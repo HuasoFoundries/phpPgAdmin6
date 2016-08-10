@@ -544,6 +544,11 @@ class Misc {
 	 * @param $script script tag
 	 */
 	function printHeader($title = '', $script = null, $frameset = false) {
+
+		if (function_exists('newrelic_disable_autorum')) {
+			newrelic_disable_autorum();
+		}
+
 		global $appName, $lang, $_no_output, $conf, $plugin_manager;
 
 		if (!isset($_no_output)) {
@@ -568,9 +573,16 @@ class Misc {
 			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 			// Theme
 			echo "<link rel=\"stylesheet\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" id=\"csstheme\" />\n";
+
+			echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" type="text/css" id="csstheme" />' . "\n";
+
 			echo "<link rel=\"shortcut icon\" href=\"images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
 			echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/Introduction.png\" />\n";
-			echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.js\"></script>";
+			echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>' . "\n";
+
+			echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>' . "\n";
+			echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/i18n/es.js"></script>' . "\n";
+
 			echo "<script type=\"text/javascript\">// <!-- \n";
 			echo "$(document).ready(function() { \n";
 			echo "  if (window.parent.frames.length > 1)\n";
@@ -2799,4 +2811,3 @@ echo "</td>";
 		return $fksprops;
 	}
 }
-?>
