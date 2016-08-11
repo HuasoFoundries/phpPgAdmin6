@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9a93cc3bd0023d8ae777cb34194bf854",
-    "content-hash": "b711c01bcfcf4425c689dd9c6b6bda1c",
+    "hash": "cdfecfb70970603d43e1d65d83c890f8",
+    "content-hash": "b2524e5c296fb00d0722a1de6016ff2f",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -60,6 +60,57 @@
                 "php"
             ],
             "time": "2016-08-10 11:08:40"
+        },
+        {
+            "name": "php-console/php-console",
+            "version": "3.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barbushin/php-console.git",
+                "reference": "07801c32ea32e4d57ddf1c6b9cf98ff7f2982542"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barbushin/php-console/zipball/07801c32ea32e4d57ddf1c6b9cf98ff7f2982542",
+                "reference": "07801c32ea32e4d57ddf1c6b9cf98ff7f2982542",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "PhpConsole": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD 3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Barbushin",
+                    "email": "barbushin@gmail.com",
+                    "homepage": "http://linkedin.com/in/barbushin"
+                }
+            ],
+            "description": "Server side PHP library for Google Chrome extension \"PHP Console\".",
+            "homepage": "https://github.com/barbushin/php-console",
+            "keywords": [
+                "chrome",
+                "debug",
+                "error handler",
+                "errors",
+                "google chrome",
+                "php"
+            ],
+            "time": "2016-02-19 16:00:24"
         }
     ],
     "packages-dev": [],
@@ -68,6 +119,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.4.0",
+        "ext-pgsql": "*"
+    },
     "platform-dev": []
 }

@@ -6,8 +6,6 @@ namespace PHPPgAdmin\Database;
  * $Id: ADODB_base.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
  */
 
-include_once './libraries/errorhandler.inc.php';
-
 class ADODB_base {
 
 	var $conn;

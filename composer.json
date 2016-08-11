@@ -17,6 +17,9 @@
         }
     },
     "require": {
+        "php": ">=5.4.0",
+        "ext-pgsql": "*",
+        "php-console/php-console": "~3.1",
         "adodb/adodb-php": "^5.20"
     }
 }

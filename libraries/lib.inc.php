@@ -6,9 +6,17 @@
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
 require_once './vendor/autoload.php';
-
+include_once './libraries/errorhandler.inc.php';
 include_once './libraries/decorator.inc.php';
 include_once './lang/translations.php';
+
+$handler = PhpConsole\Handler::getInstance();
+/* You can override default Handler behavior:
+$handler->setHandleErrors(false);  // disable errors handling
+$handler->setHandleExceptions(false); // disable exceptions handling
+$handler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
+ */
+$handler->start(); // initialize handlers
 
 // Set error reporting level to max
 error_reporting(E_ALL);
