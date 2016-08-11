@@ -12,7 +12,8 @@
         "psr-4": {
             "PHPPgAdmin\\": "classes",
             "PHPPgAdmin\\Database\\": "classes/database",
-            "PHPPgAdmin\\XHtml\\": "classes/xhtml"
+            "PHPPgAdmin\\XHtml\\": "classes/xhtml",
+            "PHPPgAdmin\\Decorators\\": "classes/decorators"
         }
     },
     "require": {

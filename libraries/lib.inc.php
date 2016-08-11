@@ -5,7 +5,8 @@
  *
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
-include_once './vendor/autoload.php';
+require_once './vendor/autoload.php';
+
 include_once './libraries/decorator.inc.php';
 include_once './lang/translations.php';
 
@@ -50,8 +51,8 @@ $lang = array();
 require_once './lang/english.php';
 
 // Create Misc class references
-require_once './classes/Misc.php';
-$misc = new Misc();
+
+$misc = new \PHPPgAdmin\Misc();
 
 // Start session (if not auto-started)
 if (!ini_get('session.auto_start')) {
@@ -225,9 +226,6 @@ if (!function_exists('pg_connect')) {
 	exit;
 }
 
-// Manage the plugins
-require_once './classes/PluginManager.php';
-
 // Create data accessor object, if necessary
 if (!isset($_no_db_connection)) {
 	if (!isset($_REQUEST['server'])) {
@@ -277,5 +275,5 @@ if (!function_exists("htmlspecialchars_decode")) {
 	}
 }
 
-$plugin_manager = new PluginManager($_language);
+$plugin_manager = new \PHPPgAdmin\PluginManager($_language);
 ?>
