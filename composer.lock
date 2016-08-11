@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c54e0a422a48fbb516ecb72c615a73c4",
+    "hash": "b083410693bb969676aea14961d7d6c5",
     "content-hash": "b711c01bcfcf4425c689dd9c6b6bda1c",
     "packages": [
         {
             "name": "adodb/adodb-php",
-            "version": "v5.20.4",
+            "version": "v5.20.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ADOdb/ADOdb.git",
-                "reference": "1a47f1078318557ac278c82b1b401c8dfc62ae4d"
+                "reference": "7ce997d4c5957a1a96e7ab483ad088b15f02b191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ADOdb/ADOdb/zipball/1a47f1078318557ac278c82b1b401c8dfc62ae4d",
-                "reference": "1a47f1078318557ac278c82b1b401c8dfc62ae4d",
+                "url": "https://api.github.com/repos/ADOdb/ADOdb/zipball/7ce997d4c5957a1a96e7ab483ad088b15f02b191",
+                "reference": "7ce997d4c5957a1a96e7ab483ad088b15f02b191",
                 "shasum": ""
             },
             "require": {
@@ -59,7 +59,7 @@
                 "library",
                 "php"
             ],
-            "time": "2016-03-31 08:10:52"
+            "time": "2016-08-10 11:08:40"
         }
     ],
     "packages-dev": [],

@@ -15,8 +15,9 @@ class XHtmlElement extends XHtmlSimpleElement {
 	var $_htmlcode = "";
 	var $_siblings = array();
 
-	function XHtmlElement($text = null) {
-		XHtmlSimpleElement::XHtmlSimpleElement();
+	function __construct($text = null) {
+
+		parent::__construct();
 
 		if ($text) {
 			$this->set_text($text);

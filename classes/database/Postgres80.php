@@ -50,7 +50,7 @@ class Postgres80 extends Postgres81 {
 	 * Constructor
 	 * @param $conn The database connection
 	 */
-	function Postgres80($conn) {
+	function __construct($conn) {
 		$this->Postgres81($conn);
 	}
 
@@ -372,5 +372,3 @@ class Postgres80 extends Postgres81 {
 	function hasAlterSequenceSchema() {return false;}
 	function hasServerAdminFuncs() {return false;}
 }
-
-namespace PHPPgAdmin\Database;

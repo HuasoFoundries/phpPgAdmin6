@@ -28,7 +28,7 @@ class Postgres74 extends Postgres80 {
 	 * Constructor
 	 * @param $conn The database connection
 	 */
-	function Postgres74($conn) {
+	function __construct($conn) {
 		$this->Postgres80($conn);
 	}
 

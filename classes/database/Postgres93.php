@@ -15,7 +15,7 @@ class Postgres93 extends Postgres {
 	 * Constructor
 	 * @param $conn The database connection
 	 */
-	function Postgres93($conn) {
+	function __construct($conn) {
 		$this->Postgres($conn);
 	}
 

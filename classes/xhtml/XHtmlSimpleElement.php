@@ -25,7 +25,7 @@ class XHtmlSimpleElement {
 	 * derived class
 	 *
 	 */
-	function XHtmlSimpleElement($element = null) {
+	function __construct($element = null) {
 
 		$this->_element = $this->is_element();
 

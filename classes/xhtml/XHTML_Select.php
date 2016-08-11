@@ -5,8 +5,8 @@ namespace PHPPgAdmin\XHtml;
 class XHTML_Select extends XHTMLElement {
 	var $_data;
 
-	function XHTML_Select($name, $multiple = false, $size = null) {
-		XHtmlElement::XHtmlElement();
+	function __construct($name, $multiple = false, $size = null) {
+		parent::__construct();
 
 		$this->set_attribute("name", $name);
 		if ($multiple) {

@@ -14,31 +14,28 @@ $misc->printHeader('', null, true);
 $rtl = (strcasecmp($lang['applangdir'], 'rtl') == 0);
 
 $cols = $rtl ? '*,' . $conf['left_width'] : $conf['left_width'] . ',*';
-$mainframe = '<frame src="intro.php" name="detail" id="detail" frameborder="0" />'
-?>
-<frameset cols="<?php echo $cols ?>">
+$mainframe = '<frame src="intro.php" name="detail" id="detail" frameborder="0" />';
 
-<?php if ($rtl) {
+echo '<frameset cols="' . $cols . '">';
+
+if ($rtl) {
 	echo $mainframe;
 }
-?>
 
-	<frame src="browser.php" name="browser" id="browser" frameborder="0" />
+echo '<frame src="browser.php" name="browser" id="browser" frameborder="0" />';
 
-<?php if (!$rtl) {
+if (!$rtl) {
 	echo $mainframe;
 }
-?>
 
-	<noframes>
-	<body>
-		<?php echo $lang['strnoframes'] ?><br />
-		<a href="intro.php"><?php echo $lang['strnoframeslink'] ?></a>
-	</body>
-	</noframes>
+echo '<noframes>';
+echo '<body>';
+echo $lang['strnoframes'];
+echo '<br />';
+echo '<a href="intro.php">' . $lang['strnoframeslink'] . '</a>';
+echo '</body>';
+echo '</noframes>';
 
-</frameset>
+echo '</frameset>';
 
-<?php
 $misc->printFooter(false);
-?>

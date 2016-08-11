@@ -8,6 +8,13 @@
         "email": "amenadiel@gmail.com"
     }],
     "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "PHPPgAdmin\\": "classes",
+            "PHPPgAdmin\\Database\\": "classes/database",
+            "PHPPgAdmin\\XHtml\\": "classes/xhtml"
+        }
+    },
     "require": {
         "adodb/adodb-php": "^5.20"
     }

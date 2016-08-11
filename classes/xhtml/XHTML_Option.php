@@ -3,8 +3,11 @@
 namespace PHPPgAdmin\XHtml;
 
 class XHTML_Option extends XHtmlElement {
-	function XHTML_Option($text, $value = null) {
-		XHtmlElement::XHtmlElement(null);
+
+	function __construct($text, $value = null) {
+
+		parent::__construct(null);
+
 		$this->set_text($text);
 	}
 }

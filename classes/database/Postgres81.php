@@ -45,7 +45,7 @@ class Postgres81 extends Postgres82 {
 	 * Constructor
 	 * @param $conn The database connection
 	 */
-	function Postgres81($conn) {
+	function __construct($conn) {
 		$this->Postgres82($conn);
 	}
 
