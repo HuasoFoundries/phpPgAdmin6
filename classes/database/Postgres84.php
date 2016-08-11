@@ -6,8 +6,6 @@ namespace PHPPgAdmin\Database;
  * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  */
 
-include_once './classes/database/Postgres90.php';
-
 class Postgres84 extends Postgres90 {
 
 	var $major_version = 8.4;
@@ -25,14 +23,6 @@ class Postgres84 extends Postgres90 {
 		'tablespace' => array('CREATE', 'ALL PRIVILEGES'),
 		'column' => array('SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'),
 	);
-
-	/**
-	 * Constructor
-	 * @param $conn The database connection
-	 */
-	function __construct($conn) {
-		$this->Postgres($conn);
-	}
 
 	// Help functions
 

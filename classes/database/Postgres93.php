@@ -5,19 +5,9 @@ namespace PHPPgAdmin\Database;
  *
  */
 
-include_once './classes/database/Postgres.php';
-
 class Postgres93 extends Postgres {
 
 	var $major_version = 9.3;
-
-	/**
-	 * Constructor
-	 * @param $conn The database connection
-	 */
-	function __construct($conn) {
-		$this->Postgres($conn);
-	}
 
 	// Help functions
 

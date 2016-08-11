@@ -6,8 +6,6 @@ namespace PHPPgAdmin\Database;
  * $Id: Postgres81.php,v 1.21 2008/01/19 13:46:15 ioguix Exp $
  */
 
-include_once './classes/database/Postgres82.php';
-
 class Postgres81 extends Postgres82 {
 
 	var $major_version = 8.1;
@@ -40,14 +38,6 @@ class Postgres81 extends Postgres82 {
 	);
 	// Array of allowed index types
 	var $typIndexes = array('BTREE', 'RTREE', 'GIST', 'HASH');
-
-	/**
-	 * Constructor
-	 * @param $conn The database connection
-	 */
-	function __construct($conn) {
-		$this->Postgres82($conn);
-	}
 
 	// Help functions
 

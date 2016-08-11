@@ -17,6 +17,9 @@ class Misc {
 	function __construct() {
 	}
 
+	public static function _cmp_desc($a, $b) {
+		return strcmp($a['desc'], $b['desc']);
+	}
 	/**
 	 * Checks if dumps are properly set up
 	 * @param $all (optional) True to check pg_dumpall, false to just check pg_dump
@@ -504,7 +507,7 @@ class Misc {
 		}
 
 		// Create the connection object and make the connection
-		$_connection = new Connection(
+		$_connection = new \PHPPgAdmin\Database\Connection(
 			$server_info['host'],
 			$server_info['port'],
 			$server_info['sslmode'],
@@ -520,12 +523,14 @@ class Misc {
 			printf($lang['strpostgresqlversionnotsupported'], $postgresqlMinVer);
 			exit;
 		}
+		$_type = '\PHPPgAdmin\Database\\' . $_type;
+
 		$this->setServerInfo('platform', $platform, $server_id);
 		$this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $server_id);
 
 		// Create a database wrapper class for easy manipulation of the
 		// connection.
-		include_once './classes/database/' . $_type . '.php';
+
 		$data = new $_type($_connection->conn);
 		$data->platform = $_connection->platform;
 
@@ -2533,10 +2538,7 @@ class Misc {
 			}
 		}
 
-		function _cmp_desc($a, $b) {
-			return strcmp($a['desc'], $b['desc']);
-		}
-		uasort($srvs, '_cmp_desc');
+		uasort($srvs, array('self', '_cmp_desc'));
 
 		if ($recordset) {
 			include_once './classes/ArrayRecordSet.php';

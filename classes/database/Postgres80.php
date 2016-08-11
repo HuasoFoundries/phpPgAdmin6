@@ -6,8 +6,6 @@ namespace PHPPgAdmin\Database;
  * $Id: Postgres80.php,v 1.28 2007/12/12 04:11:10 xzilla Exp $
  */
 
-include_once './classes/database/Postgres81.php';
-
 class Postgres80 extends Postgres81 {
 
 	var $major_version = 8.0;
@@ -45,14 +43,6 @@ class Postgres80 extends Postgres81 {
 		'WIN874' => 'CP874',
 		'WIN1256' => 'CP1256',
 	);
-
-	/**
-	 * Constructor
-	 * @param $conn The database connection
-	 */
-	function __construct($conn) {
-		$this->Postgres81($conn);
-	}
 
 	// Help functions
 

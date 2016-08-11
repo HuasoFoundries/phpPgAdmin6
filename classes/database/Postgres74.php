@@ -7,8 +7,6 @@ namespace PHPPgAdmin\Database;
  * $Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
  */
 
-include_once './classes/database/Postgres80.php';
-
 class Postgres74 extends Postgres80 {
 
 	var $major_version = 7.4;
@@ -23,14 +21,6 @@ class Postgres74 extends Postgres80 {
 		'language' => array('USAGE', 'ALL PRIVILEGES'),
 		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
 	);
-
-	/**
-	 * Constructor
-	 * @param $conn The database connection
-	 */
-	function __construct($conn) {
-		$this->Postgres80($conn);
-	}
 
 	// Help functions
 

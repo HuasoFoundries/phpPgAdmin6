@@ -6,8 +6,6 @@ namespace PHPPgAdmin\Database;
  * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  */
 
-include_once './classes/database/Postgres83.php';
-
 class Postgres82 extends Postgres83 {
 
 	var $major_version = 8.2;
@@ -17,14 +15,6 @@ class Postgres82 extends Postgres83 {
 		'LIKE' => 'i', 'NOT LIKE' => 'i', 'ILIKE' => 'i', 'NOT ILIKE' => 'i', 'SIMILAR TO' => 'i',
 		'NOT SIMILAR TO' => 'i', '~' => 'i', '!~' => 'i', '~*' => 'i', '!~*' => 'i',
 		'IS NULL' => 'p', 'IS NOT NULL' => 'p', 'IN' => 'x', 'NOT IN' => 'x');
-
-	/**
-	 * Constructor
-	 * @param $conn The database connection
-	 */
-	function __construct($conn) {
-		$this->Postgres($conn);
-	}
 
 	// Help functions
 

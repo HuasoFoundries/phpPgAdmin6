@@ -2,6 +2,7 @@
 namespace PHPPgAdmin\Decorators;
 
 class CallbackDecorator extends Decorator {
+
 	function __construct($callback, $param = null) {
 		$this->fn = $callback;
 		$this->p = $param;

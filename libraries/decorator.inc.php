@@ -48,7 +48,7 @@ function replace($str, $params) {
 // Resolving functions:
 
 function value(&$var, &$fields, $esc = null) {
-	if (is_a($var, 'Decorator')) {
+	if (is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
 		$val = $var->value($fields);
 	} else {
 		$val = &$var;

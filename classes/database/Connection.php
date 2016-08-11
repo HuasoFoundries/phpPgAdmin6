@@ -6,8 +6,6 @@ namespace PHPPgAdmin\Database;
  * $Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
  */
 
-include_once './classes/database/ADODB_base.php';
-
 class Connection {
 
 	var $conn;

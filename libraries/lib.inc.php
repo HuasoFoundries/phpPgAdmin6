@@ -276,4 +276,3 @@ if (!function_exists("htmlspecialchars_decode")) {
 }
 
 $plugin_manager = new \PHPPgAdmin\PluginManager($_language);
-?>

@@ -6,8 +6,6 @@ namespace PHPPgAdmin\Database;
  * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  */
 
-include_once './classes/database/Postgres84.php';
-
 class Postgres83 extends Postgres84 {
 
 	var $major_version = 8.3;
@@ -40,14 +38,6 @@ class Postgres83 extends Postgres84 {
 		'T' => 'TEMPORARY',
 		'c' => 'CONNECT',
 	);
-
-	/**
-	 * Constructor
-	 * @param $conn The database connection
-	 */
-	function __construct($conn) {
-		$this->Postgres($conn);
-	}
 
 	// Help functions
 

@@ -7,8 +7,6 @@ namespace PHPPgAdmin\Database;
  * $Id: Postgres.php,v 1.320 2008/02/20 20:43:09 ioguix Exp $
  */
 
-include_once './classes/database/ADODB_base.php';
-
 class Postgres extends ADODB_base {
 
 	var $major_version = 9.4;
@@ -164,14 +162,6 @@ class Postgres extends ADODB_base {
 	var $typStorages = array('plain', 'external', 'extended', 'main');
 	// The default type storage
 	var $typStorageDef = 'plain';
-
-	/**
-	 * Constructor
-	 * @param $conn The database connection
-	 */
-	function __construct($conn) {
-		$this->ADODB_base($conn);
-	}
 
 	// Formatting functions
 
