@@ -1,12 +1,12 @@
 <?php
-
+namespace PHPPgAdmin\Database;
 /**
  * PostgreSQL 8.4 support
  *
  * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  */
 
-include_once('./classes/database/Postgres90.php');
+include_once './classes/database/Postgres90.php';
 
 class Postgres84 extends Postgres90 {
 
@@ -15,15 +15,15 @@ class Postgres84 extends Postgres90 {
 	// List of all legal privileges that can be applied to different types
 	// of objects.
 	var $privlist = array(
-  		'table' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-  		'view' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-  		'sequence' => array('SELECT', 'UPDATE', 'ALL PRIVILEGES'),
-  		'database' => array('CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'),
-  		'function' => array('EXECUTE', 'ALL PRIVILEGES'),
-  		'language' => array('USAGE', 'ALL PRIVILEGES'),
-  		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
-  		'tablespace' => array('CREATE', 'ALL PRIVILEGES'),
-		'column' => array('SELECT', 'INSERT', 'UPDATE', 'REFERENCES','ALL PRIVILEGES')
+		'table' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
+		'view' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
+		'sequence' => array('SELECT', 'UPDATE', 'ALL PRIVILEGES'),
+		'database' => array('CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'),
+		'function' => array('EXECUTE', 'ALL PRIVILEGES'),
+		'language' => array('USAGE', 'ALL PRIVILEGES'),
+		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
+		'tablespace' => array('CREATE', 'ALL PRIVILEGES'),
+		'column' => array('SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'),
 	);
 
 	/**
@@ -37,7 +37,7 @@ class Postgres84 extends Postgres90 {
 	// Help functions
 
 	function getHelpPages() {
-		include_once('./help/PostgresDoc84.php');
+		include_once './help/PostgresDoc84.php';
 		return $this->help_page;
 	}
 
@@ -81,12 +81,12 @@ class Postgres84 extends Postgres90 {
 		global $conf;
 
 		/*about escaping:
-		 * SET standard_conforming_string is not available before 8.2
-		 * So we must use PostgreSQL specific notation :/
-		 * E'' notation is not available before 8.1
-		 * $$ is available since 8.0
-		 * Nothing specific from 7.4
-		 **/
+			 * SET standard_conforming_string is not available before 8.2
+			 * So we must use PostgreSQL specific notation :/
+			 * E'' notation is not available before 8.1
+			 * $$ is available since 8.0
+			 * Nothing specific from 7.4
+		*/
 
 		// Escape search term for ILIKE match
 		$this->clean($term);
@@ -100,8 +100,7 @@ class Postgres84 extends Postgres90 {
 			// it's the quickest fix to exclude the info schema from 7.4
 			$where = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
 			$lan_where = "AND pl.lanispl";
-		}
-		else {
+		} else {
 			$where = '';
 			$lan_where = '';
 		}
@@ -221,11 +220,8 @@ class Postgres84 extends Postgres90 {
 		return $this->selectSet($sql);
 	}
 
-
 	// Capabilities
 
-	function hasByteaHexDefault() { return false; } 
+	function hasByteaHexDefault() {return false;}
 
 }
-
-?>

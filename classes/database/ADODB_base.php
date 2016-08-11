@@ -1,18 +1,18 @@
 <?php
-
+namespace PHPPgAdmin\Database;
 /*
  * Parent class of all ADODB objects.
  *
  * $Id: ADODB_base.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
  */
 
-include_once('./libraries/errorhandler.inc.php');
-include_once('./libraries/adodb/adodb.inc.php');
+include_once './libraries/errorhandler.inc.php';
+include_once './libraries/adodb/adodb.inc.php';
 
 class ADODB_base {
 
 	var $conn;
-	
+
 	// The backend platform.  Set to UNKNOWN by default.
 	var $platform = 'UNKNOWN';
 
@@ -41,7 +41,7 @@ class ADODB_base {
 		$str = addslashes($str);
 		return $str;
 	}
-	
+
 	/**
 	 * Cleans (escapes) an object name (eg. table, field)
 	 * @param $str The string to clean, by reference
@@ -59,11 +59,13 @@ class ADODB_base {
 	 */
 	function arrayClean(&$arr) {
 		reset($arr);
-		while(list($k, $v) = each($arr))
+		while (list($k, $v) = each($arr)) {
 			$arr[$k] = addslashes($v);
+		}
+
 		return $arr;
 	}
-	
+
 	/**
 	 * Executes a query on the underlying connection
 	 * @param $sql The SQL query to execute
@@ -93,12 +95,14 @@ class ADODB_base {
 	function selectSet($sql) {
 		// Execute the statement
 		$rs = $this->conn->Execute($sql);
-		
-		if (!$rs) return $this->conn->ErrorNo();
- 
- 		return $rs;	
- 	}
- 	
+
+		if (!$rs) {
+			return $this->conn->ErrorNo();
+		}
+
+		return $rs;
+	}
+
 	/**
 	 * Retrieves a single value from a query
 	 *
@@ -114,8 +118,11 @@ class ADODB_base {
 		$rs = $this->conn->Execute($sql);
 
 		// If failure, or no rows returned, return error value
-		if (!$rs) return $this->conn->ErrorNo();
-		elseif ($rs->RecordCount() == 0) return -1;
+		if (!$rs) {
+			return $this->conn->ErrorNo();
+		} elseif ($rs->RecordCount() == 0) {
+			return -1;
+		}
 
 		return $rs->fields[$field];
 	}
@@ -141,22 +148,30 @@ class ADODB_base {
 
 		// Build clause
 		$sql = '';
-		while(list($key, $value) = each($conditions)) {
+		while (list($key, $value) = each($conditions)) {
 			$this->clean($key);
 			$this->clean($value);
-			if ($sql) $sql .= " AND \"{$key}\"='{$value}'";
-			else $sql = "DELETE FROM {$schema}\"{$table}\" WHERE \"{$key}\"='{$value}'";
+			if ($sql) {
+				$sql .= " AND \"{$key}\"='{$value}'";
+			} else {
+				$sql = "DELETE FROM {$schema}\"{$table}\" WHERE \"{$key}\"='{$value}'";
+			}
+
 		}
 
 		// Check for failures
 		if (!$this->conn->Execute($sql)) {
 			// Check for referential integrity failure
-			if (stristr($this->conn->ErrorMsg(), 'referential'))
+			if (stristr($this->conn->ErrorMsg(), 'referential')) {
 				return -1;
+			}
+
 		}
 
 		// Check for no rows modified
-		if ($this->conn->Affected_Rows() == 0) return -2;
+		if ($this->conn->Affected_Rows() == 0) {
+			return -2;
+		}
 
 		return $this->conn->ErrorNo();
 	}
@@ -176,15 +191,22 @@ class ADODB_base {
 		if (sizeof($vars) > 0) {
 			$fields = '';
 			$values = '';
-			foreach($vars as $key => $value) {
+			foreach ($vars as $key => $value) {
 				$this->clean($key);
 				$this->clean($value);
 
-				if ($fields) $fields .= ", \"{$key}\"";
-				else $fields = "INSERT INTO \"{$table}\" (\"{$key}\"";
+				if ($fields) {
+					$fields .= ", \"{$key}\"";
+				} else {
+					$fields = "INSERT INTO \"{$table}\" (\"{$key}\"";
+				}
 
-				if ($values) $values .= ", '{$value}'";
-				else $values = ") VALUES ('{$value}'";
+				if ($values) {
+					$values .= ", '{$value}'";
+				} else {
+					$values = ") VALUES ('{$value}'";
+				}
+
 			}
 			$sql = $fields . $values . ')';
 		}
@@ -192,11 +214,15 @@ class ADODB_base {
 		// Check for failures
 		if (!$this->conn->Execute($sql)) {
 			// Check for unique constraint failure
-			if (stristr($this->conn->ErrorMsg(), 'unique'))
+			if (stristr($this->conn->ErrorMsg(), 'unique')) {
 				return -1;
+			}
+
 			// Check for referential integrity failure
-			elseif (stristr($this->conn->ErrorMsg(), 'referential'))
+			elseif (stristr($this->conn->ErrorMsg(), 'referential')) {
 				return -2;
+			}
+
 		}
 
 		return $this->conn->ErrorNo();
@@ -221,40 +247,58 @@ class ADODB_base {
 
 		// Populate the syntax arrays
 		reset($vars);
-		while(list($key, $value) = each($vars)) {
+		while (list($key, $value) = each($vars)) {
 			$this->fieldClean($key);
 			$this->clean($value);
-			if ($setClause) $setClause .= ", \"{$key}\"='{$value}'";
-			else $setClause = "UPDATE \"{$table}\" SET \"{$key}\"='{$value}'";
+			if ($setClause) {
+				$setClause .= ", \"{$key}\"='{$value}'";
+			} else {
+				$setClause = "UPDATE \"{$table}\" SET \"{$key}\"='{$value}'";
+			}
+
 		}
 
 		reset($nulls);
-		while(list(, $value) = each($nulls)) {
+		while (list(, $value) = each($nulls)) {
 			$this->fieldClean($value);
-			if ($setClause) $setClause .= ", \"{$value}\"=NULL";
-			else $setClause = "UPDATE \"{$table}\" SET \"{$value}\"=NULL";
+			if ($setClause) {
+				$setClause .= ", \"{$value}\"=NULL";
+			} else {
+				$setClause = "UPDATE \"{$table}\" SET \"{$value}\"=NULL";
+			}
+
 		}
 
 		reset($where);
-		while(list($key, $value) = each($where)) {
+		while (list($key, $value) = each($where)) {
 			$this->fieldClean($key);
 			$this->clean($value);
-			if ($whereClause) $whereClause .= " AND \"{$key}\"='{$value}'";
-			else $whereClause = " WHERE \"{$key}\"='{$value}'";
+			if ($whereClause) {
+				$whereClause .= " AND \"{$key}\"='{$value}'";
+			} else {
+				$whereClause = " WHERE \"{$key}\"='{$value}'";
+			}
+
 		}
 
 		// Check for failures
 		if (!$this->conn->Execute($setClause . $whereClause)) {
 			// Check for unique constraint failure
-			if (stristr($this->conn->ErrorMsg(), 'unique'))
+			if (stristr($this->conn->ErrorMsg(), 'unique')) {
 				return -1;
+			}
+
 			// Check for referential integrity failure
-			elseif (stristr($this->conn->ErrorMsg(), 'referential'))
+			elseif (stristr($this->conn->ErrorMsg(), 'referential')) {
 				return -2;
+			}
+
 		}
 
 		// Check for no rows modified
-		if ($this->conn->Affected_Rows() == 0) return -3;
+		if ($this->conn->Affected_Rows() == 0) {
+			return -3;
+		}
 
 		return $this->conn->ErrorNo();
 	}
@@ -322,15 +366,15 @@ class ADODB_base {
 		// Pick out array entries by carefully parsing.  This is necessary in order
 		// to cope with double quotes and commas, etc.
 		$elements = array();
-		$i = $j = 0;		
+		$i = $j = 0;
 		$in_quotes = false;
 		while ($i < strlen($arr)) {
 			// If current char is a double quote and it's not escaped, then
 			// enter quoted bit
 			$char = substr($arr, $i, 1);
-			if ($char == '"' && ($i == 0 || substr($arr, $i - 1, 1) != '\\')) 
+			if ($char == '"' && ($i == 0 || substr($arr, $i - 1, 1) != '\\')) {
 				$in_quotes = !$in_quotes;
-			elseif ($char == ',' && !$in_quotes) {
+			} elseif ($char == ',' && !$in_quotes) {
 				// Add text so far to the array
 				$elements[] = substr($arr, $j, $i - $j);
 				$j = $i + 1;
@@ -355,5 +399,3 @@ class ADODB_base {
 		return $elements;
 	}
 }
-
-?>

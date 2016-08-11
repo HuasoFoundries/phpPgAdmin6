@@ -1,12 +1,12 @@
 <?php
-
+namespace PHPPgAdmin\Database;
 /**
  * PostgreSQL 8.2 support
  *
  * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  */
 
-include_once('./classes/database/Postgres83.php');
+include_once './classes/database/Postgres83.php';
 
 class Postgres82 extends Postgres83 {
 
@@ -29,7 +29,7 @@ class Postgres82 extends Postgres83 {
 	// Help functions
 
 	function getHelpPages() {
-		include_once('./help/PostgresDoc82.php');
+		include_once './help/PostgresDoc82.php';
 		return $this->help_page;
 	}
 
@@ -42,10 +42,11 @@ class Postgres82 extends Postgres83 {
 	function getLocks() {
 		global $conf;
 
-		if (!$conf['show_system'])
+		if (!$conf['show_system']) {
 			$where = 'AND pn.nspname NOT LIKE $$pg\_%$$';
-		else
+		} else {
 			$where = "AND nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
+		}
 
 		$sql = "SELECT pn.nspname, pc.relname AS tablename, pl.transaction, pl.pid, pl.mode, pl.granted
 		FROM pg_catalog.pg_locks pl, pg_catalog.pg_class pc, pg_catalog.pg_namespace pn
@@ -70,13 +71,15 @@ class Postgres82 extends Postgres83 {
 			$this->fieldClean($f_schema);
 			$sql = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
 			$status = $this->execute($sql);
-			if ($status == 0)
+			if ($status == 0) {
 				$seqrs->fields['seqname'] = $name;
-			else
+			} else {
 				return $status;
+			}
+
 		}
 		return 0;
-		}
+	}
 
 	// View functions
 
@@ -94,11 +97,13 @@ class Postgres82 extends Postgres83 {
 			$f_schema = $this->_schema;
 			$this->fieldClean($f_schema);
 			$sql = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
-			$status =  $this->execute($sql);
-			if ($status == 0)
+			$status = $this->execute($sql);
+			if ($status == 0) {
 				$vwrs->fields['relname'] = $name;
-			else
+			} else {
 				return $status;
+			}
+
 		}
 		return 0;
 	}
@@ -130,7 +135,7 @@ class Postgres82 extends Postgres83 {
 				AND p.pronamespace = ns.oid";
 
 		return $this->selectSet($sql);
-		}
+	}
 
 	// Function functions
 
@@ -179,7 +184,7 @@ class Postgres82 extends Postgres83 {
 	 * @param $flags An array of optional flags
 	 * @param $setof True if it returns a set, false otherwise
 	 * @param $rows number of rows planner should estimate will be returned
-     * @param $cost cost the planner should use in the function execution step
+	 * @param $cost cost the planner should use in the function execution step
 	 * @param $comment The comment on the function
 	 * @param $replace (optional) True if OR REPLACE, false for normal
 	 * @return 0 success
@@ -187,14 +192,14 @@ class Postgres82 extends Postgres83 {
 	 * @return -4 set comment failed
 	 */
 	function createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, $replace = false) {
-		
+
 		// Begin a transaction
 		$status = $this->beginTransaction();
 		if ($status != 0) {
 			$this->rollbackTransaction();
 			return -1;
 		}
-		
+
 		$f_schema = $this->_schema;
 		$this->fieldClean($f_schema);
 		$this->fieldClean($funcname);
@@ -203,15 +208,22 @@ class Postgres82 extends Postgres83 {
 		$this->arrayClean($flags);
 
 		$sql = "CREATE";
-		if ($replace) $sql .= " OR REPLACE";
+		if ($replace) {
+			$sql .= " OR REPLACE";
+		}
+
 		$sql .= " FUNCTION \"{$f_schema}\".\"{$funcname}\" (";
 
-		if ($args != '')
+		if ($args != '') {
 			$sql .= $args;
+		}
 
 		// For some reason, the returns field cannot have quotes...
 		$sql .= ") RETURNS ";
-		if ($setof) $sql .= "SETOF ";
+		if ($setof) {
+			$sql .= "SETOF ";
+		}
+
 		$sql .= "{$returns} AS ";
 
 		if (is_array($definition)) {
@@ -223,15 +235,19 @@ class Postgres82 extends Postgres83 {
 		} else {
 			$this->clean($definition);
 			$sql .= "'" . $definition . "'";
-	}
+		}
 
 		$sql .= " LANGUAGE \"{$language}\"";
 
 		// Add flags
-		foreach ($flags as  $v) {
+		foreach ($flags as $v) {
 			// Skip default flags
-			if ($v == '') continue;
-			else $sql .= "\n{$v}";
+			if ($v == '') {
+				continue;
+			} else {
+				$sql .= "\n{$v}";
+			}
+
 		}
 
 		$status = $this->execute($sql);
@@ -258,23 +274,22 @@ class Postgres82 extends Postgres83 {
 	 * @param $table The table the index is on
 	 * @return 0 success
 	 */
-	function clusterIndex($table='', $index='') {
+	function clusterIndex($table = '', $index = '') {
 
 		$sql = 'CLUSTER';
-		
+
 		// We don't bother with a transaction here, as there's no point rolling
 		// back an expensive cluster if a cheap analyze fails for whatever reason
-		
+
 		if (!empty($table)) {
 			$f_schema = $this->_schema;
 			$this->fieldClean($f_schema);
 			$this->fieldClean($table);
-			
+
 			if (!empty($index)) {
 				$this->fieldClean($index);
 				$sql .= " \"{$index}\" ON \"{$f_schema}\".\"{$table}\"";
-			}
-			else {
+			} else {
 				$sql .= " \"{$f_schema}\".\"{$table}\"";
 			}
 		}
@@ -355,5 +370,3 @@ class Postgres82 extends Postgres83 {
 	function hasVirtualTransactionId() {return false;}
 
 }
-
-?>

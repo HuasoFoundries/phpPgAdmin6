@@ -1,12 +1,12 @@
 <?php
-
+namespace PHPPgAdmin\Database;
 /**
  * PostgreSQL 9.1 support
  *
  * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  */
 
-include_once('./classes/database/Postgres92.php');
+include_once './classes/database/Postgres92.php';
 
 class Postgres91 extends Postgres92 {
 
@@ -23,7 +23,7 @@ class Postgres91 extends Postgres92 {
 	// Help functions
 
 	function getHelpPages() {
-		include_once('./help/PostgresDoc91.php');
+		include_once './help/PostgresDoc91.php';
 		return $this->help_page;
 	}
 
@@ -34,11 +34,11 @@ class Postgres91 extends Postgres92 {
 	 * @return A recordset
 	 */
 	function getProcesses($database = null) {
-		if ($database === null)
+		if ($database === null) {
 			$sql = "SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
 				FROM pg_catalog.pg_stat_activity
 				ORDER BY datname, usename, procpid";
-		else {
+		} else {
 			$this->clean($database);
 			$sql = "SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
 				FROM pg_catalog.pg_stat_activity
@@ -88,11 +88,7 @@ class Postgres91 extends Postgres92 {
 		return $this->selectSet($sql);
 	}
 
-
 	// Capabilities
-	function hasUserSignals() { return false; }
-
-
+	function hasUserSignals() {return false;}
 
 }
-?>

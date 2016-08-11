@@ -1,12 +1,12 @@
 <?php
-
+namespace PHPPgAdmin\Database;
 /**
  * PostgreSQL 8.0 support
  *
  * $Id: Postgres80.php,v 1.28 2007/12/12 04:11:10 xzilla Exp $
  */
 
-include_once('./classes/database/Postgres81.php');
+include_once './classes/database/Postgres81.php';
 
 class Postgres80 extends Postgres81 {
 
@@ -43,7 +43,7 @@ class Postgres80 extends Postgres81 {
 		'UNICODE' => 'UTF-8',
 		'WIN' => 'CP1251',
 		'WIN874' => 'CP874',
-		'WIN1256' => 'CP1256'
+		'WIN1256' => 'CP1256',
 	);
 
 	/**
@@ -57,7 +57,7 @@ class Postgres80 extends Postgres81 {
 	// Help functions
 
 	function getHelpPages() {
-		include_once('./help/PostgresDoc80.php');
+		include_once './help/PostgresDoc80.php';
 		return $this->help_page;
 	}
 
@@ -76,20 +76,22 @@ class Postgres80 extends Postgres81 {
 			$username = $server_info['username'];
 			$this->clean($username);
 			$clause = " AND pu.usename='{$username}'";
+		} else {
+			$clause = '';
 		}
-		else $clause = '';
 
 		if ($currentdatabase != NULL) {
 			$this->clean($currentdatabase);
 			$orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
-		}
-		else
+		} else {
 			$orderby = "ORDER BY pdb.datname";
+		}
 
-		if (!$conf['show_system'])
+		if (!$conf['show_system']) {
 			$where = ' AND NOT pdb.datistemplate';
-		else
+		} else {
 			$where = ' AND pdb.datallowconn';
+		}
 
 		$sql = "SELECT pdb.datname AS datname, pu.usename AS datowner, pg_encoding_to_char(encoding) AS datencoding,
                                (SELECT description FROM pg_description pd WHERE pdb.oid=pd.objoid) AS datcomment,
@@ -114,8 +116,10 @@ class Postgres80 extends Postgres81 {
 
 		if (!$conf['show_system']) {
 			$where = "WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND nspname != 'information_schema'";
+		} else {
+			$where = "WHERE nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
 		}
-		else $where = "WHERE nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
+
 		$sql = "
 			SELECT pn.nspname, pu.usename AS nspowner,
 				pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment
@@ -167,22 +171,30 @@ class Postgres80 extends Postgres81 {
 
 		// Comment
 		$status = $this->setComment('TABLE', '', $tblrs->fields['relname'], $comment);
-		if ($status != 0) return -4;
+		if ($status != 0) {
+			return -4;
+		}
 
 		// Owner
 		$this->fieldClean($owner);
 		$status = $this->alterTableOwner($tblrs, $owner);
-		if ($status != 0) return -5;
+		if ($status != 0) {
+			return -5;
+		}
 
 		// Tablespace
 		$this->fieldClean($tablespace);
 		$status = $this->alterTableTablespace($tblrs, $tablespace);
-			if ($status != 0) return -6;
+		if ($status != 0) {
+			return -6;
+		}
 
 		// Rename
 		$this->fieldClean($name);
 		$status = $this->alterTableName($tblrs, $name);
-		if ($status != 0) return -3;
+		if ($status != 0) {
+			return -3;
+		}
 
 		return 0;
 	}
@@ -202,24 +214,29 @@ class Postgres80 extends Postgres81 {
 	 * @return -5 owner error
 	 */
 	protected
-    function _alterView($vwrs, $name, $owner, $schema, $comment) {
+	function _alterView($vwrs, $name, $owner, $schema, $comment) {
 
-    	/* $schema not supported in pg80- */
-    	$this->fieldArrayClean($vwrs->fields);
+		/* $schema not supported in pg80- */
+		$this->fieldArrayClean($vwrs->fields);
 
 		// Comment
-		if ($this->setComment('VIEW', $vwrs->fields['relname'], '', $comment) != 0)
+		if ($this->setComment('VIEW', $vwrs->fields['relname'], '', $comment) != 0) {
 			return -4;
+		}
 
 		// Owner
 		$this->fieldClean($owner);
 		$status = $this->alterViewOwner($vwrs, $owner);
-		if ($status != 0) return -5;
+		if ($status != 0) {
+			return -5;
+		}
 
 		// Rename
 		$this->fieldClean($name);
 		$status = $this->alterViewName($vwrs, $name);
-		if ($status != 0) return -3;
+		if ($status != 0) {
+			return -3;
+		}
 
 		return 0;
 	}
@@ -250,21 +267,23 @@ class Postgres80 extends Postgres81 {
 	 */
 	protected
 	function _alterSequence($seqrs, $name, $comment, $owner, $schema, $increment,
-	$minvalue, $maxvalue, $restartvalue, $cachevalue, $cycledvalue, $startvalue) {
+		$minvalue, $maxvalue, $restartvalue, $cachevalue, $cycledvalue, $startvalue) {
 
 		/* $schema not supported in pg80- */
 		$this->fieldArrayClean($seqrs->fields);
 
 		// Comment
 		$status = $this->setComment('SEQUENCE', $seqrs->fields['seqname'], '', $comment);
-		if ($status != 0)
+		if ($status != 0) {
 			return -4;
+		}
 
 		// Owner
 		$this->fieldClean($owner);
 		$status = $this->alterSequenceOwner($seqrs, $owner);
-		if ($status != 0)
+		if ($status != 0) {
 			return -5;
+		}
 
 		// Props
 		$this->clean($increment);
@@ -274,16 +293,18 @@ class Postgres80 extends Postgres81 {
 		$this->clean($cachevalue);
 		$this->clean($cycledvalue);
 		$this->clean($startvalue);
-		$status = $this->alterSequenceProps($seqrs, $increment,	$minvalue,
+		$status = $this->alterSequenceProps($seqrs, $increment, $minvalue,
 			$maxvalue, $restartvalue, $cachevalue, $cycledvalue, null);
-		if ($status != 0)
+		if ($status != 0) {
 			return -6;
+		}
 
 		// Rename
 		$this->fieldClean($name);
 		$status = $this->alterSequenceName($seqrs, $name);
-		if ($status != 0)
+		if ($status != 0) {
 			return -3;
+		}
 
 		return 0;
 	}
@@ -341,14 +362,15 @@ class Postgres80 extends Postgres81 {
 
 	// Capabilities
 
-	function hasAggregateSortOp() { return false; }
-	function hasAlterTableSchema() { return false; }
-	function hasAutovacuum() { return false; }
-	function hasDisableTriggers() { return false; }
-	function hasFunctionAlterSchema() { return false; }
-	function hasPreparedXacts() { return false; }
-	function hasRoles() { return false; }
-	function hasAlterSequenceSchema() { return false; }
-	function hasServerAdminFuncs() { return false; }
+	function hasAggregateSortOp() {return false;}
+	function hasAlterTableSchema() {return false;}
+	function hasAutovacuum() {return false;}
+	function hasDisableTriggers() {return false;}
+	function hasFunctionAlterSchema() {return false;}
+	function hasPreparedXacts() {return false;}
+	function hasRoles() {return false;}
+	function hasAlterSequenceSchema() {return false;}
+	function hasServerAdminFuncs() {return false;}
 }
-?>
+
+namespace PHPPgAdmin\Database;

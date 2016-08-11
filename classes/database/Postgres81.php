@@ -1,12 +1,12 @@
 <?php
-
+namespace PHPPgAdmin\Database;
 /**
  * PostgreSQL 8.1 support
  *
  * $Id: Postgres81.php,v 1.21 2008/01/19 13:46:15 ioguix Exp $
  */
 
-include_once('./classes/database/Postgres82.php');
+include_once './classes/database/Postgres82.php';
 
 class Postgres81 extends Postgres82 {
 
@@ -21,7 +21,7 @@ class Postgres81 extends Postgres82 {
 		'function' => array('EXECUTE', 'ALL PRIVILEGES'),
 		'language' => array('USAGE', 'ALL PRIVILEGES'),
 		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
-		'tablespace' => array('CREATE', 'ALL PRIVILEGES')
+		'tablespace' => array('CREATE', 'ALL PRIVILEGES'),
 	);
 	// List of characters in acl lists and the privileges they
 	// refer to.
@@ -36,7 +36,7 @@ class Postgres81 extends Postgres82 {
 		'X' => 'EXECUTE',
 		'U' => 'USAGE',
 		'C' => 'CREATE',
-		'T' => 'TEMPORARY'
+		'T' => 'TEMPORARY',
 	);
 	// Array of allowed index types
 	var $typIndexes = array('BTREE', 'RTREE', 'GIST', 'HASH');
@@ -50,9 +50,9 @@ class Postgres81 extends Postgres82 {
 	}
 
 	// Help functions
-	
+
 	function getHelpPages() {
-		include_once('./help/PostgresDoc81.php');
+		include_once './help/PostgresDoc81.php';
 		return $this->help_page;
 	}
 
@@ -64,34 +64,36 @@ class Postgres81 extends Postgres82 {
 	 */
 	function getDatabases($currentdatabase = NULL) {
 		global $conf, $misc;
-		
+
 		$server_info = $misc->getServerInfo();
-		
+
 		if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
 			$username = $server_info['username'];
 			$this->clean($username);
 			$clause = " AND pr.rolname='{$username}'";
+		} else {
+			$clause = '';
 		}
-		else $clause = '';
 
 		if ($currentdatabase != NULL) {
 			$this->clean($currentdatabase);
 			$orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
-		}
-		else
+		} else {
 			$orderby = "ORDER BY pdb.datname";
+		}
 
-		if (!$conf['show_system'])
+		if (!$conf['show_system']) {
 			$where = ' AND NOT pdb.datistemplate';
-		else
+		} else {
 			$where = ' AND pdb.datallowconn';
+		}
 
 		$sql = "SELECT pdb.datname AS datname, pr.rolname AS datowner, pg_encoding_to_char(encoding) AS datencoding,
                                (SELECT description FROM pg_catalog.pg_description pd WHERE pdb.oid=pd.objoid) AS datcomment,
                                (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=pdb.dattablespace) AS tablespace,
-							   pg_catalog.pg_database_size(pdb.oid) as dbsize 
-                        FROM pg_catalog.pg_database pdb LEFT JOIN pg_catalog.pg_roles pr ON (pdb.datdba = pr.oid)  
-						WHERE true 
+							   pg_catalog.pg_database_size(pdb.oid) as dbsize
+                        FROM pg_catalog.pg_database pdb LEFT JOIN pg_catalog.pg_roles pr ON (pdb.datdba = pr.oid)
+						WHERE true
 			{$where}
 			{$clause}
 			{$orderby}";
@@ -115,7 +117,7 @@ class Postgres81 extends Postgres82 {
 		$this->clean($newName);
 		$this->clean($newOwner);
 		//ignore $comment, not supported pre 8.2
-			
+
 		$status = $this->beginTransaction();
 		if ($status != 0) {
 			$this->rollbackTransaction();
@@ -141,8 +143,7 @@ class Postgres81 extends Postgres82 {
 	// Autovacuum functions
 
 	function saveAutovacuum($table, $vacenabled, $vacthreshold, $vacscalefactor,
-		$anathresold, $anascalefactor, $vaccostdelay, $vaccostlimit)
-	{
+		$anathresold, $anascalefactor, $vaccostdelay, $vaccostlimit) {
 		$defaults = $this->getAutovacuum();
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
@@ -156,29 +157,36 @@ class Postgres81 extends Postgres82 {
 				c.relname = '{$table}' AND n.nspname = '{$c_schema}'
 		");
 
-		if ($rs->EOF)
+		if ($rs->EOF) {
 			return -1;
+		}
 
 		$toid = $rs->fields('oid');
-		unset ($rs);
+		unset($rs);
 
-		if (empty($_POST['autovacuum_vacuum_threshold']))
+		if (empty($_POST['autovacuum_vacuum_threshold'])) {
 			$_POST['autovacuum_vacuum_threshold'] = $defaults['autovacuum_vacuum_threshold'];
+		}
 
-		if (empty($_POST['autovacuum_vacuum_scale_factor']))
+		if (empty($_POST['autovacuum_vacuum_scale_factor'])) {
 			$_POST['autovacuum_vacuum_scale_factor'] = $defaults['autovacuum_vacuum_scale_factor'];
+		}
 
-		if (empty($_POST['autovacuum_analyze_threshold']))
+		if (empty($_POST['autovacuum_analyze_threshold'])) {
 			$_POST['autovacuum_analyze_threshold'] = $defaults['autovacuum_analyze_threshold'];
+		}
 
-		if (empty($_POST['autovacuum_analyze_scale_factor']))
+		if (empty($_POST['autovacuum_analyze_scale_factor'])) {
 			$_POST['autovacuum_analyze_scale_factor'] = $defaults['autovacuum_analyze_scale_factor'];
+		}
 
-		if (empty($_POST['autovacuum_vacuum_cost_delay']))
+		if (empty($_POST['autovacuum_vacuum_cost_delay'])) {
 			$_POST['autovacuum_vacuum_cost_delay'] = $defaults['autovacuum_vacuum_cost_delay'];
+		}
 
-		if (empty($_POST['autovacuum_vacuum_cost_limit']))
+		if (empty($_POST['autovacuum_vacuum_cost_limit'])) {
 			$_POST['autovacuum_vacuum_cost_limit'] = $defaults['autovacuum_vacuum_cost_limit'];
+		}
 
 		$rs = $this->selectSet("SELECT vacrelid
 			FROM \"pg_catalog\".\"pg_autovacuum\"
@@ -197,7 +205,7 @@ class Postgres81 extends Postgres82 {
 						vac_cost_limit = %s
 					WHERE vacrelid = {$toid};
 				",
-				($_POST['autovacuum_enabled'] == 'on')? 't':'f',
+				($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
 				$_POST['autovacuum_vacuum_threshold'],
 				$_POST['autovacuum_vacuum_scale_factor'],
 				$_POST['autovacuum_analyze_threshold'],
@@ -206,13 +214,12 @@ class Postgres81 extends Postgres82 {
 				$_POST['autovacuum_vacuum_cost_limit']
 			);
 			$status = $this->execute($sql);
-		}
-		else {
+		} else {
 			// table doesn't exists in pg_autovacuum, INSERT
 			$sql = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
 				VALUES (%s, '%s', %s, %s, %s, %s, %s, %s)",
 				$toid,
-				($_POST['autovacuum_enabled'] == 'on')? 't':'f',
+				($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
 				$_POST['autovacuum_vacuum_threshold'],
 				$_POST['autovacuum_vacuum_scale_factor'],
 				$_POST['autovacuum_analyze_threshold'],
@@ -232,15 +239,15 @@ class Postgres81 extends Postgres82 {
 	 * @return A recordset
 	 */
 	function getProcesses($database = null) {
-		if ($database === null)
-			$sql = "SELECT datname, usename, procpid AS pid, current_query AS query, query_start, 
-                  case when (select count(*) from pg_locks where pid=pg_stat_activity.procpid and granted is false) > 0 then 't' else 'f' end as waiting  
+		if ($database === null) {
+			$sql = "SELECT datname, usename, procpid AS pid, current_query AS query, query_start,
+                  case when (select count(*) from pg_locks where pid=pg_stat_activity.procpid and granted is false) > 0 then 't' else 'f' end as waiting
 				FROM pg_catalog.pg_stat_activity
 				ORDER BY datname, usename, procpid";
-		else {
+		} else {
 			$this->clean($database);
 			$sql = "SELECT datname, usename, procpid AS pid, current_query AS query, query_start
-                    case when (select count(*) from pg_locks where pid=pg_stat_activity.procpid and granted is false) > 0 then 't' else 'f' end as waiting 
+                    case when (select count(*) from pg_locks where pid=pg_stat_activity.procpid and granted is false) > 0 then 't' else 'f' end as waiting
 				FROM pg_catalog.pg_stat_activity
 				WHERE datname='{$database}'
 				ORDER BY usename, procpid";
@@ -252,7 +259,7 @@ class Postgres81 extends Postgres82 {
 	}
 
 	// Tablespace functions
-	
+
 	/**
 	 * Retrieves a tablespace's information
 	 * @return A recordset
@@ -265,7 +272,7 @@ class Postgres81 extends Postgres82 {
 
 		return $this->selectSet($sql);
 	}
-	
+
 	/**
 	 * Retrieves information for all tablespaces
 	 * @param $all Include all tablespaces (necessary when moving objects back to the default space)
@@ -273,14 +280,14 @@ class Postgres81 extends Postgres82 {
 	 */
 	function getTablespaces($all = false) {
 		global $conf;
-		
+
 		$sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation
 					FROM pg_catalog.pg_tablespace";
 
 		if (!$conf['show_system'] && !$all) {
 			$sql .= ' WHERE spcname NOT LIKE $$pg\_%$$';
 		}
-	
+
 		$sql .= " ORDER BY spcname";
 
 		return $this->selectSet($sql);
@@ -292,5 +299,3 @@ class Postgres81 extends Postgres82 {
 	function hasSharedComments() {return false;}
 	function hasConcurrentIndexBuild() {return false;}
 }
-
-?>

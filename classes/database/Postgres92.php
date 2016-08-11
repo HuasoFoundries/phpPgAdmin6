@@ -1,11 +1,11 @@
 <?php
-
+namespace PHPPgAdmin\Database;
 /**
  * PostgreSQL 9.2 support
  *
  */
 
-include_once('./classes/database/Postgres93.php');
+include_once './classes/database/Postgres93.php';
 
 class Postgres92 extends Postgres93 {
 
@@ -22,9 +22,8 @@ class Postgres92 extends Postgres93 {
 	// Help functions
 
 	function getHelpPages() {
-		include_once('./help/PostgresDoc92.php');
+		include_once './help/PostgresDoc92.php';
 		return $this->help_page;
 	}
 
 }
-?>

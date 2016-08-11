@@ -1,5 +1,5 @@
 <?php
-
+namespace PHPPgAdmin\Database;
 /**
  * A class that implements the DB interface for Postgres
  * Note: This class uses ADODB and returns RecordSets.
@@ -7,7 +7,7 @@
  * $Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
  */
 
-include_once('./classes/database/Postgres80.php');
+include_once './classes/database/Postgres80.php';
 
 class Postgres74 extends Postgres80 {
 
@@ -21,9 +21,8 @@ class Postgres74 extends Postgres80 {
 		'database' => array('CREATE', 'TEMPORARY', 'ALL PRIVILEGES'),
 		'function' => array('EXECUTE', 'ALL PRIVILEGES'),
 		'language' => array('USAGE', 'ALL PRIVILEGES'),
-		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES')
+		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
 	);
-
 
 	/**
 	 * Constructor
@@ -36,7 +35,7 @@ class Postgres74 extends Postgres80 {
 	// Help functions
 
 	function getHelpPages() {
-		include_once('./help/PostgresDoc74.php');
+		include_once './help/PostgresDoc74.php';
 		return $this->help_page;
 	}
 
@@ -60,8 +59,12 @@ class Postgres74 extends Postgres80 {
 		$this->clean($newName);
 
 		$status = $this->alterDatabaseRename($dbName, $newName);
-		if ($status != 0) return -3;
-		else return 0;
+		if ($status != 0) {
+			return -3;
+		} else {
+			return 0;
+		}
+
 	}
 
 	/**
@@ -77,20 +80,22 @@ class Postgres74 extends Postgres80 {
 			$username = $server_info['username'];
 			$this->clean($username);
 			$clause = " AND pu.usename='{$username}'";
+		} else {
+			$clause = '';
 		}
-		else $clause = '';
 
 		if ($currentdatabase != NULL) {
 			$this->clean($currentdatabase);
 			$orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
-		}
-		else
+		} else {
 			$orderby = "ORDER BY pdb.datname";
+		}
 
-		if (!$conf['show_system'])
+		if (!$conf['show_system']) {
 			$where = ' AND NOT pdb.datistemplate';
-		else
+		} else {
 			$where = ' AND pdb.datallowconn';
+		}
 
 		$sql = "SELECT pdb.datname AS datname, pu.usename AS datowner, pg_encoding_to_char(encoding) AS datencoding,
                                (SELECT description FROM pg_description pd WHERE pdb.oid=pd.objoid) AS datcomment
@@ -113,12 +118,12 @@ class Postgres74 extends Postgres80 {
 		global $conf;
 
 		/*about escaping:
-		 * SET standard_conforming_string is not available before 8.2
-		 * So we must use PostgreSQL specific notation :/
-		 * E'' notation is not available before 8.1
-		 * $$ is available since 8.0
-		 * Nothing specific from 7.4
-		 **/
+			 * SET standard_conforming_string is not available before 8.2
+			 * So we must use PostgreSQL specific notation :/
+			 * E'' notation is not available before 8.1
+			 * $$ is available since 8.0
+			 * Nothing specific from 7.4
+		*/
 
 		// Escape search term for ILIKE match
 		$term = str_replace('_', '\\_', $term);
@@ -132,8 +137,7 @@ class Postgres74 extends Postgres80 {
 			// it's the quickest fix to exclude the info schema from 7.4
 			$where = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
 			$lan_where = "AND pl.lanispl";
-		}
-		else {
+		} else {
 			$where = '';
 			$lan_where = '';
 		}
@@ -258,10 +262,11 @@ class Postgres74 extends Postgres80 {
 	function getLocks() {
 		global $conf;
 
-		if (!$conf['show_system'])
+		if (!$conf['show_system']) {
 			$where = "AND pn.nspname NOT LIKE 'pg\\\\_%'";
-		else
+		} else {
 			$where = "AND nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
+		}
 
 		$sql = "SELECT pn.nspname, pc.relname AS tablename, pl.transaction, pl.pid, pl.mode, pl.granted
 		FROM pg_catalog.pg_locks pl, pg_catalog.pg_class pc, pg_catalog.pg_namespace pn
@@ -305,17 +310,23 @@ class Postgres74 extends Postgres80 {
 
 		// Comment
 		$status = $this->setComment('TABLE', '', $tblrs->fields['relname'], $comment);
-		if ($status != 0) return -4;
+		if ($status != 0) {
+			return -4;
+		}
 
 		// Owner
 		$this->fieldClean($owner);
 		$status = $this->alterTableOwner($tblrs, $owner);
-		if ($status != 0) return -5;
+		if ($status != 0) {
+			return -5;
+		}
 
 		// Rename
 		$this->fieldClean($name);
 		$status = $this->alterTableName($tblrs, $name);
-		if ($status != 0) return -3;
+		if ($status != 0) {
+			return -3;
+		}
 
 		return 0;
 	}
@@ -342,10 +353,11 @@ class Postgres74 extends Postgres80 {
 	 * @return -6 transaction error
 	 */
 	function alterColumn($table, $column, $name, $notnull, $oldnotnull, $default, $olddefault,
-	$type, $length, $array, $oldtype, $comment)
-	{
+		$type, $length, $array, $oldtype, $comment) {
 		$status = $this->beginTransaction();
-		if ($status != 0) return -1;
+		if ($status != 0) {
+			return -1;
+		}
 
 		// @@ NEED TO HANDLE "NESTED" TRANSACTION HERE
 		if ($notnull != $oldnotnull) {
@@ -358,10 +370,11 @@ class Postgres74 extends Postgres80 {
 
 		// Set default, if it has changed
 		if ($default != $olddefault) {
-			if ($default == '')
+			if ($default == '') {
 				$status = $this->dropColumnDefault($table, $column);
-			else
+			} else {
 				$status = $this->setColumnDefault($table, $column, $default);
+			}
 
 			if ($status != 0) {
 				$this->rollbackTransaction();
@@ -378,8 +391,8 @@ class Postgres74 extends Postgres80 {
 			}
 		}
 
-		// The $name and $table parameters must be cleaned for the setComment function.  
-                // It's ok to do that here since this is the last time these variables are used.
+		// The $name and $table parameters must be cleaned for the setComment function.
+		// It's ok to do that here since this is the last time these variables are used.
 		$this->fieldClean($name);
 		$this->fieldClean($table);
 		$status = $this->setComment('COLUMN', $name, $table, $comment);
@@ -451,7 +464,7 @@ class Postgres74 extends Postgres80 {
 		// 8.0 is the first release to have this setting
 		// Prior releases don't have this setting... oids always activated
 		return 'on';
-		}
+	}
 
 	// Constraint functions
 
@@ -479,8 +492,11 @@ class Postgres74 extends Postgres80 {
 
 		$rs = $this->selectSet($sql);
 
-		if ($rs->EOF) $max_col = 0;
-		else $max_col = $rs->fields['nb'];
+		if ($rs->EOF) {
+			$max_col = 0;
+		} else {
+			$max_col = $rs->fields['nb'];
+		}
 
 		$sql = '
 			SELECT
@@ -494,17 +510,18 @@ class Postgres74 extends Postgres80 {
 				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
 				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]';
 		for ($i = 2; $i <= $rs->fields['nb']; $i++) {
-			$sql.= " OR f1.attnum=c.conkey[$i]";
+			$sql .= " OR f1.attnum=c.conkey[$i]";
 		}
-		$sql.= '))
+		$sql .= '))
 				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
 				LEFT JOIN (
 					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
 				) ON (c.confrelid=r2.oid)
 				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
 					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)';
-		for ($i = 2; $i <= $rs->fields['nb']; $i++)
-			$sql.= " OR (c.confkey[$i]=f2.attnum AND c.conkey[$i]=f1.attnum)";
+		for ($i = 2; $i <= $rs->fields['nb']; $i++) {
+			$sql .= " OR (c.confkey[$i]=f2.attnum AND c.conkey[$i]=f1.attnum)";
+		}
 
 		$sql .= sprintf("))
 			WHERE
@@ -538,8 +555,8 @@ class Postgres74 extends Postgres80 {
 				AND c.relkind = 'S' AND n.nspname='{$c_schema}' ORDER BY seqname";
 		}
 
-		return $this->selectSet( $sql );
-		}
+		return $this->selectSet($sql);
+	}
 
 	// Function functions
 
@@ -585,14 +602,15 @@ class Postgres74 extends Postgres80 {
 	function getCasts() {
 		global $conf;
 
-		if ($conf['show_system'])
+		if ($conf['show_system']) {
 			$where = '';
-		else
+		} else {
 			$where = "
 				AND n1.nspname NOT LIKE 'pg\\\\_%'
 				AND n2.nspname NOT LIKE 'pg\\\\_%'
 				AND n3.nspname NOT LIKE 'pg\\\\_%'
 			";
+		}
 
 		$sql = "
 			SELECT
@@ -622,14 +640,13 @@ class Postgres74 extends Postgres80 {
 
 	// Capabilities
 
-	function hasAlterColumnType() { return false; }
-	function hasCreateFieldWithConstraints() { return false; }
-	function hasAlterDatabaseOwner() { return false; }
-	function hasAlterSchemaOwner() { return false; }
-	function hasFunctionAlterOwner() { return false; }
-	function hasNamedParams() { return false; }
-	function hasQueryCancel() { return false; }
-	function hasTablespaces() { return false; }
-	function hasMagicTypes() { return false; }
+	function hasAlterColumnType() {return false;}
+	function hasCreateFieldWithConstraints() {return false;}
+	function hasAlterDatabaseOwner() {return false;}
+	function hasAlterSchemaOwner() {return false;}
+	function hasFunctionAlterOwner() {return false;}
+	function hasNamedParams() {return false;}
+	function hasQueryCancel() {return false;}
+	function hasTablespaces() {return false;}
+	function hasMagicTypes() {return false;}
 }
-?>

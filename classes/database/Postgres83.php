@@ -1,12 +1,12 @@
 <?php
-
+namespace PHPPgAdmin\Database;
 /**
  * PostgreSQL 8.3 support
  *
  * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  */
 
-include_once('./classes/database/Postgres84.php');
+include_once './classes/database/Postgres84.php';
 
 class Postgres83 extends Postgres84 {
 
@@ -15,14 +15,14 @@ class Postgres83 extends Postgres84 {
 	// List of all legal privileges that can be applied to different types
 	// of objects.
 	var $privlist = array(
-  		'table' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-  		'view' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-  		'sequence' => array('SELECT', 'UPDATE', 'ALL PRIVILEGES'),
-  		'database' => array('CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'),
-  		'function' => array('EXECUTE', 'ALL PRIVILEGES'),
-  		'language' => array('USAGE', 'ALL PRIVILEGES'),
-  		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
-  		'tablespace' => array('CREATE', 'ALL PRIVILEGES')
+		'table' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
+		'view' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
+		'sequence' => array('SELECT', 'UPDATE', 'ALL PRIVILEGES'),
+		'database' => array('CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'),
+		'function' => array('EXECUTE', 'ALL PRIVILEGES'),
+		'language' => array('USAGE', 'ALL PRIVILEGES'),
+		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
+		'tablespace' => array('CREATE', 'ALL PRIVILEGES'),
 	);
 	// List of characters in acl lists and the privileges they
 	// refer to.
@@ -30,15 +30,15 @@ class Postgres83 extends Postgres84 {
 		'r' => 'SELECT',
 		'w' => 'UPDATE',
 		'a' => 'INSERT',
-  		'd' => 'DELETE',
-  		'R' => 'RULE',
-  		'x' => 'REFERENCES',
-  		't' => 'TRIGGER',
-  		'X' => 'EXECUTE',
-  		'U' => 'USAGE',
- 		'C' => 'CREATE',
-  		'T' => 'TEMPORARY',
-  		'c' => 'CONNECT'
+		'd' => 'DELETE',
+		'R' => 'RULE',
+		'x' => 'REFERENCES',
+		't' => 'TRIGGER',
+		'X' => 'EXECUTE',
+		'U' => 'USAGE',
+		'C' => 'CREATE',
+		'T' => 'TEMPORARY',
+		'c' => 'CONNECT',
 	);
 
 	/**
@@ -52,7 +52,7 @@ class Postgres83 extends Postgres84 {
 	// Help functions
 
 	function getHelpPages() {
-		include_once('./help/PostgresDoc83.php');
+		include_once './help/PostgresDoc83.php';
 		return $this->help_page;
 	}
 
@@ -61,7 +61,7 @@ class Postgres83 extends Postgres84 {
 	/**
 	 * Return all database available on the server
 	 * @param $currentdatabase database name that should be on top of the resultset
-	 * 
+	 *
 	 * @return A list of databases, sorted alphabetically
 	 */
 	function getDatabases($currentdatabase = NULL) {
@@ -73,20 +73,22 @@ class Postgres83 extends Postgres84 {
 			$username = $server_info['username'];
 			$this->clean($username);
 			$clause = " AND pr.rolname='{$username}'";
+		} else {
+			$clause = '';
 		}
-		else $clause = '';
 
 		if ($currentdatabase != NULL) {
 			$this->clean($currentdatabase);
 			$orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
-		}
-		else
+		} else {
 			$orderby = "ORDER BY pdb.datname";
+		}
 
-		if (!$conf['show_system'])
+		if (!$conf['show_system']) {
 			$where = ' AND NOT pdb.datistemplate';
-		else
+		} else {
 			$where = ' AND pdb.datallowconn';
+		}
 
 		$sql = "
 			SELECT pdb.datname AS datname, pr.rolname AS datowner, pg_encoding_to_char(encoding) AS datencoding,
@@ -108,7 +110,7 @@ class Postgres83 extends Postgres84 {
 	 * Returns all available autovacuum per table information.
 	 * @return A recordset
 	 */
-	function getTableAutovacuum($table='') {
+	function getTableAutovacuum($table = '') {
 		$sql = '';
 
 		if ($table !== '') {
@@ -117,13 +119,13 @@ class Postgres83 extends Postgres84 {
 			$this->clean($c_schema);
 
 			$sql = "
-				SELECT vacrelid, nspname, relname, 
-					CASE enabled 
-						WHEN 't' THEN 'on' 
-						ELSE 'off' 
+				SELECT vacrelid, nspname, relname,
+					CASE enabled
+						WHEN 't' THEN 'on'
+						ELSE 'off'
 					END AS autovacuum_enabled, vac_base_thresh AS autovacuum_vacuum_threshold,
-					vac_scale_factor AS autovacuum_vacuum_scale_factor, anl_base_thresh AS autovacuum_analyze_threshold, 
-					anl_scale_factor AS autovacuum_analyze_scale_factor, vac_cost_delay AS autovacuum_vacuum_cost_delay, 
+					vac_scale_factor AS autovacuum_vacuum_scale_factor, anl_base_thresh AS autovacuum_analyze_threshold,
+					anl_scale_factor AS autovacuum_analyze_scale_factor, vac_cost_delay AS autovacuum_vacuum_cost_delay,
 					vac_cost_limit AS autovacuum_vacuum_cost_limit
 				FROM pg_autovacuum AS a
 					join pg_class AS c on (c.oid=a.vacrelid)
@@ -131,16 +133,15 @@ class Postgres83 extends Postgres84 {
 				WHERE c.relname = '{$table}' AND n.nspname = '{$c_schema}'
 				ORDER BY nspname, relname
 			";
-		}
-		else {
+		} else {
 			$sql = "
-				SELECT vacrelid, nspname, relname, 
-					CASE enabled 
-						WHEN 't' THEN 'on' 
-						ELSE 'off' 
+				SELECT vacrelid, nspname, relname,
+					CASE enabled
+						WHEN 't' THEN 'on'
+						ELSE 'off'
 					END AS autovacuum_enabled, vac_base_thresh AS autovacuum_vacuum_threshold,
-					vac_scale_factor AS autovacuum_vacuum_scale_factor, anl_base_thresh AS autovacuum_analyze_threshold, 
-					anl_scale_factor AS autovacuum_analyze_scale_factor, vac_cost_delay AS autovacuum_vacuum_cost_delay, 
+					vac_scale_factor AS autovacuum_vacuum_scale_factor, anl_base_thresh AS autovacuum_analyze_threshold,
+					anl_scale_factor AS autovacuum_analyze_scale_factor, vac_cost_delay AS autovacuum_vacuum_cost_delay,
 					vac_cost_limit AS autovacuum_vacuum_cost_limit
 				FROM pg_autovacuum AS a
 					join pg_class AS c on (c.oid=a.vacrelid)
@@ -151,62 +152,69 @@ class Postgres83 extends Postgres84 {
 
 		return $this->selectSet($sql);
 	}
-	
-	function saveAutovacuum($table, $vacenabled, $vacthreshold, $vacscalefactor, $anathresold, 
-		$anascalefactor, $vaccostdelay, $vaccostlimit) 
-	{
+
+	function saveAutovacuum($table, $vacenabled, $vacthreshold, $vacscalefactor, $anathresold,
+		$anascalefactor, $vaccostdelay, $vaccostlimit) {
 		$defaults = $this->getAutovacuum();
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
 		$this->clean($table);
-		
+
 		$rs = $this->selectSet("
-			SELECT c.oid 
-			FROM pg_catalog.pg_class AS c 
+			SELECT c.oid
+			FROM pg_catalog.pg_class AS c
 				LEFT JOIN pg_catalog.pg_namespace AS n ON (n.oid=c.relnamespace)
-			WHERE 
+			WHERE
 				c.relname = '{$table}' AND n.nspname = '{$c_schema}'
 		");
-		
-		if ($rs->EOF)
-			return -1;
-			
-		$toid = $rs->fields('oid');
-		unset ($rs);
-			
-		if (empty($_POST['autovacuum_vacuum_threshold']))
-			$_POST['autovacuum_vacuum_threshold'] = $defaults['autovacuum_vacuum_threshold'];
-		
-		if (empty($_POST['autovacuum_vacuum_scale_factor']))
-			$_POST['autovacuum_vacuum_scale_factor'] = $defaults['autovacuum_vacuum_scale_factor'];
-		
-		if (empty($_POST['autovacuum_analyze_threshold']))
-			$_POST['autovacuum_analyze_threshold'] = $defaults['autovacuum_analyze_threshold'];
-		
-		if (empty($_POST['autovacuum_analyze_scale_factor']))
-			$_POST['autovacuum_analyze_scale_factor'] = $defaults['autovacuum_analyze_scale_factor'];
-		
-		if (empty($_POST['autovacuum_vacuum_cost_delay']))
-			$_POST['autovacuum_vacuum_cost_delay'] = $defaults['autovacuum_vacuum_cost_delay'];
-		
-		if (empty($_POST['autovacuum_vacuum_cost_limit']))
-			$_POST['autovacuum_vacuum_cost_limit'] = $defaults['autovacuum_vacuum_cost_limit'];
-		
-		if (empty($_POST['vacuum_freeze_min_age']))
-			$_POST['vacuum_freeze_min_age'] = $defaults['vacuum_freeze_min_age'];
-		
-		if (empty($_POST['autovacuum_freeze_max_age']))
-			$_POST['autovacuum_freeze_max_age'] = $defaults['autovacuum_freeze_max_age'];
-		
 
-		$rs = $this->selectSet("SELECT vacrelid 
-			FROM \"pg_catalog\".\"pg_autovacuum\" 
+		if ($rs->EOF) {
+			return -1;
+		}
+
+		$toid = $rs->fields('oid');
+		unset($rs);
+
+		if (empty($_POST['autovacuum_vacuum_threshold'])) {
+			$_POST['autovacuum_vacuum_threshold'] = $defaults['autovacuum_vacuum_threshold'];
+		}
+
+		if (empty($_POST['autovacuum_vacuum_scale_factor'])) {
+			$_POST['autovacuum_vacuum_scale_factor'] = $defaults['autovacuum_vacuum_scale_factor'];
+		}
+
+		if (empty($_POST['autovacuum_analyze_threshold'])) {
+			$_POST['autovacuum_analyze_threshold'] = $defaults['autovacuum_analyze_threshold'];
+		}
+
+		if (empty($_POST['autovacuum_analyze_scale_factor'])) {
+			$_POST['autovacuum_analyze_scale_factor'] = $defaults['autovacuum_analyze_scale_factor'];
+		}
+
+		if (empty($_POST['autovacuum_vacuum_cost_delay'])) {
+			$_POST['autovacuum_vacuum_cost_delay'] = $defaults['autovacuum_vacuum_cost_delay'];
+		}
+
+		if (empty($_POST['autovacuum_vacuum_cost_limit'])) {
+			$_POST['autovacuum_vacuum_cost_limit'] = $defaults['autovacuum_vacuum_cost_limit'];
+		}
+
+		if (empty($_POST['vacuum_freeze_min_age'])) {
+			$_POST['vacuum_freeze_min_age'] = $defaults['vacuum_freeze_min_age'];
+		}
+
+		if (empty($_POST['autovacuum_freeze_max_age'])) {
+			$_POST['autovacuum_freeze_max_age'] = $defaults['autovacuum_freeze_max_age'];
+		}
+
+		$rs = $this->selectSet("SELECT vacrelid
+			FROM \"pg_catalog\".\"pg_autovacuum\"
 			WHERE vacrelid = {$toid};");
-		
+
 		$status = -1; // ini
 		if ($rs->recordCount() and ($rs->fields['vacrelid'] == $toid)) {
 			// table exists in pg_autovacuum, UPDATE
-			$sql = sprintf("UPDATE \"pg_catalog\".\"pg_autovacuum\" SET 
+			$sql = sprintf("UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
 						enabled = '%s',
 						vac_base_thresh = %s,
 						vac_scale_factor = %s,
@@ -218,7 +226,7 @@ class Postgres83 extends Postgres84 {
 						freeze_max_age = %s
 					WHERE vacrelid = {$toid};
 				",
-				($_POST['autovacuum_enabled'] == 'on')? 't':'f',
+				($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
 				$_POST['autovacuum_vacuum_threshold'],
 				$_POST['autovacuum_vacuum_scale_factor'],
 				$_POST['autovacuum_analyze_threshold'],
@@ -229,13 +237,12 @@ class Postgres83 extends Postgres84 {
 				$_POST['autovacuum_freeze_max_age']
 			);
 			$status = $this->execute($sql);
-		}
-		else {
+		} else {
 			// table doesn't exists in pg_autovacuum, INSERT
-			$sql = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\" 
+			$sql = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
 				VALUES (%s, '%s', %s, %s, %s, %s, %s, %s, %s, %s )",
 				$toid,
-				($_POST['autovacuum_enabled'] == 'on')? 't':'f',
+				($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
 				$_POST['autovacuum_vacuum_threshold'],
 				$_POST['autovacuum_vacuum_scale_factor'],
 				$_POST['autovacuum_analyze_threshold'],
@@ -247,7 +254,7 @@ class Postgres83 extends Postgres84 {
 			);
 			$status = $this->execute($sql);
 		}
-		
+
 		return $status;
 	}
 
@@ -255,20 +262,20 @@ class Postgres83 extends Postgres84 {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
 		$this->clean($table);
-		
+
 		$rs = $this->selectSet("
-			SELECT c.oid 
-			FROM pg_catalog.pg_class AS c 
+			SELECT c.oid
+			FROM pg_catalog.pg_class AS c
 				LEFT JOIN pg_catalog.pg_namespace AS n ON (n.oid=c.relnamespace)
-			WHERE 
+			WHERE
 				c.relname = '{$table}' AND n.nspname = '{$c_schema}'
 		");
-		
+
 		return $this->deleteRow('pg_autovacuum', array('vacrelid' => $rs->fields['oid']), 'pg_catalog');
 	}
-	
+
 	// Sequence functions
-	
+
 	/**
 	 * Alter a sequence's properties
 	 * @param $seqrs The sequence RecordSet returned by getSequence()
@@ -281,18 +288,36 @@ class Postgres83 extends Postgres84 {
 	 * @param $startvalue The sequence start value when issueing a restart (ignored)
 	 * @return 0 success
 	 */
-	function alterSequenceProps($seqrs, $increment,	$minvalue, $maxvalue,
-								$restartvalue, $cachevalue, $cycledvalue, $startvalue) {
+	function alterSequenceProps($seqrs, $increment, $minvalue, $maxvalue,
+		$restartvalue, $cachevalue, $cycledvalue, $startvalue) {
 
 		$sql = '';
 		/* vars are cleaned in _alterSequence */
-		if (!empty($increment) && ($increment != $seqrs->fields['increment_by'])) $sql .= " INCREMENT {$increment}";
-		if (!empty($minvalue) && ($minvalue != $seqrs->fields['min_value'])) $sql .= " MINVALUE {$minvalue}";
-		if (!empty($maxvalue) && ($maxvalue != $seqrs->fields['max_value'])) $sql .= " MAXVALUE {$maxvalue}";
-		if (!empty($restartvalue) && ($restartvalue != $seqrs->fields['last_value'])) $sql .= " RESTART {$restartvalue}";
-		if (!empty($cachevalue) && ($cachevalue != $seqrs->fields['cache_value'])) $sql .= " CACHE {$cachevalue}";
+		if (!empty($increment) && ($increment != $seqrs->fields['increment_by'])) {
+			$sql .= " INCREMENT {$increment}";
+		}
+
+		if (!empty($minvalue) && ($minvalue != $seqrs->fields['min_value'])) {
+			$sql .= " MINVALUE {$minvalue}";
+		}
+
+		if (!empty($maxvalue) && ($maxvalue != $seqrs->fields['max_value'])) {
+			$sql .= " MAXVALUE {$maxvalue}";
+		}
+
+		if (!empty($restartvalue) && ($restartvalue != $seqrs->fields['last_value'])) {
+			$sql .= " RESTART {$restartvalue}";
+		}
+
+		if (!empty($cachevalue) && ($cachevalue != $seqrs->fields['cache_value'])) {
+			$sql .= " CACHE {$cachevalue}";
+		}
+
 		// toggle cycle yes/no
-		if (!is_null($cycledvalue))	$sql .= (!$cycledvalue ? ' NO ' : '') . " CYCLE";
+		if (!is_null($cycledvalue)) {
+			$sql .= (!$cycledvalue ? ' NO ' : '') . " CYCLE";
+		}
+
 		if ($sql != '') {
 			$f_schema = $this->_schema;
 			$this->fieldClean($f_schema);
@@ -353,11 +378,8 @@ class Postgres83 extends Postgres84 {
 		return $this->selectSet($sql);
 	}
 
-
 	// Capabilities
-	function hasQueryKill() { return false; }
-	function hasDatabaseCollation() { return false; }
-	function hasAlterSequenceStart() { return false; }
+	function hasQueryKill() {return false;}
+	function hasDatabaseCollation() {return false;}
+	function hasAlterSequenceStart() {return false;}
 }
-
-?>
