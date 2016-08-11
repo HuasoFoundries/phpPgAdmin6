@@ -1,4 +1,7 @@
 <?php
+
+namespace PHPPgAdmin;
+
 abstract class Plugin {
 
 	/**
@@ -8,22 +11,22 @@ abstract class Plugin {
 	 */
 	function __construct($language) {
 		// Set the plugin's language
-		$plugin_directory = "plugins/". $this->get_name();
+		$plugin_directory = "plugins/" . $this->get_name();
 
 		if (file_exists("{$plugin_directory}/lang")) {
 			if (file_exists("{$plugin_directory}/lang/english.php")) {
-				require_once("{$plugin_directory}/lang/english.php");
+				require_once "{$plugin_directory}/lang/english.php";
 			}
 
 			if (file_exists("{$plugin_directory}/lang/{$language}.php")) {
-				include_once("{$plugin_directory}/lang/{$language}.php");
+				include_once "{$plugin_directory}/lang/{$language}.php";
 			}
 
 			$this->lang = $plugin_lang;
 		}
 
 		if (file_exists("{$plugin_directory}/conf/config.inc.php")) {
-			include_once("{$plugin_directory}/conf/config.inc.php");
+			include_once "{$plugin_directory}/conf/config.inc.php";
 			$this->conf = $plugin_conf;
 		}
 	}
@@ -65,4 +68,3 @@ abstract class Plugin {
 		return array($this->name, $img);
 	}
 }
-?>

@@ -1,4 +1,6 @@
 <?php
+
+namespace PHPPgAdmin;
 /**
  * Class to hold various commonly used functions
  *
@@ -1500,26 +1502,26 @@ class Misc {
 		} else {
 			echo "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
 		}
-/*
-echo "<td style=\"text-align: right; width: 1%\">";
+		/*
+			echo "<td style=\"text-align: right; width: 1%\">";
 
-echo "<form method=\"get\"><select name=\"language\" onchange=\"this.form.submit()\">\n";
-$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
-foreach ($appLangFiles as $k => $v) {
-echo "<option value=\"{$k}\"",
-($k == $language) ? ' selected="selected"' : '',
-">{$v}</option>\n";
-}
-echo "</select>\n";
-echo "<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
-foreach ($_GET as $key => $val) {
-if ($key == 'language') continue;
-echo "<input type=\"hidden\" name=\"$key\" value=\"", htmlspecialchars($val), "\" />\n";
-}
-echo "</form>\n";
+			echo "<form method=\"get\"><select name=\"language\" onchange=\"this.form.submit()\">\n";
+			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
+			foreach ($appLangFiles as $k => $v) {
+			echo "<option value=\"{$k}\"",
+			($k == $language) ? ' selected="selected"' : '',
+			">{$v}</option>\n";
+			}
+			echo "</select>\n";
+			echo "<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
+			foreach ($_GET as $key => $val) {
+			if ($key == 'language') continue;
+			echo "<input type=\"hidden\" name=\"$key\" value=\"", htmlspecialchars($val), "\" />\n";
+			}
+			echo "</form>\n";
 
-echo "</td>";
- */
+			echo "</td>";
+		*/
 		echo "</tr></table></div>\n";
 	}
 

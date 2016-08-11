@@ -1,5 +1,6 @@
 <?php
 
+namespace PHPPgAdmin;
 /**
  * A class that implements the plugin's system
  */
@@ -18,7 +19,7 @@ class PluginManager {
 		'navlinks',
 		'actionbuttons',
 		'tree',
-		'logout'
+		'logout',
 	);
 	private $actions = array();
 	private $hooks = array();
@@ -30,26 +31,27 @@ class PluginManager {
 	function __construct($language) {
 		global $conf, $lang;
 
-		if (! isset($conf['plugins'])) return;
+		if (!isset($conf['plugins'])) {
+			return;
+		}
 
 		// Get the activated plugins
 		$plugins = $conf['plugins'];
 
 		foreach ($plugins as $activated_plugin) {
-			$plugin_file = './plugins/'.$activated_plugin.'/plugin.php';
+			$plugin_file = './plugins/' . $activated_plugin . '/plugin.php';
 
 			// Verify is the activated plugin exists
 			if (file_exists($plugin_file)) {
-				include_once($plugin_file);
+				include_once $plugin_file;
 				try {
 					$plugin = new $activated_plugin($language);
 					$this->add_plugin($plugin);
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					continue;
 				}
 			} else {
-				printf($lang['strpluginnotfound']."\t\n", $activated_plugin);
+				printf($lang['strpluginnotfound'] . "\t\n", $activated_plugin);
 				exit;
 			}
 		}
@@ -72,7 +74,7 @@ class PluginManager {
 		$hooks = $plugin->get_hooks();
 		foreach ($hooks as $hook => $functions) {
 			if (!in_array($hook, $this->available_hooks)) {
-				printf($lang['strhooknotfound']."\t\n", $hook);
+				printf($lang['strhooknotfound'] . "\t\n", $hook);
 				exit;
 			}
 			$this->hooks[$hook][$plugin_name] = $functions;
@@ -84,8 +86,9 @@ class PluginManager {
 	}
 
 	function getPlugin($plugin) {
-		if (isset($this->plugins_list[$plugin]))
+		if (isset($this->plugins_list[$plugin])) {
 			return $this->plugins_list[$plugin];
+		}
 
 		return null;
 	}
@@ -118,7 +121,7 @@ class PluginManager {
 
 		if (!isset($this->plugins_list[$plugin_name])) {
 			// Show an error and stop the application
-			printf($lang['strpluginnotfound']."\t\n", $plugin_name);
+			printf($lang['strpluginnotfound'] . "\t\n", $plugin_name);
 			exit;
 		}
 		$plugin = $this->plugins_list[$plugin_name];
@@ -126,12 +129,10 @@ class PluginManager {
 		// Check if the plugin's method exists and if this method is an declared action.
 		if (method_exists($plugin, $action) and in_array($action, $this->actions[$plugin_name])) {
 			call_user_func(array($plugin, $action));
-		}
-		else {
+		} else {
 			// Show an error and stop the application
-			printf($lang['stractionnotfound']."\t\n", $action, $plugin_name);
+			printf($lang['stractionnotfound'] . "\t\n", $action, $plugin_name);
 			exit;
 		}
 	}
 }
-?>
