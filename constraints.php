@@ -8,7 +8,6 @@
 
 // Include application functions
 include_once './libraries/lib.inc.php';
-include_once './classes/class.select.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
@@ -71,24 +70,24 @@ function addForeignKey($stage, $msg = '') {
 			$attrs = $data->getTableAttributes($_REQUEST['target']['tablename']);
 			$data->setSchema($_REQUEST['schema']);
 
-			$selColumns = new XHTML_select('TableColumnList', true, 10);
+			$selColumns = new \PHPPgAdmin\XHtml\XHTML_Select('TableColumnList', true, 10);
 			$selColumns->set_style('width: 15em;');
 
 			if ($attrs->recordCount() > 0) {
 				while (!$attrs->EOF) {
-					$selColumns->add(new XHTML_Option($attrs->fields['attname']));
+					$selColumns->add(new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']));
 					$attrs->moveNext();
 				}
 			}
 
-			$selIndex = new XHTML_select('IndexColumnList[]', true, 10);
+			$selIndex = new \PHPPgAdmin\XHtml\XHTML_Select('IndexColumnList[]', true, 10);
 			$selIndex->set_style('width: 15em;');
 			$selIndex->set_attribute('id', 'IndexColumnList');
-			$buttonAdd = new XHTML_Button('add', '>>');
+			$buttonAdd = new \PHPPgAdmin\XHtml\XHTML_Button('add', '>>');
 			$buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
 			$buttonAdd->set_attribute('type', 'button');
 
-			$buttonRemove = new XHTML_Button('remove', '<<');
+			$buttonRemove = new \PHPPgAdmin\XHtml\XHTML_Button('remove', '<<');
 			$buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
 			$buttonRemove->set_attribute('type', 'button');
 
@@ -190,24 +189,24 @@ function addForeignKey($stage, $msg = '') {
 		$attrs = $data->getTableAttributes($_REQUEST['table']);
 		$tables = $data->getTables(true);
 
-		$selColumns = new XHTML_select('TableColumnList', true, 10);
+		$selColumns = new \PHPPgAdmin\XHtml\XHTML_Select('TableColumnList', true, 10);
 		$selColumns->set_style('width: 15em;');
 
 		if ($attrs->recordCount() > 0) {
 			while (!$attrs->EOF) {
-				$selColumns->add(new XHTML_Option($attrs->fields['attname']));
+				$selColumns->add(new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']));
 				$attrs->moveNext();
 			}
 		}
 
-		$selIndex = new XHTML_select('IndexColumnList[]', true, 10);
+		$selIndex = new \PHPPgAdmin\XHtml\XHTML_Select('IndexColumnList[]', true, 10);
 		$selIndex->set_style('width: 15em;');
 		$selIndex->set_attribute('id', 'IndexColumnList');
-		$buttonAdd = new XHTML_Button('add', '>>');
+		$buttonAdd = new \PHPPgAdmin\XHtml\XHTML_Button('add', '>>');
 		$buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
 		$buttonAdd->set_attribute('type', 'button');
 
-		$buttonRemove = new XHTML_Button('remove', '<<');
+		$buttonRemove = new \PHPPgAdmin\XHtml\XHTML_Button('remove', '<<');
 		$buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
 		$buttonRemove->set_attribute('type', 'button');
 
@@ -291,24 +290,24 @@ function addPrimaryOrUniqueKey($type, $confirm, $msg = '') {
 			$tablespaces = $data->getTablespaces();
 		}
 
-		$selColumns = new XHTML_select('TableColumnList', true, 10);
+		$selColumns = new \PHPPgAdmin\XHtml\XHTML_Select('TableColumnList', true, 10);
 		$selColumns->set_style('width: 15em;');
 
 		if ($attrs->recordCount() > 0) {
 			while (!$attrs->EOF) {
-				$selColumns->add(new XHTML_Option($attrs->fields['attname']));
+				$selColumns->add(new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']));
 				$attrs->moveNext();
 			}
 		}
 
-		$selIndex = new XHTML_select('IndexColumnList[]', true, 10);
+		$selIndex = new \PHPPgAdmin\XHtml\XHTML_Select('IndexColumnList[]', true, 10);
 		$selIndex->set_style('width: 15em;');
 		$selIndex->set_attribute('id', 'IndexColumnList');
-		$buttonAdd = new XHTML_Button('add', '>>');
+		$buttonAdd = new \PHPPgAdmin\XHtml\XHTML_Button('add', '>>');
 		$buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
 		$buttonAdd->set_attribute('type', 'button');
 
-		$buttonRemove = new XHTML_Button('remove', '<<');
+		$buttonRemove = new \PHPPgAdmin\XHtml\XHTML_Button('remove', '<<');
 		$buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
 		$buttonRemove->set_attribute('type', 'button');
 
@@ -719,5 +718,3 @@ default:
 }
 
 $misc->printFooter();
-
-?>

@@ -53,6 +53,8 @@ class Connection {
 	function getDriver(&$description) {
 
 		$v = pg_version($this->conn->_connectionID);
+		//\PhpConsole\Handler::getInstance()->debug($v, 'pg_version');
+
 		if (isset($v['server'])) {
 			$version = $v['server'];
 		}

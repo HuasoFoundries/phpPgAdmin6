@@ -23,6 +23,11 @@ fix-permissions:
 install:
 	composer install --no-dev
 
+update:
+	git clean -fd
+	git checkout .
+	git pull
+	composer install
 
 update_version:
 	@echo "Current version is " ${VERSION}

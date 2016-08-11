@@ -41,7 +41,7 @@ class XHtmlSimpleElement {
 
 	function is_element() {
 		return
-		str_replace('xhtml_', '', strtolower(get_class($this)));
+		str_replace('phppgadmin\xhtml\xhtml_', '', strtolower(get_class($this)));
 	}
 
 	/**

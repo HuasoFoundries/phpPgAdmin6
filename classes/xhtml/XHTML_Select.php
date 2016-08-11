@@ -2,7 +2,7 @@
 
 namespace PHPPgAdmin\XHtml;
 
-class XHTML_Select extends XHTMLElement {
+class XHTML_Select extends XHtmlElement {
 	var $_data;
 
 	function __construct($name, $multiple = false, $size = null) {

@@ -2565,8 +2565,7 @@ class Postgres extends ADODB_base {
 			$_autovacs->moveNext();
 		}
 
-		include_once './classes/ArrayRecordSet.php';
-		return new ArrayRecordSet($autovacs);
+		return new \PHPPgAdmin\ArrayRecordSet($autovacs);
 	}
 
 	// Row functions
