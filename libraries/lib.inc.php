@@ -5,10 +5,12 @@
  *
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
-require_once './vendor/autoload.php';
-include_once './libraries/errorhandler.inc.php';
-include_once './libraries/decorator.inc.php';
-include_once './lang/translations.php';
+DEFINE('BASE_PATH', dirname(__DIR__));
+
+require_once BASE_PATH . '/vendor/autoload.php';
+include_once BASE_PATH . '/libraries/errorhandler.inc.php';
+include_once BASE_PATH . '/libraries/decorator.inc.php';
+include_once BASE_PATH . '/libraries/lang/translations.php';
 
 $handler = PhpConsole\Handler::getInstance();
 /* You can override default Handler behavior:
@@ -37,18 +39,18 @@ if (version_compare(phpversion(), $phpMinVer, '<')) {
 }
 
 // Check to see if the configuration file exists, if not, explain
-if (file_exists('conf/config.inc.php')) {
+if (file_exists(BASE_PATH . '/libraries/config.inc.php')) {
 	$conf = array();
-	include './conf/config.inc.php';
+	include BASE_PATH . '/libraries/config.inc.php';
 } else {
-	echo 'Configuration error: Copy conf/config.inc.php-dist to conf/config.inc.php and edit appropriately.';
+	echo 'Configuration error: Copy conf/config.inc.php-dist to libraries/config.inc.php and edit appropriately.';
 	exit;
 }
 
 // Configuration file version.  If this is greater than that in config.inc.php, then
 // the app will refuse to run.  This and $conf['version'] should be incremented whenever
 // backwards incompatible changes are made to config.inc.php-dist.
-$conf['base_version'] = 16;
+$conf['base_version'] = 20;
 
 // Always include english.php, since it's the master language file
 if (!isset($conf['default_lang'])) {
@@ -56,7 +58,7 @@ if (!isset($conf['default_lang'])) {
 }
 
 $lang = array();
-require_once './lang/english.php';
+require_once BASE_PATH . '/libraries/lang/english.php';
 
 // Create Misc class references
 
@@ -68,21 +70,11 @@ if (!ini_get('session.auto_start')) {
 	session_start();
 }
 
-// Do basic PHP configuration checks
-if (ini_get('magic_quotes_gpc')) {
-	$misc->stripVar($_GET);
-	$misc->stripVar($_POST);
-	$misc->stripVar($_COOKIE);
-	$misc->stripVar($_REQUEST);
-}
-
 // This has to be deferred until after stripVar above
 $misc->setHREF();
 $misc->setForm();
 
 // Enforce PHP environment
-ini_set('magic_quotes_runtime', 0);
-ini_set('magic_quotes_sybase', 0);
 ini_set('arg_separator.output', '&amp;');
 
 // If login action is set, then set session variables
@@ -112,19 +104,19 @@ if (!isset($conf['theme'])) {
 }
 
 // 1. Check for the theme from a request var
-if (isset($_REQUEST['theme']) && is_file("./themes/{$_REQUEST['theme']}/global.css")) {
+if (isset($_REQUEST['theme']) && is_file(BASE_PATH . "/themes/{$_REQUEST['theme']}/global.css")) {
 	/* save the selected theme in cookie for a year */
 	setcookie('ppaTheme', $_REQUEST['theme'], time() + 31536000);
 	$_theme = $_SESSION['ppaTheme'] = $conf['theme'] = $_REQUEST['theme'];
 }
 
 // 2. Check for theme session var
-if (!isset($_theme) && isset($_SESSION['ppaTheme']) && is_file("./themes/{$_SESSION['ppaTheme']}/global.css")) {
+if (!isset($_theme) && isset($_SESSION['ppaTheme']) && is_file(BASE_PATH . "/themes/{$_SESSION['ppaTheme']}/global.css")) {
 	$conf['theme'] = $_SESSION['ppaTheme'];
 }
 
 // 3. Check for theme in cookie var
-if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && is_file("./themes/{$_COOKIE['ppaTheme']}/global.css")) {
+if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && is_file(BASE_PATH . "/themes/{$_COOKIE['ppaTheme']}/global.css")) {
 	$conf['theme'] = $_COOKIE['ppaTheme'];
 }
 
@@ -135,21 +127,21 @@ if (!is_null($info)) {
 	$_theme = '';
 
 	if ((isset($info['theme']['default']))
-		and is_file("./themes/{$info['theme']['default']}/global.css")
+		and is_file(BASE_PATH . "/themes/{$info['theme']['default']}/global.css")
 	) {
 		$_theme = $info['theme']['default'];
 	}
 
 	if (isset($_REQUEST['database'])
 		and isset($info['theme']['db'][$_REQUEST['database']])
-		and is_file("./themes/{$info['theme']['db'][$_REQUEST['database']]}/global.css")
+		and is_file(BASE_PATH . "/themes/{$info['theme']['db'][$_REQUEST['database']]}/global.css")
 	) {
 		$_theme = $info['theme']['db'][$_REQUEST['database']];
 	}
 
 	if (isset($info['username'])
 		and isset($info['theme']['user'][$info['username']])
-		and is_file("./themes/{$info['theme']['user'][$info['username']]}/global.css")
+		and is_file(BASE_PATH . "/themes/{$info['theme']['user'][$info['username']]}/global.css")
 	) {
 		$_theme = $info['theme']['user'][$info['username']];
 	}
@@ -218,7 +210,7 @@ if (!isset($_language)) {
 
 // Import the language file
 if (isset($_language)) {
-	include "./lang/{$_language}.php";
+	include BASE_PATH . "/libraries/lang/{$_language}.php";
 	$_SESSION['webdbLanguage'] = $_language;
 }
 
@@ -249,7 +241,7 @@ if (!isset($_no_db_connection)) {
 
 	// Redirect to the login form if not logged in
 	if (!isset($_server_info['username'])) {
-		include './login.php';
+		include BASE_PATH . '/views/login.php';
 		exit;
 	}
 
@@ -260,8 +252,6 @@ if (!isset($_no_db_connection)) {
 	} else {
 		$_curr_db = $_server_info['defaultdb'];
 	}
-
-	include_once './classes/database/Connection.php';
 
 	// Connect to database and set the global $data variable
 	$data = $misc->getDatabaseAccessor($_curr_db);

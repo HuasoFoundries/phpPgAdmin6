@@ -501,7 +501,7 @@ class Misc {
 			if ($server_info['password'] == '' || in_array($username, $bad_usernames)) {
 				unset($_SESSION['webdbLogin'][$_REQUEST['server']]);
 				$msg = $lang['strlogindisallowed'];
-				include './login.php';
+				include '../views/login.php';
 				exit;
 			}
 		}
@@ -579,12 +579,12 @@ class Misc {
 			echo "<head>\n";
 			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 			// Theme
-			echo "<link rel=\"stylesheet\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" id=\"csstheme\" />\n";
+			echo "<link rel=\"stylesheet\" href=\"/themes/{$conf['theme']}/global.css\" type=\"text/css\" id=\"csstheme\" />\n";
 
 			echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" type="text/css" id="csstheme" />' . "\n";
 
-			echo "<link rel=\"shortcut icon\" href=\"images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
-			echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/Introduction.png\" />\n";
+			echo "<link rel=\"shortcut icon\" href=\"/images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
+			echo "<link rel=\"icon\" type=\"image/png\" href=\"/images/themes/{$conf['theme']}/Introduction.png\" />\n";
 			echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>' . "\n";
 
 			echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>' . "\n";
@@ -593,7 +593,7 @@ class Misc {
 			echo "<script type=\"text/javascript\">// <!-- \n";
 			echo "$(document).ready(function() { \n";
 			echo "  if (window.parent.frames.length > 1)\n";
-			echo "    $('#csstheme', window.parent.frames[0].document).attr('href','themes/{$conf['theme']}/global.css');\n";
+			echo "    $('#csstheme', window.parent.frames[0].document).attr('href','/themes/{$conf['theme']}/global.css');\n";
 			echo "}); // --></script>\n";
 			echo "<title>", htmlspecialchars($appName);
 			if ($title != '') {
@@ -2058,7 +2058,7 @@ class Misc {
 			}
 
 			if ($has_ma) {
-				echo "<script src=\"multiactionform.js\" type=\"text/javascript\"></script>\n";
+				echo "<script src=\"/js/multiactionform.js\" type=\"text/javascript\"></script>\n";
 				echo "<form id=\"multi_form\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
 				if (isset($ma['vars'])) {
 					foreach ($ma['vars'] as $k => $v) {
@@ -2324,7 +2324,6 @@ class Misc {
 	}
 
 	function adjustTabsForTree(&$tabs) {
-		include_once './classes/ArrayRecordSet.php';
 
 		foreach ($tabs as $i => $tab) {
 			if ((isset($tab['hide']) && $tab['hide'] === true) || (isset($tab['tree']) && $tab['tree'] === false)) {
@@ -2337,32 +2336,32 @@ class Misc {
 	function icon($icon) {
 		if (is_string($icon)) {
 			global $conf;
-			$path = "images/themes/{$conf['theme']}/{$icon}";
-			if (file_exists($path . '.png')) {
+			$path = "/images/themes/{$conf['theme']}/{$icon}";
+			if (file_exists(BASE_PATH . $path . '.png')) {
 				return $path . '.png';
 			}
 
-			if (file_exists($path . '.gif')) {
+			if (file_exists(BASE_PATH . $path . '.gif')) {
 				return $path . '.gif';
 			}
 
-			$path = "images/themes/default/{$icon}";
-			if (file_exists($path . '.png')) {
+			$path = "/images/themes/default/{$icon}";
+			if (file_exists(BASE_PATH . $path . '.png')) {
 				return $path . '.png';
 			}
 
-			if (file_exists($path . '.gif')) {
+			if (file_exists(BASE_PATH . $path . '.gif')) {
 				return $path . '.gif';
 			}
 
 		} else {
 			// Icon from plugins
-			$path = "plugins/{$icon[0]}/images/{$icon[1]}";
-			if (file_exists($path . '.png')) {
+			$path = "/plugins/{$icon[0]}/images/{$icon[1]}";
+			if (file_exists(BASE_PATH . $path . '.png')) {
 				return $path . '.png';
 			}
 
-			if (file_exists($path . '.gif')) {
+			if (file_exists(BASE_PATH . $path . '.gif')) {
 				return $path . '.gif';
 			}
 
@@ -2473,7 +2472,6 @@ class Misc {
 		}
 
 		if ($recordset) {
-			include_once './classes/ArrayRecordSet.php';
 			return new ArrayRecordSet($grps);
 		}
 
@@ -2541,7 +2539,6 @@ class Misc {
 		uasort($srvs, array('self', '_cmp_desc'));
 
 		if ($recordset) {
-			include_once './classes/ArrayRecordSet.php';
 			return new ArrayRecordSet($srvs);
 		}
 		return $srvs;

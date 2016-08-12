@@ -8,7 +8,7 @@
 
 // Include application functions
 $_no_db_connection = true;
-include_once './libraries/lib.inc.php';
+require_once './libraries/lib.inc.php';
 $misc->printHeader('', null, true);
 
 $rtl = (strcasecmp($lang['applangdir'], 'rtl') == 0);
@@ -22,7 +22,7 @@ if ($rtl) {
 	echo $mainframe;
 }
 
-echo '<frame src="browser.php" name="browser" id="browser" frameborder="0" />';
+echo '<frame src="views/browser.php" name="browser" id="browser" frameborder="0" />';
 
 if (!$rtl) {
 	echo $mainframe;
