@@ -2662,11 +2662,10 @@ class Misc {
 	function printConnection($onchange) {
 		global $data, $lang, $misc;
 
-		echo "<table style=\"width: 100%\"><tr><td>\n";
+		echo "<table style=\"width: 100%\"><tr><td class=\"popup_select1\">\n";
 		echo "<label>";
 		$misc->printHelp($lang['strserver'], 'pg.server');
-		echo "</label>";
-		echo ": <select name=\"server\" {$onchange}>\n";
+		echo ": </label> <select name=\"server\" {$onchange}>\n";
 
 		$servers = $misc->getServers();
 		foreach ($servers as $info) {
@@ -2678,7 +2677,7 @@ class Misc {
 			((isset($_REQUEST['server']) && $info['id'] == $_REQUEST['server'])) ? ' selected="selected"' : '', ">",
 			htmlspecialchars("{$info['desc']} ({$info['id']})"), "</option>\n";
 		}
-		echo "</select>\n</td><td style=\"text-align: right\">\n";
+		echo "</select>\n</td><td class=\"popup_select2\" style=\"text-align: right\">\n";
 
 		// Get the list of all databases
 		$databases = $data->getDatabases();

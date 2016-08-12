@@ -25,11 +25,11 @@ error_reporting(E_ALL);
 $appName = 'phpPgAdmin';
 
 // Application version
-$appVersion = '5.3-dev';
+$appVersion = '6.0.0-alpha';
 
 // PostgreSQL and PHP minimum version
-$postgresqlMinVer = '7.4';
-$phpMinVer = '5.0';
+$postgresqlMinVer = '9.3';
+$phpMinVer = '5.4';
 
 // Check the version of PHP
 if (version_compare(phpversion(), $phpMinVer, '<')) {
