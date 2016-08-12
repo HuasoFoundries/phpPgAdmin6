@@ -87,7 +87,7 @@ function doChangePassword($confirm, $msg = '') {
 			$_POST['confirm'] = '';
 		}
 
-		echo "<form action=\"users.php\" method=\"post\">\n";
+		echo "<form action=\"/views/users.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strpassword']}</th>\n";
 		echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
@@ -158,7 +158,7 @@ function doEdit($msg = '') {
 			$_POST['formPassword'] = '';
 		}
 
-		echo "<form action=\"users.php\" method=\"post\">\n";
+		echo "<form action=\"/views/users.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strusername']}</th>\n";
 		echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . "\" />" : $misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
@@ -227,7 +227,7 @@ function doDrop($confirm) {
 
 		echo "<p>", sprintf($lang['strconfdropuser'], $misc->printVal($_REQUEST['username'])), "</p>\n";
 
-		echo "<form action=\"users.php\" method=\"post\">\n";
+		echo "<form action=\"/views/users.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 		echo "<input type=\"hidden\" name=\"username\" value=\"", htmlspecialchars($_REQUEST['username']), "\" />\n";
 		echo $misc->form;
@@ -272,7 +272,7 @@ function doCreate($msg = '') {
 	$misc->printTitle($lang['strcreateuser'], 'pg.user.create');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"users.php\" method=\"post\">\n";
+	echo "<form action=\"/views/users.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strusername']}</th>\n";
 	echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formUsername\" value=\"", htmlspecialchars($_POST['formUsername']), "\" /></td>\n\t</tr>\n";

@@ -54,7 +54,7 @@ function doCreate($msg = '') {
 		$misc->printTitle($lang['strcreatetable'], 'pg.table.create');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"tables.php\" method=\"post\">\n";
+		echo "<form action=\"/views/tables.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 		echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -117,7 +117,7 @@ function doCreate($msg = '') {
 		$misc->printMsg($msg);
 
 		echo "<script src=\"/js/tables.js\" type=\"text/javascript\"></script>";
-		echo "<form action=\"tables.php\" method=\"post\">\n";
+		echo "<form action=\"/views/tables.php\" method=\"post\">\n";
 
 		// Output table header
 		echo "<table>\n";
@@ -317,7 +317,7 @@ function doCreateLike($confirm, $msg = '') {
 
 		unset($tbltmp);
 
-		echo "<form action=\"tables.php\" method=\"post\">\n";
+		echo "<form action=\"/views/tables.php\" method=\"post\">\n";
 		echo "<table>\n\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 		echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strcreatetablelikeparent']}</th>\n";
@@ -404,7 +404,7 @@ function doSelectRows($confirm, $msg = '') {
 
 		$attrs = $data->getTableAttributes($_REQUEST['table']);
 
-		echo "<form action=\"tables.php\" method=\"post\" id=\"selectform\">\n";
+		echo "<form action=\"/views/tables.php\" method=\"post\" id=\"selectform\">\n";
 		if ($attrs->recordCount() > 0) {
 			// JavaScript for select all feature
 			echo "<script type=\"text/javascript\">\n";
@@ -534,7 +534,7 @@ function doInsertRow($confirm, $msg = '') {
 			$fksprops = false;
 		}
 
-		echo "<form action=\"tables.php\" method=\"post\" id=\"ac_form\">\n";
+		echo "<form action=\"/views/tables.php\" method=\"post\" id=\"ac_form\">\n";
 		if ($attrs->recordCount() > 0) {
 			echo "<table>\n";
 
@@ -674,7 +674,7 @@ function doEmpty($confirm) {
 			$misc->printTrail('schema');
 			$misc->printTitle($lang['strempty'], 'pg.table.empty');
 
-			echo "<form action=\"tables.php\" method=\"post\">\n";
+			echo "<form action=\"/views/tables.php\" method=\"post\">\n";
 			foreach ($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 				echo "<p>", sprintf($lang['strconfemptytable'], $misc->printVal($a['table'])), "</p>\n";
@@ -687,7 +687,7 @@ function doEmpty($confirm) {
 
 			echo "<p>", sprintf($lang['strconfemptytable'], $misc->printVal($_REQUEST['table'])), "</p>\n";
 
-			echo "<form action=\"tables.php\" method=\"post\">\n";
+			echo "<form action=\"/views/tables.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 		} // END not mutli empty
 
@@ -742,7 +742,7 @@ function doDrop($confirm) {
 			$misc->printTrail('schema');
 			$misc->printTitle($lang['strdrop'], 'pg.table.drop');
 
-			echo "<form action=\"tables.php\" method=\"post\">\n";
+			echo "<form action=\"/views/tables.php\" method=\"post\">\n";
 			foreach ($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 				echo "<p>", sprintf($lang['strconfdroptable'], $misc->printVal($a['table'])), "</p>\n";
@@ -755,7 +755,7 @@ function doDrop($confirm) {
 
 			echo "<p>", sprintf($lang['strconfdroptable'], $misc->printVal($_REQUEST['table'])), "</p>\n";
 
-			echo "<form action=\"tables.php\" method=\"post\">\n";
+			echo "<form action=\"/views/tables.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 		} // END if multi drop
 

@@ -96,7 +96,7 @@ function doAlter($msg = '') {
 			$_POST['tablespace'] = $table->fields['tablespace'];
 		}
 
-		echo "<form action=\"tblproperties.php\" method=\"post\">\n";
+		echo "<form action=\"/views/tblproperties.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
 		echo "<td class=\"data1\">";
@@ -173,7 +173,7 @@ function doExport($msg = '') {
 	$misc->printTabs('table', 'export');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"dataexport.php\" method=\"post\">\n";
+	echo "<form action=\"/views/dataexport.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
 	// Data only
@@ -233,7 +233,7 @@ function doImport($msg = '') {
 		// Don't show upload option if max size of uploads is zero
 		$max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
 		if (is_double($max_size) && $max_size > 0) {
-			echo "<form action=\"dataimport.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
+			echo "<form action=\"/views/dataimport.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
 			echo "<table>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strformat']}</th>\n";
 			echo "\t\t<td><select name=\"format\">\n";
@@ -311,7 +311,7 @@ function doAddColumn($msg = '') {
 		$misc->printMsg($msg);
 
 		echo "<script src=\"/js/tables.js\" type=\"text/javascript\"></script>";
-		echo "<form action=\"tblproperties.php\" method=\"post\">\n";
+		echo "<form action=\"/views/tblproperties.php\" method=\"post\">\n";
 
 		// Output table header
 		echo "<table>\n";
@@ -421,7 +421,7 @@ function doDrop($confirm) {
 		echo "<p>", sprintf($lang['strconfdropcolumn'], $misc->printVal($_REQUEST['column']),
 			$misc->printVal($_REQUEST['table'])), "</p>\n";
 
-		echo "<form action=\"tblproperties.php\" method=\"post\">\n";
+		echo "<form action=\"/views/tblproperties.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"column\" value=\"", htmlspecialchars($_REQUEST['column']), "\" />\n";

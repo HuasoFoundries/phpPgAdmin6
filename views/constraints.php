@@ -410,7 +410,7 @@ function addCheck($confirm, $msg = '') {
 		$misc->printTitle($lang['straddcheck'], 'pg.constraint.check');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"constraints.php\" method=\"post\">\n";
+		echo "<form action=\"/views/constraints.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
 		echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
@@ -459,7 +459,7 @@ function doDrop($confirm) {
 		echo "<p>", sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
 			$misc->printVal($_REQUEST['table'])), "</p>\n";
 
-		echo "<form action=\"constraints.php\" method=\"post\">\n";
+		echo "<form action=\"/views/constraints.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"constraint\" value=\"", htmlspecialchars($_REQUEST['constraint']), "\" />\n";
@@ -640,7 +640,7 @@ if ($action == 'tree') {
 }
 
 $misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
-	"<script src=\"indexes.js\" type=\"text/javascript\"></script>");
+	"<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
 
 if ($action == 'add_unique_key' || $action == 'save_add_unique_key'
 	|| $action == 'add_primary_key' || $action == 'save_add_primary_key'

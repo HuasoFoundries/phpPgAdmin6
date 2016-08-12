@@ -309,7 +309,7 @@ function doDrop($confirm, $msg = '') {
 		$misc->printTitle($lang['strdrop'], 'pg.sequence.drop');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"sequences.php\" method=\"post\">\n";
+		echo "<form action=\"/views/sequences.php\" method=\"post\">\n";
 
 		//If multi drop
 		if (isset($_REQUEST['ma'])) {
@@ -401,7 +401,7 @@ function doCreateSequence($msg = '') {
 	$misc->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"sequences.php\" method=\"post\">\n";
+	echo "<form action=\"/views/sequences.php\" method=\"post\">\n";
 	echo "<table>\n";
 
 	echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -541,7 +541,7 @@ function doSetval($msg = '') {
 	$sequence = $data->getSequence($_REQUEST['sequence']);
 
 	if (is_object($sequence) && $sequence->recordCount() > 0) {
-		echo "<form action=\"sequences.php\" method=\"post\">\n";
+		echo "<form action=\"/views/sequences.php\" method=\"post\">\n";
 		echo "<table border=\"0\">";
 		echo "<tr><th class=\"data left required\">{$lang['strlastvalue']}</th>\n";
 		echo "<td class=\"data1\">";
@@ -662,7 +662,7 @@ function doAlter($msg = '') {
 			$_POST['formCycledValue'] = 'on';
 		}
 
-		echo "<form action=\"sequences.php\" method=\"post\">\n";
+		echo "<form action=\"/views/sequences.php\" method=\"post\">\n";
 		echo "<table>\n";
 
 		echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";

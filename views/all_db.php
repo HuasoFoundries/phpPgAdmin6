@@ -25,7 +25,7 @@ function doAlter($confirm) {
 		$misc->printTrail('database');
 		$misc->printTitle($lang['stralter'], 'pg.database.alter');
 
-		echo "<form action=\"all_db.php\" method=\"post\">\n";
+		echo "<form action=\"/views/all_db.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
 		echo "<td class=\"data1\">";
@@ -101,7 +101,7 @@ function doDrop($confirm) {
 		$misc->printTrail('database');
 		$misc->printTitle($lang['strdrop'], 'pg.database.drop');
 
-		echo "<form action=\"all_db.php\" method=\"post\">\n";
+		echo "<form action=\"/views/all_db.php\" method=\"post\">\n";
 		//If multi drop
 		if (isset($_REQUEST['ma'])) {
 
@@ -189,7 +189,7 @@ function doCreate($msg = '') {
 		$tablespaces = $data->getTablespaces();
 	}
 
-	echo "<form action=\"all_db.php\" method=\"post\">\n";
+	echo "<form action=\"/views/all_db.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 	echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -335,7 +335,7 @@ function doExport($msg = '') {
 	$misc->printTabs('server', 'export');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"dbexport.php\" method=\"post\">\n";
+	echo "<form action=\"/views/dbexport.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\">{$lang['stroptions']}</th></tr>\n";
 	// Data only

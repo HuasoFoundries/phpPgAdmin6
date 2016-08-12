@@ -27,7 +27,7 @@ function doClusterIndex($confirm) {
 
 		echo "<p>", sprintf($lang['strconfcluster'], $misc->printVal($_REQUEST['index'])), "</p>\n";
 
-		echo "<form action=\"indexes.php\" method=\"post\">\n";
+		echo "<form action=\"/views/indexes.php\" method=\"post\">\n";
 		echo "<p><input type=\"checkbox\" id=\"analyze\" name=\"analyze\"", (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), " /><label for=\"analyze\">{$lang['stranalyze']}</label></p>\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"cluster_index\" />\n";
 		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
@@ -244,7 +244,7 @@ function doDropIndex($confirm) {
 
 		echo "<p>", sprintf($lang['strconfdropindex'], $misc->printVal($_REQUEST['index'])), "</p>\n";
 
-		echo "<form action=\"indexes.php\" method=\"post\">\n";
+		echo "<form action=\"/views/indexes.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"drop_index\" />\n";
 		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"index\" value=\"", htmlspecialchars($_REQUEST['index']), "\" />\n";
@@ -415,7 +415,7 @@ if ($action == 'tree') {
 	doTree();
 }
 
-$misc->printHeader($lang['strindexes'], "<script src=\"indexes.js\" type=\"text/javascript\"></script>");
+$misc->printHeader($lang['strindexes'], "<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
 
 if ($action == 'create_index' || $action == 'save_create_index') {
 	echo "<body onload=\"init();\">";

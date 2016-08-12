@@ -339,7 +339,7 @@ if (isset($_REQUEST['what'])) {
 		$misc->printMsg($msg);
 	}
 
-	echo "<form action=\"dataexport.php\" method=\"post\">\n";
+	echo "<form action=\"/views/dataexport.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "<tr><th class=\"data\">{$lang['strformat']}:</th><td><select name=\"d_format\">\n";
 	// COPY and SQL require a table

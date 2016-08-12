@@ -44,7 +44,7 @@ function doAlter($msg = '') {
 			$_POST['comment'] = ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '';
 		}
 
-		echo "<form action=\"tablespaces.php\" method=\"post\">\n";
+		echo "<form action=\"/views/tablespaces.php\" method=\"post\">\n";
 		echo $misc->form;
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -116,7 +116,7 @@ function doDrop($confirm) {
 
 		echo "<p>", sprintf($lang['strconfdroptablespace'], $misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
-		echo "<form action=\"tablespaces.php\" method=\"post\">\n";
+		echo "<form action=\"/views/tablespaces.php\" method=\"post\">\n";
 		echo $misc->form;
 		echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 		echo "<input type=\"hidden\" name=\"tablespace\" value=\"", htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
@@ -166,7 +166,7 @@ function doCreate($msg = '') {
 	$misc->printTitle($lang['strcreatetablespace'], 'pg.tablespace.create');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"tablespaces.php\" method=\"post\">\n";
+	echo "<form action=\"/views/tablespaces.php\" method=\"post\">\n";
 	echo $misc->form;
 	echo "<table>\n";
 	echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";

@@ -18,7 +18,7 @@ function doCluster($type, $confirm = false) {
 			$misc->printTrail('schema');
 			$misc->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
-			echo "<form action=\"{$script}\" method=\"post\">\n";
+			echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 			foreach ($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 				echo "<p>", sprintf($lang['strconfclustertable'], $misc->printVal($a['table'])), "</p>\n";
@@ -29,7 +29,7 @@ function doCluster($type, $confirm = false) {
 			$misc->printTrail($type);
 			$misc->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
-			echo "<form action=\"{$script}\" method=\"post\">\n";
+			echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 
 			if ($type == 'table') {
 				echo "<p>", sprintf($lang['strconfclustertable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -102,7 +102,7 @@ function doReindex($type, $confirm = false) {
 			$misc->printTrail('schema');
 			$misc->printTitle($lang['strreindex'], 'pg.reindex');
 
-			echo "<form action=\"{$script}\" method=\"post\">\n";
+			echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 			foreach ($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 				echo "<p>", sprintf($lang['strconfreindextable'], $misc->printVal($a['table'])), "</p>\n";
@@ -113,7 +113,7 @@ function doReindex($type, $confirm = false) {
 			$misc->printTrail($type);
 			$misc->printTitle($lang['strreindex'], 'pg.reindex');
 
-			echo "<form action=\"{$script}\" method=\"post\">\n";
+			echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 
 			if ($type == 'table') {
 				echo "<p>", sprintf($lang['strconfreindextable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -180,7 +180,7 @@ function doAnalyze($type, $confirm = false) {
 			$misc->printTrail('schema');
 			$misc->printTitle($lang['stranalyze'], 'pg.analyze');
 
-			echo "<form action=\"{$script}\" method=\"post\">\n";
+			echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 			foreach ($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 				echo "<p>", sprintf($lang['strconfanalyzetable'], $misc->printVal($a['table'])), "</p>\n";
@@ -191,7 +191,7 @@ function doAnalyze($type, $confirm = false) {
 			$misc->printTrail($type);
 			$misc->printTitle($lang['stranalyze'], 'pg.analyze');
 
-			echo "<form action=\"{$script}\" method=\"post\">\n";
+			echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 
 			if ($type == 'table') {
 				echo "<p>", sprintf($lang['strconfanalyzetable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -254,7 +254,7 @@ function doVacuum($type, $confirm = false) {
 			$misc->printTrail('schema');
 			$misc->printTitle($lang['strvacuum'], 'pg.vacuum');
 
-			echo "<form action=\"{$script}\" method=\"post\">\n";
+			echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 			foreach ($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 				echo "<p>", sprintf($lang['strconfvacuumtable'], $misc->printVal($a['table'])), "</p>\n";
@@ -265,7 +265,7 @@ function doVacuum($type, $confirm = false) {
 			$misc->printTrail($type);
 			$misc->printTitle($lang['strvacuum'], 'pg.vacuum');
 
-			echo "<form action=\"{$script}\" method=\"post\">\n";
+			echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 
 			if ($type == 'table') {
 				echo "<p>", sprintf($lang['strconfvacuumtable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -373,7 +373,7 @@ function doEditAutovacuum($type, $confirm, $msg = '') {
 			$old_val['autovacuum_vacuum_cost_limit'] = '';
 		}
 
-		echo "<form action=\"{$script}\" method=\"post\">\n";
+		echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 		echo $misc->form;
 		echo "<input type=\"hidden\" name=\"action\" value=\"editautovac\" />\n";
 		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
@@ -453,7 +453,7 @@ function doDropAutovacuum($type, $confirm) {
 		echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
 		echo "</form>\n";
 
-		echo "<form action=\"{$script}\" method=\"post\">\n";
+		echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"admin\" />\n";
 		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 		echo $misc->form;
@@ -512,7 +512,7 @@ function doAdmin($type, $msg = '') {
 	// Vacuum
 	echo "<tr class=\"row1\">\n";
 	echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-	echo "<form action=\"{$script}\" method=\"post\">\n";
+	echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 
 	echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_vacuum\" />\n";
 	echo $misc->form;
@@ -526,7 +526,7 @@ function doAdmin($type, $msg = '') {
 
 	// Analyze
 	echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-	echo "<form action=\"{$script}\" method=\"post\">\n";
+	echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 	echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_analyze\" />\n";
 	echo $misc->form;
 	if ($type == 'table') {
@@ -541,7 +541,7 @@ function doAdmin($type, $msg = '') {
 	if ($data->hasRecluster()) {
 		$disabled = '';
 		echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-		echo "<form action=\"{$script}\" method=\"post\">\n";
+		echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 		echo $misc->form;
 		if ($type == 'table') {
 			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['object']), "\" />\n";
@@ -559,7 +559,7 @@ function doAdmin($type, $msg = '') {
 
 	// Reindex
 	echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-	echo "<form action=\"{$script}\" method=\"post\">\n";
+	echo "<form action=\"/views/{$script}\" method=\"post\">\n";
 	echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_reindex\" />\n";
 	echo $misc->form;
 	if ($type == 'table') {

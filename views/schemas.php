@@ -145,7 +145,7 @@ function doCreate($msg = '') {
 	$misc->printTitle($lang['strcreateschema'], 'pg.schema.create');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"schemas.php\" method=\"post\">\n";
+	echo "<form action=\"/views/schemas.php\" method=\"post\">\n";
 	echo "<table style=\"width: 100%\">\n";
 	echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 	echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -225,7 +225,7 @@ function doAlter($msg = '') {
 			$_POST['owner'] = $schema->fields['ownername'];
 		}
 
-		echo "<form action=\"schemas.php\" method=\"post\">\n";
+		echo "<form action=\"/views/schemas.php\" method=\"post\">\n";
 		echo "<table>\n";
 
 		echo "\t<tr>\n";
@@ -299,7 +299,7 @@ function doDrop($confirm) {
 		$misc->printTrail('schema');
 		$misc->printTitle($lang['strdrop'], 'pg.schema.drop');
 
-		echo "<form action=\"schemas.php\" method=\"post\">\n";
+		echo "<form action=\"/views/schemas.php\" method=\"post\">\n";
 		//If multi drop
 		if (isset($_REQUEST['ma'])) {
 			foreach ($_REQUEST['ma'] as $v) {
@@ -367,7 +367,7 @@ function doExport($msg = '') {
 	$misc->printTabs('schema', 'export');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"dbexport.php\" method=\"post\">\n";
+	echo "<form action=\"/views/dbexport.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
 	// Data only

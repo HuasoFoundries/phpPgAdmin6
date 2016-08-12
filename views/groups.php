@@ -43,7 +43,7 @@ function doDropMember($confirm) {
 
 		echo "<p>", sprintf($lang['strconfdropmember'], $misc->printVal($_REQUEST['user']), $misc->printVal($_REQUEST['group'])), "</p>\n";
 
-		echo "<form action=\"groups.php\" method=\"post\">\n";
+		echo "<form action=\"/views/groups.php\" method=\"post\">\n";
 		echo $misc->form;
 		echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -111,7 +111,7 @@ function doProperties($msg = '') {
 	}
 
 	// Display form for adding a user to the group
-	echo "<form action=\"groups.php\" method=\"post\">\n";
+	echo "<form action=\"/views/groups.php\" method=\"post\">\n";
 	echo "<select name=\"user\">";
 	while (!$users->EOF) {
 		$uname = $misc->printVal($users->fields['usename']);
@@ -152,7 +152,7 @@ function doDrop($confirm) {
 
 		echo "<p>", sprintf($lang['strconfdropgroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
 
-		echo "<form action=\"groups.php\" method=\"post\">\n";
+		echo "<form action=\"/views/groups.php\" method=\"post\">\n";
 		echo $misc->form;
 		echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";

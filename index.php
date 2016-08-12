@@ -14,7 +14,7 @@ $misc->printHeader('', null, true);
 $rtl = (strcasecmp($lang['applangdir'], 'rtl') == 0);
 
 $cols = $rtl ? '*,' . $conf['left_width'] : $conf['left_width'] . ',*';
-$mainframe = '<frame src="intro.php" name="detail" id="detail" frameborder="0" />';
+$mainframe = '<frame src="views/intro.php" name="detail" id="detail" frameborder="0" />';
 
 echo '<frameset cols="' . $cols . '">';
 
@@ -32,7 +32,7 @@ echo '<noframes>';
 echo '<body>';
 echo $lang['strnoframes'];
 echo '<br />';
-echo '<a href="intro.php">' . $lang['strnoframeslink'] . '</a>';
+echo '<a href="views/intro.php">' . $lang['strnoframeslink'] . '</a>';
 echo '</body>';
 echo '</noframes>';
 

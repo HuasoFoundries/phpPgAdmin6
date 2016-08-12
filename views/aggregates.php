@@ -89,7 +89,7 @@ function doCreate($msg = '') {
 	$misc->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"aggregates.php\" method=\"post\">\n";
+	echo "<form action=\"/views/aggregates.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 	echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -158,7 +158,7 @@ function doAlter($msg = '') {
 	$misc->printTitle($lang['stralter'], 'pg.aggregate.alter');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"aggregates.php\" method=\"post\">\n";
+	echo "<form action=\"/views/aggregates.php\" method=\"post\">\n";
 	$aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
 	if ($aggrdata->recordCount() > 0) {
 		// Output table header
@@ -204,7 +204,7 @@ function doDrop($confirm) {
 
 		echo "<p>", sprintf($lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
 
-		echo "<form action=\"aggregates.php\" method=\"post\">\n";
+		echo "<form action=\"/views/aggregates.php\" method=\"post\">\n";
 		echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 		echo "<input type=\"hidden\" name=\"aggrname\" value=\"", htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
