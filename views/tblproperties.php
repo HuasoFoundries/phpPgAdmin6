@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-include_once './libraries/lib.inc.php';
+require_once '../libraries/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
