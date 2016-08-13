@@ -34,7 +34,7 @@ function doDefault() {
 
 		$history = new \PHPPgAdmin\ArrayRecordSet($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
 
-		Kint::dump($history);
+		//Kint::dump($history);
 		$columns = array(
 			'query' => array(
 				'title' => $lang['strsql'],

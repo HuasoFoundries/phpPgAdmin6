@@ -109,12 +109,21 @@ function doDefault() {
 	$misc->printHeader($lang['strsql']);
 	echo '<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">';
 	echo '<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>';
+	echo '<script>
+	$(document).ready(function() {
+  		$("pre code").each(function(i, block) {
+    		hljs.highlightBlock(block);
+  		});
+  		$("#sqlquery").resizable();
+	});
+	</script>';
+
 	// Bring to the front always
 	echo "<body onload=\"window.focus();\">\n";
 
 	$misc->printTabs($misc->getNavTabs('popup'), 'sql');
 
-	echo "<form action=\"/views/sql.php\" method=\"post\" enctype=\"multipart/form-data\" class=\"sqlform\" target=\"detail\">\n";
+	echo "<form style='float:left;width:100%;' action=\"/views/sql.php\" method=\"post\" enctype=\"multipart/form-data\" class=\"sqlform\" target=\"detail\">\n";
 	_printConnection();
 	echo "\n";
 	if (!isset($_REQUEST['search_path'])) {
@@ -126,8 +135,8 @@ function doDefault() {
 	echo ": <input type=\"text\" name=\"search_path\" size=\"50\" value=\"",
 	htmlspecialchars($_REQUEST['search_path']), "\" /></label></p>\n";
 
-	echo "<textarea style=\"width:98%;\" rows=\"20\" cols=\"50\" name=\"query\">",
-	htmlspecialchars($_SESSION['sqlquery']), "</textarea>\n";
+	echo '<div style="padding:1%;width:98%;float:left;"><pre id="sqlquery"><code contenteditable="true"  class="sql" style="width:98%;" rows="20" cols="50" name="query">',
+	htmlspecialchars($_SESSION['sqlquery']), "</code></pre></div>\n";
 
 	// Check that file uploads are enabled
 	if (ini_get('file_uploads')) {
@@ -146,7 +155,7 @@ function doDefault() {
 	echo "</form>\n";
 
 	// Default focus
-	$misc->setFocus('forms[0].query');
+	//$misc->setFocus('forms[0].query');
 }
 
 switch ($action) {
