@@ -12,6 +12,8 @@ include_once BASE_PATH . '/libraries/errorhandler.inc.php';
 include_once BASE_PATH . '/libraries/decorator.inc.php';
 include_once BASE_PATH . '/libraries/lang/translations.php';
 
+Kint::enabled(true);
+
 $handler = PhpConsole\Handler::getInstance();
 /* You can override default Handler behavior:
 $handler->setHandleErrors(false);  // disable errors handling

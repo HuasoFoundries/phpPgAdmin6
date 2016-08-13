@@ -167,7 +167,7 @@ function doCreateConfig($msg = '') {
 	global $data, $misc;
 	global $lang;
 
-	include_once './classes/Gui.php';
+	include_once BASE_PATH . '/classes/Gui.php';
 
 	$server_info = $misc->getServerInfo();
 
@@ -601,7 +601,7 @@ function doCreateDict($msg = '') {
 	global $data, $misc;
 	global $lang;
 
-	include_once './classes/Gui.php';
+	include_once BASE_PATH . '/classes/Gui.php';
 
 	$server_info = $misc->getServerInfo();
 

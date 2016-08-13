@@ -582,6 +582,7 @@ class Misc {
 			echo "<link rel=\"stylesheet\" href=\"/themes/{$conf['theme']}/global.css\" type=\"text/css\" id=\"csstheme\" />\n";
 
 			echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" type="text/css" id="csstheme" />' . "\n";
+			echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" type="text/css" id="csstheme" />' . "\n";
 
 			echo "<link rel=\"shortcut icon\" href=\"/images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
 			echo "<link rel=\"icon\" type=\"image/png\" href=\"/images/themes/{$conf['theme']}/Introduction.png\" />\n";
@@ -589,6 +590,8 @@ class Misc {
 
 			echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>' . "\n";
 			echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/i18n/es.js"></script>' . "\n";
+
+			echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>' . "\n";
 
 			echo "<script type=\"text/javascript\">// <!-- \n";
 			echo "$(document).ready(function() { \n";

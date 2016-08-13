@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once './libraries/lib.inc.php';
+require_once '../libraries/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -23,7 +23,7 @@ function _printConnection() {
 	// The javascript action on the select box reloads the
 	// popup whenever the server or database is changed.
 	// This ensures that the correct page encoding is used.
-	$onchange = "onchange=\"location.href='sqledit.php?action=" .
+	$onchange = "onchange=\"location.href='/views/sqledit.php?action=" .
 	urlencode($action) . "&amp;server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + ";
 
 	// The exact URL to reload to is different between SQL and Find mode, however.
@@ -107,13 +107,14 @@ function doDefault() {
 	}
 
 	$misc->printHeader($lang['strsql']);
-
+	echo '<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">';
+	echo '<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>';
 	// Bring to the front always
 	echo "<body onload=\"window.focus();\">\n";
 
 	$misc->printTabs($misc->getNavTabs('popup'), 'sql');
 
-	echo "<form action=\"sql.php\" method=\"post\" enctype=\"multipart/form-data\" class=\"sqlform\" target=\"detail\">\n";
+	echo "<form action=\"/views/sql.php\" method=\"post\" enctype=\"multipart/form-data\" class=\"sqlform\" target=\"detail\">\n";
 	_printConnection();
 	echo "\n";
 	if (!isset($_REQUEST['search_path'])) {

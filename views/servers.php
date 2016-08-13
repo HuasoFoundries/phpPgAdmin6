@@ -128,7 +128,7 @@ function doTree() {
 		}
 
 		$nodes = array_merge($nodes, $misc->getServers(false, $group_id));
-		include_once './classes/ArrayRecordSet.php';
+		include_once BASE_PATH . '/classes/ArrayRecordSet.php';
 		$nodes = new ArrayRecordSet($nodes);
 	}
 	/* no srv_group */
