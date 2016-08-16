@@ -13,8 +13,95 @@ class Misc {
 	// Tracking string to include in forms
 	var $form;
 
+	var $lang = [];
+	private $data = null;
+	private $app = null;
+	private $_connection = null;
+
 	/* Constructor */
-	function __construct() {
+	function __construct(\Slim\App $app) {
+		$this->app = $app;
+	}
+
+	function getConnection($database = '', $server_id = null) {
+
+		$server_info = $this->getServerInfo($server_id);
+		if ($database === '') {
+			// Connect to the current database, or if one is not specified
+			// then connect to the default database.
+			if (isset($_REQUEST['database'])) {
+				$database = $_REQUEST['database'];
+			} else {
+				$database = $this->getServerInfo('defaultdb');
+			}
+		}
+
+		// Perform extra security checks if this config option is set
+		if ($this->conf['extra_login_security']) {
+			// Disallowed logins if extra_login_security is enabled.
+			// These must be lowercase.
+			$bad_usernames = array('pgsql', 'postgres', 'root', 'administrator');
+
+			$username = strtolower($server_info['username']);
+
+			if ($server_info['password'] == '' || in_array($username, $bad_usernames)) {
+				unset($_SESSION['webdbLogin'][$_REQUEST['server']]);
+				$msg = $lang['strlogindisallowed'];
+				include '../views/login.php';
+				exit;
+			}
+		}
+
+		if ($this->_connection === null) {
+			// Create the connection object and make the connection
+			$this->_connection = new \PHPPgAdmin\Database\Connection(
+				$server_info['host'],
+				$server_info['port'],
+				$server_info['sslmode'],
+				$server_info['username'],
+				$server_info['password'],
+				$database
+			);
+		}
+		return $this->_connection;
+	}
+
+	/**
+	 * Creates a database accessor
+	 */
+	function getDatabaseAccessor($database = '', $server_id = null) {
+		$lang = $this->lang;
+
+		if ($this->data === null) {
+			$_connection = $this->getConnection($database, $server_id);
+
+			// Get the name of the database driver we need to use.
+			// The description of the server is returned in $platform.
+			$_type = $_connection->getDriver($platform);
+			if ($_type === null) {
+				printf($lang['strpostgresqlversionnotsupported'], $postgresqlMinVer);
+				exit;
+			}
+			$_type = '\PHPPgAdmin\Database\\' . $_type;
+
+			$this->setServerInfo('platform', $platform, $server_id);
+			$this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $server_id);
+
+			// Create a database wrapper class for easy manipulation of the
+			// connection.
+
+			$this->data = new $_type($_connection->conn);
+			$this->data->platform = $_connection->platform;
+
+			/* we work on UTF-8 only encoding */
+			$this->data->execute("SET client_encoding TO 'UTF-8'");
+
+			if ($this->data->hasByteaHexDefault()) {
+				$this->data->execute("SET bytea_output TO escape");
+			}
+		}
+
+		return $this->data;
 	}
 
 	public static function _cmp_desc($a, $b) {
@@ -30,11 +117,19 @@ class Misc {
 		return !empty($info[$all ? 'pg_dumpall_path' : 'pg_dump_path']);
 	}
 
+	function setLang($lang) {
+		$this->lang = $lang;
+	}
+	function setConf($conf) {
+		$this->conf = $conf;
+	}
 	/**
 	 * Sets the href tracking variable
 	 */
 	function setHREF() {
 		$this->href = $this->getHREF();
+		\PC::debug($this->href, 'Misc::href');
+
 	}
 
 	/**
@@ -224,6 +319,7 @@ class Misc {
 				}
 			}
 		}
+		\PC::debug($this->form, 'Misc::form');
 	}
 
 	/**
@@ -257,7 +353,7 @@ class Misc {
 	 * @return The HTML rendered value
 	 */
 	function printVal($str, $type = null, $params = array()) {
-		global $lang, $conf, $data;
+		global $lang, $data;
 
 		// Shortcircuit for a NULL value
 		if (is_null($str)) {
@@ -272,7 +368,7 @@ class Misc {
 
 		// Clip the value if the 'clip' parameter is true.
 		if (isset($params['clip']) && $params['clip'] === true) {
-			$maxlen = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $conf['max_chars'];
+			$maxlen = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
 			$ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
 			if (strlen($str) > $maxlen) {
 				$str = substr($str, 0, $maxlen - 1) . $ellipsis;
@@ -483,68 +579,6 @@ class Misc {
 	}
 
 	/**
-	 * Creates a database accessor
-	 */
-	function getDatabaseAccessor($database, $server_id = null) {
-		global $lang, $conf, $misc, $_connection;
-
-		$server_info = $this->getServerInfo($server_id);
-
-		// Perform extra security checks if this config option is set
-		if ($conf['extra_login_security']) {
-			// Disallowed logins if extra_login_security is enabled.
-			// These must be lowercase.
-			$bad_usernames = array('pgsql', 'postgres', 'root', 'administrator');
-
-			$username = strtolower($server_info['username']);
-
-			if ($server_info['password'] == '' || in_array($username, $bad_usernames)) {
-				unset($_SESSION['webdbLogin'][$_REQUEST['server']]);
-				$msg = $lang['strlogindisallowed'];
-				include '../views/login.php';
-				exit;
-			}
-		}
-
-		// Create the connection object and make the connection
-		$_connection = new \PHPPgAdmin\Database\Connection(
-			$server_info['host'],
-			$server_info['port'],
-			$server_info['sslmode'],
-			$server_info['username'],
-			$server_info['password'],
-			$database
-		);
-
-		// Get the name of the database driver we need to use.
-		// The description of the server is returned in $platform.
-		$_type = $_connection->getDriver($platform);
-		if ($_type === null) {
-			printf($lang['strpostgresqlversionnotsupported'], $postgresqlMinVer);
-			exit;
-		}
-		$_type = '\PHPPgAdmin\Database\\' . $_type;
-
-		$this->setServerInfo('platform', $platform, $server_id);
-		$this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $server_id);
-
-		// Create a database wrapper class for easy manipulation of the
-		// connection.
-
-		$data = new $_type($_connection->conn);
-		$data->platform = $_connection->platform;
-
-		/* we work on UTF-8 only encoding */
-		$data->execute("SET client_encoding TO 'UTF-8'");
-
-		if ($data->hasByteaHexDefault()) {
-			$data->execute("SET bytea_output TO escape");
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Prints the page header.  If global variable $_no_output is
 	 * set then no header is drawn.
 	 * @param $title The title of the page
@@ -556,7 +590,7 @@ class Misc {
 			newrelic_disable_autorum();
 		}
 
-		global $appName, $lang, $_no_output, $conf, $plugin_manager;
+		global $appName, $lang, $_no_output, $plugin_manager;
 
 		if (!isset($_no_output)) {
 			header("Content-Type: text/html; charset=utf-8");
@@ -564,7 +598,7 @@ class Misc {
 			echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 			if ($frameset == true) {
 				echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">\n";
-			} else if (isset($conf['use_xhtml_strict']) && $conf['use_xhtml_strict']) {
+			} else if (isset($this->conf['use_xhtml_strict']) && $this->conf['use_xhtml_strict']) {
 				echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-Strict.dtd\">\n";
 			} else {
 				echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -579,13 +613,13 @@ class Misc {
 			echo "<head>\n";
 			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 			// Theme
-			echo "<link rel=\"stylesheet\" href=\"/themes/{$conf['theme']}/global.css\" type=\"text/css\" id=\"csstheme\" />\n";
+			echo "<link rel=\"stylesheet\" href=\"/themes/{$this->conf['theme']}/global.css\" type=\"text/css\" id=\"csstheme\" />\n";
 
 			echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" type="text/css" id="csstheme" />' . "\n";
 			echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" type="text/css" id="csstheme" />' . "\n";
 
-			echo "<link rel=\"shortcut icon\" href=\"/images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
-			echo "<link rel=\"icon\" type=\"image/png\" href=\"/images/themes/{$conf['theme']}/Introduction.png\" />\n";
+			echo "<link rel=\"shortcut icon\" href=\"/images/themes/{$this->conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
+			echo "<link rel=\"icon\" type=\"image/png\" href=\"/images/themes/{$this->conf['theme']}/Introduction.png\" />\n";
 			echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>' . "\n";
 
 			echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>' . "\n";
@@ -596,7 +630,7 @@ class Misc {
 			echo "<script type=\"text/javascript\">// <!-- \n";
 			echo "$(document).ready(function() { \n";
 			echo "  if (window.parent.frames.length > 1)\n";
-			echo "    $('#csstheme', window.parent.frames[0].document).attr('href','/themes/{$conf['theme']}/global.css');\n";
+			echo "    $('#csstheme', window.parent.frames[0].document).attr('href','/themes/{$this->conf['theme']}/global.css');\n";
 			echo "}); // --></script>\n";
 			echo "<title>", htmlspecialchars($appName);
 			if ($title != '') {
@@ -731,9 +765,10 @@ class Misc {
 	 * Display navigation tabs
 	 * @param $tabs The name of current section (Ex: intro, server, ...), or an array with tabs (Ex: sqledit.php doFind function)
 	 * @param $activetab The name of the tab to be highlighted.
+	 * @param  $print if false, just return $tabs
 	 */
-	function printTabs($tabs, $activetab) {
-		global $misc, $conf, $data, $lang;
+	function printTabs($tabs, $activetab, $print = true) {
+		global $misc, $data, $lang;
 
 		if (is_string($tabs)) {
 			$_SESSION['webdbLastTab'][$tabs] = $activetab;
@@ -741,40 +776,48 @@ class Misc {
 		}
 
 		if (count($tabs) > 0) {
-			echo "<table class=\"tabs\"><tr>\n";
-			#echo "<div class=\"tabs\">\n";
+			if ($print) {
+				echo "<table class=\"tabs\"><tr>\n";
+			}
 
 			# FIXME: don't count hidden tabs
 			$width = (int) (100 / count($tabs)) . '%';
 			foreach ($tabs as $tab_id => $tab) {
-				$active = ($tab_id == $activetab) ? ' active' : '';
+
+				$tabs[$tab_id]['active'] = $active = ($tab_id == $activetab) ? ' active' : '';
+
+				$tabs[$tab_id]['width'] = $width;
 
 				if (!isset($tab['hide']) || $tab['hide'] !== true) {
 
-					$tablink = '<a href="' . htmlentities($this->getActionUrl($tab, $_REQUEST)) . '">';
+					$tabs[$tab_id]['tablink'] = htmlentities($this->getActionUrl($tab, $_REQUEST));
+
+					$tablink = '<a href="' . $tabs[$tab_id]['tablink'] . '">';
 
 					if (isset($tab['icon']) && $icon = $this->icon($tab['icon'])) {
+						$tabs[$tab_id]['iconurl'] = $icon;
 						$tablink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$tab['title']}\" /></span>";
 					}
 
 					$tablink .= "<span class=\"label\">{$tab['title']}</span></a>";
+					if ($print) {
+						echo "<td style=\"width: {$width}\" class=\"tab{$active}\">";
 
-					echo "<td style=\"width: {$width}\" class=\"tab{$active}\">";
-					#echo "<span class=\"tab{$active}\" style=\"white-space:nowrap;\">";
+						if (isset($tab['help'])) {
+							$this->printHelp($tablink, $tab['help']);
+						} else {
+							echo $tablink;
+						}
 
-					if (isset($tab['help'])) {
-						$this->printHelp($tablink, $tab['help']);
-					} else {
-						echo $tablink;
+						echo "</td>\n";
 					}
-
-					echo "</td>\n";
-					#echo "</span>\n";
 				}
 			}
-			echo "</tr></table>\n";
+			if ($print) {
+				echo "</tr></table>\n";
+			}
 		}
-		#echo "</div>\n";
+		return $tabs;
 	}
 
 	/**
@@ -782,9 +825,9 @@ class Misc {
 	 * @param $section The name of the tab bar.
 	 */
 	function getNavTabs($section) {
-		global $data, $lang, $conf, $plugin_manager;
+		global $data, $lang, $plugin_manager;
 
-		$hide_advanced = ($conf['show_advanced'] === false);
+		$hide_advanced = ($this->conf['show_advanced'] === false);
 		$tabs = array();
 
 		switch ($section) {
@@ -1293,14 +1336,14 @@ class Misc {
 			$tabs = array(
 				'sql' => array(
 					'title' => $lang['strsql'],
-					'url' => 'sqledit.php',
+					'url' => '/sqledit',
 					'urlvars' => array('subject' => 'schema', 'action' => 'sql'),
 					'help' => 'pg.sql',
 					'icon' => 'SqlEditor',
 				),
 				'find' => array(
 					'title' => $lang['strfind'],
-					'url' => 'sqledit.php',
+					'url' => '/sqledit',
 					'urlvars' => array('subject' => 'schema', 'action' => 'find'),
 					'icon' => 'Search',
 				),
@@ -1380,7 +1423,7 @@ class Misc {
 	 * Get the URL for the last active tab of a particular tab bar.
 	 */
 	function getLastTabURL($section) {
-		global $data;
+		$data = $this->data;
 
 		$tabs = $this->getNavTabs($section);
 
@@ -1394,7 +1437,7 @@ class Misc {
 	}
 
 	function printTopbar() {
-		global $lang, $conf, $plugin_manager, $appName, $appVersion, $appLangFiles;
+		global $lang, $plugin_manager, $appName, $appVersion, $appLangFiles;
 
 		$server_info = $this->getServerInfo();
 		$reqvars = $this->getRequestVars('table');
@@ -1417,7 +1460,7 @@ class Misc {
 				'sql' => array(
 					'attr' => array(
 						'href' => array(
-							'url' => 'sqledit.php',
+							'url' => '/sqledit',
 							'urlvars' => array_merge($reqvars, array(
 								'action' => 'sql',
 							)),
@@ -1430,7 +1473,7 @@ class Misc {
 				'history' => array(
 					'attr' => array(
 						'href' => array(
-							'url' => 'history.php',
+							'url' => '/history.php',
 							'urlvars' => array_merge($reqvars, array(
 								'action' => 'pophistory',
 							)),
@@ -1442,7 +1485,7 @@ class Misc {
 				'find' => array(
 					'attr' => array(
 						'href' => array(
-							'url' => 'sqledit.php',
+							'url' => '/sqledit',
 							'urlvars' => array_merge($reqvars, array(
 								'action' => 'find',
 							)),
@@ -1591,7 +1634,7 @@ class Misc {
 	 * @param $object The type of object at the end of the trail.
 	 */
 	function getTrail($subject = null) {
-		global $lang, $conf, $data, $appName, $plugin_manager;
+		global $lang, $data, $appName, $plugin_manager;
 
 		$trail = array();
 		$vars = '';
@@ -1847,14 +1890,20 @@ class Misc {
 	 * @param $help  - help section identifier
 	 */
 	function printHelp($str, $help) {
-		global $lang, $data;
 
 		echo $str;
+
 		if ($help) {
-			echo "<a class=\"help\" href=\"";
-			echo htmlspecialchars("help.php?help=" . urlencode($help) . "&server=" . urlencode($_REQUEST['server']));
-			echo "\" title=\"{$lang['strhelp']}\" target=\"phppgadminhelp\">{$lang['strhelpicon']}</a>";
+			echo "<a class=\"help\" href=\"",
+			$this->getHelpLink($help),
+				"\" title=\"{$this->lang['strhelp']}\" target=\"phppgadminhelp\">{$this->lang['strhelpicon']}</a>";
+
 		}
+	}
+
+	function getHelpLink($help) {
+		return htmlspecialchars("help.php?help=" . urlencode($help) . "&server=" . urlencode($_REQUEST['server']));
+
 	}
 
 	/**
@@ -2032,7 +2081,7 @@ class Misc {
 	 *					 they are relative and won't work out of context.
 	 */
 	function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
-		global $data, $conf, $misc, $lang, $plugin_manager;
+		global $data, $misc, $lang, $plugin_manager;
 
 		// Action buttons hook's place
 		$plugin_functions_parameters = array(
@@ -2050,7 +2099,7 @@ class Misc {
 		if ($tabledata->recordCount() > 0) {
 
 			// Remove the 'comment' column if they have been disabled
-			if (!$conf['show_comments']) {
+			if (!$this->conf['show_comments']) {
 				unset($columns['comment']);
 			}
 
@@ -2288,7 +2337,7 @@ class Misc {
 	 *        'nodata' - message to display when node has no children
 	 */
 	function printTreeXML(&$treedata, &$attrs) {
-		global $conf, $lang;
+		global $lang;
 
 		header("Content-Type: text/xml; charset=UTF-8");
 		header("Cache-Control: no-cache");
@@ -2338,8 +2387,7 @@ class Misc {
 
 	function icon($icon) {
 		if (is_string($icon)) {
-			global $conf;
-			$path = "/images/themes/{$conf['theme']}/{$icon}";
+			$path = "/images/themes/{$this->conf['theme']}/{$icon}";
 			if (file_exists(BASE_PATH . $path . '.png')) {
 				return $path . '.png';
 			}
@@ -2418,11 +2466,11 @@ class Misc {
 	 * @return a recordset of servers' groups
 	 */
 	function getServersGroups($recordset = false, $group_id = false) {
-		global $conf, $lang;
+		global $lang;
 		$grps = array();
 
-		if (isset($conf['srv_groups'])) {
-			foreach ($conf['srv_groups'] as $i => $group) {
+		if (isset($this->conf['srv_groups'])) {
+			foreach ($this->conf['srv_groups'] as $i => $group) {
 				if (
 					(($group_id === false) and (!isset($group['parents']))) /* root */
 					or (
@@ -2485,24 +2533,23 @@ class Misc {
 	 * Get list of servers
 	 * @param $recordset return as RecordSet suitable for printTable if true,
 	 *                   otherwise just return an array.
-	 * @param $group a group name to filter the returned servers using $conf[srv_groups]
+	 * @param $group a group name to filter the returned servers using $this->conf[srv_groups]
 	 */
 	function getServers($recordset = false, $group = false) {
-		global $conf;
 
 		$logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : array();
 		$srvs = array();
 
 		if (($group !== false) and ($group !== 'all')) {
-			if (isset($conf['srv_groups'][$group]['servers'])) {
+			if (isset($this->conf['srv_groups'][$group]['servers'])) {
 				$group = array_fill_keys(explode(',', preg_replace('/\s/', '',
-					$conf['srv_groups'][$group]['servers'])), 1);
+					$this->conf['srv_groups'][$group]['servers'])), 1);
 			} else {
 				$group = '';
 			}
 		}
 
-		foreach ($conf['servers'] as $idx => $info) {
+		foreach ($this->conf['servers'] as $idx => $info) {
 			$server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
 			if (($group === false)
 				or (isset($group[$idx]))
@@ -2554,8 +2601,11 @@ class Misc {
 	 * @param $server_id A server identifier (host:port)
 	 * @return An associative array of server properties
 	 */
-	function getServerInfo($server_id = null) {
-		global $conf, $_reload_browser, $lang;
+	function getServerInfo($server_id = null, $conf = null) {
+		global $_reload_browser;
+		if ($conf !== null) {
+			$this->conf = $conf;
+		}
 
 		if ($server_id === null && isset($_REQUEST['server'])) {
 			$server_id = $_REQUEST['server'];
@@ -2567,7 +2617,7 @@ class Misc {
 		}
 
 		// Otherwise, look for it in the conf file
-		foreach ($conf['servers'] as $idx => $info) {
+		foreach ($this->conf['servers'] as $idx => $info) {
 			if ($server_id == $info['host'] . ':' . $info['port'] . ':' . $info['sslmode']) {
 				// Automatically use shared credentials if available
 				if (!isset($info['username']) && isset($_SESSION['sharedUsername'])) {
@@ -2585,7 +2635,7 @@ class Misc {
 			return null;
 		} else {
 			// Unable to find a matching server, are we being hacked?
-			echo $lang['strinvalidserverparam'];
+			echo $this->lang['strinvalidserverparam'];
 			exit;
 		}
 	}
@@ -2660,14 +2710,14 @@ class Misc {
 		 * @param $onchange Javascript action to take when selections change.
 		 */
 	function printConnection($onchange) {
-		global $data, $lang, $misc;
+		$lang = $this->lang;
 
-		echo "<table style=\"width: 100%\"><tr><td class=\"popup_select1\">\n";
+		echo "<table class=\"printconnection\" style=\"width: 100%\"><tr><td class=\"popup_select1\">\n";
 		echo "<label>";
-		$misc->printHelp($lang['strserver'], 'pg.server');
+		$this->printHelp($lang['strserver'], 'pg.server');
 		echo ": </label> <select name=\"server\" {$onchange}>\n";
 
-		$servers = $misc->getServers();
+		$servers = $this->getServers();
 		foreach ($servers as $info) {
 			if (empty($info['username'])) {
 				continue;
@@ -2680,12 +2730,14 @@ class Misc {
 		echo "</select>\n</td><td class=\"popup_select2\" style=\"text-align: right\">\n";
 
 		// Get the list of all databases
+		$data = $this->getDatabaseAccessor();
+
 		$databases = $data->getDatabases();
 
 		if ($databases->recordCount() > 0) {
 
 			echo "<label>";
-			$misc->printHelp($lang['strdatabase'], 'pg.database');
+			$this->printHelp($lang['strdatabase'], 'pg.database');
 			echo ": <select name=\"database\" {$onchange}>\n";
 
 			//if no database was selected, user should select one

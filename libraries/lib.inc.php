@@ -10,7 +10,6 @@ DEFINE('BASE_PATH', dirname(__DIR__));
 require_once BASE_PATH . '/vendor/autoload.php';
 include_once BASE_PATH . '/libraries/errorhandler.inc.php';
 include_once BASE_PATH . '/libraries/decorator.inc.php';
-include_once BASE_PATH . '/libraries/lang/translations.php';
 
 Kint::enabled(true);
 
@@ -21,6 +20,7 @@ $handler->setHandleExceptions(false); // disable exceptions handling
 $handler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
  */
 $handler->start(); // initialize handlers
+PhpConsole\Helper::register(); // it will register global PC class
 
 // Set error reporting level to max
 error_reporting(E_ALL);
@@ -54,52 +54,50 @@ if (file_exists(BASE_PATH . '/libraries/config.inc.php')) {
 // backwards incompatible changes are made to config.inc.php-dist.
 $conf['base_version'] = 20;
 
-// Always include english.php, since it's the master language file
-if (!isset($conf['default_lang'])) {
-	$conf['default_lang'] = 'english';
-}
-
-$lang = array();
-require_once BASE_PATH . '/libraries/lang/english.php';
+include_once BASE_PATH . '/libraries/translations.php';
 
 // Create Misc class references
-
-$misc = new \PHPPgAdmin\Misc();
 
 // Start session (if not auto-started)
 if (!ini_get('session.auto_start')) {
 	session_name('PPA_ID');
 	session_start();
 }
+//Kint::dump($_SERVER);
 
 // Create Slim app
 $app = new \Slim\App();
 
+$misc = new \PHPPgAdmin\Misc($app);
+
 // Fetch DI Container
 $container = $app->getContainer();
+$environment = $container->get('environment');
 
+$container['misc'] = $misc;
 // Register Twig View helper
 $container['view'] = function ($c) {
 	$view = new \Slim\Views\Twig(BASE_PATH . '/templates', [
 		'cache' => BASE_PATH . '/temp/twigcache',
+		'debug' => true,
 	]);
-
-	// Instantiate and add Slim specific extension
-	$basePath = rtrim(str_ireplace('index.php', '', $c['request']->getUri()->getBasePath()), '/');
+	$environment = $c->get('environment');
+	$base_script_trailing_shit = substr($environment['SCRIPT_NAME'], 1);
+// Instantiate and add Slim specific extension
+	$basePath = rtrim(str_ireplace($base_script_trailing_shit, '', $c['request']->getUri()->getBasePath()), '/');
 	$view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
 
 	return $view;
 };
 
-// Define named route
-$app->get('/hello/{name}', function ($request, $response, $args) {
-	return $this->view->render($response, 'profile.html', [
-		'name' => $args['name'],
-	]);
-})->setName('profile');
+$container['lang'] = $lang;
+$misc->setLang($lang);
+// 4. Check for theme by server/db/user
+$info = $misc->getServerInfo(null, $conf);
+include_once BASE_PATH . '/libraries/themes.php';
 
-// Run app
-$app->run();
+$container['conf'] = $conf;
+$misc->setConf($conf);
 
 // This has to be deferred until after stripVar above
 $misc->setHREF();
@@ -126,123 +124,6 @@ if (isset($_POST['loginServer']) && isset($_POST['loginUsername']) &&
 	}
 
 	$_reload_browser = true;
-}
-
-/* select the theme */
-unset($_theme);
-if (!isset($conf['theme'])) {
-	$conf['theme'] = 'default';
-}
-
-// 1. Check for the theme from a request var
-if (isset($_REQUEST['theme']) && is_file(BASE_PATH . "/themes/{$_REQUEST['theme']}/global.css")) {
-	/* save the selected theme in cookie for a year */
-	setcookie('ppaTheme', $_REQUEST['theme'], time() + 31536000);
-	$_theme = $_SESSION['ppaTheme'] = $conf['theme'] = $_REQUEST['theme'];
-}
-
-// 2. Check for theme session var
-if (!isset($_theme) && isset($_SESSION['ppaTheme']) && is_file(BASE_PATH . "/themes/{$_SESSION['ppaTheme']}/global.css")) {
-	$conf['theme'] = $_SESSION['ppaTheme'];
-}
-
-// 3. Check for theme in cookie var
-if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && is_file(BASE_PATH . "/themes/{$_COOKIE['ppaTheme']}/global.css")) {
-	$conf['theme'] = $_COOKIE['ppaTheme'];
-}
-
-// 4. Check for theme by server/db/user
-$info = $misc->getServerInfo();
-
-if (!is_null($info)) {
-	$_theme = '';
-
-	if ((isset($info['theme']['default']))
-		and is_file(BASE_PATH . "/themes/{$info['theme']['default']}/global.css")
-	) {
-		$_theme = $info['theme']['default'];
-	}
-
-	if (isset($_REQUEST['database'])
-		and isset($info['theme']['db'][$_REQUEST['database']])
-		and is_file(BASE_PATH . "/themes/{$info['theme']['db'][$_REQUEST['database']]}/global.css")
-	) {
-		$_theme = $info['theme']['db'][$_REQUEST['database']];
-	}
-
-	if (isset($info['username'])
-		and isset($info['theme']['user'][$info['username']])
-		and is_file(BASE_PATH . "/themes/{$info['theme']['user'][$info['username']]}/global.css")
-	) {
-		$_theme = $info['theme']['user'][$info['username']];
-	}
-
-	if ($_theme !== '') {
-		setcookie('ppaTheme', $_theme, time() + 31536000);
-		$conf['theme'] = $_theme;
-	}
-}
-
-// Determine language file to import:
-unset($_language);
-
-// 1. Check for the language from a request var
-if (isset($_REQUEST['language']) && isset($appLangFiles[$_REQUEST['language']])) {
-	/* save the selected language in cookie for a year */
-	setcookie('webdbLanguage', $_REQUEST['language'], time() + 31536000);
-	$_language = $_REQUEST['language'];
-}
-
-// 2. Check for language session var
-if (!isset($_language) && isset($_SESSION['webdbLanguage']) && isset($appLangFiles[$_SESSION['webdbLanguage']])) {
-	$_language = $_SESSION['webdbLanguage'];
-}
-
-// 3. Check for language in cookie var
-if (!isset($_language) && isset($_COOKIE['webdbLanguage']) && isset($appLangFiles[$_COOKIE['webdbLanguage']])) {
-	$_language = $_COOKIE['webdbLanguage'];
-}
-
-// 4. Check for acceptable languages in HTTP_ACCEPT_LANGUAGE var
-if (!isset($_language) && $conf['default_lang'] == 'auto' && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-	// extract acceptable language tags
-	// (http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4)
-	preg_match_all('/\s*([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;q=([01](?:.[0-9]{0,3})?))?\s*(?:,|$)/', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']), $_m, PREG_SET_ORDER);
-	foreach ($_m as $_l) {
-		// $_l[1] = language tag, [2] = quality
-		if (!isset($_l[2])) {
-			$_l[2] = 1;
-		}
-		// Default quality to 1
-		if ($_l[2] > 0 && $_l[2] <= 1 && isset($availableLanguages[$_l[1]])) {
-			// Build up array of (quality => language_file)
-			$_acceptLang[$_l[2]] = $availableLanguages[$_l[1]];
-		}
-	}
-	unset($_m);
-	unset($_l);
-	if (isset($_acceptLang)) {
-		// Sort acceptable languages by quality
-		krsort($_acceptLang, SORT_NUMERIC);
-		$_language = reset($_acceptLang);
-		unset($_acceptLang);
-	}
-}
-
-// 5. Otherwise resort to the default set in the config file
-if (!isset($_language) && $conf['default_lang'] != 'auto' && isset($appLangFiles[$conf['default_lang']])) {
-	$_language = $conf['default_lang'];
-}
-
-// 6. Otherwise, default to english.
-if (!isset($_language)) {
-	$_language = 'english';
-}
-
-// Import the language file
-if (isset($_language)) {
-	include BASE_PATH . "/libraries/lang/{$_language}.php";
-	$_SESSION['webdbLanguage'] = $_language;
 }
 
 // Check for config file version mismatch

@@ -7,23 +7,19 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
-
-$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-if (!isset($msg)) {
-	$msg = '';
-}
+//require_once '../libraries/lib.inc.php';
 
 /**
  * Private function to display server and list of databases
  */
-function _printConnection() {
-	global $data, $action, $misc;
+function _printConnection($misc, $action) {
+	$lang = $misc->lang;
+	$data = $misc->getDatabaseAccessor();
 
 	// The javascript action on the select box reloads the
 	// popup whenever the server or database is changed.
 	// This ensures that the correct page encoding is used.
-	$onchange = "onchange=\"location.href='/views/sqledit.php?action=" .
+	$onchange = "onchange=\"location.href='/sqledit.php?action=" .
 	urlencode($action) . "&amp;server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + ";
 
 	// The exact URL to reload to is different between SQL and Find mode, however.
@@ -39,7 +35,7 @@ function _printConnection() {
 /**
  * Searches for a named database object
  */
-function doFind() {
+function doFind($misc) {
 	global $data, $misc;
 	global $lang, $conf;
 
@@ -98,68 +94,51 @@ function doFind() {
 /**
  * Allow execution of arbitrary SQL statements on a database
  */
-function doDefault() {
-	global $data, $misc;
-	global $lang;
+function doDefault($misc) {
+
+	$lang = $misc->lang;
+	$data = $misc->getDatabaseAccessor();
+
+	$viewParams = $lang;
+
+	$viewParams['title'] = $lang['strsql'];
 
 	if (!isset($_SESSION['sqlquery'])) {
 		$_SESSION['sqlquery'] = '';
 	}
+	$viewParams['sqlquery'] = htmlspecialchars($_SESSION['sqlquery']);
 
-	$misc->printHeader($lang['strsql']);
-	echo '<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">';
-	echo '<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>';
-	// Bring to the front always
-	echo "<body onload=\"window.focus();\">\n";
-
-	$misc->printTabs($misc->getNavTabs('popup'), 'sql');
-
-	echo "<form action=\"/views/sql.php\" method=\"post\" enctype=\"multipart/form-data\" class=\"sqlform\" target=\"detail\">\n";
-	_printConnection();
-	echo "\n";
 	if (!isset($_REQUEST['search_path'])) {
 		$_REQUEST['search_path'] = implode(',', $data->getSearchPath());
 	}
+	$viewParams['search_path'] = htmlspecialchars($_REQUEST['search_path']);
+	$viewParams['navtabs'] = $misc->printTabs($misc->getNavTabs('popup'), 'sql', false);
+	PC::debug($viewParams['navtabs']);
 
-	echo "<p><label>";
-	$misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path');
-	echo ": <input type=\"text\" name=\"search_path\" size=\"50\" value=\"",
-	htmlspecialchars($_REQUEST['search_path']), "\" /></label></p>\n";
+	$viewParams['paginate'] = (isset($_REQUEST['paginate']) ? ' checked="checked"' : '');
 
-	echo "<textarea style=\"width:98%;\" rows=\"20\" cols=\"50\" name=\"query\">",
-	htmlspecialchars($_SESSION['sqlquery']), "</textarea>\n";
+	$viewParams['max_size'] = 0;
+
+	$viewParams['helplink'] = $misc->getHelpLink('pg.schema.search_path');
 
 	// Check that file uploads are enabled
 	if (ini_get('file_uploads')) {
 		// Don't show upload option if max size of uploads is zero
 		$max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
 		if (is_double($max_size) && $max_size > 0) {
-			echo "<p><input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"{$max_size}\" />\n";
-			echo "<label for=\"script\">{$lang['struploadscript']}</label> <input id=\"script\" name=\"script\" type=\"file\" /></p>\n";
+			$viewParams['max_size'] = $max_size;
+
 		}
 	}
 
-	echo "<p><label for=\"paginate\"><input type=\"checkbox\" id=\"paginate\" name=\"paginate\"", (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), " />&nbsp;{$lang['strpaginate']}</label>&nbsp;&nbsp;</p>\n";
+	//$misc->printTabs(, 'sql');
 
-	echo "<p><input type=\"submit\" name=\"execute\" accesskey=\"r\" value=\"{$lang['strexecute']}\" />\n";
-	echo "<input type=\"reset\" accesskey=\"q\" value=\"{$lang['strreset']}\" /></p>\n";
-	echo "</form>\n";
+	/*echo "<form action=\"/views/sql.php\" method=\"post\" enctype=\"multipart/form-data\" class=\"sqlform\" target=\"detail\">\n";
+		_printConnection();
+	*/
+
+	return $viewParams;
 
 	// Default focus
-	$misc->setFocus('forms[0].query');
+	//$misc->setFocus('forms[0].query');
 }
-
-switch ($action) {
-case 'find':
-	doFind();
-	break;
-case 'sql':
-default:
-	doDefault();
-	break;
-}
-
-// Set the name of the window
-$misc->setWindowName('sqledit');
-
-$misc->printFooter();

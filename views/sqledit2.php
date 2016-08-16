@@ -23,7 +23,7 @@ function _printConnection() {
 	// The javascript action on the select box reloads the
 	// popup whenever the server or database is changed.
 	// This ensures that the correct page encoding is used.
-	$onchange = "onchange=\"location.href='/views/sqledit.php?action=" .
+	$onchange = "onchange=\"location.href='/sqledit.php?action=" .
 	urlencode($action) . "&amp;server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + ";
 
 	// The exact URL to reload to is different between SQL and Find mode, however.

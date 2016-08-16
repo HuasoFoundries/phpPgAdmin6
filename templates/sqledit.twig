@@ -1,0 +1,98 @@
+<form action="/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" target="detail">
+
+    <div class="searchpath">
+        <label>{{strsearchpath}} <a class="help" href="{{helplink}}" title="{{strhelp}}" target="phppgadminhelp">{{strhelpicon}}</a> :
+            <input type="text" name="search_path" size="50" value="{{search_path}}" />
+        </label>
+    </div>
+
+    <div id="queryedition" style="padding:1%;width:98%;float:left;">
+
+        <textarea style="width:98%;" rows="9" cols="50" id="query" name="query">{{sqlquery}}</textarea>
+
+        <pre id="sqlquery">
+			<code contenteditable="true"  class="sql" style="width:98%;min-height:140px;" id="hlquery">{{sqlquery}}</code>
+		</pre>
+    </div>
+
+    {% if max_size>0 %}
+    <p>
+        <input type="hidden" name="MAX_FILE_SIZE" value="{{max_size}}" />
+        <label for="script">{{struploadscript}}:</label>
+        <input id="script" name="script" type="file" />
+    </p>
+    {% endif %}
+
+    <p>
+        <label for="paginate">
+            <input type="checkbox" id="paginate" name="paginate" {{paginate}} />&nbsp;{{strpaginate}}</label>&nbsp;&nbsp;</p>
+    <p>
+        <input type="submit" name="execute" accesskey="r" value="{{strexecute}}" />
+        <input type="reset" accesskey="q" value="{{strreset}}" />
+    </p>
+</form>
+
+{#
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>#}
+
+<script type="text/javascript">
+document.forms[0].query.focus();
+jQuery(document).ready(function() {
+    window.editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+        mode: 'text/x-sql',
+        indentWithTabs: true,
+        smartIndent: true,
+        lineNumbers: true,
+        matchBrackets: true,
+        autofocus: true,
+        extraKeys: {
+            "Ctrl-Space": "autocomplete"
+        },
+        hintOptions: {
+            tables: {
+                users: {
+                    name: null,
+                    score: null,
+                    birthDate: null
+                },
+                countries: {
+                    name: null,
+                    population: null,
+                    size: null
+                }
+            }
+        }
+    });
+    jQuery('table.tabs').prependTo('body');
+    jQuery('table.printconnection').prependTo('.sqlform');
+    /*$("#sqlquery").resizable();
+    var update_highlight = function() {
+        if (jQuery("#hlquery").html().indexOf("<br>") !== -1) {
+            jQuery("#hlquery").html(jQuery("#hlquery").html().replace("<br>", "\n"));
+        }
+        jQuery('#hlquery').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+    }
+    var sync_textareas = function() {
+        update_highlight();
+        jQuery('#queryedition textarea').text(jQuery('#hlquery').text());
+    };
+    update_highlight();
+    jQuery('#hlquery').on('keyup', function(e) {
+        if (e.keyCode === 13) {
+            window.setTimeout(sync_textareas, 500);
+            if (e.ctrlKey) {
+                console.log('CTRL+ENTER');
+            }
+        } else {
+            //window.setTimeout(sync_textareas, 2000);
+        }
+    });*/
+});
+</script>
+
+<a href="#" class="bottom_link">subir al inicio</a></body>
+
+</html>

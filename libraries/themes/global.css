@@ -180,8 +180,18 @@ div.fk_value {
 
 
 /*#sqlquery {
-	    float: left;
+        float: left;
     overflow: auto;
     border: 1px solid #AAA;
     max-width: 690px;
 }*/
+
+form.sqlform {
+    float: left;
+    width: 100%;
+}
+
+.searchpath {
+    padding: 5px;
+    clear: both;
+}
