@@ -109,25 +109,45 @@ function doDefault() {
 	$misc->printHeader($lang['strsql']);
 	echo '<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">';
 	echo '<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>';
+	echo '<script>
+	$(document).ready(function() {
+  		$("pre code").each(function(i, block) {
+    		hljs.highlightBlock(block);
+  		});
+  		$("#sqlquery").resizable();
+	});
+	</script>';
+
 	// Bring to the front always
 	echo "<body onload=\"window.focus();\">\n";
 
 	$misc->printTabs($misc->getNavTabs('popup'), 'sql');
 
-	echo "<form action=\"/views/sql.php\" method=\"post\" enctype=\"multipart/form-data\" class=\"sqlform\" target=\"detail\">\n";
+	echo '<form style="float:left;width:100%;" action="/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" target="detail">' . "\n";
 	_printConnection();
 	echo "\n";
 	if (!isset($_REQUEST['search_path'])) {
 		$_REQUEST['search_path'] = implode(',', $data->getSearchPath());
 	}
 
-	echo "<p><label>";
+	echo "<div>";
+	echo "<label>";
 	$misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path');
 	echo ": <input type=\"text\" name=\"search_path\" size=\"50\" value=\"",
-	htmlspecialchars($_REQUEST['search_path']), "\" /></label></p>\n";
+	htmlspecialchars($_REQUEST['search_path']), "\" />";
+	echo "</label></div>\n";
+
+	echo '<div id="queryedition" style="padding:1%;width:98%;float:left;">';
 
 	echo "<textarea style=\"width:98%;\" rows=\"20\" cols=\"50\" name=\"query\">",
 	htmlspecialchars($_SESSION['sqlquery']), "</textarea>\n";
+
+	echo '<pre id="sqlquery">';
+	echo '<code contenteditable="true"  class="sql" style="width:98%;" rows="20" cols="50" id="hlquery">';
+	echo htmlspecialchars($_SESSION['sqlquery']);
+	echo "</code>";
+	echo "</pre>";
+	echo "</div>\n";
 
 	// Check that file uploads are enabled
 	if (ini_get('file_uploads')) {
@@ -139,14 +159,27 @@ function doDefault() {
 		}
 	}
 
-	echo "<p><label for=\"paginate\"><input type=\"checkbox\" id=\"paginate\" name=\"paginate\"", (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), " />&nbsp;{$lang['strpaginate']}</label>&nbsp;&nbsp;</p>\n";
+	echo '<p><label for="paginate"><input type="checkbox" id="paginate" name="paginate"';
+	echo (isset($_REQUEST['paginate']) ? ' checked="checked"' : '');
 
-	echo "<p><input type=\"submit\" name=\"execute\" accesskey=\"r\" value=\"{$lang['strexecute']}\" />\n";
-	echo "<input type=\"reset\" accesskey=\"q\" value=\"{$lang['strreset']}\" /></p>\n";
-	echo "</form>\n";
+	echo " />&nbsp;" . $lang['strpaginate'] . "</label>&nbsp;&nbsp;</p>\n";
+
+	echo '<p><input type="submit" name="execute" accesskey="r" value="' . $lang['strexecute'] . '" />' . "\n";
+	echo '<input type="reset" accesskey="q" value="' . $lang['strreset'] . '" />' . "\n";
+	echo '</form>' . "\n";
+
+	echo "<script>";
+	echo "	jQuery('#hlquery').on('keyup',function(e) {  \n";
+	echo '		jQuery("#hlquery").html(jQuery("#hlquery").html().replace("<br>","\n"));';
+	echo "		jQuery('#queryedition textarea').text(jQuery('#hlquery').text());\n";
+	echo "		if (e.keyCode === 13 && e.ctrlKey) { \n";
+	echo "			console.log('CTRL+ENTER'); \n";
+	echo "		}  \n";
+	echo "	}); \n";
+	echo "</script>";
 
 	// Default focus
-	$misc->setFocus('forms[0].query');
+	//$misc->setFocus('forms[0].query');
 }
 
 switch ($action) {

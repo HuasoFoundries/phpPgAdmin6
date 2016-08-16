@@ -18,8 +18,10 @@
         }
     },
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "ext-pgsql": "*",
+        "slim/slim": "^3.0",
+        "slim/twig-view": "~2.1.1",
         "php-console/php-console": "~3.1",
         "twig/twig": "~1.24",
         "raveren/kint": "^1.0",

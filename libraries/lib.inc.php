@@ -72,6 +72,35 @@ if (!ini_get('session.auto_start')) {
 	session_start();
 }
 
+// Create Slim app
+$app = new \Slim\App();
+
+// Fetch DI Container
+$container = $app->getContainer();
+
+// Register Twig View helper
+$container['view'] = function ($c) {
+	$view = new \Slim\Views\Twig(BASE_PATH . '/templates', [
+		'cache' => BASE_PATH . '/temp/twigcache',
+	]);
+
+	// Instantiate and add Slim specific extension
+	$basePath = rtrim(str_ireplace('index.php', '', $c['request']->getUri()->getBasePath()), '/');
+	$view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
+
+	return $view;
+};
+
+// Define named route
+$app->get('/hello/{name}', function ($request, $response, $args) {
+	return $this->view->render($response, 'profile.html', [
+		'name' => $args['name'],
+	]);
+})->setName('profile');
+
+// Run app
+$app->run();
+
 // This has to be deferred until after stripVar above
 $misc->setHREF();
 $misc->setForm();
