@@ -1,2 +1,7 @@
 selenium/tests/config.inc.php
 tests/selenium/config.test.php
+*sublime*
+.php.tools.ini
+sftp-config.json
+libraries/config.inc.php
+vendor
