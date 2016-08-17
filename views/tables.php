@@ -282,7 +282,7 @@ function doCreateLike($confirm, $msg = '') {
 
 	if (!$confirm) {
 
-		include_once './classes/Gui.php';
+		include_once BASE_PATH . '/classes/Gui.php';
 
 		if (!isset($_REQUEST['name'])) {
 			$_REQUEST['name'] = '';

@@ -11,8 +11,10 @@ global $conf, $plugin_manager;
 // Check to see if the configuration file exists, if not, explain
 require_once '../libraries/lib.inc.php';
 
+$webdbLanguage = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : NULL;
+
 if (!isset($plugin_manager)) {
-	$plugin_manager = new \PHPPgAdmin\PluginManager($_SESSION['webdbLanguage']);
+	$plugin_manager = new \PHPPgAdmin\PluginManager($webdbLanguage);
 }
 
 $misc->printHeader($lang['strlogin']);

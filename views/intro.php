@@ -9,7 +9,7 @@
 // Include application functions (no db conn)
 $_no_db_connection = true;
 require_once '../libraries/lib.inc.php';
-include_once '../themes/themes.php';
+include_once '../libraries/themes.php';
 
 $misc->printHeader();
 $misc->printBody();
@@ -70,5 +70,6 @@ if (isset($_GET['language'])) {
 	$_reload_browser = true;
 }
 
+Kint::dump($_SESSION);
+
 $misc->printFooter();
-?>

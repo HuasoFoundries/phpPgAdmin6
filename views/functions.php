@@ -374,7 +374,7 @@ function doProperties($msg = '') {
 			echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strlinksymbol']}</th></tr>\n";
 			echo "<tr><td class=\"data1\" colspan=\"4\">", $misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
 		} else {
-			include_once './libraries/highlight.php';
+			include_once BASE_PATH . '/libraries/highlight.php';
 			echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strdefinition']}</th></tr>\n";
 			// Check to see if we have syntax highlighting for this language
 			if (isset($data->langmap[$funcdata->fields['prolanguage']])) {
