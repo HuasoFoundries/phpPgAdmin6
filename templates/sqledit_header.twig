@@ -3,7 +3,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" href="/themes/default/global.css" type="text/css" id="csstheme" />
+        <link rel="stylesheet" href="/libraries/themes/default/global.css" type="text/css" id="csstheme" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" type="text/css" id="csstheme" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" type="text/css" id="csstheme" />
         <link rel="shortcut icon" href="/images/themes/default/Favicon.ico" type="image/vnd.microsoft.icon" />
@@ -13,22 +13,20 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/i18n/es.js"></script>#}
 
-        <link rel="stylesheet" href="/js/codemirror/lib/codemirror.css" />
-        <script src="/js/codemirror/lib/codemirror.js"></script>
+        <link rel="stylesheet" href="/js/codemirror/codemirror.css" />
+
+        <script src="/js/codemirror/codemirror.js"></script>
         <script src="/js/codemirror/mode/sql/sql.js"></script>
         <link rel="stylesheet" href="/js/codemirror/addon/hint/show-hint.css" />
         <script src="/js/codemirror/addon/hint/show-hint.js"></script>
         <script src="/js/codemirror/addon/hint/sql-hint.js"></script>
 
+        <link rel="stylesheet" href="/js/codemirror/addon/fold/foldgutter.css" />
+        <script src="/js/codemirror/addon/fold/foldcode.js"></script>
+        <script src="/js/codemirror/addon/fold/foldgutter.js"></script>
+        <script src="/js/codemirror/addon/fold/indent-fold.js"></script>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
-        <script type="text/javascript">
-        // <!-- 
-        $(document).ready(function() {
-            if (window.parent.frames.length > 1) {
-                $('#csstheme', window.parent.frames[0].document).attr('href', '/themes/default/global.css');
-            }
-        }); // -->
-        </script>
 
         <title>phpPgAdmin - {{title}}</title>
 

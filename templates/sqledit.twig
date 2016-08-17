@@ -1,4 +1,4 @@
-<form action="/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" target="detail">
+<form action="/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">
 
     <div class="searchpath">
         <label>{{strsearchpath}} <a class="help" href="{{helplink}}" title="{{strhelp}}" target="phppgadminhelp">{{strhelpicon}}</a> :
@@ -10,9 +10,6 @@
 
         <textarea style="width:98%;" rows="9" cols="50" id="query" name="query">{{sqlquery}}</textarea>
 
-        <pre id="sqlquery">
-			<code contenteditable="true"  class="sql" style="width:98%;min-height:140px;" id="hlquery">{{sqlquery}}</code>
-		</pre>
     </div>
 
     {% if max_size>0 %}
@@ -27,19 +24,19 @@
         <label for="paginate">
             <input type="checkbox" id="paginate" name="paginate" {{paginate}} />&nbsp;{{strpaginate}}</label>&nbsp;&nbsp;</p>
     <p>
-        <input type="submit" name="execute" accesskey="r" value="{{strexecute}}" />
+        <input type="submit" name="execute" id="execute" accesskey="r" value="{{strexecute}}" />
         <input type="reset" accesskey="q" value="{{strreset}}" />
     </p>
 </form>
 
-{#
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>#}
-
 <script type="text/javascript">
-document.forms[0].query.focus();
 jQuery(document).ready(function() {
-    window.editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+    document.forms[0].query.focus();
+    CodeMirror.commands.sendQuery = function() {
+        console.log('SEND QUERY');
+        jQuery('#sqlform').submit();
+    };
+    window.editor = CodeMirror.fromTextArea($('#query')[0], {
         mode: 'text/x-sql',
         indentWithTabs: true,
         smartIndent: true,
@@ -47,49 +44,32 @@ jQuery(document).ready(function() {
         matchBrackets: true,
         autofocus: true,
         extraKeys: {
-            "Ctrl-Space": "autocomplete"
+            "Ctrl-Space": "autocomplete",
+            "Ctrl-Enter": "sendQuery"
         },
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         hintOptions: {
             tables: {
-                users: {
+                medios: {
+                    id: null,
                     name: null,
-                    score: null,
-                    birthDate: null
+                    categoria: null
                 },
-                countries: {
+                posts: {
+                    id: null,
                     name: null,
-                    population: null,
-                    size: null
+                    id_medio: null,
+                    created_date: null
                 }
             }
         }
     });
     jQuery('table.tabs').prependTo('body');
     jQuery('table.printconnection').prependTo('.sqlform');
-    /*$("#sqlquery").resizable();
-    var update_highlight = function() {
-        if (jQuery("#hlquery").html().indexOf("<br>") !== -1) {
-            jQuery("#hlquery").html(jQuery("#hlquery").html().replace("<br>", "\n"));
-        }
-        jQuery('#hlquery').each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
+    if (window.parent.frames.length > 1) {
+        $('#csstheme', window.parent.frames[0].document).attr('href', '/libraries/themes/default/global.css');
     }
-    var sync_textareas = function() {
-        update_highlight();
-        jQuery('#queryedition textarea').text(jQuery('#hlquery').text());
-    };
-    update_highlight();
-    jQuery('#hlquery').on('keyup', function(e) {
-        if (e.keyCode === 13) {
-            window.setTimeout(sync_textareas, 500);
-            if (e.ctrlKey) {
-                console.log('CTRL+ENTER');
-            }
-        } else {
-            //window.setTimeout(sync_textareas, 2000);
-        }
-    });*/
 });
 </script>
 

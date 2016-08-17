@@ -33,7 +33,7 @@ $appVersion = '6.0.0-alpha';
 
 // PostgreSQL and PHP minimum version
 $postgresqlMinVer = '9.3';
-$phpMinVer = '5.4';
+$phpMinVer = '5.5';
 
 // Check the version of PHP
 if (version_compare(phpversion(), $phpMinVer, '<')) {
@@ -83,7 +83,7 @@ $container['view'] = function ($c) {
 	]);
 	$environment = $c->get('environment');
 	$base_script_trailing_shit = substr($environment['SCRIPT_NAME'], 1);
-// Instantiate and add Slim specific extension
+	// Instantiate and add Slim specific extension
 	$basePath = rtrim(str_ireplace($base_script_trailing_shit, '', $c['request']->getUri()->getBasePath()), '/');
 	$view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
 
@@ -138,13 +138,16 @@ if (!function_exists('pg_connect')) {
 	exit;
 }
 
+$_server_info = $misc->getServerInfo();
+
+PC::debug($_server_info, 'server_info');
+
 // Create data accessor object, if necessary
 if (!isset($_no_db_connection)) {
 	if (!isset($_REQUEST['server'])) {
 		echo $lang['strnoserversupplied'];
 		exit;
 	}
-	$_server_info = $misc->getServerInfo();
 
 	/* starting with PostgreSQL 9.0, we can set the application name */
 	if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {

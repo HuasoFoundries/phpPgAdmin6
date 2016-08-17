@@ -319,7 +319,7 @@ class Misc {
 				}
 			}
 		}
-		\PC::debug($this->form, 'Misc::form');
+		//\PC::debug($this->form, 'Misc::form');
 	}
 
 	/**
@@ -613,7 +613,7 @@ class Misc {
 			echo "<head>\n";
 			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 			// Theme
-			echo "<link rel=\"stylesheet\" href=\"/themes/{$this->conf['theme']}/global.css\" type=\"text/css\" id=\"csstheme\" />\n";
+			echo "<link rel=\"stylesheet\" href=\"/libraries/themes/{$this->conf['theme']}/global.css\" type=\"text/css\" id=\"csstheme\" />\n";
 
 			echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" type="text/css" id="csstheme" />' . "\n";
 			echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" type="text/css" id="csstheme" />' . "\n";
@@ -630,7 +630,7 @@ class Misc {
 			echo "<script type=\"text/javascript\">// <!-- \n";
 			echo "$(document).ready(function() { \n";
 			echo "  if (window.parent.frames.length > 1)\n";
-			echo "    $('#csstheme', window.parent.frames[0].document).attr('href','/themes/{$this->conf['theme']}/global.css');\n";
+			echo "    $('#csstheme', window.parent.frames[0].document).attr('href','/libraries/themes/{$this->conf['theme']}/global.css');\n";
 			echo "}); // --></script>\n";
 			echo "<title>", htmlspecialchars($appName);
 			if ($title != '') {
@@ -1424,15 +1424,16 @@ class Misc {
 	 */
 	function getLastTabURL($section) {
 		$data = $this->data;
-
+		\PC::debug($section, 'getLastTabURL.section');
 		$tabs = $this->getNavTabs($section);
+		\PC::debug($tabs, 'getLastTabURL.tabs');
 
 		if (isset($_SESSION['webdbLastTab'][$section]) && isset($tabs[$_SESSION['webdbLastTab'][$section]])) {
 			$tab = $tabs[$_SESSION['webdbLastTab'][$section]];
 		} else {
 			$tab = reset($tabs);
 		}
-
+		\PC::debug($tab, 'getLastTabURL.tab');
 		return isset($tab['url']) ? $tab : null;
 	}
 

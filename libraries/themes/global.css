@@ -195,3 +195,10 @@ form.sqlform {
     padding: 5px;
     clear: both;
 }
+
+.CodeMirror {
+    border: 1px solid #AAA;
+    padding: 3px;
+    font-size: 1.1em;
+    line-height: 1.5em;
+}
