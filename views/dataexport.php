@@ -29,7 +29,7 @@ if (isset($_REQUEST['what'])) {
 
 	// Include application functions
 	$_no_output = true;
-	require_once '../libraries/lib.inc.php';
+	require_once '../includes/lib.inc.php';
 
 	switch ($_REQUEST['what']) {
 	case 'dataonly':
@@ -325,7 +325,7 @@ if (isset($_REQUEST['what'])) {
 	$status = $data->endDump();
 } else {
 	// Include application functions
-	require_once '../libraries/lib.inc.php';
+	require_once '../includes/lib.inc.php';
 
 	if (!isset($_REQUEST['query']) or empty($_REQUEST['query'])) {
 		$_REQUEST['query'] = $_SESSION['sqlquery'];

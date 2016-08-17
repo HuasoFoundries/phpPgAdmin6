@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
@@ -35,100 +35,100 @@ function doDefault() {
 		$history = new \PHPPgAdmin\ArrayRecordSet($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
 
 		//Kint::dump($history);
-		$columns = array(
-			'query' => array(
+		$columns = [
+			'query' => [
 				'title' => $lang['strsql'],
 				'field' => field('query'),
-			),
-			'paginate' => array(
+			],
+			'paginate' => [
 				'title' => $lang['strpaginate'],
 				'field' => field('paginate'),
 				'type' => 'yesno',
-			),
-			'actions' => array(
+			],
+			'actions' => [
 				'title' => $lang['stractions'],
-			),
-		);
+			],
+		];
 
-		$actions = array(
-			'run' => array(
+		$actions = [
+			'run' => [
 				'content' => $lang['strexecute'],
-				'attr' => array(
-					'href' => array(
+				'attr' => [
+					'href' => [
 						'url' => 'sql.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'subject' => 'history',
 							'nohistory' => 't',
 							'queryid' => field('queryid'),
 							'paginate' => field('paginate'),
-						),
-					),
+						],
+					],
 					'target' => 'detail',
-				),
-			),
-			'remove' => array(
+				],
+			],
+			'remove' => [
 				'content' => $lang['strdelete'],
-				'attr' => array(
-					'href' => array(
+				'attr' => [
+					'href' => [
 						'url' => 'history.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'action' => 'confdelhistory',
 							'queryid' => field('queryid'),
-						),
-					),
-				),
-			),
-		);
+						],
+					],
+				],
+			],
+		];
 
-		$misc->printTable($history, $columns, $actions, 'history-history', $lang['strnohistory']);
+		echo $misc->printTable($history, $columns, $actions, 'history-history', $lang['strnohistory']);
 	} else {
 		echo "<p>{$lang['strnohistory']}</p>\n";
 	}
 
-	$navlinks = array(
-		'refresh' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'refresh' => [
+			'attr' => [
+				'href' => [
 					'url' => 'history.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'history',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strrefresh'],
-		),
-	);
+		],
+	];
 
 	if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])
 		&& count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
-		$navlinks['download'] = array(
-			'attr' => array(
-				'href' => array(
+		$navlinks['download'] = [
+			'attr' => [
+				'href' => [
 					'url' => 'history.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'download',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strdownload'],
-		);
-		$navlinks['clear'] = array(
-			'attr' => array(
-				'href' => array(
+		];
+		$navlinks['clear'] = [
+			'attr' => [
+				'href' => [
 					'url' => 'history.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confclearhistory',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strclearhistory'],
-		);
+		];
 	}
 
 	$misc->printNavLinks($navlinks, 'history-history', get_defined_vars());
@@ -203,31 +203,31 @@ function doDownloadHistory() {
 }
 
 switch ($action) {
-case 'confdelhistory':
-	doDelHistory($_REQUEST['queryid'], true);
-	break;
-case 'delhistory':
-	if (isset($_POST['yes'])) {
-		doDelHistory($_REQUEST['queryid'], false);
-	}
+	case 'confdelhistory':
+		doDelHistory($_REQUEST['queryid'], true);
+		break;
+	case 'delhistory':
+		if (isset($_POST['yes'])) {
+			doDelHistory($_REQUEST['queryid'], false);
+		}
 
-	doDefault();
-	break;
-case 'confclearhistory':
-	doClearHistory(true);
-	break;
-case 'clearhistory':
-	if (isset($_POST['yes'])) {
-		doClearHistory(false);
-	}
+		doDefault();
+		break;
+	case 'confclearhistory':
+		doClearHistory(true);
+		break;
+	case 'clearhistory':
+		if (isset($_POST['yes'])) {
+			doClearHistory(false);
+		}
 
-	doDefault();
-	break;
-case 'download':
-	doDownloadHistory();
-	break;
-default:
-	doDefault();
+		doDefault();
+		break;
+	case 'download':
+		doDownloadHistory();
+		break;
+	default:
+		doDefault();
 }
 
 // Set the name of the window

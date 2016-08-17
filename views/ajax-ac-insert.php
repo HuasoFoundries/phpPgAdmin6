@@ -1,5 +1,5 @@
 <?php
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 if (isset($_POST['offset'])) {
 	$offset = " OFFSET {$_POST['offset']}";

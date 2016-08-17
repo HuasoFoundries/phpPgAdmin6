@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -25,7 +25,7 @@ function doProperties($msg = '') {
 	$misc->printTitle($lang['strproperties'], 'pg.operator');
 	$misc->printMsg($msg);
 
-	$oprdata = $data->getOperator($_REQUEST['operator_oid']);
+	$oprdata                       = $data->getOperator($_REQUEST['operator_oid']);
 	$oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
 
 	if ($oprdata->recordCount() > 0) {
@@ -65,20 +65,20 @@ function doProperties($msg = '') {
 		}
 		echo "</table>\n";
 
-		$misc->printNavLinks(array(
-			'showall' => array(
-				'attr' => array(
-					'href' => array(
+		$misc->printNavLinks([
+			'showall' => [
+				'attr' => [
+					'href' => [
 						'url' => 'operators.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
-						),
-					),
-				),
+						],
+					],
+				],
 				'content' => $lang['strshowalloperators'],
-			)), 'operators-properties', get_defined_vars()
+			]], 'operators-properties', get_defined_vars()
 		);
 	} else {
 		doDefault($lang['strinvalidparam']);
@@ -133,54 +133,54 @@ function doDefault($msg = '') {
 
 	$operators = $data->getOperators();
 
-	$columns = array(
-		'operator' => array(
+	$columns = [
+		'operator' => [
 			'title' => $lang['stroperator'],
 			'field' => field('oprname'),
 			'url' => "operators.php?action=properties&amp;{$misc->href}&amp;",
-			'vars' => array('operator' => 'oprname', 'operator_oid' => 'oid'),
-		),
-		'leftarg' => array(
+			'vars' => ['operator' => 'oprname', 'operator_oid' => 'oid'],
+		],
+		'leftarg' => [
 			'title' => $lang['strleftarg'],
 			'field' => field('oprleftname'),
-		),
-		'rightarg' => array(
+		],
+		'rightarg' => [
 			'title' => $lang['strrightarg'],
 			'field' => field('oprrightname'),
-		),
-		'returns' => array(
+		],
+		'returns' => [
 			'title' => $lang['strreturns'],
 			'field' => field('resultname'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('oprcomment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'drop' => array(
+	$actions = [
+		'drop' => [
 			// 'title' => $lang['strdrop'],
 			// 'url'   => "operators.php?action=confirm_drop&amp;{$misc->href}&amp;",
 			// 'vars'  => array('operator' => 'oprname', 'operator_oid' => 'oid'),
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'operators.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'operator' => field('oprname'),
 						'operator_oid' => field('oid'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($operators, $columns, $actions, 'operators-operators', $lang['strnooperators']);
+	echo $misc->printTable($operators, $columns, $actions, 'operators-operators', $lang['strnooperators']);
 
 //		TODO operators.php action=create $lang['strcreateoperator']
 }
@@ -198,19 +198,19 @@ function doTree() {
 
 	$reqvars = $misc->getRequestVars('operator');
 
-	$attrs = array(
+	$attrs = [
 		'text' => $proto,
 		'icon' => 'Operator',
 		'toolTip' => field('oprcomment'),
 		'action' => url('operators.php',
 			$reqvars,
-			array(
+			[
 				'action' => 'properties',
 				'operator' => $proto,
 				'operator_oid' => field('oid'),
-			)
+			]
 		),
-	);
+	];
 
 	$misc->printTree($operators, $attrs, 'operators');
 	exit;
@@ -224,34 +224,34 @@ $misc->printHeader($lang['stroperators']);
 $misc->printBody();
 
 switch ($action) {
-case 'save_create':
-	if (isset($_POST['cancel'])) {
-		doDefault();
-	} else {
-		doSaveCreate();
-	}
+	case 'save_create':
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			doSaveCreate();
+		}
 
-	break;
-case 'create':
-	doCreate();
-	break;
-case 'drop':
-	if (isset($_POST['cancel'])) {
-		doDefault();
-	} else {
-		doDrop(false);
-	}
+		break;
+	case 'create':
+		doCreate();
+		break;
+	case 'drop':
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			doDrop(false);
+		}
 
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-case 'properties':
-	doProperties();
-	break;
-default:
-	doDefault();
-	break;
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	case 'properties':
+		doProperties();
+		break;
+	default:
+		doDefault();
+		break;
 }
 
 $misc->printFooter();

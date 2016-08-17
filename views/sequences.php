@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -28,87 +28,87 @@ function doDefault($msg = '') {
 	// Get all sequences
 	$sequences = $data->getSequences();
 
-	$columns = array(
-		'sequence' => array(
+	$columns = [
+		'sequence' => [
 			'title' => $lang['strsequence'],
 			'field' => field('seqname'),
 			'url' => "sequences.php?action=properties&amp;{$misc->href}&amp;",
-			'vars' => array('sequence' => 'seqname'),
-		),
-		'owner' => array(
+			'vars' => ['sequence' => 'seqname'],
+		],
+		'owner' => [
 			'title' => $lang['strowner'],
 			'field' => field('seqowner'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('seqcomment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'multiactions' => array(
-			'keycols' => array('sequence' => 'seqname'),
+	$actions = [
+		'multiactions' => [
+			'keycols' => ['sequence' => 'seqname'],
 			'url' => 'sequences.php',
-		),
-		'alter' => array(
+		],
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'sequences.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_alter',
 						'subject' => 'sequence',
 						'sequence' => field('seqname'),
-					),
-				),
-			),
-		),
-		'drop' => array(
+					],
+				],
+			],
+		],
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'sequences.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'sequence' => field('seqname'),
-					),
-				),
-			),
+					],
+				],
+			],
 			'multiaction' => 'confirm_drop',
-		),
-		'privileges' => array(
+		],
+		'privileges' => [
 			'content' => $lang['strprivileges'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'privileges.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'subject' => 'sequence',
 						'sequence' => field('seqname'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences']);
+	echo $misc->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences']);
 
-	$misc->printNavLinks(array('create' => array(
-		'attr' => array(
-			'href' => array(
+	$misc->printNavLinks(['create' => [
+		'attr' => [
+			'href' => [
 				'url' => 'sequences.php',
-				'urlvars' => array(
+				'urlvars' => [
 					'action' => 'create',
 					'server' => $_REQUEST['server'],
 					'database' => $_REQUEST['database'],
 					'schema' => $_REQUEST['schema'],
-				),
-			),
-		),
+				],
+			],
+		],
 		'content' => $lang['strcreatesequence'],
-	)), 'sequences-sequences', get_defined_vars());
+	]], 'sequences-sequences', get_defined_vars());
 }
 
 /**
@@ -121,18 +121,18 @@ function doTree() {
 
 	$reqvars = $misc->getRequestVars('sequence');
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('seqname'),
 		'icon' => 'Sequence',
 		'toolTip' => field('seqcomment'),
 		'action' => url('sequences.php',
 			$reqvars,
-			array(
+			[
 				'action' => 'properties',
 				'sequence' => field('seqname'),
-			)
+			]
 		),
-	);
+	];
 
 	$misc->printTree($sequences, $attrs, 'sequences');
 	exit;
@@ -190,96 +190,96 @@ function doProperties($msg = '') {
 		echo "</tr>";
 		echo "</table>";
 
-		$navlinks = array(
-			'alter' => array(
-				'attr' => array(
-					'href' => array(
+		$navlinks = [
+			'alter' => [
+				'attr' => [
+					'href' => [
 						'url' => 'sequences.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'action' => 'confirm_alter',
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
 							'sequence' => $sequence->fields['seqname'],
-						),
-					),
-				),
+						],
+					],
+				],
 				'content' => $lang['stralter'],
-			),
-			'setval' => array(
-				'attr' => array(
-					'href' => array(
+			],
+			'setval' => [
+				'attr' => [
+					'href' => [
 						'url' => 'sequences.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'action' => 'confirm_setval',
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
 							'sequence' => $sequence->fields['seqname'],
-						),
-					),
-				),
+						],
+					],
+				],
 				'content' => $lang['strsetval'],
-			),
-			'nextval' => array(
-				'attr' => array(
-					'href' => array(
+			],
+			'nextval' => [
+				'attr' => [
+					'href' => [
 						'url' => 'sequences.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'action' => 'nextval',
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
 							'sequence' => $sequence->fields['seqname'],
-						),
-					),
-				),
+						],
+					],
+				],
 				'content' => $lang['strnextval'],
-			),
-			'restart' => array(
-				'attr' => array(
-					'href' => array(
+			],
+			'restart' => [
+				'attr' => [
+					'href' => [
 						'url' => 'sequences.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'action' => 'restart',
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
 							'sequence' => $sequence->fields['seqname'],
-						),
-					),
-				),
+						],
+					],
+				],
 				'content' => $lang['strrestart'],
-			),
-			'reset' => array(
-				'attr' => array(
-					'href' => array(
+			],
+			'reset' => [
+				'attr' => [
+					'href' => [
 						'url' => 'sequences.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'action' => 'reset',
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
 							'sequence' => $sequence->fields['seqname'],
-						),
-					),
-				),
+						],
+					],
+				],
 				'content' => $lang['strreset'],
-			),
-			'showall' => array(
-				'attr' => array(
-					'href' => array(
+			],
+			'showall' => [
+				'attr' => [
+					'href' => [
 						'url' => 'sequences.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
-						),
-					),
-				),
+						],
+					],
+				],
 				'content' => $lang['strshowallsequences'],
-			),
-		);
+			],
+		];
 
 		if (!$data->hasAlterSequenceStart()) {
 			unset($navlinks['restart']);
@@ -331,7 +331,7 @@ function doDrop($confirm, $msg = '') {
 		echo "</form>\n";
 	} else {
 		if (is_array($_POST['sequence'])) {
-			$msg = '';
+			$msg    = '';
 			$status = $data->beginTransaction();
 			if ($status == 0) {
 				foreach ($_POST['sequence'] as $s) {
@@ -755,65 +755,65 @@ $misc->printHeader($lang['strsequences']);
 $misc->printBody();
 
 switch ($action) {
-case 'create':
-	doCreateSequence();
-	break;
-case 'save_create_sequence':
-	if (isset($_POST['create'])) {
-		doSaveCreateSequence();
-	} else {
-		doDefault();
-	}
+	case 'create':
+		doCreateSequence();
+		break;
+	case 'save_create_sequence':
+		if (isset($_POST['create'])) {
+			doSaveCreateSequence();
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'properties':
-	doProperties();
-	break;
-case 'drop':
-	if (isset($_POST['drop'])) {
-		doDrop(false);
-	} else {
-		doDefault();
-	}
+		break;
+	case 'properties':
+		doProperties();
+		break;
+	case 'drop':
+		if (isset($_POST['drop'])) {
+			doDrop(false);
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-case 'restart':
-	doRestart();
-	break;
-case 'reset':
-	doReset();
-	break;
-case 'nextval':
-	doNextval();
-	break;
-case 'setval':
-	if (isset($_POST['setval'])) {
-		doSaveSetval();
-	} else {
-		doDefault();
-	}
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	case 'restart':
+		doRestart();
+		break;
+	case 'reset':
+		doReset();
+		break;
+	case 'nextval':
+		doNextval();
+		break;
+	case 'setval':
+		if (isset($_POST['setval'])) {
+			doSaveSetval();
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_setval':
-	doSetval();
-	break;
-case 'alter':
-	if (isset($_POST['alter'])) {
-		doSaveAlter();
-	} else {
-		doDefault();
-	}
+		break;
+	case 'confirm_setval':
+		doSetval();
+		break;
+	case 'alter':
+		if (isset($_POST['alter'])) {
+			doSaveAlter();
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_alter':
-	doAlter();
-	break;
-default:
-	doDefault();
-	break;
+		break;
+	case 'confirm_alter':
+		doAlter();
+		break;
+	default:
+		doDefault();
+		break;
 }
 
 // Print footer

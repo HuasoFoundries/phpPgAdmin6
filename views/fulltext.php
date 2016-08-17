@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -25,71 +25,71 @@ function doDefault($msg = '') {
 
 	$cfgs = $data->getFtsConfigurations(false);
 
-	$columns = array(
-		'configuration' => array(
+	$columns = [
+		'configuration' => [
 			'title' => $lang['strftsconfig'],
 			'field' => field('name'),
 			'url' => "fulltext.php?action=viewconfig&amp;{$misc->href}&amp;",
-			'vars' => array('ftscfg' => 'name'),
-		),
-		'schema' => array(
+			'vars' => ['ftscfg' => 'name'],
+		],
+		'schema' => [
 			'title' => $lang['strschema'],
 			'field' => field('schema'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('comment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'drop' => array(
+	$actions = [
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'fulltext.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'dropconfig',
 						'ftscfg' => field('name'),
-					),
-				),
-			),
-		),
-		'alter' => array(
+					],
+				],
+			],
+		],
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'fulltext.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'alterconfig',
 						'ftscfg' => field('name'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($cfgs, $columns, $actions, 'fulltext-fulltext', $lang['strftsnoconfigs']);
+	echo $misc->printTable($cfgs, $columns, $actions, 'fulltext-fulltext', $lang['strftsnoconfigs']);
 
-	$navlinks = array(
-		'createconf' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'createconf' => [
+			'attr' => [
+				'href' => [
 					'url' => 'fulltext.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'createconfig',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strftscreateconfig'],
-		),
-	);
+		],
+	];
 
 	$misc->printNavLinks($navlinks, 'fulltext-fulltext', get_defined_vars());
 }
@@ -211,16 +211,16 @@ function doCreateConfig($msg = '') {
 	echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftstemplate']}</th>\n";
 	echo "\t\t<td class=\"data1\">";
 
-	$tpls = array();
+	$tpls   = [];
 	$tplsel = '';
 	while (!$ftscfgs->EOF) {
 		$data->fieldClean($ftscfgs->fields['schema']);
 		$data->fieldClean($ftscfgs->fields['name']);
-		$tplname = $ftscfgs->fields['schema'] . '.' . $ftscfgs->fields['name'];
-		$tpls[$tplname] = serialize(array(
+		$tplname        = $ftscfgs->fields['schema'] . '.' . $ftscfgs->fields['name'];
+		$tpls[$tplname] = serialize([
 			'name' => $ftscfgs->fields['name'],
 			'schema' => $ftscfgs->fields['schema'],
-		));
+		]);
 		if ($_POST['formTemplate'] == $tpls[$tplname]) {
 			$tplsel = htmlspecialchars($tpls[$tplname]);
 		}
@@ -232,17 +232,17 @@ function doCreateConfig($msg = '') {
 	// Parser
 	echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftsparser']}</th>\n";
 	echo "\t\t<td class=\"data1\">\n";
-	$ftsparsers_ = array();
-	$ftsparsel = '';
+	$ftsparsers_ = [];
+	$ftsparsel   = '';
 	while (!$ftsparsers->EOF) {
 		$data->fieldClean($ftsparsers->fields['schema']);
 		$data->fieldClean($ftsparsers->fields['name']);
 		$parsername = $ftsparsers->fields['schema'] . '.' . $ftsparsers->fields['name'];
 
-		$ftsparsers_[$parsername] = serialize(array(
+		$ftsparsers_[$parsername] = serialize([
 			'parser' => $ftsparsers->fields['name'],
 			'schema' => $ftsparsers->fields['schema'],
-		));
+		]);
 		if ($_POST['formParser'] == $ftsparsers_[$parsername]) {
 			$ftsparsel = htmlspecialchars($ftsparsers_[$parsername]);
 		}
@@ -397,24 +397,24 @@ function doViewParsers($msg = '') {
 
 	$parsers = $data->getFtsParsers(false);
 
-	$columns = array(
-		'schema' => array(
+	$columns = [
+		'schema' => [
 			'title' => $lang['strschema'],
 			'field' => field('schema'),
-		),
-		'name' => array(
+		],
+		'name' => [
 			'title' => $lang['strname'],
 			'field' => field('name'),
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('comment'),
-		),
-	);
+		],
+	];
 
-	$actions = array();
+	$actions = [];
 
-	$misc->printTable($parsers, $columns, $actions, 'fulltext-viewparsers', $lang['strftsnoparsers']);
+	echo $misc->printTable($parsers, $columns, $actions, 'fulltext-viewparsers', $lang['strftsnoparsers']);
 
 	//TODO: navlink to "create parser"
 }
@@ -433,69 +433,69 @@ function doViewDicts($msg = '') {
 
 	$dicts = $data->getFtsDictionaries(false);
 
-	$columns = array(
-		'schema' => array(
+	$columns = [
+		'schema' => [
 			'title' => $lang['strschema'],
 			'field' => field('schema'),
-		),
-		'name' => array(
+		],
+		'name' => [
 			'title' => $lang['strname'],
 			'field' => field('name'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('comment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'drop' => array(
+	$actions = [
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'fulltext.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'dropdict',
 						'ftsdict' => field('name'),
-					),
-				),
-			),
-		),
-		'alter' => array(
+					],
+				],
+			],
+		],
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'fulltext.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'alterdict',
 						'ftsdict' => field('name'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($dicts, $columns, $actions, 'fulltext-viewdicts', $lang['strftsnodicts']);
+	echo $misc->printTable($dicts, $columns, $actions, 'fulltext-viewdicts', $lang['strftsnodicts']);
 
-	$navlinks = array(
-		'createdict' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'createdict' => [
+			'attr' => [
+				'href' => [
 					'url' => 'fulltext.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'createdict',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strftscreatedict'],
-		),
-	);
+		],
+	];
 
 	$misc->printNavLinks($navlinks, 'fulltext-viewdicts', get_defined_vars());
 }
@@ -516,80 +516,80 @@ function doViewConfig($ftscfg, $msg = '') {
 
 	$map = $data->getFtsConfigurationMap($ftscfg);
 
-	$columns = array(
-		'name' => array(
+	$columns = [
+		'name' => [
 			'title' => $lang['strftsmapping'],
 			'field' => field('name'),
-		),
-		'dictionaries' => array(
+		],
+		'dictionaries' => [
 			'title' => $lang['strftsdicts'],
 			'field' => field('dictionaries'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('description'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'drop' => array(
+	$actions = [
+		'drop' => [
 			'multiaction' => 'dropmapping',
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'fulltext.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'dropmapping',
 						'mapping' => field('name'),
 						'ftscfg' => field('cfgname'),
-					),
-				),
-			),
-		),
-		'alter' => array(
+					],
+				],
+			],
+		],
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'fulltext.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'altermapping',
 						'mapping' => field('name'),
 						'ftscfg' => field('cfgname'),
-					),
-				),
-			),
-		),
-		'multiactions' => array(
-			'keycols' => array('mapping' => 'name'),
+					],
+				],
+			],
+		],
+		'multiactions' => [
+			'keycols' => ['mapping' => 'name'],
 			'url' => 'fulltext.php',
 			'default' => null,
-			'vars' => array('ftscfg' => $ftscfg),
-		),
+			'vars' => ['ftscfg' => $ftscfg],
+		],
 
-	);
+	];
 
-	$misc->printTable($map, $columns, $actions, 'fulltext-viewconfig', $lang['strftsemptymap']);
+	echo $misc->printTable($map, $columns, $actions, 'fulltext-viewconfig', $lang['strftsemptymap']);
 
-	$navlinks = array(
-		'addmapping' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'addmapping' => [
+			'attr' => [
+				'href' => [
 					'url' => 'fulltext.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'addmapping',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'ftscfg' => $ftscfg,
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strftsaddmapping'],
-		),
-	);
+		],
+	];
 
 	$misc->printNavLinks($navlinks, 'fulltext-viewconfig', get_defined_vars());
 }
@@ -652,16 +652,16 @@ function doCreateDict($msg = '') {
 	// Template
 	echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftstemplate']}</th>\n";
 	echo "\t\t<td class=\"data1\">";
-	$tpls = array();
+	$tpls   = [];
 	$tplsel = '';
 	while (!$ftstpls->EOF) {
 		$data->fieldClean($ftstpls->fields['schema']);
 		$data->fieldClean($ftstpls->fields['name']);
-		$tplname = $ftstpls->fields['schema'] . '.' . $ftstpls->fields['name'];
-		$tpls[$tplname] = serialize(array(
+		$tplname        = $ftstpls->fields['schema'] . '.' . $ftstpls->fields['name'];
+		$tpls[$tplname] = serialize([
 			'name' => $ftstpls->fields['name'],
 			'schema' => $ftstpls->fields['schema'],
-		));
+		]);
 		if ($_POST['formTemplate'] == $tpls[$tplname]) {
 			$tplsel = htmlspecialchars($tpls[$tplname]);
 		}
@@ -887,7 +887,7 @@ function doDropMapping($confirm) {
 			}
 			doViewConfig($_REQUEST['ftscfg'], $lang['strftsmappingdropped']);
 		} else {
-			$status = $data->changeFtsMapping($_REQUEST['ftscfg'], array($_REQUEST['mapping']), 'drop');
+			$status = $data->changeFtsMapping($_REQUEST['ftscfg'], [$_REQUEST['mapping']], 'drop');
 			if ($status == 0) {
 				doViewConfig($_REQUEST['ftscfg'], $lang['strftsmappingdropped']);
 			} else {
@@ -927,12 +927,12 @@ function doAlterMapping($msg = '') {
 
 		// Case of multiaction drop
 		if (isset($_REQUEST['ma'])) {
-			$ma_mappings = array();
-			$ma_mappings_names = array();
+			$ma_mappings       = [];
+			$ma_mappings_names = [];
 			foreach ($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 				printf('<input type="hidden" name="formMapping[]" value="%s" />', htmlspecialchars($a['mapping']));
-				$ma_mappings[] = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
+				$ma_mappings[]       = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
 				$ma_mappings_names[] = $a['mapping'];
 			}
 			echo implode(", ", $ma_mappings_names);
@@ -980,8 +980,8 @@ function doAlterMapping($msg = '') {
 function doSaveAlterMapping() {
 	global $data, $misc, $lang;
 
-	$mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : array($_POST['formMapping']));
-	$status = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
+	$mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
+	$status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
 	if ($status == 0) {
 		doViewConfig($_POST['ftscfg'], $lang['strftsmappingaltered']);
 	} else {
@@ -1023,7 +1023,7 @@ function doAddMapping($msg = '') {
 		echo "\t\t<td class=\"data1\">";
 		echo "\t\t\t<select name=\"formMapping\">\n";
 		while (!$mappings->EOF) {
-			$mapping = htmlspecialchars($mappings->fields['name']);
+			$mapping      = htmlspecialchars($mappings->fields['name']);
 			$mapping_desc = htmlspecialchars($mappings->fields['description']);
 			echo "\t\t\t\t<option value=\"{$mapping}\"",
 			$mapping == $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : "", "</option>\n";
@@ -1066,8 +1066,8 @@ function doAddMapping($msg = '') {
 function doSaveAddMapping() {
 	global $data, $misc, $lang;
 
-	$mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : array($_POST['formMapping']));
-	$status = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);
+	$mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
+	$status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);
 	if ($status == 0) {
 		doViewConfig($_POST['ftscfg'], $lang['strftsmappingadded']);
 	} else {
@@ -1082,12 +1082,12 @@ function doSaveAddMapping() {
 function doTree() {
 	global $misc, $data, $lang;
 
-	$tabs = $misc->getNavTabs('fulltext');
+	$tabs  = $misc->getNavTabs('fulltext');
 	$items = $misc->adjustTabsForTree($tabs);
 
 	$reqvars = $misc->getRequestVars('ftscfg');
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('title'),
 		'icon' => field('icon'),
 		'action' => url('fulltext.php',
@@ -1096,12 +1096,12 @@ function doTree() {
 		),
 		'branch' => url('fulltext.php',
 			$reqvars,
-			array(
+			[
 				'action' => 'subtree',
 				'what' => field('icon'), // IZ: yeah, it's ugly, but I do not want to change navigation tabs arrays
-			)
+			]
 		),
-	);
+	];
 
 	$misc->printTree($items, $attrs, 'fts');
 
@@ -1112,25 +1112,25 @@ function doSubTree($what) {
 	global $misc, $data, $lang;
 
 	switch ($what) {
-	case 'FtsCfg':
-		$items = $data->getFtsConfigurations(false);
-		$urlvars = array('action' => 'viewconfig', 'ftscfg' => field('name'));
-		break;
-	case 'FtsDict':
-		$items = $data->getFtsDictionaries(false);
-		$urlvars = array('action' => 'viewdicts');
-		break;
-	case 'FtsParser':
-		$items = $data->getFtsParsers(false);
-		$urlvars = array('action' => 'viewparsers');
-		break;
-	default:
-		exit;
+		case 'FtsCfg':
+			$items   = $data->getFtsConfigurations(false);
+			$urlvars = ['action' => 'viewconfig', 'ftscfg' => field('name')];
+			break;
+		case 'FtsDict':
+			$items   = $data->getFtsDictionaries(false);
+			$urlvars = ['action' => 'viewdicts'];
+			break;
+		case 'FtsParser':
+			$items   = $data->getFtsParsers(false);
+			$urlvars = ['action' => 'viewparsers'];
+			break;
+		default:
+			exit;
 	}
 
 	$reqvars = $misc->getRequestVars('ftscfg');
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('name'),
 		'icon' => $what,
 		'toolTip' => field('comment'),
@@ -1142,13 +1142,13 @@ function doSubTree($what) {
 			'',
 			url('fulltext.php',
 				$reqvars,
-				array(
+				[
 					'action' => 'subtree',
 					'ftscfg' => field('name'),
-				)
+				]
 			)
 		),
-	);
+	];
 
 	$misc->printTree($items, $attrs, strtolower($what));
 	exit;
@@ -1174,91 +1174,91 @@ if (isset($_POST['cancel'])) {
 }
 
 switch ($action) {
-case 'createconfig':
-	if (isset($_POST['create'])) {
-		doSaveCreateConfig();
-	} else {
-		doCreateConfig();
-	}
+	case 'createconfig':
+		if (isset($_POST['create'])) {
+			doSaveCreateConfig();
+		} else {
+			doCreateConfig();
+		}
 
-	break;
-case 'alterconfig':
-	if (isset($_POST['alter'])) {
-		doSaveAlterConfig();
-	} else {
-		doAlterConfig();
-	}
+		break;
+	case 'alterconfig':
+		if (isset($_POST['alter'])) {
+			doSaveAlterConfig();
+		} else {
+			doAlterConfig();
+		}
 
-	break;
-case 'dropconfig':
-	if (isset($_POST['drop'])) {
-		doDropConfig(false);
-	} else {
-		doDropConfig(true);
-	}
+		break;
+	case 'dropconfig':
+		if (isset($_POST['drop'])) {
+			doDropConfig(false);
+		} else {
+			doDropConfig(true);
+		}
 
-	break;
-case 'viewconfig':
-	doViewConfig($_REQUEST['ftscfg']);
-	break;
-case 'viewparsers':
-	doViewParsers();
-	break;
-case 'viewdicts':
-	doViewDicts();
-	break;
-case 'createdict':
-	if (isset($_POST['create'])) {
-		doSaveCreateDict();
-	} else {
-		doCreateDict();
-	}
+		break;
+	case 'viewconfig':
+		doViewConfig($_REQUEST['ftscfg']);
+		break;
+	case 'viewparsers':
+		doViewParsers();
+		break;
+	case 'viewdicts':
+		doViewDicts();
+		break;
+	case 'createdict':
+		if (isset($_POST['create'])) {
+			doSaveCreateDict();
+		} else {
+			doCreateDict();
+		}
 
-	break;
-case 'alterdict':
-	if (isset($_POST['alter'])) {
-		doSaveAlterDict();
-	} else {
-		doAlterDict();
-	}
+		break;
+	case 'alterdict':
+		if (isset($_POST['alter'])) {
+			doSaveAlterDict();
+		} else {
+			doAlterDict();
+		}
 
-	break;
-case 'dropdict':
-	if (isset($_POST['drop'])) {
-		doDropDict(false);
-	} else {
-		doDropDict(true);
-	}
+		break;
+	case 'dropdict':
+		if (isset($_POST['drop'])) {
+			doDropDict(false);
+		} else {
+			doDropDict(true);
+		}
 
-	break;
-case 'dropmapping':
-	if (isset($_POST['drop'])) {
-		doDropMapping(false);
-	} else {
-		doDropMapping(true);
-	}
+		break;
+	case 'dropmapping':
+		if (isset($_POST['drop'])) {
+			doDropMapping(false);
+		} else {
+			doDropMapping(true);
+		}
 
-	break;
-case 'altermapping':
-	if (isset($_POST['alter'])) {
-		doSaveAlterMapping();
-	} else {
-		doAlterMapping();
-	}
+		break;
+	case 'altermapping':
+		if (isset($_POST['alter'])) {
+			doSaveAlterMapping();
+		} else {
+			doAlterMapping();
+		}
 
-	break;
-case 'addmapping':
-	if (isset($_POST['add'])) {
-		doSaveAddMapping();
-	} else {
-		doAddMapping();
-	}
+		break;
+	case 'addmapping':
+		if (isset($_POST['add'])) {
+			doSaveAddMapping();
+		} else {
+			doAddMapping();
+		}
 
-	break;
+		break;
 
-default:
-	doDefault();
-	break;
+	default:
+		doDefault();
+		break;
 }
 
 $misc->printFooter();

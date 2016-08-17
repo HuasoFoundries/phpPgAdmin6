@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -23,7 +23,7 @@ function doSaveEdit() {
 	$fnlang = strtolower($_POST['original_lang']);
 
 	if ($fnlang == 'c') {
-		$def = array($_POST['formObjectFile'], $_POST['formLinkSymbol']);
+		$def = [$_POST['formObjectFile'], $_POST['formLinkSymbol']];
 	} else if ($fnlang == 'internal') {
 		$def = $_POST['formLinkSymbol'];
 	} else {
@@ -123,8 +123,8 @@ function doEdit($msg = '') {
 			}
 			$names_arr = $data->phpArray($fndata->fields['proargnames']);
 			$modes_arr = $data->phpArray($fndata->fields['proargmodes']);
-			$args = '';
-			$i = 0;
+			$args      = '';
+			$i         = 0;
 			for ($i = 0; $i < sizeof($args_arr); $i++) {
 				if ($i != 0) {
 					$args .= ', ';
@@ -132,16 +132,16 @@ function doEdit($msg = '') {
 
 				if (isset($modes_arr[$i])) {
 					switch ($modes_arr[$i]) {
-					case 'i':$args .= " IN ";
-						break;
-					case 'o':$args .= " OUT ";
-						break;
-					case 'b':$args .= " INOUT ";
-						break;
-					case 'v':$args .= " VARIADIC ";
-						break;
-					case 't':$args .= " TABLE ";
-						break;
+						case 'i':$args .= " IN ";
+							break;
+						case 'o':$args .= " OUT ";
+							break;
+						case 'b':$args .= " INOUT ";
+							break;
+						case 'v':$args .= " VARIADIC ";
+							break;
+						case 't':$args .= " TABLE ";
+							break;
 					}
 				}
 				if (isset($names_arr[$i]) && $names_arr[$i] != '') {
@@ -311,8 +311,8 @@ function doProperties($msg = '') {
 			}
 			$names_arr = $data->phpArray($funcdata->fields['proargnames']);
 			$modes_arr = $data->phpArray($funcdata->fields['proargmodes']);
-			$args = '';
-			$i = 0;
+			$args      = '';
+			$i         = 0;
 			for ($i = 0; $i < sizeof($args_arr); $i++) {
 				if ($i != 0) {
 					$args .= ', ';
@@ -320,16 +320,16 @@ function doProperties($msg = '') {
 
 				if (isset($modes_arr[$i])) {
 					switch ($modes_arr[$i]) {
-					case 'i':$args .= " IN ";
-						break;
-					case 'o':$args .= " OUT ";
-						break;
-					case 'b':$args .= " INOUT ";
-						break;
-					case 'v':$args .= " VARIADIC ";
-						break;
-					case 't':$args .= " TABLE ";
-						break;
+						case 'i':$args .= " IN ";
+							break;
+						case 'o':$args .= " OUT ";
+							break;
+						case 'b':$args .= " INOUT ";
+							break;
+						case 'v':$args .= " VARIADIC ";
+							break;
+						case 't':$args .= " TABLE ";
+							break;
 					}
 				}
 				if (isset($names_arr[$i]) && $names_arr[$i] != '') {
@@ -348,7 +348,7 @@ function doProperties($msg = '') {
 		}
 
 		$funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-		$func_full = $funcdata->fields['proname'] . "(" . $funcdata->fields['proarguments'] . ")";
+		$func_full                     = $funcdata->fields['proname'] . "(" . $funcdata->fields['proarguments'] . ")";
 		echo "<table style=\"width: 90%\">\n";
 		echo "<tr><th class=\"data\">{$lang['strfunction']}</th>\n";
 		echo "<th class=\"data\">{$lang['strarguments']}</th>\n";
@@ -374,17 +374,17 @@ function doProperties($msg = '') {
 			echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strlinksymbol']}</th></tr>\n";
 			echo "<tr><td class=\"data1\" colspan=\"4\">", $misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
 		} else {
-			include_once BASE_PATH . '/libraries/highlight.php';
+			include_once BASE_PATH . '/includes/highlight.php';
 			echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strdefinition']}</th></tr>\n";
 			// Check to see if we have syntax highlighting for this language
 			if (isset($data->langmap[$funcdata->fields['prolanguage']])) {
 				$temp = syntax_highlight(htmlspecialchars($funcdata->fields['prosrc']), $data->langmap[$funcdata->fields['prolanguage']]);
-				$tag = 'prenoescape';
+				$tag  = 'prenoescape';
 			} else {
 				$temp = $funcdata->fields['prosrc'];
-				$tag = 'pre';
+				$tag  = 'pre';
 			}
-			echo "<tr><td class=\"data1\" colspan=\"4\">", $misc->printVal($temp, $tag, array('lineno' => true, 'class' => 'data1')), "</td></tr>\n";
+			echo "<tr><td class=\"data1\" colspan=\"4\">", $misc->printVal($temp, $tag, ['lineno' => true, 'class' => 'data1']), "</td></tr>\n";
 		}
 
 		// Display function cost options
@@ -413,53 +413,53 @@ function doProperties($msg = '') {
 		echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
-	$navlinks = array(
-		'showall' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'showall' => [
+			'attr' => [
+				'href' => [
 					'url' => 'functions.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strshowallfunctions'],
-		),
-		'alter' => array(
-			'attr' => array(
-				'href' => array(
+		],
+		'alter' => [
+			'attr' => [
+				'href' => [
 					'url' => 'functions.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'edit',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'function' => $_REQUEST['function'],
 						'function_oid' => $_REQUEST['function_oid'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['stralter'],
-		),
-		'drop' => array(
-			'attr' => array(
-				'href' => array(
+		],
+		'drop' => [
+			'attr' => [
+				'href' => [
 					'url' => 'functions.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'function' => $func_full,
 						'function_oid' => $_REQUEST['function_oid'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strdrop'],
-		),
-	);
+		],
+	];
 
 	$misc->printNavLinks($navlinks, 'functions-properties', get_defined_vars());
 }
@@ -505,7 +505,7 @@ function doDrop($confirm) {
 		echo "</form>\n";
 	} else {
 		if (is_array($_POST['function_oid'])) {
-			$msg = '';
+			$msg    = '';
 			$status = $data->beginTransaction();
 			if ($status == 0) {
 				foreach ($_POST['function_oid'] as $k => $s) {
@@ -600,20 +600,20 @@ function doCreate($msg = '', $szJS = "") {
 		$_POST['formComment'] = '';
 	}
 
-	$types = $data->getTypes(true, true, true);
-	$langs = $data->getLanguages(true);
+	$types  = $data->getTypes(true, true, true);
+	$langs  = $data->getLanguages(true);
 	$fnlang = strtolower($_POST['formLanguage']);
 
 	switch ($fnlang) {
-	case 'c':
-		$misc->printTitle($lang['strcreatecfunction'], 'pg.function.create.c');
-		break;
-	case 'internal':
-		$misc->printTitle($lang['strcreateinternalfunction'], 'pg.function.create.internal');
-		break;
-	default:
-		$misc->printTitle($lang['strcreateplfunction'], 'pg.function.create.pl');
-		break;
+		case 'c':
+			$misc->printTitle($lang['strcreatecfunction'], 'pg.function.create.c');
+			break;
+		case 'internal':
+			$misc->printTitle($lang['strcreateinternalfunction'], 'pg.function.create.internal');
+			break;
+		default:
+			$misc->printTitle($lang['strcreateplfunction'], 'pg.function.create.pl');
+			break;
 	}
 	$misc->printMsg($msg);
 
@@ -636,7 +636,7 @@ function doCreate($msg = '', $szJS = "") {
 	$szArguments = "<td class=\"data1\"><input name=\"formArguments\" style=\"width:100%;\" size=\"16\" value=\"" .
 	htmlspecialchars($_POST['formArguments']) . "\" /></td>";
 
-	$szSetOfSelected = "";
+	$szSetOfSelected    = "";
 	$szNotSetOfSelected = "";
 	if ($_POST['formSetOf'] == '') {
 		$szNotSetOfSelected = " selected=\"selected\"";
@@ -653,7 +653,7 @@ function doCreate($msg = '', $szJS = "") {
 
 	// Create string array type selector
 
-	$szArraySelected = "";
+	$szArraySelected    = "";
 	$szNotArraySelected = "";
 	if ($_POST['formArray'] == '') {
 		$szNotArraySelected = " selected=\"selected\"";
@@ -690,8 +690,8 @@ function doCreate($msg = '', $szJS = "") {
 
 	$szLanguage .= "</td>";
 	$szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$lang['strarguments']}</th></tr>";
-	$arrayModes = array("IN", "OUT", "INOUT");
-	$szModes = "<select name=\"formArgModes[]\" style=\"width:100%;\">";
+	$arrayModes    = ["IN", "OUT", "INOUT"];
+	$szModes       = "<select name=\"formArgModes[]\" style=\"width:100%;\">";
 	foreach ($arrayModes as $pV) {
 		$szModes .= "<option value=\"{$pV}\">{$pV}</option>";
 	}
@@ -814,7 +814,7 @@ function doSaveCreate() {
 	$fnlang = strtolower($_POST['formLanguage']);
 
 	if ($fnlang == 'c') {
-		$def = array($_POST['formObjectFile'], $_POST['formLinkSymbol']);
+		$def = [$_POST['formObjectFile'], $_POST['formLinkSymbol']];
 	} else if ($fnlang == 'internal') {
 		$def = $_POST['formLinkSymbol'];
 	} else {
@@ -865,7 +865,7 @@ function doSaveCreate() {
  */
 function buildFunctionArguments($arrayVars) {
 	if (isset($_POST['formArgName'])) {
-		$arrayArgs = array();
+		$arrayArgs = [];
 		foreach ($arrayVars['formArgName'] as $pK => $pV) {
 			$arrayArgs[] = $arrayVars['formArgModes'][$pK] . ' ' . trim($pV) . ' ' . trim($arrayVars['formArgType'][$pK]) . $arrayVars['formArgArray'][$pK];
 		}
@@ -878,11 +878,11 @@ function buildFunctionArguments($arrayVars) {
  * Build out JS to re-create table rows for arguments
  */
 function buildJSRows($szArgs) {
-	$arrayModes = array('IN', 'OUT', 'INOUT');
-	$arrayArgs = explode(',', $szArgs);
-	$arrayProperArgs = array();
-	$nC = 0;
-	$szReturn = '';
+	$arrayModes      = ['IN', 'OUT', 'INOUT'];
+	$arrayArgs       = explode(',', $szArgs);
+	$arrayProperArgs = [];
+	$nC              = 0;
+	$szReturn        = '';
 	foreach ($arrayArgs as $pV) {
 		$arrayWords = explode(' ', $pV);
 		if (in_array($arrayWords[0], $arrayModes) === true) {
@@ -891,13 +891,13 @@ function buildJSRows($szArgs) {
 		}
 		$szArgName = array_shift($arrayWords);
 		if (strpos($arrayWords[count($arrayWords) - 1], '[]') === false) {
-			$szArgType = implode(" ", $arrayWords);
+			$szArgType   = implode(" ", $arrayWords);
 			$bArgIsArray = "false";
 		} else {
-			$szArgType = str_replace('[]', '', implode(' ', $arrayWords));
+			$szArgType   = str_replace('[]', '', implode(' ', $arrayWords));
 			$bArgIsArray = "true";
 		}
-		$arrayProperArgs[] = array($szMode, $szArgName, $szArgType, $bArgIsArray);
+		$arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
 		$szReturn .= "<script type=\"text/javascript\">RebuildArgTR('{$szMode}','{$szArgName}','{$szArgType}',new Boolean({$bArgIsArray}));</script>";
 		$nC++;
 	}
@@ -906,11 +906,11 @@ function buildJSRows($szArgs) {
 
 function buildJSData() {
 	global $data;
-	$arrayModes = array('IN', 'OUT', 'INOUT');
-	$arrayTypes = $data->getTypes(true, true, true);
-	$arrayPTypes = array();
-	$arrayPModes = array();
-	$szTypes = '';
+	$arrayModes  = ['IN', 'OUT', 'INOUT'];
+	$arrayTypes  = $data->getTypes(true, true, true);
+	$arrayPTypes = [];
+	$arrayPModes = [];
+	$szTypes     = '';
 
 	while (!$arrayTypes->EOF) {
 		$arrayPTypes[] = "'" . $arrayTypes->fields['typname'] . "'";
@@ -939,129 +939,129 @@ function doDefault($msg = '') {
 
 	$funcs = $data->getFunctions();
 
-	$columns = array(
-		'function' => array(
+	$columns = [
+		'function' => [
 			'title' => $lang['strfunction'],
 			'field' => field('proproto'),
 			'url' => "redirect.php?subject=function&amp;action=properties&amp;{$misc->href}&amp;",
-			'vars' => array('function' => 'proproto', 'function_oid' => 'prooid'),
-		),
-		'returns' => array(
+			'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
+		],
+		'returns' => [
 			'title' => $lang['strreturns'],
 			'field' => field('proreturns'),
-		),
-		'owner' => array(
+		],
+		'owner' => [
 			'title' => $lang['strowner'],
 			'field' => field('proowner'),
-		),
-		'proglanguage' => array(
+		],
+		'proglanguage' => [
 			'title' => $lang['strproglanguage'],
 			'field' => field('prolanguage'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('procomment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'multiactions' => array(
-			'keycols' => array('function' => 'proproto', 'function_oid' => 'prooid'),
+	$actions = [
+		'multiactions' => [
+			'keycols' => ['function' => 'proproto', 'function_oid' => 'prooid'],
 			'url' => 'functions.php',
-		),
-		'alter' => array(
+		],
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'functions.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'edit',
 						'function' => field('proproto'),
 						'function_oid' => field('prooid'),
-					),
-				),
-			),
-		),
-		'drop' => array(
+					],
+				],
+			],
+		],
+		'drop' => [
 			'multiaction' => 'confirm_drop',
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'functions.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'function' => field('proproto'),
 						'function_oid' => field('prooid'),
-					),
-				),
-			),
-		),
-		'privileges' => array(
+					],
+				],
+			],
+		],
+		'privileges' => [
 			'content' => $lang['strprivileges'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'privileges.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'subject' => 'function',
 						'function' => field('proproto'),
 						'function_oid' => field('prooid'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($funcs, $columns, $actions, 'functions-functions', $lang['strnofunctions']);
+	echo $misc->printTable($funcs, $columns, $actions, 'functions-functions', $lang['strnofunctions']);
 
-	$navlinks = array(
-		'createpl' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'createpl' => [
+			'attr' => [
+				'href' => [
 					'url' => 'functions.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'create',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strcreateplfunction'],
-		),
-		'createinternal' => array(
-			'attr' => array(
-				'href' => array(
+		],
+		'createinternal' => [
+			'attr' => [
+				'href' => [
 					'url' => 'functions.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'create',
 						'language' => 'internal',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strcreateinternalfunction'],
-		),
-		'createc' => array(
-			'attr' => array(
-				'href' => array(
+		],
+		'createc' => [
+			'attr' => [
+				'href' => [
 					'url' => 'functions.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'create',
 						'language' => 'C',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strcreatecfunction'],
-		),
-	);
+		],
+	];
 
 	$misc->printNavLinks($navlinks, 'functions-functions', get_defined_vars());
 }
@@ -1078,19 +1078,19 @@ function doTree() {
 
 	$reqvars = $misc->getRequestVars('function');
 
-	$attrs = array(
+	$attrs = [
 		'text' => $proto,
 		'icon' => 'Function',
 		'toolTip' => field('procomment'),
 		'action' => url('redirect.php',
 			$reqvars,
-			array(
+			[
 				'action' => 'properties',
 				'function' => $proto,
 				'function_oid' => field('prooid'),
-			)
+			]
 		),
-	);
+	];
 
 	$misc->printTree($funcs, $attrs, 'functions');
 	exit;
@@ -1104,45 +1104,45 @@ $misc->printHeader($lang['strfunctions']);
 $misc->printBody();
 
 switch ($action) {
-case 'save_create':
-	if (isset($_POST['cancel'])) {
-		doDefault();
-	} else {
-		doSaveCreate();
-	}
+	case 'save_create':
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			doSaveCreate();
+		}
 
-	break;
-case 'create':
-	doCreate();
-	break;
-case 'drop':
-	if (isset($_POST['drop'])) {
-		doDrop(false);
-	} else {
-		doDefault();
-	}
+		break;
+	case 'create':
+		doCreate();
+		break;
+	case 'drop':
+		if (isset($_POST['drop'])) {
+			doDrop(false);
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-case 'save_edit':
-	if (isset($_POST['cancel'])) {
-		doDefault();
-	} else {
-		doSaveEdit();
-	}
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	case 'save_edit':
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			doSaveEdit();
+		}
 
-	break;
-case 'edit':
-	doEdit();
-	break;
-case 'properties':
-	doProperties();
-	break;
-default:
-	doDefault();
-	break;
+		break;
+	case 'edit':
+		doEdit();
+		break;
+	case 'properties':
+		doProperties();
+		break;
+	default:
+		doDefault();
+		break;
 }
 
 $misc->printFooter();

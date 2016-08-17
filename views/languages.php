@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -27,25 +27,25 @@ function doDefault($msg = '') {
 
 	$languages = $data->getLanguages();
 
-	$columns = array(
-		'language' => array(
+	$columns = [
+		'language' => [
 			'title' => $lang['strname'],
 			'field' => field('lanname'),
-		),
-		'trusted' => array(
+		],
+		'trusted' => [
 			'title' => $lang['strtrusted'],
 			'field' => field('lanpltrusted'),
 			'type' => 'yesno',
-		),
-		'function' => array(
+		],
+		'function' => [
 			'title' => $lang['strfunction'],
 			'field' => field('lanplcallf'),
-		),
-	);
+		],
+	];
 
-	$actions = array();
+	$actions = [];
 
-	$misc->printTable($languages, $columns, $actions, 'languages-languages', $lang['strnolanguages']);
+	echo $misc->printTable($languages, $columns, $actions, 'languages-languages', $lang['strnolanguages']);
 }
 
 /**
@@ -56,10 +56,10 @@ function doTree() {
 
 	$languages = $data->getLanguages();
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('lanname'),
 		'icon' => 'Language',
-	);
+	];
 
 	$misc->printTree($languages, $attrs, 'languages');
 	exit;
@@ -73,9 +73,9 @@ $misc->printHeader($lang['strlanguages']);
 $misc->printBody();
 
 switch ($action) {
-default:
-	doDefault();
-	break;
+	default:
+		doDefault();
+		break;
 }
 
 $misc->printFooter();

@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
@@ -23,16 +23,16 @@ function doDefault($msg = '') {
 	$misc->printMsg($msg);
 
 	// common params for printVal
-	$shownull = array('null' => true);
+	$shownull = ['null' => true];
 
 	// Fetch info
-	$referrers = $data->getReferrers($_REQUEST['table']);
-	$parents = $data->getTableParents($_REQUEST['table']);
-	$children = $data->getTableChildren($_REQUEST['table']);
+	$referrers      = $data->getReferrers($_REQUEST['table']);
+	$parents        = $data->getTableParents($_REQUEST['table']);
+	$children       = $data->getTableChildren($_REQUEST['table']);
 	$tablestatstups = $data->getStatsTableTuples($_REQUEST['table']);
-	$tablestatsio = $data->getStatsTableIO($_REQUEST['table']);
+	$tablestatsio   = $data->getStatsTableIO($_REQUEST['table']);
 	$indexstatstups = $data->getStatsIndexTuples($_REQUEST['table']);
-	$indexstatsio = $data->getStatsIndexIO($_REQUEST['table']);
+	$indexstatsio   = $data->getStatsIndexIO($_REQUEST['table']);
 
 	// Check that there is some info
 	if (($referrers === -99 || ($referrers !== -99 && $referrers->recordCount() == 0))
@@ -45,116 +45,116 @@ function doDefault($msg = '') {
 		if ($referrers !== -99 && $referrers->recordCount() > 0) {
 			echo "<h3>{$lang['strreferringtables']}</h3>\n";
 
-			$columns = array(
-				'schema' => array(
+			$columns = [
+				'schema' => [
 					'title' => $lang['strschema'],
 					'field' => field('nspname'),
-				),
-				'table' => array(
+				],
+				'table' => [
 					'title' => $lang['strtable'],
 					'field' => field('relname'),
-				),
-				'name' => array(
+				],
+				'name' => [
 					'title' => $lang['strname'],
 					'field' => field('conname'),
-				),
-				'definition' => array(
+				],
+				'definition' => [
 					'title' => $lang['strdefinition'],
 					'field' => field('consrc'),
-				),
-				'actions' => array(
+				],
+				'actions' => [
 					'title' => $lang['stractions'],
-				),
-			);
+				],
+			];
 
-			$actions = array(
-				'properties' => array(
+			$actions = [
+				'properties' => [
 					'content' => $lang['strproperties'],
-					'attr' => array(
-						'href' => array(
+					'attr' => [
+						'href' => [
 							'url' => 'constraints.php',
-							'urlvars' => array(
+							'urlvars' => [
 								'schema' => field('nspname'),
 								'table' => field('relname'),
-							),
-						),
-					),
-				),
-			);
+							],
+						],
+					],
+				],
+			];
 
-			$misc->printTable($referrers, $columns, $actions, 'info-referrers', $lang['strnodata']);
+			echo $misc->printTable($referrers, $columns, $actions, 'info-referrers', $lang['strnodata']);
 		}
 
 		// Parent tables
 		if ($parents->recordCount() > 0) {
 			echo "<h3>{$lang['strparenttables']}</h3>\n";
 
-			$columns = array(
-				'schema' => array(
+			$columns = [
+				'schema' => [
 					'title' => $lang['strschema'],
 					'field' => field('nspname'),
-				),
-				'table' => array(
+				],
+				'table' => [
 					'title' => $lang['strtable'],
 					'field' => field('relname'),
-				),
-				'actions' => array(
+				],
+				'actions' => [
 					'title' => $lang['stractions'],
-				),
-			);
+				],
+			];
 
-			$actions = array(
-				'properties' => array(
+			$actions = [
+				'properties' => [
 					'content' => $lang['strproperties'],
-					'attr' => array(
-						'href' => array(
+					'attr' => [
+						'href' => [
 							'url' => 'tblproperties.php',
-							'urlvars' => array(
+							'urlvars' => [
 								'schema' => field('nspname'),
 								'table' => field('relname'),
-							),
-						),
-					),
-				),
-			);
+							],
+						],
+					],
+				],
+			];
 
-			$misc->printTable($parents, $columns, $actions, 'info-parents', $lang['strnodata']);
+			echo $misc->printTable($parents, $columns, $actions, 'info-parents', $lang['strnodata']);
 		}
 
 		// Child tables
 		if ($children->recordCount() > 0) {
 			echo "<h3>{$lang['strchildtables']}</h3>\n";
 
-			$columns = array(
-				'schema' => array(
+			$columns = [
+				'schema' => [
 					'title' => $lang['strschema'],
 					'field' => field('nspname'),
-				),
-				'table' => array(
+				],
+				'table' => [
 					'title' => $lang['strtable'],
 					'field' => field('relname'),
-				),
-				'actions' => array(
+				],
+				'actions' => [
 					'title' => $lang['stractions'],
-				),
-			);
+				],
+			];
 
-			$actions = array(
-				'properties' => array(
+			$actions = [
+				'properties' => [
 					'content' => $lang['strproperties'],
-					'attr' => array(
-						'href' => array(
+					'attr' => [
+						'href' => [
 							'url' => 'tblproperties.php',
-							'urlvars' => array(
+							'urlvars' => [
 								'schema' => field('nspname'),
 								'table' => field('relname'),
-							),
-						),
-					),
-				),
-			);
+							],
+						],
+					],
+				],
+			];
 
-			$misc->printTable($children, $columns, $actions, 'info-children', $lang['strnodata']);
+			echo $misc->printTable($children, $columns, $actions, 'info-children', $lang['strnodata']);
 
 		}
 
@@ -348,9 +348,9 @@ $misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $la
 $misc->printBody();
 
 switch ($action) {
-default:
-	doDefault();
-	break;
+	default:
+		doDefault();
+		break;
 }
 
 $misc->printFooter();

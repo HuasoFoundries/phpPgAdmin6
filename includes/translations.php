@@ -88,7 +88,7 @@ if (!isset($conf['default_lang'])) {
 }
 
 $lang = array();
-include_once BASE_PATH . '/libraries/lang/english.php';
+include_once BASE_PATH . '/includes/lang/english.php';
 
 // Determine language file to import:
 unset($_language);
@@ -148,6 +148,6 @@ if (!isset($_language)) {
 
 // Import the language file
 if (isset($_language)) {
-	include BASE_PATH . "/libraries/lang/{$_language}.php";
+	include BASE_PATH . "/includes/lang/{$_language}.php";
 	$_SESSION['webdbLanguage'] = $_language;
 }

@@ -6,17 +6,11 @@
  * $Id: servers.php,v 1.12 2008/02/18 22:20:26 ioguix Exp $
  */
 
-// Include application functions
-$_no_db_connection = true;
-require_once '../libraries/lib.inc.php';
+function doLogout($container) {
 
-$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-if (!isset($msg)) {
-	$msg = '';
-}
-
-function doLogout() {
-	global $misc, $lang, $_reload_browser, $plugin_manager;
+	$lang           = $container->get('lang');
+	$misc           = $container->get('misc');
+	$plugin_manager = $container->get('plugin_manager');
 
 	$plugin_manager->do_hook('logout', $_REQUEST['logoutServer']);
 
@@ -25,36 +19,43 @@ function doLogout() {
 
 	unset($_SESSION['sharedUsername'], $_SESSION['sharedPassword']);
 
-	doDefault(sprintf($lang['strlogoutmsg'], $server_info['desc']));
+	$mist->setReloadBrowser(true);
 
-	$_reload_browser = true;
+	return doDefault($container, sprintf($lang['strlogoutmsg'], $server_info['desc']));
+
 }
 
-function doDefault($msg = '') {
-	global $conf, $misc;
-	global $lang;
+function doDefault($container, $msg = '') {
 
-	$misc->printTabs('root', 'servers');
-	$misc->printMsg($msg);
+	$lang = $container->get('lang');
+	$conf = $container->get('conf');
+	$misc = $container->get('misc');
+	$msg  = $container->msg;
+
+	$default_html = '';
+
+	$default_html .= $misc->printTabs('root', 'servers', false);
+	$default_html .= $misc->printMsg($msg, false);
+
 	$group = isset($_GET['group']) ? $_GET['group'] : false;
 
 	$groups = $misc->getServersGroups(true, $group);
 
-	$columns = array(
-		'group' => array(
+	$columns = [
+		'group' => [
 			'title' => $lang['strgroup'],
 			'field' => field('desc'),
 			'url' => 'servers.php?',
-			'vars' => array('group' => 'id'),
-		),
-	);
-	$actions = array();
+			'vars' => ['group' => 'id'],
+		],
+	];
+	$actions = [];
 
 	if (($group !== false) and (isset($conf['srv_groups'][$group])) and ($groups->recordCount() > 0)) {
-		$misc->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
+		$default_html .= $misc->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null, false);
 	}
 
-	$misc->printTable($groups, $columns, $actions, 'servers-servers');
+	$default_html .= $misc->printTable($groups, $columns, $actions, 'servers-servers');
 
 	$servers = $misc->getServers(true, $group);
 
@@ -63,82 +64,82 @@ function doDefault($msg = '') {
 		return $actions;
 	}
 
-	$columns = array(
-		'server' => array(
+	$columns = [
+		'server' => [
 			'title' => $lang['strserver'],
 			'field' => field('desc'),
 			'url' => "redirect.php?subject=server&amp;",
-			'vars' => array('server' => 'id'),
-		),
-		'host' => array(
+			'vars' => ['server' => 'id'],
+		],
+		'host' => [
 			'title' => $lang['strhost'],
 			'field' => field('host'),
-		),
-		'port' => array(
+		],
+		'port' => [
 			'title' => $lang['strport'],
 			'field' => field('port'),
-		),
-		'username' => array(
+		],
+		'username' => [
 			'title' => $lang['strusername'],
 			'field' => field('username'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'logout' => array(
+	$actions = [
+		'logout' => [
 			'content' => $lang['strlogout'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'servers.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'logout',
 						'logoutServer' => field('id'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
 	if (($group !== false) and isset($conf['srv_groups'][$group])) {
-		$misc->printTitle(sprintf($lang['strgroupservers'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
+		$default_html .= $misc->printTitle(sprintf($lang['strgroupservers'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null, false);
 		$actions['logout']['attr']['href']['urlvars']['group'] = $group;
 	}
 
-	$misc->printTable($servers, $columns, $actions, 'servers-servers', $lang['strnoobjects'], 'svPre');
+	$default_html .= $misc->printTable($servers, $columns, $actions, 'servers-servers', $lang['strnoobjects'], 'svPre');
+	return $default_html;
 }
 
-function doTree() {
-	global $misc, $conf;
+function doTree($container) {
 
-	$nodes = array();
+	$conf = $container->get('conf');
+	$misc = $container->get('misc');
+
+	$nodes    = [];
 	$group_id = isset($_GET['group']) ? $_GET['group'] : false;
 
 	/* root with srv_groups */
 	if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0
 		and $group_id === false) {
 		$nodes = $misc->getServersGroups(true);
-	}
-	/* group subtree */
-	else if (isset($conf['srv_groups']) and $group_id !== false) {
+	} else if (isset($conf['srv_groups']) and $group_id !== false) {
+		/* group subtree */
 		if ($group_id !== 'all') {
 			$nodes = $misc->getServersGroups(false, $group_id);
 		}
 
 		$nodes = array_merge($nodes, $misc->getServers(false, $group_id));
-		include_once BASE_PATH . '/classes/ArrayRecordSet.php';
-		$nodes = new ArrayRecordSet($nodes);
-	}
-	/* no srv_group */
-	else {
+		$nodes = new \PHPPgAdmin\ArrayRecordSet($nodes);
+	} else {
+		/* no srv_group */
 		$nodes = $misc->getServers(true, false);
 	}
 
 	$reqvars = $misc->getRequestVars('server');
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('desc'),
 
 		// Show different icons for logged in/out
@@ -151,27 +152,8 @@ function doTree() {
 		// Only create a branch url if the user has
 		// logged into the server.
 		'branch' => field('branch'),
-	);
-
+	];
+	PC::debug($nodes, 'printTree');
 	$misc->printTree($nodes, $attrs, 'servers');
-	exit;
+
 }
-
-if ($action == 'tree') {
-	doTree();
-}
-
-$misc->printHeader($lang['strservers']);
-$misc->printBody();
-$misc->printTrail('root');
-
-switch ($action) {
-case 'logout':
-	doLogout();
-	break;
-default:
-	doDefault($msg);
-	break;
-}
-
-$misc->printFooter();

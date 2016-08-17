@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -48,8 +48,8 @@ function doAlter($msg = '') {
 
 	if ($domaindata->recordCount() > 0) {
 		if (!isset($_POST['domname'])) {
-			$_POST['domtype'] = $domaindata->fields['domtype'];
-			$_POST['domdefault'] = $domaindata->fields['domdef'];
+			$_POST['domtype']                 = $domaindata->fields['domtype'];
+			$_POST['domdefault']              = $domaindata->fields['domdef'];
 			$domaindata->fields['domnotnull'] = $data->phpBool($domaindata->fields['domnotnull']);
 			if ($domaindata->fields['domnotnull']) {
 				$_POST['domnotnull'] = 'on';
@@ -221,91 +221,91 @@ function doProperties($msg = '') {
 		if ($data->hasDomainConstraints()) {
 			$domaincons = $data->getDomainConstraints($_REQUEST['domain']);
 
-			$columns = array(
-				'name' => array(
+			$columns = [
+				'name' => [
 					'title' => $lang['strname'],
 					'field' => field('conname'),
-				),
-				'definition' => array(
+				],
+				'definition' => [
 					'title' => $lang['strdefinition'],
 					'field' => field('consrc'),
-				),
-				'actions' => array(
+				],
+				'actions' => [
 					'title' => $lang['stractions'],
-				),
-			);
+				],
+			];
 
-			$actions = array(
-				'drop' => array(
+			$actions = [
+				'drop' => [
 					'content' => $lang['strdrop'],
-					'attr' => array(
-						'href' => array(
+					'attr' => [
+						'href' => [
 							'url' => 'domains.php',
-							'urlvars' => array(
+							'urlvars' => [
 								'action' => 'confirm_drop_con',
 								'domain' => $_REQUEST['domain'],
 								'constraint' => field('conname'),
 								'type' => field('contype'),
-							),
-						),
-					),
-				),
-			);
+							],
+						],
+					],
+				],
+			];
 
-			$misc->printTable($domaincons, $columns, $actions, 'domains-properties', $lang['strnodata']);
+			echo $misc->printTable($domaincons, $columns, $actions, 'domains-properties', $lang['strnodata']);
 		}
 	} else {
 		echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
-	$navlinks = array(
-		'drop' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'drop' => [
+			'attr' => [
+				'href' => [
 					'url' => 'domains.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'domain' => $_REQUEST['domain'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strdrop'],
-		),
-	);
+		],
+	];
 	if ($data->hasAlterDomains()) {
-		$navlinks['addcheck'] = array(
-			'attr' => array(
-				'href' => array(
+		$navlinks['addcheck'] = [
+			'attr' => [
+				'href' => [
 					'url' => 'domains.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'add_check',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'domain' => $_REQUEST['domain'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['straddcheck'],
-		);
-		$navlinks['alter'] = array(
-			'attr' => array(
-				'href' => array(
+		];
+		$navlinks['alter'] = [
+			'attr' => [
+				'href' => [
 					'url' => 'domains.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'alter',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'domain' => $_REQUEST['domain'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['stralter'],
-		);
+		];
 	}
 
 	$misc->printNavLinks($navlinks, 'domains-properties', get_defined_vars());
@@ -463,89 +463,89 @@ function doDefault($msg = '') {
 
 	$domains = $data->getDomains();
 
-	$columns = array(
-		'domain' => array(
+	$columns = [
+		'domain' => [
 			'title' => $lang['strdomain'],
 			'field' => field('domname'),
 			'url' => "domains.php?action=properties&amp;{$misc->href}&amp;",
-			'vars' => array('domain' => 'domname'),
-		),
-		'type' => array(
+			'vars' => ['domain' => 'domname'],
+		],
+		'type' => [
 			'title' => $lang['strtype'],
 			'field' => field('domtype'),
-		),
-		'notnull' => array(
+		],
+		'notnull' => [
 			'title' => $lang['strnotnull'],
 			'field' => field('domnotnull'),
 			'type' => 'bool',
-			'params' => array('true' => 'NOT NULL', 'false' => ''),
-		),
-		'default' => array(
+			'params' => ['true' => 'NOT NULL', 'false' => ''],
+		],
+		'default' => [
 			'title' => $lang['strdefault'],
 			'field' => field('domdef'),
-		),
-		'owner' => array(
+		],
+		'owner' => [
 			'title' => $lang['strowner'],
 			'field' => field('domowner'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('domcomment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'alter' => array(
+	$actions = [
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'domains.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'alter',
 						'domain' => field('domname'),
-					),
-				),
-			),
-		),
-		'drop' => array(
+					],
+				],
+			],
+		],
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'domains.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'domain' => field('domname'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
 	if (!$data->hasAlterDomains()) {
 		unset($actions['alter']);
 	}
 
-	$misc->printTable($domains, $columns, $actions, 'domains-domains', $lang['strnodomains']);
+	echo $misc->printTable($domains, $columns, $actions, 'domains-domains', $lang['strnodomains']);
 
-	$navlinks = array(
-		'create' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'create' => [
+			'attr' => [
+				'href' => [
 					'url' => 'domains.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'create',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strcreatedomain'],
-		),
-	);
+		],
+	];
 	$misc->printNavLinks($navlinks, 'domains-domains', get_defined_vars());
 }
 
@@ -559,18 +559,18 @@ function doTree() {
 
 	$reqvars = $misc->getRequestVars('domain');
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('domname'),
 		'icon' => 'Domain',
 		'toolTip' => field('domcomment'),
 		'action' => url('domains.php',
 			$reqvars,
-			array(
+			[
 				'action' => 'properties',
 				'domain' => field('domname'),
-			)
+			]
 		),
-	);
+	];
 
 	$misc->printTree($domains, $attrs, 'domains');
 	exit;
@@ -584,67 +584,67 @@ $misc->printHeader($lang['strdomains']);
 $misc->printBody();
 
 switch ($action) {
-case 'add_check':
-	addCheck(true);
-	break;
-case 'save_add_check':
-	if (isset($_POST['cancel'])) {
-		doProperties();
-	} else {
-		addCheck(false);
-	}
+	case 'add_check':
+		addCheck(true);
+		break;
+	case 'save_add_check':
+		if (isset($_POST['cancel'])) {
+			doProperties();
+		} else {
+			addCheck(false);
+		}
 
-	break;
-case 'drop_con':
-	if (isset($_POST['drop'])) {
-		doDropConstraint(false);
-	} else {
-		doProperties();
-	}
+		break;
+	case 'drop_con':
+		if (isset($_POST['drop'])) {
+			doDropConstraint(false);
+		} else {
+			doProperties();
+		}
 
-	break;
-case 'confirm_drop_con':
-	doDropConstraint(true);
-	break;
-case 'save_create':
-	if (isset($_POST['cancel'])) {
+		break;
+	case 'confirm_drop_con':
+		doDropConstraint(true);
+		break;
+	case 'save_create':
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			doSaveCreate();
+		}
+
+		break;
+	case 'create':
+		doCreate();
+		break;
+	case 'drop':
+		if (isset($_POST['drop'])) {
+			doDrop(false);
+		} else {
+			doDefault();
+		}
+
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	case 'save_alter':
+		if (isset($_POST['alter'])) {
+			doSaveAlter();
+		} else {
+			doProperties();
+		}
+
+		break;
+	case 'alter':
+		doAlter();
+		break;
+	case 'properties':
+		doProperties();
+		break;
+	default:
 		doDefault();
-	} else {
-		doSaveCreate();
-	}
-
-	break;
-case 'create':
-	doCreate();
-	break;
-case 'drop':
-	if (isset($_POST['drop'])) {
-		doDrop(false);
-	} else {
-		doDefault();
-	}
-
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-case 'save_alter':
-	if (isset($_POST['alter'])) {
-		doSaveAlter();
-	} else {
-		doProperties();
-	}
-
-	break;
-case 'alter':
-	doAlter();
-	break;
-case 'properties':
-	doProperties();
-	break;
-default:
-	doDefault();
-	break;
+		break;
 }
 
 $misc->printFooter();

@@ -17,7 +17,7 @@ if (!ini_get('safe_mode')) {
 }
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 /**
  * This is a callback function to display the result of each separate query

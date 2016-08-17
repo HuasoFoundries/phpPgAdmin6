@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -28,89 +28,89 @@ function doDefault($msg = '') {
 	// Check that the DB actually supports schemas
 	$schemas = $data->getSchemas();
 
-	$columns = array(
-		'schema' => array(
+	$columns = [
+		'schema' => [
 			'title' => $lang['strschema'],
 			'field' => field('nspname'),
 			'url' => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
-			'vars' => array('schema' => 'nspname'),
-		),
-		'owner' => array(
+			'vars' => ['schema' => 'nspname'],
+		],
+		'owner' => [
 			'title' => $lang['strowner'],
 			'field' => field('nspowner'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('nspcomment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'multiactions' => array(
-			'keycols' => array('nsp' => 'nspname'),
+	$actions = [
+		'multiactions' => [
+			'keycols' => ['nsp' => 'nspname'],
 			'url' => 'schemas.php',
-		),
-		'drop' => array(
+		],
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'schemas.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'drop',
 						'nsp' => field('nspname'),
-					),
-				),
-			),
+					],
+				],
+			],
 			'multiaction' => 'drop',
-		),
-		'privileges' => array(
+		],
+		'privileges' => [
 			'content' => $lang['strprivileges'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'privileges.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'subject' => 'schema',
 						'schema' => field('nspname'),
-					),
-				),
-			),
-		),
-		'alter' => array(
+					],
+				],
+			],
+		],
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'schemas.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'alter',
 						'schema' => field('nspname'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
 	if (!$data->hasAlterSchema()) {
 		unset($actions['alter']);
 	}
 
-	$misc->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas']);
+	echo $misc->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas']);
 
-	$misc->printNavLinks(array('create' => array(
-		'attr' => array(
-			'href' => array(
+	$misc->printNavLinks(['create' => [
+		'attr' => [
+			'href' => [
 				'url' => 'schemas.php',
-				'urlvars' => array(
+				'urlvars' => [
 					'action' => 'create',
 					'server' => $_REQUEST['server'],
 					'database' => $_REQUEST['database'],
-				),
-			),
-		),
+				],
+			],
+		],
 		'content' => $lang['strcreateschema'],
-	)), 'schemas-schemas', get_defined_vars());
+	]], 'schemas-schemas', get_defined_vars());
 }
 
 /**
@@ -321,7 +321,7 @@ function doDrop($confirm) {
 		echo "</form>\n";
 	} else {
 		if (is_array($_POST['nsp'])) {
-			$msg = '';
+			$msg    = '';
 			$status = $data->beginTransaction();
 			if ($status == 0) {
 				foreach ($_POST['nsp'] as $s) {
@@ -421,25 +421,25 @@ function doTree() {
 
 	$reqvars = $misc->getRequestVars('schema');
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('nspname'),
 		'icon' => 'Schema',
 		'toolTip' => field('nspcomment'),
 		'action' => url('redirect.php',
 			$reqvars,
-			array(
+			[
 				'subject' => 'schema',
 				'schema' => field('nspname'),
-			)
+			]
 		),
 		'branch' => url('schemas.php',
 			$reqvars,
-			array(
+			[
 				'action' => 'subtree',
 				'schema' => field('nspname'),
-			)
+			]
 		),
-	);
+	];
 
 	$misc->printTree($schemas, $attrs, 'schemas');
 
@@ -455,19 +455,19 @@ function doSubTree() {
 
 	$reqvars = $misc->getRequestVars('schema');
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('title'),
 		'icon' => field('icon'),
 		'action' => url(field('url'),
 			$reqvars,
-			field('urlvars', array())
+			field('urlvars', [])
 		),
 		'branch' => url(field('url'),
 			$reqvars,
 			field('urlvars'),
-			array('action' => 'tree')
+			['action' => 'tree']
 		),
-	);
+	];
 
 	$misc->printTree($items, $attrs, 'schema');
 	exit;
@@ -489,36 +489,36 @@ if (isset($_POST['cancel'])) {
 }
 
 switch ($action) {
-case 'create':
-	if (isset($_POST['create'])) {
-		doSaveCreate();
-	} else {
-		doCreate();
-	}
+	case 'create':
+		if (isset($_POST['create'])) {
+			doSaveCreate();
+		} else {
+			doCreate();
+		}
 
-	break;
-case 'alter':
-	if (isset($_POST['alter'])) {
-		doSaveAlter();
-	} else {
-		doAlter();
-	}
+		break;
+	case 'alter':
+		if (isset($_POST['alter'])) {
+			doSaveAlter();
+		} else {
+			doAlter();
+		}
 
-	break;
-case 'drop':
-	if (isset($_POST['drop'])) {
-		doDrop(false);
-	} else {
-		doDrop(true);
-	}
+		break;
+	case 'drop':
+		if (isset($_POST['drop'])) {
+			doDrop(false);
+		} else {
+			doDrop(true);
+		}
 
-	break;
-case 'export':
-	doExport();
-	break;
-default:
-	doDefault();
-	break;
+		break;
+	case 'export':
+		doExport();
+		break;
+	default:
+		doDefault();
+		break;
 }
 
 $misc->printFooter();

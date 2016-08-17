@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
@@ -274,10 +274,10 @@ function doDefault($msg = '') {
 
 		if ($data->phpBool($rowdata->fields['indisprimary'])) {
 			$rowdata->fields['+constraints'] = $lang['strprimarykey'];
-			$actions['drop']['disable'] = true;
+			$actions['drop']['disable']      = true;
 		} elseif ($data->phpBool($rowdata->fields['indisunique'])) {
 			$rowdata->fields['+constraints'] = $lang['struniquekey'];
-			$actions['drop']['disable'] = true;
+			$actions['drop']['disable']      = true;
 		} else {
 			$rowdata->fields['+constraints'] = '';
 		}
@@ -291,96 +291,96 @@ function doDefault($msg = '') {
 
 	$indexes = $data->getIndexes($_REQUEST['table']);
 
-	$columns = array(
-		'index' => array(
+	$columns = [
+		'index' => [
 			'title' => $lang['strname'],
 			'field' => field('indname'),
-		),
-		'definition' => array(
+		],
+		'definition' => [
 			'title' => $lang['strdefinition'],
 			'field' => field('inddef'),
-		),
-		'constraints' => array(
+		],
+		'constraints' => [
 			'title' => $lang['strconstraints'],
 			'field' => field('+constraints'),
 			'type' => 'verbatim',
-			'params' => array('align' => 'center'),
-		),
-		'clustered' => array(
+			'params' => ['align' => 'center'],
+		],
+		'clustered' => [
 			'title' => $lang['strclustered'],
 			'field' => field('indisclustered'),
 			'type' => 'yesno',
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('idxcomment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'cluster' => array(
+	$actions = [
+		'cluster' => [
 			'content' => $lang['strclusterindex'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'indexes.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_cluster_index',
 						'table' => $_REQUEST['table'],
 						'index' => field('indname'),
-					),
-				),
-			),
-		),
-		'reindex' => array(
+					],
+				],
+			],
+		],
+		'reindex' => [
 			'content' => $lang['strreindex'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'indexes.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'reindex',
 						'table' => $_REQUEST['table'],
 						'index' => field('indname'),
-					),
-				),
-			),
-		),
-		'drop' => array(
+					],
+				],
+			],
+		],
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'indexes.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop_index',
 						'table' => $_REQUEST['table'],
 						'index' => field('indname'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], 'indPre');
+	echo $misc->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], 'indPre');
 
-	$misc->printNavLinks(array(
-		'create' => array(
-			'attr' => array(
-				'href' => array(
+	$misc->printNavLinks([
+		'create' => [
+			'attr' => [
+				'href' => [
 					'url' => 'indexes.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'create_index',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'table' => $_REQUEST['table'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strcreateindex'],
-		),
-	), 'indexes-indexes', get_defined_vars());
+		],
+	], 'indexes-indexes', get_defined_vars());
 }
 
 function doTree() {
@@ -402,10 +402,10 @@ function doTree() {
 		return 'Index';
 	}
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('indname'),
 		'icon' => callback('getIcon'),
-	);
+	];
 
 	$misc->printTree($indexes, $attrs, 'indexes');
 	exit;
@@ -424,45 +424,45 @@ if ($action == 'create_index' || $action == 'save_create_index') {
 }
 
 switch ($action) {
-case 'cluster_index':
-	if (isset($_POST['cluster'])) {
-		doClusterIndex(false);
-	} else {
-		doDefault();
-	}
+	case 'cluster_index':
+		if (isset($_POST['cluster'])) {
+			doClusterIndex(false);
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_cluster_index':
-	doClusterIndex(true);
-	break;
-case 'reindex':
-	doReindex();
-	break;
-case 'save_create_index':
-	if (isset($_POST['cancel'])) {
-		doDefault();
-	} else {
-		doSaveCreateIndex();
-	}
+		break;
+	case 'confirm_cluster_index':
+		doClusterIndex(true);
+		break;
+	case 'reindex':
+		doReindex();
+		break;
+	case 'save_create_index':
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			doSaveCreateIndex();
+		}
 
-	break;
-case 'create_index':
-	doCreateIndex();
-	break;
-case 'drop_index':
-	if (isset($_POST['drop'])) {
-		doDropIndex(false);
-	} else {
-		doDefault();
-	}
+		break;
+	case 'create_index':
+		doCreateIndex();
+		break;
+	case 'drop_index':
+		if (isset($_POST['drop'])) {
+			doDropIndex(false);
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_drop_index':
-	doDropIndex(true);
-	break;
-default:
-	doDefault();
-	break;
+		break;
+	case 'confirm_drop_index':
+		doDropIndex(true);
+		break;
+	default:
+		doDefault();
+		break;
 }
 
 $misc->printFooter();

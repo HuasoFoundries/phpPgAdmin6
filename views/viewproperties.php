@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
@@ -43,7 +43,7 @@ function doEdit($msg = '') {
 
 		if (!isset($_POST['formDefinition'])) {
 			$_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
-			$_POST['formComment'] = $viewdata->fields['relcomment'];
+			$_POST['formComment']    = $viewdata->fields['relcomment'];
 		}
 
 		echo "<form action=\"/views/viewproperties.php\" method=\"post\">\n";
@@ -156,21 +156,21 @@ function doDefinition($msg = '') {
 		echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
-	$misc->printNavLinks(array('alter' => array(
-		'attr' => array(
-			'href' => array(
+	$misc->printNavLinks(['alter' => [
+		'attr' => [
+			'href' => [
 				'url' => 'viewproperties.php',
-				'urlvars' => array(
+				'urlvars' => [
 					'action' => 'edit',
 					'server' => $_REQUEST['server'],
 					'database' => $_REQUEST['database'],
 					'schema' => $_REQUEST['schema'],
 					'view' => $_REQUEST['view'],
-				),
-			),
-		),
+				],
+			],
+		],
 		'content' => $lang['stralter'],
-	)), 'viewproperties-definition', get_defined_vars());
+	]], 'viewproperties-definition', get_defined_vars());
 }
 
 /**
@@ -185,73 +185,73 @@ function doProperties($msg = '') {
 	}
 
 	switch ($_REQUEST['stage']) {
-	case 1:
-		global $lang;
+		case 1:
+			global $lang;
 
-		$misc->printTrail('column');
-		$misc->printTitle($lang['stralter'], 'pg.column.alter');
-		$misc->printMsg($msg);
+			$misc->printTrail('column');
+			$misc->printTitle($lang['stralter'], 'pg.column.alter');
+			$misc->printMsg($msg);
 
-		echo "<form action=\"/views/viewproperties.php\" method=\"post\">\n";
+			echo "<form action=\"/views/viewproperties.php\" method=\"post\">\n";
 
-		// Output view header
-		echo "<table>\n";
-		echo "<tr><th class=\"data required\">{$lang['strname']}</th><th class=\"data required\">{$lang['strtype']}</th>";
-		echo "<th class=\"data\">{$lang['strdefault']}</th><th class=\"data\">{$lang['strcomment']}</th></tr>";
+			// Output view header
+			echo "<table>\n";
+			echo "<tr><th class=\"data required\">{$lang['strname']}</th><th class=\"data required\">{$lang['strtype']}</th>";
+			echo "<th class=\"data\">{$lang['strdefault']}</th><th class=\"data\">{$lang['strcomment']}</th></tr>";
 
-		$column = $data->getTableAttributes($_REQUEST['view'], $_REQUEST['column']);
+			$column = $data->getTableAttributes($_REQUEST['view'], $_REQUEST['column']);
 
-		if (!isset($_REQUEST['default'])) {
-			$_REQUEST['field'] = $column->fields['attname'];
-			$_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
-			$_REQUEST['comment'] = $column->fields['comment'];
-		}
+			if (!isset($_REQUEST['default'])) {
+				$_REQUEST['field']   = $column->fields['attname'];
+				$_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
+				$_REQUEST['comment'] = $column->fields['comment'];
+			}
 
-		echo "<tr><td><input name=\"field\" size=\"32\" value=\"",
-		htmlspecialchars($_REQUEST['field']), "\" /></td>";
+			echo "<tr><td><input name=\"field\" size=\"32\" value=\"",
+			htmlspecialchars($_REQUEST['field']), "\" /></td>";
 
-		echo "<td>", $misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), "</td>";
-		echo "<td><input name=\"default\" size=\"20\" value=\"",
-		htmlspecialchars($_REQUEST['default']), "\" /></td>";
-		echo "<td><input name=\"comment\" size=\"32\" value=\"",
-		htmlspecialchars($_REQUEST['comment']), "\" /></td>";
+			echo "<td>", $misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), "</td>";
+			echo "<td><input name=\"default\" size=\"20\" value=\"",
+			htmlspecialchars($_REQUEST['default']), "\" /></td>";
+			echo "<td><input name=\"comment\" size=\"32\" value=\"",
+			htmlspecialchars($_REQUEST['comment']), "\" /></td>";
 
-		echo "</table>\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"properties\" />\n";
-		echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
-		echo $misc->form;
-		echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
-		echo "<input type=\"hidden\" name=\"column\" value=\"", htmlspecialchars($_REQUEST['column']), "\" />\n";
-		echo "<input type=\"hidden\" name=\"olddefault\" value=\"", htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
-		echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+			echo "</table>\n";
+			echo "<p><input type=\"hidden\" name=\"action\" value=\"properties\" />\n";
+			echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
+			echo $misc->form;
+			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"column\" value=\"", htmlspecialchars($_REQUEST['column']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"olddefault\" value=\"", htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
+			echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
+			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+			echo "</form>\n";
 
-		break;
-	case 2:
-		global $data, $lang;
+			break;
+		case 2:
+			global $data, $lang;
 
-		// Check inputs
-		if (trim($_REQUEST['field']) == '') {
-			$_REQUEST['stage'] = 1;
-			doProperties($lang['strcolneedsname']);
-			return;
-		}
+			// Check inputs
+			if (trim($_REQUEST['field']) == '') {
+				$_REQUEST['stage'] = 1;
+				doProperties($lang['strcolneedsname']);
+				return;
+			}
 
-		// Alter the view column
-		$status = $data->alterColumn($_REQUEST['view'], $_REQUEST['column'], $_REQUEST['field'],
-			false, false, $_REQUEST['default'], $_REQUEST['olddefault'],
-			'', '', '', '', $_REQUEST['comment']);
-		if ($status == 0) {
-			doDefault($lang['strcolumnaltered']);
-		} else {
-			$_REQUEST['stage'] = 1;
-			doProperties($lang['strcolumnalteredbad']);
-			return;
-		}
-		break;
-	default:
-		echo "<p>{$lang['strinvalidparam']}</p>\n";
+			// Alter the view column
+			$status = $data->alterColumn($_REQUEST['view'], $_REQUEST['column'], $_REQUEST['field'],
+				false, false, $_REQUEST['default'], $_REQUEST['olddefault'],
+				'', '', '', '', $_REQUEST['comment']);
+			if ($status == 0) {
+				doDefault($lang['strcolumnaltered']);
+			} else {
+				$_REQUEST['stage'] = 1;
+				doProperties($lang['strcolumnalteredbad']);
+				return;
+			}
+			break;
+		default:
+			echo "<p>{$lang['strinvalidparam']}</p>\n";
 	}
 }
 
@@ -376,32 +376,32 @@ function doTree() {
 	$reqvars = $misc->getRequestVars('column');
 	$columns = $data->getTableAttributes($_REQUEST['view']);
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('attname'),
 		'action' => url('colproperties.php',
 			$reqvars,
-			array(
+			[
 				'view' => $_REQUEST['view'],
 				'column' => field('attname'),
-			)
+			]
 		),
 		'icon' => 'Column',
 		'iconAction' => url('display.php',
 			$reqvars,
-			array(
+			[
 				'view' => $_REQUEST['view'],
 				'column' => field('attname'),
 				'query' => replace(
 					'SELECT "%column%", count(*) AS "count" FROM %view% GROUP BY "%column%" ORDER BY "%column%"',
-					array(
+					[
 						'%column%' => field('attname'),
 						'%view%' => $_REQUEST['view'],
-					)
+					]
 				),
-			)
+			]
 		),
 		'toolTip' => field('comment'),
-	);
+	];
 
 	$misc->printTree($columns, $attrs, 'viewcolumns');
 
@@ -438,113 +438,113 @@ function doDefault($msg = '') {
 		echo "<p class=\"comment\">", $misc->printVal($vdata->fields['relcomment']), "</p>\n";
 	}
 
-	$columns = array(
-		'column' => array(
+	$columns = [
+		'column' => [
 			'title' => $lang['strcolumn'],
 			'field' => field('attname'),
 			'url' => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['view']) . "&amp;",
-			'vars' => array('column' => 'attname'),
-		),
-		'type' => array(
+			'vars' => ['column' => 'attname'],
+		],
+		'type' => [
 			'title' => $lang['strtype'],
 			'field' => field('+type'),
-		),
-		'default' => array(
+		],
+		'default' => [
 			'title' => $lang['strdefault'],
 			'field' => field('adsrc'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('comment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'alter' => array(
+	$actions = [
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'viewproperties.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'properties',
 						'view' => $_REQUEST['view'],
 						'column' => field('attname'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($attrs, $columns, $actions, 'viewproperties-viewproperties', null, 'attPre');
+	echo $misc->printTable($attrs, $columns, $actions, 'viewproperties-viewproperties', null, 'attPre');
 
 	echo "<br />\n";
 
-	$navlinks = array(
-		'browse' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'browse' => [
+			'attr' => [
+				'href' => [
 					'url' => 'display.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'view' => $_REQUEST['view'],
 						'subject' => 'view',
 						'return' => 'view',
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strbrowse'],
-		),
-		'select' => array(
-			'attr' => array(
-				'href' => array(
+		],
+		'select' => [
+			'attr' => [
+				'href' => [
 					'url' => 'views.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confselectrows',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'view' => $_REQUEST['view'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strselect'],
-		),
-		'drop' => array(
-			'attr' => array(
-				'href' => array(
+		],
+		'drop' => [
+			'attr' => [
+				'href' => [
 					'url' => 'views.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'view' => $_REQUEST['view'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strdrop'],
-		),
-		'alter' => array(
-			'attr' => array(
-				'href' => array(
+		],
+		'alter' => [
+			'attr' => [
+				'href' => [
 					'url' => 'viewproperties.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_alter',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'view' => $_REQUEST['view'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['stralter'],
-		),
-	);
+		],
+	];
 
 	$misc->printNavLinks($navlinks, 'viewproperties-viewproperties', get_defined_vars());
 }
@@ -553,56 +553,56 @@ $misc->printHeader($lang['strviews'] . ' - ' . $_REQUEST['view']);
 $misc->printBody();
 
 switch ($action) {
-case 'save_edit':
-	if (isset($_POST['cancel'])) {
+	case 'save_edit':
+		if (isset($_POST['cancel'])) {
+			doDefinition();
+		} else {
+			doSaveEdit();
+		}
+
+		break;
+	case 'edit':
+		doEdit();
+		break;
+	case 'export':
+		doExport();
+		break;
+	case 'definition':
 		doDefinition();
-	} else {
-		doSaveEdit();
-	}
+		break;
+	case 'properties':
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			doProperties();
+		}
 
-	break;
-case 'edit':
-	doEdit();
-	break;
-case 'export':
-	doExport();
-	break;
-case 'definition':
-	doDefinition();
-	break;
-case 'properties':
-	if (isset($_POST['cancel'])) {
+		break;
+	case 'alter':
+		if (isset($_POST['alter'])) {
+			doAlter(false);
+		} else {
+			doDefault();
+		}
+
+		break;
+	case 'confirm_alter':
+		doAlter(true);
+		break;
+	case 'drop':
+		if (isset($_POST['drop'])) {
+			doDrop(false);
+		} else {
+			doDefault();
+		}
+
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	default:
 		doDefault();
-	} else {
-		doProperties();
-	}
-
-	break;
-case 'alter':
-	if (isset($_POST['alter'])) {
-		doAlter(false);
-	} else {
-		doDefault();
-	}
-
-	break;
-case 'confirm_alter':
-	doAlter(true);
-	break;
-case 'drop':
-	if (isset($_POST['drop'])) {
-		doDrop(false);
-	} else {
-		doDefault();
-	}
-
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-default:
-	doDefault();
-	break;
+		break;
 }
 
 $misc->printFooter();

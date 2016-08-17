@@ -8,105 +8,135 @@
 
 // Include application functions
 $_no_db_connection = true;
-require_once './libraries/lib.inc.php';
+require_once './includes/lib.inc.php';
 
-\PC::debug('Soy el index.php');
+if (!isset($msg)) {
+	$msg = '';
+}
 
-$app->get('/sqledit', function ($request, $response, $args) {
+$app->get('/sqledit[/{action}]', function ($request, $response, $args) use ($msg) {
 	/*return $this->view->render($response, 'profile.html', [
 		        'name' => $args['name']
 	*/
 	//PC::debug($request, 'sqledit');
 	//Kint::dump($request);
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) {
-		$msg = '';
-	}
+	$action = (isset($args['action'])) ? $args['action'] : 'sql';
+
 	include './views/sqledit.php';
+	$body = $response->getBody();
+
 	switch ($action) {
-	case 'find':
-		doFind($this->misc);
-		break;
-	case 'sql':
-	default:
-		$viewVars = doDefault($this->misc);
+		case 'find':
 
-		$this->view->render($response, 'sqledit_header.twig', $viewVars);
+			$header_html = $this->view->fetch('sqledit_header.twig', ['title' => $this->lang['strfind']]);
+			$body->write($header_html);
+			$body->write(doFind($this));
 
-		$this->misc->printTabs($this->misc->getNavTabs('popup'), 'sql');
+			break;
+		case 'sql':
+		default:
 
-		_printConnection($this->misc, $action);
+			$header_html = $this->view->fetch('sqledit_header.twig', ['title' => $this->lang['strsql']]);
+			$body->write($header_html);
+			$body->write(doDefault($this));
 
-		return $this->view->render($response, 'sqledit.twig', $viewVars);
-
-		break;
+			break;
 	}
 
-// Set the name of the window
-	$misc->setWindowName('sqledit');
+	$footer_html = $this->view->fetch('sqledit.twig');
+	$body->write($footer_html);
 
-	$misc->printFooter();
+	$this->misc->setWindowName('sqledit');
+	return $response;
 
 });
 
-$app->get('/{folder}/{script}', function ($request, $response, $args) use ($misc, $conf, $lang) {
-	/*return $this->view->render($response, 'profile.html', [
-		        'name' => $args['name']
-	*/
-	\PC::debug($request);
-	Kint::dump($args);
+$app->get('/views/browser', function ($request, $response, $args) use ($msg) {
+
+	$viewVars            = $this->lang;
+	$viewVars['appName'] = $this->get('settings')['appName'];
+	$viewVars['icon']    = [
+		'blank' => $this->misc->icon('blank'),
+		'I' => $this->misc->icon('I'),
+		'L' => $this->misc->icon('L'),
+		'Lminus' => $this->misc->icon('Lminus'),
+		'Loading' => $this->misc->icon('Loading'),
+		'Lplus' => $this->misc->icon('Lplus'),
+		'ObjectNotFound' => $this->misc->icon('ObjectNotFound'),
+		'Refresh' => $this->misc->icon('Refresh'),
+		'Servers' => $this->misc->icon('Servers'),
+		'T' => $this->misc->icon('T'),
+		'Tminus' => $this->misc->icon('Tminus'),
+		'Tplus' => $this->misc->icon('Tplus'),
+
+	];
+
+	$viewVars['cols'] = $cols;
+	$viewVars['rtl']  = $rtl;
+
+	$this->view->render($response, 'browser.twig', $viewVars);
 
 });
 
-$app->get('/{folder}/{script}/{name}', function ($request, $response, $args) use ($misc, $conf, $lang) {
-	/*return $this->view->render($response, 'profile.html', [
-		        'name' => $args['name']
-	*/
+$app->get('/views/servers[/{action}]', function ($request, $response, $args) use ($msg) {
 
-	\PC::debug($request);
-	Kint::dump($args);
+	$action = (isset($args['action'])) ? $args['action'] : '';
+
+	include './views/servers.php';
+
+	if ($action == 'tree') {
+		$newResponse = $response
+			->withHeader('Content-type', 'text/xml')
+			->withHeader('Cache-Control', 'no-cache');
+
+		doTree($this);
+		return $newResponse;
+
+	} else {
+		$body = $response->getBody();
+
+		$header_html = $this->misc->printHeader($this->lang['strservers'], null, false);
+		$body->write($header_html);
+
+		$body_html = $this->misc->printBody(false);
+		$body->write($body_html);
+
+		$trail_html = $this->misc->printTrail('root', false);
+		$body->write($trail_html);
+
+		switch ($action) {
+			case 'logout':
+				doLogout($this);
+				break;
+			default:
+				$body->write(doDefault($this));
+				break;
+		}
+
+		$footer_html = $this->misc->printFooter(false);
+		$body->write($footer_html);
+		return $response;
+
+	}
+
+	//$this->view->render($response, 'browser.twig', $viewVars);
 
 });
 
-$app->get('/', function ($request, $response, $args) use ($misc, $conf, $lang) {
-	/*return $this->view->render($response, 'profile.html', [
-		        'name' => $args['name']
-	*/
-	\PC::debug($request);
+$app->get('/', function ($request, $response, $args) use ($msg) {
 
-	$misc->printHeader('', null, true);
+	$rtl  = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
+	$cols = $rtl ? '*,' . $this->conf['left_width'] : $this->conf['left_width'] . ',*';
 
-	$rtl = (strcasecmp($lang['applangdir'], 'rtl') == 0);
+	$viewVars            = $this->lang;
+	$viewVars['appName'] = $this->get('settings')['appName'];
+	$viewVars['cols']    = $cols;
+	$viewVars['rtl']     = $rtl;
 
-	$cols = $rtl ? '*,' . $conf['left_width'] : $conf['left_width'] . ',*';
-	$mainframe = '<frame src="views/intro.php" name="detail" id="detail" frameborder="0" />';
+	return $this->view->render($response, 'home.twig', $viewVars);
 
-	echo '<frameset cols="' . $cols . '">';
-
-	if ($rtl) {
-		echo $mainframe;
-	}
-
-	echo '<frame src="views/browser.php" name="browser" id="browser" frameborder="0" />';
-
-	if (!$rtl) {
-		echo $mainframe;
-	}
-
-	echo '<noframes>';
-	echo '<body>';
-	echo $lang['strnoframes'];
-	echo '<br />';
-	echo '<a href="views/intro.php">' . $lang['strnoframeslink'] . '</a>';
-	echo '</body>';
-	echo '</noframes>';
-
-	echo '</frameset>';
-
-	$misc->printFooter(false);
-
-})->setName('home');
+});
 
 // Run app
 $app->run();

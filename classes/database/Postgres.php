@@ -469,6 +469,10 @@ class Postgres extends ADODB_base {
 		} else {
 			$clause = '';
 		}
+		if (isset($server_info['useonlydefaultdb']) && $server_info['useonlydefaultdb']) {
+			$currentdatabase = $server_info['defaultdb'];
+			$clause .= " AND pdb.datname = '{$currentdatabase}' ";
+		}
 
 		if ($currentdatabase != NULL) {
 			$this->clean($currentdatabase);

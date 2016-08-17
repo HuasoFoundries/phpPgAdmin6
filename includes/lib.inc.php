@@ -7,9 +7,11 @@
  */
 DEFINE('BASE_PATH', dirname(__DIR__));
 
+ini_set('error_log', BASE_PATH . '/temp/logs/phppga.php_error.log');
+
 require_once BASE_PATH . '/vendor/autoload.php';
-include_once BASE_PATH . '/libraries/errorhandler.inc.php';
-include_once BASE_PATH . '/libraries/decorator.inc.php';
+include_once BASE_PATH . '/includes/errorhandler.inc.php';
+include_once BASE_PATH . '/includes/decorator.inc.php';
 
 Kint::enabled(true);
 
@@ -33,7 +35,8 @@ $appVersion = '6.0.0-alpha';
 
 // PostgreSQL and PHP minimum version
 $postgresqlMinVer = '9.3';
-$phpMinVer = '5.5';
+$phpMinVer        = '5.5';
+$debugmode        = true;
 
 // Check the version of PHP
 if (version_compare(phpversion(), $phpMinVer, '<')) {
@@ -41,20 +44,31 @@ if (version_compare(phpversion(), $phpMinVer, '<')) {
 }
 
 // Check to see if the configuration file exists, if not, explain
-if (file_exists(BASE_PATH . '/libraries/config.inc.php')) {
-	$conf = array();
-	include BASE_PATH . '/libraries/config.inc.php';
+if (file_exists(BASE_PATH . '/includes/config.inc.php')) {
+	$conf = [];
+	include BASE_PATH . '/includes/config.inc.php';
 } else {
-	echo 'Configuration error: Copy conf/config.inc.php-dist to libraries/config.inc.php and edit appropriately.';
-	exit;
+	die('Configuration error: Copy includes/config.inc.php-dist to includes/config.inc.php and edit appropriately.');
+
 }
 
+// Check if a given server is "greedy" in which case the $_REQUEST['server'] parameter is ignored
+$serverstoshow = [];
+foreach ($conf['servers'] as $server) {
+	if (isset($server['forcehost']) && $server['forcehost'] === true) {
+		$serverstoshow = [$server];
+		break;
+	} else {
+		$serverstoshow[] = $server;
+	}
+}
+$conf['servers'] = $serverstoshow;
 // Configuration file version.  If this is greater than that in config.inc.php, then
 // the app will refuse to run.  This and $conf['version'] should be incremented whenever
 // backwards incompatible changes are made to config.inc.php-dist.
-$conf['base_version'] = 20;
+$conf['base_version'] = 60;
 
-include_once BASE_PATH . '/libraries/translations.php';
+include_once BASE_PATH . '/includes/translations.php';
 
 // Create Misc class references
 
@@ -65,23 +79,56 @@ if (!ini_get('session.auto_start')) {
 }
 //Kint::dump($_SERVER);
 
-// Create Slim app
-$app = new \Slim\App();
+$config = [
+	'msg' => '',
+	'appLangFiles' => $appLangFiles,
+	'conf' => $conf,
+	'lang' => $lang,
+	'language' => $_language,
+	'settings' => [
+		'debug' => $debugmode,
+		'appVersion' => $appVersion,
+		'appName' => htmlspecialchars($appName),
+		'displayErrorDetails' => true,
+		'addContentLengthHeader' => false,
+	],
+];
 
-$misc = new \PHPPgAdmin\Misc($app);
+$app = new \Slim\App($config);
 
 // Fetch DI Container
-$container = $app->getContainer();
+$container   = $app->getContainer();
 $environment = $container->get('environment');
 
-$container['misc'] = $misc;
+//$container['lang'] = $lang;
+
+$plugin_manager              = new \PHPPgAdmin\PluginManager($app);
+$container['plugin_manager'] = $plugin_manager;
+
+$container['serializer'] = function ($c) {
+	$serializerbuilder = \JMS\Serializer\SerializerBuilder::create();
+	$serializer        = $serializerbuilder
+		->setCacheDir(BASE_PATH . '/temp/jms')
+		->setDebug($c->get('settings')['debug'])
+		->build();
+	return $serializer;
+};
+
+$container['logger'] = function ($c) {
+	$logger       = new \Monolog\Logger($c->get('settings')['appName']);
+	$file_handler = new \Monolog\Handler\StreamHandler(BASE_PATH . '/temp/logs/app.log');
+	$logger->pushHandler($file_handler);
+	return $logger;
+};
+
 // Register Twig View helper
 $container['view'] = function ($c) {
 	$view = new \Slim\Views\Twig(BASE_PATH . '/templates', [
 		'cache' => BASE_PATH . '/temp/twigcache',
-		'debug' => true,
+		'auto_reload' => $c->get('settings')['debug'],
+		'debug' => $c->get('settings')['debug'],
 	]);
-	$environment = $c->get('environment');
+	$environment               = $c->get('environment');
 	$base_script_trailing_shit = substr($environment['SCRIPT_NAME'], 1);
 	// Instantiate and add Slim specific extension
 	$basePath = rtrim(str_ireplace($base_script_trailing_shit, '', $c['request']->getUri()->getBasePath()), '/');
@@ -90,14 +137,14 @@ $container['view'] = function ($c) {
 	return $view;
 };
 
-$container['lang'] = $lang;
-$misc->setLang($lang);
-// 4. Check for theme by server/db/user
-$info = $misc->getServerInfo(null, $conf);
-include_once BASE_PATH . '/libraries/themes.php';
+$misc              = new \PHPPgAdmin\Misc($app);
+$container['misc'] = $misc;
 
-$container['conf'] = $conf;
-$misc->setConf($conf);
+// 4. Check for theme by server/db/user
+$_server_info = $misc->getServerInfo();
+include_once BASE_PATH . '/includes/themes.php';
+
+$misc->setThemeConf($conf['theme']);
 
 // This has to be deferred until after stripVar above
 $misc->setHREF();
@@ -123,6 +170,7 @@ if (isset($_POST['loginServer']) && isset($_POST['loginUsername']) &&
 		$_SESSION['sharedPassword'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
 	}
 
+	$misc->setReloadBrowser(true);
 	$_reload_browser = true;
 }
 
@@ -138,13 +186,11 @@ if (!function_exists('pg_connect')) {
 	exit;
 }
 
-$_server_info = $misc->getServerInfo();
-
-PC::debug($_server_info, 'server_info');
+//PC::debug($_server_info, 'server_info');
 
 // Create data accessor object, if necessary
 if (!isset($_no_db_connection)) {
-	if (!isset($_REQUEST['server'])) {
+	if ($misc->getServerId() === null) {
 		echo $lang['strnoserversupplied'];
 		exit;
 	}
@@ -160,20 +206,12 @@ if (!isset($_no_db_connection)) {
 		exit;
 	}
 
-	// Connect to the current database, or if one is not specified
-	// then connect to the default database.
-	if (isset($_REQUEST['database'])) {
-		$_curr_db = $_REQUEST['database'];
-	} else {
-		$_curr_db = $_server_info['defaultdb'];
-	}
-
 	// Connect to database and set the global $data variable
-	$data = $misc->getDatabaseAccessor($_curr_db);
+	$data = $misc->getDatabaseAccessor();
 
 	// If schema is defined and database supports schemas, then set the
 	// schema explicitly.
-	if (isset($_REQUEST['database']) && isset($_REQUEST['schema'])) {
+	if ($misc->getDatabase() !== null && isset($_REQUEST['schema'])) {
 		$status = $data->setSchema($_REQUEST['schema']);
 		if ($status != 0) {
 			echo $lang['strbadschema'];
@@ -181,11 +219,3 @@ if (!isset($_no_db_connection)) {
 		}
 	}
 }
-
-if (!function_exists("htmlspecialchars_decode")) {
-	function htmlspecialchars_decode($string, $quote_style = ENT_COMPAT) {
-		return strtr($string, array_flip(get_html_translation_table(HTML_SPECIALCHARS, $quote_style)));
-	}
-}
-
-$plugin_manager = new \PHPPgAdmin\PluginManager($_language);

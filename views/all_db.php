@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -35,7 +35,7 @@ function doAlter($confirm) {
 		if ($data->hasAlterDatabaseOwner() && $data->isSuperUser()) {
 			// Fetch all users
 
-			$rs = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
+			$rs    = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
 			$owner = isset($rs->fields['usename']) ? $rs->fields['usename'] : '';
 			$users = $data->getUsers();
 
@@ -50,7 +50,7 @@ function doAlter($confirm) {
 			echo "</select></td></tr>\n";
 		}
 		if ($data->hasSharedComments()) {
-			$rs = $data->getDatabaseComment($_REQUEST['alterdatabase']);
+			$rs      = $data->getDatabaseComment($_REQUEST['alterdatabase']);
 			$comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
 			echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
 			echo "<td class=\"data1\">";
@@ -386,94 +386,94 @@ function doDefault($msg = '') {
 
 	$databases = $data->getDatabases();
 
-	$columns = array(
-		'database' => array(
+	$columns = [
+		'database' => [
 			'title' => $lang['strdatabase'],
 			'field' => field('datname'),
 			'url' => "redirect.php?subject=database&amp;{$misc->href}&amp;",
-			'vars' => array('database' => 'datname'),
-		),
-		'owner' => array(
+			'vars' => ['database' => 'datname'],
+		],
+		'owner' => [
 			'title' => $lang['strowner'],
 			'field' => field('datowner'),
-		),
-		'encoding' => array(
+		],
+		'encoding' => [
 			'title' => $lang['strencoding'],
 			'field' => field('datencoding'),
-		),
-		'lc_collate' => array(
+		],
+		'lc_collate' => [
 			'title' => $lang['strcollation'],
 			'field' => field('datcollate'),
-		),
-		'lc_ctype' => array(
+		],
+		'lc_ctype' => [
 			'title' => $lang['strctype'],
 			'field' => field('datctype'),
-		),
-		'tablespace' => array(
+		],
+		'tablespace' => [
 			'title' => $lang['strtablespace'],
 			'field' => field('tablespace'),
-		),
-		'dbsize' => array(
+		],
+		'dbsize' => [
 			'title' => $lang['strsize'],
 			'field' => field('dbsize'),
 			'type' => 'prettysize',
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-		'comment' => array(
+		],
+		'comment' => [
 			'title' => $lang['strcomment'],
 			'field' => field('datcomment'),
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'multiactions' => array(
-			'keycols' => array('database' => 'datname'),
+	$actions = [
+		'multiactions' => [
+			'keycols' => ['database' => 'datname'],
 			'url' => 'all_db.php',
 			'default' => null,
-		),
-		'drop' => array(
+		],
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'all_db.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'subject' => 'database',
 						'action' => 'confirm_drop',
 						'dropdatabase' => field('datname'),
-					),
-				),
-			),
+					],
+				],
+			],
 			'multiaction' => 'confirm_drop',
-		),
-		'privileges' => array(
+		],
+		'privileges' => [
 			'content' => $lang['strprivileges'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'privileges.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'subject' => 'database',
 						'database' => field('datname'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 	if ($data->hasAlterDatabase()) {
-		$actions['alter'] = array(
+		$actions['alter'] = [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'all_db.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'subject' => 'database',
 						'action' => 'confirm_alter',
 						'alterdatabase' => field('datname'),
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 	}
 
 	if (!$data->hasTablespaces()) {
@@ -492,23 +492,24 @@ function doDefault($msg = '') {
 		unset($actions['privileges']);
 	}
 
-	$misc->printTable($databases, $columns, $actions, 'all_db-databases', $lang['strnodatabases']);
+	echo $misc->printTable($databases, $columns, $actions, 'all_db-databases', $lang['strnodatabases']);
 
-	$navlinks = array(
-		'create' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'create' => [
+			'attr' => [
+				'href' => [
 					'url' => 'all_db.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'create',
 						'server' => $_REQUEST['server'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strcreatedatabase'],
-		),
-	);
+		],
+	];
 	$misc->printNavLinks($navlinks, 'all_db-databases', get_defined_vars());
+
 }
 
 function doTree() {
@@ -518,22 +519,22 @@ function doTree() {
 
 	$reqvars = $misc->getRequestVars('database');
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('datname'),
 		'icon' => 'Database',
 		'toolTip' => field('datcomment'),
 		'action' => url('redirect.php',
 			$reqvars,
-			array('database' => field('datname'))
+			['database' => field('datname')]
 		),
 		'branch' => url('database.php',
 			$reqvars,
-			array(
+			[
 				'action' => 'tree',
 				'database' => field('datname'),
-			)
+			]
 		),
-	);
+	];
 
 	$misc->printTree($databases, $attrs, 'databases');
 	exit;
@@ -547,45 +548,46 @@ $misc->printHeader($lang['strdatabases']);
 $misc->printBody();
 
 switch ($action) {
-case 'export':
-	doExport();
-	break;
-case 'save_create':
-	if (isset($_POST['cancel'])) {
-		doDefault();
-	} else {
-		doSaveCreate();
-	}
+	case 'export':
+		doExport();
+		break;
+	case 'save_create':
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			doSaveCreate();
+		}
 
-	break;
-case 'create':
-	doCreate();
-	break;
-case 'drop':
-	if (isset($_REQUEST['drop'])) {
-		doDrop(false);
-	} else {
-		doDefault();
-	}
+		break;
+	case 'create':
+		doCreate();
+		break;
+	case 'drop':
+		if (isset($_REQUEST['drop'])) {
+			doDrop(false);
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-case 'alter':
-	if (isset($_POST['oldname']) && isset($_POST['newname']) && !isset($_POST['cancel'])) {
-		doAlter(false);
-	} else {
-		doDefault();
-	}
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	case 'alter':
+		if (isset($_POST['oldname']) && isset($_POST['newname']) && !isset($_POST['cancel'])) {
+			doAlter(false);
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_alter':
-	doAlter(true);
-	break;
-default:
-	doDefault();
-	break;
+		break;
+	case 'confirm_alter':
+		doAlter(true);
+		break;
+	default:
+		doDefault();
+
+		break;
 }
 
 $misc->printFooter();

@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -78,36 +78,36 @@ function doProperties($msg = '') {
 	$misc->printMsg($msg);
 
 	$groupdata = $data->getGroup($_REQUEST['group']);
-	$users = $data->getUsers();
+	$users     = $data->getUsers();
 
 	if ($groupdata->recordCount() > 0) {
-		$columns = array(
-			'members' => array(
+		$columns = [
+			'members' => [
 				'title' => $lang['strmembers'],
 				'field' => field('usename'),
-			),
-			'actions' => array(
+			],
+			'actions' => [
 				'title' => $lang['stractions'],
-			),
-		);
+			],
+		];
 
-		$actions = array(
-			'drop' => array(
+		$actions = [
+			'drop' => [
 				'content' => $lang['strdrop'],
-				'attr' => array(
-					'href' => array(
+				'attr' => [
+					'href' => [
 						'url' => 'groups.php',
-						'urlvars' => array(
+						'urlvars' => [
 							'action' => 'confirm_drop_member',
 							'group' => $_REQUEST['group'],
 							'user' => field('usename'),
-						),
-					),
-				),
-			),
-		);
+						],
+					],
+				],
+			],
+		];
 
-		$misc->printTable($groupdata, $columns, $actions, 'groups-members', $lang['strnousers']);
+		echo $misc->printTable($groupdata, $columns, $actions, 'groups-members', $lang['strnousers']);
 	}
 
 	// Display form for adding a user to the group
@@ -126,17 +126,17 @@ function doProperties($msg = '') {
 	echo "<input type=\"hidden\" name=\"action\" value=\"add_member\" />\n";
 	echo "</form>\n";
 
-	$misc->printNavLinks(array('showall' => array(
-		'attr' => array(
-			'href' => array(
+	$misc->printNavLinks(['showall' => [
+		'attr' => [
+			'href' => [
 				'url' => 'groups.php',
-				'urlvars' => array(
+				'urlvars' => [
 					'server' => $_REQUEST['server'],
-				),
-			),
-		),
+				],
+			],
+		],
 		'content' => $lang['strshowallgroups'],
-	)), 'groups-properties', get_defined_vars());
+	]], 'groups-properties', get_defined_vars());
 }
 
 /**
@@ -182,7 +182,7 @@ function doCreate($msg = '') {
 	}
 
 	if (!isset($_POST['members'])) {
-		$_POST['members'] = array();
+		$_POST['members'] = [];
 	}
 
 	// Fetch a list of all users in the cluster
@@ -226,7 +226,7 @@ function doSaveCreate() {
 	global $lang;
 
 	if (!isset($_POST['members'])) {
-		$_POST['members'] = array();
+		$_POST['members'] = [];
 	}
 
 	// Check form vars
@@ -256,47 +256,47 @@ function doDefault($msg = '') {
 
 	$groups = $data->getGroups();
 
-	$columns = array(
-		'group' => array(
+	$columns = [
+		'group' => [
 			'title' => $lang['strgroup'],
 			'field' => field('groname'),
 			'url' => "groups.php?action=properties&amp;{$misc->href}&amp;",
-			'vars' => array('group' => 'groname'),
-		),
-		'actions' => array(
+			'vars' => ['group' => 'groname'],
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'drop' => array(
+	$actions = [
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'groups.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'group' => field('groname'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($groups, $columns, $actions, 'groups-properties', $lang['strnogroups']);
+	echo $misc->printTable($groups, $columns, $actions, 'groups-properties', $lang['strnogroups']);
 
-	$misc->printNavLinks(array('create' => array(
-		'attr' => array(
-			'href' => array(
+	$misc->printNavLinks(['create' => [
+		'attr' => [
+			'href' => [
 				'url' => 'groups.php',
-				'urlvars' => array(
+				'urlvars' => [
 					'action' => 'create',
 					'server' => $_REQUEST['server'],
-				),
-			),
-		),
+				],
+			],
+		],
 		'content' => $lang['strcreategroup'],
-	)), 'groups-groups', get_defined_vars());
+	]], 'groups-groups', get_defined_vars());
 
 }
 
@@ -304,54 +304,54 @@ $misc->printHeader($lang['strgroups']);
 $misc->printBody();
 
 switch ($action) {
-case 'add_member':
-	doAddMember();
-	break;
-case 'drop_member':
-	if (isset($_REQUEST['drop'])) {
-		doDropMember(false);
-	} else {
+	case 'add_member':
+		doAddMember();
+		break;
+	case 'drop_member':
+		if (isset($_REQUEST['drop'])) {
+			doDropMember(false);
+		} else {
+			doProperties();
+		}
+
+		break;
+	case 'confirm_drop_member':
+		doDropMember(true);
+		break;
+	case 'save_create':
+		if (isset($_REQUEST['cancel'])) {
+			doDefault();
+		} else {
+			doSaveCreate();
+		}
+
+		break;
+	case 'create':
+		doCreate();
+		break;
+	case 'drop':
+		if (isset($_REQUEST['drop'])) {
+			doDrop(false);
+		} else {
+			doDefault();
+		}
+
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	case 'save_edit':
+		doSaveEdit();
+		break;
+	case 'edit':
+		doEdit();
+		break;
+	case 'properties':
 		doProperties();
-	}
-
-	break;
-case 'confirm_drop_member':
-	doDropMember(true);
-	break;
-case 'save_create':
-	if (isset($_REQUEST['cancel'])) {
+		break;
+	default:
 		doDefault();
-	} else {
-		doSaveCreate();
-	}
-
-	break;
-case 'create':
-	doCreate();
-	break;
-case 'drop':
-	if (isset($_REQUEST['drop'])) {
-		doDrop(false);
-	} else {
-		doDefault();
-	}
-
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-case 'save_edit':
-	doSaveEdit();
-	break;
-case 'edit':
-	doEdit();
-	break;
-case 'properties':
-	doProperties();
-	break;
-default:
-	doDefault();
-	break;
+		break;
 }
 
 $misc->printFooter();

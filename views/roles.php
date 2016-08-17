@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -42,15 +42,15 @@ function doCreate($msg = '') {
 	}
 
 	if (!isset($_POST['memberof'])) {
-		$_POST['memberof'] = array();
+		$_POST['memberof'] = [];
 	}
 
 	if (!isset($_POST['members'])) {
-		$_POST['members'] = array();
+		$_POST['members'] = [];
 	}
 
 	if (!isset($_POST['adminmembers'])) {
-		$_POST['adminmembers'] = array();
+		$_POST['adminmembers'] = [];
 	}
 
 	$misc->printTrail('role');
@@ -141,15 +141,15 @@ function doSaveCreate() {
 	global $data, $lang;
 
 	if (!isset($_POST['memberof'])) {
-		$_POST['memberof'] = array();
+		$_POST['memberof'] = [];
 	}
 
 	if (!isset($_POST['members'])) {
-		$_POST['members'] = array();
+		$_POST['members'] = [];
 	}
 
 	if (!isset($_POST['adminmembers'])) {
-		$_POST['adminmembers'] = array();
+		$_POST['adminmembers'] = [];
 	}
 
 	// Check data
@@ -185,13 +185,13 @@ function doAlter($msg = '') {
 	$roledata = $data->getRole($_REQUEST['rolename']);
 
 	if ($roledata->recordCount() > 0) {
-		$server_info = $misc->getServerInfo();
-		$canRename = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
-		$roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
-		$roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
+		$server_info                       = $misc->getServerInfo();
+		$canRename                         = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
+		$roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
+		$roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
 		$roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-		$roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
-		$roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
+		$roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
+		$roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
 
 		if (!isset($_POST['formExpires'])) {
 			if ($canRename) {
@@ -219,8 +219,8 @@ function doAlter($msg = '') {
 			}
 
 			$_POST['formConnLimit'] = $roledata->fields['rolconnlimit'] == '-1' ? '' : $roledata->fields['rolconnlimit'];
-			$_POST['formExpires'] = $roledata->fields['rolvaliduntil'] == 'infinity' ? '' : $roledata->fields['rolvaliduntil'];
-			$_POST['formPassword'] = '';
+			$_POST['formExpires']   = $roledata->fields['rolvaliduntil'] == 'infinity' ? '' : $roledata->fields['rolvaliduntil'];
+			$_POST['formPassword']  = '';
 		}
 
 		echo "<form action=\"/views/roles.php\" method=\"post\">\n";
@@ -260,7 +260,7 @@ function doAlter($msg = '') {
 					$memberof->moveNext();
 				}
 			} else {
-				$_POST['memberof'] = array();
+				$_POST['memberof'] = [];
 			}
 
 			$memberofold = implode(',', $_POST['memberof']);
@@ -274,7 +274,7 @@ function doAlter($msg = '') {
 					$members->moveNext();
 				}
 			} else {
-				$_POST['members'] = array();
+				$_POST['members'] = [];
 			}
 
 			$membersold = implode(',', $_POST['members']);
@@ -288,7 +288,7 @@ function doAlter($msg = '') {
 					$adminmembers->moveNext();
 				}
 			} else {
-				$_POST['adminmembers'] = array();
+				$_POST['adminmembers'] = [];
 			}
 
 			$adminmembersold = implode(',', $_POST['adminmembers']);
@@ -358,15 +358,15 @@ function doSaveAlter() {
 	global $data, $lang;
 
 	if (!isset($_POST['memberof'])) {
-		$_POST['memberof'] = array();
+		$_POST['memberof'] = [];
 	}
 
 	if (!isset($_POST['members'])) {
-		$_POST['members'] = array();
+		$_POST['members'] = [];
 	}
 
 	if (!isset($_POST['adminmembers'])) {
-		$_POST['adminmembers'] = array();
+		$_POST['adminmembers'] = [];
 	}
 
 	// Check name and password
@@ -434,11 +434,11 @@ function doProperties($msg = '') {
 
 	$roledata = $data->getRole($_REQUEST['rolename']);
 	if ($roledata->recordCount() > 0) {
-		$roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
-		$roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
+		$roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
+		$roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
 		$roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-		$roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
-		$roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
+		$roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
+		$roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
 
 		echo "<table>\n";
 		echo "\t<tr>\n\t\t<th class=\"data\" style=\"width: 130px\">Description</th>\n";
@@ -496,45 +496,45 @@ function doProperties($msg = '') {
 		echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
-	$navlinks = array(
-		'showall' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'showall' => [
+			'attr' => [
+				'href' => [
 					'url' => 'roles.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'server' => $_REQUEST['server'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strshowallroles'],
-		),
-		'alter' => array(
-			'attr' => array(
-				'href' => array(
+		],
+		'alter' => [
+			'attr' => [
+				'href' => [
 					'url' => 'roles.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'alter',
 						'server' => $_REQUEST['server'],
 						'rolename' => $_REQUEST['rolename'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['stralter'],
-		),
-		'drop' => array(
-			'attr' => array(
-				'href' => array(
+		],
+		'drop' => [
+			'attr' => [
+				'href' => [
 					'url' => 'roles.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'server' => $_REQUEST['server'],
 						'rolename' => $_REQUEST['rolename'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strdrop'],
-		),
-	);
+		],
+	];
 
 	$misc->printNavLinks($navlinks, 'roles-properties', get_defined_vars());
 }
@@ -551,7 +551,7 @@ function doAccount($msg = '') {
 
 	$server_info = $misc->getServerInfo();
 
-	$roledata = $data->getRole($server_info['username']);
+	$roledata             = $data->getRole($server_info['username']);
 	$_REQUEST['rolename'] = $server_info['username'];
 
 	$misc->printTrail('role');
@@ -559,10 +559,10 @@ function doAccount($msg = '') {
 	$misc->printMsg($msg);
 
 	if ($roledata->recordCount() > 0) {
-		$roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
-		$roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
+		$roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
+		$roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
 		$roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-		$roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
+		$roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
 		echo "<table>\n";
 		echo "\t<tr>\n\t\t<th class=\"data\">{$lang['strname']}</th>\n";
 		echo "\t\t<th class=\"data\">{$lang['strsuper']}</th>\n";
@@ -586,18 +586,18 @@ function doAccount($msg = '') {
 		echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
-	$misc->printNavLinks(array('changepassword' => array(
-		'attr' => array(
-			'href' => array(
+	$misc->printNavLinks(['changepassword' => [
+		'attr' => [
+			'href' => [
 				'url' => 'roles.php',
-				'urlvars' => array(
+				'urlvars' => [
 					'action' => 'confchangepassword',
 					'server' => $_REQUEST['server'],
-				),
-			),
-		),
+				],
+			],
+		],
 		'content' => $lang['strchangepassword'],
-	)), 'roles-account', get_defined_vars());
+	]], 'roles-account', get_defined_vars());
 }
 
 /**
@@ -680,98 +680,98 @@ function doDefault($msg = '') {
 
 	$roles = $data->getRoles();
 
-	$columns = array(
-		'role' => array(
+	$columns = [
+		'role' => [
 			'title' => $lang['strrole'],
 			'field' => field('rolname'),
 			'url' => "redirect.php?subject=role&amp;action=properties&amp;{$misc->href}&amp;",
-			'vars' => array('rolename' => 'rolname'),
-		),
-		'superuser' => array(
+			'vars' => ['rolename' => 'rolname'],
+		],
+		'superuser' => [
 			'title' => $lang['strsuper'],
 			'field' => field('rolsuper'),
 			'type' => 'yesno',
-		),
-		'createdb' => array(
+		],
+		'createdb' => [
 			'title' => $lang['strcreatedb'],
 			'field' => field('rolcreatedb'),
 			'type' => 'yesno',
-		),
-		'createrole' => array(
+		],
+		'createrole' => [
 			'title' => $lang['strcancreaterole'],
 			'field' => field('rolcreaterole'),
 			'type' => 'yesno',
-		),
-		'inherits' => array(
+		],
+		'inherits' => [
 			'title' => $lang['strinheritsprivs'],
 			'field' => field('rolinherit'),
 			'type' => 'yesno',
-		),
-		'canloging' => array(
+		],
+		'canloging' => [
 			'title' => $lang['strcanlogin'],
 			'field' => field('rolcanlogin'),
 			'type' => 'yesno',
-		),
-		'connlimit' => array(
+		],
+		'connlimit' => [
 			'title' => $lang['strconnlimit'],
 			'field' => field('rolconnlimit'),
 			'type' => 'callback',
-			'params' => array('function' => 'renderRoleConnLimit'),
-		),
-		'expires' => array(
+			'params' => ['function' => 'renderRoleConnLimit'],
+		],
+		'expires' => [
 			'title' => $lang['strexpires'],
 			'field' => field('rolvaliduntil'),
 			'type' => 'callback',
-			'params' => array('function' => 'renderRoleExpires', 'null' => $lang['strnever']),
-		),
-		'actions' => array(
+			'params' => ['function' => 'renderRoleExpires', 'null' => $lang['strnever']],
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'alter' => array(
+	$actions = [
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'roles.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'alter',
 						'rolename' => field('rolname'),
-					),
-				),
-			),
-		),
-		'drop' => array(
+					],
+				],
+			],
+		],
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'roles.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'rolename' => field('rolname'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($roles, $columns, $actions, 'roles-roles', $lang['strnoroles']);
+	echo $misc->printTable($roles, $columns, $actions, 'roles-roles', $lang['strnoroles']);
 
-	$navlinks = array(
-		'create' => array(
-			'attr' => array(
-				'href' => array(
+	$navlinks = [
+		'create' => [
+			'attr' => [
+				'href' => [
 					'url' => 'roles.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'create',
 						'server' => $_REQUEST['server'],
-					),
-				),
-			),
+					],
+				],
+			],
 			'content' => $lang['strcreaterole'],
-		),
-	);
+		],
+	];
 	$misc->printNavLinks($navlinks, 'roles-roles', get_defined_vars());
 }
 
@@ -779,58 +779,58 @@ $misc->printHeader($lang['strroles']);
 $misc->printBody();
 
 switch ($action) {
-case 'create':
-	doCreate();
-	break;
-case 'save_create':
-	if (isset($_POST['create'])) {
-		doSaveCreate();
-	} else {
-		doDefault();
-	}
+	case 'create':
+		doCreate();
+		break;
+	case 'save_create':
+		if (isset($_POST['create'])) {
+			doSaveCreate();
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'alter':
-	doAlter();
-	break;
-case 'save_alter':
-	if (isset($_POST['alter'])) {
-		doSaveAlter();
-	} else {
-		doDefault();
-	}
+		break;
+	case 'alter':
+		doAlter();
+		break;
+	case 'save_alter':
+		if (isset($_POST['alter'])) {
+			doSaveAlter();
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-case 'drop':
-	if (isset($_POST['drop'])) {
-		doDrop(false);
-	} else {
-		doDefault();
-	}
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	case 'drop':
+		if (isset($_POST['drop'])) {
+			doDrop(false);
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'properties':
-	doProperties();
-	break;
-case 'confchangepassword':
-	doChangePassword(true);
-	break;
-case 'changepassword':
-	if (isset($_REQUEST['ok'])) {
-		doChangePassword(false);
-	} else {
+		break;
+	case 'properties':
+		doProperties();
+		break;
+	case 'confchangepassword':
+		doChangePassword(true);
+		break;
+	case 'changepassword':
+		if (isset($_REQUEST['ok'])) {
+			doChangePassword(false);
+		} else {
+			doAccount();
+		}
+
+		break;
+	case 'account':
 		doAccount();
-	}
-
-	break;
-case 'account':
-	doAccount();
-	break;
-default:
-	doDefault();
+		break;
+	default:
+		doDefault();
 }
 
 $misc->printFooter();

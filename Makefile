@@ -2,7 +2,7 @@ VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)",/\1/p')
 
 SHELL = /usr/bin/env bash
 
-default: clean install
+default: clean fix-permissions install
 .PHONY: default fix-permissions install
 
 version:
@@ -18,7 +18,7 @@ clean:
 
 fix-permissions:
 	sudo chmod 777 temp -R
-	sudo chmod +r public -R
+	sudo chown www-data:www-data temp -R
 	
 
 install: 

@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
@@ -146,59 +146,59 @@ function doDefault($msg = '') {
 
 	$rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
 
-	$columns = array(
-		'rule' => array(
+	$columns = [
+		'rule' => [
 			'title' => $lang['strname'],
 			'field' => field('rulename'),
-		),
-		'definition' => array(
+		],
+		'definition' => [
 			'title' => $lang['strdefinition'],
 			'field' => field('definition'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-	);
+		],
+	];
 
 	$subject = urlencode($_REQUEST['subject']);
-	$object = urlencode($_REQUEST[$_REQUEST['subject']]);
+	$object  = urlencode($_REQUEST[$_REQUEST['subject']]);
 
-	$actions = array(
-		'drop' => array(
+	$actions = [
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'rules.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'reltype' => $subject,
 						$subject => $object,
 						'subject' => 'rule',
 						'rule' => field('rulename'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($rules, $columns, $actions, 'rules-rules', $lang['strnorules']);
+	echo $misc->printTable($rules, $columns, $actions, 'rules-rules', $lang['strnorules']);
 
-	$misc->printNavLinks(array('create' => array(
-		'attr' => array(
-			'href' => array(
+	$misc->printNavLinks(['create' => [
+		'attr' => [
+			'href' => [
 				'url' => 'rules.php',
-				'urlvars' => array(
+				'urlvars' => [
 					'action' => 'create_rule',
 					'server' => $_REQUEST['server'],
 					'database' => $_REQUEST['database'],
 					'schema' => $_REQUEST['schema'],
 					$subject => $object,
 					'subject' => $subject,
-				),
-			),
-		),
+				],
+			],
+		],
 		'content' => $lang['strcreaterule'],
-	)), 'rules-rules', get_defined_vars());
+	]], 'rules-rules', get_defined_vars());
 }
 
 function doTree() {
@@ -208,10 +208,10 @@ function doTree() {
 
 	$reqvars = $misc->getRequestVars($_REQUEST['subject']);
 
-	$attrs = array(
+	$attrs = [
 		'text' => field('rulename'),
 		'icon' => 'Rule',
-	);
+	];
 
 	$misc->printTree($rules, $attrs, 'rules');
 	exit;
@@ -226,31 +226,31 @@ $misc->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $lang['strrules']);
 $misc->printBody();
 
 switch ($action) {
-case 'create_rule':
-	createRule(true);
-	break;
-case 'save_create_rule':
-	if (isset($_POST['cancel'])) {
-		doDefault();
-	} else {
-		createRule(false);
-	}
+	case 'create_rule':
+		createRule(true);
+		break;
+	case 'save_create_rule':
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			createRule(false);
+		}
 
-	break;
-case 'drop':
-	if (isset($_POST['yes'])) {
-		doDrop(false);
-	} else {
-		doDefault();
-	}
+		break;
+	case 'drop':
+		if (isset($_POST['yes'])) {
+			doDrop(false);
+		} else {
+			doDefault();
+		}
 
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-default:
-	doDefault();
-	break;
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	default:
+		doDefault();
+		break;
 }
 
 $misc->printFooter();

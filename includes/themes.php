@@ -20,7 +20,7 @@ unset($_theme);
 if (!isset($conf['theme'])) {
 	$conf['theme'] = 'default';
 }
-DEFINE('THEME_PATH', BASE_PATH . "/libraries/themes");
+DEFINE('THEME_PATH', BASE_PATH . "/includes/themes");
 
 // 1. Check for the theme from a request var
 if (isset($_REQUEST['theme']) && is_file(THEME_PATH . "/{$_REQUEST['theme']}/global.css")) {
@@ -39,27 +39,26 @@ if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && is_file(THEME_PATH . "/{$_
 	$conf['theme'] = $_COOKIE['ppaTheme'];
 }
 
-if (!is_null($info)) {
+if (!is_null($_server_info)) {
+
 	$_theme = '';
 
-	if ((isset($info['theme']['default']))
-		and is_file(THEME_PATH . "/{$info['theme']['default']}/global.css")
-	) {
-		$_theme = $info['theme']['default'];
+	if (isset($_server_info['theme']['default']) && is_file(THEME_PATH . "/{$_server_info['theme']['default']}/global.css")) {
+		$_theme = $_server_info['theme']['default'];
 	}
 
 	if (isset($_REQUEST['database'])
-		and isset($info['theme']['db'][$_REQUEST['database']])
-		and is_file(THEME_PATH . "/{$info['theme']['db'][$_REQUEST['database']]}/global.css")
+		and isset($_server_info['theme']['db'][$_REQUEST['database']])
+		and is_file(THEME_PATH . "/{$_server_info['theme']['db'][$_REQUEST['database']]}/global.css")
 	) {
-		$_theme = $info['theme']['db'][$_REQUEST['database']];
+		$_theme = $_server_info['theme']['db'][$_REQUEST['database']];
 	}
 
-	if (isset($info['username'])
-		and isset($info['theme']['user'][$info['username']])
-		and is_file(THEME_PATH . "/{$info['theme']['user'][$info['username']]}/global.css")
+	if (isset($_server_info['username'])
+		and isset($_server_info['theme']['user'][$_server_info['username']])
+		and is_file(THEME_PATH . "/{$_server_info['theme']['user'][$_server_info['username']]}/global.css")
 	) {
-		$_theme = $info['theme']['user'][$info['username']];
+		$_theme = $_server_info['theme']['user'][$_server_info['username']];
 	}
 
 	if ($_theme !== '') {

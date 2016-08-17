@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -26,7 +26,7 @@ function doAccount($msg = '') {
 
 	$server_info = $misc->getServerInfo();
 
-	$userdata = $data->getUser($server_info['username']);
+	$userdata         = $data->getUser($server_info['username']);
 	$_REQUEST['user'] = $server_info['username'];
 
 	$misc->printTrail('user');
@@ -34,7 +34,7 @@ function doAccount($msg = '') {
 	$misc->printMsg($msg);
 
 	if ($userdata->recordCount() > 0) {
-		$userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
+		$userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
 		$userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strusername']}</th><th class=\"data\">{$lang['strsuper']}</th><th class=\"data\">{$lang['strcreatedb']}</th><th class=\"data\">{$lang['strexpires']}</th>";
@@ -50,18 +50,18 @@ function doAccount($msg = '') {
 		echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
-	$misc->printNavLinks(array('changepassword' => array(
-		'attr' => array(
-			'href' => array(
+	$misc->printNavLinks(['changepassword' => [
+		'attr' => [
+			'href' => [
 				'url' => 'users.php',
-				'urlvars' => array(
+				'urlvars' => [
 					'action' => 'confchangepassword',
 					'server' => $_REQUEST['server'],
-				),
-			),
-		),
+				],
+			],
+		],
 		'content' => $lang['strchangepassword'],
-	)), 'users-account', get_defined_vars());
+	]], 'users-account', get_defined_vars());
 }
 
 /**
@@ -136,9 +136,9 @@ function doEdit($msg = '') {
 	$userdata = $data->getUser($_REQUEST['username']);
 
 	if ($userdata->recordCount() > 0) {
-		$server_info = $misc->getServerInfo();
-		$canRename = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
-		$userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
+		$server_info                     = $misc->getServerInfo();
+		$canRename                       = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
+		$userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
 		$userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
 
 		if (!isset($_POST['formExpires'])) {
@@ -154,7 +154,7 @@ function doEdit($msg = '') {
 				$_POST['formCreateDB'] = '';
 			}
 
-			$_POST['formExpires'] = $userdata->fields['useexpires'] == 'infinity' ? '' : $userdata->fields['useexpires'];
+			$_POST['formExpires']  = $userdata->fields['useexpires'] == 'infinity' ? '' : $userdata->fields['useexpires'];
 			$_POST['formPassword'] = '';
 		}
 
@@ -310,7 +310,7 @@ function doSaveCreate() {
 		doCreate($lang['strpasswordconfirm']);
 	} else {
 		$status = $data->createUser($_POST['formUsername'], $_POST['formPassword'],
-			isset($_POST['formCreateDB']), isset($_POST['formSuper']), $_POST['formExpires'], array());
+			isset($_POST['formCreateDB']), isset($_POST['formSuper']), $_POST['formExpires'], []);
 		if ($status == 0) {
 			doDefault($lang['strusercreated']);
 		} else {
@@ -338,77 +338,77 @@ function doDefault($msg = '') {
 
 	$users = $data->getUsers();
 
-	$columns = array(
-		'user' => array(
+	$columns = [
+		'user' => [
 			'title' => $lang['strusername'],
 			'field' => field('usename'),
-		),
-		'superuser' => array(
+		],
+		'superuser' => [
 			'title' => $lang['strsuper'],
 			'field' => field('usesuper'),
 			'type' => 'yesno',
-		),
-		'createdb' => array(
+		],
+		'createdb' => [
 			'title' => $lang['strcreatedb'],
 			'field' => field('usecreatedb'),
 			'type' => 'yesno',
-		),
-		'expires' => array(
+		],
+		'expires' => [
 			'title' => $lang['strexpires'],
 			'field' => field('useexpires'),
 			'type' => 'callback',
-			'params' => array('function' => 'renderUseExpires', 'null' => $lang['strnever']),
-		),
-		'defaults' => array(
+			'params' => ['function' => 'renderUseExpires', 'null' => $lang['strnever']],
+		],
+		'defaults' => [
 			'title' => $lang['strsessiondefaults'],
 			'field' => field('useconfig'),
-		),
-		'actions' => array(
+		],
+		'actions' => [
 			'title' => $lang['stractions'],
-		),
-	);
+		],
+	];
 
-	$actions = array(
-		'alter' => array(
+	$actions = [
+		'alter' => [
 			'content' => $lang['stralter'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'users.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'edit',
 						'username' => field('usename'),
-					),
-				),
-			),
-		),
-		'drop' => array(
+					],
+				],
+			],
+		],
+		'drop' => [
 			'content' => $lang['strdrop'],
-			'attr' => array(
-				'href' => array(
+			'attr' => [
+				'href' => [
 					'url' => 'users.php',
-					'urlvars' => array(
+					'urlvars' => [
 						'action' => 'confirm_drop',
 						'username' => field('usename'),
-					),
-				),
-			),
-		),
-	);
+					],
+				],
+			],
+		],
+	];
 
-	$misc->printTable($users, $columns, $actions, 'users-users', $lang['strnousers']);
+	echo $misc->printTable($users, $columns, $actions, 'users-users', $lang['strnousers']);
 
-	$misc->printNavLinks(array('create' => array(
-		'attr' => array(
-			'href' => array(
+	$misc->printNavLinks(['create' => [
+		'attr' => [
+			'href' => [
 				'url' => 'users.php',
-				'urlvars' => array(
+				'urlvars' => [
 					'action' => 'create',
 					'server' => $_REQUEST['server'],
-				),
-			),
-		),
+				],
+			],
+		],
 		'content' => $lang['strcreateuser'],
-	)), 'users-users', get_defined_vars());
+	]], 'users-users', get_defined_vars());
 
 }
 
@@ -416,56 +416,56 @@ $misc->printHeader($lang['strusers']);
 $misc->printBody();
 
 switch ($action) {
-case 'changepassword':
-	if (isset($_REQUEST['ok'])) {
-		doChangePassword(false);
-	} else {
+	case 'changepassword':
+		if (isset($_REQUEST['ok'])) {
+			doChangePassword(false);
+		} else {
+			doAccount();
+		}
+
+		break;
+	case 'confchangepassword':
+		doChangePassword(true);
+		break;
+	case 'account':
 		doAccount();
-	}
+		break;
+	case 'save_create':
+		if (isset($_REQUEST['cancel'])) {
+			doDefault();
+		} else {
+			doSaveCreate();
+		}
 
-	break;
-case 'confchangepassword':
-	doChangePassword(true);
-	break;
-case 'account':
-	doAccount();
-	break;
-case 'save_create':
-	if (isset($_REQUEST['cancel'])) {
+		break;
+	case 'create':
+		doCreate();
+		break;
+	case 'drop':
+		if (isset($_REQUEST['cancel'])) {
+			doDefault();
+		} else {
+			doDrop(false);
+		}
+
+		break;
+	case 'confirm_drop':
+		doDrop(true);
+		break;
+	case 'save_edit':
+		if (isset($_REQUEST['cancel'])) {
+			doDefault();
+		} else {
+			doSaveEdit();
+		}
+
+		break;
+	case 'edit':
+		doEdit();
+		break;
+	default:
 		doDefault();
-	} else {
-		doSaveCreate();
-	}
-
-	break;
-case 'create':
-	doCreate();
-	break;
-case 'drop':
-	if (isset($_REQUEST['cancel'])) {
-		doDefault();
-	} else {
-		doDrop(false);
-	}
-
-	break;
-case 'confirm_drop':
-	doDrop(true);
-	break;
-case 'save_edit':
-	if (isset($_REQUEST['cancel'])) {
-		doDefault();
-	} else {
-		doSaveEdit();
-	}
-
-	break;
-case 'edit':
-	doEdit();
-	break;
-default:
-	doDefault();
-	break;
+		break;
 }
 
 $misc->printFooter();

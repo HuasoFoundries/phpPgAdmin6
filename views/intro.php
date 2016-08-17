@@ -8,8 +8,8 @@
 
 // Include application functions (no db conn)
 $_no_db_connection = true;
-require_once '../libraries/lib.inc.php';
-include_once '../libraries/themes.php';
+require_once '../includes/lib.inc.php';
+include_once '../includes/themes.php';
 
 $misc->printHeader();
 $misc->printBody();

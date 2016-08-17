@@ -85,8 +85,8 @@ th.data {
     color: #000000;
     background-color: #cfd8dc;
     font-family: roboto;
-    font-size: smaller;
-    /* 0.9em */
+    font-size: 1.2em;
+    padding: 2px 4px;
 }
 
 th.data a:active,

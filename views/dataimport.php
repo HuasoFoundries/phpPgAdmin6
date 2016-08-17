@@ -12,7 +12,7 @@ if (!ini_get('safe_mode')) {
 }
 
 // Include application functions
-require_once '../libraries/lib.inc.php';
+require_once '../includes/lib.inc.php';
 
 // Default state for XML parser
 $state = 'XML';

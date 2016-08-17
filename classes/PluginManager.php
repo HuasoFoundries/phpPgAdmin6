@@ -26,17 +26,23 @@ class PluginManager {
 
 	/**
 	 * Register the plugins
-	 * @param $language - Language that have been used.
+	 * @param $this->language - Language that have been used.
 	 */
-	function __construct($language) {
-		global $conf, $lang;
+	function __construct(\Slim\App $app) {
+		$this->app = $app;
 
-		if (!isset($conf['plugins'])) {
+		$container = $app->getContainer();
+
+		$this->language = $container->get('language');
+		$this->lang = $container->get('lang');
+		$this->conf = $container->get('conf');
+
+		if (!isset($this->conf['plugins'])) {
 			return;
 		}
 
 		// Get the activated plugins
-		$plugins = $conf['plugins'];
+		$plugins = $this->conf['plugins'];
 
 		foreach ($plugins as $activated_plugin) {
 			$plugin_file = './plugins/' . $activated_plugin . '/plugin.php';
@@ -45,13 +51,13 @@ class PluginManager {
 			if (file_exists($plugin_file)) {
 				include_once $plugin_file;
 				try {
-					$plugin = new $activated_plugin($language);
+					$plugin = new $activated_plugin($this->language);
 					$this->add_plugin($plugin);
 				} catch (Exception $e) {
 					continue;
 				}
 			} else {
-				printf($lang['strpluginnotfound'] . "\t\n", $activated_plugin);
+				printf($this->lang['strpluginnotfound'] . "\t\n", $activated_plugin);
 				exit;
 			}
 		}
@@ -62,7 +68,6 @@ class PluginManager {
 	 * @param $plugin - Instance from plugin
 	 */
 	function add_plugin($plugin) {
-		global $lang;
 
 		//The $plugin_name is the identification of the plugin.
 		//Example: PluginExample is the identification for PluginExample
@@ -74,7 +79,7 @@ class PluginManager {
 		$hooks = $plugin->get_hooks();
 		foreach ($hooks as $hook => $functions) {
 			if (!in_array($hook, $this->available_hooks)) {
-				printf($lang['strhooknotfound'] . "\t\n", $hook);
+				printf($this->lang['strhooknotfound'] . "\t\n", $hook);
 				exit;
 			}
 			$this->hooks[$hook][$plugin_name] = $functions;
@@ -117,11 +122,10 @@ class PluginManager {
 	 * @param $action - action that will be executed.
 	 */
 	function do_action($plugin_name, $action) {
-		global $lang;
 
 		if (!isset($this->plugins_list[$plugin_name])) {
 			// Show an error and stop the application
-			printf($lang['strpluginnotfound'] . "\t\n", $plugin_name);
+			printf($this->lang['strpluginnotfound'] . "\t\n", $plugin_name);
 			exit;
 		}
 		$plugin = $this->plugins_list[$plugin_name];
@@ -131,7 +135,7 @@ class PluginManager {
 			call_user_func(array($plugin, $action));
 		} else {
 			// Show an error and stop the application
-			printf($lang['stractionnotfound'] . "\t\n", $action, $plugin_name);
+			printf($this->lang['stractionnotfound'] . "\t\n", $action, $plugin_name);
 			exit;
 		}
 	}

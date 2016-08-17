@@ -1,35 +1,5 @@
-<form action="/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">
-
-    <div class="searchpath">
-        <label>{{strsearchpath}} <a class="help" href="{{helplink}}" title="{{strhelp}}" target="phppgadminhelp">{{strhelpicon}}</a> :
-            <input type="text" name="search_path" size="50" value="{{search_path}}" />
-        </label>
-    </div>
-
-    <div id="queryedition" style="padding:1%;width:98%;float:left;">
-
-        <textarea style="width:98%;" rows="9" cols="50" id="query" name="query">{{sqlquery}}</textarea>
-
-    </div>
-
-    {% if max_size>0 %}
-    <p>
-        <input type="hidden" name="MAX_FILE_SIZE" value="{{max_size}}" />
-        <label for="script">{{struploadscript}}:</label>
-        <input id="script" name="script" type="file" />
-    </p>
-    {% endif %}
-
-    <p>
-        <label for="paginate">
-            <input type="checkbox" id="paginate" name="paginate" {{paginate}} />&nbsp;{{strpaginate}}</label>&nbsp;&nbsp;</p>
-    <p>
-        <input type="submit" name="execute" id="execute" accesskey="r" value="{{strexecute}}" />
-        <input type="reset" accesskey="q" value="{{strreset}}" />
-    </p>
-</form>
-
 <script type="text/javascript">
+
 jQuery(document).ready(function() {
     document.forms[0].query.focus();
     CodeMirror.commands.sendQuery = function() {
@@ -68,11 +38,12 @@ jQuery(document).ready(function() {
     jQuery('table.tabs').prependTo('body');
     jQuery('table.printconnection').prependTo('.sqlform');
     if (window.parent.frames.length > 1) {
-        $('#csstheme', window.parent.frames[0].document).attr('href', '/libraries/themes/default/global.css');
+        $('#csstheme', window.parent.frames[0].document).attr('href', '/includes/themes/default/global.css');
     }
 });
 </script>
 
-<a href="#" class="bottom_link">subir al inicio</a></body>
+<a href="#" class="bottom_link">subir al inicio</a>
+</body>
 
 </html>

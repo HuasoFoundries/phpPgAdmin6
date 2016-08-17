@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        {% include 'home_header.twig' %}
+    </head>
+
+    <frameset cols="{{cols}}">
+        {% if rtl == true %}
+        <frame src="/views/intro.php" name="detail" id="detail" frameborder="0" />
+        <frame src="/views/browser" name="browser" id="browser" frameborder="0" /> {% else %}
+        <frame src="/views/browser" name="browser" id="browser" frameborder="0" />
+        <frame src="/views/intro.php" name="detail" id="detail" frameborder="0" /> {% endif %}
+
+        <noframes>
+
+            <body>{{strnoframes}}
+                <br />
+                <a href="/views/intro.php">{{strnoframeslink}}</a>
+            </body>
+        </noframes>
+    </frameset>
+
+</html>
