@@ -711,37 +711,6 @@ function doDefault($msg = '') {
 	$misc->printNavLinks($navlinks, 'types-types', get_defined_vars());
 }
 
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$types = $data->getTypes();
-
-	$reqvars = $misc->getRequestVars('type');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('typname'),
-		'icon' => 'Type',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('typcomment'),
-		'action' => url('types.php',
-			$reqvars,
-			[
-				'action' => 'properties',
-				'type' => \PHPPgAdmin\Decorators\Decorator::field('basename'),
-			]
-		),
-	];
-
-	$misc->printTree($types, $attrs, 'types');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['strtypes']);
 $misc->printBody();
 

@@ -7,67 +7,76 @@
  */
 
 // Include application functions (no db conn)
-$_no_db_connection = true;
-require_once '../lib.inc.php';
-include_once '../themes.php';
 
-$misc->printHeader();
-$misc->printBody();
+function doDefault($container) {
 
-$misc->printTrail('root');
-$misc->printTabs('root', 'intro');
-?>
+	$lang = $container->get('lang');
+	$misc = $container->get('misc');
+	$conf = $container->get('conf');
 
-<h1><?php echo "$appName $appVersion (PHP " . phpversion() . ')' ?></h1>
+	$appName    = $container->get('settings')['appName'];
+	$appVersion = $container->get('settings')['appVersion'];
 
-<form method="get" action="intro.php">
-<table>
-	<tr class="data1">
-		<th class="data"><?php echo $lang['strlanguage'] ?></th>
-		<td>
-			<select name="language" onchange="this.form.submit()">
-			<?php
-$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
-foreach ($appLangFiles as $k => $v) {
-	echo "\t<option value=\"{$k}\"",
-	($k == $language) ? ' selected="selected"' : '',
-		">{$v}</option>\n";
+	$misc->setNoDBConnection(true);
+
+	$intro_html = $misc->printHeader('', null, false);
+
+	$intro_html .= $misc->printBody(false);
+
+	$intro_html .= $misc->printTrail('root', false);
+
+	$intro_html .= $misc->printTabs('root', 'intro', false);
+
+	$intro_html .= "<h1> $appName $appVersion (PHP " . phpversion() . ')</h1>';
+
+	$intro_html .= '<form method="get" action="intro.php">';
+	$intro_html .= '<table>';
+	$intro_html .= '<tr class="data1">';
+	$intro_html .= '<th class="data">' . $lang['strlanguage'] . '</th>';
+	$intro_html .= '<td>';
+	$intro_html .= '<select name="language" onchange="this.form.submit()">';
+
+	$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
+	foreach ($container->get('appLangFiles') as $k => $v) {
+		$selected = ($k == $language) ? ' selected="selected"' : '';
+		$intro_html .= "\t<option value=\"{$k}\"" . $selected . ">{$v}</option>\n";
+	}
+
+	$intro_html .= '</select>';
+	$intro_html .= '</td>';
+	$intro_html .= '</tr>';
+	$intro_html .= '<tr class="data2">';
+	$intro_html .= '<th class="data">' . $lang['strtheme'] . '</th>';
+	$intro_html .= '<td>';
+	$intro_html .= '<select name="theme" onchange="this.form.submit()">';
+
+	foreach ($container->get('appThemes') as $k => $v) {
+		$selected = ($k == $conf['theme']) ? ' selected="selected"' : '';
+		$intro_html .= "\t<option value=\"{$k}\"" . $selected . ">{$v}</option>\n";
+	}
+
+	$intro_html .= '</select>';
+	$intro_html .= '</td>';
+	$intro_html .= '</tr>';
+	$intro_html .= '</table>';
+	$intro_html .= '<noscript><p><input type="submit" value="' . $lang['stralter'] . '" /></p></noscript>';
+	$intro_html .= '</form>';
+
+	$intro_html .= '<p>' . $lang['strintro'] . '</p>';
+
+	$intro_html .= '<ul class="intro">';
+	$intro_html .= '	<li><a href="http://phppgadmin.sourceforge.net/">' . $lang['strppahome'] . '</a></li>';
+	$intro_html .= '<li><a href="' . $lang['strpgsqlhome_url'] . '">' . $lang['strpgsqlhome'] . '</a></li>';
+	$intro_html .= '<li><a href="http://sourceforge.net/tracker/?group_id=37132&amp;atid=418980">' . $lang['strreportbug'] . '</a></li>';
+	$intro_html .= '<li><a href="' . $lang['strviewfaq_url'] . '">' . $lang['strviewfaq'] . '</a></li>';
+	$intro_html .= '<li><a target="_top" href="tests/selenium/selenium-lib/core/TestRunner.html?test=..%2F..%2FTestSuite.php&resultsUrl=..%2FpostResults">Selenium tests</a></li>';
+	$intro_html .= '</ul>';
+
+	if (isset($_GET['language'])) {
+		$misc->setReloadBrowser(true);
+	}
+
+	$intro_html .= $misc->printFooter(false);
+
+	return $intro_html;
 }
-?>
-			</select>
-		</td>
-	</tr>
-	<tr class="data2">
-		<th class="data"><?php echo $lang['strtheme'] ?></th>
-		<td>
-			<select name="theme" onchange="this.form.submit()">
-			<?php
-foreach ($appThemes as $k => $v) {
-	echo "\t<option value=\"{$k}\"",
-	($k == $conf['theme']) ? ' selected="selected"' : '',
-		">{$v}</option>\n";
-}
-?>
-			</select>
-		</td>
-	</tr>
-</table>
-<noscript><p><input type="submit" value="<?php echo $lang['stralter'] ?>" /></p></noscript>
-</form>
-
-<p><?php echo $lang['strintro'] ?></p>
-
-<ul class="intro">
-	<li><a href="http://phppgadmin.sourceforge.net/"><?php echo $lang['strppahome'] ?></a></li>
-	<li><a href="<?php echo $lang['strpgsqlhome_url'] ?>"><?php echo $lang['strpgsqlhome'] ?></a></li>
-	<li><a href="http://sourceforge.net/tracker/?group_id=37132&amp;atid=418980"><?php echo $lang['strreportbug'] ?></a></li>
-	<li><a href="<?php echo $lang['strviewfaq_url'] ?>"><?php echo $lang['strviewfaq'] ?></a></li>
-	<li><a target="_top" href="tests/selenium/selenium-lib/core/TestRunner.html?test=..%2F..%2FTestSuite.php&resultsUrl=..%2FpostResults">Selenium tests</a></li>
-</ul>
-
-<?php
-if (isset($_GET['language'])) {
-	$_reload_browser = true;
-}
-
-$misc->printFooter();

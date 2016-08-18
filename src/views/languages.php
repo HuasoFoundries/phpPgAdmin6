@@ -48,27 +48,6 @@ function doDefault($msg = '') {
 	echo $misc->printTable($languages, $columns, $actions, 'languages-languages', $lang['strnolanguages']);
 }
 
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$languages = $data->getLanguages();
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('lanname'),
-		'icon' => 'Language',
-	];
-
-	$misc->printTree($languages, $attrs, 'languages');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['strlanguages']);
 $misc->printBody();
 

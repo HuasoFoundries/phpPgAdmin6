@@ -383,38 +383,6 @@ function doDefault($msg = '') {
 	], 'indexes-indexes', get_defined_vars());
 }
 
-function doTree() {
-	global $misc, $data;
-
-	$indexes = $data->getIndexes($_REQUEST['table']);
-
-	$reqvars = $misc->getRequestVars('table');
-
-	function getIcon($f) {
-		if ($f['indisprimary'] == 't') {
-			return 'PrimaryKey';
-		}
-
-		if ($f['indisunique'] == 't') {
-			return 'UniqueConstraint';
-		}
-
-		return 'Index';
-	}
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('indname'),
-		'icon' => callback('getIcon'),
-	];
-
-	$misc->printTree($indexes, $attrs, 'indexes');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['strindexes'], "<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
 
 if ($action == 'create_index' || $action == 'save_create_index') {

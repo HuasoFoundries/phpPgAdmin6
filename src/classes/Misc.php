@@ -27,6 +27,8 @@ class Misc {
 	public $appLangFiles     = [];
 	private $_reload_browser = false;
 
+	private $_no_db_connection = false;
+
 	/* Constructor */
 	function __construct(\Slim\App $app) {
 		$this->app = $app;
@@ -89,6 +91,19 @@ class Misc {
 			);
 		}
 		return $this->_connection;
+	}
+
+	/**
+	 * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session
+	 * @param boolean $flag [description]
+	 */
+	function setNoDBConnection($flag) {
+		$this->_no_db_connection = boolval($flag);
+		return $this;
+	}
+
+	function getNoDBConnection() {
+		return $this->_no_db_connection;
 	}
 
 	function getDatabase($database = '') {
@@ -164,6 +179,16 @@ class Misc {
 				$this->data->execute("SET bytea_output TO escape");
 			}
 
+		}
+
+		if ($this->_no_db_connection === false && $this->getDatabase() !== null && isset($_REQUEST['schema'])) {
+			$status = $this->data->setSchema($_REQUEST['schema']);
+
+			if ($status != 0) {
+				\Kint::dump($status);
+				echo $this->lang['strbadschema'];
+				exit;
+			}
 		}
 
 		return $this->data;
@@ -360,7 +385,7 @@ class Misc {
 		}
 
 		if (!isset($vars['url'])) {
-			$vars['url'] = 'redirect.php';
+			$vars['url'] = '/redirect';
 		}
 
 		return $vars;
@@ -637,15 +662,17 @@ class Misc {
 	 * @param $help (optional) The identifier for the help link
 	 */
 	function printTitle($title, $help = null, $do_print = true) {
-		global $data, $lang;
+		$data = $this->data;
+		$lang = $this->lang;
 
-		$title = "<h2>";
-		$title .= $this->printHelp($title, $help, false);
-		$title .= "</h2>\n";
+		$title_html = "<h2>";
+		$title_html .= $this->printHelp($title, $help, false);
+		$title_html .= "</h2>\n";
+
 		if ($do_print) {
-			echo $title;
+			echo $title_html;
 		} else {
-			return $title;
+			return $title_html;
 		}
 	}
 
@@ -725,8 +752,8 @@ class Misc {
 		$lang = $this->lang;
 
 		$footer_html = '';
-
-		if (($this->_reload_browser)) {
+		\PC::debug($this->_reload_browser, '$_reload_browser');
+		if ($this->_reload_browser) {
 			$footer_html .= $this->printReload(false, false);
 		} elseif (isset($_reload_drop_database)) {
 			$footer_html .= $this->printReload(true, false);
@@ -773,10 +800,13 @@ class Misc {
 	function printReload($database, $do_print = true) {
 
 		$reload = "<script type=\"text/javascript\">\n";
+		//$reload .= " alert('will reload');";
 		if ($database) {
-			$reload .= "\tparent.frames.browser.location.href=\"browser.php\";\n";
+			$reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.href=\"/tree/browser\";\n";
 		} else {
-			$reload .= "\tparent.frames.browser.location.reload();\n";
+			$reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.reload();\n";
+			//$reload .= "\tparent.frames.detail.location.href=\"/src/views/intro\";\n";
+			//$reload .= "\tparent.frames.detail.location.reload();\n";
 		}
 
 		$reload .= "</script>\n";
@@ -927,12 +957,12 @@ class Misc {
 				$tabs = [
 					'intro' => [
 						'title' => $lang['strintroduction'],
-						'url' => "intro.php",
+						'url' => "intro",
 						'icon' => 'Introduction',
 					],
 					'servers' => [
 						'title' => $lang['strservers'],
-						'url' => "/views/servers",
+						'url' => "servers",
 						'icon' => 'Servers',
 					],
 				];
@@ -1515,7 +1545,7 @@ class Misc {
 	 * Get the URL for the last active tab of a particular tab bar.
 	 */
 	function getLastTabURL($section) {
-		$data = $this->data;
+		$data = $this->getDatabaseAccessor();
 
 		$tabs = $this->getNavTabs($section);
 
@@ -1596,7 +1626,7 @@ class Misc {
 				'logout' => [
 					'attr' => [
 						'href' => [
-							'url' => '/views/servers/logout',
+							'url' => '/src/views/servers/logout',
 							'urlvars' => [
 								'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}",
 							],
@@ -1688,7 +1718,7 @@ class Misc {
 	function printTrail($trail = [], $do_print = true) {
 		$lang = $this->lang;
 
-		$trail_html = $this->printTopbar();
+		$trail_html = $this->printTopbar(false);
 
 		if (is_string($trail)) {
 			$trail = $this->getTrail($trail);
@@ -1753,7 +1783,7 @@ class Misc {
 
 		$trail['root'] = [
 			'text' => $appName,
-			'url' => 'redirect.php?subject=root',
+			'url' => '/redirect/root',
 			'icon' => 'Introduction',
 		];
 
@@ -2007,9 +2037,9 @@ class Misc {
 	 * @param $help  - help section identifier
 	 * @param $do_print true to echo, false to return
 	 */
-	function printHelp($str, $help, $do_print = true) {
-
-		if ($help) {
+	function printHelp($str, $help = null, $do_print = true) {
+		\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
+		if ($help !== null) {
 			$helplink = $this->getHelpLink($help);
 			$str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">' . $this->lang['strhelpicon'] . '</a>';
 
@@ -2128,7 +2158,7 @@ class Misc {
 			$url .= $sep . value_url($var, $fields) . '=' . value_url($varfield, $fields);
 			$sep = '&';
 		}
-
+		//return '/src/views/' . $url;
 		return $url;
 	}
 
@@ -2596,7 +2626,7 @@ class Misc {
 	 * @return a recordset of servers' groups
 	 */
 	function getServersGroups($recordset = false, $group_id = false) {
-		global $lang;
+		$lang = $this->lang;
 		$grps = [];
 
 		if (isset($this->conf['srv_groups'])) {
@@ -2620,7 +2650,7 @@ class Misc {
 								'group' => Decorator::field('id'),
 							]
 						),
-						'branch' => url('/views/servers/tree',
+						'branch' => url('/tree/servers',
 							[
 								'group' => $i,
 							]
@@ -2640,7 +2670,7 @@ class Misc {
 							'group' => Decorator::field('id'),
 						]
 					),
-					'branch' => url('/views/servers/tree',
+					'branch' => url('/tree/servers',
 						[
 							'group' => 'all',
 						]
@@ -2692,17 +2722,16 @@ class Misc {
 				}
 
 				$srvs[$server_id]['id']     = $server_id;
-				$srvs[$server_id]['action'] = url('redirect.php',
+				$srvs[$server_id]['action'] = Decorator::url('/redirect/server',
 					[
-						'subject' => 'server',
 						'server' => Decorator::field('id'),
 					]
 				);
 				if (isset($srvs[$server_id]['username'])) {
 					$srvs[$server_id]['icon']   = 'Server';
-					$srvs[$server_id]['branch'] = url('all_db.php',
+					$srvs[$server_id]['branch'] = Decorator::branchurl('all_db.php',
 						[
-							'action' => 'tree',
+
 							'subject' => 'server',
 							'server' => Decorator::field('id'),
 						]
@@ -2778,6 +2807,7 @@ class Misc {
 	 *                   server.
 	 */
 	function setServerInfo($key, $value, $server_id = null) {
+		\PC::debug('setsetverinfo');
 		if ($server_id === null && isset($_REQUEST['server'])) {
 			$server_id = $_REQUEST['server'];
 		}
@@ -2786,6 +2816,7 @@ class Misc {
 			if ($value === null) {
 				unset($_SESSION['webdbLogin'][$server_id]);
 			} else {
+				\PC::debug(['server_id' => $server_id, 'value' => $value], 'webdbLogin');
 				$_SESSION['webdbLogin'][$server_id] = $value;
 			}
 
@@ -2793,6 +2824,7 @@ class Misc {
 			if ($value === null) {
 				unset($_SESSION['webdbLogin'][$server_id][$key]);
 			} else {
+				\PC::debug(['server_id' => $server_id, 'key' => $key, 'value' => $value], 'webdbLogin');
 				$_SESSION['webdbLogin'][$server_id][$key] = $value;
 			}
 

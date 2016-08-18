@@ -684,7 +684,7 @@ function doDefault($msg = '') {
 		'role' => [
 			'title' => $lang['strrole'],
 			'field' => \PHPPgAdmin\Decorators\Decorator::field('rolname'),
-			'url' => "redirect.php?subject=role&amp;action=properties&amp;{$misc->href}&amp;",
+			'url' => "/redirect/role?action=properties&amp;{$misc->href}&amp;",
 			'vars' => ['rolename' => 'rolname'],
 		],
 		'superuser' => [

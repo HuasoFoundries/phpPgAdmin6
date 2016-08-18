@@ -619,7 +619,7 @@ function doDefault($msg = '') {
 		'view' => [
 			'title' => $lang['strview'],
 			'field' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
-			'url' => "redirect.php?subject=view&amp;{$misc->href}&amp;",
+			'url' => "/redirect/view?{$misc->href}&amp;",
 			'vars' => ['view' => 'relname'],
 		],
 		'owner' => [
@@ -735,67 +735,6 @@ function doDefault($msg = '') {
 	];
 	$misc->printNavLinks($navlinks, 'views-views', get_defined_vars());
 
-}
-
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$views = $data->getViews();
-
-	$reqvars = $misc->getRequestVars('view');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
-		'icon' => 'View',
-		'iconAction' => url('display.php', $reqvars, ['view' => \PHPPgAdmin\Decorators\Decorator::field('relname')]),
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('relcomment'),
-		'action' => url('redirect.php', $reqvars, ['view' => \PHPPgAdmin\Decorators\Decorator::field('relname')]),
-		'branch' => url('views.php', $reqvars,
-			[
-				'action' => 'subtree',
-				'view' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
-			]
-		),
-	];
-
-	$misc->printTree($views, $attrs, 'views');
-	exit;
-}
-
-function doSubTree() {
-	global $misc, $data;
-
-	$tabs    = $misc->getNavTabs('view');
-	$items   = $misc->adjustTabsForTree($tabs);
-	$reqvars = $misc->getRequestVars('view');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('title'),
-		'icon' => \PHPPgAdmin\Decorators\Decorator::field('icon'),
-		'action' => url(field('url'), $reqvars, \PHPPgAdmin\Decorators\Decorator::field('urlvars'), ['view' => $_REQUEST['view']]),
-		'branch' => ifempty(
-			field('branch'), '', url(field('url'), \PHPPgAdmin\Decorators\Decorator::field('urlvars'), $reqvars,
-				[
-					'action' => 'tree',
-					'view' => $_REQUEST['view'],
-				]
-			)
-		),
-	];
-
-	$misc->printTree($items, $attrs, 'view');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
-if ($action == 'subtree') {
-	dosubTree();
 }
 
 $misc->printHeader($lang['strviews']);

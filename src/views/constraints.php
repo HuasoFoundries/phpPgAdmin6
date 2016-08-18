@@ -605,40 +605,6 @@ function doDefault($msg = '') {
 	$misc->printNavLinks($navlinks, 'constraints-constraints', get_defined_vars());
 }
 
-function doTree() {
-	global $misc, $data;
-
-	$constraints = $data->getConstraints($_REQUEST['table']);
-
-	$reqvars = $misc->getRequestVars('schema');
-
-	function getIcon($f) {
-		switch ($f['contype']) {
-			case 'u':
-				return 'UniqueConstraint';
-			case 'c':
-				return 'CheckConstraint';
-			case 'f':
-				return 'ForeignKey';
-			case 'p':
-				return 'PrimaryKey';
-
-		}
-	}
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('conname'),
-		'icon' => callback('getIcon'),
-	];
-
-	$misc->printTree($constraints, $attrs, 'constraints');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
 	"<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
 

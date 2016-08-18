@@ -370,48 +370,6 @@ function doAlter($confirm = false, $msg = '') {
 	}
 }
 
-function doTree() {
-	global $misc, $data;
-
-	$reqvars = $misc->getRequestVars('column');
-	$columns = $data->getTableAttributes($_REQUEST['view']);
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('attname'),
-		'action' => url('colproperties.php',
-			$reqvars,
-			[
-				'view' => $_REQUEST['view'],
-				'column' => \PHPPgAdmin\Decorators\Decorator::field('attname'),
-			]
-		),
-		'icon' => 'Column',
-		'iconAction' => url('display.php',
-			$reqvars,
-			[
-				'view' => $_REQUEST['view'],
-				'column' => \PHPPgAdmin\Decorators\Decorator::field('attname'),
-				'query' => replace(
-					'SELECT "%column%", count(*) AS "count" FROM %view% GROUP BY "%column%" ORDER BY "%column%"',
-					[
-						'%column%' => \PHPPgAdmin\Decorators\Decorator::field('attname'),
-						'%view%' => $_REQUEST['view'],
-					]
-				),
-			]
-		),
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('comment'),
-	];
-
-	$misc->printTree($columns, $attrs, 'viewcolumns');
-
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 /**
  * Show view definition and virtual columns
  */

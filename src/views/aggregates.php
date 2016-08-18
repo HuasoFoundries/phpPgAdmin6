@@ -338,7 +338,7 @@ function doDefault($msg = '') {
 		'aggrname' => [
 			'title' => $lang['strname'],
 			'field' => \PHPPgAdmin\Decorators\Decorator::field('proname'),
-			'url' => "redirect.php?subject=aggregate&amp;action=properties&amp;{$misc->href}&amp;",
+			'url' => "/redirect/aggregate?action=properties&amp;{$misc->href}&amp;",
 			'vars' => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
 		],
 		'aggrtype' => [
@@ -414,39 +414,6 @@ function doDefault($msg = '') {
 		],
 	];
 	$misc->printNavLinks($navlinks, 'aggregates-aggregates', get_defined_vars());
-}
-
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$aggregates = $data->getAggregates();
-
-	$proto   = concat(field('proname'), ' (', \PHPPgAdmin\Decorators\Decorator::field('proargtypes'), ')');
-	$reqvars = $misc->getRequestVars('aggregate');
-
-	$attrs = [
-		'text' => $proto,
-		'icon' => 'Aggregate',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('aggcomment'),
-		'action' => url('redirect.php',
-			$reqvars,
-			[
-				'action' => 'properties',
-				'aggrname' => \PHPPgAdmin\Decorators\Decorator::field('proname'),
-				'aggrtype' => \PHPPgAdmin\Decorators\Decorator::field('proargtypes'),
-			]
-		),
-	];
-
-	$misc->printTree($aggregates, $attrs, 'aggregates');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
 }
 
 $misc->printHeader($lang['straggregates']);

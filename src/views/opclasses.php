@@ -56,31 +56,6 @@ function doDefault($msg = '') {
 	echo $misc->printTable($opclasses, $columns, $actions, 'opclasses-opclasses', $lang['strnoopclasses']);
 }
 
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$opclasses = $data->getOpClasses();
-
-	// OpClass prototype: "op_class/access_method"
-	$proto = concat(field('opcname'), '/', \PHPPgAdmin\Decorators\Decorator::field('amname'));
-
-	$attrs = [
-		'text' => $proto,
-		'icon' => 'OperatorClass',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('opccomment'),
-	];
-
-	$misc->printTree($opclasses, $attrs, 'opclasses');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['stropclasses']);
 $misc->printBody();
 

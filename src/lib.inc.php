@@ -114,13 +114,6 @@ $container['serializer'] = function ($c) {
 	return $serializer;
 };
 
-$container['logger'] = function ($c) {
-	$logger       = new \Monolog\Logger($c->get('settings')['appName']);
-	$file_handler = new \Monolog\Handler\StreamHandler(BASE_PATH . '/temp/logs/app.log');
-	$logger->pushHandler($file_handler);
-	return $logger;
-};
-
 // Register Twig View helper
 $container['view'] = function ($c) {
 	$view = new \Slim\Views\Twig(BASE_PATH . '/templates', [
@@ -144,6 +137,8 @@ $container['misc'] = $misc;
 $_server_info = $misc->getServerInfo();
 include_once BASE_PATH . '/src/themes.php';
 
+$container['appThemes'] = $appThemes;
+
 $misc->setThemeConf($conf['theme']);
 
 // This has to be deferred until after stripVar above
@@ -152,27 +147,6 @@ $misc->setForm();
 
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
-
-// If login action is set, then set session variables
-if (isset($_POST['loginServer']) && isset($_POST['loginUsername']) &&
-	isset($_POST['loginPassword_' . md5($_POST['loginServer'])])) {
-
-	$_server_info = $misc->getServerInfo($_POST['loginServer']);
-
-	$_server_info['username'] = $_POST['loginUsername'];
-	$_server_info['password'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
-
-	$misc->setServerInfo(null, $_server_info, $_POST['loginServer']);
-
-	// Check for shared credentials
-	if (isset($_POST['loginShared'])) {
-		$_SESSION['sharedUsername'] = $_POST['loginUsername'];
-		$_SESSION['sharedPassword'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
-	}
-
-	$misc->setReloadBrowser(true);
-	$_reload_browser = true;
-}
 
 // Check for config file version mismatch
 if (!isset($conf['version']) || $conf['base_version'] > $conf['version']) {
@@ -202,20 +176,11 @@ if (!isset($_no_db_connection)) {
 
 	// Redirect to the login form if not logged in
 	if (!isset($_server_info['username'])) {
-		include BASE_PATH . '/views/login.php';
+		include BASE_PATH . '/src/views/login.php';
 		exit;
 	}
 
 	// Connect to database and set the global $data variable
 	$data = $misc->getDatabaseAccessor();
 
-	// If schema is defined and database supports schemas, then set the
-	// schema explicitly.
-	if ($misc->getDatabase() !== null && isset($_REQUEST['schema'])) {
-		$status = $data->setSchema($_REQUEST['schema']);
-		if ($status != 0) {
-			echo $lang['strbadschema'];
-			exit;
-		}
-	}
 }

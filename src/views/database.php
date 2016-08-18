@@ -175,18 +175,18 @@ function doFind($confirm = true, $msg = '') {
 
 				switch ($curr) {
 					case 'SCHEMA':
-						echo "<li><a href=\"redirect.php?subject=schema&amp;{$misc->href}&amp;schema=", $misc->printVal($rs->fields['name']), "\">", _highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
+						echo "<li><a href=\"/redirect/schema?{$misc->href}&amp;schema=", $misc->printVal($rs->fields['name']), "\">", _highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 						break;
 					case 'TABLE':
 						echo "<li>";
 						echo "<a href=\"tables.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
-						echo "<a href=\"redirect.php?subject=table&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;table=",
+						echo "<a href=\"/redirect/table?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;table=",
 						urlencode($rs->fields['name']), "\">", _highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 						break;
 					case 'VIEW':
 						echo "<li>";
 						echo "<a href=\"views.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
-						echo "<a href=\"redirect.php?subject=view&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;view=",
+						echo "<a href=\"/redirect/view?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;view=",
 						urlencode($rs->fields['name']), "\">", _highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 						break;
 					case 'SEQUENCE':
@@ -197,7 +197,7 @@ function doFind($confirm = true, $msg = '') {
 						break;
 					case 'COLUMNTABLE':
 						echo "<li>";
-						echo "<a href=\"redirect.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
+						echo "<a href=\"/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
 						echo "<a href=\"tblproperties.php?subject=table&amp;{$misc->href}&amp;table=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
 						echo "<a href=\"colproperties.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;table=",
 						urlencode($rs->fields['relname']), "&amp;column=", urlencode($rs->fields['name']), "\">",
@@ -205,7 +205,7 @@ function doFind($confirm = true, $msg = '') {
 						break;
 					case 'COLUMNVIEW':
 						echo "<li>";
-						echo "<a href=\"redirect.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
+						echo "<a href=\"/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
 						echo "<a href=\"viewproperties.php?subject=view&amp;{$misc->href}&amp;view=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
 						echo "<a href=\"colproperties.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;view=",
 						urlencode($rs->fields['relname']), "&amp;column=", urlencode($rs->fields['name']), "\">",
@@ -213,14 +213,14 @@ function doFind($confirm = true, $msg = '') {
 						break;
 					case 'INDEX':
 						echo "<li>";
-						echo "<a href=\"redirect.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
-						echo "<a href=\"redirect.php?subject=table&amp;{$misc->href}&amp;table=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
+						echo "<a href=\"/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
+						echo "<a href=\"/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
 						echo "<a href=\"indexes.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;table=", urlencode($rs->fields['relname']), "\">", _highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 						break;
 					case 'CONSTRAINTTABLE':
 						echo "<li>";
-						echo "<a href=\"redirect.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
-						echo "<a href=\"redirect.php?subject=table&amp;{$misc->href}&amp;table=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
+						echo "<a href=\"/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
+						echo "<a href=\"/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
 						echo "<a href=\"constraints.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;table=",
 						urlencode($rs->fields['relname']), "\">", _highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 						break;
@@ -232,22 +232,22 @@ function doFind($confirm = true, $msg = '') {
 						break;
 					case 'TRIGGER':
 						echo "<li>";
-						echo "<a href=\"redirect.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
-						echo "<a href=\"redirect.php?subject=table&amp;{$misc->href}&amp;table=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
+						echo "<a href=\"/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
+						echo "<a href=\"/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
 						echo "<a href=\"triggers.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;table=", urlencode($rs->fields['relname']), "\">",
 						_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 						break;
 					case 'RULETABLE':
 						echo "<li>";
-						echo "<a href=\"redirect.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
-						echo "<a href=\"redirect.php?subject=table&amp;{$misc->href}&amp;table=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
+						echo "<a href=\"/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
+						echo "<a href=\"/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
 						echo "<a href=\"rules.php?subject=table&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;reltype=table&amp;table=",
 						urlencode($rs->fields['relname']), "\">", _highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 						break;
 					case 'RULEVIEW':
 						echo "<li>";
-						echo "<a href=\"redirect.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
-						echo "<a href=\"redirect.php?subject=view&amp;{$misc->href}&amp;view=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
+						echo "<a href=\"/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
+						echo "<a href=\"/redirect/view?{$misc->href}&amp;view=", urlencode($rs->fields['relname']), "&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['relname']), "</a>.";
 						echo "<a href=\"rules.php?subject=view&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "&amp;reltype=view&amp;view=",
 						urlencode($rs->fields['relname']), "\">", _highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 						break;
@@ -293,7 +293,7 @@ function doFind($confirm = true, $msg = '') {
 						break;
 					case 'OPCLASS':
 						echo "<li>";
-						echo "<a href=\"redirect.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
+						echo "<a href=\"/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">", $misc->printVal($rs->fields['schemaname']), "</a>.";
 						echo "<a href=\"opclasses.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), "\">",
 						_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 						break;
@@ -636,40 +636,7 @@ function doSQL() {
 	$misc->setFocus('forms[0].query');
 }
 
-function doTree() {
-	global $misc, $data, $lang;
-
-	$reqvars = $misc->getRequestVars('database');
-
-	$tabs = $misc->getNavTabs('database');
-
-	$items = $misc->adjustTabsForTree($tabs);
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('title'),
-		'icon' => \PHPPgAdmin\Decorators\Decorator::field('icon'),
-		'action' => url(field('url'),
-			$reqvars,
-			field('urlvars', [])
-		),
-		'branch' => url(field('url'),
-			$reqvars,
-			field('urlvars'),
-			['action' => 'tree']
-		),
-	];
-
-	$misc->printTree($items, $attrs, 'database');
-
-	exit;
-}
-
 require './admin.php';
-
-/* shortcuts: these functions exit the script */
-if ($action == 'tree') {
-	doTree();
-}
 
 if ($action == 'refresh_locks') {
 	currentLocks(true);

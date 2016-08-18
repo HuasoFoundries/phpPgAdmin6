@@ -56,28 +56,6 @@ function doDefault($msg = '') {
 	echo $misc->printTable($conversions, $columns, $actions, 'conversions-conversions', $lang['strnoconversions']);
 }
 
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$conversions = $data->getconversions();
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('conname'),
-		'icon' => 'Conversion',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('concomment'),
-	];
-
-	$misc->printTree($conversions, $attrs, 'conversions');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['strconversions']);
 $misc->printBody();
 

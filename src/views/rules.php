@@ -201,26 +201,6 @@ function doDefault($msg = '') {
 	]], 'rules-rules', get_defined_vars());
 }
 
-function doTree() {
-	global $misc, $data;
-
-	$rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
-
-	$reqvars = $misc->getRequestVars($_REQUEST['subject']);
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('rulename'),
-		'icon' => 'Rule',
-	];
-
-	$misc->printTree($rules, $attrs, 'rules');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 // Different header if we're view rules or table rules
 $misc->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $lang['strrules']);
 $misc->printBody();

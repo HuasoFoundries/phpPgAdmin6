@@ -599,13 +599,13 @@ function doAdmin($type, $msg = '') {
 			'namespace' => [
 				'title' => $lang['strschema'],
 				'field' => \PHPPgAdmin\Decorators\Decorator::field('nspname'),
-				'url' => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+				'url' => "/redirect/schema?{$misc->href}&amp;",
 				'vars' => ['schema' => 'nspname'],
 			],
 			'relname' => [
 				'title' => $lang['strtable'],
 				'field' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
-				'url' => "redirect.php?subject=table&amp;{$misc->href}&amp;",
+				'url' => "/redirect/table?{$misc->href}&amp;",
 				'vars' => ['table' => 'relname', 'schema' => 'nspname'],
 			],
 			'autovacuum_enabled' => [

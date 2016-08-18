@@ -821,7 +821,7 @@ function doDefault($msg = '') {
 		'table' => [
 			'title' => $lang['strtable'],
 			'field' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
-			'url' => "redirect.php?subject=table&amp;{$misc->href}&amp;",
+			'url' => "/redirect/table?{$misc->href}&amp;",
 			'vars' => ['table' => 'relname'],
 		],
 		'owner' => [
@@ -1012,81 +1012,6 @@ function doDefault($msg = '') {
 }
 
 require './admin.php';
-
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$tables = $data->getTables();
-
-	$reqvars = $misc->getRequestVars('table');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
-		'icon' => 'Table',
-		'iconAction' => url('display.php',
-			$reqvars,
-			['table' => \PHPPgAdmin\Decorators\Decorator::field('relname')]
-		),
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('relcomment'),
-		'action' => url('redirect.php',
-			$reqvars,
-			['table' => \PHPPgAdmin\Decorators\Decorator::field('relname')]
-		),
-		'branch' => url('tables.php',
-			$reqvars,
-			[
-				'action' => 'subtree',
-				'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
-			]
-		),
-	];
-
-	$misc->printTree($tables, $attrs, 'tables');
-	exit;
-}
-
-function doSubTree() {
-	global $misc, $data;
-
-	$tabs    = $misc->getNavTabs('table');
-	$items   = $misc->adjustTabsForTree($tabs);
-	$reqvars = $misc->getRequestVars('table');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('title'),
-		'icon' => \PHPPgAdmin\Decorators\Decorator::field('icon'),
-		'action' => url(
-			field('url'),
-			$reqvars,
-			field('urlvars'),
-			['table' => $_REQUEST['table']]
-		),
-		'branch' => ifempty(
-			field('branch'), '', url(
-				field('url'),
-				$reqvars,
-				[
-					'action' => 'tree',
-					'table' => $_REQUEST['table'],
-				]
-			)
-		),
-	];
-
-	$misc->printTree($items, $attrs, 'table');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
-if ($action == 'subtree') {
-	dosubTree();
-}
 
 $misc->printHeader($lang['strtables']);
 $misc->printBody();

@@ -389,27 +389,6 @@ function doDefault($msg = '') {
 	]], 'triggers-triggers', get_defined_vars());
 }
 
-function doTree() {
-
-	global $misc, $data;
-
-	$triggers = $data->getTriggers($_REQUEST['table']);
-
-	$reqvars = $misc->getRequestVars('table');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('tgname'),
-		'icon' => 'Trigger',
-	];
-
-	$misc->printTree($triggers, $attrs, 'triggers');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strtriggers']);
 $misc->printBody();
 

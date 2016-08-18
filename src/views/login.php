@@ -5,81 +5,89 @@
  *
  * $Id: login.php,v 1.38 2007/09/04 19:39:48 ioguix Exp $
  */
-global $conf, $plugin_manager;
+function doLoginForm($container, $msg) {
 
-// This needs to be an include once to prevent lib.inc.php infinite recursive src.
-// Check to see if the configuration file exists, if not, explain
-require_once '../lib.inc.php';
+	$lang = $container->get('lang');
+	$conf = $container->get('conf');
+	$misc = $container->get('misc');
+	//$msg  = $container->msg;
 
-$webdbLanguage = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : NULL;
+	$login_html = $misc->printHeader($lang['strlogin'], null, false);
+	$login_html .= $misc->printBody(false);
+	$login_html .= $misc->printTrail('root', false);
 
-if (!isset($plugin_manager)) {
-	$plugin_manager = new \PHPPgAdmin\PluginManager($webdbLanguage);
-}
-
-$misc->printHeader($lang['strlogin']);
-$misc->printBody();
-$misc->printTrail('root');
-
-$server_info = $misc->getServerInfo($_REQUEST['server']);
-
-$misc->printTitle(sprintf($lang['strlogintitle'], $server_info['desc']));
-
-if (isset($msg)) {
-	$misc->printMsg($msg);
-}
-
-$md5_server = md5($_REQUEST['server']);
-?>
-
-<form id="login_form" action="redirect.php" method="post" name="login_form">
-<?php
-if (!empty($_POST)) {
-	$vars = &$_POST;
-} else {
-	$vars = &$_GET;
-}
-
-// Pass request vars through form (is this a security risk???)
-foreach ($vars as $key => $val) {
-	if (substr($key, 0, 5) == 'login') {
-		continue;
-	}
-
-	echo "<input type=\"hidden\" name=\"", htmlspecialchars($key), "\" value=\"", htmlspecialchars($val), "\" />\n";
-}
-?>
-	<input type="hidden" name="loginServer" value="<?php echo htmlspecialchars($_REQUEST['server']); ?>" />
-	<table class="navbar" border="0" cellpadding="5" cellspacing="3">
-		<tr>
-			<td><?php echo $lang['strusername']; ?></td>
-			<td><input type="text" name="loginUsername" value="<?php if (isset($_POST['loginUsername'])) {
-	echo htmlspecialchars($_POST['loginUsername']);
-}
-?>" size="24" /></td>
-		</tr>
-		<tr>
-			<td><?php echo $lang['strpassword']; ?></td>
-			<td><input id="loginPassword" type="password" name="loginPassword_<?php echo $md5_server; ?>" size="24" /></td>
-		</tr>
-	</table>
-<?php if (sizeof($conf['servers']) > 1): ?>
-	<p><input type="checkbox" id="loginShared" name="loginShared" <?php echo isset($_POST['loginShared']) ? 'checked="checked"' : '' ?> /><label for="loginShared"><?php echo $lang['strtrycred'] ?></label></p>
-<?php endif;?>
-	<p><input type="submit" name="loginSubmit" value="<?php echo $lang['strlogin']; ?>" /></p>
-</form>
-
-<script type="text/javascript">
-	var uname = document.login_form.loginUsername;
-	var pword = document.login_form.loginPassword_<?php echo $md5_server; ?>;
-	if (uname.value == "") {
-		uname.focus();
+	if (!empty($_POST)) {
+		$vars = &$_POST;
 	} else {
-		pword.focus();
+		$vars = &$_GET;
 	}
-</script>
+	foreach ($_REQUEST as $key => $val) {
+		if (strpos($key, '?') !== FALSE) {
+			$namexploded               = explode('?', $key);
+			$_REQUEST[$namexploded[1]] = htmlspecialchars($val);
+		}
+	}
 
-<?php
+	$server_info = $misc->getServerInfo($_REQUEST['server']);
+	$title       = sprintf($lang['strlogintitle'], $server_info['desc']);
+	\PC::debug($title, 'title');
+	$printTitle = $misc->printTitle($title, null, false);
+	\PC::debug($printTitle, 'printTitle');
+
+	$login_html .= $printTitle;
+
+	if (isset($msg)) {
+		$login_html .= $misc->printMsg($msg, false);
+	}
+
+	$login_html .= '<form id="login_form"  method="post" name="login_form">';
+
+	$md5_server = md5($_REQUEST['server']);
+// Pass request vars through form (is this a security risk???)
+	foreach ($vars as $key => $val) {
+		if (substr($key, 0, 5) == 'login') {
+			continue;
+		}
+		if (strpos($key, '?') !== FALSE) {
+			$key = explode('?', $key)[1];
+		}
+
+		$login_html .= '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($val) . '" />' . "\n";
+	}
+
+	$login_html .= '<input type="hidden" name="loginServer" value="' . htmlspecialchars($_REQUEST['server']) . '" />';
+	$login_html .= '<table class="navbar" border="0" cellpadding="5" cellspacing="3">';
+	$login_html .= '<tr>';
+	$login_html .= '<td>' . $lang['strusername'] . '</td>';
+	$loginusername = isset($_POST['loginUsername']) ? htmlspecialchars($_POST['loginUsername']) : '';
+
+	$login_html .= '<td><input type="text" name="loginUsername" value="' . $loginusername . '" size="24" /></td>';
+	$login_html .= '</tr>';
+	$login_html .= '<tr>';
+	$login_html .= '<td>' . $lang['strpassword'] . '</td>';
+	$login_html .= '<td><input id="loginPassword" type="password" name="loginPassword_' . $md5_server . '" size="24" /></td>';
+	$login_html .= '</tr>';
+	$login_html .= '</table>';
+	if (sizeof($conf['servers']) > 1) {
+		$checked = isset($_POST['loginShared']) ? 'checked="checked"' : '';
+		$login_html .= '<p><input type="checkbox" id="loginShared" name="loginShared" ' . $checked . ' />';
+		$login_html .= '<label for="loginShared">' . $lang['strtrycred'] . '</label></p>';
+	}
+	$login_html .= '<p><input type="submit" name="loginSubmit" value="' . $lang['strlogin'] . '" /></p>';
+	$login_html .= '</form>';
+
+	$login_html .= '<script type="text/javascript">';
+	$login_html .= '	var uname = document.login_form.loginUsername;';
+	$login_html .= '	var pword = document.login_form.loginPassword_' . $md5_server . ';';
+	$login_html .= '	if (uname.value == "") {';
+	$login_html .= '		uname.focus();';
+	$login_html .= '	} else {';
+	$login_html .= '		pword.focus();';
+	$login_html .= '	}';
+	$login_html .= '</script>';
+
 // Output footer
-$misc->printFooter();
-?>
+	$login_html .= $misc->printFooter(false);
+	return $login_html;
+
+}

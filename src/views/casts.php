@@ -67,36 +67,11 @@ function doDefault($msg = '') {
 	echo $misc->printTable($casts, $columns, $actions, 'casts-casts', $lang['strnocasts']);
 }
 
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$casts = $data->getCasts();
-
-	$proto = concat(field('castsource'), ' AS ', \PHPPgAdmin\Decorators\Decorator::field('casttarget'));
-
-	$attrs = [
-		'text' => $proto,
-		'icon' => 'Cast',
-	];
-
-	$misc->printTree($casts, $attrs, 'casts');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['strcasts']);
 $misc->printBody();
 
 switch ($action) {
-	case 'tree':
-		doTree();
-		break;
+
 	default:
 		doDefault();
 		break;

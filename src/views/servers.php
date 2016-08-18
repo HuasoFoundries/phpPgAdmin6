@@ -19,9 +19,9 @@ function doLogout($container) {
 
 	unset($_SESSION['sharedUsername'], $_SESSION['sharedPassword']);
 
-	$mist->setReloadBrowser(true);
+	$misc->setReloadBrowser(true);
 
-	return doDefault($container, sprintf($lang['strlogoutmsg'], $server_info['desc']));
+	return sprintf($lang['strlogoutmsg'], $server_info['desc']);
 
 }
 
@@ -30,7 +30,6 @@ function doDefault($container, $msg = '') {
 	$lang = $container->get('lang');
 	$conf = $container->get('conf');
 	$misc = $container->get('misc');
-	$msg  = $container->msg;
 
 	$default_html = '';
 
@@ -68,7 +67,7 @@ function doDefault($container, $msg = '') {
 		'server' => [
 			'title' => $lang['strserver'],
 			'field' => \PHPPgAdmin\Decorators\Decorator::field('desc'),
-			'url' => "redirect.php?subject=server&amp;",
+			'url' => "/redirect/server?",
 			'vars' => ['server' => 'id'],
 		],
 		'host' => [
@@ -93,7 +92,7 @@ function doDefault($container, $msg = '') {
 			'content' => $lang['strlogout'],
 			'attr' => [
 				'href' => [
-					'url' => '/servers/logout',
+					'url' => '/src/views/servers/logout',
 					'urlvars' => [
 						'logoutServer' => \PHPPgAdmin\Decorators\Decorator::field('id'),
 					],
@@ -109,50 +108,4 @@ function doDefault($container, $msg = '') {
 
 	$default_html .= $misc->printTable($servers, $columns, $actions, 'servers-servers', $lang['strnoobjects'], 'svPre');
 	return $default_html;
-}
-
-function doTree($container) {
-
-	$conf = $container->get('conf');
-	$misc = $container->get('misc');
-
-	$nodes    = [];
-	$group_id = isset($_GET['group']) ? $_GET['group'] : false;
-
-	/* root with srv_groups */
-	if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0
-		and $group_id === false) {
-		$nodes = $misc->getServersGroups(true);
-	} else if (isset($conf['srv_groups']) and $group_id !== false) {
-		/* group subtree */
-		if ($group_id !== 'all') {
-			$nodes = $misc->getServersGroups(false, $group_id);
-		}
-
-		$nodes = array_merge($nodes, $misc->getServers(false, $group_id));
-		$nodes = new \PHPPgAdmin\ArrayRecordSet($nodes);
-	} else {
-		/* no srv_group */
-		$nodes = $misc->getServers(true, false);
-	}
-
-	$reqvars = $misc->getRequestVars('server');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('desc'),
-
-		// Show different icons for logged in/out
-		'icon' => \PHPPgAdmin\Decorators\Decorator::field('icon'),
-
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('id'),
-
-		'action' => \PHPPgAdmin\Decorators\Decorator::field('action'),
-
-		// Only create a branch url if the user has
-		// logged into the server.
-		'branch' => \PHPPgAdmin\Decorators\Decorator::field('branch'),
-	];
-	PC::debug($nodes, 'printTree');
-	$misc->printTree($nodes, $attrs, 'servers');
-
 }

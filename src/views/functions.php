@@ -943,7 +943,7 @@ function doDefault($msg = '') {
 		'function' => [
 			'title' => $lang['strfunction'],
 			'field' => \PHPPgAdmin\Decorators\Decorator::field('proproto'),
-			'url' => "redirect.php?subject=function&amp;action=properties&amp;{$misc->href}&amp;",
+			'url' => "/redirect/function?action=properties&amp;{$misc->href}&amp;",
 			'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
 		],
 		'returns' => [
@@ -1064,40 +1064,6 @@ function doDefault($msg = '') {
 	];
 
 	$misc->printNavLinks($navlinks, 'functions-functions', get_defined_vars());
-}
-
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$funcs = $data->getFunctions();
-
-	$proto = concat(field('proname'), ' (', \PHPPgAdmin\Decorators\Decorator::field('proarguments'), ')');
-
-	$reqvars = $misc->getRequestVars('function');
-
-	$attrs = [
-		'text' => $proto,
-		'icon' => 'Function',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('procomment'),
-		'action' => url('redirect.php',
-			$reqvars,
-			[
-				'action' => 'properties',
-				'function' => $proto,
-				'function_oid' => \PHPPgAdmin\Decorators\Decorator::field('prooid'),
-			]
-		),
-	];
-
-	$misc->printTree($funcs, $attrs, 'functions');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
 }
 
 $misc->printHeader($lang['strfunctions']);

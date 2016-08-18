@@ -549,37 +549,6 @@ function doDefault($msg = '') {
 	$misc->printNavLinks($navlinks, 'domains-domains', get_defined_vars());
 }
 
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$domains = $data->getDomains();
-
-	$reqvars = $misc->getRequestVars('domain');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('domname'),
-		'icon' => 'Domain',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('domcomment'),
-		'action' => url('domains.php',
-			$reqvars,
-			[
-				'action' => 'properties',
-				'domain' => \PHPPgAdmin\Decorators\Decorator::field('domname'),
-			]
-		),
-	];
-
-	$misc->printTree($domains, $attrs, 'domains');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['strdomains']);
 $misc->printBody();
 

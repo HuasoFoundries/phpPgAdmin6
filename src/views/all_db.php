@@ -7,7 +7,9 @@
  */
 
 // Include application functions
-require_once '../lib.inc.php';
+if (!defined('BASE_PATH')) {
+	require_once '../lib.inc.php';
+}
 
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
@@ -377,20 +379,20 @@ function doExport($msg = '') {
  * Show default list of databases in the server
  */
 function doDefault($msg = '') {
-	global $data, $conf, $misc;
+	global $conf, $misc;
 	global $lang;
 
 	$misc->printTrail('server');
 	$misc->printTabs('server', 'databases');
 	$misc->printMsg($msg);
-
+	$data      = $misc->getDatabaseAccessor();
 	$databases = $data->getDatabases();
 
 	$columns = [
 		'database' => [
 			'title' => $lang['strdatabase'],
 			'field' => \PHPPgAdmin\Decorators\Decorator::field('datname'),
-			'url' => "redirect.php?subject=database&amp;{$misc->href}&amp;",
+			'url' => "/redirect/database?{$misc->href}&amp;",
 			'vars' => ['database' => 'datname'],
 		],
 		'owner' => [
@@ -510,38 +512,6 @@ function doDefault($msg = '') {
 	];
 	$misc->printNavLinks($navlinks, 'all_db-databases', get_defined_vars());
 
-}
-
-function doTree() {
-	global $misc, $data, $lang;
-
-	$databases = $data->getDatabases();
-
-	$reqvars = $misc->getRequestVars('database');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('datname'),
-		'icon' => 'Database',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('datcomment'),
-		'action' => url('redirect.php',
-			$reqvars,
-			['database' => \PHPPgAdmin\Decorators\Decorator::field('datname')]
-		),
-		'branch' => url('database.php',
-			$reqvars,
-			[
-				'action' => 'tree',
-				'database' => \PHPPgAdmin\Decorators\Decorator::field('datname'),
-			]
-		),
-	];
-
-	$misc->printTree($databases, $attrs, 'databases');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
 }
 
 $misc->printHeader($lang['strdatabases']);

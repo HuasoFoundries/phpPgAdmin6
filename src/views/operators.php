@@ -185,41 +185,6 @@ function doDefault($msg = '') {
 //		TODO operators.php action=create $lang['strcreateoperator']
 }
 
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$operators = $data->getOperators();
-
-	// Operator prototype: "type operator type"
-	$proto = concat(field('oprleftname'), ' ', \PHPPgAdmin\Decorators\Decorator::field('oprname'), ' ', \PHPPgAdmin\Decorators\Decorator::field('oprrightname'));
-
-	$reqvars = $misc->getRequestVars('operator');
-
-	$attrs = [
-		'text' => $proto,
-		'icon' => 'Operator',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('oprcomment'),
-		'action' => url('operators.php',
-			$reqvars,
-			[
-				'action' => 'properties',
-				'operator' => $proto,
-				'operator_oid' => \PHPPgAdmin\Decorators\Decorator::field('oid'),
-			]
-		),
-	];
-
-	$misc->printTree($operators, $attrs, 'operators');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 $misc->printHeader($lang['stroperators']);
 $misc->printBody();
 

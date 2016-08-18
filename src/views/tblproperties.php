@@ -443,48 +443,6 @@ function doDrop($confirm) {
 
 }
 
-function doTree() {
-	global $misc, $data;
-
-	$columns = $data->getTableAttributes($_REQUEST['table']);
-	$reqvars = $misc->getRequestVars('column');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('attname'),
-		'action' => url('colproperties.php',
-			$reqvars,
-			[
-				'table' => $_REQUEST['table'],
-				'column' => \PHPPgAdmin\Decorators\Decorator::field('attname'),
-			]
-		),
-		'icon' => 'Column',
-		'iconAction' => url('display.php',
-			$reqvars,
-			[
-				'table' => $_REQUEST['table'],
-				'column' => \PHPPgAdmin\Decorators\Decorator::field('attname'),
-				'query' => replace(
-					'SELECT "%column%", count(*) AS "count" FROM "%table%" GROUP BY "%column%" ORDER BY "%column%"',
-					[
-						'%column%' => \PHPPgAdmin\Decorators\Decorator::field('attname'),
-						'%table%' => $_REQUEST['table'],
-					]
-				),
-			]
-		),
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('comment'),
-	];
-
-	$misc->printTree($columns, $attrs, 'tblcolumns');
-
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
 /**
  * Show default list of columns in the table
  */

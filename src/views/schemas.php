@@ -32,7 +32,7 @@ function doDefault($msg = '') {
 		'schema' => [
 			'title' => $lang['strschema'],
 			'field' => \PHPPgAdmin\Decorators\Decorator::field('nspname'),
-			'url' => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+			'url' => "/redirect/schema?{$misc->href}&amp;",
 			'vars' => ['schema' => 'nspname'],
 		],
 		'owner' => [
@@ -409,76 +409,6 @@ function doExport($msg = '') {
 	echo $misc->form;
 	echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
 	echo "</form>\n";
-}
-
-/**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data, $lang;
-
-	$schemas = $data->getSchemas();
-
-	$reqvars = $misc->getRequestVars('schema');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('nspname'),
-		'icon' => 'Schema',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('nspcomment'),
-		'action' => url('redirect.php',
-			$reqvars,
-			[
-				'subject' => 'schema',
-				'schema' => \PHPPgAdmin\Decorators\Decorator::field('nspname'),
-			]
-		),
-		'branch' => url('schemas.php',
-			$reqvars,
-			[
-				'action' => 'subtree',
-				'schema' => \PHPPgAdmin\Decorators\Decorator::field('nspname'),
-			]
-		),
-	];
-
-	$misc->printTree($schemas, $attrs, 'schemas');
-
-	exit;
-}
-
-function doSubTree() {
-	global $misc, $data, $lang;
-
-	$tabs = $misc->getNavTabs('schema');
-
-	$items = $misc->adjustTabsForTree($tabs);
-
-	$reqvars = $misc->getRequestVars('schema');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('title'),
-		'icon' => \PHPPgAdmin\Decorators\Decorator::field('icon'),
-		'action' => url(field('url'),
-			$reqvars,
-			field('urlvars', [])
-		),
-		'branch' => url(field('url'),
-			$reqvars,
-			field('urlvars'),
-			['action' => 'tree']
-		),
-	];
-
-	$misc->printTree($items, $attrs, 'schema');
-	exit;
-}
-
-if ($action == 'tree') {
-	doTree();
-}
-
-if ($action == 'subtree') {
-	doSubTree();
 }
 
 $misc->printHeader($lang['strschemas']);

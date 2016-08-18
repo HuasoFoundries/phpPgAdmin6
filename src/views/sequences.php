@@ -112,33 +112,6 @@ function doDefault($msg = '') {
 }
 
 /**
- * Generate XML for the browser tree.
- */
-function doTree() {
-	global $misc, $data;
-
-	$sequences = $data->getSequences();
-
-	$reqvars = $misc->getRequestVars('sequence');
-
-	$attrs = [
-		'text' => \PHPPgAdmin\Decorators\Decorator::field('seqname'),
-		'icon' => 'Sequence',
-		'toolTip' => \PHPPgAdmin\Decorators\Decorator::field('seqcomment'),
-		'action' => url('sequences.php',
-			$reqvars,
-			[
-				'action' => 'properties',
-				'sequence' => \PHPPgAdmin\Decorators\Decorator::field('seqname'),
-			]
-		),
-	];
-
-	$misc->printTree($sequences, $attrs, 'sequences');
-	exit;
-}
-
-/**
  * Display the properties of a sequence
  */
 function doProperties($msg = '') {
@@ -744,10 +717,6 @@ function doAlter($msg = '') {
 		echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
-}
-
-if ($action == 'tree') {
-	doTree();
 }
 
 // Print header
