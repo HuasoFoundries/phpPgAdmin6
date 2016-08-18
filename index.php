@@ -8,22 +8,17 @@
 
 // Include application functions
 $_no_db_connection = true;
-require_once './includes/lib.inc.php';
+require_once './src/lib.inc.php';
 
 if (!isset($msg)) {
 	$msg = '';
 }
 
 $app->get('/sqledit[/{action}]', function ($request, $response, $args) use ($msg) {
-	/*return $this->view->render($response, 'profile.html', [
-		        'name' => $args['name']
-	*/
-	//PC::debug($request, 'sqledit');
-	//Kint::dump($request);
 
 	$action = (isset($args['action'])) ? $args['action'] : 'sql';
 
-	include './views/sqledit.php';
+	include './src/views/sqledit.php';
 	$body = $response->getBody();
 
 	switch ($action) {
@@ -83,7 +78,7 @@ $app->get('/views/servers[/{action}]', function ($request, $response, $args) use
 
 	$action = (isset($args['action'])) ? $args['action'] : '';
 
-	include './views/servers.php';
+	include './src/views/servers.php';
 
 	if ($action == 'tree') {
 		$newResponse = $response
@@ -119,8 +114,6 @@ $app->get('/views/servers[/{action}]', function ($request, $response, $args) use
 		return $response;
 
 	}
-
-	//$this->view->render($response, 'browser.twig', $viewVars);
 
 });
 

@@ -11,10 +11,10 @@
     "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
-            "PHPPgAdmin\\": "classes",
-            "PHPPgAdmin\\Database\\": "classes/database",
-            "PHPPgAdmin\\XHtml\\": "classes/xhtml",
-            "PHPPgAdmin\\Decorators\\": "classes/decorators"
+            "PHPPgAdmin\\": "src/classes",
+            "PHPPgAdmin\\Database\\": "src/classes/database",
+            "PHPPgAdmin\\XHtml\\": "src/classes/xhtml",
+            "PHPPgAdmin\\Decorators\\": "src/classes/decorators"
         }
     },
     "require": {
