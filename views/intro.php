@@ -70,6 +70,4 @@ if (isset($_GET['language'])) {
 	$_reload_browser = true;
 }
 
-Kint::dump($_SESSION);
-
 $misc->printFooter();
