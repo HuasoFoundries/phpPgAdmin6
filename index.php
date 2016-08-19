@@ -8,105 +8,262 @@
 
 // Include application functions
 $_no_db_connection = true;
-require_once './libraries/lib.inc.php';
+require_once './src/lib.inc.php';
 
-\PC::debug('Soy el index.php');
+if (!isset($msg)) {
+	$msg = '';
+}
 
-$app->get('/sqledit', function ($request, $response, $args) {
-	/*return $this->view->render($response, 'profile.html', [
-		        'name' => $args['name']
-	*/
-	//PC::debug($request, 'sqledit');
-	//Kint::dump($request);
+$app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) {
-		$msg = '';
+	$body = $response->getBody();
+	$misc = $this->misc;
+
+	$pwdkey = 'loginPassword_' . md5($_POST['loginServer']);
+	// If login action is set, then set session variables
+	if (isset($_POST['loginServer']) && isset($_POST['loginUsername']) &&
+		isset($_POST['loginPassword_' . md5($_POST['loginServer'])])) {
+
+		$_server_info = $this->misc->getServerInfo($_POST['loginServer']);
+
+		\PC::debug($_POST, '$_POST');
+
+		$_server_info['username'] = $_POST['loginUsername'];
+		$_server_info['password'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
+
+		$this->misc->setServerInfo(null, $_server_info, $_POST['loginServer']);
+
+		// Check for shared credentials
+		if (isset($_POST['loginShared'])) {
+			$_SESSION['sharedUsername'] = $_POST['loginUsername'];
+			$_SESSION['sharedPassword'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
+		}
+
+		$this->misc->setReloadBrowser(true);
+		$data = $misc->getDatabaseAccessor();
+
+		include './src/views/all_db.php';
+
+		//$body->write($this->misc->printFooter(false));
+
+	} else {
+		$_server_info = $this->misc->getServerInfo();
+
+		if (!isset($_server_info['username'])) {
+
+			include BASE_PATH . '/src/views/login.php';
+
+			$body->write(doLoginForm($this, $msg));
+
+		}
 	}
-	include './views/sqledit.php';
+
+	return $response;
+
+});
+
+$app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
+
+	$subject = (isset($args['subject'])) ? $args['subject'] : 'root';
+
+	if ($subject == 'root') {
+		$this->misc->setNoDBConnection(true);
+	}
+	$_server_info = $this->misc->getServerInfo();
+
+	$body = $response->getBody();
+	if (!isset($_server_info['username'])) {
+		include BASE_PATH . '/src/views/login.php';
+		$body->write(doLoginForm($this, $msg));
+
+		//\Kint::dump($request->getParams());
+		return $response;
+	} else {
+
+		$url = $this->misc->getLastTabURL($subject);
+
+		$include_file = $url['url'];
+
+		// Load query vars into superglobal arrays
+		if (isset($url['urlvars'])) {
+
+			/*echo '<pre>';
+				print_r($url['urlvars']);
+			*/
+			$urlvars = [];
+
+			foreach ($url['urlvars'] as $key => $urlvar) {
+				if (strpos($key, '?') !== FALSE) {
+					$key = explode('?', $key)[1];
+				}
+				$urlvars[$key] = value($urlvar, $_REQUEST);
+			}
+
+			$_REQUEST = array_merge($_REQUEST, $urlvars);
+			$_GET     = array_merge($_GET, $urlvars);
+		}
+
+		$actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($include_file, $_GET);
+
+		//PC::debug($url['url'], 'redirect.php will include');
+		//PC::debug($actionurl->value($_GET), '$actionurl');
+
+		if (is_readable($include_file)) {
+			include $include_file;
+		} else {
+			$destinationurl = str_replace("%2Fredirect%2F{$subject}%3F", '', $actionurl->value($_GET));
+
+			return $response->withStatus(302)->withHeader('Location', $destinationurl);
+
+		}
+	}
+});
+
+$app->get('/sqledit[/{action}]', function ($request, $response, $args) use ($msg) {
+
+	$action = (isset($args['action'])) ? $args['action'] : 'sql';
+
+	include './src/views/sqledit.php';
+	$body = $response->getBody();
+
 	switch ($action) {
-	case 'find':
-		doFind($this->misc);
-		break;
-	case 'sql':
-	default:
-		$viewVars = doDefault($this->misc);
+		case 'find':
 
-		$this->view->render($response, 'sqledit_header.twig', $viewVars);
+			$header_html = $this->view->fetch('sqledit_header.twig', ['title' => $this->lang['strfind']]);
+			$body->write($header_html);
+			$body->write(doFind($this));
 
-		$this->misc->printTabs($this->misc->getNavTabs('popup'), 'sql');
+			break;
+		case 'sql':
+		default:
 
-		_printConnection($this->misc, $action);
+			$header_html = $this->view->fetch('sqledit_header.twig', ['title' => $this->lang['strsql']]);
+			$body->write($header_html);
+			$body->write(doDefault($this));
 
-		return $this->view->render($response, 'sqledit.twig', $viewVars);
-
-		break;
+			break;
 	}
 
-// Set the name of the window
-	$misc->setWindowName('sqledit');
+	$footer_html = $this->view->fetch('sqledit.twig');
+	$body->write($footer_html);
 
-	$misc->printFooter();
+	$this->misc->setWindowName('sqledit');
+	return $response;
 
 });
 
-$app->get('/{folder}/{script}', function ($request, $response, $args) use ($misc, $conf, $lang) {
-	/*return $this->view->render($response, 'profile.html', [
-		        'name' => $args['name']
-	*/
-	\PC::debug($request);
-	Kint::dump($args);
+$app->get('/tree/browser', function ($request, $response, $args) use ($msg) {
+
+	$viewVars            = $this->lang;
+	$viewVars['appName'] = $this->get('settings')['appName'];
+	$viewVars['icon']    = [
+		'blank' => $this->misc->icon('blank'),
+		'I' => $this->misc->icon('I'),
+		'L' => $this->misc->icon('L'),
+		'Lminus' => $this->misc->icon('Lminus'),
+		'Loading' => $this->misc->icon('Loading'),
+		'Lplus' => $this->misc->icon('Lplus'),
+		'ObjectNotFound' => $this->misc->icon('ObjectNotFound'),
+		'Refresh' => $this->misc->icon('Refresh'),
+		'Servers' => $this->misc->icon('Servers'),
+		'T' => $this->misc->icon('T'),
+		'Tminus' => $this->misc->icon('Tminus'),
+		'Tplus' => $this->misc->icon('Tplus'),
+
+	];
+
+	$viewVars['cols'] = $cols;
+	$viewVars['rtl']  = $rtl;
+
+	$this->view->render($response, 'browser.twig', $viewVars);
 
 });
 
-$app->get('/{folder}/{script}/{name}', function ($request, $response, $args) use ($misc, $conf, $lang) {
-	/*return $this->view->render($response, 'profile.html', [
-		        'name' => $args['name']
-	*/
+$app->get('/tree/{node}[/{action}]', function ($request, $response, $args) use ($msg) {
 
-	\PC::debug($request);
-	Kint::dump($args);
+	$newResponse = $response
+		->withHeader('Content-type', 'text/xml')
+		->withHeader('Cache-Control', 'no-cache');
+
+	$phpscript = './src/tree/' . $args['node'] . '.php';
+
+	if (is_readable($phpscript)) {
+		include $phpscript;
+		if (isset($args['action']) && $args['action'] == 'subtree') {
+			doSubTree($this);
+		} else {
+			doTree($this);
+		}
+	}
+
+	return $newResponse;
 
 });
 
-$app->get('/', function ($request, $response, $args) use ($misc, $conf, $lang) {
-	/*return $this->view->render($response, 'profile.html', [
-		        'name' => $args['name']
-	*/
-	\PC::debug($request);
+$app->get('/src/views/servers[/{action}]', function ($request, $response, $args) use ($msg) {
 
-	$misc->printHeader('', null, true);
+	$action = (isset($args['action'])) ? $args['action'] : '';
 
-	$rtl = (strcasecmp($lang['applangdir'], 'rtl') == 0);
+	include './src/views/servers.php';
 
-	$cols = $rtl ? '*,' . $conf['left_width'] : $conf['left_width'] . ',*';
-	$mainframe = '<frame src="views/intro.php" name="detail" id="detail" frameborder="0" />';
+	$body = $response->getBody();
 
-	echo '<frameset cols="' . $cols . '">';
+	$header_html = $this->misc->printHeader($this->lang['strservers'], null, false);
+	$body->write($header_html);
 
-	if ($rtl) {
-		echo $mainframe;
+	$body_html = $this->misc->printBody(false);
+	$body->write($body_html);
+
+	$trail_html = $this->misc->printTrail('root', false);
+	$body->write($trail_html);
+
+	switch ($action) {
+		case 'logout':
+			$body->write(doLogout($this));
+
+			break;
+		default:
+			$body->write(doDefault($this, $msg));
+			break;
 	}
 
-	echo '<frame src="views/browser.php" name="browser" id="browser" frameborder="0" />';
+	$footer_html = $this->misc->printFooter(false);
+	$body->write($footer_html);
+	return $response;
 
-	if (!$rtl) {
-		echo $mainframe;
-	}
+});
 
-	echo '<noframes>';
-	echo '<body>';
-	echo $lang['strnoframes'];
-	echo '<br />';
-	echo '<a href="views/intro.php">' . $lang['strnoframeslink'] . '</a>';
-	echo '</body>';
-	echo '</noframes>';
+$app->get('/', function ($request, $response, $args) use ($msg) {
 
-	echo '</frameset>';
+	$rtl  = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
+	$cols = $rtl ? '*,' . $this->conf['left_width'] : $this->conf['left_width'] . ',*';
 
-	$misc->printFooter(false);
+	$viewVars            = $this->lang;
+	$viewVars['appName'] = $this->get('settings')['appName'];
+	$viewVars['cols']    = $cols;
+	$viewVars['rtl']     = $rtl;
 
-})->setName('home');
+	return $this->view->render($response, 'home.twig', $viewVars);
+
+});
+
+$app->get('/src/views/intro', function ($request, $response, $args) use ($msg) {
+	include './src/views/intro.php';
+
+	$body = $response->getBody();
+	$body->write(doDefault($this));
+
+	return $response;
+
+});
+
+$app->get('/views/{script}', function ($request, $response, $args) use ($msg) {
+	$body = $response->getBody();
+	$body->write('Not found ' . $args['script']);
+	\PC::debug($args, 'args');
+	return $response;
+
+});
 
 // Run app
 $app->run();

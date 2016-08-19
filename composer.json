@@ -11,10 +11,10 @@
     "minimum-stability": "beta",
     "autoload": {
         "psr-4": {
-            "PHPPgAdmin\\": "classes",
-            "PHPPgAdmin\\Database\\": "classes/database",
-            "PHPPgAdmin\\XHtml\\": "classes/xhtml",
-            "PHPPgAdmin\\Decorators\\": "classes/decorators"
+            "PHPPgAdmin\\": "src/classes",
+            "PHPPgAdmin\\Database\\": "src/classes/database",
+            "PHPPgAdmin\\XHtml\\": "src/classes/xhtml",
+            "PHPPgAdmin\\Decorators\\": "src/classes/decorators"
         }
     },
     "require": {
@@ -23,6 +23,7 @@
         "slim/slim": "^3.0",
         "slim/twig-view": "~2.1.1",
         "php-console/php-console": "~3.1",
+
         "twig/twig": "~1.24",
         "raveren/kint": "^1.0",
         "adodb/adodb-php": "^5.20"
