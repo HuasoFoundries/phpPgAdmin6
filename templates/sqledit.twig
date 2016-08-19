@@ -1,0 +1,48 @@
+<script type="text/javascript">
+jQuery(document).ready(function() {
+    document.forms[0].query.focus();
+    CodeMirror.commands.sendQuery = function() {
+        console.log('SEND QUERY');
+        jQuery('#sqlform').submit();
+    };
+    window.editor = CodeMirror.fromTextArea($('#query')[0], {
+        mode: 'text/x-sql',
+        indentWithTabs: true,
+        smartIndent: true,
+        lineNumbers: true,
+        matchBrackets: true,
+        autofocus: true,
+        extraKeys: {
+            "Ctrl-Space": "autocomplete",
+            "Ctrl-Enter": "sendQuery"
+        },
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        hintOptions: {
+            tables: {
+                medios: {
+                    id: null,
+                    name: null,
+                    categoria: null
+                },
+                posts: {
+                    id: null,
+                    name: null,
+                    id_medio: null,
+                    created_date: null
+                }
+            }
+        }
+    });
+    jQuery('table.tabs').prependTo('body');
+    jQuery('table.printconnection').prependTo('.sqlform');
+    if (window.parent.frames.length > 1) {
+        $('#csstheme', window.parent.frames[0].document).attr('href', '/src/themes/default/global.css');
+    }
+});
+</script>
+
+<a href="#" class="bottom_link">subir al inicio</a>
+</body>
+
+</html>
