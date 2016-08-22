@@ -7,7 +7,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class AllDBController extends BaseController {
-
+	public $_name = 'AllDBController';
 /**
  * Display a form for alter and perform actual alter
  */
@@ -70,9 +70,9 @@ class AllDBController extends BaseController {
 
 			if ($data->alterDatabase($_POST['oldname'], $_POST['newname'], $_POST['owner'], $_POST['dbcomment']) == 0) {
 				$this->misc->setReloadBrowser(true);
-				return $this->doDefault($lang['strdatabasealtered']);
+				$this->doDefault($lang['strdatabasealtered']);
 			} else {
-				return $this->doDefault($lang['strdatabasealteredbad']);
+				$this->doDefault($lang['strdatabasealteredbad']);
 			}
 
 		}
@@ -86,7 +86,7 @@ class AllDBController extends BaseController {
 		global $lang, $_reload_drop_database;
 
 		if (empty($_REQUEST['dropdatabase']) && empty($_REQUEST['ma'])) {
-			return $this->doDefault($lang['strspecifydatabasetodrop']);
+			$this->doDefault($lang['strspecifydatabasetodrop']);
 			exit();
 		}
 
@@ -135,9 +135,9 @@ class AllDBController extends BaseController {
 				$status = $data->dropDatabase($_POST['dropdatabase']);
 				if ($status == 0) {
 					$_reload_drop_database = true;
-					return $this->doDefault($lang['strdatabasedropped']);
+					$this->doDefault($lang['strdatabasedropped']);
 				} else {
-					return $this->doDefault($lang['strdatabasedroppedbad']);
+					$this->doDefault($lang['strdatabasedroppedbad']);
 				}
 
 			}
@@ -304,15 +304,15 @@ class AllDBController extends BaseController {
 
 		// Check that they've given a name and a definition
 		if ($_POST['formName'] == '') {
-			return $this->doCreate($lang['strdatabaseneedsname']);
+			$this->doCreate($lang['strdatabaseneedsname']);
 		} else {
 			$status = $data->createDatabase($_POST['formName'], $_POST['formEncoding'], $_POST['formSpc'],
 				$_POST['formComment'], $_POST['formTemplate'], $_POST['formCollate'], $_POST['formCType']);
 			if ($status == 0) {
 				$this->misc->setReloadBrowser(true);
-				return $this->doDefault($lang['strdatabasecreated']);
+				$this->doDefault($lang['strdatabasecreated']);
 			} else {
-				return $this->doCreate($lang['strdatabasecreatedbad']);
+				$this->doCreate($lang['strdatabasecreatedbad']);
 			}
 
 		}

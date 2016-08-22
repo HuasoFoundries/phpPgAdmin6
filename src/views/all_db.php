@@ -59,7 +59,7 @@ switch ($action) {
 		$all_db_controller->doAlter(true);
 		break;
 	default:
-		echo $all_db_controller->doDefault();
+		$all_db_controller->doDefault();
 
 		break;
 }

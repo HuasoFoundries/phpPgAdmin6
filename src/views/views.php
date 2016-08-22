@@ -19,7 +19,7 @@ if (!isset($msg)) {
  * Ask for select parameters and perform select
  */
 function doSelectRows($confirm, $msg = '') {
-	global $data, $misc, $_no_output;
+	global $data, $misc;
 	global $lang;
 
 	if ($confirm) {
@@ -128,7 +128,7 @@ function doSelectRows($confirm, $msg = '') {
 				$_POST['values'], $_POST['ops']);
 			$_REQUEST['query']  = $query;
 			$_REQUEST['return'] = "schema";
-			$_no_output         = true;
+			$misc->setNoOutput(true);
 			include './display.php';
 			exit;
 		}

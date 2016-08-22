@@ -12,9 +12,9 @@ if (!ini_get('safe_mode')) {
 }
 
 // Include application functions
-$_no_output = true;
-$f_schema   = $f_object   = '';
+$f_schema = $f_object = '';
 require_once '../lib.inc.php';
+$misc->setNoOutput(true);
 
 // Are we doing a cluster-wide dump or just a per-database dump
 $dumpall = ($_REQUEST['subject'] == 'server');

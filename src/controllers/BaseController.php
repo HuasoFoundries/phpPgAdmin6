@@ -20,6 +20,7 @@ class BaseController {
 	public $form               = '';
 	public $href               = '';
 	public $lang               = [];
+	public $_name              = 'BaseController';
 
 	/* Constructor */
 	function __construct(\Slim\App $app) {
@@ -35,7 +36,7 @@ class BaseController {
 		$this->appVersion     = $container->get('settings')['appVersion'];
 		$this->appLangFiles   = $container->get('appLangFiles');
 		$this->misc           = $container->get('misc');
-
+		\PC::debug($this->_name, 'instanced controller');
 	}
 
 	public function doDefault() {

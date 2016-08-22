@@ -28,7 +28,7 @@ if (!ini_get('safe_mode')) {
 if (isset($_REQUEST['what'])) {
 
 	// Include application functions
-	$_no_output = true;
+	$misc->setNoOutput(true);
 	require_once '../lib.inc.php';
 
 	switch ($_REQUEST['what']) {

@@ -26,6 +26,7 @@ class Misc {
 	public $form                   = '';
 	public $href                   = '';
 	public $lang                   = [];
+	private $_no_output            = false;
 
 	/* Constructor */
 	function __construct(\Slim\App $app) {
@@ -97,6 +98,13 @@ class Misc {
 	 */
 	function setNoDBConnection($flag) {
 		$this->_no_db_connection = boolval($flag);
+		return $this;
+	}
+
+	function setNoOutput($flag) {
+		global $_no_output;
+		$this->_no_output = boolval($flag);
+		$_no_output       = $this->_no_output;
 		return $this;
 	}
 
@@ -396,8 +404,9 @@ class Misc {
 			$vars['url'] = '/redirect';
 		}
 		\PC::debug($vars, 'getSubjectParams');
-		if ($vars['url'] == '/redirect' && isset($vars['subject'])) {
-			$vars['url'] = '/redirect/' . $vars['subject'];
+		if ($vars['url'] == '/redirect' && isset($vars['params']['subject'])) {
+			$vars['url'] = '/redirect/' . $vars['params']['subject'];
+			unset($vars['params']['subject']);
 		}
 
 		return $vars;
@@ -721,8 +730,6 @@ class Misc {
 		$lang           = $this->lang;
 		$plugin_manager = $this->plugin_manager;
 
-		global $_no_output;
-
 		$viewVars        = $this->lang;
 		$viewVars['dir'] = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
 
@@ -745,7 +752,7 @@ class Misc {
 
 		$header_html .= "</head>\n";
 
-		if (!isset($_no_output) && $do_print) {
+		if (!$this->_no_output && $do_print) {
 
 			header("Content-Type: text/html; charset=utf-8");
 			echo $header_html;
@@ -789,12 +796,11 @@ class Misc {
 	 * @param $bodyClass - name of body class
 	 */
 	function printBody($doBody = true, $bodyClass = '') {
-		global $_no_output;
 
 		$bodyClass = htmlspecialchars($bodyClass);
 		$bodyHtml  = "<body " . ($bodyClass == '' ? '' : " class=\"{$bodyClass}\"") . ">\n";
 
-		if (!isset($_no_output) && $doBody) {
+		if (!$this->_no_output && $doBody) {
 			echo $bodyHtml;
 		} else {
 			return $bodyHtml;
@@ -2047,7 +2053,7 @@ class Misc {
 	 * @param $do_print true to echo, false to return
 	 */
 	function printHelp($str, $help = null, $do_print = true) {
-		\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
+		//\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
 		if ($help !== null) {
 			$helplink = $this->getHelpLink($help);
 			$str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">' . $this->lang['strhelpicon'] . '</a>';
