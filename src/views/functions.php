@@ -155,7 +155,7 @@ function doEdit($msg = '') {
 		}
 
 		$func_full = $fndata->fields['proname'] . "(" . $fndata->fields['proarguments'] . ")";
-		echo "<form action=\"/views/functions.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/functions.php\" method=\"post\">\n";
 		echo "<table style=\"width: 90%\">\n";
 		echo "<tr>\n";
 		echo "<th class=\"data required\">{$lang['strschema']}</th>\n";
@@ -480,7 +480,7 @@ function doDrop($confirm) {
 		$misc->printTrail('schema');
 		$misc->printTitle($lang['strdrop'], 'pg.function.drop');
 
-		echo "<form action=\"/views/functions.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/functions.php\" method=\"post\">\n";
 
 		//If multi drop
 		if (isset($_REQUEST['ma'])) {
@@ -729,7 +729,7 @@ function doCreate($msg = '', $szJS = "") {
 			//]]>
 		</script>
 		";
-	echo "<form action=\"/views//views/functions.php\" method=\"post\">\n";
+	echo "<form action=\"/src/views//views/functions.php\" method=\"post\">\n";
 	echo "<table><tbody id=\"args_table\">\n";
 	echo "<tr><th class=\"data required\">{$lang['strname']}</th>\n";
 	echo "<th class=\"data required\" colspan=\"2\">{$lang['strreturns']}</th>\n";

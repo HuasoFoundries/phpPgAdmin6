@@ -29,7 +29,7 @@ function doSelectRows($confirm, $msg = '') {
 
 		$attrs = $data->getTableAttributes($_REQUEST['view']);
 
-		echo "<form action=\"/views/views.php\" method=\"post\" id=\"selectform\">\n";
+		echo "<form action=\"/src/views/views.php\" method=\"post\" id=\"selectform\">\n";
 		if ($attrs->recordCount() > 0) {
 			// JavaScript for select all feature
 			echo "<script type=\"text/javascript\">\n";
@@ -37,7 +37,9 @@ function doSelectRows($confirm, $msg = '') {
 			echo "	function selectAll() {\n";
 			echo "		for (var i=0; i<document.getElementById('selectform').elements.length; i++) {\n";
 			echo "			var e = document.getElementById('selectform').elements[i];\n";
-			echo "			if (e.name.indexOf('show') == 0) e.checked = document.getElementById('selectform').selectall.checked;\n";
+			echo "			if (e.name.indexOf('show') == 0) { \n ";
+			echo "				e.checked = document.getElementById('selectform').selectall.checked;\n";
+			echo "			}\n";
 			echo "		}\n";
 			echo "	}\n";
 			echo "//]]>\n";
@@ -150,7 +152,7 @@ function doDrop($confirm) {
 		$misc->printTrail('view');
 		$misc->printTitle($lang['strdrop'], 'pg.view.drop');
 
-		echo "<form action=\"/views/views.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/views.php\" method=\"post\">\n";
 
 		//If multi drop
 		if (isset($_REQUEST['ma'])) {
@@ -269,7 +271,7 @@ function doSetParamsCreate($msg = '') {
 		}
 		asort($arrFields);
 
-		echo "<form action=\"/views/views.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/views.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strviewname']}</th></tr>";
 		echo "<tr>\n<td class=\"data1\">\n";
@@ -372,7 +374,7 @@ function doWizardCreate($msg = '') {
 	$misc->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"/views/views.php\" method=\"post\">\n";
+	echo "<form action=\"/src/views/views.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "<tr><th class=\"data\">{$lang['strtables']}</th></tr>";
 	echo "<tr>\n<td class=\"data1\">\n";
@@ -423,7 +425,7 @@ function doCreate($msg = '') {
 	$misc->printTitle($lang['strcreateview'], 'pg.view.create');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"/views/views.php\" method=\"post\">\n";
+	echo "<form action=\"/src/views/views.php\" method=\"post\">\n";
 	echo "<table style=\"width: 100%\">\n";
 	echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 	echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

@@ -11,23 +11,21 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 
 class Misc {
-	// Tracking string to include in HREFs
-	var $href;
-	// Tracking string to include in forms
-	var $form;
 
-	var $lang                = [];
-	private $data            = null;
-	private $app             = null;
-	private $_connection     = null;
-	private $server_id       = null;
-	private $database        = null;
-	public $appName          = '';
-	public $appVersion       = '';
-	public $appLangFiles     = [];
-	private $_reload_browser = false;
-
-	private $_no_db_connection = false;
+	private $_connection           = null;
+	private $_no_db_connection     = false;
+	private $_reload_drop_database = false;
+	private $_reload_browser       = false;
+	private $app                   = null;
+	private $data                  = null;
+	private $database              = null;
+	private $server_id             = null;
+	public $appLangFiles           = [];
+	public $appName                = '';
+	public $appVersion             = '';
+	public $form                   = '';
+	public $href                   = '';
+	public $lang                   = [];
 
 	/* Constructor */
 	function __construct(\Slim\App $app) {
@@ -138,6 +136,16 @@ class Misc {
 		global $_reload_browser;
 		$_reload_browser       = $flag;
 		$this->_reload_browser = boolval($flag);
+		return $this;
+	}
+	/**
+	 * [setReloadBrowser description]
+	 * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
+	 */
+	function setReloadDropDatabase($flag) {
+		global $_reload_drop_database;
+		$_reload_drop_database       = $flag;
+		$this->_reload_drop_database = boolval($flag);
 		return $this;
 	}
 
@@ -386,6 +394,10 @@ class Misc {
 
 		if (!isset($vars['url'])) {
 			$vars['url'] = '/redirect';
+		}
+		\PC::debug($vars, 'getSubjectParams');
+		if ($vars['url'] == '/redirect' && isset($vars['subject'])) {
+			$vars['url'] = '/redirect/' . $vars['subject'];
 		}
 
 		return $vars;
@@ -748,20 +760,17 @@ class Misc {
 	 * @param $doBody True to output body tag, false to return the html
 	 */
 	function printFooter($doBody = true) {
-		global $_reload_drop_database, $_no_bottom_link;
 		$lang = $this->lang;
 
 		$footer_html = '';
 		\PC::debug($this->_reload_browser, '$_reload_browser');
 		if ($this->_reload_browser) {
 			$footer_html .= $this->printReload(false, false);
-		} elseif (isset($_reload_drop_database)) {
+		} elseif ($this->_reload_drop_database) {
 			$footer_html .= $this->printReload(true, false);
 		}
 
-		if (!isset($_no_bottom_link)) {
-			$footer_html .= "<a href=\"#\" class=\"bottom_link\">" . $lang['strgotoppage'] . "</a>";
-		}
+		$footer_html .= "<a href=\"#\" class=\"bottom_link\">" . $lang['strgotoppage'] . "</a>";
 
 		$footer_html .= "</body>\n";
 		$footer_html .= "</html>\n";

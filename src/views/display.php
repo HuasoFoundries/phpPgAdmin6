@@ -54,7 +54,7 @@ function doEditRow($confirm, $msg = '') {
 			$fksprops = false;
 		}
 
-		echo "<form action=\"/views/display.php\" method=\"post\" id=\"ac_form\">\n";
+		echo "<form action=\"/src/views/display.php\" method=\"post\" id=\"ac_form\">\n";
 		$elements = 0;
 		$error    = true;
 		if ($rs->recordCount() == 1 && $attrs->recordCount() > 0) {
@@ -218,7 +218,7 @@ function doDelRow($confirm) {
 
 		$rs = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
-		echo "<form action=\"/views/display.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/display.php\" method=\"post\">\n";
 		echo $misc->form;
 
 		if ($rs->recordCount() == 1) {

@@ -54,7 +54,7 @@ function doFind($confirm = true, $msg = '') {
 	$misc->printTabs('database', 'find');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"/views/database.php\" method=\"post\">\n";
+	echo "<form action=\"/src/views/database.php\" method=\"post\">\n";
 	echo "<p><input name=\"term\" value=\"", htmlspecialchars($_REQUEST['term']),
 		"\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
 	// Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
@@ -321,7 +321,7 @@ function doExport($msg = '') {
 	$misc->printTabs('database', 'export');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"/views/dbexport.php\" method=\"post\">\n";
+	echo "<form action=\"/src/views/dbexport.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
 	// Data only
@@ -611,7 +611,7 @@ function doSQL() {
 	$misc->printTrail('database');
 	$misc->printTabs('database', 'sql');
 	echo "<p>{$lang['strentersql']}</p>\n";
-	echo "<form action=\"/views/sql.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
+	echo "<form action=\"/src/views/sql.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
 	echo "<p>{$lang['strsql']}<br />\n";
 	echo "<textarea style=\"width:100%;\" rows=\"20\" cols=\"50\" name=\"query\">",
 	htmlspecialchars($_SESSION['sqlquery']), "</textarea></p>\n";

@@ -45,7 +45,7 @@ function doAlter($msg = '') {
 			$_POST['name'] = $triggerdata->fields['tgname'];
 		}
 
-		echo "<form action=\"/views/triggers.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/triggers.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
 		echo "<td class=\"data1\">";
@@ -79,7 +79,7 @@ function doDrop($confirm) {
 		echo "<p>", sprintf($lang['strconfdroptrigger'], $misc->printVal($_REQUEST['trigger']),
 			$misc->printVal($_REQUEST['table'])), "</p>\n";
 
-		echo "<form action=\"/views/triggers.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/triggers.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"trigger\" value=\"", htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -114,7 +114,7 @@ function doEnable($confirm) {
 		echo "<p>", sprintf($lang['strconfenabletrigger'], $misc->printVal($_REQUEST['trigger']),
 			$misc->printVal($_REQUEST['table'])), "</p>\n";
 
-		echo "<form action=\"/views/triggers.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/triggers.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"enable\" />\n";
 		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"trigger\" value=\"", htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -148,7 +148,7 @@ function doDisable($confirm) {
 		echo "<p>", sprintf($lang['strconfdisabletrigger'], $misc->printVal($_REQUEST['trigger']),
 			$misc->printVal($_REQUEST['table'])), "</p>\n";
 
-		echo "<form action=\"/views/triggers.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/triggers.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"disable\" />\n";
 		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"trigger\" value=\"", htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -205,7 +205,7 @@ function doCreate($msg = '') {
 	$sel3 = new \PHPPgAdmin\XHtml\XHTML_Select('formFrequency');
 	$sel3->set_data($data->triggerFrequency);
 
-	echo "<form action=\"/views/triggers.php\" method=\"post\">\n";
+	echo "<form action=\"/src/views/triggers.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "<tr>\n";
 	echo "		<th class=\"data\">{$lang['strname']}</th>\n";
