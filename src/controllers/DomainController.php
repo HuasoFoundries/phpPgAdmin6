@@ -7,8 +7,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class DomainController extends BaseController {
-	public $script = '';
-	public $_name  = 'DomainController';
+	public $_name = 'DomainController';
 
 /**
  * Function to save after altering a domain

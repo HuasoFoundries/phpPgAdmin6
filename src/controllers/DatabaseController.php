@@ -8,7 +8,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class DatabaseController extends BaseController {
 	use AdminTrait;
-	public $script = '';
+	public $script = 'database.php';
 	public $_name  = 'DatabaseController';
 
 	function _highlight($string, $term) {

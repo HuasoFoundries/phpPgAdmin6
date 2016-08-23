@@ -8,6 +8,8 @@ trait AdminTrait {
  */
 	public function doCluster($type, $confirm = false) {
 
+		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
+
 		$script = $this->script;
 		$data   = $this->data;
 		$misc   = $this->misc;
@@ -96,11 +98,11 @@ trait AdminTrait {
  */
 	public function doReindex($type, $confirm = false) {
 
-		$script          = $this->script;
-		$data            = $this->data;
-		$misc            = $this->misc;
-		$lang            = $this->lang;
-		$_reload_browser = $this->_reload_browser;
+		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
+		$script       = $this->script;
+		$data         = $this->data;
+		$misc         = $this->misc;
+		$lang         = $this->lang;
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletoreindex']);
@@ -178,12 +180,11 @@ trait AdminTrait {
  * Show confirmation of analyze and perform analyze
  */
 	public function doAnalyze($type, $confirm = false) {
-
-		$script          = $this->script;
-		$data            = $this->data;
-		$misc            = $this->misc;
-		$lang            = $this->lang;
-		$_reload_browser = $this->_reload_browser;
+		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
+		$script       = $this->script;
+		$data         = $this->data;
+		$misc         = $this->misc;
+		$lang         = $this->lang;
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletoanalyze']);
@@ -258,7 +259,10 @@ trait AdminTrait {
  */
 	public function doVacuum($type, $confirm = false) {
 
-		$script = $this->script;
+		$script = ($type == 'database') ? 'database.php' : 'tables.php';
+
+		\Kint::dump([$type, $script]);
+		\PC::debug($type, 'doVacuum');
 
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -280,8 +284,8 @@ trait AdminTrait {
 					echo "<p>", sprintf($lang['strconfvacuumtable'], $misc->printVal($a['table'])), "</p>\n";
 					echo "<input type=\"hidden\" name=\"table[]\" value=\"", htmlspecialchars($a['table']), "\" />\n";
 				}
-			} // END if multi vacuum
-			else {
+			} else {
+				// END if multi vacuum
 				$misc->printTrail($type);
 				$misc->printTitle($lang['strvacuum'], 'pg.vacuum');
 
@@ -338,11 +342,11 @@ trait AdminTrait {
  * Add or Edit autovacuum params and save them
  */
 	public function doEditAutovacuum($type, $confirm, $msg = '') {
-
-		$script = $this->script;
-		$data   = $this->data;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
+		$script       = $this->script;
+		$data         = $this->data;
+		$misc         = $this->misc;
+		$lang         = $this->lang;
 
 		if (empty($_REQUEST['table'])) {
 			$this->doAdmin($type, '', $lang['strspecifyeditvacuumtable']);
@@ -453,11 +457,11 @@ trait AdminTrait {
  * confirm drop autovacuum params for a table and drop it
  */
 	public function doDropAutovacuum($type, $confirm) {
-
-		$script = $this->script;
-		$data   = $this->data;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
+		$script       = $this->script;
+		$data         = $this->data;
+		$misc         = $this->misc;
+		$lang         = $this->lang;
 
 		if (empty($_REQUEST['table'])) {
 			$this->doAdmin($type, '', $lang['strspecifydelvacuumtable']);
@@ -507,11 +511,11 @@ trait AdminTrait {
  */
 
 	public function doAdmin($type, $msg = '') {
-
-		$script = $this->script;
-		$data   = $this->data;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
+		$script       = $this->script;
+		$data         = $this->data;
+		$misc         = $this->misc;
+		$lang         = $this->lang;
 
 		$misc->printTrail($type);
 		$misc->printTabs($type, 'admin');
@@ -731,16 +735,18 @@ trait AdminTrait {
 
 	function adminActions($action, $type) {
 
-		$script = $this->script;
-
 		if ($type == 'database') {
 			$_REQUEST['object'] = $_REQUEST['database'];
-			$script             = 'database.php';
+			$this->script       = 'database.php';
 		} else {
 			// $_REQUEST['table'] is no set if we are in the schema page
 			$_REQUEST['object'] = (isset($_REQUEST['table']) ? $_REQUEST['table'] : '');
-			$script             = 'tables.php';
+			$this->script       = 'tables.php';
 		}
+
+		$script = $this->script;
+
+		\Kint::dump([$type, $script]);
 
 		switch ($action) {
 			case 'confirm_cluster':

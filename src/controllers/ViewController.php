@@ -7,7 +7,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class ViewController extends BaseController {
-	public $script = '';
+	public $script = 'view.php';
 	public $_name  = 'ViewController';
 
 /**

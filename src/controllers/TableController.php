@@ -8,7 +8,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class TableController extends BaseController {
 	use AdminTrait;
-	public $script = '';
+	public $script = 'table.php';
 	public $_name  = 'TableController';
 
 /**
