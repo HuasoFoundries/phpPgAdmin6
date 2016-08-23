@@ -12,7 +12,7 @@ require_once '../lib.inc.php';
 $misc->printHeader($lang['straggregates']);
 $misc->printBody();
 
-$aggregate_controller = new \PHPPgAdmin\Controller\AggregateController($app);
+$aggregate_controller = new \PHPPgAdmin\Controller\AggregateController($container);
 
 switch ($action) {
 	case 'create':

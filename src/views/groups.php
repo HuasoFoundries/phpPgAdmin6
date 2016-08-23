@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$group_controller = new \PHPPgAdmin\Controller\GroupController($app);
+$group_controller = new \PHPPgAdmin\Controller\GroupController($container);
 
 $misc->printHeader($lang['strgroups']);
 $misc->printBody();

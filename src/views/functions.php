@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$function_controller = new \PHPPgAdmin\Controller\FunctionController($app);
+$function_controller = new \PHPPgAdmin\Controller\FunctionController($container);
 
 $misc->printHeader($lang['strfunctions']);
 $misc->printBody();

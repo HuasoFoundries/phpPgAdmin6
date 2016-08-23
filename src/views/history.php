@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$history_controller = new \PHPPgAdmin\Controller\HistoryController($app);
+$history_controller = new \PHPPgAdmin\Controller\HistoryController($container);
 
 switch ($action) {
 	case 'confdelhistory':

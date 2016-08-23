@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$viewproperty_controller = new \PHPPgAdmin\Controller\ViewPropertyController($app);
+$viewproperty_controller = new \PHPPgAdmin\Controller\ViewPropertyController($container);
 
 $misc->printHeader($lang['strviews'] . ' - ' . $_REQUEST['view']);
 $misc->printBody();

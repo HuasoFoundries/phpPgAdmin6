@@ -17,10 +17,10 @@ if (isset($_REQUEST['table'])) {
 	die($lang['strnotableprovided']);
 }
 
+$colproperty_controller = new \PHPPgAdmin\Controller\ColPropertyController($container);
+
 $misc->printHeader($lang['strtables'] . ' - ' . $tableName);
 $misc->printBody();
-
-$colproperty_controller = new \PHPPgAdmin\Controller\ColPropertyController($app);
 
 if (isset($_REQUEST['view'])) {
 	$colproperty_controller->doDefault(null, false);

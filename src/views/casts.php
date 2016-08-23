@@ -9,10 +9,10 @@
 // Include application functions
 require_once '../lib.inc.php';
 
+$cast_controller = new \PHPPgAdmin\Controller\CastController($container);
+
 $misc->printHeader($lang['strcasts']);
 $misc->printBody();
-
-$cast_controller = new \PHPPgAdmin\Controller\CastController($app);
 
 switch ($action) {
 

@@ -17,7 +17,9 @@ if (!ini_get('safe_mode')) {
 }
 
 // Include application functions
-require_once '../lib.inc.php';
+if (!defined('BASE_PATH')) {
+	require_once '../lib.inc.php';
+}
 
 global $conf, $lang;
 

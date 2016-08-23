@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$database_controller = new \PHPPgAdmin\Controller\DatabaseController($app);
+$database_controller = new \PHPPgAdmin\Controller\DatabaseController($container);
 
 if ($action == 'refresh_locks') {
 	$database_controller->currentLocks(true);

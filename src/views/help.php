@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$help_controller = new \PHPPgAdmin\Controller\HelpController($app);
+$help_controller = new \PHPPgAdmin\Controller\HelpController($container);
 
 switch ($action) {
 	case 'browse':

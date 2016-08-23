@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$schema_controller = new \PHPPgAdmin\Controller\SchemaController($app);
+$schema_controller = new \PHPPgAdmin\Controller\SchemaController($container);
 
 $misc->printHeader($lang['strschemas']);
 $misc->printBody();

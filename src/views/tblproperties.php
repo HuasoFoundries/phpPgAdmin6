@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$tableproperty_controller = new \PHPPgAdmin\Controller\TablePropertyController($app);
+$tableproperty_controller = new \PHPPgAdmin\Controller\TablePropertyController($container);
 
 $misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table']);
 $misc->printBody();

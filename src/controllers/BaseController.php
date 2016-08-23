@@ -23,10 +23,7 @@ class BaseController {
 	public $_name              = 'BaseController';
 
 	/* Constructor */
-	function __construct(\Slim\App $app) {
-		$this->app = $app;
-
-		$container = $app->getContainer();
+	function __construct(\Slim\Container $container) {
 
 		$this->lang           = $container->get('lang');
 		$this->conf           = $container->get('conf');

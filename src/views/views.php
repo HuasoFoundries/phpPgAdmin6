@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$view_controller = new \PHPPgAdmin\Controller\ViewController($app);
+$view_controller = new \PHPPgAdmin\Controller\ViewController($container);
 
 $misc->printHeader($lang['strviews']);
 $misc->printBody();

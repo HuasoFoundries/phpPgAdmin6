@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$domain_controller = new \PHPPgAdmin\Controller\DomainController($app);
+$domain_controller = new \PHPPgAdmin\Controller\DomainController($container);
 
 $misc->printHeader($lang['strdomains']);
 $misc->printBody();

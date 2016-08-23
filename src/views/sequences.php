@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$sequence_controller = new \PHPPgAdmin\Controller\SequenceController($app);
+$sequence_controller = new \PHPPgAdmin\Controller\SequenceController($container);
 
 // Print header
 $misc->printHeader($lang['strsequences']);

@@ -9,10 +9,10 @@
 // Include application functions
 require_once '../lib.inc.php';
 
+$conversion_controller = new \PHPPgAdmin\Controller\ConversionController($container);
+
 $misc->printHeader($lang['strconversions']);
 $misc->printBody();
-
-$conversion_controller = new \PHPPgAdmin\Controller\ConversionController($app);
 
 switch ($action) {
 	default:

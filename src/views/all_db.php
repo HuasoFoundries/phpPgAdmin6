@@ -11,7 +11,7 @@ if (!defined('BASE_PATH')) {
 	require_once '../lib.inc.php';
 }
 
-$all_db_controller = new \PHPPgAdmin\Controller\AllDBController($app);
+$all_db_controller = new \PHPPgAdmin\Controller\AllDBController($container);
 
 $misc->printHeader($lang['strdatabases']);
 $misc->printBody();

@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$fulltext_controller = new \PHPPgAdmin\Controller\FulltextController($app);
+$fulltext_controller = new \PHPPgAdmin\Controller\FulltextController($container);
 
 $misc->printHeader($lang['strschemas']);
 $misc->printBody();

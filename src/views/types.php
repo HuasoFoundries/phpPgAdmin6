@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$type_controller = new \PHPPgAdmin\Controller\TypeController($app);
+$type_controller = new \PHPPgAdmin\Controller\TypeController($container);
 
 $misc->printHeader($lang['strtypes']);
 $misc->printBody();

@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$user_controller = new \PHPPgAdmin\Controller\UserController($app);
+$user_controller = new \PHPPgAdmin\Controller\UserController($container);
 
 $misc->printHeader($lang['strusers']);
 $misc->printBody();

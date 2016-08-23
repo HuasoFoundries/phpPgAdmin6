@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$index_controller = new \PHPPgAdmin\Controller\IndexController($app);
+$index_controller = new \PHPPgAdmin\Controller\IndexController($container);
 
 $misc->printHeader($lang['strindexes'], "<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
 

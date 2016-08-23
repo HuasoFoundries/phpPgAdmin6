@@ -97,10 +97,7 @@ $config = [
 $app = new \Slim\App($config);
 
 // Fetch DI Container
-$container   = $app->getContainer();
-$environment = $container->get('environment');
-
-//$container['lang'] = $lang;
+$container = $app->getContainer();
 
 $plugin_manager              = new \PHPPgAdmin\PluginManager($app);
 $container['plugin_manager'] = $plugin_manager;

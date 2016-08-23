@@ -9,7 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$trigger_controller = new \PHPPgAdmin\Controller\TriggerController($app);
+$trigger_controller = new \PHPPgAdmin\Controller\TriggerController($container);
 
 $misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strtriggers']);
 $misc->printBody();

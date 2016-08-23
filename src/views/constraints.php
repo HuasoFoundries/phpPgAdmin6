@@ -9,6 +9,8 @@
 // Include application functions
 require_once '../lib.inc.php';
 
+$constraint_controller = new \PHPPgAdmin\Controller\ConstraintController($container);
+
 $misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
 	"<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
 
@@ -19,8 +21,6 @@ if ($action == 'add_unique_key' || $action == 'save_add_unique_key'
 } else {
 	$misc->printBody();
 }
-
-$constraint_controller = new \PHPPgAdmin\Controller\ConstraintController($app);
 
 switch ($action) {
 	case 'add_foreign_key':
