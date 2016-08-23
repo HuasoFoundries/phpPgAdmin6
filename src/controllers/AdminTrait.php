@@ -630,13 +630,13 @@ trait AdminTrait {
 			$columns = [
 				'namespace' => [
 					'title' => $lang['strschema'],
-					'field' => \PHPPgAdmin\Decorators\Decorator::field('nspname'),
+					'field' => Decorator::field('nspname'),
 					'url' => "/redirect/schema?{$misc->href}&amp;",
 					'vars' => ['schema' => 'nspname'],
 				],
 				'relname' => [
 					'title' => $lang['strtable'],
-					'field' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+					'field' => Decorator::field('relname'),
 					'url' => "/redirect/table?{$misc->href}&amp;",
 					'vars' => ['table' => 'relname', 'schema' => 'nspname'],
 				],
@@ -689,8 +689,8 @@ trait AdminTrait {
 							'urlvars' => [
 								'subject' => $type,
 								'action' => 'confeditautovac',
-								'schema' => \PHPPgAdmin\Decorators\Decorator::field('nspname'),
-								'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+								'schema' => Decorator::field('nspname'),
+								'table' => Decorator::field('relname'),
 							],
 						],
 					],
@@ -703,8 +703,8 @@ trait AdminTrait {
 							'urlvars' => [
 								'subject' => $type,
 								'action' => 'confdelautovac',
-								'schema' => \PHPPgAdmin\Decorators\Decorator::field('nspname'),
-								'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+								'schema' => Decorator::field('nspname'),
+								'table' => Decorator::field('relname'),
 							],
 						],
 					],

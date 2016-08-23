@@ -180,14 +180,14 @@ class SchemaController extends BaseController {
 
 		// Check that they've given a name
 		if ($_POST['formName'] == '') {
-			doCreate($lang['strschemaneedsname']);
+			$this->doCreate($lang['strschemaneedsname']);
 		} else {
 			$status = $data->createSchema($_POST['formName'], $_POST['formAuth'], $_POST['formComment']);
 			if ($status == 0) {
-				$_reload_browser = true;
-				doDefault($lang['strschemacreated']);
+				$this->misc->setReloadBrowser(true);
+				$this->doDefault($lang['strschemacreated']);
 			} else {
-				doCreate($lang['strschemacreatedbad']);
+				$this->doCreate($lang['strschemacreatedbad']);
 			}
 
 		}
@@ -272,10 +272,10 @@ class SchemaController extends BaseController {
 
 		$status = $data->updateSchema($_POST['schema'], $_POST['comment'], $_POST['name'], $_POST['owner']);
 		if ($status == 0) {
-			$_reload_browser = true;
-			doDefault($lang['strschemaaltered']);
+			$this->misc->setReloadBrowser(true);
+			$this->doDefault($lang['strschemaaltered']);
 		} else {
-			doAlter($lang['strschemaalteredbad']);
+			$this->doAlter($lang['strschemaalteredbad']);
 		}
 
 	}
@@ -288,7 +288,7 @@ class SchemaController extends BaseController {
 		global $lang, $_reload_browser;
 
 		if (empty($_REQUEST['nsp']) && empty($_REQUEST['ma'])) {
-			doDefault($lang['strspecifyschematodrop']);
+			$this->doDefault($lang['strspecifyschematodrop']);
 			exit();
 		}
 
@@ -327,26 +327,26 @@ class SchemaController extends BaseController {
 							$msg .= sprintf('%s: %s<br />', htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadropped']);
 						} else {
 							$data->endTransaction();
-							doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadroppedbad']));
+							$this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadroppedbad']));
 							return;
 						}
 					}
 				}
 				if ($data->endTransaction() == 0) {
 					// Everything went fine, back to the Default page....
-					$_reload_browser = true;
-					doDefault($msg);
+					$this->misc->setReloadBrowser(true);
+					$this->doDefault($msg);
 				} else {
-					doDefault($lang['strschemadroppedbad']);
+					$this->doDefault($lang['strschemadroppedbad']);
 				}
 
 			} else {
 				$status = $data->dropSchema($_POST['nsp'], isset($_POST['cascade']));
 				if ($status == 0) {
-					$_reload_browser = true;
-					doDefault($lang['strschemadropped']);
+					$this->misc->setReloadBrowser(true);
+					$this->doDefault($lang['strschemadropped']);
 				} else {
-					doDefault($lang['strschemadroppedbad']);
+					$this->doDefault($lang['strschemadroppedbad']);
 				}
 
 			}

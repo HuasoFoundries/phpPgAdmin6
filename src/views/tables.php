@@ -9,12 +9,10 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
+$table_controller = new \PHPPgAdmin\Controller\TableController($app);
 
 $misc->printHeader($lang['strtables']);
 $misc->printBody();
-
-$table_controller = new \PHPPgAdmin\Controller\TableController($app);
 
 switch ($action) {
 	case 'create':

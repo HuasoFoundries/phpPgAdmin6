@@ -103,11 +103,11 @@ class TableController extends BaseController {
 				$fields = trim($_REQUEST['fields']);
 				if (trim($_REQUEST['name']) == '') {
 					$_REQUEST['stage'] = 1;
-					doCreate($lang['strtableneedsname']);
+					$this->doCreate($lang['strtableneedsname']);
 					return;
 				} elseif ($fields == '' || !is_numeric($fields) || $fields != (int) $fields || $fields < 1) {
 					$_REQUEST['stage'] = 1;
-					doCreate($lang['strtableneedscols']);
+					$this->doCreate($lang['strtableneedscols']);
 					return;
 				}
 
@@ -243,11 +243,11 @@ class TableController extends BaseController {
 				$fields = trim($_REQUEST['fields']);
 				if (trim($_REQUEST['name']) == '') {
 					$_REQUEST['stage'] = 1;
-					doCreate($lang['strtableneedsname']);
+					$this->doCreate($lang['strtableneedsname']);
 					return;
 				} elseif ($fields == '' || !is_numeric($fields) || $fields != (int) $fields || $fields <= 0) {
 					$_REQUEST['stage'] = 1;
-					doCreate($lang['strtableneedscols']);
+					$this->doCreate($lang['strtableneedscols']);
 					return;
 				}
 
@@ -261,11 +261,11 @@ class TableController extends BaseController {
 					return $this->doDefault($lang['strtablecreated']);
 				} elseif ($status == -1) {
 					$_REQUEST['stage'] = 2;
-					doCreate($lang['strtableneedsfield']);
+					$this->doCreate($lang['strtableneedsfield']);
 					return;
 				} else {
 					$_REQUEST['stage'] = 2;
-					doCreate($lang['strtablecreatedbad']);
+					$this->doCreate($lang['strtablecreatedbad']);
 					return;
 				}
 				break;
@@ -327,7 +327,7 @@ class TableController extends BaseController {
 			echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strcreatetablelikeparent']}</th>\n";
 			echo "\t\t<td class=\"data\">";
-			echo GUI::printCombo($tables, 'like', true, $tblsel, false);
+			echo \PHPPgAdmin\GUI::printCombo($tables, 'like', true, $tblsel, false);
 			echo "</td>\n\t</tr>\n";
 			if ($data->hasTablespaces()) {
 				$tblsp_ = $data->getTablespaces();
@@ -340,7 +340,7 @@ class TableController extends BaseController {
 
 					echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strtablespace']}</th>\n";
 					echo "\t\t<td class=\"data\">";
-					echo GUI::printCombo($tblsp, 'tablespace', true, $_REQUEST['tablespace'], false);
+					echo \PHPPgAdmin\GUI::printCombo($tblsp, 'tablespace', true, $_REQUEST['tablespace'], false);
 					echo "</td>\n\t</tr>\n";
 				}
 			}
@@ -370,11 +370,11 @@ class TableController extends BaseController {
 			global $_reload_browser;
 
 			if (trim($_REQUEST['name']) == '') {
-				doCreateLike(false, $lang['strtableneedsname']);
+				$this->doCreateLike(false, $lang['strtableneedsname']);
 				return;
 			}
 			if (trim($_REQUEST['like']) == '') {
-				doCreateLike(false, $lang['strtablelikeneedslike']);
+				$this->doCreateLike(false, $lang['strtablelikeneedslike']);
 				return;
 			}
 
@@ -389,7 +389,7 @@ class TableController extends BaseController {
 				$misc->setReloadBrowser(true);
 				return $this->doDefault($lang['strtablecreated']);
 			} else {
-				doCreateLike(false, $lang['strtablecreatedbad']);
+				$this->doCreateLike(false, $lang['strtablecreatedbad']);
 				return;
 			}
 		}
@@ -495,13 +495,13 @@ class TableController extends BaseController {
 			// Verify that they haven't supplied a value for unary operators
 			foreach ($_POST['ops'] as $k => $v) {
 				if ($data->selectOps[$v] == 'p' && $_POST['values'][$k] != '') {
-					doSelectRows(true, $lang['strselectunary']);
+					$this->doSelectRows(true, $lang['strselectunary']);
 					return;
 				}
 			}
 
 			if (sizeof($_POST['show']) == 0) {
-				doSelectRows(true, $lang['strselectneedscol']);
+				$this->doSelectRows(true, $lang['strselectneedscol']);
 			} else {
 				// Generate query SQL
 				$query = $data->getSelectSQL($_REQUEST['table'], array_keys($_POST['show']),
@@ -652,14 +652,14 @@ class TableController extends BaseController {
 					} else {
 						$_REQUEST['values'] = [];
 						$_REQUEST['nulls']  = [];
-						doInsertRow(true, $lang['strrowinserted']);
+						$this->doInsertRow(true, $lang['strrowinserted']);
 					}
 				} else {
-					doInsertRow(true, $lang['strrowinsertedbad']);
+					$this->doInsertRow(true, $lang['strrowinsertedbad']);
 				}
 
 			} else {
-				doInsertRow(true, $lang['strrowduplicate']);
+				$this->doInsertRow(true, $lang['strrowduplicate']);
 			}
 
 		}
@@ -716,11 +716,11 @@ class TableController extends BaseController {
 					if ($status == 0) {
 						$msg .= sprintf('%s: %s<br />', htmlentities($t, ENT_QUOTES, 'UTF-8'), $lang['strtableemptied']);
 					} else {
-						doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($t, ENT_QUOTES, 'UTF-8'), $lang['strtableemptiedbad']));
+						$this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($t, ENT_QUOTES, 'UTF-8'), $lang['strtableemptiedbad']));
 						return;
 					}
 				}
-				doDefault($msg);
+				$this->doDefault($msg);
 			} // END mutli empty
 			else {
 				$status = $data->emptyTable($_POST['table']);
@@ -836,21 +836,21 @@ class TableController extends BaseController {
 		$columns = [
 			'table' => [
 				'title' => $lang['strtable'],
-				'field' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+				'field' => Decorator::field('relname'),
 				'url' => "/redirect/table?{$misc->href}&amp;",
 				'vars' => ['table' => 'relname'],
 			],
 			'owner' => [
 				'title' => $lang['strowner'],
-				'field' => \PHPPgAdmin\Decorators\Decorator::field('relowner'),
+				'field' => Decorator::field('relowner'),
 			],
 			'tablespace' => [
 				'title' => $lang['strtablespace'],
-				'field' => \PHPPgAdmin\Decorators\Decorator::field('tablespace'),
+				'field' => Decorator::field('tablespace'),
 			],
 			'tuples' => [
 				'title' => $lang['strestimatedrowcount'],
-				'field' => \PHPPgAdmin\Decorators\Decorator::field('reltuples'),
+				'field' => Decorator::field('reltuples'),
 				'type' => 'numeric',
 			],
 			'actions' => [
@@ -858,7 +858,7 @@ class TableController extends BaseController {
 			],
 			'comment' => [
 				'title' => $lang['strcomment'],
-				'field' => \PHPPgAdmin\Decorators\Decorator::field('relcomment'),
+				'field' => Decorator::field('relcomment'),
 			],
 		];
 
@@ -876,7 +876,7 @@ class TableController extends BaseController {
 						'urlvars' => [
 							'subject' => 'table',
 							'return' => 'table',
-							'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+							'table' => Decorator::field('relname'),
 						],
 					],
 				],
@@ -888,7 +888,7 @@ class TableController extends BaseController {
 						'url' => 'tables.php',
 						'urlvars' => [
 							'action' => 'confselectrows',
-							'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+							'table' => Decorator::field('relname'),
 						],
 					],
 				],
@@ -900,7 +900,7 @@ class TableController extends BaseController {
 						'url' => 'tables.php',
 						'urlvars' => [
 							'action' => 'confinsertrow',
-							'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+							'table' => Decorator::field('relname'),
 						],
 					],
 				],
@@ -913,7 +913,7 @@ class TableController extends BaseController {
 						'url' => 'tables.php',
 						'urlvars' => [
 							'action' => 'confirm_empty',
-							'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+							'table' => Decorator::field('relname'),
 						],
 					],
 				],
@@ -925,7 +925,7 @@ class TableController extends BaseController {
 						'url' => 'tblproperties.php',
 						'urlvars' => [
 							'action' => 'confirm_alter',
-							'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+							'table' => Decorator::field('relname'),
 						],
 					],
 				],
@@ -938,7 +938,7 @@ class TableController extends BaseController {
 						'url' => 'tables.php',
 						'urlvars' => [
 							'action' => 'confirm_drop',
-							'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+							'table' => Decorator::field('relname'),
 						],
 					],
 				],
@@ -951,7 +951,7 @@ class TableController extends BaseController {
 						'url' => 'tables.php',
 						'urlvars' => [
 							'action' => 'confirm_vacuum',
-							'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+							'table' => Decorator::field('relname'),
 						],
 					],
 				],
@@ -964,7 +964,7 @@ class TableController extends BaseController {
 						'url' => 'tables.php',
 						'urlvars' => [
 							'action' => 'confirm_analyze',
-							'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+							'table' => Decorator::field('relname'),
 						],
 					],
 				],
@@ -977,7 +977,7 @@ class TableController extends BaseController {
 						'url' => 'tables.php',
 						'urlvars' => [
 							'action' => 'confirm_reindex',
-							'table' => \PHPPgAdmin\Decorators\Decorator::field('relname'),
+							'table' => Decorator::field('relname'),
 						],
 					],
 				],

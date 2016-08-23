@@ -184,3 +184,7 @@ if (!isset($_no_db_connection)) {
 	$data = $misc->getDatabaseAccessor();
 
 }
+$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
+if (!isset($msg)) {
+	$msg = '';
+}

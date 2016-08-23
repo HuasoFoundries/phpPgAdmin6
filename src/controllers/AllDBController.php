@@ -12,8 +12,10 @@ class AllDBController extends BaseController {
  * Display a form for alter and perform actual alter
  */
 	public function doAlter($confirm) {
-		global $data, $misc, $_reload_browser;
-		global $lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
 			$misc->printTrail('database');
@@ -82,8 +84,10 @@ class AllDBController extends BaseController {
  * Show confirmation of drop and perform actual drop
  */
 	public function doDrop($confirm) {
-		global $data, $misc;
-		global $lang, $_reload_drop_database;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (empty($_REQUEST['dropdatabase']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifydatabasetodrop']);
@@ -125,16 +129,16 @@ class AllDBController extends BaseController {
 					if ($status == 0) {
 						$msg .= sprintf('%s: %s<br />', htmlentities($d, ENT_QUOTES, 'UTF-8'), $lang['strdatabasedropped']);
 					} else {
-						doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($d, ENT_QUOTES, 'UTF-8'), $lang['strdatabasedroppedbad']));
+						$this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($d, ENT_QUOTES, 'UTF-8'), $lang['strdatabasedroppedbad']));
 						return;
 					}
 				} // Everything went fine, back to Default page...
-				$_reload_drop_database = true;
-				doDefault($msg);
+				$misc->setReloadDropDatabase(true);
+				$this->doDefault($msg);
 			} else {
 				$status = $data->dropDatabase($_POST['dropdatabase']);
 				if ($status == 0) {
-					$_reload_drop_database = true;
+					$misc->setReloadDropDatabase(true);
 					$this->doDefault($lang['strdatabasedropped']);
 				} else {
 					$this->doDefault($lang['strdatabasedroppedbad']);
@@ -148,8 +152,10 @@ class AllDBController extends BaseController {
  * Displays a screen where they can enter a new database
  */
 	public function doCreate($msg = '') {
-		global $data, $misc;
-		global $lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		$misc->printTrail('server');
 		$misc->printTitle($lang['strcreatedatabase'], 'pg.database.create');
@@ -280,7 +286,10 @@ class AllDBController extends BaseController {
  * Actually creates the new view in the database
  */
 	public function doSaveCreate() {
-		global $data, $lang, $_reload_browser;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		// Default tablespace to null if it isn't set
 		if (!isset($_POST['formSpc'])) {
@@ -322,8 +331,10 @@ class AllDBController extends BaseController {
  * Displays options for cluster download
  */
 	public function doExport($msg = '') {
-		global $data, $misc;
-		global $lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		$misc->printTrail('server');
 		$misc->printTabs('server', 'export');

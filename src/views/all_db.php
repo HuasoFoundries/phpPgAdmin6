@@ -11,11 +11,6 @@ if (!defined('BASE_PATH')) {
 	require_once '../lib.inc.php';
 }
 
-$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-if (!isset($msg)) {
-	$msg = '';
-}
-
 $all_db_controller = new \PHPPgAdmin\Controller\AllDBController($app);
 
 $misc->printHeader($lang['strdatabases']);

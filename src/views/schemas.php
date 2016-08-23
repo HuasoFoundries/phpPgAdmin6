@@ -9,10 +9,7 @@
 // Include application functions
 require_once '../lib.inc.php';
 
-$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-if (!isset($msg)) {
-	$msg = '';
-}
+$schema_controller = new \PHPPgAdmin\Controller\SchemaController($app);
 
 $misc->printHeader($lang['strschemas']);
 $misc->printBody();
@@ -20,8 +17,6 @@ $misc->printBody();
 if (isset($_POST['cancel'])) {
 	$action = '';
 }
-
-$schema_controller = new \PHPPgAdmin\Controller\SchemaController($app);
 
 switch ($action) {
 	case 'create':

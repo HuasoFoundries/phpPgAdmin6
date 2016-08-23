@@ -10,10 +10,6 @@
 $_no_db_connection = true;
 require_once './src/lib.inc.php';
 
-if (!isset($msg)) {
-	$msg = '';
-}
-
 $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
 
 	$body = $response->getBody();
