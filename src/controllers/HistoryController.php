@@ -8,7 +8,7 @@ namespace PHPPgAdmin\Controller;
 class HistoryController extends BaseController {
 	public $_name = 'HistoryController';
 
-	function doDefault() {
+	public function doDefault() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -134,7 +134,7 @@ class HistoryController extends BaseController {
 		$misc->printNavLinks($navlinks, 'history-history', get_defined_vars());
 	}
 
-	function doDelHistory($qid, $confirm) {
+	public function doDelHistory($qid, $confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -163,7 +163,7 @@ class HistoryController extends BaseController {
 
 	}
 
-	function doClearHistory($confirm) {
+	public function doClearHistory($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -190,7 +190,7 @@ class HistoryController extends BaseController {
 
 	}
 
-	function doDownloadHistory() {
+	public function doDownloadHistory() {
 		header('Content-Type: application/download');
 		$datetime = date('YmdHis');
 		header("Content-Disposition: attachment; filename=history{$datetime}.sql");

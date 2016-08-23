@@ -452,7 +452,7 @@ class ConstraintController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -486,24 +486,24 @@ class ConstraintController extends BaseController {
 		}
 	}
 
-/**
- * List all the constraints on the table
- */
-	function doDefault($msg = '') {
+	/**
+	 * List all the constraints on the table
+	 */
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		function cnPre(&$rowdata) {
-			global $data;
+		$cnPre = function (&$rowdata) use ($data) {
+
 			if (is_null($rowdata->fields['consrc'])) {
 				$atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
 				$rowdata->fields['+definition'] = ($rowdata->fields['contype'] == 'u' ? "UNIQUE (" : "PRIMARY KEY (") . join(',', $atts) . ')';
 			} else {
 				$rowdata->fields['+definition'] = $rowdata->fields['consrc'];
 			}
-		}
+		};
 
 		$misc->printTrail('table');
 		$misc->printTabs('table', 'constraints');
@@ -547,7 +547,7 @@ class ConstraintController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($constraints, $columns, $actions, 'constraints-constraints', $lang['strnoconstraints'], 'cnPre');
+		echo $misc->printTable($constraints, $columns, $actions, 'constraints-constraints', $lang['strnoconstraints'], $cnPre);
 
 		$navlinks = [
 			'addcheck' => [

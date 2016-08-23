@@ -99,7 +99,7 @@ class RuleController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -138,7 +138,7 @@ class RuleController extends BaseController {
 /**
  * List all the rules on the table
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

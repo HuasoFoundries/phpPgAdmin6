@@ -12,7 +12,7 @@ class ColPropertyController extends BaseController {
 	/**
 	 * Displays a screen where they can alter a column
 	 */
-	function doAlter($msg = '') {
+	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -179,7 +179,7 @@ class ColPropertyController extends BaseController {
 	/**
 	 * Show default list of columns in the table
 	 */
-	function doDefault($msg = '', $isTable = true) {
+	public function doDefault($msg = '', $isTable = true) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

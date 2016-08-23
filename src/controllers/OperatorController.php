@@ -12,7 +12,7 @@ class OperatorController extends BaseController {
 /**
  * Show read only properties for an operator
  */
-	function doProperties($msg = '') {
+	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -86,7 +86,7 @@ class OperatorController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -122,7 +122,7 @@ class OperatorController extends BaseController {
 /**
  * Show default list of operators in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

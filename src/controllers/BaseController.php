@@ -15,6 +15,7 @@ class BaseController {
 	private $database          = null;
 	private $server_id         = null;
 	public $appLangFiles       = [];
+	public $appThemes          = [];
 	public $appName            = '';
 	public $appVersion         = '';
 	public $form               = '';
@@ -33,6 +34,8 @@ class BaseController {
 		$this->appVersion     = $container->get('settings')['appVersion'];
 		$this->appLangFiles   = $container->get('appLangFiles');
 		$this->misc           = $container->get('misc');
+		$this->appThemes      = $container->get('appThemes');
+
 		\PC::debug($this->_name, 'instanced controller');
 	}
 

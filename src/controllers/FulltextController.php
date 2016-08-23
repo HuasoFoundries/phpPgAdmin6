@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class FulltextController extends BaseController {
 	public $_name = 'FulltextController';
 
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -91,7 +91,7 @@ class FulltextController extends BaseController {
 		$misc->printNavLinks($navlinks, 'fulltext-fulltext', get_defined_vars());
 	}
 
-	function doDropConfig($confirm) {
+	public function doDropConfig($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -125,7 +125,7 @@ class FulltextController extends BaseController {
 
 	}
 
-	function doDropDict($confirm) {
+	public function doDropDict($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -164,7 +164,7 @@ class FulltextController extends BaseController {
 /**
  * Displays a screen where one can enter a new FTS configuration
  */
-	function doCreateConfig($msg = '') {
+	public function doCreateConfig($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -273,7 +273,7 @@ class FulltextController extends BaseController {
 /**
  * Actually creates the new FTS configuration in the database
  */
-	function doSaveCreateConfig() {
+	public function doSaveCreateConfig() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -318,7 +318,7 @@ class FulltextController extends BaseController {
 /**
  * Display a form to permit editing FTS configuration properies.
  */
-	function doAlterConfig($msg = '') {
+	public function doAlterConfig($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -380,7 +380,7 @@ class FulltextController extends BaseController {
 /**
  * Save the form submission containing changes to a FTS configuration
  */
-	function doSaveAlterConfig() {
+	public function doSaveAlterConfig() {
 		$conf   = $this->conf;
 		$misc   = $this->misc;
 		$lang   = $this->lang;
@@ -397,7 +397,7 @@ class FulltextController extends BaseController {
 /**
  * View list of FTS parsers
  */
-	function doViewParsers($msg = '') {
+	public function doViewParsers($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -435,7 +435,7 @@ class FulltextController extends BaseController {
 /**
  * View list of FTS dictionaries
  */
-	function doViewDicts($msg = '') {
+	public function doViewDicts($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -518,7 +518,7 @@ class FulltextController extends BaseController {
 /**
  * View details of FTS configuration given
  */
-	function doViewConfig($ftscfg, $msg = '') {
+	public function doViewConfig($ftscfg, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -614,7 +614,7 @@ class FulltextController extends BaseController {
 /**
  * Displays a screen where one can enter a details of a new FTS dictionary
  */
-	function doCreateDict($msg = '') {
+	public function doCreateDict($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -739,7 +739,7 @@ class FulltextController extends BaseController {
 /**
  * Actually creates the new FTS dictionary in the database
  */
-	function doSaveCreateDict() {
+	public function doSaveCreateDict() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -790,7 +790,7 @@ class FulltextController extends BaseController {
 /**
  * Display a form to permit editing FTS dictionary properies.
  */
-	function doAlterDict($msg = '') {
+	public function doAlterDict($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -846,7 +846,7 @@ class FulltextController extends BaseController {
 /**
  * Save the form submission containing changes to a FTS dictionary
  */
-	function doSaveAlterDict() {
+	public function doSaveAlterDict() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -864,7 +864,7 @@ class FulltextController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop of FTS mapping
  */
-	function doDropMapping($confirm) {
+	public function doDropMapping($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -927,7 +927,7 @@ class FulltextController extends BaseController {
 		}
 	}
 
-	function doAlterMapping($msg = '') {
+	public function doAlterMapping($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -1009,7 +1009,7 @@ class FulltextController extends BaseController {
 /**
  * Save the form submission containing changes to a FTS mapping
  */
-	function doSaveAlterMapping() {
+	public function doSaveAlterMapping() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -1028,7 +1028,7 @@ class FulltextController extends BaseController {
 /**
  * Show the form to enter parameters of a new FTS mapping
  */
-	function doAddMapping($msg = '') {
+	public function doAddMapping($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -1101,7 +1101,7 @@ class FulltextController extends BaseController {
 /**
  * Save the form submission containing parameters of a new FTS mapping
  */
-	function doSaveAddMapping() {
+	public function doSaveAddMapping() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

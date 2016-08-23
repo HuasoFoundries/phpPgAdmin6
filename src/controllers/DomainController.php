@@ -13,7 +13,7 @@ class DomainController extends BaseController {
 /**
  * Function to save after altering a domain
  */
-	function doSaveAlter() {
+	public function doSaveAlter() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -32,7 +32,7 @@ class DomainController extends BaseController {
 /**
  * Allow altering a domain
  */
-	function doAlter($msg = '') {
+	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -153,7 +153,7 @@ class DomainController extends BaseController {
 /**
  * Show confirmation of drop constraint and perform actual drop
  */
-	function doDropConstraint($confirm, $msg = '') {
+	public function doDropConstraint($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -190,7 +190,7 @@ class DomainController extends BaseController {
 /**
  * Show properties for a domain.  Allow manipulating constraints as well.
  */
-	function doProperties($msg = '') {
+	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -321,7 +321,7 @@ class DomainController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -355,7 +355,7 @@ class DomainController extends BaseController {
 /**
  * Displays a screen where they can enter a new domain
  */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -439,7 +439,7 @@ class DomainController extends BaseController {
 /**
  * Actually creates the new domain in the database
  */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -467,7 +467,7 @@ class DomainController extends BaseController {
 /**
  * Show default list of domains in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

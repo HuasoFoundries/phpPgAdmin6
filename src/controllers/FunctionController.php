@@ -12,7 +12,7 @@ class FunctionController extends BaseController {
 /**
  * Function to save after editing a function
  */
-	function doSaveEdit() {
+	public function doSaveEdit() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -57,7 +57,7 @@ class FunctionController extends BaseController {
 /**
  * Function to allow editing of a Function
  */
-	function doEdit($msg = '') {
+	public function doEdit($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -293,7 +293,7 @@ class FunctionController extends BaseController {
 /**
  * Show read only properties of a function
  */
-	function doProperties($msg = '') {
+	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -471,7 +471,7 @@ class FunctionController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -549,7 +549,7 @@ class FunctionController extends BaseController {
 /**
  * Displays a screen where they can enter a new function
  */
-	function doCreate($msg = '', $szJS = "") {
+	public function doCreate($msg = '', $szJS = "") {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -816,7 +816,7 @@ class FunctionController extends BaseController {
 /**
  * Actually creates the new function in the database
  */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -944,7 +944,7 @@ class FunctionController extends BaseController {
 /**
  * Show default list of functions in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

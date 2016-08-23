@@ -8,7 +8,7 @@ namespace PHPPgAdmin\Controller;
 class HelpController extends BaseController {
 	public $_name = 'HelpController';
 
-	function doDefault() {
+	public function doDefault() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -31,7 +31,7 @@ class HelpController extends BaseController {
 		$this->doBrowse($lang['strinvalidhelppage']);
 	}
 
-	function doBrowse($msg = '') {
+	public function doBrowse($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -65,7 +65,7 @@ class HelpController extends BaseController {
 		$misc->printFooter();
 	}
 
-	function doChoosePage($urls) {
+	public function doChoosePage($urls) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

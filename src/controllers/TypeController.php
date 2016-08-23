@@ -12,7 +12,7 @@ class TypeController extends BaseController {
 /**
  * Show read only properties for a type
  */
-	function doProperties($msg = '') {
+	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -107,7 +107,7 @@ class TypeController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		global $data, $misc;
 		global $lang;
 
@@ -140,7 +140,7 @@ class TypeController extends BaseController {
 /**
  * Displays a screen where they can enter a new composite type
  */
-	function doCreateComposite($msg = '') {
+	public function doCreateComposite($msg = '') {
 		global $data, $misc;
 		global $lang;
 
@@ -304,7 +304,7 @@ class TypeController extends BaseController {
 /**
  * Displays a screen where they can enter a new enum type
  */
-	function doCreateEnum($msg = '') {
+	public function doCreateEnum($msg = '') {
 		global $data, $misc;
 		global $lang;
 
@@ -434,7 +434,7 @@ class TypeController extends BaseController {
 /**
  * Displays a screen where they can enter a new type
  */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		global $data, $misc;
 		global $lang;
 
@@ -553,7 +553,7 @@ class TypeController extends BaseController {
 /**
  * Actually creates the new type in the database
  */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		global $data;
 		global $lang;
 
@@ -589,7 +589,7 @@ class TypeController extends BaseController {
 /**
  * Show default list of types in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		global $data, $conf, $misc;
 		global $lang;
 

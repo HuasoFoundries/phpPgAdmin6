@@ -12,7 +12,7 @@ class IndexController extends BaseController {
 	/**
 	 * Show confirmation of cluster index and perform actual cluster
 	 */
-	function doClusterIndex($confirm) {
+	public function doClusterIndex($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -58,7 +58,7 @@ class IndexController extends BaseController {
 
 	}
 
-	function doReindex() {
+	public function doReindex() {
 		$conf   = $this->conf;
 		$misc   = $this->misc;
 		$lang   = $this->lang;
@@ -75,7 +75,7 @@ class IndexController extends BaseController {
 /**
  * Displays a screen where they can enter a new index
  */
-	function doCreateIndex($msg = '') {
+	public function doCreateIndex($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -203,7 +203,7 @@ class IndexController extends BaseController {
  * Actually creates the new index in the database
  * @@ Note: this function can't handle columns with commas in them
  */
-	function doSaveCreateIndex() {
+	public function doSaveCreateIndex() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -240,7 +240,7 @@ class IndexController extends BaseController {
 /**
  * Show confirmation of drop index and perform actual drop
  */
-	function doDropIndex($confirm) {
+	public function doDropIndex($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -273,7 +273,7 @@ class IndexController extends BaseController {
 
 	}
 
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

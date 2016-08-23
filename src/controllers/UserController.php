@@ -15,7 +15,7 @@ class UserController extends BaseController {
  * messing with the URL to gain access to other user admin stuff, because
  * the PostgreSQL permissions will prevent them changing anything anyway.
  */
-	function doAccount($msg = '') {
+	public function doAccount($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -64,7 +64,7 @@ class UserController extends BaseController {
 /**
  * Show confirmation of change password and actually change password
  */
-	function doChangePassword($confirm, $msg = '') {
+	public function doChangePassword($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -124,7 +124,7 @@ class UserController extends BaseController {
 /**
  * Function to allow editing of a user
  */
-	function doEdit($msg = '') {
+	public function doEdit($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -191,7 +191,7 @@ class UserController extends BaseController {
 /**
  * Function to save after editing a user
  */
-	function doSaveEdit() {
+	public function doSaveEdit() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -221,7 +221,7 @@ class UserController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -254,7 +254,7 @@ class UserController extends BaseController {
 /**
  * Displays a screen where they can enter a new user
  */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -307,7 +307,7 @@ class UserController extends BaseController {
 /**
  * Actually creates the new user in the database
  */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -333,7 +333,7 @@ class UserController extends BaseController {
 /**
  * Show default list of users in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

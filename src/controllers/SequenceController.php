@@ -12,7 +12,7 @@ class SequenceController extends BaseController {
 /**
  * Display list of all sequences in the database/schema
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -111,7 +111,7 @@ class SequenceController extends BaseController {
 /**
  * Display the properties of a sequence
  */
-	function doProperties($msg = '') {
+	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -266,7 +266,7 @@ class SequenceController extends BaseController {
 /**
  * Drop a sequence
  */
-	function doDrop($confirm, $msg = '') {
+	public function doDrop($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -342,7 +342,7 @@ class SequenceController extends BaseController {
 /**
  * Displays a screen where they can enter a new sequence
  */
-	function doCreateSequence($msg = '') {
+	public function doCreateSequence($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -418,7 +418,7 @@ class SequenceController extends BaseController {
 /**
  * Actually creates the new sequence in the database
  */
-	function doSaveCreateSequence() {
+	public function doSaveCreateSequence() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -443,7 +443,7 @@ class SequenceController extends BaseController {
 /**
  * Restarts a sequence
  */
-	function doRestart() {
+	public function doRestart() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -461,7 +461,7 @@ class SequenceController extends BaseController {
 /**
  * Resets a sequence
  */
-	function doReset() {
+	public function doReset() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -479,7 +479,7 @@ class SequenceController extends BaseController {
 /**
  * Set Nextval of a sequence
  */
-	function doNextval() {
+	public function doNextval() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -497,7 +497,7 @@ class SequenceController extends BaseController {
 /**
  * Function to save after 'setval'ing a sequence
  */
-	function doSaveSetval() {
+	public function doSaveSetval() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -515,7 +515,7 @@ class SequenceController extends BaseController {
 /**
  * Function to allow 'setval'ing of a sequence
  */
-	function doSetval($msg = '') {
+	public function doSetval($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -551,7 +551,7 @@ class SequenceController extends BaseController {
 /**
  * Function to save after altering a sequence
  */
-	function doSaveAlter() {
+	public function doSaveAlter() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -619,7 +619,7 @@ class SequenceController extends BaseController {
 /**
  * Function to allow altering of a sequence
  */
-	function doAlter($msg = '') {
+	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

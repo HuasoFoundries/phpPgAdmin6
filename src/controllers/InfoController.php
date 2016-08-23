@@ -12,7 +12,7 @@ class InfoController extends BaseController {
 /**
  * List all the information on the table
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

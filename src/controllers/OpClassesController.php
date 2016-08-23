@@ -12,7 +12,7 @@ class OpClassesController extends BaseController {
 /**
  * Show default list of opclasss in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

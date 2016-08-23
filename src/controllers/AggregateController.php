@@ -12,7 +12,7 @@ class AggregateController extends BaseController {
 /**
  * Actually creates the new aggregate in the database
  */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -46,7 +46,7 @@ class AggregateController extends BaseController {
 /**
  * Displays a screen for create a new aggregate function
  */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -126,7 +126,7 @@ class AggregateController extends BaseController {
 /**
  * Function to save after altering an aggregate
  */
-	function doSaveAlter() {
+	public function doSaveAlter() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -152,7 +152,7 @@ class AggregateController extends BaseController {
 /**
  * Function to allow editing an aggregate function
  */
-	function doAlter($msg = '') {
+	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -198,7 +198,7 @@ class AggregateController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop of the aggregate function selected
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -234,7 +234,7 @@ class AggregateController extends BaseController {
 /**
  * Show the properties of an aggregate
  */
-	function doProperties($msg = '') {
+	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -332,7 +332,7 @@ class AggregateController extends BaseController {
 /**
  * Show default list of aggregate functions in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

@@ -18,7 +18,7 @@ if ($action == 'refresh_locks') {
 if ($action == 'refresh_processes') {
 	$database_controller->currentProcesses(true);
 }
-
+$scripts = '';
 /* normal flow */
 if ($action == 'locks' or $action == 'processes') {
 	$scripts .= "<script src=\"/js/database.js\" type=\"text/javascript\"></script>";

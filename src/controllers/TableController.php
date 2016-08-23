@@ -14,7 +14,7 @@ class TableController extends BaseController {
 /**
  * Displays a screen where they can enter a new table
  */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -97,7 +97,6 @@ class TableController extends BaseController {
 				echo "</form>\n";
 				break;
 			case 2:
-				global $lang;
 
 				// Check inputs
 				$fields = trim($_REQUEST['fields']);
@@ -216,7 +215,6 @@ class TableController extends BaseController {
 
 				break;
 			case 3:
-				global $data, $lang, $_reload_browser;
 
 				if (!isset($_REQUEST['notnull'])) {
 					$_REQUEST['notnull'] = [];
@@ -279,7 +277,7 @@ class TableController extends BaseController {
  * We don't have to check if pg supports schema cause create table like
  * is available under pg 7.4+ which has schema.
  */
-	function doCreateLike($confirm, $msg = '') {
+	public function doCreateLike($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -367,7 +365,6 @@ class TableController extends BaseController {
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 			echo "</form>\n";
 		} else {
-			global $_reload_browser;
 
 			if (trim($_REQUEST['name']) == '') {
 				$this->doCreateLike(false, $lang['strtableneedsname']);
@@ -398,7 +395,7 @@ class TableController extends BaseController {
 /**
  * Ask for select parameters and perform select
  */
-	function doSelectRows($confirm, $msg = '') {
+	public function doSelectRows($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -519,7 +516,7 @@ class TableController extends BaseController {
 /**
  * Ask for insert parameters and then actually insert row
  */
-	function doInsertRow($confirm, $msg = '') {
+	public function doInsertRow($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -644,8 +641,7 @@ class TableController extends BaseController {
 			$_POST['fields'] = unserialize(htmlspecialchars_decode($_POST['fields'], ENT_QUOTES));
 
 			if ($_SESSION['counter']++ == $_POST['protection_counter']) {
-				$status = $data->insertRow($_POST['table'], $_POST['fields'], $_POST['values'],
-					$_POST['nulls'], $_POST['format'], $_POST['types']);
+				$status = $data->insertRow($_POST['table'], $_POST['fields'], $_POST['values'], $_POST['nulls'], $_POST['format'], $_POST['types']);
 				if ($status == 0) {
 					if (isset($_POST['insert'])) {
 						return $this->doDefault($lang['strrowinserted']);
@@ -669,7 +665,7 @@ class TableController extends BaseController {
 /**
  * Show confirmation of empty and perform actual empty
  */
-	function doEmpty($confirm) {
+	public function doEmpty($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -737,12 +733,11 @@ class TableController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
-		$conf            = $this->conf;
-		$misc            = $this->misc;
-		$lang            = $this->lang;
-		$data            = $misc->getDatabaseAccessor();
-		$_reload_browser = $this->_reload_browser;
+	public function doDrop($confirm) {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			return $this->doDefault($lang['strspecifytabletodrop']);
@@ -821,7 +816,7 @@ class TableController extends BaseController {
 /**
  * Show default list of tables in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

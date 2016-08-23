@@ -12,7 +12,7 @@ class TriggerController extends BaseController {
 /**
  * Function to save after altering a trigger
  */
-	function doSaveAlter() {
+	public function doSaveAlter() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -30,7 +30,7 @@ class TriggerController extends BaseController {
 /**
  * Function to allow altering of a trigger
  */
-	function doAlter($msg = '') {
+	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -71,7 +71,7 @@ class TriggerController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -108,7 +108,7 @@ class TriggerController extends BaseController {
 /**
  * Show confirmation of enable trigger and perform enabling the trigger
  */
-	function doEnable($confirm) {
+	public function doEnable($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -144,7 +144,7 @@ class TriggerController extends BaseController {
 /**
  * Show confirmation of disable trigger and perform disabling the trigger
  */
-	function doDisable($confirm) {
+	public function doDisable($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -180,7 +180,7 @@ class TriggerController extends BaseController {
 /**
  * Let them create s.th.
  */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -250,7 +250,7 @@ class TriggerController extends BaseController {
 /**
  * Actually creates the new trigger in the database
  */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -280,7 +280,7 @@ class TriggerController extends BaseController {
 /**
  * List all the triggers on the table
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

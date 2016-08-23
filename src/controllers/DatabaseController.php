@@ -18,7 +18,7 @@ class DatabaseController extends BaseController {
 /**
  * Sends a signal to a process
  */
-	function doSignal() {
+	public function doSignal() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -36,7 +36,7 @@ class DatabaseController extends BaseController {
 /**
  * Searches for a named database object
  */
-	function doFind($confirm = true, $msg = '') {
+	public function doFind($confirm = true, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -313,7 +313,7 @@ class DatabaseController extends BaseController {
 /**
  * Displays options for database download
  */
-	function doExport($msg = '') {
+	public function doExport($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -368,7 +368,7 @@ class DatabaseController extends BaseController {
 /**
  * Show the current status of all database variables
  */
-	function doVariables() {
+	public function doVariables() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -399,7 +399,7 @@ class DatabaseController extends BaseController {
  * Show all current database connections and any queries they
  * are running.
  */
-	function doProcesses($msg = '') {
+	public function doProcesses($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -594,7 +594,7 @@ class DatabaseController extends BaseController {
 /**
  * Show the existing table locks in the current database
  */
-	function doLocks() {
+	public function doLocks() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -606,14 +606,14 @@ class DatabaseController extends BaseController {
 		echo "<br /><a id=\"control\" href=\"\"><img src=\"" . $misc->icon('Refresh') . "\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
 
 		echo "<div id=\"data_block\">";
-		currentLocks();
+		$this->currentLocks();
 		echo "</div>";
 	}
 
 /**
  * Allow execution of arbitrary SQL statements on a database
  */
-	function doSQL() {
+	public function doSQL() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

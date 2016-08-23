@@ -13,7 +13,7 @@ class ViewController extends BaseController {
 /**
  * Ask for select parameters and perform select
  */
-	function doSelectRows($confirm, $msg = '') {
+	public function doSelectRows($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -136,7 +136,7 @@ class ViewController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -213,7 +213,7 @@ class ViewController extends BaseController {
 /**
  * Sets up choices for table linkage, and which fields to select for the view we're creating
  */
-	function doSetParamsCreate($msg = '') {
+	public function doSetParamsCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -365,7 +365,7 @@ class ViewController extends BaseController {
 /**
  * Display a wizard where they can enter a new view
  */
-	function doWizardCreate($msg = '') {
+	public function doWizardCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -404,7 +404,7 @@ class ViewController extends BaseController {
 /**
  * Displays a screen where they can enter a new view
  */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -452,7 +452,7 @@ class ViewController extends BaseController {
 /**
  * Actually creates the new view in the database
  */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -478,7 +478,7 @@ class ViewController extends BaseController {
 /**
  * Actually creates the new wizard view in the database
  */
-	function doSaveCreateWiz() {
+	public function doSaveCreateWiz() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -618,7 +618,7 @@ class ViewController extends BaseController {
 /**
  * Show default list of views in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

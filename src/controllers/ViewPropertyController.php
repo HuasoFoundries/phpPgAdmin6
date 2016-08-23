@@ -12,7 +12,7 @@ class ViewPropertyController extends BaseController {
 /**
  * Function to save after editing a view
  */
-	function doSaveEdit() {
+	public function doSaveEdit() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -30,7 +30,7 @@ class ViewPropertyController extends BaseController {
 /**
  * Function to allow editing of a view
  */
-	function doEdit($msg = '') {
+	public function doEdit($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -77,7 +77,7 @@ class ViewPropertyController extends BaseController {
  *        we should allow it conditionally if it becomes supported.  This is
  *        a SMOP since it is based on pg_dump version not backend version.
  */
-	function doExport($msg = '') {
+	public function doExport($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -136,7 +136,7 @@ class ViewPropertyController extends BaseController {
 /**
  * Show definition for a view
  */
-	function doDefinition($msg = '') {
+	public function doDefinition($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -183,7 +183,7 @@ class ViewPropertyController extends BaseController {
 /**
  * Displays a screen where they can alter a column in a view
  */
-	function doProperties($msg = '') {
+	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -264,7 +264,7 @@ class ViewPropertyController extends BaseController {
 		}
 	}
 
-	function doAlter($confirm = false, $msg = '') {
+	public function doAlter($confirm = false, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -386,16 +386,15 @@ class ViewPropertyController extends BaseController {
 /**
  * Show view definition and virtual columns
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		function attPre(&$rowdata) {
-			global $data;
+		$attPre = function (&$rowdata) use ($data) {
 			$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-		}
+		};
 
 		$misc->printTrail('view');
 		$misc->printTabs('view', 'columns');
@@ -451,7 +450,7 @@ class ViewPropertyController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($attrs, $columns, $actions, 'viewproperties-viewproperties', null, 'attPre');
+		echo $misc->printTable($attrs, $columns, $actions, 'viewproperties-viewproperties', null, $attPre);
 
 		echo "<br />\n";
 

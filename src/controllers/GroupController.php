@@ -12,7 +12,7 @@ class GroupController extends BaseController {
 /**
  * Add user to a group
  */
-	function doAddMember() {
+	public function doAddMember() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -30,7 +30,7 @@ class GroupController extends BaseController {
 /**
  * Show confirmation of drop user from group and perform actual drop
  */
-	function doDropMember($confirm) {
+	public function doDropMember($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -64,7 +64,7 @@ class GroupController extends BaseController {
 /**
  * Show read only properties for a group
  */
-	function doProperties($msg = '') {
+	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -143,7 +143,7 @@ class GroupController extends BaseController {
 /**
  * Show confirmation of drop and perform actual drop
  */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -176,7 +176,7 @@ class GroupController extends BaseController {
 /**
  * Displays a screen where they can enter a new group
  */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -225,7 +225,7 @@ class GroupController extends BaseController {
 /**
  * Actually creates the new group in the database
  */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -252,7 +252,7 @@ class GroupController extends BaseController {
 /**
  * Show default list of groups in the database
  */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

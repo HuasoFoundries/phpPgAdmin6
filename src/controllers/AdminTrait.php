@@ -6,7 +6,7 @@ trait AdminTrait {
 /**
  * Show confirmation of cluster and perform cluster
  */
-	function doCluster($type, $confirm = false) {
+	public function doCluster($type, $confirm = false) {
 
 		$script = $this->script;
 		$data   = $this->data;
@@ -94,7 +94,7 @@ trait AdminTrait {
 /**
  * Show confirmation of reindex and perform reindex
  */
-	function doReindex($type, $confirm = false) {
+	public function doReindex($type, $confirm = false) {
 
 		$script          = $this->script;
 		$data            = $this->data;
@@ -177,7 +177,7 @@ trait AdminTrait {
 /**
  * Show confirmation of analyze and perform analyze
  */
-	function doAnalyze($type, $confirm = false) {
+	public function doAnalyze($type, $confirm = false) {
 
 		$script          = $this->script;
 		$data            = $this->data;
@@ -256,13 +256,13 @@ trait AdminTrait {
 /**
  * Show confirmation of vacuum and perform actual vacuum
  */
-	function doVacuum($type, $confirm = false) {
+	public function doVacuum($type, $confirm = false) {
 
-		$script          = $this->script;
-		$data            = $this->data;
-		$misc            = $this->misc;
-		$lang            = $this->lang;
-		$_reload_browser = $this->_reload_browser;
+		$script = $this->script;
+
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletovacuum']);
@@ -337,7 +337,7 @@ trait AdminTrait {
 /**
  * Add or Edit autovacuum params and save them
  */
-	function doEditAutovacuum($type, $confirm, $msg = '') {
+	public function doEditAutovacuum($type, $confirm, $msg = '') {
 
 		$script = $this->script;
 		$data   = $this->data;
@@ -452,7 +452,7 @@ trait AdminTrait {
 /**
  * confirm drop autovacuum params for a table and drop it
  */
-	function doDropAutovacuum($type, $confirm) {
+	public function doDropAutovacuum($type, $confirm) {
 
 		$script = $this->script;
 		$data   = $this->data;
@@ -506,7 +506,7 @@ trait AdminTrait {
  * $Id: admin.php
  */
 
-	function doAdmin($type, $msg = '') {
+	public function doAdmin($type, $msg = '') {
 
 		$script = $this->script;
 		$data   = $this->data;
