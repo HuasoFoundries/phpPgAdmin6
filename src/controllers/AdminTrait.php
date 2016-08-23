@@ -11,9 +11,9 @@ trait AdminTrait {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 
 		$script = $this->script;
-		$data   = $this->data;
 		$misc   = $this->misc;
 		$lang   = $this->lang;
+		$data   = $this->getDatabaseAccessor();
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletocluster']);
@@ -100,9 +100,9 @@ trait AdminTrait {
 
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 		$script       = $this->script;
-		$data         = $this->data;
 		$misc         = $this->misc;
 		$lang         = $this->lang;
+		$data         = $this->getDatabaseAccessor();
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletoreindex']);
@@ -261,9 +261,6 @@ trait AdminTrait {
 
 		$script = ($type == 'database') ? 'database.php' : 'tables.php';
 
-		\Kint::dump([$type, $script]);
-		\PC::debug($type, 'doVacuum');
-
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
@@ -344,9 +341,10 @@ trait AdminTrait {
 	public function doEditAutovacuum($type, $confirm, $msg = '') {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 		$script       = $this->script;
-		$data         = $this->data;
-		$misc         = $this->misc;
-		$lang         = $this->lang;
+
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $this->getDatabaseAccessor();
 
 		if (empty($_REQUEST['table'])) {
 			$this->doAdmin($type, '', $lang['strspecifyeditvacuumtable']);
@@ -459,9 +457,10 @@ trait AdminTrait {
 	public function doDropAutovacuum($type, $confirm) {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 		$script       = $this->script;
-		$data         = $this->data;
-		$misc         = $this->misc;
-		$lang         = $this->lang;
+
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $this->getDatabaseAccessor();
 
 		if (empty($_REQUEST['table'])) {
 			$this->doAdmin($type, '', $lang['strspecifydelvacuumtable']);
@@ -512,10 +511,13 @@ trait AdminTrait {
 
 	public function doAdmin($type, $msg = '') {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
-		$script       = $this->script;
-		$data         = $this->data;
-		$misc         = $this->misc;
-		$lang         = $this->lang;
+
+		$script = $this->script;
+
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$data = $this->getDatabaseAccessor();
 
 		$misc->printTrail($type);
 		$misc->printTabs($type, 'admin');
@@ -745,8 +747,6 @@ trait AdminTrait {
 		}
 
 		$script = $this->script;
-
-		\Kint::dump([$type, $script]);
 
 		switch ($action) {
 			case 'confirm_cluster':
