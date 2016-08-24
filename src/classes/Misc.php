@@ -11,23 +11,22 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 
 class Misc {
-	// Tracking string to include in HREFs
-	var $href;
-	// Tracking string to include in forms
-	var $form;
 
-	var $lang                = [];
-	private $data            = null;
-	private $app             = null;
-	private $_connection     = null;
-	private $server_id       = null;
-	private $database        = null;
-	public $appName          = '';
-	public $appVersion       = '';
-	public $appLangFiles     = [];
-	private $_reload_browser = false;
-
-	private $_no_db_connection = false;
+	private $_connection           = null;
+	private $_no_db_connection     = false;
+	private $_reload_drop_database = false;
+	private $_reload_browser       = false;
+	private $app                   = null;
+	private $data                  = null;
+	private $database              = null;
+	private $server_id             = null;
+	public $appLangFiles           = [];
+	public $appName                = '';
+	public $appVersion             = '';
+	public $form                   = '';
+	public $href                   = '';
+	public $lang                   = [];
+	private $_no_output            = false;
 
 	/* Constructor */
 	function __construct(\Slim\App $app) {
@@ -102,6 +101,13 @@ class Misc {
 		return $this;
 	}
 
+	function setNoOutput($flag) {
+		global $_no_output;
+		$this->_no_output = boolval($flag);
+		$_no_output       = $this->_no_output;
+		return $this;
+	}
+
 	function getNoDBConnection() {
 		return $this->_no_db_connection;
 	}
@@ -138,6 +144,16 @@ class Misc {
 		global $_reload_browser;
 		$_reload_browser       = $flag;
 		$this->_reload_browser = boolval($flag);
+		return $this;
+	}
+	/**
+	 * [setReloadBrowser description]
+	 * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
+	 */
+	function setReloadDropDatabase($flag) {
+		global $_reload_drop_database;
+		$_reload_drop_database       = $flag;
+		$this->_reload_drop_database = boolval($flag);
 		return $this;
 	}
 
@@ -386,6 +402,11 @@ class Misc {
 
 		if (!isset($vars['url'])) {
 			$vars['url'] = '/redirect';
+		}
+		\PC::debug($vars, 'getSubjectParams');
+		if ($vars['url'] == '/redirect' && isset($vars['params']['subject'])) {
+			$vars['url'] = '/redirect/' . $vars['params']['subject'];
+			unset($vars['params']['subject']);
 		}
 
 		return $vars;
@@ -709,8 +730,6 @@ class Misc {
 		$lang           = $this->lang;
 		$plugin_manager = $this->plugin_manager;
 
-		global $_no_output;
-
 		$viewVars        = $this->lang;
 		$viewVars['dir'] = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
 
@@ -733,7 +752,7 @@ class Misc {
 
 		$header_html .= "</head>\n";
 
-		if (!isset($_no_output) && $do_print) {
+		if (!$this->_no_output && $do_print) {
 
 			header("Content-Type: text/html; charset=utf-8");
 			echo $header_html;
@@ -748,20 +767,17 @@ class Misc {
 	 * @param $doBody True to output body tag, false to return the html
 	 */
 	function printFooter($doBody = true) {
-		global $_reload_drop_database, $_no_bottom_link;
 		$lang = $this->lang;
 
 		$footer_html = '';
 		\PC::debug($this->_reload_browser, '$_reload_browser');
 		if ($this->_reload_browser) {
 			$footer_html .= $this->printReload(false, false);
-		} elseif (isset($_reload_drop_database)) {
+		} elseif ($this->_reload_drop_database) {
 			$footer_html .= $this->printReload(true, false);
 		}
 
-		if (!isset($_no_bottom_link)) {
-			$footer_html .= "<a href=\"#\" class=\"bottom_link\">" . $lang['strgotoppage'] . "</a>";
-		}
+		$footer_html .= "<a href=\"#\" class=\"bottom_link\">" . $lang['strgotoppage'] . "</a>";
 
 		$footer_html .= "</body>\n";
 		$footer_html .= "</html>\n";
@@ -780,12 +796,11 @@ class Misc {
 	 * @param $bodyClass - name of body class
 	 */
 	function printBody($doBody = true, $bodyClass = '') {
-		global $_no_output;
 
 		$bodyClass = htmlspecialchars($bodyClass);
 		$bodyHtml  = "<body " . ($bodyClass == '' ? '' : " class=\"{$bodyClass}\"") . ">\n";
 
-		if (!isset($_no_output) && $doBody) {
+		if (!$this->_no_output && $doBody) {
 			echo $bodyHtml;
 		} else {
 			return $bodyHtml;
@@ -2038,7 +2053,7 @@ class Misc {
 	 * @param $do_print true to echo, false to return
 	 */
 	function printHelp($str, $help = null, $do_print = true) {
-		\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
+		//\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
 		if ($help !== null) {
 			$helplink = $this->getHelpLink($help);
 			$str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">' . $this->lang['strhelpicon'] . '</a>';
@@ -3039,7 +3054,7 @@ class Misc {
 
 			$fksprops['code'] .= '<div id="fkbg"></div>';
 			$fksprops['code'] .= '<div id="fklist"></div>';
-			$fksprops['code'] .= '<script src="js/ac_insert_row.js" type="text/javascript"></script>';
+			$fksprops['code'] .= '<script src="/js/ac_insert_row.js" type="text/javascript"></script>';
 		} else /* we have no foreign keys on this table */
 		{
 			return false;

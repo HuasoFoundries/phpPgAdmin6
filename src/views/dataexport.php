@@ -28,7 +28,7 @@ if (!ini_get('safe_mode')) {
 if (isset($_REQUEST['what'])) {
 
 	// Include application functions
-	$_no_output = true;
+	$misc->setNoOutput(true);
 	require_once '../lib.inc.php';
 
 	switch ($_REQUEST['what']) {
@@ -339,7 +339,7 @@ if (isset($_REQUEST['what'])) {
 		$misc->printMsg($msg);
 	}
 
-	echo "<form action=\"/views/dataexport.php\" method=\"post\">\n";
+	echo "<form action=\"/src/views/dataexport.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "<tr><th class=\"data\">{$lang['strformat']}:</th><td><select name=\"d_format\">\n";
 	// COPY and SQL require a table

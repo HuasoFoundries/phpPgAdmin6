@@ -10,10 +10,6 @@
 $_no_db_connection = true;
 require_once './src/lib.inc.php';
 
-if (!isset($msg)) {
-	$msg = '';
-}
-
 $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
 
 	$body = $response->getBody();
@@ -39,10 +35,17 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 			$_SESSION['sharedPassword'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
 		}
 
-		$this->misc->setReloadBrowser(true);
 		$data = $misc->getDatabaseAccessor();
 
-		include './src/views/all_db.php';
+		$all_db_controller = new \PHPPgAdmin\Controller\AllDBController($this);
+
+		$misc->printHeader($this->lang['strdatabases']);
+		$misc->printBody();
+
+		return $all_db_controller->doDefault();
+
+		$misc->setReloadBrowser(true);
+		$misc->printFooter();
 
 		//$body->write($this->misc->printFooter(false));
 

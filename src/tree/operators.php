@@ -40,7 +40,3 @@ function doTree($container) {
 
 	return $misc->printTree($operators, $attrs, 'operators', false);
 }
-
-if ($action == 'tree') {
-	doTree();
-}

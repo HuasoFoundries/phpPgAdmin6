@@ -97,10 +97,7 @@ $config = [
 $app = new \Slim\App($config);
 
 // Fetch DI Container
-$container   = $app->getContainer();
-$environment = $container->get('environment');
-
-//$container['lang'] = $lang;
+$container = $app->getContainer();
 
 $plugin_manager              = new \PHPPgAdmin\PluginManager($app);
 $container['plugin_manager'] = $plugin_manager;
@@ -183,4 +180,8 @@ if (!isset($_no_db_connection)) {
 	// Connect to database and set the global $data variable
 	$data = $misc->getDatabaseAccessor();
 
+}
+$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
+if (!isset($msg)) {
+	$msg = '';
 }
