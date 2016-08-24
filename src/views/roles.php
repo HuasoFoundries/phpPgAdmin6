@@ -57,7 +57,7 @@ function doCreate($msg = '') {
 	$misc->printTitle($lang['strcreaterole'], 'pg.role.create');
 	$misc->printMsg($msg);
 
-	echo "<form action=\"/views/roles.php\" method=\"post\">\n";
+	echo "<form action=\"/src/views/roles.php\" method=\"post\">\n";
 	echo "<table>\n";
 	echo "\t<tr>\n\t\t<th class=\"data left required\" style=\"width: 130px\">{$lang['strname']}</th>\n";
 	echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formRolename\" value=\"", htmlspecialchars($_POST['formRolename']), "\" /></td>\n\t</tr>\n";
@@ -223,7 +223,7 @@ function doAlter($msg = '') {
 			$_POST['formPassword']  = '';
 		}
 
-		echo "<form action=\"/views/roles.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/roles.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$lang['strname']}</th>\n";
 		echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['formNewRoleName']) . "\" />" : $misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
@@ -403,7 +403,7 @@ function doDrop($confirm) {
 
 		echo "<p>", sprintf($lang['strconfdroprole'], $misc->printVal($_REQUEST['rolename'])), "</p>\n";
 
-		echo "<form action=\"/views/roles.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/roles.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 		echo "<input type=\"hidden\" name=\"rolename\" value=\"", htmlspecialchars($_REQUEST['rolename']), "\" />\n";
 		echo $misc->form;
@@ -623,7 +623,7 @@ function doChangePassword($confirm, $msg = '') {
 			$_POST['confirm'] = '';
 		}
 
-		echo "<form action=\"/views/roles.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/roles.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strpassword']}</th>\n";
 		echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",

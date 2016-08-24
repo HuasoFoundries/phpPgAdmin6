@@ -1,6 +1,6 @@
 {
     "name": "huasofoundries/phppgadmin",
-    "version": "6.0.0-alpha1",
+    "version": "6.0.0-alpha2",
     "description": "Like phpmyadmin but for postgres",
     "type": "project",
     "license": "MIT",
@@ -12,6 +12,7 @@
     "autoload": {
         "psr-4": {
             "PHPPgAdmin\\": "src/classes",
+            "PHPPgAdmin\\Controller\\": "src/controllers",
             "PHPPgAdmin\\Database\\": "src/classes/database",
             "PHPPgAdmin\\XHtml\\": "src/classes/xhtml",
             "PHPPgAdmin\\Decorators\\": "src/classes/decorators"

@@ -1,5 +1,6 @@
 <?php
 use \PHPPgAdmin\Decorators\Decorator;
+
 function doTree($container) {
 
 	$conf = $container->get('conf');

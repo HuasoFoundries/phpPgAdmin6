@@ -43,7 +43,3 @@ function doTree() {
 
 	exit;
 }
-
-if ($action == 'tree') {
-	doTree();
-}
