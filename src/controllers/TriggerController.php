@@ -286,17 +286,15 @@ class TriggerController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		function tgPre(&$rowdata, $actions) {
-			global $data;
+		$tgPre = function (&$rowdata, $actions) use ($data) {
 			// toggle enable/disable trigger per trigger
 			if (!$data->phpBool($rowdata->fields["tgenabled"])) {
 				unset($actions['disable']);
 			} else {
 				unset($actions['enable']);
 			}
-
 			return $actions;
-		}
+		};
 
 		$misc->printTrail('table');
 		$misc->printTabs('table', 'triggers');
@@ -385,7 +383,7 @@ class TriggerController extends BaseController {
 			];
 		}
 
-		echo $misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnotriggers'], 'tgPre');
+		echo $misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnotriggers'], $tgPre);
 
 		$misc->printNavLinks(['create' => [
 			'attr' => [

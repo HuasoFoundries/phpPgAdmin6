@@ -24,10 +24,9 @@ class TypeController extends BaseController {
 		$misc->printTitle($lang['strproperties'], 'pg.type');
 		$misc->printMsg($msg);
 
-		function attPre(&$rowdata) {
-			global $data;
+		$attPre = function (&$rowdata) use ($data) {
 			$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-		}
+		};
 
 		if ($typedata->recordCount() > 0) {
 			$vals = false;
@@ -52,7 +51,7 @@ class TypeController extends BaseController {
 
 					$actions = [];
 
-					echo $misc->printTable($attrs, $columns, $actions, 'types-properties', null, 'attPre');
+					echo $misc->printTable($attrs, $columns, $actions, 'types-properties', null, $attPre);
 
 					break;
 				case 'e':

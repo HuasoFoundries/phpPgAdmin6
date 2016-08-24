@@ -96,7 +96,7 @@ class TablePropertyController extends BaseController {
 				$_POST['tablespace'] = $table->fields['tablespace'];
 			}
 
-			echo "<form action=\"/views/tblproperties.php\" method=\"post\">\n";
+			echo "<form action=\"/src/views/tblproperties.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
 			echo "<td class=\"data1\">";
@@ -175,7 +175,7 @@ class TablePropertyController extends BaseController {
 		$misc->printTabs('table', 'export');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/views/dataexport.php\" method=\"post\">\n";
+		echo "<form action=\"/src/views/dataexport.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
 		// Data only
@@ -237,7 +237,7 @@ class TablePropertyController extends BaseController {
 			// Don't show upload option if max size of uploads is zero
 			$max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
 			if (is_double($max_size) && $max_size > 0) {
-				echo "<form action=\"/views/dataimport.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
+				echo "<form action=\"/src/views/dataimport.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
 				echo "<table>\n";
 				echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strformat']}</th>\n";
 				echo "\t\t<td><select name=\"format\">\n";
@@ -317,7 +317,7 @@ class TablePropertyController extends BaseController {
 				$misc->printMsg($msg);
 
 				echo "<script src=\"/js/tables.js\" type=\"text/javascript\"></script>";
-				echo "<form action=\"/views/tblproperties.php\" method=\"post\">\n";
+				echo "<form action=\"/src/views/tblproperties.php\" method=\"post\">\n";
 
 				// Output table header
 				echo "<table>\n";
@@ -429,7 +429,7 @@ class TablePropertyController extends BaseController {
 			echo "<p>", sprintf($lang['strconfdropcolumn'], $misc->printVal($_REQUEST['column']),
 				$misc->printVal($_REQUEST['table'])), "</p>\n";
 
-			echo "<form action=\"/views/tblproperties.php\" method=\"post\">\n";
+			echo "<form action=\"/src/views/tblproperties.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"column\" value=\"", htmlspecialchars($_REQUEST['column']), "\" />\n";

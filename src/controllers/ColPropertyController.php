@@ -187,10 +187,10 @@ class ColPropertyController extends BaseController {
 
 		global $tableName;
 
-		function attPre(&$rowdata) {
-			global $data;
+		$attPre = function (&$rowdata) use ($data) {
+
 			$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-		}
+		};
 
 		if (empty($_REQUEST['column'])) {
 			$msg .= "<br/>{$lang['strnoobjects']}";
@@ -237,7 +237,7 @@ class ColPropertyController extends BaseController {
 			}
 
 			$actions = [];
-			echo $misc->printTable($attrs, $column, $actions, 'colproperties-colproperties', null, 'attPre');
+			echo $misc->printTable($attrs, $column, $actions, 'colproperties-colproperties', null, $attPre);
 
 			echo "<br />\n";
 

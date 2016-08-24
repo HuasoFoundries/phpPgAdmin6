@@ -279,9 +279,7 @@ class IndexController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		function indPre(&$rowdata, $actions) {
-			global $data, $lang;
-
+		$indPre = function (&$rowdata, $actions) use ($data, $lang) {
 			if ($data->phpBool($rowdata->fields['indisprimary'])) {
 				$rowdata->fields['+constraints'] = $lang['strprimarykey'];
 				$actions['drop']['disable']      = true;
@@ -293,7 +291,7 @@ class IndexController extends BaseController {
 			}
 
 			return $actions;
-		}
+		};
 
 		$misc->printTrail('table');
 		$misc->printTabs('table', 'indexes');
@@ -372,7 +370,7 @@ class IndexController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], 'indPre');
+		echo $misc->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], $indPre);
 
 		$misc->printNavLinks([
 			'create' => [
