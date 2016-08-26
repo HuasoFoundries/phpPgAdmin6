@@ -9,10 +9,6 @@
 
 // Construction functions:
 
-function merge( /* ... */) {
-	return new \PHPPgAdmin\Decorators\ArrayMergeDecorator(func_get_args());
-}
-
 function concat( /* ... */) {
 	return new \PHPPgAdmin\Decorators\ConcatDecorator(func_get_args());
 }
@@ -23,18 +19,6 @@ function callback($callback, $params = null) {
 
 function ifempty($value, $empty, $full = null) {
 	return new \PHPPgAdmin\Decorators\IfEmptyDecorator($value, $empty, $full);
-}
-
-function url($base, $vars = null/* ... */) {
-	// If more than one array of vars is given,
-	// use an ArrayMergeDecorator to have them merged
-	// at value evaluation time.
-	if (func_num_args() > 2) {
-		$v = func_get_args();
-		array_shift($v);
-		return new \PHPPgAdmin\Decorators\UrlDecorator($base, new \PHPPgAdmin\Decorators\ArrayMergeDecorator($v));
-	}
-	return new \PHPPgAdmin\Decorators\UrlDecorator($base, $vars);
 }
 
 function replace($str, $params) {
