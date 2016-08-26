@@ -403,7 +403,7 @@ class Misc {
 		if (!isset($vars['url'])) {
 			$vars['url'] = '/redirect';
 		}
-		\PC::debug($vars, 'getSubjectParams');
+		//\PC::debug($vars, 'getSubjectParams');
 		if ($vars['url'] == '/redirect' && isset($vars['params']['subject'])) {
 			$vars['url'] = '/redirect/' . $vars['params']['subject'];
 			unset($vars['params']['subject']);
@@ -770,7 +770,7 @@ class Misc {
 		$lang = $this->lang;
 
 		$footer_html = '';
-		\PC::debug($this->_reload_browser, '$_reload_browser');
+		//\PC::debug($this->_reload_browser, '$_reload_browser');
 		if ($this->_reload_browser) {
 			$footer_html .= $this->printReload(false, false);
 		} elseif ($this->_reload_drop_database) {
@@ -2660,12 +2660,12 @@ class Misc {
 						'id' => $i,
 						'desc' => $group['desc'],
 						'icon' => 'Servers',
-						'action' => url('/views/servers',
+						'action' => Decorator::url('/views/servers',
 							[
 								'group' => Decorator::field('id'),
 							]
 						),
-						'branch' => url('/tree/servers',
+						'branch' => Decorator::url('/tree/servers',
 							[
 								'group' => $i,
 							]
@@ -2680,12 +2680,12 @@ class Misc {
 					'id' => 'all',
 					'desc' => $lang['strallservers'],
 					'icon' => 'Servers',
-					'action' => url('/views/servers',
+					'action' => Decorator::url('/views/servers',
 						[
 							'group' => Decorator::field('id'),
 						]
 					),
-					'branch' => url('/tree/servers',
+					'branch' => Decorator::url('/tree/servers',
 						[
 							'group' => 'all',
 						]
@@ -2822,7 +2822,7 @@ class Misc {
 	 *                   server.
 	 */
 	function setServerInfo($key, $value, $server_id = null) {
-		\PC::debug('setsetverinfo');
+		//\PC::debug('setsetverinfo');
 		if ($server_id === null && isset($_REQUEST['server'])) {
 			$server_id = $_REQUEST['server'];
 		}
@@ -2831,7 +2831,7 @@ class Misc {
 			if ($value === null) {
 				unset($_SESSION['webdbLogin'][$server_id]);
 			} else {
-				\PC::debug(['server_id' => $server_id, 'value' => $value], 'webdbLogin');
+				\PC::debug(['server_id' => $server_id, 'value' => $value], 'webdbLogin null key');
 				$_SESSION['webdbLogin'][$server_id] = $value;
 			}
 
@@ -2839,7 +2839,7 @@ class Misc {
 			if ($value === null) {
 				unset($_SESSION['webdbLogin'][$server_id][$key]);
 			} else {
-				\PC::debug(['server_id' => $server_id, 'key' => $key, 'value' => $value], 'webdbLogin');
+				\PC::debug(['server_id' => $server_id, 'key' => $key, 'value' => $value], __FILE__ . ' ' . __LINE__ . ' webdbLogin key ' . $key);
 				$_SESSION['webdbLogin'][$server_id][$key] = $value;
 			}
 
