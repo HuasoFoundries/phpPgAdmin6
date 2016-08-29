@@ -13,7 +13,7 @@ trait AdminTrait {
 		$script = $this->script;
 		$misc   = $this->misc;
 		$lang   = $this->lang;
-		$data   = $this->getDatabaseAccessor();
+		$data   = $misc->getDatabaseAccessor();
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletocluster']);
@@ -102,7 +102,7 @@ trait AdminTrait {
 		$script       = $this->script;
 		$misc         = $this->misc;
 		$lang         = $this->lang;
-		$data         = $this->getDatabaseAccessor();
+		$data         = $misc->getDatabaseAccessor();
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletoreindex']);
@@ -344,7 +344,7 @@ trait AdminTrait {
 
 		$misc = $this->misc;
 		$lang = $this->lang;
-		$data = $this->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 
 		if (empty($_REQUEST['table'])) {
 			$this->doAdmin($type, '', $lang['strspecifyeditvacuumtable']);
@@ -460,7 +460,7 @@ trait AdminTrait {
 
 		$misc = $this->misc;
 		$lang = $this->lang;
-		$data = $this->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 
 		if (empty($_REQUEST['table'])) {
 			$this->doAdmin($type, '', $lang['strspecifydelvacuumtable']);
@@ -517,7 +517,7 @@ trait AdminTrait {
 		$misc = $this->misc;
 		$lang = $this->lang;
 
-		$data = $this->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 
 		$misc->printTrail($type);
 		$misc->printTabs($type, 'admin');
