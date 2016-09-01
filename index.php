@@ -78,8 +78,6 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 	if (!isset($_server_info['username'])) {
 		include BASE_PATH . '/src/views/login.php';
 		$body->write(doLoginForm($this, $msg));
-
-		//\Kint::dump($request->getParams());
 		return $response;
 	} else {
 
@@ -87,12 +85,10 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 		$include_file = $url['url'];
 
+		\PC::debug($url, 'url');
+
 		// Load query vars into superglobal arrays
 		if (isset($url['urlvars'])) {
-
-			/*echo '<pre>';
-				print_r($url['urlvars']);
-			*/
 			$urlvars = [];
 
 			foreach ($url['urlvars'] as $key => $urlvar) {
@@ -120,39 +116,6 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 		}
 	}
-});
-
-$app->get('/sqledit[/{action}]', function ($request, $response, $args) use ($msg) {
-
-	$action = (isset($args['action'])) ? $args['action'] : 'sql';
-
-	include './src/views/sqledit.php';
-	$body = $response->getBody();
-
-	switch ($action) {
-		case 'find':
-
-			$header_html = $this->view->fetch('sqledit_header.twig', ['title' => $this->lang['strfind']]);
-			$body->write($header_html);
-			$body->write(doFind($this));
-
-			break;
-		case 'sql':
-		default:
-
-			$header_html = $this->view->fetch('sqledit_header.twig', ['title' => $this->lang['strsql']]);
-			$body->write($header_html);
-			$body->write(doDefault($this));
-
-			break;
-	}
-
-	$footer_html = $this->view->fetch('sqledit.twig');
-	$body->write($footer_html);
-
-	$this->misc->setWindowName('sqledit');
-	return $response;
-
 });
 
 $app->get('/tree/browser', function ($request, $response, $args) use ($msg) {
@@ -203,39 +166,6 @@ $app->get('/tree/{node}[/{action}]', function ($request, $response, $args) use (
 
 });
 
-$app->get('/src/views/servers[/{action}]', function ($request, $response, $args) use ($msg) {
-
-	$action = (isset($args['action'])) ? $args['action'] : '';
-
-	include './src/views/servers.php';
-
-	$body = $response->getBody();
-
-	$header_html = $this->misc->printHeader($this->lang['strservers'], null, false);
-	$body->write($header_html);
-
-	$body_html = $this->misc->printBody(false);
-	$body->write($body_html);
-
-	$trail_html = $this->misc->printTrail('root', false);
-	$body->write($trail_html);
-
-	switch ($action) {
-		case 'logout':
-			$body->write(doLogout($this));
-
-			break;
-		default:
-			$body->write(doDefault($this, $msg));
-			break;
-	}
-
-	$footer_html = $this->misc->printFooter(false);
-	$body->write($footer_html);
-	return $response;
-
-});
-
 $app->get('/', function ($request, $response, $args) use ($msg) {
 
 	$rtl  = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
@@ -247,16 +177,6 @@ $app->get('/', function ($request, $response, $args) use ($msg) {
 	$viewVars['rtl']     = $rtl;
 
 	return $this->view->render($response, 'home.twig', $viewVars);
-
-});
-
-$app->get('/src/views/intro', function ($request, $response, $args) use ($msg) {
-	include './src/views/intro.php';
-
-	$body = $response->getBody();
-	$body->write(doDefault($this));
-
-	return $response;
 
 });
 

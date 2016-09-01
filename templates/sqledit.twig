@@ -20,17 +20,16 @@ jQuery(document).ready(function() {
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         hintOptions: {
             tables: {
-                medios: {
-                    id: null,
-                    name: null,
-                    categoria: null
-                },
-                posts: {
-                    id: null,
-                    name: null,
-                    id_medio: null,
-                    created_date: null
-                }
+                "medios": ['id', 'name', 'categoria', 'table_name', 'category', 'url'],
+                "posts": ['id', 'name', 'id_medio', 'created_date'],
+                "comments": ['id', 'id_usuario', 'id_post', 'id_medio', 'created_time', 'message'],
+                "users": ['id', 'nombre', 'url'],
+                "reactions": ['id', 'id_usuario', 'id_post', 'id_medio', 'type'],
+                "public.medios": ['id', 'name', 'categoria', 'table_name', 'category', 'url'],
+                "public.posts": ['id', 'name', 'id_medio', 'created_date'],
+                "public.comments": ['id', 'id_usuario', 'id_post', 'id_medio', 'created_time', 'message'],
+                "public.users": ['id', 'nombre', 'url'],
+                "public.reactions": ['id', 'id_usuario', 'id_post', 'id_medio', 'type']
             }
         }
     });

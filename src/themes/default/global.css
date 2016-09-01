@@ -36,7 +36,7 @@ body.bottombar {
 }
 
 h2 {
-    color: #666633;
+    color: #336699;
     font-size: medium;
     /*1.3em;*/
     font-family: roboto;
@@ -48,7 +48,7 @@ h2 {
 }
 
 h3 {
-    color: #666633;
+    color: #336699;
     font-size: small;
     font-family: roboto;
     font-weight: bold;
