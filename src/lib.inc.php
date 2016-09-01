@@ -182,6 +182,8 @@ if (!isset($_no_db_connection)) {
 
 }
 $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
+
+$container['action'] = $action;
 if (!isset($msg)) {
 	$msg = '';
 }

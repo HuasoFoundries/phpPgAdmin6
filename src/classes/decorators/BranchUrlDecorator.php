@@ -4,7 +4,7 @@ namespace PHPPgAdmin\Decorators;
 class BranchUrlDecorator extends Decorator {
 	function __construct($base, $queryVars = null) {
 
-		\PC::debug($base, 'BranchUrlDecorator');
+		//\PC::debug($base, 'BranchUrlDecorator');
 
 		$this->b = $base;
 		if ($queryVars !== null) {

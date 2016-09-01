@@ -17,7 +17,7 @@ function doTree($container) {
 	$tabs = $misc->getNavTabs('database');
 
 	$items = $misc->adjustTabsForTree($tabs);
-	\PC::debug($reqvars, 'reqvars');
+	//\PC::debug($reqvars, 'reqvars');
 	$attrs = [
 		'text' => Decorator::field('title'),
 		'icon' => Decorator::field('icon'),

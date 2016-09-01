@@ -21,6 +21,7 @@ class BaseController {
 	public $form               = '';
 	public $href               = '';
 	public $lang               = [];
+	public $action             = '';
 	public $_name              = 'BaseController';
 
 	/* Constructor */
@@ -35,6 +36,7 @@ class BaseController {
 		$this->appLangFiles   = $container->get('appLangFiles');
 		$this->misc           = $container->get('misc');
 		$this->appThemes      = $container->get('appThemes');
+		$this->action         = $container->get('action');
 
 		\PC::debug($this->_name, 'instanced controller');
 	}

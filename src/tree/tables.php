@@ -15,7 +15,7 @@ function doTree($container) {
 	$lang = $container->get('lang');
 	$data = $misc->getDatabaseAccessor();
 
-	\PC::debug($misc->getDatabase(), 'getDatabase');
+	//\PC::debug($misc->getDatabase(), 'getDatabase');
 
 	$tables = $data->getTables();
 

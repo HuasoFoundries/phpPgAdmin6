@@ -4,7 +4,7 @@ namespace PHPPgAdmin\Decorators;
 class RedirectUrlDecorator extends Decorator {
 	function __construct($base, $queryVars = null) {
 
-		\PC::debug($base, 'RedirectUrlDecorator');
+		//\PC::debug($base, 'RedirectUrlDecorator');
 
 		$this->b = $base;
 		if ($queryVars !== null) {

@@ -41,7 +41,7 @@ function doTree($container) {
 		// logged into the server.
 		'branch' => Decorator::field('branch'),
 	];
-	PC::debug($nodes, 'printTree');
+	//PC::debug($nodes, 'printTree');
 	return $misc->printTree($nodes, $attrs, 'servers', false);
 
 }

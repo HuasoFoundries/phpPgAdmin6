@@ -22,7 +22,7 @@
         <div dir="ltr">
 
             <div class="logo">
-                <a href="/src/views/intro" target="detail">{{appName}}</a>
+                <a href="/src/views/intro.php" target="detail">{{appName}}</a>
             </div>
             <div class="refreshTree">
                 <a href="/tree/browser" target="browser">
@@ -65,7 +65,7 @@
                 return false;
             };
             */
-        var tree = new WebFXLoadTree("{{strservers}}", "/tree/servers" /* src for sub branches */ , "/src/views/servers" /* action */ );
+        var tree = new WebFXLoadTree("{{strservers}}", "/tree/servers" /* src for sub branches */ , "/src/views/servers.php" /* action */ );
         tree.write();
         tree.setExpanded(true);
         </script>
