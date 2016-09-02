@@ -27,6 +27,55 @@ p.comment {
     padding-left: 5pt;
 }
 
+.flexbox_wrapper,
+html,
+body.flexbox_body {
+    height: 100%;
+    margin: 0;
+}
+
+.flexbox_wrapper {
+    display: flex;
+}
+
+.flexbox_wrapper > .browser_container {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
+    float: left;
+    flex: 0 0 300px;
+}
+
+.flexbox_wrapper >.detail_container {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
+    float: left;
+    flex: 1 1;
+}
+
+.topbar {
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+    top: 0;
+}
+
+.trail {
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+    top: 27px;
+}
+
+.detailbody {
+    margin-top: 58px;
+    margin-bottom: -58px;
+}
+
 
 /** Browser Tree using XLoadTree 2 **/
 

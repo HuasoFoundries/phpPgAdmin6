@@ -7,11 +7,22 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class ServerController extends BaseController {
-	public $_name      = 'ServerController';
-	public $query      = '';
-	public $subject    = '';
-	public $start_time = null;
-	public $duration   = null;
+	public $_name       = 'ServerController';
+	public $table_place = 'servers-servers';
+	public $query       = '';
+	public $subject     = '';
+	public $start_time  = null;
+	public $duration    = null;
+
+	/* Constructor */
+	function __construct(\Slim\Container $container) {
+		parent::__construct($container);
+
+		// Prevent timeouts on large exports (non-safe mode only)
+		if (!ini_get('safe_mode')) {
+			set_time_limit(0);
+		}
+	}
 
 	function doLogout() {
 
@@ -41,7 +52,7 @@ class ServerController extends BaseController {
 		$misc = $this->misc;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTabs('root', 'servers');
+		$this->printTabs('root', 'servers');
 		$misc->printMsg($msg);
 		$group = isset($_GET['group']) ? $_GET['group'] : false;
 
@@ -58,7 +69,7 @@ class ServerController extends BaseController {
 		if (($group !== false) and (isset($conf['srv_groups'][$group])) and ($groups->recordCount() > 0)) {
 			$misc->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
 		}
-		$misc->printTable($groups, $columns, $actions, 'servers-servers');
+		$this->printTable($groups, $columns, $actions, $this->table_place);
 		$servers = $misc->getServers(true, $group);
 
 		$svPre = function (&$rowdata) use ($actions) {
@@ -109,20 +120,73 @@ class ServerController extends BaseController {
 			$misc->printTitle(sprintf($lang['strgroupservers'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
 			$actions['logout']['attr']['href']['urlvars']['group'] = $group;
 		}
-		echo $misc->printTable($servers, $columns, $actions, 'servers-servers', $lang['strnoobjects'], $svPre);
+		echo $this->printTable($servers, $columns, $actions, $this->table_place, $lang['strnoobjects'], $svPre);
 
 	}
 
-	public function render($msg = '') {
-		$conf   = $this->conf;
-		$lang   = $this->lang;
-		$misc   = $this->misc;
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+
+		$nodes    = [];
+		$group_id = isset($_GET['group']) ? $_GET['group'] : false;
+
+		/* root with srv_groups */
+		if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0
+			and $group_id === false) {
+			$nodes = $misc->getServersGroups(true);
+		} else if (isset($conf['srv_groups']) and $group_id !== false) {
+			/* group subtree */
+			if ($group_id !== 'all') {
+				$nodes = $misc->getServersGroups(false, $group_id);
+			}
+
+			$nodes = array_merge($nodes, $misc->getServers(false, $group_id));
+			$nodes = new \PHPPgAdmin\ArrayRecordSet($nodes);
+		} else {
+			/* no srv_group */
+			$nodes = $misc->getServers(true, false);
+		}
+
+		$reqvars = $misc->getRequestVars('server');
+
+		$attrs = [
+			'text' => Decorator::field('desc'),
+
+			// Show different icons for logged in/out
+			'icon' => Decorator::field('icon'),
+
+			'toolTip' => Decorator::field('id'),
+
+			'action' => Decorator::field('action'),
+
+			// Only create a branch url if the user has
+			// logged into the server.
+			'branch' => Decorator::field('branch'),
+		];
+		\PC::debug(['attrs' => $attrs, 'nodes' => $nodes], __CLASS__ . '::' . __METHOD__);
+		return $misc->printTree($nodes, $attrs, 'servers');
+
+	}
+
+	public function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
 		$action = $this->action;
-		$data   = $misc->getDatabaseAccessor();
+
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$msg  = $this->msg;
+		$data = $misc->getDatabaseAccessor();
 
 		$misc->printHeader($this->lang['strservers'], null);
 		$misc->printBody();
-		$misc->printTrail('root');
+		$this->printTrail('root');
 
 		switch ($action) {
 			case 'logout':
@@ -134,7 +198,7 @@ class ServerController extends BaseController {
 				break;
 		}
 
-		$misc->printFooter();
+		return $misc->printFooter();
 
 	}
 

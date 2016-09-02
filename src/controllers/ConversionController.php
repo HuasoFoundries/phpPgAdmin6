@@ -8,9 +8,67 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class ConversionController extends BaseController {
 	public $_name = 'ConversionController';
-/**
- * Show default list of conversions in the database
- */
+
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['strconversions']);
+		$misc->printBody();
+
+		switch ($action) {
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
+
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$constraints = $data->getConstraints($_REQUEST['table']);
+
+		$reqvars = $misc->getRequestVars('schema');
+
+		function getIcon($f) {
+			switch ($f['contype']) {
+				case 'u':
+					return 'UniqueConstraint';
+				case 'c':
+					return 'CheckConstraint';
+				case 'f':
+					return 'ForeignKey';
+				case 'p':
+					return 'PrimaryKey';
+
+			}
+		}
+
+		$attrs = [
+			'text' => Decorator::field('conname'),
+			'icon' => Decorator::callback('getIcon'),
+		];
+
+		return $misc->printTree($constraints, $attrs, 'constraints');
+
+	}
+
+	/**
+	 * Show default list of conversions in the database
+	 */
 	public function doDefault($msg = '') {
 
 		$conf = $this->conf;
@@ -18,8 +76,8 @@ class ConversionController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'conversions');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'conversions');
 		$misc->printMsg($msg);
 
 		$conversions = $data->getconversions();
@@ -50,6 +108,6 @@ class ConversionController extends BaseController {
 
 		$actions = [];
 
-		echo $misc->printTable($conversions, $columns, $actions, 'conversions-conversions', $lang['strnoconversions']);
+		echo $this->printTable($conversions, $columns, $actions, 'conversions-conversions', $lang['strnoconversions']);
 	}
 }

@@ -9,9 +9,120 @@ use \PHPPgAdmin\Decorators\Decorator;
 class ViewPropertyController extends BaseController {
 	public $_name = 'ViewPropertyController';
 
-/**
- * Function to save after editing a view
- */
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['strviews'] . ' - ' . $_REQUEST['view']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'save_edit':
+				if (isset($_POST['cancel'])) {
+					$this->doDefinition();
+				} else {
+					$this->doSaveEdit();
+				}
+
+				break;
+			case 'edit':
+				$this->doEdit();
+				break;
+			case 'export':
+				$this->doExport();
+				break;
+			case 'definition':
+				$this->doDefinition();
+				break;
+			case 'properties':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doProperties();
+				}
+
+				break;
+			case 'alter':
+				if (isset($_POST['alter'])) {
+					$this->doAlter(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_alter':
+				doAlter(true);
+				break;
+			case 'drop':
+				if (isset($_POST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
+
+	}
+
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$reqvars = $misc->getRequestVars('column');
+		$columns = $data->getTableAttributes($_REQUEST['view']);
+
+		$attrs = [
+			'text' => Decorator::field('attname'),
+			'action' => Decorator::actionurl('colproperties.php',
+				$reqvars,
+				[
+					'view' => $_REQUEST['view'],
+					'column' => Decorator::field('attname'),
+				]
+			),
+			'icon' => 'Column',
+			'iconAction' => Decorator::url('display.php',
+				$reqvars,
+				[
+					'view' => $_REQUEST['view'],
+					'column' => Decorator::field('attname'),
+					'query' => Decorator::replace(
+						'SELECT "%column%", count(*) AS "count" FROM %view% GROUP BY "%column%" ORDER BY "%column%"',
+						[
+							'%column%' => Decorator::field('attname'),
+							'%view%' => $_REQUEST['view'],
+						]
+					),
+				]
+			),
+			'toolTip' => Decorator::field('comment'),
+		];
+
+		return $misc->printTree($columns, $attrs, 'viewcolumns');
+
+	}
+
+	/**
+	 * Function to save after editing a view
+	 */
 	public function doSaveEdit() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -27,16 +138,16 @@ class ViewPropertyController extends BaseController {
 
 	}
 
-/**
- * Function to allow editing of a view
- */
+	/**
+	 * Function to allow editing of a view
+	 */
 	public function doEdit($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('view');
+		$this->printTrail('view');
 		$misc->printTitle($lang['stredit'], 'pg.view.alter');
 		$misc->printMsg($msg);
 
@@ -83,8 +194,8 @@ class ViewPropertyController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('view');
-		$misc->printTabs('view', 'export');
+		$this->printTrail('view');
+		$this->printTabs('view', 'export');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/dataexport.php\" method=\"post\">\n";
@@ -145,8 +256,8 @@ class ViewPropertyController extends BaseController {
 		// Get view
 		$vdata = $data->getView($_REQUEST['view']);
 
-		$misc->printTrail('view');
-		$misc->printTabs('view', 'definition');
+		$this->printTrail('view');
+		$this->printTabs('view', 'definition');
 		$misc->printMsg($msg);
 
 		if ($vdata->recordCount() > 0) {
@@ -163,7 +274,7 @@ class ViewPropertyController extends BaseController {
 			echo "<p>{$lang['strnodata']}</p>\n";
 		}
 
-		$misc->printNavLinks(['alter' => [
+		$this->printNavLinks(['alter' => [
 			'attr' => [
 				'href' => [
 					'url' => 'viewproperties.php',
@@ -195,9 +306,8 @@ class ViewPropertyController extends BaseController {
 
 		switch ($_REQUEST['stage']) {
 			case 1:
-				global $lang;
 
-				$misc->printTrail('column');
+				$this->printTrail('column');
 				$misc->printTitle($lang['stralter'], 'pg.column.alter');
 				$misc->printMsg($msg);
 
@@ -238,7 +348,6 @@ class ViewPropertyController extends BaseController {
 
 				break;
 			case 2:
-				global $data, $lang;
 
 				// Check inputs
 				if (trim($_REQUEST['field']) == '') {
@@ -272,7 +381,7 @@ class ViewPropertyController extends BaseController {
 
 		if ($confirm) {
 
-			$misc->printTrail('view');
+			$this->printTrail('view');
 			$misc->printTitle($lang['stralter'], 'pg.view.alter');
 			$misc->printMsg($msg);
 
@@ -348,7 +457,6 @@ class ViewPropertyController extends BaseController {
 			}
 
 		} else {
-			global $data, $lang, $_reload_browser, $misc;
 
 			// For databases that don't allow owner change
 			if (!isset($_POST['owner'])) {
@@ -396,8 +504,8 @@ class ViewPropertyController extends BaseController {
 			$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
 		};
 
-		$misc->printTrail('view');
-		$misc->printTabs('view', 'columns');
+		$this->printTrail('view');
+		$this->printTabs('view', 'columns');
 		$misc->printMsg($msg);
 
 		// Get view
@@ -450,7 +558,7 @@ class ViewPropertyController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($attrs, $columns, $actions, 'viewproperties-viewproperties', null, $attPre);
+		echo $this->printTable($attrs, $columns, $actions, 'viewproperties-viewproperties', null, $attPre);
 
 		echo "<br />\n";
 
@@ -518,7 +626,7 @@ class ViewPropertyController extends BaseController {
 			],
 		];
 
-		$misc->printNavLinks($navlinks, 'viewproperties-viewproperties', get_defined_vars());
+		$this->printNavLinks($navlinks, 'viewproperties-viewproperties', get_defined_vars());
 	}
 
 }

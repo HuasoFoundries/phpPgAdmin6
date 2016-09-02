@@ -7,8 +7,48 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class ColPropertyController extends BaseController {
-	public $_name = 'ColPropertyController';
+	public $_name       = 'ColPropertyController';
+	public $tableName   = '';
+	public $table_place = 'colproperties-colproperties';
 
+	public function render() {
+		if (isset($_REQUEST['table'])) {
+			$this->tableName = &$_REQUEST['table'];
+		} elseif (isset($_REQUEST['view'])) {
+			$this->tableName = &$_REQUEST['view'];
+		} else {
+			die($lang['strnotableprovided']);
+		}
+
+		$conf   = $this->conf;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$action = $this->action;
+		$data   = $misc->getDatabaseAccessor();
+
+		$misc->printHeader($lang['strtables'] . ' - ' . $this->tableName);
+		$misc->printBody();
+
+		if (isset($_REQUEST['view'])) {
+			$this->doDefault(null, false);
+		} else {
+			switch ($action) {
+				case 'properties':
+					if (isset($_POST['cancel'])) {
+						$this->doDefault();
+					} else {
+						$this->doAlter();
+					}
+
+					break;
+				default:
+					$this->doDefault();
+					break;
+			}
+		}
+
+		$misc->printFooter();
+	}
 	/**
 	 * Displays a screen where they can alter a column
 	 */
@@ -24,7 +64,7 @@ class ColPropertyController extends BaseController {
 
 		switch ($_REQUEST['stage']) {
 			case 1:
-				$misc->printTrail('column');
+				$this->printTrail('column');
 				$misc->printTitle($lang['stralter'], 'pg.column.alter');
 				$misc->printMsg($msg);
 
@@ -162,7 +202,7 @@ class ColPropertyController extends BaseController {
 				if ($status == 0) {
 					if ($_REQUEST['column'] != $_REQUEST['field']) {
 						$_REQUEST['column'] = $_REQUEST['field'];
-						$_reload_browser    = true;
+						$misc->setReloadBrowser(true);
 					}
 					$this->doDefault($lang['strcolumnaltered']);
 				} else {
@@ -185,8 +225,6 @@ class ColPropertyController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		global $tableName;
-
 		$attPre = function (&$rowdata) use ($data) {
 
 			$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
@@ -196,16 +234,16 @@ class ColPropertyController extends BaseController {
 			$msg .= "<br/>{$lang['strnoobjects']}";
 		}
 
-		$misc->printTrail('column');
+		$this->printTrail('column');
 		//$misc->printTitle($lang['strcolprop']);
-		$misc->printTabs('column', 'properties');
+		$this->printTabs('column', 'properties');
 		$misc->printMsg($msg);
 
 		if (!empty($_REQUEST['column'])) {
 			// Get table
-			$tdata = $data->getTable($tableName);
+			$tdata = $data->getTable($this->tableName);
 			// Get columns
-			$attrs = $data->getTableAttributes($tableName, $_REQUEST['column']);
+			$attrs = $data->getTableAttributes($this->tableName, $_REQUEST['column']);
 
 			// Show comment if any
 			if ($attrs->fields['comment'] !== null) {
@@ -237,12 +275,12 @@ class ColPropertyController extends BaseController {
 			}
 
 			$actions = [];
-			echo $misc->printTable($attrs, $column, $actions, 'colproperties-colproperties', null, $attPre);
+			echo $this->printTable($attrs, $column, $actions, $this->table_place, null, $attPre);
 
 			echo "<br />\n";
 
 			$f_attname = $_REQUEST['column'];
-			$f_table   = $tableName;
+			$f_table   = $this->tableName;
 			$f_schema  = $data->_schema;
 			$data->fieldClean($f_attname);
 			$data->fieldClean($f_table);
@@ -265,7 +303,7 @@ class ColPropertyController extends BaseController {
 									'server' => $_REQUEST['server'],
 									'database' => $_REQUEST['database'],
 									'schema' => $_REQUEST['schema'],
-									'table' => $tableName,
+									'table' => $this->tableName,
 									'column' => $_REQUEST['column'],
 									'return' => 'column',
 									'query' => $query,
@@ -283,7 +321,7 @@ class ColPropertyController extends BaseController {
 									'server' => $_REQUEST['server'],
 									'database' => $_REQUEST['database'],
 									'schema' => $_REQUEST['schema'],
-									'table' => $tableName,
+									'table' => $this->tableName,
 									'column' => $_REQUEST['column'],
 								],
 							],
@@ -299,7 +337,7 @@ class ColPropertyController extends BaseController {
 									'server' => $_REQUEST['server'],
 									'database' => $_REQUEST['database'],
 									'schema' => $_REQUEST['schema'],
-									'table' => $tableName,
+									'table' => $this->tableName,
 									'column' => $_REQUEST['column'],
 								],
 							],
@@ -319,7 +357,7 @@ class ColPropertyController extends BaseController {
 									'server' => $_REQUEST['server'],
 									'database' => $_REQUEST['database'],
 									'schema' => $_REQUEST['schema'],
-									'view' => $tableName,
+									'view' => $this->tableName,
 									'column' => $_REQUEST['column'],
 									'return' => 'column',
 									'query' => $query,
@@ -331,7 +369,7 @@ class ColPropertyController extends BaseController {
 				];
 			}
 
-			$misc->printNavLinks($navlinks, 'colproperties-colproperties', get_defined_vars());
+			$this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
 		}
 	}
 

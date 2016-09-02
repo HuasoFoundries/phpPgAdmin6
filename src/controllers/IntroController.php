@@ -8,6 +8,14 @@ namespace PHPPgAdmin\Controller;
 class IntroController extends BaseController {
 	public $_name = 'IntroController';
 
+	/* Constructor */
+	function __construct(\Slim\Container $container) {
+		$this->misc = $container->get('misc');
+
+		$this->misc->setNoDBConnection(true);
+		parent::__construct($container);
+
+	}
 	/**
 	 * Intro screen
 	 *
@@ -27,9 +35,9 @@ class IntroController extends BaseController {
 
 		$misc->setNoDBConnection(true);
 
-		$intro_html = $misc->printTrail('root', false);
+		$intro_html = $this->printTrail('root', false);
 
-		$intro_html .= $misc->printTabs('root', 'intro', false);
+		$intro_html .= $this->printTabs('root', 'intro', false);
 
 		$intro_html .= "<h1> $appName $appVersion (PHP " . phpversion() . ')</h1>';
 
@@ -81,6 +89,28 @@ class IntroController extends BaseController {
 		}
 
 		echo $intro_html;
+
+	}
+
+	public function render() {
+
+		$conf   = $this->conf;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$action = $this->action;
+
+		$misc->setNoDBConnection(true);
+		$misc->printHeader($lang['strintro']);
+		$misc->printBody();
+
+		switch ($action) {
+
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
 
 	}
 }

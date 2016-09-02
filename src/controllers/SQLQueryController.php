@@ -43,14 +43,6 @@ class SQLQueryController extends BaseController {
 			unset($_GET['paginate']);
 		}
 
-		// Check to see if pagination has been specified. In that case, send to display
-		// script for pagination
-		/* if a file is given or the request is an explain, do not paginate */
-		if (isset($_REQUEST['paginate']) && !(isset($_FILES['script']) && $_FILES['script']['size'] > 0)
-			&& (preg_match('/^\s*explain/i', $this->query) == 0)) {
-			include './display.php';
-			exit;
-		}
 		if (isset($_REQUEST['subject'])) {
 			$this->subject = $_REQUEST['subject'];
 		}
@@ -63,16 +55,28 @@ class SQLQueryController extends BaseController {
 		$misc = $this->misc;
 		$data = $misc->getDatabaseAccessor();
 
+		// Check to see if pagination has been specified. In that case, send to display
+		// script for pagination
+		/* if a file is given or the request is an explain, do not paginate */
+		if (isset($_REQUEST['paginate']) &&
+			!(isset($_FILES['script']) &&
+				$_FILES['script']['size'] > 0) &&
+			(preg_match('/^\s*explain/i', $this->query) == 0)) {
+
+			$display_controller = new DisplayController($this->getContainer());
+
+			return $display_controller->render();
+		}
+
 		$misc->printHeader($lang['strqueryresults']);
 		$misc->printBody();
-		$misc->printTrail('database');
+		$this->printTrail('database');
 		$misc->printTitle($lang['strqueryresults']);
 
 		// Set the schema search path
 		if (isset($_REQUEST['search_path'])) {
 			if ($data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path']))) != 0) {
-				$misc->printFooter();
-				exit;
+				return $misc->printFooter();
 			}
 		}
 
@@ -313,7 +317,7 @@ class SQLQueryController extends BaseController {
 			];
 		}
 
-		$misc->printNavLinks($navlinks, 'sql-form', get_defined_vars());
+		$this->printNavLinks($navlinks, 'sql-form', get_defined_vars());
 
 		return $misc->printFooter();
 	}

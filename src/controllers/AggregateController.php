@@ -9,9 +9,97 @@ use \PHPPgAdmin\Decorators\Decorator;
 class AggregateController extends BaseController {
 	public $_name = 'AggregateController';
 
-/**
- * Actually creates the new aggregate in the database
- */
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['straggregates']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'create':
+				$this->doCreate();
+				break;
+			case 'save_create':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'alter':
+				$this->doAlter();
+				break;
+			case 'save_alter':
+				if (isset($_POST['alter'])) {
+					$this->doSaveAlter();
+				} else {
+					$this->doProperties();
+				}
+
+				break;
+			case 'drop':
+				if (isset($_POST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			default:
+				$this->doDefault();
+				break;
+			case 'properties':
+				$this->doProperties();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
+
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$aggregates = $data->getAggregates();
+
+		$proto   = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
+		$reqvars = $misc->getRequestVars('aggregate');
+
+		$attrs = [
+			'text' => $proto,
+			'icon' => 'Aggregate',
+			'toolTip' => Decorator::field('aggcomment'),
+			'action' => Decorator::redirecturl('redirect.php',
+				$reqvars,
+				[
+					'action' => 'properties',
+					'aggrname' => Decorator::field('proname'),
+					'aggrtype' => Decorator::field('proargtypes'),
+				]
+			),
+		];
+
+		return $misc->printTree($aggregates, $attrs, 'aggregates');
+	}
+
+	/**
+	 * Actually creates the new aggregate in the database
+	 */
 	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -84,7 +172,7 @@ class AggregateController extends BaseController {
 			$_REQUEST['aggrcomment'] = '';
 		}
 
-		$misc->printTrail('schema');
+		$this->printTrail('schema');
 		$misc->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
 		$misc->printMsg($msg);
 
@@ -158,7 +246,7 @@ class AggregateController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('aggregate');
+		$this->printTrail('aggregate');
 		$misc->printTitle($lang['stralter'], 'pg.aggregate.alter');
 		$misc->printMsg($msg);
 
@@ -205,7 +293,7 @@ class AggregateController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('aggregate');
+			$this->printTrail('aggregate');
 			$misc->printTitle($lang['strdrop'], 'pg.aggregate.drop');
 
 			echo "<p>", sprintf($lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
@@ -240,7 +328,7 @@ class AggregateController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('aggregate');
+		$this->printTrail('aggregate');
 		$misc->printTitle($lang['strproperties'], 'pg.aggregate');
 		$misc->printMsg($msg);
 
@@ -326,7 +414,7 @@ class AggregateController extends BaseController {
 			'content' => $lang['strdrop'],
 		];
 
-		$misc->printNavLinks($navlinks, 'aggregates-properties', get_defined_vars());
+		$this->printNavLinks($navlinks, 'aggregates-properties', get_defined_vars());
 	}
 
 /**
@@ -337,8 +425,8 @@ class AggregateController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'aggregates');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'aggregates');
 		$misc->printMsg($msg);
 
 		$aggregates = $data->getAggregates();
@@ -404,7 +492,7 @@ class AggregateController extends BaseController {
 			unset($actions['alter']);
 		}
 
-		echo $misc->printTable($aggregates, $columns, $actions, 'aggregates-aggregates', $lang['strnoaggregates']);
+		echo $this->printTable($aggregates, $columns, $actions, 'aggregates-aggregates', $lang['strnoaggregates']);
 
 		$navlinks = [
 			'create' => [
@@ -422,7 +510,7 @@ class AggregateController extends BaseController {
 				'content' => $lang['strcreateaggregate'],
 			],
 		];
-		$misc->printNavLinks($navlinks, 'aggregates-aggregates', get_defined_vars());
+		$this->printNavLinks($navlinks, 'aggregates-aggregates', get_defined_vars());
 	}
 
 }

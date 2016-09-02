@@ -9,9 +9,103 @@ use \PHPPgAdmin\Decorators\Decorator;
 class TypeController extends BaseController {
 	public $_name = 'TypeController';
 
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['strtypes']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'create_comp':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doCreateComposite();
+				}
+
+				break;
+			case 'create_enum':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doCreateEnum();
+				}
+
+				break;
+			case 'save_create':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'create':
+				$this->doCreate();
+				break;
+			case 'drop':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doDrop(false);
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			case 'properties':
+				$this->doProperties();
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
 /**
- * Show read only properties for a type
+ * Generate XML for the browser tree.
  */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$types = $data->getTypes();
+
+		$reqvars = $misc->getRequestVars('type');
+
+		$attrs = [
+			'text' => Decorator::field('typname'),
+			'icon' => 'Type',
+			'toolTip' => Decorator::field('typcomment'),
+			'action' => Decorator::actionurl('types.php',
+				$reqvars,
+				[
+					'action' => 'properties',
+					'type' => Decorator::field('basename'),
+				]
+			),
+		];
+
+		return $misc->printTree($types, $attrs, 'types');
+
+	}
+
+	/**
+	 * Show read only properties for a type
+	 */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -20,7 +114,7 @@ class TypeController extends BaseController {
 		// Get type (using base name)
 		$typedata = $data->getType($_REQUEST['type']);
 
-		$misc->printTrail('type');
+		$this->printTrail('type');
 		$misc->printTitle($lang['strproperties'], 'pg.type');
 		$misc->printMsg($msg);
 
@@ -51,7 +145,7 @@ class TypeController extends BaseController {
 
 					$actions = [];
 
-					echo $misc->printTable($attrs, $columns, $actions, 'types-properties', null, $attPre);
+					echo $this->printTable($attrs, $columns, $actions, 'types-properties', null, $attPre);
 
 					break;
 				case 'e':
@@ -84,7 +178,7 @@ class TypeController extends BaseController {
 					echo "</table>\n";
 			}
 
-			$misc->printNavLinks(['showall' => [
+			$this->printNavLinks(['showall' => [
 				'attr' => [
 					'href' => [
 						'url' => 'types.php',
@@ -107,11 +201,13 @@ class TypeController extends BaseController {
  * Show confirmation of drop and perform actual drop
  */
 	public function doDrop($confirm) {
-		global $data, $misc;
-		global $lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('type');
+			$this->printTrail('type');
 			$misc->printTitle($lang['strdrop'], 'pg.type.drop');
 
 			echo "<p>", sprintf($lang['strconfdroptype'], $misc->printVal($_REQUEST['type'])), "</p>\n";
@@ -140,8 +236,10 @@ class TypeController extends BaseController {
  * Displays a screen where they can enter a new composite type
  */
 	public function doCreateComposite($msg = '') {
-		global $data, $misc;
-		global $lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (!isset($_REQUEST['stage'])) {
 			$_REQUEST['stage'] = 1;
@@ -161,7 +259,7 @@ class TypeController extends BaseController {
 
 		switch ($_REQUEST['stage']) {
 			case 1:
-				$misc->printTrail('type');
+				$this->printTrail('type');
 				$misc->printTitle($lang['strcreatecomptype'], 'pg.type.create');
 				$misc->printMsg($msg);
 
@@ -187,7 +285,6 @@ class TypeController extends BaseController {
 				echo "</form>\n";
 				break;
 			case 2:
-				global $lang;
 
 				// Check inputs
 				$fields = trim($_REQUEST['fields']);
@@ -203,7 +300,7 @@ class TypeController extends BaseController {
 
 				$types = $data->getTypes(true, false, true);
 
-				$misc->printTrail('schema');
+				$this->printTrail('schema');
 				$misc->printTitle($lang['strcreatecomptype'], 'pg.type.create');
 				$misc->printMsg($msg);
 
@@ -265,7 +362,6 @@ class TypeController extends BaseController {
 
 				break;
 			case 3:
-				global $data, $lang;
 
 				// Check inputs
 				$fields = trim($_REQUEST['fields']);
@@ -304,8 +400,10 @@ class TypeController extends BaseController {
  * Displays a screen where they can enter a new enum type
  */
 	public function doCreateEnum($msg = '') {
-		global $data, $misc;
-		global $lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (!isset($_REQUEST['stage'])) {
 			$_REQUEST['stage'] = 1;
@@ -325,7 +423,7 @@ class TypeController extends BaseController {
 
 		switch ($_REQUEST['stage']) {
 			case 1:
-				$misc->printTrail('type');
+				$this->printTrail('type');
 				$misc->printTitle($lang['strcreateenumtype'], 'pg.type.create');
 				$misc->printMsg($msg);
 
@@ -351,7 +449,6 @@ class TypeController extends BaseController {
 				echo "</form>\n";
 				break;
 			case 2:
-				global $lang;
 
 				// Check inputs
 				$values = trim($_REQUEST['values']);
@@ -365,7 +462,7 @@ class TypeController extends BaseController {
 					return;
 				}
 
-				$misc->printTrail('schema');
+				$this->printTrail('schema');
 				$misc->printTitle($lang['strcreateenumtype'], 'pg.type.create');
 				$misc->printMsg($msg);
 
@@ -397,7 +494,6 @@ class TypeController extends BaseController {
 
 				break;
 			case 3:
-				global $data, $lang;
 
 				// Check inputs
 				$values = trim($_REQUEST['values']);
@@ -434,8 +530,10 @@ class TypeController extends BaseController {
  * Displays a screen where they can enter a new type
  */
 	public function doCreate($msg = '') {
-		global $data, $misc;
-		global $lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (!isset($_POST['typname'])) {
 			$_POST['typname'] = '';
@@ -477,7 +575,7 @@ class TypeController extends BaseController {
 		$funcs = $data->getFunctions(true);
 		$types = $data->getTypes(true);
 
-		$misc->printTrail('schema');
+		$this->printTrail('schema');
 		$misc->printTitle($lang['strcreatetype'], 'pg.type.create');
 		$misc->printMsg($msg);
 
@@ -553,8 +651,10 @@ class TypeController extends BaseController {
  * Actually creates the new type in the database
  */
 	public function doSaveCreate() {
-		global $data;
-		global $lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		// Check that they've given a name and a length.
 		// Note: We're assuming they've given in and out functions here
@@ -589,11 +689,13 @@ class TypeController extends BaseController {
  * Show default list of types in the database
  */
 	public function doDefault($msg = '') {
-		global $data, $conf, $misc;
-		global $lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'types');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'types');
 		$misc->printMsg($msg);
 
 		$types = $data->getTypes();
@@ -652,7 +754,7 @@ class TypeController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($types, $columns, $actions, 'types-types', $lang['strnotypes']);
+		echo $this->printTable($types, $columns, $actions, 'types-types', $lang['strnotypes']);
 
 		$navlinks = [
 			'create' => [
@@ -703,7 +805,7 @@ class TypeController extends BaseController {
 			unset($navlinks['enum']);
 		}
 
-		$misc->printNavLinks($navlinks, 'types-types', get_defined_vars());
+		$this->printNavLinks($navlinks, 'types-types', get_defined_vars());
 	}
 
 }

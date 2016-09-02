@@ -9,6 +9,116 @@ use \PHPPgAdmin\Decorators\Decorator;
 class DomainController extends BaseController {
 	public $_name = 'DomainController';
 
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['strdomains']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'add_check':
+				$this->addCheck(true);
+				break;
+			case 'save_add_check':
+				if (isset($_POST['cancel'])) {
+					$this->doProperties();
+				} else {
+					$this->addCheck(false);
+				}
+
+				break;
+			case 'drop_con':
+				if (isset($_POST['drop'])) {
+					$this->doDropConstraint(false);
+				} else {
+					$this->doProperties();
+				}
+
+				break;
+			case 'confirm_drop_con':
+				$this->doDropConstraint(true);
+				break;
+			case 'save_create':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'create':
+				$this->doCreate();
+				break;
+			case 'drop':
+				if (isset($_POST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			case 'save_alter':
+				if (isset($_POST['alter'])) {
+					$this->doSaveAlter();
+				} else {
+					$this->doProperties();
+				}
+
+				break;
+			case 'alter':
+				$this->doAlter();
+				break;
+			case 'properties':
+				$this->doProperties();
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+	}
+
+/**
+ * Generate XML for the browser tree.
+ */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$domains = $data->getDomains();
+
+		$reqvars = $misc->getRequestVars('domain');
+
+		$attrs = [
+			'text' => Decorator::field('domname'),
+			'icon' => 'Domain',
+			'toolTip' => Decorator::field('domcomment'),
+			'action' => Decorator::actionurl('domains.php',
+				$reqvars,
+				[
+					'action' => 'properties',
+					'domain' => Decorator::field('domname'),
+				]
+			),
+		];
+
+		return $misc->printTree($domains, $attrs, 'domains');
+	}
+
 /**
  * Function to save after altering a domain
  */
@@ -37,7 +147,7 @@ class DomainController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('domain');
+		$this->printTrail('domain');
 		$misc->printTitle($lang['stralter'], 'pg.domain.alter');
 		$misc->printMsg($msg);
 
@@ -110,7 +220,7 @@ class DomainController extends BaseController {
 		}
 
 		if ($confirm) {
-			$misc->printTrail('domain');
+			$this->printTrail('domain');
 			$misc->printTitle($lang['straddcheck'], 'pg.constraint.check');
 			$misc->printMsg($msg);
 
@@ -159,7 +269,7 @@ class DomainController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('domain');
+			$this->printTrail('domain');
 			$misc->printTitle($lang['strdrop'], 'pg.constraint.drop');
 			$misc->printMsg($msg);
 
@@ -195,7 +305,7 @@ class DomainController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('domain');
+		$this->printTrail('domain');
 		$misc->printTitle($lang['strproperties'], 'pg.domain');
 		$misc->printMsg($msg);
 
@@ -258,7 +368,7 @@ class DomainController extends BaseController {
 					],
 				];
 
-				echo $misc->printTable($domaincons, $columns, $actions, 'domains-properties', $lang['strnodata']);
+				echo $this->printTable($domaincons, $columns, $actions, 'domains-properties', $lang['strnodata']);
 			}
 		} else {
 			echo "<p>{$lang['strnodata']}</p>\n";
@@ -314,7 +424,7 @@ class DomainController extends BaseController {
 			];
 		}
 
-		$misc->printNavLinks($navlinks, 'domains-properties', get_defined_vars());
+		$this->printNavLinks($navlinks, 'domains-properties', get_defined_vars());
 	}
 
 /**
@@ -327,7 +437,7 @@ class DomainController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('domain');
+			$this->printTrail('domain');
 			$misc->printTitle($lang['strdrop'], 'pg.domain.drop');
 
 			echo "<p>", sprintf($lang['strconfdropdomain'], $misc->printVal($_REQUEST['domain'])), "</p>\n";
@@ -386,7 +496,7 @@ class DomainController extends BaseController {
 
 		$types = $data->getTypes(true);
 
-		$misc->printTrail('schema');
+		$this->printTrail('schema');
 		$misc->printTitle($lang['strcreatedomain'], 'pg.domain.create');
 		$misc->printMsg($msg);
 
@@ -472,8 +582,8 @@ class DomainController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'domains');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'domains');
 		$misc->printMsg($msg);
 
 		$domains = $data->getDomains();
@@ -543,7 +653,7 @@ class DomainController extends BaseController {
 			unset($actions['alter']);
 		}
 
-		echo $misc->printTable($domains, $columns, $actions, 'domains-domains', $lang['strnodomains']);
+		echo $this->printTable($domains, $columns, $actions, 'domains-domains', $lang['strnodomains']);
 
 		$navlinks = [
 			'create' => [
@@ -561,6 +671,6 @@ class DomainController extends BaseController {
 				'content' => $lang['strcreatedomain'],
 			],
 		];
-		$misc->printNavLinks($navlinks, 'domains-domains', get_defined_vars());
+		$this->printNavLinks($navlinks, 'domains-domains', get_defined_vars());
 	}
 }

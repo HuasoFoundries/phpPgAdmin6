@@ -6,14 +6,4 @@ if (!defined('BASE_PATH')) {
 
 $intro_controller = new \PHPPgAdmin\Controller\IntroController($container);
 
-$misc->printHeader($lang['strcasts']);
-$misc->printBody();
-
-switch ($action) {
-
-	default:
-		$intro_controller->doDefault();
-		break;
-}
-
-$misc->printFooter();
+$intro_controller->render();

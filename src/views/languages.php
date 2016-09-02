@@ -11,13 +11,4 @@ require_once '../lib.inc.php';
 
 $lang_controller = new \PHPPgAdmin\Controller\LangController($container);
 
-$misc->printHeader($lang['strlanguages']);
-$misc->printBody();
-
-switch ($action) {
-	default:
-		$lang_controller->doDefault();
-		break;
-}
-
-$misc->printFooter();
+$lang_controller->render();
