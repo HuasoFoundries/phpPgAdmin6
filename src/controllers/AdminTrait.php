@@ -1,5 +1,6 @@
 <?php
 namespace PHPPgAdmin\Controller;
+use \PHPPgAdmin\Decorators\Decorator;
 
 trait AdminTrait {
 
@@ -22,7 +23,7 @@ trait AdminTrait {
 
 		if ($confirm) {
 			if (isset($_REQUEST['ma'])) {
-				$misc->printTrail('schema');
+				$this->printTrail('schema');
 				$misc->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
@@ -33,7 +34,7 @@ trait AdminTrait {
 				}
 			} // END if multi cluster
 			else {
-				$misc->printTrail($type);
+				$this->printTrail($type);
 				$misc->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
@@ -111,7 +112,7 @@ trait AdminTrait {
 
 		if ($confirm) {
 			if (isset($_REQUEST['ma'])) {
-				$misc->printTrail('schema');
+				$this->printTrail('schema');
 				$misc->printTitle($lang['strreindex'], 'pg.reindex');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
@@ -122,7 +123,7 @@ trait AdminTrait {
 				}
 			} // END if multi reindex
 			else {
-				$misc->printTrail($type);
+				$this->printTrail($type);
 				$misc->printTitle($lang['strreindex'], 'pg.reindex');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
@@ -181,10 +182,11 @@ trait AdminTrait {
  */
 	public function doAnalyze($type, $confirm = false) {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
-		$script       = $this->script;
-		$data         = $this->data;
-		$misc         = $this->misc;
-		$lang         = $this->lang;
+
+		$script = $this->script;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$data   = $misc->getDatabaseAccessor();
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletoanalyze']);
@@ -192,19 +194,21 @@ trait AdminTrait {
 		}
 
 		if ($confirm) {
+
 			if (isset($_REQUEST['ma'])) {
-				$misc->printTrail('schema');
+				$this->printTrail('schema');
 				$misc->printTitle($lang['stranalyze'], 'pg.analyze');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 				foreach ($_REQUEST['ma'] as $v) {
 					$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+					\Kint::dump($a);
 					echo "<p>", sprintf($lang['strconfanalyzetable'], $misc->printVal($a['table'])), "</p>\n";
 					echo "<input type=\"hidden\" name=\"table[]\" value=\"", htmlspecialchars($a['table']), "\" />\n";
 				}
 			} // END if multi analyze
 			else {
-				$misc->printTrail($type);
+				$this->printTrail($type);
 				$misc->printTitle($lang['stranalyze'], 'pg.analyze');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
@@ -272,7 +276,7 @@ trait AdminTrait {
 
 		if ($confirm) {
 			if (isset($_REQUEST['ma'])) {
-				$misc->printTrail('schema');
+				$this->printTrail('schema');
 				$misc->printTitle($lang['strvacuum'], 'pg.vacuum');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
@@ -283,7 +287,7 @@ trait AdminTrait {
 				}
 			} else {
 				// END if multi vacuum
-				$misc->printTrail($type);
+				$this->printTrail($type);
 				$misc->printTitle($lang['strvacuum'], 'pg.vacuum');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
@@ -354,7 +358,7 @@ trait AdminTrait {
 		$script = ($type == 'database') ? 'database.php' : 'tables.php';
 
 		if ($confirm) {
-			$misc->printTrail($type);
+			$this->printTrail($type);
 			$misc->printTitle(sprintf($lang['streditvacuumtable'], $misc->printVal($_REQUEST['table'])));
 			$misc->printMsg(sprintf($msg, $misc->printVal($_REQUEST['table'])));
 
@@ -468,8 +472,8 @@ trait AdminTrait {
 		}
 
 		if ($confirm) {
-			$misc->printTrail($type);
-			$misc->printTabs($type, 'admin');
+			$this->printTrail($type);
+			$this->printTabs($type, 'admin');
 
 			$script = ($type == 'database') ? 'database.php' : 'tables.php';
 
@@ -519,8 +523,8 @@ trait AdminTrait {
 
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail($type);
-		$misc->printTabs($type, 'admin');
+		$this->printTrail($type);
+		$this->printTabs($type, 'admin');
 		$misc->printMsg($msg);
 
 		if ($type == 'database') {
@@ -648,37 +652,37 @@ trait AdminTrait {
 				],
 				'autovacuum_enabled' => [
 					'title' => $lang['strenabled'],
-					'field' => callback('enlight', ['autovacuum_enabled', $defaults['autovacuum']]),
+					'field' => Decorator::callback('enlight', ['autovacuum_enabled', $defaults['autovacuum']]),
 					'type' => 'verbatim',
 				],
 				'autovacuum_vacuum_threshold' => [
 					'title' => $lang['strvacuumbasethreshold'],
-					'field' => callback('enlight', ['autovacuum_vacuum_threshold', $defaults['autovacuum_vacuum_threshold']]),
+					'field' => Decorator::callback('enlight', ['autovacuum_vacuum_threshold', $defaults['autovacuum_vacuum_threshold']]),
 					'type' => 'verbatim',
 				],
 				'autovacuum_vacuum_scale_factor' => [
 					'title' => $lang['strvacuumscalefactor'],
-					'field' => callback('enlight', ['autovacuum_vacuum_scale_factor', $defaults['autovacuum_vacuum_scale_factor']]),
+					'field' => Decorator::callback('enlight', ['autovacuum_vacuum_scale_factor', $defaults['autovacuum_vacuum_scale_factor']]),
 					'type' => 'verbatim',
 				],
 				'autovacuum_analyze_threshold' => [
 					'title' => $lang['stranalybasethreshold'],
-					'field' => callback('enlight', ['autovacuum_analyze_threshold', $defaults['autovacuum_analyze_threshold']]),
+					'field' => Decorator::callback('enlight', ['autovacuum_analyze_threshold', $defaults['autovacuum_analyze_threshold']]),
 					'type' => 'verbatim',
 				],
 				'autovacuum_analyze_scale_factor' => [
 					'title' => $lang['stranalyzescalefactor'],
-					'field' => callback('enlight', ['autovacuum_analyze_scale_factor', $defaults['autovacuum_analyze_scale_factor']]),
+					'field' => Decorator::callback('enlight', ['autovacuum_analyze_scale_factor', $defaults['autovacuum_analyze_scale_factor']]),
 					'type' => 'verbatim',
 				],
 				'autovacuum_vacuum_cost_delay' => [
 					'title' => $lang['strvacuumcostdelay'],
-					'field' => concat(callback('enlight', ['autovacuum_vacuum_cost_delay', $defaults['autovacuum_vacuum_cost_delay']]), 'ms'),
+					'field' => Decorator::concat(Decorator::callback('enlight', ['autovacuum_vacuum_cost_delay', $defaults['autovacuum_vacuum_cost_delay']]), 'ms'),
 					'type' => 'verbatim',
 				],
 				'autovacuum_vacuum_cost_limit' => [
 					'title' => $lang['strvacuumcostlimit'],
-					'field' => callback('enlight', ['autovacuum_vacuum_cost_limit', $defaults['autovacuum_vacuum_cost_limit']]),
+					'field' => Decorator::callback('enlight', ['autovacuum_vacuum_cost_limit', $defaults['autovacuum_vacuum_cost_limit']]),
 					'type' => 'verbatim',
 				],
 			];
@@ -725,7 +729,7 @@ trait AdminTrait {
 				);
 			}
 
-			echo $misc->printTable($autovac, $columns, $actions, 'admin-admin', $lang['strnovacuumconf']);
+			echo $this->printTable($autovac, $columns, $actions, 'admin-admin', $lang['strnovacuumconf']);
 
 			if (($type == 'table') and ($autovac->recordCount() == 0)) {
 				echo "<br />";

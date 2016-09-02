@@ -9,15 +9,214 @@ use \PHPPgAdmin\Decorators\Decorator;
 class FulltextController extends BaseController {
 	public $_name = 'FulltextController';
 
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		} else if ($action == 'subtree') {
+			return $this->doSubTree($_REQUEST['what']);
+		}
+
+		$misc->printHeader($lang['strschemas']);
+		$misc->printBody();
+
+		if (isset($_POST['cancel'])) {
+			if (isset($_POST['prev_action'])) {
+				$action = $_POST['prev_action'];
+			} else {
+				$action = '';
+			}
+		}
+
+		switch ($action) {
+			case 'createconfig':
+				if (isset($_POST['create'])) {
+					$this->doSaveCreateConfig();
+				} else {
+					$this->doCreateConfig();
+				}
+
+				break;
+			case 'alterconfig':
+				if (isset($_POST['alter'])) {
+					$this->doSaveAlterConfig();
+				} else {
+					$this->doAlterConfig();
+				}
+
+				break;
+			case 'dropconfig':
+				if (isset($_POST['drop'])) {
+					$this->doDropConfig(false);
+				} else {
+					$this->doDropConfig(true);
+				}
+
+				break;
+			case 'viewconfig':
+				$this->doViewConfig($_REQUEST['ftscfg']);
+				break;
+			case 'viewparsers':
+				$this->doViewParsers();
+				break;
+			case 'viewdicts':
+				$this->doViewDicts();
+				break;
+			case 'createdict':
+				if (isset($_POST['create'])) {
+					$this->doSaveCreateDict();
+				} else {
+					doCreateDict();
+				}
+
+				break;
+			case 'alterdict':
+				if (isset($_POST['alter'])) {
+					$this->doSaveAlterDict();
+				} else {
+					$this->doAlterDict();
+				}
+
+				break;
+			case 'dropdict':
+				if (isset($_POST['drop'])) {
+					$this->doDropDict(false);
+				} else {
+					$this->doDropDict(true);
+				}
+
+				break;
+			case 'dropmapping':
+				if (isset($_POST['drop'])) {
+					$this->doDropMapping(false);
+				} else {
+					$this->doDropMapping(true);
+				}
+
+				break;
+			case 'altermapping':
+				if (isset($_POST['alter'])) {
+					$this->doSaveAlterMapping();
+				} else {
+					$this->doAlterMapping();
+				}
+
+				break;
+			case 'addmapping':
+				if (isset($_POST['add'])) {
+					$this->doSaveAddMapping();
+				} else {
+					$this->doAddMapping();
+				}
+
+				break;
+
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
+
+	/**
+	 * Generate XML for the browser tree.
+	 */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$tabs  = $misc->getNavTabs('fulltext');
+		$items = $misc->adjustTabsForTree($tabs);
+
+		$reqvars = $misc->getRequestVars('ftscfg');
+
+		$attrs = [
+			'text' => Decorator::field('title'),
+			'icon' => Decorator::field('icon'),
+			'action' => Decorator::actionurl('fulltext.php',
+				$reqvars,
+				field('urlvars')
+			),
+			'branch' => Decorator::url('fulltext.php',
+				$reqvars,
+				[
+					'action' => 'subtree',
+					'what' => Decorator::field('icon'), // IZ: yeah, it's ugly, but I do not want to change navigation tabs arrays
+				]
+			),
+		];
+
+		return $misc->printTree($items, $attrs, 'fts');
+	}
+
+	function doSubTree($what) {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		switch ($what) {
+			case 'FtsCfg':
+				$items   = $data->getFtsConfigurations(false);
+				$urlvars = ['action' => 'viewconfig', 'ftscfg' => Decorator::field('name')];
+				break;
+			case 'FtsDict':
+				$items   = $data->getFtsDictionaries(false);
+				$urlvars = ['action' => 'viewdicts'];
+				break;
+			case 'FtsParser':
+				$items   = $data->getFtsParsers(false);
+				$urlvars = ['action' => 'viewparsers'];
+				break;
+			default:
+				return;
+		}
+
+		$reqvars = $misc->getRequestVars('ftscfg');
+
+		$attrs = [
+			'text' => Decorator::field('name'),
+			'icon' => $what,
+			'toolTip' => Decorator::field('comment'),
+			'action' => Decorator::actionurl('fulltext.php',
+				$reqvars,
+				$urlvars
+			),
+			'branch' => Decorator::ifempty(Decorator::field('branch'),
+				'',
+				url('fulltext.php',
+					$reqvars,
+					[
+						'action' => 'subtree',
+						'ftscfg' => Decorator::field('name'),
+					]
+				)
+			),
+		];
+
+		return $misc->printTree($items, $attrs, strtolower($what));
+
+	}
+
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'fulltext');
-		$misc->printTabs('fulltext', 'ftsconfigs');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'fulltext');
+		$this->printTabs('fulltext', 'ftsconfigs');
 		$misc->printMsg($msg);
 
 		$cfgs = $data->getFtsConfigurations(false);
@@ -69,7 +268,7 @@ class FulltextController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($cfgs, $columns, $actions, 'fulltext-fulltext', $lang['strftsnoconfigs']);
+		echo $this->printTable($cfgs, $columns, $actions, 'fulltext-fulltext', $lang['strftsnoconfigs']);
 
 		$navlinks = [
 			'createconf' => [
@@ -88,7 +287,7 @@ class FulltextController extends BaseController {
 			],
 		];
 
-		$misc->printNavLinks($navlinks, 'fulltext-fulltext', get_defined_vars());
+		$this->printNavLinks($navlinks, 'fulltext-fulltext', get_defined_vars());
 	}
 
 	public function doDropConfig($confirm) {
@@ -98,7 +297,7 @@ class FulltextController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('ftscfg');
+			$this->printTrail('ftscfg');
 			$misc->printTitle($lang['strdrop'], 'pg.ftscfg.drop');
 
 			echo "<p>", sprintf($lang['strconfdropftsconfig'], $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
@@ -132,7 +331,7 @@ class FulltextController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('ftscfg'); // TODO: change to smth related to dictionary
+			$this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
 			$misc->printTitle($lang['strdrop'], 'pg.ftsdict.drop');
 
 			echo "<p>", sprintf($lang['strconfdropftsdict'], $misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
@@ -199,7 +398,7 @@ class FulltextController extends BaseController {
 		// Fetch all FTS parsers from the database
 		$ftsparsers = $data->getFtsParsers();
 
-		$misc->printTrail('schema');
+		$this->printTrail('schema');
 		$misc->printTitle($lang['strftscreateconfig'], 'pg.ftscfg.create');
 		$misc->printMsg($msg);
 
@@ -324,7 +523,7 @@ class FulltextController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('ftscfg');
+		$this->printTrail('ftscfg');
 		$misc->printTitle($lang['stralter'], 'pg.ftscfg.alter');
 		$misc->printMsg($msg);
 
@@ -403,9 +602,9 @@ class FulltextController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'fulltext');
-		$misc->printTabs('fulltext', 'ftsparsers');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'fulltext');
+		$this->printTabs('fulltext', 'ftsparsers');
 		$misc->printMsg($msg);
 
 		$parsers = $data->getFtsParsers(false);
@@ -427,7 +626,7 @@ class FulltextController extends BaseController {
 
 		$actions = [];
 
-		echo $misc->printTable($parsers, $columns, $actions, 'fulltext-viewparsers', $lang['strftsnoparsers']);
+		echo $this->printTable($parsers, $columns, $actions, 'fulltext-viewparsers', $lang['strftsnoparsers']);
 
 		//TODO: navlink to "create parser"
 	}
@@ -441,9 +640,9 @@ class FulltextController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'fulltext');
-		$misc->printTabs('fulltext', 'ftsdicts');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'fulltext');
+		$this->printTabs('fulltext', 'ftsdicts');
 		$misc->printMsg($msg);
 
 		$dicts = $data->getFtsDictionaries(false);
@@ -493,7 +692,7 @@ class FulltextController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($dicts, $columns, $actions, 'fulltext-viewdicts', $lang['strftsnodicts']);
+		echo $this->printTable($dicts, $columns, $actions, 'fulltext-viewdicts', $lang['strftsnodicts']);
 
 		$navlinks = [
 			'createdict' => [
@@ -512,7 +711,7 @@ class FulltextController extends BaseController {
 			],
 		];
 
-		$misc->printNavLinks($navlinks, 'fulltext-viewdicts', get_defined_vars());
+		$this->printNavLinks($navlinks, 'fulltext-viewdicts', get_defined_vars());
 	}
 
 /**
@@ -524,9 +723,9 @@ class FulltextController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('ftscfg');
-		$misc->printTabs('schema', 'fulltext');
-		$misc->printTabs('fulltext', 'ftsconfigs');
+		$this->printTrail('ftscfg');
+		$this->printTabs('schema', 'fulltext');
+		$this->printTabs('fulltext', 'ftsconfigs');
 		$misc->printMsg($msg);
 
 		echo "<h3>{$lang['strftsconfigmap']}</h3>\n";
@@ -588,7 +787,7 @@ class FulltextController extends BaseController {
 
 		];
 
-		echo $misc->printTable($map, $columns, $actions, 'fulltext-viewconfig', $lang['strftsemptymap']);
+		echo $this->printTable($map, $columns, $actions, 'fulltext-viewconfig', $lang['strftsemptymap']);
 
 		$navlinks = [
 			'addmapping' => [
@@ -608,7 +807,7 @@ class FulltextController extends BaseController {
 			],
 		];
 
-		$misc->printNavLinks($navlinks, 'fulltext-viewconfig', get_defined_vars());
+		$this->printNavLinks($navlinks, 'fulltext-viewconfig', get_defined_vars());
 	}
 
 /**
@@ -655,7 +854,7 @@ class FulltextController extends BaseController {
 		// Fetch all FTS dictionaries from the database
 		$ftstpls = $data->getFtsDictionaryTemplates();
 
-		$misc->printTrail('schema');
+		$this->printTrail('schema');
 		// TODO: create doc links
 		$misc->printTitle($lang['strftscreatedict'], 'pg.ftsdict.create');
 		$misc->printMsg($msg);
@@ -796,7 +995,7 @@ class FulltextController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('ftscfg'); // TODO: change to smth related to dictionary
+		$this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
 		$misc->printTitle($lang['stralter'], 'pg.ftsdict.alter');
 		$misc->printMsg($msg);
 
@@ -881,7 +1080,7 @@ class FulltextController extends BaseController {
 		}
 
 		if ($confirm) {
-			$misc->printTrail('ftscfg'); // TODO: proper breadcrumbs
+			$this->printTrail('ftscfg'); // TODO: proper breadcrumbs
 			$misc->printTitle($lang['strdrop'], 'pg.ftscfg.alter');
 
 			echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
@@ -932,7 +1131,7 @@ class FulltextController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
-		$misc->printTrail('ftscfg');
+		$this->printTrail('ftscfg');
 		$misc->printTitle($lang['stralter'], 'pg.ftscfg.alter');
 		$misc->printMsg($msg);
 
@@ -1034,7 +1233,7 @@ class FulltextController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('ftscfg');
+		$this->printTrail('ftscfg');
 		$misc->printTitle($lang['stralter'], 'pg.ftscfg.alter');
 		$misc->printMsg($msg);
 

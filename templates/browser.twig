@@ -65,7 +65,8 @@
                 return false;
             };
             */
-        var tree = new WebFXLoadTree("{{strservers}}", "/tree/servers" /* src for sub branches */ , "/src/views/servers.php" /* action */ );
+            //var tree = new WebFXLoadTree("{{strservers}}", "/tree/servers" /* src for sub branches */ , "/src/views/servers.php" /* action */ );
+        var tree = new WebFXLoadTree("{{strservers}}", "/src/views/servers.php?action=tree" /* src for sub branches */ , "servers.php" /* action */ );
         tree.write();
         tree.setExpanded(true);
         </script>

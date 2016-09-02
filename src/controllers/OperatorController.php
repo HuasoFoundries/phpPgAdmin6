@@ -9,16 +9,98 @@ use \PHPPgAdmin\Decorators\Decorator;
 class OperatorController extends BaseController {
 	public $_name = 'OperatorController';
 
-/**
- * Show read only properties for an operator
- */
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['stroperators']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'save_create':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'create':
+				doCreate();
+				break;
+			case 'drop':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doDrop(false);
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			case 'properties':
+				$this->doProperties();
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
+
+	}
+
+	/**
+	 * Generate XML for the browser tree.
+	 */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$operators = $data->getOperators();
+
+		// Operator prototype: "type operator type"
+		$proto = Decorator::concat(Decorator::field('oprleftname'), ' ', Decorator::field('oprname'), ' ', Decorator::field('oprrightname'));
+
+		$reqvars = $misc->getRequestVars('operator');
+
+		$attrs = [
+			'text' => $proto,
+			'icon' => 'Operator',
+			'toolTip' => Decorator::field('oprcomment'),
+			'action' => Decorator::actionurl('operators.php',
+				$reqvars,
+				[
+					'action' => 'properties',
+					'operator' => $proto,
+					'operator_oid' => Decorator::field('oid'),
+				]
+			),
+		];
+
+		return $misc->printTree($operators, $attrs, 'operators');
+	}
+
+	/**
+	 * Show read only properties for an operator
+	 */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('operator');
+		$this->printTrail('operator');
 		$misc->printTitle($lang['strproperties'], 'pg.operator');
 		$misc->printMsg($msg);
 
@@ -62,7 +144,7 @@ class OperatorController extends BaseController {
 			}
 			echo "</table>\n";
 
-			$misc->printNavLinks([
+			$this->printNavLinks([
 				'showall' => [
 					'attr' => [
 						'href' => [
@@ -93,7 +175,7 @@ class OperatorController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('operator');
+			$this->printTrail('operator');
 			$misc->printTitle($lang['strdrop'], 'pg.operator.drop');
 
 			echo "<p>", sprintf($lang['strconfdropoperator'], $misc->printVal($_REQUEST['operator'])), "</p>\n";
@@ -128,8 +210,8 @@ class OperatorController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'operators');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'operators');
 		$misc->printMsg($msg);
 
 		$operators = $data->getOperators();
@@ -181,7 +263,7 @@ class OperatorController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($operators, $columns, $actions, 'operators-operators', $lang['strnooperators']);
+		echo $this->printTable($operators, $columns, $actions, 'operators-operators', $lang['strnooperators']);
 
 //		TODO operators.php action=create $lang['strcreateoperator']
 	}

@@ -9,17 +9,39 @@ use \PHPPgAdmin\Decorators\Decorator;
 class LangController extends BaseController {
 	public $_name = 'LangController';
 
-/**
- * Show default list of languages in the database
- */
+	public function render() {
+		$conf   = $this->conf;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['strlanguages']);
+		$misc->printBody();
+
+		switch ($action) {
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
+
+	}
+
+	/**
+	 * Show default list of languages in the database
+	 */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('database');
-		$misc->printTabs('database', 'languages');
+		$this->printTrail('database');
+		$this->printTabs('database', 'languages');
 		$misc->printMsg($msg);
 
 		$languages = $data->getLanguages();
@@ -42,6 +64,28 @@ class LangController extends BaseController {
 
 		$actions = [];
 
-		echo $misc->printTable($languages, $columns, $actions, 'languages-languages', $lang['strnolanguages']);
+		echo $this->printTable($languages, $columns, $actions, 'languages-languages', $lang['strnolanguages']);
 	}
+
+	/**
+	 * Generate XML for the browser tree.
+	 */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$languages = $data->getLanguages();
+
+		$attrs = [
+			'text' => Decorator::field('lanname'),
+			'icon' => 'Language',
+		];
+
+		return $misc->printTree($languages, $attrs, 'languages');
+
+	}
+
 }

@@ -80,7 +80,7 @@ class HistoryController extends BaseController {
 				],
 			];
 
-			echo $misc->printTable($history, $columns, $actions, 'history-history', $lang['strnohistory']);
+			echo $this->printTable($history, $columns, $actions, 'history-history', $lang['strnohistory']);
 		} else {
 			echo "<p>{$lang['strnohistory']}</p>\n";
 		}
@@ -131,7 +131,7 @@ class HistoryController extends BaseController {
 			];
 		}
 
-		$misc->printNavLinks($navlinks, 'history-history', get_defined_vars());
+		$this->printNavLinks($navlinks, 'history-history', get_defined_vars());
 	}
 
 	public function doDelHistory($qid, $confirm) {

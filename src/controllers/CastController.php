@@ -18,17 +18,17 @@ class CastController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		function renderCastContext($val) {
-			global $lang;
+		$renderCastContext = function ($val) use ($lang) {
+
 			switch ($val) {
 				case 'e':return $lang['strno'];
 				case 'a':return $lang['strinassignment'];
 				default:return $lang['stryes'];
 			}
-		}
+		};
 
-		$misc->printTrail('database');
-		$misc->printTabs('database', 'casts');
+		$this->printTrail('database');
+		$this->printTabs('database', 'casts');
 		$misc->printMsg($msg);
 
 		$casts = $data->getCasts();
@@ -51,7 +51,7 @@ class CastController extends BaseController {
 				'title' => $lang['strimplicit'],
 				'field' => Decorator::field('castcontext'),
 				'type' => 'callback',
-				'params' => ['function' => 'renderCastContext', 'align' => 'center'],
+				'params' => ['function' => $renderCastContext, 'align' => 'center'],
 			],
 			'comment' => [
 				'title' => $lang['strcomment'],
@@ -61,6 +61,54 @@ class CastController extends BaseController {
 
 		$actions = [];
 
-		echo $misc->printTable($casts, $columns, $actions, 'casts-casts', $lang['strnocasts']);
+		echo $this->printTable($casts, $columns, $actions, 'casts-casts', $lang['strnocasts']);
 	}
+
+	public function render() {
+		$conf   = $this->conf;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+		$data = $misc->getDatabaseAccessor();
+
+		$misc->printHeader($lang['strcasts']);
+		$misc->printBody();
+
+		switch ($action) {
+
+			default:
+				$cast_controller->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
+
+/**
+ * Generate XML for the browser tree.
+ */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$casts = $data->getCasts();
+
+		$proto = Decorator::concat(Decorator::field('castsource'), ' AS ', Decorator::field('casttarget'));
+
+		$attrs = [
+			'text' => $proto,
+			'icon' => 'Cast',
+		];
+
+		return $misc->printTree($casts, $attrs, 'casts');
+
+	}
+
 }

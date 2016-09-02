@@ -7,10 +7,94 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class AllDBController extends BaseController {
-	public $_name = 'AllDBController';
-/**
- * Display a form for alter and perform actual alter
- */
+	public $_name       = 'AllDBController';
+	public $table_place = 'all_db-databases';
+
+	public function render() {
+		$conf   = $this->conf;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$action = $this->action;
+
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['strdatabases']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'export':
+				$this->doExport();
+				break;
+			case 'save_create':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'create':
+				$this->doCreate();
+				break;
+			case 'drop':
+				if (isset($_REQUEST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				doDrop(true);
+				break;
+			case 'alter':
+				if (isset($_POST['oldname']) && isset($_POST['newname']) && !isset($_POST['cancel'])) {
+					$this->doAlter(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_alter':
+				$this->doAlter(true);
+				break;
+			default:
+				$this->doDefault();
+
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
+
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$databases = $data->getDatabases();
+
+		$reqvars = $misc->getRequestVars('database');
+
+		$attrs = [
+			'text' => Decorator::field('datname'),
+			'icon' => 'Database',
+			'toolTip' => Decorator::field('datcomment'),
+			'action' => Decorator::redirecturl('redirect.php', $reqvars, ['database' => Decorator::field('datname')]),
+			'branch' => Decorator::url('database.php', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
+		];
+
+		return $misc->printTree($databases, $attrs, 'databases');
+	}
+
+	/**
+	 * Display a form for alter and perform actual alter
+	 */
 	public function doAlter($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -18,7 +102,7 @@ class AllDBController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('database');
+			$this->printTrail('database');
 			$misc->printTitle($lang['stralter'], 'pg.database.alter');
 
 			echo "<form action=\"/src/views/all_db.php\" method=\"post\">\n";
@@ -80,9 +164,9 @@ class AllDBController extends BaseController {
 		}
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+	/**
+	 * Show confirmation of drop and perform actual drop
+	 */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -96,7 +180,7 @@ class AllDBController extends BaseController {
 
 		if ($confirm) {
 
-			$misc->printTrail('database');
+			$this->printTrail('database');
 			$misc->printTitle($lang['strdrop'], 'pg.database.drop');
 
 			echo "<form action=\"/src/views/all_db.php\" method=\"post\">\n";
@@ -148,16 +232,16 @@ class AllDBController extends BaseController {
 		} //END DROP
 	} // END FUNCTION
 
-/**
- * Displays a screen where they can enter a new database
- */
+	/**
+	 * Displays a screen where they can enter a new database
+	 */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('server');
+		$this->printTrail('server');
 		$misc->printTitle($lang['strcreatedatabase'], 'pg.database.create');
 		$misc->printMsg($msg);
 
@@ -282,9 +366,9 @@ class AllDBController extends BaseController {
 		echo "</form>\n";
 	}
 
-/**
- * Actually creates the new view in the database
- */
+	/**
+	 * Actually creates the new view in the database
+	 */
 	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -327,17 +411,17 @@ class AllDBController extends BaseController {
 		}
 	}
 
-/**
- * Displays options for cluster download
- */
+	/**
+	 * Displays options for cluster download
+	 */
 	public function doExport($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('server');
-		$misc->printTabs('server', 'export');
+		$this->printTrail('server');
+		$this->printTabs('server', 'export');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/dbexport.php\" method=\"post\">\n";
@@ -386,8 +470,8 @@ class AllDBController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 
-		$misc->printTrail('server');
-		$misc->printTabs('server', 'databases');
+		$this->printTrail('server');
+		$this->printTabs('server', 'databases');
 		$misc->printMsg($msg);
 		$data      = $misc->getDatabaseAccessor();
 		$databases = $data->getDatabases();
@@ -498,7 +582,7 @@ class AllDBController extends BaseController {
 			unset($actions['privileges']);
 		}
 
-		echo $misc->printTable($databases, $columns, $actions, 'all_db-databases', $lang['strnodatabases']);
+		echo $this->printTable($databases, $columns, $actions, $this->table_place, $lang['strnodatabases']);
 
 		$navlinks = [
 			'create' => [
@@ -514,7 +598,7 @@ class AllDBController extends BaseController {
 				'content' => $lang['strcreatedatabase'],
 			],
 		];
-		$misc->printNavLinks($navlinks, 'all_db-databases', get_defined_vars());
+		$this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
 
 	}
 

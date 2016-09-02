@@ -5,27 +5,38 @@
  *
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
-DEFINE('BASE_PATH', dirname(__DIR__));
 
+DEFINE('BASE_PATH', dirname(__DIR__));
 ini_set('error_log', BASE_PATH . '/temp/logs/phppga.php_error.log');
+$debugmode = true;
+
+if ($debugmode) {
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+}
+
+require_once BASE_PATH . '/src/errorhandler.inc.php';
+
+if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
+	define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
+}
+if (!defined('ADODB_ERROR_HANDLER')) {
+	define('ADODB_ERROR_HANDLER', 'Error_Handler');
+}
 
 require_once BASE_PATH . '/vendor/autoload.php';
-include_once BASE_PATH . '/src/errorhandler.inc.php';
-include_once BASE_PATH . '/src/decorator.inc.php';
 
 Kint::enabled(true);
 
 $handler = PhpConsole\Handler::getInstance();
-/* You can override default Handler behavior:
-$handler->setHandleErrors(false);  // disable errors handling
-$handler->setHandleExceptions(false); // disable exceptions handling
-$handler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
- */
-$handler->start(); // initialize handlers
-PhpConsole\Helper::register(); // it will register global PC class
+// You can override default Handler behavior:
+//$handler->setHandleErrors(false); // disable errors handling
+//$handler->setHandleExceptions(false); // disable exceptions handling
+//$handler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
 
-// Set error reporting level to max
-error_reporting(E_ALL);
+$handler->start(); // initialize handlers*/
+PhpConsole\Helper::register(); // it will register global PC class
 
 // Application name
 $appName = 'phpPgAdmin';
@@ -36,7 +47,6 @@ $appVersion = '6.0.0-alpha';
 // PostgreSQL and PHP minimum version
 $postgresqlMinVer = '9.3';
 $phpMinVer        = '5.5';
-$debugmode        = true;
 
 // Check the version of PHP
 if (version_compare(phpversion(), $phpMinVer, '<')) {
@@ -132,6 +142,7 @@ $container['misc'] = $misc;
 
 // 4. Check for theme by server/db/user
 $_server_info = $misc->getServerInfo();
+
 include_once BASE_PATH . '/src/themes.php';
 
 $container['appThemes'] = $appThemes;
@@ -157,33 +168,9 @@ if (!function_exists('pg_connect')) {
 	exit;
 }
 
-//PC::debug($_server_info, 'server_info');
+$container['action'] = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
-// Create data accessor object, if necessary
-if (!isset($_no_db_connection)) {
-	if ($misc->getServerId() === null) {
-		echo $lang['strnoserversupplied'];
-		exit;
-	}
-
-	/* starting with PostgreSQL 9.0, we can set the application name */
-	if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {
-		putenv("PGAPPNAME={$appName}_{$appVersion}");
-	}
-
-	// Redirect to the login form if not logged in
-	if (!isset($_server_info['username'])) {
-		include BASE_PATH . '/src/views/login.php';
-		exit;
-	}
-
-	// Connect to database and set the global $data variable
-	$data = $misc->getDatabaseAccessor();
-
-}
-$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-
-$container['action'] = $action;
 if (!isset($msg)) {
 	$msg = '';
 }
+$container['msg'] = $msg;

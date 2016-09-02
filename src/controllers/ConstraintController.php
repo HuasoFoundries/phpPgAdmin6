@@ -9,9 +9,100 @@ use \PHPPgAdmin\Decorators\Decorator;
 class ConstraintController extends BaseController {
 	public $_name = 'ConstraintController';
 
-/**
- * Confirm and then actually add a FOREIGN KEY constraint
- */
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
+			"<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
+
+		if ($action == 'add_unique_key' || $action == 'save_add_unique_key'
+			|| $action == 'add_primary_key' || $action == 'save_add_primary_key'
+			|| $action == 'add_foreign_key' || $action == 'save_add_foreign_key') {
+			echo "<body onload=\"init();\">";
+		} else {
+			$misc->printBody();
+		}
+
+		switch ($action) {
+			case 'add_foreign_key':
+				$this->addForeignKey(1);
+				break;
+			case 'save_add_foreign_key':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->addForeignKey($_REQUEST['stage']);
+				}
+
+				break;
+			case 'add_unique_key':
+				$this->addPrimaryOrUniqueKey('unique', true);
+				break;
+			case 'save_add_unique_key':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->addPrimaryOrUniqueKey('unique', false);
+				}
+
+				break;
+			case 'add_primary_key':
+				$this->addPrimaryOrUniqueKey('primary', true);
+				break;
+			case 'save_add_primary_key':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->addPrimaryOrUniqueKey('primary', false);
+				}
+
+				break;
+			case 'add_check':
+				$this->addCheck(true);
+				break;
+			case 'save_add_check':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->addCheck(false);
+				}
+
+				break;
+			case 'save_create':
+				$this->doSaveCreate();
+				break;
+			case 'create':
+				$this->doCreate();
+				break;
+			case 'drop':
+				if (isset($_POST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
+
+	}
+	/**
+	 * Confirm and then actually add a FOREIGN KEY constraint
+	 */
 	function addForeignKey($stage, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -60,7 +151,7 @@ class ConstraintController extends BaseController {
 
 					$_REQUEST['target'] = unserialize($_REQUEST['target']);
 
-					$misc->printTrail('table');
+					$this->printTrail('table');
 					$misc->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
 					$misc->printMsg($msg);
 
@@ -182,7 +273,7 @@ class ConstraintController extends BaseController {
 				}
 				break;
 			default:
-				$misc->printTrail('table');
+				$this->printTrail('table');
 				$misc->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
 				$misc->printMsg($msg);
 
@@ -270,7 +361,7 @@ class ConstraintController extends BaseController {
 				$_POST['tablespace'] = '';
 			}
 
-			$misc->printTrail('table');
+			$this->printTrail('table');
 
 			switch ($type) {
 				case 'primary':
@@ -410,7 +501,7 @@ class ConstraintController extends BaseController {
 		}
 
 		if ($confirm) {
-			$misc->printTrail('table');
+			$this->printTrail('table');
 			$misc->printTitle($lang['straddcheck'], 'pg.constraint.check');
 			$misc->printMsg($msg);
 
@@ -459,7 +550,7 @@ class ConstraintController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('constraint');
+			$this->printTrail('constraint');
 			$misc->printTitle($lang['strdrop'], 'pg.constraint.drop');
 
 			echo "<p>", sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
@@ -505,8 +596,8 @@ class ConstraintController extends BaseController {
 			}
 		};
 
-		$misc->printTrail('table');
-		$misc->printTabs('table', 'constraints');
+		$this->printTrail('table');
+		$this->printTabs('table', 'constraints');
 		$misc->printMsg($msg);
 
 		$constraints = $data->getConstraints($_REQUEST['table']);
@@ -547,7 +638,7 @@ class ConstraintController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($constraints, $columns, $actions, 'constraints-constraints', $lang['strnoconstraints'], $cnPre);
+		echo $this->printTable($constraints, $columns, $actions, 'constraints-constraints', $lang['strnoconstraints'], $cnPre);
 
 		$navlinks = [
 			'addcheck' => [
@@ -611,6 +702,6 @@ class ConstraintController extends BaseController {
 				'content' => $lang['straddfk'],
 			],
 		];
-		$misc->printNavLinks($navlinks, 'constraints-constraints', get_defined_vars());
+		$this->printNavLinks($navlinks, 'constraints-constraints', get_defined_vars());
 	}
 }

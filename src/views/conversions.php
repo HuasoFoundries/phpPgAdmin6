@@ -10,14 +10,4 @@
 require_once '../lib.inc.php';
 
 $conversion_controller = new \PHPPgAdmin\Controller\ConversionController($container);
-
-$misc->printHeader($lang['strconversions']);
-$misc->printBody();
-
-switch ($action) {
-	default:
-		$conversion_controller->doDefault();
-		break;
-}
-
-$misc->printFooter();
+$conversion_controller->render();
