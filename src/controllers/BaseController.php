@@ -56,7 +56,7 @@ class BaseController {
 			}
 		}
 
-		\PC::debug(['name' => $this->_name, 'no_db_connection' => $this->misc->getNoDBConnection()], 'instanced controller');
+		//\PC::debug(['name' => $this->_name, 'no_db_connection' => $this->misc->getNoDBConnection()], 'instanced controller');
 	}
 
 	public function getContainer() {

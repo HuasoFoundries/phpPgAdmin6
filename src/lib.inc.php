@@ -30,28 +30,8 @@ require_once BASE_PATH . '/vendor/autoload.php';
 Kint::enabled(true);
 
 $handler = PhpConsole\Handler::getInstance();
-// You can override default Handler behavior:
-//$handler->setHandleErrors(false); // disable errors handling
-//$handler->setHandleExceptions(false); // disable exceptions handling
-//$handler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
-
 $handler->start(); // initialize handlers*/
 PhpConsole\Helper::register(); // it will register global PC class
-
-// Application name
-$appName = 'phpPgAdmin';
-
-// Application version
-$appVersion = '6.0.0-alpha';
-
-// PostgreSQL and PHP minimum version
-$postgresqlMinVer = '9.3';
-$phpMinVer        = '5.5';
-
-// Check the version of PHP
-if (version_compare(phpversion(), $phpMinVer, '<')) {
-	exit(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $phpMinVer));
-}
 
 // Check to see if the configuration file exists, if not, explain
 if (file_exists(BASE_PATH . '/config.inc.php')) {
@@ -87,7 +67,6 @@ if (!ini_get('session.auto_start')) {
 	session_name('PPA_ID');
 	session_start();
 }
-//Kint::dump($_SERVER);
 
 $config = [
 	'msg' => '',
@@ -95,10 +74,18 @@ $config = [
 	'conf' => $conf,
 	'lang' => $lang,
 	'language' => $_language,
+
 	'settings' => [
+		'base_path' => BASE_PATH,
 		'debug' => $debugmode,
-		'appVersion' => $appVersion,
-		'appName' => htmlspecialchars($appName),
+		// Application version
+		'appVersion' => '6.0.0-alpha',
+		// Application name
+		'appName' => 'phpPgAdmin',
+
+		// PostgreSQL and PHP minimum version
+		'postgresqlMinVer' => '9.3',
+		'phpMinVer' => '5.5',
 		'displayErrorDetails' => true,
 		'addContentLengthHeader' => false,
 	],
@@ -109,8 +96,7 @@ $app = new \Slim\App($config);
 // Fetch DI Container
 $container = $app->getContainer();
 
-$plugin_manager              = new \PHPPgAdmin\PluginManager($app);
-$container['plugin_manager'] = $plugin_manager;
+$container['plugin_manager'] = new \PHPPgAdmin\PluginManager($app);
 
 $container['serializer'] = function ($c) {
 	$serializerbuilder = \JMS\Serializer\SerializerBuilder::create();
