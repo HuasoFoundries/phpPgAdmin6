@@ -7,7 +7,7 @@
  */
 
 // Include application functions
-$_no_db_connection = true;
+
 require_once './src/lib.inc.php';
 
 $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
@@ -42,7 +42,7 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 		$misc->printHeader($this->lang['strdatabases']);
 		$misc->printBody();
 
-		return $all_db_controller->doDefault();
+		$all_db_controller->doDefault();
 
 		$misc->setReloadBrowser(true);
 		$misc->printFooter();
@@ -54,9 +54,8 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
 		if (!isset($_server_info['username'])) {
 
-			include BASE_PATH . '/src/views/login.php';
-
-			$body->write(doLoginForm($this, $msg));
+			$login_controller = new \PHPPgAdmin\Controller\LoginController($this);
+			$body->write($login_controller->doLoginForm($msg));
 
 		}
 	}
@@ -76,10 +75,11 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 	$body = $response->getBody();
 	if (!isset($_server_info['username'])) {
-		include BASE_PATH . '/src/views/login.php';
-		$body->write(doLoginForm($this, $msg));
+		$this->misc->setNoDBConnection(true);
+		$login_controller = new \PHPPgAdmin\Controller\LoginController($this);
 
-		//\Kint::dump($request->getParams());
+		$body->write($login_controller->doLoginForm($msg));
+
 		return $response;
 	} else {
 
@@ -87,19 +87,17 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 		$include_file = $url['url'];
 
+		\PC::debug($url, 'url');
+
 		// Load query vars into superglobal arrays
 		if (isset($url['urlvars'])) {
-
-			/*echo '<pre>';
-				print_r($url['urlvars']);
-			*/
 			$urlvars = [];
 
 			foreach ($url['urlvars'] as $key => $urlvar) {
 				if (strpos($key, '?') !== FALSE) {
 					$key = explode('?', $key)[1];
 				}
-				$urlvars[$key] = value($urlvar, $_REQUEST);
+				$urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
 			}
 
 			$_REQUEST = array_merge($_REQUEST, $urlvars);
@@ -107,9 +105,6 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 		}
 
 		$actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($include_file, $_GET);
-
-		//PC::debug($url['url'], 'redirect.php will include');
-		//PC::debug($actionurl->value($_GET), '$actionurl');
 
 		if (is_readable($include_file)) {
 			include $include_file;
@@ -122,149 +117,21 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 	}
 });
 
-$app->get('/sqledit[/{action}]', function ($request, $response, $args) use ($msg) {
-
-	$action = (isset($args['action'])) ? $args['action'] : 'sql';
-
-	include './src/views/sqledit.php';
-	$body = $response->getBody();
-
-	switch ($action) {
-		case 'find':
-
-			$header_html = $this->view->fetch('sqledit_header.twig', ['title' => $this->lang['strfind']]);
-			$body->write($header_html);
-			$body->write(doFind($this));
-
-			break;
-		case 'sql':
-		default:
-
-			$header_html = $this->view->fetch('sqledit_header.twig', ['title' => $this->lang['strsql']]);
-			$body->write($header_html);
-			$body->write(doDefault($this));
-
-			break;
-	}
-
-	$footer_html = $this->view->fetch('sqledit.twig');
-	$body->write($footer_html);
-
-	$this->misc->setWindowName('sqledit');
-	return $response;
-
-});
-
-$app->get('/tree/browser', function ($request, $response, $args) use ($msg) {
-
-	$viewVars            = $this->lang;
-	$viewVars['appName'] = $this->get('settings')['appName'];
-	$viewVars['icon']    = [
-		'blank' => $this->misc->icon('blank'),
-		'I' => $this->misc->icon('I'),
-		'L' => $this->misc->icon('L'),
-		'Lminus' => $this->misc->icon('Lminus'),
-		'Loading' => $this->misc->icon('Loading'),
-		'Lplus' => $this->misc->icon('Lplus'),
-		'ObjectNotFound' => $this->misc->icon('ObjectNotFound'),
-		'Refresh' => $this->misc->icon('Refresh'),
-		'Servers' => $this->misc->icon('Servers'),
-		'T' => $this->misc->icon('T'),
-		'Tminus' => $this->misc->icon('Tminus'),
-		'Tplus' => $this->misc->icon('Tplus'),
-
-	];
-
-	$viewVars['cols'] = $cols;
-	$viewVars['rtl']  = $rtl;
-
-	$this->view->render($response, 'browser.twig', $viewVars);
-
-});
-
-$app->get('/tree/{node}[/{action}]', function ($request, $response, $args) use ($msg) {
-
-	$newResponse = $response
-		->withHeader('Content-type', 'text/xml')
-		->withHeader('Cache-Control', 'no-cache');
-
-	$phpscript = './src/tree/' . $args['node'] . '.php';
-
-	if (is_readable($phpscript)) {
-		include $phpscript;
-		if (isset($args['action']) && $args['action'] == 'subtree') {
-			doSubTree($this);
-		} else {
-			doTree($this);
-		}
-	}
-
-	return $newResponse;
-
-});
-
-$app->get('/src/views/servers[/{action}]', function ($request, $response, $args) use ($msg) {
-
-	$action = (isset($args['action'])) ? $args['action'] : '';
-
-	include './src/views/servers.php';
-
-	$body = $response->getBody();
-
-	$header_html = $this->misc->printHeader($this->lang['strservers'], null, false);
-	$body->write($header_html);
-
-	$body_html = $this->misc->printBody(false);
-	$body->write($body_html);
-
-	$trail_html = $this->misc->printTrail('root', false);
-	$body->write($trail_html);
-
-	switch ($action) {
-		case 'logout':
-			$body->write(doLogout($this));
-
-			break;
-		default:
-			$body->write(doDefault($this, $msg));
-			break;
-	}
-
-	$footer_html = $this->misc->printFooter(false);
-	$body->write($footer_html);
-	return $response;
-
-});
-
 $app->get('/', function ($request, $response, $args) use ($msg) {
 
-	$rtl  = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
-	$cols = $rtl ? '*,' . $this->conf['left_width'] : $this->conf['left_width'] . ',*';
-
 	$viewVars            = $this->lang;
 	$viewVars['appName'] = $this->get('settings')['appName'];
-	$viewVars['cols']    = $cols;
-	$viewVars['rtl']     = $rtl;
+	$viewVars['rtl']     = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
-	return $this->view->render($response, 'home.twig', $viewVars);
+	if ($viewVars['rtl']) {
+		$viewVars['cols'] = '*,' . $this->conf['left_width'];
+		$template         = 'home_rtl.twig';
+	} else {
+		$viewVars['cols'] = $this->conf['left_width'] . ',*';
+		$template         = 'home.twig';
+	}
 
-});
-
-$app->get('/src/views/intro', function ($request, $response, $args) use ($msg) {
-	include './src/views/intro.php';
-
-	$body = $response->getBody();
-	$body->write(doDefault($this));
-
-	return $response;
-
-});
-
-$app->get('/views/{script}', function ($request, $response, $args) use ($msg) {
-	$body = $response->getBody();
-	$body->write('Not found ' . $args['script']);
-	\PC::debug($args, 'args');
-	return $response;
+	return $this->view->render($response, $template, $viewVars);
 
 });
 

@@ -7,11 +7,105 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class FunctionController extends BaseController {
-	public $_name = 'FunctionController';
+	public $_name       = 'FunctionController';
+	public $table_place = 'functions-functions';
 
-/**
- * Function to save after editing a function
- */
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+		$data = $misc->getDatabaseAccessor();
+
+		$misc->printHeader($lang['strfunctions'], null, true, 'datatables_header.twig');
+		$misc->printBody();
+
+		switch ($action) {
+			case 'save_create':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'create':
+				$this->doCreate();
+				break;
+			case 'drop':
+				if (isset($_POST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			case 'save_edit':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveEdit();
+				}
+
+				break;
+			case 'edit':
+				$this->doEdit();
+				break;
+			case 'properties':
+				$this->doProperties();
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
+
+	}
+
+	/**
+	 * Generate XML for the browser tree.
+	 */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$funcs = $data->getFunctions();
+
+		$proto = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proarguments'), ')');
+
+		$reqvars = $misc->getRequestVars('function');
+
+		$attrs = [
+			'text' => $proto,
+			'icon' => 'Function',
+			'toolTip' => Decorator::field('procomment'),
+			'action' => Decorator::redirecturl('redirect.php',
+				$reqvars,
+				[
+					'action' => 'properties',
+					'function' => $proto,
+					'function_oid' => Decorator::field('prooid'),
+				]
+			),
+		];
+
+		return $misc->printTree($funcs, $attrs, 'functions');
+	}
+
+	/**
+	 * Function to save after editing a function
+	 */
 	public function doSaveEdit() {
 
 		$conf = $this->conf;
@@ -54,16 +148,16 @@ class FunctionController extends BaseController {
 		}
 	}
 
-/**
- * Function to allow editing of a Function
- */
+	/**
+	 * Function to allow editing of a Function
+	 */
 	public function doEdit($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('function');
+		$this->printTrail('function');
 		$misc->printTitle($lang['stralter'], 'pg.function.alter');
 		$misc->printMsg($msg);
 
@@ -290,22 +384,23 @@ class FunctionController extends BaseController {
 
 	}
 
-/**
- * Show read only properties of a function
- */
+	/**
+	 * Show read only properties of a function
+	 */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('function');
+		$this->printTrail('function');
 		$misc->printTitle($lang['strproperties'], 'pg.function');
 		$misc->printMsg($msg);
 
 		$funcdata = $data->getFunction($_REQUEST['function_oid']);
 
 		if ($funcdata->recordCount() > 0) {
+
 			// Deal with named parameters
 			if ($data->hasNamedParams()) {
 				if (isset($funcdata->fields['proallarguments'])) {
@@ -324,15 +419,20 @@ class FunctionController extends BaseController {
 
 					if (isset($modes_arr[$i])) {
 						switch ($modes_arr[$i]) {
-							case 'i':$args .= " IN ";
+							case 'i':
+								$args .= " IN ";
 								break;
-							case 'o':$args .= " OUT ";
+							case 'o':
+								$args .= " OUT ";
 								break;
-							case 'b':$args .= " INOUT ";
+							case 'b':
+								$args .= " INOUT ";
 								break;
-							case 'v':$args .= " VARIADIC ";
+							case 'v':
+								$args .= " VARIADIC ";
 								break;
-							case 't':$args .= " TABLE ";
+							case 't':
+								$args .= " TABLE ";
 								break;
 						}
 					}
@@ -378,11 +478,13 @@ class FunctionController extends BaseController {
 				echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strlinksymbol']}</th></tr>\n";
 				echo "<tr><td class=\"data1\" colspan=\"4\">", $misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
 			} else {
-				include_once BASE_PATH . '/src/highlight.php';
+				$highlight = new \PHPPgAdmin\Highlight();
+
 				echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strdefinition']}</th></tr>\n";
 				// Check to see if we have syntax highlighting for this language
-				if (isset($data->langmap[$funcdata->fields['prolanguage']])) {
-					$temp = syntax_highlight(htmlspecialchars($funcdata->fields['prosrc']), $data->langmap[$funcdata->fields['prolanguage']]);
+				if (array_key_exists($fnlang, $data->langmap)) {
+
+					$temp = $highlight->syntax_highlight(htmlspecialchars($funcdata->fields['prosrc']), $data->langmap[$fnlang]);
 					$tag  = 'prenoescape';
 				} else {
 					$temp = $funcdata->fields['prosrc'];
@@ -465,12 +567,12 @@ class FunctionController extends BaseController {
 			],
 		];
 
-		$misc->printNavLinks($navlinks, 'functions-properties', get_defined_vars());
+		$this->printNavLinks($navlinks, 'functions-properties', get_defined_vars());
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+	/**
+	 * Show confirmation of drop and perform actual drop
+	 */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -483,7 +585,7 @@ class FunctionController extends BaseController {
 		}
 
 		if ($confirm) {
-			$misc->printTrail('schema');
+			$this->printTrail('schema');
 			$misc->printTitle($lang['strdrop'], 'pg.function.drop');
 
 			echo "<form action=\"/src/views/functions.php\" method=\"post\">\n";
@@ -546,16 +648,16 @@ class FunctionController extends BaseController {
 
 	}
 
-/**
- * Displays a screen where they can enter a new function
- */
+	/**
+	 * Displays a screen where they can enter a new function
+	 */
 	public function doCreate($msg = '', $szJS = "") {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
+		$this->printTrail('schema');
 		if (!isset($_POST['formFunction'])) {
 			$_POST['formFunction'] = '';
 		}
@@ -813,9 +915,9 @@ class FunctionController extends BaseController {
 		echo $szJS;
 	}
 
-/**
- * Actually creates the new function in the database
- */
+	/**
+	 * Actually creates the new function in the database
+	 */
 	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -941,17 +1043,17 @@ class FunctionController extends BaseController {
 		return $szTypes . $szModes;
 	}
 
-/**
- * Show default list of functions in the database
- */
+	/**
+	 * Show default list of functions in the database
+	 */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'functions');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'functions');
 		$misc->printMsg($msg);
 
 		$funcs = $data->getFunctions();
@@ -1031,7 +1133,7 @@ class FunctionController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($funcs, $columns, $actions, 'functions-functions', $lang['strnofunctions']);
+		echo $this->printTable($funcs, $columns, $actions, $this->table_place, $lang['strnofunctions']);
 
 		$navlinks = [
 			'createpl' => [
@@ -1080,6 +1182,9 @@ class FunctionController extends BaseController {
 			],
 		];
 
-		$misc->printNavLinks($navlinks, 'functions-functions', get_defined_vars());
+		$this->printNavLinks($navlinks, 'functions-functions', get_defined_vars());
+
+		echo $this->view->fetch('table_list_footer.twig', ['table_class' => $this->table_place]);
 	}
+
 }

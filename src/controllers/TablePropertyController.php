@@ -9,6 +9,112 @@ use \PHPPgAdmin\Decorators\Decorator;
 class TablePropertyController extends BaseController {
 	public $_name = 'TablePropertyController';
 
+	public function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+		$data = $misc->getDatabaseAccessor();
+		$misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'alter':
+				if (isset($_POST['alter'])) {
+					$this->doSaveAlter();
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_alter':
+				$this->doAlter();
+				break;
+			case 'import':
+				$this->doImport();
+				break;
+			case 'export':
+				$this->doExport();
+				break;
+			case 'add_column':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doAddColumn();
+				}
+
+				break;
+			case 'properties':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doProperties();
+				}
+
+				break;
+			case 'drop':
+				if (isset($_POST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
+
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$columns = $data->getTableAttributes($_REQUEST['table']);
+		$reqvars = $misc->getRequestVars('column');
+
+		$attrs = [
+			'text' => Decorator::field('attname'),
+			'action' => Decorator::actionurl('colproperties.php',
+				$reqvars,
+				[
+					'table' => $_REQUEST['table'],
+					'column' => Decorator::field('attname'),
+				]
+			),
+			'icon' => 'Column',
+			'iconAction' => Decorator::url('display.php',
+				$reqvars,
+				[
+					'table' => $_REQUEST['table'],
+					'column' => Decorator::field('attname'),
+					'query' => Decorator::replace(
+						'SELECT "%column%", count(*) AS "count" FROM "%table%" GROUP BY "%column%" ORDER BY "%column%"',
+						[
+							'%column%' => Decorator::field('attname'),
+							'%table%' => $_REQUEST['table'],
+						]
+					),
+				]
+			),
+			'toolTip' => Decorator::field('comment'),
+		];
+
+		return $misc->printTree($columns, $attrs, 'tblcolumns');
+	}
 	public function doSaveAlter() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -37,13 +143,13 @@ class TablePropertyController extends BaseController {
 				// Jump them to the new table name
 				$_REQUEST['table'] = $_POST['name'];
 				// Force a browser reload
-				$_reload_browser = true;
+				$misc->setReloadBrowser(true);
 			}
 			// If schema has changed, need to change to the new schema and reload the browser
 			if (!empty($_POST['newschema']) && ($_POST['newschema'] != $data->_schema)) {
 				// Jump them to the new sequence schema
 				$misc->setCurrentSchema($_POST['newschema']);
-				$_reload_browser = true;
+				$misc->setReloadBrowser(true);
 			}
 			$this->doDefault($lang['strtablealtered']);
 		} else {
@@ -61,7 +167,7 @@ class TablePropertyController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('table');
+		$this->printTrail('table');
 		$misc->printTitle($lang['stralter'], 'pg.table.alter');
 		$misc->printMsg($msg);
 
@@ -171,8 +277,8 @@ class TablePropertyController extends BaseController {
 		// Determine whether or not the table has an object ID
 		$hasID = $data->hasObjectID($_REQUEST['table']);
 
-		$misc->printTrail('table');
-		$misc->printTabs('table', 'export');
+		$this->printTrail('table');
+		$this->printTabs('table', 'export');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/dataexport.php\" method=\"post\">\n";
@@ -228,8 +334,8 @@ class TablePropertyController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('table');
-		$misc->printTabs('table', 'import');
+		$this->printTrail('table');
+		$this->printTabs('table', 'import');
 		$misc->printMsg($msg);
 
 		// Check that file uploads are enabled
@@ -312,7 +418,7 @@ class TablePropertyController extends BaseController {
 				$types        = $data->getTypes(true, false, true);
 				$types_for_js = [];
 
-				$misc->printTrail('table');
+				$this->printTrail('table');
 				$misc->printTitle($lang['straddcolumn'], 'pg.column.add');
 				$misc->printMsg($msg);
 
@@ -400,7 +506,7 @@ class TablePropertyController extends BaseController {
 					$_POST['type'], $_POST['array'] != '', $_POST['length'], isset($_POST['notnull']),
 					$_POST['default'], $_POST['comment']);
 				if ($status == 0) {
-					$_reload_browser = true;
+					$misc->setReloadBrowser(true);
 					$this->doDefault($lang['strcolumnadded']);
 				} else {
 					$_REQUEST['stage'] = 1;
@@ -423,7 +529,7 @@ class TablePropertyController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('column');
+			$this->printTrail('column');
 			$misc->printTitle($lang['strdrop'], 'pg.column.drop');
 
 			echo "<p>", sprintf($lang['strconfdropcolumn'], $misc->printVal($_REQUEST['column']),
@@ -441,7 +547,7 @@ class TablePropertyController extends BaseController {
 		} else {
 			$status = $data->dropColumn($_POST['table'], $_POST['column'], isset($_POST['cascade']));
 			if ($status == 0) {
-				$_reload_browser = true;
+				$misc->setReloadBrowser(true);
 				$this->doDefault($lang['strcolumndropped']);
 			} else {
 				$this->doDefault($lang['strcolumndroppedbad']);
@@ -451,9 +557,9 @@ class TablePropertyController extends BaseController {
 
 	}
 
-/**
- * Show default list of columns in the table
- */
+	/**
+	 * Show default list of columns in the table
+	 */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -509,8 +615,8 @@ class TablePropertyController extends BaseController {
 			return $str;
 		};
 
-		$misc->printTrail('table');
-		$misc->printTabs('table', 'columns');
+		$this->printTrail('table');
+		$this->printTabs('table', 'columns');
 		$misc->printMsg($msg);
 
 		// Get table
@@ -646,7 +752,7 @@ class TablePropertyController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', null, $attPre);
+		echo $this->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', null, $attPre);
 
 		$navlinks = [
 			'browse' => [
@@ -756,7 +862,7 @@ class TablePropertyController extends BaseController {
 				'content' => $lang['stralter'],
 			],
 		];
-		$misc->printNavLinks($navlinks, 'tblproperties-tblproperties', get_defined_vars());
+		$this->printNavLinks($navlinks, 'tblproperties-tblproperties', get_defined_vars());
 
 	}
 

@@ -9,9 +9,74 @@ use \PHPPgAdmin\Decorators\Decorator;
 class RuleController extends BaseController {
 	public $_name = 'RuleController';
 
-/**
- * Confirm and then actually create a rule
- */
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		// Different header if we're view rules or table rules
+		$misc->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $lang['strrules']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'create_rule':
+				$this->createRule(true);
+				break;
+			case 'save_create_rule':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->createRule(false);
+				}
+
+				break;
+			case 'drop':
+				if (isset($_POST['yes'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
+
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
+
+		$reqvars = $misc->getRequestVars($_REQUEST['subject']);
+
+		$attrs = [
+			'text' => Decorator::field('rulename'),
+			'icon' => 'Rule',
+		];
+
+		return $misc->printTree($rules, $attrs, 'rules');
+	}
+
+	/**
+	 * Confirm and then actually create a rule
+	 */
 	function createRule($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -39,7 +104,7 @@ class RuleController extends BaseController {
 		}
 
 		if ($confirm) {
-			$misc->printTrail($_REQUEST['subject']);
+			$this->printTrail($_REQUEST['subject']);
 			$misc->printTitle($lang['strcreaterule'], 'pg.rule.create');
 			$misc->printMsg($msg);
 
@@ -106,7 +171,7 @@ class RuleController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail($_REQUEST['subject']);
+			$this->printTrail($_REQUEST['subject']);
 			$misc->printTitle($lang['strdrop'], 'pg.rule.drop');
 
 			echo "<p>", sprintf($lang['strconfdroprule'], $misc->printVal($_REQUEST['rule']),
@@ -144,8 +209,8 @@ class RuleController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail($_REQUEST['subject']);
-		$misc->printTabs($_REQUEST['subject'], 'rules');
+		$this->printTrail($_REQUEST['subject']);
+		$this->printTabs($_REQUEST['subject'], 'rules');
 		$misc->printMsg($msg);
 
 		$rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
@@ -185,9 +250,9 @@ class RuleController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($rules, $columns, $actions, 'rules-rules', $lang['strnorules']);
+		echo $this->printTable($rules, $columns, $actions, 'rules-rules', $lang['strnorules']);
 
-		$misc->printNavLinks(['create' => [
+		$this->printNavLinks(['create' => [
 			'attr' => [
 				'href' => [
 					'url' => 'rules.php',

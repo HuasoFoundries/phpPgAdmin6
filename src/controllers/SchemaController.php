@@ -9,17 +9,142 @@ use \PHPPgAdmin\Decorators\Decorator;
 class SchemaController extends BaseController {
 	public $_name = 'SchemaController';
 
+	public function render() {
+		$conf   = $this->conf;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$action = $this->action;
+
+		if ($action == 'tree') {
+			return $this->doTree();
+		} else if ($action == 'subtree') {
+			return $this->doSubTree();
+		}
+
+		$misc->printHeader($lang['strschemas']);
+		$misc->printBody();
+
+		if (isset($_POST['cancel'])) {
+			$action = '';
+		}
+
+		switch ($action) {
+			case 'create':
+				if (isset($_POST['create'])) {
+					$this->doSaveCreate();
+				} else {
+					$this->doCreate();
+				}
+
+				break;
+			case 'alter':
+				if (isset($_POST['alter'])) {
+					$this->doSaveAlter();
+				} else {
+					$this->doAlter();
+				}
+
+				break;
+			case 'drop':
+				if (isset($_POST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDrop(true);
+				}
+
+				break;
+			case 'export':
+				$this->doExport();
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
+
+	}
+
 /**
- * Show default list of schemas in the database
+ * Generate XML for the browser tree.
  */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$schemas = $data->getSchemas();
+
+		$reqvars = $misc->getRequestVars('schema');
+
+		$attrs = [
+			'text' => Decorator::field('nspname'),
+			'icon' => 'Schema',
+			'toolTip' => Decorator::field('nspcomment'),
+			'action' => Decorator::redirecturl('redirect.php',
+				$reqvars,
+				[
+					'subject' => 'schema',
+					'schema' => Decorator::field('nspname'),
+				]
+			),
+			'branch' => Decorator::url('schemas.php',
+				$reqvars,
+				[
+					'action' => 'subtree',
+					'schema' => Decorator::field('nspname'),
+				]
+			),
+		];
+
+		$misc->printTree($schemas, $attrs, 'schemas');
+
+	}
+
+	function doSubTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$tabs = $misc->getNavTabs('schema');
+
+		$items = $misc->adjustTabsForTree($tabs);
+
+		$reqvars = $misc->getRequestVars('schema');
+
+		$attrs = [
+			'text' => Decorator::field('title'),
+			'icon' => Decorator::field('icon'),
+			'action' => Decorator::actionurl(Decorator::field('url'),
+				$reqvars,
+				Decorator::field('urlvars', [])
+			),
+			'branch' => Decorator::url(Decorator::field('url'),
+				$reqvars,
+				Decorator::field('urlvars'),
+				['action' => 'tree']
+			),
+		];
+
+		$misc->printTree($items, $attrs, 'schema');
+
+	}
+
+	/**
+	 * Show default list of schemas in the database
+	 */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('database');
-		$misc->printTabs('database', 'schemas');
+		$this->printTrail('database');
+		$this->printTabs('database', 'schemas');
 		$misc->printMsg($msg);
 
 		// Check that the DB actually supports schemas
@@ -93,9 +218,9 @@ class SchemaController extends BaseController {
 			unset($actions['alter']);
 		}
 
-		echo $misc->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas']);
+		echo $this->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas']);
 
-		$misc->printNavLinks(['create' => [
+		$this->printNavLinks(['create' => [
 			'attr' => [
 				'href' => [
 					'url' => 'schemas.php',
@@ -110,12 +235,13 @@ class SchemaController extends BaseController {
 		]], 'schemas-schemas', get_defined_vars());
 	}
 
-/**
- * Displays a screen where they can enter a new schema
- */
+	/**
+	 * Displays a screen where they can enter a new schema
+	 */
 	public function doCreate($msg = '') {
-		global $data, $misc;
-		global $lang;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		$server_info = $misc->getServerInfo();
 
@@ -138,7 +264,7 @@ class SchemaController extends BaseController {
 		// Fetch all users from the database
 		$users = $data->getUsers();
 
-		$misc->printTrail('database');
+		$this->printTrail('database');
 		$misc->printTitle($lang['strcreateschema'], 'pg.schema.create');
 		$misc->printMsg($msg);
 
@@ -172,11 +298,13 @@ class SchemaController extends BaseController {
 		echo "</form>\n";
 	}
 
-/**
- * Actually creates the new schema in the database
- */
+	/**
+	 * Actually creates the new schema in the database
+	 */
 	public function doSaveCreate() {
-		global $data, $lang, $_reload_browser;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		// Check that they've given a name
 		if ($_POST['formName'] == '') {
@@ -193,14 +321,17 @@ class SchemaController extends BaseController {
 		}
 	}
 
-/**
- * Display a form to permit editing schema properies.
- * TODO: permit changing owner
- */
+	/**
+	 * Display a form to permit editing schema properies.
+	 * TODO: permit changing owner
+	 */
 	public function doAlter($msg = '') {
-		global $data, $misc, $lang;
 
-		$misc->printTrail('schema');
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$this->printTrail('schema');
 		$misc->printTitle($lang['stralter'], 'pg.schema.alter');
 		$misc->printMsg($msg);
 
@@ -264,11 +395,13 @@ class SchemaController extends BaseController {
 		}
 	}
 
-/**
- * Save the form submission containing changes to a schema
- */
+	/**
+	 * Save the form submission containing changes to a schema
+	 */
 	public function doSaveAlter($msg = '') {
-		global $data, $misc, $lang, $_reload_browser;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		$status = $data->updateSchema($_POST['schema'], $_POST['comment'], $_POST['name'], $_POST['owner']);
 		if ($status == 0) {
@@ -280,12 +413,13 @@ class SchemaController extends BaseController {
 
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+	/**
+	 * Show confirmation of drop and perform actual drop
+	 */
 	public function doDrop($confirm) {
-		global $data, $misc;
-		global $lang, $_reload_browser;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (empty($_REQUEST['nsp']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifyschematodrop']);
@@ -293,7 +427,7 @@ class SchemaController extends BaseController {
 		}
 
 		if ($confirm) {
-			$misc->printTrail('schema');
+			$this->printTrail('schema');
 			$misc->printTitle($lang['strdrop'], 'pg.schema.drop');
 
 			echo '<form action="/src/views/schemas.php" method="post">' . "\n";
@@ -353,15 +487,16 @@ class SchemaController extends BaseController {
 		}
 	}
 
-/**
- * Displays options for database download
- */
+	/**
+	 * Displays options for database download
+	 */
 	public function doExport($msg = '') {
-		global $data, $misc;
-		global $lang;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'export');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'export');
 		$misc->printMsg($msg);
 
 		echo '<form action="/src/views/dbexport.php" method="post">' . "\n";

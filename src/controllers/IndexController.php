@@ -9,6 +9,101 @@ use \PHPPgAdmin\Decorators\Decorator;
 class IndexController extends BaseController {
 	public $_name = 'IndexController';
 
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['strindexes'], "<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
+
+		if ($action == 'create_index' || $action == 'save_create_index') {
+			echo "<body onload=\"init();\">";
+		} else {
+			$misc->printBody();
+		}
+
+		switch ($action) {
+			case 'cluster_index':
+				if (isset($_POST['cluster'])) {
+					$this->doClusterIndex(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_cluster_index':
+				$this->doClusterIndex(true);
+				break;
+			case 'reindex':
+				$this->doReindex();
+				break;
+			case 'save_create_index':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreateIndex();
+				}
+
+				break;
+			case 'create_index':
+				$this->doCreateIndex();
+				break;
+			case 'drop_index':
+				if (isset($_POST['drop'])) {
+					$this->doDropIndex(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop_index':
+				$this->doDropIndex(true);
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
+
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$indexes = $data->getIndexes($_REQUEST['table']);
+
+		$reqvars = $misc->getRequestVars('table');
+
+		function getIcon($f) {
+			if ($f['indisprimary'] == 't') {
+				return 'PrimaryKey';
+			}
+
+			if ($f['indisunique'] == 't') {
+				return 'UniqueConstraint';
+			}
+
+			return 'Index';
+		}
+
+		$attrs = [
+			'text' => Decorator::field('indname'),
+			'icon' => Decorator::callback('getIcon'),
+		];
+
+		return $misc->printTree($indexes, $attrs, 'indexes');
+	}
+
 	/**
 	 * Show confirmation of cluster index and perform actual cluster
 	 */
@@ -22,7 +117,7 @@ class IndexController extends BaseController {
 			// Default analyze to on
 			$_REQUEST['analyze'] = true;
 
-			$misc->printTrail('index');
+			$this->printTrail('index');
 			$misc->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
 			echo "<p>", sprintf($lang['strconfcluster'], $misc->printVal($_REQUEST['index'])), "</p>\n";
@@ -107,7 +202,7 @@ class IndexController extends BaseController {
 			$tablespaces = $data->getTablespaces();
 		}
 
-		$misc->printTrail('table');
+		$this->printTrail('table');
 		$misc->printTitle($lang['strcreateindex'], 'pg.index.create');
 		$misc->printMsg($msg);
 
@@ -247,7 +342,7 @@ class IndexController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('index');
+			$this->printTrail('index');
 			$misc->printTitle($lang['strdrop'], 'pg.index.drop');
 
 			echo "<p>", sprintf($lang['strconfdropindex'], $misc->printVal($_REQUEST['index'])), "</p>\n";
@@ -293,8 +388,8 @@ class IndexController extends BaseController {
 			return $actions;
 		};
 
-		$misc->printTrail('table');
-		$misc->printTabs('table', 'indexes');
+		$this->printTrail('table');
+		$this->printTabs('table', 'indexes');
 		$misc->printMsg($msg);
 
 		$indexes = $data->getIndexes($_REQUEST['table']);
@@ -370,9 +465,9 @@ class IndexController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], $indPre);
+		echo $this->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], $indPre);
 
-		$misc->printNavLinks([
+		$this->printNavLinks([
 			'create' => [
 				'attr' => [
 					'href' => [

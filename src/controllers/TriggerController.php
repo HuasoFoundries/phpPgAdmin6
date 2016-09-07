@@ -9,9 +9,107 @@ use \PHPPgAdmin\Decorators\Decorator;
 class TriggerController extends BaseController {
 	public $_name = 'TriggerController';
 
-/**
- * Function to save after altering a trigger
- */
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		$misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strtriggers']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'alter':
+				if (isset($_POST['alter'])) {
+					$this->doSaveAlter();
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_alter':
+				$this->doAlter();
+				break;
+			case 'confirm_enable':
+				$this->doEnable(true);
+				break;
+			case 'confirm_disable':
+				$this->doDisable(true);
+				break;
+			case 'save_create':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'create':
+				$this->doCreate();
+				break;
+			case 'drop':
+				if (isset($_POST['yes'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			case 'enable':
+				if (isset($_POST['yes'])) {
+					$this->doEnable(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'disable':
+				if (isset($_POST['yes'])) {
+					$this->doDisable(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
+
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$triggers = $data->getTriggers($_REQUEST['table']);
+
+		$reqvars = $misc->getRequestVars('table');
+
+		$attrs = [
+			'text' => Decorator::field('tgname'),
+			'icon' => 'Trigger',
+		];
+
+		return $misc->printTree($triggers, $attrs, 'triggers');
+
+	}
+
+	/**
+	 * Function to save after altering a trigger
+	 */
 	public function doSaveAlter() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -36,7 +134,7 @@ class TriggerController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('trigger');
+		$this->printTrail('trigger');
 		$misc->printTitle($lang['stralter'], 'pg.trigger.alter');
 		$misc->printMsg($msg);
 
@@ -78,7 +176,7 @@ class TriggerController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('trigger');
+			$this->printTrail('trigger');
 			$misc->printTitle($lang['strdrop'], 'pg.trigger.drop');
 
 			echo "<p>", sprintf($lang['strconfdroptrigger'], $misc->printVal($_REQUEST['trigger']),
@@ -115,7 +213,7 @@ class TriggerController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('trigger');
+			$this->printTrail('trigger');
 			$misc->printTitle($lang['strenable'], 'pg.table.alter');
 
 			echo "<p>", sprintf($lang['strconfenabletrigger'], $misc->printVal($_REQUEST['trigger']),
@@ -151,7 +249,7 @@ class TriggerController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('trigger');
+			$this->printTrail('trigger');
 			$misc->printTitle($lang['strdisable'], 'pg.table.alter');
 
 			echo "<p>", sprintf($lang['strconfdisabletrigger'], $misc->printVal($_REQUEST['trigger']),
@@ -186,7 +284,7 @@ class TriggerController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('table');
+		$this->printTrail('table');
 		$misc->printTitle($lang['strcreatetrigger'], 'pg.trigger.create');
 		$misc->printMsg($msg);
 
@@ -296,8 +394,8 @@ class TriggerController extends BaseController {
 			return $actions;
 		};
 
-		$misc->printTrail('table');
-		$misc->printTabs('table', 'triggers');
+		$this->printTrail('table');
+		$this->printTabs('table', 'triggers');
 		$misc->printMsg($msg);
 
 		$triggers = $data->getTriggers($_REQUEST['table']);
@@ -383,9 +481,9 @@ class TriggerController extends BaseController {
 			];
 		}
 
-		echo $misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnotriggers'], $tgPre);
+		echo $this->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnotriggers'], $tgPre);
 
-		$misc->printNavLinks(['create' => [
+		$this->printNavLinks(['create' => [
 			'attr' => [
 				'href' => [
 					'url' => 'triggers.php',

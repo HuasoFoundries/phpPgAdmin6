@@ -7,12 +7,152 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class ViewController extends BaseController {
-	public $script = 'view.php';
-	public $_name  = 'ViewController';
+	public $script      = 'views.php';
+	public $_name       = 'ViewController';
+	public $table_place = 'views-views';
+
+	public function render() {
+
+		$conf   = $this->conf;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$action = $this->action;
+
+		if ($action == 'tree') {
+			return $this->doTree();
+		} else if ($action == 'subtree') {
+			return $this->doSubTree();
+		}
+
+		$data = $misc->getDatabaseAccessor();
+
+		$misc->printHeader($lang['strviews']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'selectrows':
+				if (!isset($_REQUEST['cancel'])) {
+					$this->doSelectRows(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confselectrows':
+				$this->doSelectRows(true);
+				break;
+			case 'save_create_wiz':
+				if (isset($_REQUEST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreateWiz();
+				}
+
+				break;
+			case 'wiz_create':
+				doWizardCreate();
+				break;
+			case 'set_params_create':
+				if (isset($_POST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSetParamsCreate();
+				}
+
+				break;
+			case 'save_create':
+				if (isset($_REQUEST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'create':
+				doCreate();
+				break;
+			case 'drop':
+				if (isset($_POST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		return $misc->printFooter();
+
+	}
 
 /**
- * Ask for select parameters and perform select
+ * Generate XML for the browser tree.
  */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$views = $data->getViews();
+
+		$reqvars = $misc->getRequestVars('view');
+
+		$attrs = [
+			'text' => Decorator::field('relname'),
+			'icon' => 'View',
+			'iconAction' => Decorator::url('display.php', $reqvars, ['view' => Decorator::field('relname')]),
+			'toolTip' => Decorator::field('relcomment'),
+			'action' => Decorator::redirecturl('redirect.php', $reqvars, ['view' => Decorator::field('relname')]),
+			'branch' => Decorator::url('views.php', $reqvars,
+				[
+					'action' => 'subtree',
+					'view' => Decorator::field('relname'),
+				]
+			),
+		];
+
+		return $misc->printTree($views, $attrs, 'views');
+	}
+
+	function doSubTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$tabs    = $misc->getNavTabs('view');
+		$items   = $misc->adjustTabsForTree($tabs);
+		$reqvars = $misc->getRequestVars('view');
+
+		$attrs = [
+			'text' => Decorator::field('title'),
+			'icon' => Decorator::field('icon'),
+			'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['view' => $_REQUEST['view']]),
+			'branch' => Decorator::ifempty(
+				Decorator::field('branch'), '', Decorator::url(Decorator::field('url'), Decorator::field('urlvars'), $reqvars,
+					[
+						'action' => 'tree',
+						'view' => $_REQUEST['view'],
+					]
+				)
+			),
+		];
+
+		return $misc->printTree($items, $attrs, 'view');
+	}
+
+	/**
+	 * Ask for select parameters and perform select
+	 */
 	public function doSelectRows($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -20,13 +160,15 @@ class ViewController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printTrail('view');
-			$misc->printTabs('view', 'select');
+			$this->printTrail('view');
+			$this->printTabs('view', 'select');
 			$misc->printMsg($msg);
 
 			$attrs = $data->getTableAttributes($_REQUEST['view']);
 
-			echo "<form action=\"/src/views/views.php\" method=\"post\" id=\"selectform\">\n";
+			echo '<form action="/src/views/' . $this->script . '" method="post" id="selectform">';
+			echo "\n";
+
 			if ($attrs->recordCount() > 0) {
 				// JavaScript for select all feature
 				echo "<script type=\"text/javascript\">\n";
@@ -96,6 +238,7 @@ class ViewController extends BaseController {
 			echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$lang['strselect']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 			echo "</form>\n";
+			return;
 		} else {
 			if (!isset($_POST['show'])) {
 				$_POST['show'] = [];
@@ -118,24 +261,27 @@ class ViewController extends BaseController {
 			}
 
 			if (sizeof($_POST['show']) == 0) {
-				$this->doSelectRows(true, $lang['strselectneedscol']);
+				return $this->doSelectRows(true, $lang['strselectneedscol']);
 			} else {
 				// Generate query SQL
-				$query = $data->getSelectSQL($_REQUEST['view'], array_keys($_POST['show']),
-					$_POST['values'], $_POST['ops']);
+				$query = $data->getSelectSQL($_REQUEST['view'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
+
 				$_REQUEST['query']  = $query;
 				$_REQUEST['return'] = "schema";
+
 				$misc->setNoOutput(true);
-				include './display.php';
-				exit;
+
+				$display_controller = new DisplayController($this->getContainer());
+
+				return $display_controller->render();
 			}
 		}
 
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+	/**
+	 * Show confirmation of drop and perform actual drop
+	 */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -148,7 +294,7 @@ class ViewController extends BaseController {
 		}
 
 		if ($confirm) {
-			$misc->printTrail('view');
+			$this->printTrail('view');
 			$misc->printTitle($lang['strdrop'], 'pg.view.drop');
 
 			echo "<form action=\"/src/views/views.php\" method=\"post\">\n";
@@ -210,9 +356,9 @@ class ViewController extends BaseController {
 
 	}
 
-/**
- * Sets up choices for table linkage, and which fields to select for the view we're creating
- */
+	/**
+	 * Sets up choices for table linkage, and which fields to select for the view we're creating
+	 */
 	public function doSetParamsCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -232,7 +378,7 @@ class ViewController extends BaseController {
 				$_REQUEST['formComment'] = '';
 			}
 
-			$misc->printTrail('schema');
+			$this->printTrail('schema');
 			$misc->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
 			$misc->printMsg($msg);
 
@@ -362,9 +508,9 @@ class ViewController extends BaseController {
 		}
 	}
 
-/**
- * Display a wizard where they can enter a new view
- */
+	/**
+	 * Display a wizard where they can enter a new view
+	 */
 	public function doWizardCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -373,7 +519,7 @@ class ViewController extends BaseController {
 
 		$tables = $data->getTables(true);
 
-		$misc->printTrail('schema');
+		$this->printTrail('schema');
 		$misc->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
 		$misc->printMsg($msg);
 
@@ -401,9 +547,9 @@ class ViewController extends BaseController {
 		echo "</form>\n";
 	}
 
-/**
- * Displays a screen where they can enter a new view
- */
+	/**
+	 * Displays a screen where they can enter a new view
+	 */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -426,7 +572,7 @@ class ViewController extends BaseController {
 			$_REQUEST['formComment'] = '';
 		}
 
-		$misc->printTrail('schema');
+		$this->printTrail('schema');
 		$misc->printTitle($lang['strcreateview'], 'pg.view.create');
 		$misc->printMsg($msg);
 
@@ -449,9 +595,9 @@ class ViewController extends BaseController {
 		echo "</form>\n";
 	}
 
-/**
- * Actually creates the new view in the database
- */
+	/**
+	 * Actually creates the new view in the database
+	 */
 	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -475,9 +621,9 @@ class ViewController extends BaseController {
 		}
 	}
 
-/**
- * Actually creates the new wizard view in the database
- */
+	/**
+	 * Actually creates the new wizard view in the database
+	 */
 	public function doSaveCreateWiz() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -615,17 +761,17 @@ class ViewController extends BaseController {
 		}
 	}
 
-/**
- * Show default list of views in the database
- */
+	/**
+	 * Show default list of views in the database
+	 */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'views');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'views');
 		$misc->printMsg($msg);
 
 		$views = $data->getViews();
@@ -716,7 +862,7 @@ class ViewController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($views, $columns, $actions, 'views-views', $lang['strnoviews']);
+		echo $this->printTable($views, $columns, $actions, $this->table_place, $lang['strnoviews']);
 
 		$navlinks = [
 			'create' => [
@@ -748,7 +894,7 @@ class ViewController extends BaseController {
 				'content' => $lang['strcreateviewwiz'],
 			],
 		];
-		$misc->printNavLinks($navlinks, 'views-views', get_defined_vars());
+		$this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
 
 	}
 

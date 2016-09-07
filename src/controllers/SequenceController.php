@@ -9,17 +9,128 @@ use \PHPPgAdmin\Decorators\Decorator;
 class SequenceController extends BaseController {
 	public $_name = 'SequenceController';
 
-/**
- * Display list of all sequences in the database/schema
- */
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		// Print header
+		$misc->printHeader($lang['strsequences']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'create':
+				$this->doCreateSequence();
+				break;
+			case 'save_create_sequence':
+				if (isset($_POST['create'])) {
+					$this->doSaveCreateSequence();
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'properties':
+				$this->doProperties();
+				break;
+			case 'drop':
+				if (isset($_POST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			case 'restart':
+				$this->doRestart();
+				break;
+			case 'reset':
+				$this->doReset();
+				break;
+			case 'nextval':
+				$this->doNextval();
+				break;
+			case 'setval':
+				if (isset($_POST['setval'])) {
+					$this->doSaveSetval();
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_setval':
+				$this->doSetval();
+				break;
+			case 'alter':
+				if (isset($_POST['alter'])) {
+					$this->doSaveAlter();
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_alter':
+				$this->doAlter();
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		// Print footer
+		return $misc->printFooter();
+
+	}
+
+	/**
+	 * Generate XML for the browser tree.
+	 */
+	function doTree() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$sequences = $data->getSequences();
+
+		$reqvars = $misc->getRequestVars('sequence');
+
+		$attrs = [
+			'text' => Decorator::field('seqname'),
+			'icon' => 'Sequence',
+			'toolTip' => Decorator::field('seqcomment'),
+			'action' => Decorator::actionurl('sequences.php',
+				$reqvars,
+				[
+					'action' => 'properties',
+					'sequence' => Decorator::field('seqname'),
+				]
+			),
+		];
+
+		return $misc->printTree($sequences, $attrs, 'sequences');
+	}
+
+	/**
+	 * Display list of all sequences in the database/schema
+	 */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'sequences');
+		$this->printTrail('schema');
+		$this->printTabs('schema', 'sequences');
 		$misc->printMsg($msg);
 
 		// Get all sequences
@@ -90,9 +201,9 @@ class SequenceController extends BaseController {
 			],
 		];
 
-		echo $misc->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences']);
+		echo $this->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences']);
 
-		$misc->printNavLinks(['create' => [
+		$this->printNavLinks(['create' => [
 			'attr' => [
 				'href' => [
 					'url' => 'sequences.php',
@@ -116,7 +227,7 @@ class SequenceController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
-		$misc->printTrail('sequence');
+		$this->printTrail('sequence');
 		$misc->printTitle($lang['strproperties'], 'pg.sequence');
 		$misc->printMsg($msg);
 
@@ -256,7 +367,7 @@ class SequenceController extends BaseController {
 				unset($navlinks['restart']);
 			}
 
-			$misc->printNavLinks($navlinks, 'sequences-properties', get_defined_vars());
+			$this->printNavLinks($navlinks, 'sequences-properties', get_defined_vars());
 		} else {
 			echo "<p>{$lang['strnodata']}</p>\n";
 		}
@@ -278,7 +389,7 @@ class SequenceController extends BaseController {
 		}
 
 		if ($confirm) {
-			$misc->printTrail('sequence');
+			$this->printTrail('sequence');
 			$misc->printTitle($lang['strdrop'], 'pg.sequence.drop');
 			$misc->printMsg($msg);
 
@@ -372,7 +483,7 @@ class SequenceController extends BaseController {
 			$_POST['formCacheValue'] = '';
 		}
 
-		$misc->printTrail('schema');
+		$this->printTrail('schema');
 		$misc->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
 		$misc->printMsg($msg);
 
@@ -521,7 +632,7 @@ class SequenceController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('sequence');
+		$this->printTrail('sequence');
 		$misc->printTitle($lang['strsetval'], 'pg.sequence');
 		$misc->printMsg($msg);
 
@@ -625,7 +736,7 @@ class SequenceController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printTrail('sequence');
+		$this->printTrail('sequence');
 		$misc->printTitle($lang['stralter'], 'pg.sequence.alter');
 		$misc->printMsg($msg);
 
