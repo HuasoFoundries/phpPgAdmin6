@@ -1,7 +1,6 @@
 <?php
-require_once 'classes/Plugin.php';
 
-class instaGIS extends Plugin {
+class instaGIS extends \PHPPgAdmin\Plugin {
 
 	/**
 	 * Attributes
@@ -33,7 +32,7 @@ class instaGIS extends Plugin {
 	 * @return $hooks
 	 */
 	function get_hooks() {
-		$hooks = array(
+		$hooks = [
 
 			/*'toplinks' => array(
 					'add_plugin_toplinks'
@@ -42,9 +41,9 @@ class instaGIS extends Plugin {
 					'add_plugin_navlinks'
 			*/
 
-			'head' => array(
+			'head' => [
 				'add_plugin_head',
-			),
+			],
 
 			/*
 				'tabs' => array('...'),
@@ -53,7 +52,7 @@ class instaGIS extends Plugin {
 				'actionbuttons' => array('...')
 				'logout' => array('...')
 			*/
-		);
+		];
 		return $hooks;
 	}
 
@@ -69,54 +68,54 @@ class instaGIS extends Plugin {
 	 * @return $actions
 	 */
 	function get_actions() {
-		$actions = array(
+		$actions = [
 			'some_action...',
-		);
+		];
 		return $actions;
 	}
 
 	function add_plugin_toplinks(&$plugin_functions_parameters) {
 		global $misc;
 
-		$link = array(
+		$link = [
 			'url' => '/plugin.php',
 			//php file's name. Every link to a plugin must point to plugin.php
-			'urlvars' => array(
+			'urlvars' => [
 				//array with the url variables
 				'plugin' => $this->name,
 				//Every link to a plugin must have its name in it.
 				'subject' => 'server',
 				'action' => 'show_page',
-			),
-		);
+			],
+		];
 
-		$toplink = array(
-			'bettersql' => array(
-				'attr' => array(
-					'href' => array(
+		$toplink = [
+			'bettersql' => [
+				'attr' => [
+					'href' => [
 						'url' => '/sqledit.php',
-						'urlvars' => array_merge($reqvars, array(
+						'urlvars' => array_merge($reqvars, [
 							'action' => 'sql',
-						)),
-					),
+						]),
+					],
 					'target' => "sqledit",
 					'id' => 'toplink_sql',
-				),
+				],
 				'content' => 'BetterSQL',
-			),
-		);
+			],
+		];
 
-		$plugin_functions_parameters['toplinks']['betterSQL'] = array(
-			'attr' => array(
-				'href' => array(
+		$plugin_functions_parameters['toplinks']['betterSQL'] = [
+			'attr' => [
+				'href' => [
 					'url' => '/sqledit.php',
-					'urlvars' => array_merge($reqvars, array(
+					'urlvars' => array_merge($reqvars, [
 						'action' => 'sql',
-					)),
-				),
-			),
+					]),
+				],
+			],
 			'content' => 'BetterSQL',
-		);
+		];
 	}
 	/**
 	 * Prints HTML code to include plugin's js file
@@ -129,10 +128,10 @@ class instaGIS extends Plugin {
 
 	function add_plugin_head(&$plugin_functions_parameters) {
 		global $misc;
-		$plugin_functions_parameters['heads']['bootstrap'] = '<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">';
+		$plugin_functions_parameters['heads']['bootstrap']       = '<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">';
 		$plugin_functions_parameters['heads']['bootstrap.theme'] = '<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">';
-		$plugin_functions_parameters['heads']['fonts'] = '<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Dosis:600|Open+Sans:300,600,400,700|Roboto:300italic,400italic">';
-		$plugin_functions_parameters['heads']['bootstrap.js'] = '<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>';
+		$plugin_functions_parameters['heads']['fonts']           = '<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Dosis:600|Open+Sans:300,600,400,700|Roboto:300italic,400italic">';
+		$plugin_functions_parameters['heads']['bootstrap.js']    = '<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>';
 
 		$plugin_functions_parameters['heads']['include_js'] = $this->include_js();
 
@@ -142,48 +141,48 @@ class instaGIS extends Plugin {
 	function add_plugin_navlinks(&$plugin_functions_parameters) {
 		global $misc;
 
-		$navlinks = array();
+		$navlinks = [];
 		switch ($plugin_functions_parameters['place']) {
-		case 'display-browse':
-			echo '<iframe src="http://phppga.instagis.com/sqledit.php?subject=table&server=postgismaster.instagis.com%3A5432%3Aallow&database=pstn_db&schema=asistente&action=sql" width="100%" height="200"></iframe>';
-			$link = array(
-				'url' => 'plugin.php',
-				'urlvars' => array(
-					'plugin' => $this->name,
-					'subject' => 'show_page',
-					'action' => 'show_display_extension',
-					'database' => field('database'),
-					'table' => field('table'),
-				),
-			);
+			case 'display-browse':
+				echo '<iframe src="http://phppga.instagis.com/sqledit.php?subject=table&server=postgismaster.instagis.com%3A5432%3Aallow&database=pstn_db&schema=asistente&action=sql" width="100%" height="200"></iframe>';
+				$link = [
+					'url' => 'plugin.php',
+					'urlvars' => [
+						'plugin' => $this->name,
+						'subject' => 'show_page',
+						'action' => 'show_display_extension',
+						'database' => field('database'),
+						'table' => field('table'),
+					],
+				];
 
-			$plugin_functions_parameters['navlinks']['query'] = array(
-				'attr' => array(
-					'href' => $link,
-				),
-				'content' => 'QUERY',
-			);
+				$plugin_functions_parameters['navlinks']['query'] = [
+					'attr' => [
+						'href' => $link,
+					],
+					'content' => 'QUERY',
+				];
 
-			/*echo 'PLUGIN NAVLINKS <pre>';
-				print_r($plugin_functions_parameters['navlinks']);
-				echo '</pre>';*/
-			break;
+				/*echo 'PLUGIN NAVLINKS <pre>';
+					print_r($plugin_functions_parameters['navlinks']);
+				*/
+				break;
 
-		case 'all_db-databases':
-			$navlinks[] = array(
-				'attr' => array(
-					'href' => array(
-						'url' => 'plugin.php',
-						'urlvars' => array(
-							'plugin' => $this->name,
-							'subject' => 'show_page',
-							'action' => 'show_databases_extension',
-						),
-					),
-				),
-				'content' => $this->lang['strdbext'],
-			);
-			break;
+			case 'all_db-databases':
+				$navlinks[] = [
+					'attr' => [
+						'href' => [
+							'url' => 'plugin.php',
+							'urlvars' => [
+								'plugin' => $this->name,
+								'subject' => 'show_page',
+								'action' => 'show_databases_extension',
+							],
+						],
+					],
+					'content' => $this->lang['strdbext'],
+				];
+				break;
 		}
 
 		if (count($navlinks) > 0) {

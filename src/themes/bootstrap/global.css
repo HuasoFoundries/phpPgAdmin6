@@ -432,7 +432,7 @@ div.logo {
     /* 1em; */
     border: none;
     margin-bottom: 2px;
-    background-image: url('../../images/themes/bootstrap/title.png');
+    background-image: url('../../../images/themes/bootstrap/title.png');
     background-repeat: none;
     height: 50px;
 }

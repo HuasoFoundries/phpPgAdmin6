@@ -12,15 +12,15 @@ class Postgres74 extends Postgres80 {
 	var $major_version = 7.4;
 	// List of all legal privileges that can be applied to different types
 	// of objects.
-	var $privlist = array(
-		'table' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-		'view' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-		'sequence' => array('SELECT', 'UPDATE', 'ALL PRIVILEGES'),
-		'database' => array('CREATE', 'TEMPORARY', 'ALL PRIVILEGES'),
-		'function' => array('EXECUTE', 'ALL PRIVILEGES'),
-		'language' => array('USAGE', 'ALL PRIVILEGES'),
-		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
-	);
+	var $privlist = [
+		'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+		'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+		'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+		'database' => ['CREATE', 'TEMPORARY', 'ALL PRIVILEGES'],
+		'function' => ['EXECUTE', 'ALL PRIVILEGES'],
+		'language' => ['USAGE', 'ALL PRIVILEGES'],
+		'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+	];
 
 	// Help functions
 
@@ -62,9 +62,8 @@ class Postgres74 extends Postgres80 {
 	 * @return A list of databases, sorted alphabetically
 	 */
 	function getDatabases($currentdatabase = NULL) {
-		global $conf, $misc;
-
-		$server_info = $misc->getServerInfo();
+		$conf        = $this->conf;
+		$server_info = $this->server_info;
 
 		if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
 			$username = $server_info['username'];
@@ -105,7 +104,7 @@ class Postgres74 extends Postgres80 {
 	 * @return A recordset
 	 */
 	function findObject($term, $filter) {
-		global $conf;
+		$conf = $this->conf;
 
 		/*about escaping:
 			 * SET standard_conforming_string is not available before 8.2
@@ -125,10 +124,10 @@ class Postgres74 extends Postgres80 {
 		if (!$conf['show_system']) {
 			// XXX: The mention of information_schema here is in the wrong place, but
 			// it's the quickest fix to exclude the info schema from 7.4
-			$where = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
+			$where     = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
 			$lan_where = "AND pl.lanispl";
 		} else {
-			$where = '';
+			$where     = '';
 			$lan_where = '';
 		}
 
@@ -250,7 +249,7 @@ class Postgres74 extends Postgres80 {
 	 * @return A recordset
 	 */
 	function getLocks() {
-		global $conf;
+		$conf = $this->conf;
 
 		if (!$conf['show_system']) {
 			$where = "AND pn.nspname NOT LIKE 'pg\\\\_%'";
@@ -590,7 +589,7 @@ class Postgres74 extends Postgres80 {
 	 * @return All casts
 	 */
 	function getCasts() {
-		global $conf;
+		$conf = $this->conf;
 
 		if ($conf['show_system']) {
 			$where = '';

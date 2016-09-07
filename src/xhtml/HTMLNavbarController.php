@@ -197,6 +197,7 @@ class HTMLNavbarController extends HTMLController {
 		$appLangFiles   = $misc->appLangFiles;
 
 		$server_info = $misc->getServerInfo();
+		$server_id   = $misc->getServerId();
 		$reqvars     = $misc->getRequestVars('table');
 
 		$topbar_html = "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td>";
@@ -280,8 +281,8 @@ class HTMLNavbarController extends HTMLController {
 
 			$topbar_html .= "</td>";
 
-			$sql_window_id     = htmlentities('sqledit:' . $this->server_id);
-			$history_window_id = htmlentities('history:' . $this->server_id);
+			$sql_window_id     = htmlentities('sqledit:' . $server_id);
+			$history_window_id = htmlentities('history:' . $server_id);
 
 			$topbar_html .= "<script type=\"text/javascript\">
 						$('#toplink_sql').click(function() {

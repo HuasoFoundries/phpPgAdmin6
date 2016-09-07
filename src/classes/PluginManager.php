@@ -10,8 +10,8 @@ class PluginManager {
 	/**
 	 * Attributes
 	 */
-	private $plugins_list = array();
-	private $available_hooks = array(
+	private $plugins_list    = [];
+	private $available_hooks = [
 		'head',
 		'toplinks',
 		'tabs',
@@ -20,22 +20,19 @@ class PluginManager {
 		'actionbuttons',
 		'tree',
 		'logout',
-	);
-	private $actions = array();
-	private $hooks = array();
+	];
+	private $actions = [];
+	private $hooks   = [];
 
 	/**
 	 * Register the plugins
 	 * @param $this->language - Language that have been used.
 	 */
-	function __construct(\Slim\App $app) {
-		$this->app = $app;
-
-		$container = $app->getContainer();
+	function __construct(\Slim\Container $container) {
 
 		$this->language = $container->get('language');
-		$this->lang = $container->get('lang');
-		$this->conf = $container->get('conf');
+		$this->lang     = $container->get('lang');
+		$this->conf     = $container->get('conf');
 
 		if (!isset($this->conf['plugins'])) {
 			return;
@@ -72,7 +69,7 @@ class PluginManager {
 		//The $plugin_name is the identification of the plugin.
 		//Example: PluginExample is the identification for PluginExample
 		//It will be used to get a specific plugin from the plugins_list.
-		$plugin_name = $plugin->get_name();
+		$plugin_name                      = $plugin->get_name();
 		$this->plugins_list[$plugin_name] = $plugin;
 
 		//Register the plugin's functions
@@ -86,7 +83,7 @@ class PluginManager {
 		}
 
 		//Register the plugin's actions
-		$actions = $plugin->get_actions();
+		$actions                     = $plugin->get_actions();
 		$this->actions[$plugin_name] = $actions;
 	}
 
@@ -109,7 +106,7 @@ class PluginManager {
 				$plugin = $this->plugins_list[$plugin_name];
 				foreach ($functions as $function) {
 					if (method_exists($plugin, $function)) {
-						call_user_func(array($plugin, $function), $function_args);
+						call_user_func([$plugin, $function], $function_args);
 					}
 				}
 			}
@@ -132,7 +129,7 @@ class PluginManager {
 
 		// Check if the plugin's method exists and if this method is an declared action.
 		if (method_exists($plugin, $action) and in_array($action, $this->actions[$plugin_name])) {
-			call_user_func(array($plugin, $action));
+			call_user_func([$plugin, $action]);
 		} else {
 			// Show an error and stop the application
 			printf($this->lang['stractionnotfound'] . "\t\n", $action, $plugin_name);

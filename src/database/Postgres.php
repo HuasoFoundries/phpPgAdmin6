@@ -243,7 +243,7 @@ class Postgres extends ADODB_base {
 	 * @param $extras An array of attributes name as key and attributes' values as value
 	 */
 	function printField($name, $value, $type, $extras = []) {
-		global $lang;
+		$lang = $this->lang;
 
 		// Determine actions string
 		$extra_str = '';
@@ -458,9 +458,8 @@ class Postgres extends ADODB_base {
 	 * @return A list of databases, sorted alphabetically
 	 */
 	function getDatabases($currentdatabase = NULL) {
-		global $conf, $misc;
-
-		$server_info = $misc->getServerInfo();
+		$conf        = $this->conf;
+		$server_info = $this->server_info;
 
 		if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
 			$username = $server_info['username'];
@@ -715,7 +714,7 @@ class Postgres extends ADODB_base {
 	 * @return A recordset
 	 */
 	function findObject($term, $filter) {
-		global $conf;
+		$conf = $this->conf;
 
 		/*about escaping:
 			 * SET standard_conforming_string is not available before 8.2
@@ -874,7 +873,7 @@ class Postgres extends ADODB_base {
 	 * @return All schemas, sorted alphabetically
 	 */
 	function getSchemas() {
-		global $conf;
+		$conf = $this->conf;
 
 		if (!$conf['show_system']) {
 			$where = "WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND nspname != 'information_schema'";
@@ -5082,7 +5081,7 @@ class Postgres extends ADODB_base {
 	 * @return All casts
 	 */
 	function getCasts() {
-		global $conf;
+		$conf = $this->conf;
 
 		if ($conf['show_system']) {
 			$where = '';
@@ -6234,7 +6233,7 @@ class Postgres extends ADODB_base {
 	 * @return A recordset
 	 */
 	function getLanguages($all = false) {
-		global $conf;
+		$conf = $this->conf;
 
 		if ($conf['show_system'] || $all) {
 			$where = '';
@@ -7520,7 +7519,7 @@ class Postgres extends ADODB_base {
 	 * @return A recordset
 	 */
 	function getTablespaces($all = false) {
-		global $conf;
+		$conf = $this->conf;
 
 		$sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, pg_catalog.pg_tablespace_location(oid) as spclocation,
                     (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid='pg_tablespace'::regclass) AS spccomment
@@ -7822,7 +7821,7 @@ class Postgres extends ADODB_base {
 	 */
 
 	function getLocks() {
-		global $conf;
+		$conf = $this->conf;
 
 		if (!$conf['show_system']) {
 			$where = 'AND pn.nspname NOT LIKE $$pg\_%$$';
@@ -7983,10 +7982,9 @@ class Postgres extends ADODB_base {
 	 * @return True for general success, false on any failure.
 	 */
 	function executeScript($name, $callback = null) {
-		global $data;
 
 		// This whole function isn't very encapsulated, but hey...
-		$conn = $data->conn->_connectionID;
+		$conn = $this->conn->_connectionID;
 		if (!is_uploaded_file($_FILES[$name]['tmp_name'])) {
 			return false;
 		}
