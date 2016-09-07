@@ -12,17 +12,17 @@ class Postgres84 extends Postgres90 {
 
 	// List of all legal privileges that can be applied to different types
 	// of objects.
-	var $privlist = array(
-		'table' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-		'view' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-		'sequence' => array('SELECT', 'UPDATE', 'ALL PRIVILEGES'),
-		'database' => array('CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'),
-		'function' => array('EXECUTE', 'ALL PRIVILEGES'),
-		'language' => array('USAGE', 'ALL PRIVILEGES'),
-		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
-		'tablespace' => array('CREATE', 'ALL PRIVILEGES'),
-		'column' => array('SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'),
-	);
+	var $privlist = [
+		'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+		'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+		'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+		'database' => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
+		'function' => ['EXECUTE', 'ALL PRIVILEGES'],
+		'language' => ['USAGE', 'ALL PRIVILEGES'],
+		'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+		'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
+		'column' => ['SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'],
+	];
 
 	// Help functions
 
@@ -68,7 +68,7 @@ class Postgres84 extends Postgres90 {
 	 * @return A recordset
 	 */
 	function findObject($term, $filter) {
-		global $conf;
+		$conf = $this->conf;
 
 		/*about escaping:
 			 * SET standard_conforming_string is not available before 8.2
@@ -88,10 +88,10 @@ class Postgres84 extends Postgres90 {
 		if (!$conf['show_system']) {
 			// XXX: The mention of information_schema here is in the wrong place, but
 			// it's the quickest fix to exclude the info schema from 7.4
-			$where = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
+			$where     = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
 			$lan_where = "AND pl.lanispl";
 		} else {
-			$where = '';
+			$where     = '';
 			$lan_where = '';
 		}
 

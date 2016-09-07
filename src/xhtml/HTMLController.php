@@ -8,16 +8,9 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class HTMLController {
 	private $container        = null;
-	private $_connection      = null;
-	private $_reload_browser  = false;
-	private $app              = null;
 	private $data             = null;
 	private $database         = null;
 	private $server_id        = null;
-	public $appLangFiles      = [];
-	public $appThemes         = [];
-	public $appName           = '';
-	public $appVersion        = '';
 	public $form              = '';
 	public $href              = '';
 	public $lang              = [];

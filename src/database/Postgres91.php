@@ -49,7 +49,7 @@ class Postgres91 extends Postgres92 {
 	 * @return A recordset
 	 */
 	function getTablespaces($all = false) {
-		global $conf;
+		$conf = $this->conf;
 
 		$sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation,
                     (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid='pg_tablespace'::regclass) AS spccomment

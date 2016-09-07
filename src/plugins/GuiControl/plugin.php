@@ -1,7 +1,6 @@
 <?php
-require_once('classes/Plugin.php');
 
-class GuiControl extends Plugin {
+class GuiControl extends \PHPPgAdmin\Plugin {
 
 	/**
 	 * Attributes
@@ -34,14 +33,14 @@ class GuiControl extends Plugin {
 	 * @return $hooks
 	 */
 	function get_hooks() {
-		$hooks = array(
-			'toplinks' => array('filer_toplinks'),
-			'tabs' => array('filter_tabs'),
-			'trail' => array('filter_trail'),
-			'navlinks' => array('filter_navlinks'),
-			'actionbuttons' => array('filter_actionbuttons'),
-			'tree' => array('filter_tree')
-		);
+		$hooks = [
+			'toplinks' => ['filer_toplinks'],
+			'tabs' => ['filter_tabs'],
+			'trail' => ['filter_trail'],
+			'navlinks' => ['filter_navlinks'],
+			'actionbuttons' => ['filter_actionbuttons'],
+			'tree' => ['filter_tree'],
+		];
 		return $hooks;
 	}
 
@@ -57,89 +56,106 @@ class GuiControl extends Plugin {
 	 * @return $actions
 	 */
 	function get_actions() {
-		$actions = array(
+		$actions = [
 			'filer_toplinks',
 			'filter_tabs',
 			'filter_trail',
 			'filter_navlinks',
 			'filter_actionbuttons',
 			'filter_tree',
-		);
+		];
 		return $actions;
 	}
 
-    function filer_toplinks(&$f_params) {
-        if (!isset($this->conf['top_links']))
-            return;
+	function filer_toplinks(&$f_params) {
+		if (!isset($this->conf['top_links'])) {
+			return;
+		}
 
-        $top_links = &$f_params['toplinks'];
+		$top_links = &$f_params['toplinks'];
 
-        foreach ($this->conf['top_links'] as $link => $enabled)
-            if (isset ($top_links[$link])
-                && ($enabled === false)
-            )
-                unset($top_links[$link]);
+		foreach ($this->conf['top_links'] as $link => $enabled) {
+			if (isset($top_links[$link])
+				&& ($enabled === false)
+			) {
+				unset($top_links[$link]);
+			}
+		}
 
-        return;
-    }
+		return;
+	}
 
 	function filter_tabs(&$f_params) {
-        $section = $f_params['section'];
-        $tabs = &$f_params['tabs'];
+		$section = $f_params['section'];
+		$tabs    = &$f_params['tabs'];
 
-        if (!isset($this->conf['tab_links'][$section]))
-            return;
+		if (!isset($this->conf['tab_links'][$section])) {
+			return;
+		}
 
-        foreach ($this->conf['tab_links'][$section] as $link => $enabled)
-            if (isset ($tabs[$link])
-                && ($enabled === false)
-            )
-                unset($tabs[$link]);
-        return;
-    }
-   
+		foreach ($this->conf['tab_links'][$section] as $link => $enabled) {
+			if (isset($tabs[$link])
+				&& ($enabled === false)
+			) {
+				unset($tabs[$link]);
+			}
+		}
+
+		return;
+	}
+
 	function filter_trail(&$f_params) {
-        if (!isset($this->conf['trail_links']))
-            return;
+		if (!isset($this->conf['trail_links'])) {
+			return;
+		}
 
-        if ($this->conf['trail_links'] === false)
-            $f_params['trail'] = array();
+		if ($this->conf['trail_links'] === false) {
+			$f_params['trail'] = [];
+		}
 
-        return;
-    }
-   
+		return;
+	}
+
 	function filter_navlinks(&$f_params) {
-        $place = $f_params['place'];
-        $navlinks = &$f_params['navlinks'];
+		$place    = $f_params['place'];
+		$navlinks = &$f_params['navlinks'];
 
-        if (! isset($this->conf['navlinks'][$place]))
-            return;
+		if (!isset($this->conf['navlinks'][$place])) {
+			return;
+		}
 
-        foreach ($this->conf['navlinks'][$place] as $link => $enabled)
-            if (isset ($navlinks[$link])
-                && ($enabled === false)
-            )
-                unset($navlinks[$link]);
-        return;
-    }
-   
+		foreach ($this->conf['navlinks'][$place] as $link => $enabled) {
+			if (isset($navlinks[$link])
+				&& ($enabled === false)
+			) {
+				unset($navlinks[$link]);
+			}
+		}
+
+		return;
+	}
+
 	function filter_actionbuttons(&$f_params) {
-        $place = $f_params['place'];
-        $actions = &$f_params['actionbuttons'];
+		$place   = $f_params['place'];
+		$actions = &$f_params['actionbuttons'];
 
-        if (! isset($this->conf['actionbuttons'][$place]))
-            return;
+		if (!isset($this->conf['actionbuttons'][$place])) {
+			return;
+		}
 
-        foreach ($this->conf['actionbuttons'][$place] as $link => $enabled)
-            if (isset ($actions[$link])
-                && ($enabled === false)
-            )
-                unset($actions[$link]);
-        return;
-    }
+		foreach ($this->conf['actionbuttons'][$place] as $link => $enabled) {
+			if (isset($actions[$link])
+				&& ($enabled === false)
+			) {
+				unset($actions[$link]);
+			}
+		}
+
+		return;
+	}
 
 	function filter_tree() {
-        return;
-    }
+		return;
+	}
 }
 ?>

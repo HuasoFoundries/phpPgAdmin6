@@ -16,12 +16,11 @@ class ServerController extends BaseController {
 
 	/* Constructor */
 	function __construct(\Slim\Container $container) {
-		parent::__construct($container);
+		$this->misc = $container->get('misc');
 
-		// Prevent timeouts on large exports (non-safe mode only)
-		if (!ini_get('safe_mode')) {
-			set_time_limit(0);
-		}
+		$this->misc->setNoDBConnection(true);
+
+		parent::__construct($container);
 	}
 
 	function doLogout() {
@@ -165,7 +164,7 @@ class ServerController extends BaseController {
 			// logged into the server.
 			'branch' => Decorator::field('branch'),
 		];
-		\PC::debug(['attrs' => $attrs, 'nodes' => $nodes], __CLASS__ . '::' . __METHOD__);
+
 		return $misc->printTree($nodes, $attrs, 'servers');
 
 	}

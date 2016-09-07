@@ -7,6 +7,10 @@
  */
 
 DEFINE('BASE_PATH', dirname(__DIR__));
+DEFINE('THEME_PATH', BASE_PATH . "/src/themes");
+// Enforce PHP environment
+ini_set('arg_separator.output', '&amp;');
+
 ini_set('error_log', BASE_PATH . '/temp/logs/phppga.php_error.log');
 $debugmode = true;
 
@@ -16,68 +20,33 @@ if ($debugmode) {
 	error_reporting(E_ALL);
 }
 
-require_once BASE_PATH . '/src/errorhandler.inc.php';
-
-if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
-	define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
-}
-if (!defined('ADODB_ERROR_HANDLER')) {
-	define('ADODB_ERROR_HANDLER', 'Error_Handler');
-}
-
 require_once BASE_PATH . '/vendor/autoload.php';
-
-Kint::enabled(true);
-
-$handler = PhpConsole\Handler::getInstance();
-$handler->start(); // initialize handlers*/
-PhpConsole\Helper::register(); // it will register global PC class
-
-// Check to see if the configuration file exists, if not, explain
-if (file_exists(BASE_PATH . '/config.inc.php')) {
-	$conf = [];
-	include BASE_PATH . '/config.inc.php';
-} else {
-	die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
-
-}
-
-// Check if a given server is "greedy" in which case the $_REQUEST['server'] parameter is ignored
-$serverstoshow = [];
-foreach ($conf['servers'] as $server) {
-	if (isset($server['forcehost']) && $server['forcehost'] === true) {
-		$serverstoshow = [$server];
-		break;
-	} else {
-		$serverstoshow[] = $server;
-	}
-}
-$conf['servers'] = $serverstoshow;
-// Configuration file version.  If this is greater than that in config.inc.php, then
-// the app will refuse to run.  This and $conf['version'] should be incremented whenever
-// backwards incompatible changes are made to config.inc.php-dist.
-$conf['base_version'] = 60;
-
-include_once BASE_PATH . '/src/translations.php';
-
-// Create Misc class references
 
 // Start session (if not auto-started)
 if (!ini_get('session.auto_start')) {
 	session_name('PPA_ID');
 	session_start();
 }
+$handler = PhpConsole\Handler::getInstance();
+$handler->start(); // initialize handlers*/
+PhpConsole\Helper::register(); // it will register global PC class
 
 $config = [
 	'msg' => '',
-	'appLangFiles' => $appLangFiles,
-	'conf' => $conf,
-	'lang' => $lang,
-	'language' => $_language,
-
+	'appThemes' => [
+		'default' => 'Default',
+		'cappuccino' => 'Cappuccino',
+		'gotar' => 'Blue/Green',
+		'bootstrap' => 'Bootstrap3',
+	],
 	'settings' => [
 		'base_path' => BASE_PATH,
 		'debug' => $debugmode,
+
+		// Configuration file version.  If this is greater than that in config.inc.php, then
+		// the app will refuse to run.  This and $conf['version'] should be incremented whenever
+		// backwards incompatible changes are made to config.inc.php-dist.
+		'base_version' => 60,
 		// Application version
 		'appVersion' => '6.0.0-alpha',
 		// Application name
@@ -96,7 +65,33 @@ $app = new \Slim\App($config);
 // Fetch DI Container
 $container = $app->getContainer();
 
-$container['plugin_manager'] = new \PHPPgAdmin\PluginManager($app);
+Kint::enabled(true);
+
+$container['conf'] = function ($c) {
+// Check to see if the configuration file exists, if not, explain
+	if (file_exists(BASE_PATH . '/config.inc.php')) {
+		$conf = [];
+		include BASE_PATH . '/config.inc.php';
+	} else {
+		die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
+
+	}
+
+	return $conf;
+};
+
+$container['lang'] = function ($c) {
+	include_once BASE_PATH . '/src/translations.php';
+
+	$c['appLangFiles'] = $appLangFiles;
+	$c['language']     = $_language;
+	return $lang;
+};
+
+$container['plugin_manager'] = function ($c) {
+	$plugin_manager = new \PHPPgAdmin\PluginManager($c);
+	return $plugin_manager;
+};
 
 $container['serializer'] = function ($c) {
 	$serializerbuilder = \JMS\Serializer\SerializerBuilder::create();
@@ -123,36 +118,107 @@ $container['view'] = function ($c) {
 	return $view;
 };
 
-$misc              = new \PHPPgAdmin\Misc($app);
-$container['misc'] = $misc;
+// Create Misc class references
+$container['misc'] = function ($c) {
 
-// 4. Check for theme by server/db/user
-$_server_info = $misc->getServerInfo();
+	include_once BASE_PATH . '/src/errorhandler.inc.php';
 
-include_once BASE_PATH . '/src/themes.php';
+	if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
+		define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
+	}
+	if (!defined('ADODB_ERROR_HANDLER')) {
+		define('ADODB_ERROR_HANDLER', 'Error_Handler');
+	}
 
-$container['appThemes'] = $appThemes;
+	$misc = new \PHPPgAdmin\Misc($c);
+	$conf = $c->get('conf');
 
-$misc->setThemeConf($conf['theme']);
+	// 4. Check for theme by server/db/user
+	$_server_info = $misc->getServerInfo();
 
-// This has to be deferred until after stripVar above
-$misc->setHREF();
-$misc->setForm();
+	/* starting with PostgreSQL 9.0, we can set the application name */
+	if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {
+		putenv("PGAPPNAME=" . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
+	}
 
-// Enforce PHP environment
-ini_set('arg_separator.output', '&amp;');
+	$themefolders = [];
+	if ($gestor = opendir(THEME_PATH)) {
 
-// Check for config file version mismatch
-if (!isset($conf['version']) || $conf['base_version'] > $conf['version']) {
-	echo $lang['strbadconfig'];
-	exit;
-}
+		/* Esta es la forma correcta de iterar sobre el directorio. */
+		while (false !== ($file = readdir($gestor))) {
+			if ($file == '.' || $file == '..') {
+				continue;
+			}
 
-// Check database support is properly compiled in
-if (!function_exists('pg_connect')) {
-	echo $lang['strnotloaded'];
-	exit;
-}
+			$folder = THEME_PATH . DIRECTORY_SEPARATOR . $file;
+			if (is_dir($folder) && is_file($folder . DIRECTORY_SEPARATOR . 'global.css')) {
+				$themefolders[$file] = $folder;
+
+			}
+		}
+		closedir($gestor);
+	}
+
+	//\PC::debug($themefolders, 'themefolders');
+	/* select the theme */
+	unset($_theme);
+
+	// List of themes
+	if (!isset($conf['theme'])) {
+		$conf['theme'] = 'default';
+	}
+	// 1. Check for the theme from a request var
+	if (isset($_REQUEST['theme']) && array_key_exists($_REQUEST['theme'], $themefolders)) {
+		$_theme = $_REQUEST['theme'];
+
+	} else if (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
+		// 2. Check for theme session var
+		$_theme = $_SESSION['ppaTheme'];
+	} else if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
+		// 3. Check for theme in cookie var
+		$_theme = $_COOKIE['ppaTheme'];
+	}
+
+	if (!isset($_theme) && !is_null($_server_info) && array_key_exists('theme', $_server_info)) {
+
+		$server_theme = $_server_info['theme'];
+
+		if (isset($server_theme['default']) && array_key_exists($server_theme['default'], $themefolders)) {
+			$_theme = $server_theme['default'];
+		}
+
+		if (isset($_REQUEST['database'])
+			&& isset($server_theme['db'][$_REQUEST['database']])
+			&& array_key_exists($server_theme['db'][$_REQUEST['database']], $themefolders)
+
+		) {
+			$_theme = $server_theme['db'][$_REQUEST['database']];
+		}
+
+		if (isset($_server_info['username'])
+			&& isset($server_theme['user'][$_server_info['username']])
+			&& array_key_exists($server_theme['user'][$_server_info['username']], $themefolders)
+		) {
+			$_theme = $server_theme['user'][$_server_info['username']];
+		}
+
+	}
+	if (isset($_theme)) {
+		/* save the selected theme in cookie for a year */
+		setcookie('ppaTheme', $_theme, time() + 31536000, '/');
+		$_SESSION['ppaTheme'] = $_theme;
+		$conf['theme']        = $_theme;
+	}
+	//\PC::debug($conf['theme'], 'conf.theme');
+
+	$misc->setThemeConf($conf['theme']);
+
+	// This has to be deferred until after stripVar above
+	$misc->setHREF();
+	$misc->setForm();
+
+	return $misc;
+};
 
 $container['action'] = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 

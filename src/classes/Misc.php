@@ -30,12 +30,12 @@ class Misc {
 	public $lang                   = [];
 	private $server_info           = null;
 	private $_no_output            = false;
+	private $container             = null;
 
 	/* Constructor */
-	function __construct(\Slim\App $app) {
-		$this->app = $app;
+	function __construct(\Slim\Container $container) {
 
-		$container = $app->getContainer();
+		$this->container = $container;
 
 		$this->lang           = $container->get('lang');
 		$this->conf           = $container->get('conf');
@@ -47,6 +47,19 @@ class Misc {
 		$this->appVersion       = $container->get('settings')['appVersion'];
 		$this->postgresqlMinVer = $container->get('settings')['postgresqlMinVer'];
 		$this->phpMinVer        = $container->get('settings')['phpMinVer'];
+
+		$base_version = $container->get('settings')['base_version'];
+		// Check for config file version mismatch
+		if (!isset($this->conf['version']) || $base_version > $this->conf['version']) {
+			die($this->lang['strbadconfig']);
+
+		}
+
+		// Check database support is properly compiled in
+		if (!function_exists('pg_connect')) {
+			die($this->lang['strnotloaded']);
+
+		}
 
 		// Check the version of PHP
 		if (version_compare(phpversion(), $this->phpMinVer, '<')) {
@@ -61,17 +74,102 @@ class Misc {
 		} else if (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
 			$this->server_id = array_keys($_SESSION['webdbLogin'])[0];
 		}
-
-		$_server_info = $this->getServerInfo();
-		/* starting with PostgreSQL 9.0, we can set the application name */
-		if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {
-			putenv("PGAPPNAME=" . $this->appName . '_' . $this->appVersion);
-		}
-
-		//\PC::debug($this->conf, 'conf');
-		//\PC::debug($this->server_id, 'server_id');
 	}
 
+	public function getContainer() {
+		return $this->container;
+	}
+
+	/**
+	 * sets $_no_bottom_link boolean value
+	 * @param boolean $flag [description]
+	 */
+	function setNoBottomLink($flag) {
+		$this->_no_bottom_link = boolval($flag);
+		return $this;
+	}
+
+	/**
+	 * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session
+	 * @param boolean $flag [description]
+	 */
+	function setNoDBConnection($flag) {
+		$this->_no_db_connection = boolval($flag);
+		return $this;
+	}
+
+	function setNoOutput($flag) {
+		$this->_no_output = boolval($flag);
+		return $this;
+	}
+
+	function getNoDBConnection() {
+		return $this->_no_db_connection;
+	}
+
+	/**
+	 * Creates a database accessor
+	 */
+	function getDatabaseAccessor($database = '', $server_id = null) {
+		$lang = $this->lang;
+
+		if ($server_id !== null) {
+			$this->server_id = $server_id;
+		}
+
+		$server_info = $this->getServerInfo($this->server_id);
+
+		if ($this->_no_db_connection || !isset($server_info['username'])) {
+			return null;
+		}
+
+		if ($this->data === null) {
+			$_connection = $this->getConnection($database, $this->server_id);
+
+			// Get the name of the database driver we need to use.
+			// The description of the server is returned in $platform.
+			$_type = $_connection->getDriver($platform);
+
+			//\PC::debug(['type' => $_type, 'platform' => $platform], 'driver type');
+
+			if ($_type === null) {
+				die(sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer));
+			}
+			$_type = '\PHPPgAdmin\Database\\' . $_type;
+
+			$this->setServerInfo('platform', $platform, $this->server_id);
+			$this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $this->server_id);
+
+			// Create a database wrapper class for easy manipulation of the
+			// connection.
+
+			$this->data              = new $_type($_connection->conn);
+			$this->data->platform    = $_connection->platform;
+			$this->data->server_info = $server_info;
+			$this->data->conf        = $this->conf;
+			$this->data->lang        = $this->lang;
+
+			/* we work on UTF-8 only encoding */
+			$this->data->execute("SET client_encoding TO 'UTF-8'");
+
+			if ($this->data->hasByteaHexDefault()) {
+				$this->data->execute("SET bytea_output TO escape");
+			}
+
+		}
+
+		if ($this->_no_db_connection === false && $this->getDatabase() !== null && isset($_REQUEST['schema'])) {
+			$status = $this->data->setSchema($_REQUEST['schema']);
+
+			if ($status != 0) {
+				\Kint::dump($status);
+				echo $this->lang['strbadschema'];
+				exit;
+			}
+		}
+
+		return $this->data;
+	}
 	function getConnection($database = '', $server_id = null) {
 		$lang = $this->lang;
 
@@ -79,8 +177,7 @@ class Misc {
 			if ($server_id !== null) {
 				$this->server_id = $server_id;
 			}
-			$server_info = $this->getServerInfo($this->server_id);
-
+			$server_info     = $this->getServerInfo($this->server_id);
 			$database_to_use = $this->getDatabase($database);
 			// Perform extra security checks if this config option is set
 			if ($this->conf['extra_login_security']) {
@@ -119,33 +216,6 @@ class Misc {
 			);
 		}
 		return $this->_connection;
-	}
-
-	/**
-	 * sets $_no_bottom_link boolean value
-	 * @param boolean $flag [description]
-	 */
-	function setNoBottomLink($flag) {
-		$this->_no_bottom_link = boolval($flag);
-		return $this;
-	}
-
-	/**
-	 * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session
-	 * @param boolean $flag [description]
-	 */
-	function setNoDBConnection($flag) {
-		$this->_no_db_connection = boolval($flag);
-		return $this;
-	}
-
-	function setNoOutput($flag) {
-		$this->_no_output = boolval($flag);
-		return $this;
-	}
-
-	function getNoDBConnection() {
-		return $this->_no_db_connection;
 	}
 
 	function getDatabase($database = '') {
@@ -189,65 +259,6 @@ class Misc {
 		return $this;
 	}
 
-	/**
-	 * Creates a database accessor
-	 */
-	function getDatabaseAccessor($database = '', $server_id = null) {
-		$lang = $this->lang;
-
-		if ($server_id !== null) {
-			$this->server_id = $server_id;
-		}
-
-		$server_info = $this->getServerInfo($this->server_id);
-
-		if ($this->_no_db_connection || !isset($server_info['username'])) {
-			return null;
-		}
-
-		if ($this->data === null) {
-			$_connection = $this->getConnection($database, $this->server_id);
-
-			// Get the name of the database driver we need to use.
-			// The description of the server is returned in $platform.
-			$_type = $_connection->getDriver($platform);
-			if ($_type === null) {
-				printf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer);
-				exit;
-			}
-			$_type = '\PHPPgAdmin\Database\\' . $_type;
-
-			$this->setServerInfo('platform', $platform, $this->server_id);
-			$this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $this->server_id);
-
-			// Create a database wrapper class for easy manipulation of the
-			// connection.
-
-			$this->data           = new $_type($_connection->conn);
-			$this->data->platform = $_connection->platform;
-
-			/* we work on UTF-8 only encoding */
-			$this->data->execute("SET client_encoding TO 'UTF-8'");
-
-			if ($this->data->hasByteaHexDefault()) {
-				$this->data->execute("SET bytea_output TO escape");
-			}
-
-		}
-
-		if ($this->_no_db_connection === false && $this->getDatabase() !== null && isset($_REQUEST['schema'])) {
-			$status = $this->data->setSchema($_REQUEST['schema']);
-
-			if ($status != 0) {
-				\Kint::dump($status);
-				echo $this->lang['strbadschema'];
-				exit;
-			}
-		}
-
-		return $this->data;
-	}
-
 	public static function _cmp_desc($a, $b) {
 		return strcmp($a['desc'], $b['desc']);
 	}
@@ -263,9 +274,15 @@ class Misc {
 	}
 
 	function setThemeConf($theme_conf) {
+
 		$this->conf['theme'] = $theme_conf;
+		//\PC::debug(['theme_conf' => $theme_conf, 'this->theme' => $this->conf['theme']], 'setThemeConf');
 		$this->view->offsetSet('theme', $this->conf['theme']);
 		return $this;
+	}
+
+	function getConf() {
+		return $this->conf;
 	}
 	/**
 	 * Sets the href tracking variable
