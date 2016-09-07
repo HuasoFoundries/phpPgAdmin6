@@ -41,11 +41,17 @@ class Misc {
 		$this->conf           = $container->get('conf');
 		$this->view           = $container->get('view');
 		$this->plugin_manager = $container->get('plugin_manager');
-		$this->appName        = $container->get('settings')['appName'];
-		$this->appVersion     = $container->get('settings')['appVersion'];
 		$this->appLangFiles   = $container->get('appLangFiles');
 
-		//\PC::debug(['appName' => $this->appName, 'appVersion' => $this->appVersion], 'Misc constructor');
+		$this->appName          = $container->get('settings')['appName'];
+		$this->appVersion       = $container->get('settings')['appVersion'];
+		$this->postgresqlMinVer = $container->get('settings')['postgresqlMinVer'];
+		$this->phpMinVer        = $container->get('settings')['phpMinVer'];
+
+		// Check the version of PHP
+		if (version_compare(phpversion(), $this->phpMinVer, '<')) {
+			exit(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
+		}
 
 		if (count($this->conf['servers']) === 1) {
 			$info            = $this->conf['servers'][0];
@@ -206,7 +212,7 @@ class Misc {
 			// The description of the server is returned in $platform.
 			$_type = $_connection->getDriver($platform);
 			if ($_type === null) {
-				printf($lang['strpostgresqlversionnotsupported'], $postgresqlMinVer);
+				printf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer);
 				exit;
 			}
 			$_type = '\PHPPgAdmin\Database\\' . $_type;

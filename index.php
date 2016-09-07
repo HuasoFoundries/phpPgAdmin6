@@ -106,9 +106,6 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 		$actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($include_file, $_GET);
 
-		//PC::debug($url['url'], 'redirect.php will include');
-		//PC::debug($actionurl->value($_GET), '$actionurl');
-
 		if (is_readable($include_file)) {
 			include $include_file;
 		} else {
@@ -135,14 +132,6 @@ $app->get('/', function ($request, $response, $args) use ($msg) {
 	}
 
 	return $this->view->render($response, $template, $viewVars);
-
-});
-
-$app->get('/views/{script}', function ($request, $response, $args) use ($msg) {
-	$body = $response->getBody();
-	$body->write('Not found ' . $args['script']);
-	\PC::debug($args, 'args');
-	return $response;
 
 });
 
