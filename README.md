@@ -24,4 +24,3 @@ This is a fork of [phpPgAdmin](https://github.com/phppgadmin/phppgadmin) that im
 - usage of global functions is being replaced by anonymous fuctions 
 - usage of explicit includes/requires is being replaced by composer's autoloader (except for `src/lib.inc.php`)
 - global decorator functions are being replaced by static methods of the Decorator class. 
-- `doTree` and `doSubtree` functions of each entrypoint are now at `src/tree` mostly because they are a different, self contained family of routes that reference each other
