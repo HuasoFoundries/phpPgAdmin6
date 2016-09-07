@@ -12,7 +12,7 @@ class Postgres80 extends Postgres81 {
 	// Map of database encoding names to HTTP encoding names.  If a
 	// database encoding does not appear in this list, then its HTTP
 	// encoding name is the same as its database encoding name.
-	var $codemap = array(
+	var $codemap = [
 		'ALT' => 'CP866',
 		'EUC_CN' => 'GB2312',
 		'EUC_JP' => 'EUC-JP',
@@ -42,7 +42,7 @@ class Postgres80 extends Postgres81 {
 		'WIN' => 'CP1251',
 		'WIN874' => 'CP874',
 		'WIN1256' => 'CP1256',
-	);
+	];
 
 	// Help functions
 
@@ -58,9 +58,8 @@ class Postgres80 extends Postgres81 {
 	 * @return A list of databases, sorted alphabetically
 	 */
 	function getDatabases($currentdatabase = NULL) {
-		global $conf, $misc;
-
-		$server_info = $misc->getServerInfo();
+		$conf        = $this->conf;
+		$server_info = $this->server_info;
 
 		if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
 			$username = $server_info['username'];
@@ -102,7 +101,7 @@ class Postgres80 extends Postgres81 {
 	 * @return All schemas, sorted alphabetically
 	 */
 	function getSchemas() {
-		global $conf;
+		$conf = $this->conf;
 
 		if (!$conf['show_system']) {
 			$where = "WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND nspname != 'information_schema'";

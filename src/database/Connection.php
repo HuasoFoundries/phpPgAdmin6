@@ -63,7 +63,7 @@ class Connection {
 		if (!isset($version)) {
 			$adodb = new ADODB_base($this->conn);
 
-			$sql = "SELECT VERSION() AS version";
+			$sql   = "SELECT VERSION() AS version";
 			$field = $adodb->selectField($sql, 'version');
 
 			// Check the platform, if it's mingw, set it
@@ -83,29 +83,33 @@ class Connection {
 
 		// Detect version and choose appropriate database driver
 		switch (substr($version, 0, 3)) {
-		case '9.4':return 'Postgres';
-			break;
-		case '9.3':return 'Postgres93';
-			break;
-		case '9.2':return 'Postgres92';
-			break;
-		case '9.1':return 'Postgres91';
-			break;
-		case '9.0':return 'Postgres90';
-			break;
-		case '8.4':return 'Postgres84';
-			break;
-		case '8.3':return 'Postgres83';
-			break;
-		case '8.2':return 'Postgres82';
-			break;
-		case '8.1':return 'Postgres81';
-			break;
-		case '8.0':
-		case '7.5':return 'Postgres80';
-			break;
-		case '7.4':return 'Postgres74';
-			break;
+			case '9.6':return 'Postgres';
+				break;
+			case '9.5':return 'Postgres95';
+				break;
+			case '9.4':return 'Postgres94';
+				break;
+			case '9.3':return 'Postgres93';
+				break;
+			case '9.2':return 'Postgres92';
+				break;
+			case '9.1':return 'Postgres91';
+				break;
+			case '9.0':return 'Postgres90';
+				break;
+			case '8.4':return 'Postgres84';
+				break;
+			case '8.3':return 'Postgres83';
+				break;
+			case '8.2':return 'Postgres82';
+				break;
+			case '8.1':return 'Postgres81';
+				break;
+			case '8.0':
+			case '7.5':return 'Postgres80';
+				break;
+			case '7.4':return 'Postgres74';
+				break;
 		}
 
 		/* All <7.4 versions are not supported */

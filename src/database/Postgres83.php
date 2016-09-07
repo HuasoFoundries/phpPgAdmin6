@@ -12,19 +12,19 @@ class Postgres83 extends Postgres84 {
 
 	// List of all legal privileges that can be applied to different types
 	// of objects.
-	var $privlist = array(
-		'table' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-		'view' => array('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'),
-		'sequence' => array('SELECT', 'UPDATE', 'ALL PRIVILEGES'),
-		'database' => array('CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'),
-		'function' => array('EXECUTE', 'ALL PRIVILEGES'),
-		'language' => array('USAGE', 'ALL PRIVILEGES'),
-		'schema' => array('CREATE', 'USAGE', 'ALL PRIVILEGES'),
-		'tablespace' => array('CREATE', 'ALL PRIVILEGES'),
-	);
+	var $privlist = [
+		'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+		'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+		'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+		'database' => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
+		'function' => ['EXECUTE', 'ALL PRIVILEGES'],
+		'language' => ['USAGE', 'ALL PRIVILEGES'],
+		'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+		'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
+	];
 	// List of characters in acl lists and the privileges they
 	// refer to.
-	var $privmap = array(
+	var $privmap = [
 		'r' => 'SELECT',
 		'w' => 'UPDATE',
 		'a' => 'INSERT',
@@ -37,7 +37,7 @@ class Postgres83 extends Postgres84 {
 		'C' => 'CREATE',
 		'T' => 'TEMPORARY',
 		'c' => 'CONNECT',
-	);
+	];
 
 	// Help functions
 
@@ -55,9 +55,8 @@ class Postgres83 extends Postgres84 {
 	 * @return A list of databases, sorted alphabetically
 	 */
 	function getDatabases($currentdatabase = NULL) {
-		global $conf, $misc;
-
-		$server_info = $misc->getServerInfo();
+		$conf        = $this->conf;
+		$server_info = $this->server_info;
 
 		if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
 			$username = $server_info['username'];
@@ -261,7 +260,7 @@ class Postgres83 extends Postgres84 {
 				c.relname = '{$table}' AND n.nspname = '{$c_schema}'
 		");
 
-		return $this->deleteRow('pg_autovacuum', array('vacrelid' => $rs->fields['oid']), 'pg_catalog');
+		return $this->deleteRow('pg_autovacuum', ['vacrelid' => $rs->fields['oid']], 'pg_catalog');
 	}
 
 	// Sequence functions

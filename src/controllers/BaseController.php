@@ -28,16 +28,19 @@ class BaseController {
 
 	/* Constructor */
 	function __construct(\Slim\Container $container) {
-		$this->container      = $container;
-		$this->lang           = $container->get('lang');
-		$this->conf           = $container->get('conf');
+		$this->container = $container;
+		$this->lang      = $container->get('lang');
+
 		$this->view           = $container->get('view');
 		$this->plugin_manager = $container->get('plugin_manager');
 		$this->msg            = $container->get('msg');
 		$this->appLangFiles   = $container->get('appLangFiles');
-		$this->misc           = $container->get('misc');
-		$this->appThemes      = $container->get('appThemes');
-		$this->action         = $container->get('action');
+
+		$this->misc = $container->get('misc');
+		$this->conf = $this->misc->getConf();
+
+		$this->appThemes = $container->get('appThemes');
+		$this->action    = $container->get('action');
 
 		$msg = $container->get('msg');
 		if ($this->misc->getNoDBConnection() === false) {
