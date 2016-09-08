@@ -8,9 +8,9 @@ use \PHPPgAdmin\Decorators\Decorator;
  *
  */
 class HTMLTableController extends HTMLController {
-	public $_name = 'HTMLTableController';
-	private $ma   = [];
-
+	public $_name  = 'HTMLTableController';
+	private $ma    = [];
+	private $class = '';
 	/**
 	 * Display a table of data.
 	 * @param $tabledata A set of data to be formatted, as returned by $data->getDatabases() etc.
@@ -53,10 +53,10 @@ class HTMLTableController extends HTMLController {
 	 */
 	public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
 
-		$data           = $this->data;
 		$misc           = $this->misc;
 		$lang           = $this->lang;
 		$plugin_manager = $this->plugin_manager;
+		$data           = $misc->getDatabaseAccessor();
 
 		// Action buttons hook's place
 		$plugin_functions_parameters = [
@@ -197,7 +197,7 @@ class HTMLTableController extends HTMLController {
 							if (isset($action['disable']) && $action['disable'] === true) {
 								$tbody_html .= "<td></td>\n";
 							} else {
-								$tbody_html .= "<td class=\"opbutton{$id} {$class}\">";
+								$tbody_html .= "<td class=\"opbutton{$id} {$this->class}\">";
 								$action['fields'] = $tabledata->fields;
 								$tbody_html .= $this->printLink($action, false);
 								$tbody_html .= "</td>\n";
@@ -213,7 +213,7 @@ class HTMLTableController extends HTMLController {
 						$tbody_html .= "</td>";
 						break;
 					default:
-						$tbody_html .= "<td{$class}>";
+						$tbody_html .= "<td{$this->class}>";
 						$val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);
 						if (!is_null($val)) {
 							if (isset($column['url'])) {
@@ -249,9 +249,9 @@ class HTMLTableController extends HTMLController {
 
 		// Handle cases where no class has been passed
 		if (isset($column['class'])) {
-			$class = $column['class'] !== '' ? " class=\"{$column['class']}\"" : '';
+			$this->class = $column['class'] !== '' ? " class=\"{$column['class']}\"" : '';
 		} else {
-			$class = '';
+			$this->class = '';
 		}
 
 		// Display column headings
@@ -268,7 +268,7 @@ class HTMLTableController extends HTMLController {
 
 					break;
 				default:
-					$thead_html .= '<th class="data' . $class . '">';
+					$thead_html .= '<th class="data' . $this->class . '">';
 					if (isset($column['help'])) {
 						$thead_html .= $this->misc->printHelp($column['title'], $column['help'], false);
 					} else {
@@ -289,9 +289,9 @@ class HTMLTableController extends HTMLController {
 
 		// Handle cases where no class has been passed
 		if (isset($column['class'])) {
-			$class = $column['class'] !== '' ? " class=\"{$column['class']}\"" : '';
+			$this->class = $column['class'] !== '' ? " class=\"{$column['class']}\"" : '';
 		} else {
-			$class = '';
+			$this->class = '';
 		}
 
 		// Display column headings
@@ -308,7 +308,7 @@ class HTMLTableController extends HTMLController {
 
 					break;
 				default:
-					$tfoot_html .= "<td class=\"data{$class}\"></td>\n";
+					$tfoot_html .= "<td class=\"data{$this->class}\"></td>\n";
 					break;
 			}
 		}
