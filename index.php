@@ -22,8 +22,6 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
 		$_server_info = $this->misc->getServerInfo($_POST['loginServer']);
 
-		\PC::debug($_POST, '$_POST');
-
 		$_server_info['username'] = $_POST['loginUsername'];
 		$_server_info['password'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
 
