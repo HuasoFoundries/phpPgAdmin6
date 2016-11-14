@@ -53,6 +53,7 @@ class Connection {
 	function getDriver(&$description) {
 
 		$v = pg_version($this->conn->_connectionID);
+
 		//\PhpConsole\Handler::getInstance()->debug($v, 'pg_version');
 
 		if (isset($v['server'])) {
@@ -80,6 +81,8 @@ class Connection {
 		}
 
 		$description = "PostgreSQL {$version}";
+
+		\PC::debug(['pg_version' => pg_version($this->conn->_connectionID), '$version' => $version], 'getDriver');
 
 		// Detect version and choose appropriate database driver
 		switch (substr($version, 0, 3)) {

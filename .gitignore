@@ -4,4 +4,6 @@ tests/selenium/config.test.php
 .php.tools.ini
 sftp-config*
 config.inc.php
+config.inc.php.matching
+config.inc.php.pstn_db
 vendor

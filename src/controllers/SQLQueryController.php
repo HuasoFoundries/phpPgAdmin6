@@ -164,6 +164,8 @@ class SQLQueryController extends BaseController {
 
 		// Set fetch mode to NUM so that duplicate field names are properly returned
 		$data->conn->setFetchMode(ADODB_FETCH_NUM);
+
+		//\Kint::dump($data->conn);
 		$rs = $data->conn->Execute($this->query);
 
 		// $rs will only be an object if there is no error
