@@ -1,6 +1,6 @@
 {
     "name": "huasofoundries/phppgadmin",
-    "version": "6.0.0-beta1",
+    "version": "6.0.0-beta2",
     "description": "Like phpmyadmin but for postgres",
     "type": "project",
     "license": "MIT",
@@ -22,11 +22,11 @@
     "require": {
         "php": ">=5.5.0",
         "ext-pgsql": "*",
-        "slim/slim": "^3.0",
+        "slim/slim": "^3.6",
         "slim/twig-view": "~2.1.1",
         "php-console/php-console": "~3.1",
 
-        "twig/twig": "~1.24",
+        "twig/twig": "~1.28",
         "raveren/kint": "^1.0",
         "adodb/adodb-php": "^5.20"
     }
