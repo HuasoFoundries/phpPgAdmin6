@@ -70,7 +70,7 @@ class PrivilegeController extends BaseController {
 			// Get groups from the database
 			$groups = $data->getGroups();
 
-			$misc->printTrail($_REQUEST['subject']);
+			$this->printTrail($_REQUEST['subject']);
 
 			switch ($mode) {
 				case 'grant':
@@ -176,11 +176,11 @@ class PrivilegeController extends BaseController {
 				isset($_REQUEST['grantoption']), isset($_REQUEST['cascade']), $table);
 
 			if ($status == 0) {
-				doDefault($lang['strgranted']);
+				$this->doDefault($lang['strgranted']);
 			} elseif ($status == -3 || $status == -4) {
-				doAlter(true, $_REQUEST['mode'], $lang['strgrantbad']);
+				$this->doAlter(true, $_REQUEST['mode'], $lang['strgrantbad']);
 			} else {
-				doAlter(true, $_REQUEST['mode'], $lang['strgrantfailed']);
+				$this->doAlter(true, $_REQUEST['mode'], $lang['strgrantfailed']);
 			}
 
 		}
@@ -198,7 +198,7 @@ class PrivilegeController extends BaseController {
 		$data     = $misc->getDatabaseAccessor();
 		$database = $misc->getDatabase();
 
-		$misc->printTrail($_REQUEST['subject']);
+		$this->printTrail($_REQUEST['subject']);
 
 		# @@@FIXME: This switch is just a temporary solution,
 		# need a better way, maybe every type of object should
@@ -210,7 +210,7 @@ class PrivilegeController extends BaseController {
 			case 'table':
 			case 'column':
 			case 'view':
-				$misc->printTabs($_REQUEST['subject'], 'privileges');
+				$this->printTabs($_REQUEST['subject'], 'privileges');
 				break;
 			default:
 				$misc->printTitle($lang['strprivileges'], 'pg.privilege');
@@ -399,7 +399,7 @@ class PrivilegeController extends BaseController {
 			}
 		}
 
-		$misc->printNavLinks($navlinks, $this->table_place, get_defined_vars());
+		$this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
 	}
 
 }

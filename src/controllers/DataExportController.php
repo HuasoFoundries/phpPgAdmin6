@@ -355,7 +355,7 @@ class DataExportController extends BaseController {
 
 		$misc->printHeader($lang['strexport']);
 		$misc->printBody();
-		$misc->printTrail(isset($_REQUEST['subject']) ? $_REQUEST['subject'] : 'database');
+		$this->printTrail(isset($_REQUEST['subject']) ? $_REQUEST['subject'] : 'database');
 		$misc->printTitle($lang['strexport']);
 		if (isset($msg)) {
 			$misc->printMsg($msg);
