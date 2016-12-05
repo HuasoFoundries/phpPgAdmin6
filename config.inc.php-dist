@@ -167,6 +167,4 @@
 	 * Don't modify anything below this line *
 	 *****************************************/
 
-	$conf['version'] = 19;
-
-?>
+	$conf['version'] = 60;

@@ -9,6 +9,25 @@ use \PHPPgAdmin\Decorators\Decorator;
 class InfoController extends BaseController {
 	public $_name = 'InfoController';
 
+	function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+
+		$action = $this->action;
+
+		$misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strinfo']);
+		$misc->printBody();
+
+		switch ($action) {
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
+
+	}
 	/**
 	 * List all the information on the table
 	 */

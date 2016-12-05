@@ -517,8 +517,7 @@ class HTMLNavbarController extends HTMLController {
 	 * @param  boolean $do_print true to echo, false to return
 	 */
 	private function printLinksList($links, $class = '', $do_print = true) {
-		$misc = $this->misc;
-		\PC::debug($links, 'printLinksList');
+		$misc      = $this->misc;
 		$list_html = "<ul class=\"{$class}\">\n";
 		foreach ($links as $link) {
 			$list_html .= "\t<li>";

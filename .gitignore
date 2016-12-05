@@ -2,6 +2,9 @@ selenium/tests/config.inc.php
 tests/selenium/config.test.php
 *sublime*
 .php.tools.ini
-sftp-config.json
+sftp-config*
 config.inc.php
+config.inc.php.matching
+config.inc.php.pstn_db
+
 vendor

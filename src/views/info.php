@@ -11,13 +11,4 @@ require_once '../lib.inc.php';
 
 $info_controller = new \PHPPgAdmin\Controller\InfoController($container);
 
-$misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strinfo']);
-$misc->printBody();
-
-switch ($action) {
-	default:
-		$info_controller->doDefault();
-		break;
-}
-
-$misc->printFooter();
+$info_controller->render();

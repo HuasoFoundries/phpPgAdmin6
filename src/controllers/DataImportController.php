@@ -25,8 +25,8 @@ class DataImportController extends BaseController {
 		$data   = $misc->getDatabaseAccessor();
 
 		$misc->printHeader($lang['strimport']);
-		$misc->printTrail('table');
-		$misc->printTabs('table', 'import');
+		$this->printTrail('table');
+		$this->printTabs('table', 'import');
 
 		// Default state for XML parser
 		$state         = 'XML';

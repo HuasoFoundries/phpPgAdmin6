@@ -20,7 +20,7 @@ class ConstraintController extends BaseController {
 		}
 
 		$misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
-			"<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
+			"<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>", true, 'select2_header.twig');
 
 		if ($action == 'add_unique_key' || $action == 'save_add_unique_key'
 			|| $action == 'add_primary_key' || $action == 'save_add_primary_key'
@@ -334,6 +334,7 @@ class ConstraintController extends BaseController {
 				echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
 				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 				echo "</form>\n";
+				echo "<script>jQuery('select[name=\"target\"]').select2()</script>";
 				break;
 		}
 

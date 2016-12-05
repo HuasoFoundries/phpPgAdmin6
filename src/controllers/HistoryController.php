@@ -1,12 +1,55 @@
 <?php
 
 namespace PHPPgAdmin\Controller;
+use \PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class
  */
 class HistoryController extends BaseController {
 	public $_name = 'HistoryController';
+
+	public function render() {
+		$conf   = $this->conf;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$action = $this->action;
+
+		$data = $misc->getDatabaseAccessor();
+
+		switch ($action) {
+			case 'confdelhistory':
+				$this->doDelHistory($_REQUEST['queryid'], true);
+				break;
+			case 'delhistory':
+				if (isset($_POST['yes'])) {
+					$this->doDelHistory($_REQUEST['queryid'], false);
+				}
+
+				$this->doDefault();
+				break;
+			case 'confclearhistory':
+				$this->doClearHistory(true);
+				break;
+			case 'clearhistory':
+				if (isset($_POST['yes'])) {
+					$this->doClearHistory(false);
+				}
+
+				$this->doDefault();
+				break;
+			case 'download':
+				$this->doDownloadHistory();
+				break;
+			default:
+				$this->doDefault();
+		}
+
+		// Set the name of the window
+		$misc->setWindowName('history');
+		return $misc->printFooter();
+
+	}
 
 	public function doDefault() {
 		$conf = $this->conf;

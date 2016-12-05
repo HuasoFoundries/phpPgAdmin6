@@ -113,7 +113,7 @@ class Highlight {
 			return $text;
 		};
 
-		$syntax_highlight_helper = function ($text, $language) use ($keyword_replace, $preproc_replac) {
+		$syntax_highlight_helper = function ($text, $language) use ($keyword_replace, $preproc_replace) {
 			$preproc        = [];
 			$preproc["C++"] = [
 				"if", "ifdef", "ifndef", "elif", "else",
@@ -871,9 +871,9 @@ class Highlight {
 		$this->process["C89"][self::SLASH_BEGIN][self::STAR_COMMENT] = $rtrim1;
 		$this->process["C89"][self::SLASH_BEGIN][0]                  = $slash_putback;
 
-		$this->process["Scheme"][self::SCH_NORMAL][self::SCH_STRLIT] = $$this;
-		$this->process["Scheme"][self::SCH_NORMAL][self::SCH_CHRLIT] = $$this;
-		$this->process["Scheme"][self::SCH_NORMAL][self::SCH_NUMLIT] = $$this;
+		$this->process["Scheme"][self::SCH_NORMAL][self::SCH_STRLIT] = $this;
+		$this->process["Scheme"][self::SCH_NORMAL][self::SCH_CHRLIT] = $this;
+		$this->process["Scheme"][self::SCH_NORMAL][self::SCH_NUMLIT] = $this;
 
 		$this->process["SQL"][self::NORMAL_TEXT][self::SQ_LITERAL] = $rtrim1;
 		$this->process["SQL"][self::NORMAL_TEXT][self::DQ_LITERAL] = $rtrim1;

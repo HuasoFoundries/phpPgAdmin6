@@ -44,6 +44,10 @@ class Decorator {
 
 	}
 
+	public static function callback($callback, $params = null) {
+		return new \PHPPgAdmin\Decorators\CallbackDecorator($callback, $params);
+	}
+
 	public static function value_url(&$var, &$fields) {
 		return self::get_sanitized_value($var, $fields, 'url');
 	}

@@ -130,7 +130,7 @@ class Misc {
 			// The description of the server is returned in $platform.
 			$_type = $_connection->getDriver($platform);
 
-			//\PC::debug(['type' => $_type, 'platform' => $platform], 'driver type');
+			\PC::debug(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion], 'driver type');
 
 			if ($_type === null) {
 				die(sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer));
@@ -179,6 +179,7 @@ class Misc {
 			}
 			$server_info     = $this->getServerInfo($this->server_id);
 			$database_to_use = $this->getDatabase($database);
+
 			// Perform extra security checks if this config option is set
 			if ($this->conf['extra_login_security']) {
 				// Disallowed logins if extra_login_security is enabled.
@@ -2055,6 +2056,8 @@ class Misc {
 	 * @return An associative array of server properties
 	 */
 	function getServerInfo($server_id = null) {
+
+		//\PC::debug(['$server_id' => $server_id]);
 
 		if ($server_id !== null) {
 			$this->server_id = $server_id;

@@ -80,7 +80,7 @@ class CastController extends BaseController {
 		switch ($action) {
 
 			default:
-				$cast_controller->doDefault();
+				$this->doDefault();
 				break;
 		}
 
