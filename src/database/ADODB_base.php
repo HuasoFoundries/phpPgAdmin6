@@ -18,6 +18,7 @@ class ADODB_base {
 	 * @param &$conn The connection object
 	 */
 	function __construct(&$conn) {
+		\PC::debug(__CLASS__, 'instanced connection class');
 		$this->conn = $conn;
 	}
 

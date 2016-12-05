@@ -163,6 +163,10 @@ class Postgres extends ADODB_base {
 	// The default type storage
 	var $typStorageDef = 'plain';
 
+	function __construct(&$conn) {
+		\PC::debug(['class' => __CLASS__, 'major_version' => $this->major_version], 'instanced connection class');
+		$this->conn = $conn;
+	}
 	// Formatting functions
 
 	/**

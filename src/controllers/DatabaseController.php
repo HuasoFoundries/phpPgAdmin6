@@ -16,6 +16,87 @@ class DatabaseController extends BaseController {
 		return str_replace($term, "<b>{$term}</b>", $string);
 	}
 
+	public function render() {
+		$conf   = $this->conf;
+		$misc   = $this->misc;
+		$lang   = $this->lang;
+		$action = $this->action;
+		$data   = $misc->getDatabaseAccessor();
+
+		if ($action == 'tree') {
+			return $this->doTree();
+		}
+
+		if ($action == 'refresh_locks') {
+			return $this->currentLocks(true);
+		}
+
+		if ($action == 'refresh_processes') {
+			return $this->currentProcesses(true);
+		}
+		$scripts = '';
+		/* normal flow */
+		if ($action == 'locks' || $action == 'processes') {
+			$scripts .= "<script src=\"/js/database.js\" type=\"text/javascript\"></script>";
+
+			$refreshTime = $conf['ajax_refresh'] * 1000;
+
+			$scripts .= "<script type=\"text/javascript\">\n";
+			$scripts .= "var Database = {\n";
+			$scripts .= "ajax_time_refresh: {$refreshTime},\n";
+			$scripts .= "str_start: {text:'{$lang['strstart']}',icon: '" . $misc->icon('Execute') . "'},\n";
+			$scripts .= "str_stop: {text:'{$lang['strstop']}',icon: '" . $misc->icon('Stop') . "'},\n";
+			$scripts .= "load_icon: '" . $misc->icon('Loading') . "',\n";
+			$scripts .= "server:'{$_REQUEST['server']}',\n";
+			$scripts .= "dbname:'{$_REQUEST['database']}',\n";
+			$scripts .= "action:'refresh_{$action}',\n";
+			$scripts .= "errmsg: '" . str_replace("'", "\'", $lang['strconnectionfail']) . "'\n";
+			$scripts .= "};\n";
+			$scripts .= "</script>\n";
+		}
+
+		$misc->printHeader($lang['strdatabase'], $scripts);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'find':
+				if (isset($_REQUEST['term'])) {
+					$this->doFind(false);
+				} else {
+					$this->doFind(true);
+				}
+
+				break;
+			case 'sql':
+				$this->doSQL();
+				break;
+			case 'variables':
+				$this->doVariables();
+				break;
+			case 'processes':
+				$this->doProcesses();
+				break;
+			case 'locks':
+				$this->doLocks();
+				break;
+			case 'export':
+				$this->doExport();
+				break;
+			case 'signal':
+				$this->doSignal();
+				break;
+			default:
+				if ($this->adminActions($action, 'database') === false) {
+					$this->doSQL();
+				}
+
+				break;
+		}
+
+		$misc->printFooter();
+
+	}
+
 /**
  * Sends a signal to a process
  */
@@ -467,6 +548,14 @@ class DatabaseController extends BaseController {
 				'title' => $lang['strprocess'],
 				'field' => Decorator::field('pid'),
 			],
+			'application_name' => [
+				'title' => 'application',
+				'field' => Decorator::field('application_name'),
+			],
+			'client_addr' => [
+				'title' => 'address',
+				'field' => Decorator::field('client_addr'),
+			],
 			'blocked' => [
 				'title' => $lang['strblocked'],
 				'field' => Decorator::field('waiting'),
@@ -678,84 +767,4 @@ class DatabaseController extends BaseController {
 
 	}
 
-	public function render() {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$action = $this->action;
-		$data   = $misc->getDatabaseAccessor();
-
-		if ($action == 'tree') {
-			return $this->doTree();
-		}
-
-		if ($action == 'refresh_locks') {
-			return $this->currentLocks(true);
-		}
-
-		if ($action == 'refresh_processes') {
-			return $this->currentProcesses(true);
-		}
-		$scripts = '';
-		/* normal flow */
-		if ($action == 'locks' || $action == 'processes') {
-			$scripts .= "<script src=\"/js/database.js\" type=\"text/javascript\"></script>";
-
-			$refreshTime = $conf['ajax_refresh'] * 1000;
-
-			$scripts .= "<script type=\"text/javascript\">\n";
-			$scripts .= "var Database = {\n";
-			$scripts .= "ajax_time_refresh: {$refreshTime},\n";
-			$scripts .= "str_start: {text:'{$lang['strstart']}',icon: '" . $misc->icon('Execute') . "'},\n";
-			$scripts .= "str_stop: {text:'{$lang['strstop']}',icon: '" . $misc->icon('Stop') . "'},\n";
-			$scripts .= "load_icon: '" . $misc->icon('Loading') . "',\n";
-			$scripts .= "server:'{$_REQUEST['server']}',\n";
-			$scripts .= "dbname:'{$_REQUEST['database']}',\n";
-			$scripts .= "action:'refresh_{$action}',\n";
-			$scripts .= "errmsg: '" . str_replace("'", "\'", $lang['strconnectionfail']) . "'\n";
-			$scripts .= "};\n";
-			$scripts .= "</script>\n";
-		}
-
-		$misc->printHeader($lang['strdatabase'], $scripts);
-		$misc->printBody();
-
-		switch ($action) {
-			case 'find':
-				if (isset($_REQUEST['term'])) {
-					$this->doFind(false);
-				} else {
-					$this->doFind(true);
-				}
-
-				break;
-			case 'sql':
-				$this->doSQL();
-				break;
-			case 'variables':
-				$this->doVariables();
-				break;
-			case 'processes':
-				$this->doProcesses();
-				break;
-			case 'locks':
-				$this->doLocks();
-				break;
-			case 'export':
-				$this->doExport();
-				break;
-			case 'signal':
-				$this->doSignal();
-				break;
-			default:
-				if ($this->adminActions($action, 'database') === false) {
-					$this->doSQL();
-				}
-
-				break;
-		}
-
-		$misc->printFooter();
-
-	}
 }

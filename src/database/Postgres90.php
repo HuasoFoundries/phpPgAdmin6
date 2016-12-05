@@ -10,10 +10,14 @@ class Postgres90 extends Postgres91 {
 
 	var $major_version = 9.0;
 
+	function __construct(&$conn) {
+		\PC::debug(['class' => __CLASS__, 'major_version' => $this->major_version], 'instanced connection class');
+		$this->conn = $conn;
+	}
 	// Help functions
 
 	function getHelpPages() {
-		include_once './help/PostgresDoc90.php';
+		include_once BASE_PATH . '/help/PostgresDoc90.php';
 		return $this->help_page;
 	}
 
