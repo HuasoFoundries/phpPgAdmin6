@@ -24,3 +24,8 @@ This is a fork of [phpPgAdmin](https://github.com/phppgadmin/phppgadmin) that im
 - usage of global functions is being replaced by anonymous fuctions 
 - usage of explicit includes/requires is being replaced by composer's autoloader (except for `src/lib.inc.php`)
 - global decorator functions are being replaced by static methods of the Decorator class. 
+
+### v6.0.0-beta2
+
+- moves HTML printing methods to their own class, which is in turn used by controllers
+- this is the last release that will support the "processes" view for Postgres 9.5, b/c *pg_stat_activity* has changed its structure in PG 9.6.
