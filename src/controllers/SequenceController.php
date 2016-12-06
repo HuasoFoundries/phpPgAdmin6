@@ -117,7 +117,7 @@ class SequenceController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($sequences, $attrs, 'sequences');
+		return $this->printTree($sequences, $attrs, 'sequences');
 	}
 
 	/**

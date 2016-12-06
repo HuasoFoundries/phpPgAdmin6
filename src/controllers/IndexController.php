@@ -101,7 +101,7 @@ class IndexController extends BaseController {
 			'icon' => Decorator::callback('getIcon'),
 		];
 
-		return $misc->printTree($indexes, $attrs, 'indexes');
+		return $this->printTree($indexes, $attrs, 'indexes');
 	}
 
 	/**

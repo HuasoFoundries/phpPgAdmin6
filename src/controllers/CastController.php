@@ -107,7 +107,7 @@ class CastController extends BaseController {
 			'icon' => 'Cast',
 		];
 
-		return $misc->printTree($casts, $attrs, 'casts');
+		return $this->printTree($casts, $attrs, 'casts');
 
 	}
 

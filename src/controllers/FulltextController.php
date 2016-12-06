@@ -135,7 +135,7 @@ class FulltextController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$tabs  = $misc->getNavTabs('fulltext');
-		$items = $misc->adjustTabsForTree($tabs);
+		$items = $this->adjustTabsForTree($tabs);
 
 		$reqvars = $misc->getRequestVars('ftscfg');
 
@@ -155,7 +155,7 @@ class FulltextController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($items, $attrs, 'fts');
+		return $this->printTree($items, $attrs, 'fts');
 	}
 
 	function doSubTree($what) {
@@ -204,7 +204,7 @@ class FulltextController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($items, $attrs, strtolower($what));
+		return $this->printTree($items, $attrs, strtolower($what));
 
 	}
 

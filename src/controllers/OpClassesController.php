@@ -53,7 +53,7 @@ class OpClassesController extends BaseController {
 			'toolTip' => Decorator::field('opccomment'),
 		];
 
-		return $misc->printTree($opclasses, $attrs, 'opclasses');
+		return $this->printTree($opclasses, $attrs, 'opclasses');
 	}
 
 	/**

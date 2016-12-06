@@ -116,7 +116,7 @@ class DomainController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($domains, $attrs, 'domains');
+		return $this->printTree($domains, $attrs, 'domains');
 	}
 
 /**

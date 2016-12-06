@@ -84,7 +84,7 @@ class LangController extends BaseController {
 			'icon' => 'Language',
 		];
 
-		return $misc->printTree($languages, $attrs, 'languages');
+		return $this->printTree($languages, $attrs, 'languages');
 
 	}
 

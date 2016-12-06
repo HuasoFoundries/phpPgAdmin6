@@ -9,6 +9,67 @@ use \PHPPgAdmin\Decorators\Decorator;
 class UserController extends BaseController {
 	public $_name = 'UserController';
 
+	public function render() {
+
+		$misc->printHeader($lang['strusers']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'changepassword':
+				if (isset($_REQUEST['ok'])) {
+					$this->doChangePassword(false);
+				} else {
+					$this->doAccount();
+				}
+
+				break;
+			case 'confchangepassword':
+				$this->doChangePassword(true);
+				break;
+			case 'account':
+				$this->doAccount();
+				break;
+			case 'save_create':
+				if (isset($_REQUEST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'create':
+				$this->doCreate();
+				break;
+			case 'drop':
+				if (isset($_REQUEST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doDrop(false);
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			case 'save_edit':
+				if (isset($_REQUEST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveEdit();
+				}
+
+				break;
+			case 'edit':
+				$this->doEdit();
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
+
+	}
 /**
  * If a user is not a superuser, then we have an 'account management' page
  * where they can change their password, etc.  We don't prevent them from

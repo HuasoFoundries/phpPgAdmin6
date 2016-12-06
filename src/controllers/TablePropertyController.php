@@ -113,7 +113,7 @@ class TablePropertyController extends BaseController {
 			'toolTip' => Decorator::field('comment'),
 		];
 
-		return $misc->printTree($columns, $attrs, 'tblcolumns');
+		return $this->printTree($columns, $attrs, 'tblcolumns');
 	}
 	public function doSaveAlter() {
 		$conf = $this->conf;

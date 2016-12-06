@@ -119,7 +119,7 @@ class ViewController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($views, $attrs, 'views');
+		return $this->printTree($views, $attrs, 'views');
 	}
 
 	function doSubTree() {
@@ -130,7 +130,7 @@ class ViewController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$tabs    = $misc->getNavTabs('view');
-		$items   = $misc->adjustTabsForTree($tabs);
+		$items   = $this->adjustTabsForTree($tabs);
 		$reqvars = $misc->getRequestVars('view');
 
 		$attrs = [
@@ -147,7 +147,7 @@ class ViewController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($items, $attrs, 'view');
+		return $this->printTree($items, $attrs, 'view');
 	}
 
 	/**

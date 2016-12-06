@@ -754,7 +754,7 @@ class DatabaseController extends BaseController {
 
 		$tabs = $misc->getNavTabs('database');
 
-		$items = $misc->adjustTabsForTree($tabs);
+		$items = $this->adjustTabsForTree($tabs);
 		//\PC::debug($reqvars, 'reqvars');
 		$attrs = [
 			'text' => Decorator::field('title'),
@@ -763,7 +763,7 @@ class DatabaseController extends BaseController {
 			'branch' => Decorator::url(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['action' => 'tree']),
 		];
 
-		return $misc->printTree($items, $attrs, 'database');
+		return $this->printTree($items, $attrs, 'database');
 
 	}
 

@@ -62,7 +62,7 @@ class ConversionController extends BaseController {
 			'icon' => Decorator::callback('getIcon'),
 		];
 
-		return $misc->printTree($constraints, $attrs, 'constraints');
+		return $this->printTree($constraints, $attrs, 'constraints');
 
 	}
 

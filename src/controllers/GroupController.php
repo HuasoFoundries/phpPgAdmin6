@@ -9,6 +9,64 @@ use \PHPPgAdmin\Decorators\Decorator;
 class GroupController extends BaseController {
 	public $_name = 'GroupController';
 
+	public function render() {
+
+		$misc->printHeader($lang['strgroups']);
+		$misc->printBody();
+
+		switch ($action) {
+			case 'add_member':
+				$this->doAddMember();
+				break;
+			case 'drop_member':
+				if (isset($_REQUEST['drop'])) {
+					$this->doDropMember(false);
+				} else {
+					$this->doProperties();
+				}
+
+				break;
+			case 'confirm_drop_member':
+				$this->doDropMember(true);
+				break;
+			case 'save_create':
+				if (isset($_REQUEST['cancel'])) {
+					$this->doDefault();
+				} else {
+					$this->doSaveCreate();
+				}
+
+				break;
+			case 'create':
+				$this->doCreate();
+				break;
+			case 'drop':
+				if (isset($_REQUEST['drop'])) {
+					$this->doDrop(false);
+				} else {
+					$this->doDefault();
+				}
+
+				break;
+			case 'confirm_drop':
+				$this->doDrop(true);
+				break;
+			case 'save_edit':
+				$this->doSaveEdit();
+				break;
+			case 'edit':
+				$this->doEdit();
+				break;
+			case 'properties':
+				$this->doProperties();
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+		$misc->printFooter();
+	}
 /**
  * Add user to a group
  */

@@ -94,7 +94,7 @@ class AggregateController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($aggregates, $attrs, 'aggregates');
+		return $this->printTree($aggregates, $attrs, 'aggregates');
 	}
 
 	/**

@@ -24,6 +24,7 @@ class BaseController {
 	public $_title            = 'base';
 	private $table_controller = null;
 	private $trail_controller = null;
+	private $tree_controller  = null;
 	public $msg               = '';
 
 	/* Constructor */
@@ -80,6 +81,14 @@ class BaseController {
 
 		return $this->trail_controller;
 	}
+
+	private function getTreeController() {
+		if ($this->tree_controller === null) {
+			$this->tree_controller = new \PHPPgAdmin\XHtml\TreeController($this->getContainer());
+		}
+
+		return $this->tree_controller;
+	}
 	/**
 	 * Instances an HTMLTable and returns its html content
 	 * @param  [type] &$tabledata [description]
@@ -93,6 +102,16 @@ class BaseController {
 	function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
 		$html_table = $this->getTableController();
 		return $html_table->printTable($tabledata, $columns, $actions, $place, $nodata, $pre_fn);
+	}
+
+	function adjustTabsForTree($tabs) {
+		$tree = $this->getTreeController();
+		return $tree->adjustTabsForTree($tabs);
+	}
+
+	function printTree(&$_treedata, &$attrs, $section) {
+		$tree = $this->getTreeController();
+		return $tree->printTree($_treedata, $attrs, $section);
 	}
 
 	function printTrail($trail = [], $do_print = true) {

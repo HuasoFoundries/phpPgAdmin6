@@ -116,7 +116,7 @@ class ViewPropertyController extends BaseController {
 			'toolTip' => Decorator::field('comment'),
 		];
 
-		return $misc->printTree($columns, $attrs, 'viewcolumns');
+		return $this->printTree($columns, $attrs, 'viewcolumns');
 
 	}
 

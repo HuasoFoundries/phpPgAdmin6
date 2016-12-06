@@ -89,7 +89,7 @@ class AllDBController extends BaseController {
 			'branch' => Decorator::url('database.php', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
 		];
 
-		return $misc->printTree($databases, $attrs, 'databases');
+		return $this->printTree($databases, $attrs, 'databases');
 	}
 
 	/**
