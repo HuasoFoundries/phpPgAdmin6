@@ -126,6 +126,9 @@ class Misc {
 		if ($this->data === null) {
 			$_connection = $this->getConnection($database, $this->server_id);
 
+			if (!$_connection) {
+				die($lang['strlogindisallowed']);
+			}
 			// Get the name of the database driver we need to use.
 			// The description of the server is returned in $platform.
 			$_type = $_connection->getDriver($platform);
@@ -194,14 +197,14 @@ class Misc {
 				if (isset($server_info['username']) && array_key_exists(strtolower($server_info['username']), $bad_usernames)) {
 					unset($_SESSION['webdbLogin'][$this->server_id]);
 					$msg              = $lang['strlogindisallowed'];
-					$login_controller = new LoginController($this->app->getContainer());
+					$login_controller = new LoginController($this->container);
 					return $login_controller->render();
 				}
 
 				if (!isset($server_info['password']) || $server_info['password'] == '') {
 					unset($_SESSION['webdbLogin'][$this->server_id]);
 					$msg              = $lang['strlogindisallowed'];
-					$login_controller = new LoginController($this->app->getContainer());
+					$login_controller = new LoginController($this->container);
 					return $login_controller->render();
 				}
 			}
@@ -915,8 +918,12 @@ class Misc {
 				break;
 
 			case 'server':
-				$hide_users = !$data->isSuperUser();
-				$tabs       = [
+				$hide_users = true;
+				if ($data) {
+					$hide_users = !$data->isSuperUser();
+				}
+
+				$tabs = [
 					'databases' => [
 						'title' => $lang['strdatabases'],
 						'url' => 'all_db.php',
@@ -925,7 +932,7 @@ class Misc {
 						'icon' => 'Databases',
 					],
 				];
-				if ($data->hasRoles()) {
+				if ($data && $data->hasRoles()) {
 					$tabs = array_merge($tabs, [
 						'roles' => [
 							'title' => $lang['strroles'],
@@ -960,7 +967,7 @@ class Misc {
 				$tabs = array_merge($tabs, [
 					'account' => [
 						'title' => $lang['straccount'],
-						'url' => $data->hasRoles() ? 'roles.php' : 'users.php',
+						'url' => ($data && $data->hasRoles()) ? 'roles.php' : 'users.php',
 						'urlvars' => ['subject' => 'server', 'action' => 'account'],
 						'hide' => !$hide_users,
 						'help' => 'pg.role',
@@ -970,7 +977,7 @@ class Misc {
 						'title' => $lang['strtablespaces'],
 						'url' => 'tablespaces.php',
 						'urlvars' => ['subject' => 'server'],
-						'hide' => (!$data->hasTablespaces()),
+						'hide' => (!$data || !$data->hasTablespaces()),
 						'help' => 'pg.tablespace',
 						'icon' => 'Tablespaces',
 					],

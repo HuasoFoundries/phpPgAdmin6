@@ -81,7 +81,6 @@ class IntroController extends BaseController {
 		$intro_html .= '<li><a href="' . $lang['strpgsqlhome_url'] . '">' . $lang['strpgsqlhome'] . '</a></li>';
 		$intro_html .= '<li><a href="http://sourceforge.net/tracker/?group_id=37132&amp;atid=418980">' . $lang['strreportbug'] . '</a></li>';
 		$intro_html .= '<li><a href="' . $lang['strviewfaq_url'] . '">' . $lang['strviewfaq'] . '</a></li>';
-		$intro_html .= '<li><a target="_top" href="tests/selenium/selenium-lib/core/TestRunner.html?test=..%2F..%2FTestSuite.php&resultsUrl=..%2FpostResults">Selenium tests</a></li>';
 		$intro_html .= '</ul>';
 
 		if (isset($_GET['language'])) {
