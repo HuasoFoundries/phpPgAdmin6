@@ -42,7 +42,7 @@ class Postgres83 extends Postgres84 {
 	// Help functions
 
 	function getHelpPages() {
-		include_once BASE_PATH . '/help/PostgresDoc83.php';
+		include_once BASE_PATH . '/src/help/PostgresDoc83.php';
 		return $this->help_page;
 	}
 

@@ -85,7 +85,7 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 		$include_file = $url['url'];
 
-		\PC::debug($url, 'url');
+		\PC::debug($url, 'url', 'subject', $subject);
 
 		// Load query vars into superglobal arrays
 		if (isset($url['urlvars'])) {

@@ -4,27 +4,27 @@
  * Help links for PostgreSQL 7.4 documentation
  */
 
-$this->help_base = sprintf($GLOBALS['conf']['help_base'], '7.4');
+$this->help_base = sprintf($this->conf['help_base'], strval($this->major_version));
 
 # TODO: Check and fix links
 
-$this->help_page = array(
+$this->help_page = [
 
 	'pg.database' => 'managing-databases.html',
-	'pg.database.create' => array('sql-createdatabase.html', 'manage-ag-createdb.html'),
+	'pg.database.create' => ['sql-createdatabase.html', 'manage-ag-createdb.html'],
 	'pg.database.alter' => 'sql-alterdatabase.html',
-	'pg.database.drop' => array('sql-dropdatabase.html', 'manage-ag-dropdb.html'),
+	'pg.database.drop' => ['sql-dropdatabase.html', 'manage-ag-dropdb.html'],
 
 	'pg.admin.analyze' => 'sql-analyze.html',
 	'pg.admin.vacuum' => 'sql-vacuum.html',
 
-	'pg.cast' => array('sql-expressions.html#SQL-SYNTAX-TYPE-CASTS', 'sql-createcast.html'),
+	'pg.cast' => ['sql-expressions.html#SQL-SYNTAX-TYPE-CASTS', 'sql-createcast.html'],
 	'pg.cast.create' => 'sql-createcast.html',
 	'pg.cast.drop' => 'sql-dropcast.html',
 
-	'pg.column.add' => array('ddl-alter.html#AEN2115', 'sql-altertable.html'),
-	'pg.column.alter' => array('ddl-alter.html', 'sql-altertable.html'),
-	'pg.column.drop' => array('ddl-alter.html#AEN2124', 'sql-altertable.html'),
+	'pg.column.add' => ['ddl-alter.html#AEN2115', 'sql-altertable.html'],
+	'pg.column.alter' => ['ddl-alter.html', 'sql-altertable.html'],
+	'pg.column.drop' => ['ddl-alter.html#AEN2124', 'sql-altertable.html'],
 
 	'pg.constraint' => 'ddl-constraints.html',
 	'pg.constraint.add' => 'ddl-alter.html#AEN2131',
@@ -44,16 +44,16 @@ $this->help_page = array(
 	'pg.domain.create' => 'sql-createdomain.html',
 	'pg.domain.drop' => 'sql-dropdomain.html',
 
-	'pg.function' => array('xfunc.html', 'functions.html', 'sql-expressions.html#AEN1599'),
+	'pg.function' => ['xfunc.html', 'functions.html', 'sql-expressions.html#AEN1599'],
 	'pg.function.alter' => 'sql-alterfunction.html',
 	'pg.function.create' => 'sql-createfunction.html',
-	'pg.function.create.c' => array('xfunc-c.html', 'sql-createfunction.html'),
-	'pg.function.create.internal' => array('xfunc-internal.html', 'sql-createfunction.html'),
-	'pg.function.create.pl' => array('xfunc-sql.html', 'xfunc-pl.html', 'sql-createfunction.html'),
+	'pg.function.create.c' => ['xfunc-c.html', 'sql-createfunction.html'],
+	'pg.function.create.internal' => ['xfunc-internal.html', 'sql-createfunction.html'],
+	'pg.function.create.pl' => ['xfunc-sql.html', 'xfunc-pl.html', 'sql-createfunction.html'],
 	'pg.function.drop' => 'sql-dropfunction.html',
 
 	'pg.group' => 'groups.html',
-	'pg.group.alter' => array('sql-altergroup.html', 'groups.html'),
+	'pg.group.alter' => ['sql-altergroup.html', 'groups.html'],
 	'pg.group.create' => 'sql-creategroup.html',
 	'pg.group.drop' => 'sql-dropgroup.html',
 
@@ -73,7 +73,7 @@ $this->help_page = array(
 	'pg.opclass.create' => 'sql-createopclass.html',
 	'pg.opclass.drop' => 'sql-dropopclass.html',
 
-	'pg.operator' => array('xoper.html', 'functions.html', 'sql-expressions.html#AEN1570'),
+	'pg.operator' => ['xoper.html', 'functions.html', 'sql-expressions.html#AEN1570'],
 	'pg.operator.alter' => 'sql-alteroperator.html',
 	'pg.operator.create' => 'sql-createoperator.html',
 	'pg.operator.drop' => 'sql-dropoperator.html',
@@ -84,7 +84,7 @@ $this->help_page = array(
 	'pg.pl.plpython' => 'plpython.html',
 	'pg.pl.pltcl' => 'pltcl.html',
 
-	'pg.privilege' => array('privileges.html', 'ddl-priv.html'),
+	'pg.privilege' => ['privileges.html', 'ddl-priv.html'],
 	'pg.privilege.grant' => 'sql-grant.html',
 	'pg.privilege.revoke' => 'sql-revoke.html',
 
@@ -96,7 +96,7 @@ $this->help_page = array(
 
 	'pg.schema' => 'ddl-schemas.html',
 	'pg.schema.alter' => 'sql-alterschema.html',
-	'pg.schema.create' => array('sql-createschema.html', 'ddl-schemas.html#DDL-SCHEMAS-CREATE'),
+	'pg.schema.create' => ['sql-createschema.html', 'ddl-schemas.html#DDL-SCHEMAS-CREATE'],
 	'pg.schema.drop' => 'sql-dropschema.html',
 	'pg.schema.search_path' => 'ddl-schemas.html#DDL-SCHEMAS-PATH',
 
@@ -105,7 +105,7 @@ $this->help_page = array(
 	'pg.sequence.create' => 'sql-createsequence.html',
 	'pg.sequence.drop' => 'sql-dropsequence.html',
 
-	'pg.sql' => array('sql.html', 'sql-commands.html'),
+	'pg.sql' => ['sql.html', 'sql-commands.html'],
 	'pg.sql.insert' => 'sql-insert.html',
 	'pg.sql.select' => 'sql-select.html',
 	'pg.sql.update' => 'sql-update.html',
@@ -126,23 +126,23 @@ $this->help_page = array(
 	'pg.trigger.create' => 'sql-createtrigger.html',
 	'pg.trigger.drop' => 'sql-droptrigger.html',
 
-	'pg.type' => array('xtypes.html', 'datatype.html', 'extend-type-system.html'),
+	'pg.type' => ['xtypes.html', 'datatype.html', 'extend-type-system.html'],
 	'pg.type.alter' => 'sql-altertype.html',
 	'pg.type.create' => 'sql-createtype.html',
 	'pg.type.drop' => 'sql-droptype.html',
 
-	'pg.user.alter' => array('sql-alteruser.html', 'user-attributes.html'),
-	'pg.user.create' => array('sql-createuser.html', 'user-manag.html#DATABASE-USERS'),
-	'pg.user.drop' => array('sql-dropuser.html', 'user-manag.html#DATABASE-USERS'),
+	'pg.user.alter' => ['sql-alteruser.html', 'user-attributes.html'],
+	'pg.user.create' => ['sql-createuser.html', 'user-manag.html#DATABASE-USERS'],
+	'pg.user.drop' => ['sql-dropuser.html', 'user-manag.html#DATABASE-USERS'],
 
 	'pg.variable' => 'runtime-config.html',
 
 	'pg.view' => 'tutorial-views.html',
-	'pg.view.alter' => array('sql-createview.html', 'sql-altertable.html'),
+	'pg.view.alter' => ['sql-createview.html', 'sql-altertable.html'],
 	'pg.view.create' => 'sql-createview.html',
 	'pg.view.drop' => 'sql-dropview.html',
 
-	'pg.aggregate' => array('xaggr.html', 'tutorial-agg.html', 'functions-aggregate.html', 'sql-expressions.html#SYNTAX-AGGREGATES'),
+	'pg.aggregate' => ['xaggr.html', 'tutorial-agg.html', 'functions-aggregate.html', 'sql-expressions.html#SYNTAX-AGGREGATES'],
 	'pg.aggregate.create' => 'sql-createaggregate.html',
 	'pg.aggregate.drop' => 'sql-dropaggregate.html',
 	'pg.aggregate.alter' => 'sql-alteraggregate.html',
@@ -152,4 +152,4 @@ $this->help_page = array(
 	'pg.user' => 'user-manag.html',
 
 	'pg.locks' => 'view-pg-locks.html',
-);
+];

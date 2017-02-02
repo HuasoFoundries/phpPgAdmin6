@@ -146,7 +146,7 @@ class Misc {
 			// Create a database wrapper class for easy manipulation of the
 			// connection.
 
-			$this->data              = new $_type($_connection->conn);
+			$this->data              = new $_type($_connection->conn, $this->conf);
 			$this->data->platform    = $_connection->platform;
 			$this->data->server_info = $server_info;
 			$this->data->conf        = $this->conf;
@@ -1667,7 +1667,7 @@ class Misc {
 	}
 
 	function getHelpLink($help) {
-		return htmlspecialchars("help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
+		return htmlspecialchars("/src/views/help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
 
 	}
 

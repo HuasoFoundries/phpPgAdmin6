@@ -163,9 +163,10 @@ class Postgres extends ADODB_base {
 	// The default type storage
 	var $typStorageDef = 'plain';
 
-	function __construct(&$conn) {
+	function __construct(&$conn, $conf) {
 		\PC::debug(['class' => __CLASS__, 'major_version' => $this->major_version], 'instanced connection class');
 		$this->conn = $conn;
+		$this->conf = $conf;
 	}
 	// Formatting functions
 
@@ -438,7 +439,7 @@ class Postgres extends ADODB_base {
 	}
 
 	function getHelpPages() {
-		include_once BASE_PATH . '/help/PostgresDoc95.php';
+		include_once BASE_PATH . '/src/help/PostgresDoc95.php';
 		return $this->help_page;
 	}
 

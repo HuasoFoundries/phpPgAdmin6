@@ -8,6 +8,20 @@ namespace PHPPgAdmin\Controller;
 class HelpController extends BaseController {
 	public $_name = 'HelpController';
 
+	public function render() {
+		$action = $this->action;
+
+		switch ($action) {
+			case 'browse':
+				$this->doBrowse();
+				break;
+			default:
+				$this->doDefault();
+				break;
+		}
+
+	}
+
 	public function doDefault() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -17,6 +31,7 @@ class HelpController extends BaseController {
 		if (isset($_REQUEST['help'])) {
 			$url = $data->getHelp($_REQUEST['help']);
 
+			\PC::debug(['url' => $url], 'HelpController::doDefault');
 			if (is_array($url)) {
 				$this->doChoosePage($url);
 				return;
