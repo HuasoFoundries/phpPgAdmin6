@@ -76,6 +76,8 @@ $container['conf'] = function ($c) {
 		die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 
 	}
+	// Plugins are removed
+	$conf['plugins'] = [];
 
 	return $conf;
 };
@@ -87,6 +89,27 @@ $container['lang'] = function ($c) {
 	$c['language']     = $_language;
 	return $lang;
 };
+/**
+ * $container['language'] = function ($c) {
+include BASE_PATH . '/src/detect_language.php';
+
+return $_language;
+};
+
+$container['lang'] = function ($c) {
+
+$lang = [];
+include_once BASE_PATH . '/src/lang/english.php';
+
+// Import the language file
+if ($c->has('language')) {
+include BASE_PATH . "/src/lang/" . $c['language'] . ".php";
+$_SESSION['webdbLanguage'] = $c['language'];
+}
+
+return $lang;
+};
+ */
 
 $container['plugin_manager'] = function ($c) {
 	$plugin_manager = new \PHPPgAdmin\PluginManager($c);
