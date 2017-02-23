@@ -59,9 +59,8 @@ class LoginController extends BaseController {
 
 		$server_info = $misc->getServerInfo($_REQUEST['server']);
 		$title       = sprintf($lang['strlogintitle'], $server_info['desc']);
-		\PC::debug($title, 'title');
+
 		$printTitle = $misc->printTitle($title, null, false);
-		\PC::debug($printTitle, 'printTitle');
 
 		$login_html .= $printTitle;
 
