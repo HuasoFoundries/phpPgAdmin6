@@ -62,9 +62,33 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
 });
 
-$app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
+$app->get('/', function ($request, $response, $args) use ($msg) {
+
+	$viewVars            = $this->lang;
+	$viewVars['appName'] = $this->get('settings')['appName'];
+	$viewVars['view']    = 'intro';
+	$viewVars['rtl']     = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
+
+	if ($viewVars['rtl']) {
+		$viewVars['cols'] = '*,' . $this->conf['left_width'];
+		$template         = 'home_rtl.twig';
+	} else {
+		$viewVars['cols'] = $this->conf['left_width'] . ',*';
+		$template         = 'home.twig';
+	}
+
+	return $this->view->render($response, $template, $viewVars);
+
+});
+
+$app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($msg, $container) {
 
 	$subject = (isset($args['subject'])) ? $args['subject'] : 'root';
+
+	$viewVars            = $this->lang;
+	$viewVars['appName'] = $this->get('settings')['appName'];
+
+	$viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
 	if ($subject == 'root') {
 		$this->misc->setNoDBConnection(true);
@@ -85,7 +109,8 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 		$include_file = $url['url'];
 
-		\PC::debug($url, 'url', 'subject', $subject);
+		\PC::debug($url, 'url');
+		\PC::debug($subject, 'subject');
 
 		// Load query vars into superglobal arrays
 		if (isset($url['urlvars'])) {
@@ -104,33 +129,33 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 		$actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($include_file, $_GET);
 
-		if (is_readable($include_file)) {
-			include $include_file;
+		if (false && is_readable('./src/views/' . $include_file)) {
+			require ('./src/views/' . $include_file);
 		} else {
 			$destinationurl = str_replace("%2Fredirect%2F{$subject}%3F", '', $actionurl->value($_GET));
 
+			$viewVars['url'] = $destinationurl;
+
+			\PC::debug($destinationurl, 'destinationurl');
 			return $response->withStatus(302)->withHeader('Location', $destinationurl);
+			//return $this->view->render($response, 'view.twig', $viewVars);
 
 		}
 	}
 });
 
-$app->get('/', function ($request, $response, $args) use ($msg) {
+$app->get('/{subject}', function ($request, $response, $args) use ($msg, $container) {
+	$subject                   = (isset($args['subject'])) ? $args['subject'] : 'root';
+	$uri                       = $request->getUri();
+	list($base, $query_string) = explode('?', $uri->getQuery());
+	$url                       = '/src/views/' . $subject . '.php?' . $query_string;
 
 	$viewVars            = $this->lang;
 	$viewVars['appName'] = $this->get('settings')['appName'];
+	$viewVars['url']     = $url;
 	$viewVars['rtl']     = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
-	if ($viewVars['rtl']) {
-		$viewVars['cols'] = '*,' . $this->conf['left_width'];
-		$template         = 'home_rtl.twig';
-	} else {
-		$viewVars['cols'] = $this->conf['left_width'] . ',*';
-		$template         = 'home.twig';
-	}
-
-	return $this->view->render($response, $template, $viewVars);
-
+	return $this->view->render($response, 'view.twig', $viewVars);
 });
 
 // Run app

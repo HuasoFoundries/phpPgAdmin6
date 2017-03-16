@@ -50,7 +50,7 @@ class ViewController extends BaseController {
 
 				break;
 			case 'wiz_create':
-				doWizardCreate();
+				$this->doWizardCreate();
 				break;
 			case 'set_params_create':
 				if (isset($_POST['cancel'])) {
@@ -69,7 +69,7 @@ class ViewController extends BaseController {
 
 				break;
 			case 'create':
-				doCreate();
+				$this->doCreate();
 				break;
 			case 'drop':
 				if (isset($_POST['drop'])) {

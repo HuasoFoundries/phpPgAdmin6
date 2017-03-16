@@ -17,4 +17,9 @@
                 $('#csstheme', window.parent.frames[0].document).attr('href', '/src/themes/{{theme}}/global.css');
             }
         });
+        if (window.parent.frames.length === 0) {
+            var subject = location.pathname.replace('src/views/', '').replace('.php', '');
+            console.log('location subject', subject);
+            location.href = subject + location.search;
+        }
         </script>

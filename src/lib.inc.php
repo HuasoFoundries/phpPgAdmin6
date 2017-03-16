@@ -6,7 +6,8 @@
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
 
-DEFINE('BASE_PATH', dirname(__DIR__));
+defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
+
 DEFINE('THEME_PATH', BASE_PATH . "/src/themes");
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
