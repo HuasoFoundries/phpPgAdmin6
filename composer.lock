@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a238f05de641bdf085e0ac355038a065",
-    "content-hash": "31567a8d972097acb7a47fb15d17c085",
+    "hash": "d61b4ed5ba85897af21b9ea3cc3abe40",
+    "content-hash": "3151b6814555bde49ad50da7a6a8eb98",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -327,6 +327,7 @@
                 "kint",
                 "php"
             ],
+            "abandoned": "kint-php/kint",
             "time": "2015-09-16 14:09:00"
         },
         {

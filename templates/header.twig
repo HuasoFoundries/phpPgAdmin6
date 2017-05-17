@@ -18,8 +18,15 @@
             }
         });
         if (window.parent.frames.length === 0) {
-            var subject = location.pathname.replace('src/views/', '').replace('.php', '');
-            console.log('location subject', subject);
-            location.href = subject + location.search;
+            var redirect_to, subject = location.pathname.replace('src/views/', '').replace('.php', '');
+            if (subject === '/redirect/server') {
+                subject = '/server';
+                redirect_to = subject + location.search
+                console.log('location subject', subject, 'redirect_to', redirect_to);;
+            } else {
+                redirect_to = subject + location.search
+                console.log('location subject', subject, 'redirect_to', redirect_to);;
+                location.href = redirect_to;
+            }
         }
         </script>

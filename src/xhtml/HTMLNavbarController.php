@@ -114,7 +114,7 @@ class HTMLNavbarController extends HTMLController {
 
 		if (is_string($tabs)) {
 			$_SESSION['webdbLastTab'][$tabs] = $activetab;
-			$tabs                            = $misc->getNavTabs($tabs);
+			$tabs = $misc->getNavTabs($tabs);
 		}
 		$tabs_html = '';
 		if (count($tabs) > 0) {
@@ -189,16 +189,16 @@ class HTMLNavbarController extends HTMLController {
 	 */
 	private function printTopbar($do_print = true) {
 
-		$lang           = $this->lang;
+		$lang = $this->lang;
 		$plugin_manager = $this->plugin_manager;
-		$misc           = $this->misc;
-		$appName        = $misc->appName;
-		$appVersion     = $misc->appVersion;
-		$appLangFiles   = $misc->appLangFiles;
+		$misc = $this->misc;
+		$appName = $misc->appName;
+		$appVersion = $misc->appVersion;
+		$appLangFiles = $misc->appLangFiles;
 
 		$server_info = $misc->getServerInfo();
-		$server_id   = $misc->getServerId();
-		$reqvars     = $misc->getRequestVars('table');
+		$server_id = $misc->getServerId();
+		$reqvars = $misc->getRequestVars('table');
 
 		$topbar_html = "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td>";
 
@@ -218,7 +218,7 @@ class HTMLNavbarController extends HTMLController {
 				'sql' => [
 					'attr' => [
 						'href' => [
-							'url' => 'sqledit.php',
+							'url' => '/src/views/sqledit.php',
 							'urlvars' => array_merge($reqvars, [
 								'action' => 'sql',
 							]),
@@ -231,7 +231,7 @@ class HTMLNavbarController extends HTMLController {
 				'history' => [
 					'attr' => [
 						'href' => [
-							'url' => 'history.php',
+							'url' => '/src/views/history.php',
 							'urlvars' => array_merge($reqvars, [
 								'action' => 'pophistory',
 							]),
@@ -243,7 +243,7 @@ class HTMLNavbarController extends HTMLController {
 				'find' => [
 					'attr' => [
 						'href' => [
-							'url' => 'sqledit.php',
+							'url' => '/src/views/sqledit.php',
 							'urlvars' => array_merge($reqvars, [
 								'action' => 'find',
 							]),
@@ -256,7 +256,7 @@ class HTMLNavbarController extends HTMLController {
 				'logout' => [
 					'attr' => [
 						'href' => [
-							'url' => 'servers.php',
+							'url' => '/src/views/servers.php',
 							'urlvars' => [
 								'action' => 'logout',
 								'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}",
@@ -281,7 +281,7 @@ class HTMLNavbarController extends HTMLController {
 
 			$topbar_html .= "</td>";
 
-			$sql_window_id     = htmlentities('sqledit:' . $server_id);
+			$sql_window_id = htmlentities('sqledit:' . $server_id);
 			$history_window_id = htmlentities('history:' . $server_id);
 
 			$topbar_html .= "<script type=\"text/javascript\">
@@ -347,16 +347,16 @@ class HTMLNavbarController extends HTMLController {
 	 * @param $object The type of object at the end of the trail.
 	 */
 	private function getTrail($subject = null) {
-		$lang           = $this->lang;
+		$lang = $this->lang;
 		$plugin_manager = $this->plugin_manager;
-		$misc           = $this->misc;
-		$appName        = $misc->appName;
+		$misc = $this->misc;
+		$appName = $misc->appName;
 
 		$data = $misc->getDatabaseAccessor();
 
 		$trail = [];
-		$vars  = '';
-		$done  = false;
+		$vars = '';
+		$done = false;
 
 		$trail['root'] = [
 			'text' => $appName,
@@ -369,7 +369,7 @@ class HTMLNavbarController extends HTMLController {
 		}
 
 		if (!$done) {
-			$server_info     = $misc->getServerInfo();
+			$server_info = $misc->getServerInfo();
 			$trail['server'] = [
 				'title' => $lang['strserver'],
 				'text' => $server_info['desc'],
@@ -447,53 +447,53 @@ class HTMLNavbarController extends HTMLController {
 
 		if (!$done && !is_null($subject)) {
 			switch ($subject) {
-				case 'function':
+			case 'function':
+				$trail[$subject] = [
+					'title' => $lang['str' . $subject],
+					'text' => $_REQUEST[$subject],
+					'url' => $misc->getHREFSubject('function'),
+					'help' => 'pg.function',
+					'icon' => 'Function',
+				];
+				break;
+			case 'aggregate':
+				$trail[$subject] = [
+					'title' => $lang['straggregate'],
+					'text' => $_REQUEST['aggrname'],
+					'url' => $misc->getHREFSubject('aggregate'),
+					'help' => 'pg.aggregate',
+					'icon' => 'Aggregate',
+				];
+				break;
+			case 'column':
+				$trail['column'] = [
+					'title' => $lang['strcolumn'],
+					'text' => $_REQUEST['column'],
+					'icon' => 'Column',
+					'url' => $misc->getHREFSubject('column'),
+				];
+				break;
+			default:
+				if (isset($_REQUEST[$subject])) {
+					switch ($subject) {
+					case 'domain':$icon = 'Domain';
+						break;
+					case 'sequence':$icon = 'Sequence';
+						break;
+					case 'type':$icon = 'Type';
+						break;
+					case 'operator':$icon = 'Operator';
+						break;
+					default:$icon = null;
+						break;
+					}
 					$trail[$subject] = [
 						'title' => $lang['str' . $subject],
 						'text' => $_REQUEST[$subject],
-						'url' => $misc->getHREFSubject('function'),
-						'help' => 'pg.function',
-						'icon' => 'Function',
+						'help' => 'pg.' . $subject,
+						'icon' => $icon,
 					];
-					break;
-				case 'aggregate':
-					$trail[$subject] = [
-						'title' => $lang['straggregate'],
-						'text' => $_REQUEST['aggrname'],
-						'url' => $misc->getHREFSubject('aggregate'),
-						'help' => 'pg.aggregate',
-						'icon' => 'Aggregate',
-					];
-					break;
-				case 'column':
-					$trail['column'] = [
-						'title' => $lang['strcolumn'],
-						'text' => $_REQUEST['column'],
-						'icon' => 'Column',
-						'url' => $misc->getHREFSubject('column'),
-					];
-					break;
-				default:
-					if (isset($_REQUEST[$subject])) {
-						switch ($subject) {
-							case 'domain':$icon = 'Domain';
-								break;
-							case 'sequence':$icon = 'Sequence';
-								break;
-							case 'type':$icon = 'Type';
-								break;
-							case 'operator':$icon = 'Operator';
-								break;
-							default:$icon = null;
-								break;
-						}
-						$trail[$subject] = [
-							'title' => $lang['str' . $subject],
-							'text' => $_REQUEST[$subject],
-							'help' => 'pg.' . $subject,
-							'icon' => $icon,
-						];
-					}
+				}
 			}
 		}
 
@@ -517,7 +517,7 @@ class HTMLNavbarController extends HTMLController {
 	 * @param  boolean $do_print true to echo, false to return
 	 */
 	private function printLinksList($links, $class = '', $do_print = true) {
-		$misc      = $this->misc;
+		$misc = $this->misc;
 		$list_html = "<ul class=\"{$class}\">\n";
 		foreach ($links as $link) {
 			$list_html .= "\t<li>";

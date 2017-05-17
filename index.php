@@ -43,7 +43,7 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 		$all_db_controller->doDefault();
 
 		$misc->setReloadBrowser(true);
-		$misc->printFooter();
+		$misc->printFooter(true);
 
 		//$body->write($this->misc->printFooter(false));
 
@@ -64,17 +64,17 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
 $app->get('/', function ($request, $response, $args) use ($msg) {
 
-	$viewVars            = $this->lang;
+	$viewVars = $this->lang;
 	$viewVars['appName'] = $this->get('settings')['appName'];
-	$viewVars['view']    = 'intro';
-	$viewVars['rtl']     = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
+	$viewVars['view'] = 'intro';
+	$viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
 	if ($viewVars['rtl']) {
 		$viewVars['cols'] = '*,' . $this->conf['left_width'];
-		$template         = 'home_rtl.twig';
+		$template = 'home_rtl.twig';
 	} else {
 		$viewVars['cols'] = $this->conf['left_width'] . ',*';
-		$template         = 'home.twig';
+		$template = 'home.twig';
 	}
 
 	return $this->view->render($response, $template, $viewVars);
@@ -85,7 +85,7 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 	$subject = (isset($args['subject'])) ? $args['subject'] : 'root';
 
-	$viewVars            = $this->lang;
+	$viewVars = $this->lang;
 	$viewVars['appName'] = $this->get('settings')['appName'];
 
 	$viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
@@ -96,11 +96,15 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 	$_server_info = $this->misc->getServerInfo();
 
 	$body = $response->getBody();
+	\PC::debug($subject, 'subject');
+
 	if (!isset($_server_info['username'])) {
 		$this->misc->setNoDBConnection(true);
-		$login_controller = new \PHPPgAdmin\Controller\LoginController($this);
 
-		$body->write($login_controller->doLoginForm($msg));
+		$login_controller = new \PHPPgAdmin\Controller\LoginController($this);
+		$login_html = $login_controller->doLoginForm($msg);
+
+		$body->write($login_html);
 
 		return $response;
 	} else {
@@ -124,7 +128,7 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 			}
 
 			$_REQUEST = array_merge($_REQUEST, $urlvars);
-			$_GET     = array_merge($_GET, $urlvars);
+			$_GET = array_merge($_GET, $urlvars);
 		}
 
 		$actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($include_file, $_GET);
@@ -145,15 +149,18 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 });
 
 $app->get('/{subject}', function ($request, $response, $args) use ($msg, $container) {
-	$subject                   = (isset($args['subject'])) ? $args['subject'] : 'root';
-	$uri                       = $request->getUri();
+	$subject = (isset($args['subject'])) ? $args['subject'] : 'root';
+	$uri = $request->getUri();
+	if ($subject === 'server' || $subject === 'root') {
+		$subject = 'login';
+	}
 	list($base, $query_string) = explode('?', $uri->getQuery());
-	$url                       = '/src/views/' . $subject . '.php?' . $query_string;
+	$url = '/src/views/' . $subject . '.php?' . $query_string;
 
-	$viewVars            = $this->lang;
+	$viewVars = $this->lang;
 	$viewVars['appName'] = $this->get('settings')['appName'];
-	$viewVars['url']     = $url;
-	$viewVars['rtl']     = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
+	$viewVars['url'] = $url;
+	$viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
 	return $this->view->render($response, 'view.twig', $viewVars);
 });
