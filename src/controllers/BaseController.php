@@ -6,42 +6,42 @@ namespace PHPPgAdmin\Controller;
  * Base controller class
  */
 class BaseController {
-	private $container        = null;
-	private $_connection      = null;
-	private $app              = null;
-	private $data             = null;
-	private $database         = null;
-	private $server_id        = null;
-	public $appLangFiles      = [];
-	public $appThemes         = [];
-	public $appName           = '';
-	public $appVersion        = '';
-	public $form              = '';
-	public $href              = '';
-	public $lang              = [];
-	public $action            = '';
-	public $_name             = 'BaseController';
-	public $_title            = 'base';
+	private $container = null;
+	private $_connection = null;
+	private $app = null;
+	private $data = null;
+	private $database = null;
+	private $server_id = null;
+	public $appLangFiles = [];
+	public $appThemes = [];
+	public $appName = '';
+	public $appVersion = '';
+	public $form = '';
+	public $href = '';
+	public $lang = [];
+	public $action = '';
+	public $_name = 'BaseController';
+	public $_title = 'base';
 	private $table_controller = null;
 	private $trail_controller = null;
-	private $tree_controller  = null;
-	public $msg               = '';
+	private $tree_controller = null;
+	public $msg = '';
 
 	/* Constructor */
 	function __construct(\Slim\Container $container) {
 		$this->container = $container;
-		$this->lang      = $container->get('lang');
+		$this->lang = $container->get('lang');
 
-		$this->view           = $container->get('view');
+		$this->view = $container->get('view');
 		$this->plugin_manager = $container->get('plugin_manager');
-		$this->msg            = $container->get('msg');
-		$this->appLangFiles   = $container->get('appLangFiles');
+		$this->msg = $container->get('msg');
+		$this->appLangFiles = $container->get('appLangFiles');
 
 		$this->misc = $container->get('misc');
 		$this->conf = $this->misc->getConf();
 
 		$this->appThemes = $container->get('appThemes');
-		$this->action    = $container->get('action');
+		$this->action = $container->get('action');
 
 		$msg = $container->get('msg');
 		if ($this->misc->getNoDBConnection() === false) {
@@ -65,6 +65,27 @@ class BaseController {
 
 	public function getContainer() {
 		return $this->container;
+	}
+
+	/**
+	 * Receives N parameters and sends them to the console adding where was it called from
+	 * @return [type] [description]
+	 */
+	public function prtrace() {
+
+		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+		$btarray0 = ([
+			'class' => $backtrace[1]['class'],
+			'type' => $backtrace[1]['type'],
+			'function' => $backtrace[1]['function'],
+			'spacer' => ' ',
+			'line' => $backtrace[0]['line'],
+		]);
+
+		$tag = implode('', $btarray0);
+
+		\PC::debug(func_get_args(), $tag);
 	}
 
 	private function getTableController() {
@@ -139,17 +160,17 @@ class BaseController {
 	}
 
 	public function render() {
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
 
 		$misc->printHeader($lang[$this->_title]);
 		$misc->printBody();
 
 		switch ($action) {
-			default:
-				$this->doDefault();
-				break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();

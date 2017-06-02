@@ -6,7 +6,7 @@ namespace PHPPgAdmin\Controller;
  * Base controller class
  */
 class DataExportController extends BaseController {
-	public $_name      = 'DataExportController';
+	public $_name = 'DataExportController';
 	public $extensions = [
 		'sql' => 'sql',
 		'copy' => 'sql',
@@ -28,10 +28,10 @@ class DataExportController extends BaseController {
 
 	public function render() {
 
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$data   = $misc->getDatabaseAccessor();
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 		$action = $this->action;
 
 		// if (!isset($_REQUEST['table']) && !isset($_REQUEST['query']))
@@ -40,47 +40,49 @@ class DataExportController extends BaseController {
 		// If format is set, then perform the export
 		if (isset($_REQUEST['what'])) {
 
+			$this->prtrace("REQUEST['what']", $_REQUEST['what']);
+
 			// Include application functions
 			$misc->setNoOutput(true);
 
 			switch ($_REQUEST['what']) {
-				case 'dataonly':
-					// Check to see if they have pg_dump set up and if they do, use that
-					// instead of custom dump code
-					if ($misc->isDumpEnabled()
-						&& ($_REQUEST['d_format'] == 'copy' || $_REQUEST['d_format'] == 'sql')) {
+			case 'dataonly':
+				// Check to see if they have pg_dump set up and if they do, use that
+				// instead of custom dump code
+				if ($misc->isDumpEnabled() && ($_REQUEST['d_format'] == 'copy' || $_REQUEST['d_format'] == 'sql')) {
+					$this->prtrace("DUMP ENABLED, d_format is", $_REQUEST['d_format']);
+					$dbexport_controller = new \PHPPgAdmin\Controller\DBExportController($this->getContainer());
+					return $dbexport_controller->render();
 
-						$dbexport_controller = new \PHPPgAdmin\Controller\DBExportController($this->getContainer());
-						return $dbexport_controller->render();
+				} else {
+					$this->prtrace("d_format is", $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
+					$format = $_REQUEST['d_format'];
+					$oids = isset($_REQUEST['d_oids']);
+				}
+				break;
+			case 'structureonly':
+				// Check to see if they have pg_dump set up and if they do, use that
+				// instead of custom dump code
+				if ($misc->isDumpEnabled()) {
+					$dbexport_controller = new \PHPPgAdmin\Controller\DBExportController($this->getContainer());
+					return $dbexport_controller->render();
+				} else {
+					$clean = isset($_REQUEST['s_clean']);
+				}
 
-					} else {
-						$format = $_REQUEST['d_format'];
-						$oids   = isset($_REQUEST['d_oids']);
-					}
-					break;
-				case 'structureonly':
-					// Check to see if they have pg_dump set up and if they do, use that
-					// instead of custom dump code
-					if ($misc->isDumpEnabled()) {
-						$dbexport_controller = new \PHPPgAdmin\Controller\DBExportController($this->getContainer());
-						return $dbexport_controller->render();
-					} else {
-						$clean = isset($_REQUEST['s_clean']);
-					}
-
-					break;
-				case 'structureanddata':
-					// Check to see if they have pg_dump set up and if they do, use that
-					// instead of custom dump code
-					if ($misc->isDumpEnabled()) {
-						$dbexport_controller = new \PHPPgAdmin\Controller\DBExportController($this->getContainer());
-						return $dbexport_controller->render();
-					} else {
-						$format = $_REQUEST['sd_format'];
-						$clean  = isset($_REQUEST['sd_clean']);
-						$oids   = isset($_REQUEST['sd_oids']);
-					}
-					break;
+				break;
+			case 'structureanddata':
+				// Check to see if they have pg_dump set up and if they do, use that
+				// instead of custom dump code
+				if ($misc->isDumpEnabled()) {
+					$dbexport_controller = new \PHPPgAdmin\Controller\DBExportController($this->getContainer());
+					return $dbexport_controller->render();
+				} else {
+					$format = $_REQUEST['sd_format'];
+					$clean = isset($_REQUEST['sd_clean']);
+					$oids = isset($_REQUEST['sd_oids']);
+				}
+				break;
 			}
 
 			// Make it do a download, if necessary
@@ -213,8 +215,8 @@ class DataExportController extends BaseController {
 						echo "\t<header>\n";
 						foreach ($rs->fields as $k => $v) {
 							$finfo = $rs->fetchField($j++);
-							$name  = htmlspecialchars($finfo->name);
-							$type  = htmlspecialchars($finfo->type);
+							$name = htmlspecialchars($finfo->name);
+							$type = htmlspecialchars($finfo->type);
 							echo "\t\t<column name=\"{$name}\" type=\"{$type}\" />\n";
 						}
 						echo "\t</header>\n";
@@ -225,7 +227,7 @@ class DataExportController extends BaseController {
 						echo "\t\t<row>\n";
 						foreach ($rs->fields as $k => $v) {
 							$finfo = $rs->fetchField($j++);
-							$name  = htmlspecialchars($finfo->name);
+							$name = htmlspecialchars($finfo->name);
 							if (!is_null($v)) {
 								$v = htmlspecialchars($v);
 							}
@@ -242,10 +244,10 @@ class DataExportController extends BaseController {
 					while (!$rs->EOF) {
 						echo "INSERT INTO \"{$_REQUEST['table']}\" (";
 						$first = true;
-						$j     = 0;
+						$j = 0;
 						foreach ($rs->fields as $k => $v) {
 							$finfo = $rs->fetchField($j++);
-							$k     = $finfo->name;
+							$k = $finfo->name;
 							// SQL (INSERT) format cannot handle oids
 							//						if ($k == $data->id) continue;
 							// Output field
@@ -268,7 +270,7 @@ class DataExportController extends BaseController {
 							}
 							if ($first) {
 								$values = (is_null($v) ? 'NULL' : "'{$v}'");
-								$first  = false;
+								$first = false;
 							} else {
 								$values .= ', ' . ((is_null($v) ? 'NULL' : "'{$v}'"));
 							}
@@ -279,20 +281,20 @@ class DataExportController extends BaseController {
 					}
 				} else {
 					switch ($format) {
-						case 'tab':
-							$sep = "\t";
-							break;
-						case 'csv':
-						default:
-							$sep = ',';
-							break;
+					case 'tab':
+						$sep = "\t";
+						break;
+					case 'csv':
+					default:
+						$sep = ',';
+						break;
 					}
 					if (!$rs->EOF) {
 						// Output header row
 						$first = true;
 						foreach ($rs->fields as $k => $v) {
 							$finfo = $rs->fetchField($k);
-							$v     = $finfo->name;
+							$v = $finfo->name;
 							if (!is_null($v)) {
 								$v = str_replace('"', '""', $v);
 							}
@@ -343,10 +345,10 @@ class DataExportController extends BaseController {
 	}
 
 	public function doDefault($msg = '') {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$data   = $misc->getDatabaseAccessor();
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 		$action = $this->action;
 
 		if (!isset($_REQUEST['query']) or empty($_REQUEST['query'])) {
