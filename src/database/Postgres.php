@@ -2275,9 +2275,10 @@ class Postgres extends ADODB_base {
 		$type, $length, $array, $oldtype, $comment) {
 		// Begin transaction
 		$status = $this->beginTransaction();
+		$sql = '';
 		if ($status != 0) {
 			$this->rollbackTransaction();
-			return -6;
+			return [-6, $sql];
 		}
 
 		// Rename the column, if it has been changed
@@ -2285,7 +2286,7 @@ class Postgres extends ADODB_base {
 			$status = $this->renameColumn($table, $column, $name);
 			if ($status != 0) {
 				$this->rollbackTransaction();
-				return -4;
+				return [-4, $sql];
 			}
 		}
 
@@ -2350,7 +2351,7 @@ class Postgres extends ADODB_base {
 			$status = $this->execute($sql);
 			if ($status != 0) {
 				$this->rollbackTransaction();
-				return -1;
+				return [-1, $sql];
 			}
 		}
 
@@ -2358,10 +2359,10 @@ class Postgres extends ADODB_base {
 		$status = $this->setComment('COLUMN', $name, $table, $comment);
 		if ($status != 0) {
 			$this->rollbackTransaction();
-			return -5;
+			return [-5, $sql];
 		}
 
-		return $this->endTransaction();
+		return [$this->endTransaction(), $sql];
 	}
 
 	/**
