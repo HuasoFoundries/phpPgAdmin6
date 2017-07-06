@@ -71,7 +71,7 @@ class RuleController extends BaseController {
 			'icon' => 'Rule',
 		];
 
-		return $misc->printTree($rules, $attrs, 'rules');
+		return $this->printTree($rules, $attrs, 'rules');
 	}
 
 	/**

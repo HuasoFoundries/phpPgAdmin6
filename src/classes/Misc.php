@@ -13,40 +13,42 @@ use \PHPPgAdmin\Decorators\Decorator;
 
 class Misc {
 
-	private $_connection           = null;
-	private $_no_db_connection     = false;
+	use \PHPPgAdmin\DebugTrait;
+
+	private $_connection = null;
+	private $_no_db_connection = false;
 	private $_reload_drop_database = false;
-	private $_reload_browser       = false;
-	private $_no_bottom_link       = false;
-	private $app                   = null;
-	private $data                  = null;
-	private $database              = null;
-	private $server_id             = null;
-	public $appLangFiles           = [];
-	public $appName                = '';
-	public $appVersion             = '';
-	public $form                   = '';
-	public $href                   = '';
-	public $lang                   = [];
-	private $server_info           = null;
-	private $_no_output            = false;
-	private $container             = null;
+	private $_reload_browser = false;
+	private $_no_bottom_link = false;
+	private $app = null;
+	private $data = null;
+	private $database = null;
+	private $server_id = null;
+	public $appLangFiles = [];
+	public $appName = '';
+	public $appVersion = '';
+	public $form = '';
+	public $href = '';
+	public $lang = [];
+	private $server_info = null;
+	private $_no_output = false;
+	private $container = null;
 
 	/* Constructor */
 	function __construct(\Slim\Container $container) {
 
 		$this->container = $container;
 
-		$this->lang           = $container->get('lang');
-		$this->conf           = $container->get('conf');
-		$this->view           = $container->get('view');
+		$this->lang = $container->get('lang');
+		$this->conf = $container->get('conf');
+		$this->view = $container->get('view');
 		$this->plugin_manager = $container->get('plugin_manager');
-		$this->appLangFiles   = $container->get('appLangFiles');
+		$this->appLangFiles = $container->get('appLangFiles');
 
-		$this->appName          = $container->get('settings')['appName'];
-		$this->appVersion       = $container->get('settings')['appVersion'];
+		$this->appName = $container->get('settings')['appName'];
+		$this->appVersion = $container->get('settings')['appVersion'];
 		$this->postgresqlMinVer = $container->get('settings')['postgresqlMinVer'];
-		$this->phpMinVer        = $container->get('settings')['phpMinVer'];
+		$this->phpMinVer = $container->get('settings')['phpMinVer'];
 
 		$base_version = $container->get('settings')['base_version'];
 		// Check for config file version mismatch
@@ -67,7 +69,7 @@ class Misc {
 		}
 
 		if (count($this->conf['servers']) === 1) {
-			$info            = $this->conf['servers'][0];
+			$info = $this->conf['servers'][0];
 			$this->server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
 		} else if (isset($_REQUEST['server'])) {
 			$this->server_id = $_REQUEST['server'];
@@ -126,6 +128,10 @@ class Misc {
 		if ($this->data === null) {
 			$_connection = $this->getConnection($database, $this->server_id);
 
+			$this->prtrace('_connection', $_connection);
+			if (!$_connection) {
+				die($lang['strloginfailed']);
+			}
 			// Get the name of the database driver we need to use.
 			// The description of the server is returned in $platform.
 			$_type = $_connection->getDriver($platform);
@@ -143,11 +149,11 @@ class Misc {
 			// Create a database wrapper class for easy manipulation of the
 			// connection.
 
-			$this->data              = new $_type($_connection->conn);
-			$this->data->platform    = $_connection->platform;
+			$this->data = new $_type($_connection->conn, $this->conf);
+			$this->data->platform = $_connection->platform;
 			$this->data->server_info = $server_info;
-			$this->data->conf        = $this->conf;
-			$this->data->lang        = $this->lang;
+			$this->data->conf = $this->conf;
+			$this->data->lang = $this->lang;
 
 			/* we work on UTF-8 only encoding */
 			$this->data->execute("SET client_encoding TO 'UTF-8'");
@@ -177,7 +183,7 @@ class Misc {
 			if ($server_id !== null) {
 				$this->server_id = $server_id;
 			}
-			$server_info     = $this->getServerInfo($this->server_id);
+			$server_info = $this->getServerInfo($this->server_id);
 			$database_to_use = $this->getDatabase($database);
 
 			// Perform extra security checks if this config option is set
@@ -193,28 +199,43 @@ class Misc {
 
 				if (isset($server_info['username']) && array_key_exists(strtolower($server_info['username']), $bad_usernames)) {
 					unset($_SESSION['webdbLogin'][$this->server_id]);
-					$msg              = $lang['strlogindisallowed'];
-					$login_controller = new LoginController($this->app->getContainer());
+					$msg = $lang['strlogindisallowed'];
+					$this->prtrace('msg', $msg);
+					$login_controller = new LoginController($this->container);
 					return $login_controller->render();
 				}
 
 				if (!isset($server_info['password']) || $server_info['password'] == '') {
 					unset($_SESSION['webdbLogin'][$this->server_id]);
-					$msg              = $lang['strlogindisallowed'];
-					$login_controller = new LoginController($this->app->getContainer());
+					$msg = $lang['strlogindisallowed'];
+					$this->prtrace('msg', $msg);
+					$login_controller = new LoginController($this->container);
 					return $login_controller->render();
 				}
 			}
+			try {
+				// Create the connection object and make the connection
+				$this->_connection = new \PHPPgAdmin\Database\Connection(
+					$server_info['host'],
+					$server_info['port'],
+					$server_info['sslmode'],
+					$server_info['username'],
+					$server_info['password'],
+					$database_to_use
+				);
 
-			// Create the connection object and make the connection
-			$this->_connection = new \PHPPgAdmin\Database\Connection(
-				$server_info['host'],
-				$server_info['port'],
-				$server_info['sslmode'],
-				$server_info['username'],
-				$server_info['password'],
-				$database_to_use
-			);
+				$this->prtrace('getConnectionResult', $this->_connection->getConnectionResult());
+				if ($this->_connection->getConnectionResult() === false) {
+					$msg = $lang['strloginfailed'];
+					$this->prtrace('msg', $msg);
+					//$login_controller = new LoginController($this->container);
+					return null;
+				}
+
+			} catch (\Exception $e) {
+				$this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+			}
+
 		}
 		return $this->_connection;
 	}
@@ -319,142 +340,142 @@ class Misc {
 		$vars = [];
 
 		switch ($subject) {
-			case 'root':
-				$vars = [
-					'params' => [
-						'subject' => 'root',
-					],
-				];
-				break;
-			case 'server':
-				$vars = ['params' => [
-					'server' => $_REQUEST['server'],
-					'subject' => 'server',
-				]];
-				break;
-			case 'role':
-				$vars = ['params' => [
-					'server' => $_REQUEST['server'],
-					'subject' => 'role',
-					'action' => 'properties',
-					'rolename' => $_REQUEST['rolename'],
-				]];
-				break;
-			case 'database':
-				$vars = ['params' => [
-					'server' => $_REQUEST['server'],
-					'subject' => 'database',
-					'database' => $_REQUEST['database'],
-				]];
-				break;
-			case 'schema':
-				$vars = ['params' => [
-					'server' => $_REQUEST['server'],
-					'subject' => 'schema',
-					'database' => $_REQUEST['database'],
-					'schema' => $_REQUEST['schema'],
-				]];
-				break;
-			case 'table':
-				$vars = ['params' => [
+		case 'root':
+			$vars = [
+				'params' => [
+					'subject' => 'root',
+				],
+			];
+			break;
+		case 'server':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'server',
+			]];
+			break;
+		case 'role':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'role',
+				'action' => 'properties',
+				'rolename' => $_REQUEST['rolename'],
+			]];
+			break;
+		case 'database':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'database',
+				'database' => $_REQUEST['database'],
+			]];
+			break;
+		case 'schema':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'schema',
+				'database' => $_REQUEST['database'],
+				'schema' => $_REQUEST['schema'],
+			]];
+			break;
+		case 'table':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'table',
+				'database' => $_REQUEST['database'],
+				'schema' => $_REQUEST['schema'],
+				'table' => $_REQUEST['table'],
+			]];
+			break;
+		case 'selectrows':
+			$vars = [
+				'url' => 'tables.php',
+				'params' => [
 					'server' => $_REQUEST['server'],
 					'subject' => 'table',
 					'database' => $_REQUEST['database'],
 					'schema' => $_REQUEST['schema'],
 					'table' => $_REQUEST['table'],
+					'action' => 'confselectrows',
 				]];
-				break;
-			case 'selectrows':
-				$vars = [
-					'url' => 'tables.php',
-					'params' => [
-						'server' => $_REQUEST['server'],
-						'subject' => 'table',
-						'database' => $_REQUEST['database'],
-						'schema' => $_REQUEST['schema'],
-						'table' => $_REQUEST['table'],
-						'action' => 'confselectrows',
-					]];
-				break;
-			case 'view':
+			break;
+		case 'view':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'view',
+				'database' => $_REQUEST['database'],
+				'schema' => $_REQUEST['schema'],
+				'view' => $_REQUEST['view'],
+			]];
+			break;
+		case 'fulltext':
+		case 'ftscfg':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'fulltext',
+				'database' => $_REQUEST['database'],
+				'schema' => $_REQUEST['schema'],
+				'action' => 'viewconfig',
+				'ftscfg' => $_REQUEST['ftscfg'],
+			]];
+			break;
+		case 'function':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'function',
+				'database' => $_REQUEST['database'],
+				'schema' => $_REQUEST['schema'],
+				'function' => $_REQUEST['function'],
+				'function_oid' => $_REQUEST['function_oid'],
+			]];
+			break;
+		case 'aggregate':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'aggregate',
+				'action' => 'properties',
+				'database' => $_REQUEST['database'],
+				'schema' => $_REQUEST['schema'],
+				'aggrname' => $_REQUEST['aggrname'],
+				'aggrtype' => $_REQUEST['aggrtype'],
+			]];
+			break;
+		case 'column':
+			if (isset($_REQUEST['table'])) {
 				$vars = ['params' => [
 					'server' => $_REQUEST['server'],
-					'subject' => 'view',
+					'subject' => 'column',
+					'database' => $_REQUEST['database'],
+					'schema' => $_REQUEST['schema'],
+					'table' => $_REQUEST['table'],
+					'column' => $_REQUEST['column'],
+				]];
+			} else {
+				$vars = ['params' => [
+					'server' => $_REQUEST['server'],
+					'subject' => 'column',
 					'database' => $_REQUEST['database'],
 					'schema' => $_REQUEST['schema'],
 					'view' => $_REQUEST['view'],
+					'column' => $_REQUEST['column'],
 				]];
-				break;
-			case 'fulltext':
-			case 'ftscfg':
-				$vars = ['params' => [
-					'server' => $_REQUEST['server'],
-					'subject' => 'fulltext',
-					'database' => $_REQUEST['database'],
-					'schema' => $_REQUEST['schema'],
-					'action' => 'viewconfig',
-					'ftscfg' => $_REQUEST['ftscfg'],
-				]];
-				break;
-			case 'function':
-				$vars = ['params' => [
-					'server' => $_REQUEST['server'],
-					'subject' => 'function',
-					'database' => $_REQUEST['database'],
-					'schema' => $_REQUEST['schema'],
-					'function' => $_REQUEST['function'],
-					'function_oid' => $_REQUEST['function_oid'],
-				]];
-				break;
-			case 'aggregate':
-				$vars = ['params' => [
-					'server' => $_REQUEST['server'],
-					'subject' => 'aggregate',
-					'action' => 'properties',
-					'database' => $_REQUEST['database'],
-					'schema' => $_REQUEST['schema'],
-					'aggrname' => $_REQUEST['aggrname'],
-					'aggrtype' => $_REQUEST['aggrtype'],
-				]];
-				break;
-			case 'column':
-				if (isset($_REQUEST['table'])) {
-					$vars = ['params' => [
-						'server' => $_REQUEST['server'],
-						'subject' => 'column',
-						'database' => $_REQUEST['database'],
-						'schema' => $_REQUEST['schema'],
-						'table' => $_REQUEST['table'],
-						'column' => $_REQUEST['column'],
-					]];
-				} else {
-					$vars = ['params' => [
-						'server' => $_REQUEST['server'],
-						'subject' => 'column',
-						'database' => $_REQUEST['database'],
-						'schema' => $_REQUEST['schema'],
-						'view' => $_REQUEST['view'],
-						'column' => $_REQUEST['column'],
-					]];
-				}
+			}
 
-				break;
-			case 'plugin':
-				$vars = [
-					'url' => 'plugin.php',
-					'params' => [
-						'server' => $_REQUEST['server'],
-						'subject' => 'plugin',
-						'plugin' => $_REQUEST['plugin'],
-					]];
+			break;
+		case 'plugin':
+			$vars = [
+				'url' => 'plugin.php',
+				'params' => [
+					'server' => $_REQUEST['server'],
+					'subject' => 'plugin',
+					'plugin' => $_REQUEST['plugin'],
+				]];
 
-				if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin']))) {
-					$vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
-				}
+			if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin']))) {
+				$vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
+			}
 
-				break;
-			default:
-				return false;
+			break;
+		default:
+			return false;
 		}
 
 		if (!isset($vars['url'])) {
@@ -542,7 +563,7 @@ class Misc {
 
 		// Clip the value if the 'clip' parameter is true.
 		if (isset($params['clip']) && $params['clip'] === true) {
-			$maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
+			$maxlen = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
 			$ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
 			if (strlen($str) > $maxlen) {
 				$str = substr($str, 0, $maxlen - 1) . $ellipsis;
@@ -552,119 +573,119 @@ class Misc {
 		$out = '';
 
 		switch ($type) {
-			case 'int2':
-			case 'int4':
-			case 'int8':
-			case 'float4':
-			case 'float8':
-			case 'money':
-			case 'numeric':
-			case 'oid':
-			case 'xid':
-			case 'cid':
-			case 'tid':
-				$align = 'right';
-				$out   = nl2br(htmlspecialchars($str));
-				break;
-			case 'yesno':
-				if (!isset($params['true'])) {
-					$params['true'] = $lang['stryes'];
-				}
+		case 'int2':
+		case 'int4':
+		case 'int8':
+		case 'float4':
+		case 'float8':
+		case 'money':
+		case 'numeric':
+		case 'oid':
+		case 'xid':
+		case 'cid':
+		case 'tid':
+			$align = 'right';
+			$out = nl2br(htmlspecialchars($str));
+			break;
+		case 'yesno':
+			if (!isset($params['true'])) {
+				$params['true'] = $lang['stryes'];
+			}
 
-				if (!isset($params['false'])) {
-					$params['false'] = $lang['strno'];
-				}
+			if (!isset($params['false'])) {
+				$params['false'] = $lang['strno'];
+			}
 
-			// No break - fall through to boolean case.
-			case 'bool':
-			case 'boolean':
-				if (is_bool($str)) {
-					$str = $str ? 't' : 'f';
-				}
+		// No break - fall through to boolean case.
+		case 'bool':
+		case 'boolean':
+			if (is_bool($str)) {
+				$str = $str ? 't' : 'f';
+			}
 
-				switch ($str) {
-					case 't':
-						$out   = (isset($params['true']) ? $params['true'] : $lang['strtrue']);
-						$align = 'center';
-						break;
-					case 'f':
-						$out   = (isset($params['false']) ? $params['false'] : $lang['strfalse']);
-						$align = 'center';
-						break;
-					default:
-						$out = htmlspecialchars($str);
-				}
+			switch ($str) {
+			case 't':
+				$out = (isset($params['true']) ? $params['true'] : $lang['strtrue']);
+				$align = 'center';
 				break;
-			case 'bytea':
-				$tag   = 'div';
-				$class = 'pre';
-				$out   = $data->escapeBytea($str);
+			case 'f':
+				$out = (isset($params['false']) ? $params['false'] : $lang['strfalse']);
+				$align = 'center';
 				break;
-			case 'errormsg':
-				$tag   = 'pre';
-				$class = 'error';
-				$out   = htmlspecialchars($str);
-				break;
-			case 'pre':
-				$tag = 'pre';
+			default:
 				$out = htmlspecialchars($str);
-				break;
-			case 'prenoescape':
-				$tag = 'pre';
-				$out = $str;
-				break;
-			case 'nbsp':
-				$out = nl2br(str_replace(' ', '&nbsp;', htmlspecialchars($str)));
-				break;
-			case 'verbatim':
-				$out = $str;
-				break;
-			case 'callback':
-				$out = $params['function']($str, $params);
-				break;
-			case 'prettysize':
-				if ($str == -1) {
-					$out = $lang['strnoaccess'];
+			}
+			break;
+		case 'bytea':
+			$tag = 'div';
+			$class = 'pre';
+			$out = $data->escapeBytea($str);
+			break;
+		case 'errormsg':
+			$tag = 'pre';
+			$class = 'error';
+			$out = htmlspecialchars($str);
+			break;
+		case 'pre':
+			$tag = 'pre';
+			$out = htmlspecialchars($str);
+			break;
+		case 'prenoescape':
+			$tag = 'pre';
+			$out = $str;
+			break;
+		case 'nbsp':
+			$out = nl2br(str_replace(' ', '&nbsp;', htmlspecialchars($str)));
+			break;
+		case 'verbatim':
+			$out = $str;
+			break;
+		case 'callback':
+			$out = $params['function']($str, $params);
+			break;
+		case 'prettysize':
+			if ($str == -1) {
+				$out = $lang['strnoaccess'];
+			} else {
+				$limit = 10 * 1024;
+				$mult = 1;
+				if ($str < $limit * $mult) {
+					$out = $str . ' ' . $lang['strbytes'];
 				} else {
-					$limit = 10 * 1024;
-					$mult  = 1;
+					$mult *= 1024;
 					if ($str < $limit * $mult) {
-						$out = $str . ' ' . $lang['strbytes'];
+						$out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strkb'];
 					} else {
 						$mult *= 1024;
 						if ($str < $limit * $mult) {
-							$out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strkb'];
+							$out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strmb'];
 						} else {
 							$mult *= 1024;
 							if ($str < $limit * $mult) {
-								$out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strmb'];
+								$out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strgb'];
 							} else {
 								$mult *= 1024;
 								if ($str < $limit * $mult) {
-									$out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strgb'];
-								} else {
-									$mult *= 1024;
-									if ($str < $limit * $mult) {
-										$out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strtb'];
-									}
-
+									$out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strtb'];
 								}
+
 							}
 						}
 					}
 				}
-				break;
-			default:
-				// If the string contains at least one instance of >1 space in a row, a tab
-				// character, a space at the start of a line, or a space at the start of
-				// the whole string then render within a pre-formatted element (<pre>).
-				if (preg_match('/(^ |  |\t|\n )/m', $str)) {
-					$tag   = 'pre';
-					$class = 'data';
-					$out   = htmlspecialchars($str);
-				} else {
-					$out = nl2br(htmlspecialchars($str));
-				}
+			}
+			break;
+		default:
+			// If the string contains at least one instance of >1 space in a row, a tab
+			// character, a space at the start of a line, or a space at the start of
+			// the whole string then render within a pre-formatted element (<pre>).
+			if (preg_match('/(^ |  |\t|\n )/m', $str)) {
+				$tag = 'pre';
+				$class = 'data';
+				$out = htmlspecialchars($str);
+			} else {
+				$out = nl2br(htmlspecialchars($str));
+			}
 		}
 
 		if (isset($params['class'])) {
@@ -682,13 +703,13 @@ class Misc {
 		if (isset($tag)) {
 			$alignattr = isset($align) ? " style=\"text-align: {$align}\"" : '';
 			$classattr = isset($class) ? " class=\"{$class}\"" : '';
-			$out       = "<{$tag}{$alignattr}{$classattr}>{$out}</{$tag}>";
+			$out = "<{$tag}{$alignattr}{$classattr}>{$out}</{$tag}>";
 		}
 
 		// Add line numbers if 'lineno' param is true
 		if (isset($params['lineno']) && $params['lineno'] === true) {
 			$lines = explode("\n", $str);
-			$num   = count($lines);
+			$num = count($lines);
 			if ($num > 0) {
 				$temp = "<table>\n<tr><td class=\"{$class}\" style=\"vertical-align: top; padding-right: 10px;\"><pre class=\"{$class}\">";
 				for ($i = 1; $i <= $num; $i++) {
@@ -777,11 +798,11 @@ class Misc {
 		if (function_exists('newrelic_disable_autorum')) {
 			newrelic_disable_autorum();
 		}
-		$appName        = $this->appName;
-		$lang           = $this->lang;
+		$appName = $this->appName;
+		$lang = $this->lang;
 		$plugin_manager = $this->plugin_manager;
 
-		$viewVars        = $this->lang;
+		$viewVars = $this->lang;
 		$viewVars['dir'] = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
 
 		$viewVars['appName'] = htmlspecialchars($this->appName) . ($title != '') ? htmlspecialchars(" - {$title}") : '';
@@ -793,7 +814,7 @@ class Misc {
 		}
 
 		$plugins_head = [];
-		$_params      = ['heads' => &$plugins_head];
+		$_params = ['heads' => &$plugins_head];
 
 		$plugin_manager->do_hook('head', $_params);
 
@@ -821,7 +842,7 @@ class Misc {
 		$lang = $this->lang;
 
 		$footer_html = '';
-		//\PC::debug($this->_reload_browser, '$_reload_browser');
+		$this->prtrace(['$_reload_browser' => $this->_reload_browser]);
 		if ($this->_reload_browser) {
 			$footer_html .= $this->printReload(false, false);
 		} elseif ($this->_reload_drop_database) {
@@ -850,7 +871,7 @@ class Misc {
 	function printBody($doBody = true, $bodyClass = '') {
 
 		$bodyClass = htmlspecialchars($bodyClass);
-		$bodyHtml  = '<body class="detailbody ' . ($bodyClass == '' ? '' : $bodyClass) . '">';
+		$bodyHtml = '<body class="detailbody ' . ($bodyClass == '' ? '' : $bodyClass) . '">';
 		$bodyHtml .= "\n";
 
 		if (!$this->_no_output && $doBody) {
@@ -870,9 +891,9 @@ class Misc {
 		$reload = "<script type=\"text/javascript\">\n";
 		//$reload .= " alert('will reload');";
 		if ($database) {
-			$reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.href=\"/tree/browser\";\n";
+			$reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.href=\"/src/views/browser.php\";\n";
 		} else {
-			$reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.reload();\n";
+			$reload .= "\tif(parent.frames && parent.frames.browser) { parent.frames.browser.location.reload();} else { location.replace(location.href);}\n";
 			//$reload .= "\tparent.frames.detail.location.href=\"/src/views/intro\";\n";
 			//$reload .= "\tparent.frames.detail.location.reload();\n";
 		}
@@ -891,656 +912,660 @@ class Misc {
 	 */
 	function getNavTabs($section) {
 
-		$data           = $this->data;
-		$lang           = $this->lang;
+		$data = $this->data;
+		$lang = $this->lang;
 		$plugin_manager = $this->plugin_manager;
 
 		$hide_advanced = ($this->conf['show_advanced'] === false);
-		$tabs          = [];
+		$tabs = [];
 
 		switch ($section) {
-			case 'root':
-				$tabs = [
-					'intro' => [
-						'title' => $lang['strintroduction'],
-						'url' => "intro.php",
-						'icon' => 'Introduction',
-					],
-					'servers' => [
-						'title' => $lang['strservers'],
-						'url' => "servers.php",
-						'icon' => 'Servers',
-					],
-				];
-				break;
+		case 'root':
+			$tabs = [
+				'intro' => [
+					'title' => $lang['strintroduction'],
+					'url' => "intro.php",
+					'icon' => 'Introduction',
+				],
+				'servers' => [
+					'title' => $lang['strservers'],
+					'url' => "servers.php",
+					'icon' => 'Servers',
+				],
+			];
+			break;
 
-			case 'server':
+		case 'server':
+			$hide_users = true;
+			if ($data) {
 				$hide_users = !$data->isSuperUser();
-				$tabs       = [
-					'databases' => [
-						'title' => $lang['strdatabases'],
-						'url' => 'all_db.php',
-						'urlvars' => ['subject' => 'server'],
-						'help' => 'pg.database',
-						'icon' => 'Databases',
-					],
-				];
-				if ($data->hasRoles()) {
-					$tabs = array_merge($tabs, [
-						'roles' => [
-							'title' => $lang['strroles'],
-							'url' => 'roles.php',
-							'urlvars' => ['subject' => 'server'],
-							'hide' => $hide_users,
-							'help' => 'pg.role',
-							'icon' => 'Roles',
-						],
-					]);
-				} else {
-					$tabs = array_merge($tabs, [
-						'users' => [
-							'title' => $lang['strusers'],
-							'url' => 'users.php',
-							'urlvars' => ['subject' => 'server'],
-							'hide' => $hide_users,
-							'help' => 'pg.user',
-							'icon' => 'Users',
-						],
-						'groups' => [
-							'title' => $lang['strgroups'],
-							'url' => 'groups.php',
-							'urlvars' => ['subject' => 'server'],
-							'hide' => $hide_users,
-							'help' => 'pg.group',
-							'icon' => 'UserGroups',
-						],
-					]);
-				}
+			}
 
+			$tabs = [
+				'databases' => [
+					'title' => $lang['strdatabases'],
+					'url' => 'all_db.php',
+					'urlvars' => ['subject' => 'server'],
+					'help' => 'pg.database',
+					'icon' => 'Databases',
+				],
+			];
+			if ($data && $data->hasRoles()) {
 				$tabs = array_merge($tabs, [
-					'account' => [
-						'title' => $lang['straccount'],
-						'url' => $data->hasRoles() ? 'roles.php' : 'users.php',
-						'urlvars' => ['subject' => 'server', 'action' => 'account'],
-						'hide' => !$hide_users,
-						'help' => 'pg.role',
-						'icon' => 'User',
-					],
-					'tablespaces' => [
-						'title' => $lang['strtablespaces'],
-						'url' => 'tablespaces.php',
+					'roles' => [
+						'title' => $lang['strroles'],
+						'url' => 'roles.php',
 						'urlvars' => ['subject' => 'server'],
-						'hide' => (!$data->hasTablespaces()),
-						'help' => 'pg.tablespace',
-						'icon' => 'Tablespaces',
-					],
-					'export' => [
-						'title' => $lang['strexport'],
-						'url' => 'all_db.php',
-						'urlvars' => ['subject' => 'server', 'action' => 'export'],
-						'hide' => (!$this->isDumpEnabled()),
-						'icon' => 'Export',
+						'hide' => $hide_users,
+						'help' => 'pg.role',
+						'icon' => 'Roles',
 					],
 				]);
-				break;
-			case 'database':
-				$tabs = [
-					'schemas' => [
-						'title' => $lang['strschemas'],
-						'url' => 'schemas.php',
-						'urlvars' => ['subject' => 'database'],
-						'help' => 'pg.schema',
-						'icon' => 'Schemas',
+			} else {
+				$tabs = array_merge($tabs, [
+					'users' => [
+						'title' => $lang['strusers'],
+						'url' => 'users.php',
+						'urlvars' => ['subject' => 'server'],
+						'hide' => $hide_users,
+						'help' => 'pg.user',
+						'icon' => 'Users',
 					],
-					'sql' => [
-						'title' => $lang['strsql'],
-						'url' => 'database.php',
-						'urlvars' => ['subject' => 'database', 'action' => 'sql', 'new' => 1],
-						'help' => 'pg.sql',
-						'tree' => false,
-						'icon' => 'SqlEditor',
+					'groups' => [
+						'title' => $lang['strgroups'],
+						'url' => 'groups.php',
+						'urlvars' => ['subject' => 'server'],
+						'hide' => $hide_users,
+						'help' => 'pg.group',
+						'icon' => 'UserGroups',
 					],
-					'find' => [
-						'title' => $lang['strfind'],
-						'url' => 'database.php',
-						'urlvars' => ['subject' => 'database', 'action' => 'find'],
-						'tree' => false,
-						'icon' => 'Search',
-					],
-					'variables' => [
-						'title' => $lang['strvariables'],
-						'url' => 'database.php',
-						'urlvars' => ['subject' => 'database', 'action' => 'variables'],
-						'help' => 'pg.variable',
-						'tree' => false,
-						'icon' => 'Variables',
-					],
-					'processes' => [
-						'title' => $lang['strprocesses'],
-						'url' => 'database.php',
-						'urlvars' => ['subject' => 'database', 'action' => 'processes'],
-						'help' => 'pg.process',
-						'tree' => false,
-						'icon' => 'Processes',
-					],
-					'locks' => [
-						'title' => $lang['strlocks'],
-						'url' => 'database.php',
-						'urlvars' => ['subject' => 'database', 'action' => 'locks'],
-						'help' => 'pg.locks',
-						'tree' => false,
-						'icon' => 'Key',
-					],
-					'admin' => [
-						'title' => $lang['stradmin'],
-						'url' => 'database.php',
-						'urlvars' => ['subject' => 'database', 'action' => 'admin'],
-						'tree' => false,
-						'icon' => 'Admin',
-					],
-					'privileges' => [
-						'title' => $lang['strprivileges'],
-						'url' => 'privileges.php',
-						'urlvars' => ['subject' => 'database'],
-						'hide' => (!isset($data->privlist['database'])),
-						'help' => 'pg.privilege',
-						'tree' => false,
-						'icon' => 'Privileges',
-					],
-					'languages' => [
-						'title' => $lang['strlanguages'],
-						'url' => 'languages.php',
-						'urlvars' => ['subject' => 'database'],
-						'hide' => $hide_advanced,
-						'help' => 'pg.language',
-						'icon' => 'Languages',
-					],
-					'casts' => [
-						'title' => $lang['strcasts'],
-						'url' => 'casts.php',
-						'urlvars' => ['subject' => 'database'],
-						'hide' => ($hide_advanced),
-						'help' => 'pg.cast',
-						'icon' => 'Casts',
-					],
-					'export' => [
-						'title' => $lang['strexport'],
-						'url' => 'database.php',
-						'urlvars' => ['subject' => 'database', 'action' => 'export'],
-						'hide' => (!$this->isDumpEnabled()),
-						'tree' => false,
-						'icon' => 'Export',
-					],
-				];
-				break;
+				]);
+			}
 
-			case 'schema':
-				$tabs = [
-					'tables' => [
-						'title' => $lang['strtables'],
-						'url' => 'tables.php',
-						'urlvars' => ['subject' => 'schema'],
-						'help' => 'pg.table',
-						'icon' => 'Tables',
-					],
-					'views' => [
-						'title' => $lang['strviews'],
-						'url' => 'views.php',
-						'urlvars' => ['subject' => 'schema'],
-						'help' => 'pg.view',
-						'icon' => 'Views',
-					],
-					'matviews' => [
-						'title' => 'M ' . $lang['strviews'],
-						'url' => 'materialized_views.php',
-						'urlvars' => ['subject' => 'schema'],
-						'help' => 'pg.matview',
-						'icon' => 'MViews',
-					],
-					'sequences' => [
-						'title' => $lang['strsequences'],
-						'url' => 'sequences.php',
-						'urlvars' => ['subject' => 'schema'],
-						'help' => 'pg.sequence',
-						'icon' => 'Sequences',
-					],
-					'functions' => [
-						'title' => $lang['strfunctions'],
-						'url' => 'functions.php',
-						'urlvars' => ['subject' => 'schema'],
-						'help' => 'pg.function',
-						'icon' => 'Functions',
-					],
-					'fulltext' => [
-						'title' => $lang['strfulltext'],
-						'url' => 'fulltext.php',
-						'urlvars' => ['subject' => 'schema'],
-						'help' => 'pg.fts',
-						'tree' => true,
-						'icon' => 'Fts',
-					],
-					'domains' => [
-						'title' => $lang['strdomains'],
-						'url' => 'domains.php',
-						'urlvars' => ['subject' => 'schema'],
-						'help' => 'pg.domain',
-						'icon' => 'Domains',
-					],
-					'aggregates' => [
-						'title' => $lang['straggregates'],
-						'url' => 'aggregates.php',
-						'urlvars' => ['subject' => 'schema'],
-						'hide' => $hide_advanced,
-						'help' => 'pg.aggregate',
-						'icon' => 'Aggregates',
-					],
-					'types' => [
-						'title' => $lang['strtypes'],
-						'url' => 'types.php',
-						'urlvars' => ['subject' => 'schema'],
-						'hide' => $hide_advanced,
-						'help' => 'pg.type',
-						'icon' => 'Types',
-					],
-					'operators' => [
-						'title' => $lang['stroperators'],
-						'url' => 'operators.php',
-						'urlvars' => ['subject' => 'schema'],
-						'hide' => $hide_advanced,
-						'help' => 'pg.operator',
-						'icon' => 'Operators',
-					],
-					'opclasses' => [
-						'title' => $lang['stropclasses'],
-						'url' => 'opclasses.php',
-						'urlvars' => ['subject' => 'schema'],
-						'hide' => $hide_advanced,
-						'help' => 'pg.opclass',
-						'icon' => 'OperatorClasses',
-					],
-					'conversions' => [
-						'title' => $lang['strconversions'],
-						'url' => 'conversions.php',
-						'urlvars' => ['subject' => 'schema'],
-						'hide' => $hide_advanced,
-						'help' => 'pg.conversion',
-						'icon' => 'Conversions',
-					],
-					'privileges' => [
-						'title' => $lang['strprivileges'],
-						'url' => 'privileges.php',
-						'urlvars' => ['subject' => 'schema'],
-						'help' => 'pg.privilege',
-						'tree' => false,
-						'icon' => 'Privileges',
-					],
-					'export' => [
-						'title' => $lang['strexport'],
-						'url' => 'schemas.php',
-						'urlvars' => ['subject' => 'schema', 'action' => 'export'],
-						'hide' => (!$this->isDumpEnabled()),
-						'tree' => false,
-						'icon' => 'Export',
-					],
-				];
-				if (!$data->hasFTS()) {
-					unset($tabs['fulltext']);
-				}
+			$tabs = array_merge($tabs, [
+				'account' => [
+					'title' => $lang['straccount'],
+					'url' => ($data && $data->hasRoles()) ? 'roles.php' : 'users.php',
+					'urlvars' => ['subject' => 'server', 'action' => 'account'],
+					'hide' => !$hide_users,
+					'help' => 'pg.role',
+					'icon' => 'User',
+				],
+				'tablespaces' => [
+					'title' => $lang['strtablespaces'],
+					'url' => 'tablespaces.php',
+					'urlvars' => ['subject' => 'server'],
+					'hide' => (!$data || !$data->hasTablespaces()),
+					'help' => 'pg.tablespace',
+					'icon' => 'Tablespaces',
+				],
+				'export' => [
+					'title' => $lang['strexport'],
+					'url' => 'all_db.php',
+					'urlvars' => ['subject' => 'server', 'action' => 'export'],
+					'hide' => (!$this->isDumpEnabled()),
+					'icon' => 'Export',
+				],
+			]);
+			break;
+		case 'database':
+			$tabs = [
+				'schemas' => [
+					'title' => $lang['strschemas'],
+					'url' => 'schemas.php',
+					'urlvars' => ['subject' => 'database'],
+					'help' => 'pg.schema',
+					'icon' => 'Schemas',
+				],
+				'sql' => [
+					'title' => $lang['strsql'],
+					'url' => 'database.php',
+					'urlvars' => ['subject' => 'database', 'action' => 'sql', 'new' => 1],
+					'help' => 'pg.sql',
+					'tree' => false,
+					'icon' => 'SqlEditor',
+				],
+				'find' => [
+					'title' => $lang['strfind'],
+					'url' => 'database.php',
+					'urlvars' => ['subject' => 'database', 'action' => 'find'],
+					'tree' => false,
+					'icon' => 'Search',
+				],
+				'variables' => [
+					'title' => $lang['strvariables'],
+					'url' => 'database.php',
+					'urlvars' => ['subject' => 'database', 'action' => 'variables'],
+					'help' => 'pg.variable',
+					'tree' => false,
+					'icon' => 'Variables',
+				],
+				'processes' => [
+					'title' => $lang['strprocesses'],
+					'url' => 'database.php',
+					'urlvars' => ['subject' => 'database', 'action' => 'processes'],
+					'help' => 'pg.process',
+					'tree' => false,
+					'icon' => 'Processes',
+				],
+				'locks' => [
+					'title' => $lang['strlocks'],
+					'url' => 'database.php',
+					'urlvars' => ['subject' => 'database', 'action' => 'locks'],
+					'help' => 'pg.locks',
+					'tree' => false,
+					'icon' => 'Key',
+				],
+				'admin' => [
+					'title' => $lang['stradmin'],
+					'url' => 'database.php',
+					'urlvars' => ['subject' => 'database', 'action' => 'admin'],
+					'tree' => false,
+					'icon' => 'Admin',
+				],
+				'privileges' => [
+					'title' => $lang['strprivileges'],
+					'url' => 'privileges.php',
+					'urlvars' => ['subject' => 'database'],
+					'hide' => (!isset($data->privlist['database'])),
+					'help' => 'pg.privilege',
+					'tree' => false,
+					'icon' => 'Privileges',
+				],
+				'languages' => [
+					'title' => $lang['strlanguages'],
+					'url' => 'languages.php',
+					'urlvars' => ['subject' => 'database'],
+					'hide' => $hide_advanced,
+					'help' => 'pg.language',
+					'icon' => 'Languages',
+				],
+				'casts' => [
+					'title' => $lang['strcasts'],
+					'url' => 'casts.php',
+					'urlvars' => ['subject' => 'database'],
+					'hide' => ($hide_advanced),
+					'help' => 'pg.cast',
+					'icon' => 'Casts',
+				],
+				'export' => [
+					'title' => $lang['strexport'],
+					'url' => 'database.php',
+					'urlvars' => ['subject' => 'database', 'action' => 'export'],
+					'hide' => (!$this->isDumpEnabled()),
+					'tree' => false,
+					'icon' => 'Export',
+				],
+			];
+			break;
 
-				break;
+		case 'schema':
+			$tabs = [
+				'tables' => [
+					'title' => $lang['strtables'],
+					'url' => 'tables.php',
+					'urlvars' => ['subject' => 'schema'],
+					'help' => 'pg.table',
+					'icon' => 'Tables',
+				],
+				'views' => [
+					'title' => $lang['strviews'],
+					'url' => 'views.php',
+					'urlvars' => ['subject' => 'schema'],
+					'help' => 'pg.view',
+					'icon' => 'Views',
+				],
+				'matviews' => [
+					'title' => 'M ' . $lang['strviews'],
+					'url' => 'materialized_views.php',
+					'urlvars' => ['subject' => 'schema'],
+					'help' => 'pg.matview',
+					'icon' => 'MViews',
+				],
+				'sequences' => [
+					'title' => $lang['strsequences'],
+					'url' => 'sequences.php',
+					'urlvars' => ['subject' => 'schema'],
+					'help' => 'pg.sequence',
+					'icon' => 'Sequences',
+				],
+				'functions' => [
+					'title' => $lang['strfunctions'],
+					'url' => 'functions.php',
+					'urlvars' => ['subject' => 'schema'],
+					'help' => 'pg.function',
+					'icon' => 'Functions',
+				],
+				'fulltext' => [
+					'title' => $lang['strfulltext'],
+					'url' => 'fulltext.php',
+					'urlvars' => ['subject' => 'schema'],
+					'help' => 'pg.fts',
+					'tree' => true,
+					'icon' => 'Fts',
+				],
+				'domains' => [
+					'title' => $lang['strdomains'],
+					'url' => 'domains.php',
+					'urlvars' => ['subject' => 'schema'],
+					'help' => 'pg.domain',
+					'icon' => 'Domains',
+				],
+				'aggregates' => [
+					'title' => $lang['straggregates'],
+					'url' => 'aggregates.php',
+					'urlvars' => ['subject' => 'schema'],
+					'hide' => $hide_advanced,
+					'help' => 'pg.aggregate',
+					'icon' => 'Aggregates',
+				],
+				'types' => [
+					'title' => $lang['strtypes'],
+					'url' => 'types.php',
+					'urlvars' => ['subject' => 'schema'],
+					'hide' => $hide_advanced,
+					'help' => 'pg.type',
+					'icon' => 'Types',
+				],
+				'operators' => [
+					'title' => $lang['stroperators'],
+					'url' => 'operators.php',
+					'urlvars' => ['subject' => 'schema'],
+					'hide' => $hide_advanced,
+					'help' => 'pg.operator',
+					'icon' => 'Operators',
+				],
+				'opclasses' => [
+					'title' => $lang['stropclasses'],
+					'url' => 'opclasses.php',
+					'urlvars' => ['subject' => 'schema'],
+					'hide' => $hide_advanced,
+					'help' => 'pg.opclass',
+					'icon' => 'OperatorClasses',
+				],
+				'conversions' => [
+					'title' => $lang['strconversions'],
+					'url' => 'conversions.php',
+					'urlvars' => ['subject' => 'schema'],
+					'hide' => $hide_advanced,
+					'help' => 'pg.conversion',
+					'icon' => 'Conversions',
+				],
+				'privileges' => [
+					'title' => $lang['strprivileges'],
+					'url' => 'privileges.php',
+					'urlvars' => ['subject' => 'schema'],
+					'help' => 'pg.privilege',
+					'tree' => false,
+					'icon' => 'Privileges',
+				],
+				'export' => [
+					'title' => $lang['strexport'],
+					'url' => 'schemas.php',
+					'urlvars' => ['subject' => 'schema', 'action' => 'export'],
+					'hide' => (!$this->isDumpEnabled()),
+					'tree' => false,
+					'icon' => 'Export',
+				],
+			];
+			if (!$data->hasFTS()) {
+				unset($tabs['fulltext']);
+			}
 
-			case 'table':
-				$tabs = [
-					'columns' => [
-						'title' => $lang['strcolumns'],
-						'url' => 'tblproperties.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-						'icon' => 'Columns',
-						'branch' => true,
-					],
-					'browse' => [
-						'title' => $lang['strbrowse'],
-						'icon' => 'Columns',
-						'url' => 'display.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-						'return' => 'table',
-						'branch' => true,
-					],
-					'select' => [
-						'title' => $lang['strselect'],
-						'icon' => 'Search',
-						'url' => 'tables.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'confselectrows'],
-						'help' => 'pg.sql.select',
-					],
-					'insert' => [
-						'title' => $lang['strinsert'],
-						'url' => 'tables.php',
-						'urlvars' => [
-							'action' => 'confinsertrow',
-							'table' => Decorator::field('table'),
-						],
-						'help' => 'pg.sql.insert',
-						'icon' => 'Operator',
-					],
-					'indexes' => [
-						'title' => $lang['strindexes'],
-						'url' => 'indexes.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-						'help' => 'pg.index',
-						'icon' => 'Indexes',
-						'branch' => true,
-					],
-					'constraints' => [
-						'title' => $lang['strconstraints'],
-						'url' => 'constraints.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-						'help' => 'pg.constraint',
-						'icon' => 'Constraints',
-						'branch' => true,
-					],
-					'triggers' => [
-						'title' => $lang['strtriggers'],
-						'url' => 'triggers.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-						'help' => 'pg.trigger',
-						'icon' => 'Triggers',
-						'branch' => true,
-					],
-					'rules' => [
-						'title' => $lang['strrules'],
-						'url' => 'rules.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-						'help' => 'pg.rule',
-						'icon' => 'Rules',
-						'branch' => true,
-					],
-					'admin' => [
-						'title' => $lang['stradmin'],
-						'url' => 'tables.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'admin'],
-						'icon' => 'Admin',
-					],
-					'info' => [
-						'title' => $lang['strinfo'],
-						'url' => 'info.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-						'icon' => 'Statistics',
-					],
-					'privileges' => [
-						'title' => $lang['strprivileges'],
-						'url' => 'privileges.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-						'help' => 'pg.privilege',
-						'icon' => 'Privileges',
-					],
-					'import' => [
-						'title' => $lang['strimport'],
-						'url' => 'tblproperties.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'import'],
-						'icon' => 'Import',
-						'hide' => false,
-					],
-					'export' => [
-						'title' => $lang['strexport'],
-						'url' => 'tblproperties.php',
-						'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'export'],
-						'icon' => 'Export',
-						'hide' => false,
-					],
-				];
-				break;
+			break;
 
-			case 'view':
-				$tabs = [
-					'columns' => [
-						'title' => $lang['strcolumns'],
-						'url' => 'viewproperties.php',
-						'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
-						'icon' => 'Columns',
-						'branch' => true,
+		case 'table':
+			$tabs = [
+				'columns' => [
+					'title' => $lang['strcolumns'],
+					'url' => 'tblproperties.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+					'icon' => 'Columns',
+					'branch' => true,
+				],
+				'browse' => [
+					'title' => $lang['strbrowse'],
+					'icon' => 'Columns',
+					'url' => 'display.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+					'return' => 'table',
+					'branch' => true,
+				],
+				'select' => [
+					'title' => $lang['strselect'],
+					'icon' => 'Search',
+					'url' => 'tables.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'confselectrows'],
+					'help' => 'pg.sql.select',
+				],
+				'insert' => [
+					'title' => $lang['strinsert'],
+					'url' => 'tables.php',
+					'urlvars' => [
+						'action' => 'confinsertrow',
+						'table' => Decorator::field('table'),
 					],
-					'browse' => [
-						'title' => $lang['strbrowse'],
-						'icon' => 'Columns',
-						'url' => 'display.php',
-						'urlvars' => [
-							'action' => 'confselectrows',
-							'return' => 'schema',
-							'subject' => 'view',
-							'view' => Decorator::field('view'),
-						],
-						'branch' => true,
-					],
-					'select' => [
-						'title' => $lang['strselect'],
-						'icon' => 'Search',
-						'url' => 'views.php',
-						'urlvars' => ['action' => 'confselectrows', 'view' => Decorator::field('view')],
-						'help' => 'pg.sql.select',
-					],
-					'definition' => [
-						'title' => $lang['strdefinition'],
-						'url' => 'viewproperties.php',
-						'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'definition'],
-						'icon' => 'Definition',
-					],
-					'rules' => [
-						'title' => $lang['strrules'],
-						'url' => 'rules.php',
-						'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
-						'help' => 'pg.rule',
-						'icon' => 'Rules',
-						'branch' => true,
-					],
-					'privileges' => [
-						'title' => $lang['strprivileges'],
-						'url' => 'privileges.php',
-						'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
-						'help' => 'pg.privilege',
-						'icon' => 'Privileges',
-					],
-					'export' => [
-						'title' => $lang['strexport'],
-						'url' => 'viewproperties.php',
-						'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'export'],
-						'icon' => 'Export',
-						'hide' => false,
-					],
-				];
-				break;
+					'help' => 'pg.sql.insert',
+					'icon' => 'Operator',
+				],
+				'indexes' => [
+					'title' => $lang['strindexes'],
+					'url' => 'indexes.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+					'help' => 'pg.index',
+					'icon' => 'Indexes',
+					'branch' => true,
+				],
+				'constraints' => [
+					'title' => $lang['strconstraints'],
+					'url' => 'constraints.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+					'help' => 'pg.constraint',
+					'icon' => 'Constraints',
+					'branch' => true,
+				],
+				'triggers' => [
+					'title' => $lang['strtriggers'],
+					'url' => 'triggers.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+					'help' => 'pg.trigger',
+					'icon' => 'Triggers',
+					'branch' => true,
+				],
+				'rules' => [
+					'title' => $lang['strrules'],
+					'url' => 'rules.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+					'help' => 'pg.rule',
+					'icon' => 'Rules',
+					'branch' => true,
+				],
+				'admin' => [
+					'title' => $lang['stradmin'],
+					'url' => 'tables.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'admin'],
+					'icon' => 'Admin',
+				],
+				'info' => [
+					'title' => $lang['strinfo'],
+					'url' => 'info.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+					'icon' => 'Statistics',
+				],
+				'privileges' => [
+					'title' => $lang['strprivileges'],
+					'url' => 'privileges.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+					'help' => 'pg.privilege',
+					'icon' => 'Privileges',
+				],
+				'import' => [
+					'title' => $lang['strimport'],
+					'url' => 'tblproperties.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'import'],
+					'icon' => 'Import',
+					'hide' => false,
+				],
+				'export' => [
+					'title' => $lang['strexport'],
+					'url' => 'tblproperties.php',
+					'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'export'],
+					'icon' => 'Export',
+					'hide' => false,
+				],
+			];
+			break;
 
-			case 'matview':
-				$tabs = [
-					'columns' => [
-						'title' => $lang['strcolumns'],
-						'url' => 'viewproperties.php',
-						'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
-						'icon' => 'Columns',
-						'branch' => true,
+		case 'view':
+			$tabs = [
+				'columns' => [
+					'title' => $lang['strcolumns'],
+					'url' => 'viewproperties.php',
+					'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
+					'icon' => 'Columns',
+					'branch' => true,
+				],
+				'browse' => [
+					'title' => $lang['strbrowse'],
+					'icon' => 'Columns',
+					'url' => 'display.php',
+					'urlvars' => [
+						'action' => 'confselectrows',
+						'return' => 'schema',
+						'subject' => 'view',
+						'view' => Decorator::field('view'),
 					],
-					'browse' => [
-						'title' => $lang['strbrowse'],
-						'icon' => 'Columns',
-						'url' => 'display.php',
-						'urlvars' => [
-							'action' => 'confselectrows',
-							'return' => 'schema',
-							'subject' => 'matview',
-							'matview' => Decorator::field('matview'),
-						],
-						'branch' => true,
-					],
-					'select' => [
-						'title' => $lang['strselect'],
-						'icon' => 'Search',
-						'url' => 'views.php',
-						'urlvars' => ['action' => 'confselectrows', 'matview' => Decorator::field('matview')],
-						'help' => 'pg.sql.select',
-					],
-					'definition' => [
-						'title' => $lang['strdefinition'],
-						'url' => 'viewproperties.php',
-						'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'definition'],
-						'icon' => 'Definition',
-					],
-					'rules' => [
-						'title' => $lang['strrules'],
-						'url' => 'rules.php',
-						'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
-						'help' => 'pg.rule',
-						'icon' => 'Rules',
-						'branch' => true,
-					],
-					'privileges' => [
-						'title' => $lang['strprivileges'],
-						'url' => 'privileges.php',
-						'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
-						'help' => 'pg.privilege',
-						'icon' => 'Privileges',
-					],
-					'export' => [
-						'title' => $lang['strexport'],
-						'url' => 'viewproperties.php',
-						'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'export'],
-						'icon' => 'Export',
-						'hide' => false,
-					],
-				];
-				break;
+					'branch' => true,
+				],
+				'select' => [
+					'title' => $lang['strselect'],
+					'icon' => 'Search',
+					'url' => 'views.php',
+					'urlvars' => ['action' => 'confselectrows', 'view' => Decorator::field('view')],
+					'help' => 'pg.sql.select',
+				],
+				'definition' => [
+					'title' => $lang['strdefinition'],
+					'url' => 'viewproperties.php',
+					'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'definition'],
+					'icon' => 'Definition',
+				],
+				'rules' => [
+					'title' => $lang['strrules'],
+					'url' => 'rules.php',
+					'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
+					'help' => 'pg.rule',
+					'icon' => 'Rules',
+					'branch' => true,
+				],
+				'privileges' => [
+					'title' => $lang['strprivileges'],
+					'url' => 'privileges.php',
+					'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
+					'help' => 'pg.privilege',
+					'icon' => 'Privileges',
+				],
+				'export' => [
+					'title' => $lang['strexport'],
+					'url' => 'viewproperties.php',
+					'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'export'],
+					'icon' => 'Export',
+					'hide' => false,
+				],
+			];
+			break;
 
-			case 'function':
-				$tabs = [
-					'definition' => [
-						'title' => $lang['strdefinition'],
-						'url' => 'functions.php',
-						'urlvars' => [
-							'subject' => 'function',
-							'function' => Decorator::field('function'),
-							'function_oid' => Decorator::field('function_oid'),
-							'action' => 'properties',
-						],
-						'icon' => 'Definition',
+		case 'matview':
+			$tabs = [
+				'columns' => [
+					'title' => $lang['strcolumns'],
+					'url' => 'viewproperties.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+					'icon' => 'Columns',
+					'branch' => true,
+				],
+				'browse' => [
+					'title' => $lang['strbrowse'],
+					'icon' => 'Columns',
+					'url' => 'display.php',
+					'urlvars' => [
+						'action' => 'confselectrows',
+						'return' => 'schema',
+						'subject' => 'matview',
+						'matview' => Decorator::field('matview'),
 					],
-					'privileges' => [
-						'title' => $lang['strprivileges'],
-						'url' => 'privileges.php',
-						'urlvars' => [
-							'subject' => 'function',
-							'function' => Decorator::field('function'),
-							'function_oid' => Decorator::field('function_oid'),
-						],
-						'icon' => 'Privileges',
-					],
-				];
-				break;
+					'branch' => true,
+				],
+				'select' => [
+					'title' => $lang['strselect'],
+					'icon' => 'Search',
+					'url' => 'views.php',
+					'urlvars' => ['action' => 'confselectrows', 'matview' => Decorator::field('matview')],
+					'help' => 'pg.sql.select',
+				],
+				'definition' => [
+					'title' => $lang['strdefinition'],
+					'url' => 'viewproperties.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'definition'],
+					'icon' => 'Definition',
+				],
+				'rules' => [
+					'title' => $lang['strrules'],
+					'url' => 'rules.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+					'help' => 'pg.rule',
+					'icon' => 'Rules',
+					'branch' => true,
+				],
+				'privileges' => [
+					'title' => $lang['strprivileges'],
+					'url' => 'privileges.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+					'help' => 'pg.privilege',
+					'icon' => 'Privileges',
+				],
+				'export' => [
+					'title' => $lang['strexport'],
+					'url' => 'viewproperties.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'export'],
+					'icon' => 'Export',
+					'hide' => false,
+				],
+			];
+			break;
 
-			case 'aggregate':
-				$tabs = [
-					'definition' => [
-						'title' => $lang['strdefinition'],
-						'url' => 'aggregates.php',
-						'urlvars' => [
-							'subject' => 'aggregate',
-							'aggrname' => Decorator::field('aggrname'),
-							'aggrtype' => Decorator::field('aggrtype'),
-							'action' => 'properties',
-						],
-						'icon' => 'Definition',
+		case 'function':
+			$tabs = [
+				'definition' => [
+					'title' => $lang['strdefinition'],
+					'url' => 'functions.php',
+					'urlvars' => [
+						'subject' => 'function',
+						'function' => Decorator::field('function'),
+						'function_oid' => Decorator::field('function_oid'),
+						'action' => 'properties',
 					],
-				];
-				break;
+					'icon' => 'Definition',
+				],
+				'privileges' => [
+					'title' => $lang['strprivileges'],
+					'url' => 'privileges.php',
+					'urlvars' => [
+						'subject' => 'function',
+						'function' => Decorator::field('function'),
+						'function_oid' => Decorator::field('function_oid'),
+					],
+					'icon' => 'Privileges',
+				],
+			];
+			break;
 
-			case 'role':
-				$tabs = [
-					'definition' => [
-						'title' => $lang['strdefinition'],
-						'url' => 'roles.php',
-						'urlvars' => [
-							'subject' => 'role',
-							'rolename' => Decorator::field('rolename'),
-							'action' => 'properties',
-						],
-						'icon' => 'Definition',
+		case 'aggregate':
+			$tabs = [
+				'definition' => [
+					'title' => $lang['strdefinition'],
+					'url' => 'aggregates.php',
+					'urlvars' => [
+						'subject' => 'aggregate',
+						'aggrname' => Decorator::field('aggrname'),
+						'aggrtype' => Decorator::field('aggrtype'),
+						'action' => 'properties',
 					],
-				];
-				break;
+					'icon' => 'Definition',
+				],
+			];
+			break;
 
-			case 'popup':
-				$tabs = [
-					'sql' => [
-						'title' => $lang['strsql'],
-						'url' => '/src/views/sqledit.php',
-						'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
-						'help' => 'pg.sql',
-						'icon' => 'SqlEditor',
+		case 'role':
+			$tabs = [
+				'definition' => [
+					'title' => $lang['strdefinition'],
+					'url' => 'roles.php',
+					'urlvars' => [
+						'subject' => 'role',
+						'rolename' => Decorator::field('rolename'),
+						'action' => 'properties',
 					],
-					'find' => [
-						'title' => $lang['strfind'],
-						'url' => '/src/views/sqledit.php',
-						'urlvars' => ['action' => 'find', 'subject' => 'schema'],
-						'icon' => 'Search',
-					],
-				];
-				break;
+					'icon' => 'Definition',
+				],
+			];
+			break;
 
-			case 'column':
-				$tabs = [
-					'properties' => [
-						'title' => $lang['strcolprop'],
-						'url' => 'colproperties.php',
-						'urlvars' => [
-							'subject' => 'column',
-							'table' => Decorator::field('table'),
-							'column' => Decorator::field('column'),
-						],
-						'icon' => 'Column',
-					],
-					'privileges' => [
-						'title' => $lang['strprivileges'],
-						'url' => 'privileges.php',
-						'urlvars' => [
-							'subject' => 'column',
-							'table' => Decorator::field('table'),
-							'column' => Decorator::field('column'),
-						],
-						'help' => 'pg.privilege',
-						'icon' => 'Privileges',
-					],
-				];
-				break;
+		case 'popup':
+			$tabs = [
+				'sql' => [
+					'title' => $lang['strsql'],
+					'url' => '/src/views/sqledit.php',
+					'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
+					'help' => 'pg.sql',
+					'icon' => 'SqlEditor',
+				],
+				'find' => [
+					'title' => $lang['strfind'],
+					'url' => '/src/views/sqledit.php',
+					'urlvars' => ['action' => 'find', 'subject' => 'schema'],
+					'icon' => 'Search',
+				],
+			];
+			break;
 
-			case 'fulltext':
-				$tabs = [
-					'ftsconfigs' => [
-						'title' => $lang['strftstabconfigs'],
-						'url' => 'fulltext.php',
-						'urlvars' => ['subject' => 'schema'],
-						'hide' => !$data->hasFTS(),
-						'help' => 'pg.ftscfg',
-						'tree' => true,
-						'icon' => 'FtsCfg',
+		case 'column':
+			$tabs = [
+				'properties' => [
+					'title' => $lang['strcolprop'],
+					'url' => 'colproperties.php',
+					'urlvars' => [
+						'subject' => 'column',
+						'table' => Decorator::field('table'),
+						'column' => Decorator::field('column'),
 					],
-					'ftsdicts' => [
-						'title' => $lang['strftstabdicts'],
-						'url' => 'fulltext.php',
-						'urlvars' => ['subject' => 'schema', 'action' => 'viewdicts'],
-						'hide' => !$data->hasFTS(),
-						'help' => 'pg.ftsdict',
-						'tree' => true,
-						'icon' => 'FtsDict',
+					'icon' => 'Column',
+				],
+				'privileges' => [
+					'title' => $lang['strprivileges'],
+					'url' => 'privileges.php',
+					'urlvars' => [
+						'subject' => 'column',
+						'table' => Decorator::field('table'),
+						'column' => Decorator::field('column'),
 					],
-					'ftsparsers' => [
-						'title' => $lang['strftstabparsers'],
-						'url' => 'fulltext.php',
-						'urlvars' => ['subject' => 'schema', 'action' => 'viewparsers'],
-						'hide' => !$data->hasFTS(),
-						'help' => 'pg.ftsparser',
-						'tree' => true,
-						'icon' => 'FtsParser',
-					],
-				];
-				break;
+					'help' => 'pg.privilege',
+					'icon' => 'Privileges',
+				],
+			];
+			break;
+
+		case 'fulltext':
+			$tabs = [
+				'ftsconfigs' => [
+					'title' => $lang['strftstabconfigs'],
+					'url' => 'fulltext.php',
+					'urlvars' => ['subject' => 'schema'],
+					'hide' => !$data->hasFTS(),
+					'help' => 'pg.ftscfg',
+					'tree' => true,
+					'icon' => 'FtsCfg',
+				],
+				'ftsdicts' => [
+					'title' => $lang['strftstabdicts'],
+					'url' => 'fulltext.php',
+					'urlvars' => ['subject' => 'schema', 'action' => 'viewdicts'],
+					'hide' => !$data->hasFTS(),
+					'help' => 'pg.ftsdict',
+					'tree' => true,
+					'icon' => 'FtsDict',
+				],
+				'ftsparsers' => [
+					'title' => $lang['strftstabparsers'],
+					'url' => 'fulltext.php',
+					'urlvars' => ['subject' => 'schema', 'action' => 'viewparsers'],
+					'hide' => !$data->hasFTS(),
+					'help' => 'pg.ftsparser',
+					'tree' => true,
+					'icon' => 'FtsParser',
+				],
+			];
+			break;
 		}
 
 		// Tabs hook's place
@@ -1660,7 +1685,7 @@ class Misc {
 	}
 
 	function getHelpLink($help) {
-		return htmlspecialchars("help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
+		return htmlspecialchars("/src/views/help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
 
 	}
 
@@ -1708,17 +1733,17 @@ class Misc {
 			return false;
 		}
 
-		$nSize   = (double) $a_IniParts[1];
+		$nSize = (double) $a_IniParts[1];
 		$strUnit = strtolower($a_IniParts[2]);
 
 		switch ($strUnit) {
-			case 'm':
-				return ($nSize * (double) 1048576);
-			case 'k':
-				return ($nSize * (double) 1024);
-			case 'b':
-			default:
-				return $nSize;
+		case 'm':
+			return ($nSize * (double) 1048576);
+		case 'k':
+			return ($nSize * (double) 1024);
+		case 'b':
+		default:
+			return $nSize;
 		}
 	}
 
@@ -1738,104 +1763,6 @@ class Misc {
 			}
 		}
 		return $v;
-	}
-
-	/** Produce XML data for the browser tree
-	 * @param $treedata A set of records to populate the tree.
-	 * @param $attrs Attributes for tree items
-	 *        'text' - the text for the tree node
-	 *        'icon' - an icon for node
-	 *        'openIcon' - an alternative icon when the node is expanded
-	 *        'toolTip' - tool tip text for the node
-	 *        'action' - URL to visit when single clicking the node
-	 *        'iconAction' - URL to visit when single clicking the icon node
-	 *        'branch' - URL for child nodes (tree XML)
-	 *        'expand' - the action to return XML for the subtree
-	 *        'nodata' - message to display when node has no children
-	 * @param $section The section where the branch is linked in the tree
-	 */
-	function printTree(&$_treedata, &$attrs, $section) {
-		$plugin_manager = $this->plugin_manager;
-
-		$treedata = [];
-
-		if ($_treedata->recordCount() > 0) {
-			while (!$_treedata->EOF) {
-				$treedata[] = $_treedata->fields;
-				$_treedata->moveNext();
-			}
-		}
-
-		$tree_params = [
-			'treedata' => &$treedata,
-			'attrs' => &$attrs,
-			'section' => $section,
-		];
-
-		$plugin_manager->do_hook('tree', $tree_params);
-
-		//\Kint::dump($tree_params);
-		$this->printTreeXML($treedata, $attrs);
-	}
-
-	/** Produce XML data for the browser tree
-	 * @param $treedata A set of records to populate the tree.
-	 * @param $attrs Attributes for tree items
-	 *        'text' - the text for the tree node
-	 *        'icon' - an icon for node
-	 *        'openIcon' - an alternative icon when the node is expanded
-	 *        'toolTip' - tool tip text for the node
-	 *        'action' - URL to visit when single clicking the node
-	 *        'iconAction' - URL to visit when single clicking the icon node
-	 *        'branch' - URL for child nodes (tree XML)
-	 *        'expand' - the action to return XML for the subtree
-	 *        'nodata' - message to display when node has no children
-	 */
-	function printTreeXML(&$treedata, &$attrs) {
-		$lang = $this->lang;
-
-		header("Content-Type: text/xml; charset=UTF-8");
-		header("Cache-Control: no-cache");
-
-		echo "<tree>\n";
-
-		if (count($treedata) > 0) {
-			foreach ($treedata as $rec) {
-
-				echo "<tree";
-				echo Decorator::value_xml_attr('text', $attrs['text'], $rec);
-				echo Decorator::value_xml_attr('action', $attrs['action'], $rec);
-				echo Decorator::value_xml_attr('src', $attrs['branch'], $rec);
-
-				$icon = $this->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
-				echo Decorator::value_xml_attr('icon', $icon, $rec);
-				echo Decorator::value_xml_attr('iconaction', $attrs['iconAction'], $rec);
-
-				if (!empty($attrs['openicon'])) {
-					$icon = $this->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
-				}
-				echo Decorator::value_xml_attr('openicon', $icon, $rec);
-
-				echo Decorator::value_xml_attr('tooltip', $attrs['toolTip'], $rec);
-
-				echo " />\n";
-			}
-		} else {
-			$msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
-			echo "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"", $this->icon('ObjectNotFound'), "\" />\n";
-		}
-
-		echo "</tree>\n";
-	}
-
-	function adjustTabsForTree(&$tabs) {
-
-		foreach ($tabs as $i => $tab) {
-			if ((isset($tab['hide']) && $tab['hide'] === true) || (isset($tab['tree']) && $tab['tree'] === false)) {
-				unset($tabs[$i]);
-			}
-		}
-		return new ArrayRecordSet($tabs);
 	}
 
 	function icon($icon) {
@@ -1990,7 +1917,7 @@ class Misc {
 	function getServers($recordset = false, $group = false) {
 
 		$logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
-		$srvs   = [];
+		$srvs = [];
 
 		if (($group !== false) and ($group !== 'all')) {
 			if (isset($this->conf['srv_groups'][$group]['servers'])) {
@@ -2015,14 +1942,14 @@ class Misc {
 					$srvs[$server_id] = $info;
 				}
 
-				$srvs[$server_id]['id']     = $server_id;
+				$srvs[$server_id]['id'] = $server_id;
 				$srvs[$server_id]['action'] = Decorator::url('/redirect/server',
 					[
 						'server' => Decorator::field('id'),
 					]
 				);
 				if (isset($srvs[$server_id]['username'])) {
-					$srvs[$server_id]['icon']   = 'Server';
+					$srvs[$server_id]['icon'] = 'Server';
 					$srvs[$server_id]['branch'] = Decorator::url('all_db.php',
 						[
 							'action' => 'tree',
@@ -2031,7 +1958,7 @@ class Misc {
 						]
 					);
 				} else {
-					$srvs[$server_id]['icon']   = 'DisconnectedServer';
+					$srvs[$server_id]['icon'] = 'DisconnectedServer';
 					$srvs[$server_id]['branch'] = false;
 				}
 			}
@@ -2158,8 +2085,8 @@ class Misc {
 	 * @param $script the SQL script to save.
 	 */
 	function saveScriptHistory($script) {
-		list($usec, $sec)                                                         = explode(' ', microtime());
-		$time                                                                     = ((float) $usec + (float) $sec);
+		list($usec, $sec) = explode(' ', microtime());
+		$time = ((float) $usec + (float) $sec);
 		$_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]["$time"] = [
 			'query' => $script,
 			'paginate' => (!isset($_REQUEST['paginate']) ? 'f' : 't'),
@@ -2177,7 +2104,7 @@ class Misc {
 
 		$connection_html = "<table class=\"printconnection\" style=\"width: 100%\"><tr><td class=\"popup_select1\">\n";
 
-		$servers      = $this->getServers();
+		$servers = $this->getServers();
 		$forcedserver = null;
 		if (count($servers) === 1) {
 			$forcedserver = $this->server_id;
@@ -2209,7 +2136,7 @@ class Misc {
 		} else {
 
 			// Get the list of all databases
-			$data      = $this->getDatabaseAccessor();
+			$data = $this->getDatabaseAccessor();
 			$databases = $data->getDatabases();
 			if ($databases->recordCount() > 0) {
 
@@ -2223,7 +2150,7 @@ class Misc {
 				}
 
 				while (!$databases->EOF) {
-					$dbname     = $databases->fields['datname'];
+					$dbname = $databases->fields['datname'];
 					$dbselected = ((isset($_REQUEST['database']) && $dbname == $_REQUEST['database'])) ? ' selected="selected"' : '';
 					$connection_html .= "<option value=\"" . htmlspecialchars($dbname) . "\" " . $dbselected . ">" . htmlspecialchars($dbname) . "</option>\n";
 
@@ -2294,7 +2221,7 @@ class Misc {
 						];
 					}
 
-					$fksprops['byconstr'][$constrs->fields['conid']]['pattnums'][]  = $constrs->fields['p_attnum'];
+					$fksprops['byconstr'][$constrs->fields['conid']]['pattnums'][] = $constrs->fields['p_attnum'];
 					$fksprops['byconstr'][$constrs->fields['conid']]['pattnames'][] = $constrs->fields['p_field'];
 					$fksprops['byconstr'][$constrs->fields['conid']]['fattnames'][] = $constrs->fields['f_field'];
 

@@ -143,7 +143,7 @@ class TableController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($tables, $attrs, 'tables');
+		return $this->printTree($tables, $attrs, 'tables');
 	}
 
 	function doSubTree() {
@@ -154,7 +154,7 @@ class TableController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$tabs    = $misc->getNavTabs('table');
-		$items   = $misc->adjustTabsForTree($tabs);
+		$items   = $this->adjustTabsForTree($tabs);
 		$reqvars = $misc->getRequestVars('table');
 
 		$attrs = [
@@ -175,7 +175,7 @@ class TableController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($items, $attrs, 'table');
+		return $this->printTree($items, $attrs, 'table');
 	}
 
 	/**
@@ -666,7 +666,7 @@ class TableController extends BaseController {
 
 		if (!$confirm) {
 
-			include_once BASE_PATH . '/classes/Gui.php';
+			//include_once BASE_PATH . '/classes/Gui.php';
 
 			if (!isset($_REQUEST['name'])) {
 				$_REQUEST['name'] = '';

@@ -6,41 +6,45 @@ namespace PHPPgAdmin\Controller;
  * Base controller class
  */
 class BaseController {
-	private $container        = null;
-	private $_connection      = null;
-	private $app              = null;
-	private $data             = null;
-	private $database         = null;
-	private $server_id        = null;
-	public $appLangFiles      = [];
-	public $appThemes         = [];
-	public $appName           = '';
-	public $appVersion        = '';
-	public $form              = '';
-	public $href              = '';
-	public $lang              = [];
-	public $action            = '';
-	public $_name             = 'BaseController';
-	public $_title            = 'base';
+
+	use \PHPPgAdmin\DebugTrait;
+
+	private $container = null;
+	private $_connection = null;
+	private $app = null;
+	private $data = null;
+	private $database = null;
+	private $server_id = null;
+	public $appLangFiles = [];
+	public $appThemes = [];
+	public $appName = '';
+	public $appVersion = '';
+	public $form = '';
+	public $href = '';
+	public $lang = [];
+	public $action = '';
+	public $_name = 'BaseController';
+	public $_title = 'base';
 	private $table_controller = null;
 	private $trail_controller = null;
-	public $msg               = '';
+	private $tree_controller = null;
+	public $msg = '';
 
 	/* Constructor */
 	function __construct(\Slim\Container $container) {
 		$this->container = $container;
-		$this->lang      = $container->get('lang');
+		$this->lang = $container->get('lang');
 
-		$this->view           = $container->get('view');
+		$this->view = $container->get('view');
 		$this->plugin_manager = $container->get('plugin_manager');
-		$this->msg            = $container->get('msg');
-		$this->appLangFiles   = $container->get('appLangFiles');
+		$this->msg = $container->get('msg');
+		$this->appLangFiles = $container->get('appLangFiles');
 
 		$this->misc = $container->get('misc');
 		$this->conf = $this->misc->getConf();
 
 		$this->appThemes = $container->get('appThemes');
-		$this->action    = $container->get('action');
+		$this->action = $container->get('action');
 
 		$msg = $container->get('msg');
 		if ($this->misc->getNoDBConnection() === false) {
@@ -80,6 +84,14 @@ class BaseController {
 
 		return $this->trail_controller;
 	}
+
+	private function getTreeController() {
+		if ($this->tree_controller === null) {
+			$this->tree_controller = new \PHPPgAdmin\XHtml\TreeController($this->getContainer());
+		}
+
+		return $this->tree_controller;
+	}
 	/**
 	 * Instances an HTMLTable and returns its html content
 	 * @param  [type] &$tabledata [description]
@@ -93,6 +105,16 @@ class BaseController {
 	function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
 		$html_table = $this->getTableController();
 		return $html_table->printTable($tabledata, $columns, $actions, $place, $nodata, $pre_fn);
+	}
+
+	function adjustTabsForTree($tabs) {
+		$tree = $this->getTreeController();
+		return $tree->adjustTabsForTree($tabs);
+	}
+
+	function printTree(&$_treedata, &$attrs, $section) {
+		$tree = $this->getTreeController();
+		return $tree->printTree($_treedata, $attrs, $section);
 	}
 
 	function printTrail($trail = [], $do_print = true) {
@@ -120,17 +142,17 @@ class BaseController {
 	}
 
 	public function render() {
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
 
 		$misc->printHeader($lang[$this->_title]);
 		$misc->printBody();
 
 		switch ($action) {
-			default:
-				$this->doDefault();
-				break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();

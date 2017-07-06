@@ -12,7 +12,7 @@ class Postgres94 extends Postgres {
 	// Help functions
 
 	function getHelpPages() {
-		include_once './help/PostgresDoc94.php';
+		include_once BASE_PATH . '/src/help/PostgresDoc94.php';
 		return $this->help_page;
 	}
 

@@ -23,56 +23,56 @@ class ViewPropertyController extends BaseController {
 		$misc->printBody();
 
 		switch ($action) {
-			case 'save_edit':
-				if (isset($_POST['cancel'])) {
-					$this->doDefinition();
-				} else {
-					$this->doSaveEdit();
-				}
-
-				break;
-			case 'edit':
-				$this->doEdit();
-				break;
-			case 'export':
-				$this->doExport();
-				break;
-			case 'definition':
+		case 'save_edit':
+			if (isset($_POST['cancel'])) {
 				$this->doDefinition();
-				break;
-			case 'properties':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doProperties();
-				}
+			} else {
+				$this->doSaveEdit();
+			}
 
-				break;
-			case 'alter':
-				if (isset($_POST['alter'])) {
-					$this->doAlter(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_alter':
-				doAlter(true);
-				break;
-			case 'drop':
-				if (isset($_POST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			default:
+			break;
+		case 'edit':
+			$this->doEdit();
+			break;
+		case 'export':
+			$this->doExport();
+			break;
+		case 'definition':
+			$this->doDefinition();
+			break;
+		case 'properties':
+			if (isset($_POST['cancel'])) {
 				$this->doDefault();
-				break;
+			} else {
+				$this->doProperties();
+			}
+
+			break;
+		case 'alter':
+			if (isset($_POST['alter'])) {
+				$this->doAlter(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_alter':
+			doAlter(true);
+			break;
+		case 'drop':
+			if (isset($_POST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();
@@ -116,7 +116,7 @@ class ViewPropertyController extends BaseController {
 			'toolTip' => Decorator::field('comment'),
 		];
 
-		return $misc->printTree($columns, $attrs, 'viewcolumns');
+		return $this->printTree($columns, $attrs, 'viewcolumns');
 
 	}
 
@@ -157,7 +157,7 @@ class ViewPropertyController extends BaseController {
 
 			if (!isset($_POST['formDefinition'])) {
 				$_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
-				$_POST['formComment']    = $viewdata->fields['relcomment'];
+				$_POST['formComment'] = $viewdata->fields['relcomment'];
 			}
 
 			echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
@@ -305,71 +305,71 @@ class ViewPropertyController extends BaseController {
 		}
 
 		switch ($_REQUEST['stage']) {
-			case 1:
+		case 1:
 
-				$this->printTrail('column');
-				$misc->printTitle($lang['stralter'], 'pg.column.alter');
-				$misc->printMsg($msg);
+			$this->printTrail('column');
+			$misc->printTitle($lang['stralter'], 'pg.column.alter');
+			$misc->printMsg($msg);
 
-				echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
+			echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
 
-				// Output view header
-				echo "<table>\n";
-				echo "<tr><th class=\"data required\">{$lang['strname']}</th><th class=\"data required\">{$lang['strtype']}</th>";
-				echo "<th class=\"data\">{$lang['strdefault']}</th><th class=\"data\">{$lang['strcomment']}</th></tr>";
+			// Output view header
+			echo "<table>\n";
+			echo "<tr><th class=\"data required\">{$lang['strname']}</th><th class=\"data required\">{$lang['strtype']}</th>";
+			echo "<th class=\"data\">{$lang['strdefault']}</th><th class=\"data\">{$lang['strcomment']}</th></tr>";
 
-				$column = $data->getTableAttributes($_REQUEST['view'], $_REQUEST['column']);
+			$column = $data->getTableAttributes($_REQUEST['view'], $_REQUEST['column']);
 
-				if (!isset($_REQUEST['default'])) {
-					$_REQUEST['field']   = $column->fields['attname'];
-					$_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
-					$_REQUEST['comment'] = $column->fields['comment'];
-				}
+			if (!isset($_REQUEST['default'])) {
+				$_REQUEST['field'] = $column->fields['attname'];
+				$_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
+				$_REQUEST['comment'] = $column->fields['comment'];
+			}
 
-				echo "<tr><td><input name=\"field\" size=\"32\" value=\"",
-				htmlspecialchars($_REQUEST['field']), "\" /></td>";
+			echo "<tr><td><input name=\"field\" size=\"32\" value=\"",
+			htmlspecialchars($_REQUEST['field']), "\" /></td>";
 
-				echo "<td>", $misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), "</td>";
-				echo "<td><input name=\"default\" size=\"20\" value=\"",
-				htmlspecialchars($_REQUEST['default']), "\" /></td>";
-				echo "<td><input name=\"comment\" size=\"32\" value=\"",
-				htmlspecialchars($_REQUEST['comment']), "\" /></td>";
+			echo "<td>", $misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), "</td>";
+			echo "<td><input name=\"default\" size=\"20\" value=\"",
+			htmlspecialchars($_REQUEST['default']), "\" /></td>";
+			echo "<td><input name=\"comment\" size=\"32\" value=\"",
+			htmlspecialchars($_REQUEST['comment']), "\" /></td>";
 
-				echo "</table>\n";
-				echo "<p><input type=\"hidden\" name=\"action\" value=\"properties\" />\n";
-				echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
-				echo $misc->form;
-				echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
-				echo "<input type=\"hidden\" name=\"column\" value=\"", htmlspecialchars($_REQUEST['column']), "\" />\n";
-				echo "<input type=\"hidden\" name=\"olddefault\" value=\"", htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
-				echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
-				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-				echo "</form>\n";
+			echo "</table>\n";
+			echo "<p><input type=\"hidden\" name=\"action\" value=\"properties\" />\n";
+			echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
+			echo $misc->form;
+			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"column\" value=\"", htmlspecialchars($_REQUEST['column']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"olddefault\" value=\"", htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
+			echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
+			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+			echo "</form>\n";
 
-				break;
-			case 2:
+			break;
+		case 2:
 
-				// Check inputs
-				if (trim($_REQUEST['field']) == '') {
-					$_REQUEST['stage'] = 1;
-					$this->doProperties($lang['strcolneedsname']);
-					return;
-				}
+			// Check inputs
+			if (trim($_REQUEST['field']) == '') {
+				$_REQUEST['stage'] = 1;
+				$this->doProperties($lang['strcolneedsname']);
+				return;
+			}
 
-				// Alter the view column
-				$status = $data->alterColumn($_REQUEST['view'], $_REQUEST['column'], $_REQUEST['field'],
-					false, false, $_REQUEST['default'], $_REQUEST['olddefault'],
-					'', '', '', '', $_REQUEST['comment']);
-				if ($status == 0) {
-					$this->doDefault($lang['strcolumnaltered']);
-				} else {
-					$_REQUEST['stage'] = 1;
-					$this->doProperties($lang['strcolumnalteredbad']);
-					return;
-				}
-				break;
-			default:
-				echo "<p>{$lang['strinvalidparam']}</p>\n";
+			// Alter the view column
+			list($status, $sql) = $data->alterColumn($_REQUEST['view'], $_REQUEST['column'], $_REQUEST['field'],
+				false, false, $_REQUEST['default'], $_REQUEST['olddefault'],
+				'', '', '', '', $_REQUEST['comment']);
+			if ($status == 0) {
+				$this->doDefault($lang['strcolumnaltered']);
+			} else {
+				$_REQUEST['stage'] = 1;
+				$this->doProperties($lang['strcolumnalteredbad']);
+				return;
+			}
+			break;
+		default:
+			echo "<p>{$lang['strinvalidparam']}</p>\n";
 		}
 	}
 

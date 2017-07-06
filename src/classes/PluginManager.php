@@ -30,7 +30,7 @@ class PluginManager {
 	 */
 	function __construct(\Slim\Container $container) {
 
-		$this->language = $container->get('language');
+		$this->language = $container->has('language') ? $container->get('language') : 'english';
 		$this->lang     = $container->get('lang');
 		$this->conf     = $container->get('conf');
 
@@ -42,7 +42,7 @@ class PluginManager {
 		$plugins = $this->conf['plugins'];
 
 		foreach ($plugins as $activated_plugin) {
-			$plugin_file = './plugins/' . $activated_plugin . '/plugin.php';
+			$plugin_file = BASE_PATH . '/src/plugins/' . $activated_plugin . '/plugin.php';
 
 			// Verify is the activated plugin exists
 			if (file_exists($plugin_file)) {

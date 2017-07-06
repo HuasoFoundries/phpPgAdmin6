@@ -7,22 +7,22 @@ namespace PHPPgAdmin\Controller;
  */
 class LoginController extends BaseController {
 
-	private $container   = null;
+	private $container = null;
 	private $_connection = null;
-	private $app         = null;
-	private $data        = null;
-	private $database    = null;
-	private $server_id   = null;
+	private $app = null;
+	private $data = null;
+	private $database = null;
+	private $server_id = null;
 	public $appLangFiles = [];
-	public $appThemes    = [];
-	public $appName      = '';
-	public $appVersion   = '';
-	public $form         = '';
-	public $href         = '';
-	public $lang         = [];
-	public $action       = '';
-	public $_name        = 'LoginController';
-	public $_title       = 'strlogin';
+	public $appThemes = [];
+	public $appName = '';
+	public $appVersion = '';
+	public $form = '';
+	public $href = '';
+	public $lang = [];
+	public $action = '';
+	public $_name = 'LoginController';
+	public $_title = 'strlogin';
 
 	/* Constructor */
 	function __construct(\Slim\Container $container) {
@@ -30,6 +30,21 @@ class LoginController extends BaseController {
 
 		$this->misc->setNoDBConnection(true);
 		parent::__construct($container);
+
+	}
+
+	public function render() {
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$action = $this->action;
+
+		$misc->setNoDBConnection(true);
+
+		switch ($action) {
+		default:
+			echo $this->doLoginForm();
+			break;
+		}
 
 	}
 
@@ -52,16 +67,15 @@ class LoginController extends BaseController {
 		}
 		foreach ($_REQUEST as $key => $val) {
 			if (strpos($key, '?') !== FALSE) {
-				$namexploded               = explode('?', $key);
+				$namexploded = explode('?', $key);
 				$_REQUEST[$namexploded[1]] = htmlspecialchars($val);
 			}
 		}
 
 		$server_info = $misc->getServerInfo($_REQUEST['server']);
-		$title       = sprintf($lang['strlogintitle'], $server_info['desc']);
-		\PC::debug($title, 'title');
+		$title = sprintf($lang['strlogintitle'], $server_info['desc']);
+
 		$printTitle = $misc->printTitle($title, null, false);
-		\PC::debug($printTitle, 'printTitle');
 
 		$login_html .= $printTitle;
 
@@ -118,21 +132,6 @@ class LoginController extends BaseController {
 		// Output footer
 		$login_html .= $misc->printFooter(false);
 		return $login_html;
-
-	}
-
-	public function render() {
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$action = $this->action;
-
-		$misc->setNoDBConnection(true);
-
-		switch ($action) {
-			default:
-				echo $this->doLoginForm();
-				break;
-		}
 
 	}
 

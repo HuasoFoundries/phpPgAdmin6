@@ -161,20 +161,19 @@ function autocomplete(event) {
 }
 
 /* bind actions on values lines: hover for style change, click for select */
-with(jQuery('tr.acline')) {
-    live('mouseover', function () {
-        selectVal(jQuery('table.ac_values tr').index(this));
-    });
 
-    live('click', function () {
-        var a = jQuery(this).find('td > a.fkval');
+jQuery('tr.acline').on('mouseover', function () {
+    selectVal(jQuery('table.ac_values tr').index(this));
+});
 
-        for (i = 0; i < a.length; i++) {
-            jQuery('input[name="values[' + a[i].name + ']"]').val(jQuery(a[i]).text());
-        }
-        hideAc();
-    });
-}
+jQuery('tr.acline').on('click', function () {
+    var a = jQuery(this).find('td > a.fkval');
+
+    for (i = 0; i < a.length; i++) {
+        jQuery('input[name="values[' + a[i].name + ']"]').val(jQuery(a[i]).text());
+    }
+    hideAc();
+});
 
 
 jQuery(document).ready(function () {

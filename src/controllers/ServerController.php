@@ -9,6 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class ServerController extends BaseController {
 	public $_name       = 'ServerController';
 	public $table_place = 'servers-servers';
+	public $section     = 'servers';
 	public $query       = '';
 	public $subject     = '';
 	public $start_time  = null;
@@ -165,7 +166,7 @@ class ServerController extends BaseController {
 			'branch' => Decorator::field('branch'),
 		];
 
-		return $misc->printTree($nodes, $attrs, 'servers');
+		return $this->printTree($nodes, $attrs, $this->section);
 
 	}
 

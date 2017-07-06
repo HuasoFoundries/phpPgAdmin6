@@ -6,7 +6,8 @@
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
 
-DEFINE('BASE_PATH', dirname(__DIR__));
+defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
+
 DEFINE('THEME_PATH', BASE_PATH . "/src/themes");
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
@@ -18,6 +19,15 @@ if ($debugmode) {
 	ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);
+}
+
+require_once BASE_PATH . '/src/errorhandler.inc.php';
+
+if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
+	define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
+}
+if (!defined('ADODB_ERROR_HANDLER')) {
+	define('ADODB_ERROR_HANDLER', 'Error_Handler');
 }
 
 require_once BASE_PATH . '/vendor/autoload.php';
@@ -76,6 +86,8 @@ $container['conf'] = function ($c) {
 		die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 
 	}
+	// Plugins are removed
+	$conf['plugins'] = [];
 
 	return $conf;
 };
@@ -84,9 +96,30 @@ $container['lang'] = function ($c) {
 	include_once BASE_PATH . '/src/translations.php';
 
 	$c['appLangFiles'] = $appLangFiles;
-	$c['language']     = $_language;
+	$c['language'] = $_language;
 	return $lang;
 };
+/**
+ * $container['language'] = function ($c) {
+include BASE_PATH . '/src/detect_language.php';
+
+return $_language;
+};
+
+$container['lang'] = function ($c) {
+
+$lang = [];
+include_once BASE_PATH . '/src/lang/english.php';
+
+// Import the language file
+if ($c->has('language')) {
+include BASE_PATH . "/src/lang/" . $c['language'] . ".php";
+$_SESSION['webdbLanguage'] = $c['language'];
+}
+
+return $lang;
+};
+ */
 
 $container['plugin_manager'] = function ($c) {
 	$plugin_manager = new \PHPPgAdmin\PluginManager($c);
@@ -95,7 +128,7 @@ $container['plugin_manager'] = function ($c) {
 
 $container['serializer'] = function ($c) {
 	$serializerbuilder = \JMS\Serializer\SerializerBuilder::create();
-	$serializer        = $serializerbuilder
+	$serializer = $serializerbuilder
 		->setCacheDir(BASE_PATH . '/temp/jms')
 		->setDebug($c->get('settings')['debug'])
 		->build();
@@ -109,7 +142,7 @@ $container['view'] = function ($c) {
 		'auto_reload' => $c->get('settings')['debug'],
 		'debug' => $c->get('settings')['debug'],
 	]);
-	$environment               = $c->get('environment');
+	$environment = $c->get('environment');
 	$base_script_trailing_shit = substr($environment['SCRIPT_NAME'], 1);
 	// Instantiate and add Slim specific extension
 	$basePath = rtrim(str_ireplace($base_script_trailing_shit, '', $c['request']->getUri()->getBasePath()), '/');
@@ -120,15 +153,6 @@ $container['view'] = function ($c) {
 
 // Create Misc class references
 $container['misc'] = function ($c) {
-
-	include_once BASE_PATH . '/src/errorhandler.inc.php';
-
-	if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
-		define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
-	}
-	if (!defined('ADODB_ERROR_HANDLER')) {
-		define('ADODB_ERROR_HANDLER', 'Error_Handler');
-	}
 
 	$misc = new \PHPPgAdmin\Misc($c);
 	$conf = $c->get('conf');
@@ -207,7 +231,7 @@ $container['misc'] = function ($c) {
 		/* save the selected theme in cookie for a year */
 		setcookie('ppaTheme', $_theme, time() + 31536000, '/');
 		$_SESSION['ppaTheme'] = $_theme;
-		$conf['theme']        = $_theme;
+		$conf['theme'] = $_theme;
 	}
 	//\PC::debug($conf['theme'], 'conf.theme');
 

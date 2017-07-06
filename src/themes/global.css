@@ -38,13 +38,41 @@ body.flexbox_body {
     display: flex;
 }
 
-.flexbox_wrapper > .browser_container {
+.flexbox_wrapper > #browser_container {
     height: 100%;
     margin: 0px;
     padding: 0px;
     text-align: left;
     float: left;
     flex: 0 0 300px;
+}
+
+.flexbox_wrapper > #browser_container.ui-resizable {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
+    float: left;
+    width: 300px;
+    flex: unset;
+    border-right: 8px solid #cfd8dc;
+}
+
+.flexbox_wrapper > #browser_container.ui-resizable .ui-resizable-handle.ui-resizable-e {
+    width: 8px;
+    right: -8px;
+    background: #84a0ad;
+    top: 45%;
+    height: 50px
+}
+
+.flexbox_wrapper > #browser_container > .browser_container {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
+    float: left;
+    width: 100%;
 }
 
 .flexbox_wrapper >.detail_container {
@@ -62,6 +90,7 @@ body.flexbox_body {
     z-index: 100;
     width: 100%;
     top: 0;
+    margin-left: -10px !important;
 }
 
 .trail {
@@ -69,11 +98,17 @@ body.flexbox_body {
     z-index: 100;
     width: 100%;
     top: 27px;
+    margin-left: -10px !important;
 }
 
 .detailbody {
     margin-top: 58px;
     margin-bottom: -58px;
+    margin-left: 10px !important;
+}
+
+table.tabs {
+    margin-left: -10px !important;
 }
 
 

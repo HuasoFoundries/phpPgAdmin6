@@ -99,7 +99,7 @@ class SchemaController extends BaseController {
 			),
 		];
 
-		$misc->printTree($schemas, $attrs, 'schemas');
+		$this->printTree($schemas, $attrs, 'schemas');
 
 	}
 
@@ -112,7 +112,7 @@ class SchemaController extends BaseController {
 
 		$tabs = $misc->getNavTabs('schema');
 
-		$items = $misc->adjustTabsForTree($tabs);
+		$items = $this->adjustTabsForTree($tabs);
 
 		$reqvars = $misc->getRequestVars('schema');
 
@@ -130,7 +130,7 @@ class SchemaController extends BaseController {
 			),
 		];
 
-		$misc->printTree($items, $attrs, 'schema');
+		$this->printTree($items, $attrs, 'schema');
 
 	}
 

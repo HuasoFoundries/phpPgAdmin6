@@ -103,7 +103,7 @@ class TriggerController extends BaseController {
 			'icon' => 'Trigger',
 		];
 
-		return $misc->printTree($triggers, $attrs, 'triggers');
+		return $this->printTree($triggers, $attrs, 'triggers');
 
 	}
 

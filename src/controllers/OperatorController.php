@@ -88,7 +88,7 @@ class OperatorController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($operators, $attrs, 'operators');
+		return $this->printTree($operators, $attrs, 'operators');
 	}
 
 	/**

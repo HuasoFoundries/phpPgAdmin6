@@ -100,7 +100,7 @@ class FunctionController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($funcs, $attrs, 'functions');
+		return $this->printTree($funcs, $attrs, 'functions');
 	}
 
 	/**

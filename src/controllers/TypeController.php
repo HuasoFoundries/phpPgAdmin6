@@ -99,7 +99,7 @@ class TypeController extends BaseController {
 			),
 		];
 
-		return $misc->printTree($types, $attrs, 'types');
+		return $this->printTree($types, $attrs, 'types');
 
 	}
 
