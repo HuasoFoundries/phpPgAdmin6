@@ -9,3 +9,4 @@ config.inc.php.matching
 config.inc.php.pstn_db
 
 vendor
+npm-debug.log
