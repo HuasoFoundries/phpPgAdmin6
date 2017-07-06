@@ -1,6 +1,6 @@
 /**
  * This is hte mandatory CSS file to include on top of every CSS theme file 
- **/
+**/
 
 img {
     border: none;
@@ -285,4 +285,46 @@ form.sqlform {
     padding: 3px;
     font-size: 1.1em;
     line-height: 1.5em;
+}
+
+@media print {
+    @page {
+        size: 215.9mm 279.4mm;
+        margin: 5mm 5mm 5mm 5mm;
+        orphans: 100;
+        widows: 0;
+    }
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+    }
+    #browser_container {
+        display: none;
+    }
+    body {
+        margin: 0;
+        //zoom: 0.9;
+        background: white;
+        background-color: #ffffff;
+        .flexbox_wrapper > .detail_container {
+            height: 100%;
+            width: 100%;
+            margin: 0px;
+            padding: 0px;
+            text-align: left;
+            float: left;
+            flex: 1 1;
+            border: 4px red;
+        }
+        .topbar {
+            display: none;
+        }
+        .trail {
+            display: none;
+        }
+        h2 {
+            display: none;
+        }
+    }
 }

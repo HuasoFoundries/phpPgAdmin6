@@ -13,6 +13,8 @@ use \PHPPgAdmin\Decorators\Decorator;
 
 class Misc {
 
+	use \PHPPgAdmin\DebugTrait;
+
 	private $_connection = null;
 	private $_no_db_connection = false;
 	private $_reload_drop_database = false;
@@ -126,8 +128,9 @@ class Misc {
 		if ($this->data === null) {
 			$_connection = $this->getConnection($database, $this->server_id);
 
+			$this->prtrace('_connection', $_connection);
 			if (!$_connection) {
-				die($lang['strlogindisallowed']);
+				die($lang['strloginfailed']);
 			}
 			// Get the name of the database driver we need to use.
 			// The description of the server is returned in $platform.
@@ -197,6 +200,7 @@ class Misc {
 				if (isset($server_info['username']) && array_key_exists(strtolower($server_info['username']), $bad_usernames)) {
 					unset($_SESSION['webdbLogin'][$this->server_id]);
 					$msg = $lang['strlogindisallowed'];
+					$this->prtrace('msg', $msg);
 					$login_controller = new LoginController($this->container);
 					return $login_controller->render();
 				}
@@ -204,20 +208,34 @@ class Misc {
 				if (!isset($server_info['password']) || $server_info['password'] == '') {
 					unset($_SESSION['webdbLogin'][$this->server_id]);
 					$msg = $lang['strlogindisallowed'];
+					$this->prtrace('msg', $msg);
 					$login_controller = new LoginController($this->container);
 					return $login_controller->render();
 				}
 			}
+			try {
+				// Create the connection object and make the connection
+				$this->_connection = new \PHPPgAdmin\Database\Connection(
+					$server_info['host'],
+					$server_info['port'],
+					$server_info['sslmode'],
+					$server_info['username'],
+					$server_info['password'],
+					$database_to_use
+				);
 
-			// Create the connection object and make the connection
-			$this->_connection = new \PHPPgAdmin\Database\Connection(
-				$server_info['host'],
-				$server_info['port'],
-				$server_info['sslmode'],
-				$server_info['username'],
-				$server_info['password'],
-				$database_to_use
-			);
+				$this->prtrace('getConnectionResult', $this->_connection->getConnectionResult());
+				if ($this->_connection->getConnectionResult() === false) {
+					$msg = $lang['strloginfailed'];
+					$this->prtrace('msg', $msg);
+					//$login_controller = new LoginController($this->container);
+					return null;
+				}
+
+			} catch (\Exception $e) {
+				$this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+			}
+
 		}
 		return $this->_connection;
 	}
@@ -824,7 +842,7 @@ class Misc {
 		$lang = $this->lang;
 
 		$footer_html = '';
-		\PC::debug($this->_reload_browser, '$_reload_browser');
+		$this->prtrace(['$_reload_browser' => $this->_reload_browser]);
 		if ($this->_reload_browser) {
 			$footer_html .= $this->printReload(false, false);
 		} elseif ($this->_reload_drop_database) {

@@ -8,8 +8,10 @@ namespace PHPPgAdmin\Database;
 
 class Connection {
 
-	var $conn;
+	use \PHPPgAdmin\DebugTrait;
 
+	var $conn;
+	private $connection_result;
 	// The backend platform.  Set to UNKNOWN by default.
 	var $platform = 'UNKNOWN';
 
@@ -19,6 +21,7 @@ class Connection {
 	 */
 	function __construct($host, $port, $sslmode, $user, $password, $database, $fetchMode = ADODB_FETCH_ASSOC) {
 		$this->conn = ADONewConnection('postgres9');
+		//$this->conn->debug = true;
 		$this->conn->setFetchMode($fetchMode);
 
 		// Ignore host if null
@@ -39,9 +42,18 @@ class Connection {
 			$pghost .= ' requiressl=1';
 		}
 
-		$this->conn->connect($pghost, $user, $password, $database);
+		try {
+			$this->connection_result = $this->conn->connect($pghost, $user, $password, $database);
+			$this->prtrace(['connection_result' => $this->connection_result, 'conn' => $this->conn]);
+		} catch (\Exception $e) {
+			$this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+		}
+
 	}
 
+	public function getConnectionResult() {
+		return $this->connection_result;
+	}
 	/**
 	 * Gets the name of the correct database driver to use.  As a side effect,
 	 * sets the platform.
@@ -64,7 +76,7 @@ class Connection {
 		if (!isset($version)) {
 			$adodb = new ADODB_base($this->conn);
 
-			$sql   = "SELECT VERSION() AS version";
+			$sql = "SELECT VERSION() AS version";
 			$field = $adodb->selectField($sql, 'version');
 
 			// Check the platform, if it's mingw, set it
@@ -82,39 +94,39 @@ class Connection {
 
 		$description = "PostgreSQL {$version}";
 
-		\PC::debug(['pg_version' => pg_version($this->conn->_connectionID), '$version' => $version], 'getDriver');
+		$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), '$version' => $version]);
 
 		// Detect version and choose appropriate database driver
 		switch (substr($version, 0, 3)) {
-			case '9.7':return 'Postgres96';
-				break;
-			case '9.6':return 'Postgres96';
-				break;
-			case '9.5':return 'Postgres95';
-				break;
-			case '9.4':return 'Postgres94';
-				break;
-			case '9.3':return 'Postgres93';
-				break;
-			case '9.2':return 'Postgres92';
-				break;
-			case '9.1':return 'Postgres91';
-				break;
-			case '9.0':return 'Postgres90';
-				break;
-			case '8.4':return 'Postgres84';
-				break;
-			case '8.3':return 'Postgres83';
-				break;
-			case '8.2':return 'Postgres82';
-				break;
-			case '8.1':return 'Postgres81';
-				break;
-			case '8.0':
-			case '7.5':return 'Postgres80';
-				break;
-			case '7.4':return 'Postgres74';
-				break;
+		case '9.7':return 'Postgres96';
+			break;
+		case '9.6':return 'Postgres96';
+			break;
+		case '9.5':return 'Postgres95';
+			break;
+		case '9.4':return 'Postgres94';
+			break;
+		case '9.3':return 'Postgres93';
+			break;
+		case '9.2':return 'Postgres92';
+			break;
+		case '9.1':return 'Postgres91';
+			break;
+		case '9.0':return 'Postgres90';
+			break;
+		case '8.4':return 'Postgres84';
+			break;
+		case '8.3':return 'Postgres83';
+			break;
+		case '8.2':return 'Postgres82';
+			break;
+		case '8.1':return 'Postgres81';
+			break;
+		case '8.0':
+		case '7.5':return 'Postgres80';
+			break;
+		case '7.4':return 'Postgres74';
+			break;
 		}
 
 		/* All <7.4 versions are not supported */

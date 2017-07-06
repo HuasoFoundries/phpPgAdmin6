@@ -21,6 +21,15 @@ if ($debugmode) {
 	error_reporting(E_ALL);
 }
 
+require_once BASE_PATH . '/src/errorhandler.inc.php';
+
+if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
+	define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
+}
+if (!defined('ADODB_ERROR_HANDLER')) {
+	define('ADODB_ERROR_HANDLER', 'Error_Handler');
+}
+
 require_once BASE_PATH . '/vendor/autoload.php';
 
 // Start session (if not auto-started)
@@ -87,7 +96,7 @@ $container['lang'] = function ($c) {
 	include_once BASE_PATH . '/src/translations.php';
 
 	$c['appLangFiles'] = $appLangFiles;
-	$c['language']     = $_language;
+	$c['language'] = $_language;
 	return $lang;
 };
 /**
@@ -119,7 +128,7 @@ $container['plugin_manager'] = function ($c) {
 
 $container['serializer'] = function ($c) {
 	$serializerbuilder = \JMS\Serializer\SerializerBuilder::create();
-	$serializer        = $serializerbuilder
+	$serializer = $serializerbuilder
 		->setCacheDir(BASE_PATH . '/temp/jms')
 		->setDebug($c->get('settings')['debug'])
 		->build();
@@ -133,7 +142,7 @@ $container['view'] = function ($c) {
 		'auto_reload' => $c->get('settings')['debug'],
 		'debug' => $c->get('settings')['debug'],
 	]);
-	$environment               = $c->get('environment');
+	$environment = $c->get('environment');
 	$base_script_trailing_shit = substr($environment['SCRIPT_NAME'], 1);
 	// Instantiate and add Slim specific extension
 	$basePath = rtrim(str_ireplace($base_script_trailing_shit, '', $c['request']->getUri()->getBasePath()), '/');
@@ -144,15 +153,6 @@ $container['view'] = function ($c) {
 
 // Create Misc class references
 $container['misc'] = function ($c) {
-
-	include_once BASE_PATH . '/src/errorhandler.inc.php';
-
-	if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
-		define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
-	}
-	if (!defined('ADODB_ERROR_HANDLER')) {
-		define('ADODB_ERROR_HANDLER', 'Error_Handler');
-	}
 
 	$misc = new \PHPPgAdmin\Misc($c);
 	$conf = $c->get('conf');
@@ -231,7 +231,7 @@ $container['misc'] = function ($c) {
 		/* save the selected theme in cookie for a year */
 		setcookie('ppaTheme', $_theme, time() + 31536000, '/');
 		$_SESSION['ppaTheme'] = $_theme;
-		$conf['theme']        = $_theme;
+		$conf['theme'] = $_theme;
 	}
 	//\PC::debug($conf['theme'], 'conf.theme');
 
