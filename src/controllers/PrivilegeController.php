@@ -6,35 +6,35 @@ namespace PHPPgAdmin\Controller;
  * PrivilegeController controller class
  */
 class PrivilegeController extends BaseController {
-	public $_name       = 'PrivilegeController';
+	public $_name = 'PrivilegeController';
 	public $table_place = 'privileges-privileges';
 
 	function render() {
 
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
-		$data   = $misc->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 
-		$misc->printHeader($lang['strprivileges']);
-		$misc->printBody();
+		$this->printHeader($lang['strprivileges']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'save':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doAlter(false, $_REQUEST['mode']);
-				}
-
-				break;
-			case 'alter':
-				$this->doAlter(true, $_REQUEST['mode']);
-				break;
-			default:
+		case 'save':
+			if (isset($_REQUEST['cancel'])) {
 				$this->doDefault();
-				break;
+			} else {
+				$this->doAlter(false, $_REQUEST['mode']);
+			}
+
+			break;
+		case 'alter':
+			$this->doAlter(true, $_REQUEST['mode']);
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();
@@ -46,11 +46,11 @@ class PrivilegeController extends BaseController {
 	 * @param $msg (optional) A message to show
 	 */
 	function doAlter($confirm, $mode, $msg = '') {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
-		$data   = $misc->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 
 		if (!isset($_REQUEST['username'])) {
 			$_REQUEST['username'] = [];
@@ -73,12 +73,12 @@ class PrivilegeController extends BaseController {
 			$this->printTrail($_REQUEST['subject']);
 
 			switch ($mode) {
-				case 'grant':
-					$misc->printTitle($lang['strgrant'], 'pg.privilege.grant');
-					break;
-				case 'revoke':
-					$misc->printTitle($lang['strrevoke'], 'pg.privilege.revoke');
-					break;
+			case 'grant':
+				$this->printTitle($lang['strgrant'], 'pg.privilege.grant');
+				break;
+			case 'revoke':
+				$this->printTitle($lang['strrevoke'], 'pg.privilege.revoke');
+				break;
 			}
 			$misc->printMsg($msg);
 
@@ -191,11 +191,11 @@ class PrivilegeController extends BaseController {
 	 */
 	function doDefault($msg = '') {
 
-		$conf     = $this->conf;
-		$misc     = $this->misc;
-		$lang     = $this->lang;
-		$action   = $this->action;
-		$data     = $misc->getDatabaseAccessor();
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$action = $this->action;
+		$data = $misc->getDatabaseAccessor();
 		$database = $misc->getDatabase();
 
 		$this->printTrail($_REQUEST['subject']);
@@ -204,16 +204,16 @@ class PrivilegeController extends BaseController {
 		# need a better way, maybe every type of object should
 		# have a tab bar???
 		switch ($_REQUEST['subject']) {
-			case 'server':
-			case 'database':
-			case 'schema':
-			case 'table':
-			case 'column':
-			case 'view':
-				$this->printTabs($_REQUEST['subject'], 'privileges');
-				break;
-			default:
-				$misc->printTitle($lang['strprivileges'], 'pg.privilege');
+		case 'server':
+		case 'database':
+		case 'schema':
+		case 'table':
+		case 'column':
+		case 'view':
+			$this->printTabs($_REQUEST['subject'], 'privileges');
+			break;
+		default:
+			$this->printTitle($lang['strprivileges'], 'pg.privilege');
 		}
 		$misc->printMsg($msg);
 
@@ -296,33 +296,33 @@ class PrivilegeController extends BaseController {
 
 		// Links for granting to a user or group
 		switch ($_REQUEST['subject']) {
-			case 'table':
-			case 'view':
-			case 'sequence':
-			case 'function':
-			case 'tablespace':
-				$alllabel = "showall{$_REQUEST['subject']}s";
-				$allurl   = "{$_REQUEST['subject']}s.php";
-				$alltxt   = $lang["strshowall{$_REQUEST['subject']}s"];
-				break;
-			case 'schema':
-				$alllabel = "showallschemas";
-				$allurl   = "schemas.php";
-				$alltxt   = $lang["strshowallschemas"];
-				break;
-			case 'database':
-				$alllabel = "showalldatabases";
-				$allurl   = 'all_db.php';
-				$alltxt   = $lang['strshowalldatabases'];
-				break;
+		case 'table':
+		case 'view':
+		case 'sequence':
+		case 'function':
+		case 'tablespace':
+			$alllabel = "showall{$_REQUEST['subject']}s";
+			$allurl = "{$_REQUEST['subject']}s.php";
+			$alltxt = $lang["strshowall{$_REQUEST['subject']}s"];
+			break;
+		case 'schema':
+			$alllabel = "showallschemas";
+			$allurl = "schemas.php";
+			$alltxt = $lang["strshowallschemas"];
+			break;
+		case 'database':
+			$alllabel = "showalldatabases";
+			$allurl = 'all_db.php';
+			$alltxt = $lang['strshowalldatabases'];
+			break;
 		}
 
 		$subject = $_REQUEST['subject'];
-		$object  = $_REQUEST[$_REQUEST['subject']];
+		$object = $_REQUEST[$_REQUEST['subject']];
 
 		if ($_REQUEST['subject'] == 'function') {
 			$objectoid = $_REQUEST[$_REQUEST['subject'] . '_oid'];
-			$urlvars   = [
+			$urlvars = [
 				'action' => 'alter',
 				'server' => $_REQUEST['server'],
 				'database' => $_REQUEST['database'],

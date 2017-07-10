@@ -23,7 +23,7 @@ class HTMLNavbarController extends HTMLController {
 			$trail = $this->getTrail($trail);
 		}
 
-		$trail_html .= "<div class=\"trail\"><table><tr>";
+		$trail_html .= '<div class="trail" data-controller="' . $this->controller_name . '"><table><tr>';
 
 		foreach ($trail as $crumb) {
 			$trail_html .= "<td class=\"crumb\">";
@@ -119,7 +119,7 @@ class HTMLNavbarController extends HTMLController {
 		$tabs_html = '';
 		if (count($tabs) > 0) {
 
-			$tabs_html .= "<table class=\"tabs\"><tr>\n";
+			$tabs_html .= '<table class="tabs" data-controller="' . $this->controller_name . '"><tr>' . "\n";
 
 			# FIXME: don't count hidden tabs
 			$width = (int) (100 / count($tabs)) . '%';
@@ -200,7 +200,7 @@ class HTMLNavbarController extends HTMLController {
 		$server_id = $misc->getServerId();
 		$reqvars = $misc->getRequestVars('table');
 
-		$topbar_html = "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td>";
+		$topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><table style="width: 100%"><tr><td>';
 
 		if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
 			/* top left informations when connected */

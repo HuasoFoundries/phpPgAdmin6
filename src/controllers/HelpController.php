@@ -12,12 +12,12 @@ class HelpController extends BaseController {
 		$action = $this->action;
 
 		switch ($action) {
-			case 'browse':
-				$this->doBrowse();
-				break;
-			default:
-				$this->doDefault();
-				break;
+		case 'browse':
+			$this->doBrowse();
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 	}
@@ -52,10 +52,10 @@ class HelpController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printHeader($lang['strhelppagebrowser']);
-		$misc->printBody();
+		$this->printHeader($lang['strhelppagebrowser']);
+		$this->printBody();
 
-		$misc->printTitle($lang['strselecthelppage']);
+		$this->printTitle($lang['strselecthelppage']);
 
 		echo $misc->printMsg($msg);
 
@@ -86,10 +86,10 @@ class HelpController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printHeader($lang['strhelppagebrowser']);
-		$misc->printBody();
+		$this->printHeader($lang['strhelppagebrowser']);
+		$this->printBody();
 
-		$misc->printTitle($lang['strselecthelppage']);
+		$this->printTitle($lang['strselecthelppage']);
 
 		echo "<ul>\n";
 		foreach ($urls as $url) {

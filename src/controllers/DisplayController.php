@@ -18,6 +18,95 @@ class DisplayController extends BaseController {
 		}
 	}
 
+	public function render() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$plugin_manager = $this->plugin_manager;
+		$data = $misc->getDatabaseAccessor();
+		$action = $this->action;
+
+		/* shortcuts: this function exit the script for ajax purpose */
+		if ($action == 'dobrowsefk') {
+			$this->doBrowseFK();
+		}
+
+		$scripts = "<script src=\"/js/display.js\" type=\"text/javascript\"></script>";
+
+		$scripts .= "<script type=\"text/javascript\">\n";
+		$scripts .= "var Display = {\n";
+		$scripts .= "errmsg: '" . str_replace("'", "\'", $lang['strconnectionfail']) . "'\n";
+		$scripts .= "};\n";
+		$scripts .= "</script>\n";
+
+		$footer_template = 'footer.twig';
+		$header_template = 'header.twig';
+
+		ob_start();
+		switch ($action) {
+		case 'editrow':
+			if (isset($_POST['save'])) {
+				$this->doEditRow(false);
+			} else {
+				$header_template = 'sqledit_header.twig';
+				$footer_template = 'sqledit_footer.twig';
+				$this->doBrowse();
+			}
+
+			break;
+		case 'confeditrow':
+			$this->doEditRow(true);
+			break;
+		case 'delrow':
+			if (isset($_POST['yes'])) {
+				$this->doDelRow(false);
+			} else {
+				$header_template = 'sqledit_header.twig';
+				$footer_template = 'sqledit_footer.twig';
+				$this->doBrowse();
+			}
+
+			break;
+		case 'confdelrow':
+			$this->doDelRow(true);
+			break;
+		default:
+			$header_template = 'sqledit_header.twig';
+			$footer_template = 'sqledit_footer.twig';
+			$this->doBrowse();
+			break;
+		}
+		$output = ob_get_clean();
+
+		// Set the title based on the subject of the request
+		if (isset($_REQUEST['subject']) && isset($_REQUEST[$_REQUEST['subject']])) {
+			if ($_REQUEST['subject'] == 'table') {
+				$this->printHeader(
+					$lang['strtables'] . ': ' . $_REQUEST[$_REQUEST['subject']],
+					$scripts, true, $header_template
+				);
+			} else if ($_REQUEST['subject'] == 'view') {
+				$this->printHeader(
+					$lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']],
+					$scripts, true, $header_template
+				);
+			} else if ($_REQUEST['subject'] == 'column') {
+				$this->printHeader(
+					$lang['strcolumn'] . ': ' . $_REQUEST[$_REQUEST['subject']],
+					$scripts, true, $header_template
+				);
+			}
+		} else {
+			$this->printHeader($lang['strqueryresults'], $scripts, true, $header_template);
+		}
+
+		$this->printBody();
+
+		echo $output;
+
+		$misc->printFooter(true, $footer_template);
+	}
+
 	/**
 	 * Show confirmation of edit and perform actual update
 	 */
@@ -35,11 +124,11 @@ class DisplayController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail($_REQUEST['subject']);
-			$misc->printTitle($lang['streditrow']);
+			$this->printTitle($lang['streditrow']);
 			$misc->printMsg($msg);
 
 			$attrs = $data->getTableAttributes($_REQUEST['table']);
-			$rs    = $data->browseRow($_REQUEST['table'], $key);
+			$rs = $data->browseRow($_REQUEST['table'], $key);
 
 			if (($conf['autocomplete'] != 'disable')) {
 				$fksprops = $misc->getAutocompleteFKProperties($_REQUEST['table']);
@@ -53,7 +142,7 @@ class DisplayController extends BaseController {
 
 			echo "<form action=\"/src/views/display.php\" method=\"post\" id=\"ac_form\">\n";
 			$elements = 0;
-			$error    = true;
+			$error = true;
 			if ($rs->recordCount() == 1 && $attrs->recordCount() > 0) {
 				echo "<table>\n";
 
@@ -66,7 +155,7 @@ class DisplayController extends BaseController {
 				while (!$attrs->EOF) {
 
 					$attrs->fields['attnotnull'] = $data->phpBool($attrs->fields['attnotnull']);
-					$id                          = (($i % 2) == 0 ? '1' : '2');
+					$id = (($i % 2) == 0 ? '1' : '2');
 
 					// Initialise variables
 					if (!isset($_REQUEST['format'][$attrs->fields['attname']])) {
@@ -113,7 +202,7 @@ class DisplayController extends BaseController {
 					}
 
 					if (($fksprops !== false) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
-						$extras['id']           = "attr_{$attrs->fields['attnum']}";
+						$extras['id'] = "attr_{$attrs->fields['attnum']}";
 						$extras['autocomplete'] = 'off';
 					}
 
@@ -213,7 +302,7 @@ class DisplayController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail($_REQUEST['subject']);
-			$misc->printTitle($lang['strdeleterow']);
+			$this->printTitle($lang['strdeleterow']);
 
 			$rs = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
@@ -342,7 +431,7 @@ class DisplayController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
-		$j    = 0;
+		$j = 0;
 
 		foreach ($rs->fields as $k => $v) {
 
@@ -355,7 +444,7 @@ class DisplayController extends BaseController {
 			if ($args === false) {
 				echo "<th class=\"data\">", $misc->printVal($finfo->name), "</th>\n";
 			} else {
-				$args['page']    = $_REQUEST['page'];
+				$args['page'] = $_REQUEST['page'];
 				$args['sortkey'] = $j + 1;
 				// Sort direction opposite to current direction, unless it's currently ''
 				$args['sortdir'] = (
@@ -389,7 +478,7 @@ class DisplayController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
-		$j    = 0;
+		$j = 0;
 
 		if (!isset($_REQUEST['strings'])) {
 			$_REQUEST['strings'] = 'collapsed';
@@ -444,7 +533,7 @@ class DisplayController extends BaseController {
 		foreach ($_REQUEST['fkey'] as $x => $y) {
 			$ops[$x] = '=';
 		}
-		$query             = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+		$query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
 		$_REQUEST['query'] = $query;
 
 		$fkinfo = $this->getFKInfo();
@@ -483,11 +572,11 @@ class DisplayController extends BaseController {
 	 * Displays requested data
 	 */
 	function doBrowse($msg = '') {
-		$conf           = $this->conf;
-		$misc           = $this->misc;
-		$lang           = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$plugin_manager = $this->plugin_manager;
-		$data           = $misc->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 
 		$save_history = false;
 		// If current page is not set, default to first page
@@ -518,20 +607,20 @@ class DisplayController extends BaseController {
 			foreach ($_REQUEST['fkey'] as $x => $y) {
 				$ops[$x] = '=';
 			}
-			$query             = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+			$query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
 			$_REQUEST['query'] = $query;
 		}
 
 		if (isset($object)) {
 			if (isset($_REQUEST['query'])) {
 				$_SESSION['sqlquery'] = $_REQUEST['query'];
-				$misc->printTitle($lang['strselect']);
+				$this->printTitle($lang['strselect']);
 				$type = 'SELECT';
 			} else {
 				$type = 'TABLE';
 			}
 		} else {
-			$misc->printTitle($lang['strqueryresults']);
+			$this->printTitle($lang['strqueryresults']);
 			/*we comes from sql.php, $_SESSION['sqlquery'] has been set there */
 			$type = 'QUERY';
 		}
@@ -633,7 +722,8 @@ class DisplayController extends BaseController {
 			$misc->saveScriptHistory($_REQUEST['query']);
 		}
 
-		echo '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '"><textarea width="90%" name="query" rows="5" cols="100" resizable="true">';
+		echo '<form method="POST" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
+		echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 		if (isset($_REQUEST['query'])) {
 			$query = $_REQUEST['query'];
 		} else {
@@ -731,7 +821,7 @@ class DisplayController extends BaseController {
 				// Display edit and delete links if we have a key
 				if ($colspan > 0 and count($key) > 0) {
 					$keys_array = [];
-					$has_nulls  = false;
+					$has_nulls = false;
 					foreach ($key as $v) {
 						if ($rs->fields[$v] === null) {
 							$has_nulls = true;
@@ -744,7 +834,7 @@ class DisplayController extends BaseController {
 					} else {
 
 						if (isset($actions['actionbuttons']['edit'])) {
-							$actions['actionbuttons']['edit']                            = $edit_params;
+							$actions['actionbuttons']['edit'] = $edit_params;
 							$actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
 								$actions['actionbuttons']['edit']['attr']['href']['urlvars'],
 								$keys_array
@@ -752,7 +842,7 @@ class DisplayController extends BaseController {
 						}
 
 						if (isset($actions['actionbuttons']['delete'])) {
-							$actions['actionbuttons']['delete']                            = $delete_params;
+							$actions['actionbuttons']['delete'] = $delete_params;
 							$actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
 								$actions['actionbuttons']['delete']['attr']['href']['urlvars'],
 								$keys_array
@@ -929,79 +1019,4 @@ class DisplayController extends BaseController {
 		$this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
 	}
 
-	public function render() {
-		$conf           = $this->conf;
-		$misc           = $this->misc;
-		$lang           = $this->lang;
-		$plugin_manager = $this->plugin_manager;
-		$data           = $misc->getDatabaseAccessor();
-		$action         = $this->action;
-
-		/* shortcuts: this function exit the script for ajax purpose */
-		if ($action == 'dobrowsefk') {
-			$this->doBrowseFK();
-		}
-
-		$scripts = "<script src=\"/js/display.js\" type=\"text/javascript\"></script>";
-
-		$scripts .= "<script type=\"text/javascript\">\n";
-		$scripts .= "var Display = {\n";
-		$scripts .= "errmsg: '" . str_replace("'", "\'", $lang['strconnectionfail']) . "'\n";
-		$scripts .= "};\n";
-		$scripts .= "</script>\n";
-
-		// Set the title based on the subject of the request
-		if (isset($_REQUEST['subject']) && isset($_REQUEST[$_REQUEST['subject']])) {
-			if ($_REQUEST['subject'] == 'table') {
-				$misc->printHeader(
-					$lang['strtables'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-					$scripts
-				);
-			} else if ($_REQUEST['subject'] == 'view') {
-				$misc->printHeader(
-					$lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-					$scripts
-				);
-			} else if ($_REQUEST['subject'] == 'column') {
-				$misc->printHeader(
-					$lang['strcolumn'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-					$scripts
-				);
-			}
-		} else {
-			$misc->printHeader($lang['strqueryresults']);
-		}
-
-		$misc->printBody();
-
-		switch ($action) {
-			case 'editrow':
-				if (isset($_POST['save'])) {
-					$this->doEditRow(false);
-				} else {
-					$this->doBrowse();
-				}
-
-				break;
-			case 'confeditrow':
-				$this->doEditRow(true);
-				break;
-			case 'delrow':
-				if (isset($_POST['yes'])) {
-					$this->doDelRow(false);
-				} else {
-					$this->doBrowse();
-				}
-
-				break;
-			case 'confdelrow':
-				$this->doDelRow(true);
-				break;
-			default:
-				$this->doBrowse();
-				break;
-		}
-
-		$misc->printFooter();
-	}
 }

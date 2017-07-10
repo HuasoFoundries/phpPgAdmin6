@@ -6,15 +6,46 @@ namespace PHPPgAdmin\Controller;
  * Base controller class
  */
 class SQLEditController extends BaseController {
-	public $_name      = 'SQLEditController';
-	public $query      = '';
-	public $subject    = '';
+	public $_name = 'SQLEditController';
+	public $query = '';
+	public $subject = '';
 	public $start_time = null;
-	public $duration   = null;
+	public $duration = null;
 
-/**
- * Private function to display server and list of databases
- */
+	public function render() {
+		$conf = $this->conf;
+		$lang = $this->lang;
+		$misc = $this->misc;
+		$action = $this->action;
+		$data = $misc->getDatabaseAccessor();
+
+		switch ($action) {
+		case 'find':
+			$title = $this->lang['strfind'];
+			$body_text = $this->doFind();
+			break;
+
+		case 'sql':
+		default:
+			$title = $this->lang['strsql'];
+			$body_text = $this->doDefault();
+
+			break;
+		}
+
+		$this->setWindowName('sqledit');
+
+		$this->printHeader($title, null, true, 'sqledit_header.twig');
+		$this->printBody(true, '');
+		echo $body_text;
+
+		$misc->printFooter(true, 'sqledit_footer.twig');
+
+	}
+
+	/**
+	 * Private function to display server and list of databases
+	 */
 	function _printConnection($action) {
 
 		$conf = $this->conf;
@@ -91,7 +122,7 @@ class SQLEditController extends BaseController {
 		$default_html .= "</form>\n";
 
 		// Default focus
-		//$misc->setFocus('forms[0].term');
+		$this->setFocus('forms[0].term');
 		return $default_html;
 	}
 
@@ -109,6 +140,12 @@ class SQLEditController extends BaseController {
 			$_SESSION['sqlquery'] = '';
 		}
 
+		if (!isset($_REQUEST['search_path'])) {
+			$_REQUEST['search_path'] = implode(',', $data->getSearchPath());
+		}
+		$search_path = htmlspecialchars($_REQUEST['search_path']);
+		$sqlquery = htmlspecialchars($_SESSION['sqlquery']);
+
 		$default_html = $this->printTabs($misc->getNavTabs('popup'), 'sql', false);
 
 		$default_html .= '<form action="/src/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
@@ -117,15 +154,9 @@ class SQLEditController extends BaseController {
 
 		$default_html .= "\n";
 
-		if (!isset($_REQUEST['search_path'])) {
-			$_REQUEST['search_path'] = implode(',', $data->getSearchPath());
-		}
-		$search_path = htmlspecialchars($_REQUEST['search_path']);
-		$sqlquery    = htmlspecialchars($_SESSION['sqlquery']);
-
 		$default_html .= ' <div class="searchpath">';
 		$default_html .= "<label>";
-		$default_html .= $misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
+		$default_html .= $this->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
 
 		$default_html .= ': <input type="text" name="search_path" size="50" value="' . $search_path . '" />';
 		$default_html .= "</label>\n";
@@ -162,36 +193,8 @@ class SQLEditController extends BaseController {
 		$default_html .= "\n";
 
 		// Default focus
-		//$misc->setFocus('forms[0].query');
+		//$this->setFocus('forms[0].query');
 		return $default_html;
-
-	}
-
-	public function render() {
-		$conf   = $this->conf;
-		$lang   = $this->lang;
-		$misc   = $this->misc;
-		$action = $this->action;
-		$data   = $misc->getDatabaseAccessor();
-
-		switch ($action) {
-			case 'find':
-				$view_param = ['title' => $this->lang['strfind']];
-				$body_text  = $this->doFind();
-				break;
-			case 'sql':
-			default:
-				$view_param = ['title' => $this->lang['strsql']];
-				$body_text  = $this->doDefault();
-
-				break;
-		}
-
-		echo $this->view->fetch('sqledit_header.twig', $view_param);
-		echo $body_text;
-		echo $this->view->fetch('sqledit.twig');
-
-		$misc->setWindowName('sqledit');
 
 	}
 

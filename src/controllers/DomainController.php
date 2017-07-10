@@ -19,71 +19,71 @@ class DomainController extends BaseController {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['strdomains']);
-		$misc->printBody();
+		$this->printHeader($lang['strdomains']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'add_check':
-				$this->addCheck(true);
-				break;
-			case 'save_add_check':
-				if (isset($_POST['cancel'])) {
-					$this->doProperties();
-				} else {
-					$this->addCheck(false);
-				}
-
-				break;
-			case 'drop_con':
-				if (isset($_POST['drop'])) {
-					$this->doDropConstraint(false);
-				} else {
-					$this->doProperties();
-				}
-
-				break;
-			case 'confirm_drop_con':
-				$this->doDropConstraint(true);
-				break;
-			case 'save_create':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreate();
-				}
-
-				break;
-			case 'create':
-				$this->doCreate();
-				break;
-			case 'drop':
-				if (isset($_POST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			case 'save_alter':
-				if (isset($_POST['alter'])) {
-					$this->doSaveAlter();
-				} else {
-					$this->doProperties();
-				}
-
-				break;
-			case 'alter':
-				$this->doAlter();
-				break;
-			case 'properties':
+		case 'add_check':
+			$this->addCheck(true);
+			break;
+		case 'save_add_check':
+			if (isset($_POST['cancel'])) {
 				$this->doProperties();
-				break;
-			default:
+			} else {
+				$this->addCheck(false);
+			}
+
+			break;
+		case 'drop_con':
+			if (isset($_POST['drop'])) {
+				$this->doDropConstraint(false);
+			} else {
+				$this->doProperties();
+			}
+
+			break;
+		case 'confirm_drop_con':
+			$this->doDropConstraint(true);
+			break;
+		case 'save_create':
+			if (isset($_POST['cancel'])) {
 				$this->doDefault();
-				break;
+			} else {
+				$this->doSaveCreate();
+			}
+
+			break;
+		case 'create':
+			$this->doCreate();
+			break;
+		case 'drop':
+			if (isset($_POST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		case 'save_alter':
+			if (isset($_POST['alter'])) {
+				$this->doSaveAlter();
+			} else {
+				$this->doProperties();
+			}
+
+			break;
+		case 'alter':
+			$this->doAlter();
+			break;
+		case 'properties':
+			$this->doProperties();
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		return $misc->printFooter();
@@ -148,7 +148,7 @@ class DomainController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('domain');
-		$misc->printTitle($lang['stralter'], 'pg.domain.alter');
+		$this->printTitle($lang['stralter'], 'pg.domain.alter');
 		$misc->printMsg($msg);
 
 		// Fetch domain info
@@ -158,8 +158,8 @@ class DomainController extends BaseController {
 
 		if ($domaindata->recordCount() > 0) {
 			if (!isset($_POST['domname'])) {
-				$_POST['domtype']                 = $domaindata->fields['domtype'];
-				$_POST['domdefault']              = $domaindata->fields['domdef'];
+				$_POST['domtype'] = $domaindata->fields['domtype'];
+				$_POST['domdefault'] = $domaindata->fields['domdef'];
 				$domaindata->fields['domnotnull'] = $data->phpBool($domaindata->fields['domnotnull']);
 				if ($domaindata->fields['domnotnull']) {
 					$_POST['domnotnull'] = 'on';
@@ -221,7 +221,7 @@ class DomainController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('domain');
-			$misc->printTitle($lang['straddcheck'], 'pg.constraint.check');
+			$this->printTitle($lang['straddcheck'], 'pg.constraint.check');
 			$misc->printMsg($msg);
 
 			echo "<form action=\"/src/views/domains.php\" method=\"post\">\n";
@@ -270,7 +270,7 @@ class DomainController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('domain');
-			$misc->printTitle($lang['strdrop'], 'pg.constraint.drop');
+			$this->printTitle($lang['strdrop'], 'pg.constraint.drop');
 			$misc->printMsg($msg);
 
 			echo "<p>", sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
@@ -306,7 +306,7 @@ class DomainController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('domain');
-		$misc->printTitle($lang['strproperties'], 'pg.domain');
+		$this->printTitle($lang['strproperties'], 'pg.domain');
 		$misc->printMsg($msg);
 
 		$domaindata = $data->getDomain($_REQUEST['domain']);
@@ -438,7 +438,7 @@ class DomainController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('domain');
-			$misc->printTitle($lang['strdrop'], 'pg.domain.drop');
+			$this->printTitle($lang['strdrop'], 'pg.domain.drop');
 
 			echo "<p>", sprintf($lang['strconfdropdomain'], $misc->printVal($_REQUEST['domain'])), "</p>\n";
 			echo "<form action=\"/src/views/domains.php\" method=\"post\">\n";
@@ -497,7 +497,7 @@ class DomainController extends BaseController {
 		$types = $data->getTypes(true);
 
 		$this->printTrail('schema');
-		$misc->printTitle($lang['strcreatedomain'], 'pg.domain.create');
+		$this->printTitle($lang['strcreatedomain'], 'pg.domain.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/domains.php\" method=\"post\">\n";

@@ -19,13 +19,13 @@ class ConversionController extends BaseController {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['strconversions']);
-		$misc->printBody();
+		$this->printHeader($lang['strconversions']);
+		$this->printBody();
 
 		switch ($action) {
-			default:
-				$this->doDefault();
-				break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		return $misc->printFooter();
@@ -45,14 +45,14 @@ class ConversionController extends BaseController {
 
 		function getIcon($f) {
 			switch ($f['contype']) {
-				case 'u':
-					return 'UniqueConstraint';
-				case 'c':
-					return 'CheckConstraint';
-				case 'f':
-					return 'ForeignKey';
-				case 'p':
-					return 'PrimaryKey';
+			case 'u':
+				return 'UniqueConstraint';
+			case 'c':
+				return 'CheckConstraint';
+			case 'f':
+				return 'ForeignKey';
+			case 'p':
+				return 'PrimaryKey';
 
 			}
 		}

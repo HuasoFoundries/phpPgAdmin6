@@ -19,38 +19,38 @@ class OperatorController extends BaseController {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['stroperators']);
-		$misc->printBody();
+		$this->printHeader($lang['stroperators']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'save_create':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreate();
-				}
-
-				break;
-			case 'create':
-				doCreate();
-				break;
-			case 'drop':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doDrop(false);
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			case 'properties':
-				$this->doProperties();
-				break;
-			default:
+		case 'save_create':
+			if (isset($_POST['cancel'])) {
 				$this->doDefault();
-				break;
+			} else {
+				$this->doSaveCreate();
+			}
+
+			break;
+		case 'create':
+			doCreate();
+			break;
+		case 'drop':
+			if (isset($_POST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doDrop(false);
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		case 'properties':
+			$this->doProperties();
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();
@@ -101,10 +101,10 @@ class OperatorController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('operator');
-		$misc->printTitle($lang['strproperties'], 'pg.operator');
+		$this->printTitle($lang['strproperties'], 'pg.operator');
 		$misc->printMsg($msg);
 
-		$oprdata                       = $data->getOperator($_REQUEST['operator_oid']);
+		$oprdata = $data->getOperator($_REQUEST['operator_oid']);
 		$oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
 
 		if ($oprdata->recordCount() > 0) {
@@ -176,7 +176,7 @@ class OperatorController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('operator');
-			$misc->printTitle($lang['strdrop'], 'pg.operator.drop');
+			$this->printTitle($lang['strdrop'], 'pg.operator.drop');
 
 			echo "<p>", sprintf($lang['strconfdropoperator'], $misc->printVal($_REQUEST['operator'])), "</p>\n";
 

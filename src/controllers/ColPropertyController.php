@@ -26,8 +26,8 @@ class ColPropertyController extends BaseController {
 		$action = $this->action;
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printHeader($lang['strtables'] . ' - ' . $this->tableName, null, true, 'select2_header.twig');
-		$misc->printBody();
+		$this->printHeader($lang['strtables'] . ' - ' . $this->tableName, null, true, 'select2_header.twig');
+		$this->printBody();
 
 		if (isset($_REQUEST['view'])) {
 			$this->doDefault(null, false);
@@ -67,7 +67,7 @@ class ColPropertyController extends BaseController {
 		switch ($_REQUEST['stage']) {
 		case 1:
 			$this->printTrail('column');
-			$misc->printTitle($lang['stralter'], 'pg.column.alter');
+			$this->printTitle($lang['stralter'], 'pg.column.alter');
 			$misc->printMsg($msg);
 
 			echo "<script src=\"/js/tables.js\" type=\"text/javascript\"></script>";
@@ -239,7 +239,7 @@ class ColPropertyController extends BaseController {
 		}
 
 		$this->printTrail('column');
-		//$misc->printTitle($lang['strcolprop']);
+		//$this->printTitle($lang['strcolprop']);
 		$this->printTabs('column', 'properties');
 		$misc->printMsg($msg);
 

@@ -19,8 +19,8 @@ class ViewPropertyController extends BaseController {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['strviews'] . ' - ' . $_REQUEST['view']);
-		$misc->printBody();
+		$this->printHeader($lang['strviews'] . ' - ' . $_REQUEST['view']);
+		$this->printBody();
 
 		switch ($action) {
 		case 'save_edit':
@@ -148,7 +148,7 @@ class ViewPropertyController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('view');
-		$misc->printTitle($lang['stredit'], 'pg.view.alter');
+		$this->printTitle($lang['stredit'], 'pg.view.alter');
 		$misc->printMsg($msg);
 
 		$viewdata = $data->getView($_REQUEST['view']);
@@ -308,7 +308,7 @@ class ViewPropertyController extends BaseController {
 		case 1:
 
 			$this->printTrail('column');
-			$misc->printTitle($lang['stralter'], 'pg.column.alter');
+			$this->printTitle($lang['stralter'], 'pg.column.alter');
 			$misc->printMsg($msg);
 
 			echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
@@ -382,7 +382,7 @@ class ViewPropertyController extends BaseController {
 		if ($confirm) {
 
 			$this->printTrail('view');
-			$misc->printTitle($lang['stralter'], 'pg.view.alter');
+			$this->printTitle($lang['stralter'], 'pg.view.alter');
 			$misc->printMsg($msg);
 
 			// Fetch view info

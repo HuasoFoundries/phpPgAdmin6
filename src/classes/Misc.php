@@ -753,21 +753,21 @@ class Misc {
 	 * Print out the page heading and help link
 	 * @param $title Title, already escaped
 	 * @param $help (optional) The identifier for the help link
-	 */
+
 	function printTitle($title, $help = null, $do_print = true) {
-		$data = $this->data;
-		$lang = $this->lang;
+	$data = $this->data;
+	$lang = $this->lang;
 
-		$title_html = "<h2>";
-		$title_html .= $this->printHelp($title, $help, false);
-		$title_html .= "</h2>\n";
+	$title_html = "<h2>";
+	$title_html .= $this->printHelp($title, $help, false);
+	$title_html .= "</h2>\n";
 
-		if ($do_print) {
-			echo $title_html;
-		} else {
-			return $title_html;
-		}
+	if ($do_print) {
+	echo $title_html;
+	} else {
+	return $title_html;
 	}
+	} */
 
 	/**
 	 * Print out a message
@@ -792,68 +792,67 @@ class Misc {
 	 * @param $title The title of the page
 	 * @param $script script tag
 	 * @param $do_print boolean if false, the function will return the header content
-	 */
+
 	function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig') {
 
-		if (function_exists('newrelic_disable_autorum')) {
-			newrelic_disable_autorum();
-		}
-		$appName = $this->appName;
-		$lang = $this->lang;
-		$plugin_manager = $this->plugin_manager;
-
-		$viewVars = $this->lang;
-		$viewVars['dir'] = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
-
-		$viewVars['appName'] = htmlspecialchars($this->appName) . ($title != '') ? htmlspecialchars(" - {$title}") : '';
-
-		$header_html = $this->view->fetch($template, $viewVars);
-
-		if ($script) {
-			$header_html .= "{$script}\n";
-		}
-
-		$plugins_head = [];
-		$_params = ['heads' => &$plugins_head];
-
-		$plugin_manager->do_hook('head', $_params);
-
-		foreach ($plugins_head as $tag) {
-			$header_html .= $tag;
-		}
-
-		$header_html .= "</head>\n";
-
-		if (!$this->_no_output && $do_print) {
-
-			header("Content-Type: text/html; charset=utf-8");
-			echo $header_html;
-
-		} else {
-			return $header_html;
-		}
+	if (function_exists('newrelic_disable_autorum')) {
+	newrelic_disable_autorum();
 	}
+	$appName = $this->appName;
+	$lang = $this->lang;
+	$plugin_manager = $this->plugin_manager;
+
+	$viewVars = $this->lang;
+	$viewVars['dir'] = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
+
+	$viewVars['appName'] = htmlspecialchars($this->appName) . ($title != '') ? htmlspecialchars(" - {$title}") : '';
+
+	$header_html = $this->view->fetch($template, $viewVars);
+
+	if ($script) {
+	$header_html .= "{$script}\n";
+	}
+
+	$plugins_head = [];
+	$_params = ['heads' => &$plugins_head];
+
+	$plugin_manager->do_hook('head', $_params);
+
+	foreach ($plugins_head as $tag) {
+	$header_html .= $tag;
+	}
+
+	$header_html .= "</head>\n";
+
+	if (!$this->_no_output && $do_print) {
+
+	header("Content-Type: text/html; charset=utf-8");
+	echo $header_html;
+
+	} else {
+	return $header_html;
+	}
+	}*/
 
 	/**
 	 * Prints the page footer
 	 * @param $doBody True to output body tag, false to return the html
 	 */
-	function printFooter($doBody = true) {
+	function printFooter($doBody = true, $template = 'footer.twig') {
 		$lang = $this->lang;
 
 		$footer_html = '';
-		$this->prtrace(['$_reload_browser' => $this->_reload_browser]);
+		$this->prtrace(['$_reload_browser' => $this->_reload_browser, 'template' => $template]);
 		if ($this->_reload_browser) {
 			$footer_html .= $this->printReload(false, false);
 		} elseif ($this->_reload_drop_database) {
 			$footer_html .= $this->printReload(true, false);
 		}
 		if (!$this->_no_bottom_link) {
-			$footer_html .= "<a href=\"#\" class=\"bottom_link\">" . $lang['strgotoppage'] . "</a>";
+			$footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . "</a>";
 		}
 
-		$footer_html .= "</body>\n";
-		$footer_html .= "</html>\n";
+		$footer_html .= $this->view->fetch($template);
 
 		if ($doBody) {
 			echo $footer_html;
@@ -861,24 +860,6 @@ class Misc {
 			return $footer_html;
 		}
 
-	}
-
-	/**
-	 * Prints the page body.
-	 * @param $doBody True to output body tag, false to return
-	 * @param $bodyClass - name of body class
-	 */
-	function printBody($doBody = true, $bodyClass = '') {
-
-		$bodyClass = htmlspecialchars($bodyClass);
-		$bodyHtml = '<body class="detailbody ' . ($bodyClass == '' ? '' : $bodyClass) . '">';
-		$bodyHtml .= "\n";
-
-		if (!$this->_no_output && $doBody) {
-			echo $bodyHtml;
-		} else {
-			return $bodyHtml;
-		}
 	}
 
 	/**
@@ -1687,30 +1668,6 @@ class Misc {
 	function getHelpLink($help) {
 		return htmlspecialchars("/src/views/help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
 
-	}
-
-	/**
-	 * Outputs JavaScript to set default focus
-	 * @param $object eg. forms[0].username
-	 */
-	function setFocus($object) {
-		echo "<script type=\"text/javascript\">\n";
-		echo "   document.{$object}.focus();\n";
-		echo "</script>\n";
-	}
-
-	/**
-	 * Outputs JavaScript to set the name of the browser window.
-	 * @param $name the window name
-	 * @param $addServer if true (default) then the server id is
-	 *        attached to the name.
-	 */
-	function setWindowName($name, $addServer = true) {
-		echo "<script type=\"text/javascript\">\n";
-		echo "//<![CDATA[\n";
-		echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->server_id) : ''), "';\n";
-		echo "//]]>\n";
-		echo "</script>\n";
 	}
 
 	/**

@@ -19,54 +19,54 @@ class IndexController extends BaseController {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['strindexes'], "<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
+		$this->printHeader($lang['strindexes'], "<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
 
 		if ($action == 'create_index' || $action == 'save_create_index') {
 			echo "<body onload=\"init();\">";
 		} else {
-			$misc->printBody();
+			$this->printBody();
 		}
 
 		switch ($action) {
-			case 'cluster_index':
-				if (isset($_POST['cluster'])) {
-					$this->doClusterIndex(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_cluster_index':
-				$this->doClusterIndex(true);
-				break;
-			case 'reindex':
-				$this->doReindex();
-				break;
-			case 'save_create_index':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreateIndex();
-				}
-
-				break;
-			case 'create_index':
-				$this->doCreateIndex();
-				break;
-			case 'drop_index':
-				if (isset($_POST['drop'])) {
-					$this->doDropIndex(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop_index':
-				$this->doDropIndex(true);
-				break;
-			default:
+		case 'cluster_index':
+			if (isset($_POST['cluster'])) {
+				$this->doClusterIndex(false);
+			} else {
 				$this->doDefault();
-				break;
+			}
+
+			break;
+		case 'confirm_cluster_index':
+			$this->doClusterIndex(true);
+			break;
+		case 'reindex':
+			$this->doReindex();
+			break;
+		case 'save_create_index':
+			if (isset($_POST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doSaveCreateIndex();
+			}
+
+			break;
+		case 'create_index':
+			$this->doCreateIndex();
+			break;
+		case 'drop_index':
+			if (isset($_POST['drop'])) {
+				$this->doDropIndex(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop_index':
+			$this->doDropIndex(true);
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		return $misc->printFooter();
@@ -118,7 +118,7 @@ class IndexController extends BaseController {
 			$_REQUEST['analyze'] = true;
 
 			$this->printTrail('index');
-			$misc->printTitle($lang['strclusterindex'], 'pg.index.cluster');
+			$this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
 			echo "<p>", sprintf($lang['strconfcluster'], $misc->printVal($_REQUEST['index'])), "</p>\n";
 
@@ -154,10 +154,10 @@ class IndexController extends BaseController {
 	}
 
 	public function doReindex() {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$data   = $misc->getDatabaseAccessor();
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 		$status = $data->reindex('INDEX', $_REQUEST['index']);
 		if ($status == 0) {
 			$this->doDefault($lang['strreindexgood']);
@@ -203,7 +203,7 @@ class IndexController extends BaseController {
 		}
 
 		$this->printTrail('table');
-		$misc->printTitle($lang['strcreateindex'], 'pg.index.create');
+		$this->printTitle($lang['strcreateindex'], 'pg.index.create');
 		$misc->printMsg($msg);
 
 		$selColumns = new \PHPPgAdmin\XHtml\XHTML_Select("TableColumnList", true, 10);
@@ -343,7 +343,7 @@ class IndexController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('index');
-			$misc->printTitle($lang['strdrop'], 'pg.index.drop');
+			$this->printTitle($lang['strdrop'], 'pg.index.drop');
 
 			echo "<p>", sprintf($lang['strconfdropindex'], $misc->printVal($_REQUEST['index'])), "</p>\n";
 
@@ -377,10 +377,10 @@ class IndexController extends BaseController {
 		$indPre = function (&$rowdata, $actions) use ($data, $lang) {
 			if ($data->phpBool($rowdata->fields['indisprimary'])) {
 				$rowdata->fields['+constraints'] = $lang['strprimarykey'];
-				$actions['drop']['disable']      = true;
+				$actions['drop']['disable'] = true;
 			} elseif ($data->phpBool($rowdata->fields['indisunique'])) {
 				$rowdata->fields['+constraints'] = $lang['struniquekey'];
-				$actions['drop']['disable']      = true;
+				$actions['drop']['disable'] = true;
 			} else {
 				$rowdata->fields['+constraints'] = '';
 			}

@@ -6,11 +6,11 @@ namespace PHPPgAdmin\Controller;
  * Base controller class
  */
 class SQLQueryController extends BaseController {
-	public $_name      = 'SQLQueryController';
-	public $query      = '';
-	public $subject    = '';
+	public $_name = 'SQLQueryController';
+	public $query = '';
+	public $subject = '';
 	public $start_time = null;
-	public $duration   = null;
+	public $duration = null;
 
 	/* Constructor */
 	function __construct(\Slim\Container $container) {
@@ -26,11 +26,11 @@ class SQLQueryController extends BaseController {
 		if (isset($_REQUEST['subject']) && $_REQUEST['subject'] == 'history') {
 			// Or maybe we came from the history popup
 			$_SESSION['sqlquery'] = $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$_GET['queryid']]['query'];
-			$this->query          = $_SESSION['sqlquery'];
+			$this->query = $_SESSION['sqlquery'];
 		} elseif (isset($_POST['query'])) {
 			// Or maybe we came from an sql form
 			$_SESSION['sqlquery'] = $_POST['query'];
-			$this->query          = $_SESSION['sqlquery'];
+			$this->query = $_SESSION['sqlquery'];
 		} else {
 			echo "could not find the query!!";
 		}
@@ -68,10 +68,10 @@ class SQLQueryController extends BaseController {
 			return $display_controller->render();
 		}
 
-		$misc->printHeader($lang['strqueryresults']);
-		$misc->printBody();
+		$this->printHeader($lang['strqueryresults']);
+		$this->printBody();
 		$this->printTrail('database');
-		$misc->printTitle($lang['strqueryresults']);
+		$this->printTitle($lang['strqueryresults']);
 
 		// Set the schema search path
 		if (isset($_REQUEST['search_path'])) {
@@ -92,10 +92,10 @@ class SQLQueryController extends BaseController {
 	}
 
 	private function execute_script() {
-		$conf        = $this->conf;
-		$misc        = $this->misc;
-		$lang        = $this->lang;
-		$data        = $misc->getDatabaseAccessor();
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 		$_connection = $this->getConnection();
 
 		/**
@@ -110,45 +110,45 @@ class SQLQueryController extends BaseController {
 			} else {
 				// Print query results
 				switch (pg_result_status($rs)) {
-					case PGSQL_TUPLES_OK:
-						// If rows returned, then display the results
-						$num_fields = pg_numfields($rs);
-						echo "<p><table>\n<tr>";
-						for ($k = 0; $k < $num_fields; $k++) {
-							echo "<th class=\"data\">", $misc->printVal(pg_fieldname($rs, $k)), "</th>";
-						}
+				case PGSQL_TUPLES_OK:
+					// If rows returned, then display the results
+					$num_fields = pg_numfields($rs);
+					echo "<p><table>\n<tr>";
+					for ($k = 0; $k < $num_fields; $k++) {
+						echo "<th class=\"data\">", $misc->printVal(pg_fieldname($rs, $k)), "</th>";
+					}
 
-						$i   = 0;
+					$i = 0;
+					$row = pg_fetch_row($rs);
+					while ($row !== false) {
+						$id = (($i % 2) == 0 ? '1' : '2');
+						echo "<tr class=\"data{$id}\">\n";
+						foreach ($row as $k => $v) {
+							echo "<td style=\"white-space:nowrap;\">", $misc->printVal($v, pg_fieldtype($rs, $k), ['null' => true]), "</td>";
+						}
+						echo "</tr>\n";
 						$row = pg_fetch_row($rs);
-						while ($row !== false) {
-							$id = (($i % 2) == 0 ? '1' : '2');
-							echo "<tr class=\"data{$id}\">\n";
-							foreach ($row as $k => $v) {
-								echo "<td style=\"white-space:nowrap;\">", $misc->printVal($v, pg_fieldtype($rs, $k), ['null' => true]), "</td>";
-							}
-							echo "</tr>\n";
-							$row = pg_fetch_row($rs);
-							$i++;
-						}
-						;
-						echo "</table><br/>\n";
-						echo $i, " {$lang['strrows']}</p>\n";
-						break;
-					case PGSQL_COMMAND_OK:
-						// If we have the command completion tag
-						if (version_compare(phpversion(), '4.3', '>=')) {
-							echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), "<br/>\n";
-						}
-						// Otherwise if any rows have been affected
-						elseif ($data->conn->Affected_Rows() > 0) {
-							echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>\n";
-						}
-						// Otherwise output nothing...
-						break;
-					case PGSQL_EMPTY_QUERY:
-						break;
-					default:
-						break;
+						$i++;
+					}
+					;
+					echo "</table><br/>\n";
+					echo $i, " {$lang['strrows']}</p>\n";
+					break;
+				case PGSQL_COMMAND_OK:
+					// If we have the command completion tag
+					if (version_compare(phpversion(), '4.3', '>=')) {
+						echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), "<br/>\n";
+					}
+					// Otherwise if any rows have been affected
+					elseif ($data->conn->Affected_Rows() > 0) {
+						echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>\n";
+					}
+					// Otherwise output nothing...
+					break;
+				case PGSQL_EMPTY_QUERY:
+					break;
+				default:
+					break;
 				}
 			}
 		};
@@ -235,7 +235,7 @@ class SQLQueryController extends BaseController {
 		// May as well try to time the query
 		if ($this->start_time !== null) {
 			list($usec, $sec) = explode(' ', microtime());
-			$end_time         = ((float) $usec + (float) $sec);
+			$end_time = ((float) $usec + (float) $sec);
 			// Get duration in milliseconds, round to 3dp's
 			$this->duration = number_format(($end_time - $this->start_time) * 1000, 3);
 		}
@@ -251,7 +251,7 @@ class SQLQueryController extends BaseController {
 		echo "<p>{$lang['strsqlexecuted']}</p>\n";
 
 		$navlinks = [];
-		$fields   = [
+		$fields = [
 			'server' => $_REQUEST['server'],
 			'database' => $_REQUEST['database'],
 		];
@@ -262,7 +262,7 @@ class SQLQueryController extends BaseController {
 
 		// Return
 		if (isset($_REQUEST['return'])) {
-			$urlvars          = $misc->getSubjectParams($_REQUEST['return']);
+			$urlvars = $misc->getSubjectParams($_REQUEST['return']);
 			$navlinks['back'] = [
 				'attr' => [
 					'href' => [

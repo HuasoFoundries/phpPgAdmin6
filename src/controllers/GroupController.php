@@ -11,58 +11,58 @@ class GroupController extends BaseController {
 
 	public function render() {
 
-		$misc->printHeader($lang['strgroups']);
-		$misc->printBody();
+		$this->printHeader($lang['strgroups']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'add_member':
-				$this->doAddMember();
-				break;
-			case 'drop_member':
-				if (isset($_REQUEST['drop'])) {
-					$this->doDropMember(false);
-				} else {
-					$this->doProperties();
-				}
-
-				break;
-			case 'confirm_drop_member':
-				$this->doDropMember(true);
-				break;
-			case 'save_create':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreate();
-				}
-
-				break;
-			case 'create':
-				$this->doCreate();
-				break;
-			case 'drop':
-				if (isset($_REQUEST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			case 'save_edit':
-				$this->doSaveEdit();
-				break;
-			case 'edit':
-				$this->doEdit();
-				break;
-			case 'properties':
+		case 'add_member':
+			$this->doAddMember();
+			break;
+		case 'drop_member':
+			if (isset($_REQUEST['drop'])) {
+				$this->doDropMember(false);
+			} else {
 				$this->doProperties();
-				break;
-			default:
+			}
+
+			break;
+		case 'confirm_drop_member':
+			$this->doDropMember(true);
+			break;
+		case 'save_create':
+			if (isset($_REQUEST['cancel'])) {
 				$this->doDefault();
-				break;
+			} else {
+				$this->doSaveCreate();
+			}
+
+			break;
+		case 'create':
+			$this->doCreate();
+			break;
+		case 'drop':
+			if (isset($_REQUEST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		case 'save_edit':
+			$this->doSaveEdit();
+			break;
+		case 'edit':
+			$this->doEdit();
+			break;
+		case 'properties':
+			$this->doProperties();
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();
@@ -96,7 +96,7 @@ class GroupController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('group');
-			$misc->printTitle($lang['strdropmember'], 'pg.group.alter');
+			$this->printTitle($lang['strdropmember'], 'pg.group.alter');
 
 			echo "<p>", sprintf($lang['strconfdropmember'], $misc->printVal($_REQUEST['user']), $misc->printVal($_REQUEST['group'])), "</p>\n";
 
@@ -133,11 +133,11 @@ class GroupController extends BaseController {
 		}
 
 		$this->printTrail('group');
-		$misc->printTitle($lang['strproperties'], 'pg.group');
+		$this->printTitle($lang['strproperties'], 'pg.group');
 		$misc->printMsg($msg);
 
 		$groupdata = $data->getGroup($_REQUEST['group']);
-		$users     = $data->getUsers();
+		$users = $data->getUsers();
 
 		if ($groupdata->recordCount() > 0) {
 			$columns = [
@@ -209,7 +209,7 @@ class GroupController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('group');
-			$misc->printTitle($lang['strdrop'], 'pg.group.drop');
+			$this->printTitle($lang['strdrop'], 'pg.group.drop');
 
 			echo "<p>", sprintf($lang['strconfdropgroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
 
@@ -251,7 +251,7 @@ class GroupController extends BaseController {
 		$users = $data->getUsers();
 
 		$this->printTrail('server');
-		$misc->printTitle($lang['strcreategroup'], 'pg.group.create');
+		$this->printTitle($lang['strcreategroup'], 'pg.group.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"\" method=\"post\">\n";

@@ -10,43 +10,43 @@ class HistoryController extends BaseController {
 	public $_name = 'HistoryController';
 
 	public function render() {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
 
 		$data = $misc->getDatabaseAccessor();
 
 		switch ($action) {
-			case 'confdelhistory':
-				$this->doDelHistory($_REQUEST['queryid'], true);
-				break;
-			case 'delhistory':
-				if (isset($_POST['yes'])) {
-					$this->doDelHistory($_REQUEST['queryid'], false);
-				}
+		case 'confdelhistory':
+			$this->doDelHistory($_REQUEST['queryid'], true);
+			break;
+		case 'delhistory':
+			if (isset($_POST['yes'])) {
+				$this->doDelHistory($_REQUEST['queryid'], false);
+			}
 
-				$this->doDefault();
-				break;
-			case 'confclearhistory':
-				$this->doClearHistory(true);
-				break;
-			case 'clearhistory':
-				if (isset($_POST['yes'])) {
-					$this->doClearHistory(false);
-				}
+			$this->doDefault();
+			break;
+		case 'confclearhistory':
+			$this->doClearHistory(true);
+			break;
+		case 'clearhistory':
+			if (isset($_POST['yes'])) {
+				$this->doClearHistory(false);
+			}
 
-				$this->doDefault();
-				break;
-			case 'download':
-				$this->doDownloadHistory();
-				break;
-			default:
-				$this->doDefault();
+			$this->doDefault();
+			break;
+		case 'download':
+			$this->doDownloadHistory();
+			break;
+		default:
+			$this->doDefault();
 		}
 
 		// Set the name of the window
-		$misc->setWindowName('history');
+		$this->setWindowName('history');
 		return $misc->printFooter();
 
 	}
@@ -59,7 +59,7 @@ class HistoryController extends BaseController {
 
 		$onchange = "onchange=\"location.href='/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
-		$misc->printHeader($lang['strhistory']);
+		$this->printHeader($lang['strhistory']);
 
 		// Bring to the front always
 		echo "<body onload=\"window.focus();\">\n";
@@ -184,7 +184,7 @@ class HistoryController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printHeader($lang['strhistory']);
+			$this->printHeader($lang['strhistory']);
 
 			// Bring to the front always
 			echo "<body onload=\"window.focus();\">\n";
@@ -213,7 +213,7 @@ class HistoryController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		if ($confirm) {
-			$misc->printHeader($lang['strhistory']);
+			$this->printHeader($lang['strhistory']);
 
 			// Bring to the front always
 			echo "<body onload=\"window.focus();\">\n";

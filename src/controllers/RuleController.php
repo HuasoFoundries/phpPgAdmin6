@@ -20,35 +20,35 @@ class RuleController extends BaseController {
 		}
 
 		// Different header if we're view rules or table rules
-		$misc->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $lang['strrules']);
-		$misc->printBody();
+		$this->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $lang['strrules']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'create_rule':
-				$this->createRule(true);
-				break;
-			case 'save_create_rule':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->createRule(false);
-				}
-
-				break;
-			case 'drop':
-				if (isset($_POST['yes'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			default:
+		case 'create_rule':
+			$this->createRule(true);
+			break;
+		case 'save_create_rule':
+			if (isset($_POST['cancel'])) {
 				$this->doDefault();
-				break;
+			} else {
+				$this->createRule(false);
+			}
+
+			break;
+		case 'drop':
+			if (isset($_POST['yes'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		return $misc->printFooter();
@@ -105,7 +105,7 @@ class RuleController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail($_REQUEST['subject']);
-			$misc->printTitle($lang['strcreaterule'], 'pg.rule.create');
+			$this->printTitle($lang['strcreaterule'], 'pg.rule.create');
 			$misc->printMsg($msg);
 
 			echo "<form action=\"/src/views/rules.php\" method=\"post\">\n";
@@ -172,7 +172,7 @@ class RuleController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail($_REQUEST['subject']);
-			$misc->printTitle($lang['strdrop'], 'pg.rule.drop');
+			$this->printTitle($lang['strdrop'], 'pg.rule.drop');
 
 			echo "<p>", sprintf($lang['strconfdroprule'], $misc->printVal($_REQUEST['rule']),
 				$misc->printVal($_REQUEST[$_REQUEST['reltype']])), "</p>\n";
@@ -230,7 +230,7 @@ class RuleController extends BaseController {
 		];
 
 		$subject = urlencode($_REQUEST['subject']);
-		$object  = urlencode($_REQUEST[$_REQUEST['subject']]);
+		$object = urlencode($_REQUEST[$_REQUEST['subject']]);
 
 		$actions = [
 			'drop' => [

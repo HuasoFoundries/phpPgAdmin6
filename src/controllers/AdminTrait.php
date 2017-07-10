@@ -12,9 +12,9 @@ trait AdminTrait {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 
 		$script = $this->script;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$data   = $misc->getDatabaseAccessor();
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletocluster']);
@@ -24,7 +24,7 @@ trait AdminTrait {
 		if ($confirm) {
 			if (isset($_REQUEST['ma'])) {
 				$this->printTrail('schema');
-				$misc->printTitle($lang['strclusterindex'], 'pg.index.cluster');
+				$this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 				foreach ($_REQUEST['ma'] as $v) {
@@ -35,7 +35,7 @@ trait AdminTrait {
 			} // END if multi cluster
 			else {
 				$this->printTrail($type);
-				$misc->printTitle($lang['strclusterindex'], 'pg.index.cluster');
+				$this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 
@@ -100,10 +100,10 @@ trait AdminTrait {
 	public function doReindex($type, $confirm = false) {
 
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
-		$script       = $this->script;
-		$misc         = $this->misc;
-		$lang         = $this->lang;
-		$data         = $misc->getDatabaseAccessor();
+		$script = $this->script;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletoreindex']);
@@ -113,7 +113,7 @@ trait AdminTrait {
 		if ($confirm) {
 			if (isset($_REQUEST['ma'])) {
 				$this->printTrail('schema');
-				$misc->printTitle($lang['strreindex'], 'pg.reindex');
+				$this->printTitle($lang['strreindex'], 'pg.reindex');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 				foreach ($_REQUEST['ma'] as $v) {
@@ -124,7 +124,7 @@ trait AdminTrait {
 			} // END if multi reindex
 			else {
 				$this->printTrail($type);
-				$misc->printTitle($lang['strreindex'], 'pg.reindex');
+				$this->printTitle($lang['strreindex'], 'pg.reindex');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 
@@ -184,9 +184,9 @@ trait AdminTrait {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 
 		$script = $this->script;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$data   = $misc->getDatabaseAccessor();
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
 		if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifytabletoanalyze']);
@@ -197,7 +197,7 @@ trait AdminTrait {
 
 			if (isset($_REQUEST['ma'])) {
 				$this->printTrail('schema');
-				$misc->printTitle($lang['stranalyze'], 'pg.analyze');
+				$this->printTitle($lang['stranalyze'], 'pg.analyze');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 				foreach ($_REQUEST['ma'] as $v) {
@@ -209,7 +209,7 @@ trait AdminTrait {
 			} // END if multi analyze
 			else {
 				$this->printTrail($type);
-				$misc->printTitle($lang['stranalyze'], 'pg.analyze');
+				$this->printTitle($lang['stranalyze'], 'pg.analyze');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 
@@ -277,7 +277,7 @@ trait AdminTrait {
 		if ($confirm) {
 			if (isset($_REQUEST['ma'])) {
 				$this->printTrail('schema');
-				$misc->printTitle($lang['strvacuum'], 'pg.vacuum');
+				$this->printTitle($lang['strvacuum'], 'pg.vacuum');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 				foreach ($_REQUEST['ma'] as $v) {
@@ -288,7 +288,7 @@ trait AdminTrait {
 			} else {
 				// END if multi vacuum
 				$this->printTrail($type);
-				$misc->printTitle($lang['strvacuum'], 'pg.vacuum');
+				$this->printTitle($lang['strvacuum'], 'pg.vacuum');
 
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 
@@ -344,7 +344,7 @@ trait AdminTrait {
  */
 	public function doEditAutovacuum($type, $confirm, $msg = '') {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
-		$script       = $this->script;
+		$script = $this->script;
 
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -359,7 +359,7 @@ trait AdminTrait {
 
 		if ($confirm) {
 			$this->printTrail($type);
-			$misc->printTitle(sprintf($lang['streditvacuumtable'], $misc->printVal($_REQUEST['table'])));
+			$this->printTitle(sprintf($lang['streditvacuumtable'], $misc->printVal($_REQUEST['table'])));
 			$misc->printMsg(sprintf($msg, $misc->printVal($_REQUEST['table'])));
 
 			if (empty($_REQUEST['table'])) {
@@ -367,15 +367,15 @@ trait AdminTrait {
 				return;
 			}
 
-			$old_val  = $data->getTableAutovacuum($_REQUEST['table']);
+			$old_val = $data->getTableAutovacuum($_REQUEST['table']);
 			$defaults = $data->getAutovacuum();
-			$old_val  = $old_val->fields;
+			$old_val = $old_val->fields;
 
 			if (isset($old_val['autovacuum_enabled']) and ($old_val['autovacuum_enabled'] == 'off')) {
-				$enabled  = '';
+				$enabled = '';
 				$disabled = 'checked="checked"';
 			} else {
-				$enabled  = 'checked="checked"';
+				$enabled = 'checked="checked"';
 				$disabled = '';
 			}
 
@@ -460,7 +460,7 @@ trait AdminTrait {
  */
 	public function doDropAutovacuum($type, $confirm) {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
-		$script       = $this->script;
+		$script = $this->script;
 
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -536,18 +536,18 @@ trait AdminTrait {
 		echo "<table style=\"width: 50%\">\n";
 		echo "<tr>\n";
 		echo "<th class=\"data\">";
-		$misc->printHelp($lang['strvacuum'], 'pg.admin.vacuum') . "</th>\n";
+		$this->printHelp($lang['strvacuum'], 'pg.admin.vacuum') . "</th>\n";
 		echo "</th>";
 		echo "<th class=\"data\">";
-		$misc->printHelp($lang['stranalyze'], 'pg.admin.analyze');
+		$this->printHelp($lang['stranalyze'], 'pg.admin.analyze');
 		echo "</th>";
 		if ($data->hasRecluster()) {
 			echo "<th class=\"data\">";
-			$misc->printHelp($lang['strclusterindex'], 'pg.index.cluster');
+			$this->printHelp($lang['strclusterindex'], 'pg.index.cluster');
 			echo "</th>";
 		}
 		echo "<th class=\"data\">";
-		$misc->printHelp($lang['strreindex'], 'pg.index.reindex');
+		$this->printHelp($lang['strreindex'], 'pg.index.reindex');
 		echo "</th>";
 		echo "</tr>";
 
@@ -743,105 +743,105 @@ trait AdminTrait {
 
 		if ($type == 'database') {
 			$_REQUEST['object'] = $_REQUEST['database'];
-			$this->script       = 'database.php';
+			$this->script = 'database.php';
 		} else {
 			// $_REQUEST['table'] is no set if we are in the schema page
 			$_REQUEST['object'] = (isset($_REQUEST['table']) ? $_REQUEST['table'] : '');
-			$this->script       = 'tables.php';
+			$this->script = 'tables.php';
 		}
 
 		$script = $this->script;
 
 		switch ($action) {
-			case 'confirm_cluster':
-				$this->doCluster($type, true);
-				break;
-			case 'confirm_reindex':
-				$this->doReindex($type, true);
-				break;
-			case 'confirm_analyze':
-				$this->doAnalyze($type, true);
-				break;
-			case 'confirm_vacuum':
-				$this->doVacuum($type, true);
-				break;
-			case 'cluster':
-				if (isset($_POST['cluster'])) {
-					$this->doCluster($type);
-				}
+		case 'confirm_cluster':
+			$this->doCluster($type, true);
+			break;
+		case 'confirm_reindex':
+			$this->doReindex($type, true);
+			break;
+		case 'confirm_analyze':
+			$this->doAnalyze($type, true);
+			break;
+		case 'confirm_vacuum':
+			$this->doVacuum($type, true);
+			break;
+		case 'cluster':
+			if (isset($_POST['cluster'])) {
+				$this->doCluster($type);
+			}
 
-				// if multi-action from table canceled: back to the schema default page
-				else if (($type == 'table') && is_array($_REQUEST['object'])) {
-					$this->doDefault();
-				} else {
-					$this->doAdmin($type);
-				}
-
-				break;
-			case 'reindex':
-				if (isset($_POST['reindex'])) {
-					$this->doReindex($type);
-				}
-
-				// if multi-action from table canceled: back to the schema default page
-				else if (($type == 'table') && is_array($_REQUEST['object'])) {
-					$this->doDefault();
-				} else {
-					$this->doAdmin($type);
-				}
-
-				break;
-			case 'analyze':
-				if (isset($_POST['analyze'])) {
-					$this->doAnalyze($type);
-				}
-
-				// if multi-action from table canceled: back to the schema default page
-				else if (($type == 'table') && is_array($_REQUEST['object'])) {
-					$this->doDefault();
-				} else {
-					$this->doAdmin($type);
-				}
-
-				break;
-			case 'vacuum':
-				if (isset($_POST['vacuum'])) {
-					$this->doVacuum($type);
-				}
-
-				// if multi-action from table canceled: back to the schema default page
-				else if (($type == 'table') && is_array($_REQUEST['object'])) {
-					$this->doDefault();
-				} else {
-					$this->doAdmin($type);
-				}
-
-				break;
-			case 'admin':
+			// if multi-action from table canceled: back to the schema default page
+			else if (($type == 'table') && is_array($_REQUEST['object'])) {
+				$this->doDefault();
+			} else {
 				$this->doAdmin($type);
-				break;
-			case 'confeditautovac':
-				$this->doEditAutovacuum($type, true);
-				break;
-			case 'confdelautovac':
-				$this->doDropAutovacuum($type, true);
-				break;
-			case 'confaddautovac':
-				$this->doAddAutovacuum(true);
-				break;
-			case 'editautovac':
-				if (isset($_POST['save'])) {
-					$this->doEditAutovacuum($type, false);
-				} else {
-					$this->doAdmin($type);
-				}
+			}
 
-				break;
-			case 'delautovac':
-				$this->doDropAutovacuum($type, false);
-				break;
-			default:
-				return false;
+			break;
+		case 'reindex':
+			if (isset($_POST['reindex'])) {
+				$this->doReindex($type);
+			}
+
+			// if multi-action from table canceled: back to the schema default page
+			else if (($type == 'table') && is_array($_REQUEST['object'])) {
+				$this->doDefault();
+			} else {
+				$this->doAdmin($type);
+			}
+
+			break;
+		case 'analyze':
+			if (isset($_POST['analyze'])) {
+				$this->doAnalyze($type);
+			}
+
+			// if multi-action from table canceled: back to the schema default page
+			else if (($type == 'table') && is_array($_REQUEST['object'])) {
+				$this->doDefault();
+			} else {
+				$this->doAdmin($type);
+			}
+
+			break;
+		case 'vacuum':
+			if (isset($_POST['vacuum'])) {
+				$this->doVacuum($type);
+			}
+
+			// if multi-action from table canceled: back to the schema default page
+			else if (($type == 'table') && is_array($_REQUEST['object'])) {
+				$this->doDefault();
+			} else {
+				$this->doAdmin($type);
+			}
+
+			break;
+		case 'admin':
+			$this->doAdmin($type);
+			break;
+		case 'confeditautovac':
+			$this->doEditAutovacuum($type, true);
+			break;
+		case 'confdelautovac':
+			$this->doDropAutovacuum($type, true);
+			break;
+		case 'confaddautovac':
+			$this->doAddAutovacuum(true);
+			break;
+		case 'editautovac':
+			if (isset($_POST['save'])) {
+				$this->doEditAutovacuum($type, false);
+			} else {
+				$this->doAdmin($type);
+			}
+
+			break;
+		case 'delautovac':
+			$this->doDropAutovacuum($type, false);
+			break;
+		default:
+			return false;
 		}
 		return true;
 	}
