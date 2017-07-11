@@ -226,7 +226,7 @@ class SQLQueryController extends BaseController {
 
 	}
 
-	public function printFooter() {
+	public function printFooter($doBody = true, $template = 'footer.twig') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -321,6 +321,6 @@ class SQLQueryController extends BaseController {
 
 		$this->printNavLinks($navlinks, 'sql-form', get_defined_vars());
 
-		return $misc->printFooter();
+		return $misc->printFooter($doBody, $template);
 	}
 }
