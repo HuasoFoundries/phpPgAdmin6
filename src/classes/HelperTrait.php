@@ -39,7 +39,7 @@ trait HelperTrait {
 		$lang = $this->lang;
 		$plugin_manager = $this->plugin_manager;
 
-		$this->prtrace('appName', $appName);
+		//$this->prtrace('appName', $appName);
 
 		$viewVars = [];
 		//$viewVars = $this->lang;
@@ -53,7 +53,7 @@ trait HelperTrait {
 		$viewVars['title'] = $title;
 		$viewVars['appName'] = htmlspecialchars($this->appName) . (($title != '') ? htmlspecialchars(" - {$title}") : '');
 
-		$this->prtrace($viewVars);
+		//$this->prtrace($viewVars);
 		$header_html = $this->view->fetch($template, $viewVars);
 
 		if ($script) {
@@ -141,6 +141,59 @@ trait HelperTrait {
 			echo $title_html;
 		} else {
 			return $title_html;
+		}
+	}
+
+	/**
+	 * Prints the page footer
+	 * @param $doBody True to output body tag, false to return the html
+	 */
+	function printFooter($doBody = true, $template = 'footer.twig') {
+		$lang = $this->lang;
+
+		$footer_html = '';
+		//$this->prtrace(['$_reload_browser' => $this->_reload_browser, 'template' => $template]);
+		if ($this->_reload_browser) {
+			$footer_html .= $this->printReload(false, false);
+		} elseif ($this->_reload_drop_database) {
+			$footer_html .= $this->printReload(true, false);
+		}
+		if (!$this->_no_bottom_link) {
+			$footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . "</a>";
+		}
+
+		$footer_html .= $this->view->fetch($template);
+
+		if ($doBody) {
+			echo $footer_html;
+		} else {
+			return $footer_html;
+		}
+
+	}
+
+	/**
+	 * Outputs JavaScript code that will reload the browser
+	 * @param $database True if dropping a database, false otherwise
+	 * @param $do_print true to echo, false to return;
+	 */
+	function printReload($database, $do_print = true) {
+
+		$reload = "<script type=\"text/javascript\">\n";
+		//$reload .= " alert('will reload');";
+		if ($database) {
+			$reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.href=\"/src/views/browser.php\";\n";
+		} else {
+			$reload .= "\tif(parent.frames && parent.frames.browser) { parent.frames.browser.location.reload();} else { location.replace(location.href);}\n";
+			//$reload .= "\tparent.frames.detail.location.href=\"/src/views/intro\";\n";
+			//$reload .= "\tparent.frames.detail.location.reload();\n";
+		}
+
+		$reload .= "</script>\n";
+		if ($do_print) {
+			echo $reload;
+		} else {
+			return $reload;
 		}
 	}
 

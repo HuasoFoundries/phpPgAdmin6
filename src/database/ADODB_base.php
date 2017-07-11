@@ -7,6 +7,7 @@ namespace PHPPgAdmin\Database;
  */
 
 class ADODB_base {
+	use \PHPPgAdmin\HelperTrait;
 
 	var $conn;
 
@@ -18,7 +19,7 @@ class ADODB_base {
 	 * @param &$conn The connection object
 	 */
 	function __construct(&$conn) {
-		\PC::debug(__CLASS__, 'instanced connection class');
+		$this->prtrace('instanced connection class');
 		$this->conn = $conn;
 	}
 
@@ -240,7 +241,7 @@ class ADODB_base {
 	function update($table, $vars, $where, $nulls = []) {
 		$this->fieldClean($table);
 
-		$setClause   = '';
+		$setClause = '';
 		$whereClause = '';
 
 		// Populate the syntax arrays
@@ -363,8 +364,8 @@ class ADODB_base {
 
 		// Pick out array entries by carefully parsing.  This is necessary in order
 		// to cope with double quotes and commas, etc.
-		$elements  = [];
-		$i         = $j         = 0;
+		$elements = [];
+		$i = $j = 0;
 		$in_quotes = false;
 		while ($i < strlen($arr)) {
 			// If current char is a double quote and it's not escaped, then
@@ -375,7 +376,7 @@ class ADODB_base {
 			} elseif ($char == ',' && !$in_quotes) {
 				// Add text so far to the array
 				$elements[] = substr($arr, $j, $i - $j);
-				$j          = $i + 1;
+				$j = $i + 1;
 			}
 			$i++;
 		}
@@ -387,9 +388,9 @@ class ADODB_base {
 		for ($i = 0; $i < sizeof($elements); $i++) {
 			$v = $elements[$i];
 			if (strpos($v, '"') === 0) {
-				$v            = substr($v, 1, strlen($v) - 2);
-				$v            = str_replace('\\"', '"', $v);
-				$v            = str_replace('\\\\', '\\', $v);
+				$v = substr($v, 1, strlen($v) - 2);
+				$v = str_replace('\\"', '"', $v);
+				$v = str_replace('\\\\', '\\', $v);
 				$elements[$i] = $v;
 			}
 		}

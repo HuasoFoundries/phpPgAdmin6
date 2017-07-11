@@ -161,7 +161,7 @@ class Misc {
 		if ($this->data === null) {
 			$_connection = $this->getConnection($database, $this->server_id);
 
-			$this->prtrace('_connection', $_connection);
+			//$this->prtrace('_connection', $_connection);
 			if (!$_connection) {
 				die($lang['strloginfailed']);
 			}
@@ -169,7 +169,7 @@ class Misc {
 			// The description of the server is returned in $platform.
 			$_type = $_connection->getDriver($platform);
 
-			\PC::debug(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion], 'driver type');
+			$this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
 
 			if ($_type === null) {
 				die(sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer));
@@ -862,59 +862,6 @@ class Misc {
 	return $header_html;
 	}
 	}*/
-
-	/**
-	 * Prints the page footer
-	 * @param $doBody True to output body tag, false to return the html
-	 */
-	function printFooter($doBody = true, $template = 'footer.twig') {
-		$lang = $this->lang;
-
-		$footer_html = '';
-		$this->prtrace(['$_reload_browser' => $this->_reload_browser, 'template' => $template]);
-		if ($this->_reload_browser) {
-			$footer_html .= $this->printReload(false, false);
-		} elseif ($this->_reload_drop_database) {
-			$footer_html .= $this->printReload(true, false);
-		}
-		if (!$this->_no_bottom_link) {
-			$footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . "</a>";
-		}
-
-		$footer_html .= $this->view->fetch($template);
-
-		if ($doBody) {
-			echo $footer_html;
-		} else {
-			return $footer_html;
-		}
-
-	}
-
-	/**
-	 * Outputs JavaScript code that will reload the browser
-	 * @param $database True if dropping a database, false otherwise
-	 * @param $do_print true to echo, false to return;
-	 */
-	function printReload($database, $do_print = true) {
-
-		$reload = "<script type=\"text/javascript\">\n";
-		//$reload .= " alert('will reload');";
-		if ($database) {
-			$reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.href=\"/src/views/browser.php\";\n";
-		} else {
-			$reload .= "\tif(parent.frames && parent.frames.browser) { parent.frames.browser.location.reload();} else { location.replace(location.href);}\n";
-			//$reload .= "\tparent.frames.detail.location.href=\"/src/views/intro\";\n";
-			//$reload .= "\tparent.frames.detail.location.reload();\n";
-		}
-
-		$reload .= "</script>\n";
-		if ($do_print) {
-			echo $reload;
-		} else {
-			return $reload;
-		}
-	}
 
 	/**
 	 * Retrieve the tab info for a specific tab bar.

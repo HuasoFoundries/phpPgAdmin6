@@ -9,6 +9,8 @@ namespace PHPPgAdmin\Database;
 
 class Postgres extends ADODB_base {
 
+	use \PHPPgAdmin\HelperTrait;
+
 	var $major_version = 9.5;
 	// Max object name length
 	var $_maxNameLen = 63;
@@ -164,7 +166,7 @@ class Postgres extends ADODB_base {
 	var $typStorageDef = 'plain';
 
 	function __construct(&$conn, $conf) {
-		\PC::debug(['class' => __CLASS__, 'major_version' => $this->major_version], 'instanced connection class');
+		$this->prtrace('major_version', $this->major_version);
 		$this->conn = $conn;
 		$this->conf = $conf;
 	}

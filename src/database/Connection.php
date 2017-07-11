@@ -95,7 +95,7 @@ class Connection {
 
 		$description = "PostgreSQL {$version}";
 
-		$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), '$version' => $version]);
+		//$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), '$version' => $version]);
 
 		// Detect version and choose appropriate database driver
 		switch (substr($version, 0, 3)) {
