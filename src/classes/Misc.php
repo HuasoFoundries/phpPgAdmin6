@@ -29,6 +29,7 @@ class Misc {
 	public $appVersion = '';
 	public $form = '';
 	public $href = '';
+	public $_name = 'Misc';
 	public $lang = [];
 	private $server_info = null;
 	private $_no_output = false;
