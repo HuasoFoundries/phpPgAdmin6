@@ -96,7 +96,7 @@ class SQLQueryController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
-		$_connection = $this->getConnection();
+		$_connection = $misc->getConnection();
 
 		/**
 		 * This is a callback function to display the result of each separate query
@@ -215,15 +215,25 @@ class SQLQueryController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
+		$_connection = $misc->getConnection();
 
-		// Execute the query.  If it's a script upload, special handling is necessary
-		if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
-			return $this->execute_script();
-		} else {
-			return $this->execute_query();
+		try {
+			// Execute the query.  If it's a script upload, special handling is necessary
+			if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
+				return $this->execute_script();
+			} else {
+				return $this->execute_query();
 
+			}
+		} catch (\PHPPgAdmin\ADODB_Exception $e) {
+
+			$message = $e->getMessage();
+			$trace = $e->getTraceAsString();
+			$lastError = $_connection->getLastError();
+			$this->prtrace(['message' => $message, 'trace' => $trace, 'lastError' => $lastError]);
+
+			return null;
 		}
-
 	}
 
 	public function printFooter($doBody = true, $template = 'footer.twig') {

@@ -41,10 +41,16 @@
     }
 
     function init() {
-        tableColumnList = document.formIndex.TableColumnList;
         indexColumnList = document.getElementById("IndexColumnList");
-        indexColumns = indexColumnList.options;
-        tableColumns = tableColumnList.options;
+        if (indexColumnList) {
+            indexColumns = indexColumnList.options;
+        }
+
+        if (document.formIndex) {
+            tableColumnList = document.formIndex.TableColumnList;
+            tableColumns = tableColumnList.options;
+        }
+
     }
 
 

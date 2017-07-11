@@ -104,6 +104,29 @@ class Misc {
 			'line' => $backtrace[0]['line'],
 		]);
 
+		switch ($fn) {
+		case 'EXECUTE':
+			$sql = $p1;
+			$inputparams = $p2;
+
+			/*$s = "<p><b>{$lang['strsqlerror']}</b><br />" . $misc->printVal($errmsg, 'errormsg') . "</p> <p><b>{$lang['strinstatement']}</b><br />" . $misc->printVal($sql). "</p>	";*/
+
+			$s = "<p><b>strsqlerror</b><br />" . $errmsg . "</p> <p><b>SQL:</b><br />" . $sql . "</p>	";
+
+			echo '<table class="error" cellpadding="5"><tr><td>' . $s . '</td></tr></table><br />' . "\n";
+
+			break;
+
+		case 'PCONNECT':
+		case 'CONNECT':
+			// do nothing;
+			break;
+		default:
+			$s = "$dbms error: [$errno: $errmsg] in $fn($p1, $p2)\n";
+			echo "<table class=\"error\" cellpadding=\"5\"><tr><td>{$s}</td></tr></table><br />\n";
+			break;
+		}
+
 		$tag = implode('', $btarray0);
 
 		\PC::debug(['errno' => $errno, 'fn' => $fn, 'errmsg' => $errmsg], $tag);
