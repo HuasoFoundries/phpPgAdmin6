@@ -21,13 +21,12 @@ if ($debugmode) {
 	error_reporting(E_ALL);
 }
 
-require_once BASE_PATH . '/src/errorhandler.inc.php';
-
 if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
 	define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
 }
 if (!defined('ADODB_ERROR_HANDLER')) {
-	define('ADODB_ERROR_HANDLER', 'Error_Handler');
+	//define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\Misc::Error_Handler');
+	define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\Misc::adodb_throw');
 }
 
 require_once BASE_PATH . '/vendor/autoload.php';
@@ -97,29 +96,9 @@ $container['lang'] = function ($c) {
 
 	$c['appLangFiles'] = $appLangFiles;
 	$c['language'] = $_language;
+	$c['isolang'] = $_isolang;
 	return $lang;
 };
-/**
- * $container['language'] = function ($c) {
-include BASE_PATH . '/src/detect_language.php';
-
-return $_language;
-};
-
-$container['lang'] = function ($c) {
-
-$lang = [];
-include_once BASE_PATH . '/src/lang/english.php';
-
-// Import the language file
-if ($c->has('language')) {
-include BASE_PATH . "/src/lang/" . $c['language'] . ".php";
-$_SESSION['webdbLanguage'] = $c['language'];
-}
-
-return $lang;
-};
- */
 
 $container['plugin_manager'] = function ($c) {
 	$plugin_manager = new \PHPPgAdmin\PluginManager($c);

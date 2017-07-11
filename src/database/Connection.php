@@ -8,7 +8,7 @@ namespace PHPPgAdmin\Database;
 
 class Connection {
 
-	use \PHPPgAdmin\DebugTrait;
+	use \PHPPgAdmin\HelperTrait;
 
 	var $conn;
 	private $connection_result;
@@ -42,12 +42,13 @@ class Connection {
 			$pghost .= ' requiressl=1';
 		}
 
-		try {
-			$this->connection_result = $this->conn->connect($pghost, $user, $password, $database);
-			$this->prtrace(['connection_result' => $this->connection_result, 'conn' => $this->conn]);
-		} catch (\Exception $e) {
-			$this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-		}
+		/*try {
+				$this->connection_result = $this->conn->connect($pghost, $user, $password, $database);
+				$this->prtrace(['connection_result' => $this->connection_result, 'conn' => $this->conn]);
+			} catch (\PHPPgAdmin\ADODB_Exception $e) {
+				$this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+		*/
+		$this->conn->connect($pghost, $user, $password, $database);
 
 	}
 

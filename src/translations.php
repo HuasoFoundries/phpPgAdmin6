@@ -154,11 +154,11 @@ if (isset($_language)) {
 	$_SESSION['webdbLanguage'] = $_language;
 
 	if (array_key_exists($_language, $languages_iso_code)) {
-		$isolang = $languages_iso_code[$_language];
+		$_isolang = $languages_iso_code[$_language];
 	} else {
-		$isolang = '';
+		$_isolang = '';
 	}
-	$_SESSION['isolang'] = $isolang;
+	$_SESSION['isolang'] = $_isolang;
 
 	//\PC::debug($_language, 'webdbLanguage');
 }

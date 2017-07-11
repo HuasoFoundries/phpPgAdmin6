@@ -13,7 +13,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 
 class Misc {
 
-	use \PHPPgAdmin\DebugTrait;
+	use \PHPPgAdmin\HelperTrait;
 
 	private $_connection = null;
 	private $_no_db_connection = false;
@@ -76,6 +76,39 @@ class Misc {
 		} else if (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
 			$this->server_id = array_keys($_SESSION['webdbLogin'])[0];
 		}
+	}
+
+	/**
+	 * Default Error Handler. This will be called with the following params
+	 *
+	 * @param $dbms		the RDBMS you are connecting to
+	 * @param $fn		the name of the calling function (in uppercase)
+	 * @param $errno		the native error number from the database
+	 * @param $errmsg	the native error msg from the database
+	 * @param $p1		$fn specific parameter - see below
+	 * @param $P2		$fn specific parameter - see below
+	 */
+	public static function adodb_throw($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection) {
+
+		if (error_reporting() == 0) {
+			return;
+		}
+
+		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+		$btarray0 = ([
+			'class' => $backtrace[1]['class'],
+			'type' => $backtrace[1]['type'],
+			'function' => $backtrace[1]['function'],
+			'spacer' => ' ',
+			'line' => $backtrace[0]['line'],
+		]);
+
+		$tag = implode('', $btarray0);
+
+		\PC::debug(['errno' => $errno, 'fn' => $fn, 'errmsg' => $errmsg], $tag);
+
+		throw new \PHPPgAdmin\ADODB_Exception($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
 	}
 
 	public function getContainer() {
@@ -214,6 +247,7 @@ class Misc {
 				}
 			}
 			try {
+
 				// Create the connection object and make the connection
 				$this->_connection = new \PHPPgAdmin\Database\Connection(
 					$server_info['host'],
@@ -224,16 +258,11 @@ class Misc {
 					$database_to_use
 				);
 
-				$this->prtrace('getConnectionResult', $this->_connection->getConnectionResult());
-				if ($this->_connection->getConnectionResult() === false) {
-					$msg = $lang['strloginfailed'];
-					$this->prtrace('msg', $msg);
-					//$login_controller = new LoginController($this->container);
-					return null;
-				}
-
-			} catch (\Exception $e) {
-				$this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+			} catch (\PHPPgAdmin\ADODB_Exception $e) {
+				unset($_SESSION['webdbLogin'][$this->server_id]);
+				$msg = $lang['strloginfailed'];
+				$login_controller = new LoginController($this->container);
+				return $login_controller->render();
 			}
 
 		}

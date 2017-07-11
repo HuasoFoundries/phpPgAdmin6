@@ -7,7 +7,7 @@ namespace PHPPgAdmin\Controller;
  */
 class BaseController {
 
-	use \PHPPgAdmin\DebugTrait;
+	use \PHPPgAdmin\HelperTrait;
 
 	private $container = null;
 	private $_connection = null;
@@ -72,6 +72,29 @@ class BaseController {
 		//\PC::debug(['name' => $this->_name, 'no_db_connection' => $this->misc->getNoDBConnection()], 'instanced controller');
 	}
 
+	public function render() {
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$action = $this->action;
+
+		$this->printHeader($lang[$this->_title]);
+		$this->printBody();
+
+		switch ($action) {
+		default:
+			$this->doDefault();
+			break;
+		}
+
+		$misc->printFooter();
+	}
+
+	public function doDefault() {
+		$html = '<div><h2>Section title</h2> <p>Main content</p></div>';
+		echo $html;
+		return $html;
+	}
+
 	function setNoOutput($flag) {
 		$this->_no_output = boolval($flag);
 		$this->misc->setNoOutput(boolval($flag));
@@ -103,127 +126,6 @@ class BaseController {
 		}
 
 		return $this->tree_controller;
-	}
-
-	/**
-	 * Prints the page header.  If member variable $this->_no_output is
-	 * set then no header is drawn.
-	 * @param $title The title of the page
-	 * @param $script script tag
-	 * @param $do_print boolean if false, the function will return the header content
-	 */
-	function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig') {
-
-		if (function_exists('newrelic_disable_autorum')) {
-			newrelic_disable_autorum();
-		}
-		$appName = $this->appName;
-		$lang = $this->lang;
-		$plugin_manager = $this->plugin_manager;
-
-		$this->prtrace('appName', $appName);
-
-		$viewVars = [];
-		//$viewVars = $this->lang;
-		if (isset($_SESSION['isolang'])) {
-			$viewVars['isolang'] = $_SESSION['isolang'];
-			$viewVars['applocale'] = $lang['applocale'];
-		}
-
-		$viewVars['dir'] = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
-		$viewVars['headertemplate'] = $template;
-		$viewVars['title'] = $title;
-		$viewVars['appName'] = htmlspecialchars($this->appName) . (($title != '') ? htmlspecialchars(" - {$title}") : '');
-
-		$this->prtrace($viewVars);
-		$header_html = $this->view->fetch($template, $viewVars);
-
-		if ($script) {
-			$header_html .= "{$script}\n";
-		}
-
-		$plugins_head = [];
-		$_params = ['heads' => &$plugins_head];
-
-		$plugin_manager->do_hook('head', $_params);
-
-		foreach ($plugins_head as $tag) {
-			$header_html .= $tag;
-		}
-
-		$header_html .= "</head>\n";
-
-		if (!$this->_no_output && $do_print) {
-
-			header("Content-Type: text/html; charset=utf-8");
-			echo $header_html;
-
-		} else {
-			return $header_html;
-		}
-	}
-
-	/**
-	 * Prints the page body.
-	 * @param $doBody True to output body tag, false to return
-	 * @param $bodyClass - name of body class
-	 */
-	function printBody($doBody = true, $bodyClass = 'detailbody') {
-
-		$bodyClass = htmlspecialchars($bodyClass);
-		$bodyHtml = '<body data-controller="' . $this->_name . '" class="' . $bodyClass . '" >';
-		$bodyHtml .= "\n";
-
-		if (!$this->_no_output && $doBody) {
-			echo $bodyHtml;
-		} else {
-			return $bodyHtml;
-		}
-	}
-
-	/**
-	 * Displays link to the context help.
-	 * @param $str   - the string that the context help is related to (already escaped)
-	 * @param $help  - help section identifier
-	 * @param $do_print true to echo, false to return
-	 */
-	function printHelp($str, $help = null, $do_print = true) {
-		//\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
-		if ($help !== null) {
-			$helplink = $this->getHelpLink($help);
-			$str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">' . $this->lang['strhelpicon'] . '</a>';
-
-		}
-		if ($do_print) {
-			echo $str;
-		} else {
-			return $str;
-		}
-	}
-
-	function getHelpLink($help) {
-		return htmlspecialchars("/src/views/help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
-
-	}
-
-	/**
-	 * Print out the page heading and help link
-	 * @param $title Title, already escaped
-	 * @param $help (optional) The identifier for the help link
-	 */
-	function printTitle($title, $help = null, $do_print = true) {
-		$data = $this->data;
-		$lang = $this->lang;
-
-		$title_html = "<h2>";
-		$title_html .= $this->printHelp($title, $help, false);
-		$title_html .= "</h2>\n";
-
-		if ($do_print) {
-			echo $title_html;
-		} else {
-			return $title_html;
-		}
 	}
 
 	/**
@@ -275,50 +177,4 @@ class BaseController {
 		return $html_trail->printLink($link, $do_print);
 	}
 
-	/**
-	 * Outputs JavaScript to set default focus
-	 * @param $object eg. forms[0].username
-	 */
-	function setFocus($object) {
-		echo "<script type=\"text/javascript\">\n";
-		echo "   document.{$object}.focus();\n";
-		echo "</script>\n";
-	}
-
-	/**
-	 * Outputs JavaScript to set the name of the browser window.
-	 * @param $name the window name
-	 * @param $addServer if true (default) then the server id is
-	 *        attached to the name.
-	 */
-	function setWindowName($name, $addServer = true) {
-		echo "<script type=\"text/javascript\">\n";
-		echo "//<![CDATA[\n";
-		echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->server_id) : ''), "';\n";
-		echo "//]]>\n";
-		echo "</script>\n";
-	}
-
-	public function render() {
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$action = $this->action;
-
-		$this->printHeader($lang[$this->_title]);
-		$this->printBody();
-
-		switch ($action) {
-		default:
-			$this->doDefault();
-			break;
-		}
-
-		$misc->printFooter();
-	}
-
-	public function doDefault() {
-		$html = '<div><h2>Section title</h2> <p>Main content</p></div>';
-		echo $html;
-		return $html;
-	}
 }
