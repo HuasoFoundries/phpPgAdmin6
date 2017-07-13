@@ -7,7 +7,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class MaterializedViewController extends BaseController {
-	public $script = 'materialized_materialized_views.php';
+	public $script = 'materialized_views.php';
 	public $_name = 'MaterializedViewController';
 	public $table_place = 'matviews-matviews';
 
@@ -97,7 +97,7 @@ class MaterializedViewController extends BaseController {
 			$this->printTabs('view', 'select');
 			$misc->printMsg($msg);
 
-			$attrs = $data->getTableAttributes($_REQUEST['view']);
+			$attrs = $data->getTableAttributes($_REQUEST['matview']);
 
 			echo '<form action="/src/views/' . $this->script . '" method="post" id="selectform">';
 			echo "\n";
@@ -165,7 +165,7 @@ class MaterializedViewController extends BaseController {
 			}
 
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"selectrows\" />\n";
-			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"subject\" value=\"view\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$lang['strselect']}\" />\n";
@@ -197,7 +197,7 @@ class MaterializedViewController extends BaseController {
 				return $this->doSelectRows(true, $lang['strselectneedscol']);
 			} else {
 				// Generate query SQL
-				$query = $data->getSelectSQL($_REQUEST['view'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
+				$query = $data->getSelectSQL($_REQUEST['matview'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
 
 				$_REQUEST['query'] = $query;
 				$_REQUEST['return'] = "schema";
@@ -221,7 +221,7 @@ class MaterializedViewController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		if (empty($_REQUEST['view']) && empty($_REQUEST['ma'])) {
+		if (empty($_REQUEST['matview']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifyviewtodrop']);
 			exit();
 		}
@@ -240,8 +240,8 @@ class MaterializedViewController extends BaseController {
 					echo '<input type="hidden" name="view[]" value="', htmlspecialchars($a['view']), "\" />\n";
 				}
 			} else {
-				echo "<p>", sprintf($lang['strconfdropview'], $misc->printVal($_REQUEST['view'])), "</p>\n";
-				echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+				echo "<p>", sprintf($lang['strconfdropview'], $misc->printVal($_REQUEST['matview'])), "</p>\n";
+				echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
 			}
 
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
@@ -733,7 +733,7 @@ class MaterializedViewController extends BaseController {
 		$actions = [
 			'multiactions' => [
 				'keycols' => ['matview' => 'relname'],
-				'url' => 'materialized_materialized_views.php',
+				'url' => 'materialized_views.php',
 			],
 			'browse' => [
 				'content' => $lang['strbrowse'],
@@ -773,7 +773,7 @@ class MaterializedViewController extends BaseController {
 				'content' => $lang['stralter'],
 				'attr' => [
 					'href' => [
-						'url' => 'viewproperties.php',
+						'url' => 'materializedviewproperties.php',
 						'urlvars' => [
 							'action' => 'confirm_alter',
 							'matview' => Decorator::field('relname'),

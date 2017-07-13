@@ -2,6 +2,8 @@
 namespace PHPPgAdmin\Decorators;
 
 class Decorator {
+	use \PHPPgAdmin\HelperTrait;
+
 	function __construct($value) {
 		$this->v = $value;
 	}
@@ -11,6 +13,8 @@ class Decorator {
 	}
 
 	public static function get_sanitized_value(&$var, &$fields, $esc = null) {
+
+		//self::statictrace($var, $fields, $esc);
 		if (is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
 			$val = $var->value($fields);
 		} else {
@@ -19,16 +23,16 @@ class Decorator {
 
 		if (is_string($val)) {
 			switch ($esc) {
-				case 'xml':
-					return strtr($val, [
-						'&' => '&amp;',
-						"'" => '&apos;', '"' => '&quot;',
-						'<' => '&lt;', '>' => '&gt;',
-					]);
-				case 'html':
-					return htmlentities($val, ENT_COMPAT, 'UTF-8');
-				case 'url':
-					return urlencode($val);
+			case 'xml':
+				return strtr($val, [
+					'&' => '&amp;',
+					"'" => '&apos;', '"' => '&quot;',
+					'<' => '&lt;', '>' => '&gt;',
+				]);
+			case 'html':
+				return htmlentities($val, ENT_COMPAT, 'UTF-8');
+			case 'url':
+				return urlencode($val);
 			}
 		}
 		return $val;

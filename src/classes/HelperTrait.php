@@ -23,6 +23,22 @@ trait HelperTrait {
 		\PC::debug(func_get_args(), $tag);
 	}
 
+	public static function statictrace() {
+		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+		$btarray0 = ([
+			'class' => $backtrace[1]['class'],
+			'type' => $backtrace[1]['type'],
+			'function' => $backtrace[1]['function'],
+			'spacer' => ' ',
+			'line' => $backtrace[0]['line'],
+		]);
+
+		$tag = implode('', $btarray0);
+
+		\PC::debug(func_get_args(), $tag);
+	}
+
 	/**
 	 * Prints the page header.  If member variable $this->_no_output is
 	 * set then no header is drawn.

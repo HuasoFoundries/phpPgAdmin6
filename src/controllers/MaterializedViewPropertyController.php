@@ -6,8 +6,8 @@ use \PHPPgAdmin\Decorators\Decorator;
 /**
  * Base controller class
  */
-class ViewPropertyController extends BaseController {
-	public $_name = 'ViewPropertyController';
+class MaterializedViewPropertyController extends BaseController {
+	public $_name = 'MaterializedViewPropertyController';
 
 	function render() {
 		$conf = $this->conf;
@@ -19,7 +19,7 @@ class ViewPropertyController extends BaseController {
 			return $this->doTree();
 		}
 
-		$this->printHeader($lang['strviews'] . ' - ' . $_REQUEST['view']);
+		$this->printHeader($lang['strviews'] . ' - ' . $_REQUEST['matview']);
 		$this->printBody();
 
 		switch ($action) {
@@ -92,14 +92,14 @@ class ViewPropertyController extends BaseController {
 			$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
 		};
 
-		$this->printTrail('view');
-		$this->printTabs('view', 'columns');
+		$this->printTrail('matview');
+		$this->printTabs('matview', 'columns');
 		$misc->printMsg($msg);
 
 		// Get view
-		$vdata = $data->getView($_REQUEST['view']);
+		$vdata = $data->getView($_REQUEST['matview']);
 		// Get columns (using same method for getting a view)
-		$attrs = $data->getTableAttributes($_REQUEST['view']);
+		$attrs = $data->getTableAttributes($_REQUEST['matview']);
 
 		// Show comment if any
 		if ($vdata->fields['relcomment'] !== null) {
@@ -110,7 +110,7 @@ class ViewPropertyController extends BaseController {
 			'column' => [
 				'title' => $lang['strcolumn'],
 				'field' => Decorator::field('attname'),
-				'url' => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['view']) . "&amp;",
+				'url' => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['matview']) . "&amp;",
 				'vars' => ['column' => 'attname'],
 			],
 			'type' => [
@@ -135,10 +135,10 @@ class ViewPropertyController extends BaseController {
 				'content' => $lang['stralter'],
 				'attr' => [
 					'href' => [
-						'url' => 'viewproperties.php',
+						'url' => 'materializedviewproperties.php',
 						'urlvars' => [
 							'action' => 'properties',
-							'view' => $_REQUEST['view'],
+							'view' => $_REQUEST['matview'],
 							'column' => Decorator::field('attname'),
 						],
 					],
@@ -146,7 +146,7 @@ class ViewPropertyController extends BaseController {
 			],
 		];
 
-		echo $this->printTable($attrs, $columns, $actions, 'viewproperties-viewproperties', null, $attPre);
+		echo $this->printTable($attrs, $columns, $actions, 'materializedviewproperties-materializedviewproperties', null, $attPre);
 
 		echo "<br />\n";
 
@@ -159,7 +159,7 @@ class ViewPropertyController extends BaseController {
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
-							'view' => $_REQUEST['view'],
+							'view' => $_REQUEST['matview'],
 							'subject' => 'view',
 							'return' => 'view',
 						],
@@ -176,7 +176,7 @@ class ViewPropertyController extends BaseController {
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
-							'view' => $_REQUEST['view'],
+							'view' => $_REQUEST['matview'],
 						],
 					],
 				],
@@ -191,7 +191,7 @@ class ViewPropertyController extends BaseController {
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
-							'view' => $_REQUEST['view'],
+							'view' => $_REQUEST['matview'],
 						],
 					],
 				],
@@ -200,13 +200,13 @@ class ViewPropertyController extends BaseController {
 			'alter' => [
 				'attr' => [
 					'href' => [
-						'url' => 'viewproperties.php',
+						'url' => 'materializedviewproperties.php',
 						'urlvars' => [
 							'action' => 'confirm_alter',
 							'server' => $_REQUEST['server'],
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
-							'view' => $_REQUEST['view'],
+							'view' => $_REQUEST['matview'],
 						],
 					],
 				],
@@ -214,7 +214,7 @@ class ViewPropertyController extends BaseController {
 			],
 		];
 
-		$this->printNavLinks($navlinks, 'viewproperties-viewproperties', get_defined_vars());
+		$this->printNavLinks($navlinks, 'materializedviewproperties-materializedviewproperties', get_defined_vars());
 	}
 
 	function doTree() {
@@ -225,14 +225,14 @@ class ViewPropertyController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$reqvars = $misc->getRequestVars('column');
-		$columns = $data->getTableAttributes($_REQUEST['view']);
+		$columns = $data->getTableAttributes($_REQUEST['matview']);
 
 		$attrs = [
 			'text' => Decorator::field('attname'),
 			'action' => Decorator::actionurl('colproperties.php',
 				$reqvars,
 				[
-					'view' => $_REQUEST['view'],
+					'view' => $_REQUEST['matview'],
 					'column' => Decorator::field('attname'),
 				]
 			),
@@ -240,13 +240,13 @@ class ViewPropertyController extends BaseController {
 			'iconAction' => Decorator::url('display.php',
 				$reqvars,
 				[
-					'view' => $_REQUEST['view'],
+					'view' => $_REQUEST['matview'],
 					'column' => Decorator::field('attname'),
 					'query' => Decorator::replace(
 						'SELECT "%column%", count(*) AS "count" FROM %view% GROUP BY "%column%" ORDER BY "%column%"',
 						[
 							'%column%' => Decorator::field('attname'),
-							'%view%' => $_REQUEST['view'],
+							'%view%' => $_REQUEST['matview'],
 						]
 					),
 				]
@@ -289,7 +289,7 @@ class ViewPropertyController extends BaseController {
 		$this->printTitle($lang['stredit'], 'pg.view.alter');
 		$misc->printMsg($msg);
 
-		$viewdata = $data->getView($_REQUEST['view']);
+		$viewdata = $data->getView($_REQUEST['matview']);
 
 		if ($viewdata->recordCount() > 0) {
 
@@ -298,7 +298,7 @@ class ViewPropertyController extends BaseController {
 				$_POST['formComment'] = $viewdata->fields['relcomment'];
 			}
 
-			echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
+			echo "<form action=\"/src/views/materializedviewproperties.php\" method=\"post\">\n";
 			echo "<table style=\"width: 100%\">\n";
 			echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strdefinition']}</th>\n";
 			echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -308,7 +308,7 @@ class ViewPropertyController extends BaseController {
 			htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
 			echo "</table>\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
-			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -377,7 +377,7 @@ class ViewPropertyController extends BaseController {
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
 		echo $misc->form;
 		echo "<input type=\"hidden\" name=\"subject\" value=\"view\" />\n";
-		echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+		echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
 		echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
 		echo "</form>\n";
 	}
@@ -392,7 +392,7 @@ class ViewPropertyController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		// Get view
-		$vdata = $data->getView($_REQUEST['view']);
+		$vdata = $data->getView($_REQUEST['matview']);
 
 		$this->printTrail('view');
 		$this->printTabs('view', 'definition');
@@ -415,18 +415,18 @@ class ViewPropertyController extends BaseController {
 		$this->printNavLinks(['alter' => [
 			'attr' => [
 				'href' => [
-					'url' => 'viewproperties.php',
+					'url' => 'materializedviewproperties.php',
 					'urlvars' => [
 						'action' => 'edit',
 						'server' => $_REQUEST['server'],
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
-						'view' => $_REQUEST['view'],
+						'view' => $_REQUEST['matview'],
 					],
 				],
 			],
 			'content' => $lang['stralter'],
-		]], 'viewproperties-definition', get_defined_vars());
+		]], 'materializedviewproperties-definition', get_defined_vars());
 	}
 
 /**
@@ -449,14 +449,14 @@ class ViewPropertyController extends BaseController {
 			$this->printTitle($lang['stralter'], 'pg.column.alter');
 			$misc->printMsg($msg);
 
-			echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
+			echo "<form action=\"/src/views/materializedviewproperties.php\" method=\"post\">\n";
 
 			// Output view header
 			echo "<table>\n";
 			echo "<tr><th class=\"data required\">{$lang['strname']}</th><th class=\"data required\">{$lang['strtype']}</th>";
 			echo "<th class=\"data\">{$lang['strdefault']}</th><th class=\"data\">{$lang['strcomment']}</th></tr>";
 
-			$column = $data->getTableAttributes($_REQUEST['view'], $_REQUEST['column']);
+			$column = $data->getTableAttributes($_REQUEST['matview'], $_REQUEST['column']);
 
 			if (!isset($_REQUEST['default'])) {
 				$_REQUEST['field'] = $column->fields['attname'];
@@ -477,7 +477,7 @@ class ViewPropertyController extends BaseController {
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"properties\" />\n";
 			echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
 			echo $misc->form;
-			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"column\" value=\"", htmlspecialchars($_REQUEST['column']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"olddefault\" value=\"", htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
 			echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
@@ -495,7 +495,7 @@ class ViewPropertyController extends BaseController {
 			}
 
 			// Alter the view column
-			list($status, $sql) = $data->alterColumn($_REQUEST['view'], $_REQUEST['column'], $_REQUEST['field'],
+			list($status, $sql) = $data->alterColumn($_REQUEST['matview'], $_REQUEST['column'], $_REQUEST['field'],
 				false, false, $_REQUEST['default'], $_REQUEST['olddefault'],
 				'', '', '', '', $_REQUEST['comment']);
 			if ($status == 0) {
@@ -524,7 +524,7 @@ class ViewPropertyController extends BaseController {
 			$misc->printMsg($msg);
 
 			// Fetch view info
-			$view = $data->getView($_REQUEST['view']);
+			$view = $data->getView($_REQUEST['matview']);
 
 			if ($view->recordCount() > 0) {
 				if (!isset($_POST['name'])) {
@@ -543,7 +543,7 @@ class ViewPropertyController extends BaseController {
 					$_POST['comment'] = $view->fields['relcomment'];
 				}
 
-				echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
+				echo "<form action=\"/src/views/materializedviewproperties.php\" method=\"post\">\n";
 				echo "<table>\n";
 				echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
 				echo "<td class=\"data1\">";
@@ -585,7 +585,7 @@ class ViewPropertyController extends BaseController {
 				htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
 				echo "</table>\n";
 				echo "<input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
-				echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
 				echo $misc->form;
 				echo "<p><input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
 				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -611,7 +611,7 @@ class ViewPropertyController extends BaseController {
 				// reload the browser frame.
 				if ($_POST['view'] != $_POST['name']) {
 					// Jump them to the new view name
-					$_REQUEST['view'] = $_POST['name'];
+					$_REQUEST['matview'] = $_POST['name'];
 					// Force a browser reload
 					$this->misc->setReloadBrowser(true);
 				}

@@ -90,6 +90,11 @@ class DisplayController extends BaseController {
 					$lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']],
 					$scripts, true, $header_template
 				);
+			} else if ($_REQUEST['subject'] == 'matview') {
+				$this->printHeader(
+					'M' . $lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']],
+					$scripts, true, $header_template
+				);
 			} else if ($_REQUEST['subject'] == 'column') {
 				$this->printHeader(
 					$lang['strcolumn'] . ': ' . $_REQUEST[$_REQUEST['subject']],
@@ -107,6 +112,458 @@ class DisplayController extends BaseController {
 		$misc->printFooter(true, $footer_template);
 	}
 
+	/**
+	 * Displays requested data
+	 */
+	function doBrowse($msg = '') {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$plugin_manager = $this->plugin_manager;
+		$data = $misc->getDatabaseAccessor();
+
+		$save_history = false;
+		// If current page is not set, default to first page
+		if (!isset($_REQUEST['page'])) {
+			$_REQUEST['page'] = 1;
+		}
+
+		if (!isset($_REQUEST['nohistory'])) {
+			$save_history = true;
+		}
+
+		if (isset($_REQUEST['subject'])) {
+			$subject = $_REQUEST['subject'];
+			if (isset($_REQUEST[$subject])) {
+				$object = $_REQUEST[$subject];
+			}
+
+		} else {
+			$subject = '';
+		}
+
+		$this->printTrail(isset($subject) ? $subject : 'database');
+		$this->printTabs($subject, 'browse');
+
+		/* This code is used when browsing FK in pure-xHTML (without js) */
+		if (isset($_REQUEST['fkey'])) {
+			$ops = [];
+			foreach ($_REQUEST['fkey'] as $x => $y) {
+				$ops[$x] = '=';
+			}
+			$query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+			$_REQUEST['query'] = $query;
+		}
+
+		if (isset($object)) {
+			if (isset($_REQUEST['query'])) {
+				$_SESSION['sqlquery'] = $_REQUEST['query'];
+				$this->printTitle($lang['strselect']);
+				$type = 'SELECT';
+			} else {
+				$type = 'TABLE';
+			}
+		} else {
+			$this->printTitle($lang['strqueryresults']);
+			/*we comes from sql.php, $_SESSION['sqlquery'] has been set there */
+			$type = 'QUERY';
+		}
+
+		$misc->printMsg($msg);
+
+		// If 'sortkey' is not set, default to ''
+		if (!isset($_REQUEST['sortkey'])) {
+			$_REQUEST['sortkey'] = '';
+		}
+
+		// If 'sortdir' is not set, default to ''
+		if (!isset($_REQUEST['sortdir'])) {
+			$_REQUEST['sortdir'] = '';
+		}
+
+		// If 'strings' is not set, default to collapsed
+		if (!isset($_REQUEST['strings'])) {
+			$_REQUEST['strings'] = 'collapsed';
+		}
+
+		// Fetch unique row identifier, if this is a table browse request.
+		if (isset($object)) {
+			$key = $data->getRowIdentifier($object);
+		} else {
+			$key = [];
+		}
+
+		// Set the schema search path
+		if (isset($_REQUEST['search_path'])) {
+			if ($data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path']))) != 0) {
+				return;
+			}
+		}
+
+		// Retrieve page from query.  $max_pages is returned by reference.
+		$rs = $data->browseQuery($type,
+			isset($object) ? $object : null,
+			isset($_SESSION['sqlquery']) ? $_SESSION['sqlquery'] : null,
+			$_REQUEST['sortkey'], $_REQUEST['sortdir'], $_REQUEST['page'],
+			$conf['max_rows'], $max_pages);
+
+		$fkey_information = $this->getFKInfo();
+
+		// Build strings for GETs in array
+		$_gets = [
+			'server' => $_REQUEST['server'],
+			'database' => $_REQUEST['database'],
+		];
+
+		if (isset($_REQUEST['schema'])) {
+			$_gets['schema'] = $_REQUEST['schema'];
+		}
+
+		if (isset($object)) {
+			$_gets[$subject] = $object;
+		}
+
+		if (isset($subject)) {
+			$_gets['subject'] = $subject;
+		}
+
+		if (isset($_REQUEST['query'])) {
+			$_gets['query'] = $_REQUEST['query'];
+		}
+
+		if (isset($_REQUEST['count'])) {
+			$_gets['count'] = $_REQUEST['count'];
+		}
+
+		if (isset($_REQUEST['return'])) {
+			$_gets['return'] = $_REQUEST['return'];
+		}
+
+		if (isset($_REQUEST['search_path'])) {
+			$_gets['search_path'] = $_REQUEST['search_path'];
+		}
+
+		if (isset($_REQUEST['table'])) {
+			$_gets['table'] = $_REQUEST['table'];
+		}
+
+		if (isset($_REQUEST['sortkey'])) {
+			$_gets['sortkey'] = $_REQUEST['sortkey'];
+		}
+
+		if (isset($_REQUEST['sortdir'])) {
+			$_gets['sortdir'] = $_REQUEST['sortdir'];
+		}
+
+		if (isset($_REQUEST['nohistory'])) {
+			$_gets['nohistory'] = $_REQUEST['nohistory'];
+		}
+
+		$_gets['strings'] = $_REQUEST['strings'];
+
+		if ($save_history && is_object($rs) && ($type == 'QUERY')) //{
+		{
+			$misc->saveScriptHistory($_REQUEST['query']);
+		}
+
+		echo '<form method="POST" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
+		echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
+		if (isset($_REQUEST['query'])) {
+			$query = $_REQUEST['query'];
+		} else {
+			$query = "SELECT * FROM {$_REQUEST['schema']}";
+			if ($_REQUEST['subject'] == 'matview') {
+				$query = "{$query}.{$_REQUEST['matview']};";
+			} else if ($_REQUEST['subject'] == 'view') {
+				$query = "{$query}.{$_REQUEST['view']};";
+			} else {
+				$query = "{$query}.{$_REQUEST['table']};";
+			}
+		}
+		//$query = isset($_REQUEST['query'])? $_REQUEST['query'] : "select * from {$_REQUEST['schema']}.{$_REQUEST['table']};";
+		echo $query;
+		echo '</textarea><br><input type="submit"/></form>';
+
+		if (is_object($rs) && $rs->recordCount() > 0) {
+			// Show page navigation
+			$misc->printPages($_REQUEST['page'], $max_pages, $_gets);
+
+			echo "<table id=\"data\">\n<tr>";
+
+			// Check that the key is actually in the result set.  This can occur for select
+			// operations where the key fields aren't part of the select.  XXX:  We should
+			// be able to support this, somehow.
+			foreach ($key as $v) {
+				// If a key column is not found in the record set, then we
+				// can't use the key.
+				if (!in_array($v, array_keys($rs->fields))) {
+					$key = [];
+					break;
+				}
+			}
+
+			$buttons = [
+				'edit' => [
+					'content' => $lang['stredit'],
+					'attr' => [
+						'href' => [
+							'url' => 'display.php',
+							'urlvars' => array_merge([
+								'action' => 'confeditrow',
+								'strings' => $_REQUEST['strings'],
+								'page' => $_REQUEST['page'],
+							], $_gets),
+						],
+					],
+				],
+				'delete' => [
+					'content' => $lang['strdelete'],
+					'attr' => [
+						'href' => [
+							'url' => 'display.php',
+							'urlvars' => array_merge([
+								'action' => 'confdelrow',
+								'strings' => $_REQUEST['strings'],
+								'page' => $_REQUEST['page'],
+							], $_gets),
+						],
+					],
+				],
+			];
+			$actions = [
+				'actionbuttons' => &$buttons,
+				'place' => 'display-browse',
+			];
+			$plugin_manager->do_hook('actionbuttons', $actions);
+
+			foreach (array_keys($actions['actionbuttons']) as $action) {
+				$actions['actionbuttons'][$action]['attr']['href']['urlvars'] = array_merge(
+					$actions['actionbuttons'][$action]['attr']['href']['urlvars'],
+					$_gets
+				);
+			}
+
+			$edit_params = isset($actions['actionbuttons']['edit']) ?
+			$actions['actionbuttons']['edit'] : [];
+			$delete_params = isset($actions['actionbuttons']['delete']) ?
+			$actions['actionbuttons']['delete'] : [];
+
+			// Display edit and delete actions if we have a key
+			$colspan = count($buttons);
+			if ($colspan > 0 and count($key) > 0) {
+				echo "<th colspan=\"{$colspan}\" class=\"data\">{$lang['stractions']}</th>\n";
+			}
+
+			/* we show OIDs only if we are in TABLE or SELECT type browsing */
+			$this->printTableHeaderCells($rs, $_gets, isset($object));
+
+			echo "</tr>\n";
+
+			$i = 0;
+			reset($rs->fields);
+			while (!$rs->EOF) {
+				$id = (($i % 2) == 0 ? '1' : '2');
+				echo "<tr class=\"data{$id}\">\n";
+				// Display edit and delete links if we have a key
+				if ($colspan > 0 and count($key) > 0) {
+					$keys_array = [];
+					$has_nulls = false;
+					foreach ($key as $v) {
+						if ($rs->fields[$v] === null) {
+							$has_nulls = true;
+							break;
+						}
+						$keys_array["key[{$v}]"] = $rs->fields[$v];
+					}
+					if ($has_nulls) {
+						echo "<td colspan=\"{$colspan}\">&nbsp;</td>\n";
+					} else {
+
+						if (isset($actions['actionbuttons']['edit'])) {
+							$actions['actionbuttons']['edit'] = $edit_params;
+							$actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
+								$actions['actionbuttons']['edit']['attr']['href']['urlvars'],
+								$keys_array
+							);
+						}
+
+						if (isset($actions['actionbuttons']['delete'])) {
+							$actions['actionbuttons']['delete'] = $delete_params;
+							$actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
+								$actions['actionbuttons']['delete']['attr']['href']['urlvars'],
+								$keys_array
+							);
+						}
+
+						foreach ($actions['actionbuttons'] as $action) {
+							echo "<td class=\"opbutton{$id}\">";
+							$this->printLink($action);
+							echo "</td>\n";
+						}
+					}
+				}
+
+				$this->printTableRowCells($rs, $fkey_information, isset($object));
+
+				echo "</tr>\n";
+				$rs->moveNext();
+				$i++;
+			}
+			echo "</table>\n";
+
+			echo "<p>", $rs->recordCount(), " {$lang['strrows']}</p>\n";
+			// Show page navigation
+			$misc->printPages($_REQUEST['page'], $max_pages, $_gets);
+		} else {
+			echo "<p>{$lang['strnodata']}</p>\n";
+		}
+
+		// Navigation links
+		$navlinks = [];
+
+		$fields = [
+			'server' => $_REQUEST['server'],
+			'database' => $_REQUEST['database'],
+		];
+
+		if (isset($_REQUEST['schema'])) {
+			$fields['schema'] = $_REQUEST['schema'];
+		}
+
+		// Return
+		if (isset($_REQUEST['return'])) {
+			$urlvars = $misc->getSubjectParams($_REQUEST['return']);
+
+			$navlinks['back'] = [
+				'attr' => [
+					'href' => [
+						'url' => $urlvars['url'],
+						'urlvars' => $urlvars['params'],
+					],
+				],
+				'content' => $lang['strback'],
+			];
+		}
+
+		// Edit SQL link
+		if ($type == 'QUERY') {
+			$navlinks['edit'] = [
+				'attr' => [
+					'href' => [
+						'url' => 'database.php',
+						'urlvars' => array_merge($fields, [
+							'action' => 'sql',
+							'paginate' => 'on',
+						]),
+					],
+				],
+				'content' => $lang['streditsql'],
+			];
+		}
+
+		// Expand/Collapse
+		if ($_REQUEST['strings'] == 'expanded') {
+			$navlinks['collapse'] = [
+				'attr' => [
+					'href' => [
+						'url' => 'display.php',
+						'urlvars' => array_merge(
+							$_gets,
+							[
+								'strings' => 'collapsed',
+								'page' => $_REQUEST['page'],
+							]),
+					],
+				],
+				'content' => $lang['strcollapse'],
+			];
+		} else {
+			$navlinks['collapse'] = [
+				'attr' => [
+					'href' => [
+						'url' => 'display.php',
+						'urlvars' => array_merge(
+							$_gets,
+							[
+								'strings' => 'expanded',
+								'page' => $_REQUEST['page'],
+							]),
+					],
+				],
+				'content' => $lang['strexpand'],
+			];
+		}
+
+		// Create view and download
+		if (isset($_REQUEST['query']) && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
+
+			// Report views don't set a schema, so we need to disable create view in that case
+			if (isset($_REQUEST['schema'])) {
+
+				$navlinks['createview'] = [
+					'attr' => [
+						'href' => [
+							'url' => 'views.php',
+							'urlvars' => array_merge($fields, [
+								'action' => 'create',
+								'formDefinition' => $_REQUEST['query'],
+							]),
+						],
+					],
+					'content' => $lang['strcreateview'],
+				];
+			}
+
+			$urlvars = [];
+			if (isset($_REQUEST['search_path'])) {
+				$urlvars['search_path'] = $_REQUEST['search_path'];
+			}
+
+			$navlinks['download'] = [
+				'attr' => [
+					'href' => [
+						'url' => 'dataexport.php',
+						'urlvars' => array_merge($fields, $urlvars),
+					],
+				],
+				'content' => $lang['strdownload'],
+			];
+		}
+
+		// Insert
+		if (isset($object) && (isset($subject) && $subject == 'table')) {
+			$navlinks['insert'] = [
+				'attr' => [
+					'href' => [
+						'url' => 'tables.php',
+						'urlvars' => array_merge($fields, [
+							'action' => 'confinsertrow',
+							'table' => $object,
+						]),
+					],
+				],
+				'content' => $lang['strinsert'],
+			];
+		}
+
+		// Refresh
+		$navlinks['refresh'] = [
+			'attr' => [
+				'href' => [
+					'url' => 'display.php',
+					'urlvars' => array_merge(
+						$_gets,
+						[
+							'strings' => $_REQUEST['strings'],
+							'page' => $_REQUEST['page'],
+						]),
+				],
+			],
+			'content' => $lang['strrefresh'],
+		];
+
+		$this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
+	}
 	/**
 	 * Show confirmation of edit and perform actual update
 	 */
@@ -566,457 +1023,6 @@ class DisplayController extends BaseController {
 		echo "</div>";
 
 		exit;
-	}
-
-	/**
-	 * Displays requested data
-	 */
-	function doBrowse($msg = '') {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$plugin_manager = $this->plugin_manager;
-		$data = $misc->getDatabaseAccessor();
-
-		$save_history = false;
-		// If current page is not set, default to first page
-		if (!isset($_REQUEST['page'])) {
-			$_REQUEST['page'] = 1;
-		}
-
-		if (!isset($_REQUEST['nohistory'])) {
-			$save_history = true;
-		}
-
-		if (isset($_REQUEST['subject'])) {
-			$subject = $_REQUEST['subject'];
-			if (isset($_REQUEST[$subject])) {
-				$object = $_REQUEST[$subject];
-			}
-
-		} else {
-			$subject = '';
-		}
-
-		$this->printTrail(isset($subject) ? $subject : 'database');
-		$this->printTabs($subject, 'browse');
-
-		/* This code is used when browsing FK in pure-xHTML (without js) */
-		if (isset($_REQUEST['fkey'])) {
-			$ops = [];
-			foreach ($_REQUEST['fkey'] as $x => $y) {
-				$ops[$x] = '=';
-			}
-			$query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
-			$_REQUEST['query'] = $query;
-		}
-
-		if (isset($object)) {
-			if (isset($_REQUEST['query'])) {
-				$_SESSION['sqlquery'] = $_REQUEST['query'];
-				$this->printTitle($lang['strselect']);
-				$type = 'SELECT';
-			} else {
-				$type = 'TABLE';
-			}
-		} else {
-			$this->printTitle($lang['strqueryresults']);
-			/*we comes from sql.php, $_SESSION['sqlquery'] has been set there */
-			$type = 'QUERY';
-		}
-
-		$misc->printMsg($msg);
-
-		// If 'sortkey' is not set, default to ''
-		if (!isset($_REQUEST['sortkey'])) {
-			$_REQUEST['sortkey'] = '';
-		}
-
-		// If 'sortdir' is not set, default to ''
-		if (!isset($_REQUEST['sortdir'])) {
-			$_REQUEST['sortdir'] = '';
-		}
-
-		// If 'strings' is not set, default to collapsed
-		if (!isset($_REQUEST['strings'])) {
-			$_REQUEST['strings'] = 'collapsed';
-		}
-
-		// Fetch unique row identifier, if this is a table browse request.
-		if (isset($object)) {
-			$key = $data->getRowIdentifier($object);
-		} else {
-			$key = [];
-		}
-
-		// Set the schema search path
-		if (isset($_REQUEST['search_path'])) {
-			if ($data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path']))) != 0) {
-				return;
-			}
-		}
-
-		// Retrieve page from query.  $max_pages is returned by reference.
-		$rs = $data->browseQuery($type,
-			isset($object) ? $object : null,
-			isset($_SESSION['sqlquery']) ? $_SESSION['sqlquery'] : null,
-			$_REQUEST['sortkey'], $_REQUEST['sortdir'], $_REQUEST['page'],
-			$conf['max_rows'], $max_pages);
-
-		$fkey_information = $this->getFKInfo();
-
-		// Build strings for GETs in array
-		$_gets = [
-			'server' => $_REQUEST['server'],
-			'database' => $_REQUEST['database'],
-		];
-
-		if (isset($_REQUEST['schema'])) {
-			$_gets['schema'] = $_REQUEST['schema'];
-		}
-
-		if (isset($object)) {
-			$_gets[$subject] = $object;
-		}
-
-		if (isset($subject)) {
-			$_gets['subject'] = $subject;
-		}
-
-		if (isset($_REQUEST['query'])) {
-			$_gets['query'] = $_REQUEST['query'];
-		}
-
-		if (isset($_REQUEST['count'])) {
-			$_gets['count'] = $_REQUEST['count'];
-		}
-
-		if (isset($_REQUEST['return'])) {
-			$_gets['return'] = $_REQUEST['return'];
-		}
-
-		if (isset($_REQUEST['search_path'])) {
-			$_gets['search_path'] = $_REQUEST['search_path'];
-		}
-
-		if (isset($_REQUEST['table'])) {
-			$_gets['table'] = $_REQUEST['table'];
-		}
-
-		if (isset($_REQUEST['sortkey'])) {
-			$_gets['sortkey'] = $_REQUEST['sortkey'];
-		}
-
-		if (isset($_REQUEST['sortdir'])) {
-			$_gets['sortdir'] = $_REQUEST['sortdir'];
-		}
-
-		if (isset($_REQUEST['nohistory'])) {
-			$_gets['nohistory'] = $_REQUEST['nohistory'];
-		}
-
-		$_gets['strings'] = $_REQUEST['strings'];
-
-		if ($save_history && is_object($rs) && ($type == 'QUERY')) //{
-		{
-			$misc->saveScriptHistory($_REQUEST['query']);
-		}
-
-		echo '<form method="POST" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
-		echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
-		if (isset($_REQUEST['query'])) {
-			$query = $_REQUEST['query'];
-		} else {
-			$query = "SELECT * FROM {$_REQUEST['schema']}";
-			if ($_REQUEST['subject'] == 'view') {
-				$query = "{$query}.{$_REQUEST['view']};";
-			} else {
-				$query = "{$query}.{$_REQUEST['table']};";
-			}
-		}
-		//$query = isset($_REQUEST['query'])? $_REQUEST['query'] : "select * from {$_REQUEST['schema']}.{$_REQUEST['table']};";
-		echo $query;
-		echo '</textarea><br><input type="submit"/></form>';
-
-		if (is_object($rs) && $rs->recordCount() > 0) {
-			// Show page navigation
-			$misc->printPages($_REQUEST['page'], $max_pages, $_gets);
-
-			echo "<table id=\"data\">\n<tr>";
-
-			// Check that the key is actually in the result set.  This can occur for select
-			// operations where the key fields aren't part of the select.  XXX:  We should
-			// be able to support this, somehow.
-			foreach ($key as $v) {
-				// If a key column is not found in the record set, then we
-				// can't use the key.
-				if (!in_array($v, array_keys($rs->fields))) {
-					$key = [];
-					break;
-				}
-			}
-
-			$buttons = [
-				'edit' => [
-					'content' => $lang['stredit'],
-					'attr' => [
-						'href' => [
-							'url' => 'display.php',
-							'urlvars' => array_merge([
-								'action' => 'confeditrow',
-								'strings' => $_REQUEST['strings'],
-								'page' => $_REQUEST['page'],
-							], $_gets),
-						],
-					],
-				],
-				'delete' => [
-					'content' => $lang['strdelete'],
-					'attr' => [
-						'href' => [
-							'url' => 'display.php',
-							'urlvars' => array_merge([
-								'action' => 'confdelrow',
-								'strings' => $_REQUEST['strings'],
-								'page' => $_REQUEST['page'],
-							], $_gets),
-						],
-					],
-				],
-			];
-			$actions = [
-				'actionbuttons' => &$buttons,
-				'place' => 'display-browse',
-			];
-			$plugin_manager->do_hook('actionbuttons', $actions);
-
-			foreach (array_keys($actions['actionbuttons']) as $action) {
-				$actions['actionbuttons'][$action]['attr']['href']['urlvars'] = array_merge(
-					$actions['actionbuttons'][$action]['attr']['href']['urlvars'],
-					$_gets
-				);
-			}
-
-			$edit_params = isset($actions['actionbuttons']['edit']) ?
-			$actions['actionbuttons']['edit'] : [];
-			$delete_params = isset($actions['actionbuttons']['delete']) ?
-			$actions['actionbuttons']['delete'] : [];
-
-			// Display edit and delete actions if we have a key
-			$colspan = count($buttons);
-			if ($colspan > 0 and count($key) > 0) {
-				echo "<th colspan=\"{$colspan}\" class=\"data\">{$lang['stractions']}</th>\n";
-			}
-
-			/* we show OIDs only if we are in TABLE or SELECT type browsing */
-			$this->printTableHeaderCells($rs, $_gets, isset($object));
-
-			echo "</tr>\n";
-
-			$i = 0;
-			reset($rs->fields);
-			while (!$rs->EOF) {
-				$id = (($i % 2) == 0 ? '1' : '2');
-				echo "<tr class=\"data{$id}\">\n";
-				// Display edit and delete links if we have a key
-				if ($colspan > 0 and count($key) > 0) {
-					$keys_array = [];
-					$has_nulls = false;
-					foreach ($key as $v) {
-						if ($rs->fields[$v] === null) {
-							$has_nulls = true;
-							break;
-						}
-						$keys_array["key[{$v}]"] = $rs->fields[$v];
-					}
-					if ($has_nulls) {
-						echo "<td colspan=\"{$colspan}\">&nbsp;</td>\n";
-					} else {
-
-						if (isset($actions['actionbuttons']['edit'])) {
-							$actions['actionbuttons']['edit'] = $edit_params;
-							$actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
-								$actions['actionbuttons']['edit']['attr']['href']['urlvars'],
-								$keys_array
-							);
-						}
-
-						if (isset($actions['actionbuttons']['delete'])) {
-							$actions['actionbuttons']['delete'] = $delete_params;
-							$actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
-								$actions['actionbuttons']['delete']['attr']['href']['urlvars'],
-								$keys_array
-							);
-						}
-
-						foreach ($actions['actionbuttons'] as $action) {
-							echo "<td class=\"opbutton{$id}\">";
-							$this->printLink($action);
-							echo "</td>\n";
-						}
-					}
-				}
-
-				$this->printTableRowCells($rs, $fkey_information, isset($object));
-
-				echo "</tr>\n";
-				$rs->moveNext();
-				$i++;
-			}
-			echo "</table>\n";
-
-			echo "<p>", $rs->recordCount(), " {$lang['strrows']}</p>\n";
-			// Show page navigation
-			$misc->printPages($_REQUEST['page'], $max_pages, $_gets);
-		} else {
-			echo "<p>{$lang['strnodata']}</p>\n";
-		}
-
-		// Navigation links
-		$navlinks = [];
-
-		$fields = [
-			'server' => $_REQUEST['server'],
-			'database' => $_REQUEST['database'],
-		];
-
-		if (isset($_REQUEST['schema'])) {
-			$fields['schema'] = $_REQUEST['schema'];
-		}
-
-		// Return
-		if (isset($_REQUEST['return'])) {
-			$urlvars = $misc->getSubjectParams($_REQUEST['return']);
-
-			$navlinks['back'] = [
-				'attr' => [
-					'href' => [
-						'url' => $urlvars['url'],
-						'urlvars' => $urlvars['params'],
-					],
-				],
-				'content' => $lang['strback'],
-			];
-		}
-
-		// Edit SQL link
-		if ($type == 'QUERY') {
-			$navlinks['edit'] = [
-				'attr' => [
-					'href' => [
-						'url' => 'database.php',
-						'urlvars' => array_merge($fields, [
-							'action' => 'sql',
-							'paginate' => 'on',
-						]),
-					],
-				],
-				'content' => $lang['streditsql'],
-			];
-		}
-
-		// Expand/Collapse
-		if ($_REQUEST['strings'] == 'expanded') {
-			$navlinks['collapse'] = [
-				'attr' => [
-					'href' => [
-						'url' => 'display.php',
-						'urlvars' => array_merge(
-							$_gets,
-							[
-								'strings' => 'collapsed',
-								'page' => $_REQUEST['page'],
-							]),
-					],
-				],
-				'content' => $lang['strcollapse'],
-			];
-		} else {
-			$navlinks['collapse'] = [
-				'attr' => [
-					'href' => [
-						'url' => 'display.php',
-						'urlvars' => array_merge(
-							$_gets,
-							[
-								'strings' => 'expanded',
-								'page' => $_REQUEST['page'],
-							]),
-					],
-				],
-				'content' => $lang['strexpand'],
-			];
-		}
-
-		// Create view and download
-		if (isset($_REQUEST['query']) && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
-
-			// Report views don't set a schema, so we need to disable create view in that case
-			if (isset($_REQUEST['schema'])) {
-
-				$navlinks['createview'] = [
-					'attr' => [
-						'href' => [
-							'url' => 'views.php',
-							'urlvars' => array_merge($fields, [
-								'action' => 'create',
-								'formDefinition' => $_REQUEST['query'],
-							]),
-						],
-					],
-					'content' => $lang['strcreateview'],
-				];
-			}
-
-			$urlvars = [];
-			if (isset($_REQUEST['search_path'])) {
-				$urlvars['search_path'] = $_REQUEST['search_path'];
-			}
-
-			$navlinks['download'] = [
-				'attr' => [
-					'href' => [
-						'url' => 'dataexport.php',
-						'urlvars' => array_merge($fields, $urlvars),
-					],
-				],
-				'content' => $lang['strdownload'],
-			];
-		}
-
-		// Insert
-		if (isset($object) && (isset($subject) && $subject == 'table')) {
-			$navlinks['insert'] = [
-				'attr' => [
-					'href' => [
-						'url' => 'tables.php',
-						'urlvars' => array_merge($fields, [
-							'action' => 'confinsertrow',
-							'table' => $object,
-						]),
-					],
-				],
-				'content' => $lang['strinsert'],
-			];
-		}
-
-		// Refresh
-		$navlinks['refresh'] = [
-			'attr' => [
-				'href' => [
-					'url' => 'display.php',
-					'urlvars' => array_merge(
-						$_gets,
-						[
-							'strings' => $_REQUEST['strings'],
-							'page' => $_REQUEST['page'],
-						]),
-				],
-			],
-			'content' => $lang['strrefresh'],
-		];
-
-		$this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
 	}
 
 }

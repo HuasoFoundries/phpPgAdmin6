@@ -73,6 +73,129 @@ class IndexController extends BaseController {
 
 	}
 
+	public function doDefault($msg = '') {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$indPre = function (&$rowdata, $actions) use ($data, $lang) {
+			if ($data->phpBool($rowdata->fields['indisprimary'])) {
+				$rowdata->fields['+constraints'] = $lang['strprimarykey'];
+				$actions['drop']['disable'] = true;
+			} elseif ($data->phpBool($rowdata->fields['indisunique'])) {
+				$rowdata->fields['+constraints'] = $lang['struniquekey'];
+				$actions['drop']['disable'] = true;
+			} else {
+				$rowdata->fields['+constraints'] = '';
+			}
+
+			return $actions;
+		};
+
+		$table_or_mview = $_REQUEST['subject'];
+
+		$this->printTrail($table_or_mview);
+		$this->printTabs($table_or_mview, 'indexes');
+		$misc->printMsg($msg);
+
+		$indexes = $data->getIndexes($_REQUEST[$table_or_mview]);
+
+		$columns = [
+			'index' => [
+				'title' => $lang['strname'],
+				'field' => Decorator::field('indname'),
+			],
+			'definition' => [
+				'title' => $lang['strdefinition'],
+				'field' => Decorator::field('inddef'),
+			],
+			'constraints' => [
+				'title' => $lang['strconstraints'],
+				'field' => Decorator::field('+constraints'),
+				'type' => 'verbatim',
+				'params' => ['align' => 'center'],
+			],
+			'clustered' => [
+				'title' => $lang['strclustered'],
+				'field' => Decorator::field('indisclustered'),
+				'type' => 'yesno',
+			],
+			'actions' => [
+				'title' => $lang['stractions'],
+			],
+			'comment' => [
+				'title' => $lang['strcomment'],
+				'field' => Decorator::field('idxcomment'),
+			],
+		];
+
+		$actions = [
+			'cluster' => [
+				'content' => $lang['strclusterindex'],
+				'attr' => [
+					'href' => [
+						'url' => 'indexes.php',
+						'urlvars' => [
+							'action' => 'confirm_cluster_index',
+							'table' => $_REQUEST[$table_or_mview],
+							'index' => Decorator::field('indname'),
+						],
+					],
+				],
+			],
+			'reindex' => [
+				'content' => $lang['strreindex'],
+				'attr' => [
+					'href' => [
+						'url' => 'indexes.php',
+						'urlvars' => [
+							'action' => 'reindex',
+							'table' => $_REQUEST[$table_or_mview],
+							'index' => Decorator::field('indname'),
+						],
+					],
+				],
+			],
+			'drop' => [
+				'content' => $lang['strdrop'],
+				'attr' => [
+					'href' => [
+						'url' => 'indexes.php',
+						'urlvars' => [
+							'action' => 'confirm_drop_index',
+							'table' => $_REQUEST[$table_or_mview],
+							'index' => Decorator::field('indname'),
+						],
+					],
+				],
+			],
+		];
+
+		echo $this->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], $indPre);
+
+		$urlvars = [
+			'action' => 'create_index',
+			'server' => $_REQUEST['server'],
+			'database' => $_REQUEST['database'],
+			'schema' => $_REQUEST['schema'],
+		];
+
+		$urlvars[$table_or_mview] = $_REQUEST[$table_or_mview];
+
+		$this->printNavLinks([
+			'create' => [
+				'attr' => [
+					'href' => [
+						'url' => 'indexes.php',
+						'urlvars' => $urlvars,
+					],
+				],
+				'content' => $lang['strcreateindex'],
+			],
+		], 'indexes-indexes', get_defined_vars());
+	}
+
 	function doTree() {
 
 		$conf = $this->conf;
@@ -211,7 +334,8 @@ class IndexController extends BaseController {
 
 		if ($attrs->recordCount() > 0) {
 			while (!$attrs->EOF) {
-				$selColumns->add(new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']));
+				$attname = new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']);
+				$selColumns->add($attname);
 				$attrs->moveNext();
 			}
 		}
@@ -366,124 +490,6 @@ class IndexController extends BaseController {
 
 		}
 
-	}
-
-	public function doDefault($msg = '') {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-
-		$indPre = function (&$rowdata, $actions) use ($data, $lang) {
-			if ($data->phpBool($rowdata->fields['indisprimary'])) {
-				$rowdata->fields['+constraints'] = $lang['strprimarykey'];
-				$actions['drop']['disable'] = true;
-			} elseif ($data->phpBool($rowdata->fields['indisunique'])) {
-				$rowdata->fields['+constraints'] = $lang['struniquekey'];
-				$actions['drop']['disable'] = true;
-			} else {
-				$rowdata->fields['+constraints'] = '';
-			}
-
-			return $actions;
-		};
-
-		$this->printTrail('table');
-		$this->printTabs('table', 'indexes');
-		$misc->printMsg($msg);
-
-		$indexes = $data->getIndexes($_REQUEST['table']);
-
-		$columns = [
-			'index' => [
-				'title' => $lang['strname'],
-				'field' => Decorator::field('indname'),
-			],
-			'definition' => [
-				'title' => $lang['strdefinition'],
-				'field' => Decorator::field('inddef'),
-			],
-			'constraints' => [
-				'title' => $lang['strconstraints'],
-				'field' => Decorator::field('+constraints'),
-				'type' => 'verbatim',
-				'params' => ['align' => 'center'],
-			],
-			'clustered' => [
-				'title' => $lang['strclustered'],
-				'field' => Decorator::field('indisclustered'),
-				'type' => 'yesno',
-			],
-			'actions' => [
-				'title' => $lang['stractions'],
-			],
-			'comment' => [
-				'title' => $lang['strcomment'],
-				'field' => Decorator::field('idxcomment'),
-			],
-		];
-
-		$actions = [
-			'cluster' => [
-				'content' => $lang['strclusterindex'],
-				'attr' => [
-					'href' => [
-						'url' => 'indexes.php',
-						'urlvars' => [
-							'action' => 'confirm_cluster_index',
-							'table' => $_REQUEST['table'],
-							'index' => Decorator::field('indname'),
-						],
-					],
-				],
-			],
-			'reindex' => [
-				'content' => $lang['strreindex'],
-				'attr' => [
-					'href' => [
-						'url' => 'indexes.php',
-						'urlvars' => [
-							'action' => 'reindex',
-							'table' => $_REQUEST['table'],
-							'index' => Decorator::field('indname'),
-						],
-					],
-				],
-			],
-			'drop' => [
-				'content' => $lang['strdrop'],
-				'attr' => [
-					'href' => [
-						'url' => 'indexes.php',
-						'urlvars' => [
-							'action' => 'confirm_drop_index',
-							'table' => $_REQUEST['table'],
-							'index' => Decorator::field('indname'),
-						],
-					],
-				],
-			],
-		];
-
-		echo $this->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], $indPre);
-
-		$this->printNavLinks([
-			'create' => [
-				'attr' => [
-					'href' => [
-						'url' => 'indexes.php',
-						'urlvars' => [
-							'action' => 'create_index',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-							'schema' => $_REQUEST['schema'],
-							'table' => $_REQUEST['table'],
-						],
-					],
-				],
-				'content' => $lang['strcreateindex'],
-			],
-		], 'indexes-indexes', get_defined_vars());
 	}
 
 }

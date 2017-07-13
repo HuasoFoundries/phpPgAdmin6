@@ -432,6 +432,15 @@ class HTMLNavbarController extends HTMLController {
 				'help' => 'pg.view',
 				'icon' => 'View',
 			];
+		} elseif (isset($_REQUEST['matview']) && !$done) {
+			$trail['matview'] = [
+				'title' => 'M' . $lang['strview'],
+				'text' => $_REQUEST['matview'],
+				'url' => $misc->getHREFSubject('matview'),
+				'help' => 'pg.matview',
+				'icon' => 'MViews',
+			];
+
 		} elseif (isset($_REQUEST['ftscfg']) && !$done) {
 			$trail['ftscfg'] = [
 				'title' => $lang['strftsconfig'],
@@ -488,7 +497,7 @@ class HTMLNavbarController extends HTMLController {
 						break;
 					}
 					$trail[$subject] = [
-						'title' => $lang['str' . $subject],
+						'title' => array_key_exists('str' . $subject, $lang) ? $lang['str' . $subject] : $subject,
 						'text' => $_REQUEST[$subject],
 						'help' => 'pg.' . $subject,
 						'icon' => $icon,

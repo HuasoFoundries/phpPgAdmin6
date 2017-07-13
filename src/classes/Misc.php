@@ -459,6 +459,16 @@ class Misc {
 				'view' => $_REQUEST['view'],
 			]];
 			break;
+		case 'matview':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'matview',
+				'database' => $_REQUEST['database'],
+				'schema' => $_REQUEST['schema'],
+				'matview' => $_REQUEST['matview'],
+			]];
+			break;
+
 		case 'fulltext':
 		case 'ftscfg':
 			$vars = ['params' => [
@@ -1360,7 +1370,7 @@ class Misc {
 			$tabs = [
 				'columns' => [
 					'title' => $lang['strcolumns'],
-					'url' => 'viewproperties.php',
+					'url' => 'materializedviewproperties.php',
 					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
 					'icon' => 'Columns',
 					'branch' => true,
@@ -1380,15 +1390,39 @@ class Misc {
 				'select' => [
 					'title' => $lang['strselect'],
 					'icon' => 'Search',
-					'url' => 'views.php',
+					'url' => 'materialized_views.php',
 					'urlvars' => ['action' => 'confselectrows', 'matview' => Decorator::field('matview')],
 					'help' => 'pg.sql.select',
 				],
 				'definition' => [
 					'title' => $lang['strdefinition'],
-					'url' => 'viewproperties.php',
+					'url' => 'materializedviewproperties.php',
 					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'definition'],
 					'icon' => 'Definition',
+				],
+				'indexes' => [
+					'title' => $lang['strindexes'],
+					'url' => 'indexes.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+					'help' => 'pg.index',
+					'icon' => 'Indexes',
+					'branch' => true,
+				],
+				'constraints' => [
+					'title' => $lang['strconstraints'],
+					'url' => 'constraints.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+					'help' => 'pg.constraint',
+					'icon' => 'Constraints',
+					'branch' => true,
+				],
+				'triggers' => [
+					'title' => $lang['strtriggers'],
+					'url' => 'triggers.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+					'help' => 'pg.trigger',
+					'icon' => 'Triggers',
+					'branch' => true,
 				],
 				'rules' => [
 					'title' => $lang['strrules'],
@@ -1407,7 +1441,7 @@ class Misc {
 				],
 				'export' => [
 					'title' => $lang['strexport'],
-					'url' => 'viewproperties.php',
+					'url' => 'materializedviewproperties.php',
 					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'export'],
 					'icon' => 'Export',
 					'hide' => false,
