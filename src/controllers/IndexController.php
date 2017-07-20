@@ -92,14 +92,18 @@ class IndexController extends BaseController {
 
 			return $actions;
 		};
+		if (!isset($_REQUEST['subject'])) {
+			$_REQUEST['subject'] = 'table';
+		}
 
-		$table_or_mview = $_REQUEST['subject'];
+		$subject = urlencode($_REQUEST['subject']);
+		$object = urlencode($_REQUEST[$_REQUEST['subject']]);
 
-		$this->printTrail($table_or_mview);
-		$this->printTabs($table_or_mview, 'indexes');
+		$this->printTrail($subject);
+		$this->printTabs($subject, 'indexes');
 		$misc->printMsg($msg);
 
-		$indexes = $data->getIndexes($_REQUEST[$table_or_mview]);
+		$indexes = $data->getIndexes($_REQUEST[$_REQUEST['subject']]);
 
 		$columns = [
 			'index' => [
@@ -138,7 +142,7 @@ class IndexController extends BaseController {
 						'url' => 'indexes.php',
 						'urlvars' => [
 							'action' => 'confirm_cluster_index',
-							'table' => $_REQUEST[$table_or_mview],
+							$subject => $object,
 							'index' => Decorator::field('indname'),
 						],
 					],
@@ -151,7 +155,7 @@ class IndexController extends BaseController {
 						'url' => 'indexes.php',
 						'urlvars' => [
 							'action' => 'reindex',
-							'table' => $_REQUEST[$table_or_mview],
+							$subject => $object,
 							'index' => Decorator::field('indname'),
 						],
 					],
@@ -164,7 +168,7 @@ class IndexController extends BaseController {
 						'url' => 'indexes.php',
 						'urlvars' => [
 							'action' => 'confirm_drop_index',
-							'table' => $_REQUEST[$table_or_mview],
+							$subject => $object,
 							'index' => Decorator::field('indname'),
 						],
 					],
@@ -174,21 +178,18 @@ class IndexController extends BaseController {
 
 		echo $this->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], $indPre);
 
-		$urlvars = [
-			'action' => 'create_index',
-			'server' => $_REQUEST['server'],
-			'database' => $_REQUEST['database'],
-			'schema' => $_REQUEST['schema'],
-		];
-
-		$urlvars[$table_or_mview] = $_REQUEST[$table_or_mview];
-
 		$this->printNavLinks([
 			'create' => [
 				'attr' => [
 					'href' => [
 						'url' => 'indexes.php',
-						'urlvars' => $urlvars,
+						'urlvars' => [
+							'action' => 'create_index',
+							'server' => $_REQUEST['server'],
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema'],
+							$subject => $object,
+						],
 					],
 				],
 				'content' => $lang['strcreateindex'],
@@ -202,10 +203,16 @@ class IndexController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
+		if (!isset($_REQUEST['subject'])) {
+			$_REQUEST['subject'] = 'table';
+		}
 
-		$indexes = $data->getIndexes($_REQUEST['table']);
+		$subject = urlencode($_REQUEST['subject']);
+		$object = urlencode($_REQUEST[$_REQUEST['subject']]);
 
-		$reqvars = $misc->getRequestVars('table');
+		$indexes = $data->getIndexes($object);
+
+		$reqvars = $misc->getRequestVars($subject);
 
 		function getIcon($f) {
 			if ($f['indisprimary'] == 't') {
@@ -299,6 +306,12 @@ class IndexController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
+		if (!isset($_REQUEST['subject'])) {
+			$_REQUEST['subject'] = 'table';
+		}
+		$subject = urlencode($_REQUEST['subject']);
+		$object = urlencode($_REQUEST[$_REQUEST['subject']]);
+
 		if (!isset($_POST['formIndexName'])) {
 			$_POST['formIndexName'] = '';
 		}
@@ -319,13 +332,13 @@ class IndexController extends BaseController {
 			$_POST['formSpc'] = '';
 		}
 
-		$attrs = $data->getTableAttributes($_REQUEST['table']);
+		$attrs = $data->getTableAttributes($object);
 		// Fetch all tablespaces from the database
 		if ($data->hasTablespaces()) {
 			$tablespaces = $data->getTablespaces();
 		}
 
-		$this->printTrail('table');
+		$this->printTrail($subject);
 		$this->printTitle($lang['strcreateindex'], 'pg.index.create');
 		$misc->printMsg($msg);
 
@@ -412,7 +425,7 @@ class IndexController extends BaseController {
 
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create_index\" />\n";
 		echo $misc->form;
-		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($object), "\" />\n";
 		echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
@@ -465,6 +478,12 @@ class IndexController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
+		if (!isset($_REQUEST['subject'])) {
+			$_REQUEST['subject'] = 'table';
+		}
+		$subject = urlencode($_REQUEST['subject']);
+		$object = urlencode($_REQUEST[$_REQUEST['subject']]);
+
 		if ($confirm) {
 			$this->printTrail('index');
 			$this->printTitle($lang['strdrop'], 'pg.index.drop');
@@ -473,7 +492,7 @@ class IndexController extends BaseController {
 
 			echo "<form action=\"/src/views/indexes.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop_index\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($object), "\" />\n";
 			echo "<input type=\"hidden\" name=\"index\" value=\"", htmlspecialchars($_REQUEST['index']), "\" />\n";
 			echo $misc->form;
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";

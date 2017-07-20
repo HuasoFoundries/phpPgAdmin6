@@ -1408,22 +1408,15 @@ class Misc {
 					'icon' => 'Indexes',
 					'branch' => true,
 				],
-				'constraints' => [
+				/*'constraints' => [
 					'title' => $lang['strconstraints'],
 					'url' => 'constraints.php',
 					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
 					'help' => 'pg.constraint',
 					'icon' => 'Constraints',
 					'branch' => true,
-				],
-				'triggers' => [
-					'title' => $lang['strtriggers'],
-					'url' => 'triggers.php',
-					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
-					'help' => 'pg.trigger',
-					'icon' => 'Triggers',
-					'branch' => true,
-				],
+				],*/
+
 				'rules' => [
 					'title' => $lang['strrules'],
 					'url' => 'rules.php',
