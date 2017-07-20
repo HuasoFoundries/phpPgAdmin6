@@ -4,13 +4,16 @@
     "description": "Like phpmyadmin but for postgres",
     "type": "project",
     "license": "MIT",
-    "authors": [{
+    "authors": [
+    {
         "name": "Amenadiel",
         "email": "amenadiel@gmail.com"
     }],
     "minimum-stability": "beta",
-    "autoload": {
-        "psr-4": {
+    "autoload":
+    {
+        "psr-4":
+        {
             "PHPPgAdmin\\": "src/classes",
             "PHPPgAdmin\\Controller\\": "src/controllers",
             "PHPPgAdmin\\Middleware\\": "src/middleware",
@@ -19,7 +22,8 @@
             "PHPPgAdmin\\Decorators\\": "src/decorators"
         }
     },
-    "require": {
+    "require":
+    {
         "php": ">=5.6.0",
         "ext-pgsql": "*",
         "slim/slim": "^3.6",
@@ -27,7 +31,7 @@
         "php-console/php-console": "~3.1",
 
         "twig/twig": "~1.28",
-        "raveren/kint": "^1.0",
+        "kint-php/kint": "^2.1",
         "adodb/adodb-php": "^5.20"
     }
 }
