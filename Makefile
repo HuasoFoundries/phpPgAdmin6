@@ -2,7 +2,7 @@ VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)",/\1/p')
 
 SHELL = /usr/bin/env bash
 
-default: clean fix-permissions install
+default: clean fix-permissions update
 .PHONY: default fix-permissions install
 
 version:
@@ -28,7 +28,7 @@ update:
 	git clean -fd
 	git checkout .
 	git pull
-	composer install
+	composer install  --no-dev
 
 update_version:
 	@echo "Current version is " ${VERSION}
