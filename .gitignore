@@ -10,3 +10,5 @@ config.inc.php.pstn_db
 
 vendor
 npm-debug.log
+logs
+info.php

@@ -65,7 +65,12 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 $app->get('/', function ($request, $response, $args) use ($msg) {
 
 	$uri = $request->getUri();
-	list($base, $query_string) = explode('?', $uri->getQuery());
+	$base_and_qs = explode('?', $uri->getQuery());
+
+	$query_string = '';
+	if (count($base_and_qs) >= 2) {
+		$query_string = '?' . $base_and_qs[1];
+	}
 
 	$viewVars = $this->lang;
 	$viewVars['appName'] = $this->get('settings')['appName'];
@@ -79,7 +84,7 @@ $app->get('/', function ($request, $response, $args) use ($msg) {
 		$viewVars['cols'] = $this->conf['left_width'] . ',*';
 		$template = 'iframe_view.twig';
 	}
-	$url = '/src/views/' . $subject . '.php?' . $query_string;
+	$url = '/src/views/' . $subject . '.php' . $query_string;
 	$viewVars['url'] = $url;
 
 	return $this->view->render($response, $template, $viewVars);

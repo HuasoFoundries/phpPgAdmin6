@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fb869ccfc9b44dcec7bf5f9bb537e31b",
-    "content-hash": "8e245fb7a6a49233a45a7f0b709e3f4e",
+    "hash": "a7338c59308e8ea1f1d3e00013d54856",
+    "content-hash": "ed8852c20c539f96a24449caefc12d1c",
     "packages": [
         {
             "name": "adodb/adodb-php",
