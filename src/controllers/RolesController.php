@@ -129,68 +129,68 @@ class RolesController extends BaseController {
 
 	function render() {
 
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$data   = $misc->getDatabaseAccessor();
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 		$action = $this->action;
 
-		$misc->printHeader($lang['strroles']);
-		$misc->printBody();
+		$this->printHeader($lang['strroles']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'create':
-				$this->doCreate();
-				break;
-			case 'save_create':
-				if (isset($_POST['create'])) {
-					$this->doSaveCreate();
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'alter':
-				$this->doAlter();
-				break;
-			case 'save_alter':
-				if (isset($_POST['alter'])) {
-					$this->doSaveAlter();
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			case 'drop':
-				if (isset($_POST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'properties':
-				$this->doProperties();
-				break;
-			case 'confchangepassword':
-				$this->doChangePassword(true);
-				break;
-			case 'changepassword':
-				if (isset($_REQUEST['ok'])) {
-					$this->doChangePassword(false);
-				} else {
-					$this->doAccount();
-				}
-
-				break;
-			case 'account':
-				$this->doAccount();
-				break;
-			default:
+		case 'create':
+			$this->doCreate();
+			break;
+		case 'save_create':
+			if (isset($_POST['create'])) {
+				$this->doSaveCreate();
+			} else {
 				$this->doDefault();
+			}
+
+			break;
+		case 'alter':
+			$this->doAlter();
+			break;
+		case 'save_alter':
+			if (isset($_POST['alter'])) {
+				$this->doSaveAlter();
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		case 'drop':
+			if (isset($_POST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'properties':
+			$this->doProperties();
+			break;
+		case 'confchangepassword':
+			$this->doChangePassword(true);
+			break;
+		case 'changepassword':
+			if (isset($_REQUEST['ok'])) {
+				$this->doChangePassword(false);
+			} else {
+				$this->doAccount();
+			}
+
+			break;
+		case 'account':
+			$this->doAccount();
+			break;
+		default:
+			$this->doDefault();
 		}
 
 		$misc->printFooter();
@@ -238,7 +238,7 @@ class RolesController extends BaseController {
 		}
 
 		$this->printTrail('role');
-		$misc->printTitle($lang['strcreaterole'], 'pg.role.create');
+		$this->printTitle($lang['strcreaterole'], 'pg.role.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/roles.php\" method=\"post\">\n";
@@ -368,19 +368,19 @@ class RolesController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('role');
-		$misc->printTitle($lang['stralter'], 'pg.role.alter');
+		$this->printTitle($lang['stralter'], 'pg.role.alter');
 		$misc->printMsg($msg);
 
 		$roledata = $data->getRole($_REQUEST['rolename']);
 
 		if ($roledata->recordCount() > 0) {
-			$server_info                       = $misc->getServerInfo();
-			$canRename                         = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
-			$roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-			$roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+			$server_info = $misc->getServerInfo();
+			$canRename = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
+			$roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+			$roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
 			$roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-			$roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-			$roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
+			$roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
+			$roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
 
 			if (!isset($_POST['formExpires'])) {
 				if ($canRename) {
@@ -408,8 +408,8 @@ class RolesController extends BaseController {
 				}
 
 				$_POST['formConnLimit'] = $roledata->fields['rolconnlimit'] == '-1' ? '' : $roledata->fields['rolconnlimit'];
-				$_POST['formExpires']   = $roledata->fields['rolvaliduntil'] == 'infinity' ? '' : $roledata->fields['rolvaliduntil'];
-				$_POST['formPassword']  = '';
+				$_POST['formExpires'] = $roledata->fields['rolvaliduntil'] == 'infinity' ? '' : $roledata->fields['rolvaliduntil'];
+				$_POST['formPassword'] = '';
 			}
 
 			echo "<form action=\"/src/views/roles.php\" method=\"post\">\n";
@@ -593,7 +593,7 @@ class RolesController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('role');
-			$misc->printTitle($lang['strdroprole'], 'pg.role.drop');
+			$this->printTitle($lang['strdroprole'], 'pg.role.drop');
 
 			echo "<p>", sprintf($lang['strconfdroprole'], $misc->printVal($_REQUEST['rolename'])), "</p>\n";
 
@@ -625,16 +625,16 @@ class RolesController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('role');
-		$misc->printTitle($lang['strproperties'], 'pg.role');
+		$this->printTitle($lang['strproperties'], 'pg.role');
 		$misc->printMsg($msg);
 
 		$roledata = $data->getRole($_REQUEST['rolename']);
 		if ($roledata->recordCount() > 0) {
-			$roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-			$roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+			$roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+			$roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
 			$roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-			$roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-			$roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
+			$roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
+			$roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
 
 			echo "<table>\n";
 			echo "\t<tr>\n\t\t<th class=\"data\" style=\"width: 130px\">Description</th>\n";
@@ -749,7 +749,7 @@ class RolesController extends BaseController {
 
 		$server_info = $misc->getServerInfo();
 
-		$roledata             = $data->getRole($server_info['username']);
+		$roledata = $data->getRole($server_info['username']);
 		$_REQUEST['rolename'] = $server_info['username'];
 
 		$this->printTrail('role');
@@ -757,10 +757,10 @@ class RolesController extends BaseController {
 		$misc->printMsg($msg);
 
 		if ($roledata->recordCount() > 0) {
-			$roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-			$roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+			$roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+			$roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
 			$roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-			$roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
+			$roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
 			echo "<table>\n";
 			echo "\t<tr>\n\t\t<th class=\"data\">{$lang['strname']}</th>\n";
 			echo "\t\t<th class=\"data\">{$lang['strsuper']}</th>\n";
@@ -812,7 +812,7 @@ class RolesController extends BaseController {
 		if ($confirm) {
 			$_REQUEST['rolename'] = $server_info['username'];
 			$this->printTrail('role');
-			$misc->printTitle($lang['strchangepassword'], 'pg.role.alter');
+			$this->printTitle($lang['strchangepassword'], 'pg.role.alter');
 			$misc->printMsg($msg);
 
 			if (!isset($_POST['password'])) {

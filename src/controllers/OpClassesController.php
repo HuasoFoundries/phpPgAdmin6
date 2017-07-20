@@ -19,13 +19,13 @@ class OpClassesController extends BaseController {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['stropclasses']);
-		$misc->printBody();
+		$this->printHeader($lang['stropclasses']);
+		$this->printBody();
 
 		switch ($action) {
-			default:
-				$this->doDefault();
-				break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();

@@ -1,0 +1,96 @@
+<script type="text/javascript">
+jQuery(document).ready(function() {
+    document.forms[0].query.focus();
+    CodeMirror.commands.sendQuery = function() {
+        console.log('SEND QUERY');
+        jQuery('#sqlform').submit();
+    };
+    window.editor = CodeMirror.fromTextArea($('#query')[0], {
+        mode: 'text/x-sql',
+        indentWithTabs: true,
+        smartIndent: true,
+        lineNumbers: true,
+        matchBrackets: true,
+        autofocus: true,
+        extraKeys: {
+            "Ctrl-Space": "autocomplete",
+            "Ctrl-Enter": "sendQuery"
+        },
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    jQuery('table.tabs').prependTo('body');
+    jQuery('table.printconnection').prependTo('.sqlform');
+    if (window.parent.frames.length > 1) {
+        $('#csstheme', window.parent.frames[0].document).attr('href', '/src/themes/default/global.css');
+    }
+    //jQuery('.CodeMirror').focus().css('height', $('#query').attr('rows') * 30).resizable();
+    jQuery('.CodeMirror')
+        .focus()
+        .css('height', $('#query').attr('rows') * 30);
+    if (location.pathname.indexOf('sqledit.php') !== -1) {
+        /*jQuery('.sqledit_header,.sqledit_footer,.printconnection').css({
+            'padding': '1%',
+            width: '98%'
+        });
+        jQuery('.printconnection label').css({
+            'font-size': '0.9em'
+        });*/
+        var windowsize = {
+            height: jQuery(window).innerHeight(),
+            width: jQuery(window).innerWidth(),
+            height_difference: height_difference
+        };
+        console.log('window size', windowsize);
+        var height_difference = windowsize.height - jQuery('.CodeMirror').innerHeight();
+        jQuery(window).on('resize', function() {
+            var windowsize = {
+                height: jQuery(window).innerHeight(),
+                width: jQuery(window).innerWidth(),
+                height_difference: height_difference
+            };
+            //console.log('window size', windowsize);
+            jQuery('.CodeMirror').css('height', (windowsize.height - height_difference));
+        });
+    } else {
+        jQuery('.CodeMirror')
+            .resizable();
+    }
+});
+</script>
+<!--
+     jQuery('.CodeMirror')
+        .focus()
+        .css('height', $('#query').attr('rows') * 30);
+    if (location.pathname.indexOf('sqledit.php') !== -1) {
+        /*jQuery('.sqledit_header,.sqledit_footer,.printconnection').css({
+            'padding': '1%',
+            width: '98%'
+        });
+        jQuery('.printconnection label').css({
+            'font-size': '0.9em'
+        });*/
+        var windowsize = {
+            height: jQuery(window).innerHeight(),
+            width: jQuery(window).innerWidth(),
+            height_difference: height_difference
+        };
+        console.log('window size', windowsize);
+        var height_difference = windowsize.height - jQuery('.CodeMirror').innerHeight();
+        jQuery(window).on('resize', function() {
+            var windowsize = {
+                height: jQuery(window).innerHeight(),
+                width: jQuery(window).innerWidth(),
+                height_difference: height_difference
+            };
+            //console.log('window size', windowsize);
+            jQuery('.CodeMirror').css('height', (windowsize.height - height_difference));
+        });
+    } else {
+        jQuery('.CodeMirror')
+            .resizable();
+    }-->
+
+</body>
+
+</html>

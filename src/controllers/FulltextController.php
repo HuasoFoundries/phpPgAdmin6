@@ -21,8 +21,8 @@ class FulltextController extends BaseController {
 			return $this->doSubTree($_REQUEST['what']);
 		}
 
-		$misc->printHeader($lang['strschemas']);
-		$misc->printBody();
+		$this->printHeader($lang['strschemas']);
+		$this->printBody();
 
 		if (isset($_POST['cancel'])) {
 			if (isset($_POST['prev_action'])) {
@@ -33,91 +33,91 @@ class FulltextController extends BaseController {
 		}
 
 		switch ($action) {
-			case 'createconfig':
-				if (isset($_POST['create'])) {
-					$this->doSaveCreateConfig();
-				} else {
-					$this->doCreateConfig();
-				}
+		case 'createconfig':
+			if (isset($_POST['create'])) {
+				$this->doSaveCreateConfig();
+			} else {
+				$this->doCreateConfig();
+			}
 
-				break;
-			case 'alterconfig':
-				if (isset($_POST['alter'])) {
-					$this->doSaveAlterConfig();
-				} else {
-					$this->doAlterConfig();
-				}
+			break;
+		case 'alterconfig':
+			if (isset($_POST['alter'])) {
+				$this->doSaveAlterConfig();
+			} else {
+				$this->doAlterConfig();
+			}
 
-				break;
-			case 'dropconfig':
-				if (isset($_POST['drop'])) {
-					$this->doDropConfig(false);
-				} else {
-					$this->doDropConfig(true);
-				}
+			break;
+		case 'dropconfig':
+			if (isset($_POST['drop'])) {
+				$this->doDropConfig(false);
+			} else {
+				$this->doDropConfig(true);
+			}
 
-				break;
-			case 'viewconfig':
-				$this->doViewConfig($_REQUEST['ftscfg']);
-				break;
-			case 'viewparsers':
-				$this->doViewParsers();
-				break;
-			case 'viewdicts':
-				$this->doViewDicts();
-				break;
-			case 'createdict':
-				if (isset($_POST['create'])) {
-					$this->doSaveCreateDict();
-				} else {
-					doCreateDict();
-				}
+			break;
+		case 'viewconfig':
+			$this->doViewConfig($_REQUEST['ftscfg']);
+			break;
+		case 'viewparsers':
+			$this->doViewParsers();
+			break;
+		case 'viewdicts':
+			$this->doViewDicts();
+			break;
+		case 'createdict':
+			if (isset($_POST['create'])) {
+				$this->doSaveCreateDict();
+			} else {
+				doCreateDict();
+			}
 
-				break;
-			case 'alterdict':
-				if (isset($_POST['alter'])) {
-					$this->doSaveAlterDict();
-				} else {
-					$this->doAlterDict();
-				}
+			break;
+		case 'alterdict':
+			if (isset($_POST['alter'])) {
+				$this->doSaveAlterDict();
+			} else {
+				$this->doAlterDict();
+			}
 
-				break;
-			case 'dropdict':
-				if (isset($_POST['drop'])) {
-					$this->doDropDict(false);
-				} else {
-					$this->doDropDict(true);
-				}
+			break;
+		case 'dropdict':
+			if (isset($_POST['drop'])) {
+				$this->doDropDict(false);
+			} else {
+				$this->doDropDict(true);
+			}
 
-				break;
-			case 'dropmapping':
-				if (isset($_POST['drop'])) {
-					$this->doDropMapping(false);
-				} else {
-					$this->doDropMapping(true);
-				}
+			break;
+		case 'dropmapping':
+			if (isset($_POST['drop'])) {
+				$this->doDropMapping(false);
+			} else {
+				$this->doDropMapping(true);
+			}
 
-				break;
-			case 'altermapping':
-				if (isset($_POST['alter'])) {
-					$this->doSaveAlterMapping();
-				} else {
-					$this->doAlterMapping();
-				}
+			break;
+		case 'altermapping':
+			if (isset($_POST['alter'])) {
+				$this->doSaveAlterMapping();
+			} else {
+				$this->doAlterMapping();
+			}
 
-				break;
-			case 'addmapping':
-				if (isset($_POST['add'])) {
-					$this->doSaveAddMapping();
-				} else {
-					$this->doAddMapping();
-				}
+			break;
+		case 'addmapping':
+			if (isset($_POST['add'])) {
+				$this->doSaveAddMapping();
+			} else {
+				$this->doAddMapping();
+			}
 
-				break;
+			break;
 
-			default:
-				$this->doDefault();
-				break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		return $misc->printFooter();
@@ -134,7 +134,7 @@ class FulltextController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$tabs  = $misc->getNavTabs('fulltext');
+		$tabs = $misc->getNavTabs('fulltext');
 		$items = $this->adjustTabsForTree($tabs);
 
 		$reqvars = $misc->getRequestVars('ftscfg');
@@ -166,20 +166,20 @@ class FulltextController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		switch ($what) {
-			case 'FtsCfg':
-				$items   = $data->getFtsConfigurations(false);
-				$urlvars = ['action' => 'viewconfig', 'ftscfg' => Decorator::field('name')];
-				break;
-			case 'FtsDict':
-				$items   = $data->getFtsDictionaries(false);
-				$urlvars = ['action' => 'viewdicts'];
-				break;
-			case 'FtsParser':
-				$items   = $data->getFtsParsers(false);
-				$urlvars = ['action' => 'viewparsers'];
-				break;
-			default:
-				return;
+		case 'FtsCfg':
+			$items = $data->getFtsConfigurations(false);
+			$urlvars = ['action' => 'viewconfig', 'ftscfg' => Decorator::field('name')];
+			break;
+		case 'FtsDict':
+			$items = $data->getFtsDictionaries(false);
+			$urlvars = ['action' => 'viewdicts'];
+			break;
+		case 'FtsParser':
+			$items = $data->getFtsParsers(false);
+			$urlvars = ['action' => 'viewparsers'];
+			break;
+		default:
+			return;
 		}
 
 		$reqvars = $misc->getRequestVars('ftscfg');
@@ -298,7 +298,7 @@ class FulltextController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('ftscfg');
-			$misc->printTitle($lang['strdrop'], 'pg.ftscfg.drop');
+			$this->printTitle($lang['strdrop'], 'pg.ftscfg.drop');
 
 			echo "<p>", sprintf($lang['strconfdropftsconfig'], $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
 
@@ -332,7 +332,7 @@ class FulltextController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
-			$misc->printTitle($lang['strdrop'], 'pg.ftsdict.drop');
+			$this->printTitle($lang['strdrop'], 'pg.ftsdict.drop');
 
 			echo "<p>", sprintf($lang['strconfdropftsdict'], $misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
 
@@ -399,7 +399,7 @@ class FulltextController extends BaseController {
 		$ftsparsers = $data->getFtsParsers();
 
 		$this->printTrail('schema');
-		$misc->printTitle($lang['strftscreateconfig'], 'pg.ftscfg.create');
+		$this->printTitle($lang['strftscreateconfig'], 'pg.ftscfg.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
@@ -413,12 +413,12 @@ class FulltextController extends BaseController {
 		echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftstemplate']}</th>\n";
 		echo "\t\t<td class=\"data1\">";
 
-		$tpls   = [];
+		$tpls = [];
 		$tplsel = '';
 		while (!$ftscfgs->EOF) {
 			$data->fieldClean($ftscfgs->fields['schema']);
 			$data->fieldClean($ftscfgs->fields['name']);
-			$tplname        = $ftscfgs->fields['schema'] . '.' . $ftscfgs->fields['name'];
+			$tplname = $ftscfgs->fields['schema'] . '.' . $ftscfgs->fields['name'];
 			$tpls[$tplname] = serialize([
 				'name' => $ftscfgs->fields['name'],
 				'schema' => $ftscfgs->fields['schema'],
@@ -435,7 +435,7 @@ class FulltextController extends BaseController {
 		echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftsparser']}</th>\n";
 		echo "\t\t<td class=\"data1\">\n";
 		$ftsparsers_ = [];
-		$ftsparsel   = '';
+		$ftsparsel = '';
 		while (!$ftsparsers->EOF) {
 			$data->fieldClean($ftsparsers->fields['schema']);
 			$data->fieldClean($ftsparsers->fields['name']);
@@ -524,7 +524,7 @@ class FulltextController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('ftscfg');
-		$misc->printTitle($lang['stralter'], 'pg.ftscfg.alter');
+		$this->printTitle($lang['stralter'], 'pg.ftscfg.alter');
 		$misc->printMsg($msg);
 
 		$ftscfg = $data->getFtsConfigurationByName($_REQUEST['ftscfg']);
@@ -580,10 +580,10 @@ class FulltextController extends BaseController {
  * Save the form submission containing changes to a FTS configuration
  */
 	public function doSaveAlterConfig() {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$data   = $misc->getDatabaseAccessor();
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 		$status = $data->updateFtsConfiguration($_POST['ftscfg'], $_POST['formComment'], $_POST['formName']);
 		if ($status == 0) {
 			$this->doDefault($lang['strftsconfigaltered']);
@@ -856,7 +856,7 @@ class FulltextController extends BaseController {
 
 		$this->printTrail('schema');
 		// TODO: create doc links
-		$misc->printTitle($lang['strftscreatedict'], 'pg.ftsdict.create');
+		$this->printTitle($lang['strftscreatedict'], 'pg.ftsdict.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
@@ -870,12 +870,12 @@ class FulltextController extends BaseController {
 		// Template
 		echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftstemplate']}</th>\n";
 		echo "\t\t<td class=\"data1\">";
-		$tpls   = [];
+		$tpls = [];
 		$tplsel = '';
 		while (!$ftstpls->EOF) {
 			$data->fieldClean($ftstpls->fields['schema']);
 			$data->fieldClean($ftstpls->fields['name']);
-			$tplname        = $ftstpls->fields['schema'] . '.' . $ftstpls->fields['name'];
+			$tplname = $ftstpls->fields['schema'] . '.' . $ftstpls->fields['name'];
 			$tpls[$tplname] = serialize([
 				'name' => $ftstpls->fields['name'],
 				'schema' => $ftstpls->fields['schema'],
@@ -996,7 +996,7 @@ class FulltextController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
-		$misc->printTitle($lang['stralter'], 'pg.ftsdict.alter');
+		$this->printTitle($lang['stralter'], 'pg.ftsdict.alter');
 		$misc->printMsg($msg);
 
 		$ftsdict = $data->getFtsDictionaryByName($_REQUEST['ftsdict']);
@@ -1081,7 +1081,7 @@ class FulltextController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('ftscfg'); // TODO: proper breadcrumbs
-			$misc->printTitle($lang['strdrop'], 'pg.ftscfg.alter');
+			$this->printTitle($lang['strdrop'], 'pg.ftscfg.alter');
 
 			echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
 
@@ -1132,7 +1132,7 @@ class FulltextController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 		$this->printTrail('ftscfg');
-		$misc->printTitle($lang['stralter'], 'pg.ftscfg.alter');
+		$this->printTitle($lang['stralter'], 'pg.ftscfg.alter');
 		$misc->printMsg($msg);
 
 		$ftsdicts = $data->getFtsDictionaries();
@@ -1158,12 +1158,12 @@ class FulltextController extends BaseController {
 
 			// Case of multiaction drop
 			if (isset($_REQUEST['ma'])) {
-				$ma_mappings       = [];
+				$ma_mappings = [];
 				$ma_mappings_names = [];
 				foreach ($_REQUEST['ma'] as $v) {
 					$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 					printf('<input type="hidden" name="formMapping[]" value="%s" />', htmlspecialchars($a['mapping']));
-					$ma_mappings[]       = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
+					$ma_mappings[] = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
 					$ma_mappings_names[] = $a['mapping'];
 				}
 				echo implode(", ", $ma_mappings_names);
@@ -1215,7 +1215,7 @@ class FulltextController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
-		$status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
+		$status = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
 		if ($status == 0) {
 			$this->doViewConfig($_POST['ftscfg'], $lang['strftsmappingaltered']);
 		} else {
@@ -1234,7 +1234,7 @@ class FulltextController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('ftscfg');
-		$misc->printTitle($lang['stralter'], 'pg.ftscfg.alter');
+		$this->printTitle($lang['stralter'], 'pg.ftscfg.alter');
 		$misc->printMsg($msg);
 
 		$ftsdicts = $data->getFtsDictionaries();
@@ -1260,7 +1260,7 @@ class FulltextController extends BaseController {
 			echo "\t\t<td class=\"data1\">";
 			echo "\t\t\t<select name=\"formMapping\">\n";
 			while (!$mappings->EOF) {
-				$mapping      = htmlspecialchars($mappings->fields['name']);
+				$mapping = htmlspecialchars($mappings->fields['name']);
 				$mapping_desc = htmlspecialchars($mappings->fields['description']);
 				echo "\t\t\t\t<option value=\"{$mapping}\"",
 				$mapping == $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : "", "</option>\n";
@@ -1307,7 +1307,7 @@ class FulltextController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
-		$status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);
+		$status = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);
 		if ($status == 0) {
 			$this->doViewConfig($_POST['ftscfg'], $lang['strftsmappingadded']);
 		} else {

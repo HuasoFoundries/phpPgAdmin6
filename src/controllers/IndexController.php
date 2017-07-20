@@ -19,58 +19,182 @@ class IndexController extends BaseController {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['strindexes'], "<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
+		$this->printHeader($lang['strindexes'], "<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
 
 		if ($action == 'create_index' || $action == 'save_create_index') {
 			echo "<body onload=\"init();\">";
 		} else {
-			$misc->printBody();
+			$this->printBody();
 		}
 
 		switch ($action) {
-			case 'cluster_index':
-				if (isset($_POST['cluster'])) {
-					$this->doClusterIndex(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_cluster_index':
-				$this->doClusterIndex(true);
-				break;
-			case 'reindex':
-				$this->doReindex();
-				break;
-			case 'save_create_index':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreateIndex();
-				}
-
-				break;
-			case 'create_index':
-				$this->doCreateIndex();
-				break;
-			case 'drop_index':
-				if (isset($_POST['drop'])) {
-					$this->doDropIndex(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop_index':
-				$this->doDropIndex(true);
-				break;
-			default:
+		case 'cluster_index':
+			if (isset($_POST['cluster'])) {
+				$this->doClusterIndex(false);
+			} else {
 				$this->doDefault();
-				break;
+			}
+
+			break;
+		case 'confirm_cluster_index':
+			$this->doClusterIndex(true);
+			break;
+		case 'reindex':
+			$this->doReindex();
+			break;
+		case 'save_create_index':
+			if (isset($_POST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doSaveCreateIndex();
+			}
+
+			break;
+		case 'create_index':
+			$this->doCreateIndex();
+			break;
+		case 'drop_index':
+			if (isset($_POST['drop'])) {
+				$this->doDropIndex(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop_index':
+			$this->doDropIndex(true);
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		return $misc->printFooter();
 
+	}
+
+	public function doDefault($msg = '') {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$indPre = function (&$rowdata, $actions) use ($data, $lang) {
+			if ($data->phpBool($rowdata->fields['indisprimary'])) {
+				$rowdata->fields['+constraints'] = $lang['strprimarykey'];
+				$actions['drop']['disable'] = true;
+			} elseif ($data->phpBool($rowdata->fields['indisunique'])) {
+				$rowdata->fields['+constraints'] = $lang['struniquekey'];
+				$actions['drop']['disable'] = true;
+			} else {
+				$rowdata->fields['+constraints'] = '';
+			}
+
+			return $actions;
+		};
+		if (!isset($_REQUEST['subject'])) {
+			$_REQUEST['subject'] = 'table';
+		}
+
+		$subject = urlencode($_REQUEST['subject']);
+		$object = urlencode($_REQUEST[$_REQUEST['subject']]);
+
+		$this->printTrail($subject);
+		$this->printTabs($subject, 'indexes');
+		$misc->printMsg($msg);
+
+		$indexes = $data->getIndexes($_REQUEST[$_REQUEST['subject']]);
+
+		$columns = [
+			'index' => [
+				'title' => $lang['strname'],
+				'field' => Decorator::field('indname'),
+			],
+			'definition' => [
+				'title' => $lang['strdefinition'],
+				'field' => Decorator::field('inddef'),
+			],
+			'constraints' => [
+				'title' => $lang['strconstraints'],
+				'field' => Decorator::field('+constraints'),
+				'type' => 'verbatim',
+				'params' => ['align' => 'center'],
+			],
+			'clustered' => [
+				'title' => $lang['strclustered'],
+				'field' => Decorator::field('indisclustered'),
+				'type' => 'yesno',
+			],
+			'actions' => [
+				'title' => $lang['stractions'],
+			],
+			'comment' => [
+				'title' => $lang['strcomment'],
+				'field' => Decorator::field('idxcomment'),
+			],
+		];
+
+		$actions = [
+			'cluster' => [
+				'content' => $lang['strclusterindex'],
+				'attr' => [
+					'href' => [
+						'url' => 'indexes.php',
+						'urlvars' => [
+							'action' => 'confirm_cluster_index',
+							$subject => $object,
+							'index' => Decorator::field('indname'),
+						],
+					],
+				],
+			],
+			'reindex' => [
+				'content' => $lang['strreindex'],
+				'attr' => [
+					'href' => [
+						'url' => 'indexes.php',
+						'urlvars' => [
+							'action' => 'reindex',
+							$subject => $object,
+							'index' => Decorator::field('indname'),
+						],
+					],
+				],
+			],
+			'drop' => [
+				'content' => $lang['strdrop'],
+				'attr' => [
+					'href' => [
+						'url' => 'indexes.php',
+						'urlvars' => [
+							'action' => 'confirm_drop_index',
+							$subject => $object,
+							'index' => Decorator::field('indname'),
+						],
+					],
+				],
+			],
+		];
+
+		echo $this->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], $indPre);
+
+		$this->printNavLinks([
+			'create' => [
+				'attr' => [
+					'href' => [
+						'url' => 'indexes.php',
+						'urlvars' => [
+							'action' => 'create_index',
+							'server' => $_REQUEST['server'],
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema'],
+							$subject => $object,
+						],
+					],
+				],
+				'content' => $lang['strcreateindex'],
+			],
+		], 'indexes-indexes', get_defined_vars());
 	}
 
 	function doTree() {
@@ -79,10 +203,16 @@ class IndexController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
+		if (!isset($_REQUEST['subject'])) {
+			$_REQUEST['subject'] = 'table';
+		}
 
-		$indexes = $data->getIndexes($_REQUEST['table']);
+		$subject = urlencode($_REQUEST['subject']);
+		$object = urlencode($_REQUEST[$_REQUEST['subject']]);
 
-		$reqvars = $misc->getRequestVars('table');
+		$indexes = $data->getIndexes($object);
+
+		$reqvars = $misc->getRequestVars($subject);
 
 		function getIcon($f) {
 			if ($f['indisprimary'] == 't') {
@@ -118,7 +248,7 @@ class IndexController extends BaseController {
 			$_REQUEST['analyze'] = true;
 
 			$this->printTrail('index');
-			$misc->printTitle($lang['strclusterindex'], 'pg.index.cluster');
+			$this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
 			echo "<p>", sprintf($lang['strconfcluster'], $misc->printVal($_REQUEST['index'])), "</p>\n";
 
@@ -154,10 +284,10 @@ class IndexController extends BaseController {
 	}
 
 	public function doReindex() {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$data   = $misc->getDatabaseAccessor();
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 		$status = $data->reindex('INDEX', $_REQUEST['index']);
 		if ($status == 0) {
 			$this->doDefault($lang['strreindexgood']);
@@ -175,6 +305,12 @@ class IndexController extends BaseController {
 		$misc = $this->misc;
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
+
+		if (!isset($_REQUEST['subject'])) {
+			$_REQUEST['subject'] = 'table';
+		}
+		$subject = urlencode($_REQUEST['subject']);
+		$object = urlencode($_REQUEST[$_REQUEST['subject']]);
 
 		if (!isset($_POST['formIndexName'])) {
 			$_POST['formIndexName'] = '';
@@ -196,14 +332,14 @@ class IndexController extends BaseController {
 			$_POST['formSpc'] = '';
 		}
 
-		$attrs = $data->getTableAttributes($_REQUEST['table']);
+		$attrs = $data->getTableAttributes($object);
 		// Fetch all tablespaces from the database
 		if ($data->hasTablespaces()) {
 			$tablespaces = $data->getTablespaces();
 		}
 
-		$this->printTrail('table');
-		$misc->printTitle($lang['strcreateindex'], 'pg.index.create');
+		$this->printTrail($subject);
+		$this->printTitle($lang['strcreateindex'], 'pg.index.create');
 		$misc->printMsg($msg);
 
 		$selColumns = new \PHPPgAdmin\XHtml\XHTML_Select("TableColumnList", true, 10);
@@ -211,7 +347,8 @@ class IndexController extends BaseController {
 
 		if ($attrs->recordCount() > 0) {
 			while (!$attrs->EOF) {
-				$selColumns->add(new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']));
+				$attname = new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']);
+				$selColumns->add($attname);
 				$attrs->moveNext();
 			}
 		}
@@ -288,7 +425,7 @@ class IndexController extends BaseController {
 
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create_index\" />\n";
 		echo $misc->form;
-		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($object), "\" />\n";
 		echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
@@ -341,15 +478,21 @@ class IndexController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
+		if (!isset($_REQUEST['subject'])) {
+			$_REQUEST['subject'] = 'table';
+		}
+		$subject = urlencode($_REQUEST['subject']);
+		$object = urlencode($_REQUEST[$_REQUEST['subject']]);
+
 		if ($confirm) {
 			$this->printTrail('index');
-			$misc->printTitle($lang['strdrop'], 'pg.index.drop');
+			$this->printTitle($lang['strdrop'], 'pg.index.drop');
 
 			echo "<p>", sprintf($lang['strconfdropindex'], $misc->printVal($_REQUEST['index'])), "</p>\n";
 
 			echo "<form action=\"/src/views/indexes.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop_index\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($object), "\" />\n";
 			echo "<input type=\"hidden\" name=\"index\" value=\"", htmlspecialchars($_REQUEST['index']), "\" />\n";
 			echo $misc->form;
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
@@ -366,124 +509,6 @@ class IndexController extends BaseController {
 
 		}
 
-	}
-
-	public function doDefault($msg = '') {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-
-		$indPre = function (&$rowdata, $actions) use ($data, $lang) {
-			if ($data->phpBool($rowdata->fields['indisprimary'])) {
-				$rowdata->fields['+constraints'] = $lang['strprimarykey'];
-				$actions['drop']['disable']      = true;
-			} elseif ($data->phpBool($rowdata->fields['indisunique'])) {
-				$rowdata->fields['+constraints'] = $lang['struniquekey'];
-				$actions['drop']['disable']      = true;
-			} else {
-				$rowdata->fields['+constraints'] = '';
-			}
-
-			return $actions;
-		};
-
-		$this->printTrail('table');
-		$this->printTabs('table', 'indexes');
-		$misc->printMsg($msg);
-
-		$indexes = $data->getIndexes($_REQUEST['table']);
-
-		$columns = [
-			'index' => [
-				'title' => $lang['strname'],
-				'field' => Decorator::field('indname'),
-			],
-			'definition' => [
-				'title' => $lang['strdefinition'],
-				'field' => Decorator::field('inddef'),
-			],
-			'constraints' => [
-				'title' => $lang['strconstraints'],
-				'field' => Decorator::field('+constraints'),
-				'type' => 'verbatim',
-				'params' => ['align' => 'center'],
-			],
-			'clustered' => [
-				'title' => $lang['strclustered'],
-				'field' => Decorator::field('indisclustered'),
-				'type' => 'yesno',
-			],
-			'actions' => [
-				'title' => $lang['stractions'],
-			],
-			'comment' => [
-				'title' => $lang['strcomment'],
-				'field' => Decorator::field('idxcomment'),
-			],
-		];
-
-		$actions = [
-			'cluster' => [
-				'content' => $lang['strclusterindex'],
-				'attr' => [
-					'href' => [
-						'url' => 'indexes.php',
-						'urlvars' => [
-							'action' => 'confirm_cluster_index',
-							'table' => $_REQUEST['table'],
-							'index' => Decorator::field('indname'),
-						],
-					],
-				],
-			],
-			'reindex' => [
-				'content' => $lang['strreindex'],
-				'attr' => [
-					'href' => [
-						'url' => 'indexes.php',
-						'urlvars' => [
-							'action' => 'reindex',
-							'table' => $_REQUEST['table'],
-							'index' => Decorator::field('indname'),
-						],
-					],
-				],
-			],
-			'drop' => [
-				'content' => $lang['strdrop'],
-				'attr' => [
-					'href' => [
-						'url' => 'indexes.php',
-						'urlvars' => [
-							'action' => 'confirm_drop_index',
-							'table' => $_REQUEST['table'],
-							'index' => Decorator::field('indname'),
-						],
-					],
-				],
-			],
-		];
-
-		echo $this->printTable($indexes, $columns, $actions, 'indexes-indexes', $lang['strnoindexes'], $indPre);
-
-		$this->printNavLinks([
-			'create' => [
-				'attr' => [
-					'href' => [
-						'url' => 'indexes.php',
-						'urlvars' => [
-							'action' => 'create_index',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-							'schema' => $_REQUEST['schema'],
-							'table' => $_REQUEST['table'],
-						],
-					],
-				],
-				'content' => $lang['strcreateindex'],
-			],
-		], 'indexes-indexes', get_defined_vars());
 	}
 
 }

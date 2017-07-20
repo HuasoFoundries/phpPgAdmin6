@@ -2,24 +2,25 @@
 <html lang="en">
 
     <head>
-        {% include 'home_header.twig' %}
+        {% include 'iframe_header.twig' %}
     </head>
 
     <body class="flexbox_body">
         <div class="flexbox_wrapper">
+
+            <iframe src="/src/views/{{view}}.php" name="detail" id="detail" class="detail_container" frameborder="0" />
+            <p>Your browser does not support iframes.</p>
+            </iframe>
+
             <div id="browser_container">
                 <iframe src="/src/views/browser.php" name="browser" id="browser" class="browser_container" frameborder="0" />
                 <p>Your browser does not support iframes.</p>
                 </iframe>
             </div>
 
-            <iframe src="/src/views/{{view}}.php" name="detail" id="detail" class="detail_container" frameborder="0" />
-            <p>Your browser does not support iframes.</p>
-            </iframe>
-
             <script type="text/javascript">
             jQuery('#browser_container').resizable({
-                handles: "e"
+                handles: "w"
             });
             </script>
 

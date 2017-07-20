@@ -7,63 +7,63 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class AllDBController extends BaseController {
-	public $_name       = 'AllDBController';
+	public $_name = 'AllDBController';
 	public $table_place = 'all_db-databases';
 
 	public function render() {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
 
 		if ($action == 'tree') {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['strdatabases']);
-		$misc->printBody();
+		$this->printHeader($lang['strdatabases']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'export':
-				$this->doExport();
-				break;
-			case 'save_create':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreate();
-				}
-
-				break;
-			case 'create':
-				$this->doCreate();
-				break;
-			case 'drop':
-				if (isset($_REQUEST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				doDrop(true);
-				break;
-			case 'alter':
-				if (isset($_POST['oldname']) && isset($_POST['newname']) && !isset($_POST['cancel'])) {
-					$this->doAlter(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_alter':
-				$this->doAlter(true);
-				break;
-			default:
+		case 'export':
+			$this->doExport();
+			break;
+		case 'save_create':
+			if (isset($_POST['cancel'])) {
 				$this->doDefault();
+			} else {
+				$this->doSaveCreate();
+			}
 
-				break;
+			break;
+		case 'create':
+			$this->doCreate();
+			break;
+		case 'drop':
+			if (isset($_REQUEST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			doDrop(true);
+			break;
+		case 'alter':
+			if (isset($_POST['oldname']) && isset($_POST['newname']) && !isset($_POST['cancel'])) {
+				$this->doAlter(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_alter':
+			$this->doAlter(true);
+			break;
+		default:
+			$this->doDefault();
+
+			break;
 		}
 
 		return $misc->printFooter();
@@ -103,7 +103,7 @@ class AllDBController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('database');
-			$misc->printTitle($lang['stralter'], 'pg.database.alter');
+			$this->printTitle($lang['stralter'], 'pg.database.alter');
 
 			echo "<form action=\"/src/views/all_db.php\" method=\"post\">\n";
 			echo "<table>\n";
@@ -115,7 +115,7 @@ class AllDBController extends BaseController {
 			if ($data->hasAlterDatabaseOwner() && $data->isSuperUser()) {
 				// Fetch all users
 
-				$rs    = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
+				$rs = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
 				$owner = isset($rs->fields['usename']) ? $rs->fields['usename'] : '';
 				$users = $data->getUsers();
 
@@ -130,7 +130,7 @@ class AllDBController extends BaseController {
 				echo "</select></td></tr>\n";
 			}
 			if ($data->hasSharedComments()) {
-				$rs      = $data->getDatabaseComment($_REQUEST['alterdatabase']);
+				$rs = $data->getDatabaseComment($_REQUEST['alterdatabase']);
 				$comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
 				echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
 				echo "<td class=\"data1\">";
@@ -181,7 +181,7 @@ class AllDBController extends BaseController {
 		if ($confirm) {
 
 			$this->printTrail('database');
-			$misc->printTitle($lang['strdrop'], 'pg.database.drop');
+			$this->printTitle($lang['strdrop'], 'pg.database.drop');
 
 			echo "<form action=\"/src/views/all_db.php\" method=\"post\">\n";
 			//If multi drop
@@ -242,7 +242,7 @@ class AllDBController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('server');
-		$misc->printTitle($lang['strcreatedatabase'], 'pg.database.create');
+		$this->printTitle($lang['strcreatedatabase'], 'pg.database.create');
 		$misc->printMsg($msg);
 
 		if (!isset($_POST['formName'])) {
@@ -473,7 +473,7 @@ class AllDBController extends BaseController {
 		$this->printTrail('server');
 		$this->printTabs('server', 'databases');
 		$misc->printMsg($msg);
-		$data      = $misc->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 		$databases = $data->getDatabases();
 
 		$columns = [

@@ -1,30 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xml:lang="{{isolang}}" lang="{{isolang}}" isolang="{{isolang}}" {{dir}}>
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="/src/themes/default/global.css" type="text/css" id="csstheme" />
         <link rel="shortcut icon" href="/images/themes/default/Favicon.ico" type="image/vnd.microsoft.icon" />
         <link rel="icon" type="image/png" href="/images/themes/default/Introduction.png" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" type="text/css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
         <link href="/js/codemirror/addon/hint/show-hint.css" rel="stylesheet" />
         <link href="/js/codemirror/codemirror.css" rel="stylesheet" />
+        <link href="/js/codemirror/addon/fold/foldgutter.css" rel="stylesheet" />
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
         <script src="/js/codemirror/codemirror.js"></script>
         <script src="/js/codemirror/mode/sql/sql.js"></script>
-
-        <script src="/js/codemirror/addon/hint/show-hint.js"></script>
-        <script src="/js/codemirror/addon/hint/sql-hint.js"></script>
-
-        <link rel="stylesheet" href="/js/codemirror/addon/fold/foldgutter.css" />
         <script src="/js/codemirror/addon/fold/foldcode.js"></script>
         <script src="/js/codemirror/addon/fold/foldgutter.js"></script>
         <script src="/js/codemirror/addon/fold/indent-fold.js"></script>
 
-        <title>phpPgAdmin - {{title}}</title>
+        <title data-headertemplate="{{headertemplate}}">{{appName}}</title>
 
     </head>
-
-    <body onload="window.focus();">

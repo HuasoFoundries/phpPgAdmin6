@@ -10,21 +10,21 @@ class LangController extends BaseController {
 	public $_name = 'LangController';
 
 	public function render() {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
 		if ($action == 'tree') {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['strlanguages']);
-		$misc->printBody();
+		$this->printHeader($lang['strlanguages']);
+		$this->printBody();
 
 		switch ($action) {
-			default:
-				$this->doDefault();
-				break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();

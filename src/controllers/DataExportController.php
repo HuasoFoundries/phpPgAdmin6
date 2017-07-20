@@ -355,10 +355,10 @@ class DataExportController extends BaseController {
 			$_REQUEST['query'] = $_SESSION['sqlquery'];
 		}
 
-		$misc->printHeader($lang['strexport']);
-		$misc->printBody();
+		$this->printHeader($lang['strexport']);
+		$this->printBody();
 		$this->printTrail(isset($_REQUEST['subject']) ? $_REQUEST['subject'] : 'database');
-		$misc->printTitle($lang['strexport']);
+		$this->printTitle($lang['strexport']);
 		if (isset($msg)) {
 			$misc->printMsg($msg);
 		}

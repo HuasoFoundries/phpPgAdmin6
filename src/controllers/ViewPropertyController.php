@@ -19,8 +19,8 @@ class ViewPropertyController extends BaseController {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['strviews'] . ' - ' . $_REQUEST['view']);
-		$misc->printBody();
+		$this->printHeader($lang['strviews'] . ' - ' . $_REQUEST['view']);
+		$this->printBody();
 
 		switch ($action) {
 		case 'save_edit':
@@ -77,6 +77,144 @@ class ViewPropertyController extends BaseController {
 
 		$misc->printFooter();
 
+	}
+
+	/**
+	 * Show view definition and virtual columns
+	 */
+	public function doDefault($msg = '') {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$attPre = function (&$rowdata) use ($data) {
+			$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
+		};
+
+		$this->printTrail('view');
+		$this->printTabs('view', 'columns');
+		$misc->printMsg($msg);
+
+		// Get view
+		$vdata = $data->getView($_REQUEST['view']);
+		// Get columns (using same method for getting a view)
+		$attrs = $data->getTableAttributes($_REQUEST['view']);
+
+		// Show comment if any
+		if ($vdata->fields['relcomment'] !== null) {
+			echo "<p class=\"comment\">", $misc->printVal($vdata->fields['relcomment']), "</p>\n";
+		}
+
+		$columns = [
+			'column' => [
+				'title' => $lang['strcolumn'],
+				'field' => Decorator::field('attname'),
+				'url' => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['view']) . "&amp;",
+				'vars' => ['column' => 'attname'],
+			],
+			'type' => [
+				'title' => $lang['strtype'],
+				'field' => Decorator::field('+type'),
+			],
+			'default' => [
+				'title' => $lang['strdefault'],
+				'field' => Decorator::field('adsrc'),
+			],
+			'actions' => [
+				'title' => $lang['stractions'],
+			],
+			'comment' => [
+				'title' => $lang['strcomment'],
+				'field' => Decorator::field('comment'),
+			],
+		];
+
+		$actions = [
+			'alter' => [
+				'content' => $lang['stralter'],
+				'attr' => [
+					'href' => [
+						'url' => 'viewproperties.php',
+						'urlvars' => [
+							'action' => 'properties',
+							'view' => $_REQUEST['view'],
+							'column' => Decorator::field('attname'),
+						],
+					],
+				],
+			],
+		];
+
+		echo $this->printTable($attrs, $columns, $actions, 'viewproperties-viewproperties', null, $attPre);
+
+		echo "<br />\n";
+
+		$navlinks = [
+			'browse' => [
+				'attr' => [
+					'href' => [
+						'url' => 'display.php',
+						'urlvars' => [
+							'server' => $_REQUEST['server'],
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema'],
+							'view' => $_REQUEST['view'],
+							'subject' => 'view',
+							'return' => 'view',
+						],
+					],
+				],
+				'content' => $lang['strbrowse'],
+			],
+			'select' => [
+				'attr' => [
+					'href' => [
+						'url' => 'views.php',
+						'urlvars' => [
+							'action' => 'confselectrows',
+							'server' => $_REQUEST['server'],
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema'],
+							'view' => $_REQUEST['view'],
+						],
+					],
+				],
+				'content' => $lang['strselect'],
+			],
+			'drop' => [
+				'attr' => [
+					'href' => [
+						'url' => 'views.php',
+						'urlvars' => [
+							'action' => 'confirm_drop',
+							'server' => $_REQUEST['server'],
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema'],
+							'view' => $_REQUEST['view'],
+						],
+					],
+				],
+				'content' => $lang['strdrop'],
+			],
+			'alter' => [
+				'attr' => [
+					'href' => [
+						'url' => 'viewproperties.php',
+						'urlvars' => [
+							'action' => 'confirm_alter',
+							'server' => $_REQUEST['server'],
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema'],
+							'view' => $_REQUEST['view'],
+						],
+					],
+				],
+				'content' => $lang['stralter'],
+			],
+		];
+
+		$this->printNavLinks($navlinks, 'viewproperties-viewproperties', get_defined_vars());
 	}
 
 	function doTree() {
@@ -148,7 +286,7 @@ class ViewPropertyController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('view');
-		$misc->printTitle($lang['stredit'], 'pg.view.alter');
+		$this->printTitle($lang['stredit'], 'pg.view.alter');
 		$misc->printMsg($msg);
 
 		$viewdata = $data->getView($_REQUEST['view']);
@@ -308,7 +446,7 @@ class ViewPropertyController extends BaseController {
 		case 1:
 
 			$this->printTrail('column');
-			$misc->printTitle($lang['stralter'], 'pg.column.alter');
+			$this->printTitle($lang['stralter'], 'pg.column.alter');
 			$misc->printMsg($msg);
 
 			echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
@@ -382,7 +520,7 @@ class ViewPropertyController extends BaseController {
 		if ($confirm) {
 
 			$this->printTrail('view');
-			$misc->printTitle($lang['stralter'], 'pg.view.alter');
+			$this->printTitle($lang['stralter'], 'pg.view.alter');
 			$misc->printMsg($msg);
 
 			// Fetch view info
@@ -489,144 +627,6 @@ class ViewPropertyController extends BaseController {
 			}
 
 		}
-	}
-
-/**
- * Show view definition and virtual columns
- */
-	public function doDefault($msg = '') {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-
-		$attPre = function (&$rowdata) use ($data) {
-			$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-		};
-
-		$this->printTrail('view');
-		$this->printTabs('view', 'columns');
-		$misc->printMsg($msg);
-
-		// Get view
-		$vdata = $data->getView($_REQUEST['view']);
-		// Get columns (using same method for getting a view)
-		$attrs = $data->getTableAttributes($_REQUEST['view']);
-
-		// Show comment if any
-		if ($vdata->fields['relcomment'] !== null) {
-			echo "<p class=\"comment\">", $misc->printVal($vdata->fields['relcomment']), "</p>\n";
-		}
-
-		$columns = [
-			'column' => [
-				'title' => $lang['strcolumn'],
-				'field' => Decorator::field('attname'),
-				'url' => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['view']) . "&amp;",
-				'vars' => ['column' => 'attname'],
-			],
-			'type' => [
-				'title' => $lang['strtype'],
-				'field' => Decorator::field('+type'),
-			],
-			'default' => [
-				'title' => $lang['strdefault'],
-				'field' => Decorator::field('adsrc'),
-			],
-			'actions' => [
-				'title' => $lang['stractions'],
-			],
-			'comment' => [
-				'title' => $lang['strcomment'],
-				'field' => Decorator::field('comment'),
-			],
-		];
-
-		$actions = [
-			'alter' => [
-				'content' => $lang['stralter'],
-				'attr' => [
-					'href' => [
-						'url' => 'viewproperties.php',
-						'urlvars' => [
-							'action' => 'properties',
-							'view' => $_REQUEST['view'],
-							'column' => Decorator::field('attname'),
-						],
-					],
-				],
-			],
-		];
-
-		echo $this->printTable($attrs, $columns, $actions, 'viewproperties-viewproperties', null, $attPre);
-
-		echo "<br />\n";
-
-		$navlinks = [
-			'browse' => [
-				'attr' => [
-					'href' => [
-						'url' => 'display.php',
-						'urlvars' => [
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-							'schema' => $_REQUEST['schema'],
-							'view' => $_REQUEST['view'],
-							'subject' => 'view',
-							'return' => 'view',
-						],
-					],
-				],
-				'content' => $lang['strbrowse'],
-			],
-			'select' => [
-				'attr' => [
-					'href' => [
-						'url' => 'views.php',
-						'urlvars' => [
-							'action' => 'confselectrows',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-							'schema' => $_REQUEST['schema'],
-							'view' => $_REQUEST['view'],
-						],
-					],
-				],
-				'content' => $lang['strselect'],
-			],
-			'drop' => [
-				'attr' => [
-					'href' => [
-						'url' => 'views.php',
-						'urlvars' => [
-							'action' => 'confirm_drop',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-							'schema' => $_REQUEST['schema'],
-							'view' => $_REQUEST['view'],
-						],
-					],
-				],
-				'content' => $lang['strdrop'],
-			],
-			'alter' => [
-				'attr' => [
-					'href' => [
-						'url' => 'viewproperties.php',
-						'urlvars' => [
-							'action' => 'confirm_alter',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-							'schema' => $_REQUEST['schema'],
-							'view' => $_REQUEST['view'],
-						],
-					],
-				],
-				'content' => $lang['stralter'],
-			],
-		];
-
-		$this->printNavLinks($navlinks, 'viewproperties-viewproperties', get_defined_vars());
 	}
 
 }

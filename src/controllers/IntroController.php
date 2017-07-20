@@ -16,6 +16,28 @@ class IntroController extends BaseController {
 		parent::__construct($container);
 
 	}
+
+	public function render() {
+
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$action = $this->action;
+
+		$misc->setNoDBConnection(true);
+		$this->printHeader($lang['strintro']);
+		$this->printBody();
+
+		switch ($action) {
+
+		default:
+			$this->doDefault();
+			break;
+		}
+
+		$misc->printFooter();
+
+	}
 	/**
 	 * Intro screen
 	 *
@@ -28,10 +50,10 @@ class IntroController extends BaseController {
 		$lang = $this->lang;
 
 		$appLangFiles = $this->appLangFiles;
-		$misc         = $this->misc;
-		$appThemes    = $this->appThemes;
-		$appName      = $this->appName;
-		$appVersion   = $this->appVersion;
+		$misc = $this->misc;
+		$appThemes = $this->appThemes;
+		$appName = $this->appName;
+		$appVersion = $this->appVersion;
 
 		$misc->setNoDBConnection(true);
 
@@ -91,25 +113,4 @@ class IntroController extends BaseController {
 
 	}
 
-	public function render() {
-
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
-		$action = $this->action;
-
-		$misc->setNoDBConnection(true);
-		$misc->printHeader($lang['strintro']);
-		$misc->printBody();
-
-		switch ($action) {
-
-			default:
-				$this->doDefault();
-				break;
-		}
-
-		$misc->printFooter();
-
-	}
 }

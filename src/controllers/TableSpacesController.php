@@ -19,7 +19,7 @@ class TableSpacesController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('tablespace');
-		$misc->printTitle($lang['stralter'], 'pg.tablespace.alter');
+		$this->printTitle($lang['stralter'], 'pg.tablespace.alter');
 		$misc->printMsg($msg);
 
 		// Fetch tablespace info
@@ -114,7 +114,7 @@ class TableSpacesController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('tablespace');
-			$misc->printTitle($lang['strdrop'], 'pg.tablespace.drop');
+			$this->printTitle($lang['strdrop'], 'pg.tablespace.drop');
 
 			echo "<p>", sprintf($lang['strconfdroptablespace'], $misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
@@ -167,7 +167,7 @@ class TableSpacesController extends BaseController {
 		$users = $data->getUsers();
 
 		$this->printTrail('server');
-		$misc->printTitle($lang['strcreatetablespace'], 'pg.tablespace.create');
+		$this->printTitle($lang['strcreatetablespace'], 'pg.tablespace.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/tablespaces.php\" method=\"post\">\n";
@@ -331,46 +331,46 @@ class TableSpacesController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 		$action->$this->action;
 
-		$misc->printHeader($lang['strtablespaces']);
-		$misc->printBody();
+		$this->printHeader($lang['strtablespaces']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'save_create':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreate();
-				}
-
-				break;
-			case 'create':
-				$this->doCreate();
-				break;
-			case 'drop':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doDrop(false);
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			case 'save_edit':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveAlter();
-				}
-
-				break;
-			case 'edit':
-				$this->doAlter();
-				break;
-			default:
+		case 'save_create':
+			if (isset($_REQUEST['cancel'])) {
 				$this->doDefault();
-				break;
+			} else {
+				$this->doSaveCreate();
+			}
+
+			break;
+		case 'create':
+			$this->doCreate();
+			break;
+		case 'drop':
+			if (isset($_REQUEST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doDrop(false);
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		case 'save_edit':
+			if (isset($_REQUEST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doSaveAlter();
+			}
+
+			break;
+		case 'edit':
+			$this->doAlter();
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();

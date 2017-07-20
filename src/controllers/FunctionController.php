@@ -7,7 +7,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class FunctionController extends BaseController {
-	public $_name       = 'FunctionController';
+	public $_name = 'FunctionController';
 	public $table_place = 'functions-functions';
 
 	function render() {
@@ -21,49 +21,49 @@ class FunctionController extends BaseController {
 		}
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printHeader($lang['strfunctions'], null, true, 'datatables_header.twig');
-		$misc->printBody();
+		$this->printHeader($lang['strfunctions'], null, true, 'datatables_header.twig');
+		$this->printBody();
 
 		switch ($action) {
-			case 'save_create':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreate();
-				}
-
-				break;
-			case 'create':
-				$this->doCreate();
-				break;
-			case 'drop':
-				if (isset($_POST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			case 'save_edit':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveEdit();
-				}
-
-				break;
-			case 'edit':
-				$this->doEdit();
-				break;
-			case 'properties':
-				$this->doProperties();
-				break;
-			default:
+		case 'save_create':
+			if (isset($_POST['cancel'])) {
 				$this->doDefault();
-				break;
+			} else {
+				$this->doSaveCreate();
+			}
+
+			break;
+		case 'create':
+			$this->doCreate();
+			break;
+		case 'drop':
+			if (isset($_POST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		case 'save_edit':
+			if (isset($_POST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doSaveEdit();
+			}
+
+			break;
+		case 'edit':
+			$this->doEdit();
+			break;
+		case 'properties':
+			$this->doProperties();
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();
@@ -158,7 +158,7 @@ class FunctionController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('function');
-		$misc->printTitle($lang['stralter'], 'pg.function.alter');
+		$this->printTitle($lang['stralter'], 'pg.function.alter');
 		$misc->printMsg($msg);
 
 		$fndata = $data->getFunction($_REQUEST['function_oid']);
@@ -219,8 +219,8 @@ class FunctionController extends BaseController {
 				}
 				$names_arr = $data->phpArray($fndata->fields['proargnames']);
 				$modes_arr = $data->phpArray($fndata->fields['proargmodes']);
-				$args      = '';
-				$i         = 0;
+				$args = '';
+				$i = 0;
 				for ($i = 0; $i < sizeof($args_arr); $i++) {
 					if ($i != 0) {
 						$args .= ', ';
@@ -228,16 +228,16 @@ class FunctionController extends BaseController {
 
 					if (isset($modes_arr[$i])) {
 						switch ($modes_arr[$i]) {
-							case 'i':$args .= " IN ";
-								break;
-							case 'o':$args .= " OUT ";
-								break;
-							case 'b':$args .= " INOUT ";
-								break;
-							case 'v':$args .= " VARIADIC ";
-								break;
-							case 't':$args .= " TABLE ";
-								break;
+						case 'i':$args .= " IN ";
+							break;
+						case 'o':$args .= " OUT ";
+							break;
+						case 'b':$args .= " INOUT ";
+							break;
+						case 'v':$args .= " VARIADIC ";
+							break;
+						case 't':$args .= " TABLE ";
+							break;
 						}
 					}
 					if (isset($names_arr[$i]) && $names_arr[$i] != '') {
@@ -394,7 +394,7 @@ class FunctionController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('function');
-		$misc->printTitle($lang['strproperties'], 'pg.function');
+		$this->printTitle($lang['strproperties'], 'pg.function');
 		$misc->printMsg($msg);
 
 		$funcdata = $data->getFunction($_REQUEST['function_oid']);
@@ -410,8 +410,8 @@ class FunctionController extends BaseController {
 				}
 				$names_arr = $data->phpArray($funcdata->fields['proargnames']);
 				$modes_arr = $data->phpArray($funcdata->fields['proargmodes']);
-				$args      = '';
-				$i         = 0;
+				$args = '';
+				$i = 0;
 				for ($i = 0; $i < sizeof($args_arr); $i++) {
 					if ($i != 0) {
 						$args .= ', ';
@@ -419,21 +419,21 @@ class FunctionController extends BaseController {
 
 					if (isset($modes_arr[$i])) {
 						switch ($modes_arr[$i]) {
-							case 'i':
-								$args .= " IN ";
-								break;
-							case 'o':
-								$args .= " OUT ";
-								break;
-							case 'b':
-								$args .= " INOUT ";
-								break;
-							case 'v':
-								$args .= " VARIADIC ";
-								break;
-							case 't':
-								$args .= " TABLE ";
-								break;
+						case 'i':
+							$args .= " IN ";
+							break;
+						case 'o':
+							$args .= " OUT ";
+							break;
+						case 'b':
+							$args .= " INOUT ";
+							break;
+						case 'v':
+							$args .= " VARIADIC ";
+							break;
+						case 't':
+							$args .= " TABLE ";
+							break;
 						}
 					}
 					if (isset($names_arr[$i]) && $names_arr[$i] != '') {
@@ -452,7 +452,7 @@ class FunctionController extends BaseController {
 			}
 
 			$funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-			$func_full                     = $funcdata->fields['proname'] . "(" . $funcdata->fields['proarguments'] . ")";
+			$func_full = $funcdata->fields['proname'] . "(" . $funcdata->fields['proarguments'] . ")";
 			echo "<table style=\"width: 90%\">\n";
 			echo "<tr><th class=\"data\">{$lang['strfunction']}</th>\n";
 			echo "<th class=\"data\">{$lang['strarguments']}</th>\n";
@@ -485,10 +485,10 @@ class FunctionController extends BaseController {
 				if (array_key_exists($fnlang, $data->langmap)) {
 
 					$temp = $highlight->syntax_highlight(htmlspecialchars($funcdata->fields['prosrc']), $data->langmap[$fnlang]);
-					$tag  = 'prenoescape';
+					$tag = 'prenoescape';
 				} else {
 					$temp = $funcdata->fields['prosrc'];
-					$tag  = 'pre';
+					$tag = 'pre';
 				}
 				echo "<tr><td class=\"data1\" colspan=\"4\">", $misc->printVal($temp, $tag, ['lineno' => true, 'class' => 'data1']), "</td></tr>\n";
 			}
@@ -586,7 +586,7 @@ class FunctionController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('schema');
-			$misc->printTitle($lang['strdrop'], 'pg.function.drop');
+			$this->printTitle($lang['strdrop'], 'pg.function.drop');
 
 			echo "<form action=\"/src/views/functions.php\" method=\"post\">\n";
 
@@ -613,7 +613,7 @@ class FunctionController extends BaseController {
 			echo "</form>\n";
 		} else {
 			if (is_array($_POST['function_oid'])) {
-				$msg    = '';
+				$msg = '';
 				$status = $data->beginTransaction();
 				if ($status == 0) {
 					foreach ($_POST['function_oid'] as $k => $s) {
@@ -710,20 +710,20 @@ class FunctionController extends BaseController {
 			$_POST['formComment'] = '';
 		}
 
-		$types  = $data->getTypes(true, true, true);
-		$langs  = $data->getLanguages(true);
+		$types = $data->getTypes(true, true, true);
+		$langs = $data->getLanguages(true);
 		$fnlang = strtolower($_POST['formLanguage']);
 
 		switch ($fnlang) {
-			case 'c':
-				$misc->printTitle($lang['strcreatecfunction'], 'pg.function.create.c');
-				break;
-			case 'internal':
-				$misc->printTitle($lang['strcreateinternalfunction'], 'pg.function.create.internal');
-				break;
-			default:
-				$misc->printTitle($lang['strcreateplfunction'], 'pg.function.create.pl');
-				break;
+		case 'c':
+			$this->printTitle($lang['strcreatecfunction'], 'pg.function.create.c');
+			break;
+		case 'internal':
+			$this->printTitle($lang['strcreateinternalfunction'], 'pg.function.create.internal');
+			break;
+		default:
+			$this->printTitle($lang['strcreateplfunction'], 'pg.function.create.pl');
+			break;
 		}
 		$misc->printMsg($msg);
 
@@ -746,7 +746,7 @@ class FunctionController extends BaseController {
 		$szArguments = "<td class=\"data1\"><input name=\"formArguments\" style=\"width:100%;\" size=\"16\" value=\"" .
 		htmlspecialchars($_POST['formArguments']) . "\" /></td>";
 
-		$szSetOfSelected    = "";
+		$szSetOfSelected = "";
 		$szNotSetOfSelected = "";
 		if ($_POST['formSetOf'] == '') {
 			$szNotSetOfSelected = " selected=\"selected\"";
@@ -763,7 +763,7 @@ class FunctionController extends BaseController {
 
 		// Create string array type selector
 
-		$szArraySelected    = "";
+		$szArraySelected = "";
 		$szNotArraySelected = "";
 		if ($_POST['formArray'] == '') {
 			$szNotArraySelected = " selected=\"selected\"";
@@ -800,8 +800,8 @@ class FunctionController extends BaseController {
 
 		$szLanguage .= "</td>";
 		$szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$lang['strarguments']}</th></tr>";
-		$arrayModes    = ["IN", "OUT", "INOUT"];
-		$szModes       = "<select name=\"formArgModes[]\" style=\"width:100%;\">";
+		$arrayModes = ["IN", "OUT", "INOUT"];
+		$szModes = "<select name=\"formArgModes[]\" style=\"width:100%;\">";
 		foreach ($arrayModes as $pV) {
 			$szModes .= "<option value=\"{$pV}\">{$pV}</option>";
 		}
@@ -991,11 +991,11 @@ class FunctionController extends BaseController {
  * Build out JS to re-create table rows for arguments
  */
 	function buildJSRows($szArgs) {
-		$arrayModes      = ['IN', 'OUT', 'INOUT'];
-		$arrayArgs       = explode(',', $szArgs);
+		$arrayModes = ['IN', 'OUT', 'INOUT'];
+		$arrayArgs = explode(',', $szArgs);
 		$arrayProperArgs = [];
-		$nC              = 0;
-		$szReturn        = '';
+		$nC = 0;
+		$szReturn = '';
 		foreach ($arrayArgs as $pV) {
 			$arrayWords = explode(' ', $pV);
 			if (in_array($arrayWords[0], $arrayModes) === true) {
@@ -1004,10 +1004,10 @@ class FunctionController extends BaseController {
 			}
 			$szArgName = array_shift($arrayWords);
 			if (strpos($arrayWords[count($arrayWords) - 1], '[]') === false) {
-				$szArgType   = implode(" ", $arrayWords);
+				$szArgType = implode(" ", $arrayWords);
 				$bArgIsArray = "false";
 			} else {
-				$szArgType   = str_replace('[]', '', implode(' ', $arrayWords));
+				$szArgType = str_replace('[]', '', implode(' ', $arrayWords));
 				$bArgIsArray = "true";
 			}
 			$arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
@@ -1023,11 +1023,11 @@ class FunctionController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$arrayModes  = ['IN', 'OUT', 'INOUT'];
-		$arrayTypes  = $data->getTypes(true, true, true);
+		$arrayModes = ['IN', 'OUT', 'INOUT'];
+		$arrayTypes = $data->getTypes(true, true, true);
 		$arrayPTypes = [];
 		$arrayPModes = [];
-		$szTypes     = '';
+		$szTypes = '';
 
 		while (!$arrayTypes->EOF) {
 			$arrayPTypes[] = "'" . $arrayTypes->fields['typname'] . "'";

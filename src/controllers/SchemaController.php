@@ -10,9 +10,9 @@ class SchemaController extends BaseController {
 	public $_name = 'SchemaController';
 
 	public function render() {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
 
 		if ($action == 'tree') {
@@ -21,44 +21,44 @@ class SchemaController extends BaseController {
 			return $this->doSubTree();
 		}
 
-		$misc->printHeader($lang['strschemas']);
-		$misc->printBody();
+		$this->printHeader($lang['strschemas']);
+		$this->printBody();
 
 		if (isset($_POST['cancel'])) {
 			$action = '';
 		}
 
 		switch ($action) {
-			case 'create':
-				if (isset($_POST['create'])) {
-					$this->doSaveCreate();
-				} else {
-					$this->doCreate();
-				}
+		case 'create':
+			if (isset($_POST['create'])) {
+				$this->doSaveCreate();
+			} else {
+				$this->doCreate();
+			}
 
-				break;
-			case 'alter':
-				if (isset($_POST['alter'])) {
-					$this->doSaveAlter();
-				} else {
-					$this->doAlter();
-				}
+			break;
+		case 'alter':
+			if (isset($_POST['alter'])) {
+				$this->doSaveAlter();
+			} else {
+				$this->doAlter();
+			}
 
-				break;
-			case 'drop':
-				if (isset($_POST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDrop(true);
-				}
+			break;
+		case 'drop':
+			if (isset($_POST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDrop(true);
+			}
 
-				break;
-			case 'export':
-				$this->doExport();
-				break;
-			default:
-				$this->doDefault();
-				break;
+			break;
+		case 'export':
+			$this->doExport();
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();
@@ -265,7 +265,7 @@ class SchemaController extends BaseController {
 		$users = $data->getUsers();
 
 		$this->printTrail('database');
-		$misc->printTitle($lang['strcreateschema'], 'pg.schema.create');
+		$this->printTitle($lang['strcreateschema'], 'pg.schema.create');
 		$misc->printMsg($msg);
 
 		echo '<form action="/src/views/schemas.php" method="post">' . "\n";
@@ -332,7 +332,7 @@ class SchemaController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('schema');
-		$misc->printTitle($lang['stralter'], 'pg.schema.alter');
+		$this->printTitle($lang['stralter'], 'pg.schema.alter');
 		$misc->printMsg($msg);
 
 		$schema = $data->getSchemaByName($_REQUEST['schema']);
@@ -428,7 +428,7 @@ class SchemaController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('schema');
-			$misc->printTitle($lang['strdrop'], 'pg.schema.drop');
+			$this->printTitle($lang['strdrop'], 'pg.schema.drop');
 
 			echo '<form action="/src/views/schemas.php" method="post">' . "\n";
 			//If multi drop
@@ -452,7 +452,7 @@ class SchemaController extends BaseController {
 			echo "</form>\n";
 		} else {
 			if (is_array($_POST['nsp'])) {
-				$msg    = '';
+				$msg = '';
 				$status = $data->beginTransaction();
 				if ($status == 0) {
 					foreach ($_POST['nsp'] as $s) {

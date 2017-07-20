@@ -82,6 +82,8 @@ $availableLanguages = [
 	'uk' => 'ukrainian',
 ];
 
+$languages_iso_code = array_flip($availableLanguages);
+
 // Always include english.php, since it's the master language file
 if (!isset($conf['default_lang'])) {
 	$conf['default_lang'] = 'english';
@@ -150,4 +152,13 @@ if (!isset($_language)) {
 if (isset($_language)) {
 	include BASE_PATH . "/src/lang/{$_language}.php";
 	$_SESSION['webdbLanguage'] = $_language;
+
+	if (array_key_exists($_language, $languages_iso_code)) {
+		$_isolang = $languages_iso_code[$_language];
+	} else {
+		$_isolang = '';
+	}
+	$_SESSION['isolang'] = $_isolang;
+
+	//\PC::debug($_language, 'webdbLanguage');
 }

@@ -7,32 +7,36 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class HTMLController {
-	private $container        = null;
-	private $data             = null;
-	private $database         = null;
-	private $server_id        = null;
-	public $form              = '';
-	public $href              = '';
-	public $lang              = [];
-	public $action            = '';
-	public $_name             = 'HTMLController';
-	public $_title            = 'base';
+	private $container = null;
+	private $data = null;
+	private $database = null;
+	private $server_id = null;
+	public $form = '';
+	public $href = '';
+	public $lang = [];
+	public $action = '';
+	public $_name = 'HTMLController';
+	public $controller_name = 'HTMLController';
+	public $_title = 'base';
 	private $table_controller = null;
 	private $trail_controller = null;
 
 	/* Constructor */
-	function __construct(\Slim\Container $container) {
-		$this->container      = $container;
-		$this->lang           = $container->get('lang');
-		$this->conf           = $container->get('conf');
-		$this->view           = $container->get('view');
+	function __construct(\Slim\Container $container, $controller_name = null) {
+		$this->container = $container;
+		$this->lang = $container->get('lang');
+		$this->conf = $container->get('conf');
+		$this->view = $container->get('view');
 		$this->plugin_manager = $container->get('plugin_manager');
-		$this->appName        = $container->get('settings')['appName'];
-		$this->appVersion     = $container->get('settings')['appVersion'];
-		$this->appLangFiles   = $container->get('appLangFiles');
-		$this->misc           = $container->get('misc');
-		$this->appThemes      = $container->get('appThemes');
-		$this->action         = $container->get('action');
+		$this->appName = $container->get('settings')['appName'];
+		$this->appVersion = $container->get('settings')['appVersion'];
+		$this->appLangFiles = $container->get('appLangFiles');
+		$this->misc = $container->get('misc');
+		$this->appThemes = $container->get('appThemes');
+		$this->action = $container->get('action');
+		if ($controller_name !== null) {
+			$this->controller_name = $controller_name;
+		}
 
 		//\PC::debug($this->_name, 'instanced controller');
 	}

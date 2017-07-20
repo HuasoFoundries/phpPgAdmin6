@@ -21,9 +21,9 @@ class CastController extends BaseController {
 		$renderCastContext = function ($val) use ($lang) {
 
 			switch ($val) {
-				case 'e':return $lang['strno'];
-				case 'a':return $lang['strinassignment'];
-				default:return $lang['stryes'];
+			case 'e':return $lang['strno'];
+			case 'a':return $lang['strinassignment'];
+			default:return $lang['stryes'];
 			}
 		};
 
@@ -65,23 +65,23 @@ class CastController extends BaseController {
 	}
 
 	public function render() {
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
 		if ($action == 'tree') {
 			return $this->doTree();
 		}
 		$data = $misc->getDatabaseAccessor();
 
-		$misc->printHeader($lang['strcasts']);
-		$misc->printBody();
+		$this->printHeader($lang['strcasts']);
+		$this->printBody();
 
 		switch ($action) {
 
-			default:
-				$this->doDefault();
-				break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		return $misc->printFooter();

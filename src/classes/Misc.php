@@ -13,7 +13,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 
 class Misc {
 
-	use \PHPPgAdmin\DebugTrait;
+	use \PHPPgAdmin\HelperTrait;
 
 	private $_connection = null;
 	private $_no_db_connection = false;
@@ -29,6 +29,7 @@ class Misc {
 	public $appVersion = '';
 	public $form = '';
 	public $href = '';
+	public $_name = 'Misc';
 	public $lang = [];
 	private $server_info = null;
 	private $_no_output = false;
@@ -76,6 +77,62 @@ class Misc {
 		} else if (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
 			$this->server_id = array_keys($_SESSION['webdbLogin'])[0];
 		}
+	}
+
+	/**
+	 * Default Error Handler. This will be called with the following params
+	 *
+	 * @param $dbms		the RDBMS you are connecting to
+	 * @param $fn		the name of the calling function (in uppercase)
+	 * @param $errno		the native error number from the database
+	 * @param $errmsg	the native error msg from the database
+	 * @param $p1		$fn specific parameter - see below
+	 * @param $P2		$fn specific parameter - see below
+	 */
+	public static function adodb_throw($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection) {
+
+		if (error_reporting() == 0) {
+			return;
+		}
+
+		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+		$btarray0 = ([
+			'class' => $backtrace[1]['class'],
+			'type' => $backtrace[1]['type'],
+			'function' => $backtrace[1]['function'],
+			'spacer' => ' ',
+			'line' => $backtrace[0]['line'],
+		]);
+
+		switch ($fn) {
+		case 'EXECUTE':
+			$sql = $p1;
+			$inputparams = $p2;
+
+			/*$s = "<p><b>{$lang['strsqlerror']}</b><br />" . $misc->printVal($errmsg, 'errormsg') . "</p> <p><b>{$lang['strinstatement']}</b><br />" . $misc->printVal($sql). "</p>	";*/
+
+			$s = "<p><b>strsqlerror</b><br />" . $errmsg . "</p> <p><b>SQL:</b><br />" . $sql . "</p>	";
+
+			echo '<table class="error" cellpadding="5"><tr><td>' . $s . '</td></tr></table><br />' . "\n";
+
+			break;
+
+		case 'PCONNECT':
+		case 'CONNECT':
+			// do nothing;
+			break;
+		default:
+			$s = "$dbms error: [$errno: $errmsg] in $fn($p1, $p2)\n";
+			echo "<table class=\"error\" cellpadding=\"5\"><tr><td>{$s}</td></tr></table><br />\n";
+			break;
+		}
+
+		$tag = implode('', $btarray0);
+
+		\PC::debug(['errno' => $errno, 'fn' => $fn, 'errmsg' => $errmsg], $tag);
+
+		throw new \PHPPgAdmin\ADODB_Exception($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
 	}
 
 	public function getContainer() {
@@ -128,7 +185,7 @@ class Misc {
 		if ($this->data === null) {
 			$_connection = $this->getConnection($database, $this->server_id);
 
-			$this->prtrace('_connection', $_connection);
+			//$this->prtrace('_connection', $_connection);
 			if (!$_connection) {
 				die($lang['strloginfailed']);
 			}
@@ -136,7 +193,7 @@ class Misc {
 			// The description of the server is returned in $platform.
 			$_type = $_connection->getDriver($platform);
 
-			\PC::debug(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion], 'driver type');
+			$this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
 
 			if ($_type === null) {
 				die(sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer));
@@ -214,6 +271,7 @@ class Misc {
 				}
 			}
 			try {
+
 				// Create the connection object and make the connection
 				$this->_connection = new \PHPPgAdmin\Database\Connection(
 					$server_info['host'],
@@ -224,16 +282,11 @@ class Misc {
 					$database_to_use
 				);
 
-				$this->prtrace('getConnectionResult', $this->_connection->getConnectionResult());
-				if ($this->_connection->getConnectionResult() === false) {
-					$msg = $lang['strloginfailed'];
-					$this->prtrace('msg', $msg);
-					//$login_controller = new LoginController($this->container);
-					return null;
-				}
-
-			} catch (\Exception $e) {
-				$this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+			} catch (\PHPPgAdmin\ADODB_Exception $e) {
+				unset($_SESSION['webdbLogin'][$this->server_id]);
+				$msg = $lang['strloginfailed'];
+				$login_controller = new LoginController($this->container);
+				return $login_controller->render();
 			}
 
 		}
@@ -406,6 +459,16 @@ class Misc {
 				'view' => $_REQUEST['view'],
 			]];
 			break;
+		case 'matview':
+			$vars = ['params' => [
+				'server' => $_REQUEST['server'],
+				'subject' => 'matview',
+				'database' => $_REQUEST['database'],
+				'schema' => $_REQUEST['schema'],
+				'matview' => $_REQUEST['matview'],
+			]];
+			break;
+
 		case 'fulltext':
 		case 'ftscfg':
 			$vars = ['params' => [
@@ -753,21 +816,21 @@ class Misc {
 	 * Print out the page heading and help link
 	 * @param $title Title, already escaped
 	 * @param $help (optional) The identifier for the help link
-	 */
+
 	function printTitle($title, $help = null, $do_print = true) {
-		$data = $this->data;
-		$lang = $this->lang;
+	$data = $this->data;
+	$lang = $this->lang;
 
-		$title_html = "<h2>";
-		$title_html .= $this->printHelp($title, $help, false);
-		$title_html .= "</h2>\n";
+	$title_html = "<h2>";
+	$title_html .= $this->printHelp($title, $help, false);
+	$title_html .= "</h2>\n";
 
-		if ($do_print) {
-			echo $title_html;
-		} else {
-			return $title_html;
-		}
+	if ($do_print) {
+	echo $title_html;
+	} else {
+	return $title_html;
 	}
+	} */
 
 	/**
 	 * Print out a message
@@ -792,119 +855,47 @@ class Misc {
 	 * @param $title The title of the page
 	 * @param $script script tag
 	 * @param $do_print boolean if false, the function will return the header content
-	 */
+
 	function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig') {
 
-		if (function_exists('newrelic_disable_autorum')) {
-			newrelic_disable_autorum();
-		}
-		$appName = $this->appName;
-		$lang = $this->lang;
-		$plugin_manager = $this->plugin_manager;
+	if (function_exists('newrelic_disable_autorum')) {
+	newrelic_disable_autorum();
+	}
+	$appName = $this->appName;
+	$lang = $this->lang;
+	$plugin_manager = $this->plugin_manager;
 
-		$viewVars = $this->lang;
-		$viewVars['dir'] = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
+	$viewVars = $this->lang;
+	$viewVars['dir'] = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
 
-		$viewVars['appName'] = htmlspecialchars($this->appName) . ($title != '') ? htmlspecialchars(" - {$title}") : '';
+	$viewVars['appName'] = htmlspecialchars($this->appName) . ($title != '') ? htmlspecialchars(" - {$title}") : '';
 
-		$header_html = $this->view->fetch($template, $viewVars);
+	$header_html = $this->view->fetch($template, $viewVars);
 
-		if ($script) {
-			$header_html .= "{$script}\n";
-		}
-
-		$plugins_head = [];
-		$_params = ['heads' => &$plugins_head];
-
-		$plugin_manager->do_hook('head', $_params);
-
-		foreach ($plugins_head as $tag) {
-			$header_html .= $tag;
-		}
-
-		$header_html .= "</head>\n";
-
-		if (!$this->_no_output && $do_print) {
-
-			header("Content-Type: text/html; charset=utf-8");
-			echo $header_html;
-
-		} else {
-			return $header_html;
-		}
+	if ($script) {
+	$header_html .= "{$script}\n";
 	}
 
-	/**
-	 * Prints the page footer
-	 * @param $doBody True to output body tag, false to return the html
-	 */
-	function printFooter($doBody = true) {
-		$lang = $this->lang;
+	$plugins_head = [];
+	$_params = ['heads' => &$plugins_head];
 
-		$footer_html = '';
-		$this->prtrace(['$_reload_browser' => $this->_reload_browser]);
-		if ($this->_reload_browser) {
-			$footer_html .= $this->printReload(false, false);
-		} elseif ($this->_reload_drop_database) {
-			$footer_html .= $this->printReload(true, false);
-		}
-		if (!$this->_no_bottom_link) {
-			$footer_html .= "<a href=\"#\" class=\"bottom_link\">" . $lang['strgotoppage'] . "</a>";
-		}
+	$plugin_manager->do_hook('head', $_params);
 
-		$footer_html .= "</body>\n";
-		$footer_html .= "</html>\n";
-
-		if ($doBody) {
-			echo $footer_html;
-		} else {
-			return $footer_html;
-		}
-
+	foreach ($plugins_head as $tag) {
+	$header_html .= $tag;
 	}
 
-	/**
-	 * Prints the page body.
-	 * @param $doBody True to output body tag, false to return
-	 * @param $bodyClass - name of body class
-	 */
-	function printBody($doBody = true, $bodyClass = '') {
+	$header_html .= "</head>\n";
 
-		$bodyClass = htmlspecialchars($bodyClass);
-		$bodyHtml = '<body class="detailbody ' . ($bodyClass == '' ? '' : $bodyClass) . '">';
-		$bodyHtml .= "\n";
+	if (!$this->_no_output && $do_print) {
 
-		if (!$this->_no_output && $doBody) {
-			echo $bodyHtml;
-		} else {
-			return $bodyHtml;
-		}
+	header("Content-Type: text/html; charset=utf-8");
+	echo $header_html;
+
+	} else {
+	return $header_html;
 	}
-
-	/**
-	 * Outputs JavaScript code that will reload the browser
-	 * @param $database True if dropping a database, false otherwise
-	 * @param $do_print true to echo, false to return;
-	 */
-	function printReload($database, $do_print = true) {
-
-		$reload = "<script type=\"text/javascript\">\n";
-		//$reload .= " alert('will reload');";
-		if ($database) {
-			$reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.href=\"/src/views/browser.php\";\n";
-		} else {
-			$reload .= "\tif(parent.frames && parent.frames.browser) { parent.frames.browser.location.reload();} else { location.replace(location.href);}\n";
-			//$reload .= "\tparent.frames.detail.location.href=\"/src/views/intro\";\n";
-			//$reload .= "\tparent.frames.detail.location.reload();\n";
-		}
-
-		$reload .= "</script>\n";
-		if ($do_print) {
-			echo $reload;
-		} else {
-			return $reload;
-		}
-	}
+	}*/
 
 	/**
 	 * Retrieve the tab info for a specific tab bar.
@@ -1379,7 +1370,7 @@ class Misc {
 			$tabs = [
 				'columns' => [
 					'title' => $lang['strcolumns'],
-					'url' => 'viewproperties.php',
+					'url' => 'materializedviewproperties.php',
 					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
 					'icon' => 'Columns',
 					'branch' => true,
@@ -1399,16 +1390,33 @@ class Misc {
 				'select' => [
 					'title' => $lang['strselect'],
 					'icon' => 'Search',
-					'url' => 'views.php',
+					'url' => 'materialized_views.php',
 					'urlvars' => ['action' => 'confselectrows', 'matview' => Decorator::field('matview')],
 					'help' => 'pg.sql.select',
 				],
 				'definition' => [
 					'title' => $lang['strdefinition'],
-					'url' => 'viewproperties.php',
+					'url' => 'materializedviewproperties.php',
 					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'definition'],
 					'icon' => 'Definition',
 				],
+				'indexes' => [
+					'title' => $lang['strindexes'],
+					'url' => 'indexes.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+					'help' => 'pg.index',
+					'icon' => 'Indexes',
+					'branch' => true,
+				],
+				/*'constraints' => [
+					'title' => $lang['strconstraints'],
+					'url' => 'constraints.php',
+					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+					'help' => 'pg.constraint',
+					'icon' => 'Constraints',
+					'branch' => true,
+				],*/
+
 				'rules' => [
 					'title' => $lang['strrules'],
 					'url' => 'rules.php',
@@ -1426,7 +1434,7 @@ class Misc {
 				],
 				'export' => [
 					'title' => $lang['strexport'],
-					'url' => 'viewproperties.php',
+					'url' => 'materializedviewproperties.php',
 					'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'export'],
 					'icon' => 'Export',
 					'hide' => false,
@@ -1687,30 +1695,6 @@ class Misc {
 	function getHelpLink($help) {
 		return htmlspecialchars("/src/views/help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
 
-	}
-
-	/**
-	 * Outputs JavaScript to set default focus
-	 * @param $object eg. forms[0].username
-	 */
-	function setFocus($object) {
-		echo "<script type=\"text/javascript\">\n";
-		echo "   document.{$object}.focus();\n";
-		echo "</script>\n";
-	}
-
-	/**
-	 * Outputs JavaScript to set the name of the browser window.
-	 * @param $name the window name
-	 * @param $addServer if true (default) then the server id is
-	 *        attached to the name.
-	 */
-	function setWindowName($name, $addServer = true) {
-		echo "<script type=\"text/javascript\">\n";
-		echo "//<![CDATA[\n";
-		echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->server_id) : ''), "';\n";
-		echo "//]]>\n";
-		echo "</script>\n";
 	}
 
 	/**

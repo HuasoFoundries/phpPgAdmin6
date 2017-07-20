@@ -7,77 +7,77 @@ use \PHPPgAdmin\Decorators\Decorator;
  * Base controller class
  */
 class MaterializedViewController extends BaseController {
-	public $script      = 'materialized_materialized_views.php';
-	public $_name       = 'MaterializedViewController';
+	public $script = 'materialized_views.php';
+	public $_name = 'MaterializedViewController';
 	public $table_place = 'matviews-matviews';
 
 	public function render() {
 
-		$conf   = $this->conf;
-		$misc   = $this->misc;
-		$lang   = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$action = $this->action;
-		$data   = $misc->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 
-		$misc->printHeader('M ' . $lang['strviews']);
-		$misc->printBody();
+		$this->printHeader('M ' . $lang['strviews']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'selectrows':
-				if (!isset($_REQUEST['cancel'])) {
-					$this->doSelectRows(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confselectrows':
-				$this->doSelectRows(true);
-				break;
-			case 'save_create_wiz':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreateWiz();
-				}
-
-				break;
-			case 'wiz_create':
-				$this->doWizardCreate();
-				break;
-			case 'set_params_create':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSetParamsCreate();
-				}
-
-				break;
-			case 'save_create':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreate();
-				}
-
-				break;
-			case 'create':
-				$this->doCreate();
-				break;
-			case 'drop':
-				if (isset($_POST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			default:
+		case 'selectrows':
+			if (!isset($_REQUEST['cancel'])) {
+				$this->doSelectRows(false);
+			} else {
 				$this->doDefault();
-				break;
+			}
+
+			break;
+		case 'confselectrows':
+			$this->doSelectRows(true);
+			break;
+		case 'save_create_wiz':
+			if (isset($_REQUEST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doSaveCreateWiz();
+			}
+
+			break;
+		case 'wiz_create':
+			$this->doWizardCreate();
+			break;
+		case 'set_params_create':
+			if (isset($_POST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doSetParamsCreate();
+			}
+
+			break;
+		case 'save_create':
+			if (isset($_REQUEST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doSaveCreate();
+			}
+
+			break;
+		case 'create':
+			$this->doCreate();
+			break;
+		case 'drop':
+			if (isset($_POST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();
@@ -97,7 +97,7 @@ class MaterializedViewController extends BaseController {
 			$this->printTabs('view', 'select');
 			$misc->printMsg($msg);
 
-			$attrs = $data->getTableAttributes($_REQUEST['view']);
+			$attrs = $data->getTableAttributes($_REQUEST['matview']);
 
 			echo '<form action="/src/views/' . $this->script . '" method="post" id="selectform">';
 			echo "\n";
@@ -165,7 +165,7 @@ class MaterializedViewController extends BaseController {
 			}
 
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"selectrows\" />\n";
-			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"subject\" value=\"view\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$lang['strselect']}\" />\n";
@@ -197,9 +197,9 @@ class MaterializedViewController extends BaseController {
 				return $this->doSelectRows(true, $lang['strselectneedscol']);
 			} else {
 				// Generate query SQL
-				$query = $data->getSelectSQL($_REQUEST['view'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
+				$query = $data->getSelectSQL($_REQUEST['matview'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
 
-				$_REQUEST['query']  = $query;
+				$_REQUEST['query'] = $query;
 				$_REQUEST['return'] = "schema";
 
 				$misc->setNoOutput(true);
@@ -221,14 +221,14 @@ class MaterializedViewController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		if (empty($_REQUEST['view']) && empty($_REQUEST['ma'])) {
+		if (empty($_REQUEST['matview']) && empty($_REQUEST['ma'])) {
 			$this->doDefault($lang['strspecifyviewtodrop']);
 			exit();
 		}
 
 		if ($confirm) {
 			$this->printTrail('view');
-			$misc->printTitle($lang['strdrop'], 'pg.view.drop');
+			$this->printTitle($lang['strdrop'], 'pg.view.drop');
 
 			echo "<form action=\"/src/views/materialized_views.php\" method=\"post\">\n";
 
@@ -240,8 +240,8 @@ class MaterializedViewController extends BaseController {
 					echo '<input type="hidden" name="view[]" value="', htmlspecialchars($a['view']), "\" />\n";
 				}
 			} else {
-				echo "<p>", sprintf($lang['strconfdropview'], $misc->printVal($_REQUEST['view'])), "</p>\n";
-				echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['view']), "\" />\n";
+				echo "<p>", sprintf($lang['strconfdropview'], $misc->printVal($_REQUEST['matview'])), "</p>\n";
+				echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
 			}
 
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
@@ -253,7 +253,7 @@ class MaterializedViewController extends BaseController {
 			echo "</form>\n";
 		} else {
 			if (is_array($_POST['view'])) {
-				$msg    = '';
+				$msg = '';
 				$status = $data->beginTransaction();
 				if ($status == 0) {
 					foreach ($_POST['view'] as $s) {
@@ -312,7 +312,7 @@ class MaterializedViewController extends BaseController {
 			}
 
 			$this->printTrail('schema');
-			$misc->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
+			$this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
 			$misc->printMsg($msg);
 
 			$tblCount = sizeof($_POST['formTables']);
@@ -325,7 +325,7 @@ class MaterializedViewController extends BaseController {
 
 			//get linking keys
 			$rsLinkKeys = $data->getLinkingKeys($arrSelTables);
-			$linkCount  = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
+			$linkCount = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
 
 			$arrFields = []; //array that will hold all our table/field names
 
@@ -389,11 +389,11 @@ class MaterializedViewController extends BaseController {
 				echo "<tr>\n<td class=\"$rowClass\">\n";
 
 				if (!$rsLinkKeys->EOF) {
-					$curLeftLink  = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
+					$curLeftLink = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
 					$curRightLink = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['f_schema'], 'tablename' => $rsLinkKeys->fields['f_table'], 'fieldname' => $rsLinkKeys->fields['f_field']]));
 					$rsLinkKeys->moveNext();
 				} else {
-					$curLeftLink  = '';
+					$curLeftLink = '';
 					$curRightLink = '';
 				}
 
@@ -453,7 +453,7 @@ class MaterializedViewController extends BaseController {
 		$tables = $data->getTables(true);
 
 		$this->printTrail('schema');
-		$misc->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
+		$this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/materialized_views.php\" method=\"post\">\n";
@@ -463,9 +463,9 @@ class MaterializedViewController extends BaseController {
 
 		$arrTables = [];
 		while (!$tables->EOF) {
-			$arrTmp                                                                   = [];
-			$arrTmp['schemaname']                                                     = $tables->fields['nspname'];
-			$arrTmp['tablename']                                                      = $tables->fields['relname'];
+			$arrTmp = [];
+			$arrTmp['schemaname'] = $tables->fields['nspname'];
+			$arrTmp['tablename'] = $tables->fields['relname'];
 			$arrTables[$tables->fields['nspname'] . '.' . $tables->fields['relname']] = serialize($arrTmp);
 			$tables->moveNext();
 		}
@@ -506,7 +506,7 @@ class MaterializedViewController extends BaseController {
 		}
 
 		$this->printTrail('schema');
-		$misc->printTitle($lang['strcreateview'], 'pg.view.create');
+		$this->printTitle($lang['strcreateview'], 'pg.view.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/materialized_views.php\" method=\"post\">\n";
@@ -611,8 +611,8 @@ class MaterializedViewController extends BaseController {
 					}
 				}
 				// We must perform some magic to make sure that we have a valid join order
-				$count       = sizeof($arrLinks);
-				$arrJoined   = [];
+				$count = sizeof($arrLinks);
+				$arrJoined = [];
 				$arrUsedTbls = [];
 
 				// If we have at least one join condition, output it
@@ -621,7 +621,7 @@ class MaterializedViewController extends BaseController {
 					while ($j < $count) {
 						foreach ($arrLinks as $curLink) {
 
-							$arrLeftLink  = unserialize($curLink['leftlink']);
+							$arrLeftLink = unserialize($curLink['leftlink']);
 							$arrRightLink = unserialize($curLink['rightlink']);
 							$data->fieldArrayClean($arrLeftLink);
 							$data->fieldArrayClean($arrRightLink);
@@ -733,7 +733,7 @@ class MaterializedViewController extends BaseController {
 		$actions = [
 			'multiactions' => [
 				'keycols' => ['matview' => 'relname'],
-				'url' => 'materialized_materialized_views.php',
+				'url' => 'materialized_views.php',
 			],
 			'browse' => [
 				'content' => $lang['strbrowse'],
@@ -773,7 +773,7 @@ class MaterializedViewController extends BaseController {
 				'content' => $lang['stralter'],
 				'attr' => [
 					'href' => [
-						'url' => 'viewproperties.php',
+						'url' => 'materializedviewproperties.php',
 						'urlvars' => [
 							'action' => 'confirm_alter',
 							'matview' => Decorator::field('relname'),

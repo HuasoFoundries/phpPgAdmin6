@@ -64,18 +64,23 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
 $app->get('/', function ($request, $response, $args) use ($msg) {
 
+	$uri = $request->getUri();
+	list($base, $query_string) = explode('?', $uri->getQuery());
+
 	$viewVars = $this->lang;
 	$viewVars['appName'] = $this->get('settings')['appName'];
-	$viewVars['view'] = 'intro';
+	$subject = 'intro';
 	$viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
 	if ($viewVars['rtl']) {
 		$viewVars['cols'] = '*,' . $this->conf['left_width'];
-		$template = 'home_rtl.twig';
+		$template = 'iframe_view_rtl.twig';
 	} else {
 		$viewVars['cols'] = $this->conf['left_width'] . ',*';
-		$template = 'home.twig';
+		$template = 'iframe_view.twig';
 	}
+	$url = '/src/views/' . $subject . '.php?' . $query_string;
+	$viewVars['url'] = $url;
 
 	return $this->view->render($response, $template, $viewVars);
 
@@ -107,6 +112,8 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 		$body->write($login_html);
 
 		return $response;
+
+		//return $response->withStatus(302)->withHeader('Location', '/login');
 	} else {
 
 		$url = $this->misc->getLastTabURL($subject);
@@ -150,19 +157,35 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 $app->get('/{subject}', function ($request, $response, $args) use ($msg, $container) {
 	$subject = (isset($args['subject'])) ? $args['subject'] : 'root';
-	$uri = $request->getUri();
 	if ($subject === 'server' || $subject === 'root') {
 		$subject = 'login';
 	}
-	list($base, $query_string) = explode('?', $uri->getQuery());
-	$url = '/src/views/' . $subject . '.php?' . $query_string;
+	$uri = $request->getUri();
+	$base_and_qs = explode('?', $uri->getQuery());
+
+	$query_string = '';
+	if (count($base_and_qs) >= 2) {
+		$query_string = '?' . $base_and_qs[1];
+	}
+
+	$url = '/src/views/' . $subject . '.php' . $query_string;
+
+	\PC::debug(['subject' => $subject, 'url' => $url], 'subject');
+	$viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
+
+	if ($viewVars['rtl']) {
+		$viewVars['cols'] = '*,' . $this->conf['left_width'];
+		$template = 'iframe_view_rtl.twig';
+	} else {
+		$viewVars['cols'] = $this->conf['left_width'] . ',*';
+		$template = 'iframe_view.twig';
+	}
 
 	$viewVars = $this->lang;
 	$viewVars['appName'] = $this->get('settings')['appName'];
 	$viewVars['url'] = $url;
-	$viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
-	return $this->view->render($response, 'view.twig', $viewVars);
+	return $this->view->render($response, $template, $viewVars);
 });
 
 // Run app

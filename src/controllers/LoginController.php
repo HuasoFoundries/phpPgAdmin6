@@ -56,8 +56,8 @@ class LoginController extends BaseController {
 
 		$misc->setNoDBConnection(true);
 
-		$login_html = $misc->printHeader($lang[$this->_title], null, false);
-		$login_html .= $misc->printBody(false);
+		$login_html = $this->printHeader($lang[$this->_title], null, false);
+		$login_html .= $this->printBody(false);
 		$login_html .= $this->printTrail('root', false);
 
 		if (!empty($_POST)) {
@@ -75,7 +75,7 @@ class LoginController extends BaseController {
 		$server_info = $misc->getServerInfo($_REQUEST['server']);
 		$title = sprintf($lang['strlogintitle'], $server_info['desc']);
 
-		$printTitle = $misc->printTitle($title, null, false);
+		$printTitle = $this->printTitle($title, null, false);
 
 		$login_html .= $printTitle;
 

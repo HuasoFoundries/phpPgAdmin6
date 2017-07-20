@@ -20,69 +20,69 @@ class SequenceController extends BaseController {
 		}
 
 		// Print header
-		$misc->printHeader($lang['strsequences']);
-		$misc->printBody();
+		$this->printHeader($lang['strsequences']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'create':
-				$this->doCreateSequence();
-				break;
-			case 'save_create_sequence':
-				if (isset($_POST['create'])) {
-					$this->doSaveCreateSequence();
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'properties':
-				$this->doProperties();
-				break;
-			case 'drop':
-				if (isset($_POST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			case 'restart':
-				$this->doRestart();
-				break;
-			case 'reset':
-				$this->doReset();
-				break;
-			case 'nextval':
-				$this->doNextval();
-				break;
-			case 'setval':
-				if (isset($_POST['setval'])) {
-					$this->doSaveSetval();
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_setval':
-				$this->doSetval();
-				break;
-			case 'alter':
-				if (isset($_POST['alter'])) {
-					$this->doSaveAlter();
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_alter':
-				$this->doAlter();
-				break;
-			default:
+		case 'create':
+			$this->doCreateSequence();
+			break;
+		case 'save_create_sequence':
+			if (isset($_POST['create'])) {
+				$this->doSaveCreateSequence();
+			} else {
 				$this->doDefault();
-				break;
+			}
+
+			break;
+		case 'properties':
+			$this->doProperties();
+			break;
+		case 'drop':
+			if (isset($_POST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		case 'restart':
+			$this->doRestart();
+			break;
+		case 'reset':
+			$this->doReset();
+			break;
+		case 'nextval':
+			$this->doNextval();
+			break;
+		case 'setval':
+			if (isset($_POST['setval'])) {
+				$this->doSaveSetval();
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_setval':
+			$this->doSetval();
+			break;
+		case 'alter':
+			if (isset($_POST['alter'])) {
+				$this->doSaveAlter();
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_alter':
+			$this->doAlter();
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		// Print footer
@@ -228,7 +228,7 @@ class SequenceController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 		$this->printTrail('sequence');
-		$misc->printTitle($lang['strproperties'], 'pg.sequence');
+		$this->printTitle($lang['strproperties'], 'pg.sequence');
 		$misc->printMsg($msg);
 
 		// Fetch the sequence information
@@ -390,7 +390,7 @@ class SequenceController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('sequence');
-			$misc->printTitle($lang['strdrop'], 'pg.sequence.drop');
+			$this->printTitle($lang['strdrop'], 'pg.sequence.drop');
 			$misc->printMsg($msg);
 
 			echo "<form action=\"/src/views/sequences.php\" method=\"post\">\n";
@@ -415,7 +415,7 @@ class SequenceController extends BaseController {
 			echo "</form>\n";
 		} else {
 			if (is_array($_POST['sequence'])) {
-				$msg    = '';
+				$msg = '';
 				$status = $data->beginTransaction();
 				if ($status == 0) {
 					foreach ($_POST['sequence'] as $s) {
@@ -484,7 +484,7 @@ class SequenceController extends BaseController {
 		}
 
 		$this->printTrail('schema');
-		$misc->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
+		$this->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/sequences.php\" method=\"post\">\n";
@@ -633,7 +633,7 @@ class SequenceController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('sequence');
-		$misc->printTitle($lang['strsetval'], 'pg.sequence');
+		$this->printTitle($lang['strsetval'], 'pg.sequence');
 		$misc->printMsg($msg);
 
 		// Fetch the sequence information
@@ -737,7 +737,7 @@ class SequenceController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('sequence');
-		$misc->printTitle($lang['stralter'], 'pg.sequence.alter');
+		$this->printTitle($lang['stralter'], 'pg.sequence.alter');
 		$misc->printMsg($msg);
 
 		// Fetch the sequence information

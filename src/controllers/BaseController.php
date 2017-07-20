@@ -7,7 +7,7 @@ namespace PHPPgAdmin\Controller;
  */
 class BaseController {
 
-	use \PHPPgAdmin\DebugTrait;
+	use \PHPPgAdmin\HelperTrait;
 
 	private $container = null;
 	private $_connection = null;
@@ -28,6 +28,7 @@ class BaseController {
 	private $table_controller = null;
 	private $trail_controller = null;
 	private $tree_controller = null;
+	private $_no_output = false;
 	public $msg = '';
 
 	/* Constructor */
@@ -45,6 +46,11 @@ class BaseController {
 
 		$this->appThemes = $container->get('appThemes');
 		$this->action = $container->get('action');
+
+		$this->appName = $container->get('settings')['appName'];
+		$this->appVersion = $container->get('settings')['appVersion'];
+		$this->postgresqlMinVer = $container->get('settings')['postgresqlMinVer'];
+		$this->phpMinVer = $container->get('settings')['phpMinVer'];
 
 		$msg = $container->get('msg');
 		if ($this->misc->getNoDBConnection() === false) {
@@ -66,20 +72,49 @@ class BaseController {
 		//\PC::debug(['name' => $this->_name, 'no_db_connection' => $this->misc->getNoDBConnection()], 'instanced controller');
 	}
 
+	public function render() {
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$action = $this->action;
+
+		$this->printHeader($lang[$this->_title]);
+		$this->printBody();
+
+		switch ($action) {
+		default:
+			$this->doDefault();
+			break;
+		}
+
+		$misc->printFooter();
+	}
+
+	public function doDefault() {
+		$html = '<div><h2>Section title</h2> <p>Main content</p></div>';
+		echo $html;
+		return $html;
+	}
+
+	function setNoOutput($flag) {
+		$this->_no_output = boolval($flag);
+		$this->misc->setNoOutput(boolval($flag));
+		return $this;
+	}
+
 	public function getContainer() {
 		return $this->container;
 	}
 
 	private function getTableController() {
 		if ($this->table_controller === null) {
-			$this->table_controller = new \PHPPgAdmin\XHtml\HTMLTableController($this->getContainer());
+			$this->table_controller = new \PHPPgAdmin\XHtml\HTMLTableController($this->getContainer(), $this->_name);
 		}
 		return $this->table_controller;
 	}
 
 	private function getNavbarController() {
 		if ($this->trail_controller === null) {
-			$this->trail_controller = new \PHPPgAdmin\XHtml\HTMLNavbarController($this->getContainer());
+			$this->trail_controller = new \PHPPgAdmin\XHtml\HTMLNavbarController($this->getContainer(), $this->_name);
 		}
 
 		return $this->trail_controller;
@@ -87,11 +122,12 @@ class BaseController {
 
 	private function getTreeController() {
 		if ($this->tree_controller === null) {
-			$this->tree_controller = new \PHPPgAdmin\XHtml\TreeController($this->getContainer());
+			$this->tree_controller = new \PHPPgAdmin\XHtml\TreeController($this->getContainer(), $this->_name);
 		}
 
 		return $this->tree_controller;
 	}
+
 	/**
 	 * Instances an HTMLTable and returns its html content
 	 * @param  [type] &$tabledata [description]
@@ -141,26 +177,4 @@ class BaseController {
 		return $html_trail->printLink($link, $do_print);
 	}
 
-	public function render() {
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$action = $this->action;
-
-		$misc->printHeader($lang[$this->_title]);
-		$misc->printBody();
-
-		switch ($action) {
-		default:
-			$this->doDefault();
-			break;
-		}
-
-		$misc->printFooter();
-	}
-
-	public function doDefault() {
-		$html = '<div><h2>Section title</h2> <p>Main content</p></div>';
-		echo $html;
-		return $html;
-	}
 }

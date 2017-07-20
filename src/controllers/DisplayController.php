@@ -18,476 +18,109 @@ class DisplayController extends BaseController {
 		}
 	}
 
-	/**
-	 * Show confirmation of edit and perform actual update
-	 */
-	function doEditRow($confirm, $msg = '') {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
+		$plugin_manager = $this->plugin_manager;
 		$data = $misc->getDatabaseAccessor();
+		$action = $this->action;
 
-		if (is_array($_REQUEST['key'])) {
-			$key = $_REQUEST['key'];
+		/* shortcuts: this function exit the script for ajax purpose */
+		if ($action == 'dobrowsefk') {
+			$this->doBrowseFK();
+		}
+
+		$scripts = "<script src=\"/js/display.js\" type=\"text/javascript\"></script>";
+
+		$scripts .= "<script type=\"text/javascript\">\n";
+		$scripts .= "var Display = {\n";
+		$scripts .= "errmsg: '" . str_replace("'", "\'", $lang['strconnectionfail']) . "'\n";
+		$scripts .= "};\n";
+		$scripts .= "</script>\n";
+
+		$footer_template = 'footer.twig';
+		$header_template = 'header.twig';
+
+		ob_start();
+		switch ($action) {
+		case 'editrow':
+			if (isset($_POST['save'])) {
+				$this->doEditRow(false);
+			} else {
+				$header_template = 'sqledit_header.twig';
+				$footer_template = 'sqledit_footer.twig';
+				$this->doBrowse();
+			}
+
+			break;
+		case 'confeditrow':
+			$this->doEditRow(true);
+			break;
+		case 'delrow':
+			if (isset($_POST['yes'])) {
+				$this->doDelRow(false);
+			} else {
+				$header_template = 'sqledit_header.twig';
+				$footer_template = 'sqledit_footer.twig';
+				$this->doBrowse();
+			}
+
+			break;
+		case 'confdelrow':
+			$this->doDelRow(true);
+			break;
+		default:
+			$header_template = 'sqledit_header.twig';
+			$footer_template = 'sqledit_footer.twig';
+			$this->doBrowse();
+			break;
+		}
+		$output = ob_get_clean();
+
+		// Set the title based on the subject of the request
+		if (isset($_REQUEST['subject']) && isset($_REQUEST[$_REQUEST['subject']])) {
+			if ($_REQUEST['subject'] == 'table') {
+				$this->printHeader(
+					$lang['strtables'] . ': ' . $_REQUEST[$_REQUEST['subject']],
+					$scripts, true, $header_template
+				);
+			} else if ($_REQUEST['subject'] == 'view') {
+				$this->printHeader(
+					$lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']],
+					$scripts, true, $header_template
+				);
+			} else if ($_REQUEST['subject'] == 'matview') {
+				$this->printHeader(
+					'M' . $lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']],
+					$scripts, true, $header_template
+				);
+			} else if ($_REQUEST['subject'] == 'column') {
+				$this->printHeader(
+					$lang['strcolumn'] . ': ' . $_REQUEST[$_REQUEST['subject']],
+					$scripts, true, $header_template
+				);
+			}
 		} else {
-			$key = unserialize(urldecode($_REQUEST['key']));
+			$this->printHeader($lang['strqueryresults'], $scripts, true, $header_template);
 		}
 
-		if ($confirm) {
-			$this->printTrail($_REQUEST['subject']);
-			$misc->printTitle($lang['streditrow']);
-			$misc->printMsg($msg);
+		$this->printBody();
 
-			$attrs = $data->getTableAttributes($_REQUEST['table']);
-			$rs    = $data->browseRow($_REQUEST['table'], $key);
+		echo $output;
 
-			if (($conf['autocomplete'] != 'disable')) {
-				$fksprops = $misc->getAutocompleteFKProperties($_REQUEST['table']);
-				if ($fksprops !== false) {
-					echo $fksprops['code'];
-				}
-
-			} else {
-				$fksprops = false;
-			}
-
-			echo "<form action=\"/src/views/display.php\" method=\"post\" id=\"ac_form\">\n";
-			$elements = 0;
-			$error    = true;
-			if ($rs->recordCount() == 1 && $attrs->recordCount() > 0) {
-				echo "<table>\n";
-
-				// Output table header
-				echo "<tr><th class=\"data\">{$lang['strcolumn']}</th><th class=\"data\">{$lang['strtype']}</th>";
-				echo "<th class=\"data\">{$lang['strformat']}</th>\n";
-				echo "<th class=\"data\">{$lang['strnull']}</th><th class=\"data\">{$lang['strvalue']}</th></tr>";
-
-				$i = 0;
-				while (!$attrs->EOF) {
-
-					$attrs->fields['attnotnull'] = $data->phpBool($attrs->fields['attnotnull']);
-					$id                          = (($i % 2) == 0 ? '1' : '2');
-
-					// Initialise variables
-					if (!isset($_REQUEST['format'][$attrs->fields['attname']])) {
-						$_REQUEST['format'][$attrs->fields['attname']] = 'VALUE';
-					}
-
-					echo "<tr class=\"data{$id}\">\n";
-					echo "<td style=\"white-space:nowrap;\">", $misc->printVal($attrs->fields['attname']), "</td>";
-					echo "<td style=\"white-space:nowrap;\">\n";
-					echo $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
-					echo "<input type=\"hidden\" name=\"types[", htmlspecialchars($attrs->fields['attname']), "]\" value=\"",
-					htmlspecialchars($attrs->fields['type']), "\" /></td>";
-					$elements++;
-					echo "<td style=\"white-space:nowrap;\">\n";
-					echo "<select name=\"format[", htmlspecialchars($attrs->fields['attname']), "]\">\n";
-					echo "<option value=\"VALUE\"", ($_REQUEST['format'][$attrs->fields['attname']] == 'VALUE') ? ' selected="selected"' : '', ">{$lang['strvalue']}</option>\n";
-					echo "<option value=\"EXPRESSION\"", ($_REQUEST['format'][$attrs->fields['attname']] == 'EXPRESSION') ? ' selected="selected"' : '', ">{$lang['strexpression']}</option>\n";
-					echo "</select>\n</td>\n";
-					$elements++;
-					echo "<td style=\"white-space:nowrap;\">";
-					// Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
-					if (!$attrs->fields['attnotnull']) {
-						// Set initial null values
-						if ($_REQUEST['action'] == 'confeditrow' && $rs->fields[$attrs->fields['attname']] === null) {
-							$_REQUEST['nulls'][$attrs->fields['attname']] = 'on';
-						}
-						echo "<label><span><input type=\"checkbox\" name=\"nulls[{$attrs->fields['attname']}]\"",
-						isset($_REQUEST['nulls'][$attrs->fields['attname']]) ? ' checked="checked"' : '', " /></span></label></td>\n";
-						$elements++;
-					} else {
-						echo "&nbsp;</td>";
-					}
-
-					echo "<td id=\"row_att_{$attrs->fields['attnum']}\" style=\"white-space:nowrap;\">";
-
-					$extras = [];
-
-					// If the column allows nulls, then we put a JavaScript action on the data field to unset the
-					// NULL checkbox as soon as anything is entered in the field.  We use the $elements variable to
-					// keep track of which element offset we're up to.  We can't refer to the null checkbox by name
-					// as it contains '[' and ']' characters.
-					if (!$attrs->fields['attnotnull']) {
-						$extras['onChange'] = 'elements[' . ($elements - 1) . '].checked = false;';
-					}
-
-					if (($fksprops !== false) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
-						$extras['id']           = "attr_{$attrs->fields['attnum']}";
-						$extras['autocomplete'] = 'off';
-					}
-
-					echo $data->printField("values[{$attrs->fields['attname']}]", $rs->fields[$attrs->fields['attname']], $attrs->fields['type'], $extras);
-
-					echo "</td>";
-					$elements++;
-					echo "</tr>\n";
-					$i++;
-					$attrs->moveNext();
-				}
-				echo "</table>\n";
-
-				$error = false;
-			} elseif ($rs->recordCount() != 1) {
-				echo "<p>{$lang['strrownotunique']}</p>\n";
-			} else {
-				echo "<p>{$lang['strinvalidparam']}</p>\n";
-			}
-
-			echo "<input type=\"hidden\" name=\"action\" value=\"editrow\" />\n";
-			echo $misc->form;
-			if (isset($_REQUEST['table'])) {
-				echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-			}
-
-			if (isset($_REQUEST['subject'])) {
-				echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['subject']), "\" />\n";
-			}
-
-			if (isset($_REQUEST['query'])) {
-				echo "<input type=\"hidden\" name=\"query\" value=\"", htmlspecialchars($_REQUEST['query']), "\" />\n";
-			}
-
-			if (isset($_REQUEST['count'])) {
-				echo "<input type=\"hidden\" name=\"count\" value=\"", htmlspecialchars($_REQUEST['count']), "\" />\n";
-			}
-
-			if (isset($_REQUEST['return'])) {
-				echo "<input type=\"hidden\" name=\"return\" value=\"", htmlspecialchars($_REQUEST['return']), "\" />\n";
-			}
-
-			echo "<input type=\"hidden\" name=\"page\" value=\"", htmlspecialchars($_REQUEST['page']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"sortkey\" value=\"", htmlspecialchars($_REQUEST['sortkey']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"sortdir\" value=\"", htmlspecialchars($_REQUEST['sortdir']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"strings\" value=\"", htmlspecialchars($_REQUEST['strings']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"key\" value=\"", htmlspecialchars(urlencode(serialize($key))), "\" />\n";
-			echo "<p>";
-			if (!$error) {
-				echo "<input type=\"submit\" name=\"save\" accesskey=\"r\" value=\"{$lang['strsave']}\" />\n";
-			}
-
-			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
-
-			if ($fksprops !== false) {
-				if ($conf['autocomplete'] != 'default off') {
-					echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$lang['strac']}</label>\n";
-				} else {
-					echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$lang['strac']}</label>\n";
-				}
-
-			}
-
-			echo "</p>\n";
-			echo "</form>\n";
-		} else {
-			if (!isset($_POST['values'])) {
-				$_POST['values'] = [];
-			}
-
-			if (!isset($_POST['nulls'])) {
-				$_POST['nulls'] = [];
-			}
-
-			$status = $data->editRow($_POST['table'], $_POST['values'], $_POST['nulls'],
-				$_POST['format'], $_POST['types'], $key);
-			if ($status == 0) {
-				$this->doBrowse($lang['strrowupdated']);
-			} elseif ($status == -2) {
-				$this->doEditRow(true, $lang['strrownotunique']);
-			} else {
-				$this->doEditRow(true, $lang['strrowupdatedbad']);
-			}
-
-		}
-
-	}
-
-	/**
-	 * Show confirmation of drop and perform actual drop
-	 */
-	function doDelRow($confirm) {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-
-		if ($confirm) {
-			$this->printTrail($_REQUEST['subject']);
-			$misc->printTitle($lang['strdeleterow']);
-
-			$rs = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
-
-			echo "<form action=\"/src/views/display.php\" method=\"post\">\n";
-			echo $misc->form;
-
-			if ($rs->recordCount() == 1) {
-				echo "<p>{$lang['strconfdeleterow']}</p>\n";
-
-				$fkinfo = [];
-				echo "<table><tr>";
-				$this->printTableHeaderCells($rs, false, true);
-				echo "</tr>";
-				echo "<tr class=\"data1\">\n";
-				$this->printTableRowCells($rs, $fkinfo, true);
-				echo "</tr>\n";
-				echo "</table>\n";
-				echo "<br />\n";
-
-				echo "<input type=\"hidden\" name=\"action\" value=\"delrow\" />\n";
-				echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
-				echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
-			} elseif ($rs->recordCount() != 1) {
-				echo "<p>{$lang['strrownotunique']}</p>\n";
-				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
-			} else {
-				echo "<p>{$lang['strinvalidparam']}</p>\n";
-				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
-			}
-			if (isset($_REQUEST['table'])) {
-				echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-			}
-
-			if (isset($_REQUEST['subject'])) {
-				echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['subject']), "\" />\n";
-			}
-
-			if (isset($_REQUEST['query'])) {
-				echo "<input type=\"hidden\" name=\"query\" value=\"", htmlspecialchars($_REQUEST['query']), "\" />\n";
-			}
-
-			if (isset($_REQUEST['count'])) {
-				echo "<input type=\"hidden\" name=\"count\" value=\"", htmlspecialchars($_REQUEST['count']), "\" />\n";
-			}
-
-			if (isset($_REQUEST['return'])) {
-				echo "<input type=\"hidden\" name=\"return\" value=\"", htmlspecialchars($_REQUEST['return']), "\" />\n";
-			}
-
-			echo "<input type=\"hidden\" name=\"page\" value=\"", htmlspecialchars($_REQUEST['page']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"sortkey\" value=\"", htmlspecialchars($_REQUEST['sortkey']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"sortdir\" value=\"", htmlspecialchars($_REQUEST['sortdir']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"strings\" value=\"", htmlspecialchars($_REQUEST['strings']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"key\" value=\"", htmlspecialchars(urlencode(serialize($_REQUEST['key']))), "\" />\n";
-			echo "</form>\n";
-		} else {
-			$status = $data->deleteRow($_POST['table'], unserialize(urldecode($_POST['key'])));
-			if ($status == 0) {
-				$this->doBrowse($lang['strrowdeleted']);
-			} elseif ($status == -2) {
-				$this->doBrowse($lang['strrownotunique']);
-			} else {
-				$this->doBrowse($lang['strrowdeletedbad']);
-			}
-
-		}
-
-	}
-
-	/**
-	 * build & return the FK information data structure
-	 * used when deciding if a field should have a FK link or not
-	 * @return [type] [description]
-	 */
-	function &getFKInfo() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-
-		// Get the foreign key(s) information from the current table
-		$fkey_information = ['byconstr' => [], 'byfield' => []];
-
-		if (isset($_REQUEST['table'])) {
-			$constraints = $data->getConstraintsWithFields($_REQUEST['table']);
-			if ($constraints->recordCount() > 0) {
-
-				$fkey_information['common_url'] = $misc->getHREF('schema') . '&amp;subject=table';
-
-				/* build the FK constraints data structure */
-				while (!$constraints->EOF) {
-					$constr = &$constraints->fields;
-					if ($constr['contype'] == 'f') {
-
-						if (!isset($fkey_information['byconstr'][$constr['conid']])) {
-							$fkey_information['byconstr'][$constr['conid']] = [
-								'url_data' => 'table=' . urlencode($constr['f_table']) . '&amp;schema=' . urlencode($constr['f_schema']),
-								'fkeys' => [],
-								'consrc' => $constr['consrc'],
-							];
-						}
-
-						$fkey_information['byconstr'][$constr['conid']]['fkeys'][$constr['p_field']] = $constr['f_field'];
-
-						if (!isset($fkey_information['byfield'][$constr['p_field']])) {
-							$fkey_information['byfield'][$constr['p_field']] = [];
-						}
-
-						$fkey_information['byfield'][$constr['p_field']][] = $constr['conid'];
-					}
-					$constraints->moveNext();
-				}
-			}
-		}
-
-		return $fkey_information;
-	}
-
-	/**
-	 * Print table header cells
-	 * @param $args - associative array for sort link parameters
-	 *
-	 */
-	function printTableHeaderCells(&$rs, $args, $withOid) {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-		$j    = 0;
-
-		foreach ($rs->fields as $k => $v) {
-
-			if (($k === $data->id) && (!($withOid && $conf['show_oids']))) {
-				$j++;
-				continue;
-			}
-			$finfo = $rs->fetchField($j);
-
-			if ($args === false) {
-				echo "<th class=\"data\">", $misc->printVal($finfo->name), "</th>\n";
-			} else {
-				$args['page']    = $_REQUEST['page'];
-				$args['sortkey'] = $j + 1;
-				// Sort direction opposite to current direction, unless it's currently ''
-				$args['sortdir'] = (
-					$_REQUEST['sortdir'] == 'asc'
-					and $_REQUEST['sortkey'] == ($j + 1)
-				) ? 'desc' : 'asc';
-
-				$sortLink = http_build_query($args);
-
-				echo "<th class=\"data\"><a href=\"?{$sortLink}\">"
-				, $misc->printVal($finfo->name);
-				if ($_REQUEST['sortkey'] == ($j + 1)) {
-					if ($_REQUEST['sortdir'] == 'asc') {
-						echo '<img src="' . $misc->icon('RaiseArgument') . '" alt="asc">';
-					} else {
-						echo '<img src="' . $misc->icon('LowerArgument') . '" alt="desc">';
-					}
-
-				}
-				echo "</a></th>\n";
-			}
-			$j++;
-		}
-
-		reset($rs->fields);
-	}
-
-	/* Print data-row cells */
-	function printTableRowCells(&$rs, &$fkey_information, $withOid) {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-		$j    = 0;
-
-		if (!isset($_REQUEST['strings'])) {
-			$_REQUEST['strings'] = 'collapsed';
-		}
-
-		foreach ($rs->fields as $k => $v) {
-			$finfo = $rs->fetchField($j++);
-
-			if (($k === $data->id) && (!($withOid && $conf['show_oids']))) {
-				continue;
-			} elseif ($v !== null && $v == '') {
-				echo "<td>&nbsp;</td>";
-			} else {
-				echo "<td style=\"white-space:nowrap;\">";
-
-				if (($v !== null) && isset($fkey_information['byfield'][$k])) {
-					foreach ($fkey_information['byfield'][$k] as $conid) {
-
-						$query_params = $fkey_information['byconstr'][$conid]['url_data'];
-
-						foreach ($fkey_information['byconstr'][$conid]['fkeys'] as $p_field => $f_field) {
-							$query_params .= '&amp;' . urlencode("fkey[{$f_field}]") . '=' . urlencode($rs->fields[$p_field]);
-						}
-
-						/* $fkey_information['common_url'] is already urlencoded */
-						$query_params .= '&amp;' . $fkey_information['common_url'];
-						echo "<div style=\"display:inline-block;\">";
-						echo "<a class=\"fk fk_" . htmlentities($conid, ENT_QUOTES, 'UTF-8') . "\" href=\"display.php?{$query_params}\">";
-						echo "<img src=\"" . $misc->icon('ForeignKey') . "\" style=\"vertical-align:middle;\" alt=\"[fk]\" title=\""
-						. htmlentities($fkey_information['byconstr'][$conid]['consrc'], ENT_QUOTES, 'UTF-8')
-							. "\" />";
-						echo "</a>";
-						echo "</div>";
-					}
-					echo $misc->printVal($v, $finfo->type, ['null' => true, 'clip' => ($_REQUEST['strings'] == 'collapsed'), 'class' => 'fk_value']);
-				} else {
-					echo $misc->printVal($v, $finfo->type, ['null' => true, 'clip' => ($_REQUEST['strings'] == 'collapsed')]);
-				}
-				echo "</td>";
-			}
-		}
-	}
-
-	/* Print the FK row, used in ajax requests */
-	function doBrowseFK() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-
-		$ops = [];
-		foreach ($_REQUEST['fkey'] as $x => $y) {
-			$ops[$x] = '=';
-		}
-		$query             = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
-		$_REQUEST['query'] = $query;
-
-		$fkinfo = $this->getFKInfo();
-
-		$max_pages = 1;
-		// Retrieve page from query.  $max_pages is returned by reference.
-		$rs = $data->browseQuery('SELECT', $_REQUEST['table'], $_REQUEST['query'],
-			null, null, 1, 1, $max_pages);
-
-		echo "<a href=\"\" style=\"display:table-cell;\" class=\"fk_delete\"><img alt=\"[delete]\" src=\"" . $misc->icon('Delete') . "\" /></a>\n";
-		echo "<div style=\"display:table-cell;\">";
-
-		if (is_object($rs) && $rs->recordCount() > 0) {
-			/* we are browsing a referenced table here
-				 * we should show OID if show_oids is true
-				 * so we give true to withOid in functions bellow
-			*/
-
-			echo "<table><tr>";
-			$this->printTableHeaderCells($rs, false, true);
-			echo "</tr>";
-			echo "<tr class=\"data1\">\n";
-			$this->printTableRowCells($rs, $fkinfo, true);
-			echo "</tr>\n";
-			echo "</table>\n";
-		} else {
-			echo $lang['strnodata'];
-		}
-
-		echo "</div>";
-
-		exit;
+		$misc->printFooter(true, $footer_template);
 	}
 
 	/**
 	 * Displays requested data
 	 */
 	function doBrowse($msg = '') {
-		$conf           = $this->conf;
-		$misc           = $this->misc;
-		$lang           = $this->lang;
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$plugin_manager = $this->plugin_manager;
-		$data           = $misc->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 
 		$save_history = false;
 		// If current page is not set, default to first page
@@ -518,20 +151,20 @@ class DisplayController extends BaseController {
 			foreach ($_REQUEST['fkey'] as $x => $y) {
 				$ops[$x] = '=';
 			}
-			$query             = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+			$query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
 			$_REQUEST['query'] = $query;
 		}
 
 		if (isset($object)) {
 			if (isset($_REQUEST['query'])) {
 				$_SESSION['sqlquery'] = $_REQUEST['query'];
-				$misc->printTitle($lang['strselect']);
+				$this->printTitle($lang['strselect']);
 				$type = 'SELECT';
 			} else {
 				$type = 'TABLE';
 			}
 		} else {
-			$misc->printTitle($lang['strqueryresults']);
+			$this->printTitle($lang['strqueryresults']);
 			/*we comes from sql.php, $_SESSION['sqlquery'] has been set there */
 			$type = 'QUERY';
 		}
@@ -633,12 +266,15 @@ class DisplayController extends BaseController {
 			$misc->saveScriptHistory($_REQUEST['query']);
 		}
 
-		echo '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '"><textarea width="90%" name="query" rows="5" cols="100" resizable="true">';
+		echo '<form method="POST" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
+		echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 		if (isset($_REQUEST['query'])) {
 			$query = $_REQUEST['query'];
 		} else {
 			$query = "SELECT * FROM {$_REQUEST['schema']}";
-			if ($_REQUEST['subject'] == 'view') {
+			if ($_REQUEST['subject'] == 'matview') {
+				$query = "{$query}.{$_REQUEST['matview']};";
+			} else if ($_REQUEST['subject'] == 'view') {
 				$query = "{$query}.{$_REQUEST['view']};";
 			} else {
 				$query = "{$query}.{$_REQUEST['table']};";
@@ -731,7 +367,7 @@ class DisplayController extends BaseController {
 				// Display edit and delete links if we have a key
 				if ($colspan > 0 and count($key) > 0) {
 					$keys_array = [];
-					$has_nulls  = false;
+					$has_nulls = false;
 					foreach ($key as $v) {
 						if ($rs->fields[$v] === null) {
 							$has_nulls = true;
@@ -744,7 +380,7 @@ class DisplayController extends BaseController {
 					} else {
 
 						if (isset($actions['actionbuttons']['edit'])) {
-							$actions['actionbuttons']['edit']                            = $edit_params;
+							$actions['actionbuttons']['edit'] = $edit_params;
 							$actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
 								$actions['actionbuttons']['edit']['attr']['href']['urlvars'],
 								$keys_array
@@ -752,7 +388,7 @@ class DisplayController extends BaseController {
 						}
 
 						if (isset($actions['actionbuttons']['delete'])) {
-							$actions['actionbuttons']['delete']                            = $delete_params;
+							$actions['actionbuttons']['delete'] = $delete_params;
 							$actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
 								$actions['actionbuttons']['delete']['attr']['href']['urlvars'],
 								$keys_array
@@ -928,80 +564,465 @@ class DisplayController extends BaseController {
 
 		$this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
 	}
+	/**
+	 * Show confirmation of edit and perform actual update
+	 */
+	function doEditRow($confirm, $msg = '') {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
 
-	public function render() {
-		$conf           = $this->conf;
-		$misc           = $this->misc;
-		$lang           = $this->lang;
-		$plugin_manager = $this->plugin_manager;
-		$data           = $misc->getDatabaseAccessor();
-		$action         = $this->action;
-
-		/* shortcuts: this function exit the script for ajax purpose */
-		if ($action == 'dobrowsefk') {
-			$this->doBrowseFK();
-		}
-
-		$scripts = "<script src=\"/js/display.js\" type=\"text/javascript\"></script>";
-
-		$scripts .= "<script type=\"text/javascript\">\n";
-		$scripts .= "var Display = {\n";
-		$scripts .= "errmsg: '" . str_replace("'", "\'", $lang['strconnectionfail']) . "'\n";
-		$scripts .= "};\n";
-		$scripts .= "</script>\n";
-
-		// Set the title based on the subject of the request
-		if (isset($_REQUEST['subject']) && isset($_REQUEST[$_REQUEST['subject']])) {
-			if ($_REQUEST['subject'] == 'table') {
-				$misc->printHeader(
-					$lang['strtables'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-					$scripts
-				);
-			} else if ($_REQUEST['subject'] == 'view') {
-				$misc->printHeader(
-					$lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-					$scripts
-				);
-			} else if ($_REQUEST['subject'] == 'column') {
-				$misc->printHeader(
-					$lang['strcolumn'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-					$scripts
-				);
-			}
+		if (is_array($_REQUEST['key'])) {
+			$key = $_REQUEST['key'];
 		} else {
-			$misc->printHeader($lang['strqueryresults']);
+			$key = unserialize(urldecode($_REQUEST['key']));
 		}
 
-		$misc->printBody();
+		if ($confirm) {
+			$this->printTrail($_REQUEST['subject']);
+			$this->printTitle($lang['streditrow']);
+			$misc->printMsg($msg);
 
-		switch ($action) {
-			case 'editrow':
-				if (isset($_POST['save'])) {
-					$this->doEditRow(false);
-				} else {
-					$this->doBrowse();
+			$attrs = $data->getTableAttributes($_REQUEST['table']);
+			$rs = $data->browseRow($_REQUEST['table'], $key);
+
+			if (($conf['autocomplete'] != 'disable')) {
+				$fksprops = $misc->getAutocompleteFKProperties($_REQUEST['table']);
+				if ($fksprops !== false) {
+					echo $fksprops['code'];
 				}
 
-				break;
-			case 'confeditrow':
-				$this->doEditRow(true);
-				break;
-			case 'delrow':
-				if (isset($_POST['yes'])) {
-					$this->doDelRow(false);
+			} else {
+				$fksprops = false;
+			}
+
+			echo "<form action=\"/src/views/display.php\" method=\"post\" id=\"ac_form\">\n";
+			$elements = 0;
+			$error = true;
+			if ($rs->recordCount() == 1 && $attrs->recordCount() > 0) {
+				echo "<table>\n";
+
+				// Output table header
+				echo "<tr><th class=\"data\">{$lang['strcolumn']}</th><th class=\"data\">{$lang['strtype']}</th>";
+				echo "<th class=\"data\">{$lang['strformat']}</th>\n";
+				echo "<th class=\"data\">{$lang['strnull']}</th><th class=\"data\">{$lang['strvalue']}</th></tr>";
+
+				$i = 0;
+				while (!$attrs->EOF) {
+
+					$attrs->fields['attnotnull'] = $data->phpBool($attrs->fields['attnotnull']);
+					$id = (($i % 2) == 0 ? '1' : '2');
+
+					// Initialise variables
+					if (!isset($_REQUEST['format'][$attrs->fields['attname']])) {
+						$_REQUEST['format'][$attrs->fields['attname']] = 'VALUE';
+					}
+
+					echo "<tr class=\"data{$id}\">\n";
+					echo "<td style=\"white-space:nowrap;\">", $misc->printVal($attrs->fields['attname']), "</td>";
+					echo "<td style=\"white-space:nowrap;\">\n";
+					echo $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
+					echo "<input type=\"hidden\" name=\"types[", htmlspecialchars($attrs->fields['attname']), "]\" value=\"",
+					htmlspecialchars($attrs->fields['type']), "\" /></td>";
+					$elements++;
+					echo "<td style=\"white-space:nowrap;\">\n";
+					echo "<select name=\"format[", htmlspecialchars($attrs->fields['attname']), "]\">\n";
+					echo "<option value=\"VALUE\"", ($_REQUEST['format'][$attrs->fields['attname']] == 'VALUE') ? ' selected="selected"' : '', ">{$lang['strvalue']}</option>\n";
+					echo "<option value=\"EXPRESSION\"", ($_REQUEST['format'][$attrs->fields['attname']] == 'EXPRESSION') ? ' selected="selected"' : '', ">{$lang['strexpression']}</option>\n";
+					echo "</select>\n</td>\n";
+					$elements++;
+					echo "<td style=\"white-space:nowrap;\">";
+					// Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
+					if (!$attrs->fields['attnotnull']) {
+						// Set initial null values
+						if ($_REQUEST['action'] == 'confeditrow' && $rs->fields[$attrs->fields['attname']] === null) {
+							$_REQUEST['nulls'][$attrs->fields['attname']] = 'on';
+						}
+						echo "<label><span><input type=\"checkbox\" name=\"nulls[{$attrs->fields['attname']}]\"",
+						isset($_REQUEST['nulls'][$attrs->fields['attname']]) ? ' checked="checked"' : '', " /></span></label></td>\n";
+						$elements++;
+					} else {
+						echo "&nbsp;</td>";
+					}
+
+					echo "<td id=\"row_att_{$attrs->fields['attnum']}\" style=\"white-space:nowrap;\">";
+
+					$extras = [];
+
+					// If the column allows nulls, then we put a JavaScript action on the data field to unset the
+					// NULL checkbox as soon as anything is entered in the field.  We use the $elements variable to
+					// keep track of which element offset we're up to.  We can't refer to the null checkbox by name
+					// as it contains '[' and ']' characters.
+					if (!$attrs->fields['attnotnull']) {
+						$extras['onChange'] = 'elements[' . ($elements - 1) . '].checked = false;';
+					}
+
+					if (($fksprops !== false) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
+						$extras['id'] = "attr_{$attrs->fields['attnum']}";
+						$extras['autocomplete'] = 'off';
+					}
+
+					echo $data->printField("values[{$attrs->fields['attname']}]", $rs->fields[$attrs->fields['attname']], $attrs->fields['type'], $extras);
+
+					echo "</td>";
+					$elements++;
+					echo "</tr>\n";
+					$i++;
+					$attrs->moveNext();
+				}
+				echo "</table>\n";
+
+				$error = false;
+			} elseif ($rs->recordCount() != 1) {
+				echo "<p>{$lang['strrownotunique']}</p>\n";
+			} else {
+				echo "<p>{$lang['strinvalidparam']}</p>\n";
+			}
+
+			echo "<input type=\"hidden\" name=\"action\" value=\"editrow\" />\n";
+			echo $misc->form;
+			if (isset($_REQUEST['table'])) {
+				echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+			}
+
+			if (isset($_REQUEST['subject'])) {
+				echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['subject']), "\" />\n";
+			}
+
+			if (isset($_REQUEST['query'])) {
+				echo "<input type=\"hidden\" name=\"query\" value=\"", htmlspecialchars($_REQUEST['query']), "\" />\n";
+			}
+
+			if (isset($_REQUEST['count'])) {
+				echo "<input type=\"hidden\" name=\"count\" value=\"", htmlspecialchars($_REQUEST['count']), "\" />\n";
+			}
+
+			if (isset($_REQUEST['return'])) {
+				echo "<input type=\"hidden\" name=\"return\" value=\"", htmlspecialchars($_REQUEST['return']), "\" />\n";
+			}
+
+			echo "<input type=\"hidden\" name=\"page\" value=\"", htmlspecialchars($_REQUEST['page']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"sortkey\" value=\"", htmlspecialchars($_REQUEST['sortkey']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"sortdir\" value=\"", htmlspecialchars($_REQUEST['sortdir']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"strings\" value=\"", htmlspecialchars($_REQUEST['strings']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"key\" value=\"", htmlspecialchars(urlencode(serialize($key))), "\" />\n";
+			echo "<p>";
+			if (!$error) {
+				echo "<input type=\"submit\" name=\"save\" accesskey=\"r\" value=\"{$lang['strsave']}\" />\n";
+			}
+
+			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+
+			if ($fksprops !== false) {
+				if ($conf['autocomplete'] != 'default off') {
+					echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$lang['strac']}</label>\n";
 				} else {
-					$this->doBrowse();
+					echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$lang['strac']}</label>\n";
 				}
 
-				break;
-			case 'confdelrow':
-				$this->doDelRow(true);
-				break;
-			default:
-				$this->doBrowse();
-				break;
+			}
+
+			echo "</p>\n";
+			echo "</form>\n";
+		} else {
+			if (!isset($_POST['values'])) {
+				$_POST['values'] = [];
+			}
+
+			if (!isset($_POST['nulls'])) {
+				$_POST['nulls'] = [];
+			}
+
+			$status = $data->editRow($_POST['table'], $_POST['values'], $_POST['nulls'],
+				$_POST['format'], $_POST['types'], $key);
+			if ($status == 0) {
+				$this->doBrowse($lang['strrowupdated']);
+			} elseif ($status == -2) {
+				$this->doEditRow(true, $lang['strrownotunique']);
+			} else {
+				$this->doEditRow(true, $lang['strrowupdatedbad']);
+			}
+
 		}
 
-		$misc->printFooter();
 	}
+
+	/**
+	 * Show confirmation of drop and perform actual drop
+	 */
+	function doDelRow($confirm) {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		if ($confirm) {
+			$this->printTrail($_REQUEST['subject']);
+			$this->printTitle($lang['strdeleterow']);
+
+			$rs = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
+
+			echo "<form action=\"/src/views/display.php\" method=\"post\">\n";
+			echo $misc->form;
+
+			if ($rs->recordCount() == 1) {
+				echo "<p>{$lang['strconfdeleterow']}</p>\n";
+
+				$fkinfo = [];
+				echo "<table><tr>";
+				$this->printTableHeaderCells($rs, false, true);
+				echo "</tr>";
+				echo "<tr class=\"data1\">\n";
+				$this->printTableRowCells($rs, $fkinfo, true);
+				echo "</tr>\n";
+				echo "</table>\n";
+				echo "<br />\n";
+
+				echo "<input type=\"hidden\" name=\"action\" value=\"delrow\" />\n";
+				echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
+				echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
+			} elseif ($rs->recordCount() != 1) {
+				echo "<p>{$lang['strrownotunique']}</p>\n";
+				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+			} else {
+				echo "<p>{$lang['strinvalidparam']}</p>\n";
+				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+			}
+			if (isset($_REQUEST['table'])) {
+				echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+			}
+
+			if (isset($_REQUEST['subject'])) {
+				echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['subject']), "\" />\n";
+			}
+
+			if (isset($_REQUEST['query'])) {
+				echo "<input type=\"hidden\" name=\"query\" value=\"", htmlspecialchars($_REQUEST['query']), "\" />\n";
+			}
+
+			if (isset($_REQUEST['count'])) {
+				echo "<input type=\"hidden\" name=\"count\" value=\"", htmlspecialchars($_REQUEST['count']), "\" />\n";
+			}
+
+			if (isset($_REQUEST['return'])) {
+				echo "<input type=\"hidden\" name=\"return\" value=\"", htmlspecialchars($_REQUEST['return']), "\" />\n";
+			}
+
+			echo "<input type=\"hidden\" name=\"page\" value=\"", htmlspecialchars($_REQUEST['page']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"sortkey\" value=\"", htmlspecialchars($_REQUEST['sortkey']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"sortdir\" value=\"", htmlspecialchars($_REQUEST['sortdir']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"strings\" value=\"", htmlspecialchars($_REQUEST['strings']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"key\" value=\"", htmlspecialchars(urlencode(serialize($_REQUEST['key']))), "\" />\n";
+			echo "</form>\n";
+		} else {
+			$status = $data->deleteRow($_POST['table'], unserialize(urldecode($_POST['key'])));
+			if ($status == 0) {
+				$this->doBrowse($lang['strrowdeleted']);
+			} elseif ($status == -2) {
+				$this->doBrowse($lang['strrownotunique']);
+			} else {
+				$this->doBrowse($lang['strrowdeletedbad']);
+			}
+
+		}
+
+	}
+
+	/**
+	 * build & return the FK information data structure
+	 * used when deciding if a field should have a FK link or not
+	 * @return [type] [description]
+	 */
+	function &getFKInfo() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		// Get the foreign key(s) information from the current table
+		$fkey_information = ['byconstr' => [], 'byfield' => []];
+
+		if (isset($_REQUEST['table'])) {
+			$constraints = $data->getConstraintsWithFields($_REQUEST['table']);
+			if ($constraints->recordCount() > 0) {
+
+				$fkey_information['common_url'] = $misc->getHREF('schema') . '&amp;subject=table';
+
+				/* build the FK constraints data structure */
+				while (!$constraints->EOF) {
+					$constr = &$constraints->fields;
+					if ($constr['contype'] == 'f') {
+
+						if (!isset($fkey_information['byconstr'][$constr['conid']])) {
+							$fkey_information['byconstr'][$constr['conid']] = [
+								'url_data' => 'table=' . urlencode($constr['f_table']) . '&amp;schema=' . urlencode($constr['f_schema']),
+								'fkeys' => [],
+								'consrc' => $constr['consrc'],
+							];
+						}
+
+						$fkey_information['byconstr'][$constr['conid']]['fkeys'][$constr['p_field']] = $constr['f_field'];
+
+						if (!isset($fkey_information['byfield'][$constr['p_field']])) {
+							$fkey_information['byfield'][$constr['p_field']] = [];
+						}
+
+						$fkey_information['byfield'][$constr['p_field']][] = $constr['conid'];
+					}
+					$constraints->moveNext();
+				}
+			}
+		}
+
+		return $fkey_information;
+	}
+
+	/**
+	 * Print table header cells
+	 * @param $args - associative array for sort link parameters
+	 *
+	 */
+	function printTableHeaderCells(&$rs, $args, $withOid) {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+		$j = 0;
+
+		foreach ($rs->fields as $k => $v) {
+
+			if (($k === $data->id) && (!($withOid && $conf['show_oids']))) {
+				$j++;
+				continue;
+			}
+			$finfo = $rs->fetchField($j);
+
+			if ($args === false) {
+				echo "<th class=\"data\">", $misc->printVal($finfo->name), "</th>\n";
+			} else {
+				$args['page'] = $_REQUEST['page'];
+				$args['sortkey'] = $j + 1;
+				// Sort direction opposite to current direction, unless it's currently ''
+				$args['sortdir'] = (
+					$_REQUEST['sortdir'] == 'asc'
+					and $_REQUEST['sortkey'] == ($j + 1)
+				) ? 'desc' : 'asc';
+
+				$sortLink = http_build_query($args);
+
+				echo "<th class=\"data\"><a href=\"?{$sortLink}\">"
+				, $misc->printVal($finfo->name);
+				if ($_REQUEST['sortkey'] == ($j + 1)) {
+					if ($_REQUEST['sortdir'] == 'asc') {
+						echo '<img src="' . $misc->icon('RaiseArgument') . '" alt="asc">';
+					} else {
+						echo '<img src="' . $misc->icon('LowerArgument') . '" alt="desc">';
+					}
+
+				}
+				echo "</a></th>\n";
+			}
+			$j++;
+		}
+
+		reset($rs->fields);
+	}
+
+	/* Print data-row cells */
+	function printTableRowCells(&$rs, &$fkey_information, $withOid) {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+		$j = 0;
+
+		if (!isset($_REQUEST['strings'])) {
+			$_REQUEST['strings'] = 'collapsed';
+		}
+
+		foreach ($rs->fields as $k => $v) {
+			$finfo = $rs->fetchField($j++);
+
+			if (($k === $data->id) && (!($withOid && $conf['show_oids']))) {
+				continue;
+			} elseif ($v !== null && $v == '') {
+				echo "<td>&nbsp;</td>";
+			} else {
+				echo "<td style=\"white-space:nowrap;\">";
+
+				if (($v !== null) && isset($fkey_information['byfield'][$k])) {
+					foreach ($fkey_information['byfield'][$k] as $conid) {
+
+						$query_params = $fkey_information['byconstr'][$conid]['url_data'];
+
+						foreach ($fkey_information['byconstr'][$conid]['fkeys'] as $p_field => $f_field) {
+							$query_params .= '&amp;' . urlencode("fkey[{$f_field}]") . '=' . urlencode($rs->fields[$p_field]);
+						}
+
+						/* $fkey_information['common_url'] is already urlencoded */
+						$query_params .= '&amp;' . $fkey_information['common_url'];
+						echo "<div style=\"display:inline-block;\">";
+						echo "<a class=\"fk fk_" . htmlentities($conid, ENT_QUOTES, 'UTF-8') . "\" href=\"display.php?{$query_params}\">";
+						echo "<img src=\"" . $misc->icon('ForeignKey') . "\" style=\"vertical-align:middle;\" alt=\"[fk]\" title=\""
+						. htmlentities($fkey_information['byconstr'][$conid]['consrc'], ENT_QUOTES, 'UTF-8')
+							. "\" />";
+						echo "</a>";
+						echo "</div>";
+					}
+					echo $misc->printVal($v, $finfo->type, ['null' => true, 'clip' => ($_REQUEST['strings'] == 'collapsed'), 'class' => 'fk_value']);
+				} else {
+					echo $misc->printVal($v, $finfo->type, ['null' => true, 'clip' => ($_REQUEST['strings'] == 'collapsed')]);
+				}
+				echo "</td>";
+			}
+		}
+	}
+
+	/* Print the FK row, used in ajax requests */
+	function doBrowseFK() {
+		$conf = $this->conf;
+		$misc = $this->misc;
+		$lang = $this->lang;
+		$data = $misc->getDatabaseAccessor();
+
+		$ops = [];
+		foreach ($_REQUEST['fkey'] as $x => $y) {
+			$ops[$x] = '=';
+		}
+		$query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+		$_REQUEST['query'] = $query;
+
+		$fkinfo = $this->getFKInfo();
+
+		$max_pages = 1;
+		// Retrieve page from query.  $max_pages is returned by reference.
+		$rs = $data->browseQuery('SELECT', $_REQUEST['table'], $_REQUEST['query'],
+			null, null, 1, 1, $max_pages);
+
+		echo "<a href=\"\" style=\"display:table-cell;\" class=\"fk_delete\"><img alt=\"[delete]\" src=\"" . $misc->icon('Delete') . "\" /></a>\n";
+		echo "<div style=\"display:table-cell;\">";
+
+		if (is_object($rs) && $rs->recordCount() > 0) {
+			/* we are browsing a referenced table here
+				 * we should show OID if show_oids is true
+				 * so we give true to withOid in functions bellow
+			*/
+
+			echo "<table><tr>";
+			$this->printTableHeaderCells($rs, false, true);
+			echo "</tr>";
+			echo "<tr class=\"data1\">\n";
+			$this->printTableRowCells($rs, $fkinfo, true);
+			echo "</tr>\n";
+			echo "</table>\n";
+		} else {
+			echo $lang['strnodata'];
+		}
+
+		echo "</div>";
+
+		exit;
+	}
+
 }

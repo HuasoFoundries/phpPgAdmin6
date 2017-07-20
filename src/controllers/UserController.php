@@ -11,60 +11,60 @@ class UserController extends BaseController {
 
 	public function render() {
 
-		$misc->printHeader($lang['strusers']);
-		$misc->printBody();
+		$this->printHeader($lang['strusers']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'changepassword':
-				if (isset($_REQUEST['ok'])) {
-					$this->doChangePassword(false);
-				} else {
-					$this->doAccount();
-				}
-
-				break;
-			case 'confchangepassword':
-				$this->doChangePassword(true);
-				break;
-			case 'account':
+		case 'changepassword':
+			if (isset($_REQUEST['ok'])) {
+				$this->doChangePassword(false);
+			} else {
 				$this->doAccount();
-				break;
-			case 'save_create':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreate();
-				}
+			}
 
-				break;
-			case 'create':
-				$this->doCreate();
-				break;
-			case 'drop':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doDrop(false);
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			case 'save_edit':
-				if (isset($_REQUEST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveEdit();
-				}
-
-				break;
-			case 'edit':
-				$this->doEdit();
-				break;
-			default:
+			break;
+		case 'confchangepassword':
+			$this->doChangePassword(true);
+			break;
+		case 'account':
+			$this->doAccount();
+			break;
+		case 'save_create':
+			if (isset($_REQUEST['cancel'])) {
 				$this->doDefault();
-				break;
+			} else {
+				$this->doSaveCreate();
+			}
+
+			break;
+		case 'create':
+			$this->doCreate();
+			break;
+		case 'drop':
+			if (isset($_REQUEST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doDrop(false);
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		case 'save_edit':
+			if (isset($_REQUEST['cancel'])) {
+				$this->doDefault();
+			} else {
+				$this->doSaveEdit();
+			}
+
+			break;
+		case 'edit':
+			$this->doEdit();
+			break;
+		default:
+			$this->doDefault();
+			break;
 		}
 
 		$misc->printFooter();
@@ -84,7 +84,7 @@ class UserController extends BaseController {
 
 		$server_info = $misc->getServerInfo();
 
-		$userdata         = $data->getUser($server_info['username']);
+		$userdata = $data->getUser($server_info['username']);
 		$_REQUEST['user'] = $server_info['username'];
 
 		$this->printTrail('user');
@@ -92,7 +92,7 @@ class UserController extends BaseController {
 		$misc->printMsg($msg);
 
 		if ($userdata->recordCount() > 0) {
-			$userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
+			$userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
 			$userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
 			echo "<table>\n";
 			echo "<tr><th class=\"data\">{$lang['strusername']}</th><th class=\"data\">{$lang['strsuper']}</th><th class=\"data\">{$lang['strcreatedb']}</th><th class=\"data\">{$lang['strexpires']}</th>";
@@ -136,7 +136,7 @@ class UserController extends BaseController {
 		if ($confirm) {
 			$_REQUEST['user'] = $server_info['username'];
 			$this->printTrail('user');
-			$misc->printTitle($lang['strchangepassword'], 'pg.user.alter');
+			$this->printTitle($lang['strchangepassword'], 'pg.user.alter');
 			$misc->printMsg($msg);
 
 			if (!isset($_POST['password'])) {
@@ -192,15 +192,15 @@ class UserController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('user');
-		$misc->printTitle($lang['stralter'], 'pg.user.alter');
+		$this->printTitle($lang['stralter'], 'pg.user.alter');
 		$misc->printMsg($msg);
 
 		$userdata = $data->getUser($_REQUEST['username']);
 
 		if ($userdata->recordCount() > 0) {
-			$server_info                     = $misc->getServerInfo();
-			$canRename                       = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
-			$userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
+			$server_info = $misc->getServerInfo();
+			$canRename = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
+			$userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
 			$userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
 
 			if (!isset($_POST['formExpires'])) {
@@ -216,7 +216,7 @@ class UserController extends BaseController {
 					$_POST['formCreateDB'] = '';
 				}
 
-				$_POST['formExpires']  = $userdata->fields['useexpires'] == 'infinity' ? '' : $userdata->fields['useexpires'];
+				$_POST['formExpires'] = $userdata->fields['useexpires'] == 'infinity' ? '' : $userdata->fields['useexpires'];
 				$_POST['formPassword'] = '';
 			}
 
@@ -290,7 +290,7 @@ class UserController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('user');
-			$misc->printTitle($lang['strdrop'], 'pg.user.drop');
+			$this->printTitle($lang['strdrop'], 'pg.user.drop');
 
 			echo "<p>", sprintf($lang['strconfdropuser'], $misc->printVal($_REQUEST['username'])), "</p>\n";
 
@@ -338,7 +338,7 @@ class UserController extends BaseController {
 		}
 
 		$this->printTrail('server');
-		$misc->printTitle($lang['strcreateuser'], 'pg.user.create');
+		$this->printTitle($lang['strcreateuser'], 'pg.user.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/users.php\" method=\"post\">\n";

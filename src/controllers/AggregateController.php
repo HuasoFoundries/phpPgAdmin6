@@ -19,49 +19,49 @@ class AggregateController extends BaseController {
 			return $this->doTree();
 		}
 
-		$misc->printHeader($lang['straggregates']);
-		$misc->printBody();
+		$this->printHeader($lang['straggregates']);
+		$this->printBody();
 
 		switch ($action) {
-			case 'create':
-				$this->doCreate();
-				break;
-			case 'save_create':
-				if (isset($_POST['cancel'])) {
-					$this->doDefault();
-				} else {
-					$this->doSaveCreate();
-				}
-
-				break;
-			case 'alter':
-				$this->doAlter();
-				break;
-			case 'save_alter':
-				if (isset($_POST['alter'])) {
-					$this->doSaveAlter();
-				} else {
-					$this->doProperties();
-				}
-
-				break;
-			case 'drop':
-				if (isset($_POST['drop'])) {
-					$this->doDrop(false);
-				} else {
-					$this->doDefault();
-				}
-
-				break;
-			case 'confirm_drop':
-				$this->doDrop(true);
-				break;
-			default:
+		case 'create':
+			$this->doCreate();
+			break;
+		case 'save_create':
+			if (isset($_POST['cancel'])) {
 				$this->doDefault();
-				break;
-			case 'properties':
+			} else {
+				$this->doSaveCreate();
+			}
+
+			break;
+		case 'alter':
+			$this->doAlter();
+			break;
+		case 'save_alter':
+			if (isset($_POST['alter'])) {
+				$this->doSaveAlter();
+			} else {
 				$this->doProperties();
-				break;
+			}
+
+			break;
+		case 'drop':
+			if (isset($_POST['drop'])) {
+				$this->doDrop(false);
+			} else {
+				$this->doDefault();
+			}
+
+			break;
+		case 'confirm_drop':
+			$this->doDrop(true);
+			break;
+		default:
+			$this->doDefault();
+			break;
+		case 'properties':
+			$this->doProperties();
+			break;
 		}
 
 		return $misc->printFooter();
@@ -77,7 +77,7 @@ class AggregateController extends BaseController {
 
 		$aggregates = $data->getAggregates();
 
-		$proto   = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
+		$proto = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
 		$reqvars = $misc->getRequestVars('aggregate');
 
 		$attrs = [
@@ -173,7 +173,7 @@ class AggregateController extends BaseController {
 		}
 
 		$this->printTrail('schema');
-		$misc->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
+		$this->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/aggregates.php\" method=\"post\">\n";
@@ -247,7 +247,7 @@ class AggregateController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('aggregate');
-		$misc->printTitle($lang['stralter'], 'pg.aggregate.alter');
+		$this->printTitle($lang['stralter'], 'pg.aggregate.alter');
 		$misc->printMsg($msg);
 
 		echo "<form action=\"/src/views/aggregates.php\" method=\"post\">\n";
@@ -294,7 +294,7 @@ class AggregateController extends BaseController {
 
 		if ($confirm) {
 			$this->printTrail('aggregate');
-			$misc->printTitle($lang['strdrop'], 'pg.aggregate.drop');
+			$this->printTitle($lang['strdrop'], 'pg.aggregate.drop');
 
 			echo "<p>", sprintf($lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
 
@@ -329,7 +329,7 @@ class AggregateController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 
 		$this->printTrail('aggregate');
-		$misc->printTitle($lang['strproperties'], 'pg.aggregate');
+		$this->printTitle($lang['strproperties'], 'pg.aggregate');
 		$misc->printMsg($msg);
 
 		$aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);

@@ -12,6 +12,7 @@ class ActionUrlDecorator extends Decorator {
 	}
 
 	function value($fields) {
+		//$this->prtrace($fields);
 		$url = Decorator::get_sanitized_value($this->b, $fields);
 
 		if ($url === false) {
