@@ -1,7 +1,8 @@
-# phppgadmin
-the premier web-based administration tool for postgresql
+# phpPgAdmin6
 
-This is a fork of [phpPgAdmin](https://github.com/phppgadmin/phppgadmin) that implements **a lot of changes**
+PHP Based administration tool for PostgreSQL. Runs on PHP 7+ and Postgres 9.6+.
+
+This is a fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) that implements **a lot of changes**
 
 ### v6.0.0-alpha1
 
