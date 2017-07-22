@@ -16,7 +16,7 @@ class ServerController extends BaseController {
 	public $duration = null;
 
 	/* Constructor */
-	function __construct(\Slim\Container $container) {
+	public function __construct(\Slim\Container $container) {
 		$this->misc = $container->get('misc');
 
 		$this->misc->setNoDBConnection(true);
@@ -24,7 +24,7 @@ class ServerController extends BaseController {
 		parent::__construct($container);
 	}
 
-	function doLogout() {
+	public function doLogout() {
 
 		$plugin_manager = $this->plugin_manager;
 		$lang = $this->lang;
@@ -45,7 +45,7 @@ class ServerController extends BaseController {
 
 	}
 
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 
 		$lang = $this->lang;
 		$conf = $this->conf;
@@ -124,7 +124,7 @@ class ServerController extends BaseController {
 
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

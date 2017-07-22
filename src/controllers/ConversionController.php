@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class ConversionController extends BaseController {
 	public $_name = 'ConversionController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -32,7 +32,7 @@ class ConversionController extends BaseController {
 
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

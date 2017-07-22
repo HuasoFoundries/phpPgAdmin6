@@ -8,10 +8,10 @@ namespace PHPPgAdmin\Database;
 
 class Postgres81 extends Postgres82 {
 
-	var $major_version = 8.1;
+	public $major_version = 8.1;
 	// List of all legal privileges that can be applied to different types
 	// of objects.
-	var $privlist = [
+	public $privlist = [
 		'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
 		'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
 		'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
@@ -23,7 +23,7 @@ class Postgres81 extends Postgres82 {
 	];
 	// List of characters in acl lists and the privileges they
 	// refer to.
-	var $privmap = [
+	public $privmap = [
 		'r' => 'SELECT',
 		'w' => 'UPDATE',
 		'a' => 'INSERT',
@@ -37,11 +37,11 @@ class Postgres81 extends Postgres82 {
 		'T' => 'TEMPORARY',
 	];
 	// Array of allowed index types
-	var $typIndexes = ['BTREE', 'RTREE', 'GIST', 'HASH'];
+	public $typIndexes = ['BTREE', 'RTREE', 'GIST', 'HASH'];
 
 	// Help functions
 
-	function getHelpPages() {
+	public function getHelpPages() {
 		include_once BASE_PATH . '/src/help/PostgresDoc81.php';
 		return $this->help_page;
 	}
@@ -52,7 +52,7 @@ class Postgres81 extends Postgres82 {
 	 * Returns all databases available on the server
 	 * @return A list of databases, sorted alphabetically
 	 */
-	function getDatabases($currentdatabase = NULL) {
+	public function getDatabases($currentdatabase = NULL) {
 		$conf        = $this->conf;
 		$server_info = $this->server_info;
 
@@ -101,7 +101,7 @@ class Postgres81 extends Postgres82 {
 	 * @return -2 owner error
 	 * @return -3 rename error
 	 */
-	function alterDatabase($dbName, $newName, $newOwner = '', $comment = '') {
+	public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '') {
 		$this->clean($dbName);
 		$this->clean($newName);
 		$this->clean($newOwner);
@@ -131,8 +131,8 @@ class Postgres81 extends Postgres82 {
 
 	// Autovacuum functions
 
-	function saveAutovacuum($table, $vacenabled, $vacthreshold, $vacscalefactor,
-		$anathresold, $anascalefactor, $vaccostdelay, $vaccostlimit) {
+	public function saveAutovacuum($table, $vacenabled, $vacthreshold, $vacscalefactor,
+                                   $anathresold, $anascalefactor, $vaccostdelay, $vaccostlimit) {
 		$defaults = $this->getAutovacuum();
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
@@ -227,7 +227,7 @@ class Postgres81 extends Postgres82 {
 	 * @param $database (optional) Find only connections to specified database
 	 * @return A recordset
 	 */
-	function getProcesses($database = null) {
+	public function getProcesses($database = null) {
 		if ($database === null) {
 			$sql = "SELECT datname, usename, procpid AS pid, current_query AS query, query_start,
                   case when (select count(*) from pg_locks where pid=pg_stat_activity.procpid and granted is false) > 0 then 't' else 'f' end as waiting
@@ -253,7 +253,7 @@ class Postgres81 extends Postgres82 {
 	 * Retrieves a tablespace's information
 	 * @return A recordset
 	 */
-	function getTablespace($spcname) {
+	public function getTablespace($spcname) {
 		$this->clean($spcname);
 
 		$sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation
@@ -267,7 +267,7 @@ class Postgres81 extends Postgres82 {
 	 * @param $all Include all tablespaces (necessary when moving objects back to the default space)
 	 * @return A recordset
 	 */
-	function getTablespaces($all = false) {
+	public function getTablespaces($all = false) {
 		$conf = $this->conf;
 
 		$sql = 'SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation
@@ -284,7 +284,7 @@ class Postgres81 extends Postgres82 {
 
 	// Capabilities
 
-	function hasCreateTableLikeWithConstraints() {return false;}
-	function hasSharedComments() {return false;}
-	function hasConcurrentIndexBuild() {return false;}
+	public function hasCreateTableLikeWithConstraints() {return false;}
+	public function hasSharedComments() {return false;}
+	public function hasConcurrentIndexBuild() {return false;}
 }

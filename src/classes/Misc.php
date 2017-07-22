@@ -36,7 +36,7 @@ class Misc {
 	private $container = null;
 
 	/* Constructor */
-	function __construct(\Slim\Container $container) {
+	public function __construct(\Slim\Container $container) {
 
 		$this->container = $container;
 
@@ -143,7 +143,7 @@ class Misc {
 	 * sets $_no_bottom_link boolean value
 	 * @param boolean $flag [description]
 	 */
-	function setNoBottomLink($flag) {
+	public function setNoBottomLink($flag) {
 		$this->_no_bottom_link = boolval($flag);
 		return $this;
 	}
@@ -152,24 +152,24 @@ class Misc {
 	 * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session
 	 * @param boolean $flag [description]
 	 */
-	function setNoDBConnection($flag) {
+	public function setNoDBConnection($flag) {
 		$this->_no_db_connection = boolval($flag);
 		return $this;
 	}
 
-	function setNoOutput($flag) {
+	public function setNoOutput($flag) {
 		$this->_no_output = boolval($flag);
 		return $this;
 	}
 
-	function getNoDBConnection() {
+	public function getNoDBConnection() {
 		return $this->_no_db_connection;
 	}
 
 	/**
 	 * Creates a database accessor
 	 */
-	function getDatabaseAccessor($database = '', $server_id = null) {
+	public function getDatabaseAccessor($database = '', $server_id = null) {
 		$lang = $this->lang;
 
 		if ($server_id !== null) {
@@ -233,7 +233,7 @@ class Misc {
 
 		return $this->data;
 	}
-	function getConnection($database = '', $server_id = null) {
+	public function getConnection($database = '', $server_id = null) {
 		$lang = $this->lang;
 
 		if ($this->_connection === null) {
@@ -293,7 +293,7 @@ class Misc {
 		return $this->_connection;
 	}
 
-	function getDatabase($database = '') {
+	public function getDatabase($database = '') {
 
 		if ($this->server_id === null && !isset($_REQUEST['database'])) {
 			return null;
@@ -321,7 +321,7 @@ class Misc {
 	 * [setReloadBrowser description]
 	 * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
 	 */
-	function setReloadBrowser($flag) {
+	public function setReloadBrowser($flag) {
 		$this->_reload_browser = boolval($flag);
 		return $this;
 	}
@@ -329,7 +329,7 @@ class Misc {
 	 * [setReloadBrowser description]
 	 * @param boolean $flag sets internal $_reload_drop_database var which will be passed to the footer methods
 	 */
-	function setReloadDropDatabase($flag) {
+	public function setReloadDropDatabase($flag) {
 		$this->_reload_drop_database = boolval($flag);
 		return $this;
 	}
@@ -342,13 +342,13 @@ class Misc {
 	 * @param $all (optional) True to check pg_dumpall, false to just check pg_dump
 	 * @return True, dumps are set up, false otherwise
 	 */
-	function isDumpEnabled($all = false) {
+	public function isDumpEnabled($all = false) {
 		$info = $this->getServerInfo();
 
 		return !empty($info[$all ? 'pg_dumpall_path' : 'pg_dump_path']);
 	}
 
-	function setThemeConf($theme_conf) {
+	public function setThemeConf($theme_conf) {
 
 		$this->conf['theme'] = $theme_conf;
 		//\PC::debug(['theme_conf' => $theme_conf, 'this->theme' => $this->conf['theme']], 'setThemeConf');
@@ -356,13 +356,13 @@ class Misc {
 		return $this;
 	}
 
-	function getConf() {
+	public function getConf() {
 		return $this->conf;
 	}
 	/**
 	 * Sets the href tracking variable
 	 */
-	function setHREF() {
+	public function setHREF() {
 		$this->href = $this->getHREF();
 		//\PC::debug($this->href, 'Misc::href');
 		return $this;
@@ -372,7 +372,7 @@ class Misc {
 	/**
 	 * Get a href query string, excluding objects below the given object type (inclusive)
 	 */
-	function getHREF($exclude_from = null) {
+	public function getHREF($exclude_from = null) {
 		$href = [];
 		if (isset($_REQUEST['server']) && $exclude_from != 'server') {
 			$href[] = 'server=' . urlencode($_REQUEST['server']);
@@ -387,7 +387,7 @@ class Misc {
 		return htmlentities(implode('&', $href));
 	}
 
-	function getSubjectParams($subject) {
+	public function getSubjectParams($subject) {
 		$plugin_manager = $this->plugin_manager;
 
 		$vars = [];
@@ -553,7 +553,7 @@ class Misc {
 		return $vars;
 	}
 
-	function getHREFSubject($subject) {
+	public function getHREFSubject($subject) {
 		$vars = $this->getSubjectParams($subject);
 		return "{$vars['url']}?" . http_build_query($vars['params'], '', '&amp;');
 	}
@@ -561,7 +561,7 @@ class Misc {
 	/**
 	 * Sets the form tracking variable
 	 */
-	function setForm() {
+	public function setForm() {
 		$form = [];
 		if (isset($_REQUEST['server'])) {
 			$form[] = '<input type="hidden" name="server" value="' . htmlspecialchars($_REQUEST['server']) . '" />';
@@ -609,7 +609,7 @@ class Misc {
 	 *
 	 * @return The HTML rendered value
 	 */
-	function printVal($str, $type = null, $params = []) {
+	public function printVal($str, $type = null, $params = []) {
 		$lang = $this->lang;
 		$data = $this->data;
 
@@ -792,7 +792,7 @@ class Misc {
 	 * enforce magic_quotes_gpc being off.
 	 * @param &var The variable to strip
 	 */
-	function stripVar(&$var) {
+	public function stripVar(&$var) {
 		if (is_array($var)) {
 			foreach ($var as $k => $v) {
 				$this->stripVar($var[$k]);
@@ -836,7 +836,7 @@ class Misc {
 	 * Print out a message
 	 * @param $msg The message to print
 	 */
-	function printMsg($msg, $do_print = true) {
+	public function printMsg($msg, $do_print = true) {
 		$html = '';
 		if ($msg != '') {
 			$html .= "<p class=\"message\">{$msg}</p>\n";
@@ -901,7 +901,7 @@ class Misc {
 	 * Retrieve the tab info for a specific tab bar.
 	 * @param $section The name of the tab bar.
 	 */
-	function getNavTabs($section) {
+	public function getNavTabs($section) {
 
 		$data = $this->data;
 		$lang = $this->lang;
@@ -1589,7 +1589,7 @@ class Misc {
 	/**
 	 * Get the URL for the last active tab of a particular tab bar.
 	 */
-	function getLastTabURL($section) {
+	public function getLastTabURL($section) {
 		$data = $this->getDatabaseAccessor();
 
 		$tabs = $this->getNavTabs($section);
@@ -1610,7 +1610,7 @@ class Misc {
 	 * @param $gets -  the parameters to include in the link to the wanted page
 	 * @param $max_width - the number of pages to make available at any one time (default = 20)
 	 */
-	function printPages($page, $pages, $gets, $max_width = 20) {
+	public function printPages($page, $pages, $gets, $max_width = 20) {
 		$lang = $this->lang;
 
 		$window = 10;
@@ -1678,7 +1678,7 @@ class Misc {
 	 * @param $help  - help section identifier
 	 * @param $do_print true to echo, false to return
 	 */
-	function printHelp($str, $help = null, $do_print = true) {
+	public function printHelp($str, $help = null, $do_print = true) {
 		//\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
 		if ($help !== null) {
 			$helplink = $this->getHelpLink($help);
@@ -1692,7 +1692,7 @@ class Misc {
 		}
 	}
 
-	function getHelpLink($help) {
+	public function getHelpLink($help) {
 		return htmlspecialchars('/src/views/help.php?help=' . urlencode($help) . '&server=' . urlencode($this->server_id));
 
 	}
@@ -1703,7 +1703,7 @@ class Misc {
 	 * @param $strIniSize The PHP.INI variable
 	 * @return size in bytes, false on failure
 	 */
-	function inisizeToBytes($strIniSize) {
+	public function inisizeToBytes($strIniSize) {
 		// This function will take the string value of an ini 'size' parameter,
 		// and return a double (64-bit float) representing the number of bytes
 		// that the parameter represents. Or false if $strIniSize is unparseable.
@@ -1731,7 +1731,7 @@ class Misc {
 		}
 	}
 
-	function getRequestVars($subject = '') {
+	public function getRequestVars($subject = '') {
 		$v = [];
 		if (!empty($subject)) {
 			$v['subject'] = $subject;
@@ -1749,7 +1749,7 @@ class Misc {
 		return $v;
 	}
 
-	function icon($icon) {
+	public function icon($icon) {
 		if (is_string($icon)) {
 			$path = "/images/themes/{$this->conf['theme']}/{$icon}";
 			if (file_exists(BASE_PATH . $path . '.png')) {
@@ -1789,7 +1789,7 @@ class Misc {
 	 * @param $str The string to escape
 	 * @return The escaped string
 	 */
-	function escapeShellArg($str) {
+	public function escapeShellArg($str) {
 		$data = $this->getDatabaseAccessor();
 		$lang = $this->lang;
 
@@ -1814,7 +1814,7 @@ class Misc {
 	 * @param $str The string to escape
 	 * @return The escaped string
 	 */
-	function escapeShellCmd($str) {
+	public function escapeShellCmd($str) {
 		$data = $this->getDatabaseAccessor();
 
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -1830,7 +1830,7 @@ class Misc {
 	 * Get list of servers' groups if existing in the conf
 	 * @return a recordset of servers' groups
 	 */
-	function getServersGroups($recordset = false, $group_id = false) {
+	public function getServersGroups($recordset = false, $group_id = false) {
 		$lang = $this->lang;
 		$grps = [];
 
@@ -1898,7 +1898,7 @@ class Misc {
 	 *                   otherwise just return an array.
 	 * @param $group a group name to filter the returned servers using $this->conf[srv_groups]
 	 */
-	function getServers($recordset = false, $group = false) {
+	public function getServers($recordset = false, $group = false) {
 
 		$logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
 		$srvs = [];
@@ -1956,7 +1956,7 @@ class Misc {
 		return $srvs;
 	}
 
-	function getServerId() {
+	public function getServerId() {
 		return $this->server_id;
 	}
 	/**
@@ -1966,7 +1966,7 @@ class Misc {
 	 * @param $server_id A server identifier (host:port)
 	 * @return An associative array of server properties
 	 */
-	function getServerInfo($server_id = null) {
+	public function getServerInfo($server_id = null) {
 
 		//\PC::debug(['$server_id' => $server_id]);
 
@@ -2019,7 +2019,7 @@ class Misc {
 	 * @param $server_id the server identifier, or null for current
 	 *                   server.
 	 */
-	function setServerInfo($key, $value, $server_id = null) {
+	public function setServerInfo($key, $value, $server_id = null) {
 		//\PC::debug('setsetverinfo');
 		if ($server_id === null && isset($_REQUEST['server'])) {
 			$server_id = $_REQUEST['server'];
@@ -2050,7 +2050,7 @@ class Misc {
 	 * @return 0 on success
 	 * @return $data->seSchema() on error
 	 */
-	function setCurrentSchema($schema) {
+	public function setCurrentSchema($schema) {
 		$data = $this->getDatabaseAccessor();
 
 		$status = $data->setSchema($schema);
@@ -2068,7 +2068,7 @@ class Misc {
 	 * of the database and server.
 	 * @param $script the SQL script to save.
 	 */
-	function saveScriptHistory($script) {
+	public function saveScriptHistory($script) {
 		list($usec, $sec) = explode(' ', microtime());
 		$time = ((float) $usec + (float) $sec);
 		$_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]["$time"] = [
@@ -2083,7 +2083,7 @@ class Misc {
 		 * databases form the popups windows.
 		 * @param $onchange Javascript action to take when selections change.
 		 */
-	function printConnection($onchange, $do_print = true) {
+	public function printConnection($onchange, $do_print = true) {
 		$lang = $this->lang;
 
 		$connection_html = "<table class=\"printconnection\" style=\"width: 100%\"><tr><td class=\"popup_select1\">\n";
@@ -2179,7 +2179,7 @@ class Misc {
 	 *     'code' => HTML/js code to include in the page for auto-completion
 	 *   )
 	 **/
-	function getAutocompleteFKProperties($table) {
+	public function getAutocompleteFKProperties($table) {
 		$data = $this->getDatabaseAccessor();
 
 		$fksprops = [

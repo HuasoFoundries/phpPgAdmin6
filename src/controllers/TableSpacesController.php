@@ -12,7 +12,7 @@ class TableSpacesController extends BaseController {
 	/**
 	 * Function to allow altering of a tablespace
 	 */
-	function doAlter($msg = '') {
+	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -78,7 +78,7 @@ class TableSpacesController extends BaseController {
 	/**
 	 * Function to save after altering a tablespace
 	 */
-	function doSaveAlter() {
+	public function doSaveAlter() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -106,7 +106,7 @@ class TableSpacesController extends BaseController {
 	/**
 	 * Show confirmation of drop and perform actual drop
 	 */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -139,7 +139,7 @@ class TableSpacesController extends BaseController {
 	/**
 	 * Displays a screen where they can enter a new tablespace
 	 */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -202,7 +202,7 @@ class TableSpacesController extends BaseController {
 	/**
 	 * Actually creates the new tablespace in the cluster
 	 */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -232,7 +232,7 @@ class TableSpacesController extends BaseController {
 	/**
 	 * Show default list of tablespaces in the cluster
 	 */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -324,7 +324,7 @@ class TableSpacesController extends BaseController {
 		]], 'tablespaces-tablespaces', get_defined_vars());
 	}
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

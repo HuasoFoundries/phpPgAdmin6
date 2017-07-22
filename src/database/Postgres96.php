@@ -7,11 +7,11 @@ namespace PHPPgAdmin\Database;
 
 class Postgres96 extends Postgres {
 
-	var $major_version = 9.6;
+	public $major_version = 9.6;
 
 	// Help functions
 
-	function getHelpPages() {
+	public function getHelpPages() {
 		include_once BASE_PATH . '/src/help/PostgresDoc96.php';
 
 		return $this->help_page;
@@ -23,7 +23,7 @@ class Postgres96 extends Postgres {
 	 * @param $database (optional) Find only connections to specified database
 	 * @return A recordset
 	 */
-	function getProcesses($database = null) {
+	public function getProcesses($database = null) {
 		if ($database === null) {
 			$sql = "SELECT datid, datname, pid, usename, application_name, client_addr, state, wait_event_type, wait_event, state_change as query_start,
 					CASE when state='idle in transaction' then ' in transaction' else query end as query

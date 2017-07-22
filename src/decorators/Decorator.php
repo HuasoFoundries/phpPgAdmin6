@@ -4,11 +4,11 @@ namespace PHPPgAdmin\Decorators;
 class Decorator {
 	use \PHPPgAdmin\HelperTrait;
 
-	function __construct($value) {
+	public function __construct($value) {
 		$this->v = $value;
 	}
 
-	function value($fields) {
+	public function value($fields) {
 		return $this->v;
 	}
 

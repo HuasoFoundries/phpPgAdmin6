@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class ConstraintController extends BaseController {
 	public $_name = 'ConstraintController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -103,7 +103,7 @@ class ConstraintController extends BaseController {
 	/**
 	 * Confirm and then actually add a FOREIGN KEY constraint
 	 */
-	function addForeignKey($stage, $msg = '') {
+	public function addForeignKey($stage, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -343,7 +343,7 @@ class ConstraintController extends BaseController {
 /**
  * Confirm and then actually add a PRIMARY KEY or UNIQUE constraint
  */
-	function addPrimaryOrUniqueKey($type, $confirm, $msg = '') {
+	public function addPrimaryOrUniqueKey($type, $confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -488,7 +488,7 @@ class ConstraintController extends BaseController {
 /**
  * Confirm and then actually add a CHECK constraint
  */
-	function addCheck($confirm, $msg = '') {
+	public function addCheck($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

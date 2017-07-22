@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class MaterializedViewPropertyController extends BaseController {
 	public $_name = 'MaterializedViewPropertyController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -217,7 +217,7 @@ class MaterializedViewPropertyController extends BaseController {
 		$this->printNavLinks($navlinks, 'materializedviewproperties-materializedviewproperties', get_defined_vars());
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

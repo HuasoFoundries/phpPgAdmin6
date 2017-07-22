@@ -32,7 +32,7 @@ class BaseController {
 	public $msg = '';
 
 	/* Constructor */
-	function __construct(\Slim\Container $container) {
+	public function __construct(\Slim\Container $container) {
 		$this->container = $container;
 		$this->lang = $container->get('lang');
 
@@ -95,7 +95,7 @@ class BaseController {
 		return $html;
 	}
 
-	function setNoOutput($flag) {
+	public function setNoOutput($flag) {
 		$this->_no_output = boolval($flag);
 		$this->misc->setNoOutput(boolval($flag));
 		return $this;
@@ -138,41 +138,41 @@ class BaseController {
 	 * @param  [type] $pre_fn     [description]
 	 * @return [type]             [description]
 	 */
-	function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
+	public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
 		$html_table = $this->getTableController();
 		return $html_table->printTable($tabledata, $columns, $actions, $place, $nodata, $pre_fn);
 	}
 
-	function adjustTabsForTree($tabs) {
+	public function adjustTabsForTree($tabs) {
 		$tree = $this->getTreeController();
 		return $tree->adjustTabsForTree($tabs);
 	}
 
-	function printTree(&$_treedata, &$attrs, $section) {
+	public function printTree(&$_treedata, &$attrs, $section) {
 		$tree = $this->getTreeController();
 		return $tree->printTree($_treedata, $attrs, $section);
 	}
 
-	function printTrail($trail = [], $do_print = true) {
+	public function printTrail($trail = [], $do_print = true) {
 		$html_trail = $this->getNavbarController();
 		return $html_trail->printTrail($trail, $do_print);
 	}
 
-	function printNavLinks($navlinks, $place, $env = [], $do_print = true) {
+	public function printNavLinks($navlinks, $place, $env = [], $do_print = true) {
 		$html_trail = $this->getNavbarController();
 		return $html_trail->printNavLinks($navlinks, $place, $env, $do_print);
 	}
 
-	function printTabs($tabs, $activetab, $do_print = true) {
+	public function printTabs($tabs, $activetab, $do_print = true) {
 		$html_trail = $this->getNavbarController();
 		return $html_trail->printTabs($tabs, $activetab, $do_print);
 	}
-	function getLastTabURL($section) {
+	public function getLastTabURL($section) {
 		$html_trail = $this->getNavbarController();
 		return $html_trail->getLastTabURL($section);
 	}
 
-	function printLink($link, $do_print = true) {
+	public function printLink($link, $do_print = true) {
 		$html_trail = $this->getNavbarController();
 		return $html_trail->printLink($link, $do_print);
 	}

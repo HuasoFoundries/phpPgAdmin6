@@ -10,7 +10,7 @@ class FunctionController extends BaseController {
 	public $_name = 'FunctionController';
 	public $table_place = 'functions-functions';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -73,7 +73,7 @@ class FunctionController extends BaseController {
 	/**
 	 * Generate XML for the browser tree.
 	 */
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -976,7 +976,7 @@ class FunctionController extends BaseController {
 /**
  * Build out the function arguments string
  */
-	function buildFunctionArguments($arrayVars) {
+	public function buildFunctionArguments($arrayVars) {
 		if (isset($_POST['formArgName'])) {
 			$arrayArgs = [];
 			foreach ($arrayVars['formArgName'] as $pK => $pV) {
@@ -990,7 +990,7 @@ class FunctionController extends BaseController {
 /**
  * Build out JS to re-create table rows for arguments
  */
-	function buildJSRows($szArgs) {
+	public function buildJSRows($szArgs) {
 		$arrayModes = ['IN', 'OUT', 'INOUT'];
 		$arrayArgs = explode(',', $szArgs);
 		$arrayProperArgs = [];
@@ -1017,7 +1017,7 @@ class FunctionController extends BaseController {
 		return $szReturn;
 	}
 
-	function buildJSData() {
+	public function buildJSData() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

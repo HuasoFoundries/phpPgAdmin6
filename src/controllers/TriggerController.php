@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class TriggerController extends BaseController {
 	public $_name = 'TriggerController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -87,7 +87,7 @@ class TriggerController extends BaseController {
 
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

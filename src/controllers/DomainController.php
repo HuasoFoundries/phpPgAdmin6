@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class DomainController extends BaseController {
 	public $_name = 'DomainController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -92,7 +92,7 @@ class DomainController extends BaseController {
 /**
  * Generate XML for the browser tree.
  */
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -205,7 +205,7 @@ class DomainController extends BaseController {
 /**
  * Confirm and then actually add a CHECK constraint
  */
-	function addCheck($confirm, $msg = '') {
+	public function addCheck($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

@@ -85,7 +85,7 @@ class Highlight {
 
 	/* Constructor */
 
-	function __construct() {
+	public function __construct() {
 
 		$keyword_replace = function ($keywords, $text, $ncs = false) {
 			$cm = $ncs ? 'i' : '';
@@ -1066,7 +1066,7 @@ class Highlight {
 	 * Does the bulk of the syntax highlighting by lexing the input
 	 * string, then calling the helper function to highlight keywords.
 	 */
-	function syntax_highlight($text, $language) {
+	public function syntax_highlight($text, $language) {
 		if ($language == 'Plain Text') {
 			return $text;
 		}

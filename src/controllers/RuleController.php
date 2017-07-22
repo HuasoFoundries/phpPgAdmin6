@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class RuleController extends BaseController {
 	public $_name = 'RuleController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -55,7 +55,7 @@ class RuleController extends BaseController {
 
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -77,7 +77,7 @@ class RuleController extends BaseController {
 	/**
 	 * Confirm and then actually create a rule
 	 */
-	function createRule($confirm, $msg = '') {
+	public function createRule($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

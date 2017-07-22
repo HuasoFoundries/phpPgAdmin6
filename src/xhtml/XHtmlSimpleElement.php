@@ -13,10 +13,10 @@ namespace PHPPgAdmin\XHtml;
  *
  */
 class XHtmlSimpleElement {
-	var $_element;
-	var $_siblings = array();
-	var $_htmlcode;
-	var $_attributes = array();
+	public $_element;
+	public $_siblings   = array();
+	public $_htmlcode;
+	public $_attributes = array();
 
 	/**
 	 * Constructor
@@ -25,21 +25,21 @@ class XHtmlSimpleElement {
 	 * derived class
 	 *
 	 */
-	function __construct($element = null) {
+	public function __construct($element = null) {
 
 		$this->_element = $this->is_element();
 
 	}
 
-	function set_style($style) {
+	public function set_style($style) {
 		$this->set_attribute('style', $style);
 	}
 
-	function set_class($class) {
+	public function set_class($class) {
 		$this->set_attribute('class', $class);
 	}
 
-	function is_element() {
+	public function is_element() {
 		return
 		str_replace('phppgadmin\xhtml\xhtml_', '', strtolower(get_class($this)));
 	}
@@ -48,7 +48,7 @@ class XHtmlSimpleElement {
 	 * Private function generates xhtml
 	 * @access private
 	 */
-	function _html() {
+	public function _html() {
 		$this->_htmlcode = '<';
 		foreach ($this->_attributeCollection as $attribute => $value) {
 			if (!empty($value)) {
@@ -65,18 +65,18 @@ class XHtmlSimpleElement {
 	 * Returns xhtml code
 	 *
 	 */
-	function fetch() {
+	public function fetch() {
 		return $this->_html();
 	}
 	/**
 	 * Echoes xhtml
 	 *
 	 */
-	function show() {
+	public function show() {
 		echo $this->fetch();
 	}
 
-	function set_attribute($attr, $value) {
+	public function set_attribute($attr, $value) {
 		$this->_attributes[$attr] = $value;
 	}
 

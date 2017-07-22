@@ -8,12 +8,12 @@ namespace PHPPgAdmin;
  */
 class ArrayRecordSet {
 
-	var $_array;
-	var $_count;
-	var $EOF = false;
-	var $fields;
+	public $_array;
+	public $_count;
+	public $EOF = false;
+	public $fields;
 
-	function __construct($data) {
+	public function __construct($data) {
 		$this->_array = $data;
 		$this->_count = count($this->_array);
 		$this->fields = reset($this->_array);
@@ -23,11 +23,11 @@ class ArrayRecordSet {
 
 	}
 
-	function recordCount() {
+	public function recordCount() {
 		return $this->_count;
 	}
 
-	function moveNext() {
+	public function moveNext() {
 		$this->fields = next($this->_array);
 		if ($this->fields === false) {
 			$this->EOF = true;

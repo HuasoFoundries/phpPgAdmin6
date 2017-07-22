@@ -11,11 +11,11 @@ namespace PHPPgAdmin\XHtml;
  *
  */
 class XHtmlElement extends XHtmlSimpleElement {
-	var $_text = null;
-	var $_htmlcode = '';
-	var $_siblings = array();
+	public $_text     = null;
+	public $_htmlcode = '';
+	public $_siblings = array();
 
-	function __construct($text = null) {
+	public function __construct($text = null) {
 
 		parent::__construct();
 
@@ -30,7 +30,7 @@ class XHtmlElement extends XHtmlSimpleElement {
 		*
 		* @param	XHtmlElement 	The element to become a child of element
 	*/
-	function add(&$object) {
+	public function add(&$object) {
 		array_push($this->_siblings, $object);
 	}
 
@@ -39,18 +39,18 @@ class XHtmlElement extends XHtmlSimpleElement {
 		*
 		* @param	string	Text
 	*/
-	function set_text($text) {
+	public function set_text($text) {
 		if ($text) {
 			$this->_text = htmlspecialchars($text);
 		}
 
 	}
 
-	function fetch() {
+	public function fetch() {
 		return $this->_html();
 	}
 
-	function _html() {
+	public function _html() {
 
 		$this->_htmlcode = "<{$this->_element}";
 		foreach ($this->_attributes as $attribute => $value) {
@@ -78,11 +78,11 @@ class XHtmlElement extends XHtmlSimpleElement {
 		* Returns siblings of Element
 		*
 	*/
-	function get_siblings() {
+	public function get_siblings() {
 		return $this->_siblings;
 	}
 
-	function has_siblings() {
+	public function has_siblings() {
 		return (count($this->_siblings) != 0);
 	}
 }

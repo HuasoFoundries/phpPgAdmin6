@@ -46,7 +46,7 @@ class SQLEditController extends BaseController {
 	/**
 	 * Private function to display server and list of databases
 	 */
-	function _printConnection($action) {
+	public function _printConnection($action) {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -72,7 +72,7 @@ class SQLEditController extends BaseController {
 	/**
 	 * Searches for a named database object
 	 */
-	function doFind() {
+	public function doFind() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -129,7 +129,7 @@ class SQLEditController extends BaseController {
 	/**
 	 * Allow execution of arbitrary SQL statements on a database
 	 */
-	function doDefault() {
+	public function doDefault() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

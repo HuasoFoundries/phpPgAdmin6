@@ -8,11 +8,11 @@ namespace PHPPgAdmin\Database;
 
 class Postgres80 extends Postgres81 {
 
-	var $major_version = 8.0;
+	public $major_version = 8.0;
 	// Map of database encoding names to HTTP encoding names.  If a
 	// database encoding does not appear in this list, then its HTTP
 	// encoding name is the same as its database encoding name.
-	var $codemap = [
+	public $codemap = [
 		'ALT' => 'CP866',
 		'EUC_CN' => 'GB2312',
 		'EUC_JP' => 'EUC-JP',
@@ -46,7 +46,7 @@ class Postgres80 extends Postgres81 {
 
 	// Help functions
 
-	function getHelpPages() {
+	public function getHelpPages() {
 		include_once BASE_PATH . '/src/help/PostgresDoc80.php';
 		return $this->help_page;
 	}
@@ -57,7 +57,7 @@ class Postgres80 extends Postgres81 {
 	 * Return all database available on the server
 	 * @return A list of databases, sorted alphabetically
 	 */
-	function getDatabases($currentdatabase = NULL) {
+	public function getDatabases($currentdatabase = NULL) {
 		$conf        = $this->conf;
 		$server_info = $this->server_info;
 
@@ -100,7 +100,7 @@ class Postgres80 extends Postgres81 {
 	 * Return all schemas in the current database.
 	 * @return All schemas, sorted alphabetically
 	 */
-	function getSchemas() {
+	public function getSchemas() {
 		$conf = $this->conf;
 
 		if (!$conf['show_system']) {
@@ -125,7 +125,7 @@ class Postgres80 extends Postgres81 {
 	 * @param $schema The name of the schema
 	 * @return Schema information
 	 */
-	function getSchemaByName($schema) {
+	public function getSchemaByName($schema) {
 		$this->clean($schema);
 		$sql = "
 			SELECT nspname, nspowner, u.usename AS ownername, nspacl,
@@ -306,7 +306,7 @@ class Postgres80 extends Postgres81 {
 	 * @param $password The new password
 	 * @return 0 success
 	 */
-	function changePassword($username, $password) {
+	public function changePassword($username, $password) {
 		$enc = $this->_encryptPassword($username, $password);
 		$this->fieldClean($username);
 		$this->clean($enc);
@@ -324,7 +324,7 @@ class Postgres80 extends Postgres81 {
 	 * @param $basetype The input data type of the aggregate
 	 * @return A recordset
 	 */
-	function getAggregate($name, $basetype) {
+	public function getAggregate($name, $basetype) {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
 		$this->clean($name);
@@ -351,13 +351,13 @@ class Postgres80 extends Postgres81 {
 
 	// Capabilities
 
-	function hasAggregateSortOp() {return false;}
-	function hasAlterTableSchema() {return false;}
-	function hasAutovacuum() {return false;}
-	function hasDisableTriggers() {return false;}
-	function hasFunctionAlterSchema() {return false;}
-	function hasPreparedXacts() {return false;}
-	function hasRoles() {return false;}
-	function hasAlterSequenceSchema() {return false;}
-	function hasServerAdminFuncs() {return false;}
+	public function hasAggregateSortOp() {return false;}
+	public function hasAlterTableSchema() {return false;}
+	public function hasAutovacuum() {return false;}
+	public function hasDisableTriggers() {return false;}
+	public function hasFunctionAlterSchema() {return false;}
+	public function hasPreparedXacts() {return false;}
+	public function hasRoles() {return false;}
+	public function hasAlterSequenceSchema() {return false;}
+	public function hasServerAdminFuncs() {return false;}
 }

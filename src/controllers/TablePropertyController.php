@@ -76,7 +76,7 @@ class TablePropertyController extends BaseController {
 
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

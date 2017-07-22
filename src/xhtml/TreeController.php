@@ -22,7 +22,7 @@ class TreeController extends HTMLController {
 	private $trail_controller = null;
 
 	/* Constructor */
-	function __construct(\Slim\Container $container, $controller_name = null) {
+	public function __construct(\Slim\Container $container, $controller_name = null) {
 		$this->container = $container;
 		$this->lang = $container->get('lang');
 		$this->conf = $container->get('conf');
@@ -58,7 +58,7 @@ class TreeController extends HTMLController {
 	 *        'nodata' - message to display when node has no children
 	 * @param $section The section where the branch is linked in the tree
 	 */
-	function printTree(&$_treedata, &$attrs, $section) {
+	public function printTree(&$_treedata, &$attrs, $section) {
 		$plugin_manager = $this->plugin_manager;
 
 		$treedata = [];
@@ -95,7 +95,7 @@ class TreeController extends HTMLController {
 	 *        'expand' - the action to return XML for the subtree
 	 *        'nodata' - message to display when node has no children
 	 */
-	function printTreeXML(&$treedata, &$attrs) {
+	public function printTreeXML(&$treedata, &$attrs) {
 		$lang = $this->lang;
 
 		header('Content-Type: text/xml; charset=UTF-8');
@@ -132,7 +132,7 @@ class TreeController extends HTMLController {
 		echo "</tree>\n";
 	}
 
-	function adjustTabsForTree(&$tabs) {
+	public function adjustTabsForTree(&$tabs) {
 
 		foreach ($tabs as $i => $tab) {
 			if ((isset($tab['hide']) && $tab['hide'] === true) || (isset($tab['tree']) && $tab['tree'] === false)) {
@@ -141,7 +141,7 @@ class TreeController extends HTMLController {
 		}
 		return new \PHPPgAdmin\ArrayRecordSet($tabs);
 	}
-	function icon($icon) {
+	public function icon($icon) {
 		if (is_string($icon)) {
 			$path = "/images/themes/{$this->conf['theme']}/{$icon}";
 			if (file_exists(BASE_PATH . $path . '.png')) {

@@ -91,7 +91,7 @@ class CastController extends BaseController {
 /**
  * Generate XML for the browser tree.
  */
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

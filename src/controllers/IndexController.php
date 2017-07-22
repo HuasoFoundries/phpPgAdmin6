@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class IndexController extends BaseController {
 	public $_name = 'IndexController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -197,7 +197,7 @@ class IndexController extends BaseController {
 		], 'indexes-indexes', get_defined_vars());
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

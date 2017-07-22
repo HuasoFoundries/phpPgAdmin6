@@ -4,7 +4,7 @@ namespace PHPPgAdmin\XHtml;
 
 class XHTML_Button extends XHtmlElement {
 
-	function __construct($name, $text = null) {
+	public function __construct($name, $text = null) {
 
 		parent::__construct();
 

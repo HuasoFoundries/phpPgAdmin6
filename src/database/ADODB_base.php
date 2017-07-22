@@ -9,16 +9,16 @@ namespace PHPPgAdmin\Database;
 class ADODB_base {
 	use \PHPPgAdmin\HelperTrait;
 
-	var $conn;
+	public $conn;
 
 	// The backend platform.  Set to UNKNOWN by default.
-	var $platform = 'UNKNOWN';
+	public $platform = 'UNKNOWN';
 
 	/**
 	 * Base constructor
 	 * @param &$conn The connection object
 	 */
-	function __construct(&$conn) {
+	public function __construct(&$conn) {
 		$this->prtrace('instanced connection class');
 		$this->conn = $conn;
 	}
@@ -27,7 +27,7 @@ class ADODB_base {
 	 * Turns on or off query debugging
 	 * @param $debug True to turn on debugging, false otherwise
 	 */
-	function setDebug($debug) {
+	public function setDebug($debug) {
 		$this->conn->debug = $debug;
 	}
 
@@ -36,7 +36,7 @@ class ADODB_base {
 	 * @param $str The string to clean, by reference
 	 * @return The cleaned string
 	 */
-	function clean(&$str) {
+	public function clean(&$str) {
 		$str = addslashes($str);
 		return $str;
 	}
@@ -46,7 +46,7 @@ class ADODB_base {
 	 * @param $str The string to clean, by reference
 	 * @return The cleaned string
 	 */
-	function fieldClean(&$str) {
+	public function fieldClean(&$str) {
 		$str = str_replace('"', '""', $str);
 		return $str;
 	}
@@ -56,7 +56,7 @@ class ADODB_base {
 	 * @param $arr The array to clean, by reference
 	 * @return The cleaned array
 	 */
-	function arrayClean(&$arr) {
+	public function arrayClean(&$arr) {
 		reset($arr);
 		while (list($k, $v) = each($arr)) {
 			$arr[$k] = addslashes($v);
@@ -70,7 +70,7 @@ class ADODB_base {
 	 * @param $sql The SQL query to execute
 	 * @return A recordset
 	 */
-	function execute($sql) {
+	public function execute($sql) {
 		// Execute the statement
 		$rs = $this->conn->Execute($sql);
 
@@ -82,7 +82,7 @@ class ADODB_base {
 	 * Closes the connection the database class
 	 * relies on.
 	 */
-	function close() {
+	public function close() {
 		$this->conn->close();
 	}
 
@@ -91,7 +91,7 @@ class ADODB_base {
 	 * @param $sql The SQL statement to be executed
 	 * @return A recordset
 	 */
-	function selectSet($sql) {
+	public function selectSet($sql) {
 		// Execute the statement
 		$rs = $this->conn->Execute($sql);
 
@@ -112,7 +112,7 @@ class ADODB_base {
 	 * @return A single field value
 	 * @return -1 No rows were found
 	 */
-	function selectField($sql, $field) {
+	public function selectField($sql, $field) {
 		// Execute the statement
 		$rs = $this->conn->Execute($sql);
 
@@ -135,7 +135,7 @@ class ADODB_base {
 	 * @return -1 on referential integrity violation
 	 * @return -2 on no rows deleted
 	 */
-	function delete($table, $conditions, $schema = '') {
+	public function delete($table, $conditions, $schema = '') {
 		$this->fieldClean($table);
 
 		reset($conditions);
@@ -183,7 +183,7 @@ class ADODB_base {
 	 * @return -1 if a unique constraint is violated
 	 * @return -2 if a referential constraint is violated
 	 */
-	function insert($table, $vars) {
+	public function insert($table, $vars) {
 		$this->fieldClean($table);
 
 		// Build clause
@@ -238,7 +238,7 @@ class ADODB_base {
 	 * @return -2 if a referential constraint is violated
 	 * @return -3 on no rows deleted
 	 */
-	function update($table, $vars, $where, $nulls = []) {
+	public function update($table, $vars, $where, $nulls = []) {
 		$this->fieldClean($table);
 
 		$setClause = '';
@@ -306,7 +306,7 @@ class ADODB_base {
 	 * Begin a transaction
 	 * @return 0 success
 	 */
-	function beginTransaction() {
+	public function beginTransaction() {
 		return !$this->conn->BeginTrans();
 	}
 
@@ -314,7 +314,7 @@ class ADODB_base {
 	 * End a transaction
 	 * @return 0 success
 	 */
-	function endTransaction() {
+	public function endTransaction() {
 		return !$this->conn->CommitTrans();
 	}
 
@@ -322,7 +322,7 @@ class ADODB_base {
 	 * Roll back a transaction
 	 * @return 0 success
 	 */
-	function rollbackTransaction() {
+	public function rollbackTransaction() {
 		return !$this->conn->RollbackTrans();
 	}
 
@@ -330,7 +330,7 @@ class ADODB_base {
 	 * Get the backend platform
 	 * @return The backend platform
 	 */
-	function getPlatform() {
+	public function getPlatform() {
 		//return $this->conn->platform;
 		return 'UNKNOWN';
 	}
@@ -341,7 +341,7 @@ class ADODB_base {
 	 * Change the value of a parameter to database representation depending on whether it evaluates to true or false
 	 * @param $parameter the parameter
 	 */
-	function dbBool(&$parameter) {
+	public function dbBool(&$parameter) {
 		return $parameter;
 	}
 
@@ -349,7 +349,7 @@ class ADODB_base {
 	 * Change a parameter from database representation to a boolean, (others evaluate to false)
 	 * @param $parameter the parameter
 	 */
-	function phpBool($parameter) {
+	public function phpBool($parameter) {
 		return $parameter;
 	}
 
@@ -358,7 +358,7 @@ class ADODB_base {
 	 * @param $arr String representing the DB array
 	 * @return A PHP array
 	 */
-	function phpArray($dbarr) {
+	public function phpArray($dbarr) {
 		// Take off the first and last characters (the braces)
 		$arr = substr($dbarr, 1, strlen($dbarr) - 2);
 

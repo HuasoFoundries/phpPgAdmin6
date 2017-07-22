@@ -68,7 +68,7 @@ class SchemaController extends BaseController {
 /**
  * Generate XML for the browser tree.
  */
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -103,7 +103,7 @@ class SchemaController extends BaseController {
 
 	}
 
-	function doSubTree() {
+	public function doSubTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

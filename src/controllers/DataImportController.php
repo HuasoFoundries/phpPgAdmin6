@@ -9,7 +9,7 @@ class DataImportController extends BaseController {
 	public $_name = 'DataImportController';
 
 	/* Constructor */
-	function __construct(\Slim\Container $container) {
+	public function __construct(\Slim\Container $container) {
 		parent::__construct($container);
 
 		// Prevent timeouts on large exports (non-safe mode only)

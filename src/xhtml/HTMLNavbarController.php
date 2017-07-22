@@ -13,7 +13,7 @@ class HTMLNavbarController extends HTMLController {
 	 * Display a bread crumb trail.
 	 * @param  $do_print true to echo, false to return html
 	 */
-	function printTrail($trail = [], $do_print = true) {
+	public function printTrail($trail = [], $do_print = true) {
 		$lang = $this->lang;
 		$misc = $this->misc;
 
@@ -79,7 +79,7 @@ class HTMLNavbarController extends HTMLController {
 	 * and 'browse' is the place inside that code (doBrowse).
 	 * @param bool $do_print if true, print html, if false, return html
 	 */
-	function printNavLinks($navlinks, $place, $env = [], $do_print = true) {
+	public function printNavLinks($navlinks, $place, $env = [], $do_print = true) {
 		$plugin_manager = $this->plugin_manager;
 
 		// Navlinks hook's place
@@ -106,7 +106,7 @@ class HTMLNavbarController extends HTMLController {
 	 * @param $activetab The name of the tab to be highlighted.
 	 * @param  $print if false, return html
 	 */
-	function printTabs($tabs, $activetab, $do_print = true) {
+	public function printTabs($tabs, $activetab, $do_print = true) {
 
 		$lang = $this->lang;
 		$misc = $this->misc;
@@ -167,7 +167,7 @@ class HTMLNavbarController extends HTMLController {
 	/**
 	 * Get the URL for the last active tab of a particular tab bar.
 	 */
-	function getLastTabURL($section) {
+	public function getLastTabURL($section) {
 		$lang = $this->lang;
 		$misc = $this->misc;
 

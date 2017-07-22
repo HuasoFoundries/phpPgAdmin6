@@ -2,7 +2,7 @@
 namespace PHPPgAdmin\Decorators;
 
 class UrlDecorator extends Decorator {
-	function __construct($base, $queryVars = null) {
+	public function __construct($base, $queryVars = null) {
 
 		$this->b = $base;
 		if ($queryVars !== null) {
@@ -11,7 +11,7 @@ class UrlDecorator extends Decorator {
 
 	}
 
-	function value($fields) {
+	public function value($fields) {
 		$url = Decorator::get_sanitized_value($this->b, $fields);
 
 		if ($url === false) {

@@ -46,7 +46,7 @@ trait HelperTrait {
 	 * @param $script script tag
 	 * @param $do_print boolean if false, the function will return the header content
 	 */
-	function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig') {
+	public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig') {
 
 		if (function_exists('newrelic_disable_autorum')) {
 			newrelic_disable_autorum();
@@ -102,7 +102,7 @@ trait HelperTrait {
 	 * @param $doBody True to output body tag, false to return
 	 * @param $bodyClass - name of body class
 	 */
-	function printBody($doBody = true, $bodyClass = 'detailbody') {
+	public function printBody($doBody = true, $bodyClass = 'detailbody') {
 
 		$bodyClass = htmlspecialchars($bodyClass);
 		$bodyHtml = '<body data-controller="' . $this->_name . '" class="' . $bodyClass . '" >';
@@ -121,7 +121,7 @@ trait HelperTrait {
 	 * @param $help  - help section identifier
 	 * @param $do_print true to echo, false to return
 	 */
-	function printHelp($str, $help = null, $do_print = true) {
+	public function printHelp($str, $help = null, $do_print = true) {
 		//\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
 		if ($help !== null) {
 			$helplink = $this->getHelpLink($help);
@@ -135,7 +135,7 @@ trait HelperTrait {
 		}
 	}
 
-	function getHelpLink($help) {
+	public function getHelpLink($help) {
 		return htmlspecialchars('/src/views/help.php?help=' . urlencode($help) . '&server=' . urlencode($this->server_id));
 
 	}
@@ -145,7 +145,7 @@ trait HelperTrait {
 	 * @param $title Title, already escaped
 	 * @param $help (optional) The identifier for the help link
 	 */
-	function printTitle($title, $help = null, $do_print = true) {
+	public function printTitle($title, $help = null, $do_print = true) {
 		$data = $this->data;
 		$lang = $this->lang;
 
@@ -164,7 +164,7 @@ trait HelperTrait {
 	 * Prints the page footer
 	 * @param $doBody True to output body tag, false to return the html
 	 */
-	function printFooter($doBody = true, $template = 'footer.twig') {
+	public function printFooter($doBody = true, $template = 'footer.twig') {
 		$lang = $this->lang;
 
 		$footer_html = '';
@@ -193,7 +193,7 @@ trait HelperTrait {
 	 * @param $database True if dropping a database, false otherwise
 	 * @param $do_print true to echo, false to return;
 	 */
-	function printReload($database, $do_print = true) {
+	public function printReload($database, $do_print = true) {
 
 		$reload = "<script type=\"text/javascript\">\n";
 		//$reload .= " alert('will reload');";
@@ -217,7 +217,7 @@ trait HelperTrait {
 	 * Outputs JavaScript to set default focus
 	 * @param $object eg. forms[0].username
 	 */
-	function setFocus($object) {
+	public function setFocus($object) {
 		echo "<script type=\"text/javascript\">\n";
 		echo "   document.{$object}.focus();\n";
 		echo "</script>\n";
@@ -229,7 +229,7 @@ trait HelperTrait {
 	 * @param $addServer if true (default) then the server id is
 	 *        attached to the name.
 	 */
-	function setWindowName($name, $addServer = true) {
+	public function setWindowName($name, $addServer = true) {
 		echo "<script type=\"text/javascript\">\n";
 		echo "//<![CDATA[\n";
 		echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->server_id) : ''), "';\n";

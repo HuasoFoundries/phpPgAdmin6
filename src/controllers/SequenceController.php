@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class SequenceController extends BaseController {
 	public $_name = 'SequenceController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -93,7 +93,7 @@ class SequenceController extends BaseController {
 	/**
 	 * Generate XML for the browser tree.
 	 */
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

@@ -94,7 +94,7 @@ class ViewController extends BaseController {
 /**
  * Generate XML for the browser tree.
  */
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -122,7 +122,7 @@ class ViewController extends BaseController {
 		return $this->printTree($views, $attrs, 'views');
 	}
 
-	function doSubTree() {
+	public function doSubTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

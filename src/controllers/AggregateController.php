@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class AggregateController extends BaseController {
 	public $_name = 'AggregateController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -68,7 +68,7 @@ class AggregateController extends BaseController {
 
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

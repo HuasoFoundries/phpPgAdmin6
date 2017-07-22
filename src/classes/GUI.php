@@ -10,7 +10,7 @@ class GUI {
 	/**
 	 *Constructor
 	 */
-	function __construct() {}
+	public function __construct() {}
 
 	/**
 	 * Prints a combox box

@@ -8,11 +8,11 @@ namespace PHPPgAdmin\Database;
 
 class Postgres84 extends Postgres90 {
 
-	var $major_version = 8.4;
+	public $major_version = 8.4;
 
 	// List of all legal privileges that can be applied to different types
 	// of objects.
-	var $privlist = [
+	public $privlist = [
 		'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
 		'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
 		'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
@@ -26,7 +26,7 @@ class Postgres84 extends Postgres90 {
 
 	// Help functions
 
-	function getHelpPages() {
+	public function getHelpPages() {
 		include_once BASE_PATH . '/src/help/PostgresDoc84.php';
 		return $this->help_page;
 	}
@@ -38,7 +38,7 @@ class Postgres84 extends Postgres90 {
 	 * @param $table The name of a table whose triggers to retrieve
 	 * @return A recordset
 	 */
-	function getTriggers($table = '') {
+	public function getTriggers($table = '') {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
 		$this->clean($table);
@@ -67,7 +67,7 @@ class Postgres84 extends Postgres90 {
 	 * @param $filter The object type to restrict to ('' means no restriction)
 	 * @return A recordset
 	 */
-	function findObject($term, $filter) {
+	public function findObject($term, $filter) {
 		$conf = $this->conf;
 
 		/*about escaping:
@@ -212,6 +212,6 @@ class Postgres84 extends Postgres90 {
 
 	// Capabilities
 
-	function hasByteaHexDefault() {return false;}
+	public function hasByteaHexDefault() {return false;}
 
 }

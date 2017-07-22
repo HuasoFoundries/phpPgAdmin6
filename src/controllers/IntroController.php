@@ -9,7 +9,7 @@ class IntroController extends BaseController {
 	public $_name = 'IntroController';
 
 	/* Constructor */
-	function __construct(\Slim\Container $container) {
+	public function __construct(\Slim\Container $container) {
 		$this->misc = $container->get('misc');
 
 		$this->misc->setNoDBConnection(true);

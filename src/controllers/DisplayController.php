@@ -9,7 +9,7 @@ class DisplayController extends BaseController {
 	public $_name = 'DisplayController';
 
 	/* Constructor */
-	function __construct(\Slim\Container $container) {
+	public function __construct(\Slim\Container $container) {
 		parent::__construct($container);
 
 		// Prevent timeouts on large exports (non-safe mode only)
@@ -115,7 +115,7 @@ class DisplayController extends BaseController {
 	/**
 	 * Displays requested data
 	 */
-	function doBrowse($msg = '') {
+	public function doBrowse($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -567,7 +567,7 @@ class DisplayController extends BaseController {
 	/**
 	 * Show confirmation of edit and perform actual update
 	 */
-	function doEditRow($confirm, $msg = '') {
+	public function doEditRow($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -751,7 +751,7 @@ class DisplayController extends BaseController {
 	/**
 	 * Show confirmation of drop and perform actual drop
 	 */
-	function doDelRow($confirm) {
+	public function doDelRow($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -834,7 +834,7 @@ class DisplayController extends BaseController {
 	 * used when deciding if a field should have a FK link or not
 	 * @return [type] [description]
 	 */
-	function &getFKInfo() {
+	public function &getFKInfo() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -883,7 +883,7 @@ class DisplayController extends BaseController {
 	 * @param $args - associative array for sort link parameters
 	 *
 	 */
-	function printTableHeaderCells(&$rs, $args, $withOid) {
+	public function printTableHeaderCells(&$rs, $args, $withOid) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -930,7 +930,7 @@ class DisplayController extends BaseController {
 	}
 
 	/* Print data-row cells */
-	function printTableRowCells(&$rs, &$fkey_information, $withOid) {
+	public function printTableRowCells(&$rs, &$fkey_information, $withOid) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -980,7 +980,7 @@ class DisplayController extends BaseController {
 	}
 
 	/* Print the FK row, used in ajax requests */
-	function doBrowseFK() {
+	public function doBrowseFK() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

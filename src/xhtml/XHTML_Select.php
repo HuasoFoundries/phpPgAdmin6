@@ -3,9 +3,9 @@
 namespace PHPPgAdmin\XHtml;
 
 class XHTML_Select extends XHtmlElement {
-	var $_data;
+	public $_data;
 
-	function __construct($name, $multiple = false, $size = null) {
+	public function __construct($name, $multiple = false, $size = null) {
 		parent::__construct();
 
 		$this->set_attribute('name', $name);
@@ -19,7 +19,7 @@ class XHTML_Select extends XHtmlElement {
 
 	}
 
-	function set_data(&$data, $delim = ',') {
+	public function set_data(&$data, $delim = ',') {
 		switch (gettype($data)) {
 		case 'string':
 			$this->_data = explode($delim, $data);
@@ -33,7 +33,7 @@ class XHTML_Select extends XHtmlElement {
 		}
 	}
 
-	function fetch() {
+	public function fetch() {
 		if (isset($this->_data) && $this->_data) {
 			foreach ($this->_data as $value) {$this->add(new XHTML_Option($value));}
 		}

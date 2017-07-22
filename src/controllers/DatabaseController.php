@@ -12,7 +12,7 @@ class DatabaseController extends BaseController {
 	public $_name = 'DatabaseController';
 	public $table_place = 'database-variables';
 
-	function _highlight($string, $term) {
+	public function _highlight($string, $term) {
 		return str_replace($term, "<b>{$term}</b>", $string);
 	}
 
@@ -510,7 +510,7 @@ class DatabaseController extends BaseController {
 		echo '</div>';
 	}
 
-	function currentProcesses($isAjax = false) {
+	public function currentProcesses($isAjax = false) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -637,7 +637,7 @@ class DatabaseController extends BaseController {
 
 	}
 
-	function currentLocks($isAjax = false) {
+	public function currentLocks($isAjax = false) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -752,7 +752,7 @@ class DatabaseController extends BaseController {
 		$this->setFocus('forms[0].query');
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

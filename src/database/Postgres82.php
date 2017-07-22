@@ -8,17 +8,17 @@ namespace PHPPgAdmin\Database;
 
 class Postgres82 extends Postgres83 {
 
-	var $major_version = 8.2;
+	public $major_version = 8.2;
 
 	// Select operators
-	var $selectOps = ['=' => 'i', '!=' => 'i', '<' => 'i', '>' => 'i', '<=' => 'i', '>=' => 'i', '<<' => 'i', '>>' => 'i', '<<=' => 'i', '>>=' => 'i',
-		'LIKE' => 'i', 'NOT LIKE' => 'i', 'ILIKE' => 'i', 'NOT ILIKE' => 'i', 'SIMILAR TO' => 'i',
-		'NOT SIMILAR TO' => 'i', '~' => 'i', '!~' => 'i', '~*' => 'i', '!~*' => 'i',
-		'IS NULL' => 'p', 'IS NOT NULL' => 'p', 'IN' => 'x', 'NOT IN' => 'x'];
+	public $selectOps = ['='              => 'i', '!=' => 'i', '<' => 'i', '>' => 'i', '<=' => 'i', '>=' => 'i', '<<' => 'i', '>>' => 'i', '<<=' => 'i', '>>=' => 'i',
+                         'LIKE'           => 'i', 'NOT LIKE' => 'i', 'ILIKE' => 'i', 'NOT ILIKE' => 'i', 'SIMILAR TO' => 'i',
+                         'NOT SIMILAR TO' => 'i', '~' => 'i', '!~' => 'i', '~*' => 'i', '!~*' => 'i',
+                         'IS NULL'        => 'p', 'IS NOT NULL' => 'p', 'IN' => 'x', 'NOT IN' => 'x'];
 
 	// Help functions
 
-	function getHelpPages() {
+	public function getHelpPages() {
 		include_once BASE_PATH . '/src/help/PostgresDoc82.php';
 		return $this->help_page;
 	}
@@ -29,7 +29,7 @@ class Postgres82 extends Postgres83 {
 	 * Returns table locks information in the current database
 	 * @return A recordset
 	 */
-	function getLocks() {
+	public function getLocks() {
 		$conf = $this->conf;
 
 		if (!$conf['show_system']) {
@@ -54,7 +54,7 @@ class Postgres82 extends Postgres83 {
 	 * @param $name The new name for the sequence
 	 * @return 0 success
 	 */
-	function alterSequenceName($seqrs, $name) {
+	public function alterSequenceName($seqrs, $name) {
 		/* vars are cleaned in _alterSequence */
 		if (!empty($name) && ($seqrs->fields['seqname'] != $name)) {
 			$f_schema = $this->_schema;
@@ -80,7 +80,7 @@ class Postgres82 extends Postgres83 {
 	 * @return -1 Failed
 	 * @return 0 success
 	 */
-	function alterViewName($vwrs, $name) {
+	public function alterViewName($vwrs, $name) {
 		// Rename (only if name has changed)
 		/* $vwrs and $name are cleaned in _alterView */
 		if (!empty($name) && ($name != $vwrs->fields['relname'])) {
@@ -105,7 +105,7 @@ class Postgres82 extends Postgres83 {
 	 * @param $table The name of a table whose triggers to retrieve
 	 * @return A recordset
 	 */
-	function getTriggers($table = '') {
+	public function getTriggers($table = '') {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
 		$this->clean($table);
@@ -134,7 +134,7 @@ class Postgres82 extends Postgres83 {
 	 * @param $func The name of the function to retrieve
 	 * @return Function info
 	 */
-	function getFunction($function_oid) {
+	public function getFunction($function_oid) {
 		$this->clean($function_oid);
 
 		$sql = "SELECT
@@ -181,7 +181,7 @@ class Postgres82 extends Postgres83 {
 	 * @return -1 create function failed
 	 * @return -4 set comment failed
 	 */
-	function createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, $replace = false) {
+	public function createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, $replace = false) {
 
 		// Begin a transaction
 		$status = $this->beginTransaction();
@@ -264,7 +264,7 @@ class Postgres82 extends Postgres83 {
 	 * @param $table The table the index is on
 	 * @return 0 success
 	 */
-	function clusterIndex($table = '', $index = '') {
+	public function clusterIndex($table = '', $index = '') {
 
 		$sql = 'CLUSTER';
 
@@ -294,7 +294,7 @@ class Postgres82 extends Postgres83 {
 	 * @param $operator_oid The oid of the operator
 	 * @return Function info
 	 */
-	function getOperator($operator_oid) {
+	public function getOperator($operator_oid) {
 		$this->clean($operator_oid);
 
 		$sql = "
@@ -328,7 +328,7 @@ class Postgres82 extends Postgres83 {
 	 * Gets all opclasses
 	 * @return A recordset
 	 */
-	function getOpClasses() {
+	public function getOpClasses() {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
 		$sql = "
@@ -352,11 +352,11 @@ class Postgres82 extends Postgres83 {
 
 	// Capabilities
 
-	function hasCreateTableLikeWithIndexes() {return false;}
-	function hasEnumTypes() {return false;}
-	function hasFTS() {return false;}
-	function hasFunctionCosting() {return false;}
-	function hasFunctionGUC() {return false;}
-	function hasVirtualTransactionId() {return false;}
+	public function hasCreateTableLikeWithIndexes() {return false;}
+	public function hasEnumTypes() {return false;}
+	public function hasFTS() {return false;}
+	public function hasFunctionCosting() {return false;}
+	public function hasFunctionGUC() {return false;}
+	public function hasVirtualTransactionId() {return false;}
 
 }

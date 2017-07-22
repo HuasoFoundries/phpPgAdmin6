@@ -10,16 +10,16 @@ class Connection {
 
 	use \PHPPgAdmin\HelperTrait;
 
-	var $conn;
+	public  $conn;
 	private $connection_result;
 	// The backend platform.  Set to UNKNOWN by default.
-	var $platform = 'UNKNOWN';
+	public $platform = 'UNKNOWN';
 
 	/**
 	 * Creates a new connection.  Will actually make a database connection.
 	 * @param $fetchMode Defaults to associative.  Override for different behaviour
 	 */
-	function __construct($host, $port, $sslmode, $user, $password, $database, $fetchMode = ADODB_FETCH_ASSOC) {
+	public function __construct($host, $port, $sslmode, $user, $password, $database, $fetchMode = ADODB_FETCH_ASSOC) {
 		$this->conn = ADONewConnection('postgres9');
 		//$this->conn->debug = true;
 		$this->conn->setFetchMode($fetchMode);
@@ -63,7 +63,7 @@ class Connection {
 	 * @return null if version is < 7.4
 	 * @return -3 Database-specific failure
 	 */
-	function getDriver(&$description) {
+	public function getDriver(&$description) {
 
 		$v = pg_version($this->conn->_connectionID);
 
@@ -146,7 +146,7 @@ class Connection {
 	 * Get the last error in the connection
 	 * @return Error string
 	 */
-	function getLastError() {
+	public function getLastError() {
 		return pg_last_error($this->conn->_connectionID);
 	}
 }

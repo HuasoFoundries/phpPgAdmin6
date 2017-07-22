@@ -8,11 +8,11 @@ namespace PHPPgAdmin\Database;
 
 class Postgres90 extends Postgres91 {
 
-	var $major_version = 9.0;
+	public $major_version = 9.0;
 
 	// Help functions
 
-	function getHelpPages() {
+	public function getHelpPages() {
 		include_once BASE_PATH . '/src/help/PostgresDoc90.php';
 		return $this->help_page;
 	}

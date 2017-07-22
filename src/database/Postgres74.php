@@ -9,10 +9,10 @@ namespace PHPPgAdmin\Database;
 
 class Postgres74 extends Postgres80 {
 
-	var $major_version = 7.4;
+	public $major_version = 7.4;
 	// List of all legal privileges that can be applied to different types
 	// of objects.
-	var $privlist = [
+	public $privlist = [
 		'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
 		'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
 		'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
@@ -24,7 +24,7 @@ class Postgres74 extends Postgres80 {
 
 	// Help functions
 
-	function getHelpPages() {
+	public function getHelpPages() {
 		include_once BASE_PATH . '/src/help/PostgresDoc74.php';
 		return $this->help_page;
 	}
@@ -42,7 +42,7 @@ class Postgres74 extends Postgres80 {
 	 * @return -2 owner error
 	 * @return -3 rename error
 	 */
-	function alterDatabase($dbName, $newName, $newOwner = '', $comment = '') {
+	public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '') {
 		//ignore $newowner, not supported pre 8.0
 		//ignore $comment, not supported pre 8.2
 		$this->clean($dbName);
@@ -61,7 +61,7 @@ class Postgres74 extends Postgres80 {
 	 * Return all database available on the server
 	 * @return A list of databases, sorted alphabetically
 	 */
-	function getDatabases($currentdatabase = NULL) {
+	public function getDatabases($currentdatabase = NULL) {
 		$conf        = $this->conf;
 		$server_info = $this->server_info;
 
@@ -103,7 +103,7 @@ class Postgres74 extends Postgres80 {
 	 * @param $filter The object type to restrict to ('' means no restriction)
 	 * @return A recordset
 	 */
-	function findObject($term, $filter) {
+	public function findObject($term, $filter) {
 		$conf = $this->conf;
 
 		/*about escaping:
@@ -248,7 +248,7 @@ class Postgres74 extends Postgres80 {
 	 * Returns table locks information in the current database
 	 * @return A recordset
 	 */
-	function getLocks() {
+	public function getLocks() {
 		$conf = $this->conf;
 
 		if (!$conf['show_system']) {
@@ -269,7 +269,7 @@ class Postgres74 extends Postgres80 {
 	 * Returns the current database encoding
 	 * @return The encoding.  eg. SQL_ASCII, UTF-8, etc.
 	 */
-	function getDatabaseEncoding() {
+	public function getDatabaseEncoding() {
 		$sql = 'SELECT getdatabaseencoding() AS encoding';
 
 		return $this->selectField($sql, 'encoding');
@@ -341,8 +341,8 @@ class Postgres74 extends Postgres80 {
 	 * @return -5 comment error
 	 * @return -6 transaction error
 	 */
-	function alterColumn($table, $column, $name, $notnull, $oldnotnull, $default, $olddefault,
-		$type, $length, $array, $oldtype, $comment) {
+	public function alterColumn($table, $column, $name, $notnull, $oldnotnull, $default, $olddefault,
+                                $type, $length, $array, $oldtype, $comment) {
 		$status = $this->beginTransaction();
 		if ($status != 0) {
 			return -1;
@@ -398,7 +398,7 @@ class Postgres74 extends Postgres80 {
 	 * @param $table The name of the table
 	 * @return A recordset
 	 */
-	function getTable($table) {
+	public function getTable($table) {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
 		$this->clean($table);
@@ -422,7 +422,7 @@ class Postgres74 extends Postgres80 {
 	 * @param $all True to fetch all tables, false for just in current schema
 	 * @return All tables, sorted alphabetically
 	 */
-	function getTables($all = false) {
+	public function getTables($all = false) {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
 		if ($all) {
@@ -449,7 +449,7 @@ class Postgres74 extends Postgres80 {
 	 * Returns the current default_with_oids setting
 	 * @return default_with_oids setting
 	 */
-	function getDefaultWithOid() {
+	public function getDefaultWithOid() {
 		// 8.0 is the first release to have this setting
 		// Prior releases don't have this setting... oids always activated
 		return 'on';
@@ -464,7 +464,7 @@ class Postgres74 extends Postgres80 {
 	 * @param $table the table where we are looking for fk
 	 * @return a recordset
 	 */
-	function getConstraintsWithFields($table) {
+	public function getConstraintsWithFields($table) {
 
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
@@ -526,7 +526,7 @@ class Postgres74 extends Postgres80 {
 	 * Returns all sequences in the current database
 	 * @return A recordset
 	 */
-	function getSequences($all = false) {
+	public function getSequences($all = false) {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
 		if ($all) {
@@ -554,7 +554,7 @@ class Postgres74 extends Postgres80 {
 	 * @param $func The name of the function to retrieve
 	 * @return Function info
 	 */
-	function getFunction($function_oid) {
+	public function getFunction($function_oid) {
 		$this->clean($function_oid);
 
 		$sql = "
@@ -588,7 +588,7 @@ class Postgres74 extends Postgres80 {
 	 * Returns a list of all casts in the database
 	 * @return All casts
 	 */
-	function getCasts() {
+	public function getCasts() {
 		$conf = $this->conf;
 
 		if ($conf['show_system']) {
@@ -629,13 +629,13 @@ class Postgres74 extends Postgres80 {
 
 	// Capabilities
 
-	function hasAlterColumnType() {return false;}
-	function hasCreateFieldWithConstraints() {return false;}
-	function hasAlterDatabaseOwner() {return false;}
-	function hasAlterSchemaOwner() {return false;}
-	function hasFunctionAlterOwner() {return false;}
-	function hasNamedParams() {return false;}
-	function hasQueryCancel() {return false;}
-	function hasTablespaces() {return false;}
-	function hasMagicTypes() {return false;}
+	public function hasAlterColumnType() {return false;}
+	public function hasCreateFieldWithConstraints() {return false;}
+	public function hasAlterDatabaseOwner() {return false;}
+	public function hasAlterSchemaOwner() {return false;}
+	public function hasFunctionAlterOwner() {return false;}
+	public function hasNamedParams() {return false;}
+	public function hasQueryCancel() {return false;}
+	public function hasTablespaces() {return false;}
+	public function hasMagicTypes() {return false;}
 }

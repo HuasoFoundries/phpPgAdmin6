@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class ViewPropertyController extends BaseController {
 	public $_name = 'ViewPropertyController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -217,7 +217,7 @@ class ViewPropertyController extends BaseController {
 		$this->printNavLinks($navlinks, 'viewproperties-viewproperties', get_defined_vars());
 	}
 
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

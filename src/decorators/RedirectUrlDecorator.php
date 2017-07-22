@@ -2,7 +2,7 @@
 namespace PHPPgAdmin\Decorators;
 
 class RedirectUrlDecorator extends Decorator {
-	function __construct($base, $queryVars = null) {
+	public function __construct($base, $queryVars = null) {
 
 		//\PC::debug($base, 'RedirectUrlDecorator');
 
@@ -13,7 +13,7 @@ class RedirectUrlDecorator extends Decorator {
 
 	}
 
-	function value($fields) {
+	public function value($fields) {
 		$url = Decorator::get_sanitized_value($this->b, $fields);
 
 		if ($url === false) {

@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class InfoController extends BaseController {
 	public $_name = 'InfoController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

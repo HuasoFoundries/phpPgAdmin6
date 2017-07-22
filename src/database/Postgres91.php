@@ -8,11 +8,11 @@ namespace PHPPgAdmin\Database;
 
 class Postgres91 extends Postgres92 {
 
-	var $major_version = 9.1;
+	public $major_version = 9.1;
 
 	// Help functions
 
-	function getHelpPages() {
+	public function getHelpPages() {
 		include_once BASE_PATH . '/src/help/PostgresDoc91.php';
 		return $this->help_page;
 	}
@@ -23,7 +23,7 @@ class Postgres91 extends Postgres92 {
 	 * @param $database (optional) Find only connections to specified database
 	 * @return A recordset
 	 */
-	function getProcesses($database = null) {
+	public function getProcesses($database = null) {
 		if ($database === null) {
 			$sql = 'SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
 				FROM pg_catalog.pg_stat_activity
@@ -48,7 +48,7 @@ class Postgres91 extends Postgres92 {
 	 * @param $all Include all tablespaces (necessary when moving objects back to the default space)
 	 * @return A recordset
 	 */
-	function getTablespaces($all = false) {
+	public function getTablespaces($all = false) {
 		$conf = $this->conf;
 
 		$sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation,
@@ -68,7 +68,7 @@ class Postgres91 extends Postgres92 {
 	 * Retrieves a tablespace's information
 	 * @return A recordset
 	 */
-	function getTablespace($spcname) {
+	public function getTablespace($spcname) {
 		$this->clean($spcname);
 
 		$sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation,
@@ -79,6 +79,6 @@ class Postgres91 extends Postgres92 {
 	}
 
 	// Capabilities
-	function hasUserSignals() {return false;}
+	public function hasUserSignals() {return false;}
 
 }

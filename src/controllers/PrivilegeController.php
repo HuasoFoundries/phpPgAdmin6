@@ -9,7 +9,7 @@ class PrivilegeController extends BaseController {
 	public $_name = 'PrivilegeController';
 	public $table_place = 'privileges-privileges';
 
-	function render() {
+	public function render() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -45,7 +45,7 @@ class PrivilegeController extends BaseController {
 	 * @param $mode 'grant' or 'revoke'
 	 * @param $msg (optional) A message to show
 	 */
-	function doAlter($confirm, $mode, $msg = '') {
+	public function doAlter($confirm, $mode, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -189,7 +189,7 @@ class PrivilegeController extends BaseController {
 	/**
 	 * Show permissions on a database, namespace, relation, language or function
 	 */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

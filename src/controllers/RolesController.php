@@ -12,7 +12,7 @@ class RolesController extends BaseController {
 	/**
 	 * Show default list of roles in the database
 	 */
-	function doDefault($msg = '') {
+	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -127,7 +127,7 @@ class RolesController extends BaseController {
 		$this->printNavLinks($navlinks, 'roles-roles', get_defined_vars());
 	}
 
-	function render() {
+	public function render() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -199,7 +199,7 @@ class RolesController extends BaseController {
 	/**
 	 * Displays a screen for create a new role
 	 */
-	function doCreate($msg = '') {
+	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -321,7 +321,7 @@ class RolesController extends BaseController {
 	/**
 	 * Actually creates the new role in the database
 	 */
-	function doSaveCreate() {
+	public function doSaveCreate() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -361,7 +361,7 @@ class RolesController extends BaseController {
 	/**
 	 * Function to allow alter a role
 	 */
-	function doAlter($msg = '') {
+	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -543,7 +543,7 @@ class RolesController extends BaseController {
 	/**
 	 * Function to save after editing a role
 	 */
-	function doSaveAlter() {
+	public function doSaveAlter() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -585,7 +585,7 @@ class RolesController extends BaseController {
 	/**
 	 * Show confirmation of drop a role and perform actual drop
 	 */
-	function doDrop($confirm) {
+	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -618,7 +618,7 @@ class RolesController extends BaseController {
 	/**
 	 * Show the properties of a role
 	 */
-	function doProperties($msg = '') {
+	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -741,7 +741,7 @@ class RolesController extends BaseController {
 	 * messing with the URL to gain access to other role admin stuff, because
 	 * the PostgreSQL permissions will prevent them changing anything anyway.
 	 */
-	function doAccount($msg = '') {
+	public function doAccount($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -801,7 +801,7 @@ class RolesController extends BaseController {
 	/**
 	 * Show confirmation of change password and actually change password
 	 */
-	function doChangePassword($confirm, $msg = '') {
+	public function doChangePassword($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;

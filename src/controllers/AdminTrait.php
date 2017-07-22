@@ -739,7 +739,7 @@ trait AdminTrait {
 		}
 	}
 
-	function adminActions($action, $type) {
+	public function adminActions($action, $type) {
 
 		if ($type == 'database') {
 			$_REQUEST['object'] = $_REQUEST['database'];

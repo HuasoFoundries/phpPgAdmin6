@@ -109,7 +109,7 @@ class TableController extends BaseController {
 	/**
 	 * Generate XML for the browser tree.
 	 */
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -146,7 +146,7 @@ class TableController extends BaseController {
 		return $this->printTree($tables, $attrs, 'tables');
 	}
 
-	function doSubTree() {
+	public function doSubTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

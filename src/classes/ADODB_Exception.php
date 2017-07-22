@@ -17,14 +17,14 @@ namespace PHPPgAdmin;
  */
 
 class ADODB_Exception extends \Exception {
-	var $dbms;
-	var $fn;
-	var $sql = '';
-	var $params = '';
-	var $host = '';
-	var $database = '';
+	public $dbms;
+	public $fn;
+	public $sql      = '';
+	public $params   = '';
+	public $host     = '';
+	public $database = '';
 
-	function __construct($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection) {
+	public function __construct($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection) {
 		switch ($fn) {
 		case 'EXECUTE':
 			$this->sql = is_array($p1) ? $p1[0] : $p1;

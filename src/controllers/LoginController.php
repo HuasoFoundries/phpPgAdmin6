@@ -25,7 +25,7 @@ class LoginController extends BaseController {
 	public $_title = 'strlogin';
 
 	/* Constructor */
-	function __construct(\Slim\Container $container) {
+	public function __construct(\Slim\Container $container) {
 		$this->misc = $container->get('misc');
 
 		$this->misc->setNoDBConnection(true);
@@ -48,7 +48,7 @@ class LoginController extends BaseController {
 
 	}
 
-	function doLoginForm($msg = '') {
+	public function doLoginForm($msg = '') {
 
 		$conf = $this->conf;
 		$misc = $this->misc;

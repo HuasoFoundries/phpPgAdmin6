@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class FulltextController extends BaseController {
 	public $_name = 'FulltextController';
 
-	function render() {
+	public function render() {
 		$conf = $this->conf;
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -127,7 +127,7 @@ class FulltextController extends BaseController {
 	/**
 	 * Generate XML for the browser tree.
 	 */
-	function doTree() {
+	public function doTree() {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -158,7 +158,7 @@ class FulltextController extends BaseController {
 		return $this->printTree($items, $attrs, 'fts');
 	}
 
-	function doSubTree($what) {
+	public function doSubTree($what) {
 
 		$conf = $this->conf;
 		$misc = $this->misc;
