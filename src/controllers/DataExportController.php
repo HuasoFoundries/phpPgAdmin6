@@ -20,10 +20,9 @@ class DataExportController extends BaseController {
 	public function __construct(\Slim\Container $container) {
 		parent::__construct($container);
 
-		// Prevent timeouts on large exports (non-safe mode only)
-		if (!ini_get('safe_mode')) {
-			set_time_limit(0);
-		}
+		// Prevent timeouts on large exports
+		set_time_limit(0);
+
 	}
 
 	public function render() {
