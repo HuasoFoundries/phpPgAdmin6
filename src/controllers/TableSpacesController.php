@@ -38,7 +38,7 @@ class TableSpacesController extends BaseController {
 			}
 
 			if (!isset($_POST['comment'])) {
-				$_POST['comment'] = ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '';
+				$_POST['comment'] = $data->hasSharedComments() ? $tablespace->fields['spccomment'] : '';
 			}
 
 			echo "<form action=\"/src/views/tablespaces.php\" method=\"post\">\n";

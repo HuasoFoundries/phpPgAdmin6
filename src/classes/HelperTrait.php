@@ -10,13 +10,13 @@ trait HelperTrait {
 
 		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-		$btarray0 = ([
+		$btarray0 = [
 			'class' => $backtrace[1]['class'],
 			'type' => $backtrace[1]['type'],
 			'function' => $backtrace[1]['function'],
 			'spacer' => ' ',
 			'line' => $backtrace[0]['line'],
-		]);
+		];
 
 		$tag = implode('', $btarray0);
 
@@ -26,13 +26,13 @@ trait HelperTrait {
 	public static function statictrace() {
 		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-		$btarray0 = ([
+		$btarray0 = [
 			'class' => $backtrace[1]['class'],
 			'type' => $backtrace[1]['type'],
 			'function' => $backtrace[1]['function'],
 			'spacer' => ' ',
 			'line' => $backtrace[0]['line'],
-		]);
+		];
 
 		$tag = implode('', $btarray0);
 

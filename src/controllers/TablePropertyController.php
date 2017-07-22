@@ -285,7 +285,7 @@ class TablePropertyController extends BaseController {
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
 		// Data only
-		echo '<tr><th class="data left" rowspan="', ($hasID) ? 2 : 1, '">';
+		echo '<tr><th class="data left" rowspan="', $hasID ? 2 : 1, '">';
 		echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$lang['strdataonly']}</label></th>\n";
 		echo "<td>{$lang['strformat']}</td>\n";
 		echo "<td><select name=\"d_format\">\n";
@@ -303,7 +303,7 @@ class TablePropertyController extends BaseController {
 		echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$lang['strstructureonly']}</label></th>\n";
 		echo "<td><label for=\"s_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
 		// Structure and data
-		echo '<tr><th class="data left" rowspan="', ($hasID) ? 3 : 2, '">';
+		echo '<tr><th class="data left" rowspan="', $hasID ? 3 : 2, '">';
 		echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$lang['strstructureanddata']}</label></th>\n";
 		echo "<td>{$lang['strformat']}</td>\n";
 		echo "<td><select name=\"sd_format\">\n";
@@ -472,7 +472,7 @@ class TablePropertyController extends BaseController {
 			// Support for adding column with not null and default
 			if ($data->hasCreateFieldWithConstraints()) {
 				echo '<td><input type="checkbox" name="notnull"',
-				(isset($_REQUEST['notnull'])) ? ' checked="checked"' : '', " /></td>\n";
+				isset($_REQUEST['notnull']) ? ' checked="checked"' : '', " /></td>\n";
 				echo '<td><input name="default" size="20" value="',
 				htmlspecialchars($_POST['default']), "\" /></td>\n";
 			}

@@ -155,10 +155,10 @@ class DataExportController extends BaseController {
 							// We add an extra escaping slash onto octal encoded characters
 							$v = preg_replace('/\\\\([0-7]{3})/', '\\\\\1', $v);
 							if ($first) {
-								echo (is_null($v)) ? '\\N' : $v;
+								echo is_null($v) ? '\\N' : $v;
 								$first = false;
 							} else {
-								echo "\t", (is_null($v)) ? '\\N' : $v;
+								echo "\t", is_null($v) ? '\\N' : $v;
 							}
 
 						}
@@ -272,7 +272,7 @@ class DataExportController extends BaseController {
 								$values = (is_null($v) ? 'NULL' : "'{$v}'");
 								$first = false;
 							} else {
-								$values .= ', ' . ((is_null($v) ? 'NULL' : "'{$v}'"));
+								$values .= ', ' . is_null($v) ? 'NULL' : "'{$v}'";
 							}
 
 						}
@@ -317,7 +317,7 @@ class DataExportController extends BaseController {
 							}
 
 							if ($first) {
-								echo (is_null($v)) ? "\"\\N\"" : "\"{$v}\"";
+								echo is_null($v) ? "\"\\N\"" : "\"{$v}\"";
 								$first = false;
 							} else {
 								echo is_null($v) ? "{$sep}\"\\N\"" : "{$sep}\"{$v}\"";

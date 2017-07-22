@@ -125,7 +125,7 @@ class RuleController extends BaseController {
 			htmlspecialchars($_POST['where']), "\" /></td></tr>\n";
 			echo "<tr><th class=\"data left\"><label for=\"instead\">{$lang['strinstead']}</label></th>\n";
 			echo '<td class="data1">';
-			echo '<input type="checkbox" id="instead" name="instead" ', (isset($_POST['instead'])) ? ' checked="checked"' : '', " />\n";
+			echo '<input type="checkbox" id="instead" name="instead" ', isset($_POST['instead']) ? ' checked="checked"' : '', " />\n";
 			echo "</td></tr>\n";
 			echo "<tr><th class=\"data left required\">{$lang['straction']}</th>\n";
 			echo '<td class="data1">';

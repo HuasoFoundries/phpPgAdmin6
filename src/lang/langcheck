@@ -25,14 +25,14 @@
 	}
 
 	// Include english source file
-	include('./english.php');
+	include './english.php';
 
 	$master = $lang;
 	$master_keys = array_keys($lang);
 	unset($lang);
 
 	// Include target language file
-	include("./{$_SERVER['argv'][1]}.php");
+	include "./{$_SERVER['argv'][1]}.php";
 	$slave = $lang;
 	$slave_keys = array_keys($lang);
 

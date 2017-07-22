@@ -587,7 +587,7 @@ class DisplayController extends BaseController {
 			$attrs = $data->getTableAttributes($_REQUEST['table']);
 			$rs = $data->browseRow($_REQUEST['table'], $key);
 
-			if (($conf['autocomplete'] != 'disable')) {
+			if ($conf['autocomplete'] != 'disable') {
 				$fksprops = $misc->getAutocompleteFKProperties($_REQUEST['table']);
 				if ($fksprops !== false) {
 					echo $fksprops['code'];
@@ -970,9 +970,9 @@ class DisplayController extends BaseController {
 						echo '</a>';
 						echo '</div>';
 					}
-					echo $misc->printVal($v, $finfo->type, ['null' => true, 'clip' => ($_REQUEST['strings'] == 'collapsed'), 'class' => 'fk_value']);
+					echo $misc->printVal($v, $finfo->type, ['null' => true, 'clip' => $_REQUEST['strings'] == 'collapsed', 'class' => 'fk_value']);
 				} else {
-					echo $misc->printVal($v, $finfo->type, ['null' => true, 'clip' => ($_REQUEST['strings'] == 'collapsed')]);
+					echo $misc->printVal($v, $finfo->type, ['null' => true, 'clip' => $_REQUEST['strings'] == 'collapsed']);
 				}
 				echo '</td>';
 			}

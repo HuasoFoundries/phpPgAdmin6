@@ -157,7 +157,7 @@ class ColPropertyController extends BaseController {
 				echo '<td>', $misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), "</td>\n";
 			}
 
-			echo '<td><input type="checkbox" name="notnull"', (isset($_REQUEST['notnull'])) ? ' checked="checked"' : '', " /></td>\n";
+			echo '<td><input type="checkbox" name="notnull"', isset($_REQUEST['notnull']) ? ' checked="checked"' : '', " /></td>\n";
 			echo '<td><input name="default" size="20" value="',
 			htmlspecialchars($_REQUEST['default']), "\" /></td>\n";
 			echo '<td><input name="comment" size="40" value="',

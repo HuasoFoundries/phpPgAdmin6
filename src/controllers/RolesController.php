@@ -251,19 +251,19 @@ class RolesController extends BaseController {
 		echo "\t\t<td class=\"data1\"><input size=\"15\" type=\"password\" name=\"formConfirm\" value=\"", htmlspecialchars($_POST['formConfirm']), "\" /></td>\n\t</tr>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$lang['strsuper']}</label></th>\n";
 		echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
-		(isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+		isset($_POST['formSuper']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$lang['strcreatedb']}</label></th>\n";
 		echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
-		(isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+		isset($_POST['formCreateDB']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$lang['strcancreaterole']}</label></th>\n";
 		echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
-		(isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+		isset($_POST['formCreateRole']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$lang['strinheritsprivs']}</label></th>\n";
 		echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
-		(isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+		isset($_POST['formInherits']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$lang['strcanlogin']}</label></th>\n";
 		echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
-		(isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+		isset($_POST['formCanLogin']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strconnlimit']}</th>\n";
 		echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strexpires']}</th>\n";
@@ -422,19 +422,19 @@ class RolesController extends BaseController {
 			echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formConfirm\" value=\"\" /></td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$lang['strsuper']}</label></th>\n";
 			echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
-			(isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+			isset($_POST['formSuper']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$lang['strcreatedb']}</label></th>\n";
 			echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
-			(isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+			isset($_POST['formCreateDB']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$lang['strcancreaterole']}</label></th>\n";
 			echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
-			(isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+			isset($_POST['formCreateRole']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$lang['strinheritsprivs']}</label></th>\n";
 			echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
-			(isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+			isset($_POST['formInherits']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$lang['strcanlogin']}</label></th>\n";
 			echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
-			(isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+			isset($_POST['formCanLogin']) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strconnlimit']}</th>\n";
 			echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strexpires']}</th>\n";
@@ -642,15 +642,15 @@ class RolesController extends BaseController {
 			echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strname']}</td>\n";
 			echo "\t\t<td class=\"data1\">", htmlspecialchars($_REQUEST['rolename']), "</td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strsuper']}</td>\n";
-			echo "\t\t<td class=\"data2\">", (($roledata->fields['rolsuper']) ? $lang['stryes'] : $lang['strno']), "</td>\n\t</tr>\n";
+			echo "\t\t<td class=\"data2\">", ($roledata->fields['rolsuper'] ? $lang['stryes'] : $lang['strno']), "</td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strcreatedb']}</td>\n";
-			echo "\t\t<td class=\"data1\">", (($roledata->fields['rolcreatedb']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
+			echo "\t\t<td class=\"data1\">", ($roledata->fields['rolcreatedb'] ? $lang['stryes'] : $lang['strno']), "</td>\n";
 			echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strcancreaterole']}</td>\n";
-			echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcreaterole']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
+			echo "\t\t<td class=\"data2\">", ($roledata->fields['rolcreaterole'] ? $lang['stryes'] : $lang['strno']), "</td>\n";
 			echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strinheritsprivs']}</td>\n";
-			echo "\t\t<td class=\"data1\">", (($roledata->fields['rolinherit']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
+			echo "\t\t<td class=\"data1\">", ($roledata->fields['rolinherit'] ? $lang['stryes'] : $lang['strno']), "</td>\n";
 			echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strcanlogin']}</td>\n";
-			echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcanlogin']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
+			echo "\t\t<td class=\"data2\">", ($roledata->fields['rolcanlogin'] ? $lang['stryes'] : $lang['strno']), "</td>\n";
 			echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strconnlimit']}</td>\n";
 			echo "\t\t<td class=\"data1\">", ($roledata->fields['rolconnlimit'] == '-1' ? $lang['strnolimit'] : $misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
 			echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strexpires']}</td>\n";

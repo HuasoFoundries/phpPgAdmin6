@@ -944,12 +944,12 @@ class FunctionController extends BaseController {
 			$szJS = '<script type="text/javascript" src="/js/functions.js">noArgsRebuild(addArg());</script>';
 		}
 
-		$cost = (isset($_POST['formCost'])) ? $_POST['formCost'] : null;
+		$cost = isset($_POST['formCost']) ? $_POST['formCost'] : null;
 		if ($cost == '' || !is_numeric($cost) || $cost != (int) $cost || $cost < 0) {
 			$cost = null;
 		}
 
-		$rows = (isset($_POST['formRows'])) ? $_POST['formRows'] : null;
+		$rows = isset($_POST['formRows']) ? $_POST['formRows'] : null;
 		if ($rows == '' || !is_numeric($rows) || $rows != (int) $rows) {
 			$rows = null;
 		}

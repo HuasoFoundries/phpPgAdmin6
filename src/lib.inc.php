@@ -74,7 +74,7 @@ $app = new \Slim\App($config);
 // Fetch DI Container
 $container = $app->getContainer();
 
-\Kint::$enabled_mode = ($debugmode);
+\Kint::$enabled_mode = $debugmode;
 
 $container['conf'] = function ($c) {
 // Check to see if the configuration file exists, if not, explain
@@ -223,7 +223,7 @@ $container['misc'] = function ($c) {
 	return $misc;
 };
 
-$container['action'] = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
+$container['action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 if (!isset($msg)) {
 	$msg = '';

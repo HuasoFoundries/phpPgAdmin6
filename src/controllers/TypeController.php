@@ -162,7 +162,7 @@ class TypeController extends BaseController {
 				echo "<tr><th class=\"data left\">{$lang['strlength']}</th>\n";
 				echo '<td class="data1">', $misc->printVal($typedata->fields['typlen']), "</td></tr>\n";
 				echo "<tr><th class=\"data left\">{$lang['strpassbyval']}</th>\n";
-				echo '<td class="data1">', ($byval) ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
+				echo '<td class="data1">', $byval ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
 				echo "<tr><th class=\"data left\">{$lang['stralignment']}</th>\n";
 				echo '<td class="data1">', $misc->printVal($typedata->fields['typalign']), "</td></tr>\n";
 				if ($data->hasEnumTypes() && $vals) {

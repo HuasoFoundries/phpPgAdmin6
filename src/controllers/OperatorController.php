@@ -122,7 +122,7 @@ class OperatorController extends BaseController {
 			echo "<tr><th class=\"data left\">{$lang['strjoin']}</th>\n";
 			echo '<td class="data1">', $misc->printVal($oprdata->fields['oprjoin']), "</td></tr>\n";
 			echo "<tr><th class=\"data left\">{$lang['strhashes']}</th>\n";
-			echo '<td class="data1">', ($oprdata->fields['oprcanhash']) ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
+			echo '<td class="data1">', $oprdata->fields['oprcanhash'] ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
 
 			/* these field only exists in 8.2 and before in pg_catalog */
 			if (isset($oprdata->fields['oprlsortop'])) {

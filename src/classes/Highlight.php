@@ -88,7 +88,7 @@ class Highlight {
 	function __construct() {
 
 		$keyword_replace = function ($keywords, $text, $ncs = false) {
-			$cm = ($ncs) ? 'i' : '';
+			$cm = $ncs ? 'i' : '';
 			foreach ($keywords as $keyword) {
 				$search[]  = "/(\\b$keyword\\b)/" . $cm;
 				$replace[] = '<span class="keyword">\\0</span>';
@@ -576,10 +576,10 @@ class Highlight {
 				$ncs = true;
 			}
 
-			$text = (array_key_exists($language, $preproc)) ?
+			$text = array_key_exists($language, $preproc) ?
 			$preproc_replace($preproc[$language], $text) :
 			$text;
-			$text = (array_key_exists($language, $keywords)) ?
+			$text = array_key_exists($language, $keywords) ?
 			$keyword_replace($keywords[$language], $text, $ncs) :
 			$text;
 
@@ -1087,7 +1087,7 @@ class Highlight {
 			$text = substr($text, 1);
 
 			$oldstate = $state;
-			$state    = (array_key_exists($ch, $this->states[$language][$state])) ?
+			$state    = array_key_exists($ch, $this->states[$language][$state]) ?
 			$this->states[$language][$state][$ch] :
 			$this->states[$language][$state][0];
 

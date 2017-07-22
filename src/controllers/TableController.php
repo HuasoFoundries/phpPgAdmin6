@@ -564,7 +564,7 @@ class TableController extends BaseController {
 
 				echo "\t\t<td><input name=\"length[{$i}]\" id=\"lengths{$i}\" size=\"10\" value=\"",
 				htmlspecialchars($_REQUEST['length'][$i]), "\" /></td>\n";
-				echo "\t\t<td><input type=\"checkbox\" name=\"notnull[{$i}]\"", (isset($_REQUEST['notnull'][$i])) ? ' checked="checked"' : '', " /></td>\n";
+				echo "\t\t<td><input type=\"checkbox\" name=\"notnull[{$i}]\"", isset($_REQUEST['notnull'][$i]) ? ' checked="checked"' : '', " /></td>\n";
 				echo "\t\t<td style=\"text-align: center\"><input type=\"checkbox\" name=\"uniquekey[{$i}]\""
 					. (isset($_REQUEST['uniquekey'][$i]) ? ' checked="checked"' : '') . " /></td>\n";
 				echo "\t\t<td style=\"text-align: center\"><input type=\"checkbox\" name=\"primarykey[{$i}]\" "
@@ -916,7 +916,7 @@ class TableController extends BaseController {
 
 			$attrs = $data->getTableAttributes($_REQUEST['table']);
 
-			if (($conf['autocomplete'] != 'disable')) {
+			if ($conf['autocomplete'] != 'disable') {
 				$fksprops = $misc->getAutocompleteFKProperties($_REQUEST['table']);
 				if ($fksprops !== false) {
 					echo $fksprops['code'];

@@ -66,7 +66,7 @@ class ServerController extends BaseController {
 			],
 		];
 		$actions = [];
-		if (($group !== false) and (isset($conf['srv_groups'][$group])) and ($groups->recordCount() > 0)) {
+		if (($group !== false) and isset($conf['srv_groups'][$group]) and ($groups->recordCount() > 0)) {
 			$this->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
 		}
 		$this->printTable($groups, $columns, $actions, $this->table_place);
