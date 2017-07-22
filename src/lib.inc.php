@@ -8,7 +8,7 @@
 
 defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
 
-DEFINE('THEME_PATH', BASE_PATH . '/src/themes');
+define('THEME_PATH', BASE_PATH . '/src/themes');
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 

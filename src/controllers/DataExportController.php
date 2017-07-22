@@ -262,7 +262,7 @@ class DataExportController extends BaseController {
 								// Output value
 								// addCSlashes converts all weird ASCII characters to octal representation,
 								// EXCEPT the 'special' ones like \r \n \t, etc.
-								$v = addCSlashes($v, "\0..\37\177..\377");
+								$v = addcslashes($v, "\0..\37\177..\377");
 								// We add an extra escaping slash onto octal encoded characters
 								$v = preg_replace('/\\\\([0-7]{3})/', '\\\1', $v);
 								// Finally, escape all apostrophes

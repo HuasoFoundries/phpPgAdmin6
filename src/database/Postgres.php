@@ -5424,7 +5424,7 @@ class Postgres extends ADODB_base {
 
 		// Parameters
 		// Escape null characters
-		$v = addCSlashes($trigger['tgargs'], "\0");
+		$v = addcslashes($trigger['tgargs'], "\0");
 		// Split on escaped null characters
 		$params = explode('\\000', $v);
 		for ($findx = 0; $findx < $trigger['tgnargs']; $findx++) {
@@ -6371,8 +6371,8 @@ class Postgres extends ADODB_base {
 	public function getAggregate($name, $basetype) {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
-		$this->fieldclean($name);
-		$this->fieldclean($basetype);
+		$this->fieldClean($name);
+		$this->fieldClean($basetype);
 
 		$sql = "
 			SELECT p.proname, CASE p.proargtypes[0]
