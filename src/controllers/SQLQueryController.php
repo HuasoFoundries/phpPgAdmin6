@@ -130,8 +130,7 @@ class SQLQueryController extends BaseController {
 						$row = pg_fetch_row($rs);
 						$i++;
 					}
-					;
-					echo "</table><br/>\n";
+                  echo "</table><br/>\n";
 					echo $i, " {$lang['strrows']}</p>\n";
 					break;
 				case PGSQL_COMMAND_OK:

@@ -145,9 +145,8 @@ class HTMLTableController extends HTMLController {
 				$tablehtml .= "</tr>\n";
 				$tablehtml .= "</table>\n";
 				$tablehtml .= '</form>';
-			};
-
-		} else {
+			}
+        } else {
 			if (!is_null($nodata)) {
 				$tablehtml .= "<p>{$nodata}</p>\n";
 			}
