@@ -87,8 +87,10 @@ class Misc {
    * @param $errno        the native error number from the database
    * @param $errmsg       the native error msg from the database
    * @param $p1           $fn specific parameter - see below
-   * @param $P2           $fn specific parameter - see below
+   * @param $p2
+   * @param $thisConnection
    * @throws \PHPPgAdmin\ADODB_Exception
+   * @internal param $P2 $fn specific parameter - see below
    */
 	public static function adodb_throw($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection) {
 
@@ -140,19 +142,23 @@ class Misc {
 		return $this->container;
 	}
 
-	/**
-	 * sets $_no_bottom_link boolean value
-	 * @param boolean $flag [description]
-	 */
+  /**
+   * sets $_no_bottom_link boolean value
+   *
+   * @param boolean $flag [description]
+   * @return $this
+   */
 	public function setNoBottomLink($flag) {
 		$this->_no_bottom_link = boolval($flag);
 		return $this;
 	}
 
-	/**
-	 * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session
-	 * @param boolean $flag [description]
-	 */
+  /**
+   * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session
+   *
+   * @param boolean $flag [description]
+   * @return $this
+   */
 	public function setNoDBConnection($flag) {
 		$this->_no_db_connection = boolval($flag);
 		return $this;
@@ -318,18 +324,23 @@ class Misc {
 
 	}
 
-	/**
-	 * [setReloadBrowser description]
-	 * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
-	 */
+  /**
+   * [setReloadBrowser description]
+   *
+   * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
+   * @return $this
+   */
 	public function setReloadBrowser($flag) {
 		$this->_reload_browser = boolval($flag);
 		return $this;
 	}
-	/**
-	 * [setReloadBrowser description]
-	 * @param boolean $flag sets internal $_reload_drop_database var which will be passed to the footer methods
-	 */
+
+  /**
+   * [setReloadBrowser description]
+   *
+   * @param boolean $flag sets internal $_reload_drop_database var which will be passed to the footer methods
+   * @return $this
+   */
 	public function setReloadDropDatabase($flag) {
 		$this->_reload_drop_database = boolval($flag);
 		return $this;
@@ -833,10 +844,12 @@ class Misc {
 	}
 	} */
 
-	/**
-	 * Print out a message
-	 * @param $msg The message to print
-	 */
+  /**
+   * Print out a message
+   *
+   * @param $msg The message to print
+   * @return string
+   */
 	public function printMsg($msg, $do_print = true) {
 		$html = '';
 		if ($msg != '') {
@@ -898,10 +911,12 @@ class Misc {
 	}
 	}*/
 
-	/**
-	 * Retrieve the tab info for a specific tab bar.
-	 * @param $section The name of the tab bar.
-	 */
+  /**
+   * Retrieve the tab info for a specific tab bar.
+   *
+   * @param $section The name of the tab bar.
+   * @return array
+   */
 	public function getNavTabs($section) {
 
 		$data = $this->data;
@@ -1673,12 +1688,14 @@ class Misc {
 		}
 	}
 
-	/**
-	 * Displays link to the context help.
-	 * @param $str   - the string that the context help is related to (already escaped)
-	 * @param $help  - help section identifier
-	 * @param $do_print true to echo, false to return
-	 */
+  /**
+   * Displays link to the context help.
+   *
+   * @param $str      - the string that the context help is related to (already escaped)
+   * @param $help     - help section identifier
+   * @param $do_print true to echo, false to return
+   * @return string
+   */
 	public function printHelp($str, $help = null, $do_print = true) {
 		//\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
 		if ($help !== null) {
@@ -1893,12 +1910,14 @@ class Misc {
 		return $grps;
 	}
 
-	/**
-	 * Get list of servers
-	 * @param $recordset return as RecordSet suitable for printTable if true,
-	 *                   otherwise just return an array.
-	 * @param $group a group name to filter the returned servers using $this->conf[srv_groups]
-	 */
+  /**
+   * Get list of servers
+   *
+   * @param $recordset return as RecordSet suitable for printTable if true,
+   *                   otherwise just return an array.
+   * @param $group     a group name to filter the returned servers using $this->conf[srv_groups]
+   * @return array|\PHPPgAdmin\ArrayRecordSet
+   */
 	public function getServers($recordset = false, $group = false) {
 
 		$logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];

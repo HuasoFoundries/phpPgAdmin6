@@ -9,10 +9,12 @@ namespace PHPPgAdmin\XHtml;
 class HTMLNavbarController extends HTMLController {
 	public $_name = 'HTMLNavbarController';
 
-	/**
-	 * Display a bread crumb trail.
-	 * @param  $do_print true to echo, false to return html
-	 */
+  /**
+   * Display a bread crumb trail.
+   *
+   * @param  $do_print true to echo, false to return html
+   * @return string
+   */
 	public function printTrail($trail = [], $do_print = true) {
 		$lang = $this->lang;
 		$misc = $this->misc;
@@ -69,16 +71,17 @@ class HTMLNavbarController extends HTMLController {
 		}
 	}
 
-	/**
-	 * Display the navlinks
-	 *
-	 * @param $navlinks - An array with the the attributes and values that will be shown. See printLinksList for array format.
-	 * @param $place - Place where the $navlinks are displayed. Like 'display-browse', where 'display' is the file (display.php)
-	 * @param $env - Associative array of defined variables in the scope of the caller.
-	 *               Allows to give some environnement details to plugins.
-	 * and 'browse' is the place inside that code (doBrowse).
-	 * @param bool $do_print if true, print html, if false, return html
-	 */
+  /**
+   * Display the navlinks
+   *
+   * @param      $navlinks - An array with the the attributes and values that will be shown. See printLinksList for array format.
+   * @param      $place    - Place where the $navlinks are displayed. Like 'display-browse', where 'display' is the file (display.php)
+   * @param      $env      - Associative array of defined variables in the scope of the caller.
+   *                       Allows to give some environnement details to plugins.
+   *                       and 'browse' is the place inside that code (doBrowse).
+   * @param bool $do_print if true, print html, if false, return html
+   * @return string
+   */
 	public function printNavLinks($navlinks, $place, $env = [], $do_print = true) {
 		$plugin_manager = $this->plugin_manager;
 
@@ -100,12 +103,14 @@ class HTMLNavbarController extends HTMLController {
 		}
 	}
 
-	/**
-	 * Display navigation tabs
-	 * @param $tabs The name of current section (Ex: intro, server, ...), or an array with tabs (Ex: sqledit.php doFind function)
-	 * @param $activetab The name of the tab to be highlighted.
-	 * @param  $print if false, return html
-	 */
+  /**
+   * Display navigation tabs
+   *
+   * @param  $tabs      The name of current section (Ex: intro, server, ...), or an array with tabs (Ex: sqledit.php doFind function)
+   * @param  $activetab The name of the tab to be highlighted.
+   * @param  $print     if false, return html
+   * @return string
+   */
 	public function printTabs($tabs, $activetab, $do_print = true) {
 
 		$lang = $this->lang;
@@ -342,10 +347,12 @@ class HTMLNavbarController extends HTMLController {
 		}
 	}
 
-	/**
-	 * Create a bread crumb trail of the object hierarchy.
-	 * @param $object The type of object at the end of the trail.
-	 */
+  /**
+   * Create a bread crumb trail of the object hierarchy.
+   *
+   * @param $object The type of object at the end of the trail.
+   * @return array
+   */
 	private function getTrail($subject = null) {
 		$lang = $this->lang;
 		$plugin_manager = $this->plugin_manager;
@@ -517,14 +524,16 @@ class HTMLNavbarController extends HTMLController {
 		return $trail;
 	}
 
-	/**
-	 * Display a list of links
-	 * @param $links An associative array of links to print. See printLink function for
-	 *               the links array format.
-	 * @param $class An optional class or list of classes seprated by a space
-	 *   WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
-	 * @param  boolean $do_print true to echo, false to return
-	 */
+  /**
+   * Display a list of links
+   *
+   * @param          $links    An associative array of links to print. See printLink function for
+   *                           the links array format.
+   * @param          $class    An optional class or list of classes seprated by a space
+   *                           WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
+   * @param  boolean $do_print true to echo, false to return
+   * @return string
+   */
 	private function printLinksList($links, $class = '', $do_print = true) {
 		$misc = $this->misc;
 		$list_html = "<ul class=\"{$class}\">\n";

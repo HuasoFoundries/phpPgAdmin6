@@ -39,13 +39,15 @@ trait HelperTrait {
 		\PC::debug(func_get_args(), $tag);
 	}
 
-	/**
-	 * Prints the page header.  If member variable $this->_no_output is
-	 * set then no header is drawn.
-	 * @param $title The title of the page
-	 * @param $script script tag
-	 * @param $do_print boolean if false, the function will return the header content
-	 */
+  /**
+   * Prints the page header.  If member variable $this->_no_output is
+   * set then no header is drawn.
+   *
+   * @param $title    The title of the page
+   * @param $script   script tag
+   * @param $do_print boolean if false, the function will return the header content
+   * @return string
+   */
 	public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig') {
 
 		if (function_exists('newrelic_disable_autorum')) {
@@ -97,11 +99,13 @@ trait HelperTrait {
 		}
 	}
 
-	/**
-	 * Prints the page body.
-	 * @param $doBody True to output body tag, false to return
-	 * @param $bodyClass - name of body class
-	 */
+  /**
+   * Prints the page body.
+   *
+   * @param $doBody    True to output body tag, false to return
+   * @param $bodyClass - name of body class
+   * @return string
+   */
 	public function printBody($doBody = true, $bodyClass = 'detailbody') {
 
 		$bodyClass = htmlspecialchars($bodyClass);
@@ -115,12 +119,14 @@ trait HelperTrait {
 		}
 	}
 
-	/**
-	 * Displays link to the context help.
-	 * @param $str   - the string that the context help is related to (already escaped)
-	 * @param $help  - help section identifier
-	 * @param $do_print true to echo, false to return
-	 */
+  /**
+   * Displays link to the context help.
+   *
+   * @param $str      - the string that the context help is related to (already escaped)
+   * @param $help     - help section identifier
+   * @param $do_print true to echo, false to return
+   * @return string
+   */
 	public function printHelp($str, $help = null, $do_print = true) {
 		//\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
 		if ($help !== null) {
@@ -140,11 +146,13 @@ trait HelperTrait {
 
 	}
 
-	/**
-	 * Print out the page heading and help link
-	 * @param $title Title, already escaped
-	 * @param $help (optional) The identifier for the help link
-	 */
+  /**
+   * Print out the page heading and help link
+   *
+   * @param $title Title, already escaped
+   * @param $help  (optional) The identifier for the help link
+   * @return string
+   */
 	public function printTitle($title, $help = null, $do_print = true) {
 		$data = $this->data;
 		$lang = $this->lang;
@@ -160,10 +168,12 @@ trait HelperTrait {
 		}
 	}
 
-	/**
-	 * Prints the page footer
-	 * @param $doBody True to output body tag, false to return the html
-	 */
+  /**
+   * Prints the page footer
+   *
+   * @param $doBody True to output body tag, false to return the html
+   * @return string
+   */
 	public function printFooter($doBody = true, $template = 'footer.twig') {
 		$lang = $this->lang;
 
@@ -188,11 +198,13 @@ trait HelperTrait {
 
 	}
 
-	/**
-	 * Outputs JavaScript code that will reload the browser
-	 * @param $database True if dropping a database, false otherwise
-	 * @param $do_print true to echo, false to return;
-	 */
+  /**
+   * Outputs JavaScript code that will reload the browser
+   *
+   * @param $database True if dropping a database, false otherwise
+   * @param $do_print true to echo, false to return;
+   * @return string
+   */
 	public function printReload($database, $do_print = true) {
 
 		$reload = "<script type=\"text/javascript\">\n";

@@ -364,12 +364,14 @@ class Postgres extends ADODB_base {
 		}
 	}
 
-	/**
-	 * Formats a type correctly for display.  Postgres 7.0 had no 'format_type'
-	 * built-in function, and hence we need to do it manually.
-	 * @param $typname The name of the type
-	 * @param $typmod The contents of the typmod field
-	 */
+  /**
+   * Formats a type correctly for display.  Postgres 7.0 had no 'format_type'
+   * built-in function, and hence we need to do it manually.
+   *
+   * @param $typname The name of the type
+   * @param $typmod  The contents of the typmod field
+   * @return bool|\PHPPgAdmin\Database\The|string
+   */
 	public function formatType($typname, $typmod) {
 		// This is a specific constant in the 7.0 source
 		$varhdrsz = 4;
@@ -1847,18 +1849,20 @@ class Postgres extends ADODB_base {
 		return $this->endTransaction();
 	}
 
-	/**
-	 * Creates a new table in the database copying attribs and other properties from another table
-	 * @param $name The name of the table
-	 * @param $like an array giving the schema ans the name of the table from which attribs are copying from:
-	 *		array(
-	 *			'table' => table name,
-	 *			'schema' => the schema name,
-	 *		)
-	 * @param $defaults if true, copy the defaults values as well
-	 * @param $constraints if true, copy the constraints as well (CHECK on table & attr)
-	 * @param $tablespace The tablespace name ('' means none/default)
-	 */
+  /**
+   * Creates a new table in the database copying attribs and other properties from another table
+   *
+   * @param $name        The name of the table
+   * @param $like        an array giving the schema ans the name of the table from which attribs are copying from:
+   *                     array(
+   *                     'table' => table name,
+   *                     'schema' => the schema name,
+   *                     )
+   * @param $defaults    if true, copy the defaults values as well
+   * @param $constraints if true, copy the constraints as well (CHECK on table & attr)
+   * @param $tablespace  The tablespace name ('' means none/default)
+   * @return bool|int
+   */
 	public function createTableLike($name, $like, $defaults = false, $constraints = false, $idx = false, $tablespace = '') {
 
 		$f_schema = $this->_schema;
@@ -3644,12 +3648,14 @@ class Postgres extends ADODB_base {
 		return $this->execute($sql);
 	}
 
-	/**
-	 * Rebuild indexes
-	 * @param $type 'DATABASE' or 'TABLE' or 'INDEX'
-	 * @param $name The name of the specific database, table, or index to be reindexed
-	 * @param $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in 7.2-7.3, ignored in >=7.4
-	 */
+  /**
+   * Rebuild indexes
+   *
+   * @param $type  'DATABASE' or 'TABLE' or 'INDEX'
+   * @param $name  The name of the specific database, table, or index to be reindexed
+   * @param $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in 7.2-7.3, ignored in >=7.4
+   * @return int|\PHPPgAdmin\Database\A
+   */
 	public function reindex($type, $name, $force = false) {
 		$f_schema = $this->_schema;
 		$this->fieldClean($f_schema);
@@ -7516,11 +7522,13 @@ class Postgres extends ADODB_base {
 		return $this->execute($sql);
 	}
 
-	/**
-	 * Helper function that computes encypted PostgreSQL passwords
-	 * @param $username The username
-	 * @param $password The password
-	 */
+  /**
+   * Helper function that computes encypted PostgreSQL passwords
+   *
+   * @param $username The username
+   * @param $password The password
+   * @return string
+   */
 	public function _encryptPassword($username, $password) {
 		return 'md5' . md5($password . $username);
 	}
@@ -7667,10 +7675,12 @@ class Postgres extends ADODB_base {
 
 	// Administration functions
 
-	/**
-	 * Analyze a database
-	 * @param $table (optional) The table to analyze
-	 */
+  /**
+   * Analyze a database
+   *
+   * @param $table (optional) The table to analyze
+   * @return \PHPPgAdmin\Database\A
+   */
 	public function analyzeDB($table = '') {
 		if ($table != '') {
 			$f_schema = $this->_schema;
@@ -7685,13 +7695,15 @@ class Postgres extends ADODB_base {
 		return $this->execute($sql);
 	}
 
-	/**
-	 * Vacuums a database
-	 * @param $table The table to vacuum
-	 * @param $analyze If true, also does analyze
-	 * @param $full If true, selects "full" vacuum
-	 * @param $freeze If true, selects aggressive "freezing" of tuples
-	 */
+  /**
+   * Vacuums a database
+   *
+   * @param $table   The table to vacuum
+   * @param $analyze If true, also does analyze
+   * @param $full    If true, selects "full" vacuum
+   * @param $freeze  If true, selects aggressive "freezing" of tuples
+   * @return \PHPPgAdmin\Database\A
+   */
 	public function vacuumDB($table = '', $analyze = false, $full = false, $freeze = false) {
 
 		$sql = 'VACUUM';
@@ -8504,10 +8516,12 @@ class Postgres extends ADODB_base {
 
 	// Type conversion routines
 
-	/**
-	 * Change the value of a parameter to 't' or 'f' depending on whether it evaluates to true or false
-	 * @param $parameter the parameter
-	 */
+  /**
+   * Change the value of a parameter to 't' or 'f' depending on whether it evaluates to true or false
+   *
+   * @param $parameter the parameter
+   * @return \PHPPgAdmin\Database\the|string
+   */
 	public function dbBool(&$parameter) {
 		if ($parameter) {
 			$parameter = 't';
@@ -8518,10 +8532,12 @@ class Postgres extends ADODB_base {
 		return $parameter;
 	}
 
-	/**
-	 * Change a parameter from 't' or 'f' to a boolean, (others evaluate to false)
-	 * @param $parameter the parameter
-	 */
+  /**
+   * Change a parameter from 't' or 'f' to a boolean, (others evaluate to false)
+   *
+   * @param $parameter the parameter
+   * @return bool|\PHPPgAdmin\Database\the
+   */
 	public function phpBool($parameter) {
 		$parameter = ($parameter == 't');
 		return $parameter;

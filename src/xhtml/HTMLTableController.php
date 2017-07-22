@@ -11,46 +11,51 @@ class HTMLTableController extends HTMLController {
 	public $_name  = 'HTMLTableController';
 	private $ma    = [];
 	private $class = '';
-	/**
-	 * Display a table of data.
-	 * @param $tabledata A set of data to be formatted, as returned by $data->getDatabases() etc.
-	 * @param $columns   An associative array of columns to be displayed:
-	 *			$columns = array(
-	 *				column_id => array(
-	 *					'title' => Column heading,
-	 * 					'class' => The class to apply on the column cells,
-	 *					'field' => Field name for $tabledata->fields[...],
-	 *					'help'  => Help page for this column,
-	 *				), ...
-	 *			);
-	 * @param $actions   Actions that can be performed on each object:
-	 *			$actions = array(
-	 *				* multi action support
-	 *				* parameters are serialized for each entries and given in $_REQUEST['ma']
-	 *				'multiactions' => array(
-	 *					'keycols' => Associative array of (URL variable => field name), // fields included in the form
-	 *					'url' => URL submission,
-	 *					'default' => Default selected action in the form. If null, an empty action is added & selected
-	 *				),
-	 *				* actions *
-	 *				action_id => array(
-	 *					'title' => Action heading,
-	 *					'url'   => Static part of URL.  Often we rely
-	 *							   relative urls, usually the page itself (not '' !), or just a query string,
-	 *					'vars'  => Associative array of (URL variable => field name),
-	 *					'multiaction' => Name of the action to execute.
-	 *										Add this action to the multi action form
-	 *				), ...
-	 *			);
-	 * @param $place     Place where the $actions are displayed. Like 'display-browse',  where 'display'
-	 * is the entrypoint (/src/views/display.php) and 'browse' is the action used inside its controller (in this case, doBrowse).
-	 * @param $nodata    (optional) Message to display if data set is empty.
-	 * @param $pre_fn    (optional) callback closure for each row. It will be passed two params: $rowdata and $actions,
-	 *  it may be used to derive new fields or modify actions.
-	 *  It can return an array of actions specific to the row,  or if nothing is returned then the standard actions are used.
-	 *  (see TablePropertyController and ConstraintController for examples)
-	 *  The function must not must not store urls because	 they are relative and won't work out of context.
-	 */
+
+  /**
+   * Display a table of data.
+   *
+   * @param $tabledata                      A set of data to be formatted, as returned by $data->getDatabases() etc.
+   * @param $columns                        An associative array of columns to be displayed:
+   *                                        $columns = array(
+   *                                        column_id => array(
+   *                                        'title' => Column heading,
+   *                                        'class' => The class to apply on the column cells,
+   *                                        'field' => Field name for $tabledata->fields[...],
+   *                                        'help'  => Help page for this column,
+   *                                        ), ...
+   *                                        );
+   * @param $actions                        Actions that can be performed on each object:
+   *                                        $actions = array(
+   *                                        * multi action support
+   *                                        * parameters are serialized for each entries and given in $_REQUEST['ma']
+   *                                        'multiactions' => array(
+   *                                        'keycols' => Associative array of (URL variable => field name), // fields included in the form
+   *                                        'url' => URL submission,
+   *                                        'default' => Default selected action in the form. If null, an empty action is added & selected
+   *                                        ),
+   *                                        * actions *
+   *                                        action_id => array(
+   *                                        'title' => Action heading,
+   *                                        'url'   => Static part of URL.  Often we rely
+   *                                        relative urls, usually the page itself (not '' !), or just a query string,
+   *                                        'vars'  => Associative array of (URL variable => field name),
+   *                                        'multiaction' => Name of the action to execute.
+   *                                        Add this action to the multi action form
+   *                                        ), ...
+   *                                        );
+   * @param $place                          Place where the $actions are displayed. Like 'display-browse',  where 'display'
+   *                                        is the entrypoint (/src/views/display.php) and 'browse' is the action used inside its controller (in this
+   *                                        case, doBrowse).
+   * @param $nodata                         (optional) Message to display if data set is empty.
+   * @param $pre_fn                         (optional) callback closure for each row. It will be passed two params: $rowdata and $actions,
+   *                                        it may be used to derive new fields or modify actions.
+   *                                        It can return an array of actions specific to the row,  or if nothing is returned then the standard
+   *                                        actions are used.
+   *                                        (see TablePropertyController and ConstraintController for examples)
+   *                                        The function must not must not store urls because     they are relative and won't work out of context.
+   * @return string
+   */
 	public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
 
 		$misc           = $this->misc;

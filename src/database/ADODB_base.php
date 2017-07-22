@@ -337,18 +337,22 @@ class ADODB_base {
 
 	// Type conversion routines
 
-	/**
-	 * Change the value of a parameter to database representation depending on whether it evaluates to true or false
-	 * @param $parameter the parameter
-	 */
+  /**
+   * Change the value of a parameter to database representation depending on whether it evaluates to true or false
+   *
+   * @param $parameter the parameter
+   * @return \PHPPgAdmin\Database\the
+   */
 	public function dbBool(&$parameter) {
 		return $parameter;
 	}
 
-	/**
-	 * Change a parameter from database representation to a boolean, (others evaluate to false)
-	 * @param $parameter the parameter
-	 */
+  /**
+   * Change a parameter from database representation to a boolean, (others evaluate to false)
+   *
+   * @param $parameter the parameter
+   * @return \PHPPgAdmin\Database\the
+   */
 	public function phpBool($parameter) {
 		return $parameter;
 	}
