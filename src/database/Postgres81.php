@@ -242,9 +242,7 @@ class Postgres81 extends Postgres82 {
 				ORDER BY usename, procpid";
 		}
 
-		$rc = $this->selectSet($sql);
-
-		return $rc;
+      return $this->selectSet($sql);
 	}
 
 	// Tablespace functions

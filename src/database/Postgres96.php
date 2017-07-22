@@ -38,8 +38,6 @@ class Postgres96 extends Postgres {
 					ORDER BY usename, pid";
 		}
 
-		$rc = $this->selectSet($sql);
-
-		return $rc;
+      return $this->selectSet($sql);
 	}
 }
