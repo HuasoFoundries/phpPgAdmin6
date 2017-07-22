@@ -24,10 +24,13 @@ class PluginManager {
 	private $actions = [];
 	private $hooks   = [];
 
-	/**
-	 * Register the plugins
-	 * @param $this->language - Language that have been used.
-	 */
+  /**
+   * Register the plugins
+   *
+   * @param $this ->language - Language that have been used.
+   * @throws \Interop\Container\Exception\ContainerException
+   * @throws \Slim\Exception\ContainerValueNotFoundException
+   */
 	public function __construct(\Slim\Container $container) {
 
 		$this->language = $container->has('language') ? $container->get('language') : 'english';
