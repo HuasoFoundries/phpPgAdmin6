@@ -1,7 +1,6 @@
 <?php
 
 namespace PHPPgAdmin\Controller;
-use \PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class
