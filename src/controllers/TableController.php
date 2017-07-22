@@ -1059,7 +1059,6 @@ class TableController extends BaseController {
 
 		if (empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			return $this->doDefault($lang['strspecifytabletoempty']);
-			exit();
 		}
 
 		if ($confirm) {
@@ -1127,7 +1126,6 @@ class TableController extends BaseController {
 
 		if (empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
 			return $this->doDefault($lang['strspecifytabletodrop']);
-			exit();
 		}
 
 		if ($confirm) {
@@ -1174,7 +1172,6 @@ class TableController extends BaseController {
 						} else {
 							$data->endTransaction();
 							return $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($t, ENT_QUOTES, 'UTF-8'), $lang['strtabledroppedbad']));
-							return;
 						}
 					}
 				}
