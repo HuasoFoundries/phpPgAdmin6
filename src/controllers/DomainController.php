@@ -138,9 +138,11 @@ class DomainController extends BaseController {
 
 	}
 
-/**
- * Allow altering a domain
- */
+  /**
+   * Allow altering a domain
+   *
+   * @param string $msg
+   */
 	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -202,9 +204,12 @@ class DomainController extends BaseController {
 
 	}
 
-/**
- * Confirm and then actually add a CHECK constraint
- */
+  /**
+   * Confirm and then actually add a CHECK constraint
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function addCheck($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -259,9 +264,12 @@ class DomainController extends BaseController {
 		}
 	}
 
-/**
- * Show confirmation of drop constraint and perform actual drop
- */
+  /**
+   * Show confirmation of drop constraint and perform actual drop
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function doDropConstraint($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -296,9 +304,11 @@ class DomainController extends BaseController {
 
 	}
 
-/**
- * Show properties for a domain.  Allow manipulating constraints as well.
- */
+  /**
+   * Show properties for a domain.  Allow manipulating constraints as well.
+   *
+   * @param string $msg
+   */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -427,9 +437,11 @@ class DomainController extends BaseController {
 		$this->printNavLinks($navlinks, 'domains-properties', get_defined_vars());
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -461,9 +473,11 @@ class DomainController extends BaseController {
 
 	}
 
-/**
- * Displays a screen where they can enter a new domain
- */
+  /**
+   * Displays a screen where they can enter a new domain
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -573,9 +587,12 @@ class DomainController extends BaseController {
 		}
 	}
 
-/**
- * Show default list of domains in the database
- */
+  /**
+   * Show default list of domains in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

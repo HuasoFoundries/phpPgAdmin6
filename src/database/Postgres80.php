@@ -53,10 +53,12 @@ class Postgres80 extends Postgres81 {
 
 	// Database functions
 
-	/**
-	 * Return all database available on the server
-	 * @return A list of databases, sorted alphabetically
-	 */
+  /**
+   * Return all database available on the server
+   *
+   * @param null $currentdatabase
+   * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
+   */
 	public function getDatabases($currentdatabase = NULL) {
 		$conf        = $this->conf;
 		$server_info = $this->server_info;
@@ -138,21 +140,18 @@ class Postgres80 extends Postgres81 {
 
 	// Table functions
 
-	/**
-	 * Protected method which alter a table
-	 * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
-	 * @param $tblrs The table recordSet returned by getTable()
-	 * @param $name The new name for the table
-	 * @param $owner The new owner for the table
-	 * @param $schema The new schema for the table
-	 * @param $comment The comment on the table
-	 * @param $tablespace The new tablespace for the table ('' means leave as is)
-	 * @return 0 success
-	 * @return -3 rename error
-	 * @return -4 comment error
-	 * @return -5 owner error
-	 * @return -6 tablespace error
-	 */
+  /**
+   * Protected method which alter a table
+   * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+   *
+   * @param $tblrs      The table recordSet returned by getTable()
+   * @param $name       The new name for the table
+   * @param $owner      The new owner for the table
+   * @param $schema     The new schema for the table
+   * @param $comment    The comment on the table
+   * @param $tablespace The new tablespace for the table ('' means leave as is)
+   * @return int 0 success
+   */
 	protected
 	function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace) {
 
@@ -190,18 +189,17 @@ class Postgres80 extends Postgres81 {
 
 	// View functions
 
-	/**
-	 * Protected method which alter a view
-	 * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
-	 * @param $vwrs The view recordSet returned by getView()
-	 * @param $name The new name for the view
-	 * @param $owner The new owner for the view
-	 * @param $comment The comment on the view
-	 * @return 0 success
-	 * @return -3 rename error
-	 * @return -4 comment error
-	 * @return -5 owner error
-	 */
+  /**
+   * Protected method which alter a view
+   * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+   *
+   * @param $vwrs    The view recordSet returned by getView()
+   * @param $name    The new name for the view
+   * @param $owner   The new owner for the view
+   * @param $schema
+   * @param $comment The comment on the view
+   * @return int 0 success
+   */
 	protected
 	function _alterView($vwrs, $name, $owner, $schema, $comment) {
 
@@ -232,28 +230,24 @@ class Postgres80 extends Postgres81 {
 
 	// Sequence functions
 
-	/**
-	 * Protected method which alter a sequence
-	 * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
-	 * @param $seqrs The sequence recordSet returned by getSequence()
-	 * @param $name The new name for the sequence
-	 * @param $comment The comment on the sequence
-	 * @param $owner The new owner for the sequence
-	 * @param $schema The new schema for the sequence
-	 * @param $increment The increment
-	 * @param $minvalue The min value
-	 * @param $maxvalue The max value
-	 * @param $restartvalue The starting value
-	 * @param $cachevalue The cache value
-	 * @param $cycledvalue True if cycled, false otherwise
-	 * @param $startvalue The sequence start value when issueing a restart
-	 * @return 0 success
-	 * @return -3 rename error
-	 * @return -4 comment error
-	 * @return -5 owner error
-	 * @return -6 get sequence props error
-	 * @return -7 schema error
-	 */
+  /**
+   * Protected method which alter a sequence
+   * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+   *
+   * @param $seqrs        The sequence recordSet returned by getSequence()
+   * @param $name         The new name for the sequence
+   * @param $comment      The comment on the sequence
+   * @param $owner        The new owner for the sequence
+   * @param $schema       The new schema for the sequence
+   * @param $increment    The increment
+   * @param $minvalue     The min value
+   * @param $maxvalue     The max value
+   * @param $restartvalue The starting value
+   * @param $cachevalue   The cache value
+   * @param $cycledvalue  True if cycled, false otherwise
+   * @param $startvalue   The sequence start value when issueing a restart
+   * @return int 0 success
+   */
 	protected
 	function _alterSequence($seqrs, $name, $comment, $owner, $schema, $increment,
 		$minvalue, $maxvalue, $restartvalue, $cachevalue, $cycledvalue, $startvalue) {
@@ -300,12 +294,13 @@ class Postgres80 extends Postgres81 {
 
 	// Role, User/group functions
 
-	/**
-	 * Changes a user's password
-	 * @param $username The username
-	 * @param $password The new password
-	 * @return 0 success
-	 */
+  /**
+   * Changes a user's password
+   *
+   * @param $username The username
+   * @param $password The new password
+   * @return \PHPPgAdmin\Database\A 0 success
+   */
 	public function changePassword($username, $password) {
 		$enc = $this->_encryptPassword($username, $password);
 		$this->fieldClean($username);

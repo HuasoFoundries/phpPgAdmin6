@@ -173,9 +173,13 @@ class Misc {
 		return $this->_no_db_connection;
 	}
 
-	/**
-	 * Creates a database accessor
-	 */
+  /**
+   * Creates a database accessor
+   *
+   * @param string $database
+   * @param null   $server_id
+   * @return null
+   */
 	public function getDatabaseAccessor($database = '', $server_id = null) {
 		$lang = $this->lang;
 
@@ -381,9 +385,12 @@ class Misc {
 
 	}
 
-	/**
-	 * Get a href query string, excluding objects below the given object type (inclusive)
-	 */
+  /**
+   * Get a href query string, excluding objects below the given object type (inclusive)
+   *
+   * @param null $exclude_from
+   * @return string
+   */
 	public function getHREF($exclude_from = null) {
 		$href = [];
 		if (isset($_REQUEST['server']) && $exclude_from != 'server') {
@@ -591,36 +598,35 @@ class Misc {
 		//\PC::debug($this->form, 'Misc::form');
 	}
 
-	/**
-	 * Render a value into HTML using formatting rules specified
-	 * by a type name and parameters.
-	 *
-	 * @param $str The string to change
-	 *
-	 * @param $type Field type (optional), this may be an internal PostgreSQL type, or:
-	 *			yesno    - same as bool, but renders as 'Yes' or 'No'.
-	 *			pre      - render in a <pre> block.
-	 *			nbsp     - replace all spaces with &nbsp;'s
-	 *			verbatim - render exactly as supplied, no escaping what-so-ever.
-	 *			callback - render using a callback function supplied in the 'function' param.
-	 *
-	 * @param $params Type parameters (optional), known parameters:
-	 *			null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
-	 *			           otherwise nothing is rendered.
-	 *			clip     - if true, clip the value to a fixed length, and append an ellipsis...
-	 *			cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
-	 *			ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
-	 *			tag      - an HTML element name to surround the value.
-	 *			class    - a class attribute to apply to any surrounding HTML element.
-	 *			align    - an align attribute ('left','right','center' etc.)
-	 *			true     - (type='bool') the representation of true.
-	 *			false    - (type='bool') the representation of false.
-	 *			function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
-	 *			lineno   - prefix each line with a line number.
-	 *			map      - an associative array.
-	 *
-	 * @return The HTML rendered value
-	 */
+  /**
+   * Render a value into HTML using formatting rules specified
+   * by a type name and parameters.
+   *
+   * @param                        $str    The string to change
+   *
+   * @param                        $type   Field type (optional), this may be an internal PostgreSQL type, or:
+   *                                       yesno    - same as bool, but renders as 'Yes' or 'No'.
+   *                                       pre      - render in a <pre> block.
+   *                                       nbsp     - replace all spaces with &nbsp;'s
+   *                                       verbatim - render exactly as supplied, no escaping what-so-ever.
+   *                                       callback - render using a callback function supplied in the 'function' param.
+   *
+   * @param array|\PHPPgAdmin\Type $params Type parameters (optional), known parameters:
+   *                                       null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
+   *                                       otherwise nothing is rendered.
+   *                                       clip     - if true, clip the value to a fixed length, and append an ellipsis...
+   *                                       cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
+   *                                       ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
+   *                                       tag      - an HTML element name to surround the value.
+   *                                       class    - a class attribute to apply to any surrounding HTML element.
+   *                                       align    - an align attribute ('left','right','center' etc.)
+   *                                       true     - (type='bool') the representation of true.
+   *                                       false    - (type='bool') the representation of false.
+   *                                       function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
+   *                                       lineno   - prefix each line with a line number.
+   *                                       map      - an associative array.
+   * @return \PHPPgAdmin\The HTML rendered value
+   */
 	public function printVal($str, $type = null, $params = []) {
 		$lang = $this->lang;
 		$data = $this->data;
@@ -847,7 +853,8 @@ class Misc {
   /**
    * Print out a message
    *
-   * @param $msg The message to print
+   * @param      $msg The message to print
+   * @param bool $do_print
    * @return string
    */
 	public function printMsg($msg, $do_print = true) {
@@ -1602,9 +1609,12 @@ class Misc {
 		return $tabs;
 	}
 
-	/**
-	 * Get the URL for the last active tab of a particular tab bar.
-	 */
+  /**
+   * Get the URL for the last active tab of a particular tab bar.
+   *
+   * @param $section
+   * @return mixed|null
+   */
 	public function getLastTabURL($section) {
 		$data = $this->getDatabaseAccessor();
 
@@ -1691,9 +1701,9 @@ class Misc {
   /**
    * Displays link to the context help.
    *
-   * @param $str      - the string that the context help is related to (already escaped)
-   * @param $help     - help section identifier
-   * @param $do_print true to echo, false to return
+   * @param           $str      - the string that the context help is related to (already escaped)
+   * @param           $help     - help section identifier
+   * @param bool|true $do_print true to echo, false to return
    * @return string
    */
 	public function printHelp($str, $help = null, $do_print = true) {
@@ -1844,10 +1854,13 @@ class Misc {
 
 	}
 
-	/**
-	 * Get list of servers' groups if existing in the conf
-	 * @return a recordset of servers' groups
-	 */
+  /**
+   * Get list of servers' groups if existing in the conf
+   *
+   * @param bool $recordset
+   * @param bool $group_id
+   * @return \PHPPgAdmin\a recordset of servers' groups
+   */
 	public function getServersGroups($recordset = false, $group_id = false) {
 		$lang = $this->lang;
 		$grps = [];
@@ -1913,9 +1926,9 @@ class Misc {
   /**
    * Get list of servers
    *
-   * @param $recordset return as RecordSet suitable for printTable if true,
-   *                   otherwise just return an array.
-   * @param $group     a group name to filter the returned servers using $this->conf[srv_groups]
+   * @param bool|\PHPPgAdmin\return $recordset return as RecordSet suitable for printTable if true,
+   *                                           otherwise just return an array.
+   * @param bool|\PHPPgAdmin\a      $group     a group name to filter the returned servers using $this->conf[srv_groups]
    * @return array|\PHPPgAdmin\ArrayRecordSet
    */
 	public function getServers($recordset = false, $group = false) {
@@ -2064,12 +2077,12 @@ class Misc {
 		}
 	}
 
-	/**
-	 * Set the current schema
-	 * @param $schema The schema name
-	 * @return 0 on success
-	 * @return $data->seSchema() on error
-	 */
+  /**
+   * Set the current schema
+   *
+   * @param $schema The schema name
+   * @return int 0 on success
+   */
 	public function setCurrentSchema($schema) {
 		$data = $this->getDatabaseAccessor();
 

@@ -178,9 +178,12 @@ class TableController extends BaseController {
 		return $this->printTree($items, $attrs, 'table');
 	}
 
-	/**
-	 * Show default list of tables in the database
-	 */
+  /**
+   * Show default list of tables in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -391,9 +394,12 @@ class TableController extends BaseController {
 		echo $this->view->fetch('table_list_footer.twig', ['table_class' => $this->table_place]);
 
 	}
-	/**
-	 * Displays a screen where they can enter a new table
-	 */
+
+  /**
+   * Displays a screen where they can enter a new table
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -653,11 +659,15 @@ class TableController extends BaseController {
 		}
 	}
 
-	/**
-	 * Dsiplay a screen where user can create a table from an existing one.
-	 * We don't have to check if pg supports schema cause create table like
-	 * is available under pg 7.4+ which has schema.
-	 */
+  /**
+   * Dsiplay a screen where user can create a table from an existing one.
+   * We don't have to check if pg supports schema cause create table like
+   * is available under pg 7.4+ which has schema.
+   *
+   * @param        $confirm
+   * @param string $msg
+   * @return string|void
+   */
 	public function doCreateLike($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -773,9 +783,12 @@ class TableController extends BaseController {
 		}
 	}
 
-	/**
-	 * Ask for select parameters and perform select
-	 */
+  /**
+   * Ask for select parameters and perform select
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function doSelectRows($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -899,9 +912,12 @@ class TableController extends BaseController {
 		}
 	}
 
-	/**
-	 * Ask for insert parameters and then actually insert row
-	 */
+  /**
+   * Ask for insert parameters and then actually insert row
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function doInsertRow($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -1048,9 +1064,12 @@ class TableController extends BaseController {
 
 	}
 
-	/**
-	 * Show confirmation of empty and perform actual empty
-	 */
+  /**
+   * Show confirmation of empty and perform actual empty
+   *
+   * @param $confirm
+   * @return string|void
+   */
 	public function doEmpty($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -1115,9 +1134,12 @@ class TableController extends BaseController {
 		} // END do Empty
 	}
 
-	/**
-	 * Show confirmation of drop and perform actual drop
-	 */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   * @return string|void
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;

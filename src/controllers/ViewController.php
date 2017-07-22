@@ -150,9 +150,12 @@ class ViewController extends BaseController {
 		return $this->printTree($items, $attrs, 'view');
 	}
 
-	/**
-	 * Ask for select parameters and perform select
-	 */
+  /**
+   * Ask for select parameters and perform select
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function doSelectRows($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -279,9 +282,11 @@ class ViewController extends BaseController {
 
 	}
 
-	/**
-	 * Show confirmation of drop and perform actual drop
-	 */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -356,9 +361,11 @@ class ViewController extends BaseController {
 
 	}
 
-	/**
-	 * Sets up choices for table linkage, and which fields to select for the view we're creating
-	 */
+  /**
+   * Sets up choices for table linkage, and which fields to select for the view we're creating
+   *
+   * @param string $msg
+   */
 	public function doSetParamsCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -508,9 +515,11 @@ class ViewController extends BaseController {
 		}
 	}
 
-	/**
-	 * Display a wizard where they can enter a new view
-	 */
+  /**
+   * Display a wizard where they can enter a new view
+   *
+   * @param string $msg
+   */
 	public function doWizardCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -547,9 +556,11 @@ class ViewController extends BaseController {
 		echo "</form>\n";
 	}
 
-	/**
-	 * Displays a screen where they can enter a new view
-	 */
+  /**
+   * Displays a screen where they can enter a new view
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -761,9 +772,12 @@ class ViewController extends BaseController {
 		}
 	}
 
-	/**
-	 * Show default list of views in the database
-	 */
+  /**
+   * Show default list of views in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

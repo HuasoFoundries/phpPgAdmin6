@@ -33,11 +33,12 @@ class Postgres84 extends Postgres90 {
 
 	// Database functions
 
-	/**
-	 * Grabs a list of triggers on a table
-	 * @param $table The name of a table whose triggers to retrieve
-	 * @return A recordset
-	 */
+  /**
+   * Grabs a list of triggers on a table
+   *
+   * @param \PHPPgAdmin\Database\The|string $table The name of a table whose triggers to retrieve
+   * @return \PHPPgAdmin\Database\A recordset
+   */
 	public function getTriggers($table = '') {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);

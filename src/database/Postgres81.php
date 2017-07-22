@@ -48,10 +48,12 @@ class Postgres81 extends Postgres82 {
 
 	// Database functions
 
-	/**
-	 * Returns all databases available on the server
-	 * @return A list of databases, sorted alphabetically
-	 */
+  /**
+   * Returns all databases available on the server
+   *
+   * @param null $currentdatabase
+   * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
+   */
 	public function getDatabases($currentdatabase = NULL) {
 		$conf        = $this->conf;
 		$server_info = $this->server_info;
@@ -90,17 +92,16 @@ class Postgres81 extends Postgres82 {
 		return $this->selectSet($sql);
 	}
 
-	/**
-	 * Alters a database
-	 * the multiple return vals are for postgres 8+ which support more functionality in alter database
-	 * @param $dbName The name of the database
-	 * @param $newName new name for the database
-	 * @param $newOwner The new owner for the database
-	 * @return 0 success
-	 * @return -1 transaction error
-	 * @return -2 owner error
-	 * @return -3 rename error
-	 */
+  /**
+   * Alters a database
+   * the multiple return vals are for postgres 8+ which support more functionality in alter database
+   *
+   * @param                                 $dbName   The name of the database
+   * @param                                 $newName  new name for the database
+   * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
+   * @param string                          $comment
+   * @return bool|int 0 success
+   */
 	public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '') {
 		$this->clean($dbName);
 		$this->clean($newName);
@@ -247,10 +248,12 @@ class Postgres81 extends Postgres82 {
 
 	// Tablespace functions
 
-	/**
-	 * Retrieves a tablespace's information
-	 * @return A recordset
-	 */
+  /**
+   * Retrieves a tablespace's information
+   *
+   * @param $spcname
+   * @return \PHPPgAdmin\Database\A recordset
+   */
 	public function getTablespace($spcname) {
 		$this->clean($spcname);
 
@@ -260,11 +263,12 @@ class Postgres81 extends Postgres82 {
 		return $this->selectSet($sql);
 	}
 
-	/**
-	 * Retrieves information for all tablespaces
-	 * @param $all Include all tablespaces (necessary when moving objects back to the default space)
-	 * @return A recordset
-	 */
+  /**
+   * Retrieves information for all tablespaces
+   *
+   * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+   * @return \PHPPgAdmin\Database\A recordset
+   */
 	public function getTablespaces($all = false) {
 		$conf = $this->conf;
 

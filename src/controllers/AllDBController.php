@@ -92,9 +92,11 @@ class AllDBController extends BaseController {
 		return $this->printTree($databases, $attrs, 'databases');
 	}
 
-	/**
-	 * Display a form for alter and perform actual alter
-	 */
+  /**
+   * Display a form for alter and perform actual alter
+   *
+   * @param $confirm
+   */
 	public function doAlter($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -164,9 +166,11 @@ class AllDBController extends BaseController {
 		}
 	}
 
-	/**
-	 * Show confirmation of drop and perform actual drop
-	 */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -232,9 +236,11 @@ class AllDBController extends BaseController {
 		} //END DROP
 	} // END FUNCTION
 
-	/**
-	 * Displays a screen where they can enter a new database
-	 */
+  /**
+   * Displays a screen where they can enter a new database
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -411,9 +417,11 @@ class AllDBController extends BaseController {
 		}
 	}
 
-	/**
-	 * Displays options for cluster download
-	 */
+  /**
+   * Displays options for cluster download
+   *
+   * @param string $msg
+   */
 	public function doExport($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -462,9 +470,12 @@ class AllDBController extends BaseController {
 		echo "</form>\n";
 	}
 
-/**
- * Show default list of databases in the server
- */
+  /**
+   * Show default list of databases in the server
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

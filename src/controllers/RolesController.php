@@ -9,9 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
 class RolesController extends BaseController {
 	public $_name = 'RolesController';
 
-	/**
-	 * Show default list of roles in the database
-	 */
+  /**
+   * Show default list of roles in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -196,9 +199,11 @@ class RolesController extends BaseController {
 		$misc->printFooter();
 	}
 
-	/**
-	 * Displays a screen for create a new role
-	 */
+  /**
+   * Displays a screen for create a new role
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -358,9 +363,11 @@ class RolesController extends BaseController {
 		}
 	}
 
-	/**
-	 * Function to allow alter a role
-	 */
+  /**
+   * Function to allow alter a role
+   *
+   * @param string $msg
+   */
 	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -582,9 +589,11 @@ class RolesController extends BaseController {
 		}
 	}
 
-	/**
-	 * Show confirmation of drop a role and perform actual drop
-	 */
+  /**
+   * Show confirmation of drop a role and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -615,9 +624,11 @@ class RolesController extends BaseController {
 		}
 	}
 
-	/**
-	 * Show the properties of a role
-	 */
+  /**
+   * Show the properties of a role
+   *
+   * @param string $msg
+   */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -735,12 +746,14 @@ class RolesController extends BaseController {
 		$this->printNavLinks($navlinks, 'roles-properties', get_defined_vars());
 	}
 
-	/**
-	 * If a role is not a superuser role, then we have an 'account management'
-	 * page for change his password, etc.  We don't prevent them from
-	 * messing with the URL to gain access to other role admin stuff, because
-	 * the PostgreSQL permissions will prevent them changing anything anyway.
-	 */
+  /**
+   * If a role is not a superuser role, then we have an 'account management'
+   * page for change his password, etc.  We don't prevent them from
+   * messing with the URL to gain access to other role admin stuff, because
+   * the PostgreSQL permissions will prevent them changing anything anyway.
+   *
+   * @param string $msg
+   */
 	public function doAccount($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -798,9 +811,12 @@ class RolesController extends BaseController {
 		]], 'roles-account', get_defined_vars());
 	}
 
-	/**
-	 * Show confirmation of change password and actually change password
-	 */
+  /**
+   * Show confirmation of change password and actually change password
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function doChangePassword($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

@@ -128,16 +128,23 @@ class BaseController {
 		return $this->tree_controller;
 	}
 
-	/**
-	 * Instances an HTMLTable and returns its html content
-	 * @param  [type] &$tabledata [description]
-	 * @param  [type] &$columns   [description]
-	 * @param  [type] &$actions   [description]
-	 * @param  [type] $place      [description]
-	 * @param  [type] $nodata     [description]
-	 * @param  [type] $pre_fn     [description]
-	 * @return [type]             [description]
-	 */
+  /**
+   * Instances an HTMLTable and returns its html content
+   *
+   * @param      $tabledata
+   * @param      $columns
+   * @param      $actions
+   * @param      $place
+   * @param null $nodata
+   * @param null $pre_fn
+   * @return string [type]             [description]
+   * @internal param $ [type] &$tabledata [description]
+   * @internal param $ [type] &$columns   [description]
+   * @internal param $ [type] &$actions   [description]
+   * @internal param $ [type] $place      [description]
+   * @internal param $ [type] $nodata     [description]
+   * @internal param $ [type] $pre_fn     [description]
+   */
 	public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
 		$html_table = $this->getTableController();
 		return $html_table->printTable($tabledata, $columns, $actions, $place, $nodata, $pre_fn);

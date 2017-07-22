@@ -70,12 +70,15 @@ class UserController extends BaseController {
 		$misc->printFooter();
 
 	}
-/**
- * If a user is not a superuser, then we have an 'account management' page
- * where they can change their password, etc.  We don't prevent them from
- * messing with the URL to gain access to other user admin stuff, because
- * the PostgreSQL permissions will prevent them changing anything anyway.
- */
+
+  /**
+   * If a user is not a superuser, then we have an 'account management' page
+   * where they can change their password, etc.  We don't prevent them from
+   * messing with the URL to gain access to other user admin stuff, because
+   * the PostgreSQL permissions will prevent them changing anything anyway.
+   *
+   * @param string $msg
+   */
 	public function doAccount($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -122,9 +125,12 @@ class UserController extends BaseController {
 		]], 'users-account', get_defined_vars());
 	}
 
-/**
- * Show confirmation of change password and actually change password
- */
+  /**
+   * Show confirmation of change password and actually change password
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function doChangePassword($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -182,9 +188,11 @@ class UserController extends BaseController {
 		}
 	}
 
-/**
- * Function to allow editing of a user
- */
+  /**
+   * Function to allow editing of a user
+   *
+   * @param string $msg
+   */
 	public function doEdit($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -279,9 +287,11 @@ class UserController extends BaseController {
 		}
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -312,9 +322,11 @@ class UserController extends BaseController {
 		}
 	}
 
-/**
- * Displays a screen where they can enter a new user
- */
+  /**
+   * Displays a screen where they can enter a new user
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -391,9 +403,12 @@ class UserController extends BaseController {
 		}
 	}
 
-/**
- * Show default list of users in the database
- */
+  /**
+   * Show default list of users in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

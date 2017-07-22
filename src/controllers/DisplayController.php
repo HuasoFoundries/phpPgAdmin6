@@ -111,9 +111,11 @@ class DisplayController extends BaseController {
 		$misc->printFooter(true, $footer_template);
 	}
 
-	/**
-	 * Displays requested data
-	 */
+  /**
+   * Displays requested data
+   *
+   * @param string $msg
+   */
 	public function doBrowse($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -563,9 +565,13 @@ class DisplayController extends BaseController {
 
 		$this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
 	}
-	/**
-	 * Show confirmation of edit and perform actual update
-	 */
+
+  /**
+   * Show confirmation of edit and perform actual update
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function doEditRow($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -747,9 +753,11 @@ class DisplayController extends BaseController {
 
 	}
 
-	/**
-	 * Show confirmation of drop and perform actual drop
-	 */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDelRow($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -828,11 +836,12 @@ class DisplayController extends BaseController {
 
 	}
 
-	/**
-	 * build & return the FK information data structure
-	 * used when deciding if a field should have a FK link or not
-	 * @return [type] [description]
-	 */
+  /**
+   * build & return the FK information data structure
+   * used when deciding if a field should have a FK link or not
+   *
+   * @return array [type] [description]
+   */
 	public function &getFKInfo() {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -877,11 +886,13 @@ class DisplayController extends BaseController {
 		return $fkey_information;
 	}
 
-	/**
-	 * Print table header cells
-	 * @param $args - associative array for sort link parameters
-	 *
-	 */
+  /**
+   * Print table header cells
+   *
+   * @param $rs
+   * @param $args - associative array for sort link parameters
+   * @param $withOid
+   */
 	public function printTableHeaderCells(&$rs, $args, $withOid) {
 		$conf = $this->conf;
 		$misc = $this->misc;

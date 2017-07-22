@@ -158,9 +158,11 @@ class TablePropertyController extends BaseController {
 
 	}
 
-/**
- * Function to allow altering of a table
- */
+  /**
+   * Function to allow altering of a table
+   *
+   * @param string $msg
+   */
 	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -374,9 +376,11 @@ class TablePropertyController extends BaseController {
 
 	}
 
-/**
- * Displays a screen where they can add a column
- */
+  /**
+   * Displays a screen where they can add a column
+   *
+   * @param string $msg
+   */
 	public function doAddColumn($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -519,9 +523,11 @@ class TablePropertyController extends BaseController {
 		}
 	}
 
-/**
- * Show confirmation of drop column and perform actual drop
- */
+  /**
+   * Show confirmation of drop column and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -557,9 +563,12 @@ class TablePropertyController extends BaseController {
 
 	}
 
-	/**
-	 * Show default list of columns in the table
-	 */
+  /**
+   * Show default list of columns in the table
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

@@ -34,18 +34,25 @@ class DataImportController extends BaseController {
 		$curr_col_null = false;
 		$curr_row = [];
 
-		/**
-		 * Character data handler for XML import feature
-		 */
+      /**
+       * Character data handler for XML import feature
+       *
+       * @param $parser
+       * @param $cdata
+       */
 		$_charHandler = function ($parser, $cdata) use (&$state, &$curr_col_val) {
 			if ($state == 'COLUMN') {
 				$curr_col_val .= $cdata;
 			}
 		};
 
-		/**
-		 * Open tag handler for XML import feature
-		 */
+      /**
+       * Open tag handler for XML import feature
+       *
+       * @param $parser
+       * @param $name
+       * @param $attrs
+       */
 		$_startElement = function ($parser, $name, $attrs) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null) {
 
 			switch ($name) {
@@ -104,9 +111,12 @@ class DataImportController extends BaseController {
 			}
 		};
 
-		/**
-		 * Close tag handler for XML import feature
-		 */
+      /**
+       * Close tag handler for XML import feature
+       *
+       * @param $parser
+       * @param $name
+       */
 		$_endElement = function ($parser, $name) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null, &$curr_col_val) {
 
 			switch ($name) {

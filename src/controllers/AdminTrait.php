@@ -4,9 +4,12 @@ use \PHPPgAdmin\Decorators\Decorator;
 
 trait AdminTrait {
 
-/**
- * Show confirmation of cluster and perform cluster
- */
+  /**
+   * Show confirmation of cluster and perform cluster
+   *
+   * @param      $type
+   * @param bool $confirm
+   */
 	public function doCluster($type, $confirm = false) {
 
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
@@ -94,9 +97,12 @@ trait AdminTrait {
 		}
 	}
 
-/**
- * Show confirmation of reindex and perform reindex
- */
+  /**
+   * Show confirmation of reindex and perform reindex
+   *
+   * @param      $type
+   * @param bool $confirm
+   */
 	public function doReindex($type, $confirm = false) {
 
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
@@ -177,9 +183,12 @@ trait AdminTrait {
 		}
 	}
 
-/**
- * Show confirmation of analyze and perform analyze
- */
+  /**
+   * Show confirmation of analyze and perform analyze
+   *
+   * @param      $type
+   * @param bool $confirm
+   */
 	public function doAnalyze($type, $confirm = false) {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 
@@ -258,9 +267,12 @@ trait AdminTrait {
 		}
 	}
 
-/**
- * Show confirmation of vacuum and perform actual vacuum
- */
+  /**
+   * Show confirmation of vacuum and perform actual vacuum
+   *
+   * @param      $type
+   * @param bool $confirm
+   */
 	public function doVacuum($type, $confirm = false) {
 
 		$script = ($type == 'database') ? 'database.php' : 'tables.php';
@@ -339,9 +351,13 @@ trait AdminTrait {
 		}
 	}
 
-/**
- * Add or Edit autovacuum params and save them
- */
+  /**
+   * Add or Edit autovacuum params and save them
+   *
+   * @param        $type
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function doEditAutovacuum($type, $confirm, $msg = '') {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 		$script = $this->script;
@@ -455,9 +471,12 @@ trait AdminTrait {
 		}
 	}
 
-/**
- * confirm drop autovacuum params for a table and drop it
- */
+  /**
+   * confirm drop autovacuum params for a table and drop it
+   *
+   * @param $type
+   * @param $confirm
+   */
 	public function doDropAutovacuum($type, $confirm) {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 		$script = $this->script;
@@ -507,11 +526,14 @@ trait AdminTrait {
 		}
 	}
 
-/**
- * database/table administration and tuning tasks
- *
- * $Id: admin.php
- */
+  /**
+   * database/table administration and tuning tasks
+   *
+   * $Id: admin.php
+   *
+   * @param        $type
+   * @param string $msg
+   */
 
 	public function doAdmin($type, $msg = '') {
 		$this->script = ($type == 'database') ? 'database.php' : 'tables.php';

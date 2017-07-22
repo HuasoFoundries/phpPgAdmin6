@@ -74,9 +74,12 @@ class RuleController extends BaseController {
 		return $this->printTree($rules, $attrs, 'rules');
 	}
 
-	/**
-	 * Confirm and then actually create a rule
-	 */
+  /**
+   * Confirm and then actually create a rule
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function createRule($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -161,9 +164,11 @@ class RuleController extends BaseController {
 		}
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -200,9 +205,12 @@ class RuleController extends BaseController {
 
 	}
 
-/**
- * List all the rules on the table
- */
+  /**
+   * List all the rules on the table
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

@@ -31,9 +31,12 @@ class LangController extends BaseController {
 
 	}
 
-	/**
-	 * Show default list of languages in the database
-	 */
+  /**
+   * Show default list of languages in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

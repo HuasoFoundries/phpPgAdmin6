@@ -56,9 +56,12 @@ class OpClassesController extends BaseController {
 		return $this->printTree($opclasses, $attrs, 'opclasses');
 	}
 
-	/**
-	 * Show default list of opclasss in the database
-	 */
+  /**
+   * Show default list of opclasss in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

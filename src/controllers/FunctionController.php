@@ -148,9 +148,11 @@ class FunctionController extends BaseController {
 		}
 	}
 
-	/**
-	 * Function to allow editing of a Function
-	 */
+  /**
+   * Function to allow editing of a Function
+   *
+   * @param string $msg
+   */
 	public function doEdit($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -384,9 +386,11 @@ class FunctionController extends BaseController {
 
 	}
 
-	/**
-	 * Show read only properties of a function
-	 */
+  /**
+   * Show read only properties of a function
+   *
+   * @param string $msg
+   */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -570,9 +574,11 @@ class FunctionController extends BaseController {
 		$this->printNavLinks($navlinks, 'functions-properties', get_defined_vars());
 	}
 
-	/**
-	 * Show confirmation of drop and perform actual drop
-	 */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -648,9 +654,12 @@ class FunctionController extends BaseController {
 
 	}
 
-	/**
-	 * Displays a screen where they can enter a new function
-	 */
+  /**
+   * Displays a screen where they can enter a new function
+   *
+   * @param string $msg
+   * @param string $szJS
+   */
 	public function doCreate($msg = '', $szJS = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -973,9 +982,12 @@ class FunctionController extends BaseController {
 		}
 	}
 
-/**
- * Build out the function arguments string
- */
+  /**
+   * Build out the function arguments string
+   *
+   * @param $arrayVars
+   * @return string
+   */
 	public function buildFunctionArguments($arrayVars) {
 		if (isset($_POST['formArgName'])) {
 			$arrayArgs = [];
@@ -987,9 +999,12 @@ class FunctionController extends BaseController {
 		return '';
 	}
 
-/**
- * Build out JS to re-create table rows for arguments
- */
+  /**
+   * Build out JS to re-create table rows for arguments
+   *
+   * @param $szArgs
+   * @return string
+   */
 	public function buildJSRows($szArgs) {
 		$arrayModes = ['IN', 'OUT', 'INOUT'];
 		$arrayArgs = explode(',', $szArgs);
@@ -1043,9 +1058,12 @@ class FunctionController extends BaseController {
 		return $szTypes . $szModes;
 	}
 
-	/**
-	 * Show default list of functions in the database
-	 */
+  /**
+   * Show default list of functions in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

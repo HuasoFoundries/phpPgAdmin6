@@ -2,10 +2,9 @@
 namespace PHPPgAdmin;
 
 trait HelperTrait {
-	/**
-	 * Receives N parameters and sends them to the console adding where was it called from
-	 * @return [type] [description]
-	 */
+  /**
+   * Receives N parameters and sends them to the console adding where was it called from
+   */
 	public function prtrace() {
 
 		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
@@ -43,9 +42,10 @@ trait HelperTrait {
    * Prints the page header.  If member variable $this->_no_output is
    * set then no header is drawn.
    *
-   * @param $title    The title of the page
-   * @param $script   script tag
-   * @param $do_print boolean if false, the function will return the header content
+   * @param \PHPPgAdmin\The|string $title    The title of the page
+   * @param                        $script   script tag
+   * @param                        $do_print boolean if false, the function will return the header content
+   * @param string                 $template
    * @return string
    */
 	public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig') {
@@ -102,8 +102,8 @@ trait HelperTrait {
   /**
    * Prints the page body.
    *
-   * @param $doBody    True to output body tag, false to return
-   * @param $bodyClass - name of body class
+   * @param bool|True $doBody    True to output body tag, false to return
+   * @param string    $bodyClass - name of body class
    * @return string
    */
 	public function printBody($doBody = true, $bodyClass = 'detailbody') {
@@ -122,9 +122,9 @@ trait HelperTrait {
   /**
    * Displays link to the context help.
    *
-   * @param $str      - the string that the context help is related to (already escaped)
-   * @param $help     - help section identifier
-   * @param $do_print true to echo, false to return
+   * @param           $str      - the string that the context help is related to (already escaped)
+   * @param           $help     - help section identifier
+   * @param bool|true $do_print true to echo, false to return
    * @return string
    */
 	public function printHelp($str, $help = null, $do_print = true) {
@@ -149,8 +149,9 @@ trait HelperTrait {
   /**
    * Print out the page heading and help link
    *
-   * @param $title Title, already escaped
-   * @param $help  (optional) The identifier for the help link
+   * @param      $title Title, already escaped
+   * @param      $help  (optional) The identifier for the help link
+   * @param bool $do_print
    * @return string
    */
 	public function printTitle($title, $help = null, $do_print = true) {
@@ -171,7 +172,8 @@ trait HelperTrait {
   /**
    * Prints the page footer
    *
-   * @param $doBody True to output body tag, false to return the html
+   * @param bool|True $doBody True to output body tag, false to return the html
+   * @param string    $template
    * @return string
    */
 	public function printFooter($doBody = true, $template = 'footer.twig') {
@@ -201,8 +203,8 @@ trait HelperTrait {
   /**
    * Outputs JavaScript code that will reload the browser
    *
-   * @param $database True if dropping a database, false otherwise
-   * @param $do_print true to echo, false to return;
+   * @param           $database True if dropping a database, false otherwise
+   * @param bool|true $do_print true to echo, false to return;
    * @return string
    */
 	public function printReload($database, $do_print = true) {
@@ -235,12 +237,13 @@ trait HelperTrait {
 		echo "</script>\n";
 	}
 
-	/**
-	 * Outputs JavaScript to set the name of the browser window.
-	 * @param $name the window name
-	 * @param $addServer if true (default) then the server id is
-	 *        attached to the name.
-	 */
+  /**
+   * Outputs JavaScript to set the name of the browser window.
+   *
+   * @param                     $name      the window name
+   * @param bool|\PHPPgAdmin\if $addServer if true (default) then the server id is
+   *                                       attached to the name.
+   */
 	public function setWindowName($name, $addServer = true) {
 		echo "<script type=\"text/javascript\">\n";
 		echo "//<![CDATA[\n";

@@ -48,12 +48,13 @@ class Postgres82 extends Postgres83 {
 
 	// Sequence functions
 
-	/**
-	 * Rename a sequence
-	 * @param $seqrs The sequence RecordSet returned by getSequence()
-	 * @param $name The new name for the sequence
-	 * @return 0 success
-	 */
+  /**
+   * Rename a sequence
+   *
+   * @param $seqrs The sequence RecordSet returned by getSequence()
+   * @param $name  The new name for the sequence
+   * @return int|\PHPPgAdmin\Database\A 0 success
+   */
 	public function alterSequenceName($seqrs, $name) {
 		/* vars are cleaned in _alterSequence */
 		if (!empty($name) && ($seqrs->fields['seqname'] != $name)) {
@@ -73,13 +74,13 @@ class Postgres82 extends Postgres83 {
 
 	// View functions
 
-	/**
-	 * Rename a view
-	 * @param $vwrs The view recordSet returned by getView()
-	 * @param $name The new view's name
-	 * @return -1 Failed
-	 * @return 0 success
-	 */
+  /**
+   * Rename a view
+   *
+   * @param $vwrs The view recordSet returned by getView()
+   * @param $name The new view's name
+   * @return int|\PHPPgAdmin\Database\A -1 Failed
+   */
 	public function alterViewName($vwrs, $name) {
 		// Rename (only if name has changed)
 		/* $vwrs and $name are cleaned in _alterView */
@@ -100,11 +101,12 @@ class Postgres82 extends Postgres83 {
 
 	// Trigger functions
 
-	/**
-	 * Grabs a list of triggers on a table
-	 * @param $table The name of a table whose triggers to retrieve
-	 * @return A recordset
-	 */
+  /**
+   * Grabs a list of triggers on a table
+   *
+   * @param \PHPPgAdmin\Database\The|string $table The name of a table whose triggers to retrieve
+   * @return \PHPPgAdmin\Database\A recordset
+   */
 	public function getTriggers($table = '') {
 		$c_schema = $this->_schema;
 		$this->clean($c_schema);
@@ -129,11 +131,13 @@ class Postgres82 extends Postgres83 {
 
 	// Function functions
 
-	/**
-	 * Returns all details for a particular function
-	 * @param $func The name of the function to retrieve
-	 * @return Function info
-	 */
+  /**
+   * Returns all details for a particular function
+   *
+   * @param $function_oid
+   * @return \PHPPgAdmin\Database\Function info
+   * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
+   */
 	public function getFunction($function_oid) {
 		$this->clean($function_oid);
 
@@ -164,23 +168,22 @@ class Postgres82 extends Postgres83 {
 		return $this->selectSet($sql);
 	}
 
-	/**
-	 * Creates a new function.
-	 * @param $funcname The name of the function to create
-	 * @param $args A comma separated string of types
-	 * @param $returns The return type
-	 * @param $definition The definition for the new function
-	 * @param $language The language the function is written for
-	 * @param $flags An array of optional flags
-	 * @param $setof True if it returns a set, false otherwise
-	 * @param $rows number of rows planner should estimate will be returned
-	 * @param $cost cost the planner should use in the function execution step
-	 * @param $comment The comment on the function
-	 * @param $replace (optional) True if OR REPLACE, false for normal
-	 * @return 0 success
-	 * @return -1 create function failed
-	 * @return -4 set comment failed
-	 */
+  /**
+   * Creates a new function.
+   *
+   * @param      $funcname   The name of the function to create
+   * @param      $args       A comma separated string of types
+   * @param      $returns    The return type
+   * @param      $definition The definition for the new function
+   * @param      $language   The language the function is written for
+   * @param      $flags      An array of optional flags
+   * @param      $setof      True if it returns a set, false otherwise
+   * @param      $cost       cost the planner should use in the function execution step
+   * @param      $rows       number of rows planner should estimate will be returned
+   * @param      $comment    The comment on the function
+   * @param bool $replace    (optional) True if OR REPLACE, false for normal
+   * @return bool|int 0 success
+   */
 	public function createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, $replace = false) {
 
 		// Begin a transaction
@@ -258,12 +261,13 @@ class Postgres82 extends Postgres83 {
 
 	// Index functions
 
-	/**
-	 * Clusters an index
-	 * @param $index The name of the index
-	 * @param $table The table the index is on
-	 * @return 0 success
-	 */
+  /**
+   * Clusters an index
+   *
+   * @param \PHPPgAdmin\Database\The|string $table The table the index is on
+   * @param \PHPPgAdmin\Database\The|string $index The name of the index
+   * @return \PHPPgAdmin\Database\A 0 success
+   */
 	public function clusterIndex($table = '', $index = '') {
 
 		$sql = 'CLUSTER';

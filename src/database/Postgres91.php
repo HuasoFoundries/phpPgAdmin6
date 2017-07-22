@@ -41,11 +41,12 @@ class Postgres91 extends Postgres92 {
 
 	// Tablespace functions
 
-	/**
-	 * Retrieves information for all tablespaces
-	 * @param $all Include all tablespaces (necessary when moving objects back to the default space)
-	 * @return A recordset
-	 */
+  /**
+   * Retrieves information for all tablespaces
+   *
+   * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+   * @return \PHPPgAdmin\Database\A recordset
+   */
 	public function getTablespaces($all = false) {
 		$conf = $this->conf;
 
@@ -62,10 +63,12 @@ class Postgres91 extends Postgres92 {
 		return $this->selectSet($sql);
 	}
 
-	/**
-	 * Retrieves a tablespace's information
-	 * @return A recordset
-	 */
+  /**
+   * Retrieves a tablespace's information
+   *
+   * @param $spcname
+   * @return \PHPPgAdmin\Database\A recordset
+   */
 	public function getTablespace($spcname) {
 		$this->clean($spcname);
 

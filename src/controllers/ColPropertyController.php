@@ -49,9 +49,12 @@ class ColPropertyController extends BaseController {
 
 		$misc->printFooter();
 	}
-	/**
-	 * Displays a screen where they can alter a column
-	 */
+
+  /**
+   * Displays a screen where they can alter a column
+   *
+   * @param string $msg
+   */
 	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -220,9 +223,13 @@ class ColPropertyController extends BaseController {
 		}
 	}
 
-	/**
-	 * Show default list of columns in the table
-	 */
+  /**
+   * Show default list of columns in the table
+   *
+   * @param string $msg
+   * @param bool   $isTable
+   * @return string|void
+   */
 	public function doDefault($msg = '', $isTable = true) {
 		$conf = $this->conf;
 		$misc = $this->misc;

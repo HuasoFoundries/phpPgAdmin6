@@ -9,9 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
 class CastController extends BaseController {
 	public $_name = 'CastController';
 
-/**
- * Show default list of casts in the database
- */
+  /**
+   * Show default list of casts in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

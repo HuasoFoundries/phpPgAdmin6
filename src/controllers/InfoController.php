@@ -28,9 +28,13 @@ class InfoController extends BaseController {
 		$misc->printFooter();
 
 	}
-	/**
-	 * List all the information on the table
-	 */
+
+  /**
+   * List all the information on the table
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

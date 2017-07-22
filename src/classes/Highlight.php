@@ -1061,11 +1061,15 @@ class Highlight {
 
 	}
 
-	/**
-	 * Syntax highlight function
-	 * Does the bulk of the syntax highlighting by lexing the input
-	 * string, then calling the helper function to highlight keywords.
-	 */
+  /**
+   * Syntax highlight function
+   * Does the bulk of the syntax highlighting by lexing the input
+   * string, then calling the helper function to highlight keywords.
+   *
+   * @param $text
+   * @param $language
+   * @return string
+   */
 	public function syntax_highlight($text, $language) {
 		if ($language == 'Plain Text') {
 			return $text;

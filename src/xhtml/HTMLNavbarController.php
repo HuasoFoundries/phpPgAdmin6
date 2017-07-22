@@ -12,7 +12,8 @@ class HTMLNavbarController extends HTMLController {
   /**
    * Display a bread crumb trail.
    *
-   * @param  $do_print true to echo, false to return html
+   * @param array     $trail
+   * @param bool|true $do_print true to echo, false to return html
    * @return string
    */
 	public function printTrail($trail = [], $do_print = true) {
@@ -106,10 +107,11 @@ class HTMLNavbarController extends HTMLController {
   /**
    * Display navigation tabs
    *
-   * @param  $tabs      The name of current section (Ex: intro, server, ...), or an array with tabs (Ex: sqledit.php doFind function)
-   * @param  $activetab The name of the tab to be highlighted.
-   * @param  $print     if false, return html
+   * @param      $tabs      The name of current section (Ex: intro, server, ...), or an array with tabs (Ex: sqledit.php doFind function)
+   * @param      $activetab The name of the tab to be highlighted.
+   * @param bool $do_print
    * @return string
+   * @internal param \PHPPgAdmin\XHtml\if $print false, return html
    */
 	public function printTabs($tabs, $activetab, $do_print = true) {
 
@@ -169,9 +171,12 @@ class HTMLNavbarController extends HTMLController {
 
 	}
 
-	/**
-	 * Get the URL for the last active tab of a particular tab bar.
-	 */
+  /**
+   * Get the URL for the last active tab of a particular tab bar.
+   *
+   * @param $section
+   * @return mixed|null
+   */
 	public function getLastTabURL($section) {
 		$lang = $this->lang;
 		$misc = $this->misc;
@@ -350,8 +355,9 @@ class HTMLNavbarController extends HTMLController {
   /**
    * Create a bread crumb trail of the object hierarchy.
    *
-   * @param $object The type of object at the end of the trail.
+   * @param null $subject
    * @return array
+   * @internal param \PHPPgAdmin\XHtml\The $object type of object at the end of the trail.
    */
 	private function getTrail($subject = null) {
 		$lang = $this->lang;
@@ -527,11 +533,11 @@ class HTMLNavbarController extends HTMLController {
   /**
    * Display a list of links
    *
-   * @param          $links    An associative array of links to print. See printLink function for
-   *                           the links array format.
-   * @param          $class    An optional class or list of classes seprated by a space
-   *                           WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
-   * @param  boolean $do_print true to echo, false to return
+   * @param                             $links    An associative array of links to print. See printLink function for
+   *                                              the links array format.
+   * @param \PHPPgAdmin\XHtml\An|string $class    An optional class or list of classes seprated by a space
+   *                                              WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
+   * @param  boolean                    $do_print true to echo, false to return
    * @return string
    */
 	private function printLinksList($links, $class = '', $do_print = true) {

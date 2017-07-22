@@ -103,9 +103,11 @@ class TypeController extends BaseController {
 
 	}
 
-	/**
-	 * Show read only properties for a type
-	 */
+  /**
+   * Show read only properties for a type
+   *
+   * @param string $msg
+   */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -197,9 +199,11 @@ class TypeController extends BaseController {
 
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -232,9 +236,11 @@ class TypeController extends BaseController {
 
 	}
 
-/**
- * Displays a screen where they can enter a new composite type
- */
+  /**
+   * Displays a screen where they can enter a new composite type
+   *
+   * @param string $msg
+   */
 	public function doCreateComposite($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -396,9 +402,11 @@ class TypeController extends BaseController {
 		}
 	}
 
-/**
- * Displays a screen where they can enter a new enum type
- */
+  /**
+   * Displays a screen where they can enter a new enum type
+   *
+   * @param string $msg
+   */
 	public function doCreateEnum($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -526,9 +534,11 @@ class TypeController extends BaseController {
 		}
 	}
 
-/**
- * Displays a screen where they can enter a new type
- */
+  /**
+   * Displays a screen where they can enter a new type
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -685,9 +695,12 @@ class TypeController extends BaseController {
 		}
 	}
 
-/**
- * Show default list of types in the database
- */
+  /**
+   * Show default list of types in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

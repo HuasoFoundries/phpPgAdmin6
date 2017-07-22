@@ -91,9 +91,11 @@ class OperatorController extends BaseController {
 		return $this->printTree($operators, $attrs, 'operators');
 	}
 
-	/**
-	 * Show read only properties for an operator
-	 */
+  /**
+   * Show read only properties for an operator
+   *
+   * @param string $msg
+   */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -165,9 +167,11 @@ class OperatorController extends BaseController {
 
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -201,9 +205,12 @@ class OperatorController extends BaseController {
 
 	}
 
-/**
- * Show default list of operators in the database
- */
+  /**
+   * Show default list of operators in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

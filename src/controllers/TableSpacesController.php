@@ -9,9 +9,11 @@ use \PHPPgAdmin\Decorators\Decorator;
 class TableSpacesController extends BaseController {
 	public $_name = 'TableSpacesController';
 
-	/**
-	 * Function to allow altering of a tablespace
-	 */
+  /**
+   * Function to allow altering of a tablespace
+   *
+   * @param string $msg
+   */
 	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -103,9 +105,11 @@ class TableSpacesController extends BaseController {
 		}
 	}
 
-	/**
-	 * Show confirmation of drop and perform actual drop
-	 */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -136,9 +140,11 @@ class TableSpacesController extends BaseController {
 		}
 	}
 
-	/**
-	 * Displays a screen where they can enter a new tablespace
-	 */
+  /**
+   * Displays a screen where they can enter a new tablespace
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -229,9 +235,12 @@ class TableSpacesController extends BaseController {
 		}
 	}
 
-	/**
-	 * Show default list of tablespaces in the cluster
-	 */
+  /**
+   * Show default list of tablespaces in the cluster
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

@@ -120,9 +120,12 @@ class SequenceController extends BaseController {
 		return $this->printTree($sequences, $attrs, 'sequences');
 	}
 
-	/**
-	 * Display list of all sequences in the database/schema
-	 */
+  /**
+   * Display list of all sequences in the database/schema
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -219,9 +222,11 @@ class SequenceController extends BaseController {
 		]], 'sequences-sequences', get_defined_vars());
 	}
 
-/**
- * Display the properties of a sequence
- */
+  /**
+   * Display the properties of a sequence
+   *
+   * @param string $msg
+   */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -374,9 +379,12 @@ class SequenceController extends BaseController {
 
 	}
 
-/**
- * Drop a sequence
- */
+  /**
+   * Drop a sequence
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function doDrop($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -450,9 +458,11 @@ class SequenceController extends BaseController {
 		}
 	}
 
-/**
- * Displays a screen where they can enter a new sequence
- */
+  /**
+   * Displays a screen where they can enter a new sequence
+   *
+   * @param string $msg
+   */
 	public function doCreateSequence($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -623,9 +633,11 @@ class SequenceController extends BaseController {
 
 	}
 
-/**
- * Function to allow 'setval'ing of a sequence
- */
+  /**
+   * Function to allow 'setval'ing of a sequence
+   *
+   * @param string $msg
+   */
 	public function doSetval($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -727,9 +739,11 @@ class SequenceController extends BaseController {
 
 	}
 
-/**
- * Function to allow altering of a sequence
- */
+  /**
+   * Function to allow altering of a sequence
+   *
+   * @param string $msg
+   */
 	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

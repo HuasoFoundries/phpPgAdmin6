@@ -234,9 +234,11 @@ class IndexController extends BaseController {
 		return $this->printTree($indexes, $attrs, 'indexes');
 	}
 
-	/**
-	 * Show confirmation of cluster index and perform actual cluster
-	 */
+  /**
+   * Show confirmation of cluster index and perform actual cluster
+   *
+   * @param $confirm
+   */
 	public function doClusterIndex($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -297,9 +299,11 @@ class IndexController extends BaseController {
 
 	}
 
-/**
- * Displays a screen where they can enter a new index
- */
+  /**
+   * Displays a screen where they can enter a new index
+   *
+   * @param string $msg
+   */
 	public function doCreateIndex($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -469,9 +473,11 @@ class IndexController extends BaseController {
 		}
 	}
 
-/**
- * Show confirmation of drop index and perform actual drop
- */
+  /**
+   * Show confirmation of drop index and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDropIndex($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;

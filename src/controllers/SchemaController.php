@@ -134,9 +134,12 @@ class SchemaController extends BaseController {
 
 	}
 
-	/**
-	 * Show default list of schemas in the database
-	 */
+  /**
+   * Show default list of schemas in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -235,9 +238,11 @@ class SchemaController extends BaseController {
 		]], 'schemas-schemas', get_defined_vars());
 	}
 
-	/**
-	 * Displays a screen where they can enter a new schema
-	 */
+  /**
+   * Displays a screen where they can enter a new schema
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -321,10 +326,12 @@ class SchemaController extends BaseController {
 		}
 	}
 
-	/**
-	 * Display a form to permit editing schema properies.
-	 * TODO: permit changing owner
-	 */
+  /**
+   * Display a form to permit editing schema properies.
+   * TODO: permit changing owner
+   *
+   * @param string $msg
+   */
 	public function doAlter($msg = '') {
 
 		$misc = $this->misc;
@@ -395,9 +402,11 @@ class SchemaController extends BaseController {
 		}
 	}
 
-	/**
-	 * Save the form submission containing changes to a schema
-	 */
+  /**
+   * Save the form submission containing changes to a schema
+   *
+   * @param string $msg
+   */
 	public function doSaveAlter($msg = '') {
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -413,9 +422,11 @@ class SchemaController extends BaseController {
 
 	}
 
-	/**
-	 * Show confirmation of drop and perform actual drop
-	 */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$misc = $this->misc;
 		$lang = $this->lang;
@@ -487,9 +498,11 @@ class SchemaController extends BaseController {
 		}
 	}
 
-	/**
-	 * Displays options for database download
-	 */
+  /**
+   * Displays options for database download
+   *
+   * @param string $msg
+   */
 	public function doExport($msg = '') {
 		$misc = $this->misc;
 		$lang = $this->lang;

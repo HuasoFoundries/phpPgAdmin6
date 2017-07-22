@@ -96,10 +96,13 @@ class SQLQueryController extends BaseController {
 		$data = $misc->getDatabaseAccessor();
 		$_connection = $misc->getConnection();
 
-		/**
-		 * This is a callback function to display the result of each separate query
-		 * @param ADORecordSet $rs The recordset returned by the script execetor
-		 */
+      /**
+       * This is a callback function to display the result of each separate query
+       *
+       * @param              $query
+       * @param ADORecordSet $rs The recordset returned by the script execetor
+       * @param              $lineno
+       */
 		$sqlCallback = function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection) {
 
 			// Check if $rs is false, if so then there was a fatal error

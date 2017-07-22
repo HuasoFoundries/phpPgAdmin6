@@ -79,9 +79,12 @@ class ViewPropertyController extends BaseController {
 
 	}
 
-	/**
-	 * Show view definition and virtual columns
-	 */
+  /**
+   * Show view definition and virtual columns
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -276,9 +279,11 @@ class ViewPropertyController extends BaseController {
 
 	}
 
-	/**
-	 * Function to allow editing of a view
-	 */
+  /**
+   * Function to allow editing of a view
+   *
+   * @param string $msg
+   */
 	public function doEdit($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -319,13 +324,15 @@ class ViewPropertyController extends BaseController {
 
 	}
 
-/**
- * Allow the dumping of the data "in" a view
- * NOTE:: PostgreSQL doesn't currently support dumping the data in a view
- *        so I have disabled the data related parts for now. In the future
- *        we should allow it conditionally if it becomes supported.  This is
- *        a SMOP since it is based on pg_dump version not backend version.
- */
+  /**
+   * Allow the dumping of the data "in" a view
+   * NOTE:: PostgreSQL doesn't currently support dumping the data in a view
+   *        so I have disabled the data related parts for now. In the future
+   *        we should allow it conditionally if it becomes supported.  This is
+   *        a SMOP since it is based on pg_dump version not backend version.
+   *
+   * @param string $msg
+   */
 	public function doExport($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -382,9 +389,11 @@ class ViewPropertyController extends BaseController {
 		echo "</form>\n";
 	}
 
-/**
- * Show definition for a view
- */
+  /**
+   * Show definition for a view
+   *
+   * @param string $msg
+   */
 	public function doDefinition($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -429,9 +438,11 @@ class ViewPropertyController extends BaseController {
 		]], 'viewproperties-definition', get_defined_vars());
 	}
 
-/**
- * Displays a screen where they can alter a column in a view
- */
+  /**
+   * Displays a screen where they can alter a column in a view
+   *
+   * @param string $msg
+   */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

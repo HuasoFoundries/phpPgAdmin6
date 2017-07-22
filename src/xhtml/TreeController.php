@@ -44,20 +44,22 @@ class TreeController extends HTMLController {
 		return $this->container;
 	}
 
-	/** Produce XML data for the browser tree
-	 * @param $treedata A set of records to populate the tree.
-	 * @param $attrs Attributes for tree items
-	 *        'text' - the text for the tree node
-	 *        'icon' - an icon for node
-	 *        'openIcon' - an alternative icon when the node is expanded
-	 *        'toolTip' - tool tip text for the node
-	 *        'action' - URL to visit when single clicking the node
-	 *        'iconAction' - URL to visit when single clicking the icon node
-	 *        'branch' - URL for child nodes (tree XML)
-	 *        'expand' - the action to return XML for the subtree
-	 *        'nodata' - message to display when node has no children
-	 * @param $section The section where the branch is linked in the tree
-	 */
+  /** Produce XML data for the browser tree
+   *
+   * @param $_treedata
+   * @param $attrs   Attributes for tree items
+   *                 'text' - the text for the tree node
+   *                 'icon' - an icon for node
+   *                 'openIcon' - an alternative icon when the node is expanded
+   *                 'toolTip' - tool tip text for the node
+   *                 'action' - URL to visit when single clicking the node
+   *                 'iconAction' - URL to visit when single clicking the icon node
+   *                 'branch' - URL for child nodes (tree XML)
+   *                 'expand' - the action to return XML for the subtree
+   *                 'nodata' - message to display when node has no children
+   * @param $section The section where the branch is linked in the tree
+   * @internal param \PHPPgAdmin\XHtml\A $treedata set of records to populate the tree.
+   */
 	public function printTree(&$_treedata, &$attrs, $section) {
 		$plugin_manager = $this->plugin_manager;
 

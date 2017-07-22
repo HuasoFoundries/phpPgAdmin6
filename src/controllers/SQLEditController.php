@@ -43,9 +43,12 @@ class SQLEditController extends BaseController {
 
 	}
 
-	/**
-	 * Private function to display server and list of databases
-	 */
+  /**
+   * Private function to display server and list of databases
+   *
+   * @param $action
+   * @return
+   */
 	public function _printConnection($action) {
 
 		$conf = $this->conf;

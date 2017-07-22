@@ -186,9 +186,12 @@ class PrivilegeController extends BaseController {
 		}
 	}
 
-	/**
-	 * Show permissions on a database, namespace, relation, language or function
-	 */
+  /**
+   * Show permissions on a database, namespace, relation, language or function
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 
 		$conf = $this->conf;

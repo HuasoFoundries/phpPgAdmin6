@@ -85,9 +85,11 @@ class GroupController extends BaseController {
 
 	}
 
-/**
- * Show confirmation of drop user from group and perform actual drop
- */
+  /**
+   * Show confirmation of drop user from group and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDropMember($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -119,9 +121,11 @@ class GroupController extends BaseController {
 		}
 	}
 
-/**
- * Show read only properties for a group
- */
+  /**
+   * Show read only properties for a group
+   *
+   * @param string $msg
+   */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -198,9 +202,11 @@ class GroupController extends BaseController {
 		]], 'groups-properties', get_defined_vars());
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -231,9 +237,11 @@ class GroupController extends BaseController {
 		}
 	}
 
-/**
- * Displays a screen where they can enter a new group
- */
+  /**
+   * Displays a screen where they can enter a new group
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -307,9 +315,12 @@ class GroupController extends BaseController {
 		}
 	}
 
-/**
- * Show default list of groups in the database
- */
+  /**
+   * Show default list of groups in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

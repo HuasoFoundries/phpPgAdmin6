@@ -100,9 +100,13 @@ class ConstraintController extends BaseController {
 		$misc->printFooter();
 
 	}
-	/**
-	 * Confirm and then actually add a FOREIGN KEY constraint
-	 */
+
+  /**
+   * Confirm and then actually add a FOREIGN KEY constraint
+   *
+   * @param        $stage
+   * @param string $msg
+   */
 	public function addForeignKey($stage, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -340,9 +344,13 @@ class ConstraintController extends BaseController {
 
 	}
 
-/**
- * Confirm and then actually add a PRIMARY KEY or UNIQUE constraint
- */
+  /**
+   * Confirm and then actually add a PRIMARY KEY or UNIQUE constraint
+   *
+   * @param        $type
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function addPrimaryOrUniqueKey($type, $confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -485,9 +493,12 @@ class ConstraintController extends BaseController {
 		}
 	}
 
-/**
- * Confirm and then actually add a CHECK constraint
- */
+  /**
+   * Confirm and then actually add a CHECK constraint
+   *
+   * @param        $confirm
+   * @param string $msg
+   */
 	public function addCheck($confirm, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -542,9 +553,11 @@ class ConstraintController extends BaseController {
 		}
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -579,9 +592,12 @@ class ConstraintController extends BaseController {
 		}
 	}
 
-	/**
-	 * List all the constraints on the table
-	 */
+  /**
+   * List all the constraints on the table
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

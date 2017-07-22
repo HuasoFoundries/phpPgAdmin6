@@ -126,15 +126,14 @@ class ADODB_base {
 		return $rs->fields[$field];
 	}
 
-	/**
-	 * Delete from the database
-	 * @param $table The name of the table
-	 * @param $conditions (array) A map of field names to conditions
-	 * @param $schema (optional) The table's schema
-	 * @return 0 success
-	 * @return -1 on referential integrity violation
-	 * @return -2 on no rows deleted
-	 */
+  /**
+   * Delete from the database
+   *
+   * @param        $table      The name of the table
+   * @param        $conditions (array) A map of field names to conditions
+   * @param string $schema     (optional) The table's schema
+   * @return int 0 success
+   */
 	public function delete($table, $conditions, $schema = '') {
 		$this->fieldClean($table);
 
@@ -175,14 +174,13 @@ class ADODB_base {
 		return $this->conn->ErrorNo();
 	}
 
-	/**
-	 * Insert a set of values into the database
-	 * @param $table The table to insert into
-	 * @param $vars (array) A mapping of the field names to the values to be inserted
-	 * @return 0 success
-	 * @return -1 if a unique constraint is violated
-	 * @return -2 if a referential constraint is violated
-	 */
+  /**
+   * Insert a set of values into the database
+   *
+   * @param $table The table to insert into
+   * @param $vars  (array) A mapping of the field names to the values to be inserted
+   * @return int 0 success
+   */
 	public function insert($table, $vars) {
 		$this->fieldClean($table);
 
@@ -227,17 +225,15 @@ class ADODB_base {
 		return $this->conn->ErrorNo();
 	}
 
-	/**
-	 * Update a row in the database
-	 * @param $table The table that is to be updated
-	 * @param $vars (array) A mapping of the field names to the values to be updated
-	 * @param $where (array) A mapping of field names to values for the where clause
-	 * @param $nulls (array, optional) An array of fields to be set null
-	 * @return 0 success
-	 * @return -1 if a unique constraint is violated
-	 * @return -2 if a referential constraint is violated
-	 * @return -3 on no rows deleted
-	 */
+  /**
+   * Update a row in the database
+   *
+   * @param       $table The table that is to be updated
+   * @param       $vars  (array) A mapping of the field names to the values to be updated
+   * @param       $where (array) A mapping of field names to values for the where clause
+   * @param array $nulls (array, optional) An array of fields to be set null
+   * @return int 0 success
+   */
 	public function update($table, $vars, $where, $nulls = []) {
 		$this->fieldClean($table);
 
@@ -302,26 +298,29 @@ class ADODB_base {
 		return $this->conn->ErrorNo();
 	}
 
-	/**
-	 * Begin a transaction
-	 * @return 0 success
-	 */
+  /**
+   * Begin a transaction
+   *
+   * @return bool 0 success
+   */
 	public function beginTransaction() {
 		return !$this->conn->BeginTrans();
 	}
 
-	/**
-	 * End a transaction
-	 * @return 0 success
-	 */
+  /**
+   * End a transaction
+   *
+   * @return bool 0 success
+   */
 	public function endTransaction() {
 		return !$this->conn->CommitTrans();
 	}
 
-	/**
-	 * Roll back a transaction
-	 * @return 0 success
-	 */
+  /**
+   * Roll back a transaction
+   *
+   * @return bool 0 success
+   */
 	public function rollbackTransaction() {
 		return !$this->conn->RollbackTrans();
 	}
@@ -357,11 +356,13 @@ class ADODB_base {
 		return $parameter;
 	}
 
-	/**
-	 * Change a db array into a PHP array
-	 * @param $arr String representing the DB array
-	 * @return A PHP array
-	 */
+  /**
+   * Change a db array into a PHP array
+   *
+   * @param $dbarr
+   * @return \PHPPgAdmin\Database\A PHP array
+   * @internal param String $arr representing the DB array
+   */
 	public function phpArray($dbarr) {
 		// Take off the first and last characters (the braces)
 		$arr = substr($dbarr, 1, strlen($dbarr) - 2);

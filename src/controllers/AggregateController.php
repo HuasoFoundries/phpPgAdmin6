@@ -131,9 +131,11 @@ class AggregateController extends BaseController {
 		}
 	}
 
-/**
- * Displays a screen for create a new aggregate function
- */
+  /**
+   * Displays a screen for create a new aggregate function
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -237,9 +239,11 @@ class AggregateController extends BaseController {
 		}
 	}
 
-/**
- * Function to allow editing an aggregate function
- */
+  /**
+   * Function to allow editing an aggregate function
+   *
+   * @param string $msg
+   */
 	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -283,9 +287,11 @@ class AggregateController extends BaseController {
 		echo "</form>\n";
 	}
 
-/**
- * Show confirmation of drop and perform actual drop of the aggregate function selected
- */
+  /**
+   * Show confirmation of drop and perform actual drop of the aggregate function selected
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -319,9 +325,11 @@ class AggregateController extends BaseController {
 		}
 	}
 
-/**
- * Show the properties of an aggregate
- */
+  /**
+   * Show the properties of an aggregate
+   *
+   * @param string $msg
+   */
 	public function doProperties($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -417,9 +425,12 @@ class AggregateController extends BaseController {
 		$this->printNavLinks($navlinks, 'aggregates-properties', get_defined_vars());
 	}
 
-/**
- * Show default list of aggregate functions in the database
- */
+  /**
+   * Show default list of aggregate functions in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

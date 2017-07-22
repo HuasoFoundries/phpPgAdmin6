@@ -360,9 +360,11 @@ class FulltextController extends BaseController {
 
 	}
 
-/**
- * Displays a screen where one can enter a new FTS configuration
- */
+  /**
+   * Displays a screen where one can enter a new FTS configuration
+   *
+   * @param string $msg
+   */
 	public function doCreateConfig($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -514,9 +516,11 @@ class FulltextController extends BaseController {
 
 	}
 
-/**
- * Display a form to permit editing FTS configuration properies.
- */
+  /**
+   * Display a form to permit editing FTS configuration properies.
+   *
+   * @param string $msg
+   */
 	public function doAlterConfig($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -593,9 +597,11 @@ class FulltextController extends BaseController {
 
 	}
 
-/**
- * View list of FTS parsers
- */
+  /**
+   * View list of FTS parsers
+   *
+   * @param string $msg
+   */
 	public function doViewParsers($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -631,9 +637,11 @@ class FulltextController extends BaseController {
 		//TODO: navlink to "create parser"
 	}
 
-/**
- * View list of FTS dictionaries
- */
+  /**
+   * View list of FTS dictionaries
+   *
+   * @param string $msg
+   */
 	public function doViewDicts($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -714,9 +722,12 @@ class FulltextController extends BaseController {
 		$this->printNavLinks($navlinks, 'fulltext-viewdicts', get_defined_vars());
 	}
 
-/**
- * View details of FTS configuration given
- */
+  /**
+   * View details of FTS configuration given
+   *
+   * @param        $ftscfg
+   * @param string $msg
+   */
 	public function doViewConfig($ftscfg, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -810,9 +821,11 @@ class FulltextController extends BaseController {
 		$this->printNavLinks($navlinks, 'fulltext-viewconfig', get_defined_vars());
 	}
 
-/**
- * Displays a screen where one can enter a details of a new FTS dictionary
- */
+  /**
+   * Displays a screen where one can enter a details of a new FTS dictionary
+   *
+   * @param string $msg
+   */
 	public function doCreateDict($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -986,9 +999,11 @@ class FulltextController extends BaseController {
 		}
 	}
 
-/**
- * Display a form to permit editing FTS dictionary properies.
- */
+  /**
+   * Display a form to permit editing FTS dictionary properies.
+   *
+   * @param string $msg
+   */
 	public function doAlterDict($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -1060,9 +1075,11 @@ class FulltextController extends BaseController {
 
 	}
 
-/**
- * Show confirmation of drop and perform actual drop of FTS mapping
- */
+  /**
+   * Show confirmation of drop and perform actual drop of FTS mapping
+   *
+   * @param $confirm
+   */
 	public function doDropMapping($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -1224,9 +1241,11 @@ class FulltextController extends BaseController {
 
 	}
 
-/**
- * Show the form to enter parameters of a new FTS mapping
- */
+  /**
+   * Show the form to enter parameters of a new FTS mapping
+   *
+   * @param string $msg
+   */
 	public function doAddMapping($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

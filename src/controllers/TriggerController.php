@@ -125,9 +125,11 @@ class TriggerController extends BaseController {
 
 	}
 
-/**
- * Function to allow altering of a trigger
- */
+  /**
+   * Function to allow altering of a trigger
+   *
+   * @param string $msg
+   */
 	public function doAlter($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -166,9 +168,11 @@ class TriggerController extends BaseController {
 
 	}
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+  /**
+   * Show confirmation of drop and perform actual drop
+   *
+   * @param $confirm
+   */
 	public function doDrop($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -203,9 +207,11 @@ class TriggerController extends BaseController {
 
 	}
 
-/**
- * Show confirmation of enable trigger and perform enabling the trigger
- */
+  /**
+   * Show confirmation of enable trigger and perform enabling the trigger
+   *
+   * @param $confirm
+   */
 	public function doEnable($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -239,9 +245,11 @@ class TriggerController extends BaseController {
 
 	}
 
-/**
- * Show confirmation of disable trigger and perform disabling the trigger
- */
+  /**
+   * Show confirmation of disable trigger and perform disabling the trigger
+   *
+   * @param $confirm
+   */
 	public function doDisable($confirm) {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -275,9 +283,11 @@ class TriggerController extends BaseController {
 
 	}
 
-/**
- * Let them create s.th.
- */
+  /**
+   * Let them create s.th.
+   *
+   * @param string $msg
+   */
 	public function doCreate($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -375,9 +385,12 @@ class TriggerController extends BaseController {
 		}
 	}
 
-/**
- * List all the triggers on the table
- */
+  /**
+   * List all the triggers on the table
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;

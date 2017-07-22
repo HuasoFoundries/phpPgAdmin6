@@ -66,9 +66,12 @@ class ConversionController extends BaseController {
 
 	}
 
-	/**
-	 * Show default list of conversions in the database
-	 */
+  /**
+   * Show default list of conversions in the database
+   *
+   * @param string $msg
+   * @return string|void
+   */
 	public function doDefault($msg = '') {
 
 		$conf = $this->conf;

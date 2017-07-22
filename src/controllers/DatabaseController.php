@@ -125,9 +125,12 @@ class DatabaseController extends BaseController {
 
 	}
 
-/**
- * Searches for a named database object
- */
+  /**
+   * Searches for a named database object
+   *
+   * @param bool   $confirm
+   * @param string $msg
+   */
 	public function doFind($confirm = true, $msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -402,9 +405,11 @@ class DatabaseController extends BaseController {
 		}
 	}
 
-/**
- * Displays options for database download
- */
+  /**
+   * Displays options for database download
+   *
+   * @param string $msg
+   */
 	public function doExport($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
@@ -487,10 +492,12 @@ class DatabaseController extends BaseController {
 		echo $this->printTable($variables, $columns, $actions, $this->table_place, $lang['strnodata']);
 	}
 
-/**
- * Show all current database connections and any queries they
- * are running.
- */
+  /**
+   * Show all current database connections and any queries they
+   * are running.
+   *
+   * @param string $msg
+   */
 	public function doProcesses($msg = '') {
 		$conf = $this->conf;
 		$misc = $this->misc;
