@@ -154,24 +154,24 @@ class TypeController extends BaseController {
 				$byval = $data->phpBool($typedata->fields['typbyval']);
 				echo "<table>\n";
 				echo "<tr><th class=\"data left\">{$lang['strname']}</th>\n";
-				echo "<td class=\"data1\">", $misc->printVal($typedata->fields['typname']), "</td></tr>\n";
+				echo '<td class="data1">', $misc->printVal($typedata->fields['typname']), "</td></tr>\n";
 				echo "<tr><th class=\"data left\">{$lang['strinputfn']}</th>\n";
-				echo "<td class=\"data1\">", $misc->printVal($typedata->fields['typin']), "</td></tr>\n";
+				echo '<td class="data1">', $misc->printVal($typedata->fields['typin']), "</td></tr>\n";
 				echo "<tr><th class=\"data left\">{$lang['stroutputfn']}</th>\n";
-				echo "<td class=\"data1\">", $misc->printVal($typedata->fields['typout']), "</td></tr>\n";
+				echo '<td class="data1">', $misc->printVal($typedata->fields['typout']), "</td></tr>\n";
 				echo "<tr><th class=\"data left\">{$lang['strlength']}</th>\n";
-				echo "<td class=\"data1\">", $misc->printVal($typedata->fields['typlen']), "</td></tr>\n";
+				echo '<td class="data1">', $misc->printVal($typedata->fields['typlen']), "</td></tr>\n";
 				echo "<tr><th class=\"data left\">{$lang['strpassbyval']}</th>\n";
-				echo "<td class=\"data1\">", ($byval) ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
+				echo '<td class="data1">', ($byval) ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
 				echo "<tr><th class=\"data left\">{$lang['stralignment']}</th>\n";
-				echo "<td class=\"data1\">", $misc->printVal($typedata->fields['typalign']), "</td></tr>\n";
+				echo '<td class="data1">', $misc->printVal($typedata->fields['typalign']), "</td></tr>\n";
 				if ($data->hasEnumTypes() && $vals) {
 					$vals = $vals->getArray();
 					$nbVals = count($vals);
 					echo "<tr>\n\t<th class=\"data left\" rowspan=\"$nbVals\">{$lang['strenumvalues']}</th>\n";
 					echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>\n";
 					for ($i = 1; $i < $nbVals; $i++) {
-						echo "<td class=\"data", 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>\n";
+						echo '<td class="data', 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>\n";
 					}
 
 				}
@@ -210,12 +210,12 @@ class TypeController extends BaseController {
 			$this->printTrail('type');
 			$this->printTitle($lang['strdrop'], 'pg.type.drop');
 
-			echo "<p>", sprintf($lang['strconfdroptype'], $misc->printVal($_REQUEST['type'])), "</p>\n";
+			echo '<p>', sprintf($lang['strconfdroptype'], $misc->printVal($_REQUEST['type'])), "</p>\n";
 
 			echo "<form action=\"/src/views/types.php\" method=\"post\">\n";
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-			echo "<input type=\"hidden\" name=\"type\" value=\"", htmlspecialchars($_REQUEST['type']), "\" />\n";
+			echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -331,8 +331,8 @@ class TypeController extends BaseController {
 				$types->moveFirst();
 				while (!$types->EOF) {
 					$typname = $types->fields['typname'];
-					echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), "\"",
-					(isset($_REQUEST['type'][$i]) && $typname == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', ">",
+					echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), '"',
+					(isset($_REQUEST['type'][$i]) && $typname == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', '>',
 					$misc->printVal($typname), "</option>\n";
 					$types->moveNext();
 				}
@@ -353,9 +353,9 @@ class TypeController extends BaseController {
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"create_comp\" />\n";
 			echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
 			echo $misc->form;
-			echo "<input type=\"hidden\" name=\"name\" value=\"", htmlspecialchars($_REQUEST['name']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"fields\" value=\"", htmlspecialchars($_REQUEST['fields']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"typcomment\" value=\"", htmlspecialchars($_REQUEST['typcomment']), "\" />\n";
+			echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
+			echo '<input type="hidden" name="fields" value="', htmlspecialchars($_REQUEST['fields']), "\" />\n";
+			echo '<input type="hidden" name="typcomment" value="', htmlspecialchars($_REQUEST['typcomment']), "\" />\n";
 			echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 			echo "</form>\n";
@@ -485,9 +485,9 @@ class TypeController extends BaseController {
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"create_enum\" />\n";
 			echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
 			echo $misc->form;
-			echo "<input type=\"hidden\" name=\"name\" value=\"", htmlspecialchars($_REQUEST['name']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"values\" value=\"", htmlspecialchars($_REQUEST['values']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"typcomment\" value=\"", htmlspecialchars($_REQUEST['typcomment']), "\" />\n";
+			echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
+			echo '<input type="hidden" name="values" value="', htmlspecialchars($_REQUEST['values']), "\" />\n";
+			echo '<input type="hidden" name="typcomment" value="', htmlspecialchars($_REQUEST['typcomment']), "\" />\n";
 			echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 			echo "</form>\n";
@@ -585,7 +585,7 @@ class TypeController extends BaseController {
 		echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
 		htmlspecialchars($_POST['typname']), "\" /></td></tr>\n";
 		echo "<tr><th class=\"data left required\">{$lang['strinputfn']}</th>\n";
-		echo "<td class=\"data1\"><select name=\"typin\">";
+		echo '<td class="data1"><select name="typin">';
 		while (!$funcs->EOF) {
 			$proname = htmlspecialchars($funcs->fields['proname']);
 			echo "<option value=\"{$proname}\"",
@@ -594,7 +594,7 @@ class TypeController extends BaseController {
 		}
 		echo "</select></td></tr>\n";
 		echo "<tr><th class=\"data left required\">{$lang['stroutputfn']}</th>\n";
-		echo "<td class=\"data1\"><select name=\"typout\">";
+		echo '<td class="data1"><select name="typout">';
 		$funcs->moveFirst();
 		while (!$funcs->EOF) {
 			$proname = htmlspecialchars($funcs->fields['proname']);
@@ -603,14 +603,14 @@ class TypeController extends BaseController {
 			$funcs->moveNext();
 		}
 		echo "</select></td></tr>\n";
-		echo "<tr><th class=\"data left" . (version_compare($data->major_version, '7.4', '<') ? ' required' : '') . "\">{$lang['strlength']}</th>\n";
-		echo "<td class=\"data1\"><input name=\"typlen\" size=\"8\" value=\"",
-		htmlspecialchars($_POST['typlen']), "\" /></td></tr>";
+		echo '<tr><th class="data left' . (version_compare($data->major_version, '7.4', '<') ? ' required' : '') . "\">{$lang['strlength']}</th>\n";
+		echo '<td class="data1"><input name="typlen" size="8" value="',
+		htmlspecialchars($_POST['typlen']), '" /></td></tr>';
 		echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
-		echo "<td class=\"data1\"><input name=\"typdef\" size=\"8\" value=\"",
-		htmlspecialchars($_POST['typdef']), "\" /></td></tr>";
+		echo '<td class="data1"><input name="typdef" size="8" value="',
+		htmlspecialchars($_POST['typdef']), '" /></td></tr>';
 		echo "<tr><th class=\"data left\">{$lang['strelement']}</th>\n";
-		echo "<td class=\"data1\"><select name=\"typelem\">";
+		echo '<td class="data1"><select name="typelem">';
 		echo "<option value=\"\"></option>\n";
 		while (!$types->EOF) {
 			$currname = htmlspecialchars($types->fields['typname']);
@@ -620,20 +620,20 @@ class TypeController extends BaseController {
 		}
 		echo "</select></td></tr>\n";
 		echo "<tr><th class=\"data left\">{$lang['strdelimiter']}</th>\n";
-		echo "<td class=\"data1\"><input name=\"typdelim\" size=\"1\" maxlength=\"1\" value=\"",
-		htmlspecialchars($_POST['typdelim']), "\" /></td></tr>";
+		echo '<td class="data1"><input name="typdelim" size="1" maxlength="1" value="',
+		htmlspecialchars($_POST['typdelim']), '" /></td></tr>';
 		echo "<tr><th class=\"data left\"><label for=\"typbyval\">{$lang['strpassbyval']}</label></th>\n";
-		echo "<td class=\"data1\"><input type=\"checkbox\" id=\"typbyval\" name=\"typbyval\"",
-		isset($_POST['typbyval']) ? ' checked="checked"' : '', " /></td></tr>";
+		echo '<td class="data1"><input type="checkbox" id="typbyval" name="typbyval"',
+		isset($_POST['typbyval']) ? ' checked="checked"' : '', ' /></td></tr>';
 		echo "<tr><th class=\"data left\">{$lang['stralignment']}</th>\n";
-		echo "<td class=\"data1\"><select name=\"typalign\">";
+		echo '<td class="data1"><select name="typalign">';
 		foreach ($data->typAligns as $v) {
 			echo "<option value=\"{$v}\"",
 			($v == $_POST['typalign']) ? ' selected="selected"' : '', ">{$v}</option>\n";
 		}
 		echo "</select></td></tr>\n";
 		echo "<tr><th class=\"data left\">{$lang['strstorage']}</th>\n";
-		echo "<td class=\"data1\"><select name=\"typstorage\">";
+		echo '<td class="data1"><select name="typstorage">';
 		foreach ($data->typStorages as $v) {
 			echo "<option value=\"{$v}\"",
 			($v == $_POST['typstorage']) ? ' selected="selected"' : '', ">{$v}</option>\n";

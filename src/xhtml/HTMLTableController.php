@@ -119,7 +119,7 @@ class HTMLTableController extends HTMLController {
 				$tablehtml .= "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$lang['stractionsonmultiplelines']}</th>\n";
 				$tablehtml .= "</tr>\n";
 				$tablehtml .= "<tr class=\"row1\">\n";
-				$tablehtml .= "<td>";
+				$tablehtml .= '<td>';
 				$tablehtml .= "<a href=\"#\" onclick=\"javascript:checkAll(true);\">{$lang['strselectall']}</a> / ";
 				$tablehtml .= "<a href=\"#\" onclick=\"javascript:checkAll(false);\">{$lang['strunselectall']}</a></td>\n";
 				$tablehtml .= "<td>&nbsp;--->&nbsp;</td>\n";
@@ -179,8 +179,8 @@ class HTMLTableController extends HTMLController {
 					$a[$k] = $tabledata->fields[$v];
 				}
 				//\Kint::dump($a);
-				$tbody_html .= "<td>";
-				$tbody_html .= "<input type=\"checkbox\" name=\"ma[]\" value=\"" . htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') . "\" />";
+				$tbody_html .= '<td>';
+				$tbody_html .= '<input type="checkbox" name="ma[]" value="' . htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') . '" />';
 				$tbody_html .= "</td>\n";
 			}
 
@@ -210,7 +210,7 @@ class HTMLTableController extends HTMLController {
 						if (!is_null($val)) {
 							$tbody_html .= htmlentities($val);
 						}
-						$tbody_html .= "</td>";
+						$tbody_html .= '</td>';
 						break;
 					default:
 						$tbody_html .= "<td{$this->class}>";
@@ -219,13 +219,13 @@ class HTMLTableController extends HTMLController {
 							if (isset($column['url'])) {
 								$tbody_html .= "<a href=\"{$column['url']}";
 								$tbody_html .= $this->printUrlVars($column['vars'], $tabledata->fields, false);
-								$tbody_html .= "\">";
+								$tbody_html .= '">';
 							}
 							$type   = isset($column['type']) ? $column['type'] : null;
 							$params = isset($column['params']) ? $column['params'] : [];
 							$tbody_html .= $this->misc->printVal($val, $type, $params);
 							if (isset($column['url'])) {
-								$tbody_html .= "</a>";
+								$tbody_html .= '</a>';
 							}
 
 						}
@@ -256,7 +256,7 @@ class HTMLTableController extends HTMLController {
 
 		// Display column headings
 		if ($this->has_ma) {
-			$thead_html .= "<th></th>";
+			$thead_html .= '<th></th>';
 		}
 
 		foreach ($columns as $column_id => $column) {
@@ -296,14 +296,14 @@ class HTMLTableController extends HTMLController {
 
 		// Display column headings
 		if ($this->has_ma) {
-			$tfoot_html .= "<td></td>";
+			$tfoot_html .= '<td></td>';
 		}
 
 		foreach ($columns as $column_id => $column) {
 			switch ($column_id) {
 				case 'actions':
 					if (sizeof($actions) > 0) {
-						$tfoot_html .= "<td class=\"data\" colspan=\"" . count($actions) . "\"></td>\n";
+						$tfoot_html .= '<td class="data" colspan="' . count($actions) . "\"></td>\n";
 					}
 
 					break;
@@ -327,7 +327,7 @@ class HTMLTableController extends HTMLController {
 	private function printUrlVars(&$vars, &$fields, $do_print = true) {
 		$url_vars_html = '';
 		foreach ($vars as $var => $varfield) {
-			$url_vars_html .= "{$var}=" . urlencode($fields[$varfield]) . "&amp;";
+			$url_vars_html .= "{$var}=" . urlencode($fields[$varfield]) . '&amp;';
 		}
 		if ($do_print) {
 			echo $url_vars_html;

@@ -26,8 +26,8 @@ class HTMLNavbarController extends HTMLController {
 		$trail_html .= '<div class="trail" data-controller="' . $this->controller_name . '"><table><tr>';
 
 		foreach ($trail as $crumb) {
-			$trail_html .= "<td class=\"crumb\">";
-			$crumblink = "<a";
+			$trail_html .= '<td class="crumb">';
+			$crumblink = '<a';
 
 			if (isset($crumb['url'])) {
 				$crumblink .= " href=\"{$crumb['url']}\"";
@@ -37,7 +37,7 @@ class HTMLNavbarController extends HTMLController {
 				$crumblink .= " title=\"{$crumb['title']}\"";
 			}
 
-			$crumblink .= ">";
+			$crumblink .= '>';
 
 			if (isset($crumb['title'])) {
 				$iconalt = $crumb['title'];
@@ -49,7 +49,7 @@ class HTMLNavbarController extends HTMLController {
 				$crumblink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$iconalt}\" /></span>";
 			}
 
-			$crumblink .= "<span class=\"label\">" . htmlspecialchars($crumb['text']) . "</span></a>";
+			$crumblink .= '<span class="label">' . htmlspecialchars($crumb['text']) . '</span></a>';
 
 			if (isset($crumb['help'])) {
 				$trail_html .= $misc->printHelp($crumblink, $crumb['help'], false);
@@ -58,7 +58,7 @@ class HTMLNavbarController extends HTMLController {
 			}
 
 			$trail_html .= "{$lang['strseparator']}";
-			$trail_html .= "</td>";
+			$trail_html .= '</td>';
 		}
 
 		$trail_html .= "</tr></table></div>\n";
@@ -210,21 +210,21 @@ class HTMLNavbarController extends HTMLController {
 				'<span class="port">' . htmlspecialchars($server_info['port']) . '</span>',
 				'<span class="username">' . htmlspecialchars($server_info['username']) . '</span>');
 
-			$topbar_html .= "</td>";
+			$topbar_html .= '</td>';
 
 			/* top right informations when connected */
 
 			$toplinks = [
 				'sql' => [
 					'attr' => [
-						'href' => [
+                        'href' => [
 							'url' => '/src/views/sqledit.php',
 							'urlvars' => array_merge($reqvars, [
 								'action' => 'sql',
 							]),
 						],
-						'target' => "sqledit",
-						'id' => 'toplink_sql',
+                        'target' => 'sqledit',
+                        'id' => 'toplink_sql',
 					],
 					'content' => $lang['strsql'],
 				],
@@ -242,14 +242,14 @@ class HTMLNavbarController extends HTMLController {
 				],
 				'find' => [
 					'attr' => [
-						'href' => [
+                        'href' => [
 							'url' => '/src/views/sqledit.php',
 							'urlvars' => array_merge($reqvars, [
 								'action' => 'find',
 							]),
 						],
-						'target' => "sqledit",
-						'id' => 'toplink_find',
+                        'target' => 'sqledit',
+                        'id' => 'toplink_find',
 					],
 					'content' => $lang['strfind'],
 				],
@@ -275,11 +275,11 @@ class HTMLNavbarController extends HTMLController {
 
 			$plugin_manager->do_hook('toplinks', $plugin_functions_parameters);
 
-			$topbar_html .= "<td style=\"text-align: right\">";
+			$topbar_html .= '<td style="text-align: right">';
 
 			$topbar_html .= $this->printLinksList($toplinks, 'toplink', [], false);
 
-			$topbar_html .= "</td>";
+			$topbar_html .= '</td>';
 
 			$sql_window_id = htmlentities('sqledit:' . $server_id);
 			$history_window_id = htmlentities('history:' . $server_id);
@@ -308,8 +308,8 @@ class HTMLNavbarController extends HTMLController {
 						});", str_replace("'", "\'", $lang['strconfdropcred']));
 			}
 
-			$topbar_html .= "
-				</script>";
+			$topbar_html .= '
+				</script>';
 		} else {
 			$topbar_html .= "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
 		}

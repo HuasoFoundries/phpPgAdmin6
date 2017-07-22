@@ -77,7 +77,7 @@ class Postgres74 extends Postgres80 {
 			$this->clean($currentdatabase);
 			$orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
 		} else {
-			$orderby = "ORDER BY pdb.datname";
+			$orderby = 'ORDER BY pdb.datname';
 		}
 
 		if (!$conf['show_system']) {
@@ -125,7 +125,7 @@ class Postgres74 extends Postgres80 {
 			// XXX: The mention of information_schema here is in the wrong place, but
 			// it's the quickest fix to exclude the info schema from 7.4
 			$where     = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
-			$lan_where = "AND pl.lanispl";
+			$lan_where = 'AND pl.lanispl';
 		} else {
 			$where     = '';
 			$lan_where = '';
@@ -134,7 +134,7 @@ class Postgres74 extends Postgres80 {
 		// Apply outer filter
 		$sql = '';
 		if ($filter != '') {
-			$sql = "SELECT * FROM (";
+			$sql = 'SELECT * FROM (';
 		}
 
 		$sql .= "
@@ -239,7 +239,7 @@ class Postgres74 extends Postgres80 {
 			$sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
 		}
 
-		$sql .= "ORDER BY type, schemaname, relname, name";
+		$sql .= 'ORDER BY type, schemaname, relname, name';
 
 		return $this->selectSet($sql);
 	}
@@ -270,7 +270,7 @@ class Postgres74 extends Postgres80 {
 	 * @return The encoding.  eg. SQL_ASCII, UTF-8, etc.
 	 */
 	function getDatabaseEncoding() {
-		$sql = "SELECT getdatabaseencoding() AS encoding";
+		$sql = 'SELECT getdatabaseencoding() AS encoding';
 
 		return $this->selectField($sql, 'encoding');
 	}

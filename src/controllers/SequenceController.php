@@ -240,10 +240,10 @@ class SequenceController extends BaseController {
 
 			// Show comment if any
 			if ($sequence->fields['seqcomment'] !== null) {
-				echo "<p class=\"comment\">", $misc->printVal($sequence->fields['seqcomment']), "</p>\n";
+				echo '<p class="comment">', $misc->printVal($sequence->fields['seqcomment']), "</p>\n";
 			}
 
-			echo "<table border=\"0\">";
+			echo '<table border="0">';
 			echo "<tr><th class=\"data\">{$lang['strname']}</th>";
 			if ($data->hasAlterSequenceStart()) {
 				echo "<th class=\"data\">{$lang['strstartvalue']}</th>";
@@ -256,21 +256,21 @@ class SequenceController extends BaseController {
 			echo "<th class=\"data\">{$lang['strlogcount']}</th>";
 			echo "<th class=\"data\">{$lang['strcancycle']}</th>";
 			echo "<th class=\"data\">{$lang['striscalled']}</th></tr>";
-			echo "<tr>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['seqname']), "</td>";
+			echo '<tr>';
+			echo '<td class="data1">', $misc->printVal($sequence->fields['seqname']), '</td>';
 			if ($data->hasAlterSequenceStart()) {
-				echo "<td class=\"data1\">", $misc->printVal($sequence->fields['start_value']), "</td>";
+				echo '<td class="data1">', $misc->printVal($sequence->fields['start_value']), '</td>';
 			}
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['last_value']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['increment_by']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['max_value']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['min_value']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['cache_value']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['log_cnt']), "</td>";
-			echo "<td class=\"data1\">", ($sequence->fields['is_cycled'] ? $lang['stryes'] : $lang['strno']), "</td>";
-			echo "<td class=\"data1\">", ($sequence->fields['is_called'] ? $lang['stryes'] : $lang['strno']), "</td>";
-			echo "</tr>";
-			echo "</table>";
+			echo '<td class="data1">', $misc->printVal($sequence->fields['last_value']), '</td>';
+			echo '<td class="data1">', $misc->printVal($sequence->fields['increment_by']), '</td>';
+			echo '<td class="data1">', $misc->printVal($sequence->fields['max_value']), '</td>';
+			echo '<td class="data1">', $misc->printVal($sequence->fields['min_value']), '</td>';
+			echo '<td class="data1">', $misc->printVal($sequence->fields['cache_value']), '</td>';
+			echo '<td class="data1">', $misc->printVal($sequence->fields['log_cnt']), '</td>';
+			echo '<td class="data1">', ($sequence->fields['is_cycled'] ? $lang['stryes'] : $lang['strno']), '</td>';
+			echo '<td class="data1">', ($sequence->fields['is_called'] ? $lang['stryes'] : $lang['strno']), '</td>';
+			echo '</tr>';
+			echo '</table>';
 
 			$navlinks = [
 				'alter' => [
@@ -399,12 +399,12 @@ class SequenceController extends BaseController {
 			if (isset($_REQUEST['ma'])) {
 				foreach ($_REQUEST['ma'] as $v) {
 					$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-					echo "<p>", sprintf($lang['strconfdropsequence'], $misc->printVal($a['sequence'])), "</p>\n";
+					echo '<p>', sprintf($lang['strconfdropsequence'], $misc->printVal($a['sequence'])), "</p>\n";
 					printf('<input type="hidden" name="sequence[]" value="%s" />', htmlspecialchars($a['sequence']));
 				}
 			} else {
-				echo "<p>", sprintf($lang['strconfdropsequence'], $misc->printVal($_REQUEST['sequence'])), "</p>\n";
-				echo "<input type=\"hidden\" name=\"sequence\" value=\"", htmlspecialchars($_REQUEST['sequence']), "\" />\n";
+				echo '<p>', sprintf($lang['strconfdropsequence'], $misc->printVal($_REQUEST['sequence'])), "</p>\n";
+				echo '<input type="hidden" name="sequence" value="', htmlspecialchars($_REQUEST['sequence']), "\" />\n";
 			}
 
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
@@ -495,27 +495,27 @@ class SequenceController extends BaseController {
 		htmlspecialchars($_POST['formSequenceName']), "\" /></td></tr>\n";
 
 		echo "<tr><th class=\"data left\">{$lang['strincrementby']}</th>\n";
-		echo "<td class=\"data1\"><input name=\"formIncrement\" size=\"5\" value=\"",
+		echo '<td class="data1"><input name="formIncrement" size="5" value="',
 		htmlspecialchars($_POST['formIncrement']), "\" /> </td></tr>\n";
 
 		echo "<tr><th class=\"data left\">{$lang['strminvalue']}</th>\n";
-		echo "<td class=\"data1\"><input name=\"formMinValue\" size=\"5\" value=\"",
+		echo '<td class="data1"><input name="formMinValue" size="5" value="',
 		htmlspecialchars($_POST['formMinValue']), "\" /></td></tr>\n";
 
 		echo "<tr><th class=\"data left\">{$lang['strmaxvalue']}</th>\n";
-		echo "<td class=\"data1\"><input name=\"formMaxValue\" size=\"5\" value=\"",
+		echo '<td class="data1"><input name="formMaxValue" size="5" value="',
 		htmlspecialchars($_POST['formMaxValue']), "\" /></td></tr>\n";
 
 		echo "<tr><th class=\"data left\">{$lang['strstartvalue']}</th>\n";
-		echo "<td class=\"data1\"><input name=\"formStartValue\" size=\"5\" value=\"",
+		echo '<td class="data1"><input name="formStartValue" size="5" value="',
 		htmlspecialchars($_POST['formStartValue']), "\" /></td></tr>\n";
 
 		echo "<tr><th class=\"data left\">{$lang['strcachevalue']}</th>\n";
-		echo "<td class=\"data1\"><input name=\"formCacheValue\" size=\"5\" value=\"",
+		echo '<td class="data1"><input name="formCacheValue" size="5" value="',
 		htmlspecialchars($_POST['formCacheValue']), "\" /></td></tr>\n";
 
 		echo "<tr><th class=\"data left\"><label for=\"formCycledValue\">{$lang['strcancycle']}</label></th>\n";
-		echo "<td class=\"data1\"><input type=\"checkbox\" id=\"formCycledValue\" name=\"formCycledValue\" ",
+		echo '<td class="data1"><input type="checkbox" id="formCycledValue" name="formCycledValue" ',
 		(isset($_POST['formCycledValue']) ? ' checked="checked"' : ''), " /></td></tr>\n";
 
 		echo "</table>\n";
@@ -641,14 +641,14 @@ class SequenceController extends BaseController {
 
 		if (is_object($sequence) && $sequence->recordCount() > 0) {
 			echo "<form action=\"/src/views/sequences.php\" method=\"post\">\n";
-			echo "<table border=\"0\">";
+			echo '<table border="0">';
 			echo "<tr><th class=\"data left required\">{$lang['strlastvalue']}</th>\n";
-			echo "<td class=\"data1\">";
+			echo '<td class="data1">';
 			echo "<input name=\"nextvalue\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
 			$misc->printVal($sequence->fields['last_value']), "\" /></td></tr>\n";
 			echo "</table>\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"setval\" />\n";
-			echo "<input type=\"hidden\" name=\"sequence\" value=\"", htmlspecialchars($_REQUEST['sequence']), "\" />\n";
+			echo '<input type="hidden" name="sequence" value="', htmlspecialchars($_REQUEST['sequence']), "\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"setval\" value=\"{$lang['strsetval']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -770,7 +770,7 @@ class SequenceController extends BaseController {
 			echo "<table>\n";
 
 			echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
-			echo "<td class=\"data1\">";
+			echo '<td class="data1">';
 			echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
 			htmlspecialchars($_POST['name']), "\" /></td></tr>\n";
 
@@ -779,11 +779,11 @@ class SequenceController extends BaseController {
 				$users = $data->getUsers();
 
 				echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
-				echo "<td class=\"data1\"><select name=\"owner\">";
+				echo '<td class="data1"><select name="owner">';
 				while (!$users->EOF) {
 					$uname = $users->fields['usename'];
-					echo "<option value=\"", htmlspecialchars($uname), "\"",
-					($uname == $_POST['owner']) ? ' selected="selected"' : '', ">", htmlspecialchars($uname), "</option>\n";
+					echo '<option value="', htmlspecialchars($uname), '"',
+					($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
 					$users->moveNext();
 				}
 				echo "</select></td></tr>\n";
@@ -792,55 +792,55 @@ class SequenceController extends BaseController {
 			if ($data->hasAlterSequenceSchema()) {
 				$schemas = $data->getSchemas();
 				echo "<tr><th class=\"data left required\">{$lang['strschema']}</th>\n";
-				echo "<td class=\"data1\"><select name=\"newschema\">";
+				echo '<td class="data1"><select name="newschema">';
 				while (!$schemas->EOF) {
 					$schema = $schemas->fields['nspname'];
-					echo "<option value=\"", htmlspecialchars($schema), "\"",
-					($schema == $_POST['newschema']) ? ' selected="selected"' : '', ">", htmlspecialchars($schema), "</option>\n";
+					echo '<option value="', htmlspecialchars($schema), '"',
+					($schema == $_POST['newschema']) ? ' selected="selected"' : '', '>', htmlspecialchars($schema), "</option>\n";
 					$schemas->moveNext();
 				}
 				echo "</select></td></tr>\n";
 			}
 
 			echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
-			echo "<td class=\"data1\">";
-			echo "<textarea rows=\"3\" cols=\"32\" name=\"comment\">",
+			echo '<td class="data1">';
+			echo '<textarea rows="3" cols="32" name="comment">',
 			htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
 
 			if ($data->hasAlterSequenceStart()) {
 				echo "<tr><th class=\"data left\">{$lang['strstartvalue']}</th>\n";
-				echo "<td class=\"data1\"><input name=\"formStartValue\" size=\"5\" value=\"",
+				echo '<td class="data1"><input name="formStartValue" size="5" value="',
 				htmlspecialchars($sequence->fields['start_value']), "\" /></td></tr>\n";
 			}
 
 			echo "<tr><th class=\"data left\">{$lang['strrestartvalue']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"formRestartValue\" size=\"5\" value=\"",
+			echo '<td class="data1"><input name="formRestartValue" size="5" value="',
 			htmlspecialchars($sequence->fields['last_value']), "\" /></td></tr>\n";
 
 			echo "<tr><th class=\"data left\">{$lang['strincrementby']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"formIncrement\" size=\"5\" value=\"",
+			echo '<td class="data1"><input name="formIncrement" size="5" value="',
 			htmlspecialchars($sequence->fields['increment_by']), "\" /> </td></tr>\n";
 
 			echo "<tr><th class=\"data left\">{$lang['strmaxvalue']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"formMaxValue\" size=\"5\" value=\"",
+			echo '<td class="data1"><input name="formMaxValue" size="5" value="',
 			htmlspecialchars($sequence->fields['max_value']), "\" /></td></tr>\n";
 
 			echo "<tr><th class=\"data left\">{$lang['strminvalue']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"formMinValue\" size=\"5\" value=\"",
+			echo '<td class="data1"><input name="formMinValue" size="5" value="',
 			htmlspecialchars($sequence->fields['min_value']), "\" /></td></tr>\n";
 
 			echo "<tr><th class=\"data left\">{$lang['strcachevalue']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"formCacheValue\" size=\"5\" value=\"",
+			echo '<td class="data1"><input name="formCacheValue" size="5" value="',
 			htmlspecialchars($sequence->fields['cache_value']), "\" /></td></tr>\n";
 
 			echo "<tr><th class=\"data left\"><label for=\"formCycledValue\">{$lang['strcancycle']}</label></th>\n";
-			echo "<td class=\"data1\"><input type=\"checkbox\" id=\"formCycledValue\" name=\"formCycledValue\" ",
+			echo '<td class="data1"><input type="checkbox" id="formCycledValue" name="formCycledValue" ',
 			(isset($_POST['formCycledValue']) ? ' checked="checked"' : ''), " /></td></tr>\n";
 
 			echo "</table>\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
 			echo $misc->form;
-			echo "<input type=\"hidden\" name=\"sequence\" value=\"", htmlspecialchars($_REQUEST['sequence']), "\" />\n";
+			echo '<input type="hidden" name="sequence" value="', htmlspecialchars($_REQUEST['sequence']), "\" />\n";
 			echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 			echo "</form>\n";

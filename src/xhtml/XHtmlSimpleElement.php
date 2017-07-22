@@ -49,14 +49,14 @@ class XHtmlSimpleElement {
 	 * @access private
 	 */
 	function _html() {
-		$this->_htmlcode = "<";
+		$this->_htmlcode = '<';
 		foreach ($this->_attributeCollection as $attribute => $value) {
 			if (!empty($value)) {
 				$this->_htmlcode .= " {$attribute}=\"{$value}\"";
 			}
 
 		}
-		$this->_htmlcode .= "/>";
+		$this->_htmlcode .= '/>';
 
 		return $this->_htmlcode;
 	}

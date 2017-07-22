@@ -121,24 +121,24 @@ class RuleController extends BaseController {
 			}
 			echo "</select></td></tr>\n";
 			echo "<tr><th class=\"data left\">{$lang['strwhere']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"where\" size=\"32\" value=\"",
+			echo '<td class="data1"><input name="where" size="32" value="',
 			htmlspecialchars($_POST['where']), "\" /></td></tr>\n";
 			echo "<tr><th class=\"data left\"><label for=\"instead\">{$lang['strinstead']}</label></th>\n";
-			echo "<td class=\"data1\">";
-			echo "<input type=\"checkbox\" id=\"instead\" name=\"instead\" ", (isset($_POST['instead'])) ? ' checked="checked"' : '', " />\n";
+			echo '<td class="data1">';
+			echo '<input type="checkbox" id="instead" name="instead" ', (isset($_POST['instead'])) ? ' checked="checked"' : '', " />\n";
 			echo "</td></tr>\n";
 			echo "<tr><th class=\"data left required\">{$lang['straction']}</th>\n";
-			echo "<td class=\"data1\">";
-			echo "<input type=\"radio\" id=\"type1\" name=\"type\" value=\"NOTHING\"", ($_POST['type'] == 'NOTHING') ? ' checked="checked"' : '', " /> <label for=\"type1\">NOTHING</label><br />\n";
-			echo "<input type=\"radio\" name=\"type\" value=\"SOMETHING\"", ($_POST['type'] == 'SOMETHING') ? ' checked="checked"' : '', " />\n";
-			echo "(<input name=\"raction\" size=\"32\" value=\"",
+			echo '<td class="data1">';
+			echo '<input type="radio" id="type1" name="type" value="NOTHING"', ($_POST['type'] == 'NOTHING') ? ' checked="checked"' : '', " /> <label for=\"type1\">NOTHING</label><br />\n";
+			echo '<input type="radio" name="type" value="SOMETHING"', ($_POST['type'] == 'SOMETHING') ? ' checked="checked"' : '', " />\n";
+			echo '(<input name="raction" size="32" value="',
 			htmlspecialchars($_POST['raction']), "\" />)</td></tr>\n";
 			echo "</table>\n";
 
 			echo "<input type=\"hidden\" name=\"action\" value=\"save_create_rule\" />\n";
-			echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['subject']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"", htmlspecialchars($_REQUEST['subject']),
-			"\" value=\"", htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
+			echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
+			echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
+            '" value="', htmlspecialchars($_REQUEST[ $_REQUEST['subject']]), "\" />\n";
 			echo $misc->form;
 			echo "<p><input type=\"submit\" name=\"ok\" value=\"{$lang['strcreate']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -174,15 +174,15 @@ class RuleController extends BaseController {
 			$this->printTrail($_REQUEST['subject']);
 			$this->printTitle($lang['strdrop'], 'pg.rule.drop');
 
-			echo "<p>", sprintf($lang['strconfdroprule'], $misc->printVal($_REQUEST['rule']),
+			echo '<p>', sprintf($lang['strconfdroprule'], $misc->printVal($_REQUEST['rule']),
 				$misc->printVal($_REQUEST[$_REQUEST['reltype']])), "</p>\n";
 
 			echo "<form action=\"/src/views/rules.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-			echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['reltype']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"", htmlspecialchars($_REQUEST['reltype']),
-			"\" value=\"", htmlspecialchars($_REQUEST[$_REQUEST['reltype']]), "\" />\n";
-			echo "<input type=\"hidden\" name=\"rule\" value=\"", htmlspecialchars($_REQUEST['rule']), "\" />\n";
+			echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['reltype']), "\" />\n";
+			echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['reltype']),
+            '" value="', htmlspecialchars($_REQUEST[ $_REQUEST['reltype']]), "\" />\n";
+			echo '<input type="hidden" name="rule" value="', htmlspecialchars($_REQUEST['rule']), "\" />\n";
 			echo $misc->form;
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
 			echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";

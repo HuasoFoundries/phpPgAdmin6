@@ -108,7 +108,7 @@ class AllDBController extends BaseController {
 			echo "<form action=\"/src/views/all_db.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
-			echo "<td class=\"data1\">";
+			echo '<td class="data1">';
 			echo "<input name=\"newname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
 			htmlspecialchars($_REQUEST['alterdatabase']), "\" /></td></tr>\n";
 
@@ -120,11 +120,11 @@ class AllDBController extends BaseController {
 				$users = $data->getUsers();
 
 				echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
-				echo "<td class=\"data1\"><select name=\"owner\">";
+				echo '<td class="data1"><select name="owner">';
 				while (!$users->EOF) {
 					$uname = $users->fields['usename'];
-					echo "<option value=\"", htmlspecialchars($uname), "\"",
-					($uname == $owner) ? ' selected="selected"' : '', ">", htmlspecialchars($uname), "</option>\n";
+					echo '<option value="', htmlspecialchars($uname), '"',
+					($uname == $owner) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
 					$users->moveNext();
 				}
 				echo "</select></td></tr>\n";
@@ -133,14 +133,14 @@ class AllDBController extends BaseController {
 				$rs = $data->getDatabaseComment($_REQUEST['alterdatabase']);
 				$comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
 				echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
-				echo "<td class=\"data1\">";
-				echo "<textarea rows=\"3\" cols=\"32\" name=\"dbcomment\">",
+				echo '<td class="data1">';
+				echo '<textarea rows="3" cols="32" name="dbcomment">',
 				htmlspecialchars($comment), "</textarea></td></tr>\n";
 			}
 			echo "</table>\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
 			echo $misc->form;
-			echo "<input type=\"hidden\" name=\"oldname\" value=\"",
+			echo '<input type="hidden" name="oldname" value="',
 			htmlspecialchars($_REQUEST['alterdatabase']), "\" />\n";
 			echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
@@ -189,13 +189,13 @@ class AllDBController extends BaseController {
 
 				foreach ($_REQUEST['ma'] as $v) {
 					$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-					echo "<p>", sprintf($lang['strconfdropdatabase'], $misc->printVal($a['database'])), "</p>\n";
+					echo '<p>', sprintf($lang['strconfdropdatabase'], $misc->printVal($a['database'])), "</p>\n";
 					printf('<input type="hidden" name="dropdatabase[]" value="%s" />', htmlspecialchars($a['database']));
 				}
 
 			} else {
-				echo "<p>", sprintf($lang['strconfdropdatabase'], $misc->printVal($_REQUEST['dropdatabase'])), "</p>\n";
-				echo "<input type=\"hidden\" name=\"dropdatabase\" value=\"", htmlspecialchars($_REQUEST['dropdatabase']), "\" />\n";
+				echo '<p>', sprintf($lang['strconfdropdatabase'], $misc->printVal($_REQUEST['dropdatabase'])), "</p>\n";
+				echo '<input type="hidden" name="dropdatabase" value="', htmlspecialchars($_REQUEST['dropdatabase']), "\" />\n";
 			} // END if multi drop
 
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
@@ -305,8 +305,8 @@ class AllDBController extends BaseController {
 		echo "\t\t\t<select name=\"formEncoding\">\n";
 		echo "\t\t\t\t<option value=\"\"></option>\n";
 		while (list($key) = each($data->codemap)) {
-			echo "\t\t\t\t<option value=\"", htmlspecialchars($key), "\"",
-			($key == $_POST['formEncoding']) ? ' selected="selected"' : '', ">",
+			echo "\t\t\t\t<option value=\"", htmlspecialchars($key), '"',
+			($key == $_POST['formEncoding']) ? ' selected="selected"' : '', '>',
 			$misc->printVal($key), "</option>\n";
 		}
 		echo "\t\t\t</select>\n";
@@ -428,7 +428,7 @@ class AllDBController extends BaseController {
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\">{$lang['stroptions']}</th></tr>\n";
 		// Data only
-		echo "<tr><th class=\"data left\" rowspan=\"2\">";
+		echo '<tr><th class="data left" rowspan="2">';
 		echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$lang['strdataonly']}</label></th>\n";
 		echo "<td>{$lang['strformat']}\n";
 		echo "<select name=\"d_format\">\n";
@@ -440,7 +440,7 @@ class AllDBController extends BaseController {
 		echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$lang['strstructureonly']}</label></th>\n";
 		echo "<td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /><label for=\"s_clean\">{$lang['strdrop']}</label></td>\n</tr>\n";
 		// Structure and data
-		echo "<tr><th class=\"data left\" rowspan=\"3\">";
+		echo '<tr><th class="data left" rowspan="3">';
 		echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$lang['strstructureanddata']}</label></th>\n";
 		echo "<td>{$lang['strformat']}\n";
 		echo "<select name=\"sd_format\">\n";

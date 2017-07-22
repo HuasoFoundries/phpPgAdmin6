@@ -25,9 +25,9 @@ class Postgres91 extends Postgres92 {
 	 */
 	function getProcesses($database = null) {
 		if ($database === null) {
-			$sql = "SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
+			$sql = 'SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
 				FROM pg_catalog.pg_stat_activity
-				ORDER BY datname, usename, procpid";
+				ORDER BY datname, usename, procpid';
 		} else {
 			$this->clean($database);
 			$sql = "SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
@@ -59,7 +59,7 @@ class Postgres91 extends Postgres92 {
 			$sql .= ' WHERE spcname NOT LIKE $$pg\_%$$';
 		}
 
-		$sql .= " ORDER BY spcname";
+		$sql .= ' ORDER BY spcname';
 
 		return $this->selectSet($sql);
 	}

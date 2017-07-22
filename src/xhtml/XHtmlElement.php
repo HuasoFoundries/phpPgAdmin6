@@ -12,7 +12,7 @@ namespace PHPPgAdmin\XHtml;
  */
 class XHtmlElement extends XHtmlSimpleElement {
 	var $_text = null;
-	var $_htmlcode = "";
+	var $_htmlcode = '';
 	var $_siblings = array();
 
 	function __construct($text = null) {
@@ -59,7 +59,7 @@ class XHtmlElement extends XHtmlSimpleElement {
 			}
 
 		}
-		$this->_htmlcode .= ">";
+		$this->_htmlcode .= '>';
 
 		if ($this->_text) {
 			$this->_htmlcode .= $this->_text;

@@ -332,7 +332,7 @@ class ADODB_base {
 	 */
 	function getPlatform() {
 		//return $this->conn->platform;
-		return "UNKNOWN";
+		return 'UNKNOWN';
 	}
 
 	// Type conversion routines

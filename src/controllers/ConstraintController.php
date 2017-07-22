@@ -20,12 +20,12 @@ class ConstraintController extends BaseController {
 		}
 
 		$this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
-			"<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>", true, 'select2_header.twig');
+            '<script src="/js/indexes.js" type="text/javascript"></script>', true, 'select2_header.twig');
 
 		if ($action == 'add_unique_key' || $action == 'save_add_unique_key'
 			|| $action == 'add_primary_key' || $action == 'save_add_primary_key'
 			|| $action == 'add_foreign_key' || $action == 'save_add_foreign_key') {
-			echo "<body onload=\"init();\">";
+			echo '<body onload="init();">';
 		} else {
 			$this->printBody();
 		}
@@ -187,11 +187,11 @@ class ConstraintController extends BaseController {
 				echo "<table>\n";
 				echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strfktarget']}</th></tr>";
 				echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$lang['strfkcolumnlist']}</th></tr>\n";
-				echo "<tr><td class=\"data1\">" . $selColumns->fetch() . "</td>\n";
-				echo "<td class=\"data1\" style=\"text-align: center\">" . $buttonRemove->fetch() . $buttonAdd->fetch() . "</td>";
-				echo "<td class=\"data1\">" . $selIndex->fetch() . "</td></tr>\n";
+				echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
+				echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
+				echo '<td class="data1">' . $selIndex->fetch() . "</td></tr>\n";
 				echo "<tr><th class=\"data\" colspan=\"3\">{$lang['stractions']}</th></tr>";
-				echo "<tr>";
+				echo '<tr>';
 				echo "<td class=\"data1\" colspan=\"3\">\n";
 				// ON SELECT actions
 				echo "{$lang['stronupdate']} <select name=\"upd_action\">";
@@ -210,7 +210,7 @@ class ConstraintController extends BaseController {
 				echo "</select><br />\n";
 
 				// MATCH options
-				echo "<select name=\"match\">";
+				echo '<select name="match">';
 				foreach ($data->fkmatches as $v) {
 					echo "<option value=\"{$v}\"", ($_POST['match'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
 				}
@@ -218,7 +218,7 @@ class ConstraintController extends BaseController {
 				echo "</select><br />\n";
 
 				// DEFERRABLE options
-				echo "<select name=\"deferrable\">";
+				echo '<select name="deferrable">';
 				foreach ($data->fkdeferrable as $v) {
 					echo "<option value=\"{$v}\"", ($_POST['deferrable'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
 				}
@@ -226,7 +226,7 @@ class ConstraintController extends BaseController {
 				echo "</select><br />\n";
 
 				// INITIALLY options
-				echo "<select name=\"initially\">";
+				echo '<select name="initially">';
 				foreach ($data->fkinitial as $v) {
 					echo "<option value=\"{$v}\"", ($_POST['initially'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
 				}
@@ -237,10 +237,10 @@ class ConstraintController extends BaseController {
 
 				echo "<p><input type=\"hidden\" name=\"action\" value=\"save_add_foreign_key\" />\n";
 				echo $misc->form;
-				echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-				echo "<input type=\"hidden\" name=\"name\" value=\"", htmlspecialchars($_REQUEST['name']), "\" />\n";
-				echo "<input type=\"hidden\" name=\"target\" value=\"", htmlspecialchars(serialize($_REQUEST['target'])), "\" />\n";
-				echo "<input type=\"hidden\" name=\"SourceColumnList\" value=\"", htmlspecialchars($_REQUEST['SourceColumnList']), "\" />\n";
+				echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+				echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
+				echo '<input type="hidden" name="target" value="', htmlspecialchars(serialize($_REQUEST['target'])), "\" />\n";
+				echo '<input type="hidden" name="SourceColumnList" value="', htmlspecialchars($_REQUEST['SourceColumnList']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
 				echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
 				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -307,16 +307,16 @@ class ConstraintController extends BaseController {
 			echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strname']}</th></tr>\n";
 			echo "<tr><td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>\n";
 			echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$lang['strfkcolumnlist']}</th></tr>\n";
-			echo "<tr><td class=\"data1\">" . $selColumns->fetch() . "</td>\n";
-			echo "<td class=\"data1\" style=\"text-align: center\">" . $buttonRemove->fetch() . $buttonAdd->fetch() . "</td>\n";
-			echo "<td class=data1>" . $selIndex->fetch() . "</td></tr>\n";
+			echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
+			echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . "</td>\n";
+			echo '<td class=data1>' . $selIndex->fetch() . "</td></tr>\n";
 			echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strfktarget']}</th></tr>";
-			echo "<tr>";
-			echo "<td class=\"data1\" colspan=\"3\"><select name=\"target\">";
+			echo '<tr>';
+			echo '<td class="data1" colspan="3"><select name="target">';
 			while (!$tables->EOF) {
 				$key = ['schemaname' => $tables->fields['nspname'], 'tablename' => $tables->fields['relname']];
 				$key = serialize($key);
-				echo "<option value=\"", htmlspecialchars($key), "\">";
+				echo '<option value="', htmlspecialchars($key), '">';
 				if ($tables->fields['nspname'] != $_REQUEST['schema']) {
 					echo htmlspecialchars($tables->fields['nspname']), '.';
 				}
@@ -324,12 +324,12 @@ class ConstraintController extends BaseController {
 				$tables->moveNext();
 			}
 			echo "</select>\n";
-			echo "</td></tr>";
+			echo '</td></tr>';
 			echo "</table>\n";
 
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"save_add_foreign_key\" />\n";
 			echo $misc->form;
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
 			echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -410,13 +410,13 @@ class ConstraintController extends BaseController {
 
 			echo "<table>\n";
 			echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strname']}</th></tr>";
-			echo "<tr>";
-			echo "<td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" value=\"", htmlspecialchars($_POST['name']),
+			echo '<tr>';
+			echo '<td class="data1" colspan="3"><input type="text" name="name" value="', htmlspecialchars($_POST['name']),
 				"\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>";
 			echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$lang['strindexcolumnlist']}</th></tr>\n";
-			echo "<tr><td class=\"data1\">" . $selColumns->fetch() . "</td>\n";
-			echo "<td class=\"data1\" style=\"text-align: center\">" . $buttonRemove->fetch() . $buttonAdd->fetch() . "</td>";
-			echo "<td class=data1>" . $selIndex->fetch() . "</td></tr>\n";
+			echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
+			echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
+			echo '<td class=data1>' . $selIndex->fetch() . "</td></tr>\n";
 
 			// Tablespace (if there are any)
 			if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
@@ -439,8 +439,8 @@ class ConstraintController extends BaseController {
 
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"save_add_primary_key\" />\n";
 			echo $misc->form;
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"type\" value=\"", htmlspecialchars($type), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="type" value="', htmlspecialchars($type), "\" />\n";
 			echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 			echo "</form>\n";
@@ -515,12 +515,12 @@ class ConstraintController extends BaseController {
 			echo "<tr><td class=\"data1\"><input name=\"name\" size=\"24\" maxlength=\"{$data->_maxNameLen}\" value=\"",
 			htmlspecialchars($_POST['name']), "\" /></td>\n";
 
-			echo "<td class=\"data1\">(<input name=\"definition\" size=\"64\" value=\"",
+			echo '<td class="data1">(<input name="definition" size="64" value="',
 			htmlspecialchars($_POST['definition']), "\" />)</td></tr>\n";
 			echo "</table>\n";
 
 			echo "<input type=\"hidden\" name=\"action\" value=\"save_add_check\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
 			echo $misc->form;
 			echo "<p><input type=\"submit\" name=\"ok\" value=\"{$lang['stradd']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -555,14 +555,14 @@ class ConstraintController extends BaseController {
 			$this->printTrail('constraint');
 			$this->printTitle($lang['strdrop'], 'pg.constraint.drop');
 
-			echo "<p>", sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
+			echo '<p>', sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
 				$misc->printVal($_REQUEST['table'])), "</p>\n";
 
 			echo "<form action=\"/src/views/constraints.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"constraint\" value=\"", htmlspecialchars($_REQUEST['constraint']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"type\" value=\"", htmlspecialchars($_REQUEST['type']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";
+			echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
 			echo $misc->form;
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
 			echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
@@ -592,7 +592,7 @@ class ConstraintController extends BaseController {
 
 			if (is_null($rowdata->fields['consrc'])) {
 				$atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
-				$rowdata->fields['+definition'] = ($rowdata->fields['contype'] == 'u' ? "UNIQUE (" : "PRIMARY KEY (") . join(',', $atts) . ')';
+				$rowdata->fields['+definition'] = ($rowdata->fields['contype'] == 'u' ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
 			} else {
 				$rowdata->fields['+definition'] = $rowdata->fields['consrc'];
 			}

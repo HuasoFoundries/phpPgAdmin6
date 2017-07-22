@@ -79,10 +79,10 @@ class ServerController extends BaseController {
 
 		$columns = [
 			'server' => [
-				'title' => $lang['strserver'],
-				'field' => Decorator::field('desc'),
-				'url' => "/redirect/server?",
-				'vars' => ['server' => 'id'],
+                'title' => $lang['strserver'],
+                'field' => Decorator::field('desc'),
+                'url' => '/redirect/server?',
+                'vars' => ['server' => 'id'],
 			],
 			'host' => [
 				'title' => $lang['strhost'],

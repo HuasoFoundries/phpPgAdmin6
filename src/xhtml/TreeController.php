@@ -98,15 +98,15 @@ class TreeController extends HTMLController {
 	function printTreeXML(&$treedata, &$attrs) {
 		$lang = $this->lang;
 
-		header("Content-Type: text/xml; charset=UTF-8");
-		header("Cache-Control: no-cache");
+		header('Content-Type: text/xml; charset=UTF-8');
+		header('Cache-Control: no-cache');
 
 		echo "<tree>\n";
 
 		if (count($treedata) > 0) {
 			foreach ($treedata as $rec) {
 
-				echo "<tree";
+				echo '<tree';
 				echo Decorator::value_xml_attr('text', $attrs['text'], $rec);
 				echo Decorator::value_xml_attr('action', $attrs['action'], $rec);
 				echo Decorator::value_xml_attr('src', $attrs['branch'], $rec);

@@ -45,27 +45,27 @@ class TableSpacesController extends BaseController {
 			echo $misc->form;
 			echo "<table>\n";
 			echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
-			echo "<td class=\"data1\">";
+			echo '<td class="data1">';
 			echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
 			htmlspecialchars($_POST['name']), "\" /></td></tr>\n";
 			echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
-			echo "<td class=\"data1\"><select name=\"owner\">";
+			echo '<td class="data1"><select name="owner">';
 			while (!$users->EOF) {
 				$uname = $users->fields['usename'];
-				echo "<option value=\"", htmlspecialchars($uname), "\"",
-				($uname == $_POST['owner']) ? ' selected="selected"' : '', ">", htmlspecialchars($uname), "</option>\n";
+				echo '<option value="', htmlspecialchars($uname), '"',
+				($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
 				$users->moveNext();
 			}
 			echo "</select></td></tr>\n";
 			if ($data->hasSharedComments()) {
 				echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
-				echo "<td class=\"data1\">";
-				echo "<textarea rows=\"3\" cols=\"32\" name=\"comment\">",
+				echo '<td class="data1">';
+				echo '<textarea rows="3" cols="32" name="comment">',
 				htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
 			}
 			echo "</table>\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
-			echo "<input type=\"hidden\" name=\"tablespace\" value=\"", htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
+			echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
 			echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 			echo "</form>\n";
@@ -116,12 +116,12 @@ class TableSpacesController extends BaseController {
 			$this->printTrail('tablespace');
 			$this->printTitle($lang['strdrop'], 'pg.tablespace.drop');
 
-			echo "<p>", sprintf($lang['strconfdroptablespace'], $misc->printVal($_REQUEST['tablespace'])), "</p>\n";
+			echo '<p>', sprintf($lang['strconfdroptablespace'], $misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
 			echo "<form action=\"/src/views/tablespaces.php\" method=\"post\">\n";
 			echo $misc->form;
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-			echo "<input type=\"hidden\" name=\"tablespace\" value=\"", htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
+			echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
 			echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
 			echo "</form>\n";
@@ -179,8 +179,8 @@ class TableSpacesController extends BaseController {
 		echo "\t\t<td class=\"data1\"><select name=\"formOwner\">\n";
 		while (!$users->EOF) {
 			$uname = $users->fields['usename'];
-			echo "\t\t\t<option value=\"", htmlspecialchars($uname), "\"",
-			($uname == $_POST['formOwner']) ? ' selected="selected"' : '', ">", htmlspecialchars($uname), "</option>\n";
+			echo "\t\t\t<option value=\"", htmlspecialchars($uname), '"',
+			($uname == $_POST['formOwner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
 			$users->moveNext();
 		}
 		echo "\t\t</select></td>\n\t</tr>\n";

@@ -77,7 +77,7 @@ class Connection {
 		if (!isset($version)) {
 			$adodb = new ADODB_base($this->conn);
 
-			$sql = "SELECT VERSION() AS version";
+			$sql = 'SELECT VERSION() AS version';
 			$field = $adodb->selectField($sql, 'version');
 
 			// Check the platform, if it's mingw, set it

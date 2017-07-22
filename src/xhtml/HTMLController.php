@@ -112,7 +112,7 @@ class HTMLController {
 			$link['fields'] = $_REQUEST;
 		}
 
-		$tag = "<a ";
+		$tag = '<a ';
 		foreach ($link['attr'] as $attr => $value) {
 			if ($attr == 'href' and is_array($value)) {
 				$tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'])) . '" ';
@@ -120,7 +120,7 @@ class HTMLController {
 				$tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
 			}
 		}
-		$tag .= ">" . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
+		$tag .= '>' . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
 
 		if ($do_print) {
 			echo $tag;

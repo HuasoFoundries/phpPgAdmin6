@@ -68,7 +68,7 @@ class Postgres81 extends Postgres82 {
 			$this->clean($currentdatabase);
 			$orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
 		} else {
-			$orderby = "ORDER BY pdb.datname";
+			$orderby = 'ORDER BY pdb.datname';
 		}
 
 		if (!$conf['show_system']) {
@@ -270,14 +270,14 @@ class Postgres81 extends Postgres82 {
 	function getTablespaces($all = false) {
 		$conf = $this->conf;
 
-		$sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation
-					FROM pg_catalog.pg_tablespace";
+		$sql = 'SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation
+					FROM pg_catalog.pg_tablespace';
 
 		if (!$conf['show_system'] && !$all) {
 			$sql .= ' WHERE spcname NOT LIKE $$pg\_%$$';
 		}
 
-		$sql .= " ORDER BY spcname";
+		$sql .= ' ORDER BY spcname';
 
 		return $this->selectSet($sql);
 	}

@@ -277,7 +277,7 @@ class RolesController extends BaseController {
 			while (!$roles->EOF) {
 				$rolename = $roles->fields['rolname'];
 				echo "\t\t\t\t<option value=\"{$rolename}\"",
-				(in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), ">", $misc->printVal($rolename), "</option>\n";
+				(in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
 				$roles->moveNext();
 			}
 			echo "\t\t\t</select>\n";
@@ -290,7 +290,7 @@ class RolesController extends BaseController {
 			while (!$roles->EOF) {
 				$rolename = $roles->fields['rolname'];
 				echo "\t\t\t\t<option value=\"{$rolename}\"",
-				(in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), ">", $misc->printVal($rolename), "</option>\n";
+				(in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
 				$roles->moveNext();
 			}
 			echo "\t\t\t</select>\n";
@@ -303,7 +303,7 @@ class RolesController extends BaseController {
 			while (!$roles->EOF) {
 				$rolename = $roles->fields['rolname'];
 				echo "\t\t\t\t<option value=\"{$rolename}\"",
-				(in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), ">", $misc->printVal($rolename), "</option>\n";
+				(in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
 				$roles->moveNext();
 			}
 			echo "\t\t\t</select>\n";
@@ -415,7 +415,7 @@ class RolesController extends BaseController {
 			echo "<form action=\"/src/views/roles.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$lang['strname']}</th>\n";
-			echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['formNewRoleName']) . "\" />" : $misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
+			echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['formNewRoleName']) . '" />' : $misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strpassword']}</th>\n";
 			echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strconfirm']}</th>\n";
@@ -491,7 +491,7 @@ class RolesController extends BaseController {
 				while (!$roles->EOF) {
 					$rolename = $roles->fields['rolname'];
 					echo "\t\t\t\t<option value=\"{$rolename}\"",
-					(in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), ">", $misc->printVal($rolename), "</option>\n";
+					(in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
 					$roles->moveNext();
 				}
 				echo "\t\t\t</select>\n";
@@ -504,7 +504,7 @@ class RolesController extends BaseController {
 				while (!$roles->EOF) {
 					$rolename = $roles->fields['rolname'];
 					echo "\t\t\t\t<option value=\"{$rolename}\"",
-					(in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), ">", $misc->printVal($rolename), "</option>\n";
+					(in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
 					$roles->moveNext();
 				}
 				echo "\t\t\t</select>\n";
@@ -517,7 +517,7 @@ class RolesController extends BaseController {
 				while (!$roles->EOF) {
 					$rolename = $roles->fields['rolname'];
 					echo "\t\t\t\t<option value=\"{$rolename}\"",
-					(in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), ">", $misc->printVal($rolename), "</option>\n";
+					(in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
 					$roles->moveNext();
 				}
 				echo "\t\t\t</select>\n";
@@ -526,10 +526,10 @@ class RolesController extends BaseController {
 			echo "</table>\n";
 
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"save_alter\" />\n";
-			echo "<input type=\"hidden\" name=\"rolename\" value=\"", htmlspecialchars($_REQUEST['rolename']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"memberofold\" value=\"", isset($_POST['memberofold']) ? $_POST['memberofold'] : htmlspecialchars($memberofold), "\" />\n";
-			echo "<input type=\"hidden\" name=\"membersold\" value=\"", isset($_POST['membersold']) ? $_POST['membersold'] : htmlspecialchars($membersold), "\" />\n";
-			echo "<input type=\"hidden\" name=\"adminmembersold\" value=\"", isset($_POST['adminmembersold']) ? $_POST['adminmembersold'] : htmlspecialchars($adminmembersold), "\" />\n";
+			echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), "\" />\n";
+			echo '<input type="hidden" name="memberofold" value="', isset($_POST['memberofold']) ? $_POST['memberofold'] : htmlspecialchars($memberofold), "\" />\n";
+			echo '<input type="hidden" name="membersold" value="', isset($_POST['membersold']) ? $_POST['membersold'] : htmlspecialchars($membersold), "\" />\n";
+			echo '<input type="hidden" name="adminmembersold" value="', isset($_POST['adminmembersold']) ? $_POST['adminmembersold'] : htmlspecialchars($adminmembersold), "\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -595,11 +595,11 @@ class RolesController extends BaseController {
 			$this->printTrail('role');
 			$this->printTitle($lang['strdroprole'], 'pg.role.drop');
 
-			echo "<p>", sprintf($lang['strconfdroprole'], $misc->printVal($_REQUEST['rolename'])), "</p>\n";
+			echo '<p>', sprintf($lang['strconfdroprole'], $misc->printVal($_REQUEST['rolename'])), "</p>\n";
 
 			echo "<form action=\"/src/views/roles.php\" method=\"post\">\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-			echo "<input type=\"hidden\" name=\"rolename\" value=\"", htmlspecialchars($_REQUEST['rolename']), "\" />\n";
+			echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), "\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";

@@ -112,7 +112,7 @@ class Misc {
 
 			/*$s = "<p><b>{$lang['strsqlerror']}</b><br />" . $misc->printVal($errmsg, 'errormsg') . "</p> <p><b>{$lang['strinstatement']}</b><br />" . $misc->printVal($sql). "</p>	";*/
 
-			$s = "<p><b>strsqlerror</b><br />" . $errmsg . "</p> <p><b>SQL:</b><br />" . $sql . "</p>	";
+			$s = '<p><b>strsqlerror</b><br />' . $errmsg . '</p> <p><b>SQL:</b><br />' . $sql . '</p>	';
 
 			echo '<table class="error" cellpadding="5"><tr><td>' . $s . '</td></tr></table><br />' . "\n";
 
@@ -216,7 +216,7 @@ class Misc {
 			$this->data->execute("SET client_encoding TO 'UTF-8'");
 
 			if ($this->data->hasByteaHexDefault()) {
-				$this->data->execute("SET bytea_output TO escape");
+				$this->data->execute('SET bytea_output TO escape');
 			}
 
 		}
@@ -914,14 +914,14 @@ class Misc {
 		case 'root':
 			$tabs = [
 				'intro' => [
-					'title' => $lang['strintroduction'],
-					'url' => "intro.php",
-					'icon' => 'Introduction',
+                    'title' => $lang['strintroduction'],
+                    'url' => 'intro.php',
+                    'icon' => 'Introduction',
 				],
 				'servers' => [
-					'title' => $lang['strservers'],
-					'url' => "servers.php",
-					'icon' => 'Servers',
+                    'title' => $lang['strservers'],
+                    'url' => 'servers.php',
+                    'icon' => 'Servers',
 				],
 			];
 			break;
@@ -1693,7 +1693,7 @@ class Misc {
 	}
 
 	function getHelpLink($help) {
-		return htmlspecialchars("/src/views/help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
+		return htmlspecialchars('/src/views/help.php?help=' . urlencode($help) . '&server=' . urlencode($this->server_id));
 
 	}
 
@@ -2094,9 +2094,9 @@ class Misc {
 			$forcedserver = $this->server_id;
 			$connection_html .= '<input type="hidden" readonly="readonly" value="' . $this->server_id . '" name="server">';
 		} else {
-			$connection_html .= "<label>";
+			$connection_html .= '<label>';
 			$connection_html .= $this->printHelp($lang['strserver'], 'pg.server', false);
-			$connection_html .= ": </label>";
+			$connection_html .= ': </label>';
 			$connection_html .= " <select name=\"server\" {$onchange}>\n";
 			foreach ($servers as $info) {
 				if (empty($info['username'])) {
@@ -2104,7 +2104,7 @@ class Misc {
 				}
 				$selected = ((isset($_REQUEST['server']) && $info['id'] == $_REQUEST['server'])) ? ' selected="selected"' : '';
 				// not logged on this server
-				$connection_html .= "<option value=\"" . htmlspecialchars($info['id']) . "\" " . $selected . ">";
+				$connection_html .= '<option value="' . htmlspecialchars($info['id']) . '" ' . $selected . '>';
 				$connection_html .= htmlspecialchars("{$info['desc']} ({$info['id']})");
 				$connection_html .= "</option>\n";
 			}
@@ -2115,7 +2115,7 @@ class Misc {
 
 		if (count($servers) === 1 && isset($servers[$this->server_id]['useonlydefaultdb']) && $servers[$this->server_id]['useonlydefaultdb'] === true) {
 
-			$connection_html .= "<input type=\"hidden\" name=\"database\" value=\"" . htmlspecialchars($servers[$this->server_id]['defaultdb']) . "\" />\n";
+			$connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($servers[ $this->server_id]['defaultdb']) . "\" />\n";
 
 		} else {
 
@@ -2124,7 +2124,7 @@ class Misc {
 			$databases = $data->getDatabases();
 			if ($databases->recordCount() > 0) {
 
-				$connection_html .= "<label>";
+				$connection_html .= '<label>';
 				$connection_html .= $this->printHelp($lang['strdatabase'], 'pg.database', false);
 				$connection_html .= ": <select name=\"database\" {$onchange}>\n";
 
@@ -2136,14 +2136,14 @@ class Misc {
 				while (!$databases->EOF) {
 					$dbname = $databases->fields['datname'];
 					$dbselected = ((isset($_REQUEST['database']) && $dbname == $_REQUEST['database'])) ? ' selected="selected"' : '';
-					$connection_html .= "<option value=\"" . htmlspecialchars($dbname) . "\" " . $dbselected . ">" . htmlspecialchars($dbname) . "</option>\n";
+					$connection_html .= '<option value="' . htmlspecialchars($dbname) . '" ' . $dbselected . '>' . htmlspecialchars($dbname) . "</option>\n";
 
 					$databases->moveNext();
 				}
 				$connection_html .= "</select></label>\n";
 			} else {
 				$server_info = $misc->getServerInfo();
-				$connection_html .= "<input type=\"hidden\" name=\"database\" value=\"" . htmlspecialchars($server_info['defaultdb']) . "\" />\n";
+				$connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($server_info['defaultdb']) . "\" />\n";
 			}
 		}
 

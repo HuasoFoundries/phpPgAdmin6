@@ -91,7 +91,7 @@ class SQLEditController extends BaseController {
 
 		$default_html .= "<form action=\"database.php\" method=\"post\" target=\"detail\">\n";
 		$default_html .= $this->_printConnection('find');
-		$default_html .= "<p><input class=\"focusme\" name=\"term\" value=\"" . htmlspecialchars($_REQUEST['term']) . "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
+		$default_html .= '<p><input class="focusme" name="term" value="' . htmlspecialchars($_REQUEST['term']) . "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
 
 		// Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
 		$default_html .= "<select name=\"filter\">\n";
@@ -155,7 +155,7 @@ class SQLEditController extends BaseController {
 		$default_html .= "\n";
 
 		$default_html .= ' <div class="searchpath">';
-		$default_html .= "<label>";
+		$default_html .= '<label>';
 		$default_html .= $this->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
 
 		$default_html .= ': <input type="text" name="search_path" size="50" value="' . $search_path . '" />';
@@ -164,7 +164,7 @@ class SQLEditController extends BaseController {
 
 		$default_html .= '<div id="queryedition" style="padding:1%;width:98%;float:left;">';
 		$default_html .= "\n";
-		$default_html .= '<textarea style="width:98%;" rows="10" cols="50" name="query" id="query" resizable="true">' . $sqlquery . "</textarea>";
+		$default_html .= '<textarea style="width:98%;" rows="10" cols="50" name="query" id="query" resizable="true">' . $sqlquery . '</textarea>';
 		$default_html .= "\n";
 		$default_html .= "</div>\n";
 
@@ -173,7 +173,7 @@ class SQLEditController extends BaseController {
 			// Don't show upload option if max size of uploads is zero
 			$max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
 			if (is_double($max_size) && $max_size > 0) {
-				$default_html .= "<p>";
+				$default_html .= '<p>';
 				$default_html .= '<input type="hidden" name="MAX_FILE_SIZE" value="' . $max_size . '" />';
 				$default_html .= "\n";
 				$default_html .= '<label for="script">' . $lang['struploadscript'] . '</label>';
@@ -189,7 +189,7 @@ class SQLEditController extends BaseController {
 		$default_html .= "\n";
 		$default_html .= '<input type="reset" accesskey="q" value="' . $lang['strreset'] . '" /></p>';
 		$default_html .= "\n";
-		$default_html .= "</form>";
+		$default_html .= '</form>';
 		$default_html .= "\n";
 
 		// Default focus

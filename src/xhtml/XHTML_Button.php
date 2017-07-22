@@ -8,7 +8,7 @@ class XHTML_Button extends XHtmlElement {
 
 		parent::__construct();
 
-		$this->set_attribute("name", $name);
+		$this->set_attribute('name', $name);
 
 		if ($text) {
 			$this->set_text($text);

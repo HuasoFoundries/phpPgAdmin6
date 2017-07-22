@@ -255,7 +255,7 @@ class Postgres extends ADODB_base {
 		// Determine actions string
 		$extra_str = '';
 		foreach ($extras as $k => $v) {
-			$extra_str .= " {$k}=\"" . htmlspecialchars($v) . "\"";
+			$extra_str .= " {$k}=\"" . htmlspecialchars($v) . '"';
 		}
 
 		switch (substr($type, 0, 9)) {
@@ -271,13 +271,13 @@ class Postgres extends ADODB_base {
 
 			// If value is null, 't' or 'f'...
 			if ($value === null || $value == 't' || $value == 'f') {
-				echo "<select name=\"", htmlspecialchars($name), "\"{$extra_str}>\n";
-				echo "<option value=\"\"", ($value === null) ? ' selected="selected"' : '', "></option>\n";
-				echo "<option value=\"t\"", ($value == 't') ? ' selected="selected"' : '', ">{$lang['strtrue']}</option>\n";
-				echo "<option value=\"f\"", ($value == 'f') ? ' selected="selected"' : '', ">{$lang['strfalse']}</option>\n";
+				echo '<select name="', htmlspecialchars($name), "\"{$extra_str}>\n";
+				echo '<option value=""', ($value === null) ? ' selected="selected"' : '', "></option>\n";
+				echo '<option value="t"', ($value == 't') ? ' selected="selected"' : '', ">{$lang['strtrue']}</option>\n";
+				echo '<option value="f"', ($value == 'f') ? ' selected="selected"' : '', ">{$lang['strfalse']}</option>\n";
 				echo "</select>\n";
 			} else {
-				echo "<input name=\"", htmlspecialchars($name), "\" value=\"", htmlspecialchars($value), "\" size=\"35\"{$extra_str} />\n";
+				echo '<input name="', htmlspecialchars($name), '" value="', htmlspecialchars($value), "\" size=\"35\"{$extra_str} />\n";
 			}
 			break;
 		case 'bytea':
@@ -294,7 +294,7 @@ class Postgres extends ADODB_base {
 			$n = substr_count($value, "\n");
 			$n = $n < 5 ? 5 : $n;
 			$n = $n > 20 ? 20 : $n;
-			echo "<textarea name=\"", htmlspecialchars($name), "\" rows=\"{$n}\" cols=\"75\"{$extra_str}>\n";
+			echo '<textarea name="', htmlspecialchars($name), "\" rows=\"{$n}\" cols=\"75\"{$extra_str}>\n";
 			echo htmlspecialchars($value);
 			echo "</textarea>\n";
 			break;
@@ -303,12 +303,12 @@ class Postgres extends ADODB_base {
 			$n = substr_count($value, "\n");
 			$n = $n < 5 ? 5 : $n;
 			$n = $n > 20 ? 20 : $n;
-			echo "<textarea name=\"", htmlspecialchars($name), "\" rows=\"{$n}\" cols=\"35\"{$extra_str}>\n";
+			echo '<textarea name="', htmlspecialchars($name), "\" rows=\"{$n}\" cols=\"35\"{$extra_str}>\n";
 			echo htmlspecialchars($value);
 			echo "</textarea>\n";
 			break;
 		default:
-			echo "<input name=\"", htmlspecialchars($name), "\" value=\"", htmlspecialchars($value), "\" size=\"35\"{$extra_str} />\n";
+			echo '<input name="', htmlspecialchars($name), '" value="', htmlspecialchars($value), "\" size=\"35\"{$extra_str} />\n";
 			break;
 		}
 	}
@@ -392,7 +392,7 @@ class Postgres extends ADODB_base {
 		} elseif ($typname == 'varchar') {
 			$temp = 'character varying';
 			if ($typmod != -1) {
-				$temp .= "(" . ($typmod - $varhdrsz) . ")";
+				$temp .= '(' . ($typmod - $varhdrsz) . ')';
 			}
 
 		} elseif ($typname == 'numeric') {
@@ -490,7 +490,7 @@ class Postgres extends ADODB_base {
 			$this->clean($currentdatabase);
 			$orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
 		} else {
-			$orderby = "ORDER BY pdb.datname";
+			$orderby = 'ORDER BY pdb.datname';
 		}
 
 		if (!$conf['show_system']) {
@@ -553,7 +553,7 @@ class Postgres extends ADODB_base {
 	 */
 	function getDefaultWithOid() {
 
-		$sql = "SHOW default_with_oids";
+		$sql = 'SHOW default_with_oids';
 
 		return $this->selectField($sql, 'default_with_oids');
 	}
@@ -710,7 +710,7 @@ class Postgres extends ADODB_base {
 	 */
 	function getPreparedXacts($database = null) {
 		if ($database === null) {
-			$sql = "SELECT * FROM pg_prepared_xacts";
+			$sql = 'SELECT * FROM pg_prepared_xacts';
 		} else {
 			$this->clean($database);
 			$sql = "SELECT transaction, gid, prepared, owner FROM pg_prepared_xacts
@@ -748,7 +748,7 @@ class Postgres extends ADODB_base {
 			// XXX: The mention of information_schema here is in the wrong place, but
 			// it's the quickest fix to exclude the info schema from 7.4
 			$where = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
-			$lan_where = "AND pl.lanispl";
+			$lan_where = 'AND pl.lanispl';
 		} else {
 			$where = '';
 			$lan_where = '';
@@ -757,7 +757,7 @@ class Postgres extends ADODB_base {
 		// Apply outer filter
 		$sql = '';
 		if ($filter != '') {
-			$sql = "SELECT * FROM (";
+			$sql = 'SELECT * FROM (';
 		}
 
 		$term = "\$_PATERN_\$%{$term}%\$_PATERN_\$";
@@ -864,7 +864,7 @@ class Postgres extends ADODB_base {
 			$sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
 		}
 
-		$sql .= "ORDER BY type, schemaname, relname, name";
+		$sql .= 'ORDER BY type, schemaname, relname, name';
 
 		return $this->selectSet($sql);
 	}
@@ -874,7 +874,7 @@ class Postgres extends ADODB_base {
 	 * @return A recordset
 	 */
 	function getVariables() {
-		$sql = "SHOW ALL";
+		$sql = 'SHOW ALL';
 
 		return $this->selectSet($sql);
 	}
@@ -1078,7 +1078,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP SCHEMA \"{$schemaname}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -1339,10 +1339,10 @@ class Postgres extends ADODB_base {
 		// DROP TABLE must be fully qualified in case a table with the same name exists
 		// in pg_catalog.
 		if (!$clean) {
-			$sql .= "-- ";
+			$sql .= '-- ';
 		}
 
-		$sql .= "DROP TABLE ";
+		$sql .= 'DROP TABLE ';
 		$sql .= "\"{$t->fields['nspname']}\".\"{$t->fields['relname']}\";\n";
 		$sql .= "CREATE TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" (\n";
 
@@ -1357,17 +1357,17 @@ class Postgres extends ADODB_base {
 			if ($this->phpBool($atts->fields['attisserial']) &&
 				($atts->fields['type'] == 'integer' || $atts->fields['type'] == 'bigint')) {
 				if ($atts->fields['type'] == 'integer') {
-					$sql .= " SERIAL";
+					$sql .= ' SERIAL';
 				} else {
-					$sql .= " BIGSERIAL";
+					$sql .= ' BIGSERIAL';
 				}
 
 			} else {
-				$sql .= " " . $this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
+				$sql .= ' ' . $this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
 
 				// Add NOT NULL if necessary
 				if ($this->phpBool($atts->fields['attnotnull'])) {
-					$sql .= " NOT NULL";
+					$sql .= ' NOT NULL';
 				}
 
 				// Add default if necessary
@@ -1404,11 +1404,11 @@ class Postgres extends ADODB_base {
 				switch ($cons->fields['contype']) {
 				case 'p':
 					$keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-					$sql .= "PRIMARY KEY (" . join(',', $keys) . ")";
+					$sql .= 'PRIMARY KEY (' . join(',', $keys) . ')';
 					break;
 				case 'u':
 					$keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-					$sql .= "UNIQUE (" . join(',', $keys) . ")";
+					$sql .= 'UNIQUE (' . join(',', $keys) . ')';
 					break;
 				default:
 					// Unrecognised constraint
@@ -1428,7 +1428,7 @@ class Postgres extends ADODB_base {
 			$i++;
 		}
 
-		$sql .= ")";
+		$sql .= ')';
 
 		// @@@@ DUMP CLUSTERING INFORMATION
 
@@ -1459,9 +1459,9 @@ class Postgres extends ADODB_base {
 
 		// Handle WITHOUT OIDS
 		if ($this->hasObjectID($table)) {
-			$sql .= " WITH OIDS";
+			$sql .= ' WITH OIDS';
 		} else {
-			$sql .= " WITHOUT OIDS";
+			$sql .= ' WITHOUT OIDS';
 		}
 
 		$sql .= ";\n";
@@ -1549,7 +1549,7 @@ class Postgres extends ADODB_base {
 				}
 
 				// Output privileges with no GRANT OPTION
-				$sql .= "GRANT " . join(', ', $nongrant) . " ON TABLE \"{$t->fields['relname']}\" TO ";
+				$sql .= 'GRANT ' . join(', ', $nongrant) . " ON TABLE \"{$t->fields['relname']}\" TO ";
 				switch ($v[0]) {
 				case 'public':
 					$sql .= "PUBLIC;\n";
@@ -1587,10 +1587,10 @@ class Postgres extends ADODB_base {
 					$sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
 				}
 
-				$sql .= "GRANT " . join(', ', $v[4]) . " ON \"{$t->fields['relname']}\" TO ";
+				$sql .= 'GRANT ' . join(', ', $v[4]) . " ON \"{$t->fields['relname']}\" TO ";
 				switch ($v[0]) {
 				case 'public':
-					$sql .= "PUBLIC";
+					$sql .= 'PUBLIC';
 					break;
 				case 'user':
 					$this->fieldClean($v[1]);
@@ -1731,7 +1731,7 @@ class Postgres extends ADODB_base {
 
 			// If not the first column, add a comma
 			if (!$first) {
-				$sql .= ", ";
+				$sql .= ', ';
 			} else {
 				$first = false;
 			}
@@ -1774,11 +1774,11 @@ class Postgres extends ADODB_base {
 			// Add other qualifiers
 			if (!isset($primarykey[$i])) {
 				if (isset($uniquekey[$i])) {
-					$sql .= " UNIQUE";
+					$sql .= ' UNIQUE';
 				}
 
 				if (isset($notnull[$i])) {
-					$sql .= " NOT NULL";
+					$sql .= ' NOT NULL';
 				}
 
 			}
@@ -1805,10 +1805,10 @@ class Postgres extends ADODB_base {
 			}
 		}
 		if (count($primarykeycolumns) > 0) {
-			$sql .= ", PRIMARY KEY (" . implode(", ", $primarykeycolumns) . ")";
+			$sql .= ', PRIMARY KEY (' . implode(', ', $primarykeycolumns) . ')';
 		}
 
-		$sql .= ")";
+		$sql .= ')';
 
 		// WITHOUT OIDS
 		if ($withoutoids) {
@@ -1876,18 +1876,18 @@ class Postgres extends ADODB_base {
 		$sql = "CREATE TABLE \"{$f_schema}\".\"{$name}\" (LIKE {$like}";
 
 		if ($defaults) {
-			$sql .= " INCLUDING DEFAULTS";
+			$sql .= ' INCLUDING DEFAULTS';
 		}
 
 		if ($this->hasCreateTableLikeWithConstraints() && $constraints) {
-			$sql .= " INCLUDING CONSTRAINTS";
+			$sql .= ' INCLUDING CONSTRAINTS';
 		}
 
 		if ($this->hasCreateTableLikeWithIndexes() && $idx) {
-			$sql .= " INCLUDING INDEXES";
+			$sql .= ' INCLUDING INDEXES';
 		}
 
-		$sql .= ")";
+		$sql .= ')';
 
 		if ($this->hasTablespaces() && $tablespace != '') {
 			$this->fieldClean($tablespace);
@@ -2168,7 +2168,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP TABLE \"{$f_schema}\".\"{$table}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -2301,7 +2301,7 @@ class Postgres extends ADODB_base {
 		$toAlter = [];
 		// Create the command for changing nullability
 		if ($notnull != $oldnotnull) {
-			$toAlter[] = "ALTER COLUMN \"{$name}\" " . (($notnull) ? 'SET' : 'DROP') . " NOT NULL";
+			$toAlter[] = "ALTER COLUMN \"{$name}\" " . (($notnull) ? 'SET' : 'DROP') . ' NOT NULL';
 		}
 
 		// Add default, if it has changed
@@ -2417,7 +2417,7 @@ class Postgres extends ADODB_base {
 		$this->fieldClean($table);
 		$this->fieldClean($column);
 
-		$sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . (($state) ? 'DROP' : 'SET') . " NOT NULL";
+		$sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . (($state) ? 'DROP' : 'SET') . ' NOT NULL';
 
 		return $this->execute($sql);
 	}
@@ -2437,7 +2437,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" DROP COLUMN \"{$column}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -2473,7 +2473,7 @@ class Postgres extends ADODB_base {
 		}
 
 		// Set serializable
-		$sql = "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE";
+		$sql = 'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE';
 		$status = $this->execute($sql);
 		if ($status != 0) {
 			$this->rollbackTransaction();
@@ -2481,7 +2481,7 @@ class Postgres extends ADODB_base {
 		}
 
 		// Set datestyle to ISO
-		$sql = "SET DATESTYLE = ISO";
+		$sql = 'SET DATESTYLE = ISO';
 		$status = $this->execute($sql);
 		if ($status != 0) {
 			$this->rollbackTransaction();
@@ -2489,7 +2489,7 @@ class Postgres extends ADODB_base {
 		}
 
 		// Set extra_float_digits to 2
-		$sql = "SET extra_float_digits TO 2";
+		$sql = 'SET extra_float_digits TO 2';
 		$status = $this->execute($sql);
 		if ($status != 0) {
 			$this->rollbackTransaction();
@@ -2682,8 +2682,8 @@ class Postgres extends ADODB_base {
 
 				}
 
-				$sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . implode('","', $fields) . "\")
-					VALUES (" . substr($sql, 1) . ")";
+				$sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . implode('","', $fields) . '")
+					VALUES (' . substr($sql, 1) . ')';
 
 				return $this->execute($sql);
 			}
@@ -2981,7 +2981,7 @@ class Postgres extends ADODB_base {
 		}
 
 		if ($cycledvalue) {
-			$sql .= " CYCLE";
+			$sql .= ' CYCLE';
 		}
 
 		return $this->execute($sql);
@@ -3090,7 +3090,7 @@ class Postgres extends ADODB_base {
 
 		// toggle cycle yes/no
 		if (!is_null($cycledvalue)) {
-			$sql .= (!$cycledvalue ? ' NO ' : '') . " CYCLE";
+			$sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
 		}
 
 		if ($sql != '') {
@@ -3234,7 +3234,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP SEQUENCE \"{$f_schema}\".\"{$sequence}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -3330,9 +3330,9 @@ class Postgres extends ADODB_base {
 
 		// Note: $definition not cleaned
 
-		$sql = "CREATE ";
+		$sql = 'CREATE ';
 		if ($replace) {
-			$sql .= "OR REPLACE ";
+			$sql .= 'OR REPLACE ';
 		}
 
 		$sql .= "VIEW \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
@@ -3512,7 +3512,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP VIEW \"{$f_schema}\".\"{$viewname}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -3537,10 +3537,10 @@ class Postgres extends ADODB_base {
 				AND c.oid = i.indrelid AND i.indexrelid = c2.oid
 		";
 		if ($unique) {
-			$sql .= " AND i.indisunique ";
+			$sql .= ' AND i.indisunique ';
 		}
 
-		$sql .= " ORDER BY c2.relname";
+		$sql .= ' ORDER BY c2.relname';
 
 		return $this->selectSet($sql);
 	}
@@ -3592,23 +3592,23 @@ class Postgres extends ADODB_base {
 		$this->fieldClean($name);
 		$this->fieldClean($table);
 
-		$sql = "CREATE";
+		$sql = 'CREATE';
 		if ($unique) {
-			$sql .= " UNIQUE";
+			$sql .= ' UNIQUE';
 		}
 
-		$sql .= " INDEX";
+		$sql .= ' INDEX';
 		if ($concurrently) {
-			$sql .= " CONCURRENTLY";
+			$sql .= ' CONCURRENTLY';
 		}
 
 		$sql .= " \"{$name}\" ON \"{$f_schema}\".\"{$table}\" USING {$type} ";
 
 		if (is_array($columns)) {
 			$this->arrayClean($columns);
-			$sql .= "(\"" . implode('","', $columns) . "\")";
+			$sql .= '("' . implode('","', $columns) . '")';
 		} else {
-			$sql .= "(" . $columns . ")";
+			$sql .= '(' . $columns . ')';
 		}
 
 		// Tablespace
@@ -3638,7 +3638,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP INDEX \"{$f_schema}\".\"{$index}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -3840,7 +3840,7 @@ class Postgres extends ADODB_base {
 			$sql .= "CONSTRAINT \"{$name}\" ";
 		}
 
-		$sql .= "PRIMARY KEY (\"" . join('","', $fields) . "\")";
+		$sql .= 'PRIMARY KEY ("' . join('","', $fields) . '")';
 
 		if ($tablespace != '' && $this->hasTablespaces()) {
 			$sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -3875,7 +3875,7 @@ class Postgres extends ADODB_base {
 			$sql .= "CONSTRAINT \"{$name}\" ";
 		}
 
-		$sql .= "UNIQUE (\"" . join('","', $fields) . "\")";
+		$sql .= 'UNIQUE ("' . join('","', $fields) . '")';
 
 		if ($tablespace != '' && $this->hasTablespaces()) {
 			$sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -4004,9 +4004,9 @@ class Postgres extends ADODB_base {
 			$sql .= "CONSTRAINT \"{$name}\" ";
 		}
 
-		$sql .= "FOREIGN KEY (\"" . join('","', $sfields) . "\") ";
+		$sql .= 'FOREIGN KEY ("' . join('","', $sfields) . '") ';
 		// Target table needs to be fully qualified
-		$sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"" . join('","', $tfields) . "\") ";
+		$sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"" . join('","', $tfields) . '") ';
 		if ($match != $this->fkmatches[0]) {
 			$sql .= " {$match}";
 		}
@@ -4046,7 +4046,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "ALTER TABLE \"{$f_schema}\".\"{$relation}\" DROP CONSTRAINT \"{$constraint}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -4400,7 +4400,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP DOMAIN \"{$f_schema}\".\"{$domain}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -4444,7 +4444,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" DROP CONSTRAINT \"{$constraint}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -4689,9 +4689,9 @@ class Postgres extends ADODB_base {
 		$f_schema = $this->_schema;
 		$this->fieldClean($f_schema);
 
-		$sql = "CREATE";
+		$sql = 'CREATE';
 		if ($replace) {
-			$sql .= " OR REPLACE";
+			$sql .= ' OR REPLACE';
 		}
 
 		$sql .= " FUNCTION \"{$f_schema}\".\"{$funcname}\" (";
@@ -4701,9 +4701,9 @@ class Postgres extends ADODB_base {
 		}
 
 		// For some reason, the returns field cannot have quotes...
-		$sql .= ") RETURNS ";
+		$sql .= ') RETURNS ';
 		if ($setof) {
-			$sql .= "SETOF ";
+			$sql .= 'SETOF ';
 		}
 
 		$sql .= "{$returns} AS ";
@@ -4772,7 +4772,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP FUNCTION \"{$f_schema}\".\"{$fn->fields['proname']}\"({$fn->fields['proarguments']})";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -4872,7 +4872,7 @@ class Postgres extends ADODB_base {
 		}
 
 		if ($typbyval) {
-			$sql .= ", PASSEDBYVALUE, ";
+			$sql .= ', PASSEDBYVALUE, ';
 		}
 
 		if ($typalign != '') {
@@ -4883,7 +4883,7 @@ class Postgres extends ADODB_base {
 			$sql .= ", STORAGE = {$typstorage}";
 		}
 
-		$sql .= ")";
+		$sql .= ')';
 
 		return $this->execute($sql);
 	}
@@ -4901,7 +4901,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP TYPE \"{$f_schema}\".\"{$typname}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -5013,7 +5013,7 @@ class Postgres extends ADODB_base {
 
 			// If not the first column, add a comma
 			if (!$first) {
-				$sql .= ", ";
+				$sql .= ', ';
 			} else {
 				$first = false;
 			}
@@ -5064,7 +5064,7 @@ class Postgres extends ADODB_base {
 			return -1;
 		}
 
-		$sql .= ")";
+		$sql .= ')';
 
 		$status = $this->execute($sql);
 		if ($status) {
@@ -5217,9 +5217,9 @@ class Postgres extends ADODB_base {
 			return -1;
 		}
 
-		$sql = "CREATE";
+		$sql = 'CREATE';
 		if ($replace) {
-			$sql .= " OR REPLACE";
+			$sql .= ' OR REPLACE';
 		}
 
 		$sql .= " RULE \"{$name}\" AS ON {$event} TO \"{$f_schema}\".\"{$table}\"";
@@ -5228,13 +5228,13 @@ class Postgres extends ADODB_base {
 			$sql .= " WHERE {$where}";
 		}
 
-		$sql .= " DO";
+		$sql .= ' DO';
 		if ($instead) {
-			$sql .= " INSTEAD";
+			$sql .= ' INSTEAD';
 		}
 
 		if ($type == 'NOTHING') {
-			$sql .= " NOTHING";
+			$sql .= ' NOTHING';
 		} else {
 			$sql .= " ({$action})";
 		}
@@ -5257,7 +5257,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP RULE \"{$rule}\" ON \"{$f_schema}\".\"{$relation}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -5508,7 +5508,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP TRIGGER \"{$tgname}\" ON \"{$f_schema}\".\"{$table}\"";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -5624,17 +5624,17 @@ class Postgres extends ADODB_base {
 		if ($opr->fields['oprleftname'] !== null) {
 			$sql .= $opr->fields['oprleftname'] . ', ';
 		} else {
-			$sql .= "NONE, ";
+			$sql .= 'NONE, ';
 		}
 
 		if ($opr->fields['oprrightname'] !== null) {
 			$sql .= $opr->fields['oprrightname'] . ')';
 		} else {
-			$sql .= "NONE)";
+			$sql .= 'NONE)';
 		}
 
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -5700,7 +5700,7 @@ class Postgres extends ADODB_base {
 			$this->fieldClean($template['name']);
 			$sql .= " COPY = \"{$template['schema']}\".\"{$template['name']}\"";
 		}
-		$sql .= ")";
+		$sql .= ')';
 
 		if ($comment != '') {
 			$status = $this->beginTransaction();
@@ -5755,7 +5755,7 @@ class Postgres extends ADODB_base {
 			$sql .= " AND  n.nspname='{$c_schema}'\n";
 		}
 
-		$sql .= "ORDER BY name";
+		$sql .= 'ORDER BY name';
 
 		return $this->selectSet($sql);
 	}
@@ -5848,7 +5848,7 @@ class Postgres extends ADODB_base {
 			$sql .= " AND n.nspname='{$c_schema}'\n";
 		}
 
-		$sql .= "ORDER BY name";
+		$sql .= 'ORDER BY name';
 
 		return $this->selectSet($sql);
 	}
@@ -5874,7 +5874,7 @@ class Postgres extends ADODB_base {
 			$sql .= " AND n.nspname='{$c_schema}'\n";
 		}
 
-		$sql .= "ORDER BY name;";
+		$sql .= 'ORDER BY name;';
 
 		return $this->selectSet($sql);
 	}
@@ -5938,7 +5938,7 @@ class Postgres extends ADODB_base {
 		$this->fieldClean($f_schema);
 		$this->fieldClean($ftsdict);
 
-		$sql = "DROP TEXT SEARCH DICTIONARY";
+		$sql = 'DROP TEXT SEARCH DICTIONARY';
 		$sql .= " \"{$f_schema}\".\"{$ftsdict}\"";
 		if ($cascade) {
 			$sql .= ' CASCADE';
@@ -6011,7 +6011,7 @@ class Postgres extends ADODB_base {
 		$this->fieldClean($init);
 		$this->fieldClean($option);
 
-		$sql = "CREATE TEXT SEARCH";
+		$sql = 'CREATE TEXT SEARCH';
 		if ($isTemplate) {
 			$sql .= " TEMPLATE \"{$f_schema}\".\"{$dictname}\" (";
 			if ($lexize != '') {
@@ -6022,7 +6022,7 @@ class Postgres extends ADODB_base {
 				$sql .= ", INIT = {$init}";
 			}
 
-			$sql .= ")";
+			$sql .= ')';
 			$whatToComment = 'TEXT SEARCH TEMPLATE';
 		} else {
 			$sql .= " DICTIONARY \"{$f_schema}\".\"{$dictname}\" (";
@@ -6037,7 +6037,7 @@ class Postgres extends ADODB_base {
 				$sql .= ", {$option}";
 			}
 
-			$sql .= ")";
+			$sql .= ')';
 			$whatToComment = 'TEXT SEARCH DICTIONARY';
 		}
 
@@ -6161,18 +6161,18 @@ class Postgres extends ADODB_base {
 
 			switch ($action) {
 			case 'alter':
-				$whatToDo = "ALTER";
+				$whatToDo = 'ALTER';
 				break;
 			case 'drop':
-				$whatToDo = "DROP";
+				$whatToDo = 'DROP';
 				break;
 			default:
-				$whatToDo = "ADD";
+				$whatToDo = 'ADD';
 				break;
 			}
 
 			$sql = "ALTER TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$ftscfg}\" {$whatToDo} MAPPING FOR ";
-			$sql .= implode(",", $mapping);
+			$sql .= implode(',', $mapping);
 			if ($action != 'drop' && !empty($dictname)) {
 				$sql .= " WITH {$dictname}";
 			}
@@ -6309,7 +6309,7 @@ class Postgres extends ADODB_base {
 			$sql .= ", SORTOP = \"{$sortop}\"";
 		}
 
-		$sql .= ")";
+		$sql .= ')';
 
 		$status = $this->execute($sql);
 		if ($status) {
@@ -6356,7 +6356,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "DROP AGGREGATE \"{$f_schema}\".\"{$aggrname}\" (\"{$aggrtype}\")";
 		if ($cascade) {
-			$sql .= " CASCADE";
+			$sql .= ' CASCADE';
 		}
 
 		return $this->execute($sql);
@@ -6577,7 +6577,7 @@ class Postgres extends ADODB_base {
 		$this->fieldClean($role);
 		$this->fieldClean($rolename);
 
-		$sql = "REVOKE ";
+		$sql = 'REVOKE ';
 		if ($admin == 1) {
 			$sql .= 'ADMIN OPTION FOR ';
 		}
@@ -6592,9 +6592,9 @@ class Postgres extends ADODB_base {
 	 * @return All users
 	 */
 	function getUsers() {
-		$sql = "SELECT usename, usesuper, usecreatedb, valuntil AS useexpires, useconfig
+		$sql = 'SELECT usename, usesuper, usecreatedb, valuntil AS useexpires, useconfig
 			FROM pg_user
-			ORDER BY usename";
+			ORDER BY usename';
 
 		return $this->selectSet($sql);
 	}
@@ -6909,7 +6909,7 @@ class Postgres extends ADODB_base {
 		$sql .= ($createdb) ? ' CREATEDB' : ' NOCREATEDB';
 		$sql .= ($createuser) ? ' CREATEUSER' : ' NOCREATEUSER';
 		if (is_array($groups) && sizeof($groups) > 0) {
-			$sql .= " IN GROUP \"" . join('", "', $groups) . "\"";
+			$sql .= ' IN GROUP "' . join('", "', $groups) . '"';
 		}
 
 		if ($expiry != '') {
@@ -7149,7 +7149,7 @@ class Postgres extends ADODB_base {
 	 * @return All groups
 	 */
 	function getGroups() {
-		$sql = "SELECT groname FROM pg_group ORDER BY groname";
+		$sql = 'SELECT groname FROM pg_group ORDER BY groname';
 
 		return $this->selectSet($sql);
 	}
@@ -7543,7 +7543,7 @@ class Postgres extends ADODB_base {
 			$sql .= ' WHERE spcname NOT LIKE $$pg\_%$$';
 		}
 
-		$sql .= " ORDER BY spcname";
+		$sql .= ' ORDER BY spcname';
 
 		return $this->selectSet($sql);
 	}
@@ -7679,7 +7679,7 @@ class Postgres extends ADODB_base {
 
 			$sql = "ANALYZE \"{$f_schema}\".\"{$table}\"";
 		} else {
-			$sql = "ANALYZE";
+			$sql = 'ANALYZE';
 		}
 
 		return $this->execute($sql);
@@ -7694,17 +7694,17 @@ class Postgres extends ADODB_base {
 	 */
 	function vacuumDB($table = '', $analyze = false, $full = false, $freeze = false) {
 
-		$sql = "VACUUM";
+		$sql = 'VACUUM';
 		if ($full) {
-			$sql .= " FULL";
+			$sql .= ' FULL';
 		}
 
 		if ($freeze) {
-			$sql .= " FREEZE";
+			$sql .= ' FREEZE';
 		}
 
 		if ($analyze) {
-			$sql .= " ANALYZE";
+			$sql .= ' ANALYZE';
 		}
 
 		if ($table != '') {
@@ -8262,7 +8262,7 @@ class Postgres extends ADODB_base {
 			if ($this->hasObjectID($table)) {
 				$sql = "SELECT \"{$this->id}\", * FROM ";
 			} else {
-				$sql = "SELECT * FROM ";
+				$sql = 'SELECT * FROM ';
 			}
 
 		} else {
@@ -8270,10 +8270,10 @@ class Postgres extends ADODB_base {
 			if (!in_array($this->id, $show) && $this->hasObjectID($table)) {
 				$sql = "SELECT \"{$this->id}\", \"";
 			} else {
-				$sql = "SELECT \"";
+				$sql = 'SELECT "';
 			}
 
-			$sql .= join('","', $show) . "\" FROM ";
+			$sql .= join('","', $show) . '" FROM ';
 		}
 
 		$this->fieldClean($table);
@@ -8292,10 +8292,10 @@ class Postgres extends ADODB_base {
 				if ($v != '' || $this->selectOps[$ops[$k]] == 'p') {
 					$this->fieldClean($k);
 					if ($first) {
-						$sql .= " WHERE ";
+						$sql .= ' WHERE ';
 						$first = false;
 					} else {
-						$sql .= " AND ";
+						$sql .= ' AND ';
 					}
 					// Different query format depending on operator type
 					switch ($this->selectOps[$ops[$k]]) {
@@ -8324,7 +8324,7 @@ class Postgres extends ADODB_base {
 
 		// ORDER BY
 		if (is_array($orderby) && sizeof($orderby) > 0) {
-			$sql .= " ORDER BY ";
+			$sql .= ' ORDER BY ';
 			$first = true;
 			foreach ($orderby as $k => $v) {
 				if ($first) {
@@ -8340,7 +8340,7 @@ class Postgres extends ADODB_base {
 					$sql .= '"' . $k . '"';
 				}
 				if (strtoupper($v) == 'DESC') {
-					$sql .= " DESC";
+					$sql .= ' DESC';
 				}
 
 			}
@@ -8410,7 +8410,7 @@ class Postgres extends ADODB_base {
 		// If backend supports read only queries, then specify read only mode
 		// to avoid side effects from repeating queries that do writes.
 		if ($this->hasReadOnlyQueries()) {
-			$status = $this->execute("SET TRANSACTION READ ONLY");
+			$status = $this->execute('SET TRANSACTION READ ONLY');
 			if ($status != 0) {
 				$this->rollbackTransaction();
 				return -5;
@@ -8491,7 +8491,7 @@ class Postgres extends ADODB_base {
 
 		$sql = "SELECT * FROM \"{$f_schema}\".\"{$table}\"";
 		if (is_array($key) && sizeof($key) > 0) {
-			$sql .= " WHERE true";
+			$sql .= ' WHERE true';
 			foreach ($key as $k => $v) {
 				$this->fieldClean($k);
 				$this->clean($v);

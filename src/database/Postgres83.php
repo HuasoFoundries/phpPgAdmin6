@@ -70,7 +70,7 @@ class Postgres83 extends Postgres84 {
 			$this->clean($currentdatabase);
 			$orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
 		} else {
-			$orderby = "ORDER BY pdb.datname";
+			$orderby = 'ORDER BY pdb.datname';
 		}
 
 		if (!$conf['show_system']) {
@@ -304,7 +304,7 @@ class Postgres83 extends Postgres84 {
 
 		// toggle cycle yes/no
 		if (!is_null($cycledvalue)) {
-			$sql .= (!$cycledvalue ? ' NO ' : '') . " CYCLE";
+			$sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
 		}
 
 		if ($sql != '') {

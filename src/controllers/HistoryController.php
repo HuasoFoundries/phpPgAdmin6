@@ -66,7 +66,7 @@ class HistoryController extends BaseController {
 
 		echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
 		$misc->printConnection($onchange);
-		echo "</form><br />";
+		echo '</form><br />';
 
 		if (!isset($_REQUEST['database'])) {
 			echo "<p>{$lang['strnodatabaseselected']}</p>\n";
@@ -192,7 +192,7 @@ class HistoryController extends BaseController {
 			echo "<h3>{$lang['strdelhistory']}</h3>\n";
 			echo "<p>{$lang['strconfdelhistory']}</p>\n";
 
-			echo "<pre>", htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), "</pre>";
+			echo '<pre>', htmlentities($_SESSION['history'][ $_REQUEST['server']][ $_REQUEST['database']][ $qid]['query'], ENT_QUOTES, 'UTF-8'), '</pre>';
 			echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
 			echo "<input type=\"hidden\" name=\"queryid\" value=\"$qid\" />\n";

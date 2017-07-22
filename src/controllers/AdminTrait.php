@@ -29,8 +29,8 @@ trait AdminTrait {
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 				foreach ($_REQUEST['ma'] as $v) {
 					$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-					echo "<p>", sprintf($lang['strconfclustertable'], $misc->printVal($a['table'])), "</p>\n";
-					echo "<input type=\"hidden\" name=\"table[]\" value=\"", htmlspecialchars($a['table']), "\" />\n";
+					echo '<p>', sprintf($lang['strconfclustertable'], $misc->printVal($a['table'])), "</p>\n";
+					echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), "\" />\n";
 				}
 			} // END if multi cluster
 			else {
@@ -40,10 +40,10 @@ trait AdminTrait {
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 
 				if ($type == 'table') {
-					echo "<p>", sprintf($lang['strconfclustertable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
-					echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['object']), "\" />\n";
+					echo '<p>', sprintf($lang['strconfclustertable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
+					echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
 				} else {
-					echo "<p>", sprintf($lang['strconfclusterdatabase'], $misc->printVal($_REQUEST['object'])), "</p>\n";
+					echo '<p>', sprintf($lang['strconfclusterdatabase'], $misc->printVal($_REQUEST['object'])), "</p>\n";
 					echo "<input type=\"hidden\" name=\"table\" value=\"\" />\n";
 				}
 			}
@@ -118,8 +118,8 @@ trait AdminTrait {
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 				foreach ($_REQUEST['ma'] as $v) {
 					$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-					echo "<p>", sprintf($lang['strconfreindextable'], $misc->printVal($a['table'])), "</p>\n";
-					echo "<input type=\"hidden\" name=\"table[]\" value=\"", htmlspecialchars($a['table']), "\" />\n";
+					echo '<p>', sprintf($lang['strconfreindextable'], $misc->printVal($a['table'])), "</p>\n";
+					echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), "\" />\n";
 				}
 			} // END if multi reindex
 			else {
@@ -129,10 +129,10 @@ trait AdminTrait {
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 
 				if ($type == 'table') {
-					echo "<p>", sprintf($lang['strconfreindextable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
-					echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['object']), "\" />\n";
+					echo '<p>', sprintf($lang['strconfreindextable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
+					echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
 				} else {
-					echo "<p>", sprintf($lang['strconfreindexdatabase'], $misc->printVal($_REQUEST['object'])), "</p>\n";
+					echo '<p>', sprintf($lang['strconfreindexdatabase'], $misc->printVal($_REQUEST['object'])), "</p>\n";
 					echo "<input type=\"hidden\" name=\"table\" value=\"\" />\n";
 				}
 			}
@@ -203,8 +203,8 @@ trait AdminTrait {
 				foreach ($_REQUEST['ma'] as $v) {
 					$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 					\Kint::dump($a);
-					echo "<p>", sprintf($lang['strconfanalyzetable'], $misc->printVal($a['table'])), "</p>\n";
-					echo "<input type=\"hidden\" name=\"table[]\" value=\"", htmlspecialchars($a['table']), "\" />\n";
+					echo '<p>', sprintf($lang['strconfanalyzetable'], $misc->printVal($a['table'])), "</p>\n";
+					echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), "\" />\n";
 				}
 			} // END if multi analyze
 			else {
@@ -214,10 +214,10 @@ trait AdminTrait {
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 
 				if ($type == 'table') {
-					echo "<p>", sprintf($lang['strconfanalyzetable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
-					echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['object']), "\" />\n";
+					echo '<p>', sprintf($lang['strconfanalyzetable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
+					echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
 				} else {
-					echo "<p>", sprintf($lang['strconfanalyzedatabase'], $misc->printVal($_REQUEST['object'])), "</p>\n";
+					echo '<p>', sprintf($lang['strconfanalyzedatabase'], $misc->printVal($_REQUEST['object'])), "</p>\n";
 					echo "<input type=\"hidden\" name=\"table\" value=\"\" />\n";
 				}
 			}
@@ -282,8 +282,8 @@ trait AdminTrait {
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 				foreach ($_REQUEST['ma'] as $v) {
 					$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-					echo "<p>", sprintf($lang['strconfvacuumtable'], $misc->printVal($a['table'])), "</p>\n";
-					echo "<input type=\"hidden\" name=\"table[]\" value=\"", htmlspecialchars($a['table']), "\" />\n";
+					echo '<p>', sprintf($lang['strconfvacuumtable'], $misc->printVal($a['table'])), "</p>\n";
+					echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), "\" />\n";
 				}
 			} else {
 				// END if multi vacuum
@@ -293,10 +293,10 @@ trait AdminTrait {
 				echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 
 				if ($type == 'table') {
-					echo "<p>", sprintf($lang['strconfvacuumtable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
-					echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['object']), "\" />\n";
+					echo '<p>', sprintf($lang['strconfvacuumtable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
+					echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
 				} else {
-					echo "<p>", sprintf($lang['strconfvacuumdatabase'], $misc->printVal($_REQUEST['object'])), "</p>\n";
+					echo '<p>', sprintf($lang['strconfvacuumdatabase'], $misc->printVal($_REQUEST['object'])), "</p>\n";
 					echo "<input type=\"hidden\" name=\"table\" value=\"\" />\n";
 				}
 			}
@@ -406,7 +406,7 @@ trait AdminTrait {
 			echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 			echo $misc->form;
 			echo "<input type=\"hidden\" name=\"action\" value=\"editautovac\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
 
 			echo "<br />\n<br />\n<table>\n";
 			echo "\t<tr><td>&nbsp;</td>\n";
@@ -435,8 +435,8 @@ trait AdminTrait {
 			echo "<td class=\"datat1\"><input type=\"text\" name=\"autovacuum_vacuum_cost_limit\" value=\"{$old_val['autovacuum_vacuum_cost_limit']}\" /></td>\n";
 			echo "<th class=\"data left\">{$defaults['autovacuum_vacuum_cost_limit']}</th></tr>\n";
 			echo "</table>\n";
-			echo "<br />";
-			echo "<br />";
+			echo '<br />';
+			echo '<br />';
 			echo "<input type=\"submit\" name=\"save\" value=\"{$lang['strsave']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 
@@ -483,14 +483,14 @@ trait AdminTrait {
 			echo "<form style=\"float: left\" action=\"{$script}\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"delautovac\" />\n";
 			echo $misc->form;
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"rel\" value=\"", htmlspecialchars(serialize([$_REQUEST['schema'], $_REQUEST['table']])), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="rel" value="', htmlspecialchars(serialize([$_REQUEST['schema'], $_REQUEST['table']])), "\" />\n";
 			echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
 			echo "</form>\n";
 
 			echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"admin\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
 			echo "</form>\n";
@@ -535,21 +535,21 @@ trait AdminTrait {
 
 		echo "<table style=\"width: 50%\">\n";
 		echo "<tr>\n";
-		echo "<th class=\"data\">";
+		echo '<th class="data">';
 		$this->printHelp($lang['strvacuum'], 'pg.admin.vacuum') . "</th>\n";
-		echo "</th>";
-		echo "<th class=\"data\">";
+		echo '</th>';
+		echo '<th class="data">';
 		$this->printHelp($lang['stranalyze'], 'pg.admin.analyze');
-		echo "</th>";
+		echo '</th>';
 		if ($data->hasRecluster()) {
-			echo "<th class=\"data\">";
+			echo '<th class="data">';
 			$this->printHelp($lang['strclusterindex'], 'pg.index.cluster');
-			echo "</th>";
+			echo '</th>';
 		}
-		echo "<th class=\"data\">";
+		echo '<th class="data">';
 		$this->printHelp($lang['strreindex'], 'pg.index.reindex');
-		echo "</th>";
-		echo "</tr>";
+		echo '</th>';
+		echo '</tr>';
 
 		// Vacuum
 		echo "<tr class=\"row1\">\n";
@@ -559,7 +559,7 @@ trait AdminTrait {
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_vacuum\" />\n";
 		echo $misc->form;
 		if ($type == 'table') {
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['object']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"subject\" value=\"table\" />\n";
 		}
 		echo "<input type=\"submit\" value=\"{$lang['strvacuum']}\" /></p>\n";
@@ -572,7 +572,7 @@ trait AdminTrait {
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_analyze\" />\n";
 		echo $misc->form;
 		if ($type == 'table') {
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['object']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"subject\" value=\"table\" />\n";
 		}
 		echo "<input type=\"submit\" value=\"{$lang['stranalyze']}\" /></p>\n";
@@ -586,7 +586,7 @@ trait AdminTrait {
 			echo "<form action=\"/src/views/{$script}\" method=\"post\">\n";
 			echo $misc->form;
 			if ($type == 'table') {
-				echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['object']), "\" />\n";
+				echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"subject\" value=\"table\" />\n";
 				if (!$data->alreadyClustered($_REQUEST['object'])) {
 					$disabled = 'disabled="disabled" ';
@@ -605,7 +605,7 @@ trait AdminTrait {
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_reindex\" />\n";
 		echo $misc->form;
 		if ($type == 'table') {
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['object']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"subject\" value=\"table\" />\n";
 		}
 		echo "<input type=\"submit\" value=\"{$lang['strreindex']}\" /></p>\n";
@@ -631,7 +631,7 @@ trait AdminTrait {
 
 			function enlight($f, $p) {
 				if (isset($f[$p[0]]) and ($f[$p[0]] != $p[1])) {
-					return "<span style=\"color:#F33;font-weight:bold\">" . htmlspecialchars($f[$p[0]]) . "</span>";
+					return '<span style="color:#F33;font-weight:bold">' . htmlspecialchars($f[ $p[0]]) . '</span>';
 				}
 
 				return htmlspecialchars($p[1]);
@@ -732,7 +732,7 @@ trait AdminTrait {
 			echo $this->printTable($autovac, $columns, $actions, 'admin-admin', $lang['strnovacuumconf']);
 
 			if (($type == 'table') and ($autovac->recordCount() == 0)) {
-				echo "<br />";
+				echo '<br />';
 				echo "<a href=\"tables.php?action=confeditautovac&amp;{$misc->href}&amp;table=", htmlspecialchars($_REQUEST['table'])
 				, "\">{$lang['straddvacuumtable']}</a>";
 			}

@@ -149,13 +149,13 @@ class TriggerController extends BaseController {
 			echo "<form action=\"/src/views/triggers.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
-			echo "<td class=\"data1\">";
+			echo '<td class="data1">';
 			echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
 			htmlspecialchars($_POST['name']), "\" />\n";
 			echo "</table>\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"trigger\" value=\"", htmlspecialchars($_REQUEST['trigger']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['strok']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -179,13 +179,13 @@ class TriggerController extends BaseController {
 			$this->printTrail('trigger');
 			$this->printTitle($lang['strdrop'], 'pg.trigger.drop');
 
-			echo "<p>", sprintf($lang['strconfdroptrigger'], $misc->printVal($_REQUEST['trigger']),
+			echo '<p>', sprintf($lang['strconfdroptrigger'], $misc->printVal($_REQUEST['trigger']),
 				$misc->printVal($_REQUEST['table'])), "</p>\n";
 
 			echo "<form action=\"/src/views/triggers.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"trigger\" value=\"", htmlspecialchars($_REQUEST['trigger']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
 			echo $misc->form;
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
 			echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
@@ -216,13 +216,13 @@ class TriggerController extends BaseController {
 			$this->printTrail('trigger');
 			$this->printTitle($lang['strenable'], 'pg.table.alter');
 
-			echo "<p>", sprintf($lang['strconfenabletrigger'], $misc->printVal($_REQUEST['trigger']),
+			echo '<p>', sprintf($lang['strconfenabletrigger'], $misc->printVal($_REQUEST['trigger']),
 				$misc->printVal($_REQUEST['table'])), "</p>\n";
 
 			echo "<form action=\"/src/views/triggers.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"enable\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"trigger\" value=\"", htmlspecialchars($_REQUEST['trigger']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
 			echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
@@ -252,13 +252,13 @@ class TriggerController extends BaseController {
 			$this->printTrail('trigger');
 			$this->printTitle($lang['strdisable'], 'pg.table.alter');
 
-			echo "<p>", sprintf($lang['strconfdisabletrigger'], $misc->printVal($_REQUEST['trigger']),
+			echo '<p>', sprintf($lang['strconfdisabletrigger'], $misc->printVal($_REQUEST['trigger']),
 				$misc->printVal($_REQUEST['table'])), "</p>\n";
 
 			echo "<form action=\"/src/views/triggers.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"disable\" />\n";
-			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-			echo "<input type=\"hidden\" name=\"trigger\" value=\"", htmlspecialchars($_REQUEST['trigger']), "\" />\n";
+			echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+			echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
 			echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
@@ -322,25 +322,25 @@ class TriggerController extends BaseController {
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "		<td class=\"data1\"> <input type=\"text\" name=\"formTriggerName\" size=\"32\" /></td>\n";
-		echo "		<td class=\"data1\"> ", $sel1->fetch(), "</td>\n";
+		echo '		<td class="data1"> ', $sel1->fetch(), "</td>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "    <th class=\"data\">{$lang['strevent']}</th>\n";
 		echo "    <th class=\"data\">{$lang['strforeach']}</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
-		echo "     <td class=\"data1\"> ", $sel2->fetch(), "</td>\n";
-		echo "     <td class=\"data1\"> ", $sel3->fetch(), "</td>\n";
+		echo '     <td class="data1"> ', $sel2->fetch(), "</td>\n";
+		echo '     <td class="data1"> ', $sel3->fetch(), "</td>\n";
 		echo "</tr>\n";
 		echo "<tr><th class=\"data\"> {$lang['strfunction']}</th>\n";
 		echo "<th class=\"data\"> {$lang['strarguments']}</th></tr>\n";
-		echo "<tr><td class=\"data1\">", $sel0->fetch(), "</td>\n";
+		echo '<tr><td class="data1">', $sel0->fetch(), "</td>\n";
 		echo "<td class=\"data1\">(<input type=\"text\" name=\"formTriggerArgs\" size=\"32\" />)</td>\n";
 		echo "</tr></table>\n";
 		echo "<p><input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-		echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+		echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
 		echo $misc->form;
 		echo "</form>\n";
 	}
@@ -386,7 +386,7 @@ class TriggerController extends BaseController {
 
 		$tgPre = function (&$rowdata, $actions) use ($data) {
 			// toggle enable/disable trigger per trigger
-			if (!$data->phpBool($rowdata->fields["tgenabled"])) {
+			if (!$data->phpBool($rowdata->fields['tgenabled'])) {
 				unset($actions['disable']);
 			} else {
 				unset($actions['enable']);
