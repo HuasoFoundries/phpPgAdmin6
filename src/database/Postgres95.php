@@ -1,19 +1,24 @@
 <?php
-namespace PHPPgAdmin\Database;
-/**
- * PostgreSQL 9.5 support
- *
- */
 
-class Postgres95 extends Postgres {
+    namespace PHPPgAdmin\Database;
 
-	public $major_version = 9.5;
+    /**
+     * PostgreSQL 9.5 support
+     *
+     */
 
-	// Help functions
+    class Postgres95 extends Postgres
+    {
 
-	public function getHelpPages() {
-		include_once BASE_PATH . '/src/help/PostgresDoc95.php';
-		return $this->help_page;
-	}
+        public $major_version = 9.5;
 
-}
+        // Help functions
+
+        public function getHelpPages()
+        {
+            include_once BASE_PATH . '/src/help/PostgresDoc95.php';
+
+            return $this->help_page;
+        }
+
+    }

@@ -1,10 +1,10 @@
 <?php
 
-/**
- * Help links for PostgreSQL 9.5 documentation
- *
- */
+    /**
+     * Help links for PostgreSQL 9.5 documentation
+     *
+     */
 
-include BASE_PATH . '/help/PostgresDoc94.php';
+    include BASE_PATH . '/help/PostgresDoc94.php';
 
-$this->help_page['pg.matview'] = 'sql-creatematerializedview.html';
+    $this->help_page['pg.matview'] = 'sql-creatematerializedview.html';

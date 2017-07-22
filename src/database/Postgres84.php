@@ -1,50 +1,56 @@
 <?php
-namespace PHPPgAdmin\Database;
-/**
- * PostgreSQL 8.4 support
- *
- * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
- */
 
-class Postgres84 extends Postgres90 {
+    namespace PHPPgAdmin\Database;
 
-	public $major_version = 8.4;
+    /**
+     * PostgreSQL 8.4 support
+     *
+     * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+     */
 
-	// List of all legal privileges that can be applied to different types
-	// of objects.
-	public $privlist = [
-		'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-		'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-		'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
-		'database' => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
-		'function' => ['EXECUTE', 'ALL PRIVILEGES'],
-		'language' => ['USAGE', 'ALL PRIVILEGES'],
-		'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
-		'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
-		'column' => ['SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'],
-	];
+    class Postgres84 extends Postgres90
+    {
 
-	// Help functions
+        public $major_version = 8.4;
 
-	public function getHelpPages() {
-		include_once BASE_PATH . '/src/help/PostgresDoc84.php';
-		return $this->help_page;
-	}
+        // List of all legal privileges that can be applied to different types
+        // of objects.
+        public $privlist = [
+            'table'      => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+            'view'       => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+            'sequence'   => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+            'database'   => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
+            'function'   => ['EXECUTE', 'ALL PRIVILEGES'],
+            'language'   => ['USAGE', 'ALL PRIVILEGES'],
+            'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+            'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
+            'column'     => ['SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'],
+        ];
 
-	// Database functions
+        // Help functions
 
-  /**
-   * Grabs a list of triggers on a table
-   *
-   * @param \PHPPgAdmin\Database\The|string $table The name of a table whose triggers to retrieve
-   * @return \PHPPgAdmin\Database\A recordset
-   */
-	public function getTriggers($table = '') {
-		$c_schema = $this->_schema;
-		$this->clean($c_schema);
-		$this->clean($table);
+        public function getHelpPages()
+        {
+            include_once BASE_PATH . '/src/help/PostgresDoc84.php';
 
-		$sql = "SELECT
+            return $this->help_page;
+        }
+
+        // Database functions
+
+        /**
+         * Grabs a list of triggers on a table
+         *
+         * @param \PHPPgAdmin\Database\The|string $table The name of a table whose triggers to retrieve
+         * @return \PHPPgAdmin\Database\A recordset
+         */
+        public function getTriggers($table = '')
+        {
+            $c_schema = $this->_schema;
+            $this->clean($c_schema);
+            $this->clean($table);
+
+            $sql = "SELECT
 				t.tgname, pg_catalog.pg_get_triggerdef(t.oid) AS tgdef,
 				CASE WHEN t.tgenabled = 'D' THEN FALSE ELSE TRUE END AS tgenabled, p.oid AS prooid,
 				p.proname || ' (' || pg_catalog.oidvectortypes(p.proargtypes) || ')' AS proproto,
@@ -59,52 +65,54 @@ class Postgres84 extends Postgres90 {
 				AND p.oid=t.tgfoid
 				AND p.pronamespace = ns.oid";
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	/**
-	 * Searches all system catalogs to find objects that match a certain name.
-	 * @param $term The search term
-	 * @param $filter The object type to restrict to ('' means no restriction)
-	 * @return A recordset
-	 */
-	public function findObject($term, $filter) {
-		$conf = $this->conf;
+        /**
+         * Searches all system catalogs to find objects that match a certain name.
+         *
+         * @param $term   The search term
+         * @param $filter The object type to restrict to ('' means no restriction)
+         * @return A recordset
+         */
+        public function findObject($term, $filter)
+        {
+            $conf = $this->conf;
 
-		/*about escaping:
-			 * SET standard_conforming_string is not available before 8.2
-			 * So we must use PostgreSQL specific notation :/
-			 * E'' notation is not available before 8.1
-			 * $$ is available since 8.0
-			 * Nothing specific from 7.4
-		*/
+            /*about escaping:
+                 * SET standard_conforming_string is not available before 8.2
+                 * So we must use PostgreSQL specific notation :/
+                 * E'' notation is not available before 8.1
+                 * $$ is available since 8.0
+                 * Nothing specific from 7.4
+            */
 
-		// Escape search term for ILIKE match
-		$this->clean($term);
-		$this->clean($filter);
-		$term = str_replace('_', '\_', $term);
-		$term = str_replace('%', '\%', $term);
+            // Escape search term for ILIKE match
+            $this->clean($term);
+            $this->clean($filter);
+            $term = str_replace('_', '\_', $term);
+            $term = str_replace('%', '\%', $term);
 
-		// Exclude system relations if necessary
-		if (!$conf['show_system']) {
-			// XXX: The mention of information_schema here is in the wrong place, but
-			// it's the quickest fix to exclude the info schema from 7.4
-			$where     = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
-			$lan_where = 'AND pl.lanispl';
-		} else {
-			$where     = '';
-			$lan_where = '';
-		}
+            // Exclude system relations if necessary
+            if (!$conf['show_system']) {
+                // XXX: The mention of information_schema here is in the wrong place, but
+                // it's the quickest fix to exclude the info schema from 7.4
+                $where     = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
+                $lan_where = 'AND pl.lanispl';
+            } else {
+                $where     = '';
+                $lan_where = '';
+            }
 
-		// Apply outer filter
-		$sql = '';
-		if ($filter != '') {
-			$sql = 'SELECT * FROM (';
-		}
+            // Apply outer filter
+            $sql = '';
+            if ($filter != '') {
+                $sql = 'SELECT * FROM (';
+            }
 
-		$term = "\$_PATERN_\$%{$term}%\$_PATERN_\$";
+            $term = "\$_PATERN_\$%{$term}%\$_PATERN_\$";
 
-		$sql .= "
+            $sql .= "
 			SELECT 'SCHEMA' AS type, oid, NULL AS schemaname, NULL AS relname, nspname AS name
 				FROM pg_catalog.pg_namespace pn WHERE nspname ILIKE {$term} {$where}
 			UNION ALL
@@ -161,9 +169,9 @@ class Postgres84 extends Postgres90 {
 				WHERE c.relkind='v' AND r.rulename != '_RETURN' AND r.rulename ILIKE {$term} {$where}
 		";
 
-		// Add advanced objects if show_advanced is set
-		if ($conf['show_advanced']) {
-			$sql .= "
+            // Add advanced objects if show_advanced is set
+            if ($conf['show_advanced']) {
+                $sql .= "
 				UNION ALL
 				SELECT CASE WHEN pt.typtype='d' THEN 'DOMAIN' ELSE 'TYPE' END, pt.oid, pn.nspname, NULL,
 					pt.typname FROM pg_catalog.pg_type pt, pg_catalog.pg_namespace pn
@@ -188,10 +196,9 @@ class Postgres84 extends Postgres90 {
 					pg_catalog.pg_namespace pn WHERE po.opcnamespace=pn.oid
 					AND po.opcname ILIKE {$term} {$where}
 			";
-		}
-		// Otherwise just add domains
-		else {
-			$sql .= "
+            } // Otherwise just add domains
+            else {
+                $sql .= "
 				UNION ALL
 				SELECT 'DOMAIN', pt.oid, pn.nspname, NULL,
 					pt.typname FROM pg_catalog.pg_type pt, pg_catalog.pg_namespace pn
@@ -199,20 +206,23 @@ class Postgres84 extends Postgres90 {
 					AND (pt.typrelid = 0 OR (SELECT c.relkind = 'c' FROM pg_catalog.pg_class c WHERE c.oid = pt.typrelid))
 					{$where}
 			";
-		}
+            }
 
-		if ($filter != '') {
-			// We use like to make RULE, CONSTRAINT and COLUMN searches work
-			$sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
-		}
+            if ($filter != '') {
+                // We use like to make RULE, CONSTRAINT and COLUMN searches work
+                $sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
+            }
 
-		$sql .= 'ORDER BY type, schemaname, relname, name';
+            $sql .= 'ORDER BY type, schemaname, relname, name';
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	// Capabilities
+        // Capabilities
 
-	public function hasByteaHexDefault() {return false;}
+        public function hasByteaHexDefault()
+        {
+            return false;
+        }
 
-}
+    }

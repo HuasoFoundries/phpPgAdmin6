@@ -1,85 +1,98 @@
 <?php
-namespace PHPPgAdmin\Database;
-/**
- * PostgreSQL 9.1 support
- *
- * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
- */
 
-class Postgres91 extends Postgres92 {
+    namespace PHPPgAdmin\Database;
 
-	public $major_version = 9.1;
+    /**
+     * PostgreSQL 9.1 support
+     *
+     * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+     */
 
-	// Help functions
+    class Postgres91 extends Postgres92
+    {
 
-	public function getHelpPages() {
-		include_once BASE_PATH . '/src/help/PostgresDoc91.php';
-		return $this->help_page;
-	}
+        public $major_version = 9.1;
 
-	// Administration functions
-	/**
-	 * Returns all available process information.
-	 * @param $database (optional) Find only connections to specified database
-	 * @return A recordset
-	 */
-	public function getProcesses($database = null) {
-		if ($database === null) {
-			$sql = 'SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
+        // Help functions
+
+        public function getHelpPages()
+        {
+            include_once BASE_PATH . '/src/help/PostgresDoc91.php';
+
+            return $this->help_page;
+        }
+
+        // Administration functions
+
+        /**
+         * Returns all available process information.
+         *
+         * @param $database (optional) Find only connections to specified database
+         * @return A recordset
+         */
+        public function getProcesses($database = null)
+        {
+            if ($database === null) {
+                $sql = 'SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
 				FROM pg_catalog.pg_stat_activity
 				ORDER BY datname, usename, procpid';
-		} else {
-			$this->clean($database);
-			$sql = "SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
+            } else {
+                $this->clean($database);
+                $sql = "SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
 				FROM pg_catalog.pg_stat_activity
 				WHERE datname='{$database}'
 				ORDER BY usename, procpid";
-		}
+            }
 
-      return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	// Tablespace functions
+        // Tablespace functions
 
-  /**
-   * Retrieves information for all tablespaces
-   *
-   * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
-   * @return \PHPPgAdmin\Database\A recordset
-   */
-	public function getTablespaces($all = false) {
-		$conf = $this->conf;
+        /**
+         * Retrieves information for all tablespaces
+         *
+         * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+         * @return \PHPPgAdmin\Database\A recordset
+         */
+        public function getTablespaces($all = false)
+        {
+            $conf = $this->conf;
 
-		$sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation,
+            $sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation,
                     (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid='pg_tablespace'::regclass) AS spccomment
 					FROM pg_catalog.pg_tablespace";
 
-		if (!$conf['show_system'] && !$all) {
-			$sql .= ' WHERE spcname NOT LIKE $$pg\_%$$';
-		}
+            if (!$conf['show_system'] && !$all) {
+                $sql .= ' WHERE spcname NOT LIKE $$pg\_%$$';
+            }
 
-		$sql .= ' ORDER BY spcname';
+            $sql .= ' ORDER BY spcname';
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-  /**
-   * Retrieves a tablespace's information
-   *
-   * @param $spcname
-   * @return \PHPPgAdmin\Database\A recordset
-   */
-	public function getTablespace($spcname) {
-		$this->clean($spcname);
+        /**
+         * Retrieves a tablespace's information
+         *
+         * @param $spcname
+         * @return \PHPPgAdmin\Database\A recordset
+         */
+        public function getTablespace($spcname)
+        {
+            $this->clean($spcname);
 
-		$sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation,
+            $sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation,
                     (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid='pg_tablespace'::regclass) AS spccomment
 					FROM pg_catalog.pg_tablespace WHERE spcname='{$spcname}'";
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	// Capabilities
-	public function hasUserSignals() {return false;}
+        // Capabilities
+        public function hasUserSignals()
+        {
+            return false;
+        }
 
-}
+    }

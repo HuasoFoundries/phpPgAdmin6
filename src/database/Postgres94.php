@@ -1,19 +1,24 @@
 <?php
-namespace PHPPgAdmin\Database;
-/**
- * PostgreSQL 9.4 support
- *
- */
 
-class Postgres94 extends Postgres {
+    namespace PHPPgAdmin\Database;
 
-	public $major_version = 9.4;
+    /**
+     * PostgreSQL 9.4 support
+     *
+     */
 
-	// Help functions
+    class Postgres94 extends Postgres
+    {
 
-	public function getHelpPages() {
-		include_once BASE_PATH . '/src/help/PostgresDoc94.php';
-		return $this->help_page;
-	}
+        public $major_version = 9.4;
 
-}
+        // Help functions
+
+        public function getHelpPages()
+        {
+            include_once BASE_PATH . '/src/help/PostgresDoc94.php';
+
+            return $this->help_page;
+        }
+
+    }

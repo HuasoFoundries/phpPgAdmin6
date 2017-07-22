@@ -1,254 +1,262 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
-use \PHPPgAdmin\Decorators\Decorator;
+    namespace PHPPgAdmin\Controller;
 
-/**
- * Base controller class
- */
-class HistoryController extends BaseController {
-	public $_name = 'HistoryController';
+    use PHPPgAdmin\Decorators\Decorator;
 
-	public function render() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$action = $this->action;
+    /**
+     * Base controller class
+     */
+    class HistoryController extends BaseController
+    {
+        public $_name = 'HistoryController';
 
-		$data = $misc->getDatabaseAccessor();
+        public function render()
+        {
+            $conf   = $this->conf;
+            $misc   = $this->misc;
+            $lang   = $this->lang;
+            $action = $this->action;
 
-		switch ($action) {
-		case 'confdelhistory':
-			$this->doDelHistory($_REQUEST['queryid'], true);
-			break;
-		case 'delhistory':
-			if (isset($_POST['yes'])) {
-				$this->doDelHistory($_REQUEST['queryid'], false);
-			}
+            $data = $misc->getDatabaseAccessor();
 
-			$this->doDefault();
-			break;
-		case 'confclearhistory':
-			$this->doClearHistory(true);
-			break;
-		case 'clearhistory':
-			if (isset($_POST['yes'])) {
-				$this->doClearHistory(false);
-			}
+            switch ($action) {
+                case 'confdelhistory':
+                    $this->doDelHistory($_REQUEST['queryid'], true);
+                    break;
+                case 'delhistory':
+                    if (isset($_POST['yes'])) {
+                        $this->doDelHistory($_REQUEST['queryid'], false);
+                    }
 
-			$this->doDefault();
-			break;
-		case 'download':
-			$this->doDownloadHistory();
-			break;
-		default:
-			$this->doDefault();
-		}
+                    $this->doDefault();
+                    break;
+                case 'confclearhistory':
+                    $this->doClearHistory(true);
+                    break;
+                case 'clearhistory':
+                    if (isset($_POST['yes'])) {
+                        $this->doClearHistory(false);
+                    }
 
-		// Set the name of the window
-		$this->setWindowName('history');
-		return $misc->printFooter();
+                    $this->doDefault();
+                    break;
+                case 'download':
+                    $this->doDownloadHistory();
+                    break;
+                default:
+                    $this->doDefault();
+            }
 
-	}
+            // Set the name of the window
+            $this->setWindowName('history');
 
-	public function doDefault() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+            return $misc->printFooter();
+        }
 
-		$onchange = "onchange=\"location.href='/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
+        public function doDelHistory($qid, $confirm)
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-		$this->printHeader($lang['strhistory']);
+            if ($confirm) {
+                $this->printHeader($lang['strhistory']);
 
-		// Bring to the front always
-		echo "<body onload=\"window.focus();\">\n";
+                // Bring to the front always
+                echo "<body onload=\"window.focus();\">\n";
 
-		echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
-		$misc->printConnection($onchange);
-		echo '</form><br />';
+                echo "<h3>{$lang['strdelhistory']}</h3>\n";
+                echo "<p>{$lang['strconfdelhistory']}</p>\n";
 
-		if (!isset($_REQUEST['database'])) {
-			echo "<p>{$lang['strnodatabaseselected']}</p>\n";
-			return;
-		}
+                echo '<pre>', htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES,
+                    'UTF-8'), '</pre>';
+                echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
+                echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
+                echo "<input type=\"hidden\" name=\"queryid\" value=\"$qid\" />\n";
+                echo $misc->form;
+                echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
+                echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
+                echo "</form>\n";
+            } else {
+                unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]);
+            }
+        }
 
-		if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
+        public function doDefault()
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-			$history = new \PHPPgAdmin\ArrayRecordSet($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
+            $onchange =
+                "onchange=\"location.href='/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
-			//Kint::dump($history);
-			$columns = [
-				'query' => [
-					'title' => $lang['strsql'],
-					'field' => Decorator::field('query'),
-				],
-				'paginate' => [
-					'title' => $lang['strpaginate'],
-					'field' => Decorator::field('paginate'),
-					'type' => 'yesno',
-				],
-				'actions' => [
-					'title' => $lang['stractions'],
-				],
-			];
+            $this->printHeader($lang['strhistory']);
 
-			$actions = [
-				'run' => [
-					'content' => $lang['strexecute'],
-					'attr' => [
-						'href' => [
-							'url' => 'sql.php',
-							'urlvars' => [
-								'subject' => 'history',
-								'nohistory' => 't',
-								'queryid' => Decorator::field('queryid'),
-								'paginate' => Decorator::field('paginate'),
-							],
-						],
-						'target' => 'detail',
-					],
-				],
-				'remove' => [
-					'content' => $lang['strdelete'],
-					'attr' => [
-						'href' => [
-							'url' => 'history.php',
-							'urlvars' => [
-								'action' => 'confdelhistory',
-								'queryid' => Decorator::field('queryid'),
-							],
-						],
-					],
-				],
-			];
+            // Bring to the front always
+            echo "<body onload=\"window.focus();\">\n";
 
-			echo $this->printTable($history, $columns, $actions, 'history-history', $lang['strnohistory']);
-		} else {
-			echo "<p>{$lang['strnohistory']}</p>\n";
-		}
+            echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
+            $misc->printConnection($onchange);
+            echo '</form><br />';
 
-		$navlinks = [
-			'refresh' => [
-				'attr' => [
-					'href' => [
-						'url' => 'history.php',
-						'urlvars' => [
-							'action' => 'history',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-						],
-					],
-				],
-				'content' => $lang['strrefresh'],
-			],
-		];
+            if (!isset($_REQUEST['database'])) {
+                echo "<p>{$lang['strnodatabaseselected']}</p>\n";
 
-		if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])
-			&& count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
-			$navlinks['download'] = [
-				'attr' => [
-					'href' => [
-						'url' => 'history.php',
-						'urlvars' => [
-							'action' => 'download',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-						],
-					],
-				],
-				'content' => $lang['strdownload'],
-			];
-			$navlinks['clear'] = [
-				'attr' => [
-					'href' => [
-						'url' => 'history.php',
-						'urlvars' => [
-							'action' => 'confclearhistory',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-						],
-					],
-				],
-				'content' => $lang['strclearhistory'],
-			];
-		}
+                return;
+            }
 
-		$this->printNavLinks($navlinks, 'history-history', get_defined_vars());
-	}
+            if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
 
-	public function doDelHistory($qid, $confirm) {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+                $history = new \PHPPgAdmin\ArrayRecordSet($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
 
-		if ($confirm) {
-			$this->printHeader($lang['strhistory']);
+                //Kint::dump($history);
+                $columns = [
+                    'query'    => [
+                        'title' => $lang['strsql'],
+                        'field' => Decorator::field('query'),
+                    ],
+                    'paginate' => [
+                        'title' => $lang['strpaginate'],
+                        'field' => Decorator::field('paginate'),
+                        'type'  => 'yesno',
+                    ],
+                    'actions'  => [
+                        'title' => $lang['stractions'],
+                    ],
+                ];
 
-			// Bring to the front always
-			echo "<body onload=\"window.focus();\">\n";
+                $actions = [
+                    'run'    => [
+                        'content' => $lang['strexecute'],
+                        'attr'    => [
+                            'href'   => [
+                                'url'     => 'sql.php',
+                                'urlvars' => [
+                                    'subject'   => 'history',
+                                    'nohistory' => 't',
+                                    'queryid'   => Decorator::field('queryid'),
+                                    'paginate'  => Decorator::field('paginate'),
+                                ],
+                            ],
+                            'target' => 'detail',
+                        ],
+                    ],
+                    'remove' => [
+                        'content' => $lang['strdelete'],
+                        'attr'    => [
+                            'href' => [
+                                'url'     => 'history.php',
+                                'urlvars' => [
+                                    'action'  => 'confdelhistory',
+                                    'queryid' => Decorator::field('queryid'),
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
 
-			echo "<h3>{$lang['strdelhistory']}</h3>\n";
-			echo "<p>{$lang['strconfdelhistory']}</p>\n";
+                echo $this->printTable($history, $columns, $actions, 'history-history', $lang['strnohistory']);
+            } else {
+                echo "<p>{$lang['strnohistory']}</p>\n";
+            }
 
-			echo '<pre>', htmlentities($_SESSION['history'][ $_REQUEST['server']][ $_REQUEST['database']][ $qid]['query'], ENT_QUOTES, 'UTF-8'), '</pre>';
-			echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
-			echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
-			echo "<input type=\"hidden\" name=\"queryid\" value=\"$qid\" />\n";
-			echo $misc->form;
-			echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
-			echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
-			echo "</form>\n";
-		} else {
-			unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]);
-		}
+            $navlinks = [
+                'refresh' => [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'history.php',
+                            'urlvars' => [
+                                'action'   => 'history',
+                                'server'   => $_REQUEST['server'],
+                                'database' => $_REQUEST['database'],
+                            ],
+                        ],
+                    ],
+                    'content' => $lang['strrefresh'],
+                ],
+            ];
 
-	}
+            if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])
+                && count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
+                $navlinks['download'] = [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'history.php',
+                            'urlvars' => [
+                                'action'   => 'download',
+                                'server'   => $_REQUEST['server'],
+                                'database' => $_REQUEST['database'],
+                            ],
+                        ],
+                    ],
+                    'content' => $lang['strdownload'],
+                ];
+                $navlinks['clear']    = [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'history.php',
+                            'urlvars' => [
+                                'action'   => 'confclearhistory',
+                                'server'   => $_REQUEST['server'],
+                                'database' => $_REQUEST['database'],
+                            ],
+                        ],
+                    ],
+                    'content' => $lang['strclearhistory'],
+                ];
+            }
 
-	public function doClearHistory($confirm) {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+            $this->printNavLinks($navlinks, 'history-history', get_defined_vars());
+        }
 
-		if ($confirm) {
-			$this->printHeader($lang['strhistory']);
+        public function doClearHistory($confirm)
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-			// Bring to the front always
-			echo "<body onload=\"window.focus();\">\n";
+            if ($confirm) {
+                $this->printHeader($lang['strhistory']);
 
-			echo "<h3>{$lang['strclearhistory']}</h3>\n";
-			echo "<p>{$lang['strconfclearhistory']}</p>\n";
+                // Bring to the front always
+                echo "<body onload=\"window.focus();\">\n";
 
-			echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
-			echo "<input type=\"hidden\" name=\"action\" value=\"clearhistory\" />\n";
-			echo $misc->form;
-			echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
-			echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
-			echo "</form>\n";
-		} else {
-			unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
-		}
+                echo "<h3>{$lang['strclearhistory']}</h3>\n";
+                echo "<p>{$lang['strconfclearhistory']}</p>\n";
 
-	}
+                echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
+                echo "<input type=\"hidden\" name=\"action\" value=\"clearhistory\" />\n";
+                echo $misc->form;
+                echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
+                echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
+                echo "</form>\n";
+            } else {
+                unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
+            }
+        }
 
-	public function doDownloadHistory() {
-		header('Content-Type: application/download');
-		$datetime = date('YmdHis');
-		header("Content-Disposition: attachment; filename=history{$datetime}.sql");
+        public function doDownloadHistory()
+        {
+            header('Content-Type: application/download');
+            $datetime = date('YmdHis');
+            header("Content-Disposition: attachment; filename=history{$datetime}.sql");
 
-		foreach ($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']] as $queries) {
-			$query = rtrim($queries['query']);
-			echo $query;
-			if (substr($query, -1) != ';') {
-				echo ';';
-			}
+            foreach ($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']] as $queries) {
+                $query = rtrim($queries['query']);
+                echo $query;
+                if (substr($query, -1) != ';') {
+                    echo ';';
+                }
 
-			echo "\n";
-		}
+                echo "\n";
+            }
 
-		exit;
-	}
+            exit;
+        }
 
-}
+    }

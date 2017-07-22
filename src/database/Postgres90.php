@@ -1,22 +1,27 @@
 <?php
-namespace PHPPgAdmin\Database;
-/**
- * PostgreSQL 9.0 support
- *
- * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
- */
 
-class Postgres90 extends Postgres91 {
+    namespace PHPPgAdmin\Database;
 
-	public $major_version = 9.0;
+    /**
+     * PostgreSQL 9.0 support
+     *
+     * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+     */
 
-	// Help functions
+    class Postgres90 extends Postgres91
+    {
 
-	public function getHelpPages() {
-		include_once BASE_PATH . '/src/help/PostgresDoc90.php';
-		return $this->help_page;
-	}
+        public $major_version = 9.0;
 
-	// Capabilities
+        // Help functions
 
-}
+        public function getHelpPages()
+        {
+            include_once BASE_PATH . '/src/help/PostgresDoc90.php';
+
+            return $this->help_page;
+        }
+
+        // Capabilities
+
+    }

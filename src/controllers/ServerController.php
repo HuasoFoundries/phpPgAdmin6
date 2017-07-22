@@ -1,205 +1,211 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
-use \PHPPgAdmin\Decorators\Decorator;
+    namespace PHPPgAdmin\Controller;
 
-/**
- * Base controller class
- */
-class ServerController extends BaseController {
-	public $_name = 'ServerController';
-	public $table_place = 'servers-servers';
-	public $section = 'servers';
-	public $query = '';
-	public $subject = '';
-	public $start_time = null;
-	public $duration = null;
+    use PHPPgAdmin\Decorators\Decorator;
 
-	/* Constructor */
-	public function __construct(\Slim\Container $container) {
-		$this->misc = $container->get('misc');
+    /**
+     * Base controller class
+     */
+    class ServerController extends BaseController
+    {
+        public $_name       = 'ServerController';
+        public $table_place = 'servers-servers';
+        public $section     = 'servers';
+        public $query       = '';
+        public $subject     = '';
+        public $start_time  = null;
+        public $duration    = null;
 
-		$this->misc->setNoDBConnection(true);
+        /* Constructor */
+        public function __construct(\Slim\Container $container)
+        {
+            $this->misc = $container->get('misc');
 
-		parent::__construct($container);
-	}
+            $this->misc->setNoDBConnection(true);
 
-	public function doLogout() {
+            parent::__construct($container);
+        }
 
-		$plugin_manager = $this->plugin_manager;
-		$lang = $this->lang;
-		$misc = $this->misc;
-		$conf = $this->conf;
-		$data = $misc->getDatabaseAccessor();
+        public function render()
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
 
-		$plugin_manager->do_hook('logout', $_REQUEST['logoutServer']);
+            $action = $this->action;
 
-		$server_info = $misc->getServerInfo($_REQUEST['logoutServer']);
-		$misc->setServerInfo(null, null, $_REQUEST['logoutServer']);
+            if ($action == 'tree') {
+                return $this->doTree();
+            }
 
-		unset($_SESSION['sharedUsername'], $_SESSION['sharedPassword']);
+            $msg  = $this->msg;
+            $data = $misc->getDatabaseAccessor();
 
-		$misc->setReloadBrowser(true);
+            $this->printHeader($this->lang['strservers'], null);
+            $this->printBody();
+            $this->printTrail('root');
 
-		echo sprintf($lang['strlogoutmsg'], $server_info['desc']);
+            switch ($action) {
+                case 'logout':
+                    $this->doLogout();
 
-	}
+                    break;
+                default:
+                    $this->doDefault($msg);
+                    break;
+            }
 
-	public function doDefault($msg = '') {
+            return $misc->printFooter();
+        }
 
-		$lang = $this->lang;
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$data = $misc->getDatabaseAccessor();
+        public function doTree()
+        {
 
-		$this->printTabs('root', 'servers');
-		$misc->printMsg($msg);
-		$group = isset($_GET['group']) ? $_GET['group'] : false;
+            $conf = $this->conf;
+            $misc = $this->misc;
 
-		$groups = $misc->getServersGroups(true, $group);
-		$columns = [
-			'group' => [
-				'title' => $lang['strgroup'],
-				'field' => Decorator::field('desc'),
-				'url' => 'servers.php?',
-				'vars' => ['group' => 'id'],
-			],
-		];
-		$actions = [];
-		if (($group !== false) and isset($conf['srv_groups'][$group]) and ($groups->recordCount() > 0)) {
-			$this->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
-		}
-		$this->printTable($groups, $columns, $actions, $this->table_place);
-		$servers = $misc->getServers(true, $group);
+            $nodes    = [];
+            $group_id = isset($_GET['group']) ? $_GET['group'] : false;
 
-		$svPre = function (&$rowdata) use ($actions) {
-			$actions['logout']['disable'] = empty($rowdata->fields['username']);
-			return $actions;
-		};
+            /* root with srv_groups */
+            if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0
+                and $group_id === false) {
+                $nodes = $misc->getServersGroups(true);
+            } else {
+                if (isset($conf['srv_groups']) and $group_id !== false) {
+                    /* group subtree */
+                    if ($group_id !== 'all') {
+                        $nodes = $misc->getServersGroups(false, $group_id);
+                    }
 
-		$columns = [
-			'server' => [
-                'title' => $lang['strserver'],
-                'field' => Decorator::field('desc'),
-                'url' => '/redirect/server?',
-                'vars' => ['server' => 'id'],
-			],
-			'host' => [
-				'title' => $lang['strhost'],
-				'field' => Decorator::field('host'),
-			],
-			'port' => [
-				'title' => $lang['strport'],
-				'field' => Decorator::field('port'),
-			],
-			'username' => [
-				'title' => $lang['strusername'],
-				'field' => Decorator::field('username'),
-			],
-			'actions' => [
-				'title' => $lang['stractions'],
-			],
-		];
+                    $nodes = array_merge($nodes, $misc->getServers(false, $group_id));
+                    $nodes = new \PHPPgAdmin\ArrayRecordSet($nodes);
+                } else {
+                    /* no srv_group */
+                    $nodes = $misc->getServers(true, false);
+                }
+            }
 
-		$actions = [
-			'logout' => [
-				'content' => $lang['strlogout'],
-				'attr' => [
-					'href' => [
-						'url' => 'servers.php',
-						'urlvars' => [
-							'action' => 'logout',
-							'logoutServer' => Decorator::field('id'),
-						],
-					],
-				],
-			],
-		];
+            $reqvars = $misc->getRequestVars('server');
 
-		if (($group !== false) and isset($conf['srv_groups'][$group])) {
-			$this->printTitle(sprintf($lang['strgroupservers'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
-			$actions['logout']['attr']['href']['urlvars']['group'] = $group;
-		}
-		echo $this->printTable($servers, $columns, $actions, $this->table_place, $lang['strnoobjects'], $svPre);
+            $attrs = [
+                'text' => Decorator::field('desc'),
 
-	}
+                // Show different icons for logged in/out
+                'icon' => Decorator::field('icon'),
 
-	public function doTree() {
+                'toolTip' => Decorator::field('id'),
 
-		$conf = $this->conf;
-		$misc = $this->misc;
+                'action' => Decorator::field('action'),
 
-		$nodes = [];
-		$group_id = isset($_GET['group']) ? $_GET['group'] : false;
+                // Only create a branch url if the user has
+                // logged into the server.
+                'branch' => Decorator::field('branch'),
+            ];
 
-		/* root with srv_groups */
-		if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0
-			and $group_id === false) {
-			$nodes = $misc->getServersGroups(true);
-		} else if (isset($conf['srv_groups']) and $group_id !== false) {
-			/* group subtree */
-			if ($group_id !== 'all') {
-				$nodes = $misc->getServersGroups(false, $group_id);
-			}
+            return $this->printTree($nodes, $attrs, $this->section);
+        }
 
-			$nodes = array_merge($nodes, $misc->getServers(false, $group_id));
-			$nodes = new \PHPPgAdmin\ArrayRecordSet($nodes);
-		} else {
-			/* no srv_group */
-			$nodes = $misc->getServers(true, false);
-		}
+        public function doLogout()
+        {
 
-		$reqvars = $misc->getRequestVars('server');
+            $plugin_manager = $this->plugin_manager;
+            $lang           = $this->lang;
+            $misc           = $this->misc;
+            $conf           = $this->conf;
+            $data           = $misc->getDatabaseAccessor();
 
-		$attrs = [
-			'text' => Decorator::field('desc'),
+            $plugin_manager->do_hook('logout', $_REQUEST['logoutServer']);
 
-			// Show different icons for logged in/out
-			'icon' => Decorator::field('icon'),
+            $server_info = $misc->getServerInfo($_REQUEST['logoutServer']);
+            $misc->setServerInfo(null, null, $_REQUEST['logoutServer']);
 
-			'toolTip' => Decorator::field('id'),
+            unset($_SESSION['sharedUsername'], $_SESSION['sharedPassword']);
 
-			'action' => Decorator::field('action'),
+            $misc->setReloadBrowser(true);
 
-			// Only create a branch url if the user has
-			// logged into the server.
-			'branch' => Decorator::field('branch'),
-		];
+            echo sprintf($lang['strlogoutmsg'], $server_info['desc']);
+        }
 
-		return $this->printTree($nodes, $attrs, $this->section);
+        public function doDefault($msg = '')
+        {
 
-	}
+            $lang = $this->lang;
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $data = $misc->getDatabaseAccessor();
 
-	public function render() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
+            $this->printTabs('root', 'servers');
+            $misc->printMsg($msg);
+            $group = isset($_GET['group']) ? $_GET['group'] : false;
 
-		$action = $this->action;
+            $groups  = $misc->getServersGroups(true, $group);
+            $columns = [
+                'group' => [
+                    'title' => $lang['strgroup'],
+                    'field' => Decorator::field('desc'),
+                    'url'   => 'servers.php?',
+                    'vars'  => ['group' => 'id'],
+                ],
+            ];
+            $actions = [];
+            if (($group !== false) and isset($conf['srv_groups'][$group]) and ($groups->recordCount() > 0)) {
+                $this->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
+            }
+            $this->printTable($groups, $columns, $actions, $this->table_place);
+            $servers = $misc->getServers(true, $group);
 
-		if ($action == 'tree') {
-			return $this->doTree();
-		}
+            $svPre = function (&$rowdata) use ($actions) {
+                $actions['logout']['disable'] = empty($rowdata->fields['username']);
 
-		$msg = $this->msg;
-		$data = $misc->getDatabaseAccessor();
+                return $actions;
+            };
 
-		$this->printHeader($this->lang['strservers'], null);
-		$this->printBody();
-		$this->printTrail('root');
+            $columns = [
+                'server'   => [
+                    'title' => $lang['strserver'],
+                    'field' => Decorator::field('desc'),
+                    'url'   => '/redirect/server?',
+                    'vars'  => ['server' => 'id'],
+                ],
+                'host'     => [
+                    'title' => $lang['strhost'],
+                    'field' => Decorator::field('host'),
+                ],
+                'port'     => [
+                    'title' => $lang['strport'],
+                    'field' => Decorator::field('port'),
+                ],
+                'username' => [
+                    'title' => $lang['strusername'],
+                    'field' => Decorator::field('username'),
+                ],
+                'actions'  => [
+                    'title' => $lang['stractions'],
+                ],
+            ];
 
-		switch ($action) {
-		case 'logout':
-			$this->doLogout();
+            $actions = [
+                'logout' => [
+                    'content' => $lang['strlogout'],
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'servers.php',
+                            'urlvars' => [
+                                'action'       => 'logout',
+                                'logoutServer' => Decorator::field('id'),
+                            ],
+                        ],
+                    ],
+                ],
+            ];
 
-			break;
-		default:
-			$this->doDefault($msg);
-			break;
-		}
+            if (($group !== false) and isset($conf['srv_groups'][$group])) {
+                $this->printTitle(sprintf($lang['strgroupservers'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
+                $actions['logout']['attr']['href']['urlvars']['group'] = $group;
+            }
+            echo $this->printTable($servers, $columns, $actions, $this->table_place, $lang['strnoobjects'], $svPre);
+        }
 
-		return $misc->printFooter();
-
-	}
-
-}
+    }

@@ -1,93 +1,99 @@
 <?php
-namespace PHPPgAdmin\Database;
-/**
- * A class that implements the DB interface for Postgres
- * Note: This class uses ADODB and returns RecordSets.
- *
- * $Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
- */
 
-class Postgres74 extends Postgres80 {
+    namespace PHPPgAdmin\Database;
 
-	public $major_version = 7.4;
-	// List of all legal privileges that can be applied to different types
-	// of objects.
-	public $privlist = [
-		'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-		'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-		'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
-		'database' => ['CREATE', 'TEMPORARY', 'ALL PRIVILEGES'],
-		'function' => ['EXECUTE', 'ALL PRIVILEGES'],
-		'language' => ['USAGE', 'ALL PRIVILEGES'],
-		'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
-	];
+    /**
+     * A class that implements the DB interface for Postgres
+     * Note: This class uses ADODB and returns RecordSets.
+     *
+     * $Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
+     */
 
-	// Help functions
+    class Postgres74 extends Postgres80
+    {
 
-	public function getHelpPages() {
-		include_once BASE_PATH . '/src/help/PostgresDoc74.php';
-		return $this->help_page;
-	}
+        public $major_version = 7.4;
+        // List of all legal privileges that can be applied to different types
+        // of objects.
+        public $privlist = [
+            'table'    => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+            'view'     => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+            'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+            'database' => ['CREATE', 'TEMPORARY', 'ALL PRIVILEGES'],
+            'function' => ['EXECUTE', 'ALL PRIVILEGES'],
+            'language' => ['USAGE', 'ALL PRIVILEGES'],
+            'schema'   => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+        ];
 
-	// Database functions
+        // Help functions
 
-  /**
-   * Alters a database
-   * the multiple return vals are for postgres 8+ which support more functionality in alter database
-   *
-   * @param                                 $dbName   The name of the database
-   * @param                                 $newName  new name for the database
-   * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
-   * @param string                          $comment
-   * @return bool|int 0 success
-   */
-	public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '') {
-		//ignore $newowner, not supported pre 8.0
-		//ignore $comment, not supported pre 8.2
-		$this->clean($dbName);
-		$this->clean($newName);
+        public function getHelpPages()
+        {
+            include_once BASE_PATH . '/src/help/PostgresDoc74.php';
 
-		$status = $this->alterDatabaseRename($dbName, $newName);
-		if ($status != 0) {
-			return -3;
-		} else {
-			return 0;
-		}
+            return $this->help_page;
+        }
 
-	}
+        // Database functions
 
-  /**
-   * Return all database available on the server
-   *
-   * @param null $currentdatabase
-   * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
-   */
-	public function getDatabases($currentdatabase = NULL) {
-		$conf        = $this->conf;
-		$server_info = $this->server_info;
+        /**
+         * Alters a database
+         * the multiple return vals are for postgres 8+ which support more functionality in alter database
+         *
+         * @param                                 $dbName   The name of the database
+         * @param                                 $newName  new name for the database
+         * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
+         * @param string                          $comment
+         * @return bool|int 0 success
+         */
+        public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '')
+        {
+            //ignore $newowner, not supported pre 8.0
+            //ignore $comment, not supported pre 8.2
+            $this->clean($dbName);
+            $this->clean($newName);
 
-		if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
-			$username = $server_info['username'];
-			$this->clean($username);
-			$clause = " AND pu.usename='{$username}'";
-		} else {
-			$clause = '';
-		}
+            $status = $this->alterDatabaseRename($dbName, $newName);
+            if ($status != 0) {
+                return -3;
+            } else {
+                return 0;
+            }
+        }
 
-		if ($currentdatabase != NULL) {
-			$this->clean($currentdatabase);
-			$orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
-		} else {
-			$orderby = 'ORDER BY pdb.datname';
-		}
+        /**
+         * Return all database available on the server
+         *
+         * @param null $currentdatabase
+         * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
+         */
+        public function getDatabases($currentdatabase = null)
+        {
+            $conf        = $this->conf;
+            $server_info = $this->server_info;
 
-		if (!$conf['show_system']) {
-			$where = ' AND NOT pdb.datistemplate';
-		} else {
-			$where = ' AND pdb.datallowconn';
-		}
+            if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
+                $username = $server_info['username'];
+                $this->clean($username);
+                $clause = " AND pu.usename='{$username}'";
+            } else {
+                $clause = '';
+            }
 
-		$sql = "SELECT pdb.datname AS datname, pu.usename AS datowner, pg_encoding_to_char(encoding) AS datencoding,
+            if ($currentdatabase != null) {
+                $this->clean($currentdatabase);
+                $orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
+            } else {
+                $orderby = 'ORDER BY pdb.datname';
+            }
+
+            if (!$conf['show_system']) {
+                $where = ' AND NOT pdb.datistemplate';
+            } else {
+                $where = ' AND pdb.datallowconn';
+            }
+
+            $sql = "SELECT pdb.datname AS datname, pu.usename AS datowner, pg_encoding_to_char(encoding) AS datencoding,
                                (SELECT description FROM pg_description pd WHERE pdb.oid=pd.objoid) AS datcomment
                         FROM pg_database pdb, pg_user pu
 			WHERE pdb.datdba = pu.usesysid
@@ -95,50 +101,52 @@ class Postgres74 extends Postgres80 {
 			{$clause}
 			{$orderby}";
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	/**
-	 * Searches all system catalogs to find objects that match a certain name.
-	 * @param $term The search term
-	 * @param $filter The object type to restrict to ('' means no restriction)
-	 * @return A recordset
-	 */
-	public function findObject($term, $filter) {
-		$conf = $this->conf;
+        /**
+         * Searches all system catalogs to find objects that match a certain name.
+         *
+         * @param $term   The search term
+         * @param $filter The object type to restrict to ('' means no restriction)
+         * @return A recordset
+         */
+        public function findObject($term, $filter)
+        {
+            $conf = $this->conf;
 
-		/*about escaping:
-			 * SET standard_conforming_string is not available before 8.2
-			 * So we must use PostgreSQL specific notation :/
-			 * E'' notation is not available before 8.1
-			 * $$ is available since 8.0
-			 * Nothing specific from 7.4
-		*/
+            /*about escaping:
+                 * SET standard_conforming_string is not available before 8.2
+                 * So we must use PostgreSQL specific notation :/
+                 * E'' notation is not available before 8.1
+                 * $$ is available since 8.0
+                 * Nothing specific from 7.4
+            */
 
-		// Escape search term for ILIKE match
-		$term = str_replace('_', '\\_', $term);
-		$term = str_replace('%', '\\%', $term);
-		$this->clean($term);
-		$this->clean($filter);
+            // Escape search term for ILIKE match
+            $term = str_replace('_', '\\_', $term);
+            $term = str_replace('%', '\\%', $term);
+            $this->clean($term);
+            $this->clean($filter);
 
-		// Exclude system relations if necessary
-		if (!$conf['show_system']) {
-			// XXX: The mention of information_schema here is in the wrong place, but
-			// it's the quickest fix to exclude the info schema from 7.4
-			$where     = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
-			$lan_where = 'AND pl.lanispl';
-		} else {
-			$where     = '';
-			$lan_where = '';
-		}
+            // Exclude system relations if necessary
+            if (!$conf['show_system']) {
+                // XXX: The mention of information_schema here is in the wrong place, but
+                // it's the quickest fix to exclude the info schema from 7.4
+                $where     = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
+                $lan_where = 'AND pl.lanispl';
+            } else {
+                $where     = '';
+                $lan_where = '';
+            }
 
-		// Apply outer filter
-		$sql = '';
-		if ($filter != '') {
-			$sql = 'SELECT * FROM (';
-		}
+            // Apply outer filter
+            $sql = '';
+            if ($filter != '') {
+                $sql = 'SELECT * FROM (';
+            }
 
-		$sql .= "
+            $sql .= "
 			SELECT 'SCHEMA' AS type, oid, NULL AS schemaname, NULL AS relname, nspname AS name
 				FROM pg_catalog.pg_namespace pn WHERE nspname ILIKE '%{$term}%' {$where}
 			UNION ALL
@@ -195,9 +203,9 @@ class Postgres74 extends Postgres80 {
 				WHERE c.relkind='v' AND r.rulename != '_RETURN' AND r.rulename ILIKE '%{$term}%' {$where}
 		";
 
-		// Add advanced objects if show_advanced is set
-		if ($conf['show_advanced']) {
-			$sql .= "
+            // Add advanced objects if show_advanced is set
+            if ($conf['show_advanced']) {
+                $sql .= "
 				UNION ALL
 				SELECT CASE WHEN pt.typtype='d' THEN 'DOMAIN' ELSE 'TYPE' END, pt.oid, pn.nspname, NULL,
 					pt.typname FROM pg_catalog.pg_type pt, pg_catalog.pg_namespace pn
@@ -222,10 +230,9 @@ class Postgres74 extends Postgres80 {
 					pg_catalog.pg_namespace pn WHERE po.opcnamespace=pn.oid
 					AND po.opcname ILIKE '%{$term}%' {$where}
 			";
-		}
-		// Otherwise just add domains
-		else {
-			$sql .= "
+            } // Otherwise just add domains
+            else {
+                $sql .= "
 				UNION ALL
 				SELECT 'DOMAIN', pt.oid, pn.nspname, NULL,
 					pt.typname FROM pg_catalog.pg_type pt, pg_catalog.pg_namespace pn
@@ -233,172 +240,153 @@ class Postgres74 extends Postgres80 {
 					AND (pt.typrelid = 0 OR (SELECT c.relkind = 'c' FROM pg_catalog.pg_class c WHERE c.oid = pt.typrelid))
 					{$where}
 			";
-		}
+            }
 
-		if ($filter != '') {
-			// We use like to make RULE, CONSTRAINT and COLUMN searches work
-			$sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
-		}
+            if ($filter != '') {
+                // We use like to make RULE, CONSTRAINT and COLUMN searches work
+                $sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
+            }
 
-		$sql .= 'ORDER BY type, schemaname, relname, name';
+            $sql .= 'ORDER BY type, schemaname, relname, name';
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	/**
-	 * Returns table locks information in the current database
-	 * @return A recordset
-	 */
-	public function getLocks() {
-		$conf = $this->conf;
+        /**
+         * Returns table locks information in the current database
+         *
+         * @return A recordset
+         */
+        public function getLocks()
+        {
+            $conf = $this->conf;
 
-		if (!$conf['show_system']) {
-			$where = "AND pn.nspname NOT LIKE 'pg\\\\_%'";
-		} else {
-			$where = "AND nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
-		}
+            if (!$conf['show_system']) {
+                $where = "AND pn.nspname NOT LIKE 'pg\\\\_%'";
+            } else {
+                $where = "AND nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
+            }
 
-		$sql = "SELECT pn.nspname, pc.relname AS tablename, pl.transaction, pl.pid, pl.mode, pl.granted
+            $sql = "SELECT pn.nspname, pc.relname AS tablename, pl.transaction, pl.pid, pl.mode, pl.granted
 		FROM pg_catalog.pg_locks pl, pg_catalog.pg_class pc, pg_catalog.pg_namespace pn
 		WHERE pl.relation = pc.oid AND pc.relnamespace=pn.oid {$where}
 		ORDER BY nspname,tablename";
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	/**
-	 * Returns the current database encoding
-	 * @return The encoding.  eg. SQL_ASCII, UTF-8, etc.
-	 */
-	public function getDatabaseEncoding() {
-		$sql = 'SELECT getdatabaseencoding() AS encoding';
+        /**
+         * Returns the current database encoding
+         *
+         * @return The encoding.  eg. SQL_ASCII, UTF-8, etc.
+         */
+        public function getDatabaseEncoding()
+        {
+            $sql = 'SELECT getdatabaseencoding() AS encoding';
 
-		return $this->selectField($sql, 'encoding');
-	}
+            return $this->selectField($sql, 'encoding');
+        }
 
-	// Table functions
+        // Table functions
 
-  /**
-   * Protected method which alter a table
-   * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
-   *
-   * @param $tblrs      The table recordSet returned by getTable()
-   * @param $name       The new name for the table
-   * @param $owner      The new owner for the table
-   * @param $schema     The new schema for the table
-   * @param $comment    The comment on the table
-   * @param $tablespace The new tablespace for the table ('' means leave as is)
-   * @return int 0 success
-   */
-	protected
-	function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace) {
+        /**
+         * Alters a column in a table OR view
+         *
+         * @param $table      The table in which the column resides
+         * @param $column     The column to alter
+         * @param $name       The new name for the column
+         * @param $notnull    (boolean) True if not null, false otherwise
+         * @param $oldnotnull (boolean) True if column is already not null, false otherwise
+         * @param $default    The new default for the column
+         * @param $olddefault The old default for the column
+         * @param $type       The new type for the column
+         * @param $length     The optional size of the column (ie. 30 for varchar(30))
+         * @param $array      True if array type, false otherwise
+         * @param $oldtype    The old type for the column
+         * @param $comment    Comment for the column
+         * @return array|bool|int 0 success
+         */
+        public function alterColumn(
+            $table,
+            $column,
+            $name,
+            $notnull,
+            $oldnotnull,
+            $default,
+            $olddefault,
+            $type,
+            $length,
+            $array,
+            $oldtype,
+            $comment
+        ) {
+            $status = $this->beginTransaction();
+            if ($status != 0) {
+                return -1;
+            }
 
-		/* $schema and tablespace not supported in pg74- */
-		$this->fieldArrayClean($tblrs->fields);
+            // @@ NEED TO HANDLE "NESTED" TRANSACTION HERE
+            if ($notnull != $oldnotnull) {
+                $status = $this->setColumnNull($table, $column, !$notnull);
+                if ($status != 0) {
+                    $this->rollbackTransaction();
 
-		// Comment
-		$status = $this->setComment('TABLE', '', $tblrs->fields['relname'], $comment);
-		if ($status != 0) {
-			return -4;
-		}
+                    return -2;
+                }
+            }
 
-		// Owner
-		$this->fieldClean($owner);
-		$status = $this->alterTableOwner($tblrs, $owner);
-		if ($status != 0) {
-			return -5;
-		}
+            // Set default, if it has changed
+            if ($default != $olddefault) {
+                if ($default == '') {
+                    $status = $this->dropColumnDefault($table, $column);
+                } else {
+                    $status = $this->setColumnDefault($table, $column, $default);
+                }
 
-		// Rename
-		$this->fieldClean($name);
-		$status = $this->alterTableName($tblrs, $name);
-		if ($status != 0) {
-			return -3;
-		}
+                if ($status != 0) {
+                    $this->rollbackTransaction();
 
-		return 0;
-	}
+                    return -3;
+                }
+            }
 
-  /**
-   * Alters a column in a table OR view
-   *
-   * @param $table      The table in which the column resides
-   * @param $column     The column to alter
-   * @param $name       The new name for the column
-   * @param $notnull    (boolean) True if not null, false otherwise
-   * @param $oldnotnull (boolean) True if column is already not null, false otherwise
-   * @param $default    The new default for the column
-   * @param $olddefault The old default for the column
-   * @param $type       The new type for the column
-   * @param $length     The optional size of the column (ie. 30 for varchar(30))
-   * @param $array      True if array type, false otherwise
-   * @param $oldtype    The old type for the column
-   * @param $comment    Comment for the column
-   * @return array|bool|int 0 success
-   */
-	public function alterColumn($table, $column, $name, $notnull, $oldnotnull, $default, $olddefault,
-                                $type, $length, $array, $oldtype, $comment) {
-		$status = $this->beginTransaction();
-		if ($status != 0) {
-			return -1;
-		}
+            // Rename the column, if it has been changed
+            if ($column != $name) {
+                $status = $this->renameColumn($table, $column, $name);
+                if ($status != 0) {
+                    $this->rollbackTransaction();
 
-		// @@ NEED TO HANDLE "NESTED" TRANSACTION HERE
-		if ($notnull != $oldnotnull) {
-			$status = $this->setColumnNull($table, $column, !$notnull);
-			if ($status != 0) {
-				$this->rollbackTransaction();
-				return -2;
-			}
-		}
+                    return -4;
+                }
+            }
 
-		// Set default, if it has changed
-		if ($default != $olddefault) {
-			if ($default == '') {
-				$status = $this->dropColumnDefault($table, $column);
-			} else {
-				$status = $this->setColumnDefault($table, $column, $default);
-			}
+            // The $name and $table parameters must be cleaned for the setComment function.
+            // It's ok to do that here since this is the last time these variables are used.
+            $this->fieldClean($name);
+            $this->fieldClean($table);
+            $status = $this->setComment('COLUMN', $name, $table, $comment);
+            if ($status != 0) {
+                $this->rollbackTransaction();
 
-			if ($status != 0) {
-				$this->rollbackTransaction();
-				return -3;
-			}
-		}
+                return -5;
+            }
 
-		// Rename the column, if it has been changed
-		if ($column != $name) {
-			$status = $this->renameColumn($table, $column, $name);
-			if ($status != 0) {
-				$this->rollbackTransaction();
-				return -4;
-			}
-		}
+            return $this->endTransaction();
+        }
 
-		// The $name and $table parameters must be cleaned for the setComment function.
-		// It's ok to do that here since this is the last time these variables are used.
-		$this->fieldClean($name);
-		$this->fieldClean($table);
-		$status = $this->setComment('COLUMN', $name, $table, $comment);
-		if ($status != 0) {
-			$this->rollbackTransaction();
-			return -5;
-		}
+        /**
+         * Returns table information
+         *
+         * @param $table The name of the table
+         * @return A recordset
+         */
+        public function getTable($table)
+        {
+            $c_schema = $this->_schema;
+            $this->clean($c_schema);
+            $this->clean($table);
 
-		return $this->endTransaction();
-	}
-
-	/**
-	 * Returns table information
-	 * @param $table The name of the table
-	 * @return A recordset
-	 */
-	public function getTable($table) {
-		$c_schema = $this->_schema;
-		$this->clean($c_schema);
-		$this->clean($table);
-
-		$sql = "
+            $sql = "
 			SELECT
 			  c.relname, n.nspname, u.usename AS relowner,
 			  pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment
@@ -409,26 +397,27 @@ class Postgres74 extends Postgres80 {
 				AND n.nspname = '{$c_schema}'
 			    AND c.relname = '{$table}'";
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-  /**
-   * Return all tables in current database (and schema)
-   *
-   * @param bool|True $all True to fetch all tables, false for just in current schema
-   * @return \PHPPgAdmin\Database\All tables, sorted alphabetically
-   */
-	public function getTables($all = false) {
-		$c_schema = $this->_schema;
-		$this->clean($c_schema);
-		if ($all) {
-			// Exclude pg_catalog and information_schema tables
-			$sql = "SELECT schemaname AS nspname, tablename AS relname, tableowner AS relowner
+        /**
+         * Return all tables in current database (and schema)
+         *
+         * @param bool|True $all True to fetch all tables, false for just in current schema
+         * @return \PHPPgAdmin\Database\All tables, sorted alphabetically
+         */
+        public function getTables($all = false)
+        {
+            $c_schema = $this->_schema;
+            $this->clean($c_schema);
+            if ($all) {
+                // Exclude pg_catalog and information_schema tables
+                $sql = "SELECT schemaname AS nspname, tablename AS relname, tableowner AS relowner
 					FROM pg_catalog.pg_tables
 					WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
 					ORDER BY schemaname, tablename";
-		} else {
-			$sql = "SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+            } else {
+                $sql = "SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
 						reltuples::bigint
 					FROM pg_catalog.pg_class c
@@ -436,38 +425,40 @@ class Postgres74 extends Postgres80 {
 					WHERE c.relkind = 'r'
 					AND nspname='{$c_schema}'
 					ORDER BY c.relname";
-		}
+            }
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	/**
-	 * Returns the current default_with_oids setting
-	 * @return default_with_oids setting
-	 */
-	public function getDefaultWithOid() {
-		// 8.0 is the first release to have this setting
-		// Prior releases don't have this setting... oids always activated
-		return 'on';
-	}
+        /**
+         * Returns the current default_with_oids setting
+         *
+         * @return default_with_oids setting
+         */
+        public function getDefaultWithOid()
+        {
+            // 8.0 is the first release to have this setting
+            // Prior releases don't have this setting... oids always activated
+            return 'on';
+        }
 
-	// Constraint functions
+        /**
+         * Returns a list of all constraints on a table,
+         * including constraint name, definition, related col and referenced namespace,
+         * table and col if needed
+         *
+         * @param $table the table where we are looking for fk
+         * @return a recordset
+         */
+        public function getConstraintsWithFields($table)
+        {
 
-	/**
-	 * Returns a list of all constraints on a table,
-	 * including constraint name, definition, related col and referenced namespace,
-	 * table and col if needed
-	 * @param $table the table where we are looking for fk
-	 * @return a recordset
-	 */
-	public function getConstraintsWithFields($table) {
+            $c_schema = $this->_schema;
+            $this->clean($c_schema);
+            $this->clean($table);
 
-		$c_schema = $this->_schema;
-		$this->clean($c_schema);
-		$this->clean($table);
-
-		// get the max number of col used in a constraint for the table
-		$sql = "SELECT DISTINCT
+            // get the max number of col used in a constraint for the table
+            $sql = "SELECT DISTINCT
 			max(SUBSTRING(array_dims(c.conkey) FROM '^\\\\[.*:(.*)\\\\]$')) as nb
 		FROM pg_catalog.pg_constraint AS c
 			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
@@ -475,15 +466,15 @@ class Postgres74 extends Postgres80 {
 		WHERE
 			r.relname = '{$table}' AND ns.nspname='{$c_schema}'";
 
-		$rs = $this->selectSet($sql);
+            $rs = $this->selectSet($sql);
 
-		if ($rs->EOF) {
-			$max_col = 0;
-		} else {
-			$max_col = $rs->fields['nb'];
-		}
+            if ($rs->EOF) {
+                $max_col = 0;
+            } else {
+                $max_col = $rs->fields['nb'];
+            }
 
-		$sql = '
+            $sql = '
 			SELECT
 				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
 				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
@@ -494,70 +485,72 @@ class Postgres74 extends Postgres80 {
 				pg_catalog.pg_constraint AS c
 				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
 				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]';
-		for ($i = 2; $i <= $rs->fields['nb']; $i++) {
-			$sql .= " OR f1.attnum=c.conkey[$i]";
-		}
-		$sql .= '))
+            for ($i = 2; $i <= $rs->fields['nb']; $i++) {
+                $sql .= " OR f1.attnum=c.conkey[$i]";
+            }
+            $sql .= '))
 				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
 				LEFT JOIN (
 					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
 				) ON (c.confrelid=r2.oid)
 				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
 					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)';
-		for ($i = 2; $i <= $rs->fields['nb']; $i++) {
-			$sql .= " OR (c.confkey[$i]=f2.attnum AND c.conkey[$i]=f1.attnum)";
-		}
+            for ($i = 2; $i <= $rs->fields['nb']; $i++) {
+                $sql .= " OR (c.confkey[$i]=f2.attnum AND c.conkey[$i]=f1.attnum)";
+            }
 
-		$sql .= sprintf("))
+            $sql .= sprintf("))
 			WHERE
 				r1.relname = '%s' AND ns1.nspname='%s'
 			ORDER BY 1", $table, $c_schema);
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	// Sequence functions
+        // Constraint functions
 
-  /**
-   * Returns all sequences in the current database
-   *
-   * @param bool $all
-   * @return \PHPPgAdmin\Database\A recordset
-   */
-	public function getSequences($all = false) {
-		$c_schema = $this->_schema;
-		$this->clean($c_schema);
-		if ($all) {
-			// Exclude pg_catalog and information_schema tables
-			$sql = "SELECT n.nspname, c.relname AS seqname, u.usename AS seqowner
+        /**
+         * Returns all sequences in the current database
+         *
+         * @param bool $all
+         * @return \PHPPgAdmin\Database\A recordset
+         */
+        public function getSequences($all = false)
+        {
+            $c_schema = $this->_schema;
+            $this->clean($c_schema);
+            if ($all) {
+                // Exclude pg_catalog and information_schema tables
+                $sql = "SELECT n.nspname, c.relname AS seqname, u.usename AS seqowner
 				FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n
 				WHERE c.relowner=u.usesysid AND c.relnamespace=n.oid
 				AND c.relkind = 'S'
 				AND n.nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
 				ORDER BY nspname, seqname";
-		} else {
-			$sql = "SELECT c.relname AS seqname, u.usename AS seqowner, pg_catalog.obj_description(c.oid, 'pg_class') AS seqcomment
+            } else {
+                $sql = "SELECT c.relname AS seqname, u.usename AS seqowner, pg_catalog.obj_description(c.oid, 'pg_class') AS seqcomment
 				FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n
 				WHERE c.relowner=u.usesysid AND c.relnamespace=n.oid
 				AND c.relkind = 'S' AND n.nspname='{$c_schema}' ORDER BY seqname";
-		}
+            }
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	// Function functions
+        // Sequence functions
 
-  /**
-   * Returns all details for a particular function
-   *
-   * @param $function_oid
-   * @return \PHPPgAdmin\Database\Function info
-   * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
-   */
-	public function getFunction($function_oid) {
-		$this->clean($function_oid);
+        /**
+         * Returns all details for a particular function
+         *
+         * @param $function_oid
+         * @return \PHPPgAdmin\Database\Function info
+         * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
+         */
+        public function getFunction($function_oid)
+        {
+            $this->clean($function_oid);
 
-		$sql = "
+            $sql = "
 		SELECT
 			pc.oid AS prooid,
 			proname,
@@ -581,27 +574,31 @@ class Postgres74 extends Postgres80 {
 			AND n.oid = pc.pronamespace
 		";
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	/**
-	 * Returns a list of all casts in the database
-	 * @return All casts
-	 */
-	public function getCasts() {
-		$conf = $this->conf;
+        // Function functions
 
-		if ($conf['show_system']) {
-			$where = '';
-		} else {
-			$where = "
+        /**
+         * Returns a list of all casts in the database
+         *
+         * @return All casts
+         */
+        public function getCasts()
+        {
+            $conf = $this->conf;
+
+            if ($conf['show_system']) {
+                $where = '';
+            } else {
+                $where = "
 				AND n1.nspname NOT LIKE 'pg\\\\_%'
 				AND n2.nspname NOT LIKE 'pg\\\\_%'
 				AND n3.nspname NOT LIKE 'pg\\\\_%'
 			";
-		}
+            }
 
-		$sql = "
+            $sql = "
 			SELECT
 				c.castsource::pg_catalog.regtype AS castsource,
 				c.casttarget::pg_catalog.regtype AS casttarget,
@@ -624,18 +621,101 @@ class Postgres74 extends Postgres80 {
 			ORDER BY 1, 2
 		";
 
-		return $this->selectSet($sql);
-	}
+            return $this->selectSet($sql);
+        }
 
-	// Capabilities
+        public function hasAlterColumnType()
+        {
+            return false;
+        }
 
-	public function hasAlterColumnType() {return false;}
-	public function hasCreateFieldWithConstraints() {return false;}
-	public function hasAlterDatabaseOwner() {return false;}
-	public function hasAlterSchemaOwner() {return false;}
-	public function hasFunctionAlterOwner() {return false;}
-	public function hasNamedParams() {return false;}
-	public function hasQueryCancel() {return false;}
-	public function hasTablespaces() {return false;}
-	public function hasMagicTypes() {return false;}
-}
+        // Capabilities
+
+        public function hasCreateFieldWithConstraints()
+        {
+            return false;
+        }
+
+        public function hasAlterDatabaseOwner()
+        {
+            return false;
+        }
+
+        public function hasAlterSchemaOwner()
+        {
+            return false;
+        }
+
+        public function hasFunctionAlterOwner()
+        {
+            return false;
+        }
+
+        public function hasNamedParams()
+        {
+            return false;
+        }
+
+        public function hasQueryCancel()
+        {
+            return false;
+        }
+
+        public function hasTablespaces()
+        {
+            return false;
+        }
+
+        public function hasMagicTypes()
+        {
+            return false;
+        }
+
+        /**
+         * Protected method which alter a table
+         * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+         *
+         * @param $tblrs      The table recordSet returned by getTable()
+         * @param $name       The new name for the table
+         * @param $owner      The new owner for the table
+         * @param $schema     The new schema for the table
+         * @param $comment    The comment on the table
+         * @param $tablespace The new tablespace for the table ('' means leave as is)
+         * @return int 0 success
+         */
+        protected
+        function _alterTable(
+            $tblrs,
+            $name,
+            $owner,
+            $schema,
+            $comment,
+            $tablespace
+        ) {
+
+            /* $schema and tablespace not supported in pg74- */
+            $this->fieldArrayClean($tblrs->fields);
+
+            // Comment
+            $status = $this->setComment('TABLE', '', $tblrs->fields['relname'], $comment);
+            if ($status != 0) {
+                return -4;
+            }
+
+            // Owner
+            $this->fieldClean($owner);
+            $status = $this->alterTableOwner($tblrs, $owner);
+            if ($status != 0) {
+                return -5;
+            }
+
+            // Rename
+            $this->fieldClean($name);
+            $status = $this->alterTableName($tblrs, $name);
+            if ($status != 0) {
+                return -3;
+            }
+
+            return 0;
+        }
+    }

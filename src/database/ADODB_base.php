@@ -1,405 +1,425 @@
 <?php
-namespace PHPPgAdmin\Database;
-/*
- * Parent class of all ADODB objects.
- *
- * $Id: ADODB_base.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
- */
 
-class ADODB_base {
-	use \PHPPgAdmin\HelperTrait;
+    namespace PHPPgAdmin\Database;
 
-	public $conn;
+    /*
+     * Parent class of all ADODB objects.
+     *
+     * $Id: ADODB_base.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
+     */
 
-	// The backend platform.  Set to UNKNOWN by default.
-	public $platform = 'UNKNOWN';
+    class ADODB_base
+    {
+        use \PHPPgAdmin\HelperTrait;
 
-	/**
-	 * Base constructor
-	 * @param &$conn The connection object
-	 */
-	public function __construct(&$conn) {
-		$this->prtrace('instanced connection class');
-		$this->conn = $conn;
-	}
+        public $conn;
 
-	/**
-	 * Turns on or off query debugging
-	 * @param $debug True to turn on debugging, false otherwise
-	 */
-	public function setDebug($debug) {
-		$this->conn->debug = $debug;
-	}
+        // The backend platform.  Set to UNKNOWN by default.
+        public $platform = 'UNKNOWN';
 
-	/**
-	 * Cleans (escapes) a string
-	 * @param $str The string to clean, by reference
-	 * @return The cleaned string
-	 */
-	public function clean(&$str) {
-		$str = addslashes($str);
-		return $str;
-	}
+        /**
+         * Base constructor
+         *
+         * @param &$conn The connection object
+         */
+        public function __construct(&$conn)
+        {
+            $this->prtrace('instanced connection class');
+            $this->conn = $conn;
+        }
 
-	/**
-	 * Cleans (escapes) an object name (eg. table, field)
-	 * @param $str The string to clean, by reference
-	 * @return The cleaned string
-	 */
-	public function fieldClean(&$str) {
-		$str = str_replace('"', '""', $str);
-		return $str;
-	}
+        /**
+         * Turns on or off query debugging
+         *
+         * @param $debug True to turn on debugging, false otherwise
+         */
+        public function setDebug($debug)
+        {
+            $this->conn->debug = $debug;
+        }
 
-	/**
-	 * Cleans (escapes) an array
-	 * @param $arr The array to clean, by reference
-	 * @return The cleaned array
-	 */
-	public function arrayClean(&$arr) {
-		reset($arr);
-		while (list($k, $v) = each($arr)) {
-			$arr[$k] = addslashes($v);
-		}
+        /**
+         * Cleans (escapes) an array
+         *
+         * @param $arr The array to clean, by reference
+         * @return The cleaned array
+         */
+        public function arrayClean(&$arr)
+        {
+            reset($arr);
+            while (list($k, $v) = each($arr)) {
+                $arr[$k] = addslashes($v);
+            }
 
-		return $arr;
-	}
+            return $arr;
+        }
 
-	/**
-	 * Executes a query on the underlying connection
-	 * @param $sql The SQL query to execute
-	 * @return A recordset
-	 */
-	public function execute($sql) {
-		// Execute the statement
-		$rs = $this->conn->Execute($sql);
+        /**
+         * Executes a query on the underlying connection
+         *
+         * @param $sql The SQL query to execute
+         * @return A recordset
+         */
+        public function execute($sql)
+        {
+            // Execute the statement
+            $rs = $this->conn->Execute($sql);
 
-		// If failure, return error value
-		return $this->conn->ErrorNo();
-	}
+            // If failure, return error value
+            return $this->conn->ErrorNo();
+        }
 
-	/**
-	 * Closes the connection the database class
-	 * relies on.
-	 */
-	public function close() {
-		$this->conn->close();
-	}
+        /**
+         * Closes the connection the database class
+         * relies on.
+         */
+        public function close()
+        {
+            $this->conn->close();
+        }
 
-	/**
-	 * Retrieves a ResultSet from a query
-	 * @param $sql The SQL statement to be executed
-	 * @return A recordset
-	 */
-	public function selectSet($sql) {
-		// Execute the statement
-		$rs = $this->conn->Execute($sql);
+        /**
+         * Retrieves a ResultSet from a query
+         *
+         * @param $sql The SQL statement to be executed
+         * @return A recordset
+         */
+        public function selectSet($sql)
+        {
+            // Execute the statement
+            $rs = $this->conn->Execute($sql);
 
-		if (!$rs) {
-			return $this->conn->ErrorNo();
-		}
+            if (!$rs) {
+                return $this->conn->ErrorNo();
+            }
 
-		return $rs;
-	}
+            return $rs;
+        }
 
-	/**
-	 * Retrieves a single value from a query
-	 *
-	 * @@ assumes that the query will return only one row - returns field value in the first row
-	 *
-	 * @param $sql The SQL statement to be executed
-	 * @param $field The field name to be returned
-	 * @return A single field value
-	 * @return -1 No rows were found
-	 */
-	public function selectField($sql, $field) {
-		// Execute the statement
-		$rs = $this->conn->Execute($sql);
+        /**
+         * Retrieves a single value from a query
+         *
+         * @@ assumes that the query will return only one row - returns field value in the first row
+         *
+         * @param $sql   The SQL statement to be executed
+         * @param $field The field name to be returned
+         * @return A single field value
+         * @return -1 No rows were found
+         */
+        public function selectField($sql, $field)
+        {
+            // Execute the statement
+            $rs = $this->conn->Execute($sql);
 
-		// If failure, or no rows returned, return error value
-		if (!$rs) {
-			return $this->conn->ErrorNo();
-		} elseif ($rs->RecordCount() == 0) {
-			return -1;
-		}
+            // If failure, or no rows returned, return error value
+            if (!$rs) {
+                return $this->conn->ErrorNo();
+            } elseif ($rs->RecordCount() == 0) {
+                return -1;
+            }
 
-		return $rs->fields[$field];
-	}
+            return $rs->fields[$field];
+        }
 
-  /**
-   * Delete from the database
-   *
-   * @param        $table      The name of the table
-   * @param        $conditions (array) A map of field names to conditions
-   * @param string $schema     (optional) The table's schema
-   * @return int 0 success
-   */
-	public function delete($table, $conditions, $schema = '') {
-		$this->fieldClean($table);
+        /**
+         * Delete from the database
+         *
+         * @param        $table      The name of the table
+         * @param        $conditions (array) A map of field names to conditions
+         * @param string $schema     (optional) The table's schema
+         * @return int 0 success
+         */
+        public function delete($table, $conditions, $schema = '')
+        {
+            $this->fieldClean($table);
 
-		reset($conditions);
+            reset($conditions);
 
-		if (!empty($schema)) {
-			$this->fieldClean($schema);
-			$schema = "\"{$schema}\".";
-		}
+            if (!empty($schema)) {
+                $this->fieldClean($schema);
+                $schema = "\"{$schema}\".";
+            }
 
-		// Build clause
-		$sql = '';
-		while (list($key, $value) = each($conditions)) {
-			$this->clean($key);
-			$this->clean($value);
-			if ($sql) {
-				$sql .= " AND \"{$key}\"='{$value}'";
-			} else {
-				$sql = "DELETE FROM {$schema}\"{$table}\" WHERE \"{$key}\"='{$value}'";
-			}
+            // Build clause
+            $sql = '';
+            while (list($key, $value) = each($conditions)) {
+                $this->clean($key);
+                $this->clean($value);
+                if ($sql) {
+                    $sql .= " AND \"{$key}\"='{$value}'";
+                } else {
+                    $sql = "DELETE FROM {$schema}\"{$table}\" WHERE \"{$key}\"='{$value}'";
+                }
+            }
 
-		}
+            // Check for failures
+            if (!$this->conn->Execute($sql)) {
+                // Check for referential integrity failure
+                if (stristr($this->conn->ErrorMsg(), 'referential')) {
+                    return -1;
+                }
+            }
 
-		// Check for failures
-		if (!$this->conn->Execute($sql)) {
-			// Check for referential integrity failure
-			if (stristr($this->conn->ErrorMsg(), 'referential')) {
-				return -1;
-			}
+            // Check for no rows modified
+            if ($this->conn->Affected_Rows() == 0) {
+                return -2;
+            }
 
-		}
+            return $this->conn->ErrorNo();
+        }
 
-		// Check for no rows modified
-		if ($this->conn->Affected_Rows() == 0) {
-			return -2;
-		}
+        /**
+         * Cleans (escapes) an object name (eg. table, field)
+         *
+         * @param $str The string to clean, by reference
+         * @return The cleaned string
+         */
+        public function fieldClean(&$str)
+        {
+            $str = str_replace('"', '""', $str);
 
-		return $this->conn->ErrorNo();
-	}
+            return $str;
+        }
 
-  /**
-   * Insert a set of values into the database
-   *
-   * @param $table The table to insert into
-   * @param $vars  (array) A mapping of the field names to the values to be inserted
-   * @return int 0 success
-   */
-	public function insert($table, $vars) {
-		$this->fieldClean($table);
+        /**
+         * Cleans (escapes) a string
+         *
+         * @param $str The string to clean, by reference
+         * @return The cleaned string
+         */
+        public function clean(&$str)
+        {
+            $str = addslashes($str);
 
-		// Build clause
-		if (sizeof($vars) > 0) {
-			$fields = '';
-			$values = '';
-			foreach ($vars as $key => $value) {
-				$this->clean($key);
-				$this->clean($value);
+            return $str;
+        }
 
-				if ($fields) {
-					$fields .= ", \"{$key}\"";
-				} else {
-					$fields = "INSERT INTO \"{$table}\" (\"{$key}\"";
-				}
+        /**
+         * Insert a set of values into the database
+         *
+         * @param $table The table to insert into
+         * @param $vars  (array) A mapping of the field names to the values to be inserted
+         * @return int 0 success
+         */
+        public function insert($table, $vars)
+        {
+            $this->fieldClean($table);
 
-				if ($values) {
-					$values .= ", '{$value}'";
-				} else {
-					$values = ") VALUES ('{$value}'";
-				}
+            // Build clause
+            if (sizeof($vars) > 0) {
+                $fields = '';
+                $values = '';
+                foreach ($vars as $key => $value) {
+                    $this->clean($key);
+                    $this->clean($value);
 
-			}
-			$sql = $fields . $values . ')';
-		}
+                    if ($fields) {
+                        $fields .= ", \"{$key}\"";
+                    } else {
+                        $fields = "INSERT INTO \"{$table}\" (\"{$key}\"";
+                    }
 
-		// Check for failures
-		if (!$this->conn->Execute($sql)) {
-			// Check for unique constraint failure
-			if (stristr($this->conn->ErrorMsg(), 'unique')) {
-				return -1;
-			}
+                    if ($values) {
+                        $values .= ", '{$value}'";
+                    } else {
+                        $values = ") VALUES ('{$value}'";
+                    }
+                }
+                $sql = $fields . $values . ')';
+            }
 
-			// Check for referential integrity failure
-			elseif (stristr($this->conn->ErrorMsg(), 'referential')) {
-				return -2;
-			}
+            // Check for failures
+            if (!$this->conn->Execute($sql)) {
+                // Check for unique constraint failure
+                if (stristr($this->conn->ErrorMsg(), 'unique')) {
+                    return -1;
+                } // Check for referential integrity failure
+                elseif (stristr($this->conn->ErrorMsg(), 'referential')) {
+                    return -2;
+                }
+            }
 
-		}
+            return $this->conn->ErrorNo();
+        }
 
-		return $this->conn->ErrorNo();
-	}
+        /**
+         * Update a row in the database
+         *
+         * @param       $table The table that is to be updated
+         * @param       $vars  (array) A mapping of the field names to the values to be updated
+         * @param       $where (array) A mapping of field names to values for the where clause
+         * @param array $nulls (array, optional) An array of fields to be set null
+         * @return int 0 success
+         */
+        public function update($table, $vars, $where, $nulls = [])
+        {
+            $this->fieldClean($table);
 
-  /**
-   * Update a row in the database
-   *
-   * @param       $table The table that is to be updated
-   * @param       $vars  (array) A mapping of the field names to the values to be updated
-   * @param       $where (array) A mapping of field names to values for the where clause
-   * @param array $nulls (array, optional) An array of fields to be set null
-   * @return int 0 success
-   */
-	public function update($table, $vars, $where, $nulls = []) {
-		$this->fieldClean($table);
+            $setClause   = '';
+            $whereClause = '';
 
-		$setClause = '';
-		$whereClause = '';
+            // Populate the syntax arrays
+            reset($vars);
+            while (list($key, $value) = each($vars)) {
+                $this->fieldClean($key);
+                $this->clean($value);
+                if ($setClause) {
+                    $setClause .= ", \"{$key}\"='{$value}'";
+                } else {
+                    $setClause = "UPDATE \"{$table}\" SET \"{$key}\"='{$value}'";
+                }
+            }
 
-		// Populate the syntax arrays
-		reset($vars);
-		while (list($key, $value) = each($vars)) {
-			$this->fieldClean($key);
-			$this->clean($value);
-			if ($setClause) {
-				$setClause .= ", \"{$key}\"='{$value}'";
-			} else {
-				$setClause = "UPDATE \"{$table}\" SET \"{$key}\"='{$value}'";
-			}
+            reset($nulls);
+            while (list(, $value) = each($nulls)) {
+                $this->fieldClean($value);
+                if ($setClause) {
+                    $setClause .= ", \"{$value}\"=NULL";
+                } else {
+                    $setClause = "UPDATE \"{$table}\" SET \"{$value}\"=NULL";
+                }
+            }
 
-		}
+            reset($where);
+            while (list($key, $value) = each($where)) {
+                $this->fieldClean($key);
+                $this->clean($value);
+                if ($whereClause) {
+                    $whereClause .= " AND \"{$key}\"='{$value}'";
+                } else {
+                    $whereClause = " WHERE \"{$key}\"='{$value}'";
+                }
+            }
 
-		reset($nulls);
-		while (list(, $value) = each($nulls)) {
-			$this->fieldClean($value);
-			if ($setClause) {
-				$setClause .= ", \"{$value}\"=NULL";
-			} else {
-				$setClause = "UPDATE \"{$table}\" SET \"{$value}\"=NULL";
-			}
+            // Check for failures
+            if (!$this->conn->Execute($setClause . $whereClause)) {
+                // Check for unique constraint failure
+                if (stristr($this->conn->ErrorMsg(), 'unique')) {
+                    return -1;
+                } // Check for referential integrity failure
+                elseif (stristr($this->conn->ErrorMsg(), 'referential')) {
+                    return -2;
+                }
+            }
 
-		}
+            // Check for no rows modified
+            if ($this->conn->Affected_Rows() == 0) {
+                return -3;
+            }
 
-		reset($where);
-		while (list($key, $value) = each($where)) {
-			$this->fieldClean($key);
-			$this->clean($value);
-			if ($whereClause) {
-				$whereClause .= " AND \"{$key}\"='{$value}'";
-			} else {
-				$whereClause = " WHERE \"{$key}\"='{$value}'";
-			}
+            return $this->conn->ErrorNo();
+        }
 
-		}
+        /**
+         * Begin a transaction
+         *
+         * @return bool 0 success
+         */
+        public function beginTransaction()
+        {
+            return !$this->conn->BeginTrans();
+        }
 
-		// Check for failures
-		if (!$this->conn->Execute($setClause . $whereClause)) {
-			// Check for unique constraint failure
-			if (stristr($this->conn->ErrorMsg(), 'unique')) {
-				return -1;
-			}
+        /**
+         * End a transaction
+         *
+         * @return bool 0 success
+         */
+        public function endTransaction()
+        {
+            return !$this->conn->CommitTrans();
+        }
 
-			// Check for referential integrity failure
-			elseif (stristr($this->conn->ErrorMsg(), 'referential')) {
-				return -2;
-			}
+        /**
+         * Roll back a transaction
+         *
+         * @return bool 0 success
+         */
+        public function rollbackTransaction()
+        {
+            return !$this->conn->RollbackTrans();
+        }
 
-		}
+        /**
+         * Get the backend platform
+         *
+         * @return The backend platform
+         */
+        public function getPlatform()
+        {
+            //return $this->conn->platform;
+            return 'UNKNOWN';
+        }
 
-		// Check for no rows modified
-		if ($this->conn->Affected_Rows() == 0) {
-			return -3;
-		}
+        // Type conversion routines
 
-		return $this->conn->ErrorNo();
-	}
+        /**
+         * Change the value of a parameter to database representation depending on whether it evaluates to true or false
+         *
+         * @param $parameter the parameter
+         * @return \PHPPgAdmin\Database\the
+         */
+        public function dbBool(&$parameter)
+        {
+            return $parameter;
+        }
 
-  /**
-   * Begin a transaction
-   *
-   * @return bool 0 success
-   */
-	public function beginTransaction() {
-		return !$this->conn->BeginTrans();
-	}
+        /**
+         * Change a parameter from database representation to a boolean, (others evaluate to false)
+         *
+         * @param $parameter the parameter
+         * @return \PHPPgAdmin\Database\the
+         */
+        public function phpBool($parameter)
+        {
+            return $parameter;
+        }
 
-  /**
-   * End a transaction
-   *
-   * @return bool 0 success
-   */
-	public function endTransaction() {
-		return !$this->conn->CommitTrans();
-	}
+        /**
+         * Change a db array into a PHP array
+         *
+         * @param $dbarr
+         * @return \PHPPgAdmin\Database\A PHP array
+         * @internal param String $arr representing the DB array
+         */
+        public function phpArray($dbarr)
+        {
+            // Take off the first and last characters (the braces)
+            $arr = substr($dbarr, 1, strlen($dbarr) - 2);
 
-  /**
-   * Roll back a transaction
-   *
-   * @return bool 0 success
-   */
-	public function rollbackTransaction() {
-		return !$this->conn->RollbackTrans();
-	}
+            // Pick out array entries by carefully parsing.  This is necessary in order
+            // to cope with double quotes and commas, etc.
+            $elements  = [];
+            $i         = $j = 0;
+            $in_quotes = false;
+            while ($i < strlen($arr)) {
+                // If current char is a double quote and it's not escaped, then
+                // enter quoted bit
+                $char = substr($arr, $i, 1);
+                if ($char == '"' && ($i == 0 || substr($arr, $i - 1, 1) != '\\')) {
+                    $in_quotes = !$in_quotes;
+                } elseif ($char == ',' && !$in_quotes) {
+                    // Add text so far to the array
+                    $elements[] = substr($arr, $j, $i - $j);
+                    $j          = $i + 1;
+                }
+                $i++;
+            }
+            // Add final text to the array
+            $elements[] = substr($arr, $j);
 
-	/**
-	 * Get the backend platform
-	 * @return The backend platform
-	 */
-	public function getPlatform() {
-		//return $this->conn->platform;
-		return 'UNKNOWN';
-	}
+            // Do one further loop over the elements array to remote double quoting
+            // and escaping of double quotes and backslashes
+            for ($i = 0; $i < sizeof($elements); $i++) {
+                $v = $elements[$i];
+                if (strpos($v, '"') === 0) {
+                    $v            = substr($v, 1, strlen($v) - 2);
+                    $v            = str_replace('\\"', '"', $v);
+                    $v            = str_replace('\\\\', '\\', $v);
+                    $elements[$i] = $v;
+                }
+            }
 
-	// Type conversion routines
-
-  /**
-   * Change the value of a parameter to database representation depending on whether it evaluates to true or false
-   *
-   * @param $parameter the parameter
-   * @return \PHPPgAdmin\Database\the
-   */
-	public function dbBool(&$parameter) {
-		return $parameter;
-	}
-
-  /**
-   * Change a parameter from database representation to a boolean, (others evaluate to false)
-   *
-   * @param $parameter the parameter
-   * @return \PHPPgAdmin\Database\the
-   */
-	public function phpBool($parameter) {
-		return $parameter;
-	}
-
-  /**
-   * Change a db array into a PHP array
-   *
-   * @param $dbarr
-   * @return \PHPPgAdmin\Database\A PHP array
-   * @internal param String $arr representing the DB array
-   */
-	public function phpArray($dbarr) {
-		// Take off the first and last characters (the braces)
-		$arr = substr($dbarr, 1, strlen($dbarr) - 2);
-
-		// Pick out array entries by carefully parsing.  This is necessary in order
-		// to cope with double quotes and commas, etc.
-		$elements = [];
-		$i = $j = 0;
-		$in_quotes = false;
-		while ($i < strlen($arr)) {
-			// If current char is a double quote and it's not escaped, then
-			// enter quoted bit
-			$char = substr($arr, $i, 1);
-			if ($char == '"' && ($i == 0 || substr($arr, $i - 1, 1) != '\\')) {
-				$in_quotes = !$in_quotes;
-			} elseif ($char == ',' && !$in_quotes) {
-				// Add text so far to the array
-				$elements[] = substr($arr, $j, $i - $j);
-				$j = $i + 1;
-			}
-			$i++;
-		}
-		// Add final text to the array
-		$elements[] = substr($arr, $j);
-
-		// Do one further loop over the elements array to remote double quoting
-		// and escaping of double quotes and backslashes
-		for ($i = 0; $i < sizeof($elements); $i++) {
-			$v = $elements[$i];
-			if (strpos($v, '"') === 0) {
-				$v = substr($v, 1, strlen($v) - 2);
-				$v = str_replace('\\"', '"', $v);
-				$v = str_replace('\\\\', '\\', $v);
-				$elements[$i] = $v;
-			}
-		}
-
-		return $elements;
-	}
-}
+            return $elements;
+        }
+    }
