@@ -61,7 +61,7 @@ class IntroController extends BaseController {
 
 		$intro_html .= $this->printTabs('root', 'intro', false);
 
-		$intro_html .= "<h1> $appName $appVersion (PHP " . phpversion() . ')</h1>';
+		$intro_html .= "<h1> $appName $appVersion (PHP " . PHP_VERSION . ')</h1>';
 
 		$intro_html .= '<form method="get" action="intro.php">';
 		$intro_html .= '<table>';

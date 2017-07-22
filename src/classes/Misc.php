@@ -65,7 +65,7 @@ class Misc {
 		}
 
 		// Check the version of PHP
-		if (version_compare(phpversion(), $this->phpMinVer, '<')) {
+		if (version_compare(PHP_VERSION, $this->phpMinVer, '<')) {
 			exit(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
 		}
 
