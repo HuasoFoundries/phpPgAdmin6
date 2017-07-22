@@ -170,7 +170,7 @@ class DataImportController extends BaseController {
 		// Check that file is specified and is an uploaded file
 		if (isset($_FILES['source']) && is_uploaded_file($_FILES['source']['tmp_name']) && is_readable($_FILES['source']['tmp_name'])) {
 
-			$fd = fopen($_FILES['source']['tmp_name'], 'r');
+			$fd = fopen($_FILES['source']['tmp_name'], 'rb');
 			// Check that file was opened successfully
 			if ($fd !== false) {
 				$null_array = self::loadNULLArray();
