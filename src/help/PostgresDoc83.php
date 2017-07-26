@@ -28,6 +28,7 @@ class PostgresDoc83 extends PostgresDoc82
         $this->help_page['pg.ftsdict.alter']  = 'sql-altertsdictionary.html';
 
         $this->help_page['pg.ftsparser'] = 'textsearch-parsers.html';
+
     }
 
 }
