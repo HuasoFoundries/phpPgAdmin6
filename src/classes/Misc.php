@@ -108,6 +108,9 @@ class Misc
             'line'     => $backtrace[0]['line'],
         ]);
 
+        $errmsg = htmlspecialchars($errmsg);
+        $p1     = htmlspecialchars($p1);
+        $p2     = htmlspecialchars($p2);
         switch ($fn) {
             case 'EXECUTE':
                 $sql         = $p1;
@@ -115,7 +118,7 @@ class Misc
 
                 /*$s = "<p><b>{$lang['strsqlerror']}</b><br />" . $misc->printVal($errmsg, 'errormsg') . "</p> <p><b>{$lang['strinstatement']}</b><br />" . $misc->printVal($sql). "</p>    ";*/
 
-                $s = "<p><b>strsqlerror</b><br />" . htmlspecialchars($errmsg) . "</p> <p><b>SQL:</b><br />" . htmlspecialchars($sql) . "</p>	";
+                $s = "<p><b>strsqlerror</b><br />" . $errmsg . "</p> <p><b>SQL:</b><br />" . $sql . "</p>	";
 
                 echo '<table class="error" cellpadding="5"><tr><td>' . $s . '</td></tr></table><br />' . "\n";
 
@@ -568,19 +571,12 @@ class Misc
         if (!isset($vars['url'])) {
             $vars['url'] = '/redirect';
         }
-        //\PC::debug($vars, 'getSubjectParams');
         if ($vars['url'] == '/redirect' && isset($vars['params']['subject'])) {
             $vars['url'] = '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
         return $vars;
-    }
-
-    public function getHREFSubject($subject)
-    {
-        $vars = $this->getSubjectParams($subject);
-        return "{$vars['url']}?" . http_build_query($vars['params'], '', '&amp;');
     }
 
     /**
@@ -841,32 +837,13 @@ class Misc
     }
 
     /**
-     * Print out the page heading and help link
-     * @param $title Title, already escaped
-     * @param $help (optional) The identifier for the help link
-
-    function printTitle($title, $help = null, $do_print = true) {
-    $data = $this->data;
-    $lang = $this->lang;
-
-    $title_html = "<h2>";
-    $title_html .= $this->printHelp($title, $help, false);
-    $title_html .= "</h2>\n";
-
-    if ($do_print) {
-    echo $title_html;
-    } else {
-    return $title_html;
-    }
-    } */
-
-    /**
      * Print out a message
      * @param $msg The message to print
      */
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
+        $msg  = htmlspecialchars($msg);
         if ($msg != '') {
             $html .= "<p class=\"message\">{$msg}</p>\n";
         }
@@ -877,54 +854,6 @@ class Misc
         }
 
     }
-
-    /**
-     * Prints the page header.  If member variable $this->_no_output is
-     * set then no header is drawn.
-     * @param $title The title of the page
-     * @param $script script tag
-     * @param $do_print boolean if false, the function will return the header content
-
-    function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig') {
-
-    if (function_exists('newrelic_disable_autorum')) {
-    newrelic_disable_autorum();
-    }
-    $appName = $this->appName;
-    $lang = $this->lang;
-    $plugin_manager = $this->plugin_manager;
-
-    $viewVars = $this->lang;
-    $viewVars['dir'] = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
-
-    $viewVars['appName'] = htmlspecialchars($this->appName) . ($title != '') ? htmlspecialchars(" - {$title}") : '';
-
-    $header_html = $this->view->fetch($template, $viewVars);
-
-    if ($script) {
-    $header_html .= "{$script}\n";
-    }
-
-    $plugins_head = [];
-    $_params = ['heads' => &$plugins_head];
-
-    $plugin_manager->do_hook('head', $_params);
-
-    foreach ($plugins_head as $tag) {
-    $header_html .= $tag;
-    }
-
-    $header_html .= "</head>\n";
-
-    if (!$this->_no_output && $do_print) {
-
-    header("Content-Type: text/html; charset=utf-8");
-    echo $header_html;
-
-    } else {
-    return $header_html;
-    }
-    }*/
 
     /**
      * Retrieve the tab info for a specific tab bar.
@@ -1702,33 +1631,6 @@ class Misc
             }
             echo "</p>\n";
         }
-    }
-
-    /**
-     * Displays link to the context help.
-     * @param $str   - the string that the context help is related to (already escaped)
-     * @param $help  - help section identifier
-     * @param $do_print true to echo, false to return
-     */
-    public function printHelp($str, $help = null, $do_print = true)
-    {
-        //\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
-        if ($help !== null) {
-            $helplink = $this->getHelpLink($help);
-            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">' . $this->lang['strhelpicon'] . '</a>';
-
-        }
-        if ($do_print) {
-            echo $str;
-        } else {
-            return $str;
-        }
-    }
-
-    public function getHelpLink($help)
-    {
-        return htmlspecialchars("/src/views/help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
-
     }
 
     /**

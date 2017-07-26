@@ -6,7 +6,7 @@
  * $Id: PostgresDoc83.php,v 1.3 2008/03/17 21:35:48 ioguix Exp $
  */
 
-include BASE_PATH . '/help/PostgresDoc82.php';
+include BASE_PATH . '/src/help/PostgresDoc82.php';
 
 $this->help_page['pg.fts'] = 'textsearch.html';
 
