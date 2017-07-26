@@ -224,6 +224,10 @@ class Misc
             $this->data->conf        = $this->conf;
             $this->data->lang        = $this->lang;
 
+            $this->data->getHelpPages();
+
+            //$this->prtrace('help_page has ' . count($this->data->help_page) . ' items');
+
             /* we work on UTF-8 only encoding */
             $this->data->execute("SET client_encoding TO 'UTF-8'");
 

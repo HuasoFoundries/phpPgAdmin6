@@ -7,9 +7,11 @@ namespace PHPPgAdmin\Help;
  */
 class PostgresDoc74
 {
-    private $major_version;
-    private $help_page;
-    private $conf;
+    use \PHPPgAdmin\HelperTrait;
+
+    protected $major_version;
+    protected $help_page;
+    protected $conf;
 
     public function __construct($conf, $major_version)
     {
@@ -23,18 +25,14 @@ class PostgresDoc74
             'pg.database.create'          => ['sql-createdatabase.html', 'manage-ag-createdb.html'],
             'pg.database.alter'           => 'sql-alterdatabase.html',
             'pg.database.drop'            => ['sql-dropdatabase.html', 'manage-ag-dropdb.html'],
-
             'pg.admin.analyze'            => 'sql-analyze.html',
             'pg.admin.vacuum'             => 'sql-vacuum.html',
-
             'pg.cast'                     => ['sql-expressions.html#SQL-SYNTAX-TYPE-CASTS', 'sql-createcast.html'],
             'pg.cast.create'              => 'sql-createcast.html',
             'pg.cast.drop'                => 'sql-dropcast.html',
-
             'pg.column.add'               => ['ddl-alter.html#AEN2115', 'sql-altertable.html'],
             'pg.column.alter'             => ['ddl-alter.html', 'sql-altertable.html'],
             'pg.column.drop'              => ['ddl-alter.html#AEN2124', 'sql-altertable.html'],
-
             'pg.constraint'               => 'ddl-constraints.html',
             'pg.constraint.add'           => 'ddl-alter.html#AEN2131',
             'pg.constraint.check'         => 'ddl-constraints.html#AEN1895',
@@ -162,6 +160,7 @@ class PostgresDoc74
 
             'pg.locks'                    => 'view-pg-locks.html',
         ];
+
     }
 
     public function getHelpBase()
