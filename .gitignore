@@ -12,3 +12,4 @@ vendor
 npm-debug.log
 logs
 info.php
+fabfile*
