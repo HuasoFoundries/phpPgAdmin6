@@ -5,4 +5,4 @@
  *
  */
 
-include BASE_PATH . '/help/PostgresDoc95.php';
+include BASE_PATH . '/src/help/PostgresDoc95.php';
