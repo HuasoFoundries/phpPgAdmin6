@@ -13,7 +13,16 @@ DEFINE('THEME_PATH', BASE_PATH . "/src/themes");
 ini_set('arg_separator.output', '&amp;');
 
 ini_set('error_log', BASE_PATH . '/temp/logs/phppga.php_error.log');
-$debugmode = true;
+
+// Check to see if the configuration file exists, if not, explain
+if (file_exists(BASE_PATH . '/config.inc.php')) {
+	$conf = [];
+	include BASE_PATH . '/config.inc.php';
+} else {
+	die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
+
+}
+$debugmode = (!isset($conf['debugmode'])) ? false : $conf['debugmode'];
 
 if ($debugmode) {
 	ini_set('display_errors', 1);
@@ -36,6 +45,11 @@ if (!ini_get('session.auto_start')) {
 	session_name('PPA_ID');
 	session_start();
 }
+\Kint::$enabled_mode = ($debugmode);
+
+\Kint::dump($_SERVER);
+die();
+
 $handler = PhpConsole\Handler::getInstance();
 $handler->start(); // initialize handlers*/
 PhpConsole\Helper::register(); // it will register global PC class
@@ -74,17 +88,8 @@ $app = new \Slim\App($config);
 // Fetch DI Container
 $container = $app->getContainer();
 
-\Kint::$enabled_mode = ($debugmode);
+$container['conf'] = function ($c) use ($conf) {
 
-$container['conf'] = function ($c) {
-// Check to see if the configuration file exists, if not, explain
-	if (file_exists(BASE_PATH . '/config.inc.php')) {
-		$conf = [];
-		include BASE_PATH . '/config.inc.php';
-	} else {
-		die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
-
-	}
 	// Plugins are removed
 	$conf['plugins'] = [];
 
