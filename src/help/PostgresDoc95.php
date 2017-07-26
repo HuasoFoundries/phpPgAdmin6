@@ -1,10 +1,20 @@
 <?php
 
+namespace PHPPgAdmin\Help;
+
 /**
  * Help links for PostgreSQL 9.5 documentation
  *
  */
+class PostgresDoc95 extends PostgresDoc94
+{
 
-include BASE_PATH . '/src/help/PostgresDoc94.php';
+    public function __construct($conf, $major_version)
+    {
+        parent::__construct($conf, $major_version);
 
-$this->help_page['pg.matview'] = 'sql-creatematerializedview.html';
+        $this->help_page['pg.matview'] = 'sql-creatematerializedview.html';
+
+    }
+
+}
