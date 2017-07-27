@@ -3,22 +3,22 @@
 
     <head data-headertemplate="{{headertemplate}}">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" href="/src/themes/{{theme}}/global.css" type="text/css" id="csstheme" />
+        <link rel="stylesheet" href="{{subfolder}}/src/themes/{{theme}}/global.css" type="text/css" id="csstheme" />
 
-        <link rel="stylesheet" href="/src/themes/datatables.min.css" type="text/css" />
+        <link rel="stylesheet" href="{{subfolder}}/src/themes/datatables.min.css" type="text/css" />
 
-        <link rel="shortcut icon" href="/images/themes/{{theme}}/Favicon.ico" type="image/vnd.microsoft.icon" />
-        <link rel="icon" type="image/png" href="/images/themes/{{theme}}/Introduction.png" />
+        <link rel="shortcut icon" href="{{subfolder}}/images/themes/{{theme}}/Favicon.ico" type="image/vnd.microsoft.icon" />
+        <link rel="icon" type="image/png" href="{{subfolder}}/images/themes/{{theme}}/Introduction.png" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
-        <script src="/js/datatables.min.js"></script>
+        <script src="{{subfolder}}/js/datatables.min.js"></script>
 
         <title data-headertemplate="{{headertemplate}}">{{appName}}</title>
 
         <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             if (window.parent.frames.length > 1) {
-                $('#csstheme', window.parent.frames[0].document).attr('href', '/src/themes/{{theme}}/global.css');
+                $('#csstheme', window.parent.frames[0].document).attr('href', '{{subfolder}}/src/themes/{{theme}}/global.css');
             }
         });
         </script>

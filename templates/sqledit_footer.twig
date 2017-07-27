@@ -27,7 +27,7 @@ jQuery(document).ready(function () {
     jQuery('table.printconnection').prependTo('.sqlform');
 
     if (window.parent.frames.length > 1) {
-        $('#csstheme', window.parent.frames[0].document).attr('href', '/src/themes/default/global.css');
+        $('#csstheme', window.parent.frames[0].document).attr('href', '{{subfolder}}/src/themes/default/global.css');
     }
     //jQuery('.CodeMirror').focus().css('height', $('#query').attr('rows') * 30).resizable();
     jQuery('.CodeMirror')

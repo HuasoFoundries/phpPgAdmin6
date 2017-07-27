@@ -145,31 +145,31 @@ class TreeController extends HTMLController {
 		if (is_string($icon)) {
 			$path = "/images/themes/{$this->conf['theme']}/{$icon}";
 			if (file_exists(BASE_PATH . $path . '.png')) {
-				return $path . '.png';
+				return SUBFOLDER . $path . '.png';
 			}
 
 			if (file_exists(BASE_PATH . $path . '.gif')) {
-				return $path . '.gif';
+				return SUBFOLDER . $path . '.gif';
 			}
 
 			$path = "/images/themes/default/{$icon}";
 			if (file_exists(BASE_PATH . $path . '.png')) {
-				return $path . '.png';
+				return SUBFOLDER . $path . '.png';
 			}
 
 			if (file_exists(BASE_PATH . $path . '.gif')) {
-				return $path . '.gif';
+				return SUBFOLDER . $path . '.gif';
 			}
 
 		} else {
 			// Icon from plugins
 			$path = "/plugins/{$icon[0]}/images/{$icon[1]}";
 			if (file_exists(BASE_PATH . $path . '.png')) {
-				return $path . '.png';
+				return SUBFOLDER . $path . '.png';
 			}
 
 			if (file_exists(BASE_PATH . $path . '.gif')) {
-				return $path . '.gif';
+				return SUBFOLDER . $path . '.gif';
 			}
 
 		}

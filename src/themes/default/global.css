@@ -1,6 +1,8 @@
 @import url(../global.css);
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700,400italic);
 
+
+
 /**
  * Default style sheet
  */
@@ -303,6 +305,8 @@ table.tabs {
 }
 
 
+
+
 /*.tab .label {
     display: inline-block;
     float: left;
@@ -415,9 +419,11 @@ pre.error {
 }
 
 
+
+
 /** FK browsing **/
 
-div#root > div.fk {
+div#root>div.fk {
     border: 1px solid #000;
 }
 
@@ -437,7 +443,7 @@ div.logo {
     border: none;
     border-bottom: 2px solid #999;
     margin-bottom: 2px;
-    background-image: url('/images/themes/default/title_blue.png');
+    background-image: url('../../../images/themes/default/title_blue.png');
     background-repeat: no-repeat;
     background-size: contain;
     height: 50px;
