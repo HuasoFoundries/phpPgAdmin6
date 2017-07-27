@@ -6,7 +6,7 @@
  * $Id: PostgresDoc80.php,v 1.5 2005/02/16 10:27:44 jollytoad Exp $
  */
 
-include BASE_PATH . '/help/PostgresDoc74.php';
+include BASE_PATH . '/src/help/PostgresDoc74.php';
 
 $this->help_page['pg.column.add'][0]  = 'ddl-alter.html#AEN2217';
 $this->help_page['pg.column.drop'][0] = 'ddl-alter.html#AEN2226';
