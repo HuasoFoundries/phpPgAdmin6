@@ -12,6 +12,7 @@ version:
 
 install: 
 	composer install --no-dev
+	chmod 777 temp -R
 
 
 update_version:
