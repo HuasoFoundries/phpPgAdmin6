@@ -1,6 +1,4 @@
     // Globals
-    //
-
 
     /*
      * Multiple Selection lists in HTML Document
@@ -11,9 +9,8 @@
     /*
      * Two Array vars
      */
-
-    var indexColumns, tableColumns;
-
+    var indexColumns,
+        tableColumns;
 
     function buttonPressed(object) {
 
@@ -53,9 +50,8 @@
 
     }
 
-
     function getSelectedOptions(obj) {
-        var selectedOptions = new Array();
+        var selectedOptions = [];
 
         for (i = 0; i < obj.options.length; i++) {
             if (obj.options[i].selected) {
