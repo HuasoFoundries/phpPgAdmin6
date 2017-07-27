@@ -8356,18 +8356,18 @@ class Postgres extends ADODB_base
                 /* semicolon? then send query */
                 else if (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
                     $subline = substr(substr($line, 0, $i), $query_start);
-                    /* is there anything else on the line? */
-                    if (strspn($subline, " \t\n\r") != strlen($subline)) {
-                        /*
-                         * insert a cosmetic newline, if this is not the first
-                         * line in the buffer
-                         */
-                        if (strlen($query_buf) > 0) {
-                            $query_buf .= "\n";
-                        }
+                    /*
+                     * insert a cosmetic newline, if this is not the first
+                     * line in the buffer
+                     */
+                    if (strlen($query_buf) > 0) {
+                        $query_buf .= "\n";
+                    }
 
-                        /* append the line to the query buffer */
-                        $query_buf .= $subline;
+                    /* append the line to the query buffer */
+                    $query_buf .= $subline;
+                    /* is there anything in the query_buf? */
+                    if (trim($query_buf)) {
                         $query_buf .= ';';
 
                         // Execute the query. PHP cannot execute
@@ -8393,7 +8393,6 @@ class Postgres extends ADODB_base
                             }
                         }
                     }
-
                     $query_buf   = null;
                     $query_start = $i + $thislen;
                 }
