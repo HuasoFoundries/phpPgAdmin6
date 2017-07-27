@@ -9,7 +9,7 @@ config.inc.php*
 
 
 vendor
-npm-debug.log
+*.log
 logs
 info.php
 fabfile*

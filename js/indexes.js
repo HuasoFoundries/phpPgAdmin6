@@ -1,7 +1,6 @@
     // Globals
     //
 
-
     /*
      * Multiple Selection lists in HTML Document
      */
@@ -11,7 +10,6 @@
     /*
      * Two Array vars
      */
-
     var indexColumns, tableColumns;
 
 
