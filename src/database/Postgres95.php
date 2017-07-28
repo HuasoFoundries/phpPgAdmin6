@@ -1,14 +1,15 @@
 <?php
-namespace PHPPgAdmin\Database;
 
-/**
- * PostgreSQL 9.5 support
- *
- */
+    namespace PHPPgAdmin\Database;
 
-class Postgres95 extends Postgres96
-{
+    /**
+     * PostgreSQL 9.5 support
+     *
+     */
 
-    public $major_version = 9.5;
+    class Postgres95 extends Postgres96
+    {
 
-}
+        public $major_version = 9.5;
+
+    }

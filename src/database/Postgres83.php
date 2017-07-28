@@ -1,81 +1,83 @@
 <?php
-namespace PHPPgAdmin\Database;
 
-/**
- * PostgreSQL 8.3 support
- *
- * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
- */
-
-class Postgres83 extends Postgres84
-{
-
-    public $major_version = 8.3;
-
-    // List of all legal privileges that can be applied to different types
-    // of objects.
-    public $privlist = [
-        'table'      => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'view'       => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'sequence'   => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
-        'database'   => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
-        'function'   => ['EXECUTE', 'ALL PRIVILEGES'],
-        'language'   => ['USAGE', 'ALL PRIVILEGES'],
-        'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
-        'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
-    ];
-    // List of characters in acl lists and the privileges they
-    // refer to.
-    public $privmap = [
-        'r' => 'SELECT',
-        'w' => 'UPDATE',
-        'a' => 'INSERT',
-        'd' => 'DELETE',
-        'R' => 'RULE',
-        'x' => 'REFERENCES',
-        't' => 'TRIGGER',
-        'X' => 'EXECUTE',
-        'U' => 'USAGE',
-        'C' => 'CREATE',
-        'T' => 'TEMPORARY',
-        'c' => 'CONNECT',
-    ];
-
-    // Databse functions
+    namespace PHPPgAdmin\Database;
 
     /**
-     * Return all database available on the server
-     * @param $currentdatabase database name that should be on top of the resultset
+     * PostgreSQL 8.3 support
      *
-     * @return A list of databases, sorted alphabetically
+     * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
      */
-    public function getDatabases($currentdatabase = null)
+
+    class Postgres83 extends Postgres84
     {
-        $conf        = $this->conf;
-        $server_info = $this->server_info;
 
-        if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
-            $username = $server_info['username'];
-            $this->clean($username);
-            $clause = " AND pr.rolname='{$username}'";
-        } else {
-            $clause = '';
-        }
+        public $major_version = 8.3;
 
-        if ($currentdatabase != null) {
-            $this->clean($currentdatabase);
-            $orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
-        } else {
-            $orderby = 'ORDER BY pdb.datname';
-        }
+        // List of all legal privileges that can be applied to different types
+        // of objects.
+        public $privlist = [
+            'table'      => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+            'view'       => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+            'sequence'   => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+            'database'   => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
+            'function'   => ['EXECUTE', 'ALL PRIVILEGES'],
+            'language'   => ['USAGE', 'ALL PRIVILEGES'],
+            'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+            'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
+        ];
+        // List of characters in acl lists and the privileges they
+        // refer to.
+        public $privmap = [
+            'r' => 'SELECT',
+            'w' => 'UPDATE',
+            'a' => 'INSERT',
+            'd' => 'DELETE',
+            'R' => 'RULE',
+            'x' => 'REFERENCES',
+            't' => 'TRIGGER',
+            'X' => 'EXECUTE',
+            'U' => 'USAGE',
+            'C' => 'CREATE',
+            'T' => 'TEMPORARY',
+            'c' => 'CONNECT',
+        ];
 
-        if (!$conf['show_system']) {
-            $where = ' AND NOT pdb.datistemplate';
-        } else {
-            $where = ' AND pdb.datallowconn';
-        }
+        // Databse functions
 
-        $sql = "
+        /**
+         * Return all database available on the server
+         *
+         * @param $currentdatabase database name that should be on top of the resultset
+         *
+         * @return A list of databases, sorted alphabetically
+         */
+        public function getDatabases($currentdatabase = null)
+        {
+            $conf        = $this->conf;
+            $server_info = $this->server_info;
+
+            if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
+                $username = $server_info['username'];
+                $this->clean($username);
+                $clause = " AND pr.rolname='{$username}'";
+            } else {
+                $clause = '';
+            }
+
+            if ($currentdatabase != null) {
+                $this->clean($currentdatabase);
+                $orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
+            } else {
+                $orderby = 'ORDER BY pdb.datname';
+            }
+
+            if (!$conf['show_system']) {
+                $where = ' AND NOT pdb.datistemplate';
+            } else {
+                $where = ' AND pdb.datallowconn';
+            }
+
+            $sql = "
 			SELECT pdb.datname AS datname, pr.rolname AS datowner, pg_encoding_to_char(encoding) AS datencoding,
 				(SELECT description FROM pg_catalog.pg_shdescription pd WHERE pdb.oid=pd.objoid AND pd.classoid='pg_database'::regclass) AS datcomment,
 				(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=pdb.dattablespace) AS tablespace,
@@ -86,27 +88,27 @@ class Postgres83 extends Postgres84
 				{$clause}
 			{$orderby}";
 
-        return $this->selectSet($sql);
-    }
+            return $this->selectSet($sql);
+        }
 
-    // Administration functions
+        // Administration functions
 
-    /**
-     * Returns all available autovacuum per table information.
-     *
-     * @param string $table
-     * @return \PHPPgAdmin\Database\A recordset
-     */
-    public function getTableAutovacuum($table = '')
-    {
-        $sql = '';
+        /**
+         * Returns all available autovacuum per table information.
+         *
+         * @param string $table
+         * @return \PHPPgAdmin\Database\A recordset
+         */
+        public function getTableAutovacuum($table = '')
+        {
+            $sql = '';
 
-        if ($table !== '') {
-            $this->clean($table);
-            $c_schema = $this->_schema;
-            $this->clean($c_schema);
+            if ($table !== '') {
+                $this->clean($table);
+                $c_schema = $this->_schema;
+                $this->clean($c_schema);
 
-            $sql = "
+                $sql = "
 				SELECT vacrelid, nspname, relname,
 					CASE enabled
 						WHEN 't' THEN 'on'
@@ -121,8 +123,8 @@ class Postgres83 extends Postgres84
 				WHERE c.relname = '{$table}' AND n.nspname = '{$c_schema}'
 				ORDER BY nspname, relname
 			";
-        } else {
-            $sql = "
+            } else {
+                $sql = "
 				SELECT vacrelid, nspname, relname,
 					CASE enabled
 						WHEN 't' THEN 'on'
@@ -136,19 +138,27 @@ class Postgres83 extends Postgres84
 					join pg_namespace AS n on (n.oid=c.relnamespace)
 				ORDER BY nspname, relname
 			";
+            }
+
+            return $this->selectSet($sql);
         }
 
-        return $this->selectSet($sql);
-    }
+        public function saveAutovacuum(
+            $table,
+            $vacenabled,
+            $vacthreshold,
+            $vacscalefactor,
+            $anathresold,
+            $anascalefactor,
+            $vaccostdelay,
+            $vaccostlimit
+        ) {
+            $defaults = $this->getAutovacuum();
+            $c_schema = $this->_schema;
+            $this->clean($c_schema);
+            $this->clean($table);
 
-    public function saveAutovacuum($table, $vacenabled, $vacthreshold, $vacscalefactor, $anathresold,
-        $anascalefactor, $vaccostdelay, $vaccostlimit) {
-        $defaults = $this->getAutovacuum();
-        $c_schema = $this->_schema;
-        $this->clean($c_schema);
-        $this->clean($table);
-
-        $rs = $this->selectSet("
+            $rs = $this->selectSet("
 			SELECT c.oid
 			FROM pg_catalog.pg_class AS c
 				LEFT JOIN pg_catalog.pg_namespace AS n ON (n.oid=c.relnamespace)
@@ -156,53 +166,53 @@ class Postgres83 extends Postgres84
 				c.relname = '{$table}' AND n.nspname = '{$c_schema}'
 		");
 
-        if ($rs->EOF) {
-            return -1;
-        }
+            if ($rs->EOF) {
+                return -1;
+            }
 
-        $toid = $rs->fields('oid');
-        unset($rs);
+            $toid = $rs->fields('oid');
+            unset($rs);
 
-        if (empty($_POST['autovacuum_vacuum_threshold'])) {
-            $_POST['autovacuum_vacuum_threshold'] = $defaults['autovacuum_vacuum_threshold'];
-        }
+            if (empty($_POST['autovacuum_vacuum_threshold'])) {
+                $_POST['autovacuum_vacuum_threshold'] = $defaults['autovacuum_vacuum_threshold'];
+            }
 
-        if (empty($_POST['autovacuum_vacuum_scale_factor'])) {
-            $_POST['autovacuum_vacuum_scale_factor'] = $defaults['autovacuum_vacuum_scale_factor'];
-        }
+            if (empty($_POST['autovacuum_vacuum_scale_factor'])) {
+                $_POST['autovacuum_vacuum_scale_factor'] = $defaults['autovacuum_vacuum_scale_factor'];
+            }
 
-        if (empty($_POST['autovacuum_analyze_threshold'])) {
-            $_POST['autovacuum_analyze_threshold'] = $defaults['autovacuum_analyze_threshold'];
-        }
+            if (empty($_POST['autovacuum_analyze_threshold'])) {
+                $_POST['autovacuum_analyze_threshold'] = $defaults['autovacuum_analyze_threshold'];
+            }
 
-        if (empty($_POST['autovacuum_analyze_scale_factor'])) {
-            $_POST['autovacuum_analyze_scale_factor'] = $defaults['autovacuum_analyze_scale_factor'];
-        }
+            if (empty($_POST['autovacuum_analyze_scale_factor'])) {
+                $_POST['autovacuum_analyze_scale_factor'] = $defaults['autovacuum_analyze_scale_factor'];
+            }
 
-        if (empty($_POST['autovacuum_vacuum_cost_delay'])) {
-            $_POST['autovacuum_vacuum_cost_delay'] = $defaults['autovacuum_vacuum_cost_delay'];
-        }
+            if (empty($_POST['autovacuum_vacuum_cost_delay'])) {
+                $_POST['autovacuum_vacuum_cost_delay'] = $defaults['autovacuum_vacuum_cost_delay'];
+            }
 
-        if (empty($_POST['autovacuum_vacuum_cost_limit'])) {
-            $_POST['autovacuum_vacuum_cost_limit'] = $defaults['autovacuum_vacuum_cost_limit'];
-        }
+            if (empty($_POST['autovacuum_vacuum_cost_limit'])) {
+                $_POST['autovacuum_vacuum_cost_limit'] = $defaults['autovacuum_vacuum_cost_limit'];
+            }
 
-        if (empty($_POST['vacuum_freeze_min_age'])) {
-            $_POST['vacuum_freeze_min_age'] = $defaults['vacuum_freeze_min_age'];
-        }
+            if (empty($_POST['vacuum_freeze_min_age'])) {
+                $_POST['vacuum_freeze_min_age'] = $defaults['vacuum_freeze_min_age'];
+            }
 
-        if (empty($_POST['autovacuum_freeze_max_age'])) {
-            $_POST['autovacuum_freeze_max_age'] = $defaults['autovacuum_freeze_max_age'];
-        }
+            if (empty($_POST['autovacuum_freeze_max_age'])) {
+                $_POST['autovacuum_freeze_max_age'] = $defaults['autovacuum_freeze_max_age'];
+            }
 
-        $rs = $this->selectSet("SELECT vacrelid
+            $rs = $this->selectSet("SELECT vacrelid
 			FROM \"pg_catalog\".\"pg_autovacuum\"
 			WHERE vacrelid = {$toid};");
 
-        $status = -1; // ini
-        if ($rs->recordCount() and ($rs->fields['vacrelid'] == $toid)) {
-            // table exists in pg_autovacuum, UPDATE
-            $sql = sprintf("UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
+            $status = -1; // ini
+            if ($rs->recordCount() and ($rs->fields['vacrelid'] == $toid)) {
+                // table exists in pg_autovacuum, UPDATE
+                $sql    = sprintf("UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
 						enabled = '%s',
 						vac_base_thresh = %s,
 						vac_scale_factor = %s,
@@ -214,45 +224,45 @@ class Postgres83 extends Postgres84
 						freeze_max_age = %s
 					WHERE vacrelid = {$toid};
 				",
-                ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
-                $_POST['autovacuum_vacuum_threshold'],
-                $_POST['autovacuum_vacuum_scale_factor'],
-                $_POST['autovacuum_analyze_threshold'],
-                $_POST['autovacuum_analyze_scale_factor'],
-                $_POST['autovacuum_vacuum_cost_delay'],
-                $_POST['autovacuum_vacuum_cost_limit'],
-                $_POST['vacuum_freeze_min_age'],
-                $_POST['autovacuum_freeze_max_age']
-            );
-            $status = $this->execute($sql);
-        } else {
-            // table doesn't exists in pg_autovacuum, INSERT
-            $sql = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
+                    ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
+                    $_POST['autovacuum_vacuum_threshold'],
+                    $_POST['autovacuum_vacuum_scale_factor'],
+                    $_POST['autovacuum_analyze_threshold'],
+                    $_POST['autovacuum_analyze_scale_factor'],
+                    $_POST['autovacuum_vacuum_cost_delay'],
+                    $_POST['autovacuum_vacuum_cost_limit'],
+                    $_POST['vacuum_freeze_min_age'],
+                    $_POST['autovacuum_freeze_max_age']
+                );
+                $status = $this->execute($sql);
+            } else {
+                // table doesn't exists in pg_autovacuum, INSERT
+                $sql    = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
 				VALUES (%s, '%s', %s, %s, %s, %s, %s, %s, %s, %s )",
-                $toid,
-                ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
-                $_POST['autovacuum_vacuum_threshold'],
-                $_POST['autovacuum_vacuum_scale_factor'],
-                $_POST['autovacuum_analyze_threshold'],
-                $_POST['autovacuum_analyze_scale_factor'],
-                $_POST['autovacuum_vacuum_cost_delay'],
-                $_POST['autovacuum_vacuum_cost_limit'],
-                $_POST['vacuum_freeze_min_age'],
-                $_POST['autovacuum_freeze_max_age']
-            );
-            $status = $this->execute($sql);
+                    $toid,
+                    ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
+                    $_POST['autovacuum_vacuum_threshold'],
+                    $_POST['autovacuum_vacuum_scale_factor'],
+                    $_POST['autovacuum_analyze_threshold'],
+                    $_POST['autovacuum_analyze_scale_factor'],
+                    $_POST['autovacuum_vacuum_cost_delay'],
+                    $_POST['autovacuum_vacuum_cost_limit'],
+                    $_POST['vacuum_freeze_min_age'],
+                    $_POST['autovacuum_freeze_max_age']
+                );
+                $status = $this->execute($sql);
+            }
+
+            return $status;
         }
 
-        return $status;
-    }
+        public function dropAutovacuum($table)
+        {
+            $c_schema = $this->_schema;
+            $this->clean($c_schema);
+            $this->clean($table);
 
-    public function dropAutovacuum($table)
-    {
-        $c_schema = $this->_schema;
-        $this->clean($c_schema);
-        $this->clean($table);
-
-        $rs = $this->selectSet("
+            $rs = $this->selectSet("
 			SELECT c.oid
 			FROM pg_catalog.pg_class AS c
 				LEFT JOIN pg_catalog.pg_namespace AS n ON (n.oid=c.relnamespace)
@@ -260,100 +270,112 @@ class Postgres83 extends Postgres84
 				c.relname = '{$table}' AND n.nspname = '{$c_schema}'
 		");
 
-        return $this->deleteRow('pg_autovacuum', ['vacrelid' => $rs->fields['oid']], 'pg_catalog');
-    }
-
-    // Sequence functions
-
-    /**
-     * Alter a sequence's properties
-     *
-     * @param $seqrs        The sequence RecordSet returned by getSequence()
-     * @param $increment    The sequence incremental value
-     * @param $minvalue     The sequence minimum value
-     * @param $maxvalue     The sequence maximum value
-     * @param $restartvalue The sequence current value
-     * @param $cachevalue   The sequence cache value
-     * @param $cycledvalue  Sequence can cycle ?
-     * @param $startvalue   The sequence start value when issueing a restart (ignored)
-     * @return int|\PHPPgAdmin\Database\A 0 success
-     */
-    public function alterSequenceProps($seqrs, $increment, $minvalue, $maxvalue,
-        $restartvalue, $cachevalue, $cycledvalue, $startvalue) {
-
-        $sql = '';
-        /* vars are cleaned in _alterSequence */
-        if (!empty($increment) && ($increment != $seqrs->fields['increment_by'])) {
-            $sql .= " INCREMENT {$increment}";
+            return $this->deleteRow('pg_autovacuum', ['vacrelid' => $rs->fields['oid']], 'pg_catalog');
         }
 
-        if (!empty($minvalue) && ($minvalue != $seqrs->fields['min_value'])) {
-            $sql .= " MINVALUE {$minvalue}";
+        // Sequence functions
+
+        /**
+         * Alter a sequence's properties
+         *
+         * @param $seqrs        The sequence RecordSet returned by getSequence()
+         * @param $increment    The sequence incremental value
+         * @param $minvalue     The sequence minimum value
+         * @param $maxvalue     The sequence maximum value
+         * @param $restartvalue The sequence current value
+         * @param $cachevalue   The sequence cache value
+         * @param $cycledvalue  Sequence can cycle ?
+         * @param $startvalue   The sequence start value when issueing a restart (ignored)
+         * @return int|\PHPPgAdmin\Database\A 0 success
+         */
+        public function alterSequenceProps(
+            $seqrs,
+            $increment,
+            $minvalue,
+            $maxvalue,
+            $restartvalue,
+            $cachevalue,
+            $cycledvalue,
+            $startvalue
+        ) {
+
+            $sql = '';
+            /* vars are cleaned in _alterSequence */
+            if (!empty($increment) && ($increment != $seqrs->fields['increment_by'])) {
+                $sql .= " INCREMENT {$increment}";
+            }
+
+            if (!empty($minvalue) && ($minvalue != $seqrs->fields['min_value'])) {
+                $sql .= " MINVALUE {$minvalue}";
+            }
+
+            if (!empty($maxvalue) && ($maxvalue != $seqrs->fields['max_value'])) {
+                $sql .= " MAXVALUE {$maxvalue}";
+            }
+
+            if (!empty($restartvalue) && ($restartvalue != $seqrs->fields['last_value'])) {
+                $sql .= " RESTART {$restartvalue}";
+            }
+
+            if (!empty($cachevalue) && ($cachevalue != $seqrs->fields['cache_value'])) {
+                $sql .= " CACHE {$cachevalue}";
+            }
+
+            // toggle cycle yes/no
+            if (!is_null($cycledvalue)) {
+                $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
+            }
+
+            if ($sql != '') {
+                $f_schema = $this->_schema;
+                $this->fieldClean($f_schema);
+                $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" {$sql}";
+
+                return $this->execute($sql);
+            }
+
+            return 0;
         }
 
-        if (!empty($maxvalue) && ($maxvalue != $seqrs->fields['max_value'])) {
-            $sql .= " MAXVALUE {$maxvalue}";
+        /**
+         * Alter a sequence's owner
+         *
+         * @param $seqrs The sequence RecordSet returned by getSequence()
+         * @param $owner
+         * @return int|\PHPPgAdmin\Database\A 0 success
+         * @internal param \PHPPgAdmin\Database\The $name new owner for the sequence
+         */
+        public function alterSequenceOwner($seqrs, $owner)
+        {
+            // If owner has been changed, then do the alteration.  We are
+            // careful to avoid this generally as changing owner is a
+            // superuser only function.
+            /* vars are cleaned in _alterSequence */
+            if (!empty($owner) && ($seqrs->fields['seqowner'] != $owner)) {
+                $f_schema = $this->_schema;
+                $this->fieldClean($f_schema);
+                $sql = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" OWNER TO \"{$owner}\"";
+
+                return $this->execute($sql);
+            }
+
+            return 0;
         }
 
-        if (!empty($restartvalue) && ($restartvalue != $seqrs->fields['last_value'])) {
-            $sql .= " RESTART {$restartvalue}";
-        }
+        // Function functions
 
-        if (!empty($cachevalue) && ($cachevalue != $seqrs->fields['cache_value'])) {
-            $sql .= " CACHE {$cachevalue}";
-        }
+        /**
+         * Returns all details for a particular function
+         *
+         * @param $function_oid
+         * @return \PHPPgAdmin\Database\Function info
+         * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
+         */
+        public function getFunction($function_oid)
+        {
+            $this->clean($function_oid);
 
-        // toggle cycle yes/no
-        if (!is_null($cycledvalue)) {
-            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
-        }
-
-        if ($sql != '') {
-            $f_schema = $this->_schema;
-            $this->fieldClean($f_schema);
-            $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" {$sql}";
-            return $this->execute($sql);
-        }
-        return 0;
-    }
-
-    /**
-     * Alter a sequence's owner
-     *
-     * @param $seqrs The sequence RecordSet returned by getSequence()
-     * @param $owner
-     * @return int|\PHPPgAdmin\Database\A 0 success
-     * @internal param \PHPPgAdmin\Database\The $name new owner for the sequence
-     */
-    public function alterSequenceOwner($seqrs, $owner)
-    {
-        // If owner has been changed, then do the alteration.  We are
-        // careful to avoid this generally as changing owner is a
-        // superuser only function.
-        /* vars are cleaned in _alterSequence */
-        if (!empty($owner) && ($seqrs->fields['seqowner'] != $owner)) {
-            $f_schema = $this->_schema;
-            $this->fieldClean($f_schema);
-            $sql = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" OWNER TO \"{$owner}\"";
-            return $this->execute($sql);
-        }
-        return 0;
-    }
-
-    // Function functions
-
-    /**
-     * Returns all details for a particular function
-     *
-     * @param $function_oid
-     * @return \PHPPgAdmin\Database\Function info
-     * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
-     */
-    public function getFunction($function_oid)
-    {
-        $this->clean($function_oid);
-
-        $sql = "
+            $sql = "
 			SELECT
 				pc.oid AS prooid, proname, pg_catalog.pg_get_userbyid(proowner) AS proowner,
 				nspname as proschema, lanname as prolanguage, procost, prorows,
@@ -371,16 +393,22 @@ class Postgres83 extends Postgres84
 				AND pc.pronamespace = pn.oid
 			";
 
-        return $this->selectSet($sql);
+            return $this->selectSet($sql);
+        }
+
+        // Capabilities
+        public function hasQueryKill()
+        {
+            return false;
+        }
+
+        public function hasDatabaseCollation()
+        {
+            return false;
+        }
+
+        public function hasAlterSequenceStart()
+        {
+            return false;
+        }
     }
-
-    // Capabilities
-    public function hasQueryKill()
-    {return false;}
-
-    public function hasDatabaseCollation()
-    {return false;}
-
-    public function hasAlterSequenceStart()
-    {return false;}
-}

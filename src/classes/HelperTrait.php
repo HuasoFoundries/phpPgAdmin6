@@ -125,6 +125,30 @@
         }
 
         /**
+         * Print out the page heading and help link
+         *
+         * @param      $title Title, already escaped
+         * @param      $help  (optional) The identifier for the help link
+         * @param bool $do_print
+         * @return string
+         */
+        public function printTitle($title, $help = null, $do_print = true)
+        {
+            $data = $this->data;
+            $lang = $this->lang;
+
+            $title_html = '<h2>';
+            $title_html .= $this->printHelp($title, $help, false);
+            $title_html .= "</h2>\n";
+
+            if ($do_print) {
+                echo $title_html;
+            } else {
+                return $title_html;
+            }
+        }
+
+        /**
          * Displays link to the context help.
          *
          * @param           $str      - the string that the context help is related to (already escaped)
@@ -149,30 +173,6 @@
         public function getHelpLink($help)
         {
             return htmlspecialchars('/src/views/help.php?help=' . urlencode($help) . '&server=' . urlencode($this->server_id));
-        }
-
-        /**
-         * Print out the page heading and help link
-         *
-         * @param      $title Title, already escaped
-         * @param      $help  (optional) The identifier for the help link
-         * @param bool $do_print
-         * @return string
-         */
-        public function printTitle($title, $help = null, $do_print = true)
-        {
-            $data = $this->data;
-            $lang = $this->lang;
-
-            $title_html = '<h2>';
-            $title_html .= $this->printHelp($title, $help, false);
-            $title_html .= "</h2>\n";
-
-            if ($do_print) {
-                echo $title_html;
-            } else {
-                return $title_html;
-            }
         }
 
         /**
