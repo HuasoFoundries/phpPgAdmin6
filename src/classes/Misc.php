@@ -100,13 +100,13 @@ class Misc
 
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-        $btarray0 = ([
+        $btarray0 = [
             'class'    => $backtrace[1]['class'],
             'type'     => $backtrace[1]['type'],
             'function' => $backtrace[1]['function'],
             'spacer'   => ' ',
             'line'     => $backtrace[0]['line'],
-        ]);
+        ];
 
         $errmsg = htmlspecialchars($errmsg);
         $p1     = htmlspecialchars($p1);
@@ -949,7 +949,7 @@ class Misc
                         'title'   => $lang['strtablespaces'],
                         'url'     => 'tablespaces.php',
                         'urlvars' => ['subject' => 'server'],
-                        'hide'    => (!$data || !$data->hasTablespaces()),
+                        'hide'    => !$data || !$data->hasTablespaces(),
                         'help'    => 'pg.tablespace',
                         'icon'    => 'Tablespaces',
                     ],
@@ -957,7 +957,7 @@ class Misc
                         'title'   => $lang['strexport'],
                         'url'     => 'all_db.php',
                         'urlvars' => ['subject' => 'server', 'action' => 'export'],
-                        'hide'    => (!$this->isDumpEnabled()),
+                        'hide'    => !$this->isDumpEnabled(),
                         'icon'    => 'Export',
                     ],
                 ]);
@@ -1021,7 +1021,7 @@ class Misc
                         'title'   => $lang['strprivileges'],
                         'url'     => 'privileges.php',
                         'urlvars' => ['subject' => 'database'],
-                        'hide'    => (!isset($data->privlist['database'])),
+                        'hide'    => !isset($data->privlist['database']),
                         'help'    => 'pg.privilege',
                         'tree'    => false,
                         'icon'    => 'Privileges',
@@ -1038,7 +1038,7 @@ class Misc
                         'title'   => $lang['strcasts'],
                         'url'     => 'casts.php',
                         'urlvars' => ['subject' => 'database'],
-                        'hide'    => ($hide_advanced),
+                        'hide'    => $hide_advanced,
                         'help'    => 'pg.cast',
                         'icon'    => 'Casts',
                     ],
@@ -1046,7 +1046,7 @@ class Misc
                         'title'   => $lang['strexport'],
                         'url'     => 'database.php',
                         'urlvars' => ['subject' => 'database', 'action' => 'export'],
-                        'hide'    => (!$this->isDumpEnabled()),
+                        'hide'    => !$this->isDumpEnabled(),
                         'tree'    => false,
                         'icon'    => 'Export',
                     ],
@@ -1157,7 +1157,7 @@ class Misc
                         'title'   => $lang['strexport'],
                         'url'     => 'schemas.php',
                         'urlvars' => ['subject' => 'schema', 'action' => 'export'],
-                        'hide'    => (!$this->isDumpEnabled()),
+                        'hide'    => !$this->isDumpEnabled(),
                         'tree'    => false,
                         'icon'    => 'Export',
                     ],
@@ -1862,7 +1862,7 @@ class Misc
         foreach ($this->conf['servers'] as $idx => $info) {
             $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
             if (($group === false)
-                or (isset($group[$idx]))
+                or isset($group[$idx])
                 or ($group === 'all')
             ) {
                 $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
@@ -2026,7 +2026,7 @@ class Misc
         $time                                                                     = ((float) $usec + (float) $sec);
         $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]["$time"] = [
             'query'    => $script,
-            'paginate' => (!isset($_REQUEST['paginate']) ? 'f' : 't'),
+            'paginate' => !isset($_REQUEST['paginate']) ? 'f' : 't',
             'queryid'  => $time,
         ];
     }
@@ -2056,7 +2056,7 @@ class Misc
                 if (empty($info['username'])) {
                     continue;
                 }
-                $selected = ((isset($_REQUEST['server']) && $info['id'] == $_REQUEST['server'])) ? ' selected="selected"' : '';
+                $selected = isset($_REQUEST['server']) && $info['id'] == $_REQUEST['server'] ? ' selected="selected"' : '';
                 // not logged on this server
                 $connection_html .= '<option value="' . htmlspecialchars($info['id']) . '" ' . $selected . '>';
                 $connection_html .= htmlspecialchars("{$info['desc']} ({$info['id']})");
@@ -2089,7 +2089,7 @@ class Misc
 
                 while (!$databases->EOF) {
                     $dbname     = $databases->fields['datname'];
-                    $dbselected = ((isset($_REQUEST['database']) && $dbname == $_REQUEST['database'])) ? ' selected="selected"' : '';
+                    $dbselected = isset($_REQUEST['database']) && $dbname == $_REQUEST['database'] ? ' selected="selected"' : '';
                     $connection_html .= '<option value="' . htmlspecialchars($dbname) . '" ' . $dbselected . '>' . htmlspecialchars($dbname) . "</option>\n";
 
                     $databases->moveNext();

@@ -2369,7 +2369,7 @@ class Postgres extends ADODB_base
         $toAlter = [];
         // Create the command for changing nullability
         if ($notnull != $oldnotnull) {
-            $toAlter[] = "ALTER COLUMN \"{$name}\" " . (($notnull) ? 'SET' : 'DROP') . ' NOT NULL';
+            $toAlter[] = "ALTER COLUMN \"{$name}\" " . ($notnull ? 'SET' : 'DROP') . ' NOT NULL';
         }
 
         // Add default, if it has changed
@@ -2488,7 +2488,7 @@ class Postgres extends ADODB_base
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . (($state) ? 'DROP' : 'SET') . ' NOT NULL';
+        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . ($state ? 'DROP' : 'SET') . ' NOT NULL';
 
         return $this->execute($sql);
     }
@@ -5472,23 +5472,23 @@ class Postgres extends ADODB_base
         $this->fieldArrayClean($trigger);
         // Constants to figure out tgtype
         if (!defined('TRIGGER_TYPE_ROW')) {
-            define('TRIGGER_TYPE_ROW', (1 << 0));
+            define('TRIGGER_TYPE_ROW', 1 << 0);
         }
 
         if (!defined('TRIGGER_TYPE_BEFORE')) {
-            define('TRIGGER_TYPE_BEFORE', (1 << 1));
+            define('TRIGGER_TYPE_BEFORE', 1 << 1);
         }
 
         if (!defined('TRIGGER_TYPE_INSERT')) {
-            define('TRIGGER_TYPE_INSERT', (1 << 2));
+            define('TRIGGER_TYPE_INSERT', 1 << 2);
         }
 
         if (!defined('TRIGGER_TYPE_DELETE')) {
-            define('TRIGGER_TYPE_DELETE', (1 << 3));
+            define('TRIGGER_TYPE_DELETE', 1 << 3);
         }
 
         if (!defined('TRIGGER_TYPE_UPDATE')) {
-            define('TRIGGER_TYPE_UPDATE', (1 << 4));
+            define('TRIGGER_TYPE_UPDATE', 1 << 4);
         }
 
         $trigger['tgisconstraint'] = $this->phpBool($trigger['tgisconstraint']);
@@ -6831,11 +6831,11 @@ class Postgres extends ADODB_base
             $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
         }
 
-        $sql .= ($superuser) ? ' SUPERUSER' : ' NOSUPERUSER';
-        $sql .= ($createdb) ? ' CREATEDB' : ' NOCREATEDB';
-        $sql .= ($createrole) ? ' CREATEROLE' : ' NOCREATEROLE';
-        $sql .= ($inherits) ? ' INHERIT' : ' NOINHERIT';
-        $sql .= ($login) ? ' LOGIN' : ' NOLOGIN';
+        $sql .= $superuser ? ' SUPERUSER' : ' NOSUPERUSER';
+        $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
+        $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
+        $sql .= $inherits ? ' INHERIT' : ' NOINHERIT';
+        $sql .= $login ? ' LOGIN' : ' NOLOGIN';
         if ($connlimit != '') {
             $sql .= " CONNECTION LIMIT {$connlimit}";
         } else {
@@ -6898,11 +6898,11 @@ class Postgres extends ADODB_base
             $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
         }
 
-        $sql .= ($superuser) ? ' SUPERUSER' : ' NOSUPERUSER';
-        $sql .= ($createdb) ? ' CREATEDB' : ' NOCREATEDB';
-        $sql .= ($createrole) ? ' CREATEROLE' : ' NOCREATEROLE';
-        $sql .= ($inherits) ? ' INHERIT' : ' NOINHERIT';
-        $sql .= ($login) ? ' LOGIN' : ' NOLOGIN';
+        $sql .= $superuser ? ' SUPERUSER' : ' NOSUPERUSER';
+        $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
+        $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
+        $sql .= $inherits ? ' INHERIT' : ' NOINHERIT';
+        $sql .= $login ? ' LOGIN' : ' NOLOGIN';
         if ($connlimit != '') {
             $sql .= " CONNECTION LIMIT {$connlimit}";
         } else {
@@ -7096,8 +7096,8 @@ class Postgres extends ADODB_base
             $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
         }
 
-        $sql .= ($createdb) ? ' CREATEDB' : ' NOCREATEDB';
-        $sql .= ($createuser) ? ' CREATEUSER' : ' NOCREATEUSER';
+        $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
+        $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
         if (is_array($groups) && sizeof($groups) > 0) {
             $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
         }
@@ -7148,8 +7148,8 @@ class Postgres extends ADODB_base
             $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
         }
 
-        $sql .= ($createdb) ? ' CREATEDB' : ' NOCREATEDB';
-        $sql .= ($createuser) ? ' CREATEUSER' : ' NOCREATEUSER';
+        $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
+        $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
         if ($expiry != '') {
             $sql .= " VALID UNTIL '{$expiry}'";
         } else {

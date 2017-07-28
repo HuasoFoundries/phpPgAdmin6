@@ -212,7 +212,7 @@ class HTMLNavbarController extends HTMLController
             /* top left informations when connected */
             $topbar_html .= sprintf($lang['strtopbar'],
                 '<span class="platform">' . htmlspecialchars($server_info['platform']) . '</span>',
-                '<span class="host">' . htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']) . '</span>',
+                '<span class="host">' . htmlspecialchars(empty($server_info['host']) ? 'localhost' : $server_info['host']) . '</span>',
                 '<span class="port">' . htmlspecialchars($server_info['port']) . '</span>',
                 '<span class="username">' . htmlspecialchars($server_info['username']) . '</span>');
 
