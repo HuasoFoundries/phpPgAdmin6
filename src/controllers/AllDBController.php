@@ -105,7 +105,7 @@ class AllDBController extends BaseController {
 			$this->printTrail('database');
 			$this->printTitle($lang['stralter'], 'pg.database.alter');
 
-			echo "<form action=\"/src/views/all_db.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/all_db.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
 			echo "<td class=\"data1\">";
@@ -183,7 +183,7 @@ class AllDBController extends BaseController {
 			$this->printTrail('database');
 			$this->printTitle($lang['strdrop'], 'pg.database.drop');
 
-			echo "<form action=\"/src/views/all_db.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/all_db.php\" method=\"post\">\n";
 			//If multi drop
 			if (isset($_REQUEST['ma'])) {
 
@@ -273,7 +273,7 @@ class AllDBController extends BaseController {
 			$tablespaces = $data->getTablespaces();
 		}
 
-		echo "<form action=\"/src/views/all_db.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/all_db.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 		echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -424,7 +424,7 @@ class AllDBController extends BaseController {
 		$this->printTabs('server', 'export');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/src/views/dbexport.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/dbexport.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\">{$lang['stroptions']}</th></tr>\n";
 		// Data only

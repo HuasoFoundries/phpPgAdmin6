@@ -298,7 +298,7 @@ class ViewPropertyController extends BaseController {
 				$_POST['formComment'] = $viewdata->fields['relcomment'];
 			}
 
-			echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/viewproperties.php\" method=\"post\">\n";
 			echo "<table style=\"width: 100%\">\n";
 			echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strdefinition']}</th>\n";
 			echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -336,7 +336,7 @@ class ViewPropertyController extends BaseController {
 		$this->printTabs('view', 'export');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/src/views/dataexport.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
 		// Data only
@@ -449,7 +449,7 @@ class ViewPropertyController extends BaseController {
 			$this->printTitle($lang['stralter'], 'pg.column.alter');
 			$misc->printMsg($msg);
 
-			echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/viewproperties.php\" method=\"post\">\n";
 
 			// Output view header
 			echo "<table>\n";
@@ -543,7 +543,7 @@ class ViewPropertyController extends BaseController {
 					$_POST['comment'] = $view->fields['relcomment'];
 				}
 
-				echo "<form action=\"/src/views/viewproperties.php\" method=\"post\">\n";
+				echo "<form action=\"" . SUBFOLDER . "/src/views/viewproperties.php\" method=\"post\">\n";
 				echo "<table>\n";
 				echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
 				echo "<td class=\"data1\">";

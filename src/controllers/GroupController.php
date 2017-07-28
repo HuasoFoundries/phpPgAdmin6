@@ -100,7 +100,7 @@ class GroupController extends BaseController {
 
 			echo "<p>", sprintf($lang['strconfdropmember'], $misc->printVal($_REQUEST['user']), $misc->printVal($_REQUEST['group'])), "</p>\n";
 
-			echo "<form action=\"/src/views/groups.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
 			echo $misc->form;
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
 			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -170,7 +170,7 @@ class GroupController extends BaseController {
 		}
 
 		// Display form for adding a user to the group
-		echo "<form action=\"/src/views/groups.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
 		echo "<select name=\"user\">";
 		while (!$users->EOF) {
 			$uname = $misc->printVal($users->fields['usename']);
@@ -213,7 +213,7 @@ class GroupController extends BaseController {
 
 			echo "<p>", sprintf($lang['strconfdropgroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
 
-			echo "<form action=\"/src/views/groups.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
 			echo $misc->form;
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";

@@ -212,7 +212,7 @@ class TypeController extends BaseController {
 
 			echo "<p>", sprintf($lang['strconfdroptype'], $misc->printVal($_REQUEST['type'])), "</p>\n";
 
-			echo "<form action=\"/src/views/types.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 			echo "<input type=\"hidden\" name=\"type\" value=\"", htmlspecialchars($_REQUEST['type']), "\" />\n";
@@ -263,7 +263,7 @@ class TypeController extends BaseController {
 			$this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
 			$misc->printMsg($msg);
 
-			echo "<form action=\"/src/views/types.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 			echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -304,7 +304,7 @@ class TypeController extends BaseController {
 			$this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
 			$misc->printMsg($msg);
 
-			echo "<form action=\"/src/views/types.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 
 			// Output table header
 			echo "<table>\n";
@@ -427,7 +427,7 @@ class TypeController extends BaseController {
 			$this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
 			$misc->printMsg($msg);
 
-			echo "<form action=\"/src/views/types.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 			echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -466,7 +466,7 @@ class TypeController extends BaseController {
 			$this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
 			$misc->printMsg($msg);
 
-			echo "<form action=\"/src/views/types.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 
 			// Output table header
 			echo "<table>\n";
@@ -579,7 +579,7 @@ class TypeController extends BaseController {
 		$this->printTitle($lang['strcreatetype'], 'pg.type.create');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/src/views/types.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

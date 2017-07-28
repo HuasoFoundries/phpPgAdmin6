@@ -507,7 +507,7 @@ class ConstraintController extends BaseController {
 			$this->printTitle($lang['straddcheck'], 'pg.constraint.check');
 			$misc->printMsg($msg);
 
-			echo "<form action=\"/src/views/constraints.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
 			echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
@@ -558,7 +558,7 @@ class ConstraintController extends BaseController {
 			echo "<p>", sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
 				$misc->printVal($_REQUEST['table'])), "</p>\n";
 
-			echo "<form action=\"/src/views/constraints.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 			echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"constraint\" value=\"", htmlspecialchars($_REQUEST['constraint']), "\" />\n";

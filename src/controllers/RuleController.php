@@ -108,7 +108,7 @@ class RuleController extends BaseController {
 			$this->printTitle($lang['strcreaterule'], 'pg.rule.create');
 			$misc->printMsg($msg);
 
-			echo "<form action=\"/src/views/rules.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
 			echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -177,7 +177,7 @@ class RuleController extends BaseController {
 			echo "<p>", sprintf($lang['strconfdroprule'], $misc->printVal($_REQUEST['rule']),
 				$misc->printVal($_REQUEST[$_REQUEST['reltype']])), "</p>\n";
 
-			echo "<form action=\"/src/views/rules.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 			echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['reltype']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"", htmlspecialchars($_REQUEST['reltype']),

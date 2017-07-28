@@ -302,7 +302,7 @@ class FulltextController extends BaseController {
 
 			echo "<p>", sprintf($lang['strconfdropftsconfig'], $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
 
-			echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"dropconfig\" />\n";
 			echo "<input type=\"hidden\" name=\"database\" value=\"", htmlspecialchars($_REQUEST['database']), "\" />\n";
@@ -336,7 +336,7 @@ class FulltextController extends BaseController {
 
 			echo "<p>", sprintf($lang['strconfdropftsdict'], $misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
 
-			echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 			echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"dropdict\" />\n";
 			echo "<input type=\"hidden\" name=\"database\" value=\"", htmlspecialchars($_REQUEST['database']), "\" />\n";
@@ -402,7 +402,7 @@ class FulltextController extends BaseController {
 		$this->printTitle($lang['strftscreateconfig'], 'pg.ftscfg.create');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 		echo "<table>\n";
 		/* conf name */
 		echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -548,7 +548,7 @@ class FulltextController extends BaseController {
 			// Fetch all FTS parsers from the database
 			$ftsparsers = $data->getFtsParsers();
 
-			echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 			echo "<table>\n";
 
 			echo "\t<tr>\n";
@@ -859,7 +859,7 @@ class FulltextController extends BaseController {
 		$this->printTitle($lang['strftscreatedict'], 'pg.ftsdict.create');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 		echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -1013,7 +1013,7 @@ class FulltextController extends BaseController {
 				$_POST['formName'] = $_REQUEST['ftsdict'];
 			}
 
-			echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 			echo "<table>\n";
 
 			echo "\t<tr>\n";
@@ -1083,7 +1083,7 @@ class FulltextController extends BaseController {
 			$this->printTrail('ftscfg'); // TODO: proper breadcrumbs
 			$this->printTitle($lang['strdrop'], 'pg.ftscfg.alter');
 
-			echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 
 			// Case of multiaction drop
 			if (isset($_REQUEST['ma'])) {
@@ -1149,7 +1149,7 @@ class FulltextController extends BaseController {
 				$_POST['ftscfg'] = $_REQUEST['ftscfg'];
 			}
 
-			echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 
 			echo "<table>\n";
 			echo "\t<tr>\n";
@@ -1253,7 +1253,7 @@ class FulltextController extends BaseController {
 
 			$mappings = $data->getFtsMappings($_POST['ftscfg']);
 
-			echo "<form action=\"/src/views/fulltext.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "\t<tr>\n";
 			echo "\t\t<th class=\"data left required\">{$lang['strftsmapping']}</th>\n";

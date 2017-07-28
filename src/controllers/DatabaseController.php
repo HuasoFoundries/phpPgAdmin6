@@ -146,7 +146,7 @@ class DatabaseController extends BaseController {
 		$this->printTabs('database', 'find');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/src/views/database.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/database.php\" method=\"post\">\n";
 		echo "<p><input name=\"term\" value=\"", htmlspecialchars($_REQUEST['term']),
 			"\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
 		// Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
@@ -415,7 +415,7 @@ class DatabaseController extends BaseController {
 		$this->printTabs('database', 'export');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/src/views/dbexport.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/dbexport.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
 		// Data only

@@ -64,7 +64,7 @@ class HistoryController extends BaseController {
 		// Bring to the front always
 		echo "<body onload=\"window.focus();\">\n";
 
-		echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
 		$misc->printConnection($onchange);
 		echo "</form><br />";
 
@@ -193,7 +193,7 @@ class HistoryController extends BaseController {
 			echo "<p>{$lang['strconfdelhistory']}</p>\n";
 
 			echo "<pre>", htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), "</pre>";
-			echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
 			echo "<input type=\"hidden\" name=\"queryid\" value=\"$qid\" />\n";
 			echo $misc->form;
@@ -221,7 +221,7 @@ class HistoryController extends BaseController {
 			echo "<h3>{$lang['strclearhistory']}</h3>\n";
 			echo "<p>{$lang['strconfclearhistory']}</p>\n";
 
-			echo "<form action=\"/src/views/history.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"clearhistory\" />\n";
 			echo $misc->form;
 			echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";

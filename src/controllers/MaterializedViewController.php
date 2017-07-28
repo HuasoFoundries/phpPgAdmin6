@@ -230,7 +230,7 @@ class MaterializedViewController extends BaseController {
 			$this->printTrail('view');
 			$this->printTitle($lang['strdrop'], 'pg.view.drop');
 
-			echo "<form action=\"/src/views/materialized_views.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
 
 			//If multi drop
 			if (isset($_REQUEST['ma'])) {
@@ -351,7 +351,7 @@ class MaterializedViewController extends BaseController {
 			}
 			asort($arrFields);
 
-			echo "<form action=\"/src/views/materialized_views.php\" method=\"post\">\n";
+			echo "<form action=\"" . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
 			echo "<table>\n";
 			echo "<tr><th class=\"data\">{$lang['strviewname']}</th></tr>";
 			echo "<tr>\n<td class=\"data1\">\n";
@@ -456,7 +456,7 @@ class MaterializedViewController extends BaseController {
 		$this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/src/views/materialized_views.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strtables']}</th></tr>";
 		echo "<tr>\n<td class=\"data1\">\n";
@@ -509,7 +509,7 @@ class MaterializedViewController extends BaseController {
 		$this->printTitle($lang['strcreateview'], 'pg.view.create');
 		$misc->printMsg($msg);
 
-		echo "<form action=\"/src/views/materialized_views.php\" method=\"post\">\n";
+		echo "<form action=\"" . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
 		echo "<table style=\"width: 100%\">\n";
 		echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 		echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
