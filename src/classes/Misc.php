@@ -2165,7 +2165,7 @@ class Misc {
 
 			$fksprops['code'] .= '<div id="fkbg"></div>';
 			$fksprops['code'] .= '<div id="fklist"></div>';
-			$fksprops['code'] .= '<script src="/js/ac_insert_row.js" type="text/javascript"></script>';
+			$fksprops['code'] .= '<script src="' . SUBFOLDER . '/js/ac_insert_row.js" type="text/javascript"></script>';
 		} else /* we have no foreign keys on this table */
 		{
 			return false;
