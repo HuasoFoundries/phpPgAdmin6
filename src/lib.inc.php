@@ -8,7 +8,7 @@
 
 defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
 
-define('THEME_PATH', BASE_PATH . "/src/themes");
+define('THEME_PATH', BASE_PATH . '/src/themes');
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 
@@ -157,7 +157,7 @@ $container['misc'] = function ($c) {
 
 	/* starting with PostgreSQL 9.0, we can set the application name */
 	if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {
-		putenv("PGAPPNAME=" . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
+		putenv('PGAPPNAME=' . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
 	}
 
 	$themefolders = [];
