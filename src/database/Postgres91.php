@@ -35,9 +35,7 @@
 				ORDER BY usename, procpid";
             }
 
-            $rc = $this->selectSet($sql);
-
-            return $rc;
+            return $this->selectSet($sql);
         }
 
         // Tablespace functions

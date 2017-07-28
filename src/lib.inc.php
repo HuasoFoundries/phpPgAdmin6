@@ -106,8 +106,7 @@ $container['lang'] = function ($c) {
 };
 
 $container['plugin_manager'] = function ($c) {
-	$plugin_manager = new \PHPPgAdmin\PluginManager($c);
-	return $plugin_manager;
+    return new \PHPPgAdmin\PluginManager($c);
 };
 
 $container['serializer'] = function ($c) {
