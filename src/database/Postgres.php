@@ -8224,7 +8224,7 @@ class Postgres extends ADODB_base
             return false;
         }
 
-        $fd = fopen($_FILES[$name]['tmp_name'], 'r');
+        $fd = fopen($_FILES[$name]['tmp_name'], 'rb');
         if (!$fd) {
             return false;
         }
