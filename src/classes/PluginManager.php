@@ -31,6 +31,8 @@
          *
          * @param \Slim\Container $container
          * @internal param $this ->language - Language that have been used.
+         * @throws \Interop\Container\Exception\ContainerException
+         * @throws \Slim\Exception\ContainerValueNotFoundException
          */
         public function __construct(\Slim\Container $container)
         {

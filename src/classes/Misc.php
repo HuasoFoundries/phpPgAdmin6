@@ -84,12 +84,13 @@ class Misc
     /**
      * Default Error Handler. This will be called with the following params
      *
-     * @param $dbms        the RDBMS you are connecting to
-     * @param $fn        the name of the calling function (in uppercase)
+     * @param $dbms         the RDBMS you are connecting to
+     * @param $fn           the name of the calling function (in uppercase)
      * @param $errno        the native error number from the database
-     * @param $errmsg    the native error msg from the database
-     * @param $p1        $fn specific parameter - see below
-     * @param $P2        $fn specific parameter - see below
+     * @param $errmsg       the native error msg from the database
+     * @param $p1           $fn specific parameter - see below
+     * @param $P2           $fn specific parameter - see below
+     * @throws \PHPPgAdmin\ADODB_Exception
      */
     public static function adodb_throw($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection)
     {
