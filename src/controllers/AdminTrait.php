@@ -641,13 +641,13 @@ trait AdminTrait {
 				'namespace' => [
 					'title' => $lang['strschema'],
 					'field' => Decorator::field('nspname'),
-					'url' => "/redirect/schema?{$misc->href}&amp;",
+					'url' => SUBFOLDER . "/redirect/schema?{$misc->href}&amp;",
 					'vars' => ['schema' => 'nspname'],
 				],
 				'relname' => [
 					'title' => $lang['strtable'],
 					'field' => Decorator::field('relname'),
-					'url' => "/redirect/table?{$misc->href}&amp;",
+					'url' => SUBFOLDER . "/redirect/table?{$misc->href}&amp;",
 					'vars' => ['table' => 'relname', 'schema' => 'nspname'],
 				],
 				'autovacuum_enabled' => [

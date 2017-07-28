@@ -36,7 +36,7 @@ class RolesController extends BaseController {
 			'role' => [
 				'title' => $lang['strrole'],
 				'field' => Decorator::field('rolname'),
-				'url' => "/redirect/role?action=properties&amp;{$misc->href}&amp;",
+				'url' => SUBFOLDER . "/redirect/role?action=properties&amp;{$misc->href}&amp;",
 				'vars' => ['rolename' => 'rolname'],
 			],
 			'superuser' => [

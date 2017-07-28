@@ -435,7 +435,7 @@ class AggregateController extends BaseController {
 			'aggrname' => [
 				'title' => $lang['strname'],
 				'field' => Decorator::field('proname'),
-				'url' => "/redirect/aggregate?action=properties&amp;{$misc->href}&amp;",
+				'url' => SUBFOLDER . "/redirect/aggregate?action=properties&amp;{$misc->href}&amp;",
 				'vars' => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
 			],
 			'aggrtype' => [

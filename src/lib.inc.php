@@ -51,6 +51,10 @@ if (!ini_get('session.auto_start')) {
 DEFINE('SUBFOLDER', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
 
 $handler = PhpConsole\Handler::getInstance();
+$handler->setHandleErrors(false); // disable errors handling
+$handler->setHandleExceptions(false); // disable exceptions handling
+$handler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
+
 $handler->start(); // initialize handlers*/
 PhpConsole\Helper::register(); // it will register global PC class
 
@@ -87,6 +91,16 @@ $app = new \Slim\App($config);
 
 // Fetch DI Container
 $container = $app->getContainer();
+$container['errors'] = [];
+
+$container['add_error'] = function ($c) {
+
+	return function ($errormsg) use ($c) {
+		$errors = $c->offsetGet('errors');
+		$errors[] = $errormsg;
+		$c->offsetSet('errors', $errors);
+	};
+};
 
 $container['conf'] = function ($c) use ($conf) {
 
@@ -150,10 +164,13 @@ $container['view'] = function ($c) {
 $container['misc'] = function ($c) {
 
 	$misc = new \PHPPgAdmin\Misc($c);
+
 	$conf = $c->get('conf');
 
 	// 4. Check for theme by server/db/user
 	$_server_info = $misc->getServerInfo();
+
+	\PC::debug($_server_info, 'server info');
 
 	/* starting with PostgreSQL 9.0, we can set the application name */
 	if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {
@@ -163,18 +180,21 @@ $container['misc'] = function ($c) {
 	$themefolders = [];
 	if ($gestor = opendir(THEME_PATH)) {
 
-		/* Esta es la forma correcta de iterar sobre el directorio. */
-		while (false !== ($file = readdir($gestor))) {
-			if ($file == '.' || $file == '..') {
+		/* This is the right way to iterate on a folder */
+		while (false !== ($foldername = readdir($gestor))) {
+			if ($foldername == '.' || $foldername == '..') {
 				continue;
 			}
 
-			$folder = THEME_PATH . DIRECTORY_SEPARATOR . $file;
-			if (is_dir($folder) && is_file($folder . DIRECTORY_SEPARATOR . 'global.css')) {
-				$themefolders[$file] = $folder;
+			$folderpath = THEME_PATH . DIRECTORY_SEPARATOR . $foldername;
+
+			// if $folderpath if indeed a folder and contains a global.css file, then it's a theme
+			if (is_dir($folderpath) && is_file($folderpath . DIRECTORY_SEPARATOR . 'global.css')) {
+				$themefolders[$foldername] = $folderpath;
 
 			}
 		}
+
 		closedir($gestor);
 	}
 
@@ -186,15 +206,17 @@ $container['misc'] = function ($c) {
 	if (!isset($conf['theme'])) {
 		$conf['theme'] = 'default';
 	}
-	// 1. Check for the theme from a request var
+	// 1. Check for the theme from a request var.
+	// This happens when you use the selector in the intro screen
 	if (isset($_REQUEST['theme']) && array_key_exists($_REQUEST['theme'], $themefolders)) {
 		$_theme = $_REQUEST['theme'];
-
-	} else if (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
-		// 2. Check for theme session var
+	}
+	// 2. Check for theme session var
+	else if (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
 		$_theme = $_SESSION['ppaTheme'];
-	} else if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
-		// 3. Check for theme in cookie var
+	}
+	// 3. Check for theme in cookie var
+	else if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
 		$_theme = $_COOKIE['ppaTheme'];
 	}
 
@@ -222,13 +244,15 @@ $container['misc'] = function ($c) {
 		}
 
 	}
+	// if any of the above conditions had set the $_theme variable
+	// then we store it in the session and a cookie
+	// and we overwrite $conf['theme'] with its value
 	if (isset($_theme)) {
 		/* save the selected theme in cookie for a year */
 		setcookie('ppaTheme', $_theme, time() + 31536000, '/');
 		$_SESSION['ppaTheme'] = $_theme;
 		$conf['theme'] = $_theme;
 	}
-	//\PC::debug($conf['theme'], 'conf.theme');
 
 	$misc->setThemeConf($conf['theme']);
 
@@ -238,6 +262,58 @@ $container['misc'] = function ($c) {
 
 	return $misc;
 };
+
+$container['haltHandler'] = function ($c) {
+	return function ($request, $response, $exits) use ($c) {
+
+		$title = 'PHPPgAdmin Error';
+
+		$html = '<p>The application could not run because of the following error:</p>';
+
+		$output = sprintf(
+			"<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
+			"<title>%s</title><style>" .
+			"body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}" .
+			"h3{margin:0;font-size:28px;font-weight:normal;line-height:30px;}" .
+			"span{display:inline-block;font-size:16px;}" .
+			"</style></head><body><h3>%s</h3><p>%s</p><span>%s</span></body></html>",
+			$title,
+			$title,
+			$html,
+			implode('<br>', $exits)
+		);
+
+		$body = new \Slim\Http\Body(fopen('php://temp', 'r+'));
+		$body->write($output);
+
+		return $c['response']
+			->withStatus(500)
+			->withHeader('Content-type', 'text/html')
+			->withBody($body);
+	};
+};
+
+$app->add(function ($request, $response, $next) use ($container) {
+	// First execute anything else
+	$response = $next($request, $response);
+
+	$misc = $container->misc;
+	// Check if the response should render a 404
+	//if (404 === $response->getStatusCode()) {
+	// A 404 should be invoked
+	if (count($container['errors']) > 0) {
+		$handler = $container['haltHandler'];
+		return $handler($request, $response, $container['errors']);
+	} else {
+		//die('No hay errores CTM');
+	}
+	//$handler = $container['errorHandler'];
+	//return $handler($request, $response, new \Exception('Todo salió mal'));
+	//}
+
+	// Any other request, pass on current response
+	return $response;
+});
 
 $container['action'] = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 

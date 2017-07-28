@@ -154,7 +154,7 @@ class SchemaController extends BaseController {
 			'schema' => [
 				'title' => $lang['strschema'],
 				'field' => Decorator::field('nspname'),
-				'url' => "/redirect/schema?{$misc->href}&amp;",
+				'url' => SUBFOLDER . "/redirect/schema?{$misc->href}&amp;",
 				'vars' => ['schema' => 'nspname'],
 			],
 			'owner' => [

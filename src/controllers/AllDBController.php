@@ -480,7 +480,7 @@ class AllDBController extends BaseController {
 			'database' => [
 				'title' => $lang['strdatabase'],
 				'field' => Decorator::field('datname'),
-				'url' => "/redirect/database?{$misc->href}&amp;",
+				'url' => SUBFOLDER . "/redirect/database?{$misc->href}&amp;",
 				'vars' => ['database' => 'datname'],
 			],
 			'owner' => [

@@ -25,7 +25,7 @@ class RedirectUrlDecorator extends Decorator {
 
 			$sep = '?';
 			foreach ($queryVars as $var => $value) {
-				$varname  = Decorator::value_url($var, $fields);
+				$varname = Decorator::value_url($var, $fields);
 				$varvalue = Decorator::value_url($value, $fields);
 				if ($varname == 'subject') {
 					$url = '/' . str_replace('.php', '/' . $varvalue, $url);
@@ -33,6 +33,9 @@ class RedirectUrlDecorator extends Decorator {
 				$url .= $sep . $varname . '=' . $varvalue;
 				$sep = '&';
 			}
+		}
+		if (strpos($url, SUBFOLDER) === false) {
+			$url = SUBFOLDER . $url;
 		}
 		return str_replace('.php', '', $url);
 	}

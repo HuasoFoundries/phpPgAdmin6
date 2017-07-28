@@ -57,11 +57,10 @@ class Misc {
 			die($this->lang['strbadconfig']);
 
 		}
-
 		// Check database support is properly compiled in
 		if (!function_exists('pg_connect')) {
+			//$container['add_error']($this->lang['strnotloaded']);
 			die($this->lang['strnotloaded']);
-
 		}
 
 		// Check the version of PHP
@@ -553,10 +552,10 @@ class Misc {
 		}
 
 		if (!isset($vars['url'])) {
-			$vars['url'] = '/redirect';
+			$vars['url'] = SUBFOLDER . '/redirect';
 		}
-		if ($vars['url'] == '/redirect' && isset($vars['params']['subject'])) {
-			$vars['url'] = '/redirect/' . $vars['params']['subject'];
+		if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
+			$vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
 			unset($vars['params']['subject']);
 		}
 

@@ -780,7 +780,7 @@ class ViewController extends BaseController {
 			'view' => [
 				'title' => $lang['strview'],
 				'field' => Decorator::field('relname'),
-				'url' => "/redirect/view?{$misc->href}&amp;",
+				'url' => SUBFOLDER . "/redirect/view?{$misc->href}&amp;",
 				'vars' => ['view' => 'relname'],
 			],
 			'owner' => [

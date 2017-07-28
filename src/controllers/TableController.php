@@ -197,7 +197,7 @@ class TableController extends BaseController {
 			'table' => [
 				'title' => $lang['strtable'],
 				'field' => Decorator::field('relname'),
-				'url' => "/redirect/table?{$misc->href}&amp;",
+				'url' => SUBFOLDER . "/redirect/table?{$misc->href}&amp;",
 				'vars' => ['table' => 'relname'],
 			],
 			'owner' => [

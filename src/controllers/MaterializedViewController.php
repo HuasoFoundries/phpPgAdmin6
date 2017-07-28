@@ -714,7 +714,7 @@ class MaterializedViewController extends BaseController {
 			'matview' => [
 				'title' => 'M ' . $lang['strview'],
 				'field' => Decorator::field('relname'),
-				'url' => "/redirect/matview?{$misc->href}&amp;",
+				'url' => SUBFOLDER . "/redirect/matview?{$misc->href}&amp;",
 				'vars' => ['matview' => 'relname'],
 			],
 			'owner' => [

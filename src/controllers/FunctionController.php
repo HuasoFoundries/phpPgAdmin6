@@ -1062,7 +1062,7 @@ class FunctionController extends BaseController {
 			'function' => [
 				'title' => $lang['strfunction'],
 				'field' => Decorator::field('proproto'),
-				'url' => "/redirect/function?action=properties&amp;{$misc->href}&amp;",
+				'url' => SUBFOLDER . "/redirect/function?action=properties&amp;{$misc->href}&amp;",
 				'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
 			],
 			'returns' => [

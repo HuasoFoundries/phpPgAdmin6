@@ -10,6 +10,13 @@
 
 require_once './src/lib.inc.php';
 
+/*$app->post('/info', function ($request, $response, $args) use ($msg) {
+
+var_dump($_SERVER);
+
+return $response;
+});*/
+
 $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
 
 	$body = $response->getBody();
@@ -63,6 +70,9 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 });
 
 $app->get('/', function ($request, $response, $args) use ($msg) {
+
+	//throw new \Slim\Exception\SlimException($request, $response);
+	//throw new Exception("Error Processing Request", 1);
 
 	$uri = $request->getUri();
 	$base_and_qs = explode('?', $uri->getQuery());
