@@ -73,6 +73,7 @@ $app->get('/', function ($request, $response, $args) use ($msg) {
 	}
 
 	$viewVars = $this->lang;
+
 	$viewVars['appName'] = $this->get('settings')['appName'];
 	$subject = 'intro';
 	$viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
@@ -84,6 +85,7 @@ $app->get('/', function ($request, $response, $args) use ($msg) {
 		$viewVars['cols'] = $this->conf['left_width'] . ',*';
 		$template = 'iframe_view.twig';
 	}
+	$viewVars['headertemplate'] = 'iframe_header.twig';
 	$url = '/src/views/' . $subject . '.php' . $query_string;
 	$viewVars['url'] = $url;
 
