@@ -45,7 +45,7 @@ if (!ini_get('session.auto_start')) {
 	session_name('PPA_ID');
 	session_start();
 }
-\Kint::$enabled_mode = ($debugmode);
+\Kint::$enabled_mode = $debugmode;
 
 //echo readlink(dirname(__FILE__));
 define('SUBFOLDER', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
@@ -239,7 +239,7 @@ $container['misc'] = function ($c) {
 	return $misc;
 };
 
-$container['action'] = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
+$container['action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 if (!isset($msg)) {
 	$msg = '';
