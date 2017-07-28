@@ -218,7 +218,7 @@ class HTMLNavbarController extends HTMLController {
 				'sql' => [
 					'attr' => [
 						'href' => [
-							'url' => '/src/views/sqledit.php',
+							'url' => SUBFOLDER . '/src/views/sqledit.php',
 							'urlvars' => array_merge($reqvars, [
 								'action' => 'sql',
 							]),
@@ -231,7 +231,7 @@ class HTMLNavbarController extends HTMLController {
 				'history' => [
 					'attr' => [
 						'href' => [
-							'url' => '/src/views/history.php',
+							'url' => SUBFOLDER . '/src/views/history.php',
 							'urlvars' => array_merge($reqvars, [
 								'action' => 'pophistory',
 							]),
@@ -243,7 +243,7 @@ class HTMLNavbarController extends HTMLController {
 				'find' => [
 					'attr' => [
 						'href' => [
-							'url' => '/src/views/sqledit.php',
+							'url' => SUBFOLDER . '/src/views/sqledit.php',
 							'urlvars' => array_merge($reqvars, [
 								'action' => 'find',
 							]),
@@ -256,7 +256,7 @@ class HTMLNavbarController extends HTMLController {
 				'logout' => [
 					'attr' => [
 						'href' => [
-							'url' => '/src/views/servers.php',
+							'url' => SUBFOLDER . '/src/views/servers.php',
 							'urlvars' => [
 								'action' => 'logout',
 								'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}",

@@ -89,7 +89,10 @@ class HTMLController {
 			$url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($varfield, $fields);
 			$sep = '&';
 		}
-		//return '/src/views/' . $url;
+
+		if (strpos($url, SUBFOLDER) === false) {
+			$url = str_replace('//', '/', SUBFOLDER . '/' . $url);
+		}
 		return $url;
 	}
 	/**
