@@ -198,9 +198,9 @@ class Postgres82 extends Postgres83
         $this->fieldClean($language);
         $this->arrayClean($flags);
 
-        $sql = "CREATE";
+        $sql = 'CREATE';
         if ($replace) {
-            $sql .= " OR REPLACE";
+            $sql .= ' OR REPLACE';
         }
 
         $sql .= " FUNCTION \"{$f_schema}\".\"{$funcname}\" (";
@@ -210,9 +210,9 @@ class Postgres82 extends Postgres83
         }
 
         // For some reason, the returns field cannot have quotes...
-        $sql .= ") RETURNS ";
+        $sql .= ') RETURNS ';
         if ($setof) {
-            $sql .= "SETOF ";
+            $sql .= 'SETOF ';
         }
 
         $sql .= "{$returns} AS ";

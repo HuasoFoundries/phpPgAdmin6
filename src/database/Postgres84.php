@@ -86,7 +86,7 @@ class Postgres84 extends Postgres90
             // XXX: The mention of information_schema here is in the wrong place, but
             // it's the quickest fix to exclude the info schema from 7.4
             $where     = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
-            $lan_where = "AND pl.lanispl";
+            $lan_where = 'AND pl.lanispl';
         } else {
             $where     = '';
             $lan_where = '';
@@ -95,7 +95,7 @@ class Postgres84 extends Postgres90
         // Apply outer filter
         $sql = '';
         if ($filter != '') {
-            $sql = "SELECT * FROM (";
+            $sql = 'SELECT * FROM (';
         }
 
         $term = "\$_PATERN_\$%{$term}%\$_PATERN_\$";
@@ -202,7 +202,7 @@ class Postgres84 extends Postgres90
             $sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
         }
 
-        $sql .= "ORDER BY type, schemaname, relname, name";
+        $sql .= 'ORDER BY type, schemaname, relname, name';
 
         return $this->selectSet($sql);
     }
