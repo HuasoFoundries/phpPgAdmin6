@@ -4396,11 +4396,7 @@
 
             $v = $this->selectSet($sql);
 
-            if ($v->recordCount() == 0) {
-                return false;
-            }
-
-            return true;
+            return !($v->recordCount() == 0);
         }
 
         /**
