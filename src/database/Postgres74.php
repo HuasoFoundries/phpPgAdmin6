@@ -29,13 +29,12 @@ class Postgres74 extends Postgres80
     /**
      * Alters a database
      * the multiple return vals are for postgres 8+ which support more functionality in alter database
-     * @param $dbName The name of the database
-     * @param $newName new name for the database
-     * @param $newOwner The new owner for the database
-     * @return 0 success
-     * @return -1 transaction error
-     * @return -2 owner error
-     * @return -3 rename error
+     *
+     * @param                                 $dbName   The name of the database
+     * @param                                 $newName  new name for the database
+     * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
+     * @param string                          $comment
+     * @return bool|int 0 success
      */
     public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '')
     {
@@ -55,7 +54,9 @@ class Postgres74 extends Postgres80
 
     /**
      * Return all database available on the server
-     * @return A list of databases, sorted alphabetically
+     *
+     * @param null $currentdatabase
+     * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -280,16 +281,14 @@ class Postgres74 extends Postgres80
     /**
      * Protected method which alter a table
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
-     * @param $tblrs The table recordSet returned by getTable()
-     * @param $name The new name for the table
-     * @param $owner The new owner for the table
-     * @param $schema The new schema for the table
-     * @param $comment The comment on the table
+     *
+     * @param $tblrs      The table recordSet returned by getTable()
+     * @param $name       The new name for the table
+     * @param $owner      The new owner for the table
+     * @param $schema     The new schema for the table
+     * @param $comment    The comment on the table
      * @param $tablespace The new tablespace for the table ('' means leave as is)
-     * @return 0 success
-     * @return -3 rename error
-     * @return -4 comment error
-     * @return -5 owner error
+     * @return int 0 success
      */
     protected function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace)
     {
@@ -322,24 +321,20 @@ class Postgres74 extends Postgres80
 
     /**
      * Alters a column in a table OR view
-     * @param $table The table in which the column resides
-     * @param $column The column to alter
-     * @param $name The new name for the column
-     * @param $notnull (boolean) True if not null, false otherwise
+     *
+     * @param $table      The table in which the column resides
+     * @param $column     The column to alter
+     * @param $name       The new name for the column
+     * @param $notnull    (boolean) True if not null, false otherwise
      * @param $oldnotnull (boolean) True if column is already not null, false otherwise
-     * @param $default The new default for the column
+     * @param $default    The new default for the column
      * @param $olddefault The old default for the column
-     * @param $type The new type for the column
-     * @param $array True if array type, false otherwise
-     * @param $length The optional size of the column (ie. 30 for varchar(30))
-     * @param $oldtype The old type for the column
-     * @param $comment Comment for the column
-     * @return 0 success
-     * @return -2 set not null error
-     * @return -3 set default error
-     * @return -4 rename column error
-     * @return -5 comment error
-     * @return -6 transaction error
+     * @param $type       The new type for the column
+     * @param $length     The optional size of the column (ie. 30 for varchar(30))
+     * @param $array      True if array type, false otherwise
+     * @param $oldtype    The old type for the column
+     * @param $comment    Comment for the column
+     * @return array|bool|int 0 success
      */
     public function alterColumn($table, $column, $name, $notnull, $oldnotnull, $default, $olddefault,
         $type, $length, $array, $oldtype, $comment) {
@@ -420,8 +415,9 @@ class Postgres74 extends Postgres80
 
     /**
      * Return all tables in current database (and schema)
-     * @param $all True to fetch all tables, false for just in current schema
-     * @return All tables, sorted alphabetically
+     *
+     * @param bool|True $all True to fetch all tables, false for just in current schema
+     * @return \PHPPgAdmin\Database\All tables, sorted alphabetically
      */
     public function getTables($all = false)
     {
@@ -528,7 +524,9 @@ class Postgres74 extends Postgres80
 
     /**
      * Returns all sequences in the current database
-     * @return A recordset
+     *
+     * @param bool $all
+     * @return \PHPPgAdmin\Database\A recordset
      */
     public function getSequences($all = false)
     {
@@ -556,8 +554,10 @@ class Postgres74 extends Postgres80
 
     /**
      * Returns all details for a particular function
-     * @param $func The name of the function to retrieve
-     * @return Function info
+     *
+     * @param $function_oid
+     * @return \PHPPgAdmin\Database\Function info
+     * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
      */
     public function getFunction($function_oid)
     {

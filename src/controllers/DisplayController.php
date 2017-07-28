@@ -117,6 +117,8 @@ class DisplayController extends BaseController
 
     /**
      * Displays requested data
+     *
+     * @param string $msg
      */
     public function doBrowse($msg = '')
     {
@@ -579,6 +581,9 @@ class DisplayController extends BaseController
 
     /**
      * Show confirmation of edit and perform actual update
+     *
+     * @param        $confirm
+     * @param string $msg
      */
     public function doEditRow($confirm, $msg = '')
     {
@@ -764,6 +769,8 @@ class DisplayController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop
+     *
+     * @param $confirm
      */
     public function doDelRow($confirm)
     {
@@ -847,7 +854,8 @@ class DisplayController extends BaseController
     /**
      * build & return the FK information data structure
      * used when deciding if a field should have a FK link or not
-     * @return [type] [description]
+     *
+     * @return array [type] [description]
      */
     public function &getFKInfo()
     {
@@ -896,8 +904,10 @@ class DisplayController extends BaseController
 
     /**
      * Print table header cells
-     * @param $args - associative array for sort link parameters
      *
+     * @param $rs
+     * @param $args - associative array for sort link parameters
+     * @param $withOid
      */
     public function printTableHeaderCells(&$rs, $args, $withOid)
     {

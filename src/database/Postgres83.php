@@ -93,7 +93,9 @@ class Postgres83 extends Postgres84
 
     /**
      * Returns all available autovacuum per table information.
-     * @return A recordset
+     *
+     * @param string $table
+     * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTableAutovacuum($table = '')
     {
@@ -265,15 +267,16 @@ class Postgres83 extends Postgres84
 
     /**
      * Alter a sequence's properties
-     * @param $seqrs The sequence RecordSet returned by getSequence()
-     * @param $increment The sequence incremental value
-     * @param $minvalue The sequence minimum value
-     * @param $maxvalue The sequence maximum value
+     *
+     * @param $seqrs        The sequence RecordSet returned by getSequence()
+     * @param $increment    The sequence incremental value
+     * @param $minvalue     The sequence minimum value
+     * @param $maxvalue     The sequence maximum value
      * @param $restartvalue The sequence current value
-     * @param $cachevalue The sequence cache value
-     * @param $cycledvalue Sequence can cycle ?
-     * @param $startvalue The sequence start value when issueing a restart (ignored)
-     * @return 0 success
+     * @param $cachevalue   The sequence cache value
+     * @param $cycledvalue  Sequence can cycle ?
+     * @param $startvalue   The sequence start value when issueing a restart (ignored)
+     * @return int|\PHPPgAdmin\Database\A 0 success
      */
     public function alterSequenceProps($seqrs, $increment, $minvalue, $maxvalue,
         $restartvalue, $cachevalue, $cycledvalue, $startvalue) {
@@ -316,9 +319,11 @@ class Postgres83 extends Postgres84
 
     /**
      * Alter a sequence's owner
+     *
      * @param $seqrs The sequence RecordSet returned by getSequence()
-     * @param $name The new owner for the sequence
-     * @return 0 success
+     * @param $owner
+     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @internal param \PHPPgAdmin\Database\The $name new owner for the sequence
      */
     public function alterSequenceOwner($seqrs, $owner)
     {
@@ -339,8 +344,10 @@ class Postgres83 extends Postgres84
 
     /**
      * Returns all details for a particular function
-     * @param $func The name of the function to retrieve
-     * @return Function info
+     *
+     * @param $function_oid
+     * @return \PHPPgAdmin\Database\Function info
+     * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
      */
     public function getFunction($function_oid)
     {

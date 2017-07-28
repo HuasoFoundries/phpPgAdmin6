@@ -45,7 +45,9 @@ class Postgres81 extends Postgres82
 
     /**
      * Returns all databases available on the server
-     * @return A list of databases, sorted alphabetically
+     *
+     * @param null $currentdatabase
+     * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -89,13 +91,12 @@ class Postgres81 extends Postgres82
     /**
      * Alters a database
      * the multiple return vals are for postgres 8+ which support more functionality in alter database
-     * @param $dbName The name of the database
-     * @param $newName new name for the database
-     * @param $newOwner The new owner for the database
-     * @return 0 success
-     * @return -1 transaction error
-     * @return -2 owner error
-     * @return -3 rename error
+     *
+     * @param                                 $dbName   The name of the database
+     * @param                                 $newName  new name for the database
+     * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
+     * @param string                          $comment
+     * @return bool|int 0 success
      */
     public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '')
     {
@@ -249,7 +250,9 @@ class Postgres81 extends Postgres82
 
     /**
      * Retrieves a tablespace's information
-     * @return A recordset
+     *
+     * @param $spcname
+     * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTablespace($spcname)
     {
@@ -263,8 +266,9 @@ class Postgres81 extends Postgres82
 
     /**
      * Retrieves information for all tablespaces
-     * @param $all Include all tablespaces (necessary when moving objects back to the default space)
-     * @return A recordset
+     *
+     * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+     * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTablespaces($all = false)
     {

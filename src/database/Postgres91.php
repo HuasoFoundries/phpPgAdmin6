@@ -41,8 +41,9 @@ class Postgres91 extends Postgres92
 
     /**
      * Retrieves information for all tablespaces
-     * @param $all Include all tablespaces (necessary when moving objects back to the default space)
-     * @return A recordset
+     *
+     * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+     * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTablespaces($all = false)
     {
@@ -63,7 +64,9 @@ class Postgres91 extends Postgres92
 
     /**
      * Retrieves a tablespace's information
-     * @return A recordset
+     *
+     * @param $spcname
+     * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTablespace($spcname)
     {

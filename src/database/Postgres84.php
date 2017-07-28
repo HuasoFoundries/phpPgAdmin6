@@ -30,8 +30,9 @@ class Postgres84 extends Postgres90
 
     /**
      * Grabs a list of triggers on a table
-     * @param $table The name of a table whose triggers to retrieve
-     * @return A recordset
+     *
+     * @param \PHPPgAdmin\Database\The|string $table The name of a table whose triggers to retrieve
+     * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTriggers($table = '')
     {
