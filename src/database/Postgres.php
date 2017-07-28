@@ -274,9 +274,9 @@
                     }
 
                     return $urls;
-                } else {
-                    return $this->help_base . $this->help_page[$help];
                 }
+
+                return $this->help_base . $this->help_page[$help];
             } else {
                 return null;
             }
@@ -499,9 +499,9 @@
             $usesuper = $this->selectField($sql, 'usesuper');
             if ($usesuper == -1) {
                 return false;
-            } else {
-                return $usesuper == 't';
             }
+
+            return $usesuper == 't';
         }
 
         /**
@@ -794,10 +794,9 @@
                 $sql = "ALTER DATABASE \"{$oldName}\" RENAME TO \"{$newName}\"";
 
                 return $this->execute($sql);
-            } else //just return success, we're not going to do anything
-            {
-                return 0;
             }
+
+            return 0;
         }
 
         /**
@@ -1044,9 +1043,9 @@
                 $this->_schema = $schema;
 
                 return 0;
-            } else {
-                return $status;
             }
+
+            return $status;
         }
 
         /**
@@ -1071,7 +1070,9 @@
         {
             if (!is_array($paths)) {
                 return -1;
-            } elseif (sizeof($paths) == 0) {
+            }
+
+            if (sizeof($paths) == 0) {
                 return -2;
             } elseif (sizeof($paths) == 1 && $paths[0] == '') {
                 // Need to handle empty paths in some cases
@@ -1927,15 +1928,15 @@
             $rs = $this->selectSet($sql);
             if ($rs->recordCount() != sizeof($atts)) {
                 return -2;
-            } else {
-                $temp = [];
-                while (!$rs->EOF) {
-                    $temp[$rs->fields['attnum']] = $rs->fields['attname'];
-                    $rs->moveNext();
-                }
-
-                return $temp;
             }
+
+            $temp = [];
+            while (!$rs->EOF) {
+                $temp[$rs->fields['attnum']] = $rs->fields['attname'];
+                $rs->moveNext();
+            }
+
+            return $temp;
         }
 
         /**
@@ -1976,11 +1977,11 @@
             $rs = $this->selectSet($sql);
             if ($rs->recordCount() != 1) {
                 return null;
-            } else {
-                $rs->fields['relhasoids'] = $this->phpBool($rs->fields['relhasoids']);
-
-                return $rs->fields['relhasoids'];
             }
+
+            $rs->fields['relhasoids'] = $this->phpBool($rs->fields['relhasoids']);
+
+            return $rs->fields['relhasoids'];
         }
 
         /**
@@ -2047,7 +2048,9 @@
             $acl = $this->selectField($sql, 'acl');
             if ($acl == -1) {
                 return -2;
-            } elseif ($acl == '' || $acl == null) {
+            }
+
+            if ($acl == '' || $acl == null) {
                 return [];
             } else {
                 return $this->_parseACL($acl);
@@ -2171,9 +2174,9 @@
                     } else {
                         if (!isset($this->privmap[$char])) {
                             return -3;
-                        } else {
-                            $row[2][] = $this->privmap[$char];
                         }
+
+                        $row[2][] = $this->privmap[$char];
                     }
                 }
 
@@ -3330,18 +3333,17 @@
 
                 return $temp;
             } // Otherwise find the names of the keys
-            else {
-                $attnames = $this->getAttributeNames($oldtable, explode(' ', $rs->fields['indkey']));
-                if (!is_array($attnames)) {
-                    $this->rollbackTransaction();
 
-                    return -1;
-                } else {
-                    $this->endTransaction();
+            $attnames = $this->getAttributeNames($oldtable, explode(' ', $rs->fields['indkey']));
+            if (!is_array($attnames)) {
+                $this->rollbackTransaction();
 
-                    return $attnames;
-                }
+                return -1;
             }
+
+            $this->endTransaction();
+
+            return $attnames;
         }
 
         /**
@@ -3363,31 +3365,31 @@
                 || (count($fields) != count($values))
             ) {
                 return -1;
-            } else {
-                // Build clause
-                if (count($values) > 0) {
-                    // Escape all field names
-                    $fields   = array_map(['\PHPPgAdmin\Database\Postgres', 'fieldClean'], $fields);
-                    $f_schema = $this->_schema;
-                    $this->fieldClean($table);
-                    $this->fieldClean($f_schema);
+            }
 
-                    $sql = '';
-                    foreach ($values as $i => $value) {
+// Build clause
+            if (count($values) > 0) {
+                // Escape all field names
+                $fields   = array_map(['\PHPPgAdmin\Database\Postgres', 'fieldClean'], $fields);
+                $f_schema = $this->_schema;
+                $this->fieldClean($table);
+                $this->fieldClean($f_schema);
 
-                        // Handle NULL values
-                        if (isset($nulls[$i])) {
-                            $sql .= ',NULL';
-                        } else {
-                            $sql .= ',' . $this->formatValue($types[$i], $format[$i], $value);
-                        }
+                $sql = '';
+                foreach ($values as $i => $value) {
+
+                    // Handle NULL values
+                    if (isset($nulls[$i])) {
+                        $sql .= ',NULL';
+                    } else {
+                        $sql .= ',' . $this->formatValue($types[$i], $format[$i], $value);
                     }
-
-                    $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . implode('","', $fields) . '")
-					VALUES (' . substr($sql, 1) . ')';
-
-                    return $this->execute($sql);
                 }
+
+                $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . implode('","', $fields) . '")
+                VALUES (' . substr($sql, 1) . ')';
+
+                return $this->execute($sql);
             }
 
             return -1;
@@ -3408,7 +3410,9 @@
                 case 'boolean':
                     if ($value == 't') {
                         return 'TRUE';
-                    } elseif ($value == 'f') {
+                    }
+
+                    if ($value == 'f') {
                         return 'FALSE';
                     } elseif ($value == '') {
                         return 'NULL';
@@ -3424,7 +3428,9 @@
                         // Assume it's one of the time types...
                         if ($value == '') {
                             return "''";
-                        } elseif (strcasecmp($value, 'CURRENT_TIMESTAMP') == 0
+                        }
+
+                        if (strcasecmp($value, 'CURRENT_TIMESTAMP') == 0
                             || strcasecmp($value, 'CURRENT_TIME') == 0
                             || strcasecmp($value, 'CURRENT_DATE') == 0
                             || strcasecmp($value, 'LOCALTIME') == 0
@@ -3466,68 +3472,70 @@
         {
             if (!is_array($vars) || !is_array($nulls) || !is_array($format) || !is_array($types)) {
                 return -1;
-            } else {
-                $f_schema = $this->_schema;
-                $this->fieldClean($f_schema);
-                $this->fieldClean($table);
-
-                // Build clause
-                if (sizeof($vars) > 0) {
-
-                    foreach ($vars as $key => $value) {
-                        $this->fieldClean($key);
-
-                        // Handle NULL values
-                        if (isset($nulls[$key])) {
-                            $tmp = 'NULL';
-                        } else {
-                            $tmp = $this->formatValue($types[$key], $format[$key], $value);
-                        }
-
-                        if (isset($sql)) {
-                            $sql .= ", \"{$key}\"={$tmp}";
-                        } else {
-                            $sql = "UPDATE \"{$f_schema}\".\"{$table}\" SET \"{$key}\"={$tmp}";
-                        }
-                    }
-                    $first = true;
-                    foreach ($keyarr as $k => $v) {
-                        $this->fieldClean($k);
-                        $this->clean($v);
-                        if ($first) {
-                            $sql   .= " WHERE \"{$k}\"='{$v}'";
-                            $first = false;
-                        } else {
-                            $sql .= " AND \"{$k}\"='{$v}'";
-                        }
-                    }
-                }
-
-                // Begin transaction.  We do this so that we can ensure only one row is
-                // edited
-                $status = $this->beginTransaction();
-                if ($status != 0) {
-                    $this->rollbackTransaction();
-
-                    return -1;
-                }
-
-                $status = $this->execute($sql);
-                if ($status != 0) {
-                    // update failed
-                    $this->rollbackTransaction();
-
-                    return -1;
-                } elseif ($this->conn->Affected_Rows() != 1) {
-                    // more than one row could be updated
-                    $this->rollbackTransaction();
-
-                    return -2;
-                }
-
-                // End transaction
-                return $this->endTransaction();
             }
+
+            $f_schema = $this->_schema;
+            $this->fieldClean($f_schema);
+            $this->fieldClean($table);
+
+            // Build clause
+            if (sizeof($vars) > 0) {
+
+                foreach ($vars as $key => $value) {
+                    $this->fieldClean($key);
+
+                    // Handle NULL values
+                    if (isset($nulls[$key])) {
+                        $tmp = 'NULL';
+                    } else {
+                        $tmp = $this->formatValue($types[$key], $format[$key], $value);
+                    }
+
+                    if (isset($sql)) {
+                        $sql .= ", \"{$key}\"={$tmp}";
+                    } else {
+                        $sql = "UPDATE \"{$f_schema}\".\"{$table}\" SET \"{$key}\"={$tmp}";
+                    }
+                }
+                $first = true;
+                foreach ($keyarr as $k => $v) {
+                    $this->fieldClean($k);
+                    $this->clean($v);
+                    if ($first) {
+                        $sql   .= " WHERE \"{$k}\"='{$v}'";
+                        $first = false;
+                    } else {
+                        $sql .= " AND \"{$k}\"='{$v}'";
+                    }
+                }
+            }
+
+            // Begin transaction.  We do this so that we can ensure only one row is
+            // edited
+            $status = $this->beginTransaction();
+            if ($status != 0) {
+                $this->rollbackTransaction();
+
+                return -1;
+            }
+
+            $status = $this->execute($sql);
+            if ($status != 0) {
+                // update failed
+                $this->rollbackTransaction();
+
+                return -1;
+            }
+
+            if ($this->conn->Affected_Rows() != 1) {
+                // more than one row could be updated
+                $this->rollbackTransaction();
+
+                return -2;
+            }
+
+            // End transaction
+            return $this->endTransaction();
         }
 
         /**
@@ -3542,30 +3550,30 @@
         {
             if (!is_array($key)) {
                 return -1;
-            } else {
-                // Begin transaction.  We do this so that we can ensure only one row is
-                // deleted
-                $status = $this->beginTransaction();
-                if ($status != 0) {
-                    $this->rollbackTransaction();
-
-                    return -1;
-                }
-
-                if ($schema === false) {
-                    $schema = $this->_schema;
-                }
-
-                $status = $this->delete($table, $key, $schema);
-                if ($status != 0 || $this->conn->Affected_Rows() != 1) {
-                    $this->rollbackTransaction();
-
-                    return -2;
-                }
-
-                // End transaction
-                return $this->endTransaction();
             }
+
+// Begin transaction.  We do this so that we can ensure only one row is
+            // deleted
+            $status = $this->beginTransaction();
+            if ($status != 0) {
+                $this->rollbackTransaction();
+
+                return -1;
+            }
+
+            if ($schema === false) {
+                $schema = $this->_schema;
+            }
+
+            $status = $this->delete($table, $key, $schema);
+            if ($status != 0 || $this->conn->Affected_Rows() != 1) {
+                $this->rollbackTransaction();
+
+                return -2;
+            }
+
+            // End transaction
+            return $this->endTransaction();
         }
 
         /**
@@ -5520,9 +5528,9 @@
                 // Skip default flags
                 if ($v == '') {
                     continue;
-                } else {
-                    $sql .= "\n{$v}";
                 }
+
+                $sql .= "\n{$v}";
             }
 
             $status = $this->execute($sql);
@@ -7082,9 +7090,9 @@
                 }
 
                 return $this->execute($sql);
-            } else {
-                return -1;
             }
+
+            return -1;
         }
 
         /**
@@ -8763,7 +8771,9 @@
 
             if ($val === 'f') {
                 return -1;
-            } elseif ($val === 't') {
+            }
+
+            if ($val === 't') {
                 return 0;
             } else {
                 return -1;
@@ -8902,76 +8912,75 @@
                                                 $line = substr($line, 0, $i); /* remove comment */
                                                 break;
                                             } /* count nested parentheses */
-                                            else {
-                                                if (substr($line, $i, 1) == '(') {
-                                                    $paren_level++;
-                                                } else {
-                                                    if (substr($line, $i, 1) == ')' && $paren_level > 0) {
-                                                        $paren_level--;
-                                                    } /* semicolon? then send query */
-                                                    else {
-                                                        if (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
-                                                            $subline = substr(substr($line, 0, $i), $query_start);
-                                                            /*
-                     * insert a cosmetic newline, if this is not the first
-                     * line in the buffer
-                     */
-                                                            if (strlen($query_buf) > 0) {
-                                                                $query_buf .= "\n";
+
+                                            if (substr($line, $i, 1) == '(') {
+                                                $paren_level++;
+                                            } else {
+                                                if (substr($line, $i, 1) == ')' && $paren_level > 0) {
+                                                    $paren_level--;
+                                                } /* semicolon? then send query */
+                                                else {
+                                                    if (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
+                                                        $subline = substr(substr($line, 0, $i), $query_start);
+                                                        /*
+                 * insert a cosmetic newline, if this is not the first
+                 * line in the buffer
+                 */
+                                                        if (strlen($query_buf) > 0) {
+                                                            $query_buf .= "\n";
+                                                        }
+
+                                                        /* append the line to the query buffer */
+                                                        $query_buf .= $subline;
+                                                        /* is there anything in the query_buf? */
+                                                        if (trim($query_buf)) {
+                                                            $query_buf .= ';';
+
+                                                            // Execute the query. PHP cannot execute
+                                                            // empty queries, unlike libpq
+                                                            $res = @pg_query($conn, $query_buf);
+
+                                                            // Call the callback function for display
+                                                            if ($callback !== null) {
+                                                                $callback($query_buf, $res, $lineno);
                                                             }
 
-                                                            /* append the line to the query buffer */
-                                                            $query_buf .= $subline;
-                                                            /* is there anything in the query_buf? */
-                                                            if (trim($query_buf)) {
-                                                                $query_buf .= ';';
-
-                                                                // Execute the query. PHP cannot execute
-                                                                // empty queries, unlike libpq
-                                                                $res = @pg_query($conn, $query_buf);
-
-                                                                // Call the callback function for display
-                                                                if ($callback !== null) {
-                                                                    $callback($query_buf, $res, $lineno);
-                                                                }
-
-                                                                // Check for COPY request
-                                                                if (pg_result_status($res) == 4) {
-                                                                    // 4 == PGSQL_COPY_FROM
-                                                                    while (!feof($fd)) {
-                                                                        $copy = fgets($fd, 32768);
-                                                                        $lineno++;
-                                                                        pg_put_line($conn, $copy);
-                                                                        if ($copy == "\\.\n" || $copy == "\\.\r\n") {
-                                                                            pg_end_copy($conn);
-                                                                            break;
-                                                                        }
+                                                            // Check for COPY request
+                                                            if (pg_result_status($res) == 4) {
+                                                                // 4 == PGSQL_COPY_FROM
+                                                                while (!feof($fd)) {
+                                                                    $copy = fgets($fd, 32768);
+                                                                    $lineno++;
+                                                                    pg_put_line($conn, $copy);
+                                                                    if ($copy == "\\.\n" || $copy == "\\.\r\n") {
+                                                                        pg_end_copy($conn);
+                                                                        break;
                                                                     }
                                                                 }
                                                             }
-                                                            $query_buf   = null;
-                                                            $query_start = $i + $thislen;
                                                         }
+                                                        $query_buf   = null;
+                                                        $query_start = $i + $thislen;
+                                                    }
 
-                                                        /*
-                 * keyword or identifier?
-                 * We grab the whole string so that we don't
-                 * mistakenly see $foo$ inside an identifier as the start
-                 * of a dollar quote.
-                 */
-                                                        // XXX: multibyte here
-                                                        else {
-                                                            if (preg_match('/^[_[:alpha:]]$/', substr($line, $i, 1))) {
+                                                    /*
+             * keyword or identifier?
+             * We grab the whole string so that we don't
+             * mistakenly see $foo$ inside an identifier as the start
+             * of a dollar quote.
+             */
+                                                    // XXX: multibyte here
+                                                    else {
+                                                        if (preg_match('/^[_[:alpha:]]$/', substr($line, $i, 1))) {
+                                                            $sub = substr($line, $i, $thislen);
+                                                            while (preg_match('/^[\$_A-Za-z0-9]$/', $sub)) {
+                                                                /* keep going while we still have identifier chars */
+                                                                $this->advance_1($i, $prevlen, $thislen);
                                                                 $sub = substr($line, $i, $thislen);
-                                                                while (preg_match('/^[\$_A-Za-z0-9]$/', $sub)) {
-                                                                    /* keep going while we still have identifier chars */
-                                                                    $this->advance_1($i, $prevlen, $thislen);
-                                                                    $sub = substr($line, $i, $thislen);
-                                                                }
-                                                                // Since we're now over the next character to be examined, it is necessary
-                                                                // to move back one space.
-                                                                $i -= $prevlen;
                                                             }
+                                                            // Since we're now over the next character to be examined, it is necessary
+                                                            // to move back one space.
+                                                            $i -= $prevlen;
                                                         }
                                                     }
                                                 }
