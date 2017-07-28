@@ -184,10 +184,10 @@
         /**
          * Cleans (escapes) a string
          *
-         * @param $str The string to clean, by reference
-         * @return The cleaned string
+         * @param  string $str The string to clean, by reference
+         * @return string The cleaned string
          */
-        public function clean(&$str)
+        public function clean(string &$str)
         {
             $str = addslashes($str);
 
