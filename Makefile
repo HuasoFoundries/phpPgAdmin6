@@ -2,33 +2,17 @@ VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)",/\1/p')
 
 SHELL = /usr/bin/env bash
 
-default: clean fix-permissions install
-.PHONY: default fix-permissions install
+default: install
+.PHONY: tag install
 
 version:
 	@echo $(VERSION)
 
 
 
-clean:
-	git clean -fd
-	git checkout .
-	git pull
-	
-
-fix-permissions:
-	sudo chmod 777 temp -R
-	sudo chown www-data:www-data temp -R
-	
-
 install: 
 	composer install --no-dev
 
-update:
-	git clean -fd
-	git checkout .
-	git pull
-	composer install
 
 update_version:
 	@echo "Current version is " ${VERSION}

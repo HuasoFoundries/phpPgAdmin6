@@ -7,6 +7,10 @@
 	 * $Id: config.inc.php-dist,v 1.55 2008/02/18 21:10:31 xzilla Exp $
 	 */
 
+	// Set this to true to enable debug features
+	$conf['debugmode']=false;
+
+
 	// An example server.  Create as many of these as you wish,
 	// indexed from zero upwards.
 

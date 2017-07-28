@@ -1,150 +1,115 @@
 <?php
+namespace PHPPgAdmin\Database;
 
-    namespace PHPPgAdmin\Database;
+/**
+ * PostgreSQL 8.2 support
+ *
+ * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+ */
+
+class Postgres82 extends Postgres83
+{
+
+    public $major_version = 8.2;
+
+    // Select operators
+    public $selectOps = ['=' => 'i', '!='          => 'i', '<'     => 'i', '>'         => 'i', '<='         => 'i', '>=' => 'i', '<<' => 'i', '>>' => 'i', '<<=' => 'i', '>>=' => 'i',
+        'LIKE'                => 'i', 'NOT LIKE'    => 'i', 'ILIKE' => 'i', 'NOT ILIKE' => 'i', 'SIMILAR TO' => 'i',
+        'NOT SIMILAR TO'      => 'i', '~'           => 'i', '!~'    => 'i', '~*'        => 'i', '!~*'        => 'i',
+        'IS NULL'             => 'p', 'IS NOT NULL' => 'p', 'IN'    => 'x', 'NOT IN'    => 'x'];
+
+    // Database functions
 
     /**
-     * PostgreSQL 8.2 support
-     *
-     * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+     * Returns table locks information in the current database
+     * @return A recordset
      */
-
-    class Postgres82 extends Postgres83
+    public function getLocks()
     {
+        $conf = $this->conf;
 
-        public $major_version = 8.2;
-
-        // Select operators
-        public $selectOps = [
-            '='              => 'i',
-            '!='             => 'i',
-            '<'              => 'i',
-            '>'              => 'i',
-            '<='             => 'i',
-            '>='             => 'i',
-            '<<'             => 'i',
-            '>>'             => 'i',
-            '<<='            => 'i',
-            '>>='            => 'i',
-            'LIKE'           => 'i',
-            'NOT LIKE'       => 'i',
-            'ILIKE'          => 'i',
-            'NOT ILIKE'      => 'i',
-            'SIMILAR TO'     => 'i',
-            'NOT SIMILAR TO' => 'i',
-            '~'              => 'i',
-            '!~'             => 'i',
-            '~*'             => 'i',
-            '!~*'            => 'i',
-            'IS NULL'        => 'p',
-            'IS NOT NULL'    => 'p',
-            'IN'             => 'x',
-            'NOT IN'         => 'x'
-        ];
-
-        // Help functions
-
-        public function getHelpPages()
-        {
-            include_once BASE_PATH . '/src/help/PostgresDoc82.php';
-
-            return $this->help_page;
+        if (!$conf['show_system']) {
+            $where = 'AND pn.nspname NOT LIKE $$pg\_%$$';
+        } else {
+            $where = "AND nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
         }
 
-        // Database functions
-
-        /**
-         * Returns table locks information in the current database
-         *
-         * @return A recordset
-         */
-        public function getLocks()
-        {
-            $conf = $this->conf;
-
-            if (!$conf['show_system']) {
-                $where = 'AND pn.nspname NOT LIKE $$pg\_%$$';
-            } else {
-                $where = "AND nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
-            }
-
-            $sql = "SELECT pn.nspname, pc.relname AS tablename, pl.transaction, pl.pid, pl.mode, pl.granted
+        $sql = "SELECT pn.nspname, pc.relname AS tablename, pl.transaction, pl.pid, pl.mode, pl.granted
 		FROM pg_catalog.pg_locks pl, pg_catalog.pg_class pc, pg_catalog.pg_namespace pn
 		WHERE pl.relation = pc.oid AND pc.relnamespace=pn.oid {$where}
 		ORDER BY nspname,tablename";
 
-            return $this->selectSet($sql);
-        }
+        return $this->selectSet($sql);
+    }
 
-        // Sequence functions
+    // Sequence functions
 
-        /**
-         * Rename a sequence
-         *
-         * @param $seqrs The sequence RecordSet returned by getSequence()
-         * @param $name  The new name for the sequence
-         * @return int|\PHPPgAdmin\Database\A 0 success
-         */
-        public function alterSequenceName($seqrs, $name)
-        {
-            /* vars are cleaned in _alterSequence */
-            if (!empty($name) && ($seqrs->fields['seqname'] != $name)) {
-                $f_schema = $this->_schema;
-                $this->fieldClean($f_schema);
-                $sql    = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
-                $status = $this->execute($sql);
-                if ($status == 0) {
-                    $seqrs->fields['seqname'] = $name;
-                } else {
-                    return $status;
-                }
+    /**
+     * Rename a sequence
+     * @param $seqrs The sequence RecordSet returned by getSequence()
+     * @param $name The new name for the sequence
+     * @return 0 success
+     */
+    public function alterSequenceName($seqrs, $name)
+    {
+        /* vars are cleaned in _alterSequence */
+        if (!empty($name) && ($seqrs->fields['seqname'] != $name)) {
+            $f_schema = $this->_schema;
+            $this->fieldClean($f_schema);
+            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
+            $status = $this->execute($sql);
+            if ($status == 0) {
+                $seqrs->fields['seqname'] = $name;
+            } else {
+                return $status;
             }
 
-            return 0;
         }
+        return 0;
+    }
 
-        // View functions
+    // View functions
 
-        /**
-         * Rename a view
-         *
-         * @param $vwrs The view recordSet returned by getView()
-         * @param $name The new view's name
-         * @return int|\PHPPgAdmin\Database\A -1 Failed
-         */
-        public function alterViewName($vwrs, $name)
-        {
-            // Rename (only if name has changed)
-            /* $vwrs and $name are cleaned in _alterView */
-            if (!empty($name) && ($name != $vwrs->fields['relname'])) {
-                $f_schema = $this->_schema;
-                $this->fieldClean($f_schema);
-                $sql    = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
-                $status = $this->execute($sql);
-                if ($status == 0) {
-                    $vwrs->fields['relname'] = $name;
-                } else {
-                    return $status;
-                }
+    /**
+     * Rename a view
+     * @param $vwrs The view recordSet returned by getView()
+     * @param $name The new view's name
+     * @return -1 Failed
+     * @return 0 success
+     */
+    public function alterViewName($vwrs, $name)
+    {
+        // Rename (only if name has changed)
+        /* $vwrs and $name are cleaned in _alterView */
+        if (!empty($name) && ($name != $vwrs->fields['relname'])) {
+            $f_schema = $this->_schema;
+            $this->fieldClean($f_schema);
+            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $status = $this->execute($sql);
+            if ($status == 0) {
+                $vwrs->fields['relname'] = $name;
+            } else {
+                return $status;
             }
 
-            return 0;
         }
+        return 0;
+    }
 
-        // Trigger functions
+    // Trigger functions
 
-        /**
-         * Grabs a list of triggers on a table
-         *
-         * @param \PHPPgAdmin\Database\The|string $table The name of a table whose triggers to retrieve
-         * @return \PHPPgAdmin\Database\A recordset
-         */
-        public function getTriggers($table = '')
-        {
-            $c_schema = $this->_schema;
-            $this->clean($c_schema);
-            $this->clean($table);
+    /**
+     * Grabs a list of triggers on a table
+     * @param $table The name of a table whose triggers to retrieve
+     * @return A recordset
+     */
+    public function getTriggers($table = '')
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $this->clean($table);
 
-            $sql = "SELECT
+        $sql = "SELECT
 				t.tgname, pg_catalog.pg_get_triggerdef(t.oid) AS tgdef, t.tgenabled, p.oid AS prooid,
 				p.proname || ' (' || pg_catalog.oidvectortypes(p.proargtypes) || ')' AS proproto,
 				ns.nspname AS pronamespace
@@ -158,23 +123,21 @@
 				AND p.oid=t.tgfoid
 				AND p.pronamespace = ns.oid";
 
-            return $this->selectSet($sql);
-        }
+        return $this->selectSet($sql);
+    }
 
-        // Function functions
+    // Function functions
 
-        /**
-         * Returns all details for a particular function
-         *
-         * @param $function_oid
-         * @return \PHPPgAdmin\Database\Function info
-         * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
-         */
-        public function getFunction($function_oid)
-        {
-            $this->clean($function_oid);
+    /**
+     * Returns all details for a particular function
+     * @param $func The name of the function to retrieve
+     * @return Function info
+     */
+    public function getFunction($function_oid)
+    {
+        $this->clean($function_oid);
 
-            $sql = "SELECT
+        $sql = "SELECT
 					pc.oid AS prooid,
 					proname,
 					pg_catalog.pg_get_userbyid(proowner) AS proowner,
@@ -198,149 +161,146 @@
 					AND pc.pronamespace = pn.oid
 				";
 
-            return $this->selectSet($sql);
+        return $this->selectSet($sql);
+    }
+
+    /**
+     * Creates a new function.
+     * @param $funcname The name of the function to create
+     * @param $args A comma separated string of types
+     * @param $returns The return type
+     * @param $definition The definition for the new function
+     * @param $language The language the function is written for
+     * @param $flags An array of optional flags
+     * @param $setof True if it returns a set, false otherwise
+     * @param $rows number of rows planner should estimate will be returned
+     * @param $cost cost the planner should use in the function execution step
+     * @param $comment The comment on the function
+     * @param $replace (optional) True if OR REPLACE, false for normal
+     * @return 0 success
+     * @return -1 create function failed
+     * @return -4 set comment failed
+     */
+    public function createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, $replace = false)
+    {
+
+        // Begin a transaction
+        $status = $this->beginTransaction();
+        if ($status != 0) {
+            $this->rollbackTransaction();
+            return -1;
         }
 
-        /**
-         * Creates a new function.
-         *
-         * @param      $funcname   The name of the function to create
-         * @param      $args       A comma separated string of types
-         * @param      $returns    The return type
-         * @param      $definition The definition for the new function
-         * @param      $language   The language the function is written for
-         * @param      $flags      An array of optional flags
-         * @param      $setof      True if it returns a set, false otherwise
-         * @param      $cost       cost the planner should use in the function execution step
-         * @param      $rows       number of rows planner should estimate will be returned
-         * @param      $comment    The comment on the function
-         * @param bool $replace    (optional) True if OR REPLACE, false for normal
-         * @return bool|int 0 success
-         */
-        public function createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, $replace = false)
-        {
+        $f_schema = $this->_schema;
+        $this->fieldClean($f_schema);
+        $this->fieldClean($funcname);
+        $this->clean($args);
+        $this->fieldClean($language);
+        $this->arrayClean($flags);
 
-            // Begin a transaction
-            $status = $this->beginTransaction();
-            if ($status != 0) {
-                $this->rollbackTransaction();
+        $sql = "CREATE";
+        if ($replace) {
+            $sql .= " OR REPLACE";
+        }
 
-                return -1;
+        $sql .= " FUNCTION \"{$f_schema}\".\"{$funcname}\" (";
+
+        if ($args != '') {
+            $sql .= $args;
+        }
+
+        // For some reason, the returns field cannot have quotes...
+        $sql .= ") RETURNS ";
+        if ($setof) {
+            $sql .= "SETOF ";
+        }
+
+        $sql .= "{$returns} AS ";
+
+        if (is_array($definition)) {
+            $this->arrayClean($definition);
+            $sql .= "'" . $definition[0] . "'";
+            if ($definition[1]) {
+                $sql .= ",'" . $definition[1] . "'";
+            }
+        } else {
+            $this->clean($definition);
+            $sql .= "'" . $definition . "'";
+        }
+
+        $sql .= " LANGUAGE \"{$language}\"";
+
+        // Add flags
+        foreach ($flags as $v) {
+            // Skip default flags
+            if ($v == '') {
+                continue;
+            } else {
+                $sql .= "\n{$v}";
             }
 
+        }
+
+        $status = $this->execute($sql);
+        if ($status != 0) {
+            $this->rollbackTransaction();
+            return -3;
+        }
+
+        /* set the comment */
+        $status = $this->setComment('FUNCTION', "\"{$funcname}\"({$args})", null, $comment);
+        if ($status != 0) {
+            $this->rollbackTransaction();
+            return -4;
+        }
+
+        return $this->endTransaction();
+    }
+
+    // Index functions
+
+    /**
+     * Clusters an index
+     * @param $index The name of the index
+     * @param $table The table the index is on
+     * @return 0 success
+     */
+    public function clusterIndex($table = '', $index = '')
+    {
+
+        $sql = 'CLUSTER';
+
+        // We don't bother with a transaction here, as there's no point rolling
+        // back an expensive cluster if a cheap analyze fails for whatever reason
+
+        if (!empty($table)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $this->fieldClean($funcname);
-            $this->clean($args);
-            $this->fieldClean($language);
-            $this->arrayClean($flags);
+            $this->fieldClean($table);
 
-            $sql = 'CREATE';
-            if ($replace) {
-                $sql .= ' OR REPLACE';
-            }
-
-            $sql .= " FUNCTION \"{$f_schema}\".\"{$funcname}\" (";
-
-            if ($args != '') {
-                $sql .= $args;
-            }
-
-            // For some reason, the returns field cannot have quotes...
-            $sql .= ') RETURNS ';
-            if ($setof) {
-                $sql .= 'SETOF ';
-            }
-
-            $sql .= "{$returns} AS ";
-
-            if (is_array($definition)) {
-                $this->arrayClean($definition);
-                $sql .= "'" . $definition[0] . "'";
-                if ($definition[1]) {
-                    $sql .= ",'" . $definition[1] . "'";
-                }
+            if (!empty($index)) {
+                $this->fieldClean($index);
+                $sql .= " \"{$index}\" ON \"{$f_schema}\".\"{$table}\"";
             } else {
-                $this->clean($definition);
-                $sql .= "'" . $definition . "'";
+                $sql .= " \"{$f_schema}\".\"{$table}\"";
             }
-
-            $sql .= " LANGUAGE \"{$language}\"";
-
-            // Add flags
-            foreach ($flags as $v) {
-                // Skip default flags
-                if ($v == '') {
-                    continue;
-                } else {
-                    $sql .= "\n{$v}";
-                }
-            }
-
-            $status = $this->execute($sql);
-            if ($status != 0) {
-                $this->rollbackTransaction();
-
-                return -3;
-            }
-
-            /* set the comment */
-            $status = $this->setComment('FUNCTION', "\"{$funcname}\"({$args})", null, $comment);
-            if ($status != 0) {
-                $this->rollbackTransaction();
-
-                return -4;
-            }
-
-            return $this->endTransaction();
         }
 
-        // Index functions
+        return $this->execute($sql);
+    }
 
-        /**
-         * Clusters an index
-         *
-         * @param \PHPPgAdmin\Database\The|string $table The table the index is on
-         * @param \PHPPgAdmin\Database\The|string $index The name of the index
-         * @return \PHPPgAdmin\Database\A 0 success
-         */
-        public function clusterIndex($table = '', $index = '')
-        {
+    // Operator functions
 
-            $sql = 'CLUSTER';
+    /**
+     * Returns all details for a particular operator
+     * @param $operator_oid The oid of the operator
+     * @return Function info
+     */
+    public function getOperator($operator_oid)
+    {
+        $this->clean($operator_oid);
 
-            // We don't bother with a transaction here, as there's no point rolling
-            // back an expensive cluster if a cheap analyze fails for whatever reason
-
-            if (!empty($table)) {
-                $f_schema = $this->_schema;
-                $this->fieldClean($f_schema);
-                $this->fieldClean($table);
-
-                if (!empty($index)) {
-                    $this->fieldClean($index);
-                    $sql .= " \"{$index}\" ON \"{$f_schema}\".\"{$table}\"";
-                } else {
-                    $sql .= " \"{$f_schema}\".\"{$table}\"";
-                }
-            }
-
-            return $this->execute($sql);
-        }
-
-        // Operator functions
-
-        /**
-         * Returns all details for a particular operator
-         *
-         * @param $operator_oid The oid of the operator
-         * @return Function info
-         */
-        public function getOperator($operator_oid)
-        {
-            $this->clean($operator_oid);
-
-            $sql = "
+        $sql = "
 			SELECT
 				po.oid, po.oprname,
 				oprleft::pg_catalog.regtype AS oprleftname,
@@ -362,21 +322,20 @@
 				po.oid='{$operator_oid}'
 		";
 
-            return $this->selectSet($sql);
-        }
+        return $this->selectSet($sql);
+    }
 
-        // Operator Class functions
+    // Operator Class functions
 
-        /**
-         * Gets all opclasses
-         *
-         * @return A recordset
-         */
-        public function getOpClasses()
-        {
-            $c_schema = $this->_schema;
-            $this->clean($c_schema);
-            $sql = "
+    /**
+     * Gets all opclasses
+     * @return A recordset
+     */
+    public function getOpClasses()
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $sql = "
 			SELECT
 				pa.amname,
 				po.opcname,
@@ -392,39 +351,27 @@
 			ORDER BY 1,2
 		";
 
-            return $this->selectSet($sql);
-        }
-
-        // Capabilities
-
-        public function hasCreateTableLikeWithIndexes()
-        {
-            return false;
-        }
-
-        public function hasEnumTypes()
-        {
-            return false;
-        }
-
-        public function hasFTS()
-        {
-            return false;
-        }
-
-        public function hasFunctionCosting()
-        {
-            return false;
-        }
-
-        public function hasFunctionGUC()
-        {
-            return false;
-        }
-
-        public function hasVirtualTransactionId()
-        {
-            return false;
-        }
-
+        return $this->selectSet($sql);
     }
+
+    // Capabilities
+
+    public function hasCreateTableLikeWithIndexes()
+    {return false;}
+
+    public function hasEnumTypes()
+    {return false;}
+
+    public function hasFTS()
+    {return false;}
+
+    public function hasFunctionCosting()
+    {return false;}
+
+    public function hasFunctionGUC()
+    {return false;}
+
+    public function hasVirtualTransactionId()
+    {return false;}
+
+}
