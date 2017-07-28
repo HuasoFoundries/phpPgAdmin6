@@ -19,7 +19,7 @@ class IndexController extends BaseController {
 			return $this->doTree();
 		}
 
-		$this->printHeader($lang['strindexes'], "<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>");
+		$this->printHeader($lang['strindexes'], "<script src=\"" . SUBFOLDER . "/js/indexes.js\" type=\"text/javascript\"></script>");
 
 		if ($action == 'create_index' || $action == 'save_create_index') {
 			echo "<body onload=\"init();\">";

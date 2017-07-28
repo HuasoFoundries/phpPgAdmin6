@@ -37,7 +37,7 @@ class DatabaseController extends BaseController {
 		$scripts = '';
 		/* normal flow */
 		if ($action == 'locks' || $action == 'processes') {
-			$scripts .= "<script src=\"/js/database.js\" type=\"text/javascript\"></script>";
+			$scripts .= "<script src=\"" . SUBFOLDER . "/js/database.js\" type=\"text/javascript\"></script>";
 
 			$refreshTime = $conf['ajax_refresh'] * 1000;
 

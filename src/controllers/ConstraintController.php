@@ -20,7 +20,7 @@ class ConstraintController extends BaseController {
 		}
 
 		$this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
-			"<script src=\"/js/indexes.js\" type=\"text/javascript\"></script>", true, 'select2_header.twig');
+			"<script src=\"" . SUBFOLDER . "/js/indexes.js\" type=\"text/javascript\"></script>", true, 'select2_header.twig');
 
 		if ($action == 'add_unique_key' || $action == 'save_add_unique_key'
 			|| $action == 'add_primary_key' || $action == 'save_add_primary_key'

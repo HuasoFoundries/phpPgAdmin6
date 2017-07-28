@@ -8,8 +8,8 @@ use \PHPPgAdmin\Decorators\Decorator;
  *
  */
 class HTMLTableController extends HTMLController {
-	public $_name  = 'HTMLTableController';
-	private $ma    = [];
+	public $_name = 'HTMLTableController';
+	private $ma = [];
 	private $class = '';
 	/**
 	 * Display a table of data.
@@ -53,10 +53,10 @@ class HTMLTableController extends HTMLController {
 	 */
 	public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
 
-		$misc           = $this->misc;
-		$lang           = $this->lang;
+		$misc = $this->misc;
+		$lang = $this->lang;
 		$plugin_manager = $this->plugin_manager;
-		$data           = $misc->getDatabaseAccessor();
+		$data = $misc->getDatabaseAccessor();
 
 		// Action buttons hook's place
 		$plugin_functions_parameters = [
@@ -86,7 +86,7 @@ class HTMLTableController extends HTMLController {
 			}
 
 			if ($this->has_ma) {
-				$tablehtml .= "<script src=\"/js/multiactionform.js\" type=\"text/javascript\"></script>\n";
+				$tablehtml .= "<script src=\"" . SUBFOLDER . "/js/multiactionform.js\" type=\"text/javascript\"></script>\n";
 				$tablehtml .= "<form id=\"multi_form\" action=\"{$this->ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
 				if (isset($this->ma['vars'])) {
 					foreach ($this->ma['vars'] as $k => $v) {
@@ -158,7 +158,7 @@ class HTMLTableController extends HTMLController {
 
 	private function getTbody($columns, $actions, $tabledata, $pre_fn) {
 		// Display table rows
-		$i          = 0;
+		$i = 0;
 		$tbody_html = '<tbody>';
 		while (!$tabledata->EOF) {
 			$id = ($i % 2) + 1;
@@ -192,46 +192,46 @@ class HTMLTableController extends HTMLController {
 				}
 
 				switch ($column_id) {
-					case 'actions':
-						foreach ($alt_actions as $action) {
-							if (isset($action['disable']) && $action['disable'] === true) {
-								$tbody_html .= "<td></td>\n";
-							} else {
-								$tbody_html .= "<td class=\"opbutton{$id} {$this->class}\">";
-								$action['fields'] = $tabledata->fields;
-								$tbody_html .= $this->printLink($action, false);
-								$tbody_html .= "</td>\n";
-							}
+				case 'actions':
+					foreach ($alt_actions as $action) {
+						if (isset($action['disable']) && $action['disable'] === true) {
+							$tbody_html .= "<td></td>\n";
+						} else {
+							$tbody_html .= "<td class=\"opbutton{$id} {$this->class}\">";
+							$action['fields'] = $tabledata->fields;
+							$tbody_html .= $this->printLink($action, false);
+							$tbody_html .= "</td>\n";
 						}
-						break;
-					case 'comment':
-						$tbody_html .= "<td class='comment_cell'>";
-						$val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);
-						if (!is_null($val)) {
-							$tbody_html .= htmlentities($val);
+					}
+					break;
+				case 'comment':
+					$tbody_html .= "<td class='comment_cell'>";
+					$val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);
+					if (!is_null($val)) {
+						$tbody_html .= htmlentities($val);
+					}
+					$tbody_html .= "</td>";
+					break;
+				default:
+					$tbody_html .= "<td{$this->class}>";
+					$val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);
+					if (!is_null($val)) {
+						if (isset($column['url'])) {
+							$tbody_html .= "<a href=\"{$column['url']}";
+							$tbody_html .= $this->printUrlVars($column['vars'], $tabledata->fields, false);
+							$tbody_html .= "\">";
 						}
-						$tbody_html .= "</td>";
-						break;
-					default:
-						$tbody_html .= "<td{$this->class}>";
-						$val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);
-						if (!is_null($val)) {
-							if (isset($column['url'])) {
-								$tbody_html .= "<a href=\"{$column['url']}";
-								$tbody_html .= $this->printUrlVars($column['vars'], $tabledata->fields, false);
-								$tbody_html .= "\">";
-							}
-							$type   = isset($column['type']) ? $column['type'] : null;
-							$params = isset($column['params']) ? $column['params'] : [];
-							$tbody_html .= $this->misc->printVal($val, $type, $params);
-							if (isset($column['url'])) {
-								$tbody_html .= "</a>";
-							}
-
+						$type = isset($column['type']) ? $column['type'] : null;
+						$params = isset($column['params']) ? $column['params'] : [];
+						$tbody_html .= $this->misc->printVal($val, $type, $params);
+						if (isset($column['url'])) {
+							$tbody_html .= "</a>";
 						}
 
-						$tbody_html .= "</td>\n";
-						break;
+					}
+
+					$tbody_html .= "</td>\n";
+					break;
 				}
 			}
 			$tbody_html .= "</tr>\n";
@@ -261,22 +261,22 @@ class HTMLTableController extends HTMLController {
 
 		foreach ($columns as $column_id => $column) {
 			switch ($column_id) {
-				case 'actions':
-					if (sizeof($actions) > 0) {
-						$thead_html .= '<th class="data" colspan="' . count($actions) . '">' . $column['title'] . '</th>' . "\n";
-					}
+			case 'actions':
+				if (sizeof($actions) > 0) {
+					$thead_html .= '<th class="data" colspan="' . count($actions) . '">' . $column['title'] . '</th>' . "\n";
+				}
 
-					break;
-				default:
-					$thead_html .= '<th class="data' . $this->class . '">';
-					if (isset($column['help'])) {
-						$thead_html .= $this->misc->printHelp($column['title'], $column['help'], false);
-					} else {
-						$thead_html .= $column['title'];
-					}
+				break;
+			default:
+				$thead_html .= '<th class="data' . $this->class . '">';
+				if (isset($column['help'])) {
+					$thead_html .= $this->misc->printHelp($column['title'], $column['help'], false);
+				} else {
+					$thead_html .= $column['title'];
+				}
 
-					$thead_html .= "</th>\n";
-					break;
+				$thead_html .= "</th>\n";
+				break;
 			}
 		}
 		$thead_html .= "</tr></thead>\n";
@@ -301,15 +301,15 @@ class HTMLTableController extends HTMLController {
 
 		foreach ($columns as $column_id => $column) {
 			switch ($column_id) {
-				case 'actions':
-					if (sizeof($actions) > 0) {
-						$tfoot_html .= "<td class=\"data\" colspan=\"" . count($actions) . "\"></td>\n";
-					}
+			case 'actions':
+				if (sizeof($actions) > 0) {
+					$tfoot_html .= "<td class=\"data\" colspan=\"" . count($actions) . "\"></td>\n";
+				}
 
-					break;
-				default:
-					$tfoot_html .= "<td class=\"data{$this->class}\"></td>\n";
-					break;
+				break;
+			default:
+				$tfoot_html .= "<td class=\"data{$this->class}\"></td>\n";
+				break;
 			}
 		}
 		$tfoot_html .= "</tr></tfoot>\n";

@@ -498,7 +498,7 @@ class TableController extends BaseController {
 			$this->printTitle($lang['strcreatetable'], 'pg.table.create');
 			$misc->printMsg($msg);
 
-			echo "<script src=\"/js/tables.js\" type=\"text/javascript\"></script>";
+			echo "<script src=\"" . SUBFOLDER . "/js/tables.js\" type=\"text/javascript\"></script>";
 			echo "<form action=\"" . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
 
 			// Output table header

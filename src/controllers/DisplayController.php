@@ -31,7 +31,7 @@ class DisplayController extends BaseController {
 			$this->doBrowseFK();
 		}
 
-		$scripts = "<script src=\"/js/display.js\" type=\"text/javascript\"></script>";
+		$scripts = "<script src=\"" . SUBFOLDER . "/js/display.js\" type=\"text/javascript\"></script>";
 
 		$scripts .= "<script type=\"text/javascript\">\n";
 		$scripts .= "var Display = {\n";

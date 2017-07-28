@@ -57,7 +57,7 @@ class HistoryController extends BaseController {
 		$lang = $this->lang;
 		$data = $misc->getDatabaseAccessor();
 
-		$onchange = "onchange=\"location.href='/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
+		$onchange = "onchange=\"location.href='" . SUBFOLDER . "/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
 		$this->printHeader($lang['strhistory']);
 
