@@ -268,7 +268,7 @@ class SchemaController extends BaseController {
 		$this->printTitle($lang['strcreateschema'], 'pg.schema.create');
 		$misc->printMsg($msg);
 
-		echo '<form action="/src/views/schemas.php" method="post">' . "\n";
+		echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
 		echo "<table style=\"width: 100%\">\n";
 		echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
 		echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -353,7 +353,7 @@ class SchemaController extends BaseController {
 				$_POST['owner'] = $schema->fields['ownername'];
 			}
 
-			echo '<form action="/src/views/schemas.php" method="post">' . "\n";
+			echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
 			echo "<table>\n";
 
 			echo "\t<tr>\n";
@@ -430,7 +430,7 @@ class SchemaController extends BaseController {
 			$this->printTrail('schema');
 			$this->printTitle($lang['strdrop'], 'pg.schema.drop');
 
-			echo '<form action="/src/views/schemas.php" method="post">' . "\n";
+			echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
 			//If multi drop
 			if (isset($_REQUEST['ma'])) {
 				foreach ($_REQUEST['ma'] as $v) {
@@ -499,7 +499,7 @@ class SchemaController extends BaseController {
 		$this->printTabs('schema', 'export');
 		$misc->printMsg($msg);
 
-		echo '<form action="/src/views/dbexport.php" method="post">' . "\n";
+		echo '<form action="' . SUBFOLDER . '/src/views/dbexport.php" method="post">' . "\n";
 
 		echo "<table>\n";
 		echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";

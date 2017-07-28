@@ -727,7 +727,7 @@ class DatabaseController extends BaseController {
 		$this->printTrail('database');
 		$this->printTabs('database', 'sql');
 		echo "<p>{$lang['strentersql']}</p>\n";
-		echo '<form action="/src/views/sql.php" method="post" enctype="multipart/form-data" id="sqlform">' . "\n";
+		echo '<form action="' . SUBFOLDER . '/src/views/sql.php" method="post" enctype="multipart/form-data" id="sqlform">' . "\n";
 		echo "<p>{$lang['strsql']}<br />\n";
 		echo '<textarea style="width:95%;" rows="15" cols="50" name="query" id="query">',
 		htmlspecialchars($_SESSION['sqlquery']), "</textarea></p>\n";

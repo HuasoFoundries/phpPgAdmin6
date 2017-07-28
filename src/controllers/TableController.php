@@ -436,7 +436,7 @@ class TableController extends BaseController {
 			$this->printTitle($lang['strcreatetable'], 'pg.table.create');
 			$misc->printMsg($msg);
 
-			echo '<form action="/src/views/' . $this->script . '" method="post">';
+			echo '<form action="' . SUBFOLDER . '/src/views/' . $this->script . '" method="post">';
 			echo "\n";
 			echo "<table>\n";
 			echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";

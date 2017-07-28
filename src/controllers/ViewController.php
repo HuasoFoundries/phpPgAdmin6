@@ -166,7 +166,7 @@ class ViewController extends BaseController {
 
 			$attrs = $data->getTableAttributes($_REQUEST['view']);
 
-			echo '<form action="/src/views/' . $this->script . '" method="post" id="selectform">';
+			echo '<form action="' . SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
 			echo "\n";
 
 			if ($attrs->recordCount() > 0) {

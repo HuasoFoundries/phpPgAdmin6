@@ -148,7 +148,7 @@ class SQLEditController extends BaseController {
 
 		$default_html = $this->printTabs($misc->getNavTabs('popup'), 'sql', false);
 
-		$default_html .= '<form action="/src/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
+		$default_html .= '<form action="' . SUBFOLDER . '/src/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
 		$default_html .= "\n";
 		$default_html .= $this->_printConnection('sql');
 
