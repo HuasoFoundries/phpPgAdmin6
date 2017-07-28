@@ -103,9 +103,9 @@
                 // Execute the query.  If it's a script upload, special handling is necessary
                 if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
                     return $this->execute_script();
-                } else {
-                    return $this->execute_query();
                 }
+
+                return $this->execute_query();
             } catch (\PHPPgAdmin\ADODB_Exception $e) {
 
                 $message   = $e->getMessage();

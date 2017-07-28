@@ -1746,10 +1746,10 @@ class Misc
             // to be dumped.
             if (preg_match('/^[_.[:alnum:]]+$/', $str)) {
                 return $str;
-            } else {
-                echo $lang['strcannotdumponwindows'];
-                exit;
             }
+
+            echo $lang['strcannotdumponwindows'];
+            exit;
         } else {
             return escapeshellarg($str);
         }
@@ -1768,10 +1768,9 @@ class Misc
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $data->fieldClean($str);
             return '"' . $str . '"';
-        } else {
-            return escapeshellcmd($str);
         }
 
+        return escapeshellcmd($str);
     }
 
     /**
@@ -1955,13 +1954,13 @@ class Misc
             $this->server_info = null;
             return $this->server_info;
 
-        } else {
-            $this->server_info = null;
-            // Unable to find a matching server, are we being hacked?
-            echo $this->lang['strinvalidserverparam'];
-
-            exit;
         }
+
+        $this->server_info = null;
+        // Unable to find a matching server, are we being hacked?
+        echo $this->lang['strinvalidserverparam'];
+
+        exit;
     }
 
     /**

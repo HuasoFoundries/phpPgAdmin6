@@ -263,9 +263,9 @@
                 // Skip default flags
                 if ($v == '') {
                     continue;
-                } else {
-                    $sql .= "\n{$v}";
                 }
+
+                $sql .= "\n{$v}";
             }
 
             $status = $this->execute($sql);

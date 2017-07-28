@@ -287,7 +287,9 @@
 
                 if (($k === $data->id) && (!($withOid && $conf['show_oids']))) {
                     continue;
-                } elseif ($v !== null && $v == '') {
+                }
+
+                if ($v !== null && $v == '') {
                     echo '<td>&nbsp;</td>';
                 } else {
                     echo '<td style="white-space:nowrap;">';

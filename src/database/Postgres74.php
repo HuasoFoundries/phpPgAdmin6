@@ -47,9 +47,9 @@
             $status = $this->alterDatabaseRename($dbName, $newName);
             if ($status != 0) {
                 return -3;
-            } else {
-                return 0;
             }
+
+            return 0;
         }
 
         /**

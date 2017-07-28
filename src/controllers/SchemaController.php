@@ -20,10 +20,10 @@
 
             if ($action == 'tree') {
                 return $this->doTree();
-            } else {
-                if ($action == 'subtree') {
-                    return $this->doSubTree();
-                }
+            }
+
+            if ($action == 'subtree') {
+                return $this->doSubTree();
             }
 
             $this->printHeader($lang['strschemas']);

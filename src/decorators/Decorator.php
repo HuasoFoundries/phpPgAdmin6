@@ -16,9 +16,9 @@
             $val = self::get_sanitized_value($var, $fields, 'xml');
             if (!empty($val)) {
                 return " {$attr}=\"{$val}\"";
-            } else {
-                return '';
             }
+
+            return '';
         }
 
         public static function get_sanitized_value(&$var, &$fields, $esc = null)

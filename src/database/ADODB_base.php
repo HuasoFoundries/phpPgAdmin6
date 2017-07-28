@@ -114,7 +114,9 @@
             // If failure, or no rows returned, return error value
             if (!$rs) {
                 return $this->conn->ErrorNo();
-            } elseif ($rs->RecordCount() == 0) {
+            }
+
+            if ($rs->RecordCount() == 0) {
                 return -1;
             }
 
@@ -233,10 +235,11 @@
                 // Check for unique constraint failure
                 if (stristr($this->conn->ErrorMsg(), 'unique')) {
                     return -1;
-                } // Check for referential integrity failure
-                elseif (stristr($this->conn->ErrorMsg(), 'referential')) {
-                    return -2;
                 }
+
+                if (stristr($this->conn->ErrorMsg(), 'referential')) {
+                    return -2;
+                } // Check for referential integrity failure
             }
 
             return $this->conn->ErrorNo();
@@ -296,10 +299,11 @@
                 // Check for unique constraint failure
                 if (stristr($this->conn->ErrorMsg(), 'unique')) {
                     return -1;
-                } // Check for referential integrity failure
-                elseif (stristr($this->conn->ErrorMsg(), 'referential')) {
-                    return -2;
                 }
+
+                if (stristr($this->conn->ErrorMsg(), 'referential')) {
+                    return -2;
+                } // Check for referential integrity failure
             }
 
             // Check for no rows modified

@@ -297,7 +297,9 @@
                         $this->doCreateComposite($lang['strtypeneedsname']);
 
                         return;
-                    } elseif ($fields == '' || !is_numeric($fields) || $fields != (int)$fields || $fields < 1) {
+                    }
+
+                    if ($fields == '' || !is_numeric($fields) || $fields != (int)$fields || $fields < 1) {
                         $_REQUEST['stage'] = 1;
                         $this->doCreateComposite($lang['strtypeneedscols']);
 
@@ -376,7 +378,9 @@
                         $this->doCreateComposite($lang['strtypeneedsname']);
 
                         return;
-                    } elseif ($fields == '' || !is_numeric($fields) || $fields != (int)$fields || $fields <= 0) {
+                    }
+
+                    if ($fields == '' || !is_numeric($fields) || $fields != (int)$fields || $fields <= 0) {
                         $_REQUEST['stage'] = 1;
                         $this->doCreateComposite($lang['strtypeneedscols']);
 
@@ -470,7 +474,9 @@
                         $this->doCreateEnum($lang['strtypeneedsname']);
 
                         return;
-                    } elseif ($values == '' || !is_numeric($values) || $values != (int)$values || $values < 1) {
+                    }
+
+                    if ($values == '' || !is_numeric($values) || $values != (int)$values || $values < 1) {
                         $_REQUEST['stage'] = 1;
                         $this->doCreateEnum($lang['strtypeneedsvals']);
 
@@ -517,7 +523,9 @@
                         $this->doCreateEnum($lang['strtypeneedsname']);
 
                         return;
-                    } elseif ($values == '' || !is_numeric($values) || $values != (int)$values || $values <= 0) {
+                    }
+
+                    if ($values == '' || !is_numeric($values) || $values != (int)$values || $values <= 0) {
                         $_REQUEST['stage'] = 1;
                         $this->doCreateEnum($lang['strtypeneedsvals']);
 

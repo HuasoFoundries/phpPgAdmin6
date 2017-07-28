@@ -24,10 +24,10 @@
 
             if ($action == 'tree') {
                 return $this->doTree();
-            } else {
-                if ($action == 'subtree') {
-                    return $this->doSubTree();
-                }
+            }
+
+            if ($action == 'subtree') {
+                return $this->doSubTree();
             }
 
             $data = $misc->getDatabaseAccessor();
@@ -498,7 +498,9 @@
                         $this->doCreate($lang['strtableneedsname']);
 
                         return;
-                    } elseif ($fields == '' || !is_numeric($fields) || $fields != (int)$fields || $fields < 1) {
+                    }
+
+                    if ($fields == '' || !is_numeric($fields) || $fields != (int)$fields || $fields < 1) {
                         $_REQUEST['stage'] = 1;
                         $this->doCreate($lang['strtableneedscols']);
 
@@ -640,7 +642,9 @@
                         $this->doCreate($lang['strtableneedsname']);
 
                         return;
-                    } elseif ($fields == '' || !is_numeric($fields) || $fields != (int)$fields || $fields <= 0) {
+                    }
+
+                    if ($fields == '' || !is_numeric($fields) || $fields != (int)$fields || $fields <= 0) {
                         $_REQUEST['stage'] = 1;
                         $this->doCreate($lang['strtableneedscols']);
 
@@ -656,7 +660,9 @@
                         $misc->setReloadBrowser(true);
 
                         return $this->doDefault($lang['strtablecreated']);
-                    } elseif ($status == -1) {
+                    }
+
+                    if ($status == -1) {
                         $_REQUEST['stage'] = 2;
                         $this->doCreate($lang['strtableneedsfield']);
 
@@ -793,11 +799,11 @@
                     $misc->setReloadBrowser(true);
 
                     return $this->doDefault($lang['strtablecreated']);
-                } else {
-                    $this->doCreateLike(false, $lang['strtablecreatedbad']);
-
-                    return;
                 }
+
+                $this->doCreateLike(false, $lang['strtablecreatedbad']);
+
+                return;
             }
         }
 
@@ -892,43 +898,43 @@
                 echo "</form>\n";
 
                 return;
+            }
+
+            if (!isset($_POST['show'])) {
+                $_POST['show'] = [];
+            }
+
+            if (!isset($_POST['values'])) {
+                $_POST['values'] = [];
+            }
+
+            if (!isset($_POST['nulls'])) {
+                $_POST['nulls'] = [];
+            }
+
+            // Verify that they haven't supplied a value for unary operators
+            foreach ($_POST['ops'] as $k => $v) {
+                if ($data->selectOps[$v] == 'p' && $_POST['values'][$k] != '') {
+                    $this->doSelectRows(true, $lang['strselectunary']);
+
+                    return;
+                }
+            }
+
+            if (sizeof($_POST['show']) == 0) {
+                $this->doSelectRows(true, $lang['strselectneedscol']);
             } else {
-                if (!isset($_POST['show'])) {
-                    $_POST['show'] = [];
-                }
+                // Generate query SQL
+                $query              = $data->getSelectSQL($_REQUEST['table'], array_keys($_POST['show']),
+                    $_POST['values'], $_POST['ops']);
+                $_REQUEST['query']  = $query;
+                $_REQUEST['return'] = 'selectrows';
 
-                if (!isset($_POST['values'])) {
-                    $_POST['values'] = [];
-                }
+                $misc->setNoOutput(true);
 
-                if (!isset($_POST['nulls'])) {
-                    $_POST['nulls'] = [];
-                }
+                $display_controller = new DisplayController($this->getContainer());
 
-                // Verify that they haven't supplied a value for unary operators
-                foreach ($_POST['ops'] as $k => $v) {
-                    if ($data->selectOps[$v] == 'p' && $_POST['values'][$k] != '') {
-                        $this->doSelectRows(true, $lang['strselectunary']);
-
-                        return;
-                    }
-                }
-
-                if (sizeof($_POST['show']) == 0) {
-                    $this->doSelectRows(true, $lang['strselectneedscol']);
-                } else {
-                    // Generate query SQL
-                    $query              = $data->getSelectSQL($_REQUEST['table'], array_keys($_POST['show']),
-                        $_POST['values'], $_POST['ops']);
-                    $_REQUEST['query']  = $query;
-                    $_REQUEST['return'] = 'selectrows';
-
-                    $misc->setNoOutput(true);
-
-                    $display_controller = new DisplayController($this->getContainer());
-
-                    return $display_controller->render();
-                }
+                return $display_controller->render();
             }
         }
 
@@ -1071,11 +1077,11 @@
                     if ($status == 0) {
                         if (isset($_POST['insert'])) {
                             return $this->doDefault($lang['strrowinserted']);
-                        } else {
-                            $_REQUEST['values'] = [];
-                            $_REQUEST['nulls']  = [];
-                            $this->doInsertRow(true, $lang['strrowinserted']);
                         }
+
+                        $_REQUEST['values'] = [];
+                        $_REQUEST['nulls']  = [];
+                        $this->doInsertRow(true, $lang['strrowinserted']);
                     } else {
                         $this->doInsertRow(true, $lang['strrowinsertedbad']);
                     }
@@ -1149,9 +1155,9 @@
                     $status = $data->emptyTable($_POST['table']);
                     if ($status == 0) {
                         return $this->doDefault($lang['strtableemptied']);
-                    } else {
-                        return $this->doDefault($lang['strtableemptiedbad']);
                     }
+
+                    return $this->doDefault($lang['strtableemptiedbad']);
                 } // END not mutli empty
             } // END do Empty
         }
@@ -1227,18 +1233,18 @@
                         $misc->setReloadBrowser(true);
 
                         return $this->doDefault($msg);
-                    } else {
-                        return $this->doDefault($lang['strtabledroppedbad']);
                     }
+
+                    return $this->doDefault($lang['strtabledroppedbad']);
                 } else {
                     $status = $data->dropTable($_POST['table'], isset($_POST['cascade']));
                     if ($status == 0) {
                         $misc->setReloadBrowser(true);
 
                         return $this->doDefault($lang['strtabledropped']);
-                    } else {
-                        return $this->doDefault($lang['strtabledroppedbad']);
                     }
+
+                    return $this->doDefault($lang['strtabledroppedbad']);
                 }
             } // END DROP
         } // END Function

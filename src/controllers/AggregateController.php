@@ -297,24 +297,24 @@
                 $this->doCreate($lang['straggrneedsname']);
 
                 return;
-            } else {
-                if (trim($_REQUEST['basetype']) == '') {
-                    $this->doCreate($lang['straggrneedsbasetype']);
+            }
 
-                    return;
-                } else {
-                    if (trim($_REQUEST['sfunc']) == '') {
-                        $this->doCreate($lang['straggrneedssfunc']);
+            if (trim($_REQUEST['basetype']) == '') {
+                $this->doCreate($lang['straggrneedsbasetype']);
 
-                        return;
-                    } else {
-                        if (trim($_REQUEST['stype']) == '') {
-                            $this->doCreate($lang['straggrneedsstype']);
+                return;
+            }
 
-                            return;
-                        }
-                    }
-                }
+            if (trim($_REQUEST['sfunc']) == '') {
+                $this->doCreate($lang['straggrneedssfunc']);
+
+                return;
+            }
+
+            if (trim($_REQUEST['stype']) == '') {
+                $this->doCreate($lang['straggrneedsstype']);
+
+                return;
             }
 
             $status = $data->createAggregate($_REQUEST['name'], $_REQUEST['basetype'], $_REQUEST['sfunc'], $_REQUEST['stype'],

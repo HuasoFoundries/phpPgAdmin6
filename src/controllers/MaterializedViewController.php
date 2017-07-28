@@ -181,44 +181,44 @@
                 echo "</form>\n";
 
                 return;
-            } else {
-                if (!isset($_POST['show'])) {
-                    $_POST['show'] = [];
-                }
+            }
 
-                if (!isset($_POST['values'])) {
-                    $_POST['values'] = [];
-                }
+            if (!isset($_POST['show'])) {
+                $_POST['show'] = [];
+            }
 
-                if (!isset($_POST['nulls'])) {
-                    $_POST['nulls'] = [];
-                }
+            if (!isset($_POST['values'])) {
+                $_POST['values'] = [];
+            }
 
-                // Verify that they haven't supplied a value for unary operators
-                foreach ($_POST['ops'] as $k => $v) {
-                    if ($data->selectOps[$v] == 'p' && $_POST['values'][$k] != '') {
-                        $this->doSelectRows(true, $lang['strselectunary']);
+            if (!isset($_POST['nulls'])) {
+                $_POST['nulls'] = [];
+            }
 
-                        return;
-                    }
-                }
+            // Verify that they haven't supplied a value for unary operators
+            foreach ($_POST['ops'] as $k => $v) {
+                if ($data->selectOps[$v] == 'p' && $_POST['values'][$k] != '') {
+                    $this->doSelectRows(true, $lang['strselectunary']);
 
-                if (sizeof($_POST['show']) == 0) {
-                    return $this->doSelectRows(true, $lang['strselectneedscol']);
-                } else {
-                    // Generate query SQL
-                    $query = $data->getSelectSQL($_REQUEST['matview'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
-
-                    $_REQUEST['query']  = $query;
-                    $_REQUEST['return'] = 'schema';
-
-                    $misc->setNoOutput(true);
-
-                    $display_controller = new DisplayController($this->getContainer());
-
-                    return $display_controller->render();
+                    return;
                 }
             }
+
+            if (sizeof($_POST['show']) == 0) {
+                return $this->doSelectRows(true, $lang['strselectneedscol']);
+            }
+
+// Generate query SQL
+            $query = $data->getSelectSQL($_REQUEST['matview'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
+
+            $_REQUEST['query']  = $query;
+            $_REQUEST['return'] = 'schema';
+
+            $misc->setNoOutput(true);
+
+            $display_controller = new DisplayController($this->getContainer());
+
+            return $display_controller->render();
         }
 
         /**
