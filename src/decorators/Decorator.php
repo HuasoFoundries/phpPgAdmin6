@@ -110,7 +110,7 @@ class Decorator {
 		// use an ArrayMergeDecorator to have them merged
 		// at value evaluation time.
 		if (strpos($base, SUBFOLDER) === false) {
-			$base = SUBFOLDER . $base;
+			$base = str_replace('//', '/', SUBFOLDER . '/' . $base);
 		}
 		if (func_num_args() > 2) {
 			$v = func_get_args();

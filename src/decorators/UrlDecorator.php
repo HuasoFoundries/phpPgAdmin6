@@ -27,6 +27,9 @@ class UrlDecorator extends Decorator {
 				$sep = '&';
 			}
 		}
+		if (strpos($url, SUBFOLDER) === false) {
+			$url = str_replace('//', '/', SUBFOLDER . '/' . $url);
+		}
 		return $url;
 	}
 }

@@ -25,7 +25,7 @@ class BranchUrlDecorator extends Decorator {
 
 			$sep = '?';
 			foreach ($queryVars as $var => $value) {
-				$varname  = Decorator::value_url($var, $fields);
+				$varname = Decorator::value_url($var, $fields);
 				$varvalue = Decorator::value_url($value, $fields);
 				if ($varname == 'action') {
 					if ($varvalue == 'subtree') {
@@ -37,6 +37,9 @@ class BranchUrlDecorator extends Decorator {
 				$url .= $sep . $varname . '=' . $varvalue;
 				$sep = '&';
 			}
+		}
+		if (strpos($url, SUBFOLDER) === false) {
+			$url = str_replace('//', '/', SUBFOLDER . '/' . $url);
 		}
 		return str_replace('.php', '', $url);
 	}

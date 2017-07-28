@@ -28,6 +28,6 @@ class ActionUrlDecorator extends Decorator {
 				$sep = '&';
 			}
 		}
-		return '/src/views/' . $url;
+		return SUBFOLDER . '/src/views/' . $url;
 	}
 }
