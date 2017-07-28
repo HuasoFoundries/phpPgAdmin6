@@ -8,7 +8,7 @@
 
 defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
 
-DEFINE('THEME_PATH', BASE_PATH . "/src/themes");
+define('THEME_PATH', BASE_PATH . "/src/themes");
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 
@@ -48,7 +48,7 @@ if (!ini_get('session.auto_start')) {
 \Kint::$enabled_mode = ($debugmode);
 
 //echo readlink(dirname(__FILE__));
-DEFINE('SUBFOLDER', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
+define('SUBFOLDER', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
 
 $handler = PhpConsole\Handler::getInstance();
 $handler->start(); // initialize handlers*/
