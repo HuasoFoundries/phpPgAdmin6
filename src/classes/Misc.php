@@ -89,8 +89,10 @@ class Misc
      * @param $errno        the native error number from the database
      * @param $errmsg       the native error msg from the database
      * @param $p1           $fn specific parameter - see below
-     * @param $P2           $fn specific parameter - see below
+     * @param $p2
+     * @param $thisConnection
      * @throws \PHPPgAdmin\ADODB_Exception
+     * @internal param $P2 $fn specific parameter - see below
      */
     public static function adodb_throw($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection)
     {
@@ -149,7 +151,9 @@ class Misc
 
     /**
      * sets $_no_bottom_link boolean value
+     *
      * @param boolean $flag [description]
+     * @return $this
      */
     public function setNoBottomLink($flag)
     {
@@ -159,7 +163,9 @@ class Misc
 
     /**
      * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session
+     *
      * @param boolean $flag [description]
+     * @return $this
      */
     public function setNoDBConnection($flag)
     {
@@ -180,6 +186,10 @@ class Misc
 
     /**
      * Creates a database accessor
+     *
+     * @param string $database
+     * @param null   $server_id
+     * @return null
      */
     public function getDatabaseAccessor($database = '', $server_id = null)
     {
@@ -339,7 +349,9 @@ class Misc
 
     /**
      * [setReloadBrowser description]
+     *
      * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
+     * @return $this
      */
     public function setReloadBrowser($flag)
     {
@@ -349,7 +361,9 @@ class Misc
 
     /**
      * [setReloadBrowser description]
+     *
      * @param boolean $flag sets internal $_reload_drop_database var which will be passed to the footer methods
+     * @return $this
      */
     public function setReloadDropDatabase($flag)
     {
@@ -401,6 +415,9 @@ class Misc
 
     /**
      * Get a href query string, excluding objects below the given object type (inclusive)
+     *
+     * @param null $exclude_from
+     * @return string
      */
     public function getHREF($exclude_from = null)
     {
@@ -610,31 +627,30 @@ class Misc
      * Render a value into HTML using formatting rules specified
      * by a type name and parameters.
      *
-     * @param $str The string to change
+     * @param                        $str    The string to change
      *
-     * @param $type Field type (optional), this may be an internal PostgreSQL type, or:
-     *            yesno    - same as bool, but renders as 'Yes' or 'No'.
-     *            pre      - render in a <pre> block.
-     *            nbsp     - replace all spaces with &nbsp;'s
-     *            verbatim - render exactly as supplied, no escaping what-so-ever.
-     *            callback - render using a callback function supplied in the 'function' param.
+     * @param                        $type   Field type (optional), this may be an internal PostgreSQL type, or:
+     *                                       yesno    - same as bool, but renders as 'Yes' or 'No'.
+     *                                       pre      - render in a <pre> block.
+     *                                       nbsp     - replace all spaces with &nbsp;'s
+     *                                       verbatim - render exactly as supplied, no escaping what-so-ever.
+     *                                       callback - render using a callback function supplied in the 'function' param.
      *
-     * @param $params Type parameters (optional), known parameters:
-     *            null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
-     *                       otherwise nothing is rendered.
-     *            clip     - if true, clip the value to a fixed length, and append an ellipsis...
-     *            cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
-     *            ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
-     *            tag      - an HTML element name to surround the value.
-     *            class    - a class attribute to apply to any surrounding HTML element.
-     *            align    - an align attribute ('left','right','center' etc.)
-     *            true     - (type='bool') the representation of true.
-     *            false    - (type='bool') the representation of false.
-     *            function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
-     *            lineno   - prefix each line with a line number.
-     *            map      - an associative array.
-     *
-     * @return The HTML rendered value
+     * @param array|\PHPPgAdmin\Type $params Type parameters (optional), known parameters:
+     *                                       null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
+     *                                       otherwise nothing is rendered.
+     *                                       clip     - if true, clip the value to a fixed length, and append an ellipsis...
+     *                                       cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
+     *                                       ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
+     *                                       tag      - an HTML element name to surround the value.
+     *                                       class    - a class attribute to apply to any surrounding HTML element.
+     *                                       align    - an align attribute ('left','right','center' etc.)
+     *                                       true     - (type='bool') the representation of true.
+     *                                       false    - (type='bool') the representation of false.
+     *                                       function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
+     *                                       lineno   - prefix each line with a line number.
+     *                                       map      - an associative array.
+     * @return \PHPPgAdmin\The HTML rendered value
      */
     public function printVal($str, $type = null, $params = [])
     {
@@ -843,7 +859,10 @@ class Misc
 
     /**
      * Print out a message
-     * @param $msg The message to print
+     *
+     * @param      $msg The message to print
+     * @param bool $do_print
+     * @return string
      */
     public function printMsg($msg, $do_print = true)
     {
@@ -864,7 +883,9 @@ class Misc
 
     /**
      * Retrieve the tab info for a specific tab bar.
+     *
      * @param $section The name of the tab bar.
+     * @return array
      */
     public function getNavTabs($section)
     {
@@ -1554,6 +1575,9 @@ class Misc
 
     /**
      * Get the URL for the last active tab of a particular tab bar.
+     *
+     * @param $section
+     * @return mixed|null
      */
     public function getLastTabURL($section)
     {
@@ -1775,7 +1799,10 @@ class Misc
 
     /**
      * Get list of servers' groups if existing in the conf
-     * @return a recordset of servers' groups
+     *
+     * @param bool $recordset
+     * @param bool $group_id
+     * @return \PHPPgAdmin\a recordset of servers' groups
      */
     public function getServersGroups($recordset = false, $group_id = false)
     {
@@ -1842,9 +1869,11 @@ class Misc
 
     /**
      * Get list of servers
-     * @param $recordset return as RecordSet suitable for printTable if true,
-     *                   otherwise just return an array.
-     * @param $group a group name to filter the returned servers using $this->conf[srv_groups]
+     *
+     * @param bool|\PHPPgAdmin\return $recordset return as RecordSet suitable for printTable if true,
+     *                                           otherwise just return an array.
+     * @param bool|\PHPPgAdmin\a      $group     a group name to filter the returned servers using $this->conf[srv_groups]
+     * @return array|\PHPPgAdmin\ArrayRecordSet
      */
     public function getServers($recordset = false, $group = false)
     {
@@ -1999,9 +2028,9 @@ class Misc
 
     /**
      * Set the current schema
+     *
      * @param $schema The schema name
-     * @return 0 on success
-     * @return $data->seSchema() on error
+     * @return int 0 on success
      */
     public function setCurrentSchema($schema)
     {
