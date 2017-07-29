@@ -1,336 +1,341 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
+    namespace PHPPgAdmin\Controller;
 
-/**
- * Base controller class
- */
-class SQLQueryController extends BaseController {
-	public $_name = 'SQLQueryController';
-	public $query = '';
-	public $subject = '';
-	public $start_time = null;
-	public $duration = null;
+    /**
+     * Base controller class
+     */
+    class SQLQueryController extends BaseController
+    {
+        public $_name      = 'SQLQueryController';
+        public $query      = '';
+        public $subject    = '';
+        public $start_time = null;
+        public $duration   = null;
 
-	/* Constructor */
-	function __construct(\Slim\Container $container) {
-		parent::__construct($container);
+        /* Constructor */
+        public function __construct(\Slim\Container $container)
+        {
+            parent::__construct($container);
 
-		// Prevent timeouts on large exports (non-safe mode only)
-		if (!ini_get('safe_mode')) {
-			set_time_limit(0);
-		}
+            // Prevent timeouts on large exports
+            set_time_limit(0);
 
-		// We need to store the query in a session for editing purposes
-		// We avoid GPC vars to avoid truncating long queries
-		if (isset($_REQUEST['subject']) && $_REQUEST['subject'] == 'history') {
-			// Or maybe we came from the history popup
-			$_SESSION['sqlquery'] = $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$_GET['queryid']]['query'];
-			$this->query = $_SESSION['sqlquery'];
-		} elseif (isset($_POST['query'])) {
-			// Or maybe we came from an sql form
-			$_SESSION['sqlquery'] = $_POST['query'];
-			$this->query = $_SESSION['sqlquery'];
-		} else {
-			echo "could not find the query!!";
-		}
+            // We need to store the query in a session for editing purposes
+            // We avoid GPC vars to avoid truncating long queries
+            if (isset($_REQUEST['subject']) && $_REQUEST['subject'] == 'history') {
+                // Or maybe we came from the history popup
+                $_SESSION['sqlquery'] = $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$_GET['queryid']]['query'];
+                $this->query          = $_SESSION['sqlquery'];
+            } elseif (isset($_POST['query'])) {
+                // Or maybe we came from an sql form
+                $_SESSION['sqlquery'] = $_POST['query'];
+                $this->query          = $_SESSION['sqlquery'];
+            } else {
+                echo 'could not find the query!!';
+            }
 
-		// Pagination maybe set by a get link that has it as FALSE,
-		// if that's the case, unset the variable.
-		if (isset($_REQUEST['paginate']) && $_REQUEST['paginate'] == 'f') {
-			unset($_REQUEST['paginate']);
-			unset($_POST['paginate']);
-			unset($_GET['paginate']);
-		}
+            // Pagination maybe set by a get link that has it as FALSE,
+            // if that's the case, unset the variable.
+            if (isset($_REQUEST['paginate']) && $_REQUEST['paginate'] == 'f') {
+                unset($_REQUEST['paginate']);
+                unset($_POST['paginate']);
+                unset($_GET['paginate']);
+            }
 
-		if (isset($_REQUEST['subject'])) {
-			$this->subject = $_REQUEST['subject'];
-		}
+            if (isset($_REQUEST['subject'])) {
+                $this->subject = $_REQUEST['subject'];
+            }
+        }
 
-	}
+        public function render()
+        {
+            $conf = $this->conf;
+            $lang = $this->lang;
+            $misc = $this->misc;
+            $data = $misc->getDatabaseAccessor();
 
-	public function render() {
-		$conf = $this->conf;
-		$lang = $this->lang;
-		$misc = $this->misc;
-		$data = $misc->getDatabaseAccessor();
+            // Check to see if pagination has been specified. In that case, send to display
+            // script for pagination
+            /* if a file is given or the request is an explain, do not paginate */
+            if (isset($_REQUEST['paginate']) &&
+                !(isset($_FILES['script']) &&
+                    $_FILES['script']['size'] > 0) &&
+                (preg_match('/^\s*explain/i', $this->query) == 0)) {
 
-		// Check to see if pagination has been specified. In that case, send to display
-		// script for pagination
-		/* if a file is given or the request is an explain, do not paginate */
-		if (isset($_REQUEST['paginate']) &&
-			!(isset($_FILES['script']) &&
-				$_FILES['script']['size'] > 0) &&
-			(preg_match('/^\s*explain/i', $this->query) == 0)) {
+                $display_controller = new DisplayController($this->getContainer());
 
-			$display_controller = new DisplayController($this->getContainer());
+                return $display_controller->render();
+            }
 
-			return $display_controller->render();
-		}
+            $this->printHeader($lang['strqueryresults']);
+            $this->printBody();
+            $this->printTrail('database');
+            $this->printTitle($lang['strqueryresults']);
 
-		$this->printHeader($lang['strqueryresults']);
-		$this->printBody();
-		$this->printTrail('database');
-		$this->printTitle($lang['strqueryresults']);
+            // Set the schema search path
+            if (isset($_REQUEST['search_path'])) {
+                if ($data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path']))) != 0) {
+                    return $misc->printFooter();
+                }
+            }
 
-		// Set the schema search path
-		if (isset($_REQUEST['search_path'])) {
-			if ($data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path']))) != 0) {
-				return $misc->printFooter();
-			}
-		}
+            // May as well try to time the query
+            if (function_exists('microtime')) {
+                list($usec, $sec) = explode(' ', microtime());
+                $this->start_time = ((float)$usec + (float)$sec);
+            }
 
-		// May as well try to time the query
-		if (function_exists('microtime')) {
-			list($usec, $sec) = explode(' ', microtime());
-			$this->start_time = ((float) $usec + (float) $sec);
-		}
+            $this->doDefault();
 
-		$this->doDefault();
+            $this->printFooter();
+        }
 
-		$this->printFooter();
-	}
+        public function doDefault()
+        {
+            $conf        = $this->conf;
+            $misc        = $this->misc;
+            $lang        = $this->lang;
+            $data        = $misc->getDatabaseAccessor();
+            $_connection = $misc->getConnection();
 
-	private function execute_script() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-		$_connection = $misc->getConnection();
+            try {
+                // Execute the query.  If it's a script upload, special handling is necessary
+                if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
+                    return $this->execute_script();
+                }
 
-		/**
-		 * This is a callback function to display the result of each separate query
-		 * @param ADORecordSet $rs The recordset returned by the script execetor
-		 */
-		$sqlCallback = function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection) {
+                return $this->execute_query();
+            } catch (\PHPPgAdmin\ADODB_Exception $e) {
 
-			// Check if $rs is false, if so then there was a fatal error
-			if ($rs === false) {
-				echo htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', nl2br(htmlspecialchars($_connection->getLastError())), "<br/>\n";
-			} else {
-				// Print query results
-				switch (pg_result_status($rs)) {
-				case PGSQL_TUPLES_OK:
-					// If rows returned, then display the results
-					$num_fields = pg_numfields($rs);
-					echo "<p><table>\n<tr>";
-					for ($k = 0; $k < $num_fields; $k++) {
-						echo "<th class=\"data\">", $misc->printVal(pg_fieldname($rs, $k)), "</th>";
-					}
+                $message   = $e->getMessage();
+                $trace     = $e->getTraceAsString();
+                $lastError = $_connection->getLastError();
+                $this->prtrace(['message' => $message, 'trace' => $trace, 'lastError' => $lastError]);
 
-					$i = 0;
-					$row = pg_fetch_row($rs);
-					while ($row !== false) {
-						$id = (($i % 2) == 0 ? '1' : '2');
-						echo "<tr class=\"data{$id}\">\n";
-						foreach ($row as $k => $v) {
-							echo "<td style=\"white-space:nowrap;\">", $misc->printVal($v, pg_fieldtype($rs, $k), ['null' => true]), "</td>";
-						}
-						echo "</tr>\n";
-						$row = pg_fetch_row($rs);
-						$i++;
-					}
-					;
-					echo "</table><br/>\n";
-					echo $i, " {$lang['strrows']}</p>\n";
-					break;
-				case PGSQL_COMMAND_OK:
-					// If we have the command completion tag
-					if (version_compare(phpversion(), '4.3', '>=')) {
-						echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), "<br/>\n";
-					}
-					// Otherwise if any rows have been affected
-					elseif ($data->conn->Affected_Rows() > 0) {
-						echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>\n";
-					}
-					// Otherwise output nothing...
-					break;
-				case PGSQL_EMPTY_QUERY:
-					break;
-				default:
-					break;
-				}
-			}
-		};
+                return null;
+            }
+        }
 
-		return $data->executeScript('script', $sqlCallback);
-	}
+        private function execute_script()
+        {
+            $conf        = $this->conf;
+            $misc        = $this->misc;
+            $lang        = $this->lang;
+            $data        = $misc->getDatabaseAccessor();
+            $_connection = $misc->getConnection();
 
-	private function execute_query() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+            /**
+             * This is a callback function to display the result of each separate query
+             *
+             * @param              $query
+             * @param ADORecordSet $rs The recordset returned by the script execetor
+             * @param              $lineno
+             */
+            $sqlCallback = function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection) {
 
-		// Set fetch mode to NUM so that duplicate field names are properly returned
-		$data->conn->setFetchMode(ADODB_FETCH_NUM);
+                // Check if $rs is false, if so then there was a fatal error
+                if ($rs === false) {
+                    echo htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', nl2br(htmlspecialchars($_connection->getLastError())), "<br/>\n";
+                } else {
+                    // Print query results
+                    switch (pg_result_status($rs)) {
+                        case PGSQL_TUPLES_OK:
+                            // If rows returned, then display the results
+                            $num_fields = pg_numfields($rs);
+                            echo "<p><table>\n<tr>";
+                            for ($k = 0; $k < $num_fields; $k++) {
+                                echo '<th class="data">', $misc->printVal(pg_fieldname($rs, $k)), '</th>';
+                            }
 
-		//\Kint::dump($data->conn);
-		$rs = $data->conn->Execute($this->query);
+                            $i   = 0;
+                            $row = pg_fetch_row($rs);
+                            while ($row !== false) {
+                                $id = (($i % 2) == 0 ? '1' : '2');
+                                echo "<tr class=\"data{$id}\">\n";
+                                foreach ($row as $k => $v) {
+                                    echo '<td style="white-space:nowrap;">', $misc->printVal($v, pg_fieldtype($rs, $k), ['null' => true]), '</td>';
+                                }
+                                echo "</tr>\n";
+                                $row = pg_fetch_row($rs);
+                                $i++;
+                            }
+                            echo "</table><br/>\n";
+                            echo $i, " {$lang['strrows']}</p>\n";
+                            break;
+                        case PGSQL_COMMAND_OK:
+                            // If we have the command completion tag
+                            if (version_compare(PHP_VERSION, '4.3', '>=')) {
+                                echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), "<br/>\n";
+                            } // Otherwise if any rows have been affected
+                            elseif ($data->conn->Affected_Rows() > 0) {
+                                echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>\n";
+                            }
+                            // Otherwise output nothing...
+                            break;
+                        case PGSQL_EMPTY_QUERY:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
 
-		// $rs will only be an object if there is no error
-		if (is_object($rs)) {
-			// Request was run, saving it in history
-			if (!isset($_REQUEST['nohistory'])) {
-				$misc->saveScriptHistory($this->query);
-			}
+            return $data->executeScript('script', $sqlCallback);
+        }
 
-			// Now, depending on what happened do various things
+        private function execute_query()
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-			// First, if rows returned, then display the results
-			if ($rs->recordCount() > 0) {
-				echo "<table>\n<tr>";
-				foreach ($rs->fields as $k => $v) {
-					$finfo = $rs->fetchField($k);
-					echo "<th class=\"data\">", $misc->printVal($finfo->name), "</th>";
-				}
-				echo "</tr>\n";
-				$i = 0;
-				while (!$rs->EOF) {
-					$id = (($i % 2) == 0 ? '1' : '2');
-					echo "<tr class=\"data{$id}\">\n";
-					foreach ($rs->fields as $k => $v) {
-						$finfo = $rs->fetchField($k);
-						echo "<td style=\"white-space:nowrap;\">", $misc->printVal($v, $finfo->type, ['null' => true]), "</td>";
-					}
-					echo "</tr>\n";
-					$rs->moveNext();
-					$i++;
-				}
-				echo "</table>\n";
-				echo "<p>", $rs->recordCount(), " {$lang['strrows']}</p>\n";
-			} else if ($data->conn->Affected_Rows() > 0) {
-				// Otherwise if any rows have been affected
-				echo "<p>", $data->conn->Affected_Rows(), " {$lang['strrowsaff']}</p>\n";
-			} else {
-				// Otherwise nodata to print
-				echo '<p>', $lang['strnodata'], "</p>\n";
-			}
+            // Set fetch mode to NUM so that duplicate field names are properly returned
+            $data->conn->setFetchMode(ADODB_FETCH_NUM);
 
-		}
-	}
+            //\Kint::dump($data->conn);
+            $rs = $data->conn->Execute($this->query);
 
-	public function doDefault() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
-		$_connection = $misc->getConnection();
+            // $rs will only be an object if there is no error
+            if (is_object($rs)) {
+                // Request was run, saving it in history
+                if (!isset($_REQUEST['nohistory'])) {
+                    $misc->saveScriptHistory($this->query);
+                }
 
-		try {
-			// Execute the query.  If it's a script upload, special handling is necessary
-			if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
-				return $this->execute_script();
-			} else {
-				return $this->execute_query();
+                // Now, depending on what happened do various things
 
-			}
-		} catch (\PHPPgAdmin\ADODB_Exception $e) {
+                // First, if rows returned, then display the results
+                if ($rs->recordCount() > 0) {
+                    echo "<table>\n<tr>";
+                    foreach ($rs->fields as $k => $v) {
+                        $finfo = $rs->fetchField($k);
+                        echo '<th class="data">', $misc->printVal($finfo->name), '</th>';
+                    }
+                    echo "</tr>\n";
+                    $i = 0;
+                    while (!$rs->EOF) {
+                        $id = (($i % 2) == 0 ? '1' : '2');
+                        echo "<tr class=\"data{$id}\">\n";
+                        foreach ($rs->fields as $k => $v) {
+                            $finfo = $rs->fetchField($k);
+                            echo '<td style="white-space:nowrap;">', $misc->printVal($v, $finfo->type, ['null' => true]), '</td>';
+                        }
+                        echo "</tr>\n";
+                        $rs->moveNext();
+                        $i++;
+                    }
+                    echo "</table>\n";
+                    echo '<p>', $rs->recordCount(), " {$lang['strrows']}</p>\n";
+                } else {
+                    if ($data->conn->Affected_Rows() > 0) {
+                        // Otherwise if any rows have been affected
+                        echo '<p>', $data->conn->Affected_Rows(), " {$lang['strrowsaff']}</p>\n";
+                    } else {
+                        // Otherwise nodata to print
+                        echo '<p>', $lang['strnodata'], "</p>\n";
+                    }
+                }
+            }
+        }
 
-			$message = $e->getMessage();
-			$trace = $e->getTraceAsString();
-			$lastError = $_connection->getLastError();
-			$this->prtrace(['message' => $message, 'trace' => $trace, 'lastError' => $lastError]);
+        public function printFooter($doBody = true, $template = 'footer.twig')
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-			return null;
-		}
-	}
+            // May as well try to time the query
+            if ($this->start_time !== null) {
+                list($usec, $sec) = explode(' ', microtime());
+                $end_time = ((float)$usec + (float)$sec);
+                // Get duration in milliseconds, round to 3dp's
+                $this->duration = number_format(($end_time - $this->start_time) * 1000, 3);
+            }
 
-	public function printFooter($doBody = true, $template = 'footer.twig') {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+            // Reload the browser as we may have made schema changes
+            $misc->setReloadBrowser(true);
 
-		// May as well try to time the query
-		if ($this->start_time !== null) {
-			list($usec, $sec) = explode(' ', microtime());
-			$end_time = ((float) $usec + (float) $sec);
-			// Get duration in milliseconds, round to 3dp's
-			$this->duration = number_format(($end_time - $this->start_time) * 1000, 3);
-		}
+            // Display duration if we know it
+            if ($this->duration !== null) {
+                echo '<p>', sprintf($lang['strruntime'], $this->duration), "</p>\n";
+            }
 
-		// Reload the browser as we may have made schema changes
-		$misc->setReloadBrowser(true);
+            echo "<p>{$lang['strsqlexecuted']}</p>\n";
 
-		// Display duration if we know it
-		if ($this->duration !== null) {
-			echo "<p>", sprintf($lang['strruntime'], $this->duration), "</p>\n";
-		}
+            $navlinks = [];
+            $fields   = [
+                'server'   => $_REQUEST['server'],
+                'database' => $_REQUEST['database'],
+            ];
 
-		echo "<p>{$lang['strsqlexecuted']}</p>\n";
+            if (isset($_REQUEST['schema'])) {
+                $fields['schema'] = $_REQUEST['schema'];
+            }
 
-		$navlinks = [];
-		$fields = [
-			'server' => $_REQUEST['server'],
-			'database' => $_REQUEST['database'],
-		];
+            // Return
+            if (isset($_REQUEST['return'])) {
+                $urlvars          = $misc->getSubjectParams($_REQUEST['return']);
+                $navlinks['back'] = [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => $urlvars['url'],
+                            'urlvars' => $urlvars['params'],
+                        ],
+                    ],
+                    'content' => $lang['strback'],
+                ];
+            }
 
-		if (isset($_REQUEST['schema'])) {
-			$fields['schema'] = $_REQUEST['schema'];
-		}
+            // Edit
+            $navlinks['alter'] = [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'database.php',
+                        'urlvars' => array_merge($fields, [
+                            'action' => 'sql',
+                        ]),
+                    ],
+                ],
+                'content' => $lang['streditsql'],
+            ];
 
-		// Return
-		if (isset($_REQUEST['return'])) {
-			$urlvars = $misc->getSubjectParams($_REQUEST['return']);
-			$navlinks['back'] = [
-				'attr' => [
-					'href' => [
-						'url' => $urlvars['url'],
-						'urlvars' => $urlvars['params'],
-					],
-				],
-				'content' => $lang['strback'],
-			];
-		}
+            // Create view and download
+            if ($this->query !== '' && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
+                // Report views don't set a schema, so we need to disable create view in that case
+                if (isset($_REQUEST['schema'])) {
+                    $navlinks['createview'] = [
+                        'attr'    => [
+                            'href' => [
+                                'url'     => 'views.php',
+                                'urlvars' => array_merge($fields, [
+                                    'action' => 'create',
+                                ]),
+                            ],
+                        ],
+                        'content' => $lang['strcreateview'],
+                    ];
+                }
 
-		// Edit
-		$navlinks['alter'] = [
-			'attr' => [
-				'href' => [
-					'url' => 'database.php',
-					'urlvars' => array_merge($fields, [
-						'action' => 'sql',
-					]),
-				],
-			],
-			'content' => $lang['streditsql'],
-		];
+                if (isset($_REQUEST['search_path'])) {
+                    $fields['search_path'] = $_REQUEST['search_path'];
+                }
 
-		// Create view and download
-		if ($this->query !== '' && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
-			// Report views don't set a schema, so we need to disable create view in that case
-			if (isset($_REQUEST['schema'])) {
-				$navlinks['createview'] = [
-					'attr' => [
-						'href' => [
-							'url' => 'views.php',
-							'urlvars' => array_merge($fields, [
-								'action' => 'create',
-							]),
-						],
-					],
-					'content' => $lang['strcreateview'],
-				];
-			}
+                $navlinks['download'] = [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'dataexport.php',
+                            'urlvars' => $fields,
+                        ],
+                    ],
+                    'content' => $lang['strdownload'],
+                ];
+            }
 
-			if (isset($_REQUEST['search_path'])) {
-				$fields['search_path'] = $_REQUEST['search_path'];
-			}
+            $this->printNavLinks($navlinks, 'sql-form', get_defined_vars());
 
-			$navlinks['download'] = [
-				'attr' => [
-					'href' => [
-						'url' => 'dataexport.php',
-						'urlvars' => $fields,
-					],
-				],
-				'content' => $lang['strdownload'],
-			];
-		}
-
-		$this->printNavLinks($navlinks, 'sql-form', get_defined_vars());
-
-		return $misc->printFooter($doBody, $template);
-	}
-}
+            return $misc->printFooter($doBody, $template);
+        }
+    }

@@ -75,7 +75,7 @@ body.flexbox_body {
     width: 100%;
 }
 
-.flexbox_wrapper >.detail_container {
+.flexbox_wrapper > .detail_container {
     height: 100%;
     width: 100%;
     margin: 0px;
@@ -110,7 +110,6 @@ body.flexbox_body {
 table.tabs {
     margin-left: -10px !important;
 }
-
 
 /** Browser Tree using XLoadTree 2 **/
 
@@ -152,7 +151,6 @@ body.browser {
 .webfx-tree-hide-root {
     display: none
 }
-
 
 /** auto-complete on insert **/
 
@@ -205,7 +203,6 @@ p.errmsg {
     width: 100%
 }
 
-
 /** bottom link back to top **/
 
 .bottom_link {
@@ -219,7 +216,6 @@ p.errmsg {
     border-left: 1px dotted #999;
     font-size: smaller;
 }
-
 
 /** FK browsing **/
 
@@ -247,7 +243,6 @@ div.fk_value {
     background-color: #FFFF00;
 }
 
-
 /** Syntax highlighting **/
 
 .comment {
@@ -261,7 +256,6 @@ div.fk_value {
 .literal {
     color: #808080
 }
-
 
 /*#sqlquery {
         float: left;

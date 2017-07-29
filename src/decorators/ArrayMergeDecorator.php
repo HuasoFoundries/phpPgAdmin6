@@ -1,16 +1,21 @@
 <?php
-namespace PHPPgAdmin\Decorators;
 
-class ArrayMergeDecorator extends Decorator {
-	function __construct($arrays) {
-		$this->m = $arrays;
-	}
+    namespace PHPPgAdmin\Decorators;
 
-	function value($fields) {
-		$accum = [];
-		foreach ($this->m as $var) {
-			$accum = array_merge($accum, Decorator::get_sanitized_value($var, $fields));
-		}
-		return $accum;
-	}
-}
+    class ArrayMergeDecorator extends Decorator
+    {
+        public function __construct($arrays)
+        {
+            $this->m = $arrays;
+        }
+
+        public function value($fields)
+        {
+            $accum = [];
+            foreach ($this->m as $var) {
+                $accum = array_merge($accum, Decorator::get_sanitized_value($var, $fields));
+            }
+
+            return $accum;
+        }
+    }

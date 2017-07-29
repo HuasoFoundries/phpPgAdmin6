@@ -1,14 +1,18 @@
 <?php
-namespace PHPPgAdmin\Decorators;
 
-class CallbackDecorator extends Decorator {
+    namespace PHPPgAdmin\Decorators;
 
-	function __construct($callback, $param = null) {
-		$this->fn = $callback;
-		$this->p  = $param;
-	}
+    class CallbackDecorator extends Decorator
+    {
 
-	function value($fields) {
-		return call_user_func($this->fn, $fields, $this->p);
-	}
-}
+        public function __construct($callback, $param = null)
+        {
+            $this->fn = $callback;
+            $this->p  = $param;
+        }
+
+        public function value($fields)
+        {
+            return call_user_func($this->fn, $fields, $this->p);
+        }
+    }

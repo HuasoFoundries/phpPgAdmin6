@@ -1,91 +1,97 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
-use \PHPPgAdmin\Decorators\Decorator;
+    namespace PHPPgAdmin\Controller;
 
-/**
- * Base controller class
- */
-class LangController extends BaseController {
-	public $_name = 'LangController';
+    use PHPPgAdmin\Decorators\Decorator;
 
-	public function render() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$action = $this->action;
-		if ($action == 'tree') {
-			return $this->doTree();
-		}
+    /**
+     * Base controller class
+     */
+    class LangController extends BaseController
+    {
+        public $_name = 'LangController';
 
-		$this->printHeader($lang['strlanguages']);
-		$this->printBody();
+        public function render()
+        {
+            $conf   = $this->conf;
+            $misc   = $this->misc;
+            $lang   = $this->lang;
+            $action = $this->action;
+            if ($action == 'tree') {
+                return $this->doTree();
+            }
 
-		switch ($action) {
-		default:
-			$this->doDefault();
-			break;
-		}
+            $this->printHeader($lang['strlanguages']);
+            $this->printBody();
 
-		$misc->printFooter();
+            switch ($action) {
+                default:
+                    $this->doDefault();
+                    break;
+            }
 
-	}
+            $misc->printFooter();
+        }
 
-	/**
-	 * Show default list of languages in the database
-	 */
-	public function doDefault($msg = '') {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+        /**
+         * Generate XML for the browser tree.
+         */
+        public function doTree()
+        {
 
-		$this->printTrail('database');
-		$this->printTabs('database', 'languages');
-		$misc->printMsg($msg);
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-		$languages = $data->getLanguages();
+            $languages = $data->getLanguages();
 
-		$columns = [
-			'language' => [
-				'title' => $lang['strname'],
-				'field' => Decorator::field('lanname'),
-			],
-			'trusted' => [
-				'title' => $lang['strtrusted'],
-				'field' => Decorator::field('lanpltrusted'),
-				'type' => 'yesno',
-			],
-			'function' => [
-				'title' => $lang['strfunction'],
-				'field' => Decorator::field('lanplcallf'),
-			],
-		];
+            $attrs = [
+                'text' => Decorator::field('lanname'),
+                'icon' => 'Language',
+            ];
 
-		$actions = [];
+            return $this->printTree($languages, $attrs, 'languages');
+        }
 
-		echo $this->printTable($languages, $columns, $actions, 'languages-languages', $lang['strnolanguages']);
-	}
+        /**
+         * Show default list of languages in the database
+         *
+         * @param string $msg
+         * @return string|void
+         */
+        public function doDefault($msg = '')
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-	/**
-	 * Generate XML for the browser tree.
-	 */
-	function doTree() {
+            $this->printTrail('database');
+            $this->printTabs('database', 'languages');
+            $misc->printMsg($msg);
 
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+            $languages = $data->getLanguages();
 
-		$languages = $data->getLanguages();
+            $columns = [
+                'language' => [
+                    'title' => $lang['strname'],
+                    'field' => Decorator::field('lanname'),
+                ],
+                'trusted'  => [
+                    'title' => $lang['strtrusted'],
+                    'field' => Decorator::field('lanpltrusted'),
+                    'type'  => 'yesno',
+                ],
+                'function' => [
+                    'title' => $lang['strfunction'],
+                    'field' => Decorator::field('lanplcallf'),
+                ],
+            ];
 
-		$attrs = [
-			'text' => Decorator::field('lanname'),
-			'icon' => 'Language',
-		];
+            $actions = [];
 
-		return $this->printTree($languages, $attrs, 'languages');
+            echo $this->printTable($languages, $columns, $actions, 'languages-languages', $lang['strnolanguages']);
+        }
 
-	}
-
-}
+    }

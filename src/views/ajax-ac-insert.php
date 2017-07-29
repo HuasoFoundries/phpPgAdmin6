@@ -1,7 +1,7 @@
 <?php
 
-require_once '../lib.inc.php';
+    require_once '../lib.inc.php';
 
-$acinsert_controller = new \PHPPgAdmin\Controller\ACInsertController($container);
+    $acinsert_controller = new \PHPPgAdmin\Controller\ACInsertController($container);
 
-$acinsert_controller->render();
+    $acinsert_controller->render();

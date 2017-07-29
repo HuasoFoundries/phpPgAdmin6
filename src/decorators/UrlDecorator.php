@@ -1,32 +1,36 @@
 <?php
-namespace PHPPgAdmin\Decorators;
 
-class UrlDecorator extends Decorator {
-	function __construct($base, $queryVars = null) {
+    namespace PHPPgAdmin\Decorators;
 
-		$this->b = $base;
-		if ($queryVars !== null) {
-			$this->q = $queryVars;
-		}
+    class UrlDecorator extends Decorator
+    {
+        public function __construct($base, $queryVars = null)
+        {
 
-	}
+            $this->b = $base;
+            if ($queryVars !== null) {
+                $this->q = $queryVars;
+            }
+        }
 
-	function value($fields) {
-		$url = Decorator::get_sanitized_value($this->b, $fields);
+        public function value($fields)
+        {
+            $url = Decorator::get_sanitized_value($this->b, $fields);
 
-		if ($url === false) {
-			return '';
-		}
+            if ($url === false) {
+                return '';
+            }
 
-		if (!empty($this->q)) {
-			$queryVars = Decorator::get_sanitized_value($this->q, $fields);
+            if (!empty($this->q)) {
+                $queryVars = Decorator::get_sanitized_value($this->q, $fields);
 
-			$sep = '?';
-			foreach ($queryVars as $var => $value) {
-				$url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($value, $fields);
-				$sep = '&';
-			}
-		}
-		return $url;
-	}
-}
+                $sep = '?';
+                foreach ($queryVars as $var => $value) {
+                    $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($value, $fields);
+                    $sep = '&';
+                }
+            }
+
+            return $url;
+        }
+    }

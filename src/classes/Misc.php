@@ -84,12 +84,15 @@ class Misc
     /**
      * Default Error Handler. This will be called with the following params
      *
-     * @param $dbms        the RDBMS you are connecting to
-     * @param $fn        the name of the calling function (in uppercase)
+     * @param $dbms         the RDBMS you are connecting to
+     * @param $fn           the name of the calling function (in uppercase)
      * @param $errno        the native error number from the database
-     * @param $errmsg    the native error msg from the database
-     * @param $p1        $fn specific parameter - see below
-     * @param $P2        $fn specific parameter - see below
+     * @param $errmsg       the native error msg from the database
+     * @param $p1           $fn specific parameter - see below
+     * @param $p2
+     * @param $thisConnection
+     * @throws \PHPPgAdmin\ADODB_Exception
+     * @internal param $P2 $fn specific parameter - see below
      */
     public static function adodb_throw($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection)
     {
@@ -100,13 +103,13 @@ class Misc
 
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-        $btarray0 = ([
+        $btarray0 = [
             'class'    => $backtrace[1]['class'],
             'type'     => $backtrace[1]['type'],
             'function' => $backtrace[1]['function'],
             'spacer'   => ' ',
             'line'     => $backtrace[0]['line'],
-        ]);
+        ];
 
         $errmsg = htmlspecialchars($errmsg);
         $p1     = htmlspecialchars($p1);
@@ -118,7 +121,7 @@ class Misc
 
                 /*$s = "<p><b>{$lang['strsqlerror']}</b><br />" . $misc->printVal($errmsg, 'errormsg') . "</p> <p><b>{$lang['strinstatement']}</b><br />" . $misc->printVal($sql). "</p>    ";*/
 
-                $s = "<p><b>strsqlerror</b><br />" . $errmsg . "</p> <p><b>SQL:</b><br />" . $sql . "</p>	";
+                $s = '<p><b>strsqlerror</b><br />' . $errmsg . '</p> <p><b>SQL:</b><br />' . $sql . '</p>	';
 
                 echo '<table class="error" cellpadding="5"><tr><td>' . $s . '</td></tr></table><br />' . "\n";
 
@@ -148,7 +151,9 @@ class Misc
 
     /**
      * sets $_no_bottom_link boolean value
+     *
      * @param boolean $flag [description]
+     * @return $this
      */
     public function setNoBottomLink($flag)
     {
@@ -158,7 +163,9 @@ class Misc
 
     /**
      * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session
+     *
      * @param boolean $flag [description]
+     * @return $this
      */
     public function setNoDBConnection($flag)
     {
@@ -179,6 +186,10 @@ class Misc
 
     /**
      * Creates a database accessor
+     *
+     * @param string $database
+     * @param null   $server_id
+     * @return null
      */
     public function getDatabaseAccessor($database = '', $server_id = null)
     {
@@ -232,7 +243,7 @@ class Misc
             $this->data->execute("SET client_encoding TO 'UTF-8'");
 
             if ($this->data->hasByteaHexDefault()) {
-                $this->data->execute("SET bytea_output TO escape");
+                $this->data->execute('SET bytea_output TO escape');
             }
 
         }
@@ -338,7 +349,9 @@ class Misc
 
     /**
      * [setReloadBrowser description]
+     *
      * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
+     * @return $this
      */
     public function setReloadBrowser($flag)
     {
@@ -348,7 +361,9 @@ class Misc
 
     /**
      * [setReloadBrowser description]
+     *
      * @param boolean $flag sets internal $_reload_drop_database var which will be passed to the footer methods
+     * @return $this
      */
     public function setReloadDropDatabase($flag)
     {
@@ -400,6 +415,9 @@ class Misc
 
     /**
      * Get a href query string, excluding objects below the given object type (inclusive)
+     *
+     * @param null $exclude_from
+     * @return string
      */
     public function getHREF($exclude_from = null)
     {
@@ -609,31 +627,30 @@ class Misc
      * Render a value into HTML using formatting rules specified
      * by a type name and parameters.
      *
-     * @param $str The string to change
+     * @param                        $str    The string to change
      *
-     * @param $type Field type (optional), this may be an internal PostgreSQL type, or:
-     *            yesno    - same as bool, but renders as 'Yes' or 'No'.
-     *            pre      - render in a <pre> block.
-     *            nbsp     - replace all spaces with &nbsp;'s
-     *            verbatim - render exactly as supplied, no escaping what-so-ever.
-     *            callback - render using a callback function supplied in the 'function' param.
+     * @param                        $type   Field type (optional), this may be an internal PostgreSQL type, or:
+     *                                       yesno    - same as bool, but renders as 'Yes' or 'No'.
+     *                                       pre      - render in a <pre> block.
+     *                                       nbsp     - replace all spaces with &nbsp;'s
+     *                                       verbatim - render exactly as supplied, no escaping what-so-ever.
+     *                                       callback - render using a callback function supplied in the 'function' param.
      *
-     * @param $params Type parameters (optional), known parameters:
-     *            null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
-     *                       otherwise nothing is rendered.
-     *            clip     - if true, clip the value to a fixed length, and append an ellipsis...
-     *            cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
-     *            ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
-     *            tag      - an HTML element name to surround the value.
-     *            class    - a class attribute to apply to any surrounding HTML element.
-     *            align    - an align attribute ('left','right','center' etc.)
-     *            true     - (type='bool') the representation of true.
-     *            false    - (type='bool') the representation of false.
-     *            function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
-     *            lineno   - prefix each line with a line number.
-     *            map      - an associative array.
-     *
-     * @return The HTML rendered value
+     * @param array|\PHPPgAdmin\Type $params Type parameters (optional), known parameters:
+     *                                       null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
+     *                                       otherwise nothing is rendered.
+     *                                       clip     - if true, clip the value to a fixed length, and append an ellipsis...
+     *                                       cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
+     *                                       ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
+     *                                       tag      - an HTML element name to surround the value.
+     *                                       class    - a class attribute to apply to any surrounding HTML element.
+     *                                       align    - an align attribute ('left','right','center' etc.)
+     *                                       true     - (type='bool') the representation of true.
+     *                                       false    - (type='bool') the representation of false.
+     *                                       function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
+     *                                       lineno   - prefix each line with a line number.
+     *                                       map      - an associative array.
+     * @return \PHPPgAdmin\The HTML rendered value
      */
     public function printVal($str, $type = null, $params = [])
     {
@@ -842,7 +859,10 @@ class Misc
 
     /**
      * Print out a message
-     * @param $msg The message to print
+     *
+     * @param      $msg The message to print
+     * @param bool $do_print
+     * @return string
      */
     public function printMsg($msg, $do_print = true)
     {
@@ -863,7 +883,9 @@ class Misc
 
     /**
      * Retrieve the tab info for a specific tab bar.
+     *
      * @param $section The name of the tab bar.
+     * @return array
      */
     public function getNavTabs($section)
     {
@@ -880,12 +902,12 @@ class Misc
                 $tabs = [
                     'intro'   => [
                         'title' => $lang['strintroduction'],
-                        'url'   => "intro.php",
+                        'url'   => 'intro.php',
                         'icon'  => 'Introduction',
                     ],
                     'servers' => [
                         'title' => $lang['strservers'],
-                        'url'   => "servers.php",
+                        'url'   => 'servers.php',
                         'icon'  => 'Servers',
                     ],
                 ];
@@ -951,7 +973,7 @@ class Misc
                         'title'   => $lang['strtablespaces'],
                         'url'     => 'tablespaces.php',
                         'urlvars' => ['subject' => 'server'],
-                        'hide'    => (!$data || !$data->hasTablespaces()),
+                        'hide'    => !$data || !$data->hasTablespaces(),
                         'help'    => 'pg.tablespace',
                         'icon'    => 'Tablespaces',
                     ],
@@ -959,7 +981,7 @@ class Misc
                         'title'   => $lang['strexport'],
                         'url'     => 'all_db.php',
                         'urlvars' => ['subject' => 'server', 'action' => 'export'],
-                        'hide'    => (!$this->isDumpEnabled()),
+                        'hide'    => !$this->isDumpEnabled(),
                         'icon'    => 'Export',
                     ],
                 ]);
@@ -1023,7 +1045,7 @@ class Misc
                         'title'   => $lang['strprivileges'],
                         'url'     => 'privileges.php',
                         'urlvars' => ['subject' => 'database'],
-                        'hide'    => (!isset($data->privlist['database'])),
+                        'hide'    => !isset($data->privlist['database']),
                         'help'    => 'pg.privilege',
                         'tree'    => false,
                         'icon'    => 'Privileges',
@@ -1040,7 +1062,7 @@ class Misc
                         'title'   => $lang['strcasts'],
                         'url'     => 'casts.php',
                         'urlvars' => ['subject' => 'database'],
-                        'hide'    => ($hide_advanced),
+                        'hide'    => $hide_advanced,
                         'help'    => 'pg.cast',
                         'icon'    => 'Casts',
                     ],
@@ -1048,7 +1070,7 @@ class Misc
                         'title'   => $lang['strexport'],
                         'url'     => 'database.php',
                         'urlvars' => ['subject' => 'database', 'action' => 'export'],
-                        'hide'    => (!$this->isDumpEnabled()),
+                        'hide'    => !$this->isDumpEnabled(),
                         'tree'    => false,
                         'icon'    => 'Export',
                     ],
@@ -1159,7 +1181,7 @@ class Misc
                         'title'   => $lang['strexport'],
                         'url'     => 'schemas.php',
                         'urlvars' => ['subject' => 'schema', 'action' => 'export'],
-                        'hide'    => (!$this->isDumpEnabled()),
+                        'hide'    => !$this->isDumpEnabled(),
                         'tree'    => false,
                         'icon'    => 'Export',
                     ],
@@ -1553,6 +1575,9 @@ class Misc
 
     /**
      * Get the URL for the last active tab of a particular tab bar.
+     *
+     * @param $section
+     * @return mixed|null
      */
     public function getLastTabURL($section)
     {
@@ -1745,10 +1770,10 @@ class Misc
             // to be dumped.
             if (preg_match('/^[_.[:alnum:]]+$/', $str)) {
                 return $str;
-            } else {
-                echo $lang['strcannotdumponwindows'];
-                exit;
             }
+
+            echo $lang['strcannotdumponwindows'];
+            exit;
         } else {
             return escapeshellarg($str);
         }
@@ -1767,15 +1792,17 @@ class Misc
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $data->fieldClean($str);
             return '"' . $str . '"';
-        } else {
-            return escapeshellcmd($str);
         }
 
+        return escapeshellcmd($str);
     }
 
     /**
      * Get list of servers' groups if existing in the conf
-     * @return a recordset of servers' groups
+     *
+     * @param bool $recordset
+     * @param bool $group_id
+     * @return \PHPPgAdmin\a recordset of servers' groups
      */
     public function getServersGroups($recordset = false, $group_id = false)
     {
@@ -1842,9 +1869,11 @@ class Misc
 
     /**
      * Get list of servers
-     * @param $recordset return as RecordSet suitable for printTable if true,
-     *                   otherwise just return an array.
-     * @param $group a group name to filter the returned servers using $this->conf[srv_groups]
+     *
+     * @param bool|\PHPPgAdmin\return $recordset return as RecordSet suitable for printTable if true,
+     *                                           otherwise just return an array.
+     * @param bool|\PHPPgAdmin\a      $group     a group name to filter the returned servers using $this->conf[srv_groups]
+     * @return array|\PHPPgAdmin\ArrayRecordSet
      */
     public function getServers($recordset = false, $group = false)
     {
@@ -1864,7 +1893,7 @@ class Misc
         foreach ($this->conf['servers'] as $idx => $info) {
             $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
             if (($group === false)
-                or (isset($group[$idx]))
+                or isset($group[$idx])
                 or ($group === 'all')
             ) {
                 $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
@@ -1954,13 +1983,13 @@ class Misc
             $this->server_info = null;
             return $this->server_info;
 
-        } else {
-            $this->server_info = null;
-            // Unable to find a matching server, are we being hacked?
-            echo $this->lang['strinvalidserverparam'];
-
-            exit;
         }
+
+        $this->server_info = null;
+        // Unable to find a matching server, are we being hacked?
+        echo $this->lang['strinvalidserverparam'];
+
+        exit;
     }
 
     /**
@@ -1999,9 +2028,9 @@ class Misc
 
     /**
      * Set the current schema
+     *
      * @param $schema The schema name
-     * @return 0 on success
-     * @return $data->seSchema() on error
+     * @return int 0 on success
      */
     public function setCurrentSchema($schema)
     {
@@ -2028,7 +2057,7 @@ class Misc
         $time                                                                     = ((float) $usec + (float) $sec);
         $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]["$time"] = [
             'query'    => $script,
-            'paginate' => (!isset($_REQUEST['paginate']) ? 'f' : 't'),
+            'paginate' => !isset($_REQUEST['paginate']) ? 'f' : 't',
             'queryid'  => $time,
         ];
     }
@@ -2050,17 +2079,17 @@ class Misc
             $forcedserver = $this->server_id;
             $connection_html .= '<input type="hidden" readonly="readonly" value="' . $this->server_id . '" name="server">';
         } else {
-            $connection_html .= "<label>";
+            $connection_html .= '<label>';
             $connection_html .= $this->printHelp($lang['strserver'], 'pg.server', false);
-            $connection_html .= ": </label>";
+            $connection_html .= ': </label>';
             $connection_html .= " <select name=\"server\" {$onchange}>\n";
             foreach ($servers as $info) {
                 if (empty($info['username'])) {
                     continue;
                 }
-                $selected = ((isset($_REQUEST['server']) && $info['id'] == $_REQUEST['server'])) ? ' selected="selected"' : '';
+                $selected = isset($_REQUEST['server']) && $info['id'] == $_REQUEST['server'] ? ' selected="selected"' : '';
                 // not logged on this server
-                $connection_html .= "<option value=\"" . htmlspecialchars($info['id']) . "\" " . $selected . ">";
+                $connection_html .= '<option value="' . htmlspecialchars($info['id']) . '" ' . $selected . '>';
                 $connection_html .= htmlspecialchars("{$info['desc']} ({$info['id']})");
                 $connection_html .= "</option>\n";
             }
@@ -2071,7 +2100,7 @@ class Misc
 
         if (count($servers) === 1 && isset($servers[$this->server_id]['useonlydefaultdb']) && $servers[$this->server_id]['useonlydefaultdb'] === true) {
 
-            $connection_html .= "<input type=\"hidden\" name=\"database\" value=\"" . htmlspecialchars($servers[$this->server_id]['defaultdb']) . "\" />\n";
+            $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($servers[$this->server_id]['defaultdb']) . "\" />\n";
 
         } else {
 
@@ -2080,7 +2109,7 @@ class Misc
             $databases = $data->getDatabases();
             if ($databases->recordCount() > 0) {
 
-                $connection_html .= "<label>";
+                $connection_html .= '<label>';
                 $connection_html .= $this->printHelp($lang['strdatabase'], 'pg.database', false);
                 $connection_html .= ": <select name=\"database\" {$onchange}>\n";
 
@@ -2091,15 +2120,15 @@ class Misc
 
                 while (!$databases->EOF) {
                     $dbname     = $databases->fields['datname'];
-                    $dbselected = ((isset($_REQUEST['database']) && $dbname == $_REQUEST['database'])) ? ' selected="selected"' : '';
-                    $connection_html .= "<option value=\"" . htmlspecialchars($dbname) . "\" " . $dbselected . ">" . htmlspecialchars($dbname) . "</option>\n";
+                    $dbselected = isset($_REQUEST['database']) && $dbname == $_REQUEST['database'] ? ' selected="selected"' : '';
+                    $connection_html .= '<option value="' . htmlspecialchars($dbname) . '" ' . $dbselected . '>' . htmlspecialchars($dbname) . "</option>\n";
 
                     $databases->moveNext();
                 }
                 $connection_html .= "</select></label>\n";
             } else {
                 $server_info = $misc->getServerInfo();
-                $connection_html .= "<input type=\"hidden\" name=\"database\" value=\"" . htmlspecialchars($server_info['defaultdb']) . "\" />\n";
+                $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($server_info['defaultdb']) . "\" />\n";
             }
         }
 

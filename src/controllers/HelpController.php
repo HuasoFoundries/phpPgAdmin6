@@ -1,103 +1,108 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
+    namespace PHPPgAdmin\Controller;
 
-/**
- * Base controller class
- */
-class HelpController extends BaseController {
-	public $_name = 'HelpController';
+    /**
+     * Base controller class
+     */
+    class HelpController extends BaseController
+    {
+        public $_name = 'HelpController';
 
-	public function render() {
-		$action = $this->action;
+        public function render()
+        {
+            $action = $this->action;
 
-		switch ($action) {
-		case 'browse':
-			$this->doBrowse();
-			break;
-		default:
-			$this->doDefault();
-			break;
-		}
+            switch ($action) {
+                case 'browse':
+                    $this->doBrowse();
+                    break;
+                default:
+                    $this->doDefault();
+                    break;
+            }
+        }
 
-	}
+        public function doBrowse($msg = '')
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-	public function doDefault() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+            $this->printHeader($lang['strhelppagebrowser']);
+            $this->printBody();
 
-		if (isset($_REQUEST['help'])) {
-			$url = $data->getHelp($_REQUEST['help']);
+            $this->printTitle($lang['strselecthelppage']);
 
-			\PC::debug(['url' => $url], 'HelpController::doDefault');
-			if (is_array($url)) {
-				$this->doChoosePage($url);
-				return;
-			}
+            echo $misc->printMsg($msg);
 
-			if ($url) {
-				header("Location: $url");
-				exit;
-			}
-		}
+            echo "<dl>\n";
 
-		$this->doBrowse($lang['strinvalidhelppage']);
-	}
+            $pages = $data->getHelpPages();
+            foreach ($pages as $page => $dummy) {
+                echo "<dt>{$page}</dt>\n";
 
-	public function doBrowse($msg = '') {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+                $urls = $data->getHelp($page);
+                if (!is_array($urls)) {
+                    $urls = [$urls];
+                }
 
-		$this->printHeader($lang['strhelppagebrowser']);
-		$this->printBody();
+                foreach ($urls as $url) {
+                    echo "<dd><a href=\"{$url}\">{$url}</a></dd>\n";
+                }
+            }
 
-		$this->printTitle($lang['strselecthelppage']);
+            echo "</dl>\n";
 
-		echo $misc->printMsg($msg);
+            $misc->printFooter();
+        }
 
-		echo "<dl>\n";
+        public function doDefault()
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-		$pages = $data->getHelpPages();
-		foreach ($pages as $page => $dummy) {
-			echo "<dt>{$page}</dt>\n";
+            if (isset($_REQUEST['help'])) {
+                $url = $data->getHelp($_REQUEST['help']);
 
-			$urls = $data->getHelp($page);
-			if (!is_array($urls)) {
-				$urls = [$urls];
-			}
+                \PC::debug(['url' => $url], 'HelpController::doDefault');
+                if (is_array($url)) {
+                    $this->doChoosePage($url);
 
-			foreach ($urls as $url) {
-				echo "<dd><a href=\"{$url}\">{$url}</a></dd>\n";
-			}
-		}
+                    return;
+                }
 
-		echo "</dl>\n";
+                if ($url) {
+                    header("Location: $url");
+                    exit;
+                }
+            }
 
-		$misc->printFooter();
-	}
+            $this->doBrowse($lang['strinvalidhelppage']);
+        }
 
-	public function doChoosePage($urls) {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+        public function doChoosePage($urls)
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-		$this->printHeader($lang['strhelppagebrowser']);
-		$this->printBody();
+            $this->printHeader($lang['strhelppagebrowser']);
+            $this->printBody();
 
-		$this->printTitle($lang['strselecthelppage']);
+            $this->printTitle($lang['strselecthelppage']);
 
-		echo "<ul>\n";
-		foreach ($urls as $url) {
-			echo "<li><a href=\"{$url}\">{$url}</a></li>\n";
-		}
-		echo "</ul>\n";
+            echo "<ul>\n";
+            foreach ($urls as $url) {
+                echo "<li><a href=\"{$url}\">{$url}</a></li>\n";
+            }
+            echo "</ul>\n";
 
-		$misc->printFooter();
-	}
+            $misc->printFooter();
+        }
 
-}
+    }

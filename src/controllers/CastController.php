@@ -1,114 +1,123 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
-use \PHPPgAdmin\Decorators\Decorator;
+    namespace PHPPgAdmin\Controller;
 
-/**
- * Base controller class
- */
-class CastController extends BaseController {
-	public $_name = 'CastController';
+    use PHPPgAdmin\Decorators\Decorator;
 
-/**
- * Show default list of casts in the database
- */
-	public function doDefault($msg = '') {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+    /**
+     * Base controller class
+     */
+    class CastController extends BaseController
+    {
+        public $_name = 'CastController';
 
-		$renderCastContext = function ($val) use ($lang) {
+        public function render()
+        {
+            $conf   = $this->conf;
+            $misc   = $this->misc;
+            $lang   = $this->lang;
+            $action = $this->action;
+            if ($action == 'tree') {
+                return $this->doTree();
+            }
+            $data = $misc->getDatabaseAccessor();
 
-			switch ($val) {
-			case 'e':return $lang['strno'];
-			case 'a':return $lang['strinassignment'];
-			default:return $lang['stryes'];
-			}
-		};
+            $this->printHeader($lang['strcasts']);
+            $this->printBody();
 
-		$this->printTrail('database');
-		$this->printTabs('database', 'casts');
-		$misc->printMsg($msg);
+            switch ($action) {
 
-		$casts = $data->getCasts();
+                default:
+                    $this->doDefault();
+                    break;
+            }
 
-		$columns = [
-			'source_type' => [
-				'title' => $lang['strsourcetype'],
-				'field' => Decorator::field('castsource'),
-			],
-			'target_type' => [
-				'title' => $lang['strtargettype'],
-				'field' => Decorator::field('casttarget'),
-			],
-			'function' => [
-				'title' => $lang['strfunction'],
-				'field' => Decorator::field('castfunc'),
-				'params' => ['null' => $lang['strbinarycompat']],
-			],
-			'implicit' => [
-				'title' => $lang['strimplicit'],
-				'field' => Decorator::field('castcontext'),
-				'type' => 'callback',
-				'params' => ['function' => $renderCastContext, 'align' => 'center'],
-			],
-			'comment' => [
-				'title' => $lang['strcomment'],
-				'field' => Decorator::field('castcomment'),
-			],
-		];
+            return $misc->printFooter();
+        }
 
-		$actions = [];
+        /**
+         * Generate XML for the browser tree.
+         */
+        public function doTree()
+        {
 
-		echo $this->printTable($casts, $columns, $actions, 'casts-casts', $lang['strnocasts']);
-	}
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-	public function render() {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$action = $this->action;
-		if ($action == 'tree') {
-			return $this->doTree();
-		}
-		$data = $misc->getDatabaseAccessor();
+            $casts = $data->getCasts();
 
-		$this->printHeader($lang['strcasts']);
-		$this->printBody();
+            $proto = Decorator::concat(Decorator::field('castsource'), ' AS ', Decorator::field('casttarget'));
 
-		switch ($action) {
+            $attrs = [
+                'text' => $proto,
+                'icon' => 'Cast',
+            ];
 
-		default:
-			$this->doDefault();
-			break;
-		}
+            return $this->printTree($casts, $attrs, 'casts');
+        }
 
-		return $misc->printFooter();
+        /**
+         * Show default list of casts in the database
+         *
+         * @param string $msg
+         * @return string|void
+         */
+        public function doDefault($msg = '')
+        {
+            $conf = $this->conf;
+            $misc = $this->misc;
+            $lang = $this->lang;
+            $data = $misc->getDatabaseAccessor();
 
-	}
+            $renderCastContext = function ($val) use ($lang) {
 
-/**
- * Generate XML for the browser tree.
- */
-	function doTree() {
+                switch ($val) {
+                    case 'e':
+                        return $lang['strno'];
+                    case 'a':
+                        return $lang['strinassignment'];
+                    default:
+                        return $lang['stryes'];
+                }
+            };
 
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$data = $misc->getDatabaseAccessor();
+            $this->printTrail('database');
+            $this->printTabs('database', 'casts');
+            $misc->printMsg($msg);
 
-		$casts = $data->getCasts();
+            $casts = $data->getCasts();
 
-		$proto = Decorator::concat(Decorator::field('castsource'), ' AS ', Decorator::field('casttarget'));
+            $columns = [
+                'source_type' => [
+                    'title' => $lang['strsourcetype'],
+                    'field' => Decorator::field('castsource'),
+                ],
+                'target_type' => [
+                    'title' => $lang['strtargettype'],
+                    'field' => Decorator::field('casttarget'),
+                ],
+                'function'    => [
+                    'title'  => $lang['strfunction'],
+                    'field'  => Decorator::field('castfunc'),
+                    'params' => ['null' => $lang['strbinarycompat']],
+                ],
+                'implicit'    => [
+                    'title'  => $lang['strimplicit'],
+                    'field'  => Decorator::field('castcontext'),
+                    'type'   => 'callback',
+                    'params' => ['function' => $renderCastContext, 'align' => 'center'],
+                ],
+                'comment'     => [
+                    'title' => $lang['strcomment'],
+                    'field' => Decorator::field('castcomment'),
+                ],
+            ];
 
-		$attrs = [
-			'text' => $proto,
-			'icon' => 'Cast',
-		];
+            $actions = [];
 
-		return $this->printTree($casts, $attrs, 'casts');
+            echo $this->printTable($casts, $columns, $actions, 'casts-casts', $lang['strnocasts']);
+        }
 
-	}
-
-}
+    }
