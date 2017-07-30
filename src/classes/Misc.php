@@ -61,7 +61,7 @@ class Misc
         }
         // Check database support is properly compiled in
         if (!function_exists('pg_connect')) {
-			//$container['add_error']($this->lang['strnotloaded']);
+            //$container['add_error']($this->lang['strnotloaded']);
             die($this->lang['strnotloaded']);
         }
 
@@ -572,10 +572,10 @@ class Misc
         }
 
         if (!isset($vars['url'])) {
-			$vars['url'] = SUBFOLDER . '/redirect';
+            $vars['url'] = SUBFOLDER . '/redirect';
         }
-		if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
-			$vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -2208,7 +2208,7 @@ class Misc
 
             $fksprops['code'] .= '<div id="fkbg"></div>';
             $fksprops['code'] .= '<div id="fklist"></div>';
-			$fksprops['code'] .= '<script src="' . SUBFOLDER . '/js/ac_insert_row.js" type="text/javascript"></script>';
+            $fksprops['code'] .= '<script src="' . SUBFOLDER . '/js/ac_insert_row.js" type="text/javascript"></script>';
         } else /* we have no foreign keys on this table */
         {
             return false;

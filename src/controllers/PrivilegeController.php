@@ -5,401 +5,406 @@ namespace PHPPgAdmin\Controller;
 /**
  * PrivilegeController controller class
  */
-class PrivilegeController extends BaseController {
-	public $_name = 'PrivilegeController';
-	public $table_place = 'privileges-privileges';
+class PrivilegeController extends BaseController
+{
+    public $_name       = 'PrivilegeController';
+    public $table_place = 'privileges-privileges';
 
-	function render() {
+    public function render()
+    {
 
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$action = $this->action;
-		$data = $misc->getDatabaseAccessor();
+        $conf   = $this->conf;
+        $misc   = $this->misc;
+        $lang   = $this->lang;
+        $action = $this->action;
+        $data   = $misc->getDatabaseAccessor();
 
-		$this->printHeader($lang['strprivileges']);
-		$this->printBody();
+        $this->printHeader($lang['strprivileges']);
+        $this->printBody();
 
-		switch ($action) {
-		case 'save':
-			if (isset($_REQUEST['cancel'])) {
-				$this->doDefault();
-			} else {
-				$this->doAlter(false, $_REQUEST['mode']);
-			}
+        switch ($action) {
+            case 'save':
+                if (isset($_REQUEST['cancel'])) {
+                    $this->doDefault();
+                } else {
+                    $this->doAlter(false, $_REQUEST['mode']);
+                }
 
-			break;
-		case 'alter':
-			$this->doAlter(true, $_REQUEST['mode']);
-			break;
-		default:
-			$this->doDefault();
-			break;
-		}
+                break;
+            case 'alter':
+                $this->doAlter(true, $_REQUEST['mode']);
+                break;
+            default:
+                $this->doDefault();
+                break;
+        }
 
-		$misc->printFooter();
-	}
-	/**
-	 * Grant permissions on an object to a user
-	 * @param $confirm To show entry screen
-	 * @param $mode 'grant' or 'revoke'
-	 * @param $msg (optional) A message to show
-	 */
-	function doAlter($confirm, $mode, $msg = '') {
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$action = $this->action;
-		$data = $misc->getDatabaseAccessor();
+        $misc->printFooter();
+    }
 
-		if (!isset($_REQUEST['username'])) {
-			$_REQUEST['username'] = [];
-		}
+    /**
+     * Grant permissions on an object to a user
+     * @param $confirm To show entry screen
+     * @param $mode 'grant' or 'revoke'
+     * @param $msg (optional) A message to show
+     */
+    public function doAlter($confirm, $mode, $msg = '')
+    {
+        $conf   = $this->conf;
+        $misc   = $this->misc;
+        $lang   = $this->lang;
+        $action = $this->action;
+        $data   = $misc->getDatabaseAccessor();
 
-		if (!isset($_REQUEST['groupname'])) {
-			$_REQUEST['groupname'] = [];
-		}
+        if (!isset($_REQUEST['username'])) {
+            $_REQUEST['username'] = [];
+        }
 
-		if (!isset($_REQUEST['privilege'])) {
-			$_REQUEST['privilege'] = [];
-		}
+        if (!isset($_REQUEST['groupname'])) {
+            $_REQUEST['groupname'] = [];
+        }
 
-		if ($confirm) {
-			// Get users from the database
-			$users = $data->getUsers();
-			// Get groups from the database
-			$groups = $data->getGroups();
+        if (!isset($_REQUEST['privilege'])) {
+            $_REQUEST['privilege'] = [];
+        }
 
-			$this->printTrail($_REQUEST['subject']);
+        if ($confirm) {
+            // Get users from the database
+            $users = $data->getUsers();
+            // Get groups from the database
+            $groups = $data->getGroups();
 
-			switch ($mode) {
-			case 'grant':
-				$this->printTitle($lang['strgrant'], 'pg.privilege.grant');
-				break;
-			case 'revoke':
-				$this->printTitle($lang['strrevoke'], 'pg.privilege.revoke');
-				break;
-			}
-			$misc->printMsg($msg);
+            $this->printTrail($_REQUEST['subject']);
 
-			echo "<form action=\"" . SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
-			echo "<table>\n";
-			echo "<tr><th class=\"data left\">{$lang['strusers']}</th>\n";
-			echo "<td class=\"data1\"><select name=\"username[]\" multiple=\"multiple\" size=\"", min(6, $users->recordCount()), "\">\n";
-			while (!$users->EOF) {
-				$uname = htmlspecialchars($users->fields['usename']);
-				echo "<option value=\"{$uname}\"",
-				in_array($users->fields['usename'], $_REQUEST['username']) ? ' selected="selected"' : '', ">{$uname}</option>\n";
-				$users->moveNext();
-			}
-			echo "</select></td></tr>\n";
-			echo "<tr><th class=\"data left\">{$lang['strgroups']}</th>\n";
-			echo "<td class=\"data1\">\n";
-			echo "<input type=\"checkbox\" id=\"public\" name=\"public\"", (isset($_REQUEST['public']) ? ' checked="checked"' : ''), " /><label for=\"public\">PUBLIC</label>\n";
-			// Only show groups if there are groups!
-			if ($groups->recordCount() > 0) {
-				echo "<br /><select name=\"groupname[]\" multiple=\"multiple\" size=\"", min(6, $groups->recordCount()), "\">\n";
-				while (!$groups->EOF) {
-					$gname = htmlspecialchars($groups->fields['groname']);
-					echo "<option value=\"{$gname}\"",
-					in_array($groups->fields['groname'], $_REQUEST['groupname']) ? ' selected="selected"' : '', ">{$gname}</option>\n";
-					$groups->moveNext();
-				}
-				echo "</select>\n";
-			}
-			echo "</td></tr>\n";
-			echo "<tr><th class=\"data left required\">{$lang['strprivileges']}</th>\n";
-			echo "<td class=\"data1\">\n";
-			foreach ($data->privlist[$_REQUEST['subject']] as $v) {
-				$v = htmlspecialchars($v);
-				echo "<input type=\"checkbox\" id=\"privilege[$v]\" name=\"privilege[$v]\"",
-				isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', " /><label for=\"privilege[$v]\">{$v}</label><br />\n";
-			}
-			echo "</td></tr>\n";
-			// Grant option
-			if ($data->hasGrantOption()) {
-				echo "<tr><th class=\"data left\">{$lang['stroptions']}</th>\n";
-				echo "<td class=\"data1\">\n";
-				if ($mode == 'grant') {
-					echo "<input type=\"checkbox\" id=\"grantoption\" name=\"grantoption\"",
-					isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION</label>\n";
-				} elseif ($mode == 'revoke') {
-					echo "<input type=\"checkbox\" id=\"grantoption\" name=\"grantoption\"",
-					isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION FOR</label><br />\n";
-					echo "<input type=\"checkbox\" id=\"cascade\" name=\"cascade\"",
-					isset($_REQUEST['cascade']) ? ' checked="checked"' : '', " /><label for=\"cascade\">CASCADE</label><br />\n";
-				}
-				echo "</td></tr>\n";
-			}
-			echo "</table>\n";
+            switch ($mode) {
+                case 'grant':
+                    $this->printTitle($lang['strgrant'], 'pg.privilege.grant');
+                    break;
+                case 'revoke':
+                    $this->printTitle($lang['strrevoke'], 'pg.privilege.revoke');
+                    break;
+            }
+            $misc->printMsg($msg);
 
-			echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
-			echo "<input type=\"hidden\" name=\"mode\" value=\"", htmlspecialchars($mode), "\" />\n";
-			echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['subject']), "\" />\n";
-			if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-				echo "<input type=\"hidden\" name=\"", htmlspecialchars($_REQUEST['subject'] . '_oid'),
-				"\" value=\"", htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), "\" />\n";
-			}
+            echo "<form action=\"" . SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
+            echo "<table>\n";
+            echo "<tr><th class=\"data left\">{$lang['strusers']}</th>\n";
+            echo "<td class=\"data1\"><select name=\"username[]\" multiple=\"multiple\" size=\"", min(6, $users->recordCount()), "\">\n";
+            while (!$users->EOF) {
+                $uname = htmlspecialchars($users->fields['usename']);
+                echo "<option value=\"{$uname}\"",
+                in_array($users->fields['usename'], $_REQUEST['username']) ? ' selected="selected"' : '', ">{$uname}</option>\n";
+                $users->moveNext();
+            }
+            echo "</select></td></tr>\n";
+            echo "<tr><th class=\"data left\">{$lang['strgroups']}</th>\n";
+            echo "<td class=\"data1\">\n";
+            echo "<input type=\"checkbox\" id=\"public\" name=\"public\"", (isset($_REQUEST['public']) ? ' checked="checked"' : ''), " /><label for=\"public\">PUBLIC</label>\n";
+            // Only show groups if there are groups!
+            if ($groups->recordCount() > 0) {
+                echo "<br /><select name=\"groupname[]\" multiple=\"multiple\" size=\"", min(6, $groups->recordCount()), "\">\n";
+                while (!$groups->EOF) {
+                    $gname = htmlspecialchars($groups->fields['groname']);
+                    echo "<option value=\"{$gname}\"",
+                    in_array($groups->fields['groname'], $_REQUEST['groupname']) ? ' selected="selected"' : '', ">{$gname}</option>\n";
+                    $groups->moveNext();
+                }
+                echo "</select>\n";
+            }
+            echo "</td></tr>\n";
+            echo "<tr><th class=\"data left required\">{$lang['strprivileges']}</th>\n";
+            echo "<td class=\"data1\">\n";
+            foreach ($data->privlist[$_REQUEST['subject']] as $v) {
+                $v = htmlspecialchars($v);
+                echo "<input type=\"checkbox\" id=\"privilege[$v]\" name=\"privilege[$v]\"",
+                isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', " /><label for=\"privilege[$v]\">{$v}</label><br />\n";
+            }
+            echo "</td></tr>\n";
+            // Grant option
+            if ($data->hasGrantOption()) {
+                echo "<tr><th class=\"data left\">{$lang['stroptions']}</th>\n";
+                echo "<td class=\"data1\">\n";
+                if ($mode == 'grant') {
+                    echo "<input type=\"checkbox\" id=\"grantoption\" name=\"grantoption\"",
+                    isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION</label>\n";
+                } elseif ($mode == 'revoke') {
+                    echo "<input type=\"checkbox\" id=\"grantoption\" name=\"grantoption\"",
+                    isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION FOR</label><br />\n";
+                    echo "<input type=\"checkbox\" id=\"cascade\" name=\"cascade\"",
+                    isset($_REQUEST['cascade']) ? ' checked="checked"' : '', " /><label for=\"cascade\">CASCADE</label><br />\n";
+                }
+                echo "</td></tr>\n";
+            }
+            echo "</table>\n";
 
-			echo "<input type=\"hidden\" name=\"", htmlspecialchars($_REQUEST['subject']),
-			"\" value=\"", htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
-			if ($_REQUEST['subject'] == 'column') {
-				echo "<input type=\"hidden\" name=\"table\" value=\"",
-				htmlspecialchars($_REQUEST['table']), "\" />\n";
-			}
+            echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
+            echo "<input type=\"hidden\" name=\"mode\" value=\"", htmlspecialchars($mode), "\" />\n";
+            echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['subject']), "\" />\n";
+            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+                echo "<input type=\"hidden\" name=\"", htmlspecialchars($_REQUEST['subject'] . '_oid'),
+                "\" value=\"", htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), "\" />\n";
+            }
 
-			echo $misc->form;
-			if ($mode == 'grant') {
-				echo "<input type=\"submit\" name=\"grant\" value=\"{$lang['strgrant']}\" />\n";
-			} elseif ($mode == 'revoke') {
-				echo "<input type=\"submit\" name=\"revoke\" value=\"{$lang['strrevoke']}\" />\n";
-			}
+            echo "<input type=\"hidden\" name=\"", htmlspecialchars($_REQUEST['subject']),
+            "\" value=\"", htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
+            if ($_REQUEST['subject'] == 'column') {
+                echo "<input type=\"hidden\" name=\"table\" value=\"",
+                htmlspecialchars($_REQUEST['table']), "\" />\n";
+            }
 
-			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>";
-			echo "</form>\n";
-		} else {
-			// Determine whether object should be ref'd by name or oid.
-			if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-				$object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
-			} else {
-				$object = $_REQUEST[$_REQUEST['subject']];
-			}
+            echo $misc->form;
+            if ($mode == 'grant') {
+                echo "<input type=\"submit\" name=\"grant\" value=\"{$lang['strgrant']}\" />\n";
+            } elseif ($mode == 'revoke') {
+                echo "<input type=\"submit\" name=\"revoke\" value=\"{$lang['strrevoke']}\" />\n";
+            }
 
-			if (isset($_REQUEST['table'])) {
-				$table = $_REQUEST['table'];
-			} else {
-				$table = null;
-			}
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>";
+            echo "</form>\n";
+        } else {
+            // Determine whether object should be ref'd by name or oid.
+            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+                $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
+            } else {
+                $object = $_REQUEST[$_REQUEST['subject']];
+            }
 
-			$status = $data->setPrivileges(($mode == 'grant') ? 'GRANT' : 'REVOKE', $_REQUEST['subject'], $object,
-				isset($_REQUEST['public']), $_REQUEST['username'], $_REQUEST['groupname'], array_keys($_REQUEST['privilege']),
-				isset($_REQUEST['grantoption']), isset($_REQUEST['cascade']), $table);
+            if (isset($_REQUEST['table'])) {
+                $table = $_REQUEST['table'];
+            } else {
+                $table = null;
+            }
 
-			if ($status == 0) {
-				$this->doDefault($lang['strgranted']);
-			} elseif ($status == -3 || $status == -4) {
-				$this->doAlter(true, $_REQUEST['mode'], $lang['strgrantbad']);
-			} else {
-				$this->doAlter(true, $_REQUEST['mode'], $lang['strgrantfailed']);
-			}
+            $status = $data->setPrivileges(($mode == 'grant') ? 'GRANT' : 'REVOKE', $_REQUEST['subject'], $object,
+                isset($_REQUEST['public']), $_REQUEST['username'], $_REQUEST['groupname'], array_keys($_REQUEST['privilege']),
+                isset($_REQUEST['grantoption']), isset($_REQUEST['cascade']), $table);
 
-		}
-	}
+            if ($status == 0) {
+                $this->doDefault($lang['strgranted']);
+            } elseif ($status == -3 || $status == -4) {
+                $this->doAlter(true, $_REQUEST['mode'], $lang['strgrantbad']);
+            } else {
+                $this->doAlter(true, $_REQUEST['mode'], $lang['strgrantfailed']);
+            }
 
-	/**
-	 * Show permissions on a database, namespace, relation, language or function
-	 */
-	function doDefault($msg = '') {
+        }
+    }
 
-		$conf = $this->conf;
-		$misc = $this->misc;
-		$lang = $this->lang;
-		$action = $this->action;
-		$data = $misc->getDatabaseAccessor();
-		$database = $misc->getDatabase();
+    /**
+     * Show permissions on a database, namespace, relation, language or function
+     */
+    public function doDefault($msg = '')
+    {
 
-		$this->printTrail($_REQUEST['subject']);
+        $conf     = $this->conf;
+        $misc     = $this->misc;
+        $lang     = $this->lang;
+        $action   = $this->action;
+        $data     = $misc->getDatabaseAccessor();
+        $database = $misc->getDatabase();
 
-		# @@@FIXME: This switch is just a temporary solution,
-		# need a better way, maybe every type of object should
-		# have a tab bar???
-		switch ($_REQUEST['subject']) {
-		case 'server':
-		case 'database':
-		case 'schema':
-		case 'table':
-		case 'column':
-		case 'view':
-			$this->printTabs($_REQUEST['subject'], 'privileges');
-			break;
-		default:
-			$this->printTitle($lang['strprivileges'], 'pg.privilege');
-		}
-		$misc->printMsg($msg);
+        $this->printTrail($_REQUEST['subject']);
 
-		// Determine whether object should be ref'd by name or oid.
-		if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-			$object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
-		} else {
-			$object = $_REQUEST[$_REQUEST['subject']];
-		}
+        # @@@FIXME: This switch is just a temporary solution,
+        # need a better way, maybe every type of object should
+        # have a tab bar???
+        switch ($_REQUEST['subject']) {
+            case 'server':
+            case 'database':
+            case 'schema':
+            case 'table':
+            case 'column':
+            case 'view':
+                $this->printTabs($_REQUEST['subject'], 'privileges');
+                break;
+            default:
+                $this->printTitle($lang['strprivileges'], 'pg.privilege');
+        }
+        $misc->printMsg($msg);
 
-		// Get the privileges on the object, given its type
-		if ($_REQUEST['subject'] == 'column') {
-			$privileges = $data->getPrivileges($object, 'column', $_REQUEST['table']);
-		} else {
-			$privileges = $data->getPrivileges($object, $_REQUEST['subject']);
-		}
+        // Determine whether object should be ref'd by name or oid.
+        if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+            $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
+        } else {
+            $object = $_REQUEST[$_REQUEST['subject']];
+        }
 
-		if (sizeof($privileges) > 0) {
-			echo "<table>\n";
-			if ($data->hasRoles()) {
-				echo "<tr><th class=\"data\">{$lang['strrole']}</th>";
-			} else {
-				echo "<tr><th class=\"data\">{$lang['strtype']}</th><th class=\"data\">{$lang['struser']}/{$lang['strgroup']}</th>";
-			}
+        // Get the privileges on the object, given its type
+        if ($_REQUEST['subject'] == 'column') {
+            $privileges = $data->getPrivileges($object, 'column', $_REQUEST['table']);
+        } else {
+            $privileges = $data->getPrivileges($object, $_REQUEST['subject']);
+        }
 
-			foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
-				// Skip over ALL PRIVILEGES
-				if ($v2 == 'ALL PRIVILEGES') {
-					continue;
-				}
+        if (sizeof($privileges) > 0) {
+            echo "<table>\n";
+            if ($data->hasRoles()) {
+                echo "<tr><th class=\"data\">{$lang['strrole']}</th>";
+            } else {
+                echo "<tr><th class=\"data\">{$lang['strtype']}</th><th class=\"data\">{$lang['struser']}/{$lang['strgroup']}</th>";
+            }
 
-				echo "<th class=\"data\">{$v2}</th>\n";
-			}
-			if ($data->hasGrantOption()) {
-				echo "<th class=\"data\">{$lang['strgrantor']}</th>";
-			}
-			echo "</tr>\n";
+            foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
+                // Skip over ALL PRIVILEGES
+                if ($v2 == 'ALL PRIVILEGES') {
+                    continue;
+                }
 
-			// Loop over privileges, outputting them
-			$i = 0;
-			foreach ($privileges as $v) {
-				$id = (($i % 2) == 0 ? '1' : '2');
-				echo "<tr class=\"data{$id}\">\n";
-				if (!$data->hasRoles()) {
-					echo "<td>", $misc->printVal($v[0]), "</td>\n";
-				}
+                echo "<th class=\"data\">{$v2}</th>\n";
+            }
+            if ($data->hasGrantOption()) {
+                echo "<th class=\"data\">{$lang['strgrantor']}</th>";
+            }
+            echo "</tr>\n";
 
-				echo "<td>", $misc->printVal($v[1]), "</td>\n";
-				foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
-					// Skip over ALL PRIVILEGES
-					if ($v2 == 'ALL PRIVILEGES') {
-						continue;
-					}
+            // Loop over privileges, outputting them
+            $i = 0;
+            foreach ($privileges as $v) {
+                $id = (($i % 2) == 0 ? '1' : '2');
+                echo "<tr class=\"data{$id}\">\n";
+                if (!$data->hasRoles()) {
+                    echo "<td>", $misc->printVal($v[0]), "</td>\n";
+                }
 
-					echo "<td>";
-					if (in_array($v2, $v[2])) {
-						echo $lang['stryes'];
-					} else {
-						echo $lang['strno'];
-					}
+                echo "<td>", $misc->printVal($v[1]), "</td>\n";
+                foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
+                    // Skip over ALL PRIVILEGES
+                    if ($v2 == 'ALL PRIVILEGES') {
+                        continue;
+                    }
 
-					// If we have grant option for this, end mark
-					if ($data->hasGrantOption() && in_array($v2, $v[4])) {
-						echo $lang['strasterisk'];
-					}
+                    echo "<td>";
+                    if (in_array($v2, $v[2])) {
+                        echo $lang['stryes'];
+                    } else {
+                        echo $lang['strno'];
+                    }
 
-					echo "</td>\n";
-				}
-				if ($data->hasGrantOption()) {
-					echo "<td>", $misc->printVal($v[3]), "</td>\n";
-				}
-				echo "</tr>\n";
-				$i++;
-			}
+                    // If we have grant option for this, end mark
+                    if ($data->hasGrantOption() && in_array($v2, $v[4])) {
+                        echo $lang['strasterisk'];
+                    }
 
-			echo "</table>";
-		} else {
-			echo "<p>{$lang['strnoprivileges']}</p>\n";
-		}
+                    echo "</td>\n";
+                }
+                if ($data->hasGrantOption()) {
+                    echo "<td>", $misc->printVal($v[3]), "</td>\n";
+                }
+                echo "</tr>\n";
+                $i++;
+            }
 
-		// Links for granting to a user or group
-		switch ($_REQUEST['subject']) {
-		case 'table':
-		case 'view':
-		case 'sequence':
-		case 'function':
-		case 'tablespace':
-			$alllabel = "showall{$_REQUEST['subject']}s";
-			$allurl = "{$_REQUEST['subject']}s.php";
-			$alltxt = $lang["strshowall{$_REQUEST['subject']}s"];
-			break;
-		case 'schema':
-			$alllabel = "showallschemas";
-			$allurl = "schemas.php";
-			$alltxt = $lang["strshowallschemas"];
-			break;
-		case 'database':
-			$alllabel = "showalldatabases";
-			$allurl = 'all_db.php';
-			$alltxt = $lang['strshowalldatabases'];
-			break;
-		}
+            echo "</table>";
+        } else {
+            echo "<p>{$lang['strnoprivileges']}</p>\n";
+        }
 
-		$subject = $_REQUEST['subject'];
-		$object = $_REQUEST[$_REQUEST['subject']];
+        // Links for granting to a user or group
+        switch ($_REQUEST['subject']) {
+            case 'table':
+            case 'view':
+            case 'sequence':
+            case 'function':
+            case 'tablespace':
+                $alllabel = "showall{$_REQUEST['subject']}s";
+                $allurl   = "{$_REQUEST['subject']}s.php";
+                $alltxt   = $lang["strshowall{$_REQUEST['subject']}s"];
+                break;
+            case 'schema':
+                $alllabel = "showallschemas";
+                $allurl   = "schemas.php";
+                $alltxt   = $lang["strshowallschemas"];
+                break;
+            case 'database':
+                $alllabel = "showalldatabases";
+                $allurl   = 'all_db.php';
+                $alltxt   = $lang['strshowalldatabases'];
+                break;
+        }
 
-		if ($_REQUEST['subject'] == 'function') {
-			$objectoid = $_REQUEST[$_REQUEST['subject'] . '_oid'];
-			$urlvars = [
-				'action' => 'alter',
-				'server' => $_REQUEST['server'],
-				'database' => $_REQUEST['database'],
-				'schema' => $_REQUEST['schema'],
-				$subject => $object,
-				"{$subject}_oid" => $objectoid,
-				'subject' => $subject,
-			];
-		} else if ($_REQUEST['subject'] == 'column') {
-			$urlvars = [
-				'action' => 'alter',
-				'server' => $_REQUEST['server'],
-				'database' => $_REQUEST['database'],
-				'schema' => $_REQUEST['schema'],
-				$subject => $object,
-				'subject' => $subject,
-			];
+        $subject = $_REQUEST['subject'];
+        $object  = $_REQUEST[$_REQUEST['subject']];
 
-			if (isset($_REQUEST['table'])) {
-				$urlvars['table'] = $_REQUEST['table'];
-			} else {
-				$urlvars['view'] = $_REQUEST['view'];
-			}
+        if ($_REQUEST['subject'] == 'function') {
+            $objectoid = $_REQUEST[$_REQUEST['subject'] . '_oid'];
+            $urlvars   = [
+                'action'         => 'alter',
+                'server'         => $_REQUEST['server'],
+                'database'       => $_REQUEST['database'],
+                'schema'         => $_REQUEST['schema'],
+                $subject         => $object,
+                "{$subject}_oid" => $objectoid,
+                'subject'        => $subject,
+            ];
+        } else if ($_REQUEST['subject'] == 'column') {
+            $urlvars = [
+                'action'   => 'alter',
+                'server'   => $_REQUEST['server'],
+                'database' => $_REQUEST['database'],
+                'schema'   => $_REQUEST['schema'],
+                $subject   => $object,
+                'subject'  => $subject,
+            ];
 
-		} else {
-			$urlvars = [
-				'action' => 'alter',
-				'server' => $_REQUEST['server'],
-				'database' => $_REQUEST['database'],
-				$subject => $object,
-				'subject' => $subject,
-			];
-			if (isset($_REQUEST['schema'])) {
-				$urlvars['schema'] = $_REQUEST['schema'];
-			}
-		}
+            if (isset($_REQUEST['table'])) {
+                $urlvars['table'] = $_REQUEST['table'];
+            } else {
+                $urlvars['view'] = $_REQUEST['view'];
+            }
 
-		$navlinks = [
-			'grant' => [
-				'attr' => [
-					'href' => [
-						'url' => 'privileges.php',
-						'urlvars' => array_merge($urlvars, ['mode' => 'grant']),
-					],
-				],
-				'content' => $lang['strgrant'],
-			],
-			'revoke' => [
-				'attr' => [
-					'href' => [
-						'url' => 'privileges.php',
-						'urlvars' => array_merge($urlvars, ['mode' => 'revoke']),
-					],
-				],
-				'content' => $lang['strrevoke'],
-			],
-		];
+        } else {
+            $urlvars = [
+                'action'   => 'alter',
+                'server'   => $_REQUEST['server'],
+                'database' => $_REQUEST['database'],
+                $subject   => $object,
+                'subject'  => $subject,
+            ];
+            if (isset($_REQUEST['schema'])) {
+                $urlvars['schema'] = $_REQUEST['schema'];
+            }
+        }
 
-		if (isset($allurl)) {
-			$navlinks[$alllabel] = [
-				'attr' => [
-					'href' => [
-						'url' => $allurl,
-						'urlvars' => [
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-						],
-					],
-				],
-				'content' => $alltxt,
-			];
-			if (isset($_REQUEST['schema'])) {
-				$navlinks[$alllabel]['attr']['href']['urlvars']['schema'] = $_REQUEST['schema'];
-			}
-		}
+        $navlinks = [
+            'grant'  => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'privileges.php',
+                        'urlvars' => array_merge($urlvars, ['mode' => 'grant']),
+                    ],
+                ],
+                'content' => $lang['strgrant'],
+            ],
+            'revoke' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'privileges.php',
+                        'urlvars' => array_merge($urlvars, ['mode' => 'revoke']),
+                    ],
+                ],
+                'content' => $lang['strrevoke'],
+            ],
+        ];
 
-		$this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
-	}
+        if (isset($allurl)) {
+            $navlinks[$alllabel] = [
+                'attr'    => [
+                    'href' => [
+                        'url'     => $allurl,
+                        'urlvars' => [
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                        ],
+                    ],
+                ],
+                'content' => $alltxt,
+            ];
+            if (isset($_REQUEST['schema'])) {
+                $navlinks[$alllabel]['attr']['href']['urlvars']['schema'] = $_REQUEST['schema'];
+            }
+        }
+
+        $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
+    }
 
 }
