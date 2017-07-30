@@ -1,8 +1,10 @@
 # phpPgAdmin6
 
-PHP Based administration tool for PostgreSQL. Runs on PHP 7+ and Postgres 9.6+.
+PHP Based administration tool for PostgreSQL. 
 
-This is a fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) that implements **a lot of changes**
+This is a hard fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) 
+
+The focus of this fork is to move the project to modern, standards compliant and namespaced code and become compatible with PHP 7+ and the latest versions of Postgres.
 
 ### v6.0.0-alpha1
 
@@ -10,7 +12,7 @@ This is a fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) that im
     - namespaces
     - proper (yet arbitrary :sad:) folder hierarchy
     - separate files for separate classes
-- stripes the use of require and include to the bare minimum
+- strips the use of require and include to the bare minimum
 - drops support for PHP < 5.4.
 - provides full composer compatibility
 - PSR-4 autoloading

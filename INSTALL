@@ -1,25 +1,25 @@
-phpPgAdmin Installation Guide
+phpPgAdmin6 Installation Guide
 -----------------------------
 
 1. Unpack your download
 
    If you've downloaded a tar.gz package, execute from a terminal:
 
-   gunzip phpPgAdmin-*.tar.gz
-   tar -xvf phpPgAdmin-*.tar
+   gunzip phpPgAdmin6-*.tar.gz
+   tar -xvf phpPgAdmin6-*.tar
 
    Else, if you've downloaded a tar.bz2 package, execute from a terminal: 
 
-   bunzip2 phpPgAdmin-*.tar.bz2
-   tar -xvf phpPgAdmin-*.tar
+   bunzip2 phpPgAdmin6-*.tar.bz2
+   tar -xvf phpPgAdmin6-*.tar
 
    Else, if you've downloaded a zip package, execute from a terminal:
 
-   unzip phpPgAdmin-*.zip
+   unzip phpPgAdmin6-*.zip
 
-2. Configure phpPgAdmin
+2. Configure phpPgAdmin6
 
-   edit phpPgAdmin/conf/config.inc.php
+   edit phpPgAdmin6/conf/config.inc.php
 
    If you mess up the configuration file, you can recover it from the
    config.inc.php-dist file.
@@ -38,12 +38,12 @@ phpPgAdmin Installation Guide
    to a directory by themselves.
    
    Also, you will need to ensure that your 'pg_dump' and 'pg_dumpall' utilities
-   are executable by the PHP process, if you want dump support in phpPgAdmin.
+   are executable by the PHP process, if you want dump support in phpPgAdmin6.
 
-   Lastly, if you run phpPgAdmin in safe mode, very long running imports,
+   Lastly, if you run phpPgAdmin6 in safe mode, very long running imports,
    exports and transactions may time out and be aborted.
 
-4. Ensure the statistics collector is enabled in PostgreSQL.  phpPgAdmin will 
+4. Ensure the statistics collector is enabled in PostgreSQL.  phpPgAdmin6 will 
    display table, index performance, and usage statistics if you have enabled
    the PostgreSQL statistics collector.  While this is normally enabled by 
    default, to ensure it is running, make sure the following lines in your 
@@ -52,8 +52,8 @@ phpPgAdmin Installation Guide
     track_activities
     track_counts 
 
-5. Browse to the phpPgAdmin installation using a web browser.  You might
-   need cookies enabled for phpPgAdmin to work.
+5. Browse to the phpPgAdmin6 installation using a web browser.  You might
+   need cookies enabled for phpPgAdmin6 to work.
 
 6. IMPORTANT - SECURITY
 
@@ -61,10 +61,10 @@ phpPgAdmin Installation Guide
    We STRONGLY recommend that you enable md5 passwords for local connections
    in your pg_hba.conf, and set a password for the default superuser account.
 
-   Due to the large number of phpPgAdmin installations that have not set
+   Due to the large number of phpPgAdmin6 installations that have not set
    passwords on local connections, there is now a configuration file
    option called 'extra_login_security', which is TRUE by default.  While
-   this option is enabled, you will be unable to log in to phpPgAdmin as
+   this option is enabled, you will be unable to log in to phpPgAdmin6 as
    the 'root', 'administrator', 'pgsql' or 'postgres' users and empty passwords
    will not work.
    
