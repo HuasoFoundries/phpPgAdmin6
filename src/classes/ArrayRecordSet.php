@@ -1,11 +1,12 @@
 <?php
-namespace PHPPgAdmin;
 
-/**
- * Really simple RecordSet to allow printTable of arrays.
- *
- * $Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
- */
+    namespace PHPPgAdmin;
+
+    /**
+     * Really simple RecordSet to allow printTable of arrays.
+     *
+     * $Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
+     */
 class ArrayRecordSet
 {
 
@@ -22,7 +23,6 @@ class ArrayRecordSet
         if ($this->fields === false) {
             $this->EOF = true;
         }
-
     }
 
     public function recordCount()
@@ -36,6 +36,5 @@ class ArrayRecordSet
         if ($this->fields === false) {
             $this->EOF = true;
         }
-
     }
-}
+    }

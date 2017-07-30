@@ -1,12 +1,12 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
+    namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+    use PHPPgAdmin\Decorators\Decorator;
 
-/**
- * Base controller class
- */
+    /**
+     * Base controller class
+     */
 class ConversionController extends BaseController
 {
     public $_name = 'ConversionController';
@@ -32,7 +32,6 @@ class ConversionController extends BaseController
         }
 
         return $misc->printFooter();
-
     }
 
     public function doTree()
@@ -58,7 +57,6 @@ class ConversionController extends BaseController
                     return 'ForeignKey';
                 case 'p':
                     return 'PrimaryKey';
-
             }
         }
 
@@ -68,11 +66,13 @@ class ConversionController extends BaseController
         ];
 
         return $this->printTree($constraints, $attrs, 'constraints');
-
     }
 
     /**
      * Show default list of conversions in the database
+         *
+         * @param string $msg
+         * @return string|void
      */
     public function doDefault($msg = '')
     {
@@ -116,4 +116,4 @@ class ConversionController extends BaseController
 
         echo $this->printTable($conversions, $columns, $actions, 'conversions-conversions', $lang['strnoconversions']);
     }
-}
+    }

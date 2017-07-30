@@ -1,11 +1,12 @@
 <?php
-namespace PHPPgAdmin;
 
-/**
- * Class to handle basic HTML GUI functions
- *
- * $Id: Gui.php,v 1.2 2004/06/07 20:03:22 soranzo Exp $
- */
+    namespace PHPPgAdmin;
+
+    /**
+     * Class to handle basic HTML GUI functions
+     *
+     * $Id: Gui.php,v 1.2 2004/06/07 20:03:22 soranzo Exp $
+     */
 class GUI
 {
 
@@ -13,9 +14,12 @@ class GUI
      *Constructor
      */
     public function __construct() {}
+        {
+        }
 
     /**
      * Prints a combox box
+         *
      * @param $arrOptions associative array storing options and values of combo should be Option => Value
      * @param $szName string to specify the name of the form element
      * @param (optional) $bBlankEntry bool to specify whether or not we want a blank selection
@@ -23,6 +27,10 @@ class GUI
      * @param (optional) $bMultiple bool to specify whether or not we want a multi select combo box
      * @param (optional) $iSize int to specify the size IF a multi select combo
      * @return string with the generated HTML select box
+         * @internal param $ (optional) $bBlankEntry bool to specify whether or not we want a blank selection
+         * @internal param $ (optional) $szDefault string to specify the default VALUE selected
+         * @internal param $ (optional) $bMultiple bool to specify whether or not we want a multi select combo box
+         * @internal param $ (optional) $iSize int to specify the size IF a multi select combo
      */
     public static function printCombo(&$arrOptions, $szName, $bBlankEntry = true, $szDefault = '', $bMultiple = false, $iSize = 10)
     {
@@ -51,4 +59,4 @@ class GUI
 
         return $htmlOut;
     }
-}
+    }

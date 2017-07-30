@@ -1,17 +1,17 @@
 <?php
 
-namespace PHPPgAdmin\Help;
+    namespace PHPPgAdmin\Help;
 
-/**
- * Help links for PostgreSQL 9.6 documentation
- *
- */
-class PostgresDoc96 extends PostgresDoc95
-{
-
-    public function __construct($conf, $major_version)
+    /**
+     * Help links for PostgreSQL 9.6 documentation
+     *
+     */
+    class PostgresDoc96 extends PostgresDoc95
     {
-        parent::__construct($conf, $major_version);
-    }
 
-}
+        public function __construct($conf, $major_version)
+        {
+            parent::__construct($conf, $major_version);
+        }
+
+    }

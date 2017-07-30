@@ -45,10 +45,10 @@ if (!ini_get('session.auto_start')) {
     session_name('PPA_ID');
     session_start();
 }
-\Kint::$enabled_mode = ($debugmode);
+\Kint::$enabled_mode = $debugmode;
 
 //echo readlink(dirname(__FILE__));
-DEFINE('SUBFOLDER', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
+define('SUBFOLDER', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
 
 $handler = PhpConsole\Handler::getInstance();
 $handler->setHandleErrors(false); // disable errors handling
@@ -315,7 +315,6 @@ $app->add(function ($request, $response, $next) use ($container) {
     return $response;
 });
 
-$container['action'] = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
 if (!isset($msg)) {
     $msg = '';

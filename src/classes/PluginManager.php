@@ -1,13 +1,13 @@
 <?php
 
-namespace PHPPgAdmin;
+    namespace PHPPgAdmin;
 
-/**
- * A class that implements the plugin's system
- */
+    /**
+     * A class that implements the plugin's system
+     */
 
-class PluginManager
-{
+    class PluginManager
+    {
 
     /**
      * Attributes
@@ -28,10 +28,14 @@ class PluginManager
 
     /**
      * Register the plugins
-     * @param $this->language - Language that have been used.
+         *
+         * @param \Slim\Container $container
+         * @internal param $this ->language - Language that have been used.
+         * @throws \Interop\Container\Exception\ContainerException
+         * @throws \Slim\Exception\ContainerValueNotFoundException
      */
-    public function __construct(\Slim\Container $container)
-    {
+        public function __construct(\Slim\Container $container)
+        {
 
         $this->language = $container->has('language') ? $container->get('language') : 'english';
         $this->lang     = $container->get('lang');
@@ -65,10 +69,11 @@ class PluginManager
 
     /**
      * Add a plugin in the list of plugins to manage
+         *
      * @param $plugin - Instance from plugin
      */
-    public function add_plugin($plugin)
-    {
+        public function add_plugin($plugin)
+        {
 
         //The $plugin_name is the identification of the plugin.
         //Example: PluginExample is the identification for PluginExample
@@ -91,8 +96,8 @@ class PluginManager
         $this->actions[$plugin_name] = $actions;
     }
 
-    public function getPlugin($plugin)
-    {
+        public function getPlugin($plugin)
+        {
         if (isset($this->plugins_list[$plugin])) {
             return $this->plugins_list[$plugin];
         }
@@ -102,11 +107,12 @@ class PluginManager
 
     /**
      * Execute the plugins hook functions when needed.
+         *
      * @param $hook - The place where the function will be called
      * @param $function_args - An array reference with arguments to give to called function
      */
-    public function do_hook($hook, &$function_args)
-    {
+        public function do_hook($hook, &$function_args)
+        {
         if (isset($this->hooks[$hook])) {
             foreach ($this->hooks[$hook] as $plugin_name => $functions) {
                 $plugin = $this->plugins_list[$plugin_name];
@@ -121,11 +127,12 @@ class PluginManager
 
     /**
      * Execute a plugin's action
+         *
      * @param $plugin_name - The plugin name.
      * @param $action - action that will be executed.
      */
-    public function do_action($plugin_name, $action)
-    {
+        public function do_action($plugin_name, $action)
+        {
 
         if (!isset($this->plugins_list[$plugin_name])) {
             // Show an error and stop the application
@@ -143,4 +150,4 @@ class PluginManager
             exit;
         }
     }
-}
+    }

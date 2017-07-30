@@ -1,7 +1,7 @@
 Translator Info
 ---------------
 
-If you like phpPgAdmin, then why not translate it into your native language?
+If you like phpPgAdmin6, then why not translate it into your native language?
 
 There are quite a large number of strings to be translated.  Partial
 translations are better than no translations at all, and a rough guide is that
@@ -9,7 +9,7 @@ the strings are in the order from most important to least important in the
 language file.  You can ask the developers list if you don't know what a
 certain string means.
 
-We tried keeping translation easy in phpPgAdmin by using ONLY the UTF-8 charset.
+We tried keeping translation easy in phpPgAdmin6 by using ONLY the UTF-8 charset.
 Make sure to always work on UTF-8 files when creating a new translation or
 editing an existing one.
 
@@ -37,19 +37,19 @@ At this point, you can send the yourlanguage.php file to us and we will take
 care of testing and recoding the translation.  Please only do that if you 
 find the rest of these steps too difficult.
 
-5. To add your language to phpPgAdmin, edit the lang/translations.php file
+5. To add your language to phpPgAdmin6, edit the lang/translations.php file
    and add your language to the $appLangFiles array.
    Also, add your language to the $availableLanguages array for
    browser auto detection.
 
 6. Send your contribution to us.  We need the lang/translations.php entry as 
    well as the lang/yourlanguage.php file.  Email to the developers list:
-     phppgadmin-devel@lists.sourceforge.net
+     phpPgAdmin6-devel@lists.sourceforge.net
 
 7. There exists a tool named 'langcheck' in the lang/ directory.  To run it,
     just type 'php langcheck <language>'.  It will give you a report about
     which strings are missing from your language file and which need to be
     deleted.
 
-Thank you for your contribution!  You have just made phpPgAdmin accessible
+Thank you for your contribution!  You have just made phpPgAdmin6 accessible
 to thousands more users!

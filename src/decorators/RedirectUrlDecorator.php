@@ -1,5 +1,6 @@
 <?php
-namespace PHPPgAdmin\Decorators;
+
+    namespace PHPPgAdmin\Decorators;
 
 class RedirectUrlDecorator extends Decorator
 {
@@ -12,7 +13,6 @@ class RedirectUrlDecorator extends Decorator
         if ($queryVars !== null) {
             $this->q = $queryVars;
         }
-
     }
 
     public function value($fields)
@@ -42,4 +42,4 @@ class RedirectUrlDecorator extends Decorator
         }
         return str_replace('.php', '', $url);
     }
-}
+    }

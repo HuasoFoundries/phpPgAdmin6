@@ -1,26 +1,25 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
+    namespace PHPPgAdmin\Controller;
 
-/**
- * Base controller class
- */
-class IntroController extends BaseController
-{
+    /**
+     * Base controller class
+     */
+    class IntroController extends BaseController
+    {
     public $_name = 'IntroController';
 
     /* Constructor */
-    public function __construct(\Slim\Container $container)
-    {
+        public function __construct(\Slim\Container $container)
+        {
         $this->misc = $container->get('misc');
 
         $this->misc->setNoDBConnection(true);
         parent::__construct($container);
-
     }
 
-    public function render()
-    {
+        public function render()
+        {
 
         $conf   = $this->conf;
         $misc   = $this->misc;
@@ -39,7 +38,6 @@ class IntroController extends BaseController
         }
 
         $misc->printFooter();
-
     }
 
     /**
@@ -47,8 +45,8 @@ class IntroController extends BaseController
      *
      * $Id: intro.php,v 1.19 2007/07/12 19:26:22 xzilla Exp $
      */
-    public function doDefault()
-    {
+        public function doDefault()
+        {
 
         $conf = $this->conf;
         $misc = $this->misc;
@@ -66,7 +64,7 @@ class IntroController extends BaseController
 
         $intro_html .= $this->printTabs('root', 'intro', false);
 
-        $intro_html .= "<h1> $appName $appVersion (PHP " . phpversion() . ')</h1>';
+            $intro_html .= "<h1> $appName $appVersion (PHP " . PHP_VERSION . ')</h1>';
 
         $intro_html .= '<form method="get" action="intro.php">';
         $intro_html .= '<table>';
@@ -115,7 +113,6 @@ class IntroController extends BaseController
         }
 
         echo $intro_html;
-
     }
 
-}
+    }

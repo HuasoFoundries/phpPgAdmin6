@@ -1,5 +1,6 @@
 <?php
-namespace PHPPgAdmin\Decorators;
+
+    namespace PHPPgAdmin\Decorators;
 
 class ConcatDecorator extends Decorator
 {
@@ -14,6 +15,7 @@ class ConcatDecorator extends Decorator
         foreach ($this->c as $var) {
             $accum .= Decorator::get_sanitized_value($var, $fields);
         }
+
         return trim($accum);
     }
-}
+    }

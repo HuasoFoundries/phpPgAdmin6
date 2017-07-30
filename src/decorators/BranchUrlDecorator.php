@@ -1,5 +1,6 @@
 <?php
-namespace PHPPgAdmin\Decorators;
+
+    namespace PHPPgAdmin\Decorators;
 
 class BranchUrlDecorator extends Decorator
 {
@@ -12,7 +13,6 @@ class BranchUrlDecorator extends Decorator
         if ($queryVars !== null) {
             $this->q = $queryVars;
         }
-
     }
 
     public function value($fields)
@@ -46,4 +46,4 @@ class BranchUrlDecorator extends Decorator
         }
         return str_replace('.php', '', $url);
     }
-}
+    }

@@ -1,5 +1,6 @@
 <?php
-namespace PHPPgAdmin\Decorators;
+
+    namespace PHPPgAdmin\Decorators;
 
 class ArrayMergeDecorator extends Decorator
 {
@@ -14,6 +15,7 @@ class ArrayMergeDecorator extends Decorator
         foreach ($this->m as $var) {
             $accum = array_merge($accum, Decorator::get_sanitized_value($var, $fields));
         }
+
         return $accum;
     }
-}
+    }

@@ -14,7 +14,6 @@ frame {
     font-size: 12px;
 }
 
-
 /** ELEMENTS */
 
 body {
@@ -39,7 +38,8 @@ body.bottombar {
 }
 
 h2 {
-    color: #336699 !important font-weight: bold;
+    color: #336699 !important
+    font-weight: bold;
     border: 2px solid #DFFBFD;
     background-color: #FDFDFD;
     padding: 2px 1em;
@@ -409,7 +409,6 @@ pre.error {
     border-left: 1px dotted #999;
     font-size: smaller;
 }
-
 
 /** FK browsing **/
 

@@ -14,10 +14,8 @@ class DataImportController extends BaseController
     {
         parent::__construct($container);
 
-        // Prevent timeouts on large exports (non-safe mode only)
-        if (!ini_get('safe_mode')) {
-            set_time_limit(0);
-        }
+        // Prevent timeouts on large exports
+        set_time_limit(0);
     }
 
     public function render()
@@ -40,6 +38,9 @@ class DataImportController extends BaseController
 
         /**
          * Character data handler for XML import feature
+         *
+         * @param $parser
+         * @param $cdata
          */
         $_charHandler = function ($parser, $cdata) use (&$state, &$curr_col_val) {
             if ($state == 'COLUMN') {
@@ -49,6 +50,10 @@ class DataImportController extends BaseController
 
         /**
          * Open tag handler for XML import feature
+         *
+         * @param $parser
+         * @param $name
+         * @param $attrs
          */
         $_startElement = function ($parser, $name, $attrs) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null) {
 
@@ -110,6 +115,9 @@ class DataImportController extends BaseController
 
         /**
          * Close tag handler for XML import feature
+         *
+         * @param $parser
+         * @param $name
          */
         $_endElement = function ($parser, $name) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null, &$curr_col_val) {
 
@@ -173,7 +181,7 @@ class DataImportController extends BaseController
         // Check that file is specified and is an uploaded file
         if (isset($_FILES['source']) && is_uploaded_file($_FILES['source']['tmp_name']) && is_readable($_FILES['source']['tmp_name'])) {
 
-            $fd = fopen($_FILES['source']['tmp_name'], 'r');
+            $fd = fopen($_FILES['source']['tmp_name'], 'rb');
             // Check that file was opened successfully
             if ($fd !== false) {
                 $null_array = self::loadNULLArray();
@@ -303,8 +311,8 @@ class DataImportController extends BaseController
             foreach ($_POST['allowednulls'] as $null_char) {
                 $array[] = $null_char;
             }
-
         }
+
         return $array;
     }
 

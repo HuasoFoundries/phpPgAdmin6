@@ -1,10 +1,10 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
+    namespace PHPPgAdmin\Controller;
 
-/**
- * Login controller class
- */
+    /**
+     * Login controller class
+     */
 class LoginController extends BaseController
 {
 
@@ -24,19 +24,25 @@ class LoginController extends BaseController
     public $action       = '';
     public $_name        = 'LoginController';
     public $_title       = 'strlogin';
+        private $container    = null;
+        private $_connection  = null;
+        private $app          = null;
+        private $data         = null;
+        private $database     = null;
+        private $server_id    = null;
 
     /* Constructor */
-    public function __construct(\Slim\Container $container)
-    {
+
+        public function __construct(\Slim\Container $container)
+        {
         $this->misc = $container->get('misc');
 
         $this->misc->setNoDBConnection(true);
         parent::__construct($container);
-
     }
 
-    public function render()
-    {
+        public function render()
+        {
         $misc   = $this->misc;
         $lang   = $this->lang;
         $action = $this->action;
@@ -48,11 +54,10 @@ class LoginController extends BaseController
                 echo $this->doLoginForm();
                 break;
         }
-
     }
 
-    public function doLoginForm($msg = '')
-    {
+        public function doLoginForm($msg = '')
+        {
 
         $conf = $this->conf;
         $misc = $this->misc;
@@ -70,7 +75,7 @@ class LoginController extends BaseController
             $vars = &$_GET;
         }
         foreach ($_REQUEST as $key => $val) {
-            if (strpos($key, '?') !== false) {
+                if (strpos($key, '?') !== false) {
                 $namexploded               = explode('?', $key);
                 $_REQUEST[$namexploded[1]] = htmlspecialchars($val);
             }
@@ -95,7 +100,7 @@ class LoginController extends BaseController
             if (substr($key, 0, 5) == 'login') {
                 continue;
             }
-            if (strpos($key, '?') !== false) {
+                if (strpos($key, '?') !== false) {
                 $key = explode('?', $key)[1];
             }
 
@@ -135,8 +140,8 @@ class LoginController extends BaseController
 
         // Output footer
         $login_html .= $misc->printFooter(false);
-        return $login_html;
 
+            return $login_html;
     }
 
-}
+    }

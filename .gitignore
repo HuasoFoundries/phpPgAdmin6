@@ -13,3 +13,4 @@ vendor
 logs
 info.php
 fabfile*
+/.idea/*

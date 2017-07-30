@@ -93,7 +93,7 @@ trait HelperTrait
 
         if (!$this->_no_output && $do_print) {
 
-            header("Content-Type: text/html; charset=utf-8");
+            header('Content-Type: text/html; charset=utf-8');
             echo $header_html;
 
         } else {
@@ -143,7 +143,7 @@ trait HelperTrait
 
     public function getHelpLink($help)
     {
-        return htmlspecialchars("/src/views/help.php?help=" . urlencode($help) . "&server=" . urlencode($this->server_id));
+        return htmlspecialchars('/src/views/help.php?help=' . urlencode($help) . '&server=' . urlencode($this->server_id));
 
     }
 
@@ -157,7 +157,7 @@ trait HelperTrait
         $data = $this->data;
         $lang = $this->lang;
 
-        $title_html = "<h2>";
+        $title_html = '<h2>';
         $title_html .= $this->printHelp($title, $help, false);
         $title_html .= "</h2>\n";
 
@@ -184,7 +184,7 @@ trait HelperTrait
             $footer_html .= $this->printReload(true, false);
         }
         if (!$this->_no_bottom_link) {
-            $footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . "</a>";
+            $footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . '</a>';
         }
 
         $footer_html .= $this->view->fetch($template);

@@ -1,10 +1,10 @@
 <?php
 
-namespace PHPPgAdmin\Controller;
+    namespace PHPPgAdmin\Controller;
 
-/**
- * Base controller class
- */
+    /**
+     * Base controller class
+     */
 class ACInsertController extends BaseController
 {
     public $_name = 'ACInsertController';
@@ -56,7 +56,6 @@ class ACInsertController extends BaseController
                 }
 
                 echo htmlentities($h, ENT_QUOTES, 'UTF-8'), '</th>';
-
             }
             echo "</tr>\n";
             $i = 0;
@@ -74,7 +73,6 @@ class ACInsertController extends BaseController
                         $misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
                             '</a></td>';
                     }
-
                 }
                 echo "</tr>\n";
                 $i++;
@@ -108,6 +106,5 @@ class ACInsertController extends BaseController
                 echo '<a href="javascript:void(0)" class="fkprev">Prev &lt;&lt;</a>';
             }
         }
-
     }
-}
+    }

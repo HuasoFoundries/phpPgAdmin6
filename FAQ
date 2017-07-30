@@ -1,10 +1,10 @@
-phpPgAdmin Frequently Asked Questions
+phpPgAdmin6 Frequently Asked Questions
 -------------------------------------
 
 Installation errors
 -------------------
 
-Q: I've installed phpPgAdmin but when I try to use it I get an error message
+Q: I've installed phpPgAdmin6 but when I try to use it I get an error message
    telling me that I have not compiled proper database support into my
    PHP installation. 
 
@@ -36,7 +36,7 @@ A: This means that you have not properly compiled Postgres support into
    See http://www.php.net/manual/en/pgsql.setup.php for more information 
    on setting up Postgres support in PHP.
 
-Q: I get a warning like this when using phpPgAdmin on Windows: 
+Q: I get a warning like this when using phpPgAdmin6 on Windows: 
 
     "Warning: session_start() [function.session-start]:
      open(/tmp\sess_5a401ef1e67fb7a176a95236116fe348, O_RDWR) failed"
@@ -60,7 +60,7 @@ Q: I always get "Login failed" even though I'm _sure_ I'm using the right
    username and password.
 
 A: There are a number of reasons why you might not be able to connect, typically
-   having nothing to do with phpPgAdmin itself. First check the Postgres log
+   having nothing to do with phpPgAdmin6 itself. First check the Postgres log
    on your server, it should contain a FATAL error message detailing the exact
    reason why the login is failing. You will probably need to either adjust the
    username or password, add LOGIN permissions to the role, or adjust your
@@ -70,7 +70,7 @@ A: There are a number of reasons why you might not be able to connect, typically
    If you do not have any FATAL error messages, and you have verified that you
    are looking at the properly configured logfile, then this means you are not
    connecting to your database. If you are connecting via TCP/IP sockets (for
-   example if you have installed phpPgAdmin on a different computer than your
+   example if you have installed phpPgAdmin6 on a different computer than your
    database) make sure that Postgres is accepting connection over TCP/IP. On
    older versions of Postgres, you need to change this line in your
    postgresql.conf file:
@@ -93,7 +93,7 @@ A: There are a number of reasons why you might not be able to connect, typically
 
 Q: For some users I get a "Login disallowed for security" message.
 
-A: Logins via phpPgAdmin with no password or certain usernames (pgsql,
+A: Logins via phpPgAdmin6 with no password or certain usernames (pgsql,
    postgres, root, administrator) are denied by default. Before changing this
    behaviour (setting $conf['extra_login_security'] to false in the
    config.inc.php file) please read the Postgres documentation about client
@@ -129,7 +129,7 @@ A: You need to drop the sequence attached to the SERIAL column of the table
 
 Q: When browsing a table, the 'edit' and 'delete' links do not appear.
 
-A: In order, phpPgAdmin will prefer the following as unique row identifiers:
+A: In order, phpPgAdmin6 will prefer the following as unique row identifiers:
 
 	1. Primary keys
 	2. Unique keys (cannot be parital or expressional indexes)
@@ -138,7 +138,7 @@ A: In order, phpPgAdmin will prefer the following as unique row identifiers:
 
    Furthermore, any NULL values in the unique index will mean that that row
    will be uneditable.  Also, since OIDs can become duplicated in a table,
-   phpPgAdmin will alter the row, and then check to ensure that exactly one
+   phpPgAdmin6 will alter the row, and then check to ensure that exactly one
    row has been modified - otherwise rollback will occur.
 
 
@@ -147,7 +147,7 @@ Questions on dumps
 
 Q: What happened to the database dump feature?
 
-A: You need to configure phpPgAdmin (in the config.inc.php file) to point
+A: You need to configure phpPgAdmin6 (in the config.inc.php file) to point
    to the location of the pg_dump and pg_dumpall utilities on your web server.
    Once you have done that, the database export feature will appear.
 
@@ -209,7 +209,7 @@ Q: Why can't I download data from queries executed in the SQL window?
 
 A: You need to check the 'Paginate results' option to allow downloads.
 
-Q: I would like to help out with the development of phpPgAdmin. How should I
+Q: I would like to help out with the development of phpPgAdmin6. How should I
    proceed?
    
 A: We really would like your help! Please read the DEVELOPERS and TRANSLATORS

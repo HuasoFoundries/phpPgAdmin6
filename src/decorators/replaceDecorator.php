@@ -1,5 +1,6 @@
 <?php
-namespace PHPPgAdmin\Decorators;
+
+    namespace PHPPgAdmin\Decorators;
 
 class replaceDecorator extends Decorator
 {
@@ -15,6 +16,7 @@ class replaceDecorator extends Decorator
         foreach ($this->p as $k => $v) {
             $str = str_replace($k, Decorator::get_sanitized_value($v, $fields), $str);
         }
+
         return $str;
     }
-}
+    }

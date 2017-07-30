@@ -1,5 +1,6 @@
 <?php
-namespace PHPPgAdmin\Decorators;
+
+    namespace PHPPgAdmin\Decorators;
 
 class CallbackDecorator extends Decorator
 {
@@ -14,4 +15,4 @@ class CallbackDecorator extends Decorator
     {
         return call_user_func($this->fn, $fields, $this->p);
     }
-}
+    }

@@ -1,5 +1,6 @@
 <?php
-namespace PHPPgAdmin\Decorators;
+
+    namespace PHPPgAdmin\Decorators;
 
 class UrlDecorator extends Decorator
 {
@@ -10,7 +11,6 @@ class UrlDecorator extends Decorator
         if ($queryVars !== null) {
             $this->q = $queryVars;
         }
-
     }
 
     public function value($fields)
@@ -35,4 +35,4 @@ class UrlDecorator extends Decorator
         }
         return $url;
     }
-}
+    }
