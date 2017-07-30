@@ -34,7 +34,7 @@ class SQLQueryController extends BaseController
             $_SESSION['sqlquery'] = $_POST['query'];
             $this->query          = $_SESSION['sqlquery'];
         } else {
-            echo "could not find the query!!";
+            echo 'could not find the query!!';
         }
 
         // Pagination maybe set by a get link that has it as FALSE,
@@ -119,7 +119,7 @@ class SQLQueryController extends BaseController
                         $num_fields = pg_numfields($rs);
                         echo "<p><table>\n<tr>";
                         for ($k = 0; $k < $num_fields; $k++) {
-                            echo "<th class=\"data\">", $misc->printVal(pg_fieldname($rs, $k)), "</th>";
+                            echo '<th class="data">', $misc->printVal(pg_fieldname($rs, $k)), '</th>';
                         }
 
                         $i   = 0;
@@ -128,7 +128,7 @@ class SQLQueryController extends BaseController
                             $id = (($i % 2) == 0 ? '1' : '2');
                             echo "<tr class=\"data{$id}\">\n";
                             foreach ($row as $k => $v) {
-                                echo "<td style=\"white-space:nowrap;\">", $misc->printVal($v, pg_fieldtype($rs, $k), ['null' => true]), "</td>";
+                                echo '<td style="white-space:nowrap;">', $misc->printVal($v, pg_fieldtype($rs, $k), ['null' => true]), '</td>';
                             }
                             echo "</tr>\n";
                             $row = pg_fetch_row($rs);
@@ -187,7 +187,7 @@ class SQLQueryController extends BaseController
                 echo "<table>\n<tr>";
                 foreach ($rs->fields as $k => $v) {
                     $finfo = $rs->fetchField($k);
-                    echo "<th class=\"data\">", $misc->printVal($finfo->name), "</th>";
+                    echo '<th class="data">', $misc->printVal($finfo->name), '</th>';
                 }
                 echo "</tr>\n";
                 $i = 0;
@@ -196,17 +196,17 @@ class SQLQueryController extends BaseController
                     echo "<tr class=\"data{$id}\">\n";
                     foreach ($rs->fields as $k => $v) {
                         $finfo = $rs->fetchField($k);
-                        echo "<td style=\"white-space:nowrap;\">", $misc->printVal($v, $finfo->type, ['null' => true]), "</td>";
+                        echo '<td style="white-space:nowrap;">', $misc->printVal($v, $finfo->type, ['null' => true]), '</td>';
                     }
                     echo "</tr>\n";
                     $rs->moveNext();
                     $i++;
                 }
                 echo "</table>\n";
-                echo "<p>", $rs->recordCount(), " {$lang['strrows']}</p>\n";
+                echo '<p>', $rs->recordCount(), " {$lang['strrows']}</p>\n";
             } else if ($data->conn->Affected_Rows() > 0) {
                 // Otherwise if any rows have been affected
-                echo "<p>", $data->conn->Affected_Rows(), " {$lang['strrowsaff']}</p>\n";
+                echo '<p>', $data->conn->Affected_Rows(), " {$lang['strrowsaff']}</p>\n";
             } else {
                 // Otherwise nodata to print
                 echo '<p>', $lang['strnodata'], "</p>\n";
@@ -262,7 +262,7 @@ class SQLQueryController extends BaseController
 
         // Display duration if we know it
         if ($this->duration !== null) {
-            echo "<p>", sprintf($lang['strruntime'], $this->duration), "</p>\n";
+            echo '<p>', sprintf($lang['strruntime'], $this->duration), "</p>\n";
         }
 
         echo "<p>{$lang['strsqlexecuted']}</p>\n";

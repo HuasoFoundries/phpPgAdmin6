@@ -506,8 +506,8 @@ class TableController extends BaseController
                 $this->printTitle($lang['strcreatetable'], 'pg.table.create');
                 $misc->printMsg($msg);
 
-                echo "<script src=\"" . SUBFOLDER . "/js/tables.js\" type=\"text/javascript\"></script>";
-                echo "<form action=\"" . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<script src="' . SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -540,16 +540,16 @@ class TableController extends BaseController
                     // Output any "magic" types
                     foreach ($data->extraTypes as $v) {
                         $types_for_js[strtolower($v)] = 1;
-                        echo "\t\t\t\t<option value=\"", htmlspecialchars($v), "\"",
-                        (isset($_REQUEST['type'][$i]) && $v == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', ">",
+                        echo "\t\t\t\t<option value=\"", htmlspecialchars($v), '"',
+                        (isset($_REQUEST['type'][$i]) && $v == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', '>',
                         $misc->printVal($v), "</option>\n";
                     }
                     $types->moveFirst();
                     while (!$types->EOF) {
                         $typname                = $types->fields['typname'];
                         $types_for_js[$typname] = 1;
-                        echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), "\"",
-                        (isset($_REQUEST['type'][$i]) && $typname == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', ">",
+                        echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), '"',
+                        (isset($_REQUEST['type'][$i]) && $typname == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', '>',
                         $misc->printVal($typname), "</option>\n";
                         $types->moveNext();
                     }
@@ -561,7 +561,7 @@ class TableController extends BaseController
                         foreach ($predefined_size_types as $value) {
                             $escaped_predef_types[] = "'{$value}'";
                         }
-                        echo "<script type=\"text/javascript\">predefined_lengths = new Array(" . implode(",", $escaped_predef_types) . ");</script>\n\t</td>";
+                        echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");</script>\n\t</td>";
                     }
 
                     // Output array type selector
@@ -589,14 +589,14 @@ class TableController extends BaseController
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"create\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
                 echo $misc->form;
-                echo "<input type=\"hidden\" name=\"name\" value=\"", htmlspecialchars($_REQUEST['name']), "\" />\n";
-                echo "<input type=\"hidden\" name=\"fields\" value=\"", htmlspecialchars($_REQUEST['fields']), "\" />\n";
+                echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
+                echo '<input type="hidden" name="fields" value="', htmlspecialchars($_REQUEST['fields']), "\" />\n";
                 if (isset($_REQUEST['withoutoids'])) {
                     echo "<input type=\"hidden\" name=\"withoutoids\" value=\"true\" />\n";
                 }
-                echo "<input type=\"hidden\" name=\"tblcomment\" value=\"", htmlspecialchars($_REQUEST['tblcomment']), "\" />\n";
+                echo '<input type="hidden" name="tblcomment" value="', htmlspecialchars($_REQUEST['tblcomment']), "\" />\n";
                 if (isset($_REQUEST['spcname'])) {
-                    echo "<input type=\"hidden\" name=\"spcname\" value=\"", htmlspecialchars($_REQUEST['spcname']), "\" />\n";
+                    echo '<input type="hidden" name="spcname" value="', htmlspecialchars($_REQUEST['spcname']), "\" />\n";
                 }
                 echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -710,7 +710,7 @@ class TableController extends BaseController
 
             unset($tbltmp);
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
             echo "<table>\n\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
             echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strcreatetablelikeparent']}</th>\n";
@@ -733,21 +733,21 @@ class TableController extends BaseController
                 }
             }
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['stroptions']}</th>\n\t\t<td class=\"data\">";
-            echo "<label for=\"withdefaults\"><input type=\"checkbox\" id=\"withdefaults\" name=\"withdefaults\"",
+            echo '<label for="withdefaults"><input type="checkbox" id="withdefaults" name="withdefaults"',
             isset($_REQUEST['withdefaults']) ? ' checked="checked"' : '',
                 "/>{$lang['strcreatelikewithdefaults']}</label>";
             if ($data->hasCreateTableLikeWithConstraints()) {
-                echo "<br /><label for=\"withconstraints\"><input type=\"checkbox\" id=\"withconstraints\" name=\"withconstraints\"",
+                echo '<br /><label for="withconstraints"><input type="checkbox" id="withconstraints" name="withconstraints"',
                 isset($_REQUEST['withconstraints']) ? ' checked="checked"' : '',
                     "/>{$lang['strcreatelikewithconstraints']}</label>";
             }
             if ($data->hasCreateTableLikeWithIndexes()) {
-                echo "<br /><label for=\"withindexes\"><input type=\"checkbox\" id=\"withindexes\" name=\"withindexes\"",
+                echo '<br /><label for="withindexes"><input type="checkbox" id="withindexes" name="withindexes"',
                 isset($_REQUEST['withindexes']) ? ' checked="checked"' : '',
                     "/>{$lang['strcreatelikewithindexes']}</label>";
             }
             echo "</td>\n\t</tr>\n";
-            echo "</table>";
+            echo '</table>';
 
             echo "<input type=\"hidden\" name=\"action\" value=\"confcreatelike\" />\n";
             echo $misc->form;
@@ -799,7 +799,7 @@ class TableController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"selectform\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"selectform\">\n";
             if ($attrs->recordCount() > 0) {
                 // JavaScript for select all feature
                 echo "<script type=\"text/javascript\">\n";
@@ -835,20 +835,20 @@ class TableController extends BaseController
                     // Continue drawing row
                     $id = (($i % 2) == 0 ? '1' : '2');
                     echo "<tr class=\"data{$id}\">\n";
-                    echo "<td style=\"white-space:nowrap;\">";
-                    echo "<input type=\"checkbox\" name=\"show[", htmlspecialchars($attrs->fields['attname']), "]\"",
-                    isset($_REQUEST['show'][$attrs->fields['attname']]) ? ' checked="checked"' : '', " /></td>";
-                    echo "<td style=\"white-space:nowrap;\">", $misc->printVal($attrs->fields['attname']), "</td>";
-                    echo "<td style=\"white-space:nowrap;\">", $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), "</td>";
-                    echo "<td style=\"white-space:nowrap;\">";
+                    echo '<td style="white-space:nowrap;">';
+                    echo '<input type="checkbox" name="show[', htmlspecialchars($attrs->fields['attname']), ']"',
+                    isset($_REQUEST['show'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></td>';
+                    echo '<td style="white-space:nowrap;">', $misc->printVal($attrs->fields['attname']), '</td>';
+                    echo '<td style="white-space:nowrap;">', $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), '</td>';
+                    echo '<td style="white-space:nowrap;">';
                     echo "<select name=\"ops[{$attrs->fields['attname']}]\">\n";
                     foreach (array_keys($data->selectOps) as $v) {
-                        echo "<option value=\"", htmlspecialchars($v), "\"", ($v == $_REQUEST['ops'][$attrs->fields['attname']]) ? ' selected="selected"' : '',
-                        ">", htmlspecialchars($v), "</option>\n";
+                        echo '<option value="', htmlspecialchars($v), '"', ($v == $_REQUEST['ops'][$attrs->fields['attname']]) ? ' selected="selected"' : '',
+                        '>', htmlspecialchars($v), "</option>\n";
                     }
                     echo "</select>\n</td>\n";
-                    echo "<td style=\"white-space:nowrap;\">", $data->printField("values[{$attrs->fields['attname']}]",
-                        $_REQUEST['values'][$attrs->fields['attname']], $attrs->fields['type']), "</td>";
+                    echo '<td style="white-space:nowrap;">', $data->printField("values[{$attrs->fields['attname']}]",
+                        $_REQUEST['values'][$attrs->fields['attname']], $attrs->fields['type']), '</td>';
                     echo "</tr>\n";
                     $i++;
                     $attrs->moveNext();
@@ -861,7 +861,7 @@ class TableController extends BaseController
             }
 
             echo "<p><input type=\"hidden\" name=\"action\" value=\"selectrows\" />\n";
-            echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo "<input type=\"hidden\" name=\"subject\" value=\"table\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$lang['strselect']}\" />\n";
@@ -937,7 +937,7 @@ class TableController extends BaseController
                 $fksprops = false;
             }
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"ac_form\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"ac_form\">\n";
             if ($attrs->recordCount() > 0) {
                 echo "<table>\n";
 
@@ -965,23 +965,23 @@ class TableController extends BaseController
                     // Continue drawing row
                     $id = (($i % 2) == 0 ? '1' : '2');
                     echo "<tr class=\"data{$id}\">\n";
-                    echo "<td style=\"white-space:nowrap;\">", $misc->printVal($attrs->fields['attname']), "</td>";
+                    echo '<td style="white-space:nowrap;">', $misc->printVal($attrs->fields['attname']), '</td>';
                     echo "<td style=\"white-space:nowrap;\">\n";
                     echo $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
                     echo "<input type=\"hidden\" name=\"types[{$attrs->fields['attnum']}]\" value=\"",
-                    htmlspecialchars($attrs->fields['type']), "\" /></td>";
+                    htmlspecialchars($attrs->fields['type']), '" /></td>';
                     echo "<td style=\"white-space:nowrap;\">\n";
                     echo "<select name=\"format[{$attrs->fields['attnum']}]\">\n";
-                    echo "<option value=\"VALUE\"", ($_REQUEST['format'][$attrs->fields['attnum']] == 'VALUE') ? ' selected="selected"' : '', ">{$lang['strvalue']}</option>\n";
-                    echo "<option value=\"EXPRESSION\"", ($_REQUEST['format'][$attrs->fields['attnum']] == 'EXPRESSION') ? ' selected="selected"' : '', ">{$lang['strexpression']}</option>\n";
+                    echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attnum']] == 'VALUE') ? ' selected="selected"' : '', ">{$lang['strvalue']}</option>\n";
+                    echo '<option value="EXPRESSION"', ($_REQUEST['format'][$attrs->fields['attnum']] == 'EXPRESSION') ? ' selected="selected"' : '', ">{$lang['strexpression']}</option>\n";
                     echo "</select>\n</td>\n";
-                    echo "<td style=\"white-space:nowrap;\">";
+                    echo '<td style="white-space:nowrap;">';
                     // Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
                     if (!$attrs->fields['attnotnull']) {
                         echo "<label><span><input type=\"checkbox\" name=\"nulls[{$attrs->fields['attnum']}]\"",
-                        isset($_REQUEST['nulls'][$attrs->fields['attnum']]) ? ' checked="checked"' : '', " /></span></label></td>";
+                        isset($_REQUEST['nulls'][$attrs->fields['attnum']]) ? ' checked="checked"' : '', ' /></span></label></td>';
                     } else {
-                        echo "&nbsp;</td>";
+                        echo '&nbsp;</td>';
                     }
                     echo "<td id=\"row_att_{$attrs->fields['attnum']}\" style=\"white-space:nowrap;\">";
                     if (($fksprops !== false) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
@@ -1004,9 +1004,9 @@ class TableController extends BaseController
                 if (!isset($_SESSION['counter'])) {$_SESSION['counter'] = 0;}
 
                 echo "<input type=\"hidden\" name=\"action\" value=\"insertrow\" />\n";
-                echo "<input type=\"hidden\" name=\"fields\" value=\"", htmlentities(serialize($fields), ENT_QUOTES, 'UTF-8'), "\" />\n";
-                echo "<input type=\"hidden\" name=\"protection_counter\" value=\"" . $_SESSION['counter'] . "\" />\n";
-                echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+                echo '<input type="hidden" name="fields" value="', htmlentities(serialize($fields), ENT_QUOTES, 'UTF-8'), "\" />\n";
+                echo '<input type="hidden" name="protection_counter" value="' . $_SESSION['counter'] . "\" />\n";
+                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
                 echo "<p><input type=\"submit\" name=\"insert\" value=\"{$lang['strinsert']}\" />\n";
                 echo "<input type=\"submit\" name=\"insertandrepeat\" accesskey=\"r\" value=\"{$lang['strinsertandrepeat']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
@@ -1079,10 +1079,10 @@ class TableController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($lang['strempty'], 'pg.table.empty');
 
-                echo "<form action=\"" . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo "<p>", sprintf($lang['strconfemptytable'], $misc->printVal($a['table'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfemptytable'], $misc->printVal($a['table'])), "</p>\n";
                     printf('<input type="hidden" name="table[]" value="%s" />', htmlspecialchars($a['table']));
                 }
             } // END mutli empty
@@ -1090,10 +1090,10 @@ class TableController extends BaseController
                 $this->printTrail('table');
                 $this->printTitle($lang['strempty'], 'pg.table.empty');
 
-                echo "<p>", sprintf($lang['strconfemptytable'], $misc->printVal($_REQUEST['table'])), "</p>\n";
+                echo '<p>', sprintf($lang['strconfemptytable'], $misc->printVal($_REQUEST['table'])), "</p>\n";
 
-                echo "<form action=\"" . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
-                echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             } // END not mutli empty
 
             echo "<input type=\"hidden\" name=\"action\" value=\"empty\" />\n";
@@ -1150,10 +1150,10 @@ class TableController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($lang['strdrop'], 'pg.table.drop');
 
-                echo "<form action=\"" . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo "<p>", sprintf($lang['strconfdroptable'], $misc->printVal($a['table'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfdroptable'], $misc->printVal($a['table'])), "</p>\n";
                     printf('<input type="hidden" name="table[]" value="%s" />', htmlspecialchars($a['table']));
                 }
             } else {
@@ -1161,10 +1161,10 @@ class TableController extends BaseController
                 $this->printTrail('table');
                 $this->printTitle($lang['strdrop'], 'pg.table.drop');
 
-                echo "<p>", sprintf($lang['strconfdroptable'], $misc->printVal($_REQUEST['table'])), "</p>\n";
+                echo '<p>', sprintf($lang['strconfdroptable'], $misc->printVal($_REQUEST['table'])), "</p>\n";
 
-                echo "<form action=\"" . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
-                echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             } // END if multi drop
 
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
@@ -1211,6 +1211,7 @@ class TableController extends BaseController
             }
         } // END DROP
     }
+
     // END Function
 
 }

@@ -144,20 +144,20 @@ class MaterializedViewController extends BaseController
                     // Continue drawing row
                     $id = (($i % 2) == 0 ? '1' : '2');
                     echo "<tr class=\"data{$id}\">\n";
-                    echo "<td style=\"white-space:nowrap;\">";
-                    echo "<input type=\"checkbox\" name=\"show[", htmlspecialchars($attrs->fields['attname']), "]\"",
-                    isset($_REQUEST['show'][$attrs->fields['attname']]) ? ' checked="checked"' : '', " /></td>";
-                    echo "<td style=\"white-space:nowrap;\">", $misc->printVal($attrs->fields['attname']), "</td>";
-                    echo "<td style=\"white-space:nowrap;\">", $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), "</td>";
-                    echo "<td style=\"white-space:nowrap;\">";
+                    echo '<td style="white-space:nowrap;">';
+                    echo '<input type="checkbox" name="show[', htmlspecialchars($attrs->fields['attname']), ']"',
+                    isset($_REQUEST['show'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></td>';
+                    echo '<td style="white-space:nowrap;">', $misc->printVal($attrs->fields['attname']), '</td>';
+                    echo '<td style="white-space:nowrap;">', $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), '</td>';
+                    echo '<td style="white-space:nowrap;">';
                     echo "<select name=\"ops[{$attrs->fields['attname']}]\">\n";
                     foreach (array_keys($data->selectOps) as $v) {
-                        echo "<option value=\"", htmlspecialchars($v), "\"", ($v == $_REQUEST['ops'][$attrs->fields['attname']]) ? ' selected="selected"' : '',
-                        ">", htmlspecialchars($v), "</option>\n";
+                        echo '<option value="', htmlspecialchars($v), '"', ($v == $_REQUEST['ops'][$attrs->fields['attname']]) ? ' selected="selected"' : '',
+                        '>', htmlspecialchars($v), "</option>\n";
                     }
                     echo "</select></td>\n";
-                    echo "<td style=\"white-space:nowrap;\">", $data->printField("values[{$attrs->fields['attname']}]",
-                        $_REQUEST['values'][$attrs->fields['attname']], $attrs->fields['type']), "</td>";
+                    echo '<td style="white-space:nowrap;">', $data->printField("values[{$attrs->fields['attname']}]",
+                        $_REQUEST['values'][$attrs->fields['attname']], $attrs->fields['type']), '</td>';
                     echo "</tr>\n";
                     $i++;
                     $attrs->moveNext();
@@ -170,7 +170,7 @@ class MaterializedViewController extends BaseController
             }
 
             echo "<p><input type=\"hidden\" name=\"action\" value=\"selectrows\" />\n";
-            echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
+            echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
             echo "<input type=\"hidden\" name=\"subject\" value=\"view\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$lang['strselect']}\" />\n";
@@ -205,7 +205,7 @@ class MaterializedViewController extends BaseController
                 $query = $data->getSelectSQL($_REQUEST['matview'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
 
                 $_REQUEST['query']  = $query;
-                $_REQUEST['return'] = "schema";
+                $_REQUEST['return'] = 'schema';
 
                 $misc->setNoOutput(true);
 
@@ -236,18 +236,18 @@ class MaterializedViewController extends BaseController
             $this->printTrail('view');
             $this->printTitle($lang['strdrop'], 'pg.view.drop');
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo "<p>", sprintf($lang['strconfdropview'], $misc->printVal($a['view'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfdropview'], $misc->printVal($a['view'])), "</p>\n";
                     echo '<input type="hidden" name="view[]" value="', htmlspecialchars($a['view']), "\" />\n";
                 }
             } else {
-                echo "<p>", sprintf($lang['strconfdropview'], $misc->printVal($_REQUEST['matview'])), "</p>\n";
-                echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
+                echo '<p>', sprintf($lang['strconfdropview'], $misc->printVal($_REQUEST['matview'])), "</p>\n";
+                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
             }
 
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
@@ -358,17 +358,17 @@ class MaterializedViewController extends BaseController
             }
             asort($arrFields);
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strviewname']}</th></tr>";
             echo "<tr>\n<td class=\"data1\">\n";
             // View name
-            echo "<input name=\"formView\" value=\"", htmlspecialchars($_REQUEST['formView']), "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
+            echo '<input name="formView" value="', htmlspecialchars($_REQUEST['formView']), "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
             echo "</td>\n</tr>\n";
             echo "<tr><th class=\"data\">{$lang['strcomment']}</th></tr>";
             echo "<tr>\n<td class=\"data1\">\n";
             // View comments
-            echo "<textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
+            echo '<textarea name="formComment" rows="3" cols="32">',
             htmlspecialchars($_REQUEST['formComment']), "</textarea>\n";
             echo "</td>\n</tr>\n";
             echo "</table>\n";
@@ -438,7 +438,7 @@ class MaterializedViewController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create_wiz\" />\n";
 
             foreach ($arrSelTables as $curTable) {
-                echo "<input type=\"hidden\" name=\"formTables[]\" value=\"" . htmlspecialchars(serialize($curTable)) . "\" />\n";
+                echo '<input type="hidden" name="formTables[]" value="' . htmlspecialchars(serialize($curTable)) . "\" />\n";
             }
 
             echo $misc->form;
@@ -464,7 +464,7 @@ class MaterializedViewController extends BaseController
         $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
         $misc->printMsg($msg);
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">\n";
@@ -518,7 +518,7 @@ class MaterializedViewController extends BaseController
         $this->printTitle($lang['strcreateview'], 'pg.view.create');
         $misc->printMsg($msg);
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

@@ -104,13 +104,13 @@ class GroupController extends BaseController
             $this->printTrail('group');
             $this->printTitle($lang['strdropmember'], 'pg.group.alter');
 
-            echo "<p>", sprintf($lang['strconfdropmember'], $misc->printVal($_REQUEST['user']), $misc->printVal($_REQUEST['group'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropmember'], $misc->printVal($_REQUEST['user']), $misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
             echo $misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
-            echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"user\" value=\"", htmlspecialchars($_REQUEST['user']), "\" />\n";
+            echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
+            echo '<input type="hidden" name="user" value="', htmlspecialchars($_REQUEST['user']), "\" />\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
             echo "</form>\n";
@@ -177,8 +177,8 @@ class GroupController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo "<form action=\"" . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
-        echo "<select name=\"user\">";
+        echo '<form action="' . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
+        echo '<select name="user">';
         while (!$users->EOF) {
             $uname = $misc->printVal($users->fields['usename']);
             echo "<option value=\"{$uname}\"",
@@ -188,7 +188,7 @@ class GroupController extends BaseController
         echo "</select>\n";
         echo "<input type=\"submit\" value=\"{$lang['straddmember']}\" />\n";
         echo $misc->form;
-        echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+        echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"add_member\" />\n";
         echo "</form>\n";
 
@@ -219,12 +219,12 @@ class GroupController extends BaseController
             $this->printTrail('group');
             $this->printTitle($lang['strdrop'], 'pg.group.drop');
 
-            echo "<p>", sprintf($lang['strconfdropgroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropgroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
             echo $misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+            echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
             echo "</form>\n";
@@ -276,7 +276,7 @@ class GroupController extends BaseController
             while (!$users->EOF) {
                 $username = $users->fields['usename'];
                 echo "\t\t\t\t<option value=\"{$username}\"",
-                (in_array($username, $_POST['members']) ? ' selected="selected"' : ''), ">", $misc->printVal($username), "</option>\n";
+                (in_array($username, $_POST['members']) ? ' selected="selected"' : ''), '>', $misc->printVal($username), "</option>\n";
                 $users->moveNext();
             }
             echo "\t\t\t</select>\n";

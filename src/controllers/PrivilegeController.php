@@ -86,10 +86,10 @@ class PrivilegeController extends BaseController
             }
             $misc->printMsg($msg);
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left\">{$lang['strusers']}</th>\n";
-            echo "<td class=\"data1\"><select name=\"username[]\" multiple=\"multiple\" size=\"", min(6, $users->recordCount()), "\">\n";
+            echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";
             while (!$users->EOF) {
                 $uname = htmlspecialchars($users->fields['usename']);
                 echo "<option value=\"{$uname}\"",
@@ -99,10 +99,10 @@ class PrivilegeController extends BaseController
             echo "</select></td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strgroups']}</th>\n";
             echo "<td class=\"data1\">\n";
-            echo "<input type=\"checkbox\" id=\"public\" name=\"public\"", (isset($_REQUEST['public']) ? ' checked="checked"' : ''), " /><label for=\"public\">PUBLIC</label>\n";
+            echo '<input type="checkbox" id="public" name="public"', (isset($_REQUEST['public']) ? ' checked="checked"' : ''), " /><label for=\"public\">PUBLIC</label>\n";
             // Only show groups if there are groups!
             if ($groups->recordCount() > 0) {
-                echo "<br /><select name=\"groupname[]\" multiple=\"multiple\" size=\"", min(6, $groups->recordCount()), "\">\n";
+                echo '<br /><select name="groupname[]" multiple="multiple" size="', min(6, $groups->recordCount()), "\">\n";
                 while (!$groups->EOF) {
                     $gname = htmlspecialchars($groups->fields['groname']);
                     echo "<option value=\"{$gname}\"",
@@ -125,12 +125,12 @@ class PrivilegeController extends BaseController
                 echo "<tr><th class=\"data left\">{$lang['stroptions']}</th>\n";
                 echo "<td class=\"data1\">\n";
                 if ($mode == 'grant') {
-                    echo "<input type=\"checkbox\" id=\"grantoption\" name=\"grantoption\"",
+                    echo '<input type="checkbox" id="grantoption" name="grantoption"',
                     isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION</label>\n";
                 } elseif ($mode == 'revoke') {
-                    echo "<input type=\"checkbox\" id=\"grantoption\" name=\"grantoption\"",
+                    echo '<input type="checkbox" id="grantoption" name="grantoption"',
                     isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION FOR</label><br />\n";
-                    echo "<input type=\"checkbox\" id=\"cascade\" name=\"cascade\"",
+                    echo '<input type="checkbox" id="cascade" name="cascade"',
                     isset($_REQUEST['cascade']) ? ' checked="checked"' : '', " /><label for=\"cascade\">CASCADE</label><br />\n";
                 }
                 echo "</td></tr>\n";
@@ -138,17 +138,17 @@ class PrivilegeController extends BaseController
             echo "</table>\n";
 
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
-            echo "<input type=\"hidden\" name=\"mode\" value=\"", htmlspecialchars($mode), "\" />\n";
-            echo "<input type=\"hidden\" name=\"subject\" value=\"", htmlspecialchars($_REQUEST['subject']), "\" />\n";
+            echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), "\" />\n";
+            echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
             if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-                echo "<input type=\"hidden\" name=\"", htmlspecialchars($_REQUEST['subject'] . '_oid'),
-                "\" value=\"", htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), "\" />\n";
+                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'] . '_oid'),
+                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), "\" />\n";
             }
 
-            echo "<input type=\"hidden\" name=\"", htmlspecialchars($_REQUEST['subject']),
-            "\" value=\"", htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
+            echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
+            '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
             if ($_REQUEST['subject'] == 'column') {
-                echo "<input type=\"hidden\" name=\"table\" value=\"",
+                echo '<input type="hidden" name="table" value="',
                 htmlspecialchars($_REQUEST['table']), "\" />\n";
             }
 
@@ -263,17 +263,17 @@ class PrivilegeController extends BaseController
                 $id = (($i % 2) == 0 ? '1' : '2');
                 echo "<tr class=\"data{$id}\">\n";
                 if (!$data->hasRoles()) {
-                    echo "<td>", $misc->printVal($v[0]), "</td>\n";
+                    echo '<td>', $misc->printVal($v[0]), "</td>\n";
                 }
 
-                echo "<td>", $misc->printVal($v[1]), "</td>\n";
+                echo '<td>', $misc->printVal($v[1]), "</td>\n";
                 foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
                     // Skip over ALL PRIVILEGES
                     if ($v2 == 'ALL PRIVILEGES') {
                         continue;
                     }
 
-                    echo "<td>";
+                    echo '<td>';
                     if (in_array($v2, $v[2])) {
                         echo $lang['stryes'];
                     } else {
@@ -288,13 +288,13 @@ class PrivilegeController extends BaseController
                     echo "</td>\n";
                 }
                 if ($data->hasGrantOption()) {
-                    echo "<td>", $misc->printVal($v[3]), "</td>\n";
+                    echo '<td>', $misc->printVal($v[3]), "</td>\n";
                 }
                 echo "</tr>\n";
                 $i++;
             }
 
-            echo "</table>";
+            echo '</table>';
         } else {
             echo "<p>{$lang['strnoprivileges']}</p>\n";
         }
@@ -311,12 +311,12 @@ class PrivilegeController extends BaseController
                 $alltxt   = $lang["strshowall{$_REQUEST['subject']}s"];
                 break;
             case 'schema':
-                $alllabel = "showallschemas";
-                $allurl   = "schemas.php";
-                $alltxt   = $lang["strshowallschemas"];
+                $alllabel = 'showallschemas';
+                $allurl   = 'schemas.php';
+                $alltxt   = $lang['strshowallschemas'];
                 break;
             case 'database':
-                $alllabel = "showalldatabases";
+                $alllabel = 'showalldatabases';
                 $allurl   = 'all_db.php';
                 $alltxt   = $lang['strshowalldatabases'];
                 break;

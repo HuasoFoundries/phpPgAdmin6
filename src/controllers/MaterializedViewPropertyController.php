@@ -107,14 +107,14 @@ class MaterializedViewPropertyController extends BaseController
 
         // Show comment if any
         if ($vdata->fields['relcomment'] !== null) {
-            echo "<p class=\"comment\">", $misc->printVal($vdata->fields['relcomment']), "</p>\n";
+            echo '<p class="comment">', $misc->printVal($vdata->fields['relcomment']), "</p>\n";
         }
 
         $columns = [
             'column'  => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['matview']) . "&amp;",
+                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['matview']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
@@ -305,7 +305,7 @@ class MaterializedViewPropertyController extends BaseController
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -315,7 +315,7 @@ class MaterializedViewPropertyController extends BaseController
             htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
-            echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
+            echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -344,12 +344,12 @@ class MaterializedViewPropertyController extends BaseController
         $this->printTabs('view', 'export');
         $misc->printMsg($msg);
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
         echo "<!--\n";
-        echo "<tr><th class=\"data left\">";
+        echo '<tr><th class="data left">';
         echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" /><label for=\"what1\">{$lang['strdataonly']}</label></th>\n";
         echo "<td>{$lang['strformat']}</td>\n";
         echo "<td><select name=\"d_format\" >\n";
@@ -367,7 +367,7 @@ class MaterializedViewPropertyController extends BaseController
         echo "<td><label for=\"s_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
         // Structure and data
         echo "<!--\n";
-        echo "<tr><th class=\"data left\" rowspan=\"2\">";
+        echo '<tr><th class="data left" rowspan="2">';
         echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$lang['strstructureanddata']}</label></th>\n";
         echo "<td>{$lang['strformat']}</td>\n";
         echo "<td><select name=\"sd_format\">\n";
@@ -385,7 +385,7 @@ class MaterializedViewPropertyController extends BaseController
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo $misc->form;
         echo "<input type=\"hidden\" name=\"subject\" value=\"view\" />\n";
-        echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
+        echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }
@@ -410,12 +410,12 @@ class MaterializedViewPropertyController extends BaseController
         if ($vdata->recordCount() > 0) {
             // Show comment if any
             if ($vdata->fields['relcomment'] !== null) {
-                echo "<p class=\"comment\">", $misc->printVal($vdata->fields['relcomment']), "</p>\n";
+                echo '<p class="comment">', $misc->printVal($vdata->fields['relcomment']), "</p>\n";
             }
 
             echo "<table style=\"width: 100%\">\n";
             echo "<tr><th class=\"data\">{$lang['strdefinition']}</th></tr>\n";
-            echo "<tr><td class=\"data1\">", $misc->printVal($vdata->fields['vwdefinition']), "</td></tr>\n";
+            echo '<tr><td class="data1">', $misc->printVal($vdata->fields['vwdefinition']), "</td></tr>\n";
             echo "</table>\n";
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
@@ -459,7 +459,7 @@ class MaterializedViewPropertyController extends BaseController
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
                 $misc->printMsg($msg);
 
-                echo "<form action=\"" . SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
+                echo '<form action="' . SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
 
                 // Output view header
                 echo "<table>\n";
@@ -474,22 +474,22 @@ class MaterializedViewPropertyController extends BaseController
                     $_REQUEST['comment'] = $column->fields['comment'];
                 }
 
-                echo "<tr><td><input name=\"field\" size=\"32\" value=\"",
-                htmlspecialchars($_REQUEST['field']), "\" /></td>";
+                echo '<tr><td><input name="field" size="32" value="',
+                htmlspecialchars($_REQUEST['field']), '" /></td>';
 
-                echo "<td>", $misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), "</td>";
-                echo "<td><input name=\"default\" size=\"20\" value=\"",
-                htmlspecialchars($_REQUEST['default']), "\" /></td>";
-                echo "<td><input name=\"comment\" size=\"32\" value=\"",
-                htmlspecialchars($_REQUEST['comment']), "\" /></td>";
+                echo '<td>', $misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), '</td>';
+                echo '<td><input name="default" size="20" value="',
+                htmlspecialchars($_REQUEST['default']), '" /></td>';
+                echo '<td><input name="comment" size="32" value="',
+                htmlspecialchars($_REQUEST['comment']), '" /></td>';
 
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"properties\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
                 echo $misc->form;
-                echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
-                echo "<input type=\"hidden\" name=\"column\" value=\"", htmlspecialchars($_REQUEST['column']), "\" />\n";
-                echo "<input type=\"hidden\" name=\"olddefault\" value=\"", htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
+                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
+                echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), "\" />\n";
+                echo '<input type="hidden" name="olddefault" value="', htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
                 echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
@@ -554,10 +554,10 @@ class MaterializedViewPropertyController extends BaseController
                     $_POST['comment'] = $view->fields['relcomment'];
                 }
 
-                echo "<form action=\"" . SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
+                echo '<form action="' . SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
-                echo "<td class=\"data1\">";
+                echo '<td class="data1">';
                 echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
                 htmlspecialchars($_POST['name']), "\" /></td></tr>\n";
 
@@ -567,11 +567,11 @@ class MaterializedViewPropertyController extends BaseController
                     $users = $data->getUsers();
 
                     echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
-                    echo "<td class=\"data1\"><select name=\"owner\">";
+                    echo '<td class="data1"><select name="owner">';
                     while (!$users->EOF) {
                         $uname = $users->fields['usename'];
-                        echo "<option value=\"", htmlspecialchars($uname), "\"",
-                        ($uname == $_POST['owner']) ? ' selected="selected"' : '', ">", htmlspecialchars($uname), "</option>\n";
+                        echo '<option value="', htmlspecialchars($uname), '"',
+                        ($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
                         $users->moveNext();
                     }
                     echo "</select></td></tr>\n";
@@ -580,23 +580,23 @@ class MaterializedViewPropertyController extends BaseController
                 if ($data->hasAlterTableSchema()) {
                     $schemas = $data->getSchemas();
                     echo "<tr><th class=\"data left required\">{$lang['strschema']}</th>\n";
-                    echo "<td class=\"data1\"><select name=\"newschema\">";
+                    echo '<td class="data1"><select name="newschema">';
                     while (!$schemas->EOF) {
                         $schema = $schemas->fields['nspname'];
-                        echo "<option value=\"", htmlspecialchars($schema), "\"",
-                        ($schema == $_POST['newschema']) ? ' selected="selected"' : '', ">", htmlspecialchars($schema), "</option>\n";
+                        echo '<option value="', htmlspecialchars($schema), '"',
+                        ($schema == $_POST['newschema']) ? ' selected="selected"' : '', '>', htmlspecialchars($schema), "</option>\n";
                         $schemas->moveNext();
                     }
                     echo "</select></td></tr>\n";
                 }
 
                 echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
-                echo "<td class=\"data1\">";
-                echo "<textarea rows=\"3\" cols=\"32\" name=\"comment\">",
+                echo '<td class="data1">';
+                echo '<textarea rows="3" cols="32" name="comment">',
                 htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
                 echo "</table>\n";
                 echo "<input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
-                echo "<input type=\"hidden\" name=\"view\" value=\"", htmlspecialchars($_REQUEST['matview']), "\" />\n";
+                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
                 echo $misc->form;
                 echo "<p><input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";

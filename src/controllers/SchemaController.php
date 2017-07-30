@@ -297,7 +297,7 @@ class SchemaController extends BaseController
         echo "</table>\n";
         echo "<p>\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"create\" />\n";
-        echo "<input type=\"hidden\" name=\"database\" value=\"", htmlspecialchars($_REQUEST['database']), "\" />\n";
+        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
         echo $misc->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
@@ -376,11 +376,11 @@ class SchemaController extends BaseController
             if ($data->hasAlterSchemaOwner()) {
                 $users = $data->getUsers();
                 echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
-                echo "<td class=\"data2\"><select name=\"owner\">";
+                echo '<td class="data2"><select name="owner">';
                 while (!$users->EOF) {
                     $uname = $users->fields['usename'];
-                    echo "<option value=\"", htmlspecialchars($uname), "\"",
-                    ($uname == $_POST['owner']) ? ' selected="selected"' : '', ">", htmlspecialchars($uname), "</option>\n";
+                    echo '<option value="', htmlspecialchars($uname), '"',
+                    ($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
                     $users->moveNext();
                 }
                 echo "</select></td></tr>\n";
@@ -394,7 +394,7 @@ class SchemaController extends BaseController
             echo "\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
-            echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_POST['schema']), "\" />\n";
+            echo '<input type="hidden" name="schema" value="', htmlspecialchars($_POST['schema']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -450,13 +450,13 @@ class SchemaController extends BaseController
                     echo '<input type="hidden" name="nsp[]" value="', htmlspecialchars($a['nsp']), "\" />\n";
                 }
             } else {
-                echo "<p>", sprintf($lang['strconfdropschema'], $misc->printVal($_REQUEST['nsp'])), "</p>\n";
-                echo "<input type=\"hidden\" name=\"nsp\" value=\"", htmlspecialchars($_REQUEST['nsp']), "\" />\n";
+                echo '<p>', sprintf($lang['strconfdropschema'], $misc->printVal($_REQUEST['nsp'])), "</p>\n";
+                echo '<input type="hidden" name="nsp" value="', htmlspecialchars($_REQUEST['nsp']), "\" />\n";
             }
 
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo "<input type=\"hidden\" name=\"database\" value=\"", htmlspecialchars($_REQUEST['database']), "\" />\n";
+            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -516,7 +516,7 @@ class SchemaController extends BaseController
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
-        echo "<tr><th class=\"data left\" rowspan=\"2\">";
+        echo '<tr><th class="data left" rowspan="2">';
         echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$lang['strdataonly']}</label></th>\n";
         echo "<td>{$lang['strformat']}</td>\n";
         echo "<td><select name=\"d_format\">\n";
@@ -528,7 +528,7 @@ class SchemaController extends BaseController
         echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$lang['strstructureonly']}</label></th>\n";
         echo "<td><label for=\"s_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
         // Structure and data
-        echo "<tr><th class=\"data left\" rowspan=\"3\">";
+        echo '<tr><th class="data left" rowspan="3">';
         echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$lang['strstructureanddata']}</label></th>\n";
         echo "<td>{$lang['strformat']}</td>\n";
         echo "<td><select name=\"sd_format\">\n";
@@ -549,8 +549,8 @@ class SchemaController extends BaseController
         echo "</p>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo "<input type=\"hidden\" name=\"subject\" value=\"schema\" />\n";
-        echo "<input type=\"hidden\" name=\"database\" value=\"", htmlspecialchars($_REQUEST['database']), "\" />\n";
-        echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
+        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
+        echo '<input type="hidden" name="schema" value="', htmlspecialchars($_REQUEST['schema']), "\" />\n";
         echo $misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
         echo "</form>\n";

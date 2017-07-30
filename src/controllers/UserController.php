@@ -153,7 +153,7 @@ class UserController extends BaseController
                 $_POST['confirm'] = '';
             }
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
@@ -227,10 +227,10 @@ class UserController extends BaseController
                 $_POST['formPassword'] = '';
             }
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strusername']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . "\" />" : $misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . '" />' : $misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$lang['strsuper']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
             (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
@@ -245,7 +245,7 @@ class UserController extends BaseController
             echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"16\" name=\"formConfirm\" value=\"\" /></td>\n\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
-            echo "<input type=\"hidden\" name=\"username\" value=\"", htmlspecialchars($_REQUEST['username']), "\" />\n";
+            echo '<input type="hidden" name="username" value="', htmlspecialchars($_REQUEST['username']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -301,11 +301,11 @@ class UserController extends BaseController
             $this->printTrail('user');
             $this->printTitle($lang['strdrop'], 'pg.user.drop');
 
-            echo "<p>", sprintf($lang['strconfdropuser'], $misc->printVal($_REQUEST['username'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropuser'], $misc->printVal($_REQUEST['username'])), "</p>\n";
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo "<input type=\"hidden\" name=\"username\" value=\"", htmlspecialchars($_REQUEST['username']), "\" />\n";
+            echo '<input type="hidden" name="username" value="', htmlspecialchars($_REQUEST['username']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -351,7 +351,7 @@ class UserController extends BaseController
         $this->printTitle($lang['strcreateuser'], 'pg.user.create');
         $misc->printMsg($msg);
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strusername']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formUsername\" value=\"", htmlspecialchars($_POST['formUsername']), "\" /></td>\n\t</tr>\n";

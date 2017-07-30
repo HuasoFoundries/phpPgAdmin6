@@ -307,13 +307,13 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg');
             $this->printTitle($lang['strdrop'], 'pg.ftscfg.drop');
 
-            echo "<p>", sprintf($lang['strconfdropftsconfig'], $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropftsconfig'], $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"dropconfig\" />\n";
-            echo "<input type=\"hidden\" name=\"database\" value=\"", htmlspecialchars($_REQUEST['database']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_REQUEST['ftscfg']), "\" />\n";
+            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
+            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_REQUEST['ftscfg']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -342,13 +342,13 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
             $this->printTitle($lang['strdrop'], 'pg.ftsdict.drop');
 
-            echo "<p>", sprintf($lang['strconfdropftsdict'], $misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropftsdict'], $misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"dropdict\" />\n";
-            echo "<input type=\"hidden\" name=\"database\" value=\"", htmlspecialchars($_REQUEST['database']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"ftsdict\" value=\"", htmlspecialchars($_REQUEST['ftsdict']), "\" />\n";
+            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
+            echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_REQUEST['ftsdict']), "\" />\n";
             //echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_REQUEST['ftscfg']), "\" />\n";
             echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewdicts\" /></p>\n";
             echo $misc->form;
@@ -411,7 +411,7 @@ class FulltextController extends BaseController
         $this->printTitle($lang['strftscreateconfig'], 'pg.ftscfg.create');
         $misc->printMsg($msg);
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
         echo "<table>\n";
         /* conf name */
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -470,7 +470,7 @@ class FulltextController extends BaseController
         echo "</table>\n";
         echo "<p>\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"createconfig\" />\n";
-        echo "<input type=\"hidden\" name=\"database\" value=\"", htmlspecialchars($_REQUEST['database']), "\" />\n";
+        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
         echo $misc->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
@@ -559,7 +559,7 @@ class FulltextController extends BaseController
             // Fetch all FTS parsers from the database
             $ftsparsers = $data->getFtsParsers();
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -577,7 +577,7 @@ class FulltextController extends BaseController
             echo "\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alterconfig\" />\n";
-            echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_POST['ftscfg']), "\" />\n";
+            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -875,12 +875,12 @@ class FulltextController extends BaseController
         $this->printTitle($lang['strftscreatedict'], 'pg.ftsdict.create');
         $misc->printMsg($msg);
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formName']), "\" />&nbsp;",
-        "<input type=\"checkbox\" name=\"formIsTemplate\" id=\"formIsTemplate\"", $_POST['formIsTemplate'] ? ' checked="checked" ' : '', " />\n",
+        htmlspecialchars($_POST['formName']), '" />&nbsp;',
+        '<input type="checkbox" name="formIsTemplate" id="formIsTemplate"', $_POST['formIsTemplate'] ? ' checked="checked" ' : '', " />\n",
             "<label for=\"formIsTemplate\">{$lang['strftscreatedicttemplate']}</label></td>\n\t</tr>\n";
 
         // Template
@@ -908,13 +908,13 @@ class FulltextController extends BaseController
         // Lexize
         echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftslexize']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formLexize\" size=\"32\" maxlength=\"1000\" value=\"",
-        htmlspecialchars($_POST['formLexize']), "\" ", isset($_POST['formIsTemplate']) ? '' : ' disabled="disabled" ',
+        htmlspecialchars($_POST['formLexize']), '" ', isset($_POST['formIsTemplate']) ? '' : ' disabled="disabled" ',
             "/></td>\n\t</tr>\n";
 
         // Init
         echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftsinit']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formInit\" size=\"32\" maxlength=\"1000\" value=\"",
-        htmlspecialchars($_POST['formInit']), "\"", @$_POST['formIsTemplate'] ? '' : ' disabled="disabled" ',
+        htmlspecialchars($_POST['formInit']), '"', @$_POST['formIsTemplate'] ? '' : ' disabled="disabled" ',
             "/></td>\n\t</tr>\n";
 
         // Option
@@ -930,7 +930,7 @@ class FulltextController extends BaseController
         echo "</table>\n";
         echo "<p>\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"createdict\" />\n";
-        echo "<input type=\"hidden\" name=\"database\" value=\"", htmlspecialchars($_REQUEST['database']), "\" />\n";
+        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
         echo $misc->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
@@ -1031,7 +1031,7 @@ class FulltextController extends BaseController
                 $_POST['formName'] = $_REQUEST['ftsdict'];
             }
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -1049,7 +1049,7 @@ class FulltextController extends BaseController
             echo "\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alterdict\" />\n";
-            echo "<input type=\"hidden\" name=\"ftsdict\" value=\"", htmlspecialchars($_POST['ftsdict']), "\" />\n";
+            echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_POST['ftsdict']), "\" />\n";
             echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewdicts\" /></p>\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
@@ -1103,20 +1103,20 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: proper breadcrumbs
             $this->printTitle($lang['strdrop'], 'pg.ftscfg.alter');
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
 
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo "<p>", sprintf($lang['strconfdropftsmapping'], $misc->printVal($a['mapping']), $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfdropftsmapping'], $misc->printVal($a['mapping']), $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
                     printf('<input type="hidden" name="mapping[]" value="%s" />', htmlspecialchars($a['mapping']));
                 }
 
             } else {
-                echo "<p>", sprintf($lang['strconfdropftsmapping'], $misc->printVal($_REQUEST['mapping']), $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
-                echo "<input type=\"hidden\" name=\"mapping\" value=\"", htmlspecialchars($_REQUEST['mapping']), "\" />\n";
+                echo '<p>', sprintf($lang['strconfdropftsmapping'], $misc->printVal($_REQUEST['mapping']), $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
+                echo '<input type="hidden" name="mapping" value="', htmlspecialchars($_REQUEST['mapping']), "\" />\n";
             }
 
             echo "<input type=\"hidden\" name=\"ftscfg\" value=\"{$_REQUEST['ftscfg']}\" />\n";
@@ -1170,7 +1170,7 @@ class FulltextController extends BaseController
                 $_POST['ftscfg'] = $_REQUEST['ftscfg'];
             }
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
 
             echo "<table>\n";
             echo "\t<tr>\n";
@@ -1187,11 +1187,11 @@ class FulltextController extends BaseController
                     $ma_mappings[]       = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
                     $ma_mappings_names[] = $a['mapping'];
                 }
-                echo implode(", ", $ma_mappings_names);
+                echo implode(', ', $ma_mappings_names);
             } else {
                 $mapping = $data->getFtsMappingByName($_POST['ftscfg'], $_POST['formMapping']);
                 echo $mapping->fields['name'];
-                echo "<input type=\"hidden\" name=\"formMapping\" value=\"", htmlspecialchars($_POST['formMapping']), "\" />\n";
+                echo '<input type="hidden" name="formMapping" value="', htmlspecialchars($_POST['formMapping']), "\" />\n";
             }
 
             echo "\t\t</td>\n";
@@ -1214,7 +1214,7 @@ class FulltextController extends BaseController
 
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"altermapping\" />\n";
-            echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_POST['ftscfg']), "\" />\n";
+            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), "\" />\n";
             echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewconfig\" /></p>\n";
 
             echo $misc->form;
@@ -1276,7 +1276,7 @@ class FulltextController extends BaseController
 
             $mappings = $data->getFtsMappings($_POST['ftscfg']);
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n";
             echo "\t\t<th class=\"data left required\">{$lang['strftsmapping']}</th>\n";
@@ -1286,7 +1286,7 @@ class FulltextController extends BaseController
                 $mapping      = htmlspecialchars($mappings->fields['name']);
                 $mapping_desc = htmlspecialchars($mappings->fields['description']);
                 echo "\t\t\t\t<option value=\"{$mapping}\"",
-                $mapping == $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : "", "</option>\n";
+                $mapping == $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : '', "</option>\n";
                 $mappings->moveNext();
             }
             echo "\t\t</td>\n";
@@ -1309,7 +1309,7 @@ class FulltextController extends BaseController
 
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"addmapping\" />\n";
-            echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_POST['ftscfg']), "\" />\n";
+            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), "\" />\n";
             echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewconfig\" /></p>\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"add\" value=\"{$lang['stradd']}\" />\n";

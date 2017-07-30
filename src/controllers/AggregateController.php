@@ -182,7 +182,7 @@ class AggregateController extends BaseController
         $this->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
         $misc->printMsg($msg);
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -258,7 +258,7 @@ class AggregateController extends BaseController
         $this->printTitle($lang['stralter'], 'pg.aggregate.alter');
         $misc->printMsg($msg);
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
         $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
         if ($aggrdata->recordCount() > 0) {
             // Output table header
@@ -268,20 +268,20 @@ class AggregateController extends BaseController
             echo "<th class=\"data required\">{$lang['strschema']}</th>\n\t</tr>\n";
 
             // Display aggregate's name, owner and schema
-            echo "\t<tr>\n\t\t<td><input name=\"newaggrname\" size=\"32\" maxlength=\"32\" value=\"", htmlspecialchars($_REQUEST['aggrname']), "\" /></td>";
-            echo "<td><input name=\"newaggrowner\" size=\"32\" maxlength=\"32\" value=\"", htmlspecialchars($aggrdata->fields['usename']), "\" /></td>";
-            echo "<td><input name=\"newaggrschema\" size=\"32\" maxlength=\"32\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" /></td>\n\t</tr>\n";
+            echo "\t<tr>\n\t\t<td><input name=\"newaggrname\" size=\"32\" maxlength=\"32\" value=\"", htmlspecialchars($_REQUEST['aggrname']), '" /></td>';
+            echo '<td><input name="newaggrowner" size="32" maxlength="32" value="', htmlspecialchars($aggrdata->fields['usename']), '" /></td>';
+            echo '<td><input name="newaggrschema" size="32" maxlength="32" value="', htmlspecialchars($_REQUEST['schema']), "\" /></td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strcomment']}</th>\n";
             echo "\t\t<td><textarea name=\"newaggrcomment\" rows=\"3\" cols=\"32\">",
             htmlspecialchars($aggrdata->fields['aggrcomment']), "</textarea></td>\n\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_alter\" />\n";
             echo $misc->form;
-            echo "<input type=\"hidden\" name=\"aggrname\" value=\"", htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"aggrtype\" value=\"", htmlspecialchars($_REQUEST['aggrtype']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"aggrowner\" value=\"", htmlspecialchars($aggrdata->fields['usename']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"aggrschema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"aggrcomment\" value=\"", htmlspecialchars($aggrdata->fields['aggrcomment']), "\" />\n";
+            echo '<input type="hidden" name="aggrname" value="', htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
+            echo '<input type="hidden" name="aggrtype" value="', htmlspecialchars($_REQUEST['aggrtype']), "\" />\n";
+            echo '<input type="hidden" name="aggrowner" value="', htmlspecialchars($aggrdata->fields['usename']), "\" />\n";
+            echo '<input type="hidden" name="aggrschema" value="', htmlspecialchars($_REQUEST['schema']), "\" />\n";
+            echo '<input type="hidden" name="aggrcomment" value="', htmlspecialchars($aggrdata->fields['aggrcomment']), "\" />\n";
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         } else {
@@ -305,13 +305,13 @@ class AggregateController extends BaseController
             $this->printTrail('aggregate');
             $this->printTitle($lang['strdrop'], 'pg.aggregate.drop');
 
-            echo "<p>", sprintf($lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo "<input type=\"hidden\" name=\"aggrname\" value=\"", htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"aggrtype\" value=\"", htmlspecialchars($_REQUEST['aggrtype']), "\" />\n";
+            echo '<input type="hidden" name="aggrname" value="', htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
+            echo '<input type="hidden" name="aggrtype" value="', htmlspecialchars($_REQUEST['aggrtype']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";

@@ -32,7 +32,7 @@ class DBExportController extends BaseController
         $f_schema = $f_object = '';
         $misc->setNoOutput(true);
 
-        ini_set("memory_limit", "768M");
+        ini_set('memory_limit', '768M');
 
         // Are we doing a cluster-wide dump or just a per-database dump
         $dumpall = ($_REQUEST['subject'] == 'server');
@@ -48,7 +48,7 @@ class DBExportController extends BaseController
 
             // Obtain the pg_dump version number and check if the path is good
             $version = [];
-            preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($exe . " --version"), $version);
+            preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($exe . ' --version'), $version);
 
             $this->prtrace('$exe', $exe, 'version', $version[1]);
 
@@ -99,7 +99,7 @@ class DBExportController extends BaseController
 
             // Build command for executing pg_dump.  '-i' means ignore version differences.
             if (((float) $version[1]) < 9.5) {
-                $cmd = $exe . " -i";
+                $cmd = $exe . ' -i';
             } else {
                 $cmd = $exe;
             }
@@ -114,7 +114,7 @@ class DBExportController extends BaseController
             switch ($_REQUEST['subject']) {
                 case 'schema':
                     // This currently works for 8.2+ (due to the orthoganl -t -n issue introduced then)
-                    $cmd .= " -n " . $misc->escapeShellArg("\"{$f_schema}\"");
+                    $cmd .= ' -n ' . $misc->escapeShellArg("\"{$f_schema}\"");
                     break;
                 case 'table':
                 case 'view':
@@ -125,19 +125,19 @@ class DBExportController extends BaseController
                     // Starting in 8.2, -n and -t are orthagonal, so we now schema qualify
                     // the table name in the -t argument and quote both identifiers
                     if (((float) $version[1]) >= 8.2) {
-                        $cmd .= " -t " . $misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
+                        $cmd .= ' -t ' . $misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
                     } else {
                         // If we are 7.4 or higher, assume they are using 7.4 pg_dump and
                         // set dump schema as well.  Also, mixed case dumping has been fixed
                         // then..
-                        $cmd .= " -t " . $misc->escapeShellArg($f_object)
-                        . " -n " . $misc->escapeShellArg($f_schema);
+                        $cmd .= ' -t ' . $misc->escapeShellArg($f_object)
+                        . ' -n ' . $misc->escapeShellArg($f_schema);
                     }
             }
 
             // Check for GZIP compression specified
             if ($_REQUEST['output'] == 'gzipped' && !$dumpall) {
-                $cmd .= " -Z 9";
+                $cmd .= ' -Z 9';
             }
 
             switch ($_REQUEST['what']) {

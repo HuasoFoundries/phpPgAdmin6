@@ -175,29 +175,29 @@ class DomainController extends BaseController
             }
 
             // Display domain info
-            echo "<form action=\"" . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
-            echo "<td class=\"data1\">", $misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
+            echo '<td class="data1">', $misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
             echo "<tr><th class=\"data left required\">{$lang['strtype']}</th>\n";
-            echo "<td class=\"data1\">", $misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
+            echo '<td class="data1">', $misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
             echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$lang['strnotnull']}</label></th>\n";
-            echo "<td class=\"data1\"><input type=\"checkbox\" id=\"domnotnull\" name=\"domnotnull\"", (isset($_POST['domnotnull']) ? ' checked="checked"' : ''), " /></td></tr>\n";
+            echo '<td class="data1"><input type="checkbox" id="domnotnull" name="domnotnull"', (isset($_POST['domnotnull']) ? ' checked="checked"' : ''), " /></td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
-            echo "<td class=\"data1\"><input name=\"domdefault\" size=\"32\" value=\"",
+            echo '<td class="data1"><input name="domdefault" size="32" value="',
             htmlspecialchars($_POST['domdefault']), "\" /></td></tr>\n";
             echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
-            echo "<td class=\"data1\"><select name=\"domowner\">";
+            echo '<td class="data1"><select name="domowner">';
             while (!$users->EOF) {
                 $uname = $users->fields['usename'];
-                echo "<option value=\"", htmlspecialchars($uname), "\"",
-                ($uname == $_POST['domowner']) ? ' selected="selected"' : '', ">", htmlspecialchars($uname), "</option>\n";
+                echo '<option value="', htmlspecialchars($uname), '"',
+                ($uname == $_POST['domowner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
                 $users->moveNext();
             }
             echo "</select></td></tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_alter\" />\n";
-            echo "<input type=\"hidden\" name=\"domain\" value=\"", htmlspecialchars($_REQUEST['domain']), "\" />\n";
+            echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -231,7 +231,7 @@ class DomainController extends BaseController
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
             $misc->printMsg($msg);
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
@@ -239,12 +239,12 @@ class DomainController extends BaseController
             echo "<tr><td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
             htmlspecialchars($_POST['name']), "\" /></td>\n";
 
-            echo "<td class=\"data1\">(<input name=\"definition\" size=\"32\" value=\"",
+            echo '<td class="data1">(<input name="definition" size="32" value="',
             htmlspecialchars($_POST['definition']), "\" />)</td></tr>\n";
             echo "</table>\n";
 
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_add_check\" />\n";
-            echo "<input type=\"hidden\" name=\"domain\" value=\"", htmlspecialchars($_REQUEST['domain']), "\" />\n";
+            echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"add\" value=\"{$lang['stradd']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -281,12 +281,12 @@ class DomainController extends BaseController
             $this->printTitle($lang['strdrop'], 'pg.constraint.drop');
             $misc->printMsg($msg);
 
-            echo "<p>", sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
+            echo '<p>', sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
                 $misc->printVal($_REQUEST['domain'])), "</p>\n";
-            echo "<form action=\"" . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_con\" />\n";
-            echo "<input type=\"hidden\" name=\"domain\" value=\"", htmlspecialchars($_REQUEST['domain']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"constraint\" value=\"", htmlspecialchars($_REQUEST['constraint']), "\" />\n";
+            echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
+            echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";
             echo $misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
@@ -323,22 +323,22 @@ class DomainController extends BaseController
         if ($domaindata->recordCount() > 0) {
             // Show comment if any
             if ($domaindata->fields['domcomment'] !== null) {
-                echo "<p class=\"comment\">", $misc->printVal($domaindata->fields['domcomment']), "</p>\n";
+                echo '<p class="comment">', $misc->printVal($domaindata->fields['domcomment']), "</p>\n";
             }
 
             // Display domain info
             $domaindata->fields['domnotnull'] = $data->phpBool($domaindata->fields['domnotnull']);
             echo "<table>\n";
             echo "<tr><th class=\"data left\" style=\"width: 70px\">{$lang['strname']}</th>\n";
-            echo "<td class=\"data1\">", $misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
+            echo '<td class="data1">', $misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strtype']}</th>\n";
-            echo "<td class=\"data1\">", $misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
+            echo '<td class="data1">', $misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strnotnull']}</th>\n";
-            echo "<td class=\"data1\">", ($domaindata->fields['domnotnull'] ? 'NOT NULL' : ''), "</td></tr>\n";
+            echo '<td class="data1">', ($domaindata->fields['domnotnull'] ? 'NOT NULL' : ''), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
-            echo "<td class=\"data1\">", $misc->printVal($domaindata->fields['domdef']), "</td></tr>\n";
+            echo '<td class="data1">', $misc->printVal($domaindata->fields['domdef']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strowner']}</th>\n";
-            echo "<td class=\"data1\">", $misc->printVal($domaindata->fields['domowner']), "</td></tr>\n";
+            echo '<td class="data1">', $misc->printVal($domaindata->fields['domowner']), "</td></tr>\n";
             echo "</table>\n";
 
             // Display domain constraints
@@ -450,11 +450,11 @@ class DomainController extends BaseController
             $this->printTrail('domain');
             $this->printTitle($lang['strdrop'], 'pg.domain.drop');
 
-            echo "<p>", sprintf($lang['strconfdropdomain'], $misc->printVal($_REQUEST['domain'])), "</p>\n";
-            echo "<form action=\"" . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<p>', sprintf($lang['strconfdropdomain'], $misc->printVal($_REQUEST['domain'])), "</p>\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo "<input type=\"hidden\" name=\"domain\" value=\"", htmlspecialchars($_REQUEST['domain']), "\" />\n";
+            echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -511,7 +511,7 @@ class DomainController extends BaseController
         $this->printTitle($lang['strcreatedomain'], 'pg.domain.create');
         $misc->printMsg($msg);
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"domname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -521,31 +521,31 @@ class DomainController extends BaseController
         // Output return type list
         echo "<select name=\"domtype\">\n";
         while (!$types->EOF) {
-            echo "<option value=\"", htmlspecialchars($types->fields['typname']), "\"",
-            ($types->fields['typname'] == $_POST['domtype']) ? ' selected="selected"' : '', ">",
+            echo '<option value="', htmlspecialchars($types->fields['typname']), '"',
+            ($types->fields['typname'] == $_POST['domtype']) ? ' selected="selected"' : '', '>',
             $misc->printVal($types->fields['typname']), "</option>\n";
             $types->moveNext();
         }
         echo "</select>\n";
 
         // Type length
-        echo "<input type=\"text\" size=\"4\" name=\"domlength\" value=\"", htmlspecialchars($_POST['domlength']), "\" />";
+        echo '<input type="text" size="4" name="domlength" value="', htmlspecialchars($_POST['domlength']), '" />';
 
         // Output array type selector
         echo "<select name=\"domarray\">\n";
-        echo "<option value=\"\"", ($_POST['domarray'] == '') ? ' selected="selected"' : '', "></option>\n";
-        echo "<option value=\"[]\"", ($_POST['domarray'] == '[]') ? ' selected="selected"' : '', ">[ ]</option>\n";
+        echo '<option value=""', ($_POST['domarray'] == '') ? ' selected="selected"' : '', "></option>\n";
+        echo '<option value="[]"', ($_POST['domarray'] == '[]') ? ' selected="selected"' : '', ">[ ]</option>\n";
         echo "</select></td></tr>\n";
 
         echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$lang['strnotnull']}</label></th>\n";
-        echo "<td class=\"data1\"><input type=\"checkbox\" id=\"domnotnull\" name=\"domnotnull\"",
+        echo '<td class="data1"><input type="checkbox" id="domnotnull" name="domnotnull"',
         (isset($_POST['domnotnull']) ? ' checked="checked"' : ''), " /></td></tr>\n";
         echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
-        echo "<td class=\"data1\"><input name=\"domdefault\" size=\"32\" value=\"",
+        echo '<td class="data1"><input name="domdefault" size="32" value="',
         htmlspecialchars($_POST['domdefault']), "\" /></td></tr>\n";
         if ($data->hasDomainConstraints()) {
             echo "<tr><th class=\"data left\">{$lang['strconstraints']}</th>\n";
-            echo "<td class=\"data1\">CHECK (<input name=\"domcheck\" size=\"32\" value=\"",
+            echo '<td class="data1">CHECK (<input name="domcheck" size="32" value="',
             htmlspecialchars($_POST['domcheck']), "\" />)</td></tr>\n";
         }
         echo "</table>\n";

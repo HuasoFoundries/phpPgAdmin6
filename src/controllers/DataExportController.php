@@ -53,12 +53,12 @@ class DataExportController extends BaseController
                     // Check to see if they have pg_dump set up and if they do, use that
                     // instead of custom dump code
                     if ($misc->isDumpEnabled() && ($_REQUEST['d_format'] == 'copy' || $_REQUEST['d_format'] == 'sql')) {
-                        $this->prtrace("DUMP ENABLED, d_format is", $_REQUEST['d_format']);
+                        $this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
                         $dbexport_controller = new \PHPPgAdmin\Controller\DBExportController($this->getContainer());
                         return $dbexport_controller->render();
 
                     } else {
-                        $this->prtrace("d_format is", $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
+                        $this->prtrace('d_format is', $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
                         $format = $_REQUEST['d_format'];
                         $oids   = isset($_REQUEST['d_oids']);
                     }
@@ -145,7 +145,7 @@ class DataExportController extends BaseController
                     $data->fieldClean($_REQUEST['table']);
                     echo "COPY \"{$_REQUEST['table']}\"";
                     if ($oids) {
-                        echo " WITH OIDS";
+                        echo ' WITH OIDS';
                     }
 
                     echo " FROM stdin;\n";
@@ -320,7 +320,7 @@ class DataExportController extends BaseController
                             }
 
                             if ($first) {
-                                echo (is_null($v)) ? "\"\\N\"" : "\"{$v}\"";
+                                echo (is_null($v)) ? '"\\N"' : "\"{$v}\"";
                                 $first = false;
                             } else {
                                 echo is_null($v) ? "{$sep}\"\\N\"" : "{$sep}\"{$v}\"";
@@ -367,7 +367,7 @@ class DataExportController extends BaseController
             $misc->printMsg($msg);
         }
 
-        echo "<form action=\"" . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}:</th><td><select name=\"d_format\">\n";
         // COPY and SQL require a table
@@ -379,7 +379,7 @@ class DataExportController extends BaseController
         echo "<option value=\"tab\">{$lang['strtabbed']}</option>\n";
         echo "<option value=\"html\">XHTML</option>\n";
         echo "<option value=\"xml\">XML</option>\n";
-        echo "</select></td></tr>";
+        echo '</select></td></tr>';
         echo "</table>\n";
 
         echo "<h3>{$lang['stroptions']}</h3>\n";
@@ -389,11 +389,11 @@ class DataExportController extends BaseController
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo "<input type=\"hidden\" name=\"what\" value=\"dataonly\" />\n";
         if (isset($_REQUEST['table'])) {
-            echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
         }
-        echo "<input type=\"hidden\" name=\"query\" value=\"", htmlspecialchars(urlencode($_REQUEST['query'])), "\" />\n";
+        echo '<input type="hidden" name="query" value="', htmlspecialchars(urlencode($_REQUEST['query'])), "\" />\n";
         if (isset($_REQUEST['search_path'])) {
-            echo "<input type=\"hidden\" name=\"search_path\" value=\"", htmlspecialchars($_REQUEST['search_path']), "\" />\n";
+            echo '<input type="hidden" name="search_path" value="', htmlspecialchars($_REQUEST['search_path']), "\" />\n";
         }
         echo $misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";

@@ -22,10 +22,10 @@ class IndexController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strindexes'], "<script src=\"" . SUBFOLDER . "/js/indexes.js\" type=\"text/javascript\"></script>");
+        $this->printHeader($lang['strindexes'], '<script src="' . SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>');
 
         if ($action == 'create_index' || $action == 'save_create_index') {
-            echo "<body onload=\"init();\">";
+            echo '<body onload="init();">';
         } else {
             $this->printBody();
         }
@@ -257,13 +257,13 @@ class IndexController extends BaseController
             $this->printTrail('index');
             $this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
-            echo "<p>", sprintf($lang['strconfcluster'], $misc->printVal($_REQUEST['index'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfcluster'], $misc->printVal($_REQUEST['index'])), "</p>\n";
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/indexes.php\" method=\"post\">\n";
-            echo "<p><input type=\"checkbox\" id=\"analyze\" name=\"analyze\"", (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), " /><label for=\"analyze\">{$lang['stranalyze']}</label></p>\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/indexes.php\" method=\"post\">\n";
+            echo '<p><input type="checkbox" id="analyze" name="analyze"', (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), " /><label for=\"analyze\">{$lang['stranalyze']}</label></p>\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"cluster_index\" />\n";
-            echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"index\" value=\"", htmlspecialchars($_REQUEST['index']), "\" />\n";
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+            echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"cluster\" value=\"{$lang['strclusterindex']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
@@ -351,8 +351,8 @@ class IndexController extends BaseController
         $this->printTitle($lang['strcreateindex'], 'pg.index.create');
         $misc->printMsg($msg);
 
-        $selColumns = new \PHPPgAdmin\XHtml\XHTML_Select("TableColumnList", true, 10);
-        $selColumns->set_style("width: 10em;");
+        $selColumns = new \PHPPgAdmin\XHtml\XHTML_Select('TableColumnList', true, 10);
+        $selColumns->set_style('width: 10em;');
 
         if ($attrs->recordCount() > 0) {
             while (!$attrs->EOF) {
@@ -362,49 +362,49 @@ class IndexController extends BaseController
             }
         }
 
-        $selIndex = new \PHPPgAdmin\XHtml\XHTML_Select("IndexColumnList[]", true, 10);
-        $selIndex->set_style("width: 10em;");
-        $selIndex->set_attribute("id", "IndexColumnList");
-        $buttonAdd = new \PHPPgAdmin\XHtml\XHTML_Button("add", ">>");
-        $buttonAdd->set_attribute("onclick", "buttonPressed(this);");
-        $buttonAdd->set_attribute("type", "button");
+        $selIndex = new \PHPPgAdmin\XHtml\XHTML_Select('IndexColumnList[]', true, 10);
+        $selIndex->set_style('width: 10em;');
+        $selIndex->set_attribute('id', 'IndexColumnList');
+        $buttonAdd = new \PHPPgAdmin\XHtml\XHTML_Button('add', '>>');
+        $buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
+        $buttonAdd->set_attribute('type', 'button');
 
-        $buttonRemove = new \PHPPgAdmin\XHtml\XHTML_Button("remove", "<<");
-        $buttonRemove->set_attribute("onclick", "buttonPressed(this);");
-        $buttonRemove->set_attribute("type", "button");
+        $buttonRemove = new \PHPPgAdmin\XHtml\XHTML_Button('remove', '<<');
+        $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
+        $buttonRemove->set_attribute('type', 'button');
 
         echo "<form onsubmit=\"doSelectAll();\" name=\"formIndex\" action=\"indexes.php\" method=\"post\">\n";
 
         echo "<table>\n";
         echo "<tr><th class=\"data required\" colspan=\"3\">{$lang['strindexname']}</th></tr>";
-        echo "<tr>";
+        echo '<tr>';
         echo "<td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"formIndexName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formIndexName']), "\" /></td></tr>";
+        htmlspecialchars($_POST['formIndexName']), '" /></td></tr>';
         echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th>";
         echo "<th class=\"data required\">{$lang['strindexcolumnlist']}</th></tr>\n";
-        echo "<tr><td class=\"data1\">" . $selColumns->fetch() . "</td>\n";
-        echo "<td class=\"data1\">" . $buttonRemove->fetch() . $buttonAdd->fetch() . "</td>";
-        echo "<td class=\"data1\">" . $selIndex->fetch() . "</td></tr>\n";
+        echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
+        echo '<td class="data1">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
+        echo '<td class="data1">' . $selIndex->fetch() . "</td></tr>\n";
         echo "</table>\n";
 
         echo "<table> \n";
-        echo "<tr>";
+        echo '<tr>';
         echo "<th class=\"data left required\" scope=\"row\">{$lang['strindextype']}</th>";
-        echo "<td class=\"data1\"><select name=\"formIndexType\">";
+        echo '<td class="data1"><select name="formIndexType">';
         foreach ($data->typIndexes as $v) {
-            echo "<option value=\"", htmlspecialchars($v), "\"",
-            ($v == $_POST['formIndexType']) ? ' selected="selected"' : '', ">", htmlspecialchars($v), "</option>\n";
+            echo '<option value="', htmlspecialchars($v), '"',
+            ($v == $_POST['formIndexType']) ? ' selected="selected"' : '', '>', htmlspecialchars($v), "</option>\n";
         }
         echo "</select></td></tr>\n";
-        echo "<tr>";
+        echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\"><label for=\"formUnique\">{$lang['strunique']}</label></th>";
-        echo "<td class=\"data1\"><input type=\"checkbox\" id=\"formUnique\" name=\"formUnique\"", (isset($_POST['formUnique']) ? 'checked="checked"' : ''), " /></td>";
-        echo "</tr>";
-        echo "<tr>";
+        echo '<td class="data1"><input type="checkbox" id="formUnique" name="formUnique"', (isset($_POST['formUnique']) ? 'checked="checked"' : ''), ' /></td>';
+        echo '</tr>';
+        echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\">{$lang['strwhere']}</th>";
         echo "<td class=\"data1\">(<input name=\"formWhere\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formWhere']), "\" />)</td>";
-        echo "</tr>";
+        htmlspecialchars($_POST['formWhere']), '" />)</td>';
+        echo '</tr>';
 
         // Tablespace (if there are any)
         if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
@@ -424,17 +424,17 @@ class IndexController extends BaseController
         }
 
         if ($data->hasConcurrentIndexBuild()) {
-            echo "<tr>";
+            echo '<tr>';
             echo "<th class=\"data left\" scope=\"row\"><label for=\"formConcur\">{$lang['strconcurrently']}</label></th>";
-            echo "<td class=\"data1\"><input type=\"checkbox\" id=\"formConcur\" name=\"formConcur\"", (isset($_POST['formConcur']) ? 'checked="checked"' : ''), " /></td>";
-            echo "</tr>";
+            echo '<td class="data1"><input type="checkbox" id="formConcur" name="formConcur"', (isset($_POST['formConcur']) ? 'checked="checked"' : ''), ' /></td>';
+            echo '</tr>';
         }
 
-        echo "</table>";
+        echo '</table>';
 
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create_index\" />\n";
         echo $misc->form;
-        echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($object), "\" />\n";
+        echo '<input type="hidden" name="table" value="', htmlspecialchars($object), "\" />\n";
         echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
@@ -499,12 +499,12 @@ class IndexController extends BaseController
             $this->printTrail('index');
             $this->printTitle($lang['strdrop'], 'pg.index.drop');
 
-            echo "<p>", sprintf($lang['strconfdropindex'], $misc->printVal($_REQUEST['index'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropindex'], $misc->printVal($_REQUEST['index'])), "</p>\n";
 
-            echo "<form action=\"" . SUBFOLDER . "/src/views/indexes.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/indexes.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_index\" />\n";
-            echo "<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($object), "\" />\n";
-            echo "<input type=\"hidden\" name=\"index\" value=\"", htmlspecialchars($_REQUEST['index']), "\" />\n";
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($object), "\" />\n";
+            echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), "\" />\n";
             echo $misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
