@@ -1,49 +1,45 @@
 DEVELOPER INFO
 --------------
 
-phpPgAdmin is Free/Open Source software and contributions are welcome from
-everyone. Please be sure to join the developers' mailing list:
+phpPgAdmin6 is Free/Open Source software and contributions are welcome.
 
-  https://lists.sourceforge.net/lists/listinfo/phppgadmin-devel
+It is a hard fork of phpPgAdmin:
+  https://github.com/phppgadmin/phppgadmin
+  http://phppgadmin.sourceforge.net/doku.php
+
+The main focus / need addressed by this fork was to move the project from an out-dated code-base to modern, standards compliant and namespaced code.
 
 SOURCE REPOSITORY
 -----------------
 
-phpPgAdmin uses git for source control management. The phpPgAdmin git repository 
+phpPgAdmin6 uses git for source control management. The phpPgAdmin6 git repository
 is hosted at github:
 
-  https://github.com/phppgadmin/phppgadmin
+  https://github.com/HuasoFoundries/phpPgAdmin6
 
 To clone the phpPgAdmin source to your development system, execute the following
 command:
 
-  git clone git://github.com/phppgadmin/phppgadmin.git
+  git clone git://github.com/HuasoFoundries/phpPgAdmin6.git
 
-After making changes, generate a patch using "git format-patch" and submit it
-to the phpPgAdmin devel mailing list. 
-
-Alternatively you can clone the phppgadmin repository on github and make a pull
+After making changes, you can clone the phppgadmin repository on github and make a pull
 request. For details on how to make pull requests, see:
 
   https://help.github.com/articles/using-pull-requests
 
 Please note that submitting code is considered a transfer of copyright to the 
-phpPgAdmin project. phpPgAdmin is made available under the GPL v2 license.
+phpPgAdmin6 project. phpPgAdmin6 is made available under the GPL v2 license.
 
-Push access to the main phpPgAdmin git repository can be granted to developers
-with a track record of useful contributions to phpPgAdmin at the discretion
-of the phpPgAdmin development team. 
+Push access to the main phpPgAdmin6 git repository can be granted to developers
+with a track record of useful contributions to phpPgAdmin6 at the discretion
+of the phpPgAdmin6 development team.
                             
 TIPS FOR DEVELOPERS
 -------------------
 
-When you submit code to phpPgAdmin, we do expect it to adhere to the existing
-coding standards in the source.  So, instead of using your personal favourite
-code layout style, please format it to look like surrounding code.
-In general, we want the code to be portable, standard compliant (e.g. to W3C 
-(X)HTML and CSS) and independent of specific configurations of PHP, the web 
-server, PostgreSQL or the user browser. We also try to support as many versions
-as possible of these applications.
+When you submit code to phpPgAdmin6, format to PSR/2 Coding Style Guide.
+
+http://www.php-fig.org/psr/psr-2/
 
 Test your code properly! For example, if you are developing a feature to create
 domains, try naming your domain all of the following:
@@ -127,29 +123,11 @@ system works, please see the TRANSLATORS file.
 UNDERSTANDING THE WORK/BRANCH/TAG/RELEASE PROCESS
 ------------------------------------------------- 
 
-All new work for phpPgAdmin is done against the git master branch. When we feel
-we are ready to do a new release, we create a branch (ex. REL_4-1).  This 
-becomes the stable branch for all future 4.1.x releases, and any bugfixes needed
-for 4.1 would go in that branch. 
-
-When we release a new revision, we tag that at release time (REL_4-1-1), so a 
-checkout of any tag should give you the same files that downloading the release
-would have given you. As a general rule, we do not introduce new features into 
-existing stable branches, only bugfixes and language updates. This means if you 
-want to work on new features, you should be working against the git master. 
-Eventually we will call for another release, and that will be branched (REL_4-2)
-and the cycle will start over. 
-
-On occasion we have created out-of-band branches, typically labeled as DEV_foo.
-These were used for temporary, concurrent development of large features, and 
-should not be used by other developers. When development of those features is 
-completed, the branches get merged in as appropriate, so no further development 
-should occur on those branches. 
+All new work for phpPgAdmin6 is done against the git develop branch. When we release a new revision, we tag that at release time using semantic versioning.
 
 GETTING HELP
 ------------
 
-We prefer most discussion of development to take place on the phpPgAdmin
-devel mailing list, so that discussions can be archived and be searchable. 
-However, if you are into IRC, a couple of us hang out on #phppgadmin on 
-freenode, and occasionally discuss things there. 
+Use github issues to discuss development, such as proposing new features.
+
+https://github.com/HuasoFoundries/phpPgAdmin6/issues

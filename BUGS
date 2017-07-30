@@ -1,41 +1,7 @@
-Internal Bugs List
+Bugs List
 ------------------
 
-This file is used to track current working tasks - just ignore it!
+Please submit any bugs or feature requests to the github repository:
 
-dump sequences when dumping tables
-fix dumping clustering info
+https://github.com/HuasoFoundries/phpPgAdmin6
 
-Need to fix:
-* After changing password need to update data structures to avoid logouts
-* Report login errors
-* Don't offer owner change feature if user is not superuser
-* check use of apostrophes, etc. in tree menu
-* add different null formats to import and export
-* make browser language detection only happen when language is set
-  to 'auto'.  make that the default.
-* float and decimal types aren't listed.
-* Click 'Run' on this report doesn't work (only column 2 is displayed):
-
-	SELECT
-	1,
-	2;
-
-* redirect.php doesn't work for database's after certain tabs have been
-  selected, eg. 'Variables', 'Processes'.
-
-NEEDS TESTING
--------------
-
-* COPY should work in normal sql screen and sql popup window
-* notice on viewing reports page - does this still occur?
-* highlight things on the info stats page
-* advanced stats functions
-* prevent the user from dropping all the superusers
-* rename function in 7.2 and below doesn't come back to the correct function
-* Fix SQL window parent update to not update any random window
-* Show owner on privileges screen?
-* Allows tabs in textareas on IE: http://devilock.mine.nu/textarea_tab.html
-* add help links everywhere.  fix formatting of help links.
-* Deal with named parameters that have ',' in the type name
-* make sure composite types are found in the find feature
