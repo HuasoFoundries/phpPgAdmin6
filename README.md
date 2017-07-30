@@ -1,5 +1,7 @@
 # phpPgAdmin6
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/289a56c1c7d94216b3d089c220689e9e)](https://www.codacy.com/app/amenadiel/phpPgAdmin6?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=HuasoFoundries/phpPgAdmin6&amp;utm_campaign=Badge_Grade)
+
 PHP Based administration tool for PostgreSQL. Runs on PHP 7+ and Postgres 9.6+.
 
 This is a fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) that implements **a lot of changes**
