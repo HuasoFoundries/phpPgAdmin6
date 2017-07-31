@@ -1,6 +1,6 @@
 <?php
 
-    namespace PHPPgAdmin\Decorators;
+namespace PHPPgAdmin\Decorators;
 
 class RedirectUrlDecorator extends Decorator
 {
@@ -37,9 +37,9 @@ class RedirectUrlDecorator extends Decorator
                 $sep = '&';
             }
         }
-        if (strpos($url, SUBFOLDER) === false) {
+        if ((strpos($url, '/') === 0) && (strpos($url, SUBFOLDER) === false)) {
             $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
         }
         return str_replace('.php', '', $url);
     }
-    }
+}

@@ -1,25 +1,25 @@
 <?php
 
-    namespace PHPPgAdmin\Controller;
+namespace PHPPgAdmin\Controller;
 
-    /**
-     * Base controller class
-     */
-    class IntroController extends BaseController
-    {
+/**
+ * Base controller class
+ */
+class IntroController extends BaseController
+{
     public $_name = 'IntroController';
 
     /* Constructor */
-        public function __construct(\Slim\Container $container)
-        {
+    public function __construct(\Slim\Container $container)
+    {
         $this->misc = $container->get('misc');
 
         $this->misc->setNoDBConnection(true);
         parent::__construct($container);
     }
 
-        public function render()
-        {
+    public function render()
+    {
 
         $conf   = $this->conf;
         $misc   = $this->misc;
@@ -45,8 +45,8 @@
      *
      * $Id: intro.php,v 1.19 2007/07/12 19:26:22 xzilla Exp $
      */
-        public function doDefault()
-        {
+    public function doDefault()
+    {
 
         $conf = $this->conf;
         $misc = $this->misc;
@@ -64,7 +64,7 @@
 
         $intro_html .= $this->printTabs('root', 'intro', false);
 
-            $intro_html .= "<h1> $appName $appVersion (PHP " . PHP_VERSION . ')</h1>';
+        $intro_html .= "<h1> $appName $appVersion (PHP " . PHP_VERSION . ')</h1>';
 
         $intro_html .= '<form method="get" action="intro.php">';
         $intro_html .= '<table>';
@@ -102,10 +102,10 @@
         $intro_html .= '<p>' . $lang['strintro'] . '</p>';
 
         $intro_html .= '<ul class="intro">';
-        $intro_html .= '	<li><a href="http://phppgadmin.sourceforge.net/">' . $lang['strppahome'] . '</a></li>';
+        $intro_html .= '	<li><a href="https://github.com/HuasoFoundries/phpPgAdmin6">' . $lang['strppahome'] . '</a></li>';
         $intro_html .= '<li><a href="' . $lang['strpgsqlhome_url'] . '">' . $lang['strpgsqlhome'] . '</a></li>';
-        $intro_html .= '<li><a href="http://sourceforge.net/tracker/?group_id=37132&amp;atid=418980">' . $lang['strreportbug'] . '</a></li>';
-        $intro_html .= '<li><a href="' . $lang['strviewfaq_url'] . '">' . $lang['strviewfaq'] . '</a></li>';
+        $intro_html .= '<li><a href="https://github.com/HuasoFoundries/phpPgAdmin6/issues">' . $lang['strreportbug'] . '</a></li>';
+        //$intro_html .= '<li><a href="' . $lang['strviewfaq_url'] . '">' . $lang['strviewfaq'] . '</a></li>';
         $intro_html .= '</ul>';
 
         if (isset($_GET['language'])) {
@@ -115,4 +115,4 @@
         echo $intro_html;
     }
 
-    }
+}

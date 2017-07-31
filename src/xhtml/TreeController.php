@@ -9,6 +9,8 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class TreeController extends HTMLController
 {
+    use \PHPPgAdmin\HelperTrait;
+
     private $container        = null;
     private $data             = null;
     private $database         = null;
@@ -83,7 +85,6 @@ class TreeController extends HTMLController
 
         $plugin_manager->do_hook('tree', $tree_params);
 
-        //\Kint::dump($tree_params);
         $this->printTreeXML($treedata, $attrs);
     }
 
@@ -104,15 +105,20 @@ class TreeController extends HTMLController
     {
         $lang = $this->lang;
 
-        header("Content-Type: text/xml; charset=UTF-8");
-        header("Cache-Control: no-cache");
+        header('Content-Type: text/xml; charset=UTF-8');
+        header('Cache-Control: no-cache');
 
         echo "<tree>\n";
+
+        /*$this->prtrace([
+        'treedata' => $treedata,
+        'attrs'    => $attrs,
+        ]);*/
 
         if (count($treedata) > 0) {
             foreach ($treedata as $rec) {
 
-                echo "<tree";
+                echo '<tree';
                 echo Decorator::value_xml_attr('text', $attrs['text'], $rec);
                 echo Decorator::value_xml_attr('action', $attrs['action'], $rec);
                 echo Decorator::value_xml_attr('src', $attrs['branch'], $rec);
@@ -132,7 +138,7 @@ class TreeController extends HTMLController
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
-            echo "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"", $this->icon('ObjectNotFound'), "\" />\n";
+            echo "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"", $this->icon('ObjectNotFound'), '" />' . "\n";
         }
 
         echo "</tree>\n";

@@ -19,13 +19,13 @@
             }
         });
         if (window.parent.frames.length === 0) {
-            var redirect_to, subject = location.pathname.replace('src/views/', '').replace('.php', '');
+            var redirect_to, subject = location.pathname.replace('{{subfolder}}/src/views/', '').replace('.php', '');
             if (subject === '{{subfolder}}/redirect/server') {
                 subject = '/server';
                 redirect_to = '{{subfolder}}' + subject + location.search
                 console.log('location subject', subject, 'redirect_to', redirect_to);;
             } else {
-                redirect_to = '{{subfolder}}' + subject + location.search
+                redirect_to = '{{subfolder}}/' + subject + location.search
                 console.log('location subject', subject, 'redirect_to', redirect_to);;
                 location.href = redirect_to;
             }

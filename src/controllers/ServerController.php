@@ -27,25 +27,36 @@ class ServerController extends BaseController
         parent::__construct($container);
     }
 
-    public function doLogout()
+    public function render()
     {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
 
-        $plugin_manager = $this->plugin_manager;
-        $lang           = $this->lang;
-        $misc           = $this->misc;
-        $conf           = $this->conf;
-        $data           = $misc->getDatabaseAccessor();
+        $action = $this->action;
 
-        $plugin_manager->do_hook('logout', $_REQUEST['logoutServer']);
+        if ($action == 'tree') {
+            return $this->doTree();
+        }
 
-        $server_info = $misc->getServerInfo($_REQUEST['logoutServer']);
-        $misc->setServerInfo(null, null, $_REQUEST['logoutServer']);
+        $msg  = $this->msg;
+        $data = $misc->getDatabaseAccessor();
 
-        unset($_SESSION['sharedUsername'], $_SESSION['sharedPassword']);
+        $this->printHeader($this->lang['strservers'], null);
+        $this->printBody();
+        $this->printTrail('root');
 
-        $misc->setReloadBrowser(true);
+        switch ($action) {
+            case 'logout':
+                $this->doLogout();
 
-        echo sprintf($lang['strlogoutmsg'], $server_info['desc']);
+                break;
+            default:
+                $this->doDefault($msg);
+                break;
+        }
+
+        return $misc->printFooter();
 
     }
 
@@ -76,11 +87,6 @@ class ServerController extends BaseController
         }
         $this->printTable($groups, $columns, $actions, $this->table_place);
         $servers = $misc->getServers(true, $group);
-
-        $svPre = function (&$rowdata) use ($actions) {
-            $actions['logout']['disable'] = empty($rowdata->fields['username']);
-            return $actions;
-        };
 
         $columns = [
             'server'   => [
@@ -121,6 +127,11 @@ class ServerController extends BaseController
             ],
         ];
 
+        $svPre = function (&$rowdata) use ($actions) {
+            $actions['logout']['disable'] = empty($rowdata->fields['username']);
+            return $actions;
+        };
+
         if (($group !== false) and isset($conf['srv_groups'][$group])) {
             $this->printTitle(sprintf($lang['strgroupservers'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
             $actions['logout']['attr']['href']['urlvars']['group'] = $group;
@@ -159,53 +170,42 @@ class ServerController extends BaseController
 
         $attrs = [
             'text'    => Decorator::field('desc'),
-
             // Show different icons for logged in/out
             'icon'    => Decorator::field('icon'),
-
             'toolTip' => Decorator::field('id'),
-
             'action'  => Decorator::field('action'),
-
             // Only create a branch url if the user has
             // logged into the server.
             'branch'  => Decorator::field('branch'),
         ];
-
+        /*$this->prtrace([
+        'nodes'   => $nodes,
+        'attrs'   => $attrs,
+        'section' => $this->section,
+        ]);*/
         return $this->printTree($nodes, $attrs, $this->section);
 
     }
 
-    public function render()
+    public function doLogout()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
 
-        $action = $this->action;
+        $plugin_manager = $this->plugin_manager;
+        $lang           = $this->lang;
+        $misc           = $this->misc;
+        $conf           = $this->conf;
+        $data           = $misc->getDatabaseAccessor();
 
-        if ($action == 'tree') {
-            return $this->doTree();
-        }
+        $plugin_manager->do_hook('logout', $_REQUEST['logoutServer']);
 
-        $msg  = $this->msg;
-        $data = $misc->getDatabaseAccessor();
+        $server_info = $misc->getServerInfo($_REQUEST['logoutServer']);
+        $misc->setServerInfo(null, null, $_REQUEST['logoutServer']);
 
-        $this->printHeader($this->lang['strservers'], null);
-        $this->printBody();
-        $this->printTrail('root');
+        unset($_SESSION['sharedUsername'], $_SESSION['sharedPassword']);
 
-        switch ($action) {
-            case 'logout':
-                $this->doLogout();
+        $misc->setReloadBrowser(true);
 
-                break;
-            default:
-                $this->doDefault($msg);
-                break;
-        }
-
-        return $misc->printFooter();
+        echo sprintf($lang['strlogoutmsg'], $server_info['desc']);
 
     }
 

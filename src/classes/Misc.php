@@ -215,7 +215,7 @@ class Misc
             // The description of the server is returned in $platform.
             $_type = $_connection->getDriver($platform);
 
-            $this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
+            //$this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
 
             if ($_type === null) {
                 die(sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer));
@@ -1714,6 +1714,7 @@ class Misc
                 }
             }
         }
+        //$this->prtrace($v);
         return $v;
     }
 
@@ -1911,7 +1912,7 @@ class Misc
                 );
                 if (isset($srvs[$server_id]['username'])) {
                     $srvs[$server_id]['icon']   = 'Server';
-                    $srvs[$server_id]['branch'] = Decorator::url('all_db.php',
+                    $srvs[$server_id]['branch'] = Decorator::url('/src/views/all_db.php',
                         [
                             'action'  => 'tree',
                             'subject' => 'server',

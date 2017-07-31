@@ -9,6 +9,8 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class HTMLController
 {
+    use \PHPPgAdmin\HelperTrait;
+
     private $container        = null;
     private $data             = null;
     private $database         = null;
@@ -95,9 +97,9 @@ class HTMLController
             $sep = '&';
         }
 
-        if (strpos($url, SUBFOLDER) === false) {
-            $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
-        }
+        /*if (strpos($url, SUBFOLDER) === false) {
+        $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
+        }*/
         return $url;
     }
 
@@ -121,8 +123,9 @@ class HTMLController
         if (!isset($link['fields'])) {
             $link['fields'] = $_REQUEST;
         }
+        //$this->prtrace($link);
 
-        $tag = "<a ";
+        $tag = '<a ';
         foreach ($link['attr'] as $attr => $value) {
             if ($attr == 'href' and is_array($value)) {
                 $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'])) . '" ';
@@ -130,7 +133,7 @@ class HTMLController
                 $tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
             }
         }
-        $tag .= ">" . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
+        $tag .= '>' . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
 
         if ($do_print) {
             echo $tag;

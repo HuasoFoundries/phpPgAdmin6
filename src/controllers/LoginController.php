@@ -1,48 +1,42 @@
 <?php
 
-    namespace PHPPgAdmin\Controller;
+namespace PHPPgAdmin\Controller;
 
-    /**
-     * Login controller class
-     */
+/**
+ * Login controller class
+ */
 class LoginController extends BaseController
 {
 
-    private $container   = null;
-    private $_connection = null;
-    private $app         = null;
-    private $data        = null;
-    private $database    = null;
-    private $server_id   = null;
-    public $appLangFiles = [];
-    public $appThemes    = [];
-    public $appName      = '';
-    public $appVersion   = '';
-    public $form         = '';
-    public $href         = '';
-    public $lang         = [];
-    public $action       = '';
-    public $_name        = 'LoginController';
-    public $_title       = 'strlogin';
-        private $container    = null;
-        private $_connection  = null;
-        private $app          = null;
-        private $data         = null;
-        private $database     = null;
-        private $server_id    = null;
+    protected $container   = null;
+    protected $_connection = null;
+    protected $app         = null;
+    protected $data        = null;
+    protected $database    = null;
+    protected $server_id   = null;
+    public $appLangFiles   = [];
+    public $appThemes      = [];
+    public $appName        = '';
+    public $appVersion     = '';
+    public $form           = '';
+    public $href           = '';
+    public $lang           = [];
+    public $action         = '';
+    public $_name          = 'LoginController';
+    public $_title         = 'strlogin';
 
     /* Constructor */
 
-        public function __construct(\Slim\Container $container)
-        {
+    public function __construct(\Slim\Container $container)
+    {
         $this->misc = $container->get('misc');
 
         $this->misc->setNoDBConnection(true);
         parent::__construct($container);
     }
 
-        public function render()
-        {
+    public function render()
+    {
         $misc   = $this->misc;
         $lang   = $this->lang;
         $action = $this->action;
@@ -56,14 +50,20 @@ class LoginController extends BaseController
         }
     }
 
-        public function doLoginForm($msg = '')
-        {
+    public function doLoginForm($msg = '')
+    {
 
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
 
         $misc->setNoDBConnection(true);
+
+        $server_id = $this->container['request']->getQueryParam('server');
+
+        if ($server_id === null) {
+            return $this->lang['strinvalidserverparam'];
+        }
 
         $login_html = $this->printHeader($lang[$this->_title], null, false);
         $login_html .= $this->printBody(false);
@@ -75,13 +75,13 @@ class LoginController extends BaseController
             $vars = &$_GET;
         }
         foreach ($_REQUEST as $key => $val) {
-                if (strpos($key, '?') !== false) {
+            if (strpos($key, '?') !== false) {
                 $namexploded               = explode('?', $key);
                 $_REQUEST[$namexploded[1]] = htmlspecialchars($val);
             }
         }
 
-        $server_info = $misc->getServerInfo($_REQUEST['server']);
+        $server_info = $misc->getServerInfo($server_id);
         $title       = sprintf($lang['strlogintitle'], $server_info['desc']);
 
         $printTitle = $this->printTitle($title, null, false);
@@ -94,20 +94,20 @@ class LoginController extends BaseController
 
         $login_html .= '<form id="login_form"  method="post" name="login_form">';
 
-        $md5_server = md5($_REQUEST['server']);
+        $md5_server = md5($server_id);
         // Pass request vars through form (is this a security risk???)
         foreach ($vars as $key => $val) {
             if (substr($key, 0, 5) == 'login') {
                 continue;
             }
-                if (strpos($key, '?') !== false) {
+            if (strpos($key, '?') !== false) {
                 $key = explode('?', $key)[1];
             }
 
             $login_html .= '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($val) . '" />' . "\n";
         }
 
-        $login_html .= '<input type="hidden" name="loginServer" value="' . htmlspecialchars($_REQUEST['server']) . '" />';
+        $login_html .= '<input type="hidden" name="loginServer" value="' . htmlspecialchars($server_id) . '" />';
         $login_html .= '<table class="navbar" border="0" cellpadding="5" cellspacing="3">';
         $login_html .= '<tr>';
         $login_html .= '<td>' . $lang['strusername'] . '</td>';
@@ -141,7 +141,7 @@ class LoginController extends BaseController
         // Output footer
         $login_html .= $misc->printFooter(false);
 
-            return $login_html;
+        return $login_html;
     }
 
-    }
+}

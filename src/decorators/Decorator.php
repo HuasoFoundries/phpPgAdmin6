@@ -125,9 +125,7 @@ class Decorator
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
-        if (strpos($base, SUBFOLDER) === false) {
-            $base = str_replace('//', '/', SUBFOLDER . '/' . $base);
-        }
+
         if (func_num_args() > 2) {
             $v = func_get_args();
             array_shift($v);

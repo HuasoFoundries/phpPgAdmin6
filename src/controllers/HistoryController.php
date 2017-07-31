@@ -61,9 +61,9 @@ class HistoryController extends BaseController
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
-        $onchange = "onchange=\"location.href='" . SUBFOLDER . "/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
+        $onchange = "onchange=\"location.href='" . SUBFOLDER . "/src/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
-        $this->printHeader($lang['strhistory']);
+        $this->printHeader($lang['strhistory'], null, true, 'iframe_header.twig');
 
         // Bring to the front always
         echo "<body onload=\"window.focus();\">\n";

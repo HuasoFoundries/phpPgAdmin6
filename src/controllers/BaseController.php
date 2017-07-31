@@ -10,27 +10,27 @@ class BaseController
 
     use \PHPPgAdmin\HelperTrait;
 
-    private $container        = null;
-    private $_connection      = null;
-    private $app              = null;
-    private $data             = null;
-    private $database         = null;
-    private $server_id        = null;
-    public $appLangFiles      = [];
-    public $appThemes         = [];
-    public $appName           = '';
-    public $appVersion        = '';
-    public $form              = '';
-    public $href              = '';
-    public $lang              = [];
-    public $action            = '';
-    public $_name             = 'BaseController';
-    public $_title            = 'base';
-    private $table_controller = null;
-    private $trail_controller = null;
-    private $tree_controller  = null;
-    private $_no_output       = false;
-    public $msg               = '';
+    protected $container        = null;
+    protected $_connection      = null;
+    protected $app              = null;
+    protected $data             = null;
+    protected $database         = null;
+    protected $server_id        = null;
+    public $appLangFiles        = [];
+    public $appThemes           = [];
+    public $appName             = '';
+    public $appVersion          = '';
+    public $form                = '';
+    public $href                = '';
+    public $lang                = [];
+    public $action              = '';
+    public $_name               = 'BaseController';
+    public $_title              = 'base';
+    protected $table_controller = null;
+    protected $trail_controller = null;
+    protected $tree_controller  = null;
+    protected $_no_output       = false;
+    public $msg                 = '';
 
     /* Constructor */
     public function __construct(\Slim\Container $container)

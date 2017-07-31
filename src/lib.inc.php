@@ -50,11 +50,15 @@ if (!ini_get('session.auto_start')) {
 //echo readlink(dirname(__FILE__));
 define('SUBFOLDER', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
 
-$handler = PhpConsole\Handler::getInstance();
-$handler->setHandleErrors(false); // disable errors handling
-$handler->setHandleExceptions(false); // disable exceptions handling
-$handler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
+$composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
+$appVersion   = $composerinfo->version;
 
+$handler = PhpConsole\Handler::getInstance();
+if (!$debugmode) {
+    $handler->setHandleErrors(false); // disable errors handling
+    $handler->setHandleExceptions(false); // disable exceptions handling
+    $handler->setCallOldHandlers(true); // disable passing errors & exceptions to prviously defined handlers
+}
 $handler->start(); // initialize handlers*/
 PhpConsole\Helper::register(); // it will register global PC class
 
@@ -75,9 +79,9 @@ $config = [
         // backwards incompatible changes are made to config.inc.php-dist.
         'base_version'           => 60,
         // Application version
-        'appVersion'             => '6.0.0-alpha',
+        'appVersion'             => 'v' . $appVersion,
         // Application name
-        'appName'                => 'phpPgAdmin',
+        'appName'                => 'phpPgAdmin6',
 
         // PostgreSQL and PHP minimum version
         'postgresqlMinVer'       => '9.3',
@@ -315,6 +319,7 @@ $app->add(function ($request, $response, $next) use ($container) {
     return $response;
 });
 
+$container['action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 if (!isset($msg)) {
     $msg = '';
