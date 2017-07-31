@@ -3,6 +3,8 @@ $(document).ready(function () {
 	var timeid = query = null;
 	var controlLink = $('#control');
 
+	console.log('Database is', Database);
+
 	var errmsg = $('<p class="errmsg">' + Database.errmsg + '</p>')
 		.insertBefore(controlLink)
 		.hide();
