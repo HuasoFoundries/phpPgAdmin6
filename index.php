@@ -69,41 +69,6 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
 });
 
-//function renderTemplate($container,$request, )
-
-$app->get('/', function ($request, $response, $args) use ($msg) {
-
-    $uri = $request->getUri();
-
-    $base_and_qs = explode('?', $uri->getQuery());
-    //\PC::debug($base_and_qs, 'base_and_qs on route /');
-
-    $query_string = '';
-    if (count($base_and_qs) >= 2) {
-        $query_string = '?' . $base_and_qs[1];
-    }
-
-    $viewVars = $this->lang;
-
-    $viewVars['appName'] = $this->get('settings')['appName'];
-    $subject             = 'intro';
-    $viewVars['rtl']     = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
-
-    if ($viewVars['rtl']) {
-        $viewVars['cols'] = '*,' . $this->conf['left_width'];
-        $template         = 'iframe_view_rtl.twig';
-    } else {
-        $viewVars['cols'] = $this->conf['left_width'] . ',*';
-        $template         = 'iframe_view.twig';
-    }
-    $viewVars['headertemplate'] = 'iframe_header.twig';
-    $url                        = '/src/views/' . $subject . '.php' . $query_string;
-    $viewVars['url']            = $url;
-
-    return $this->view->render($response, $template, $viewVars);
-
-})->setName('home');
-
 $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($msg, $container) {
 
     $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
@@ -111,8 +76,6 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
     $_server_info = $this->misc->getServerInfo();
 
     $body = $response->getBody();
-
-    \PC::debug('subject is ' . $subject);
 
     // If username isn't set in server_info, you should login
     if (!isset($_server_info['username'])) {
@@ -160,13 +123,15 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
         $destinationurl = str_replace("%2Fredirect%2F{$subject}%3F", '', $actionurl->value($_GET));
 
+        //die($destinationurl);
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
     }
 });
 
-$app->get('/{subject}', function ($request, $response, $args) use ($msg, $container) {
+$app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $container) {
     $subject = (isset($args['subject'])) ? $args['subject'] : 'intro';
+
     if ($subject === 'server' || $subject === 'root') {
         $subject = 'login';
     }
@@ -176,7 +141,7 @@ $app->get('/{subject}', function ($request, $response, $args) use ($msg, $contai
     $uri         = $request->getUri();
     $base_and_qs = explode('?', $uri->getQuery());
 
-    $query_string = '';
+    $query_string = '?' . $uri->getQuery();
     if (count($base_and_qs) >= 2) {
         $query_string = '?' . $base_and_qs[1];
     }
@@ -184,6 +149,10 @@ $app->get('/{subject}', function ($request, $response, $args) use ($msg, $contai
     $url = '/src/views/' . $subject . '.php' . $query_string;
 
     \PC::debug(['subject' => $subject, 'url' => $url], 'subject');
+    $viewVars = $this->lang;
+
+    $viewVars['appName'] = $this->get('settings')['appName'];
+
     $viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
     if ($viewVars['rtl']) {
@@ -193,10 +162,9 @@ $app->get('/{subject}', function ($request, $response, $args) use ($msg, $contai
         $viewVars['cols'] = $this->conf['left_width'] . ',*';
         $template         = 'iframe_view.twig';
     }
+    $viewVars['headertemplate'] = 'iframe_header.twig';
 
-    $viewVars            = $this->lang;
-    $viewVars['appName'] = $this->get('settings')['appName'];
-    $viewVars['url']     = $url;
+    $viewVars['url'] = $url;
 
     return $this->view->render($response, $template, $viewVars);
 })->setName('subject');

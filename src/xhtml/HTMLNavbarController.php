@@ -14,12 +14,15 @@ class HTMLNavbarController extends HTMLController
      * Display a bread crumb trail.
      * @param  $do_print true to echo, false to return html
      */
-    public function printTrail($trail = [], $do_print = true)
+    public function printTrail($trail = [], $do_print = true, $from = null)
     {
+        if ($from === null) {
+            $from = __METHOD__;
+        }
         $lang = $this->lang;
         $misc = $this->misc;
 
-        $trail_html = $this->printTopbar(false);
+        $trail_html = $this->printTopbar(false, $from);
 
         if (is_string($trail)) {
             $trail = $this->getTrail($trail);
@@ -81,8 +84,11 @@ class HTMLNavbarController extends HTMLController
      * and 'browse' is the place inside that code (doBrowse).
      * @param bool $do_print if true, print html, if false, return html
      */
-    public function printNavLinks($navlinks, $place, $env = [], $do_print = true)
+    public function printNavLinks($navlinks, $place, $env = [], $do_print = true, $from)
     {
+        if ($from === null || $from === false) {
+            $from = __METHOD__;
+        }
         $plugin_manager = $this->plugin_manager;
 
         // Navlinks hook's place
@@ -95,9 +101,9 @@ class HTMLNavbarController extends HTMLController
 
         if (count($navlinks) > 0) {
             if ($do_print) {
-                $this->printLinksList($navlinks, 'navlink');
+                $this->printLinksList($navlinks, 'navlink', true, $from);
             } else {
-                return $this->printLinksList($navlinks, 'navlink', false);
+                return $this->printLinksList($navlinks, 'navlink', false, $from);
             }
 
         }
@@ -109,8 +115,11 @@ class HTMLNavbarController extends HTMLController
      * @param $activetab The name of the tab to be highlighted.
      * @param  $print if false, return html
      */
-    public function printTabs($tabs, $activetab, $do_print = true)
+    public function printTabs($tabs, $activetab, $do_print = true, $from = null)
     {
+        if ($from === null || $from === false) {
+            $from = __METHOD__;
+        }
 
         $lang = $this->lang;
         $misc = $this->misc;
@@ -130,15 +139,17 @@ class HTMLNavbarController extends HTMLController
             $width = (int) (100 / count($tabs)) . '%';
             foreach ($tabs as $tab_id => $tab) {
 
+                $this->prtrace('tab', $tab);
+
                 $tabs[$tab_id]['active'] = $active = ($tab_id == $activetab) ? ' active' : '';
 
                 $tabs[$tab_id]['width'] = $width;
 
                 if (!isset($tab['hide']) || $tab['hide'] !== true) {
 
-                    $tabs[$tab_id]['tablink'] = htmlentities($this->getActionUrl($tab, $_REQUEST));
+                    $tabs[$tab_id]['tablink'] = htmlentities($this->getActionUrl($tab, $_REQUEST, $from));
 
-                    $tablink = '<a href="' . $tabs[$tab_id]['tablink'] . '">';
+                    $tablink = '<a href="' . SUBFOLDER . '/' . str_replace('.php', '', $tabs[$tab_id]['tablink']) . '" target="parent">';
 
                     if (isset($tab['icon']) && $icon = $misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
@@ -193,8 +204,12 @@ class HTMLNavbarController extends HTMLController
      * @param  bool $do_print true to print, false to return html
      * @return string
      */
-    private function printTopbar($do_print = true)
+    private function printTopbar($do_print = true, $from = null)
     {
+
+        if ($from === null || $from === false) {
+            $from = __METHOD__;
+        }
 
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
@@ -284,7 +299,7 @@ class HTMLNavbarController extends HTMLController
 
             $topbar_html .= '<td style="text-align: right">';
 
-            $topbar_html .= $this->printLinksList($toplinks, 'toplink', [], false);
+            $topbar_html .= $this->printLinksList($toplinks, 'toplink', [], false, $from);
 
             $topbar_html .= '</td>';
 
@@ -539,13 +554,16 @@ class HTMLNavbarController extends HTMLController
      *   WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
      * @param  boolean $do_print true to echo, false to return
      */
-    private function printLinksList($links, $class = '', $do_print = true)
+    private function printLinksList($links, $class = '', $do_print = true, $from = null)
     {
+        if ($from === null || $from === false) {
+            $from = __METHOD__;
+        }
         $misc      = $this->misc;
         $list_html = "<ul class=\"{$class}\">\n";
         foreach ($links as $link) {
             $list_html .= "\t<li>";
-            $list_html .= $this->printLink($link, false);
+            $list_html .= $this->printLink($link, false, $from);
             $list_html .= "</li>\n";
         }
         $list_html .= "</ul>\n";

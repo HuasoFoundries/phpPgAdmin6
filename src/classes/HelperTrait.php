@@ -10,14 +10,30 @@ trait HelperTrait
     public function prtrace()
     {
 
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
 
         $btarray0 = ([
-            'class'    => $backtrace[1]['class'],
-            'type'     => $backtrace[1]['type'],
-            'function' => $backtrace[1]['function'],
-            'spacer'   => ' ',
-            'line'     => $backtrace[0]['line'],
+            'class0'    => $backtrace[3]['class'],
+            'type0'     => $backtrace[3]['type'],
+            'function0' => $backtrace[3]['function'],
+            'spacer0'   => ' ',
+            'line0'     => $backtrace[2]['line'],
+
+            'spacer1'   => ' ',
+
+            'class1'    => $backtrace[2]['class'],
+            'type1'     => $backtrace[2]['type'],
+            'function1' => $backtrace[2]['function'],
+            'spacer2'   => ' ',
+            'line1'     => $backtrace[1]['line'],
+
+            'spacer3'   => ' ',
+
+            'class2'    => $backtrace[1]['class'],
+            'type2'     => $backtrace[1]['type'],
+            'function2' => $backtrace[1]['function'],
+            'spacer4'   => ' ',
+            'line2'     => $backtrace[0]['line'],
         ]);
 
         $tag = implode('', $btarray0);
@@ -143,7 +159,7 @@ trait HelperTrait
 
     public function getHelpLink($help)
     {
-        return htmlspecialchars('/src/views/help.php?help=' . urlencode($help) . '&server=' . urlencode($this->server_id));
+        return htmlspecialchars(SUBFOLDER . '/help?help=' . urlencode($help) . '&server=' . urlencode($this->server_id));
 
     }
 

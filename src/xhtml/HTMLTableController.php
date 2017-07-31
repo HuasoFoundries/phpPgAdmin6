@@ -208,7 +208,7 @@ class HTMLTableController extends HTMLController
                                 //$this->prtrace($column_id, $action);
                                 $tbody_html .= "<td class=\"opbutton{$id} {$this->class}\">";
                                 $action['fields'] = $tabledata->fields;
-                                $tbody_html .= $this->printLink($action, false);
+                                $tbody_html .= $this->printLink($action, false, __METHOD__);
                                 $tbody_html .= "</td>\n";
                             }
                         }
