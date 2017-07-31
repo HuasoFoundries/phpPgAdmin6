@@ -174,7 +174,7 @@ $container['misc'] = function ($c) {
     // 4. Check for theme by server/db/user
     $_server_info = $misc->getServerInfo();
 
-    \PC::debug($_server_info, 'server info');
+    //\PC::debug($_server_info, 'server info');
 
     /* starting with PostgreSQL 9.0, we can set the application name */
     if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {

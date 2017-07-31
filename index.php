@@ -112,6 +112,8 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
     $body = $response->getBody();
 
+    \PC::debug('subject is ' . $subject);
+
     // If username isn't set in server_info, you should login
     if (!isset($_server_info['username'])) {
 
@@ -158,7 +160,6 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
         $destinationurl = str_replace("%2Fredirect%2F{$subject}%3F", '', $actionurl->value($_GET));
 
-        //die($destinationurl);
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
     }

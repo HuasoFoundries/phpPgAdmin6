@@ -37,7 +37,7 @@ class RedirectUrlDecorator extends Decorator
                 $sep = '&';
             }
         }
-        if ((strpos($url, '/') === 0) && (strpos($url, SUBFOLDER) === false)) {
+        if (SUBFOLDER !== '' && (strpos($url, '/') === 0) && (strpos($url, SUBFOLDER) === false)) {
             $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
         }
         return str_replace('.php', '', $url);

@@ -120,7 +120,7 @@ class HTMLNavbarController extends HTMLController
             $_SESSION['webdbLastTab'][$tabs] = $activetab;
             $tabs                            = $misc->getNavTabs($tabs);
         }
-        $this->prtrace($tabs);
+        //$this->prtrace($tabs);
         $tabs_html = '';
         if (count($tabs) > 0) {
 
