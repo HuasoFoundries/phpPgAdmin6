@@ -10,10 +10,10 @@ trait HelperTrait
     public function prtrace()
     {
 
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = ([
-            'class0'    => $backtrace[3]['class'],
+            /*'class0'    => $backtrace[3]['class'],
             'type0'     => $backtrace[3]['type'],
             'function0' => $backtrace[3]['function'],
             'spacer0'   => ' ',
@@ -27,7 +27,7 @@ trait HelperTrait
             'spacer2'   => ' ',
             'line1'     => $backtrace[1]['line'],
 
-            'spacer3'   => ' ',
+            'spacer3'   => ' ',*/
 
             'class2'    => $backtrace[1]['class'],
             'type2'     => $backtrace[1]['type'],

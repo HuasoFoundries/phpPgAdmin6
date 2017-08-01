@@ -149,7 +149,7 @@ class HTMLNavbarController extends HTMLController
 
                     $tabs[$tab_id]['tablink'] = htmlentities($this->getActionUrl($tab, $_REQUEST, $from));
 
-                    $tablink = '<a href="' . SUBFOLDER . '/' . str_replace('.php', '', $tabs[$tab_id]['tablink']) . '" target="parent">';
+                    $tablink = '<a href="' . SUBFOLDER . '/' . str_replace('.php', '', $tabs[$tab_id]['tablink']) . '" target="_parent">';
 
                     if (isset($tab['icon']) && $icon = $misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;

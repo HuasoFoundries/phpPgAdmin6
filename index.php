@@ -141,14 +141,14 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
     $uri         = $request->getUri();
     $base_and_qs = explode('?', $uri->getQuery());
 
-    $query_string = '?' . $uri->getQuery();
+    $query_string = $uri->getQuery();
     if (count($base_and_qs) >= 2) {
-        $query_string = '?' . $base_and_qs[1];
+        $query_string = $base_and_qs[1];
     }
 
-    $url = '/src/views/' . $subject . '.php' . $query_string;
+    $url = '/src/views/' . $subject . '.php' . ($query_string ? '?' . $query_string : '');
 
-    \PC::debug(['subject' => $subject, 'url' => $url], 'subject');
+    \PC::debug(['subject' => $subject, 'url' => $url, 'query_string' => $query_string], 'subject');
     $viewVars = $this->lang;
 
     $viewVars['appName'] = $this->get('settings')['appName'];
