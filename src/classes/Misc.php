@@ -1589,7 +1589,7 @@ class Misc
         } else {
             $tab = reset($tabs);
         }
-        \PC::debug(['section' => $section, 'tabs' => $tabs, 'tab' => $tab], 'getLastTabURL');
+        $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
         return isset($tab['url']) ? $tab : null;
     }
 

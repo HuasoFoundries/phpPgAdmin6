@@ -22,22 +22,25 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
     $body = $response->getBody();
     $misc = $this->misc;
 
-    $pwdkey = 'loginPassword_' . md5($_POST['loginServer']);
+    $loginShared   = $request->getParsedBodyParam('loginShared');
+    $loginServer   = $request->getParsedBodyParam('loginServer');
+    $loginUsername = $request->getParsedBodyParam('loginUsername');
+    $loginPassword = $request->getParsedBodyParam('loginPassword_' . md5($loginServer));
+
     // If login action is set, then set session variables
-    if (isset($_POST['loginServer']) && isset($_POST['loginUsername']) &&
-        isset($_POST['loginPassword_' . md5($_POST['loginServer'])])) {
+    if ($loginServer !== null && $loginUsername !== null && $loginPassword !== null) {
 
-        $_server_info = $this->misc->getServerInfo($_POST['loginServer']);
+        $_server_info = $this->misc->getServerInfo($loginServer);
 
-        $_server_info['username'] = $_POST['loginUsername'];
-        $_server_info['password'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
+        $_server_info['username'] = $loginUsername;
+        $_server_info['password'] = $loginPassword;
 
-        $this->misc->setServerInfo(null, $_server_info, $_POST['loginServer']);
+        $this->misc->setServerInfo(null, $_server_info, $loginServer);
 
         // Check for shared credentials
-        if (isset($_POST['loginShared'])) {
-            $_SESSION['sharedUsername'] = $_POST['loginUsername'];
-            $_SESSION['sharedPassword'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
+        if ($loginShared !== null) {
+            $_SESSION['sharedUsername'] = $loginUsername;
+            $_SESSION['sharedPassword'] = $loginPassword;
         }
 
         $data = $misc->getDatabaseAccessor();
@@ -59,8 +62,21 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
         if (!isset($_server_info['username'])) {
 
-            $login_controller = new \PHPPgAdmin\Controller\LoginController($this);
-            $body->write($login_controller->doLoginForm($msg));
+            $server_id = $request->getQueryParam('server');
+
+            // but if server_id isn't set, then you will be redirected to intro
+            if ($server_id === null) {
+
+                return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/intro.php');
+
+            } else {
+
+                $this->misc->setNoDBConnection(true);
+
+                $controller = new \PHPPgAdmin\Controller\LoginController($this);
+                $body_html  = $controller->doLoginForm($msg);
+                $body->write($body_html);
+            }
 
         }
     }
@@ -93,8 +109,8 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
             $controller = new \PHPPgAdmin\Controller\LoginController($this);
             $body_html  = $controller->doLoginForm($msg);
+            $body->write($body_html);
         }
-        $body->write($body_html);
 
         return $response;
 
@@ -137,6 +153,7 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
     }
 
     \PC::debug($subject, 'subject on route /{subject}');
+    //die('subject on route /{subject} is ' . $subject);
 
     $uri         = $request->getUri();
     $base_and_qs = explode('?', $uri->getQuery());
@@ -144,6 +161,11 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
     $query_string = $uri->getQuery();
     if (count($base_and_qs) >= 2) {
         $query_string = $base_and_qs[1];
+    }
+
+    $server_id = $request->getQueryParam('server');
+    if ($subject === 'login' && $server_id === null) {
+        $subject = 'intro';
     }
 
     $url = '/src/views/' . $subject . '.php' . ($query_string ? '?' . $query_string : '');

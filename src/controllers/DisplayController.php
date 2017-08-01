@@ -290,7 +290,7 @@ class DisplayController extends BaseController
         $this->prtrace($query);
         //die(htmlspecialchars($query));
 
-        echo '<form method="POST" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
+        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($query);

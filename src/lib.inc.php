@@ -47,11 +47,6 @@ if (!ini_get('session.auto_start')) {
 }
 \Kint::$enabled_mode = $debugmode;
 
-//echo readlink(dirname(__FILE__));
-//\Kint::dump(dirname($_SERVER['PHP_SELF']), $_SERVER);
-//die();
-define('SUBFOLDER', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
-
 $composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
 $appVersion   = $composerinfo->version;
 
@@ -96,7 +91,12 @@ $config = [
 $app = new \Slim\App($config);
 
 // Fetch DI Container
-$container           = $app->getContainer();
+$container = $app->getContainer();
+
+$normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
+$subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
+define('SUBFOLDER', $subfolder);
+
 $container['errors'] = [];
 
 $container['add_error'] = function ($c) {
@@ -326,4 +326,5 @@ $container['action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 if (!isset($msg)) {
     $msg = '';
 }
+
 $container['msg'] = $msg;
