@@ -1,6 +1,6 @@
 <?php
 
-    namespace PHPPgAdmin\Decorators;
+namespace PHPPgAdmin\Decorators;
 
 class FieldDecorator extends Decorator
 {
@@ -14,7 +14,13 @@ class FieldDecorator extends Decorator
 
     public function value($fields)
     {
-        return isset($fields[$this->f]) ? Decorator::get_sanitized_value($fields[$this->f], $fields) : (isset($this->d) ? $this->d : null);
+        if (isset($fields[$this->f])) {
+            return Decorator::get_sanitized_value($fields[$this->f], $fields);
+        } else if (isset($this->d)) {
+            return $this->d;
+        } else {
+            return null;
+        }
     }
 
-    }
+}

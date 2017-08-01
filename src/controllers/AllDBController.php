@@ -85,7 +85,7 @@ class AllDBController extends BaseController
 
         $reqvars = $misc->getRequestVars('database');
 
-        //$this->prtrace($reqvars);
+        $this->prtrace($reqvars);
 
         $attrs = [
             'text'    => Decorator::field('datname'),

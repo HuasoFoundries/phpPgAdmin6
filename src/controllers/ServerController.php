@@ -168,6 +168,8 @@ class ServerController extends BaseController
 
         $reqvars = $misc->getRequestVars('server');
 
+        $this->prtrace($reqvars);
+
         $attrs = [
             'text'    => Decorator::field('desc'),
             // Show different icons for logged in/out

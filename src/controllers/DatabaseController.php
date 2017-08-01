@@ -776,10 +776,12 @@ class DatabaseController extends BaseController
 
         $reqvars = $misc->getRequestVars('database');
 
+        $this->prtrace($reqvars);
+
         $tabs = $misc->getNavTabs('database');
 
         $items = $this->adjustTabsForTree($tabs);
-        //\PC::debug($reqvars, 'reqvars');
+
         $attrs = [
             'text'   => Decorator::field('title'),
             'icon'   => Decorator::field('icon'),

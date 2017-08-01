@@ -83,6 +83,8 @@ class SchemaController extends BaseController
 
         $reqvars = $misc->getRequestVars('schema');
 
+        $this->prtrace($reqvars);
+
         $attrs = [
             'text'    => Decorator::field('nspname'),
             'icon'    => 'Schema',
@@ -120,6 +122,8 @@ class SchemaController extends BaseController
         $items = $this->adjustTabsForTree($tabs);
 
         $reqvars = $misc->getRequestVars('schema');
+
+        $this->prtrace($reqvars);
 
         $attrs = [
             'text'   => Decorator::field('title'),

@@ -105,7 +105,7 @@ class HTMLController
         /*if (strpos($url, SUBFOLDER) === false) {
         $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
         }*/
-        $this->prtrace('getActionUrl', $url, 'from', $from);
+        //$this->prtrace('getActionUrl', $url, 'from', $from);
         return $url;
     }
 

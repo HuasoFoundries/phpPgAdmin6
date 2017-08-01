@@ -48,6 +48,8 @@ if (!ini_get('session.auto_start')) {
 \Kint::$enabled_mode = $debugmode;
 
 //echo readlink(dirname(__FILE__));
+//\Kint::dump(dirname($_SERVER['PHP_SELF']), $_SERVER);
+//die();
 define('SUBFOLDER', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
 
 $composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));

@@ -26,8 +26,8 @@
                 console.log('location subject', subject, 'redirect_to', redirect_to);;
             } else {
                 redirect_to = '{{subfolder}}/' + subject + location.search
-                var redirection_msg = 'location subject ' + subject + ' redirect_to ' + redirect_to;
-                alert(redirection_msg);
+                var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
+                //alert(redirection_msg);
                 console.log(redirection_msg);
                 location.href = redirect_to;
             }
