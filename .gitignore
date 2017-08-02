@@ -10,8 +10,6 @@ config.inc.php*
 
 vendor
 *.log
-logs
-info.php
 fabfile*
 /.idea/*
 phppga
