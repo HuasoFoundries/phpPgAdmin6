@@ -133,7 +133,7 @@ class ColPropertyController extends BaseController
                     $types        = $data->getTypes(true, false, true);
                     $types_for_js = [];
 
-                    echo "<td><select name=\"type\" id=\"type\" onchange=\"checkLengths(document.getElementById('type').value,'');\">\n";
+                    echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">" . "\n";
                     while (!$types->EOF) {
                         $typname        = $types->fields['typname'];
                         $types_for_js[] = $typname;
@@ -142,7 +142,6 @@ class ColPropertyController extends BaseController
                         $types->moveNext();
                     }
                     echo "</select>\n";
-                    echo "<script>jQuery('#type').select2();</script>\n";
                     echo "</td>\n";
 
                     // Output array type selector
