@@ -404,7 +404,7 @@ class Postgres extends ADODB_base
      * @param $str The string to clean, by reference
      * @return The cleaned string
      */
-    public function clean(string &$str)
+    public function clean(&$str)
     {
         if ($str === null) {
             return null;

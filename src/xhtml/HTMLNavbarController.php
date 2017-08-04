@@ -139,7 +139,7 @@ class HTMLNavbarController extends HTMLController
             $width = (int) (100 / count($tabs)) . '%';
             foreach ($tabs as $tab_id => $tab) {
 
-                $this->prtrace('tab', $tab);
+                //$this->prtrace('tab', $tab);
 
                 $tabs[$tab_id]['active'] = $active = ($tab_id == $activetab) ? ' active' : '';
 
