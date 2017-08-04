@@ -1,30 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+{% include 'iframe_header.twig' %}
+</head>
 
-    <head>
-        {% include 'iframe_header.twig' %}
-    </head>
+<body class="flexbox_body">
+    <div class="flexbox_wrapper">
 
-    <body class="flexbox_body">
-        <div class="flexbox_wrapper">
+        <iframe src="{{subfolder}}/src/views/{{view}}.php" name="detail" id="detail" class="detail_container" frameborder="0" />
+        <p>Your browser does not support iframes.</p>
+        </iframe>
 
-            <iframe src="{{subfolder}}/src/views/{{view}}.php" name="detail" id="detail" class="detail_container" frameborder="0" />
+        <div id="browser_container">
+            <iframe src="{{subfolder}}/src/views/browser.php" name="browser" id="browser" class="browser_container" frameborder="0" />
             <p>Your browser does not support iframes.</p>
             </iframe>
-
-            <div id="browser_container">
-                <iframe src="{{subfolder}}/src/views/browser.php" name="browser" id="browser" class="browser_container" frameborder="0" />
-                <p>Your browser does not support iframes.</p>
-                </iframe>
-            </div>
-
-            <script type="text/javascript">
-            jQuery('#browser_container').resizable({
-                handles: "w"
-            });
-            </script>
-
         </div>
-    </body>
+
+        <script type="text/javascript">
+        jQuery('#browser_container').resizable({
+            handles: "w"
+        });
+        </script>
+
+    </div>
+</body>
 
 </html>

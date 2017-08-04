@@ -59,11 +59,10 @@ class Misc
             die($this->lang['strbadconfig']);
 
         }
-
         // Check database support is properly compiled in
         if (!function_exists('pg_connect')) {
+            //$container['add_error']($this->lang['strnotloaded']);
             die($this->lang['strnotloaded']);
-
         }
 
         // Check the version of PHP
@@ -216,7 +215,7 @@ class Misc
             // The description of the server is returned in $platform.
             $_type = $_connection->getDriver($platform);
 
-            $this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
+            //$this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
 
             if ($_type === null) {
                 die(sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer));
@@ -591,10 +590,10 @@ class Misc
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = '/redirect';
+            $vars['url'] = SUBFOLDER . '/redirect';
         }
-        if ($vars['url'] == '/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = '/redirect/' . $vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -1590,7 +1589,7 @@ class Misc
         } else {
             $tab = reset($tabs);
         }
-        \PC::debug(['section' => $section, 'tabs' => $tabs, 'tab' => $tab], 'getLastTabURL');
+        $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
         return isset($tab['url']) ? $tab : null;
     }
 
@@ -1715,6 +1714,7 @@ class Misc
                 }
             }
         }
+        //$this->prtrace($v);
         return $v;
     }
 
@@ -1912,7 +1912,7 @@ class Misc
                 );
                 if (isset($srvs[$server_id]['username'])) {
                     $srvs[$server_id]['icon']   = 'Server';
-                    $srvs[$server_id]['branch'] = Decorator::url('all_db.php',
+                    $srvs[$server_id]['branch'] = Decorator::url('/src/views/all_db.php',
                         [
                             'action'  => 'tree',
                             'subject' => 'server',
@@ -2238,7 +2238,7 @@ class Misc
 
             $fksprops['code'] .= '<div id="fkbg"></div>';
             $fksprops['code'] .= '<div id="fklist"></div>';
-            $fksprops['code'] .= '<script src="/js/ac_insert_row.js" type="text/javascript"></script>';
+            $fksprops['code'] .= '<script src="' . SUBFOLDER . '/js/ac_insert_row.js" type="text/javascript"></script>';
         } else /* we have no foreign keys on this table */
         {
             return false;

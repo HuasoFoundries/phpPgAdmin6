@@ -2,21 +2,21 @@
 
     namespace PHPPgAdmin\Decorators;
 
-    class replaceDecorator extends Decorator
+class replaceDecorator extends Decorator
+{
+    public function __construct($str, $params)
     {
-        public function __construct($str, $params)
-        {
-            $this->s = $str;
-            $this->p = $params;
+        $this->s = $str;
+        $this->p = $params;
+    }
+
+    public function value($fields)
+    {
+        $str = $this->s;
+        foreach ($this->p as $k => $v) {
+            $str = str_replace($k, Decorator::get_sanitized_value($v, $fields), $str);
         }
 
-        public function value($fields)
-        {
-            $str = $this->s;
-            foreach ($this->p as $k => $v) {
-                $str = str_replace($k, Decorator::get_sanitized_value($v, $fields), $str);
-            }
-
-            return $str;
-        }
+        return $str;
+    }
     }

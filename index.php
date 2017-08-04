@@ -10,27 +10,37 @@
 
 require_once './src/lib.inc.php';
 
+/*$app->post('/info', function ($request, $response, $args) use ($msg) {
+
+var_dump($_SERVER);
+
+return $response;
+});*/
+
 $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
 
     $body = $response->getBody();
     $misc = $this->misc;
 
-    $pwdkey = 'loginPassword_' . md5($_POST['loginServer']);
+    $loginShared   = $request->getParsedBodyParam('loginShared');
+    $loginServer   = $request->getParsedBodyParam('loginServer');
+    $loginUsername = $request->getParsedBodyParam('loginUsername');
+    $loginPassword = $request->getParsedBodyParam('loginPassword_' . md5($loginServer));
+
     // If login action is set, then set session variables
-    if (isset($_POST['loginServer']) && isset($_POST['loginUsername']) &&
-        isset($_POST['loginPassword_' . md5($_POST['loginServer'])])) {
+    if ($loginServer !== null && $loginUsername !== null && $loginPassword !== null) {
 
-        $_server_info = $this->misc->getServerInfo($_POST['loginServer']);
+        $_server_info = $this->misc->getServerInfo($loginServer);
 
-        $_server_info['username'] = $_POST['loginUsername'];
-        $_server_info['password'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
+        $_server_info['username'] = $loginUsername;
+        $_server_info['password'] = $loginPassword;
 
-        $this->misc->setServerInfo(null, $_server_info, $_POST['loginServer']);
+        $this->misc->setServerInfo(null, $_server_info, $loginServer);
 
         // Check for shared credentials
-        if (isset($_POST['loginShared'])) {
-            $_SESSION['sharedUsername'] = $_POST['loginUsername'];
-            $_SESSION['sharedPassword'] = $_POST['loginPassword_' . md5($_POST['loginServer'])];
+        if ($loginShared !== null) {
+            $_SESSION['sharedUsername'] = $loginUsername;
+            $_SESSION['sharedPassword'] = $loginPassword;
         }
 
         $data = $misc->getDatabaseAccessor();
@@ -52,8 +62,21 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
         if (!isset($_server_info['username'])) {
 
-            $login_controller = new \PHPPgAdmin\Controller\LoginController($this);
-            $body->write($login_controller->doLoginForm($msg));
+            $server_id = $request->getQueryParam('server');
+
+            // but if server_id isn't set, then you will be redirected to intro
+            if ($server_id === null) {
+
+                return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/intro.php');
+
+            } else {
+
+                $this->misc->setNoDBConnection(true);
+
+                $controller = new \PHPPgAdmin\Controller\LoginController($this);
+                $body_html  = $controller->doLoginForm($msg);
+                $body->write($body_html);
+            }
 
         }
     }
@@ -62,73 +85,40 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
 });
 
-$app->get('/', function ($request, $response, $args) use ($msg) {
-
-    $uri         = $request->getUri();
-    $base_and_qs = explode('?', $uri->getQuery());
-
-    $query_string = '';
-    if (count($base_and_qs) >= 2) {
-        $query_string = '?' . $base_and_qs[1];
-    }
-
-    $viewVars = $this->lang;
-
-    $viewVars['appName'] = $this->get('settings')['appName'];
-    $subject             = 'intro';
-    $viewVars['rtl']     = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
-
-    if ($viewVars['rtl']) {
-        $viewVars['cols'] = '*,' . $this->conf['left_width'];
-        $template         = 'iframe_view_rtl.twig';
-    } else {
-        $viewVars['cols'] = $this->conf['left_width'] . ',*';
-        $template         = 'iframe_view.twig';
-    }
-    $viewVars['headertemplate'] = 'iframe_header.twig';
-    $url                        = '/src/views/' . $subject . '.php' . $query_string;
-    $viewVars['url']            = $url;
-
-    return $this->view->render($response, $template, $viewVars);
-
-});
-
 $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($msg, $container) {
 
     $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
 
-    $viewVars            = $this->lang;
-    $viewVars['appName'] = $this->get('settings')['appName'];
-
-    $viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
-
-    if ($subject == 'root') {
-        $this->misc->setNoDBConnection(true);
-    }
     $_server_info = $this->misc->getServerInfo();
 
     $body = $response->getBody();
-    \PC::debug($subject, 'subject');
 
+    // If username isn't set in server_info, you should login
     if (!isset($_server_info['username'])) {
-        $this->misc->setNoDBConnection(true);
 
-        $login_controller = new \PHPPgAdmin\Controller\LoginController($this);
-        $login_html       = $login_controller->doLoginForm($msg);
+        $server_id = $request->getQueryParam('server');
 
-        $body->write($login_html);
+        // but if server_id isn't set, then you will be redirected to intro
+        if ($server_id === null) {
+
+            return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/intro.php');
+
+        } else {
+
+            $this->misc->setNoDBConnection(true);
+
+            $controller = new \PHPPgAdmin\Controller\LoginController($this);
+            $body_html  = $controller->doLoginForm($msg);
+            $body->write($body_html);
+        }
 
         return $response;
 
-        //return $response->withStatus(302)->withHeader('Location', '/login');
     } else {
 
         $url = $this->misc->getLastTabURL($subject);
 
         $include_file = $url['url'];
-
-        \PC::debug($url, 'url');
-        \PC::debug($subject, 'subject');
 
         // Load query vars into superglobal arrays
         if (isset($url['urlvars'])) {
@@ -147,37 +137,44 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
         $actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($include_file, $_GET);
 
-        if (false && is_readable('./src/views/' . $include_file)) {
-            require ('./src/views/' . $include_file);
-        } else {
-            $destinationurl = str_replace("%2Fredirect%2F{$subject}%3F", '', $actionurl->value($_GET));
+        $destinationurl = str_replace("%2Fredirect%2F{$subject}%3F", '', $actionurl->value($_GET));
 
-            $viewVars['url'] = $destinationurl;
+        //die($destinationurl);
+        return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
-            \PC::debug($destinationurl, 'destinationurl');
-            return $response->withStatus(302)->withHeader('Location', $destinationurl);
-            //return $this->view->render($response, 'view.twig', $viewVars);
-
-        }
     }
 });
 
-$app->get('/{subject}', function ($request, $response, $args) use ($msg, $container) {
-    $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
+$app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $container) {
+    $subject = (isset($args['subject'])) ? $args['subject'] : 'intro';
+
     if ($subject === 'server' || $subject === 'root') {
         $subject = 'login';
     }
+
+    \PC::debug($subject, 'subject on route /{subject}');
+    //die('subject on route /{subject} is ' . $subject);
+
     $uri         = $request->getUri();
     $base_and_qs = explode('?', $uri->getQuery());
 
-    $query_string = '';
+    $query_string = $uri->getQuery();
     if (count($base_and_qs) >= 2) {
-        $query_string = '?' . $base_and_qs[1];
+        $query_string = $base_and_qs[1];
     }
 
-    $url = '/src/views/' . $subject . '.php' . $query_string;
+    $server_id = $request->getQueryParam('server');
+    if ($subject === 'login' && $server_id === null) {
+        $subject = 'intro';
+    }
 
-    \PC::debug(['subject' => $subject, 'url' => $url], 'subject');
+    $url = '/src/views/' . $subject . '.php' . ($query_string ? '?' . $query_string : '');
+
+    \PC::debug(['subject' => $subject, 'url' => $url, 'query_string' => $query_string], 'subject');
+    $viewVars = $this->lang;
+
+    $viewVars['appName'] = $this->get('settings')['appName'];
+
     $viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
     if ($viewVars['rtl']) {
@@ -187,13 +184,12 @@ $app->get('/{subject}', function ($request, $response, $args) use ($msg, $contai
         $viewVars['cols'] = $this->conf['left_width'] . ',*';
         $template         = 'iframe_view.twig';
     }
+    $viewVars['headertemplate'] = 'iframe_header.twig';
 
-    $viewVars            = $this->lang;
-    $viewVars['appName'] = $this->get('settings')['appName'];
-    $viewVars['url']     = $url;
+    $viewVars['url'] = $url;
 
     return $this->view->render($response, $template, $viewVars);
-});
+})->setName('subject');
 
 // Run app
 $app->run();

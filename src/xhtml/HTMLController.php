@@ -1,143 +1,153 @@
 <?php
 
-    namespace PHPPgAdmin\XHtml;
+namespace PHPPgAdmin\XHtml;
 
-    use PHPPgAdmin\Decorators\Decorator;
+use \PHPPgAdmin\Decorators\Decorator;
+
+/**
+ * Base controller class
+ */
+class HTMLController
+{
+    use \PHPPgAdmin\HelperTrait;
+
+    private $container        = null;
+    private $data             = null;
+    private $database         = null;
+    private $server_id        = null;
+    public $form              = '';
+    public $href              = '';
+    public $lang              = [];
+    public $action            = '';
+    public $_name             = 'HTMLController';
+    public $controller_name   = 'HTMLController';
+    public $_title            = 'base';
+    private $table_controller = null;
+    private $trail_controller = null;
+
+    /* Constructor */
+    public function __construct(\Slim\Container $container, $controller_name = null)
+    {
+        $this->container      = $container;
+        $this->lang           = $container->get('lang');
+        $this->conf           = $container->get('conf');
+        $this->view           = $container->get('view');
+        $this->plugin_manager = $container->get('plugin_manager');
+        $this->appName        = $container->get('settings')['appName'];
+        $this->appVersion     = $container->get('settings')['appVersion'];
+        $this->appLangFiles   = $container->get('appLangFiles');
+        $this->misc           = $container->get('misc');
+        $this->appThemes      = $container->get('appThemes');
+        $this->action         = $container->get('action');
+        if ($controller_name !== null) {
+            $this->controller_name = $controller_name;
+        }
+
+        //\PC::debug($this->_name, 'instanced controller');
+    }
+
+    public function getContainer()
+    {
+        return $this->container;
+    }
 
     /**
-     * Base controller class
+     * Returns URL given an action associative array.
+     * NOTE: this function does not html-escape, only url-escape
+     * @param $action An associative array of the follow properties:
+     *            'url'  => The first part of the URL (before the ?)
+     *            'urlvars' => Associative array of (URL variable => field name)
+     *                        these are appended to the URL
+     * @param $fields Field data from which 'urlfield' and 'vars' are obtained.
      */
-    class HTMLController
+    protected function getActionUrl(&$action, &$fields, $from = null)
     {
-        public  $form             = '';
-        public  $href             = '';
-        public  $lang             = [];
-        public  $action           = '';
-        public  $_name            = 'HTMLController';
-        public  $controller_name  = 'HTMLController';
-        public  $_title           = 'base';
-        private $container        = null;
-        private $data             = null;
-        private $database         = null;
-        private $server_id        = null;
-        private $table_controller = null;
-        private $trail_controller = null;
 
-        /* Constructor */
-        public function __construct(\Slim\Container $container, $controller_name = null)
-        {
-            $this->container      = $container;
-            $this->lang           = $container->get('lang');
-            $this->conf           = $container->get('conf');
-            $this->view           = $container->get('view');
-            $this->plugin_manager = $container->get('plugin_manager');
-            $this->appName        = $container->get('settings')['appName'];
-            $this->appVersion     = $container->get('settings')['appVersion'];
-            $this->appLangFiles   = $container->get('appLangFiles');
-            $this->misc           = $container->get('misc');
-            $this->appThemes      = $container->get('appThemes');
-            $this->action         = $container->get('action');
-            if ($controller_name !== null) {
-                $this->controller_name = $controller_name;
-            }
-            //\PC::debug($this->_name, 'instanced controller');
+        if ($from === null) {
+            $from = __METHOD__;
         }
 
-        public function getContainer()
-        {
-            return $this->container;
+        $url = Decorator::get_sanitized_value($action['url'], $fields);
+
+        if ($url === false) {
+            return '';
         }
 
-        /**
-         * Display a link
-         *
-         * @param      $link An associative array of link parameters to print
-         *                   link = array(
-         *                   'attr' => array( // list of A tag attribute
-         *                   'attrname' => attribute value
-         *                   ...
-         *                   ),
-         *                   'content' => The link text
-         *                   'fields' => (optionnal) the data from which content and attr's values are obtained
-         *                   );
-         *                   the special attribute 'href' might be a string or an array. If href is an array it
-         *                   will be generated by getActionUrl. See getActionUrl comment for array format.
-         * @param bool $do_print
-         * @return string
-         */
-        public function printLink($link, $do_print = true)
-        {
+        if (!empty($action['urlvars'])) {
+            $urlvars = Decorator::get_sanitized_value($action['urlvars'], $fields);
+        } else {
+            $urlvars = [];
+        }
 
-            if (!isset($link['fields'])) {
-                $link['fields'] = $_REQUEST;
-            }
+        /* set server, database and schema parameter if not presents */
+        if (isset($urlvars['subject'])) {
+            $subject = Decorator::get_sanitized_value($urlvars['subject'], $fields);
+        } else {
+            $subject = '';
+        }
 
-            $tag = '<a ';
-            foreach ($link['attr'] as $attr => $value) {
-                if ($attr == 'href' and is_array($value)) {
-                    $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'])) . '" ';
-                } else {
-                    $tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
+        if (isset($_REQUEST['server']) and !isset($urlvars['server']) and $subject != 'root') {
+            $urlvars['server'] = $_REQUEST['server'];
+            if (isset($_REQUEST['database']) and !isset($urlvars['database']) and $subject != 'server') {
+                $urlvars['database'] = $_REQUEST['database'];
+                if (isset($_REQUEST['schema']) and !isset($urlvars['schema']) and $subject != 'database') {
+                    $urlvars['schema'] = $_REQUEST['schema'];
                 }
             }
-            $tag .= '>' . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
-
-            if ($do_print) {
-                echo $tag;
-            } else {
-                return $tag;
-            }
         }
 
-        /**
-         * Returns URL given an action associative array.
-         * NOTE: this function does not html-escape, only url-escape
-         *
-         * @param $action         An associative array of the follow properties:
-         *                        'url'  => The first part of the URL (before the ?)
-         *                        'urlvars' => Associative array of (URL variable => field name)
-         *                        these are appended to the URL
-         * @param $fields         Field data from which 'urlfield' and 'vars' are obtained.
-         * @return string
-         */
-        protected function getActionUrl(&$action, &$fields)
-        {
-            $url = Decorator::get_sanitized_value($action['url'], $fields);
+        $sep = '?';
+        foreach ($urlvars as $var => $varfield) {
+            $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($varfield, $fields);
+            $sep = '&';
+        }
 
-            if ($url === false) {
-                return '';
-            }
+        /*if (strpos($url, SUBFOLDER) === false) {
+        $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
+        }*/
+        //$this->prtrace('getActionUrl', $url, 'from', $from);
+        return $url;
+    }
 
-            if (!empty($action['urlvars'])) {
-                $urlvars = Decorator::get_sanitized_value($action['urlvars'], $fields);
+    /**
+     * Display a link
+     * @param $link An associative array of link parameters to print
+     *     link = array(
+     *       'attr' => array( // list of A tag attribute
+     *          'attrname' => attribute value
+     *          ...
+     *       ),
+     *       'content' => The link text
+     *       'fields' => (optionnal) the data from which content and attr's values are obtained
+     *     );
+     *   the special attribute 'href' might be a string or an array. If href is an array it
+     *   will be generated by getActionUrl. See getActionUrl comment for array format.
+     */
+    public function printLink($link, $do_print = true, $from = null)
+    {
+
+        if (!isset($link['fields'])) {
+            $link['fields'] = $_REQUEST;
+        }
+        if ($from === null || $from === false) {
+            $from = __METHOD__;
+        }
+
+        $tag = '<a ';
+        foreach ($link['attr'] as $attr => $value) {
+            if ($attr == 'href' and is_array($value)) {
+                $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'], $from)) . '" ';
             } else {
-                $urlvars = [];
+                $tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
             }
+        }
+        $tag .= '>' . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
 
-            /* set server, database and schema parameter if not presents */
-            if (isset($urlvars['subject'])) {
-                $subject = Decorator::get_sanitized_value($urlvars['subject'], $fields);
-            } else {
-                $subject = '';
-            }
-
-            if (isset($_REQUEST['server']) and !isset($urlvars['server']) and $subject != 'root') {
-                $urlvars['server'] = $_REQUEST['server'];
-                if (isset($_REQUEST['database']) and !isset($urlvars['database']) and $subject != 'server') {
-                    $urlvars['database'] = $_REQUEST['database'];
-                    if (isset($_REQUEST['schema']) and !isset($urlvars['schema']) and $subject != 'database') {
-                        $urlvars['schema'] = $_REQUEST['schema'];
-                    }
-                }
-            }
-
-            $sep = '?';
-            foreach ($urlvars as $var => $varfield) {
-                $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($varfield, $fields);
-                $sep = '&';
-            }
-
-            //return '/src/views/' . $url;
-            return $url;
+        if ($do_print) {
+            echo $tag;
+        } else {
+            return $tag;
         }
     }
+
+}

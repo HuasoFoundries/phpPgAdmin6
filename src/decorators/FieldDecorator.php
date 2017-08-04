@@ -1,20 +1,26 @@
 <?php
 
-    namespace PHPPgAdmin\Decorators;
+namespace PHPPgAdmin\Decorators;
 
-    class FieldDecorator extends Decorator
+class FieldDecorator extends Decorator
+{
+    public function __construct($fieldName, $default = null)
     {
-        public function __construct($fieldName, $default = null)
-        {
-            $this->f = $fieldName;
-            if ($default !== null) {
-                $this->d = $default;
-            }
+        $this->f = $fieldName;
+        if ($default !== null) {
+            $this->d = $default;
         }
-
-        public function value($fields)
-        {
-            return isset($fields[$this->f]) ? Decorator::get_sanitized_value($fields[$this->f], $fields) : (isset($this->d) ? $this->d : null);
-        }
-
     }
+
+    public function value($fields)
+    {
+        if (isset($fields[$this->f])) {
+            return Decorator::get_sanitized_value($fields[$this->f], $fields);
+        } else if (isset($this->d)) {
+            return $this->d;
+        } else {
+            return null;
+        }
+    }
+
+}
