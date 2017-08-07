@@ -304,18 +304,11 @@ $app->add(function ($request, $response, $next) use ($container) {
     $response = $next($request, $response);
 
     $misc = $container->misc;
-    // Check if the response should render a 404
-    //if (404 === $response->getStatusCode()) {
-    // A 404 should be invoked
+
     if (count($container['errors']) > 0) {
         $handler = $container['haltHandler'];
         return $handler($request, $response, $container['errors']);
-    } else {
-        //die('No hay errores CTM');
     }
-    //$handler = $container['errorHandler'];
-    //return $handler($request, $response, new \Exception('Todo salió mal'));
-    //}
 
     // Any other request, pass on current response
     return $response;

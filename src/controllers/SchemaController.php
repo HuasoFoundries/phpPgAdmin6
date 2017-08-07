@@ -24,13 +24,14 @@ class SchemaController extends BaseController
             return $this->doSubTree();
         }
 
-        $this->printHeader($lang['strschemas']);
-        $this->printBody();
-
         if (isset($_POST['cancel'])) {
             $action = '';
         }
 
+        $header_template = 'header.twig';
+        $footer_template = 'footer.twig';
+
+        ob_start();
         switch ($action) {
             case 'create':
                 if (isset($_POST['create'])) {
@@ -60,11 +61,19 @@ class SchemaController extends BaseController
                 $this->doExport();
                 break;
             default:
+                $header_template = 'datatables_header.twig';
                 $this->doDefault();
                 break;
         }
 
-        $misc->printFooter();
+        $output = ob_get_clean();
+
+        $this->printHeader($lang['strschemas'], null, true, $header_template);
+        $this->printBody();
+
+        echo $output;
+
+        return $misc->printFooter();
 
     }
 

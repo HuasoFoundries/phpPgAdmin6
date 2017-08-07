@@ -317,7 +317,7 @@ class ConstraintController extends BaseController
                 echo '<td class=data1>' . $selIndex->fetch() . "</td></tr>\n";
                 echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strfktarget']}</th></tr>";
                 echo '<tr>';
-                echo '<td class="data1" colspan="3"><select name="target">';
+                echo '<td class="data1" colspan="3"><select class="select2" name="target">';
                 while (!$tables->EOF) {
                     $key = ['schemaname' => $tables->fields['nspname'], 'tablename' => $tables->fields['relname']];
                     $key = serialize($key);
@@ -339,7 +339,7 @@ class ConstraintController extends BaseController
                 echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
-                echo "<script>jQuery('select[name=\"target\"]').select2()</script>";
+                //echo "<script>jQuery('select[name=\"target\"]').select2()</script>";
                 break;
         }
 

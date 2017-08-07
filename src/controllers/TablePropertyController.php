@@ -22,9 +22,11 @@ class TablePropertyController extends BaseController
             return $this->doTree();
         }
         $data = $misc->getDatabaseAccessor();
-        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table']);
-        $this->printBody();
 
+        $footer_template = 'footer.twig';
+        $header_template = 'header.twig';
+
+        ob_start();
         switch ($action) {
             case 'alter':
                 if (isset($_POST['alter'])) {
@@ -47,6 +49,7 @@ class TablePropertyController extends BaseController
                 if (isset($_POST['cancel'])) {
                     $this->doDefault();
                 } else {
+                    $header_template = 'select2_header.twig';
                     $this->doAddColumn();
                 }
 
@@ -74,6 +77,13 @@ class TablePropertyController extends BaseController
                 $this->doDefault();
                 break;
         }
+
+        $output = ob_get_clean();
+
+        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'], null, true, $header_template);
+        $this->printBody();
+
+        echo $output;
 
         return $misc->printFooter();
 
@@ -447,7 +457,7 @@ class TablePropertyController extends BaseController
 
                 echo "<tr><td><input name=\"field\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
                 htmlspecialchars($_POST['field']), "\" /></td>\n";
-                echo "<td><select name=\"type\" id=\"type\" onchange=\"checkLengths(document.getElementById('type').value,'');\">\n";
+                echo "<td><select  class=\"select2\" name=\"type\" id=\"type\" onchange=\"checkLengths(document.getElementById('type').value,'');\">\n";
                 // Output any "magic" types.  This came in with the alter column type so we'll check that
                 if ($data->hasMagicTypes()) {
                     foreach ($data->extraTypes as $v) {

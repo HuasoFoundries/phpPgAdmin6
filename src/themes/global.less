@@ -38,7 +38,7 @@ body.flexbox_body {
   display: flex;
 }
 
-.flexbox_wrapper > #browser_container {
+.flexbox_wrapper>#browser_container {
   height: 100%;
   margin: 0px;
   padding: 0px;
@@ -47,7 +47,7 @@ body.flexbox_body {
   flex: 0 0 300px;
 }
 
-.flexbox_wrapper > #browser_container.ui-resizable {
+.flexbox_wrapper>#browser_container.ui-resizable {
   height: 100%;
   margin: 0px;
   padding: 0px;
@@ -58,7 +58,7 @@ body.flexbox_body {
   border-right: 8px solid #cfd8dc;
 }
 
-.flexbox_wrapper > #browser_container.ui-resizable .ui-resizable-handle.ui-resizable-e {
+.flexbox_wrapper>#browser_container.ui-resizable .ui-resizable-handle.ui-resizable-e {
   width: 8px;
   right: -8px;
   background: #84a0ad;
@@ -66,7 +66,7 @@ body.flexbox_body {
   height: 50px
 }
 
-.flexbox_wrapper > #browser_container > .browser_container {
+.flexbox_wrapper>#browser_container>.browser_container {
   height: 100%;
   margin: 0px;
   padding: 0px;
@@ -75,7 +75,7 @@ body.flexbox_body {
   width: 100%;
 }
 
-.flexbox_wrapper > .detail_container {
+.flexbox_wrapper>.detail_container {
   height: 100%;
   width: 100%;
   margin: 0px;
@@ -110,6 +110,9 @@ body.flexbox_body {
 table.tabs {
   margin-left: -10px !important;
 }
+
+
+
 
 /** Browser Tree using XLoadTree 2 **/
 
@@ -151,6 +154,9 @@ body.browser {
 .webfx-tree-hide-root {
   display: none
 }
+
+
+
 
 /** auto-complete on insert **/
 
@@ -203,6 +209,9 @@ p.errmsg {
   width: 100%
 }
 
+
+
+
 /** bottom link back to top **/
 
 .bottom_link {
@@ -216,6 +225,9 @@ p.errmsg {
   border-left: 1px dotted #999;
   font-size: smaller;
 }
+
+
+
 
 /** FK browsing **/
 
@@ -243,6 +255,9 @@ div.fk_value {
   background-color: #FFFF00;
 }
 
+
+
+
 /** Syntax highlighting **/
 
 .comment {
@@ -256,6 +271,9 @@ div.fk_value {
 .literal {
   color: #808080
 }
+
+
+
 
 /*#sqlquery {
         float: left;
@@ -300,11 +318,10 @@ form.sqlform {
   }
 
   body {
-    margin: 0;
-    //zoom: 0.9;
+    margin: 0; //zoom: 0.9;
     background: white;
     background-color: #ffffff;
-    .flexbox_wrapper > .detail_container {
+    .flexbox_wrapper>.detail_container {
       height: 100%;
       width: 100%;
       margin: 0px;
@@ -324,4 +341,9 @@ form.sqlform {
       display: none;
     }
   }
+}
+
+.select2-container {
+
+  min-width: 250px;
 }

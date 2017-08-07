@@ -99,7 +99,7 @@ class HTMLTableController extends HTMLController
 
             }
 
-            $tablehtml .= '<table width="auto" class="' . $place . '">' . "\n";
+            $tablehtml .= '<table width="auto" class="will_be_datatable ' . $place . '">' . "\n";
 
             $tablehtml .= $this->getThead($columns, $actions);
 

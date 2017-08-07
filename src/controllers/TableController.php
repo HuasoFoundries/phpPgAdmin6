@@ -30,14 +30,18 @@ class TableController extends BaseController
 
         $data = $misc->getDatabaseAccessor();
 
-        $this->printHeader($lang['strtables'], null, true, 'datatables_header.twig');
-        $this->printBody();
+        $header_template = 'header.twig';
+        $footer_template = 'footer.twig';
+
+        ob_start();
 
         switch ($action) {
             case 'create':
+
                 if (isset($_POST['cancel'])) {
                     $this->doDefault();
                 } else {
+                    $header_template = 'select2_header.twig';
                     $this->doCreate();
                 }
 
@@ -47,6 +51,7 @@ class TableController extends BaseController
                 break;
             case 'confcreatelike':
                 if (isset($_POST['cancel'])) {
+                    $header_template = 'datatables_header.twig';
                     $this->doDefault();
                 } else {
                     $this->doCreateLike(true);
@@ -57,6 +62,7 @@ class TableController extends BaseController
                 if (!isset($_POST['cancel'])) {
                     $this->doSelectRows(false);
                 } else {
+                    $header_template = 'datatables_header.twig';
                     $this->doDefault();
                 }
 
@@ -68,6 +74,7 @@ class TableController extends BaseController
                 if (!isset($_POST['cancel'])) {
                     $this->doInsertRow(false);
                 } else {
+                    $header_template = 'datatables_header.twig';
                     $this->doDefault();
                 }
 
@@ -79,6 +86,7 @@ class TableController extends BaseController
                 if (isset($_POST['empty'])) {
                     $this->doEmpty(false);
                 } else {
+                    $header_template = 'datatables_header.twig';
                     $this->doDefault();
                 }
 
@@ -90,6 +98,7 @@ class TableController extends BaseController
                 if (isset($_POST['drop'])) {
                     $this->doDrop(false);
                 } else {
+                    $header_template = 'datatables_header.twig';
                     $this->doDefault();
                 }
 
@@ -99,11 +108,19 @@ class TableController extends BaseController
                 break;
             default:
                 if ($this->adminActions($action, 'table') === false) {
+                    $header_template = 'datatables_header.twig';
                     $this->doDefault();
                 }
 
                 break;
         }
+
+        $output = ob_get_clean();
+
+        $this->printHeader($lang['strtables'], null, true, $header_template);
+        $this->printBody();
+
+        echo $output;
 
         return $misc->printFooter();
 
@@ -394,8 +411,6 @@ class TableController extends BaseController
         }
         $this->printNavLinks($navlinks, 'tables-tables', get_defined_vars());
 
-        echo $this->view->fetch('table_list_footer.twig', ['table_class' => $this->table_place]);
-
     }
 
     /**
@@ -435,6 +450,7 @@ class TableController extends BaseController
 
         switch ($_REQUEST['stage']) {
             case 1:
+                // You are presented with a form in which you describe the table, pick the tablespace and state how many fields it will have
                 // Fetch all tablespaces from the database
                 if ($data->hasTablespaces()) {
                     $tablespaces = $data->getTablespaces();
@@ -536,7 +552,7 @@ class TableController extends BaseController
                     echo "\t<tr>\n\t\t<td>", $i + 1, ".&nbsp;</td>\n";
                     echo "\t\t<td><input name=\"field[{$i}]\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
                     htmlspecialchars($_REQUEST['field'][$i]), "\" /></td>\n";
-                    echo "\t\t<td>\n\t\t\t<select name=\"type[{$i}]\" id=\"types{$i}\" onchange=\"checkLengths(this.options[this.selectedIndex].value,{$i});\">\n";
+                    echo "\t\t<td>\n\t\t\t<select name=\"type[{$i}]\" class=\"select2\" id=\"types{$i}\" onchange=\"checkLengths(this.options[this.selectedIndex].value,{$i});\">\n";
                     // Output any "magic" types
                     foreach ($data->extraTypes as $v) {
                         $types_for_js[strtolower($v)] = 1;
