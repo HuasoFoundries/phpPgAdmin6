@@ -397,7 +397,7 @@ class DataExportController extends BaseController
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
         echo "</form>\n";
 
-        $misc->printFooter();
+        $this->printFooter();
 
     }
 }

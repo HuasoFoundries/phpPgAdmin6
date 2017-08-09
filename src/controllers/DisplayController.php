@@ -112,7 +112,7 @@ class DisplayController extends BaseController
 
         echo $output;
 
-        $misc->printFooter(true, $footer_template);
+        $this->printFooter(true, $footer_template);
     }
 
     /**

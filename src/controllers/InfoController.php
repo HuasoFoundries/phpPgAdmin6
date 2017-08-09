@@ -1,18 +1,18 @@
 <?php
 
-    namespace PHPPgAdmin\Controller;
+namespace PHPPgAdmin\Controller;
 
-    use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
-    /**
-     * Base controller class
-     */
-    class InfoController extends BaseController
-    {
+/**
+ * Base controller class
+ */
+class InfoController extends BaseController
+{
     public $_name = 'InfoController';
 
-        public function render()
-        {
+    public function render()
+    {
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -28,17 +28,17 @@
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
     /**
      * List all the information on the table
-         *
-         * @param string $msg
-         * @return string|void
+     *
+     * @param string $msg
+     * @return string|void
      */
-        public function doDefault($msg = '')
-        {
+    public function doDefault($msg = '')
+    {
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -369,4 +369,4 @@
         }
     }
 
-    }
+}

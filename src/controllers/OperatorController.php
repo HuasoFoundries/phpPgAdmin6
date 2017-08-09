@@ -56,7 +56,7 @@ class OperatorController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
 
     }
 

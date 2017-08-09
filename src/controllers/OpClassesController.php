@@ -1,18 +1,18 @@
 <?php
 
-    namespace PHPPgAdmin\Controller;
+namespace PHPPgAdmin\Controller;
 
-    use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
-    /**
-     * Base controller class
-     */
-    class OpClassesController extends BaseController
-    {
+/**
+ * Base controller class
+ */
+class OpClassesController extends BaseController
+{
     public $_name = 'OpClassesController';
 
-        public function render()
-        {
+    public function render()
+    {
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -31,14 +31,14 @@
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
-        /**
-         * Generate XML for the browser tree.
-         */
-        public function doTree()
-        {
+    /**
+     * Generate XML for the browser tree.
+     */
+    public function doTree()
+    {
 
         $conf = $this->conf;
         $misc = $this->misc;
@@ -61,12 +61,12 @@
 
     /**
      * Show default list of opclasss in the database
-         *
-         * @param string $msg
-         * @return string|void
+     *
+     * @param string $msg
+     * @return string|void
      */
-        public function doDefault($msg = '')
-        {
+    public function doDefault($msg = '')
+    {
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -107,4 +107,4 @@
         echo $this->printTable($opclasses, $columns, $actions, 'opclasses-opclasses', $lang['strnoopclasses']);
     }
 
-    }
+}

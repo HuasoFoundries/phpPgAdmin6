@@ -122,7 +122,7 @@ class TableController extends BaseController
 
         echo $output;
 
-        return $misc->printFooter();
+        return $this->printFooter();
 
     }
 

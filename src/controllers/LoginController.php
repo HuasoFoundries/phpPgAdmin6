@@ -139,7 +139,7 @@ class LoginController extends BaseController
         $login_html .= '</script>';
 
         // Output footer
-        $login_html .= $misc->printFooter(false);
+        $login_html .= $this->printFooter(false);
 
         return $login_html;
     }

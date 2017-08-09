@@ -16,25 +16,23 @@ class Misc
 
     use \PHPPgAdmin\HelperTrait;
 
-    private $_connection           = null;
-    private $_no_db_connection     = false;
-    private $_reload_drop_database = false;
-    private $_reload_browser       = false;
-    private $_no_bottom_link       = false;
-    private $app                   = null;
-    private $data                  = null;
-    private $database              = null;
-    private $server_id             = null;
-    public $appLangFiles           = [];
-    public $appName                = '';
-    public $appVersion             = '';
-    public $form                   = '';
-    public $href                   = '';
-    public $_name                  = 'Misc';
-    public $lang                   = [];
-    private $server_info           = null;
-    private $_no_output            = false;
-    private $container             = null;
+    private $_connection       = null;
+    private $_no_db_connection = false;
+    private $_reload_browser   = false;
+    private $app               = null;
+    private $data              = null;
+    private $database          = null;
+    private $server_id         = null;
+    public $appLangFiles       = [];
+    public $appName            = '';
+    public $appVersion         = '';
+    public $form               = '';
+    public $href               = '';
+    public $_name              = 'Misc';
+    public $lang               = [];
+    private $server_info       = null;
+    private $_no_output        = false;
+    private $container         = null;
 
     /* Constructor */
     public function __construct(\Slim\Container $container)
@@ -116,6 +114,28 @@ class Misc
         return null;
     }
 
+    public function getServerId()
+    {
+        return $this->server_id;
+    }
+
+    /**
+     * [setReloadBrowser description]
+     *
+     * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
+     * @return $this
+     */
+    public function setReloadBrowser($flag)
+    {
+        $this->_reload_browser = boolval($flag);
+        return $this;
+    }
+
+    public function getReloadBrowser()
+    {
+        return $this->_reload_browser;
+    }
+
     /**
      * Default Error Handler. This will be called with the following params
      *
@@ -182,18 +202,6 @@ class Misc
     public function getContainer()
     {
         return $this->container;
-    }
-
-    /**
-     * sets $_no_bottom_link boolean value
-     *
-     * @param boolean $flag [description]
-     * @return $this
-     */
-    public function setNoBottomLink($flag)
-    {
-        $this->_no_bottom_link = boolval($flag);
-        return $this;
     }
 
     /**
@@ -380,30 +388,6 @@ class Misc
 
         return $this->database;
 
-    }
-
-    /**
-     * [setReloadBrowser description]
-     *
-     * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
-     * @return $this
-     */
-    public function setReloadBrowser($flag)
-    {
-        $this->_reload_browser = boolval($flag);
-        return $this;
-    }
-
-    /**
-     * [setReloadBrowser description]
-     *
-     * @param boolean $flag sets internal $_reload_drop_database var which will be passed to the footer methods
-     * @return $this
-     */
-    public function setReloadDropDatabase($flag)
-    {
-        $this->_reload_drop_database = boolval($flag);
-        return $this;
     }
 
     public static function _cmp_desc($a, $b)
@@ -1954,11 +1938,6 @@ class Misc
             return new ArrayRecordSet($srvs);
         }
         return $srvs;
-    }
-
-    public function getServerId()
-    {
-        return $this->server_id;
     }
 
     /**

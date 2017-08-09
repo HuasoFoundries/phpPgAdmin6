@@ -89,7 +89,7 @@ class DomainController extends BaseController
                 break;
         }
 
-        return $misc->printFooter();
+        return $this->printFooter();
     }
 
 /**

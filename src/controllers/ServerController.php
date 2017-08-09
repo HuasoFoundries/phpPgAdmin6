@@ -56,7 +56,7 @@ class ServerController extends BaseController
                 break;
         }
 
-        return $misc->printFooter();
+        return $this->printFooter();
 
     }
 

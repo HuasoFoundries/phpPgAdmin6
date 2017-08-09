@@ -39,7 +39,7 @@ class PrivilegeController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
     /**
