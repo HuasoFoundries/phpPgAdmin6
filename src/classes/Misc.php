@@ -31,8 +31,8 @@ class Misc
     public $_name              = 'Misc';
     public $lang               = [];
     private $server_info       = null;
-    private $_no_output        = false;
-    private $container         = null;
+
+    private $container = null;
 
     /* Constructor */
     public function __construct(\Slim\Container $container)
@@ -213,12 +213,6 @@ class Misc
     public function setNoDBConnection($flag)
     {
         $this->_no_db_connection = boolval($flag);
-        return $this;
-    }
-
-    public function setNoOutput($flag)
-    {
-        $this->_no_output = boolval($flag);
         return $this;
     }
 
