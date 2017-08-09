@@ -235,8 +235,7 @@ $container['misc'] = function ($c) {
 
     }
 
-    $misc->setConf($conf);
-    $misc->setTheme($conf['theme']);
+    $misc->setConf('theme', $conf['theme']);
 
     $misc->setHREF();
     $misc->setForm();
@@ -264,11 +263,11 @@ $container['view'] = function ($c) {
     $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
 
     $view->offsetSet('subfolder', SUBFOLDER);
-    $view->offsetSet('theme', $c->misc->getConf()['theme']);
+    $view->offsetSet('theme', $c->misc->getConf('theme'));
 
     $misc->setView($view);
 
-    \PC::debug($c->conf, 'conf');
+    //\PC::debug($c->conf, 'conf');
     //\PC::debug($c->view->offsetGet('subfolder'), 'subfolder');
     //\PC::debug($c->view->offsetGet('theme'), 'theme');
 

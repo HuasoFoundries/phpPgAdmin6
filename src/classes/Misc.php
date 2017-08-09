@@ -80,26 +80,40 @@ class Misc
         }
     }
 
-    public function setView($view)
+    /**
+     * Sets the view instance property of this class
+     * @param \Slim\Views\Twig $view [description]
+     */
+    public function setView(\Slim\Views\Twig $view)
     {
         $this->view = $view;
     }
 
-    public function setConf($conf)
+    /**
+     * Adds or modifies a key in the $conf instance property of this class
+     * @param string $key   [description]
+     * @param mixed $value [description]
+     * @return $this
+     */
+    public function setConf(string $key, $value)
     {
-        $this->conf = $conf;
-    }
-
-    public function getConf()
-    {
-        return $this->conf;
-    }
-
-    public function setTheme($theme)
-    {
-
-        $this->conf['theme'] = $theme;
+        $this->conf[$key] = $value;
         return $this;
+    }
+
+    /**
+     * gets the value of a config property, or the array of all config properties
+     * @param  mixed $key value of the key to be retrieved. If null, the full array is returnes
+     * @return mixed the whole $conf array, the value of $conf[key] or null if said key does not exist
+     */
+    public function getConf($key = null)
+    {
+        if ($key === null) {
+            return $this->conf;
+        } else if (array_key_exists($key, $this->conf)) {
+            return $this->conf[$key];
+        }
+        return null;
     }
 
     /**
