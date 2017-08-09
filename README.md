@@ -4,33 +4,111 @@
 
 PHP Based administration tool for PostgreSQL. 
 
-This is a hard fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) 
+This is a hard fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) which aims to add the following enhancements:
 
-The focus of this fork is to move the project to modern, standards compliant and namespaced code and become compatible with PHP 7+ and the latest versions of Postgres.
+- Composer Installation and dependency management
+- Autoloading (thanks to the above)
+- Namespaced classes
+- Removal of global variables
+- Full PHP 7+ support
+- Support for PG 9.3+ features (Materialized Views, BRIN Indexes, etc)
+- Nice urls
+- Replace usage of superglobals with [PSR-7 Message interfaces](http://www.php-fig.org/psr/psr-7/) to carry information around.
+- Usage of Dependency Injection compliant with [PSR-11 Container interface](http://www.php-fig.org/psr/psr-11/)
 
-### v6.0.0-alpha1
+Some of these are already in place, others are in progress.
 
-- the app was fully refactored adding:
-    - namespaces
-    - proper (yet arbitrary :sad:) folder hierarchy
-    - separate files for separate classes
-- strips the use of require and include to the bare minimum
-- drops support for PHP < 5.4.
-- provides full composer compatibility
-- PSR-4 autoloading
-- makes requirement checks for PHP version and ext-pgsql
+This project is made on top of [Slim Framework 3](https://www.slimframework.com/), although a big part of the code doesn't use its full features yet.
 
 
-### v6.0.0-alpha2
+## Installation
 
-- most entrypoints were moved to `src/views` and do now instance a controller, then call one of its methods depending on the `action` parameter
-- due to this, entrypoint logic was moved into controller classes in  `src/controllers`
-- usage of global variables is being replaced by member properties and usage of `use` where is due.
-- usage of global functions is being replaced by anonymous fuctions 
-- usage of explicit includes/requires is being replaced by composer's autoloader (except for `src/lib.inc.php`)
-- global decorator functions are being replaced by static methods of the Decorator class. 
+### Using Composer (recommended)
 
-### v6.0.0-beta2
+[Install Composer in your machine](https://getcomposer.org/download/).
 
-- moves HTML printing methods to their own class, which is in turn used by controllers
-- this is the last release that will support the "processes" view for Postgres 9.5, b/c *pg_stat_activity* has changed its structure in PG 9.6.
+Install with composer running the following command in your shell (replacing <FOLDER> whith your desired folder name)
+
+
+```sh
+composer create-project huasofoundries/phppgadmin6 <FOLDER> *@beta
+```
+
+Alternatively, clone this repo and run (inside then folder where the project was cloned)
+
+```sh
+composer install
+```
+
+
+## Rewrite Rules
+
+As this project is built over Slim PHP v3, you'll need some rewrite rules for this software to work. 
+
+### Apache
+
+Make sure you have the RewriteEngine module active in your Apache installation.
+
+Place an `.htaccess` file on your project root with the following contents
+
+```
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+```
+
+### Nginx
+
+Add the following vhost to your `sites-enabled` folder
+
+```
+server {
+        listen 80; 
+        # or whatever port you want
+
+        server_name yourservername.com
+
+        root /path/to/project;
+
+        index index.php;
+
+        # Use this block if you're running in your domain or subdomain root
+	    location / {
+           try_files $uri $uri/ /index.php$is_args$args;
+    	}
+
+    	# If running inside a subfolder use instead
+        #location /subfolder/ {
+        #   try_files $uri $uri/ /subfolder/index.php$is_args$args;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on IP:PORT or socket
+        location ~ \.php$ {
+                fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+
+                # Check that the PHP script exists before passing it
+                try_files $fastcgi_script_name =404;
+
+                # Bypass the fact that try_files resets $fastcgi_path_info
+                # see: http://trac.nginx.org/nginx/ticket/321
+                set $path_info $fastcgi_path_info;
+                fastcgi_param PATH_INFO $path_info;
+
+                fastcgi_index index.php;
+                include /etc/nginx/fastcgi_params;
+                fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+                # or fastcgi_pass 127.0.0.1:9000; depending on your PHP-FPM pool
+        }
+}
+```
+
+Please note that you have to customize your server name, php upstream (sock or IP) and optinally the subfolder you want phpPgAdmin6 to run on.
+
+
+
+
+
+
