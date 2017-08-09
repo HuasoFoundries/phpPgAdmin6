@@ -28,15 +28,16 @@ class TreeController extends HTMLController
     /* Constructor */
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
-        $this->container      = $container;
-        $this->lang           = $container->get('lang');
-        $this->conf           = $container->get('conf');
+        $this->container = $container;
+        $this->lang      = $container->get('lang');
+        //$this->conf           = $container->get('conf');
         $this->view           = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
         $this->appName        = $container->get('settings')['appName'];
         $this->appVersion     = $container->get('settings')['appVersion'];
         $this->appLangFiles   = $container->get('appLangFiles');
         $this->misc           = $container->get('misc');
+        $this->conf           = $this->misc->getConf();
         $this->appThemes      = $container->get('appThemes');
         $this->action         = $container->get('action');
         if ($controller_name !== null) {

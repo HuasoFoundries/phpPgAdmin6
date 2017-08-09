@@ -42,9 +42,9 @@ class Misc
 
         $this->container = $container;
 
-        $this->lang           = $container->get('lang');
-        $this->conf           = $container->get('conf');
-        $this->view           = $container->get('view');
+        $this->lang = $container->get('lang');
+        $this->conf = $container->get('conf');
+        //$this->view           = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
         $this->appLangFiles   = $container->get('appLangFiles');
 
@@ -78,6 +78,28 @@ class Misc
         } else if (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
             $this->server_id = array_keys($_SESSION['webdbLogin'])[0];
         }
+    }
+
+    public function setView($view)
+    {
+        $this->view = $view;
+    }
+
+    public function setConf($conf)
+    {
+        $this->conf = $conf;
+    }
+
+    public function getConf()
+    {
+        return $this->conf;
+    }
+
+    public function setTheme($theme)
+    {
+
+        $this->conf['theme'] = $theme;
+        return $this;
     }
 
     /**
@@ -385,20 +407,6 @@ class Misc
         $info = $this->getServerInfo();
 
         return !empty($info[$all ? 'pg_dumpall_path' : 'pg_dump_path']);
-    }
-
-    public function setThemeConf($theme_conf)
-    {
-
-        $this->conf['theme'] = $theme_conf;
-        //\PC::debug(['theme_conf' => $theme_conf, 'this->theme' => $this->conf['theme']], 'setThemeConf');
-        $this->view->offsetSet('theme', $this->conf['theme']);
-        return $this;
-    }
-
-    public function getConf()
-    {
-        return $this->conf;
     }
 
     /**

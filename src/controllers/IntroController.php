@@ -48,7 +48,8 @@ class IntroController extends BaseController
     public function doDefault()
     {
 
-        $conf = $this->conf;
+        //$conf = $this->conf;
+        $conf = $this->misc->getConf();
         $misc = $this->misc;
         $lang = $this->lang;
 
