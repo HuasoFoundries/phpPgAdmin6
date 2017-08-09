@@ -68,7 +68,7 @@ class GroupController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
 /**

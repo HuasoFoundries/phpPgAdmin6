@@ -11,19 +11,17 @@ class HTMLController
 {
     use \PHPPgAdmin\HelperTrait;
 
-    private $container        = null;
-    private $data             = null;
-    private $database         = null;
-    private $server_id        = null;
-    public $form              = '';
-    public $href              = '';
-    public $lang              = [];
-    public $action            = '';
-    public $_name             = 'HTMLController';
-    public $controller_name   = 'HTMLController';
-    public $_title            = 'base';
-    private $table_controller = null;
-    private $trail_controller = null;
+    private $container      = null;
+    private $data           = null;
+    private $database       = null;
+    private $server_id      = null;
+    public $form            = '';
+    public $href            = '';
+    public $lang            = [];
+    public $action          = '';
+    public $_name           = 'HTMLController';
+    public $controller_name = 'HTMLController';
+    public $_title          = 'base';
 
     /* Constructor */
     public function __construct(\Slim\Container $container, $controller_name = null)

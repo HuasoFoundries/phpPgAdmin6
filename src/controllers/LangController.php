@@ -30,7 +30,7 @@ class LangController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
 
     }
 

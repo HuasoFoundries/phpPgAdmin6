@@ -89,7 +89,7 @@ class SequenceController extends BaseController
         }
 
         // Print footer
-        return $misc->printFooter();
+        return $this->printFooter();
 
     }
 

@@ -69,7 +69,7 @@ class AllDBController extends BaseController
                 break;
         }
 
-        return $misc->printFooter();
+        return $this->printFooter();
 
     }
 
@@ -234,12 +234,12 @@ class AllDBController extends BaseController
                         return;
                     }
                 } // Everything went fine, back to Default page...
-                $misc->setReloadDropDatabase(true);
+                $this->setReloadDropDatabase(true);
                 $this->doDefault($msg);
             } else {
                 $status = $data->dropDatabase($_POST['dropdatabase']);
                 if ($status == 0) {
-                    $misc->setReloadDropDatabase(true);
+                    $this->setReloadDropDatabase(true);
                     $this->doDefault($lang['strdatabasedropped']);
                 } else {
                     $this->doDefault($lang['strdatabasedroppedbad']);

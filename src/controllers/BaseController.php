@@ -10,27 +10,28 @@ class BaseController
 
     use \PHPPgAdmin\HelperTrait;
 
-    protected $container        = null;
-    protected $_connection      = null;
-    protected $app              = null;
-    protected $data             = null;
-    protected $database         = null;
-    protected $server_id        = null;
-    public $appLangFiles        = [];
-    public $appThemes           = [];
-    public $appName             = '';
-    public $appVersion          = '';
-    public $form                = '';
-    public $href                = '';
-    public $lang                = [];
-    public $action              = '';
-    public $_name               = 'BaseController';
-    public $_title              = 'base';
-    protected $table_controller = null;
-    protected $trail_controller = null;
-    protected $tree_controller  = null;
-    protected $_no_output       = false;
-    public $msg                 = '';
+    protected $container         = null;
+    protected $_connection       = null;
+    protected $app               = null;
+    protected $data              = null;
+    protected $database          = null;
+    protected $server_id         = null;
+    public $appLangFiles         = [];
+    public $appThemes            = [];
+    public $appName              = '';
+    public $appVersion           = '';
+    public $form                 = '';
+    public $href                 = '';
+    public $lang                 = [];
+    public $action               = '';
+    public $_name                = 'BaseController';
+    public $_title               = 'base';
+    protected $table_controller  = null;
+    protected $trail_controller  = null;
+    protected $tree_controller   = null;
+    protected $footer_controller = null;
+    protected $_no_output        = false;
+    public $msg                  = '';
 
     /* Constructor */
     public function __construct(\Slim\Container $container)
@@ -89,7 +90,7 @@ class BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
     public function doDefault()
@@ -117,6 +118,14 @@ class BaseController
             $this->table_controller = new \PHPPgAdmin\XHtml\HTMLTableController($this->getContainer(), $this->_name);
         }
         return $this->table_controller;
+    }
+
+    private function getFooterController()
+    {
+        if ($this->footer_controller === null) {
+            $this->footer_controller = new \PHPPgAdmin\XHtml\HTMLFooterController($this->getContainer(), $this->_name);
+        }
+        return $this->footer_controller;
     }
 
     private function getNavbarController()
@@ -200,6 +209,52 @@ class BaseController
 
         $html_trail = $this->getNavbarController();
         return $html_trail->printLink($link, $do_print, $from);
+    }
+
+    public function setReloadDropDatabase($flag)
+    {
+        $footer_controller = $this->getFooterController();
+        return $footer_controller->setReloadDropDatabase($flag);
+    }
+
+    public function setNoBottomLink($flag)
+    {
+        $footer_controller = $this->getFooterController();
+        return $footer_controller->setNoBottomLink($flag);
+    }
+
+    public function printFooter($doBody, $template = 'footer.twig')
+    {
+        $footer_controller = $this->getFooterController();
+        return $footer_controller->printFooter($doBody, $template);
+    }
+
+    public function printReload($database, $do_print = true)
+    {
+        $footer_controller = $this->getFooterController();
+        return $footer_controller->printReload($database, $do_print);
+    }
+
+    /**
+     * Outputs JavaScript to set default focus
+     * @param $object eg. forms[0].username
+     */
+    public function setFocus($object)
+    {
+        $footer_controller = $this->getFooterController();
+        return $footer_controller->setFocus($object);
+    }
+
+    /**
+     * Outputs JavaScript to set the name of the browser window.
+     * @param $name the window name
+     * @param $addServer if true (default) then the server id is
+     *        attached to the name.
+     */
+    public function setWindowName($name, $addServer = true)
+    {
+        $footer_controller = $this->getFooterController();
+        return $footer_controller->setWindowName($name, $addServer);
     }
 
 }

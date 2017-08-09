@@ -81,7 +81,7 @@ class HelpController extends BaseController
 
         echo "</dl>\n";
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
     public function doChoosePage($urls)
@@ -102,7 +102,7 @@ class HelpController extends BaseController
         }
         echo "</ul>\n";
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
 }

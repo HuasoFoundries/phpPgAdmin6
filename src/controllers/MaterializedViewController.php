@@ -83,7 +83,7 @@ class MaterializedViewController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
 
     }
 

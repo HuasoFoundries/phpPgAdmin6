@@ -70,7 +70,7 @@ class UserController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
 
     }
 

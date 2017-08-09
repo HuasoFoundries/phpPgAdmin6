@@ -301,7 +301,7 @@ class DataImportController extends BaseController
             $misc->printMsg($lang['strimporterror-uploadedfile']);
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
     public static function loadNULLArray()

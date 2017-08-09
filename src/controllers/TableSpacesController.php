@@ -382,7 +382,7 @@ class TableSpacesController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
 }

@@ -50,7 +50,7 @@ class ColPropertyController extends BaseController
             }
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
     /**

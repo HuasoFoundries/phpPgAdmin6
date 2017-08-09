@@ -78,7 +78,7 @@ class ViewPropertyController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
 
     }
 

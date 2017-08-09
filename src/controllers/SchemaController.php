@@ -73,7 +73,7 @@ class SchemaController extends BaseController
 
         echo $output;
 
-        return $misc->printFooter();
+        return $this->printFooter();
 
     }
 

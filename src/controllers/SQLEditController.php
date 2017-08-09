@@ -41,7 +41,7 @@ class SQLEditController extends BaseController
         $this->printBody(true, '');
         echo $body_text;
 
-        $misc->printFooter(true, 'sqledit_footer.twig');
+        $this->printFooter(true, 'sqledit_footer.twig');
 
     }
 

@@ -123,7 +123,7 @@ class FulltextController extends BaseController
                 break;
         }
 
-        return $misc->printFooter();
+        return $this->printFooter();
 
     }
 

@@ -100,7 +100,7 @@ class ConstraintController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
 
     }
 

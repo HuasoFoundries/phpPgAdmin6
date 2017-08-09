@@ -36,7 +36,7 @@ class IntroController extends BaseController
                 break;
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
     /**

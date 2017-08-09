@@ -50,7 +50,7 @@ class HistoryController extends BaseController
 
         // Set the name of the window
         $this->setWindowName('history');
-        return $misc->printFooter();
+        return $this->printFooter();
 
     }
 

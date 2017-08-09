@@ -197,7 +197,7 @@ class RolesController extends BaseController
                 $this->doDefault();
         }
 
-        $misc->printFooter();
+        $this->printFooter();
     }
 
     /**
