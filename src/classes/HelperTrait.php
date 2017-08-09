@@ -59,6 +59,16 @@ trait HelperTrait
     }
 
     /**
+     * Returns a string with html <br> variant replaced with a new line
+     * @param  string $msg [description]
+     * @return string      [description]
+     */
+    public static function br2ln(string $msg)
+    {
+        return str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
+    }
+
+    /**
      * Prints the page header.  If member variable $this->_no_output is
      * set then no header is drawn.
      * @param $title The title of the page

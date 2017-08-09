@@ -146,9 +146,9 @@ class Misc
             'line'     => $backtrace[0]['line'],
         ];
 
-        $errmsg = htmlspecialchars($errmsg);
-        $p1     = htmlspecialchars($p1);
-        $p2     = htmlspecialchars($p2);
+        $errmsg = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($errmsg));
+        $p1     = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($p1));
+        $p2     = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($p2));
         switch ($fn) {
             case 'EXECUTE':
                 $sql         = $p1;
@@ -156,9 +156,9 @@ class Misc
 
                 /*$s = "<p><b>{$lang['strsqlerror']}</b><br />" . $misc->printVal($errmsg, 'errormsg') . "</p> <p><b>{$lang['strinstatement']}</b><br />" . $misc->printVal($sql). "</p>    ";*/
 
-                $s = '<p><b>strsqlerror</b><br />' . $errmsg . '</p> <p><b>SQL:</b><br />' . $sql . '</p>	';
+                $s = '<p><b>strsqlerror</b><br />' . nl2br($errmsg) . '</p> <p><b>SQL:</b><br />' . nl2br($sql) . '</p>	';
 
-                echo '<table class="error" cellpadding="5"><tr><td>' . $s . '</td></tr></table><br />' . "\n";
+                echo '<table class="error" cellpadding="5"><tr><td>' . nl2br($s) . '</td></tr></table><br />' . "\n";
 
                 break;
 
@@ -713,7 +713,7 @@ class Misc
             case 'cid':
             case 'tid':
                 $align = 'right';
-                $out   = nl2br(htmlspecialchars($str));
+                $out   = nl2br(htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($str)));
                 break;
             case 'yesno':
                 if (!isset($params['true'])) {
@@ -763,7 +763,8 @@ class Misc
                 $out = $str;
                 break;
             case 'nbsp':
-                $out = nl2br(str_replace(' ', '&nbsp;', htmlspecialchars($str)));
+                $out = nl2br(str_replace(' ', '&nbsp;', \PHPPgAdmin\HelperTrait::br2ln($str)));
+
                 break;
             case 'verbatim':
                 $out = $str;
@@ -812,7 +813,7 @@ class Misc
                     $class = 'data';
                     $out   = htmlspecialchars($str);
                 } else {
-                    $out = nl2br(htmlspecialchars($str));
+                    $out = nl2br(htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($str)));
                 }
         }
 
@@ -888,8 +889,7 @@ class Misc
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
-        $msg  = str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
-        $msg  = htmlspecialchars($msg);
+        $msg  = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
         if ($msg != '') {
 
             $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";

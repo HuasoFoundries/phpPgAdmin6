@@ -13,7 +13,6 @@ class IntroController extends BaseController
     public function __construct(\Slim\Container $container)
     {
         $this->misc = $container->get('misc');
-
         $this->misc->setNoDBConnection(true);
         parent::__construct($container);
     }
@@ -48,8 +47,7 @@ class IntroController extends BaseController
     public function doDefault()
     {
 
-        //$conf = $this->conf;
-        $conf = $this->misc->getConf();
+        $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
 

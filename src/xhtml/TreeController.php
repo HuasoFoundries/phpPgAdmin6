@@ -124,12 +124,12 @@ class TreeController extends HTMLController
                 echo Decorator::value_xml_attr('action', $attrs['action'], $rec);
                 echo Decorator::value_xml_attr('src', $attrs['branch'], $rec);
 
-                $icon = $this->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
+                $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
                 echo Decorator::value_xml_attr('icon', $icon, $rec);
                 echo Decorator::value_xml_attr('iconaction', $attrs['iconAction'], $rec);
 
                 if (!empty($attrs['openicon'])) {
-                    $icon = $this->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
+                    $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
                 }
                 echo Decorator::value_xml_attr('openicon', $icon, $rec);
 
@@ -139,7 +139,7 @@ class TreeController extends HTMLController
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
-            echo "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"", $this->icon('ObjectNotFound'), '" />' . "\n";
+            echo "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"", $this->misc->icon('ObjectNotFound'), '" />' . "\n";
         }
 
         echo "</tree>\n";
@@ -156,39 +156,4 @@ class TreeController extends HTMLController
         return new \PHPPgAdmin\ArrayRecordSet($tabs);
     }
 
-    public function icon($icon)
-    {
-        if (is_string($icon)) {
-            $path = "/images/themes/{$this->conf['theme']}/{$icon}";
-            if (file_exists(BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
-            }
-
-            if (file_exists(BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
-            }
-
-            $path = "/images/themes/default/{$icon}";
-            if (file_exists(BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
-            }
-
-            if (file_exists(BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
-            }
-
-        } else {
-            // Icon from plugins
-            $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
-            if (file_exists(BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
-            }
-
-            if (file_exists(BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
-            }
-
-        }
-        return '';
-    }
 }

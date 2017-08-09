@@ -264,6 +264,8 @@ $container['view'] = function ($c) {
 
     $view->offsetSet('subfolder', SUBFOLDER);
     $view->offsetSet('theme', $c->misc->getConf('theme'));
+    $view->offsetSet('Favicon', $c->misc->icon('Favicon'));
+    $view->offsetSet('Introduction', $c->misc->icon('Introduction'));
 
     $misc->setView($view);
 
