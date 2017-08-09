@@ -545,18 +545,18 @@ trait AdminTrait
         echo "<table style=\"width: 50%\">\n";
         echo "<tr>\n";
         echo '<th class="data">';
-        $this->printHelp($lang['strvacuum'], 'pg.admin.vacuum') . "</th>\n";
+        $this->misc->printHelp($lang['strvacuum'], 'pg.admin.vacuum') . "</th>\n";
         echo '</th>';
         echo '<th class="data">';
-        $this->printHelp($lang['stranalyze'], 'pg.admin.analyze');
+        $this->misc->printHelp($lang['stranalyze'], 'pg.admin.analyze');
         echo '</th>';
         if ($data->hasRecluster()) {
             echo '<th class="data">';
-            $this->printHelp($lang['strclusterindex'], 'pg.index.cluster');
+            $this->misc->printHelp($lang['strclusterindex'], 'pg.index.cluster');
             echo '</th>';
         }
         echo '<th class="data">';
-        $this->printHelp($lang['strreindex'], 'pg.index.reindex');
+        $this->misc->printHelp($lang['strreindex'], 'pg.index.reindex');
         echo '</th>';
         echo '</tr>';
 

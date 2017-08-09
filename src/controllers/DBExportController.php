@@ -28,7 +28,7 @@ class DBExportController extends BaseController
 
         // Include application functions
         $f_schema = $f_object = '';
-        $misc->setNoOutput(true);
+        $this->setNoOutput(true);
 
         ini_set('memory_limit', '768M');
 

@@ -47,13 +47,13 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
         $all_db_controller = new \PHPPgAdmin\Controller\AllDBController($this);
 
-        $misc->printHeader($this->lang['strdatabases']);
-        $misc->printBody();
+        $all_db_controller->printHeader($this->lang['strdatabases']);
+        $all_db_controller->printBody();
 
         $all_db_controller->doDefault();
 
         $misc->setReloadBrowser(true);
-        $misc->printFooter(true);
+        $all_db_controller->printFooter(true);
 
         //$body->write($this->misc->printFooter(false));
 

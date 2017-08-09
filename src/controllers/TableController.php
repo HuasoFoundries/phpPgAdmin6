@@ -915,7 +915,7 @@ class TableController extends BaseController
                 $_REQUEST['query']  = $query;
                 $_REQUEST['return'] = 'selectrows';
 
-                $misc->setNoOutput(true);
+                $this->setNoOutput(true);
 
                 $display_controller = new DisplayController($this->getContainer());
 

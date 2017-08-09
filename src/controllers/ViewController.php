@@ -275,7 +275,7 @@ class ViewController extends BaseController
                 $_REQUEST['query']  = $query;
                 $_REQUEST['return'] = 'schema';
 
-                $misc->setNoOutput(true);
+                $this->setNoOutput(true);
 
                 $display_controller = new DisplayController($this->getContainer());
 

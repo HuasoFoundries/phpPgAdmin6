@@ -44,7 +44,7 @@ class DataExportController extends BaseController
             $this->prtrace("REQUEST['what']", $_REQUEST['what']);
 
             // Include application functions
-            $misc->setNoOutput(true);
+            $this->setNoOutput(true);
 
             switch ($_REQUEST['what']) {
                 case 'dataonly':

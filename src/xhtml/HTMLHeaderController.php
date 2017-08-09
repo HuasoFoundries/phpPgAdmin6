@@ -11,6 +11,11 @@ class HTMLHeaderController extends HTMLController
     public $_name       = 'HTMLHeaderController';
     private $_no_output = false;
 
+    /**
+     * sets the value of private member variable $_no_output
+     * @param boolean $flag [description]
+     * @return  $this
+     */
     public function setNoOutput($flag)
     {
         $this->_no_output = boolval($flag);
@@ -85,7 +90,7 @@ class HTMLHeaderController extends HTMLController
     {
 
         $bodyClass = htmlspecialchars($bodyClass);
-        $bodyHtml  = '<body data-controller="' . $this->_name . '" class="' . $bodyClass . '" >';
+        $bodyHtml  = '<body data-controller="' . $this->controller_name . '" class="' . $bodyClass . '" >';
         $bodyHtml .= "\n";
 
         if (!$this->_no_output && $doBody) {
@@ -96,44 +101,17 @@ class HTMLHeaderController extends HTMLController
     }
 
     /**
-     * Displays link to the context help.
-     * @param $str   - the string that the context help is related to (already escaped)
-     * @param $help  - help section identifier
-     * @param $do_print true to echo, false to return
-     */
-    public function printHelp($str, $help = null, $do_print = true)
-    {
-        //\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
-        if ($help !== null) {
-            $helplink = $this->getHelpLink($help);
-            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">' . $this->lang['strhelpicon'] . '</a>';
-
-        }
-        if ($do_print) {
-            echo $str;
-        } else {
-            return $str;
-        }
-    }
-
-    public function getHelpLink($help)
-    {
-        return htmlspecialchars(SUBFOLDER . '/help?help=' . urlencode($help) . '&server=' . urlencode($this->misc->getServerId()));
-
-    }
-
-    /**
      * Print out the page heading and help link
      * @param $title Title, already escaped
      * @param $help (optional) The identifier for the help link
      */
     public function printTitle($title, $help = null, $do_print = true)
     {
-        $data = $this->data;
+
         $lang = $this->lang;
 
         $title_html = '<h2>';
-        $title_html .= $this->printHelp($title, $help, false);
+        $title_html .= $this->misc->printHelp($title, $help, false);
         $title_html .= "</h2>\n";
 
         if ($do_print) {

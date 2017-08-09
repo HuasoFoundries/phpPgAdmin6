@@ -224,7 +224,7 @@ class BaseController
         return $footer_controller->setNoBottomLink($flag);
     }
 
-    public function printFooter($doBody, $template = 'footer.twig')
+    public function printFooter($doBody = true, $template = 'footer.twig')
     {
         $footer_controller = $this->getFooterController();
         return $footer_controller->printFooter($doBody, $template);
@@ -275,20 +275,6 @@ class BaseController
     {
         $header_controller = $this->getHeaderController();
         return $header_controller->printBody($doBody, $bodyClass);
-
-    }
-
-    public function printHelp($str, $help = null, $do_print = true)
-    {
-        $header_controller = $this->getHeaderController();
-        return $header_controller->printHelp($str, $help, $do_print);
-
-    }
-
-    public function getHelpLink($help)
-    {
-        $header_controller = $this->getHeaderController();
-        return $header_controller->getHelpLink($help);
 
     }
 

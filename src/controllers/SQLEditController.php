@@ -161,7 +161,7 @@ class SQLEditController extends BaseController
 
         $default_html .= ' <div class="searchpath">';
         $default_html .= '<label>';
-        $default_html .= $this->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
+        $default_html .= $this->misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
 
         $default_html .= ': <input type="text" name="search_path" size="50" value="' . $search_path . '" />';
         $default_html .= "</label>\n";
