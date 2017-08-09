@@ -42,9 +42,9 @@ class Misc
 
         $this->container = $container;
 
-        $this->lang           = $container->get('lang');
-        $this->conf           = $container->get('conf');
-        $this->view           = $container->get('view');
+        $this->lang = $container->get('lang');
+        $this->conf = $container->get('conf');
+        //$this->view           = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
         $this->appLangFiles   = $container->get('appLangFiles');
 
@@ -81,6 +81,42 @@ class Misc
     }
 
     /**
+     * Sets the view instance property of this class
+     * @param \Slim\Views\Twig $view [description]
+     */
+    public function setView(\Slim\Views\Twig $view)
+    {
+        $this->view = $view;
+    }
+
+    /**
+     * Adds or modifies a key in the $conf instance property of this class
+     * @param string $key   [description]
+     * @param mixed $value [description]
+     * @return $this
+     */
+    public function setConf(string $key, $value)
+    {
+        $this->conf[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * gets the value of a config property, or the array of all config properties
+     * @param  mixed $key value of the key to be retrieved. If null, the full array is returnes
+     * @return mixed the whole $conf array, the value of $conf[key] or null if said key does not exist
+     */
+    public function getConf($key = null)
+    {
+        if ($key === null) {
+            return $this->conf;
+        } else if (array_key_exists($key, $this->conf)) {
+            return $this->conf[$key];
+        }
+        return null;
+    }
+
+    /**
      * Default Error Handler. This will be called with the following params
      *
      * @param $dbms         the RDBMS you are connecting to
@@ -110,9 +146,9 @@ class Misc
             'line'     => $backtrace[0]['line'],
         ];
 
-        $errmsg = htmlspecialchars($errmsg);
-        $p1     = htmlspecialchars($p1);
-        $p2     = htmlspecialchars($p2);
+        $errmsg = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($errmsg));
+        $p1     = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($p1));
+        $p2     = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($p2));
         switch ($fn) {
             case 'EXECUTE':
                 $sql         = $p1;
@@ -120,9 +156,9 @@ class Misc
 
                 /*$s = "<p><b>{$lang['strsqlerror']}</b><br />" . $misc->printVal($errmsg, 'errormsg') . "</p> <p><b>{$lang['strinstatement']}</b><br />" . $misc->printVal($sql). "</p>    ";*/
 
-                $s = '<p><b>strsqlerror</b><br />' . $errmsg . '</p> <p><b>SQL:</b><br />' . $sql . '</p>	';
+                $s = '<p><b>strsqlerror</b><br />' . nl2br($errmsg) . '</p> <p><b>SQL:</b><br />' . nl2br($sql) . '</p>	';
 
-                echo '<table class="error" cellpadding="5"><tr><td>' . $s . '</td></tr></table><br />' . "\n";
+                echo '<table class="error" cellpadding="5"><tr><td>' . nl2br($s) . '</td></tr></table><br />' . "\n";
 
                 break;
 
@@ -385,20 +421,6 @@ class Misc
         $info = $this->getServerInfo();
 
         return !empty($info[$all ? 'pg_dumpall_path' : 'pg_dump_path']);
-    }
-
-    public function setThemeConf($theme_conf)
-    {
-
-        $this->conf['theme'] = $theme_conf;
-        //\PC::debug(['theme_conf' => $theme_conf, 'this->theme' => $this->conf['theme']], 'setThemeConf');
-        $this->view->offsetSet('theme', $this->conf['theme']);
-        return $this;
-    }
-
-    public function getConf()
-    {
-        return $this->conf;
     }
 
     /**
@@ -691,7 +713,7 @@ class Misc
             case 'cid':
             case 'tid':
                 $align = 'right';
-                $out   = nl2br(htmlspecialchars($str));
+                $out   = nl2br(htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($str)));
                 break;
             case 'yesno':
                 if (!isset($params['true'])) {
@@ -741,7 +763,8 @@ class Misc
                 $out = $str;
                 break;
             case 'nbsp':
-                $out = nl2br(str_replace(' ', '&nbsp;', htmlspecialchars($str)));
+                $out = nl2br(str_replace(' ', '&nbsp;', \PHPPgAdmin\HelperTrait::br2ln($str)));
+
                 break;
             case 'verbatim':
                 $out = $str;
@@ -790,7 +813,7 @@ class Misc
                     $class = 'data';
                     $out   = htmlspecialchars($str);
                 } else {
-                    $out = nl2br(htmlspecialchars($str));
+                    $out = nl2br(htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($str)));
                 }
         }
 
@@ -866,8 +889,7 @@ class Misc
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
-        $msg  = str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
-        $msg  = htmlspecialchars($msg);
+        $msg  = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
         if ($msg != '') {
 
             $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";

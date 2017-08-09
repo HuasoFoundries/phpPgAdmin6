@@ -6,7 +6,7 @@
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
 
-defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
+defined('BASE_PATH') or DEFINE('BASE_PATH', dirname(__DIR__));
 
 DEFINE('THEME_PATH', BASE_PATH . '/src/themes');
 // Enforce PHP environment
@@ -22,42 +22,42 @@ if (file_exists(BASE_PATH . '/config.inc.php')) {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 
 }
-$debugmode = (!isset($conf['debugmode'])) ? false : $conf['debugmode'];
+$debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
+DEFINE('DEBUGMODE', $debugmode);
 
-if ($debugmode) {
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-}
+require_once BASE_PATH . '/vendor/autoload.php';
 
 if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
     define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
 }
+
 if (!defined('ADODB_ERROR_HANDLER')) {
-    //define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\Misc::Error_Handler');
     define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\Misc::adodb_throw');
 }
-
-require_once BASE_PATH . '/vendor/autoload.php';
 
 // Start session (if not auto-started)
 if (!ini_get('session.auto_start')) {
     session_name('PPA_ID');
     session_start();
 }
-\Kint::$enabled_mode = $debugmode;
 
-$composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
-$appVersion   = $composerinfo->version;
-
-$handler = PhpConsole\Handler::getInstance();
-if (!$debugmode) {
+$handler             = PhpConsole\Handler::getInstance();
+\Kint::$enabled_mode = DEBUGMODE;
+if (DEBUGMODE) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+} else {
     $handler->setHandleErrors(false); // disable errors handling
     $handler->setHandleExceptions(false); // disable exceptions handling
     $handler->setCallOldHandlers(true); // disable passing errors & exceptions to prviously defined handlers
 }
+
 $handler->start(); // initialize handlers*/
-PhpConsole\Helper::register(); // it will register global PC class
+\PhpConsole\Helper::register(); // it will register global PC class
+
+$composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
+$appVersion   = $composerinfo->version;
 
 $config = [
     'msg'       => '',
@@ -69,7 +69,7 @@ $config = [
     ],
     'settings'  => [
         'base_path'              => BASE_PATH,
-        'debug'                  => $debugmode,
+        'debug'                  => DEBUGMODE,
 
         // Configuration file version.  If this is greater than that in config.inc.php, then
         // the app will refuse to run.  This and $conf['version'] should be incremented whenever
@@ -82,7 +82,7 @@ $config = [
 
         // PostgreSQL and PHP minimum version
         'postgresqlMinVer'       => '9.3',
-        'phpMinVer'              => '5.5',
+        'phpMinVer'              => '5.6',
         'displayErrorDetails'    => true,
         'addContentLengthHeader' => false,
     ],
@@ -110,6 +110,7 @@ $container['add_error'] = function ($c) {
 
 $container['conf'] = function ($c) use ($conf) {
 
+    //\Kint::dump($conf);
     // Plugins are removed
     $conf['plugins'] = [];
 
@@ -137,33 +138,6 @@ $container['serializer'] = function ($c) {
         ->setDebug($c->get('settings')['debug'])
         ->build();
     return $serializer;
-};
-
-// Register Twig View helper
-$container['view'] = function ($c) {
-
-    //\Kint::dump($c->get('settings'));
-    //die();
-
-    $view = new \Slim\Views\Twig(BASE_PATH . '/templates', [
-        'cache'       => BASE_PATH . '/temp/twigcache',
-        'auto_reload' => $c->get('settings')['debug'],
-        'debug'       => $c->get('settings')['debug'],
-    ]);
-    $environment               = $c->get('environment');
-    $base_script_trailing_shit = substr($environment['SCRIPT_NAME'], 1);
-    $request_basepath          = $c['request']->getUri()->getBasePath();
-    // Instantiate and add Slim specific extension
-    $basePath = rtrim(str_ireplace($base_script_trailing_shit, '', $request_basepath), '/');
-
-    $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
-
-    $view->offsetSet('subfolder', SUBFOLDER);
-
-    //\Kint::dump(SUBFOLDER, $request_basepath, $base_script_trailing_shit, $basePath);
-    //die();
-
-    return $view;
 };
 
 // Create Misc class references
@@ -258,15 +232,48 @@ $container['misc'] = function ($c) {
         setcookie('ppaTheme', $_theme, time() + 31536000, '/');
         $_SESSION['ppaTheme'] = $_theme;
         $conf['theme']        = $_theme;
+
     }
 
-    $misc->setThemeConf($conf['theme']);
+    $misc->setConf('theme', $conf['theme']);
 
-    // This has to be deferred until after stripVar above
     $misc->setHREF();
     $misc->setForm();
 
     return $misc;
+};
+
+// Register Twig View helper
+$container['view'] = function ($c) {
+
+    $conf = $c->get('conf');
+    $misc = $c->misc;
+
+    $view = new \Slim\Views\Twig(BASE_PATH . '/templates', [
+        'cache'       => BASE_PATH . '/temp/twigcache',
+        'auto_reload' => $c->get('settings')['debug'],
+        'debug'       => $c->get('settings')['debug'],
+    ]);
+    $environment               = $c->get('environment');
+    $base_script_trailing_shit = substr($environment['SCRIPT_NAME'], 1);
+    $request_basepath          = $c['request']->getUri()->getBasePath();
+    // Instantiate and add Slim specific extension
+    $basePath = rtrim(str_ireplace($base_script_trailing_shit, '', $request_basepath), '/');
+
+    $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
+
+    $view->offsetSet('subfolder', SUBFOLDER);
+    $view->offsetSet('theme', $c->misc->getConf('theme'));
+    $view->offsetSet('Favicon', $c->misc->icon('Favicon'));
+    $view->offsetSet('Introduction', $c->misc->icon('Introduction'));
+
+    $misc->setView($view);
+
+    //\PC::debug($c->conf, 'conf');
+    //\PC::debug($c->view->offsetGet('subfolder'), 'subfolder');
+    //\PC::debug($c->view->offsetGet('theme'), 'theme');
+
+    return $view;
 };
 
 $container['haltHandler'] = function ($c) {

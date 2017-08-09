@@ -168,6 +168,11 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
         $subject = 'intro';
     }
 
+    /*\Kint::dump($this->view->offsetGet('subfolder'));
+    \Kint::dump($this->view->offsetGet('theme'));
+    \Kint::dump($this->conf);
+    die();*/
+
     $url = '/src/views/' . $subject . '.php' . ($query_string ? '?' . $query_string : '');
 
     \PC::debug(['subject' => $subject, 'url' => $url, 'query_string' => $query_string], 'subject');
