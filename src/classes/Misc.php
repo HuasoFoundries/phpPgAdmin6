@@ -31,8 +31,8 @@ class Misc
     public $_name              = 'Misc';
     public $lang               = [];
     private $server_info       = null;
-    private $_no_output        = false;
-    private $container         = null;
+
+    private $container = null;
 
     /* Constructor */
     public function __construct(\Slim\Container $container)
@@ -117,6 +117,33 @@ class Misc
     public function getServerId()
     {
         return $this->server_id;
+    }
+
+    /**
+     * Displays link to the context help.
+     * @param $str   - the string that the context help is related to (already escaped)
+     * @param $help  - help section identifier
+     * @param $do_print true to echo, false to return
+     */
+    public function printHelp($str, $help = null, $do_print = true)
+    {
+        //\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
+        if ($help !== null) {
+            $helplink = $this->getHelpLink($help);
+            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">' . $this->lang['strhelpicon'] . '</a>';
+
+        }
+        if ($do_print) {
+            echo $str;
+        } else {
+            return $str;
+        }
+    }
+
+    private function getHelpLink($help)
+    {
+        return htmlspecialchars(SUBFOLDER . '/help?help=' . urlencode($help) . '&server=' . urlencode($this->getServerId()));
+
     }
 
     /**
@@ -213,12 +240,6 @@ class Misc
     public function setNoDBConnection($flag)
     {
         $this->_no_db_connection = boolval($flag);
-        return $this;
-    }
-
-    public function setNoOutput($flag)
-    {
-        $this->_no_output = boolval($flag);
         return $this;
     }
 
@@ -1762,8 +1783,8 @@ class Misc
 
     /**
      * Function to escape command line parameters
-     * @param $str The string to escape
-     * @return The escaped string
+     * @param string $str The string to escape
+     * @return string The escaped string
      */
     public function escapeShellArg($str)
     {
@@ -1788,8 +1809,8 @@ class Misc
 
     /**
      * Function to escape command line programs
-     * @param $str The string to escape
-     * @return The escaped string
+     * @param string $str The string to escape
+     * @return string The escaped string
      */
     public function escapeShellCmd($str)
     {
@@ -1804,11 +1825,11 @@ class Misc
     }
 
     /**
-     * Get list of servers' groups if existing in the conf
+     * Get list of server groups
      *
-     * @param bool $recordset
-     * @param bool $group_id
-     * @return \PHPPgAdmin\a recordset of servers' groups
+     * @param bool $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array.
+     * @param mixed $group_id     a group name to filter the returned servers using $this->conf[srv_groups]
+     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
      */
     public function getServersGroups($recordset = false, $group_id = false)
     {
@@ -1876,10 +1897,9 @@ class Misc
     /**
      * Get list of servers
      *
-     * @param bool|\PHPPgAdmin\return $recordset return as RecordSet suitable for printTable if true,
-     *                                           otherwise just return an array.
-     * @param bool|\PHPPgAdmin\a      $group     a group name to filter the returned servers using $this->conf[srv_groups]
-     * @return array|\PHPPgAdmin\ArrayRecordSet
+     * @param bool $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array.
+     * @param mixed $group     a group name to filter the returned servers using $this->conf[srv_groups]
+     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
      */
     public function getServers($recordset = false, $group = false)
     {
@@ -1887,7 +1907,7 @@ class Misc
         $logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
         $srvs   = [];
 
-        if (($group !== false) and ($group !== 'all')) {
+        if (($group !== false) && ($group !== 'all')) {
             if (isset($this->conf['srv_groups'][$group]['servers'])) {
                 $group = array_fill_keys(explode(',', preg_replace('/\s/', '',
                     $this->conf['srv_groups'][$group]['servers'])), 1);
@@ -1898,10 +1918,7 @@ class Misc
 
         foreach ($this->conf['servers'] as $idx => $info) {
             $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
-            if (($group === false)
-                or isset($group[$idx])
-                or ($group === 'all')
-            ) {
+            if ($group === false || isset($group[$idx]) || ($group === 'all')) {
                 $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
 
                 if (isset($logins[$server_id])) {

@@ -15,7 +15,6 @@ class BrowserController extends BaseController
         $this->misc = $container->get('misc');
 
         $this->misc->setNoDBConnection(true);
-        $this->setNoBottomLink(true);
 
         parent::__construct($container);
     }
@@ -25,6 +24,8 @@ class BrowserController extends BaseController
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
+
+        $this->setNoBottomLink(true);
 
         $viewVars            = $this->lang;
         $viewVars['appName'] = $this->misc->appName;

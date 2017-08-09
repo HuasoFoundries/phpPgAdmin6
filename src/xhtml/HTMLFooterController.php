@@ -10,8 +10,7 @@ class HTMLFooterController extends HTMLController
 {
     public $_name                  = 'HTMLFooterController';
     private $_reload_drop_database = false;
-
-    private $_no_bottom_link = false;
+    private $_no_bottom_link       = false;
 
     /**
      * [setReloadBrowser description]

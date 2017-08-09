@@ -57,7 +57,7 @@ class HTMLNavbarController extends HTMLController
             $crumblink .= '<span class="label">' . htmlspecialchars($crumb['text']) . '</span></a>';
 
             if (isset($crumb['help'])) {
-                $trail_html .= $misc->printHelp($crumblink, $crumb['help'], false);
+                $trail_html .= $this->misc->printHelp($crumblink, $crumb['help'], false);
             } else {
                 $trail_html .= $crumblink;
             }
@@ -161,7 +161,7 @@ class HTMLNavbarController extends HTMLController
                     $tabs_html .= "<td style=\"width: {$width}\" class=\"tab{$active}\">";
 
                     if (isset($tab['help'])) {
-                        $tabs_html .= $misc->printHelp($tablink, $tab['help'], false);
+                        $tabs_html .= $this->misc->printHelp($tablink, $tab['help'], false);
                     } else {
                         $tabs_html .= $tablink;
                     }

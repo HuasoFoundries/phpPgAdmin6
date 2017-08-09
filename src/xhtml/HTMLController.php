@@ -37,6 +37,7 @@ class HTMLController
         $this->conf           = $this->misc->getConf();
         $this->appThemes      = $container->get('appThemes');
         $this->action         = $container->get('action');
+
         if ($controller_name !== null) {
             $this->controller_name = $controller_name;
         }

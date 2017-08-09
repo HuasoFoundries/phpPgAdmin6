@@ -30,7 +30,7 @@ class BaseController
     protected $trail_controller  = null;
     protected $tree_controller   = null;
     protected $footer_controller = null;
-    protected $_no_output        = false;
+    protected $header_controller = null;
     public $msg                  = '';
 
     /* Constructor */
@@ -100,13 +100,6 @@ class BaseController
         return $html;
     }
 
-    public function setNoOutput($flag)
-    {
-        $this->_no_output = boolval($flag);
-        $this->misc->setNoOutput(boolval($flag));
-        return $this;
-    }
-
     public function getContainer()
     {
         return $this->container;
@@ -126,6 +119,14 @@ class BaseController
             $this->footer_controller = new \PHPPgAdmin\XHtml\HTMLFooterController($this->getContainer(), $this->_name);
         }
         return $this->footer_controller;
+    }
+
+    private function getHeaderController()
+    {
+        if ($this->header_controller === null) {
+            $this->header_controller = new \PHPPgAdmin\XHtml\HTMLHeaderController($this->getContainer(), $this->_name);
+        }
+        return $this->header_controller;
     }
 
     private function getNavbarController()
@@ -223,7 +224,7 @@ class BaseController
         return $footer_controller->setNoBottomLink($flag);
     }
 
-    public function printFooter($doBody, $template = 'footer.twig')
+    public function printFooter($doBody = true, $template = 'footer.twig')
     {
         $footer_controller = $this->getFooterController();
         return $footer_controller->printFooter($doBody, $template);
@@ -255,6 +256,33 @@ class BaseController
     {
         $footer_controller = $this->getFooterController();
         return $footer_controller->setWindowName($name, $addServer);
+    }
+
+    public function setNoOutput($flag)
+    {
+        $header_controller = $this->getHeaderController();
+        return $header_controller->setNoOutput(boolval($flag));
+    }
+
+    public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
+    {
+        $header_controller = $this->getHeaderController();
+        return $header_controller->printHeader($title, $script, $do_print, $template);
+
+    }
+
+    public function printBody($doBody = true, $bodyClass = 'detailbody')
+    {
+        $header_controller = $this->getHeaderController();
+        return $header_controller->printBody($doBody, $bodyClass);
+
+    }
+
+    public function printTitle($title, $help = null, $do_print = true)
+    {
+        $header_controller = $this->getHeaderController();
+        return $header_controller->printTitle($title, $help, $do_print);
+
     }
 
 }
