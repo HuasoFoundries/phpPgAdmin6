@@ -293,7 +293,7 @@ class MaterializedViewPropertyController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $this->printTrail('view');
-        $this->printTitle($lang['stredit'], 'pg.view.alter');
+        $this->printTitle($lang['stredit'], 'pg.matview.alter');
         $this->printMsg($msg);
 
         $viewdata = $data->getView($_REQUEST['matview']);
@@ -531,7 +531,7 @@ class MaterializedViewPropertyController extends BaseController
         if ($confirm) {
 
             $this->printTrail('view');
-            $this->printTitle($lang['stralter'], 'pg.view.alter');
+            $this->printTitle($lang['stralter'], 'pg.matview.alter');
             $this->printMsg($msg);
 
             // Fetch view info
