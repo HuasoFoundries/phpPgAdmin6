@@ -91,7 +91,7 @@ class SQLQueryController extends BaseController
 
         $this->doDefault();
 
-        $this->printFooter();
+        $this->doFooter();
     }
 
     public function doDefault()
@@ -197,9 +197,7 @@ class SQLQueryController extends BaseController
         // Set fetch mode to NUM so that duplicate field names are properly returned
         $data->conn->setFetchMode(ADODB_FETCH_NUM);
 
-        //\Kint::dump($data->conn);
         $rs = $data->conn->Execute($this->query);
-
         // $rs will only be an object if there is no error
         if (is_object($rs)) {
             // Request was run, saving it in history
@@ -240,9 +238,10 @@ class SQLQueryController extends BaseController
             }
 
         }
+
     }
 
-    public function printFooter($doBody = true, $template = 'footer.twig')
+    public function doFooter($doBody = true, $template = 'footer.twig')
     {
         $conf = $this->conf;
         $misc = $this->misc;
