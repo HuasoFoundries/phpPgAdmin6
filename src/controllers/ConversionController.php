@@ -95,8 +95,7 @@ class ConversionController extends BaseController
 
         $reqvars = $misc->getRequestVars('schema');
 
-        function getIcon($f)
-        {
+        $getIcon = function ($f) {
             switch ($f['contype']) {
                 case 'u':
                     return 'UniqueConstraint';
@@ -107,11 +106,11 @@ class ConversionController extends BaseController
                 case 'p':
                     return 'PrimaryKey';
             }
-        }
+        };
 
         $attrs = [
             'text' => Decorator::field('conname'),
-            'icon' => Decorator::callback('getIcon'),
+            'icon' => Decorator::callback($getIcon),
         ];
 
         return $this->printTree($constraints, $attrs, 'constraints');

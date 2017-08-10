@@ -638,14 +638,13 @@ trait AdminTrait
             echo '<p>' . (($defaults['autovacuum'] == 'on') ? $lang['strturnedon'] : $lang['strturnedoff']) . '</p>';
             echo "<p class=\"message\">{$lang['strnotdefaultinred']}</p>";
 
-            function enlight($f, $p)
-            {
+            $enlight = function ($f, $p) {
                 if (isset($f[$p[0]]) and ($f[$p[0]] != $p[1])) {
                     return '<span style="color:#F33;font-weight:bold">' . htmlspecialchars($f[$p[0]]) . '</span>';
                 }
 
                 return htmlspecialchars($p[1]);
-            }
+            };
 
             $columns = [
                 'namespace'                       => [
@@ -662,37 +661,37 @@ trait AdminTrait
                 ],
                 'autovacuum_enabled'              => [
                     'title' => $lang['strenabled'],
-                    'field' => Decorator::callback('enlight', ['autovacuum_enabled', $defaults['autovacuum']]),
+                    'field' => Decorator::callback($enlight, ['autovacuum_enabled', $defaults['autovacuum']]),
                     'type'  => 'verbatim',
                 ],
                 'autovacuum_vacuum_threshold'     => [
                     'title' => $lang['strvacuumbasethreshold'],
-                    'field' => Decorator::callback('enlight', ['autovacuum_vacuum_threshold', $defaults['autovacuum_vacuum_threshold']]),
+                    'field' => Decorator::callback($enlight, ['autovacuum_vacuum_threshold', $defaults['autovacuum_vacuum_threshold']]),
                     'type'  => 'verbatim',
                 ],
                 'autovacuum_vacuum_scale_factor'  => [
                     'title' => $lang['strvacuumscalefactor'],
-                    'field' => Decorator::callback('enlight', ['autovacuum_vacuum_scale_factor', $defaults['autovacuum_vacuum_scale_factor']]),
+                    'field' => Decorator::callback($enlight, ['autovacuum_vacuum_scale_factor', $defaults['autovacuum_vacuum_scale_factor']]),
                     'type'  => 'verbatim',
                 ],
                 'autovacuum_analyze_threshold'    => [
                     'title' => $lang['stranalybasethreshold'],
-                    'field' => Decorator::callback('enlight', ['autovacuum_analyze_threshold', $defaults['autovacuum_analyze_threshold']]),
+                    'field' => Decorator::callback($enlight, ['autovacuum_analyze_threshold', $defaults['autovacuum_analyze_threshold']]),
                     'type'  => 'verbatim',
                 ],
                 'autovacuum_analyze_scale_factor' => [
                     'title' => $lang['stranalyzescalefactor'],
-                    'field' => Decorator::callback('enlight', ['autovacuum_analyze_scale_factor', $defaults['autovacuum_analyze_scale_factor']]),
+                    'field' => Decorator::callback($enlight, ['autovacuum_analyze_scale_factor', $defaults['autovacuum_analyze_scale_factor']]),
                     'type'  => 'verbatim',
                 ],
                 'autovacuum_vacuum_cost_delay'    => [
                     'title' => $lang['strvacuumcostdelay'],
-                    'field' => Decorator::concat(Decorator::callback('enlight', ['autovacuum_vacuum_cost_delay', $defaults['autovacuum_vacuum_cost_delay']]), 'ms'),
+                    'field' => Decorator::concat(Decorator::callback($enlight, ['autovacuum_vacuum_cost_delay', $defaults['autovacuum_vacuum_cost_delay']]), 'ms'),
                     'type'  => 'verbatim',
                 ],
                 'autovacuum_vacuum_cost_limit'    => [
                     'title' => $lang['strvacuumcostlimit'],
-                    'field' => Decorator::callback('enlight', ['autovacuum_vacuum_cost_limit', $defaults['autovacuum_vacuum_cost_limit']]),
+                    'field' => Decorator::callback($enlight, ['autovacuum_vacuum_cost_limit', $defaults['autovacuum_vacuum_cost_limit']]),
                     'type'  => 'verbatim',
                 ],
             ];

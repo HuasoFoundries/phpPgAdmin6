@@ -219,8 +219,7 @@ class IndexController extends BaseController
 
         $reqvars = $misc->getRequestVars($subject);
 
-        function getIcon($f)
-        {
+        $getIcon = function ($f) {
             if ($f['indisprimary'] == 't') {
                 return 'PrimaryKey';
             }
@@ -230,11 +229,11 @@ class IndexController extends BaseController
             }
 
             return 'Index';
-        }
+        };
 
         $attrs = [
             'text' => Decorator::field('indname'),
-            'icon' => Decorator::callback('getIcon'),
+            'icon' => Decorator::callback($getIcon),
         ];
 
         return $this->printTree($indexes, $attrs, 'indexes');
