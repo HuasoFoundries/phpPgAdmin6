@@ -69,7 +69,7 @@ class ServerController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $this->printTabs('root', 'servers');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
         $group = isset($_GET['group']) ? $_GET['group'] : false;
 
         $groups  = $misc->getServersGroups(true, $group);

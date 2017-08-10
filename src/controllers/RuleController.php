@@ -111,7 +111,7 @@ class RuleController extends BaseController
         if ($confirm) {
             $this->printTrail($_REQUEST['subject']);
             $this->printTitle($lang['strcreaterule'], 'pg.rule.create');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             echo '<form action="' . SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
             echo "<table>\n";
@@ -218,7 +218,7 @@ class RuleController extends BaseController
 
         $this->printTrail($_REQUEST['subject']);
         $this->printTabs($_REQUEST['subject'], 'rules');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
 

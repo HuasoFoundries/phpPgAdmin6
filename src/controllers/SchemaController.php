@@ -164,7 +164,7 @@ class SchemaController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'schemas');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Check that the DB actually supports schemas
         $schemas = $data->getSchemas();
@@ -286,7 +286,7 @@ class SchemaController extends BaseController
 
         $this->printTrail('database');
         $this->printTitle($lang['strcreateschema'], 'pg.schema.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
         echo "<table style=\"width: 100%\">\n";
@@ -355,7 +355,7 @@ class SchemaController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['stralter'], 'pg.schema.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $schema = $data->getSchemaByName($_REQUEST['schema']);
         if ($schema->recordCount() > 0) {
@@ -522,7 +522,7 @@ class SchemaController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'export');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . '/src/views/dbexport.php" method="post">' . "\n";
 

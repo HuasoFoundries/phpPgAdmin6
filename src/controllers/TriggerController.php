@@ -142,7 +142,7 @@ class TriggerController extends BaseController
 
         $this->printTrail('trigger');
         $this->printTitle($lang['stralter'], 'pg.trigger.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $triggerdata = $data->getTrigger($_REQUEST['table'], $_REQUEST['trigger']);
 
@@ -296,7 +296,7 @@ class TriggerController extends BaseController
 
         $this->printTrail('table');
         $this->printTitle($lang['strcreatetrigger'], 'pg.trigger.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Get all the functions that can be used in triggers
         $funcs = $data->getTriggerFunctions();
@@ -408,7 +408,7 @@ class TriggerController extends BaseController
 
         $this->printTrail('table');
         $this->printTabs('table', 'triggers');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $triggers = $data->getTriggers($_REQUEST['table']);
 

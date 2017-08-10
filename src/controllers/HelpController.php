@@ -61,7 +61,7 @@ class HelpController extends BaseController
 
         $this->printTitle($lang['strselecthelppage']);
 
-        echo $misc->printMsg($msg);
+        echo $this->printMsg($msg);
 
         echo "<dl>\n";
 

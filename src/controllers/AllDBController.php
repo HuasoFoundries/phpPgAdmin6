@@ -263,7 +263,7 @@ class AllDBController extends BaseController
 
         $this->printTrail('server');
         $this->printTitle($lang['strcreatedatabase'], 'pg.database.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         if (!isset($_POST['formName'])) {
             $_POST['formName'] = '';
@@ -444,7 +444,7 @@ class AllDBController extends BaseController
 
         $this->printTrail('server');
         $this->printTabs('server', 'export');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/dbexport.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -495,7 +495,7 @@ class AllDBController extends BaseController
 
         $this->printTrail('server');
         $this->printTabs('server', 'databases');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
         $data      = $misc->getDatabaseAccessor();
         $databases = $data->getDatabases();
 

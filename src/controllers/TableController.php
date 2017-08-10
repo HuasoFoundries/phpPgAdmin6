@@ -212,7 +212,7 @@ class TableController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'tables');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $tables = $data->getTables();
 
@@ -458,7 +458,7 @@ class TableController extends BaseController
 
                 $this->printTrail('schema');
                 $this->printTitle($lang['strcreatetable'], 'pg.table.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . '/src/views/' . $this->script . '" method="post">';
                 echo "\n";
@@ -520,7 +520,7 @@ class TableController extends BaseController
 
                 $this->printTrail('schema');
                 $this->printTitle($lang['strcreatetable'], 'pg.table.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<script src="' . SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
                 echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
@@ -707,7 +707,7 @@ class TableController extends BaseController
 
             $this->printTrail('schema');
             $this->printTitle($lang['strcreatetable'], 'pg.table.create');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $tbltmp = $data->getTables(true);
             $tbltmp = $tbltmp->getArray();
@@ -811,7 +811,7 @@ class TableController extends BaseController
         if ($confirm) {
             $this->printTrail('table');
             $this->printTabs('table', 'select');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
@@ -939,7 +939,7 @@ class TableController extends BaseController
             $this->printTrail('table');
             $this->printTabs('table', 'insert');
 
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 

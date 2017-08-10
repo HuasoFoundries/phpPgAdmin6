@@ -158,7 +158,7 @@ class ConstraintController extends BaseController
 
                     $this->printTrail('table');
                     $this->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
-                    $misc->printMsg($msg);
+                    $this->printMsg($msg);
 
                     // Unserialize target and fetch appropriate table. This is a bit messy
                     // because the table could be in another schema.
@@ -280,7 +280,7 @@ class ConstraintController extends BaseController
             default:
                 $this->printTrail('table');
                 $this->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 $attrs  = $data->getTableAttributes($_REQUEST['table']);
                 $tables = $data->getTables(true);
@@ -382,7 +382,7 @@ class ConstraintController extends BaseController
                     return;
             }
 
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
             // Fetch all tablespaces from the database
@@ -512,7 +512,7 @@ class ConstraintController extends BaseController
         if ($confirm) {
             $this->printTrail('table');
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             echo '<form action="' . SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
             echo "<table>\n";
@@ -609,7 +609,7 @@ class ConstraintController extends BaseController
 
         $this->printTrail('table');
         $this->printTabs('table', 'constraints');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $constraints = $data->getConstraints($_REQUEST['table']);
 

@@ -46,7 +46,7 @@ class LangController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'languages');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $languages = $data->getLanguages();
 

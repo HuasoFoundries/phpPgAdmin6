@@ -100,7 +100,7 @@ class MaterializedViewController extends BaseController
         if ($confirm) {
             $this->printTrail('view');
             $this->printTabs('view', 'select');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['matview']);
 
@@ -320,7 +320,7 @@ class MaterializedViewController extends BaseController
 
             $this->printTrail('schema');
             $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $tblCount = sizeof($_POST['formTables']);
             //unserialize our schema/table information and store in arrSelTables
@@ -462,7 +462,7 @@ class MaterializedViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -516,7 +516,7 @@ class MaterializedViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateview'], 'pg.view.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
@@ -717,7 +717,7 @@ class MaterializedViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'matviews');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         //$matviews = $data->getViews();
         $matviews = $data->getMaterializedViews();

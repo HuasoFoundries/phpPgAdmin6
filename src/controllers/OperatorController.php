@@ -107,7 +107,7 @@ class OperatorController extends BaseController
 
         $this->printTrail('operator');
         $this->printTitle($lang['strproperties'], 'pg.operator');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $oprdata                       = $data->getOperator($_REQUEST['operator_oid']);
         $oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
@@ -219,7 +219,7 @@ class OperatorController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'operators');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $operators = $data->getOperators();
 

@@ -32,7 +32,7 @@ class CastController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'casts');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $casts = $data->getCasts();
 

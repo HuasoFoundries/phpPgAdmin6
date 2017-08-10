@@ -186,7 +186,7 @@ class TablePropertyController extends BaseController
 
         $this->printTrail('table');
         $this->printTitle($lang['stralter'], 'pg.table.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Fetch table info
         $table = $data->getTable($_REQUEST['table']);
@@ -297,7 +297,7 @@ class TablePropertyController extends BaseController
 
         $this->printTrail('table');
         $this->printTabs('table', 'export');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -355,7 +355,7 @@ class TablePropertyController extends BaseController
 
         $this->printTrail('table');
         $this->printTabs('table', 'import');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Check that file uploads are enabled
         if (ini_get('file_uploads')) {
@@ -440,7 +440,7 @@ class TablePropertyController extends BaseController
 
                 $this->printTrail('table');
                 $this->printTitle($lang['straddcolumn'], 'pg.column.add');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<script src="' . SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
                 echo '<form action="' . SUBFOLDER . "/src/views/tblproperties.php\" method=\"post\">\n";
@@ -639,7 +639,7 @@ class TablePropertyController extends BaseController
 
         $this->printTrail('table');
         $this->printTabs('table', 'columns');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Get table
         $tdata = $data->getTable($_REQUEST['table']);

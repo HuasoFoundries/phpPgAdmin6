@@ -73,7 +73,7 @@ class ColPropertyController extends BaseController
             case 1:
                 $this->printTrail('column');
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<script src="' . SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
                 echo '<form action="' . SUBFOLDER . "/src/views/colproperties.php\" method=\"post\">\n";
@@ -246,7 +246,7 @@ class ColPropertyController extends BaseController
         $this->printTrail('column');
         //$this->printTitle($lang['strcolprop']);
         $this->printTabs('column', 'properties');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         if (!empty($_REQUEST['column'])) {
             // Get table

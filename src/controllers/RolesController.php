@@ -31,7 +31,7 @@ class RolesController extends BaseController
 
         $this->printTrail('server');
         $this->printTabs('server', 'roles');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $roles = $data->getRoles();
 
@@ -244,7 +244,7 @@ class RolesController extends BaseController
 
         $this->printTrail('role');
         $this->printTitle($lang['strcreaterole'], 'pg.role.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/roles.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -376,7 +376,7 @@ class RolesController extends BaseController
 
         $this->printTrail('role');
         $this->printTitle($lang['stralter'], 'pg.role.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $roledata = $data->getRole($_REQUEST['rolename']);
 
@@ -636,7 +636,7 @@ class RolesController extends BaseController
 
         $this->printTrail('role');
         $this->printTitle($lang['strproperties'], 'pg.role');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $roledata = $data->getRole($_REQUEST['rolename']);
         if ($roledata->recordCount() > 0) {
@@ -765,7 +765,7 @@ class RolesController extends BaseController
 
         $this->printTrail('role');
         $this->printTabs('server', 'account');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         if ($roledata->recordCount() > 0) {
             $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
@@ -825,7 +825,7 @@ class RolesController extends BaseController
             $_REQUEST['rolename'] = $server_info['username'];
             $this->printTrail('role');
             $this->printTitle($lang['strchangepassword'], 'pg.role.alter');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             if (!isset($_POST['password'])) {
                 $_POST['password'] = '';

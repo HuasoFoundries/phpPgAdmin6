@@ -180,7 +180,7 @@ class AggregateController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -256,7 +256,7 @@ class AggregateController extends BaseController
 
         $this->printTrail('aggregate');
         $this->printTitle($lang['stralter'], 'pg.aggregate.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
         $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
@@ -340,7 +340,7 @@ class AggregateController extends BaseController
 
         $this->printTrail('aggregate');
         $this->printTitle($lang['strproperties'], 'pg.aggregate');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
 
@@ -438,7 +438,7 @@ class AggregateController extends BaseController
         $data = $misc->getDatabaseAccessor();
         $this->printTrail('schema');
         $this->printTabs('schema', 'aggregates');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $aggregates = $data->getAggregates();
 

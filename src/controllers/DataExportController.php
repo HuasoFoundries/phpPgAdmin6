@@ -362,7 +362,7 @@ class DataExportController extends BaseController
         $this->printTrail(isset($_REQUEST['subject']) ? $_REQUEST['subject'] : 'database');
         $this->printTitle($lang['strexport']);
         if (isset($msg)) {
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
         }
 
         echo '<form action="' . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";

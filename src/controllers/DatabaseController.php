@@ -105,6 +105,7 @@ class DatabaseController extends BaseController
 
         $this->printHeader($lang['strdatabase'], $scripts, true, $header_template);
         $this->printBody();
+
         echo $output;
 
         $this->printFooter(true, $footer_template);
@@ -150,7 +151,7 @@ class DatabaseController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'find');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/database.php\" method=\"post\">\n";
         echo '<p><input name="term" value="', htmlspecialchars($_REQUEST['term']),
@@ -420,7 +421,7 @@ class DatabaseController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'export');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/dbexport.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -508,7 +509,7 @@ class DatabaseController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'processes');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         if (strlen($msg) === 0) {
             echo '<br /><a id="control" href=""><img src="' . $misc->icon('Refresh') . "\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";

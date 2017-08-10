@@ -136,7 +136,7 @@ class SequenceController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'sequences');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Get all sequences
         $sequences = $data->getSequences();
@@ -235,7 +235,7 @@ class SequenceController extends BaseController
         $data = $misc->getDatabaseAccessor();
         $this->printTrail('sequence');
         $this->printTitle($lang['strproperties'], 'pg.sequence');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
@@ -398,7 +398,7 @@ class SequenceController extends BaseController
         if ($confirm) {
             $this->printTrail('sequence');
             $this->printTitle($lang['strdrop'], 'pg.sequence.drop');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             echo '<form action="' . SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
 
@@ -493,7 +493,7 @@ class SequenceController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -648,7 +648,7 @@ class SequenceController extends BaseController
 
         $this->printTrail('sequence');
         $this->printTitle($lang['strsetval'], 'pg.sequence');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
@@ -754,7 +754,7 @@ class SequenceController extends BaseController
 
         $this->printTrail('sequence');
         $this->printTitle($lang['stralter'], 'pg.sequence.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);

@@ -165,7 +165,7 @@ class FunctionController extends BaseController
 
         $this->printTrail('function');
         $this->printTitle($lang['stralter'], 'pg.function.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $fndata = $data->getFunction($_REQUEST['function_oid']);
 
@@ -402,7 +402,7 @@ class FunctionController extends BaseController
 
         $this->printTrail('function');
         $this->printTitle($lang['strproperties'], 'pg.function');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $funcdata = $data->getFunction($_REQUEST['function_oid']);
 
@@ -734,7 +734,7 @@ class FunctionController extends BaseController
                 $this->printTitle($lang['strcreateplfunction'], 'pg.function.create.pl');
                 break;
         }
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Create string for return type list
         $szTypes = '';
@@ -1068,7 +1068,7 @@ class FunctionController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'functions');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $funcs = $data->getFunctions();
 

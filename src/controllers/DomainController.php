@@ -155,7 +155,7 @@ class DomainController extends BaseController
 
         $this->printTrail('domain');
         $this->printTitle($lang['stralter'], 'pg.domain.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Fetch domain info
         $domaindata = $data->getDomain($_REQUEST['domain']);
@@ -229,7 +229,7 @@ class DomainController extends BaseController
         if ($confirm) {
             $this->printTrail('domain');
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<table>\n";
@@ -279,7 +279,7 @@ class DomainController extends BaseController
         if ($confirm) {
             $this->printTrail('domain');
             $this->printTitle($lang['strdrop'], 'pg.constraint.drop');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             echo '<p>', sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
                 $misc->printVal($_REQUEST['domain'])), "</p>\n";
@@ -316,7 +316,7 @@ class DomainController extends BaseController
 
         $this->printTrail('domain');
         $this->printTitle($lang['strproperties'], 'pg.domain');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $domaindata = $data->getDomain($_REQUEST['domain']);
 
@@ -509,7 +509,7 @@ class DomainController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreatedomain'], 'pg.domain.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -597,7 +597,7 @@ class DomainController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'domains');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $domains = $data->getDomains();
 

@@ -105,7 +105,7 @@ class IndexController extends BaseController
 
         $this->printTrail($subject);
         $this->printTabs($subject, 'indexes');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $indexes = $data->getIndexes($_REQUEST[$_REQUEST['subject']]);
 
@@ -350,7 +350,7 @@ class IndexController extends BaseController
 
         $this->printTrail($subject);
         $this->printTitle($lang['strcreateindex'], 'pg.index.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $selColumns = new \PHPPgAdmin\XHtml\XHTML_Select('TableColumnList', true, 10);
         $selColumns->set_style('width: 10em;');

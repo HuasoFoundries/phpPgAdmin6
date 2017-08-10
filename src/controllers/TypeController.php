@@ -122,7 +122,7 @@ class TypeController extends BaseController
 
         $this->printTrail('type');
         $this->printTitle($lang['strproperties'], 'pg.type');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $attPre = function (&$rowdata) use ($data) {
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
@@ -269,7 +269,7 @@ class TypeController extends BaseController
             case 1:
                 $this->printTrail('type');
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
@@ -310,7 +310,7 @@ class TypeController extends BaseController
 
                 $this->printTrail('schema');
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 
@@ -434,7 +434,7 @@ class TypeController extends BaseController
             case 1:
                 $this->printTrail('type');
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
@@ -473,7 +473,7 @@ class TypeController extends BaseController
 
                 $this->printTrail('schema');
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 
@@ -587,7 +587,7 @@ class TypeController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreatetype'], 'pg.type.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -708,7 +708,7 @@ class TypeController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'types');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $types = $data->getTypes();
 

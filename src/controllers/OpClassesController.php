@@ -74,7 +74,7 @@ class OpClassesController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'opclasses');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $opclasses = $data->getOpClasses();
 

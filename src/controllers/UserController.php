@@ -94,7 +94,7 @@ class UserController extends BaseController
 
         $this->printTrail('user');
         $this->printTabs('server', 'account');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         if ($userdata->recordCount() > 0) {
             $userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
@@ -143,7 +143,7 @@ class UserController extends BaseController
             $_REQUEST['user'] = $server_info['username'];
             $this->printTrail('user');
             $this->printTitle($lang['strchangepassword'], 'pg.user.alter');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             if (!isset($_POST['password'])) {
                 $_POST['password'] = '';
@@ -200,7 +200,7 @@ class UserController extends BaseController
 
         $this->printTrail('user');
         $this->printTitle($lang['stralter'], 'pg.user.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $userdata = $data->getUser($_REQUEST['username']);
 
@@ -349,7 +349,7 @@ class UserController extends BaseController
 
         $this->printTrail('server');
         $this->printTitle($lang['strcreateuser'], 'pg.user.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -418,7 +418,7 @@ class UserController extends BaseController
 
         $this->printTrail('server');
         $this->printTabs('server', 'users');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $users = $data->getUsers();
 

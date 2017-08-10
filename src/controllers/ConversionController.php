@@ -84,7 +84,7 @@ class ConversionController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'conversions');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $conversions = $data->getconversions();
 

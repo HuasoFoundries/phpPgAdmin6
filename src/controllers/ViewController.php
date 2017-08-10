@@ -168,7 +168,7 @@ class ViewController extends BaseController
         if ($confirm) {
             $this->printTrail('view');
             $this->printTabs('view', 'select');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['view']);
 
@@ -388,7 +388,7 @@ class ViewController extends BaseController
 
             $this->printTrail('schema');
             $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $tblCount = sizeof($_POST['formTables']);
             //unserialize our schema/table information and store in arrSelTables
@@ -530,7 +530,7 @@ class ViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -584,7 +584,7 @@ class ViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateview'], 'pg.view.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
@@ -785,7 +785,7 @@ class ViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'views');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $views = $data->getViews();
 

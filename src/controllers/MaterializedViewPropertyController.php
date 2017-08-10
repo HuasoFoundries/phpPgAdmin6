@@ -98,7 +98,7 @@ class MaterializedViewPropertyController extends BaseController
 
         $this->printTrail('matview');
         $this->printTabs('matview', 'columns');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Get view
         $vdata = $data->getView($_REQUEST['matview']);
@@ -294,7 +294,7 @@ class MaterializedViewPropertyController extends BaseController
 
         $this->printTrail('view');
         $this->printTitle($lang['stredit'], 'pg.view.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $viewdata = $data->getView($_REQUEST['matview']);
 
@@ -342,7 +342,7 @@ class MaterializedViewPropertyController extends BaseController
 
         $this->printTrail('view');
         $this->printTabs('view', 'export');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -405,7 +405,7 @@ class MaterializedViewPropertyController extends BaseController
 
         $this->printTrail('view');
         $this->printTabs('view', 'definition');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         if ($vdata->recordCount() > 0) {
             // Show comment if any
@@ -457,7 +457,7 @@ class MaterializedViewPropertyController extends BaseController
 
                 $this->printTrail('column');
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
 
@@ -532,7 +532,7 @@ class MaterializedViewPropertyController extends BaseController
 
             $this->printTrail('view');
             $this->printTitle($lang['stralter'], 'pg.view.alter');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             // Fetch view info
             $view = $data->getView($_REQUEST['matview']);

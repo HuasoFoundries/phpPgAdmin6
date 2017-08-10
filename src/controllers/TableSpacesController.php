@@ -11,6 +11,155 @@ class TableSpacesController extends BaseController
 {
     public $_name = 'TableSpacesController';
 
+    public function render()
+    {
+        $conf   = $this->conf;
+        $misc   = $this->misc;
+        $lang   = $this->lang;
+        $data   = $misc->getDatabaseAccessor();
+        $action = $this->action;
+
+        $this->printHeader($lang['strtablespaces']);
+        $this->printBody();
+
+        switch ($action) {
+            case 'save_create':
+                if (isset($_REQUEST['cancel'])) {
+                    $this->doDefault();
+                } else {
+                    $this->doSaveCreate();
+                }
+
+                break;
+            case 'create':
+                $this->doCreate();
+                break;
+            case 'drop':
+                if (isset($_REQUEST['cancel'])) {
+                    $this->doDefault();
+                } else {
+                    $this->doDrop(false);
+                }
+
+                break;
+            case 'confirm_drop':
+                $this->doDrop(true);
+                break;
+            case 'save_edit':
+                if (isset($_REQUEST['cancel'])) {
+                    $this->doDefault();
+                } else {
+                    $this->doSaveAlter();
+                }
+
+                break;
+            case 'edit':
+                $this->doAlter();
+                break;
+            default:
+                $this->doDefault();
+                break;
+        }
+
+        $this->printFooter();
+    }
+
+    /**
+     * Show default list of tablespaces in the cluster
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail('server');
+        $this->printTabs('server', 'tablespaces');
+        $this->printMsg($msg);
+
+        $tablespaces = $data->getTablespaces();
+
+        $columns = [
+            'database' => [
+                'title' => $lang['strname'],
+                'field' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
+            ],
+            'owner'    => [
+                'title' => $lang['strowner'],
+                'field' => \PHPPgAdmin\Decorators\Decorator::field('spcowner'),
+            ],
+            'location' => [
+                'title' => $lang['strlocation'],
+                'field' => \PHPPgAdmin\Decorators\Decorator::field('spclocation'),
+            ],
+            'actions'  => [
+                'title' => $lang['stractions'],
+            ],
+        ];
+
+        if ($data->hasSharedComments()) {
+            $columns['comment'] = [
+                'title' => $lang['strcomment'],
+                'field' => \PHPPgAdmin\Decorators\Decorator::field('spccomment'),
+            ];
+        }
+
+        $actions = [
+            'alter'      => [
+                'content' => $lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'tablespaces.php',
+                        'urlvars' => [
+                            'action'     => 'edit',
+                            'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
+                        ],
+                    ],
+                ],
+            ],
+            'drop'       => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'tablespaces.php',
+                        'urlvars' => [
+                            'action'     => 'confirm_drop',
+                            'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
+                        ],
+                    ],
+                ],
+            ],
+            'privileges' => [
+                'content' => $lang['strprivileges'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'privileges.php',
+                        'urlvars' => [
+                            'subject'    => 'tablespace',
+                            'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($tablespaces, $columns, $actions, 'tablespaces-tablespaces', $lang['strnotablespaces']);
+
+        $this->printNavLinks(['create' => [
+            'attr'    => [
+                'href' => [
+                    'url'     => 'tablespaces.php',
+                    'urlvars' => [
+                        'action' => 'create',
+                        'server' => $_REQUEST['server'],
+                    ],
+                ],
+            ],
+            'content' => $lang['strcreatetablespace'],
+        ]], 'tablespaces-tablespaces', get_defined_vars());
+    }
+
     /**
      * Function to allow altering of a tablespace
      */
@@ -23,7 +172,7 @@ class TableSpacesController extends BaseController
 
         $this->printTrail('tablespace');
         $this->printTitle($lang['stralter'], 'pg.tablespace.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Fetch tablespace info
         $tablespace = $data->getTablespace($_REQUEST['tablespace']);
@@ -174,7 +323,7 @@ class TableSpacesController extends BaseController
 
         $this->printTrail('server');
         $this->printTitle($lang['strcreatetablespace'], 'pg.tablespace.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
         echo $misc->form;
@@ -234,155 +383,6 @@ class TableSpacesController extends BaseController
             }
 
         }
-    }
-
-    /**
-     * Show default list of tablespaces in the cluster
-     */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail('server');
-        $this->printTabs('server', 'tablespaces');
-        $misc->printMsg($msg);
-
-        $tablespaces = $data->getTablespaces();
-
-        $columns = [
-            'database' => [
-                'title' => $lang['strname'],
-                'field' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
-            ],
-            'owner'    => [
-                'title' => $lang['strowner'],
-                'field' => \PHPPgAdmin\Decorators\Decorator::field('spcowner'),
-            ],
-            'location' => [
-                'title' => $lang['strlocation'],
-                'field' => \PHPPgAdmin\Decorators\Decorator::field('spclocation'),
-            ],
-            'actions'  => [
-                'title' => $lang['stractions'],
-            ],
-        ];
-
-        if ($data->hasSharedComments()) {
-            $columns['comment'] = [
-                'title' => $lang['strcomment'],
-                'field' => \PHPPgAdmin\Decorators\Decorator::field('spccomment'),
-            ];
-        }
-
-        $actions = [
-            'alter'      => [
-                'content' => $lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'tablespaces.php',
-                        'urlvars' => [
-                            'action'     => 'edit',
-                            'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
-                        ],
-                    ],
-                ],
-            ],
-            'drop'       => [
-                'content' => $lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'tablespaces.php',
-                        'urlvars' => [
-                            'action'     => 'confirm_drop',
-                            'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
-                        ],
-                    ],
-                ],
-            ],
-            'privileges' => [
-                'content' => $lang['strprivileges'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'privileges.php',
-                        'urlvars' => [
-                            'subject'    => 'tablespace',
-                            'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($tablespaces, $columns, $actions, 'tablespaces-tablespaces', $lang['strnotablespaces']);
-
-        $this->printNavLinks(['create' => [
-            'attr'    => [
-                'href' => [
-                    'url'     => 'tablespaces.php',
-                    'urlvars' => [
-                        'action' => 'create',
-                        'server' => $_REQUEST['server'],
-                    ],
-                ],
-            ],
-            'content' => $lang['strcreatetablespace'],
-        ]], 'tablespaces-tablespaces', get_defined_vars());
-    }
-
-    public function render()
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-        $action->$this->action;
-
-        $this->printHeader($lang['strtablespaces']);
-        $this->printBody();
-
-        switch ($action) {
-            case 'save_create':
-                if (isset($_REQUEST['cancel'])) {
-                    $this->doDefault();
-                } else {
-                    $this->doSaveCreate();
-                }
-
-                break;
-            case 'create':
-                $this->doCreate();
-                break;
-            case 'drop':
-                if (isset($_REQUEST['cancel'])) {
-                    $this->doDefault();
-                } else {
-                    $this->doDrop(false);
-                }
-
-                break;
-            case 'confirm_drop':
-                $this->doDrop(true);
-                break;
-            case 'save_edit':
-                if (isset($_REQUEST['cancel'])) {
-                    $this->doDefault();
-                } else {
-                    $this->doSaveAlter();
-                }
-
-                break;
-            case 'edit':
-                $this->doAlter();
-                break;
-            default:
-                $this->doDefault();
-                break;
-        }
-
-        $this->printFooter();
     }
 
 }

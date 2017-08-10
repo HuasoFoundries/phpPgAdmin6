@@ -89,7 +89,7 @@ class LoginController extends BaseController
         $login_html .= $printTitle;
 
         if (isset($msg)) {
-            $login_html .= $misc->printMsg($msg, false);
+            $login_html .= $this->printMsg($msg, false);
         }
 
         $login_html .= '<form id="login_form"  method="post" name="login_form">';

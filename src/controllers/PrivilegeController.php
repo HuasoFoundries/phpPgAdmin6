@@ -84,7 +84,7 @@ class PrivilegeController extends BaseController
                     $this->printTitle($lang['strrevoke'], 'pg.privilege.revoke');
                     break;
             }
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             echo '<form action="' . SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
             echo "<table>\n";
@@ -220,7 +220,7 @@ class PrivilegeController extends BaseController
             default:
                 $this->printTitle($lang['strprivileges'], 'pg.privilege');
         }
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Determine whether object should be ref'd by name or oid.
         if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {

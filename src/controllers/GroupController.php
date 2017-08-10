@@ -141,7 +141,7 @@ class GroupController extends BaseController
 
         $this->printTrail('group');
         $this->printTitle($lang['strproperties'], 'pg.group');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $groupdata = $data->getGroup($_REQUEST['group']);
         $users     = $data->getUsers();
@@ -261,7 +261,7 @@ class GroupController extends BaseController
 
         $this->printTrail('server');
         $this->printTitle($lang['strcreategroup'], 'pg.group.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo "<form action=\"\" method=\"post\">\n";
         echo $misc->form;
@@ -329,7 +329,7 @@ class GroupController extends BaseController
 
         $this->printTrail('server');
         $this->printTabs('server', 'groups');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $groups = $data->getGroups();
 

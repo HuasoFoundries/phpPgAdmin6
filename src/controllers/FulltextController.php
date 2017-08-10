@@ -223,7 +223,7 @@ class FulltextController extends BaseController
         $this->printTrail('schema');
         $this->printTabs('schema', 'fulltext');
         $this->printTabs('fulltext', 'ftsconfigs');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $cfgs = $data->getFtsConfigurations(false);
 
@@ -409,7 +409,7 @@ class FulltextController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strftscreateconfig'], 'pg.ftscfg.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -536,7 +536,7 @@ class FulltextController extends BaseController
 
         $this->printTrail('ftscfg');
         $this->printTitle($lang['stralter'], 'pg.ftscfg.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $ftscfg = $data->getFtsConfigurationByName($_REQUEST['ftscfg']);
         if ($ftscfg->recordCount() > 0) {
@@ -618,7 +618,7 @@ class FulltextController extends BaseController
         $this->printTrail('schema');
         $this->printTabs('schema', 'fulltext');
         $this->printTabs('fulltext', 'ftsparsers');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $parsers = $data->getFtsParsers(false);
 
@@ -657,7 +657,7 @@ class FulltextController extends BaseController
         $this->printTrail('schema');
         $this->printTabs('schema', 'fulltext');
         $this->printTabs('fulltext', 'ftsdicts');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $dicts = $data->getFtsDictionaries(false);
 
@@ -741,7 +741,7 @@ class FulltextController extends BaseController
         $this->printTrail('ftscfg');
         $this->printTabs('schema', 'fulltext');
         $this->printTabs('fulltext', 'ftsconfigs');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo "<h3>{$lang['strftsconfigmap']}</h3>\n";
 
@@ -873,7 +873,7 @@ class FulltextController extends BaseController
         $this->printTrail('schema');
         // TODO: create doc links
         $this->printTitle($lang['strftscreatedict'], 'pg.ftsdict.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -1015,7 +1015,7 @@ class FulltextController extends BaseController
 
         $this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
         $this->printTitle($lang['stralter'], 'pg.ftsdict.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $ftsdict = $data->getFtsDictionaryByName($_REQUEST['ftsdict']);
         if ($ftsdict->recordCount() > 0) {
@@ -1154,7 +1154,7 @@ class FulltextController extends BaseController
         $data = $misc->getDatabaseAccessor();
         $this->printTrail('ftscfg');
         $this->printTitle($lang['stralter'], 'pg.ftscfg.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $ftsdicts = $data->getFtsDictionaries();
         if ($ftsdicts->recordCount() > 0) {
@@ -1258,7 +1258,7 @@ class FulltextController extends BaseController
 
         $this->printTrail('ftscfg');
         $this->printTitle($lang['stralter'], 'pg.ftscfg.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $ftsdicts = $data->getFtsDictionaries();
         if ($ftsdicts->recordCount() > 0) {
