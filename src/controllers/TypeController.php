@@ -76,9 +76,133 @@ class TypeController extends BaseController
 
     }
 
-/**
- * Generate XML for the browser tree.
- */
+    /**
+     * Show default list of types in the database
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'types');
+        $this->printMsg($msg);
+
+        $types = $data->getTypes();
+
+        $columns = [
+            'type'    => [
+                'title' => $lang['strtype'],
+                'field' => Decorator::field('typname'),
+                'url'   => "types.php?action=properties&amp;{$misc->href}&amp;",
+                'vars'  => ['type' => 'basename'],
+            ],
+            'owner'   => [
+                'title' => $lang['strowner'],
+                'field' => Decorator::field('typowner'),
+            ],
+            'flavour' => [
+                'title'  => $lang['strflavor'],
+                'field'  => Decorator::field('typtype'),
+                'type'   => 'verbatim',
+                'params' => [
+                    'map'   => [
+                        'b' => $lang['strbasetype'],
+                        'c' => $lang['strcompositetype'],
+                        'd' => $lang['strdomain'],
+                        'p' => $lang['strpseudotype'],
+                        'e' => $lang['strenum'],
+                    ],
+                    'align' => 'center',
+                ],
+            ],
+            'actions' => [
+                'title' => $lang['stractions'],
+            ],
+            'comment' => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('typcomment'),
+            ],
+        ];
+
+        if (!isset($types->fields['typtype'])) {
+            unset($columns['flavour']);
+        }
+
+        $actions = [
+            'drop' => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'types.php',
+                        'urlvars' => [
+                            'action' => 'confirm_drop',
+                            'type'   => Decorator::field('basename'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($types, $columns, $actions, 'types-types', $lang['strnotypes']);
+
+        $navlinks = [
+            'create'     => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'types.php',
+                        'urlvars' => [
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreatetype'],
+            ],
+            'createcomp' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'types.php',
+                        'urlvars' => [
+                            'action'   => 'create_comp',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreatecomptype'],
+            ],
+            'createenum' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'types.php',
+                        'urlvars' => [
+                            'action'   => 'create_enum',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreateenumtype'],
+            ],
+        ];
+
+        if (!$data->hasEnumTypes()) {
+            unset($navlinks['enum']);
+        }
+
+        $this->printNavLinks($navlinks, 'types-types', get_defined_vars());
+    }
+
+    /**
+     * Generate XML for the browser tree.
+     */
     public function doTree()
     {
 
@@ -122,7 +246,7 @@ class TypeController extends BaseController
 
         $this->printTrail('type');
         $this->printTitle($lang['strproperties'], 'pg.type');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $attPre = function (&$rowdata) use ($data) {
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
@@ -269,7 +393,7 @@ class TypeController extends BaseController
             case 1:
                 $this->printTrail('type');
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
@@ -310,7 +434,7 @@ class TypeController extends BaseController
 
                 $this->printTrail('schema');
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 
@@ -434,7 +558,7 @@ class TypeController extends BaseController
             case 1:
                 $this->printTrail('type');
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
@@ -473,7 +597,7 @@ class TypeController extends BaseController
 
                 $this->printTrail('schema');
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 
@@ -587,7 +711,7 @@ class TypeController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreatetype'], 'pg.type.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -694,130 +818,6 @@ class TypeController extends BaseController
             }
 
         }
-    }
-
-/**
- * Show default list of types in the database
- */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail('schema');
-        $this->printTabs('schema', 'types');
-        $misc->printMsg($msg);
-
-        $types = $data->getTypes();
-
-        $columns = [
-            'type'    => [
-                'title' => $lang['strtype'],
-                'field' => Decorator::field('typname'),
-                'url'   => "types.php?action=properties&amp;{$misc->href}&amp;",
-                'vars'  => ['type' => 'basename'],
-            ],
-            'owner'   => [
-                'title' => $lang['strowner'],
-                'field' => Decorator::field('typowner'),
-            ],
-            'flavour' => [
-                'title'  => $lang['strflavor'],
-                'field'  => Decorator::field('typtype'),
-                'type'   => 'verbatim',
-                'params' => [
-                    'map'   => [
-                        'b' => $lang['strbasetype'],
-                        'c' => $lang['strcompositetype'],
-                        'd' => $lang['strdomain'],
-                        'p' => $lang['strpseudotype'],
-                        'e' => $lang['strenum'],
-                    ],
-                    'align' => 'center',
-                ],
-            ],
-            'actions' => [
-                'title' => $lang['stractions'],
-            ],
-            'comment' => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('typcomment'),
-            ],
-        ];
-
-        if (!isset($types->fields['typtype'])) {
-            unset($columns['flavour']);
-        }
-
-        $actions = [
-            'drop' => [
-                'content' => $lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'types.php',
-                        'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'type'   => Decorator::field('basename'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($types, $columns, $actions, 'types-types', $lang['strnotypes']);
-
-        $navlinks = [
-            'create'     => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'types.php',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreatetype'],
-            ],
-            'createcomp' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'types.php',
-                        'urlvars' => [
-                            'action'   => 'create_comp',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreatecomptype'],
-            ],
-            'createenum' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'types.php',
-                        'urlvars' => [
-                            'action'   => 'create_enum',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreateenumtype'],
-            ],
-        ];
-
-        if (!$data->hasEnumTypes()) {
-            unset($navlinks['enum']);
-        }
-
-        $this->printNavLinks($navlinks, 'types-types', get_defined_vars());
     }
 
 }

@@ -367,7 +367,7 @@ trait AdminTrait
         if ($confirm) {
             $this->printTrail($type);
             $this->printTitle(sprintf($lang['streditvacuumtable'], $misc->printVal($_REQUEST['table'])));
-            $misc->printMsg(sprintf($msg, $misc->printVal($_REQUEST['table'])));
+            $this->printMsg(sprintf($msg, $misc->printVal($_REQUEST['table'])));
 
             if (empty($_REQUEST['table'])) {
                 $this->doAdmin($type, '', $lang['strspecifyeditvacuumtable']);
@@ -534,7 +534,7 @@ trait AdminTrait
 
         $this->printTrail($type);
         $this->printTabs($type, 'admin');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         if ($type == 'database') {
             printf("<p>{$lang['stradminondatabase']}</p>\n", $misc->printVal($_REQUEST['object']));

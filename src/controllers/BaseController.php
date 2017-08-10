@@ -285,4 +285,27 @@ class BaseController
 
     }
 
+    /**
+     * Print out a message
+     *
+     * @param      $msg The message to print
+     * @param bool $do_print
+     * @return string
+     */
+    public function printMsg($msg, $do_print = true)
+    {
+        $html = '';
+        $msg  = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
+        if ($msg != '') {
+
+            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
+        }
+        if ($do_print) {
+            echo $html;
+        } else {
+            return $html;
+        }
+
+    }
+
 }

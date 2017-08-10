@@ -11,6 +11,76 @@ class RolesController extends BaseController
 {
     public $_name = 'RolesController';
 
+    public function render()
+    {
+
+        $conf   = $this->conf;
+        $misc   = $this->misc;
+        $lang   = $this->lang;
+        $data   = $misc->getDatabaseAccessor();
+        $action = $this->action;
+
+        $this->printHeader($lang['strroles']);
+        $this->printBody();
+
+        switch ($action) {
+            case 'create':
+                $this->doCreate();
+                break;
+            case 'save_create':
+                if (isset($_POST['create'])) {
+                    $this->doSaveCreate();
+                } else {
+                    $this->doDefault();
+                }
+
+                break;
+            case 'alter':
+                $this->doAlter();
+                break;
+            case 'save_alter':
+                if (isset($_POST['alter'])) {
+                    $this->doSaveAlter();
+                } else {
+                    $this->doDefault();
+                }
+
+                break;
+            case 'confirm_drop':
+                $this->doDrop(true);
+                break;
+            case 'drop':
+                if (isset($_POST['drop'])) {
+                    $this->doDrop(false);
+                } else {
+                    $this->doDefault();
+                }
+
+                break;
+            case 'properties':
+                $this->doProperties();
+                break;
+            case 'confchangepassword':
+                $this->doChangePassword(true);
+                break;
+            case 'changepassword':
+                if (isset($_REQUEST['ok'])) {
+                    $this->doChangePassword(false);
+                } else {
+                    $this->doAccount();
+                }
+
+                break;
+            case 'account':
+                $this->doAccount();
+                break;
+            default:
+                $this->doDefault();
+        }
+
+        $this->printFooter();
+    }
+
     /**
      * Show default list of roles in the database
      */
@@ -31,7 +101,7 @@ class RolesController extends BaseController
 
         $this->printTrail('server');
         $this->printTabs('server', 'roles');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $roles = $data->getRoles();
 
@@ -130,76 +200,6 @@ class RolesController extends BaseController
         $this->printNavLinks($navlinks, 'roles-roles', get_defined_vars());
     }
 
-    public function render()
-    {
-
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
-        $action = $this->action;
-
-        $this->printHeader($lang['strroles']);
-        $this->printBody();
-
-        switch ($action) {
-            case 'create':
-                $this->doCreate();
-                break;
-            case 'save_create':
-                if (isset($_POST['create'])) {
-                    $this->doSaveCreate();
-                } else {
-                    $this->doDefault();
-                }
-
-                break;
-            case 'alter':
-                $this->doAlter();
-                break;
-            case 'save_alter':
-                if (isset($_POST['alter'])) {
-                    $this->doSaveAlter();
-                } else {
-                    $this->doDefault();
-                }
-
-                break;
-            case 'confirm_drop':
-                $this->doDrop(true);
-                break;
-            case 'drop':
-                if (isset($_POST['drop'])) {
-                    $this->doDrop(false);
-                } else {
-                    $this->doDefault();
-                }
-
-                break;
-            case 'properties':
-                $this->doProperties();
-                break;
-            case 'confchangepassword':
-                $this->doChangePassword(true);
-                break;
-            case 'changepassword':
-                if (isset($_REQUEST['ok'])) {
-                    $this->doChangePassword(false);
-                } else {
-                    $this->doAccount();
-                }
-
-                break;
-            case 'account':
-                $this->doAccount();
-                break;
-            default:
-                $this->doDefault();
-        }
-
-        $this->printFooter();
-    }
-
     /**
      * Displays a screen for create a new role
      */
@@ -244,7 +244,7 @@ class RolesController extends BaseController
 
         $this->printTrail('role');
         $this->printTitle($lang['strcreaterole'], 'pg.role.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/roles.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -376,7 +376,7 @@ class RolesController extends BaseController
 
         $this->printTrail('role');
         $this->printTitle($lang['stralter'], 'pg.role.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $roledata = $data->getRole($_REQUEST['rolename']);
 
@@ -636,7 +636,7 @@ class RolesController extends BaseController
 
         $this->printTrail('role');
         $this->printTitle($lang['strproperties'], 'pg.role');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $roledata = $data->getRole($_REQUEST['rolename']);
         if ($roledata->recordCount() > 0) {
@@ -765,7 +765,7 @@ class RolesController extends BaseController
 
         $this->printTrail('role');
         $this->printTabs('server', 'account');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         if ($roledata->recordCount() > 0) {
             $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
@@ -825,7 +825,7 @@ class RolesController extends BaseController
             $_REQUEST['rolename'] = $server_info['username'];
             $this->printTrail('role');
             $this->printTitle($lang['strchangepassword'], 'pg.role.alter');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             if (!isset($_POST['password'])) {
                 $_POST['password'] = '';

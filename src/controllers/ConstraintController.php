@@ -105,6 +105,135 @@ class ConstraintController extends BaseController
     }
 
     /**
+     * List all the constraints on the table
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $cnPre = function (&$rowdata) use ($data) {
+
+            if (is_null($rowdata->fields['consrc'])) {
+                $atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
+                $rowdata->fields['+definition'] = ($rowdata->fields['contype'] == 'u' ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
+            } else {
+                $rowdata->fields['+definition'] = $rowdata->fields['consrc'];
+            }
+        };
+
+        $this->printTrail('table');
+        $this->printTabs('table', 'constraints');
+        $this->printMsg($msg);
+
+        $constraints = $data->getConstraints($_REQUEST['table']);
+
+        $columns = [
+            'constraint' => [
+                'title' => $lang['strname'],
+                'field' => Decorator::field('conname'),
+            ],
+            'definition' => [
+                'title' => $lang['strdefinition'],
+                'field' => Decorator::field('+definition'),
+                'type'  => 'pre',
+            ],
+            'actions'    => [
+                'title' => $lang['stractions'],
+            ],
+            'comment'    => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('constcomment'),
+            ],
+        ];
+
+        $actions = [
+            'drop' => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'constraints.php',
+                        'urlvars' => [
+                            'action'     => 'confirm_drop',
+                            'table'      => $_REQUEST['table'],
+                            'constraint' => Decorator::field('conname'),
+                            'type'       => Decorator::field('contype'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($constraints, $columns, $actions, 'constraints-constraints', $lang['strnoconstraints'], $cnPre);
+
+        $navlinks = [
+            'addcheck' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'constraints.php',
+                        'urlvars' => [
+                            'action'   => 'add_check',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['straddcheck'],
+            ],
+            'adduniq'  => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'constraints.php',
+                        'urlvars' => [
+                            'action'   => 'add_unique_key',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['stradduniq'],
+            ],
+            'addpk'    => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'constraints.php',
+                        'urlvars' => [
+                            'action'   => 'add_primary_key',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['straddpk'],
+            ],
+            'addfk'    => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'constraints.php',
+                        'urlvars' => [
+                            'action'   => 'add_foreign_key',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['straddfk'],
+            ],
+        ];
+        $this->printNavLinks($navlinks, 'constraints-constraints', get_defined_vars());
+    }
+
+    /**
      * Confirm and then actually add a FOREIGN KEY constraint
      */
     public function addForeignKey($stage, $msg = '')
@@ -158,7 +287,7 @@ class ConstraintController extends BaseController
 
                     $this->printTrail('table');
                     $this->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
-                    $misc->printMsg($msg);
+                    $this->printMsg($msg);
 
                     // Unserialize target and fetch appropriate table. This is a bit messy
                     // because the table could be in another schema.
@@ -280,7 +409,7 @@ class ConstraintController extends BaseController
             default:
                 $this->printTrail('table');
                 $this->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
-                $misc->printMsg($msg);
+                $this->printMsg($msg);
 
                 $attrs  = $data->getTableAttributes($_REQUEST['table']);
                 $tables = $data->getTables(true);
@@ -345,9 +474,9 @@ class ConstraintController extends BaseController
 
     }
 
-/**
- * Confirm and then actually add a PRIMARY KEY or UNIQUE constraint
- */
+    /**
+     * Confirm and then actually add a PRIMARY KEY or UNIQUE constraint
+     */
     public function addPrimaryOrUniqueKey($type, $confirm, $msg = '')
     {
         $conf = $this->conf;
@@ -382,7 +511,7 @@ class ConstraintController extends BaseController
                     return;
             }
 
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
             // Fetch all tablespaces from the database
@@ -491,9 +620,9 @@ class ConstraintController extends BaseController
         }
     }
 
-/**
- * Confirm and then actually add a CHECK constraint
- */
+    /**
+     * Confirm and then actually add a CHECK constraint
+     */
     public function addCheck($confirm, $msg = '')
     {
         $conf = $this->conf;
@@ -512,7 +641,7 @@ class ConstraintController extends BaseController
         if ($confirm) {
             $this->printTrail('table');
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             echo '<form action="' . SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
             echo "<table>\n";
@@ -549,9 +678,9 @@ class ConstraintController extends BaseController
         }
     }
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+    /**
+     * Show confirmation of drop and perform actual drop
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -587,132 +716,4 @@ class ConstraintController extends BaseController
         }
     }
 
-    /**
-     * List all the constraints on the table
-     */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $cnPre = function (&$rowdata) use ($data) {
-
-            if (is_null($rowdata->fields['consrc'])) {
-                $atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
-                $rowdata->fields['+definition'] = ($rowdata->fields['contype'] == 'u' ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
-            } else {
-                $rowdata->fields['+definition'] = $rowdata->fields['consrc'];
-            }
-        };
-
-        $this->printTrail('table');
-        $this->printTabs('table', 'constraints');
-        $misc->printMsg($msg);
-
-        $constraints = $data->getConstraints($_REQUEST['table']);
-
-        $columns = [
-            'constraint' => [
-                'title' => $lang['strname'],
-                'field' => Decorator::field('conname'),
-            ],
-            'definition' => [
-                'title' => $lang['strdefinition'],
-                'field' => Decorator::field('+definition'),
-                'type'  => 'pre',
-            ],
-            'actions'    => [
-                'title' => $lang['stractions'],
-            ],
-            'comment'    => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('constcomment'),
-            ],
-        ];
-
-        $actions = [
-            'drop' => [
-                'content' => $lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'constraints.php',
-                        'urlvars' => [
-                            'action'     => 'confirm_drop',
-                            'table'      => $_REQUEST['table'],
-                            'constraint' => Decorator::field('conname'),
-                            'type'       => Decorator::field('contype'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($constraints, $columns, $actions, 'constraints-constraints', $lang['strnoconstraints'], $cnPre);
-
-        $navlinks = [
-            'addcheck' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'constraints.php',
-                        'urlvars' => [
-                            'action'   => 'add_check',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['straddcheck'],
-            ],
-            'adduniq'  => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'constraints.php',
-                        'urlvars' => [
-                            'action'   => 'add_unique_key',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['stradduniq'],
-            ],
-            'addpk'    => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'constraints.php',
-                        'urlvars' => [
-                            'action'   => 'add_primary_key',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['straddpk'],
-            ],
-            'addfk'    => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'constraints.php',
-                        'urlvars' => [
-                            'action'   => 'add_foreign_key',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['straddfk'],
-            ],
-        ];
-        $this->printNavLinks($navlinks, 'constraints-constraints', get_defined_vars());
-    }
 }

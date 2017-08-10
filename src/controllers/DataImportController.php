@@ -61,7 +61,7 @@ class DataImportController extends BaseController
                 case 'DATA':
                     if ($state != 'XML') {
                         $data->rollbackTransaction();
-                        $misc->printMsg($lang['strimporterror']);
+                        $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $state = 'DATA';
@@ -69,7 +69,7 @@ class DataImportController extends BaseController
                 case 'HEADER':
                     if ($state != 'DATA') {
                         $data->rollbackTransaction();
-                        $misc->printMsg($lang['strimporterror']);
+                        $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $state = 'HEADER';
@@ -77,7 +77,7 @@ class DataImportController extends BaseController
                 case 'RECORDS':
                     if ($state != 'READ_HEADER') {
                         $data->rollbackTransaction();
-                        $misc->printMsg($lang['strimporterror']);
+                        $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $state = 'RECORDS';
@@ -85,7 +85,7 @@ class DataImportController extends BaseController
                 case 'ROW':
                     if ($state != 'RECORDS') {
                         $data->rollbackTransaction();
-                        $misc->printMsg($lang['strimporterror']);
+                        $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $state    = 'ROW';
@@ -101,14 +101,14 @@ class DataImportController extends BaseController
                     // And we ignore columns in headers and fail in any other context
                     elseif ($state != 'HEADER') {
                         $data->rollbackTransaction();
-                        $misc->printMsg($lang['strimporterror']);
+                        $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     break;
                 default:
                     // An unrecognised tag means failure
                     $data->rollbackTransaction();
-                    $misc->printMsg($lang['strimporterror']);
+                    $this->printMsg($lang['strimporterror']);
                     exit;
             }
         };
@@ -157,7 +157,7 @@ class DataImportController extends BaseController
                     $status = $data->insertRow($_REQUEST['table'], $fields, $vars, $nulls, $format, $types);
                     if ($status != 0) {
                         $data->rollbackTransaction();
-                        $misc->printMsg($lang['strimporterror']);
+                        $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $curr_row = [];
@@ -173,7 +173,7 @@ class DataImportController extends BaseController
                 default:
                     // An unrecognised tag means failure
                     $data->rollbackTransaction();
-                    $misc->printMsg($lang['strimporterror']);
+                    $this->printMsg($lang['strimporterror']);
                     exit;
             }
         };
@@ -187,7 +187,7 @@ class DataImportController extends BaseController
                 $null_array = self::loadNULLArray();
                 $status     = $data->beginTransaction();
                 if ($status != 0) {
-                    $misc->printMsg($lang['strimporterror']);
+                    $this->printMsg($lang['strimporterror']);
                     exit;
                 }
 
@@ -206,7 +206,7 @@ class DataImportController extends BaseController
                             break;
                         default:
                             $data->rollbackTransaction();
-                            $misc->printMsg($lang['strimporterror-fileformat']);
+                            $this->printMsg($lang['strimporterror-fileformat']);
                             exit;
                     }
                 }
@@ -238,7 +238,7 @@ class DataImportController extends BaseController
                             foreach ($fields as $f) {
                                 // Check that there is a column
                                 if (!isset($line[$i])) {
-                                    $misc->printMsg(sprintf($lang['strimporterrorline-badcolumnnum'], $row));
+                                    $this->printMsg(sprintf($lang['strimporterrorline-badcolumnnum'], $row));
                                     exit;
                                 }
                                 $t_fields[$i] = $f;
@@ -259,7 +259,7 @@ class DataImportController extends BaseController
                             $status = $data->insertRow($_REQUEST['table'], $t_fields, $vars, $nulls, $format, $types);
                             if ($status != 0) {
                                 $data->rollbackTransaction();
-                                $misc->printMsg(sprintf($lang['strimporterrorline'], $row));
+                                $this->printMsg(sprintf($lang['strimporterrorline'], $row));
                                 exit;
                             }
                             $row++;
@@ -280,25 +280,25 @@ class DataImportController extends BaseController
                     default:
                         // Unknown type
                         $data->rollbackTransaction();
-                        $misc->printMsg($lang['strinvalidparam']);
+                        $this->printMsg($lang['strinvalidparam']);
                         exit;
                 }
 
                 $status = $data->endTransaction();
                 if ($status != 0) {
-                    $misc->printMsg($lang['strimporterror']);
+                    $this->printMsg($lang['strimporterror']);
                     exit;
                 }
                 fclose($fd);
 
-                $misc->printMsg($lang['strfileimported']);
+                $this->printMsg($lang['strfileimported']);
             } else {
                 // File could not be opened
-                $misc->printMsg($lang['strimporterror']);
+                $this->printMsg($lang['strimporterror']);
             }
         } else {
             // Upload went wrong
-            $misc->printMsg($lang['strimporterror-uploadedfile']);
+            $this->printMsg($lang['strimporterror-uploadedfile']);
         }
 
         $this->printFooter();

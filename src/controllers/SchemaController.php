@@ -77,81 +77,6 @@ class SchemaController extends BaseController
 
     }
 
-/**
- * Generate XML for the browser tree.
- */
-    public function doTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $schemas = $data->getSchemas();
-
-        $reqvars = $misc->getRequestVars('schema');
-
-        $this->prtrace($reqvars);
-
-        $attrs = [
-            'text'    => Decorator::field('nspname'),
-            'icon'    => 'Schema',
-            'toolTip' => Decorator::field('nspcomment'),
-            'action'  => Decorator::redirecturl('redirect.php',
-                $reqvars,
-                [
-                    'subject' => 'schema',
-                    'schema'  => Decorator::field('nspname'),
-                ]
-            ),
-            'branch'  => Decorator::url('schemas.php',
-                $reqvars,
-                [
-                    'action' => 'subtree',
-                    'schema' => Decorator::field('nspname'),
-                ]
-            ),
-        ];
-
-        $this->printTree($schemas, $attrs, 'schemas');
-
-    }
-
-    public function doSubTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $tabs = $misc->getNavTabs('schema');
-
-        $items = $this->adjustTabsForTree($tabs);
-
-        $reqvars = $misc->getRequestVars('schema');
-
-        $this->prtrace($reqvars);
-
-        $attrs = [
-            'text'   => Decorator::field('title'),
-            'icon'   => Decorator::field('icon'),
-            'action' => Decorator::actionurl(Decorator::field('url'),
-                $reqvars,
-                Decorator::field('urlvars', [])
-            ),
-            'branch' => Decorator::url(Decorator::field('url'),
-                $reqvars,
-                Decorator::field('urlvars'),
-                ['action' => 'tree']
-            ),
-        ];
-
-        $this->printTree($items, $attrs, 'schema');
-
-    }
-
     /**
      * Show default list of schemas in the database
      */
@@ -164,7 +89,7 @@ class SchemaController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'schemas');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Check that the DB actually supports schemas
         $schemas = $data->getSchemas();
@@ -255,6 +180,81 @@ class SchemaController extends BaseController
     }
 
     /**
+     * Generate XML for the browser tree.
+     */
+    public function doTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $schemas = $data->getSchemas();
+
+        $reqvars = $misc->getRequestVars('schema');
+
+        $this->prtrace($reqvars);
+
+        $attrs = [
+            'text'    => Decorator::field('nspname'),
+            'icon'    => 'Schema',
+            'toolTip' => Decorator::field('nspcomment'),
+            'action'  => Decorator::redirecturl('redirect.php',
+                $reqvars,
+                [
+                    'subject' => 'schema',
+                    'schema'  => Decorator::field('nspname'),
+                ]
+            ),
+            'branch'  => Decorator::url('schemas.php',
+                $reqvars,
+                [
+                    'action' => 'subtree',
+                    'schema' => Decorator::field('nspname'),
+                ]
+            ),
+        ];
+
+        $this->printTree($schemas, $attrs, 'schemas');
+
+    }
+
+    public function doSubTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $tabs = $misc->getNavTabs('schema');
+
+        $items = $this->adjustTabsForTree($tabs);
+
+        $reqvars = $misc->getRequestVars('schema');
+
+        $this->prtrace($reqvars);
+
+        $attrs = [
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
+            'action' => Decorator::actionurl(Decorator::field('url'),
+                $reqvars,
+                Decorator::field('urlvars', [])
+            ),
+            'branch' => Decorator::url(Decorator::field('url'),
+                $reqvars,
+                Decorator::field('urlvars'),
+                ['action' => 'tree']
+            ),
+        ];
+
+        $this->printTree($items, $attrs, 'schema');
+
+    }
+
+    /**
      * Displays a screen where they can enter a new schema
      */
     public function doCreate($msg = '')
@@ -286,7 +286,7 @@ class SchemaController extends BaseController
 
         $this->printTrail('database');
         $this->printTitle($lang['strcreateschema'], 'pg.schema.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
         echo "<table style=\"width: 100%\">\n";
@@ -355,7 +355,7 @@ class SchemaController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['stralter'], 'pg.schema.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $schema = $data->getSchemaByName($_REQUEST['schema']);
         if ($schema->recordCount() > 0) {
@@ -522,7 +522,7 @@ class SchemaController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'export');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . '/src/views/dbexport.php" method="post">' . "\n";
 

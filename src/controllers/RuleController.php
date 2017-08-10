@@ -58,6 +58,77 @@ class RuleController extends BaseController
 
     }
 
+    /**
+     * List all the rules on the table
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail($_REQUEST['subject']);
+        $this->printTabs($_REQUEST['subject'], 'rules');
+        $this->printMsg($msg);
+
+        $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
+
+        $columns = [
+            'rule'       => [
+                'title' => $lang['strname'],
+                'field' => Decorator::field('rulename'),
+            ],
+            'definition' => [
+                'title' => $lang['strdefinition'],
+                'field' => Decorator::field('definition'),
+            ],
+            'actions'    => [
+                'title' => $lang['stractions'],
+            ],
+        ];
+
+        $subject = urlencode($_REQUEST['subject']);
+        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
+
+        $actions = [
+            'drop' => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'rules.php',
+                        'urlvars' => [
+                            'action'  => 'confirm_drop',
+                            'reltype' => $subject,
+                            $subject  => $object,
+                            'subject' => 'rule',
+                            'rule'    => Decorator::field('rulename'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($rules, $columns, $actions, 'rules-rules', $lang['strnorules']);
+
+        $this->printNavLinks(['create' => [
+            'attr'    => [
+                'href' => [
+                    'url'     => 'rules.php',
+                    'urlvars' => [
+                        'action'   => 'create_rule',
+                        'server'   => $_REQUEST['server'],
+                        'database' => $_REQUEST['database'],
+                        'schema'   => $_REQUEST['schema'],
+                        $subject   => $object,
+                        'subject'  => $subject,
+                    ],
+                ],
+            ],
+            'content' => $lang['strcreaterule'],
+        ]], 'rules-rules', get_defined_vars());
+    }
+
     public function doTree()
     {
 
@@ -111,7 +182,7 @@ class RuleController extends BaseController
         if ($confirm) {
             $this->printTrail($_REQUEST['subject']);
             $this->printTitle($lang['strcreaterule'], 'pg.rule.create');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             echo '<form action="' . SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
             echo "<table>\n";
@@ -204,77 +275,6 @@ class RuleController extends BaseController
 
         }
 
-    }
-
-/**
- * List all the rules on the table
- */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail($_REQUEST['subject']);
-        $this->printTabs($_REQUEST['subject'], 'rules');
-        $misc->printMsg($msg);
-
-        $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
-
-        $columns = [
-            'rule'       => [
-                'title' => $lang['strname'],
-                'field' => Decorator::field('rulename'),
-            ],
-            'definition' => [
-                'title' => $lang['strdefinition'],
-                'field' => Decorator::field('definition'),
-            ],
-            'actions'    => [
-                'title' => $lang['stractions'],
-            ],
-        ];
-
-        $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
-
-        $actions = [
-            'drop' => [
-                'content' => $lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'rules.php',
-                        'urlvars' => [
-                            'action'  => 'confirm_drop',
-                            'reltype' => $subject,
-                            $subject  => $object,
-                            'subject' => 'rule',
-                            'rule'    => Decorator::field('rulename'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($rules, $columns, $actions, 'rules-rules', $lang['strnorules']);
-
-        $this->printNavLinks(['create' => [
-            'attr'    => [
-                'href' => [
-                    'url'     => 'rules.php',
-                    'urlvars' => [
-                        'action'   => 'create_rule',
-                        'server'   => $_REQUEST['server'],
-                        'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        $subject   => $object,
-                        'subject'  => $subject,
-                    ],
-                ],
-            ],
-            'content' => $lang['strcreaterule'],
-        ]], 'rules-rules', get_defined_vars());
     }
 
 }

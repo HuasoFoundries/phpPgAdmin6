@@ -88,6 +88,145 @@ class MaterializedViewController extends BaseController
     }
 
     /**
+     * Show default list of views in the database
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'matviews');
+        $this->printMsg($msg);
+
+        //$matviews = $data->getViews();
+        $matviews = $data->getMaterializedViews();
+
+        $columns = [
+            'matview' => [
+                'title' => 'M ' . $lang['strview'],
+                'field' => Decorator::field('relname'),
+                'url'   => SUBFOLDER . "/redirect/matview?{$misc->href}&amp;",
+                'vars'  => ['matview' => 'relname'],
+            ],
+            'owner'   => [
+                'title' => $lang['strowner'],
+                'field' => Decorator::field('relowner'),
+            ],
+            'actions' => [
+                'title' => $lang['stractions'],
+            ],
+            'comment' => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('relcomment'),
+            ],
+        ];
+
+        $actions = [
+            'multiactions' => [
+                'keycols' => ['matview' => 'relname'],
+                'url'     => 'materialized_views.php',
+            ],
+            'browse'       => [
+                'content' => $lang['strbrowse'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'display.php',
+                        'urlvars' => [
+                            'action'  => 'confselectrows',
+                            'subject' => 'matview',
+                            'return'  => 'schema',
+                            'matview' => Decorator::field('relname'),
+                        ],
+                    ],
+                ],
+            ],
+            'select'       => [
+                'content' => $lang['strselect'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'materialized_views.php',
+                        'urlvars' => [
+                            'action'  => 'confselectrows',
+                            'matview' => Decorator::field('relname'),
+                        ],
+                    ],
+                ],
+            ],
+
+            // Insert is possible if the relevant rule for the view has been created.
+            //            'insert' => array(
+            //                'title'    => $lang['strinsert'],
+            //                'url'    => "materialized_views.php?action=confinsertrow&amp;{$misc->href}&amp;",
+            //                'vars'    => array('view' => 'relname'),
+            //            ),
+
+            'alter'        => [
+                'content' => $lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'materializedviewproperties.php',
+                        'urlvars' => [
+                            'action'  => 'confirm_alter',
+                            'matview' => Decorator::field('relname'),
+                        ],
+                    ],
+                ],
+            ],
+            'drop'         => [
+                'multiaction' => 'confirm_drop',
+                'content'     => $lang['strdrop'],
+                'attr'        => [
+                    'href' => [
+                        'url'     => 'materialized_views.php',
+                        'urlvars' => [
+                            'action'  => 'confirm_drop',
+                            'matview' => Decorator::field('relname'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($matviews, $columns, $actions, $this->table_place, $lang['strnoviews']);
+
+        $navlinks = [
+            'create'    => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'materialized_views.php',
+                        'urlvars' => [
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreateview'],
+            ],
+            'createwiz' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'materialized_views.php',
+                        'urlvars' => [
+                            'action'   => 'wiz_create',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreateviewwiz'],
+            ],
+        ];
+        $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
+
+    }
+
+    /**
      * Ask for select parameters and perform select
      */
     public function doSelectRows($confirm, $msg = '')
@@ -100,7 +239,7 @@ class MaterializedViewController extends BaseController
         if ($confirm) {
             $this->printTrail('view');
             $this->printTabs('view', 'select');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['matview']);
 
@@ -320,7 +459,7 @@ class MaterializedViewController extends BaseController
 
             $this->printTrail('schema');
             $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $tblCount = sizeof($_POST['formTables']);
             //unserialize our schema/table information and store in arrSelTables
@@ -462,7 +601,7 @@ class MaterializedViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -516,7 +655,7 @@ class MaterializedViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateview'], 'pg.view.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
@@ -703,145 +842,6 @@ class MaterializedViewController extends BaseController
             }
 
         }
-    }
-
-    /**
-     * Show default list of views in the database
-     */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail('schema');
-        $this->printTabs('schema', 'matviews');
-        $misc->printMsg($msg);
-
-        //$matviews = $data->getViews();
-        $matviews = $data->getMaterializedViews();
-
-        $columns = [
-            'matview' => [
-                'title' => 'M ' . $lang['strview'],
-                'field' => Decorator::field('relname'),
-                'url'   => SUBFOLDER . "/redirect/matview?{$misc->href}&amp;",
-                'vars'  => ['matview' => 'relname'],
-            ],
-            'owner'   => [
-                'title' => $lang['strowner'],
-                'field' => Decorator::field('relowner'),
-            ],
-            'actions' => [
-                'title' => $lang['stractions'],
-            ],
-            'comment' => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('relcomment'),
-            ],
-        ];
-
-        $actions = [
-            'multiactions' => [
-                'keycols' => ['matview' => 'relname'],
-                'url'     => 'materialized_views.php',
-            ],
-            'browse'       => [
-                'content' => $lang['strbrowse'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'display.php',
-                        'urlvars' => [
-                            'action'  => 'confselectrows',
-                            'subject' => 'matview',
-                            'return'  => 'schema',
-                            'matview' => Decorator::field('relname'),
-                        ],
-                    ],
-                ],
-            ],
-            'select'       => [
-                'content' => $lang['strselect'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'materialized_views.php',
-                        'urlvars' => [
-                            'action'  => 'confselectrows',
-                            'matview' => Decorator::field('relname'),
-                        ],
-                    ],
-                ],
-            ],
-
-            // Insert is possible if the relevant rule for the view has been created.
-            //            'insert' => array(
-            //                'title'    => $lang['strinsert'],
-            //                'url'    => "materialized_views.php?action=confinsertrow&amp;{$misc->href}&amp;",
-            //                'vars'    => array('view' => 'relname'),
-            //            ),
-
-            'alter'        => [
-                'content' => $lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'materializedviewproperties.php',
-                        'urlvars' => [
-                            'action'  => 'confirm_alter',
-                            'matview' => Decorator::field('relname'),
-                        ],
-                    ],
-                ],
-            ],
-            'drop'         => [
-                'multiaction' => 'confirm_drop',
-                'content'     => $lang['strdrop'],
-                'attr'        => [
-                    'href' => [
-                        'url'     => 'materialized_views.php',
-                        'urlvars' => [
-                            'action'  => 'confirm_drop',
-                            'matview' => Decorator::field('relname'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($matviews, $columns, $actions, $this->table_place, $lang['strnoviews']);
-
-        $navlinks = [
-            'create'    => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'materialized_views.php',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreateview'],
-            ],
-            'createwiz' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'materialized_views.php',
-                        'urlvars' => [
-                            'action'   => 'wiz_create',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreateviewwiz'],
-            ],
-        ];
-        $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
-
     }
 
 }

@@ -71,9 +71,69 @@ class GroupController extends BaseController
         $this->printFooter();
     }
 
-/**
- * Add user to a group
- */
+    /**
+     * Show default list of groups in the database
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail('server');
+        $this->printTabs('server', 'groups');
+        $this->printMsg($msg);
+
+        $groups = $data->getGroups();
+
+        $columns = [
+            'group'   => [
+                'title' => $lang['strgroup'],
+                'field' => Decorator::field('groname'),
+                'url'   => "groups.php?action=properties&amp;{$misc->href}&amp;",
+                'vars'  => ['group' => 'groname'],
+            ],
+            'actions' => [
+                'title' => $lang['stractions'],
+            ],
+        ];
+
+        $actions = [
+            'drop' => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'groups.php',
+                        'urlvars' => [
+                            'action' => 'confirm_drop',
+                            'group'  => Decorator::field('groname'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($groups, $columns, $actions, 'groups-properties', $lang['strnogroups']);
+
+        $this->printNavLinks(['create' => [
+            'attr'    => [
+                'href' => [
+                    'url'     => 'groups.php',
+                    'urlvars' => [
+                        'action' => 'create',
+                        'server' => $_REQUEST['server'],
+                    ],
+                ],
+            ],
+            'content' => $lang['strcreategroup'],
+        ]], 'groups-groups', get_defined_vars());
+
+    }
+
+    /**
+     * Add user to a group
+     */
     public function doAddMember()
     {
         $conf = $this->conf;
@@ -90,9 +150,9 @@ class GroupController extends BaseController
 
     }
 
-/**
- * Show confirmation of drop user from group and perform actual drop
- */
+    /**
+     * Show confirmation of drop user from group and perform actual drop
+     */
     public function doDropMember($confirm)
     {
         $conf = $this->conf;
@@ -125,9 +185,9 @@ class GroupController extends BaseController
         }
     }
 
-/**
- * Show read only properties for a group
- */
+    /**
+     * Show read only properties for a group
+     */
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
@@ -141,7 +201,7 @@ class GroupController extends BaseController
 
         $this->printTrail('group');
         $this->printTitle($lang['strproperties'], 'pg.group');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $groupdata = $data->getGroup($_REQUEST['group']);
         $users     = $data->getUsers();
@@ -205,9 +265,9 @@ class GroupController extends BaseController
         ]], 'groups-properties', get_defined_vars());
     }
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+    /**
+     * Show confirmation of drop and perform actual drop
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -239,9 +299,9 @@ class GroupController extends BaseController
         }
     }
 
-/**
- * Displays a screen where they can enter a new group
- */
+    /**
+     * Displays a screen where they can enter a new group
+     */
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
@@ -261,7 +321,7 @@ class GroupController extends BaseController
 
         $this->printTrail('server');
         $this->printTitle($lang['strcreategroup'], 'pg.group.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo "<form action=\"\" method=\"post\">\n";
         echo $misc->form;
@@ -289,9 +349,9 @@ class GroupController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Actually creates the new group in the database
- */
+    /**
+     * Actually creates the new group in the database
+     */
     public function doSaveCreate()
     {
         $conf = $this->conf;
@@ -315,66 +375,6 @@ class GroupController extends BaseController
             }
 
         }
-    }
-
-/**
- * Show default list of groups in the database
- */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail('server');
-        $this->printTabs('server', 'groups');
-        $misc->printMsg($msg);
-
-        $groups = $data->getGroups();
-
-        $columns = [
-            'group'   => [
-                'title' => $lang['strgroup'],
-                'field' => Decorator::field('groname'),
-                'url'   => "groups.php?action=properties&amp;{$misc->href}&amp;",
-                'vars'  => ['group' => 'groname'],
-            ],
-            'actions' => [
-                'title' => $lang['stractions'],
-            ],
-        ];
-
-        $actions = [
-            'drop' => [
-                'content' => $lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'groups.php',
-                        'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'group'  => Decorator::field('groname'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($groups, $columns, $actions, 'groups-properties', $lang['strnogroups']);
-
-        $this->printNavLinks(['create' => [
-            'attr'    => [
-                'href' => [
-                    'url'     => 'groups.php',
-                    'urlvars' => [
-                        'action' => 'create',
-                        'server' => $_REQUEST['server'],
-                    ],
-                ],
-            ],
-            'content' => $lang['strcreategroup'],
-        ]], 'groups-groups', get_defined_vars());
-
     }
 
 }

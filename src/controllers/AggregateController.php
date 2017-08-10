@@ -71,6 +71,103 @@ class AggregateController extends BaseController
 
     }
 
+    /**
+     * Show default list of aggregate functions in the database
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'aggregates');
+        $this->printMsg($msg);
+
+        $aggregates = $data->getAggregates();
+
+        $columns = [
+            'aggrname'    => [
+                'title' => $lang['strname'],
+                'field' => Decorator::field('proname'),
+                'url'   => SUBFOLDER . "/redirect/aggregate?action=properties&amp;{$misc->href}&amp;",
+                'vars'  => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
+            ],
+            'aggrtype'    => [
+                'title' => $lang['strtype'],
+                'field' => Decorator::field('proargtypes'),
+            ],
+            'aggrtransfn' => [
+                'title' => $lang['straggrsfunc'],
+                'field' => Decorator::field('aggtransfn'),
+            ],
+            'owner'       => [
+                'title' => $lang['strowner'],
+                'field' => Decorator::field('usename'),
+            ],
+            'actions'     => [
+                'title' => $lang['stractions'],
+            ],
+            'comment'     => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('aggrcomment'),
+            ],
+        ];
+
+        $actions = [
+            'alter' => [
+                'content' => $lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'aggregates.php',
+                        'urlvars' => [
+                            'action'   => 'alter',
+                            'aggrname' => Decorator::field('proname'),
+                            'aggrtype' => Decorator::field('proargtypes'),
+                        ],
+                    ],
+                ],
+            ],
+            'drop'  => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'aggregates.php',
+                        'urlvars' => [
+                            'action'   => 'confirm_drop',
+                            'aggrname' => Decorator::field('proname'),
+                            'aggrtype' => Decorator::field('proargtypes'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        if (!$data->hasAlterAggregate()) {
+            unset($actions['alter']);
+        }
+
+        echo $this->printTable($aggregates, $columns, $actions, 'aggregates-aggregates', $lang['strnoaggregates']);
+
+        $navlinks = [
+            'create' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'aggregates.php',
+                        'urlvars' => [
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreateaggregate'],
+            ],
+        ];
+        $this->printNavLinks($navlinks, 'aggregates-aggregates', get_defined_vars());
+    }
+
     public function doTree()
     {
 
@@ -180,7 +277,7 @@ class AggregateController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -256,7 +353,7 @@ class AggregateController extends BaseController
 
         $this->printTrail('aggregate');
         $this->printTitle($lang['stralter'], 'pg.aggregate.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
         $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
@@ -340,7 +437,7 @@ class AggregateController extends BaseController
 
         $this->printTrail('aggregate');
         $this->printTitle($lang['strproperties'], 'pg.aggregate');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
 
@@ -425,103 +522,6 @@ class AggregateController extends BaseController
         ];
 
         $this->printNavLinks($navlinks, 'aggregates-properties', get_defined_vars());
-    }
-
-/**
- * Show default list of aggregate functions in the database
- */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-        $this->printTrail('schema');
-        $this->printTabs('schema', 'aggregates');
-        $misc->printMsg($msg);
-
-        $aggregates = $data->getAggregates();
-
-        $columns = [
-            'aggrname'    => [
-                'title' => $lang['strname'],
-                'field' => Decorator::field('proname'),
-                'url'   => SUBFOLDER . "/redirect/aggregate?action=properties&amp;{$misc->href}&amp;",
-                'vars'  => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
-            ],
-            'aggrtype'    => [
-                'title' => $lang['strtype'],
-                'field' => Decorator::field('proargtypes'),
-            ],
-            'aggrtransfn' => [
-                'title' => $lang['straggrsfunc'],
-                'field' => Decorator::field('aggtransfn'),
-            ],
-            'owner'       => [
-                'title' => $lang['strowner'],
-                'field' => Decorator::field('usename'),
-            ],
-            'actions'     => [
-                'title' => $lang['stractions'],
-            ],
-            'comment'     => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('aggrcomment'),
-            ],
-        ];
-
-        $actions = [
-            'alter' => [
-                'content' => $lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'aggregates.php',
-                        'urlvars' => [
-                            'action'   => 'alter',
-                            'aggrname' => Decorator::field('proname'),
-                            'aggrtype' => Decorator::field('proargtypes'),
-                        ],
-                    ],
-                ],
-            ],
-            'drop'  => [
-                'content' => $lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'aggregates.php',
-                        'urlvars' => [
-                            'action'   => 'confirm_drop',
-                            'aggrname' => Decorator::field('proname'),
-                            'aggrtype' => Decorator::field('proargtypes'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        if (!$data->hasAlterAggregate()) {
-            unset($actions['alter']);
-        }
-
-        echo $this->printTable($aggregates, $columns, $actions, 'aggregates-aggregates', $lang['strnoaggregates']);
-
-        $navlinks = [
-            'create' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'aggregates.php',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreateaggregate'],
-            ],
-        ];
-        $this->printNavLinks($navlinks, 'aggregates-aggregates', get_defined_vars());
     }
 
 }

@@ -94,37 +94,6 @@ class SequenceController extends BaseController
     }
 
     /**
-     * Generate XML for the browser tree.
-     */
-    public function doTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $sequences = $data->getSequences();
-
-        $reqvars = $misc->getRequestVars('sequence');
-
-        $attrs = [
-            'text'    => Decorator::field('seqname'),
-            'icon'    => 'Sequence',
-            'toolTip' => Decorator::field('seqcomment'),
-            'action'  => Decorator::actionurl('sequences.php',
-                $reqvars,
-                [
-                    'action'   => 'properties',
-                    'sequence' => Decorator::field('seqname'),
-                ]
-            ),
-        ];
-
-        return $this->printTree($sequences, $attrs, 'sequences');
-    }
-
-    /**
      * Display list of all sequences in the database/schema
      */
     public function doDefault($msg = '')
@@ -136,7 +105,7 @@ class SequenceController extends BaseController
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'sequences');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Get all sequences
         $sequences = $data->getSequences();
@@ -224,9 +193,40 @@ class SequenceController extends BaseController
         ]], 'sequences-sequences', get_defined_vars());
     }
 
-/**
- * Display the properties of a sequence
- */
+    /**
+     * Generate XML for the browser tree.
+     */
+    public function doTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $sequences = $data->getSequences();
+
+        $reqvars = $misc->getRequestVars('sequence');
+
+        $attrs = [
+            'text'    => Decorator::field('seqname'),
+            'icon'    => 'Sequence',
+            'toolTip' => Decorator::field('seqcomment'),
+            'action'  => Decorator::actionurl('sequences.php',
+                $reqvars,
+                [
+                    'action'   => 'properties',
+                    'sequence' => Decorator::field('seqname'),
+                ]
+            ),
+        ];
+
+        return $this->printTree($sequences, $attrs, 'sequences');
+    }
+
+    /**
+     * Display the properties of a sequence
+     */
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
@@ -235,7 +235,7 @@ class SequenceController extends BaseController
         $data = $misc->getDatabaseAccessor();
         $this->printTrail('sequence');
         $this->printTitle($lang['strproperties'], 'pg.sequence');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
@@ -380,9 +380,9 @@ class SequenceController extends BaseController
 
     }
 
-/**
- * Drop a sequence
- */
+    /**
+     * Drop a sequence
+     */
     public function doDrop($confirm, $msg = '')
     {
         $conf = $this->conf;
@@ -398,7 +398,7 @@ class SequenceController extends BaseController
         if ($confirm) {
             $this->printTrail('sequence');
             $this->printTitle($lang['strdrop'], 'pg.sequence.drop');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             echo '<form action="' . SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
 
@@ -457,9 +457,9 @@ class SequenceController extends BaseController
         }
     }
 
-/**
- * Displays a screen where they can enter a new sequence
- */
+    /**
+     * Displays a screen where they can enter a new sequence
+     */
     public function doCreateSequence($msg = '')
     {
         $conf = $this->conf;
@@ -493,7 +493,7 @@ class SequenceController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -534,9 +534,9 @@ class SequenceController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Actually creates the new sequence in the database
- */
+    /**
+     * Actually creates the new sequence in the database
+     */
     public function doSaveCreateSequence()
     {
         $conf = $this->conf;
@@ -560,9 +560,9 @@ class SequenceController extends BaseController
         }
     }
 
-/**
- * Restarts a sequence
- */
+    /**
+     * Restarts a sequence
+     */
     public function doRestart()
     {
         $conf = $this->conf;
@@ -579,9 +579,9 @@ class SequenceController extends BaseController
 
     }
 
-/**
- * Resets a sequence
- */
+    /**
+     * Resets a sequence
+     */
     public function doReset()
     {
         $conf = $this->conf;
@@ -598,9 +598,9 @@ class SequenceController extends BaseController
 
     }
 
-/**
- * Set Nextval of a sequence
- */
+    /**
+     * Set Nextval of a sequence
+     */
     public function doNextval()
     {
         $conf = $this->conf;
@@ -617,9 +617,9 @@ class SequenceController extends BaseController
 
     }
 
-/**
- * Function to save after 'setval'ing a sequence
- */
+    /**
+     * Function to save after 'setval'ing a sequence
+     */
     public function doSaveSetval()
     {
         $conf = $this->conf;
@@ -636,9 +636,9 @@ class SequenceController extends BaseController
 
     }
 
-/**
- * Function to allow 'setval'ing of a sequence
- */
+    /**
+     * Function to allow 'setval'ing of a sequence
+     */
     public function doSetval($msg = '')
     {
         $conf = $this->conf;
@@ -648,7 +648,7 @@ class SequenceController extends BaseController
 
         $this->printTrail('sequence');
         $this->printTitle($lang['strsetval'], 'pg.sequence');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
@@ -673,9 +673,9 @@ class SequenceController extends BaseController
 
     }
 
-/**
- * Function to save after altering a sequence
- */
+    /**
+     * Function to save after altering a sequence
+     */
     public function doSaveAlter()
     {
         $conf = $this->conf;
@@ -742,9 +742,9 @@ class SequenceController extends BaseController
 
     }
 
-/**
- * Function to allow altering of a sequence
- */
+    /**
+     * Function to allow altering of a sequence
+     */
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
@@ -754,7 +754,7 @@ class SequenceController extends BaseController
 
         $this->printTrail('sequence');
         $this->printTitle($lang['stralter'], 'pg.sequence.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);

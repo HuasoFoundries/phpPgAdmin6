@@ -46,7 +46,7 @@ class InfoController extends BaseController
 
         $this->printTrail('table');
         $this->printTabs('table', 'info');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // common params for printVal
         $shownull = ['null' => true];
@@ -65,7 +65,7 @@ class InfoController extends BaseController
             && $parents->recordCount() == 0 && $children->recordCount() == 0
             && ($tablestatstups->recordCount() == 0 && $tablestatsio->recordCount() == 0
                 && $indexstatstups->recordCount() == 0 && $indexstatsio->recordCount() == 0)) {
-            $misc->printMsg($lang['strnoinfo']);
+            $this->printMsg($lang['strnoinfo']);
         } else {
             // Referring foreign tables
             if ($referrers !== -99 && $referrers->recordCount() > 0) {

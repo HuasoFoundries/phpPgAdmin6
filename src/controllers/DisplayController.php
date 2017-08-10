@@ -173,7 +173,7 @@ class DisplayController extends BaseController
             $type = 'QUERY';
         }
 
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // If 'sortkey' is not set, default to ''
         if (!isset($_REQUEST['sortkey'])) {
@@ -596,7 +596,7 @@ class DisplayController extends BaseController
         if ($confirm) {
             $this->printTrail($_REQUEST['subject']);
             $this->printTitle($lang['streditrow']);
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
             $rs    = $data->browseRow($_REQUEST['table'], $key);

@@ -11,9 +11,34 @@ class CastController extends BaseController
 {
     public $_name = 'CastController';
 
-/**
- * Show default list of casts in the database
- */
+    public function render()
+    {
+        $conf   = $this->conf;
+        $misc   = $this->misc;
+        $lang   = $this->lang;
+        $action = $this->action;
+        if ($action == 'tree') {
+            return $this->doTree();
+        }
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printHeader($lang['strcasts']);
+        $this->printBody();
+
+        switch ($action) {
+
+            default:
+                $this->doDefault();
+                break;
+        }
+
+        return $this->printFooter();
+
+    }
+
+    /**
+     * Show default list of casts in the database
+     */
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
@@ -32,7 +57,7 @@ class CastController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'casts');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $casts = $data->getCasts();
 
@@ -67,34 +92,9 @@ class CastController extends BaseController
         echo $this->printTable($casts, $columns, $actions, 'casts-casts', $lang['strnocasts']);
     }
 
-    public function render()
-    {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $action = $this->action;
-        if ($action == 'tree') {
-            return $this->doTree();
-        }
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printHeader($lang['strcasts']);
-        $this->printBody();
-
-        switch ($action) {
-
-            default:
-                $this->doDefault();
-                break;
-        }
-
-        return $this->printFooter();
-
-    }
-
-/**
- * Generate XML for the browser tree.
- */
+    /**
+     * Generate XML for the browser tree.
+     */
     public function doTree()
     {
 

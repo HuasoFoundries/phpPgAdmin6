@@ -74,6 +74,150 @@ class FunctionController extends BaseController
     }
 
     /**
+     * Show default list of functions in the database
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'functions');
+        $this->printMsg($msg);
+
+        $funcs = $data->getFunctions();
+
+        $columns = [
+            'function'     => [
+                'title' => $lang['strfunction'],
+                'field' => Decorator::field('proproto'),
+                'url'   => SUBFOLDER . "/redirect/function?action=properties&amp;{$misc->href}&amp;",
+                'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
+            ],
+            'returns'      => [
+                'title' => $lang['strreturns'],
+                'field' => Decorator::field('proreturns'),
+            ],
+            'owner'        => [
+                'title' => $lang['strowner'],
+                'field' => Decorator::field('proowner'),
+            ],
+            'proglanguage' => [
+                'title' => $lang['strproglanguage'],
+                'field' => Decorator::field('prolanguage'),
+            ],
+            'actions'      => [
+                'title' => $lang['stractions'],
+            ],
+            'comment'      => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('procomment'),
+            ],
+        ];
+
+        $actions = [
+            'multiactions' => [
+                'keycols' => ['function' => 'proproto', 'function_oid' => 'prooid'],
+                'url'     => 'functions.php',
+            ],
+            'alter'        => [
+                'content' => $lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'functions.php',
+                        'urlvars' => [
+                            'action'       => 'edit',
+                            'function'     => Decorator::field('proproto'),
+                            'function_oid' => Decorator::field('prooid'),
+                        ],
+                    ],
+                ],
+            ],
+            'drop'         => [
+                'multiaction' => 'confirm_drop',
+                'content'     => $lang['strdrop'],
+                'attr'        => [
+                    'href' => [
+                        'url'     => 'functions.php',
+                        'urlvars' => [
+                            'action'       => 'confirm_drop',
+                            'function'     => Decorator::field('proproto'),
+                            'function_oid' => Decorator::field('prooid'),
+                        ],
+                    ],
+                ],
+            ],
+            'privileges'   => [
+                'content' => $lang['strprivileges'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'privileges.php',
+                        'urlvars' => [
+                            'subject'      => 'function',
+                            'function'     => Decorator::field('proproto'),
+                            'function_oid' => Decorator::field('prooid'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($funcs, $columns, $actions, $this->table_place, $lang['strnofunctions']);
+
+        $navlinks = [
+            'createpl'       => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'functions.php',
+                        'urlvars' => [
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreateplfunction'],
+            ],
+            'createinternal' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'functions.php',
+                        'urlvars' => [
+                            'action'   => 'create',
+                            'language' => 'internal',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreateinternalfunction'],
+            ],
+            'createc'        => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'functions.php',
+                        'urlvars' => [
+                            'action'   => 'create',
+                            'language' => 'C',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreatecfunction'],
+            ],
+        ];
+
+        $this->printNavLinks($navlinks, 'functions-functions', get_defined_vars());
+
+    }
+
+    /**
      * Generate XML for the browser tree.
      */
     public function doTree()
@@ -165,7 +309,7 @@ class FunctionController extends BaseController
 
         $this->printTrail('function');
         $this->printTitle($lang['stralter'], 'pg.function.alter');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $fndata = $data->getFunction($_REQUEST['function_oid']);
 
@@ -402,7 +546,7 @@ class FunctionController extends BaseController
 
         $this->printTrail('function');
         $this->printTitle($lang['strproperties'], 'pg.function');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         $funcdata = $data->getFunction($_REQUEST['function_oid']);
 
@@ -734,7 +878,7 @@ class FunctionController extends BaseController
                 $this->printTitle($lang['strcreateplfunction'], 'pg.function.create.pl');
                 break;
         }
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         // Create string for return type list
         $szTypes = '';
@@ -1054,150 +1198,6 @@ class FunctionController extends BaseController
         $szTypes = 'g_main_types = new Array(' . implode(',', $arrayPTypes) . ');';
         $szModes = 'g_main_modes = new Array(' . implode(',', $arrayPModes) . ');';
         return $szTypes . $szModes;
-    }
-
-    /**
-     * Show default list of functions in the database
-     */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail('schema');
-        $this->printTabs('schema', 'functions');
-        $misc->printMsg($msg);
-
-        $funcs = $data->getFunctions();
-
-        $columns = [
-            'function'     => [
-                'title' => $lang['strfunction'],
-                'field' => Decorator::field('proproto'),
-                'url'   => SUBFOLDER . "/redirect/function?action=properties&amp;{$misc->href}&amp;",
-                'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
-            ],
-            'returns'      => [
-                'title' => $lang['strreturns'],
-                'field' => Decorator::field('proreturns'),
-            ],
-            'owner'        => [
-                'title' => $lang['strowner'],
-                'field' => Decorator::field('proowner'),
-            ],
-            'proglanguage' => [
-                'title' => $lang['strproglanguage'],
-                'field' => Decorator::field('prolanguage'),
-            ],
-            'actions'      => [
-                'title' => $lang['stractions'],
-            ],
-            'comment'      => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('procomment'),
-            ],
-        ];
-
-        $actions = [
-            'multiactions' => [
-                'keycols' => ['function' => 'proproto', 'function_oid' => 'prooid'],
-                'url'     => 'functions.php',
-            ],
-            'alter'        => [
-                'content' => $lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions.php',
-                        'urlvars' => [
-                            'action'       => 'edit',
-                            'function'     => Decorator::field('proproto'),
-                            'function_oid' => Decorator::field('prooid'),
-                        ],
-                    ],
-                ],
-            ],
-            'drop'         => [
-                'multiaction' => 'confirm_drop',
-                'content'     => $lang['strdrop'],
-                'attr'        => [
-                    'href' => [
-                        'url'     => 'functions.php',
-                        'urlvars' => [
-                            'action'       => 'confirm_drop',
-                            'function'     => Decorator::field('proproto'),
-                            'function_oid' => Decorator::field('prooid'),
-                        ],
-                    ],
-                ],
-            ],
-            'privileges'   => [
-                'content' => $lang['strprivileges'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'privileges.php',
-                        'urlvars' => [
-                            'subject'      => 'function',
-                            'function'     => Decorator::field('proproto'),
-                            'function_oid' => Decorator::field('prooid'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($funcs, $columns, $actions, $this->table_place, $lang['strnofunctions']);
-
-        $navlinks = [
-            'createpl'       => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions.php',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreateplfunction'],
-            ],
-            'createinternal' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions.php',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'language' => 'internal',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreateinternalfunction'],
-            ],
-            'createc'        => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions.php',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'language' => 'C',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreatecfunction'],
-            ],
-        ];
-
-        $this->printNavLinks($navlinks, 'functions-functions', get_defined_vars());
-
     }
 
 }

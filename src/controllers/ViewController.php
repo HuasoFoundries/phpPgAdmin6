@@ -94,9 +94,147 @@ class ViewController extends BaseController
 
     }
 
-/**
- * Generate XML for the browser tree.
- */
+    /**
+     * Show default list of views in the database
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'views');
+        $this->printMsg($msg);
+
+        $views = $data->getViews();
+
+        $columns = [
+            'view'    => [
+                'title' => $lang['strview'],
+                'field' => Decorator::field('relname'),
+                'url'   => SUBFOLDER . "/redirect/view?{$misc->href}&amp;",
+                'vars'  => ['view' => 'relname'],
+            ],
+            'owner'   => [
+                'title' => $lang['strowner'],
+                'field' => Decorator::field('relowner'),
+            ],
+            'actions' => [
+                'title' => $lang['stractions'],
+            ],
+            'comment' => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('relcomment'),
+            ],
+        ];
+
+        $actions = [
+            'multiactions' => [
+                'keycols' => ['view' => 'relname'],
+                'url'     => 'views.php',
+            ],
+            'browse'       => [
+                'content' => $lang['strbrowse'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'display.php',
+                        'urlvars' => [
+                            'action'  => 'confselectrows',
+                            'subject' => 'view',
+                            'return'  => 'schema',
+                            'view'    => Decorator::field('relname'),
+                        ],
+                    ],
+                ],
+            ],
+            'select'       => [
+                'content' => $lang['strselect'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'views.php',
+                        'urlvars' => [
+                            'action' => 'confselectrows',
+                            'view'   => Decorator::field('relname'),
+                        ],
+                    ],
+                ],
+            ],
+
+            // Insert is possible if the relevant rule for the view has been created.
+            //            'insert' => array(
+            //                'title'    => $lang['strinsert'],
+            //                'url'    => "views.php?action=confinsertrow&amp;{$misc->href}&amp;",
+            //                'vars'    => array('view' => 'relname'),
+            //            ),
+
+            'alter'        => [
+                'content' => $lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'viewproperties.php',
+                        'urlvars' => [
+                            'action' => 'confirm_alter',
+                            'view'   => Decorator::field('relname'),
+                        ],
+                    ],
+                ],
+            ],
+            'drop'         => [
+                'multiaction' => 'confirm_drop',
+                'content'     => $lang['strdrop'],
+                'attr'        => [
+                    'href' => [
+                        'url'     => 'views.php',
+                        'urlvars' => [
+                            'action' => 'confirm_drop',
+                            'view'   => Decorator::field('relname'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($views, $columns, $actions, $this->table_place, $lang['strnoviews']);
+
+        $navlinks = [
+            'create'    => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'views.php',
+                        'urlvars' => [
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreateview'],
+            ],
+            'createwiz' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'views.php',
+                        'urlvars' => [
+                            'action'   => 'wiz_create',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreateviewwiz'],
+            ],
+        ];
+        $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
+
+    }
+
+    /**
+     * Generate XML for the browser tree.
+     */
     public function doTree()
     {
 
@@ -168,7 +306,7 @@ class ViewController extends BaseController
         if ($confirm) {
             $this->printTrail('view');
             $this->printTabs('view', 'select');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['view']);
 
@@ -388,7 +526,7 @@ class ViewController extends BaseController
 
             $this->printTrail('schema');
             $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
-            $misc->printMsg($msg);
+            $this->printMsg($msg);
 
             $tblCount = sizeof($_POST['formTables']);
             //unserialize our schema/table information and store in arrSelTables
@@ -530,7 +668,7 @@ class ViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
         echo "<table>\n";
@@ -584,7 +722,7 @@ class ViewController extends BaseController
 
         $this->printTrail('schema');
         $this->printTitle($lang['strcreateview'], 'pg.view.create');
-        $misc->printMsg($msg);
+        $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
@@ -771,144 +909,6 @@ class ViewController extends BaseController
             }
 
         }
-    }
-
-    /**
-     * Show default list of views in the database
-     */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail('schema');
-        $this->printTabs('schema', 'views');
-        $misc->printMsg($msg);
-
-        $views = $data->getViews();
-
-        $columns = [
-            'view'    => [
-                'title' => $lang['strview'],
-                'field' => Decorator::field('relname'),
-                'url'   => SUBFOLDER . "/redirect/view?{$misc->href}&amp;",
-                'vars'  => ['view' => 'relname'],
-            ],
-            'owner'   => [
-                'title' => $lang['strowner'],
-                'field' => Decorator::field('relowner'),
-            ],
-            'actions' => [
-                'title' => $lang['stractions'],
-            ],
-            'comment' => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('relcomment'),
-            ],
-        ];
-
-        $actions = [
-            'multiactions' => [
-                'keycols' => ['view' => 'relname'],
-                'url'     => 'views.php',
-            ],
-            'browse'       => [
-                'content' => $lang['strbrowse'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'display.php',
-                        'urlvars' => [
-                            'action'  => 'confselectrows',
-                            'subject' => 'view',
-                            'return'  => 'schema',
-                            'view'    => Decorator::field('relname'),
-                        ],
-                    ],
-                ],
-            ],
-            'select'       => [
-                'content' => $lang['strselect'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'views.php',
-                        'urlvars' => [
-                            'action' => 'confselectrows',
-                            'view'   => Decorator::field('relname'),
-                        ],
-                    ],
-                ],
-            ],
-
-            // Insert is possible if the relevant rule for the view has been created.
-            //            'insert' => array(
-            //                'title'    => $lang['strinsert'],
-            //                'url'    => "views.php?action=confinsertrow&amp;{$misc->href}&amp;",
-            //                'vars'    => array('view' => 'relname'),
-            //            ),
-
-            'alter'        => [
-                'content' => $lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'viewproperties.php',
-                        'urlvars' => [
-                            'action' => 'confirm_alter',
-                            'view'   => Decorator::field('relname'),
-                        ],
-                    ],
-                ],
-            ],
-            'drop'         => [
-                'multiaction' => 'confirm_drop',
-                'content'     => $lang['strdrop'],
-                'attr'        => [
-                    'href' => [
-                        'url'     => 'views.php',
-                        'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'view'   => Decorator::field('relname'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($views, $columns, $actions, $this->table_place, $lang['strnoviews']);
-
-        $navlinks = [
-            'create'    => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'views.php',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreateview'],
-            ],
-            'createwiz' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'views.php',
-                        'urlvars' => [
-                            'action'   => 'wiz_create',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreateviewwiz'],
-            ],
-        ];
-        $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
-
     }
 
 }
