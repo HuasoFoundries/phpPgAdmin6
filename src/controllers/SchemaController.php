@@ -77,81 +77,6 @@ class SchemaController extends BaseController
 
     }
 
-/**
- * Generate XML for the browser tree.
- */
-    public function doTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $schemas = $data->getSchemas();
-
-        $reqvars = $misc->getRequestVars('schema');
-
-        $this->prtrace($reqvars);
-
-        $attrs = [
-            'text'    => Decorator::field('nspname'),
-            'icon'    => 'Schema',
-            'toolTip' => Decorator::field('nspcomment'),
-            'action'  => Decorator::redirecturl('redirect.php',
-                $reqvars,
-                [
-                    'subject' => 'schema',
-                    'schema'  => Decorator::field('nspname'),
-                ]
-            ),
-            'branch'  => Decorator::url('schemas.php',
-                $reqvars,
-                [
-                    'action' => 'subtree',
-                    'schema' => Decorator::field('nspname'),
-                ]
-            ),
-        ];
-
-        $this->printTree($schemas, $attrs, 'schemas');
-
-    }
-
-    public function doSubTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $tabs = $misc->getNavTabs('schema');
-
-        $items = $this->adjustTabsForTree($tabs);
-
-        $reqvars = $misc->getRequestVars('schema');
-
-        $this->prtrace($reqvars);
-
-        $attrs = [
-            'text'   => Decorator::field('title'),
-            'icon'   => Decorator::field('icon'),
-            'action' => Decorator::actionurl(Decorator::field('url'),
-                $reqvars,
-                Decorator::field('urlvars', [])
-            ),
-            'branch' => Decorator::url(Decorator::field('url'),
-                $reqvars,
-                Decorator::field('urlvars'),
-                ['action' => 'tree']
-            ),
-        ];
-
-        $this->printTree($items, $attrs, 'schema');
-
-    }
-
     /**
      * Show default list of schemas in the database
      */
@@ -252,6 +177,81 @@ class SchemaController extends BaseController
             ],
             'content' => $lang['strcreateschema'],
         ]], 'schemas-schemas', get_defined_vars());
+    }
+
+    /**
+     * Generate XML for the browser tree.
+     */
+    public function doTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $schemas = $data->getSchemas();
+
+        $reqvars = $misc->getRequestVars('schema');
+
+        $this->prtrace($reqvars);
+
+        $attrs = [
+            'text'    => Decorator::field('nspname'),
+            'icon'    => 'Schema',
+            'toolTip' => Decorator::field('nspcomment'),
+            'action'  => Decorator::redirecturl('redirect.php',
+                $reqvars,
+                [
+                    'subject' => 'schema',
+                    'schema'  => Decorator::field('nspname'),
+                ]
+            ),
+            'branch'  => Decorator::url('schemas.php',
+                $reqvars,
+                [
+                    'action' => 'subtree',
+                    'schema' => Decorator::field('nspname'),
+                ]
+            ),
+        ];
+
+        $this->printTree($schemas, $attrs, 'schemas');
+
+    }
+
+    public function doSubTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $tabs = $misc->getNavTabs('schema');
+
+        $items = $this->adjustTabsForTree($tabs);
+
+        $reqvars = $misc->getRequestVars('schema');
+
+        $this->prtrace($reqvars);
+
+        $attrs = [
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
+            'action' => Decorator::actionurl(Decorator::field('url'),
+                $reqvars,
+                Decorator::field('urlvars', [])
+            ),
+            'branch' => Decorator::url(Decorator::field('url'),
+                $reqvars,
+                Decorator::field('urlvars'),
+                ['action' => 'tree']
+            ),
+        ];
+
+        $this->printTree($items, $attrs, 'schema');
+
     }
 
     /**

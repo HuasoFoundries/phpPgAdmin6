@@ -112,9 +112,37 @@ class DatabaseController extends BaseController
 
     }
 
-/**
- * Sends a signal to a process
- */
+    public function doTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+
+        $data = $misc->getDatabaseAccessor();
+
+        $reqvars = $misc->getRequestVars('database');
+
+        $this->prtrace($reqvars);
+
+        $tabs = $misc->getNavTabs('database');
+
+        $items = $this->adjustTabsForTree($tabs);
+
+        $attrs = [
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
+            'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars', [])),
+            'branch' => Decorator::url(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['action' => 'tree']),
+        ];
+
+        return $this->printTree($items, $attrs, 'database');
+
+    }
+
+    /**
+     * Sends a signal to a process
+     */
     public function doSignal()
     {
         $conf = $this->conf;
@@ -131,9 +159,9 @@ class DatabaseController extends BaseController
 
     }
 
-/**
- * Searches for a named database object
- */
+    /**
+     * Searches for a named database object
+     */
     public function doFind($confirm = true, $msg = '')
     {
         $conf = $this->conf;
@@ -409,9 +437,9 @@ class DatabaseController extends BaseController
         }
     }
 
-/**
- * Displays options for database download
- */
+    /**
+     * Displays options for database download
+     */
     public function doExport($msg = '')
     {
         $conf = $this->conf;
@@ -465,9 +493,9 @@ class DatabaseController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Show the current status of all database variables
- */
+    /**
+     * Show the current status of all database variables
+     */
     public function doVariables()
     {
         $conf = $this->conf;
@@ -496,10 +524,10 @@ class DatabaseController extends BaseController
         echo $this->printTable($variables, $columns, $actions, $this->table_place, $lang['strnodata']);
     }
 
-/**
- * Show all current database connections and any queries they
- * are running.
- */
+    /**
+     * Show all current database connections and any queries they
+     * are running.
+     */
     public function doProcesses($msg = '')
     {
         $conf = $this->conf;
@@ -703,9 +731,9 @@ class DatabaseController extends BaseController
 
     }
 
-/**
- * Show the existing table locks in the current database
- */
+    /**
+     * Show the existing table locks in the current database
+     */
     public function doLocks()
     {
         $conf = $this->conf;
@@ -723,9 +751,9 @@ class DatabaseController extends BaseController
         echo '</div>';
     }
 
-/**
- * Allow execution of arbitrary SQL statements on a database
- */
+    /**
+     * Allow execution of arbitrary SQL statements on a database
+     */
     public function doSQL()
     {
         $conf = $this->conf;
@@ -764,34 +792,6 @@ class DatabaseController extends BaseController
 
         // Default focus
         $this->setFocus('forms[0].query');
-    }
-
-    public function doTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-
-        $data = $misc->getDatabaseAccessor();
-
-        $reqvars = $misc->getRequestVars('database');
-
-        $this->prtrace($reqvars);
-
-        $tabs = $misc->getNavTabs('database');
-
-        $items = $this->adjustTabsForTree($tabs);
-
-        $attrs = [
-            'text'   => Decorator::field('title'),
-            'icon'   => Decorator::field('icon'),
-            'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars', [])),
-            'branch' => Decorator::url(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['action' => 'tree']),
-        ];
-
-        return $this->printTree($items, $attrs, 'database');
-
     }
 
 }

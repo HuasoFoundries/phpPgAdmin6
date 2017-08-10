@@ -94,6 +94,33 @@ class SQLQueryController extends BaseController
         $this->printFooter();
     }
 
+    public function doDefault()
+    {
+        $conf        = $this->conf;
+        $misc        = $this->misc;
+        $lang        = $this->lang;
+        $data        = $misc->getDatabaseAccessor();
+        $_connection = $misc->getConnection();
+
+        try {
+            // Execute the query.  If it's a script upload, special handling is necessary
+            if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
+                return $this->execute_script();
+            } else {
+                return $this->execute_query();
+
+            }
+        } catch (\PHPPgAdmin\ADODB_Exception $e) {
+
+            $message   = $e->getMessage();
+            $trace     = $e->getTraceAsString();
+            $lastError = $_connection->getLastError();
+            $this->prtrace(['message' => $message, 'trace' => $trace, 'lastError' => $lastError]);
+
+            return null;
+        }
+    }
+
     private function execute_script()
     {
         $conf        = $this->conf;
@@ -212,33 +239,6 @@ class SQLQueryController extends BaseController
                 echo '<p>', $lang['strnodata'], "</p>\n";
             }
 
-        }
-    }
-
-    public function doDefault()
-    {
-        $conf        = $this->conf;
-        $misc        = $this->misc;
-        $lang        = $this->lang;
-        $data        = $misc->getDatabaseAccessor();
-        $_connection = $misc->getConnection();
-
-        try {
-            // Execute the query.  If it's a script upload, special handling is necessary
-            if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
-                return $this->execute_script();
-            } else {
-                return $this->execute_query();
-
-            }
-        } catch (\PHPPgAdmin\ADODB_Exception $e) {
-
-            $message   = $e->getMessage();
-            $trace     = $e->getTraceAsString();
-            $lastError = $_connection->getLastError();
-            $this->prtrace(['message' => $message, 'trace' => $trace, 'lastError' => $lastError]);
-
-            return null;
         }
     }
 

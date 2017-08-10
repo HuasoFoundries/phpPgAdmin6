@@ -35,31 +35,6 @@ class OpClassesController extends BaseController
     }
 
     /**
-     * Generate XML for the browser tree.
-     */
-    public function doTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $opclasses = $data->getOpClasses();
-
-        // OpClass prototype: "op_class/access_method"
-        $proto = Decorator::concat(Decorator::field('opcname'), '/', Decorator::field('amname'));
-
-        $attrs = [
-            'text'    => $proto,
-            'icon'    => 'OperatorClass',
-            'toolTip' => Decorator::field('opccomment'),
-        ];
-
-        return $this->printTree($opclasses, $attrs, 'opclasses');
-    }
-
-    /**
      * Show default list of opclasss in the database
      *
      * @param string $msg
@@ -105,6 +80,31 @@ class OpClassesController extends BaseController
         $actions = [];
 
         echo $this->printTable($opclasses, $columns, $actions, 'opclasses-opclasses', $lang['strnoopclasses']);
+    }
+
+    /**
+     * Generate XML for the browser tree.
+     */
+    public function doTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $opclasses = $data->getOpClasses();
+
+        // OpClass prototype: "op_class/access_method"
+        $proto = Decorator::concat(Decorator::field('opcname'), '/', Decorator::field('amname'));
+
+        $attrs = [
+            'text'    => $proto,
+            'icon'    => 'OperatorClass',
+            'toolTip' => Decorator::field('opccomment'),
+        ];
+
+        return $this->printTree($opclasses, $attrs, 'opclasses');
     }
 
 }

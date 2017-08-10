@@ -96,6 +96,74 @@ class OperatorController extends BaseController
     }
 
     /**
+     * Show default list of operators in the database
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'operators');
+        $this->printMsg($msg);
+
+        $operators = $data->getOperators();
+
+        $columns = [
+            'operator' => [
+                'title' => $lang['stroperator'],
+                'field' => Decorator::field('oprname'),
+                'url'   => "operators.php?action=properties&amp;{$misc->href}&amp;",
+                'vars'  => ['operator' => 'oprname', 'operator_oid' => 'oid'],
+            ],
+            'leftarg'  => [
+                'title' => $lang['strleftarg'],
+                'field' => Decorator::field('oprleftname'),
+            ],
+            'rightarg' => [
+                'title' => $lang['strrightarg'],
+                'field' => Decorator::field('oprrightname'),
+            ],
+            'returns'  => [
+                'title' => $lang['strreturns'],
+                'field' => Decorator::field('resultname'),
+            ],
+            'actions'  => [
+                'title' => $lang['stractions'],
+            ],
+            'comment'  => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('oprcomment'),
+            ],
+        ];
+
+        $actions = [
+            'drop' => [
+                // 'title' => $lang['strdrop'],
+                // 'url'   => "operators.php?action=confirm_drop&amp;{$misc->href}&amp;",
+                // 'vars'  => array('operator' => 'oprname', 'operator_oid' => 'oid'),
+                'content' => $lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'operators.php',
+                        'urlvars' => [
+                            'action'       => 'confirm_drop',
+                            'operator'     => Decorator::field('oprname'),
+                            'operator_oid' => Decorator::field('oid'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($operators, $columns, $actions, 'operators-operators', $lang['strnooperators']);
+
+        //        TODO operators.php action=create $lang['strcreateoperator']
+    }
+
+    /**
      * Show read only properties for an operator
      */
     public function doProperties($msg = '')
@@ -205,74 +273,6 @@ class OperatorController extends BaseController
 
         }
 
-    }
-
-/**
- * Show default list of operators in the database
- */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail('schema');
-        $this->printTabs('schema', 'operators');
-        $this->printMsg($msg);
-
-        $operators = $data->getOperators();
-
-        $columns = [
-            'operator' => [
-                'title' => $lang['stroperator'],
-                'field' => Decorator::field('oprname'),
-                'url'   => "operators.php?action=properties&amp;{$misc->href}&amp;",
-                'vars'  => ['operator' => 'oprname', 'operator_oid' => 'oid'],
-            ],
-            'leftarg'  => [
-                'title' => $lang['strleftarg'],
-                'field' => Decorator::field('oprleftname'),
-            ],
-            'rightarg' => [
-                'title' => $lang['strrightarg'],
-                'field' => Decorator::field('oprrightname'),
-            ],
-            'returns'  => [
-                'title' => $lang['strreturns'],
-                'field' => Decorator::field('resultname'),
-            ],
-            'actions'  => [
-                'title' => $lang['stractions'],
-            ],
-            'comment'  => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('oprcomment'),
-            ],
-        ];
-
-        $actions = [
-            'drop' => [
-                // 'title' => $lang['strdrop'],
-                // 'url'   => "operators.php?action=confirm_drop&amp;{$misc->href}&amp;",
-                // 'vars'  => array('operator' => 'oprname', 'operator_oid' => 'oid'),
-                'content' => $lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'operators.php',
-                        'urlvars' => [
-                            'action'       => 'confirm_drop',
-                            'operator'     => Decorator::field('oprname'),
-                            'operator_oid' => Decorator::field('oid'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($operators, $columns, $actions, 'operators-operators', $lang['strnooperators']);
-
-//        TODO operators.php action=create $lang['strcreateoperator']
     }
 
 }

@@ -34,40 +34,6 @@ class ConversionController extends BaseController
         return $this->printFooter();
     }
 
-    public function doTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $constraints = $data->getConstraints($_REQUEST['table']);
-
-        $reqvars = $misc->getRequestVars('schema');
-
-        function getIcon($f)
-        {
-            switch ($f['contype']) {
-                case 'u':
-                    return 'UniqueConstraint';
-                case 'c':
-                    return 'CheckConstraint';
-                case 'f':
-                    return 'ForeignKey';
-                case 'p':
-                    return 'PrimaryKey';
-            }
-        }
-
-        $attrs = [
-            'text' => Decorator::field('conname'),
-            'icon' => Decorator::callback('getIcon'),
-        ];
-
-        return $this->printTree($constraints, $attrs, 'constraints');
-    }
-
     /**
      * Show default list of conversions in the database
      *
@@ -116,4 +82,39 @@ class ConversionController extends BaseController
 
         echo $this->printTable($conversions, $columns, $actions, 'conversions-conversions', $lang['strnoconversions']);
     }
+
+    public function doTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $constraints = $data->getConstraints($_REQUEST['table']);
+
+        $reqvars = $misc->getRequestVars('schema');
+
+        function getIcon($f)
+        {
+            switch ($f['contype']) {
+                case 'u':
+                    return 'UniqueConstraint';
+                case 'c':
+                    return 'CheckConstraint';
+                case 'f':
+                    return 'ForeignKey';
+                case 'p':
+                    return 'PrimaryKey';
+            }
+        }
+
+        $attrs = [
+            'text' => Decorator::field('conname'),
+            'icon' => Decorator::callback('getIcon'),
+        ];
+
+        return $this->printTree($constraints, $attrs, 'constraints');
+    }
+
 }

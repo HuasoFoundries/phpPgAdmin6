@@ -46,6 +46,79 @@ class SQLEditController extends BaseController
     }
 
     /**
+     * Allow execution of arbitrary SQL statements on a database
+     */
+    public function doDefault()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        if (!isset($_SESSION['sqlquery'])) {
+            $_SESSION['sqlquery'] = '';
+        }
+
+        if (!isset($_REQUEST['search_path'])) {
+            $_REQUEST['search_path'] = implode(',', $data->getSearchPath());
+        }
+        $search_path = htmlspecialchars($_REQUEST['search_path']);
+        $sqlquery    = htmlspecialchars($_SESSION['sqlquery']);
+
+        $default_html = $this->printTabs($misc->getNavTabs('popup'), 'sql', false);
+
+        $default_html .= '<form action="' . SUBFOLDER . '/src/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
+        $default_html .= "\n";
+        $default_html .= $this->_printConnection('sql');
+
+        $default_html .= "\n";
+
+        $default_html .= ' <div class="searchpath">';
+        $default_html .= '<label>';
+        $default_html .= $this->misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
+
+        $default_html .= ': <input type="text" name="search_path" size="50" value="' . $search_path . '" />';
+        $default_html .= "</label>\n";
+        $default_html .= "</div>\n";
+
+        $default_html .= '<div id="queryedition" style="padding:1%;width:98%;float:left;">';
+        $default_html .= "\n";
+        $default_html .= '<textarea style="width:98%;" rows="10" cols="50" name="query" id="query" resizable="true">' . $sqlquery . '</textarea>';
+        $default_html .= "\n";
+        $default_html .= "</div>\n";
+
+        // Check that file uploads are enabled
+        if (ini_get('file_uploads')) {
+            // Don't show upload option if max size of uploads is zero
+            $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
+            if (is_double($max_size) && $max_size > 0) {
+                $default_html .= '<p>';
+                $default_html .= '<input type="hidden" name="MAX_FILE_SIZE" value="' . $max_size . '" />';
+                $default_html .= "\n";
+                $default_html .= '<label for="script">' . $lang['struploadscript'] . '</label>';
+                $default_html .= ' <input id="script" name="script" type="file" /></p>';
+                $default_html .= "</p>\n";
+            }
+        }
+        $checked = (isset($_REQUEST['paginate']) ? ' checked="checked"' : '');
+        $default_html .= '<p>';
+        $default_html .= '<label for="paginate"><input type="checkbox" id="paginate" name="paginate"' . $checked . ' />&nbsp;' . $lang['strpaginate'] . '</label>';
+        $default_html .= "</p>\n";
+        $default_html .= '<p><input type="submit" name="execute" accesskey="r" value="' . $lang['strexecute'] . '" />';
+        $default_html .= "\n";
+        $default_html .= '<input type="reset" accesskey="q" value="' . $lang['strreset'] . '" /></p>';
+        $default_html .= "\n";
+        $default_html .= '</form>';
+        $default_html .= "\n";
+
+        // Default focus
+        //$this->setFocus('forms[0].query');
+        return $default_html;
+
+    }
+
+    /**
      * Private function to display server and list of databases
      */
     public function _printConnection($action)
@@ -128,79 +201,6 @@ class SQLEditController extends BaseController
         // Default focus
         $this->setFocus('forms[0].term');
         return $default_html;
-    }
-
-    /**
-     * Allow execution of arbitrary SQL statements on a database
-     */
-    public function doDefault()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        if (!isset($_SESSION['sqlquery'])) {
-            $_SESSION['sqlquery'] = '';
-        }
-
-        if (!isset($_REQUEST['search_path'])) {
-            $_REQUEST['search_path'] = implode(',', $data->getSearchPath());
-        }
-        $search_path = htmlspecialchars($_REQUEST['search_path']);
-        $sqlquery    = htmlspecialchars($_SESSION['sqlquery']);
-
-        $default_html = $this->printTabs($misc->getNavTabs('popup'), 'sql', false);
-
-        $default_html .= '<form action="' . SUBFOLDER . '/src/views/sql.php" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
-        $default_html .= "\n";
-        $default_html .= $this->_printConnection('sql');
-
-        $default_html .= "\n";
-
-        $default_html .= ' <div class="searchpath">';
-        $default_html .= '<label>';
-        $default_html .= $this->misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
-
-        $default_html .= ': <input type="text" name="search_path" size="50" value="' . $search_path . '" />';
-        $default_html .= "</label>\n";
-        $default_html .= "</div>\n";
-
-        $default_html .= '<div id="queryedition" style="padding:1%;width:98%;float:left;">';
-        $default_html .= "\n";
-        $default_html .= '<textarea style="width:98%;" rows="10" cols="50" name="query" id="query" resizable="true">' . $sqlquery . '</textarea>';
-        $default_html .= "\n";
-        $default_html .= "</div>\n";
-
-        // Check that file uploads are enabled
-        if (ini_get('file_uploads')) {
-            // Don't show upload option if max size of uploads is zero
-            $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
-            if (is_double($max_size) && $max_size > 0) {
-                $default_html .= '<p>';
-                $default_html .= '<input type="hidden" name="MAX_FILE_SIZE" value="' . $max_size . '" />';
-                $default_html .= "\n";
-                $default_html .= '<label for="script">' . $lang['struploadscript'] . '</label>';
-                $default_html .= ' <input id="script" name="script" type="file" /></p>';
-                $default_html .= "</p>\n";
-            }
-        }
-        $checked = (isset($_REQUEST['paginate']) ? ' checked="checked"' : '');
-        $default_html .= '<p>';
-        $default_html .= '<label for="paginate"><input type="checkbox" id="paginate" name="paginate"' . $checked . ' />&nbsp;' . $lang['strpaginate'] . '</label>';
-        $default_html .= "</p>\n";
-        $default_html .= '<p><input type="submit" name="execute" accesskey="r" value="' . $lang['strexecute'] . '" />';
-        $default_html .= "\n";
-        $default_html .= '<input type="reset" accesskey="q" value="' . $lang['strreset'] . '" /></p>';
-        $default_html .= "\n";
-        $default_html .= '</form>';
-        $default_html .= "\n";
-
-        // Default focus
-        //$this->setFocus('forms[0].query');
-        return $default_html;
-
     }
 
 }

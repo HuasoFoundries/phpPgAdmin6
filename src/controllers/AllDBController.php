@@ -73,6 +73,147 @@ class AllDBController extends BaseController
 
     }
 
+    /**
+     * Show default list of databases in the server
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+
+        $this->printTrail('server');
+        $this->printTabs('server', 'databases');
+        $this->printMsg($msg);
+        $data      = $misc->getDatabaseAccessor();
+        $databases = $data->getDatabases();
+
+        $columns = [
+            'database'   => [
+                'title' => $lang['strdatabase'],
+                'field' => Decorator::field('datname'),
+                'url'   => SUBFOLDER . "/redirect/database?{$misc->href}&amp;",
+                'vars'  => ['database' => 'datname'],
+            ],
+            'owner'      => [
+                'title' => $lang['strowner'],
+                'field' => Decorator::field('datowner'),
+            ],
+            'encoding'   => [
+                'title' => $lang['strencoding'],
+                'field' => Decorator::field('datencoding'),
+            ],
+            'lc_collate' => [
+                'title' => $lang['strcollation'],
+                'field' => Decorator::field('datcollate'),
+            ],
+            'lc_ctype'   => [
+                'title' => $lang['strctype'],
+                'field' => Decorator::field('datctype'),
+            ],
+            'tablespace' => [
+                'title' => $lang['strtablespace'],
+                'field' => Decorator::field('tablespace'),
+            ],
+            'dbsize'     => [
+                'title' => $lang['strsize'],
+                'field' => Decorator::field('dbsize'),
+                'type'  => 'prettysize',
+            ],
+            'actions'    => [
+                'title' => $lang['stractions'],
+            ],
+            'comment'    => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('datcomment'),
+            ],
+        ];
+
+        $actions = [
+            'multiactions' => [
+                'keycols' => ['database' => 'datname'],
+                'url'     => 'all_db.php',
+                'default' => null,
+            ],
+            'drop'         => [
+                'content'     => $lang['strdrop'],
+                'attr'        => [
+                    'href' => [
+                        'url'     => 'all_db.php',
+                        'urlvars' => [
+                            'subject'      => 'database',
+                            'action'       => 'confirm_drop',
+                            'dropdatabase' => Decorator::field('datname'),
+                        ],
+                    ],
+                ],
+                'multiaction' => 'confirm_drop',
+            ],
+            'privileges'   => [
+                'content' => $lang['strprivileges'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'privileges.php',
+                        'urlvars' => [
+                            'subject'  => 'database',
+                            'database' => Decorator::field('datname'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        if ($data->hasAlterDatabase()) {
+            $actions['alter'] = [
+                'content' => $lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'all_db.php',
+                        'urlvars' => [
+                            'subject'       => 'database',
+                            'action'        => 'confirm_alter',
+                            'alterdatabase' => Decorator::field('datname'),
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        if (!$data->hasTablespaces()) {
+            unset($columns['tablespace']);
+        }
+
+        if (!$data->hasServerAdminFuncs()) {
+            unset($columns['dbsize']);
+        }
+
+        if (!$data->hasDatabaseCollation()) {
+            unset($columns['lc_collate'], $columns['lc_ctype']);
+        }
+
+        if (!isset($data->privlist['database'])) {
+            unset($actions['privileges']);
+        }
+
+        echo $this->printTable($databases, $columns, $actions, $this->table_place, $lang['strnodatabases']);
+
+        $navlinks = [
+            'create' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'all_db.php',
+                        'urlvars' => [
+                            'action' => 'create',
+                            'server' => $_REQUEST['server'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreatedatabase'],
+            ],
+        ];
+        $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
+
+    }
+
     public function doTree()
     {
 
@@ -482,147 +623,6 @@ class AllDBController extends BaseController
         echo $misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
         echo "</form>\n";
-    }
-
-/**
- * Show default list of databases in the server
- */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-
-        $this->printTrail('server');
-        $this->printTabs('server', 'databases');
-        $this->printMsg($msg);
-        $data      = $misc->getDatabaseAccessor();
-        $databases = $data->getDatabases();
-
-        $columns = [
-            'database'   => [
-                'title' => $lang['strdatabase'],
-                'field' => Decorator::field('datname'),
-                'url'   => SUBFOLDER . "/redirect/database?{$misc->href}&amp;",
-                'vars'  => ['database' => 'datname'],
-            ],
-            'owner'      => [
-                'title' => $lang['strowner'],
-                'field' => Decorator::field('datowner'),
-            ],
-            'encoding'   => [
-                'title' => $lang['strencoding'],
-                'field' => Decorator::field('datencoding'),
-            ],
-            'lc_collate' => [
-                'title' => $lang['strcollation'],
-                'field' => Decorator::field('datcollate'),
-            ],
-            'lc_ctype'   => [
-                'title' => $lang['strctype'],
-                'field' => Decorator::field('datctype'),
-            ],
-            'tablespace' => [
-                'title' => $lang['strtablespace'],
-                'field' => Decorator::field('tablespace'),
-            ],
-            'dbsize'     => [
-                'title' => $lang['strsize'],
-                'field' => Decorator::field('dbsize'),
-                'type'  => 'prettysize',
-            ],
-            'actions'    => [
-                'title' => $lang['stractions'],
-            ],
-            'comment'    => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('datcomment'),
-            ],
-        ];
-
-        $actions = [
-            'multiactions' => [
-                'keycols' => ['database' => 'datname'],
-                'url'     => 'all_db.php',
-                'default' => null,
-            ],
-            'drop'         => [
-                'content'     => $lang['strdrop'],
-                'attr'        => [
-                    'href' => [
-                        'url'     => 'all_db.php',
-                        'urlvars' => [
-                            'subject'      => 'database',
-                            'action'       => 'confirm_drop',
-                            'dropdatabase' => Decorator::field('datname'),
-                        ],
-                    ],
-                ],
-                'multiaction' => 'confirm_drop',
-            ],
-            'privileges'   => [
-                'content' => $lang['strprivileges'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'privileges.php',
-                        'urlvars' => [
-                            'subject'  => 'database',
-                            'database' => Decorator::field('datname'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        if ($data->hasAlterDatabase()) {
-            $actions['alter'] = [
-                'content' => $lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'all_db.php',
-                        'urlvars' => [
-                            'subject'       => 'database',
-                            'action'        => 'confirm_alter',
-                            'alterdatabase' => Decorator::field('datname'),
-                        ],
-                    ],
-                ],
-            ];
-        }
-
-        if (!$data->hasTablespaces()) {
-            unset($columns['tablespace']);
-        }
-
-        if (!$data->hasServerAdminFuncs()) {
-            unset($columns['dbsize']);
-        }
-
-        if (!$data->hasDatabaseCollation()) {
-            unset($columns['lc_collate'], $columns['lc_ctype']);
-        }
-
-        if (!isset($data->privlist['database'])) {
-            unset($actions['privileges']);
-        }
-
-        echo $this->printTable($databases, $columns, $actions, $this->table_place, $lang['strnodatabases']);
-
-        $navlinks = [
-            'create' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'all_db.php',
-                        'urlvars' => [
-                            'action' => 'create',
-                            'server' => $_REQUEST['server'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreatedatabase'],
-            ],
-        ];
-        $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
-
     }
 
 }

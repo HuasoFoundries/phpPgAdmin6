@@ -92,9 +92,111 @@ class DomainController extends BaseController
         return $this->printFooter();
     }
 
-/**
- * Generate XML for the browser tree.
- */
+    /**
+     * Show default list of domains in the database
+     */
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'domains');
+        $this->printMsg($msg);
+
+        $domains = $data->getDomains();
+
+        $columns = [
+            'domain'  => [
+                'title' => $lang['strdomain'],
+                'field' => Decorator::field('domname'),
+                'url'   => "domains.php?action=properties&amp;{$misc->href}&amp;",
+                'vars'  => ['domain' => 'domname'],
+            ],
+            'type'    => [
+                'title' => $lang['strtype'],
+                'field' => Decorator::field('domtype'),
+            ],
+            'notnull' => [
+                'title'  => $lang['strnotnull'],
+                'field'  => Decorator::field('domnotnull'),
+                'type'   => 'bool',
+                'params' => ['true' => 'NOT NULL', 'false' => ''],
+            ],
+            'default' => [
+                'title' => $lang['strdefault'],
+                'field' => Decorator::field('domdef'),
+            ],
+            'owner'   => [
+                'title' => $lang['strowner'],
+                'field' => Decorator::field('domowner'),
+            ],
+            'actions' => [
+                'title' => $lang['stractions'],
+            ],
+            'comment' => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('domcomment'),
+            ],
+        ];
+
+        $actions = [
+            'alter' => [
+                'content' => $lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'domains.php',
+                        'urlvars' => [
+                            'action' => 'alter',
+                            'domain' => Decorator::field('domname'),
+                        ],
+                    ],
+                ],
+            ],
+            'drop'  => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'domains.php',
+                        'urlvars' => [
+                            'action' => 'confirm_drop',
+                            'domain' => Decorator::field('domname'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        if (!$data->hasAlterDomains()) {
+            unset($actions['alter']);
+        }
+
+        echo $this->printTable($domains, $columns, $actions, 'domains-domains', $lang['strnodomains']);
+
+        $navlinks = [
+            'create' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'domains.php',
+                        'urlvars' => [
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strcreatedomain'],
+            ],
+        ];
+        $this->printNavLinks($navlinks, 'domains-domains', get_defined_vars());
+    }
+
+    /**
+     * Generate XML for the browser tree.
+     */
     public function doTree()
     {
 
@@ -123,9 +225,9 @@ class DomainController extends BaseController
         return $this->printTree($domains, $attrs, 'domains');
     }
 
-/**
- * Function to save after altering a domain
- */
+    /**
+     * Function to save after altering a domain
+     */
     public function doSaveAlter()
     {
         $conf = $this->conf;
@@ -143,9 +245,9 @@ class DomainController extends BaseController
 
     }
 
-/**
- * Allow altering a domain
- */
+    /**
+     * Allow altering a domain
+     */
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
@@ -208,9 +310,9 @@ class DomainController extends BaseController
 
     }
 
-/**
- * Confirm and then actually add a CHECK constraint
- */
+    /**
+     * Confirm and then actually add a CHECK constraint
+     */
     public function addCheck($confirm, $msg = '')
     {
         $conf = $this->conf;
@@ -266,9 +368,9 @@ class DomainController extends BaseController
         }
     }
 
-/**
- * Show confirmation of drop constraint and perform actual drop
- */
+    /**
+     * Show confirmation of drop constraint and perform actual drop
+     */
     public function doDropConstraint($confirm, $msg = '')
     {
         $conf = $this->conf;
@@ -304,9 +406,9 @@ class DomainController extends BaseController
 
     }
 
-/**
- * Show properties for a domain.  Allow manipulating constraints as well.
- */
+    /**
+     * Show properties for a domain.  Allow manipulating constraints as well.
+     */
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
@@ -436,9 +538,9 @@ class DomainController extends BaseController
         $this->printNavLinks($navlinks, 'domains-properties', get_defined_vars());
     }
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+    /**
+     * Show confirmation of drop and perform actual drop
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -471,9 +573,9 @@ class DomainController extends BaseController
 
     }
 
-/**
- * Displays a screen where they can enter a new domain
- */
+    /**
+     * Displays a screen where they can enter a new domain
+     */
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
@@ -556,9 +658,9 @@ class DomainController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Actually creates the new domain in the database
- */
+    /**
+     * Actually creates the new domain in the database
+     */
     public function doSaveCreate()
     {
         $conf = $this->conf;
@@ -585,105 +687,4 @@ class DomainController extends BaseController
         }
     }
 
-/**
- * Show default list of domains in the database
- */
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail('schema');
-        $this->printTabs('schema', 'domains');
-        $this->printMsg($msg);
-
-        $domains = $data->getDomains();
-
-        $columns = [
-            'domain'  => [
-                'title' => $lang['strdomain'],
-                'field' => Decorator::field('domname'),
-                'url'   => "domains.php?action=properties&amp;{$misc->href}&amp;",
-                'vars'  => ['domain' => 'domname'],
-            ],
-            'type'    => [
-                'title' => $lang['strtype'],
-                'field' => Decorator::field('domtype'),
-            ],
-            'notnull' => [
-                'title'  => $lang['strnotnull'],
-                'field'  => Decorator::field('domnotnull'),
-                'type'   => 'bool',
-                'params' => ['true' => 'NOT NULL', 'false' => ''],
-            ],
-            'default' => [
-                'title' => $lang['strdefault'],
-                'field' => Decorator::field('domdef'),
-            ],
-            'owner'   => [
-                'title' => $lang['strowner'],
-                'field' => Decorator::field('domowner'),
-            ],
-            'actions' => [
-                'title' => $lang['stractions'],
-            ],
-            'comment' => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('domcomment'),
-            ],
-        ];
-
-        $actions = [
-            'alter' => [
-                'content' => $lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'domains.php',
-                        'urlvars' => [
-                            'action' => 'alter',
-                            'domain' => Decorator::field('domname'),
-                        ],
-                    ],
-                ],
-            ],
-            'drop'  => [
-                'content' => $lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'domains.php',
-                        'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'domain' => Decorator::field('domname'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        if (!$data->hasAlterDomains()) {
-            unset($actions['alter']);
-        }
-
-        echo $this->printTable($domains, $columns, $actions, 'domains-domains', $lang['strnodomains']);
-
-        $navlinks = [
-            'create' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'domains.php',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strcreatedomain'],
-            ],
-        ];
-        $this->printNavLinks($navlinks, 'domains-domains', get_defined_vars());
-    }
 }

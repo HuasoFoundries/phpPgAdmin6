@@ -127,80 +127,6 @@ class TableController extends BaseController
     }
 
     /**
-     * Generate XML for the browser tree.
-     */
-    public function doTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        //\PC::debug($misc->getDatabase(), 'getDatabase');
-
-        $tables = $data->getTables();
-
-        $reqvars = $misc->getRequestVars('table');
-
-        $attrs = [
-            'text'       => Decorator::field('relname'),
-            'icon'       => 'Table',
-            'iconAction' => Decorator::url('display.php',
-                $reqvars,
-                ['table' => Decorator::field('relname')]
-            ),
-            'toolTip'    => Decorator::field('relcomment'),
-            'action'     => Decorator::redirecturl('redirect.php',
-                $reqvars,
-                ['table' => Decorator::field('relname')]
-            ),
-            'branch'     => Decorator::url('tables.php',
-                $reqvars,
-                [
-                    'action' => 'subtree',
-                    'table'  => Decorator::field('relname'),
-                ]
-            ),
-        ];
-
-        return $this->printTree($tables, $attrs, 'tables');
-    }
-
-    public function doSubTree()
-    {
-
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $tabs    = $misc->getNavTabs('table');
-        $items   = $this->adjustTabsForTree($tabs);
-        $reqvars = $misc->getRequestVars('table');
-
-        $attrs = [
-            'text'   => Decorator::field('title'),
-            'icon'   => Decorator::field('icon'),
-            'action' => Decorator::actionurl(
-                Decorator::field('url'),
-                $reqvars,
-                Decorator::field('urlvars'),
-                ['table' => $_REQUEST['table']]
-            ),
-            'branch' => Decorator::ifempty(
-                Decorator::field('branch'), '', Decorator::url(Decorator::field('url'), $reqvars, [
-                    'action' => 'tree',
-                    'table'  => $_REQUEST['table'],
-                ]
-                )
-            ),
-        ];
-
-        return $this->printTree($items, $attrs, 'table');
-    }
-
-    /**
      * Show default list of tables in the database
      */
     public function doDefault($msg = '')
@@ -411,6 +337,80 @@ class TableController extends BaseController
         }
         $this->printNavLinks($navlinks, 'tables-tables', get_defined_vars());
 
+    }
+
+    /**
+     * Generate XML for the browser tree.
+     */
+    public function doTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        //\PC::debug($misc->getDatabase(), 'getDatabase');
+
+        $tables = $data->getTables();
+
+        $reqvars = $misc->getRequestVars('table');
+
+        $attrs = [
+            'text'       => Decorator::field('relname'),
+            'icon'       => 'Table',
+            'iconAction' => Decorator::url('display.php',
+                $reqvars,
+                ['table' => Decorator::field('relname')]
+            ),
+            'toolTip'    => Decorator::field('relcomment'),
+            'action'     => Decorator::redirecturl('redirect.php',
+                $reqvars,
+                ['table' => Decorator::field('relname')]
+            ),
+            'branch'     => Decorator::url('tables.php',
+                $reqvars,
+                [
+                    'action' => 'subtree',
+                    'table'  => Decorator::field('relname'),
+                ]
+            ),
+        ];
+
+        return $this->printTree($tables, $attrs, 'tables');
+    }
+
+    public function doSubTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $tabs    = $misc->getNavTabs('table');
+        $items   = $this->adjustTabsForTree($tabs);
+        $reqvars = $misc->getRequestVars('table');
+
+        $attrs = [
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
+            'action' => Decorator::actionurl(
+                Decorator::field('url'),
+                $reqvars,
+                Decorator::field('urlvars'),
+                ['table' => $_REQUEST['table']]
+            ),
+            'branch' => Decorator::ifempty(
+                Decorator::field('branch'), '', Decorator::url(Decorator::field('url'), $reqvars, [
+                    'action' => 'tree',
+                    'table'  => $_REQUEST['table'],
+                ]
+                )
+            ),
+        ];
+
+        return $this->printTree($items, $attrs, 'table');
     }
 
     /**

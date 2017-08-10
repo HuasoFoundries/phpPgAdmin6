@@ -1,10 +1,10 @@
 <?php
 
-    namespace PHPPgAdmin\Controller;
+namespace PHPPgAdmin\Controller;
 
-    /**
-     * Base controller class
-     */
+/**
+ * Base controller class
+ */
 class ACInsertController extends BaseController
 {
     public $_name = 'ACInsertController';
@@ -107,4 +107,4 @@ class ACInsertController extends BaseController
             }
         }
     }
-    }
+}

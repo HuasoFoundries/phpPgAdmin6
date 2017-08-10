@@ -127,6 +127,89 @@ class FulltextController extends BaseController
 
     }
 
+    public function doDefault($msg = '')
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'fulltext');
+        $this->printTabs('fulltext', 'ftsconfigs');
+        $this->printMsg($msg);
+
+        $cfgs = $data->getFtsConfigurations(false);
+
+        $columns = [
+            'configuration' => [
+                'title' => $lang['strftsconfig'],
+                'field' => Decorator::field('name'),
+                'url'   => "fulltext.php?action=viewconfig&amp;{$misc->href}&amp;",
+                'vars'  => ['ftscfg' => 'name'],
+            ],
+            'schema'        => [
+                'title' => $lang['strschema'],
+                'field' => Decorator::field('schema'),
+            ],
+            'actions'       => [
+                'title' => $lang['stractions'],
+            ],
+            'comment'       => [
+                'title' => $lang['strcomment'],
+                'field' => Decorator::field('comment'),
+            ],
+        ];
+
+        $actions = [
+            'drop'  => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'fulltext.php',
+                        'urlvars' => [
+                            'action' => 'dropconfig',
+                            'ftscfg' => Decorator::field('name'),
+                        ],
+                    ],
+                ],
+            ],
+            'alter' => [
+                'content' => $lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'fulltext.php',
+                        'urlvars' => [
+                            'action' => 'alterconfig',
+                            'ftscfg' => Decorator::field('name'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($cfgs, $columns, $actions, 'fulltext-fulltext', $lang['strftsnoconfigs']);
+
+        $navlinks = [
+            'createconf' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'fulltext.php',
+                        'urlvars' => [
+                            'action'   => 'createconfig',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $lang['strftscreateconfig'],
+            ],
+        ];
+
+        $this->printNavLinks($navlinks, 'fulltext-fulltext', get_defined_vars());
+    }
+
     /**
      * Generate XML for the browser tree.
      */
@@ -211,89 +294,6 @@ class FulltextController extends BaseController
 
         return $this->printTree($items, $attrs, strtolower($what));
 
-    }
-
-    public function doDefault($msg = '')
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $this->printTrail('schema');
-        $this->printTabs('schema', 'fulltext');
-        $this->printTabs('fulltext', 'ftsconfigs');
-        $this->printMsg($msg);
-
-        $cfgs = $data->getFtsConfigurations(false);
-
-        $columns = [
-            'configuration' => [
-                'title' => $lang['strftsconfig'],
-                'field' => Decorator::field('name'),
-                'url'   => "fulltext.php?action=viewconfig&amp;{$misc->href}&amp;",
-                'vars'  => ['ftscfg' => 'name'],
-            ],
-            'schema'        => [
-                'title' => $lang['strschema'],
-                'field' => Decorator::field('schema'),
-            ],
-            'actions'       => [
-                'title' => $lang['stractions'],
-            ],
-            'comment'       => [
-                'title' => $lang['strcomment'],
-                'field' => Decorator::field('comment'),
-            ],
-        ];
-
-        $actions = [
-            'drop'  => [
-                'content' => $lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'fulltext.php',
-                        'urlvars' => [
-                            'action' => 'dropconfig',
-                            'ftscfg' => Decorator::field('name'),
-                        ],
-                    ],
-                ],
-            ],
-            'alter' => [
-                'content' => $lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'fulltext.php',
-                        'urlvars' => [
-                            'action' => 'alterconfig',
-                            'ftscfg' => Decorator::field('name'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($cfgs, $columns, $actions, 'fulltext-fulltext', $lang['strftsnoconfigs']);
-
-        $navlinks = [
-            'createconf' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'fulltext.php',
-                        'urlvars' => [
-                            'action'   => 'createconfig',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $lang['strftscreateconfig'],
-            ],
-        ];
-
-        $this->printNavLinks($navlinks, 'fulltext-fulltext', get_defined_vars());
     }
 
     public function doDropConfig($confirm)

@@ -54,6 +54,164 @@ class ColPropertyController extends BaseController
     }
 
     /**
+     * Show default list of columns in the table
+     */
+    public function doDefault($msg = '', $isTable = true)
+    {
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $attPre = function (&$rowdata) use ($data) {
+
+            $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
+        };
+
+        if (empty($_REQUEST['column'])) {
+            $msg .= "<br/>{$lang['strnoobjects']}";
+        }
+
+        $this->printTrail('column');
+        //$this->printTitle($lang['strcolprop']);
+        $this->printTabs('column', 'properties');
+        $this->printMsg($msg);
+
+        if (!empty($_REQUEST['column'])) {
+            // Get table
+            $tdata = $data->getTable($this->tableName);
+            // Get columns
+            $attrs = $data->getTableAttributes($this->tableName, $_REQUEST['column']);
+
+            // Show comment if any
+            if ($attrs->fields['comment'] !== null) {
+                echo '<p class="comment">', $misc->printVal($attrs->fields['comment']), "</p>\n";
+            }
+
+            $column = [
+                'column' => [
+                    'title' => $lang['strcolumn'],
+                    'field' => Decorator::field('attname'),
+                ],
+                'type'   => [
+                    'title' => $lang['strtype'],
+                    'field' => Decorator::field('+type'),
+                ],
+            ];
+
+            if ($isTable) {
+                $column['notnull'] = [
+                    'title'  => $lang['strnotnull'],
+                    'field'  => Decorator::field('attnotnull'),
+                    'type'   => 'bool',
+                    'params' => ['true' => 'NOT NULL', 'false' => ''],
+                ];
+                $column['default'] = [
+                    'title' => $lang['strdefault'],
+                    'field' => Decorator::field('adsrc'),
+                ];
+            }
+
+            $actions = [];
+            echo $this->printTable($attrs, $column, $actions, $this->table_place, null, $attPre);
+
+            echo "<br />\n";
+
+            $f_attname = $_REQUEST['column'];
+            $f_table   = $this->tableName;
+            $f_schema  = $data->_schema;
+            $data->fieldClean($f_attname);
+            $data->fieldClean($f_table);
+            $data->fieldClean($f_schema);
+            $query = "SELECT \"{$f_attname}\", count(*) AS \"count\" FROM \"{$f_schema}\".\"{$f_table}\" GROUP BY \"{$f_attname}\" ORDER BY \"{$f_attname}\"";
+
+            if ($isTable) {
+
+                /* Browse link */
+                /* FIXME browsing a col should somehow be a action so we don't
+                 * send an ugly SQL in the URL */
+
+                $navlinks = [
+                    'browse' => [
+                        'attr'    => [
+                            'href' => [
+                                'url'     => 'display.php',
+                                'urlvars' => [
+                                    'subject'  => 'column',
+                                    'server'   => $_REQUEST['server'],
+                                    'database' => $_REQUEST['database'],
+                                    'schema'   => $_REQUEST['schema'],
+                                    'table'    => $this->tableName,
+                                    'column'   => $_REQUEST['column'],
+                                    'return'   => 'column',
+                                    'query'    => $query,
+                                ],
+                            ],
+                        ],
+                        'content' => $lang['strbrowse'],
+                    ],
+                    'alter'  => [
+                        'attr'    => [
+                            'href' => [
+                                'url'     => 'colproperties.php',
+                                'urlvars' => [
+                                    'action'   => 'properties',
+                                    'server'   => $_REQUEST['server'],
+                                    'database' => $_REQUEST['database'],
+                                    'schema'   => $_REQUEST['schema'],
+                                    'table'    => $this->tableName,
+                                    'column'   => $_REQUEST['column'],
+                                ],
+                            ],
+                        ],
+                        'content' => $lang['stralter'],
+                    ],
+                    'drop'   => [
+                        'attr'    => [
+                            'href' => [
+                                'url'     => 'tblproperties.php',
+                                'urlvars' => [
+                                    'action'   => 'confirm_drop',
+                                    'server'   => $_REQUEST['server'],
+                                    'database' => $_REQUEST['database'],
+                                    'schema'   => $_REQUEST['schema'],
+                                    'table'    => $this->tableName,
+                                    'column'   => $_REQUEST['column'],
+                                ],
+                            ],
+                        ],
+                        'content' => $lang['strdrop'],
+                    ],
+                ];
+            } else {
+                /* Browse link */
+                $navlinks = [
+                    'browse' => [
+                        'attr'    => [
+                            'href' => [
+                                'url'     => 'display.php',
+                                'urlvars' => [
+                                    'subject'  => 'column',
+                                    'server'   => $_REQUEST['server'],
+                                    'database' => $_REQUEST['database'],
+                                    'schema'   => $_REQUEST['schema'],
+                                    'view'     => $this->tableName,
+                                    'column'   => $_REQUEST['column'],
+                                    'return'   => 'column',
+                                    'query'    => $query,
+                                ],
+                            ],
+                        ],
+                        'content' => $lang['strbrowse'],
+                    ],
+                ];
+            }
+
+            $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
+        }
+    }
+
+    /**
      * Displays a screen where they can alter a column
      */
     public function doAlter($msg = '')
@@ -221,164 +379,6 @@ class ColPropertyController extends BaseController
                 break;
             default:
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
-        }
-    }
-
-    /**
-     * Show default list of columns in the table
-     */
-    public function doDefault($msg = '', $isTable = true)
-    {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
-
-        $attPre = function (&$rowdata) use ($data) {
-
-            $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-        };
-
-        if (empty($_REQUEST['column'])) {
-            $msg .= "<br/>{$lang['strnoobjects']}";
-        }
-
-        $this->printTrail('column');
-        //$this->printTitle($lang['strcolprop']);
-        $this->printTabs('column', 'properties');
-        $this->printMsg($msg);
-
-        if (!empty($_REQUEST['column'])) {
-            // Get table
-            $tdata = $data->getTable($this->tableName);
-            // Get columns
-            $attrs = $data->getTableAttributes($this->tableName, $_REQUEST['column']);
-
-            // Show comment if any
-            if ($attrs->fields['comment'] !== null) {
-                echo '<p class="comment">', $misc->printVal($attrs->fields['comment']), "</p>\n";
-            }
-
-            $column = [
-                'column' => [
-                    'title' => $lang['strcolumn'],
-                    'field' => Decorator::field('attname'),
-                ],
-                'type'   => [
-                    'title' => $lang['strtype'],
-                    'field' => Decorator::field('+type'),
-                ],
-            ];
-
-            if ($isTable) {
-                $column['notnull'] = [
-                    'title'  => $lang['strnotnull'],
-                    'field'  => Decorator::field('attnotnull'),
-                    'type'   => 'bool',
-                    'params' => ['true' => 'NOT NULL', 'false' => ''],
-                ];
-                $column['default'] = [
-                    'title' => $lang['strdefault'],
-                    'field' => Decorator::field('adsrc'),
-                ];
-            }
-
-            $actions = [];
-            echo $this->printTable($attrs, $column, $actions, $this->table_place, null, $attPre);
-
-            echo "<br />\n";
-
-            $f_attname = $_REQUEST['column'];
-            $f_table   = $this->tableName;
-            $f_schema  = $data->_schema;
-            $data->fieldClean($f_attname);
-            $data->fieldClean($f_table);
-            $data->fieldClean($f_schema);
-            $query = "SELECT \"{$f_attname}\", count(*) AS \"count\" FROM \"{$f_schema}\".\"{$f_table}\" GROUP BY \"{$f_attname}\" ORDER BY \"{$f_attname}\"";
-
-            if ($isTable) {
-
-                /* Browse link */
-                /* FIXME browsing a col should somehow be a action so we don't
-                 * send an ugly SQL in the URL */
-
-                $navlinks = [
-                    'browse' => [
-                        'attr'    => [
-                            'href' => [
-                                'url'     => 'display.php',
-                                'urlvars' => [
-                                    'subject'  => 'column',
-                                    'server'   => $_REQUEST['server'],
-                                    'database' => $_REQUEST['database'],
-                                    'schema'   => $_REQUEST['schema'],
-                                    'table'    => $this->tableName,
-                                    'column'   => $_REQUEST['column'],
-                                    'return'   => 'column',
-                                    'query'    => $query,
-                                ],
-                            ],
-                        ],
-                        'content' => $lang['strbrowse'],
-                    ],
-                    'alter'  => [
-                        'attr'    => [
-                            'href' => [
-                                'url'     => 'colproperties.php',
-                                'urlvars' => [
-                                    'action'   => 'properties',
-                                    'server'   => $_REQUEST['server'],
-                                    'database' => $_REQUEST['database'],
-                                    'schema'   => $_REQUEST['schema'],
-                                    'table'    => $this->tableName,
-                                    'column'   => $_REQUEST['column'],
-                                ],
-                            ],
-                        ],
-                        'content' => $lang['stralter'],
-                    ],
-                    'drop'   => [
-                        'attr'    => [
-                            'href' => [
-                                'url'     => 'tblproperties.php',
-                                'urlvars' => [
-                                    'action'   => 'confirm_drop',
-                                    'server'   => $_REQUEST['server'],
-                                    'database' => $_REQUEST['database'],
-                                    'schema'   => $_REQUEST['schema'],
-                                    'table'    => $this->tableName,
-                                    'column'   => $_REQUEST['column'],
-                                ],
-                            ],
-                        ],
-                        'content' => $lang['strdrop'],
-                    ],
-                ];
-            } else {
-                /* Browse link */
-                $navlinks = [
-                    'browse' => [
-                        'attr'    => [
-                            'href' => [
-                                'url'     => 'display.php',
-                                'urlvars' => [
-                                    'subject'  => 'column',
-                                    'server'   => $_REQUEST['server'],
-                                    'database' => $_REQUEST['database'],
-                                    'schema'   => $_REQUEST['schema'],
-                                    'view'     => $this->tableName,
-                                    'column'   => $_REQUEST['column'],
-                                    'return'   => 'column',
-                                    'query'    => $query,
-                                ],
-                            ],
-                        ],
-                        'content' => $lang['strbrowse'],
-                    ],
-                ];
-            }
-
-            $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
         }
     }
 
