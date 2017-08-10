@@ -253,12 +253,7 @@ class ViewController extends BaseController
             'iconAction' => Decorator::url('display.php', $reqvars, ['view' => Decorator::field('relname')]),
             'toolTip'    => Decorator::field('relcomment'),
             'action'     => Decorator::redirecturl('redirect.php', $reqvars, ['view' => Decorator::field('relname')]),
-            'branch'     => Decorator::url('views.php', $reqvars,
-                [
-                    'action' => 'subtree',
-                    'view'   => Decorator::field('relname'),
-                ]
-            ),
+            'branch'     => Decorator::url('views.php', $reqvars, ['action' => 'subtree', 'view' => Decorator::field('relname')]),
         ];
 
         return $this->printTree($views, $attrs, 'views');

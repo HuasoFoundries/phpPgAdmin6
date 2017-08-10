@@ -20,7 +20,14 @@ class MaterializedViewController extends BaseController
         $misc   = $this->misc;
         $lang   = $this->lang;
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+
+        if ($action == 'tree') {
+            return $this->doTree();
+        } else if ($action == 'subtree') {
+            return $this->doSubTree();
+        }
+
+        $data = $misc->getDatabaseAccessor();
 
         $this->printHeader('M ' . $lang['strviews']);
         $this->printBody();
@@ -227,6 +234,62 @@ class MaterializedViewController extends BaseController
     }
 
     /**
+     * Generate XML for the browser tree.
+     */
+    public function doTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $matviews = $data->getMaterializedViews();
+
+        $reqvars = $misc->getRequestVars('matview');
+
+        $attrs = [
+            'text'       => Decorator::field('relname'),
+            'icon'       => 'MView',
+            'iconAction' => Decorator::url('display.php', $reqvars, ['matview' => Decorator::field('relname')]),
+            'toolTip'    => Decorator::field('relcomment'),
+            'action'     => Decorator::redirecturl('redirect.php', $reqvars, ['matview' => Decorator::field('relname')]),
+            'branch'     => Decorator::url('materialized_views.php', $reqvars, ['action' => 'subtree', 'matview' => Decorator::field('relname')]),
+        ];
+
+        return $this->printTree($matviews, $attrs, 'matviews');
+    }
+
+    public function doSubTree()
+    {
+
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
+
+        $tabs    = $misc->getNavTabs('matview');
+        $items   = $this->adjustTabsForTree($tabs);
+        $reqvars = $misc->getRequestVars('matview');
+
+        $attrs = [
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
+            'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['matview' => $_REQUEST['matview']]),
+            'branch' => Decorator::ifempty(
+                Decorator::field('branch'), '', Decorator::url(Decorator::field('url'), Decorator::field('urlvars'), $reqvars,
+                    [
+                        'action'  => 'tree',
+                        'matview' => $_REQUEST['matview'],
+                    ]
+                )
+            ),
+        ];
+
+        return $this->printTree($items, $attrs, 'matviews');
+    }
+
+    /**
      * Ask for select parameters and perform select
      */
     public function doSelectRows($confirm, $msg = '')
@@ -238,7 +301,7 @@ class MaterializedViewController extends BaseController
 
         if ($confirm) {
             $this->printTrail('view');
-            $this->printTabs('view', 'select');
+            $this->printTabs('matview', 'select');
             $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['matview']);
@@ -372,8 +435,8 @@ class MaterializedViewController extends BaseController
         }
 
         if ($confirm) {
-            $this->printTrail('view');
-            $this->printTitle($lang['strdrop'], 'pg.view.drop');
+            $this->printTrail('getTrail');
+            $this->printTitle($lang['strdrop'], 'pg.matview.drop');
 
             echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
 
@@ -458,7 +521,7 @@ class MaterializedViewController extends BaseController
             }
 
             $this->printTrail('schema');
-            $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
+            $this->printTitle($lang['strcreateviewwiz'], 'pg.matview.create');
             $this->printMsg($msg);
 
             $tblCount = sizeof($_POST['formTables']);
@@ -600,7 +663,7 @@ class MaterializedViewController extends BaseController
         $tables = $data->getTables(true);
 
         $this->printTrail('schema');
-        $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
+        $this->printTitle($lang['strcreateviewwiz'], 'pg.matview.create');
         $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";
@@ -654,7 +717,7 @@ class MaterializedViewController extends BaseController
         }
 
         $this->printTrail('schema');
-        $this->printTitle($lang['strcreateview'], 'pg.view.create');
+        $this->printTitle($lang['strcreateview'], 'pg.matview.create');
         $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/materialized_views.php\" method=\"post\">\n";

@@ -359,22 +359,10 @@ class TableController extends BaseController
         $attrs = [
             'text'       => Decorator::field('relname'),
             'icon'       => 'Table',
-            'iconAction' => Decorator::url('display.php',
-                $reqvars,
-                ['table' => Decorator::field('relname')]
-            ),
+            'iconAction' => Decorator::url('display.php', $reqvars, ['table' => Decorator::field('relname')]),
             'toolTip'    => Decorator::field('relcomment'),
-            'action'     => Decorator::redirecturl('redirect.php',
-                $reqvars,
-                ['table' => Decorator::field('relname')]
-            ),
-            'branch'     => Decorator::url('tables.php',
-                $reqvars,
-                [
-                    'action' => 'subtree',
-                    'table'  => Decorator::field('relname'),
-                ]
-            ),
+            'action'     => Decorator::redirecturl('redirect.php', $reqvars, ['table' => Decorator::field('relname')]),
+            'branch'     => Decorator::url('tables.php', $reqvars, ['action' => 'subtree', 'table' => Decorator::field('relname')]),
         ];
 
         return $this->printTree($tables, $attrs, 'tables');
