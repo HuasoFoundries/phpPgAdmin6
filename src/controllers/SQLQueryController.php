@@ -110,7 +110,7 @@ class SQLQueryController extends BaseController
                 return $this->execute_query();
 
             }
-        } catch (\PHPPgAdmin\ADODB_Exception $e) {
+        } catch (\PHPPgAdmin\ADOdbException $e) {
 
             $message   = $e->getMessage();
             $trace     = $e->getTraceAsString();

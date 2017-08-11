@@ -173,7 +173,7 @@ class Misc
      * @param $p1           $fn specific parameter - see below
      * @param $p2
      * @param $thisConnection
-     * @throws \PHPPgAdmin\ADODB_Exception
+     * @throws \PHPPgAdmin\ADOdbException
      * @internal param $P2 $fn specific parameter - see below
      */
     public static function adodb_throw($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection)
@@ -223,7 +223,7 @@ class Misc
 
         \PC::debug(['errno' => $errno, 'fn' => $fn, 'errmsg' => $errmsg], $tag);
 
-        throw new \PHPPgAdmin\ADODB_Exception($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
+        throw new \PHPPgAdmin\ADOdbException($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
     }
 
     public function getContainer()
@@ -375,7 +375,7 @@ class Misc
                     $database_to_use
                 );
 
-            } catch (\PHPPgAdmin\ADODB_Exception $e) {
+            } catch (\PHPPgAdmin\ADOdbException $e) {
                 unset($_SESSION['webdbLogin'][$this->server_id]);
                 $msg              = $lang['strloginfailed'];
                 $login_controller = new LoginController($this->container);
