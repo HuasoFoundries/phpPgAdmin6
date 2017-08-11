@@ -432,22 +432,22 @@ class TriggerController extends BaseController
         }
 
         /* Populate functions */
-        $sel0 = new \PHPPgAdmin\XHtml\XHTML_Select('formFunction');
+        $sel0 = new \PHPPgAdmin\XHtml\XHtmlSelect('formFunction');
         while (!$funcs->EOF) {
             $sel0->add(new \PHPPgAdmin\XHtml\XHtmlOption($funcs->fields['proname']));
             $funcs->moveNext();
         }
 
         /* Populate times */
-        $sel1 = new \PHPPgAdmin\XHtml\XHTML_Select('formExecTime');
+        $sel1 = new \PHPPgAdmin\XHtml\XHtmlSelect('formExecTime');
         $sel1->set_data($data->triggerExecTimes);
 
         /* Populate events */
-        $sel2 = new \PHPPgAdmin\XHtml\XHTML_Select('formEvent');
+        $sel2 = new \PHPPgAdmin\XHtml\XHtmlSelect('formEvent');
         $sel2->set_data($data->triggerEvents);
 
         /* Populate occurences */
-        $sel3 = new \PHPPgAdmin\XHtml\XHTML_Select('formFrequency');
+        $sel3 = new \PHPPgAdmin\XHtml\XHtmlSelect('formFrequency');
         $sel3->set_data($data->triggerFrequency);
 
         echo '<form action="' . SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
