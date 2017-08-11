@@ -378,8 +378,6 @@ class FulltextController extends BaseController
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
-        include_once BASE_PATH . '/classes/Gui.php';
-
         $server_info = $misc->getServerInfo();
 
         if (!isset($_POST['formName'])) {
@@ -834,8 +832,6 @@ class FulltextController extends BaseController
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
-
-        include_once BASE_PATH . '/classes/Gui.php';
 
         $server_info = $misc->getServerInfo();
 

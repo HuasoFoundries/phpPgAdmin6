@@ -679,8 +679,6 @@ class TableController extends BaseController
 
         if (!$confirm) {
 
-            //include_once BASE_PATH . '/classes/Gui.php';
-
             if (!isset($_REQUEST['name'])) {
                 $_REQUEST['name'] = '';
             }
