@@ -36,6 +36,7 @@ class HTMLNavbarController extends HTMLController
 
             if (isset($crumb['url'])) {
                 $crumblink .= " href=\"{$crumb['url']}\"";
+                //$this->prtrace('crumb_url', $crumb['url']);
             }
 
             if (isset($crumb['title'])) {
