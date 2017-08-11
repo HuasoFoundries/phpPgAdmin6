@@ -89,7 +89,7 @@ class Connection
 
         // If we didn't manage to get the version without a query, query...
         if (!isset($version)) {
-            $adodb = new ADODB_base($this->conn);
+            $adodb = new ADOdbBase($this->conn);
 
             $sql   = 'SELECT VERSION() AS version';
             $field = $adodb->selectField($sql, 'version');
