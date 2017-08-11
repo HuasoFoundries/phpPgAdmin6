@@ -300,7 +300,7 @@ class ConstraintController extends BaseController
 
                     if ($attrs->recordCount() > 0) {
                         while (!$attrs->EOF) {
-                            $selColumns->add(new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']));
+                            $selColumns->add(new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']));
                             $attrs->moveNext();
                         }
                     }
@@ -419,7 +419,7 @@ class ConstraintController extends BaseController
 
                 if ($attrs->recordCount() > 0) {
                     while (!$attrs->EOF) {
-                        $selColumns->add(new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']));
+                        $selColumns->add(new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']));
                         $attrs->moveNext();
                     }
                 }
@@ -524,7 +524,7 @@ class ConstraintController extends BaseController
 
             if ($attrs->recordCount() > 0) {
                 while (!$attrs->EOF) {
-                    $new_option = new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']);
+                    $new_option = new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']);
                     $selColumns->add($new_option);
                     $attrs->moveNext();
                 }

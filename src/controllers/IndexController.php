@@ -356,7 +356,7 @@ class IndexController extends BaseController
 
         if ($attrs->recordCount() > 0) {
             while (!$attrs->EOF) {
-                $attname = new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']);
+                $attname = new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']);
                 $selColumns->add($attname);
                 $attrs->moveNext();
             }

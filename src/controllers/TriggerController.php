@@ -434,7 +434,7 @@ class TriggerController extends BaseController
         /* Populate functions */
         $sel0 = new \PHPPgAdmin\XHtml\XHTML_Select('formFunction');
         while (!$funcs->EOF) {
-            $sel0->add(new \PHPPgAdmin\XHtml\XHTML_Option($funcs->fields['proname']));
+            $sel0->add(new \PHPPgAdmin\XHtml\XHtmlOption($funcs->fields['proname']));
             $funcs->moveNext();
         }
 
