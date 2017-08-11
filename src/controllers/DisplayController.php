@@ -211,7 +211,7 @@ class DisplayController extends BaseController
                 isset($_SESSION['sqlquery']) ? $_SESSION['sqlquery'] : null,
                 $_REQUEST['sortkey'], $_REQUEST['sortdir'], $_REQUEST['page'],
                 $conf['max_rows'], $max_pages);
-        } catch (\PHPPgAdmin\ADODB_Exception $e) {
+        } catch (\PHPPgAdmin\ADOdbException $e) {
             return;
         }
 

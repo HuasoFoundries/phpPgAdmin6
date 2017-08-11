@@ -5,10 +5,10 @@ namespace PHPPgAdmin\Database;
 /*
  * Parent class of all ADODB objects.
  *
- * $Id: ADODB_base.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
+ * $Id: ADOdbBase.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
  */
 
-class ADODB_base
+class ADOdbBase
 {
     use \PHPPgAdmin\HelperTrait;
 

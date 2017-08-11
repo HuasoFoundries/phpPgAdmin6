@@ -351,25 +351,25 @@ class IndexController extends BaseController
         $this->printTitle($lang['strcreateindex'], 'pg.index.create');
         $this->printMsg($msg);
 
-        $selColumns = new \PHPPgAdmin\XHtml\XHTML_Select('TableColumnList', true, 10);
+        $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
         $selColumns->set_style('width: 10em;');
 
         if ($attrs->recordCount() > 0) {
             while (!$attrs->EOF) {
-                $attname = new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']);
+                $attname = new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']);
                 $selColumns->add($attname);
                 $attrs->moveNext();
             }
         }
 
-        $selIndex = new \PHPPgAdmin\XHtml\XHTML_Select('IndexColumnList[]', true, 10);
+        $selIndex = new \PHPPgAdmin\XHtml\XHtmlSelect('IndexColumnList[]', true, 10);
         $selIndex->set_style('width: 10em;');
         $selIndex->set_attribute('id', 'IndexColumnList');
-        $buttonAdd = new \PHPPgAdmin\XHtml\XHTML_Button('add', '>>');
+        $buttonAdd = new \PHPPgAdmin\XHtml\XHtmlButton('add', '>>');
         $buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
         $buttonAdd->set_attribute('type', 'button');
 
-        $buttonRemove = new \PHPPgAdmin\XHtml\XHTML_Button('remove', '<<');
+        $buttonRemove = new \PHPPgAdmin\XHtml\XHtmlButton('remove', '<<');
         $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
         $buttonRemove->set_attribute('type', 'button');
 

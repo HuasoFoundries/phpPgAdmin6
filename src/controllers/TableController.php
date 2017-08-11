@@ -679,8 +679,6 @@ class TableController extends BaseController
 
         if (!$confirm) {
 
-            //include_once BASE_PATH . '/classes/Gui.php';
-
             if (!isset($_REQUEST['name'])) {
                 $_REQUEST['name'] = '';
             }
@@ -719,7 +717,7 @@ class TableController extends BaseController
             echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strcreatetablelikeparent']}</th>\n";
             echo "\t\t<td class=\"data\">";
-            echo \PHPPgAdmin\GUI::printCombo($tables, 'like', true, $tblsel, false);
+            echo \PHPPgAdmin\XHtml\HTMLController::printCombo($tables, 'like', true, $tblsel, false);
             echo "</td>\n\t</tr>\n";
             if ($data->hasTablespaces()) {
                 $tblsp_ = $data->getTablespaces();
@@ -732,7 +730,7 @@ class TableController extends BaseController
 
                     echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strtablespace']}</th>\n";
                     echo "\t\t<td class=\"data\">";
-                    echo \PHPPgAdmin\GUI::printCombo($tblsp, 'tablespace', true, $_REQUEST['tablespace'], false);
+                    echo \PHPPgAdmin\XHtml\HTMLController::printCombo($tblsp, 'tablespace', true, $_REQUEST['tablespace'], false);
                     echo "</td>\n\t</tr>\n";
                 }
             }

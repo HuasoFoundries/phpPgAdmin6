@@ -9,7 +9,7 @@ namespace PHPPgAdmin\Database;
  * $Id: Postgres.php,v 1.320 2008/02/20 20:43:09 ioguix Exp $
  */
 
-class Postgres extends ADODB_base
+class Postgres extends ADOdbBase
 {
 
     use \PHPPgAdmin\HelperTrait;

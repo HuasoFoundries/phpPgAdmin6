@@ -70,7 +70,7 @@ class Decorator
 
     public static function replace($str, $params)
     {
-        return new \PHPPgAdmin\Decorators\replaceDecorator($str, $params);
+        return new \PHPPgAdmin\Decorators\ReplaceDecorator($str, $params);
     }
 
     public static function field($fieldName, $default = null)

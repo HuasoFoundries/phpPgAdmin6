@@ -139,7 +139,6 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
         $destinationurl = str_replace("%2Fredirect%2F{$subject}%3F", '', $actionurl->value($_GET));
 
-        //die($destinationurl);
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
     }
@@ -148,7 +147,9 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $container) {
     $subject = (isset($args['subject'])) ? $args['subject'] : 'intro';
 
-    if ($subject === 'server' || $subject === 'root') {
+    $_server_info = $this->misc->getServerInfo();
+
+    if (!isset($_server_info['username']) && ($subject === 'server' || $subject === 'root')) {
         $subject = 'login';
     }
 
@@ -165,13 +166,8 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
 
     $server_id = $request->getQueryParam('server');
     if ($subject === 'login' && $server_id === null) {
-        $subject = 'intro';
+        $subject = 'servers';
     }
-
-    /*\Kint::dump($this->view->offsetGet('subfolder'));
-    \Kint::dump($this->view->offsetGet('theme'));
-    \Kint::dump($this->conf);
-    die();*/
 
     $url = '/src/views/' . $subject . '.php' . ($query_string ? '?' . $query_string : '');
 

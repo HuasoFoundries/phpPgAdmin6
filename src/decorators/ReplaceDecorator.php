@@ -1,8 +1,8 @@
 <?php
 
-    namespace PHPPgAdmin\Decorators;
+namespace PHPPgAdmin\Decorators;
 
-class replaceDecorator extends Decorator
+class ReplaceDecorator extends Decorator
 {
     public function __construct($str, $params)
     {
@@ -19,4 +19,4 @@ class replaceDecorator extends Decorator
 
         return $str;
     }
-    }
+}

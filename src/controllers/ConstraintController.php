@@ -295,24 +295,24 @@ class ConstraintController extends BaseController
                     $attrs = $data->getTableAttributes($_REQUEST['target']['tablename']);
                     $data->setSchema($_REQUEST['schema']);
 
-                    $selColumns = new \PHPPgAdmin\XHtml\XHTML_Select('TableColumnList', true, 10);
+                    $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
                     $selColumns->set_style('width: 15em;');
 
                     if ($attrs->recordCount() > 0) {
                         while (!$attrs->EOF) {
-                            $selColumns->add(new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']));
+                            $selColumns->add(new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']));
                             $attrs->moveNext();
                         }
                     }
 
-                    $selIndex = new \PHPPgAdmin\XHtml\XHTML_Select('IndexColumnList[]', true, 10);
+                    $selIndex = new \PHPPgAdmin\XHtml\XHtmlSelect('IndexColumnList[]', true, 10);
                     $selIndex->set_style('width: 15em;');
                     $selIndex->set_attribute('id', 'IndexColumnList');
-                    $buttonAdd = new \PHPPgAdmin\XHtml\XHTML_Button('add', '>>');
+                    $buttonAdd = new \PHPPgAdmin\XHtml\XHtmlButton('add', '>>');
                     $buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
                     $buttonAdd->set_attribute('type', 'button');
 
-                    $buttonRemove = new \PHPPgAdmin\XHtml\XHTML_Button('remove', '<<');
+                    $buttonRemove = new \PHPPgAdmin\XHtml\XHtmlButton('remove', '<<');
                     $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
                     $buttonRemove->set_attribute('type', 'button');
 
@@ -414,24 +414,24 @@ class ConstraintController extends BaseController
                 $attrs  = $data->getTableAttributes($_REQUEST['table']);
                 $tables = $data->getTables(true);
 
-                $selColumns = new \PHPPgAdmin\XHtml\XHTML_Select('TableColumnList', true, 10);
+                $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
                 $selColumns->set_style('width: 15em;');
 
                 if ($attrs->recordCount() > 0) {
                     while (!$attrs->EOF) {
-                        $selColumns->add(new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']));
+                        $selColumns->add(new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']));
                         $attrs->moveNext();
                     }
                 }
 
-                $selIndex = new \PHPPgAdmin\XHtml\XHTML_Select('IndexColumnList[]', true, 10);
+                $selIndex = new \PHPPgAdmin\XHtml\XHtmlSelect('IndexColumnList[]', true, 10);
                 $selIndex->set_style('width: 15em;');
                 $selIndex->set_attribute('id', 'IndexColumnList');
-                $buttonAdd = new \PHPPgAdmin\XHtml\XHTML_Button('add', '>>');
+                $buttonAdd = new \PHPPgAdmin\XHtml\XHtmlButton('add', '>>');
                 $buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
                 $buttonAdd->set_attribute('type', 'button');
 
-                $buttonRemove = new \PHPPgAdmin\XHtml\XHTML_Button('remove', '<<');
+                $buttonRemove = new \PHPPgAdmin\XHtml\XHtmlButton('remove', '<<');
                 $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
                 $buttonRemove->set_attribute('type', 'button');
 
@@ -519,25 +519,25 @@ class ConstraintController extends BaseController
                 $tablespaces = $data->getTablespaces();
             }
 
-            $selColumns = new \PHPPgAdmin\XHtml\XHTML_Select('TableColumnList', true, 10);
+            $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
             $selColumns->set_style('width: 15em;');
 
             if ($attrs->recordCount() > 0) {
                 while (!$attrs->EOF) {
-                    $new_option = new \PHPPgAdmin\XHtml\XHTML_Option($attrs->fields['attname']);
+                    $new_option = new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']);
                     $selColumns->add($new_option);
                     $attrs->moveNext();
                 }
             }
 
-            $selIndex = new \PHPPgAdmin\XHtml\XHTML_Select('IndexColumnList[]', true, 10);
+            $selIndex = new \PHPPgAdmin\XHtml\XHtmlSelect('IndexColumnList[]', true, 10);
             $selIndex->set_style('width: 15em;');
             $selIndex->set_attribute('id', 'IndexColumnList');
-            $buttonAdd = new \PHPPgAdmin\XHtml\XHTML_Button('add', '>>');
+            $buttonAdd = new \PHPPgAdmin\XHtml\XHtmlButton('add', '>>');
             $buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
             $buttonAdd->set_attribute('type', 'button');
 
-            $buttonRemove = new \PHPPgAdmin\XHtml\XHTML_Button('remove', '<<');
+            $buttonRemove = new \PHPPgAdmin\XHtml\XHtmlButton('remove', '<<');
             $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
             $buttonRemove->set_attribute('type', 'button');
 

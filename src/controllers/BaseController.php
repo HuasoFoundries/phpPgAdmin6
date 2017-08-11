@@ -58,7 +58,7 @@ class BaseController
         $msg = $container->get('msg');
         if ($this->misc->getNoDBConnection() === false) {
             if ($this->misc->getServerId() === null) {
-                echo $lang['strnoserversupplied'];
+                echo $this->lang['strnoserversupplied'];
                 exit;
             }
             $_server_info = $this->misc->getServerInfo();
