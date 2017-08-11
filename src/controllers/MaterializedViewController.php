@@ -579,7 +579,7 @@ class MaterializedViewController extends BaseController
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strcolumns']}</th></tr>";
             echo "<tr>\n<td class=\"data1\">\n";
-            echo \PHPPgAdmin\GUI::printCombo($arrFields, 'formFields[]', false, '', true);
+            echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, 'formFields[]', false, '', true);
             echo "</td>\n</tr>";
             echo "<tr><td><input type=\"radio\" name=\"dblFldMeth\" id=\"dblFldMeth1\" value=\"rename\" /><label for=\"dblFldMeth1\">{$lang['strrenamedupfields']}</label>";
             echo "<br /><input type=\"radio\" name=\"dblFldMeth\" id=\"dblFldMeth2\" value=\"drop\" /><label for=\"dblFldMeth2\">{$lang['strdropdupfields']}</label>";
@@ -606,9 +606,9 @@ class MaterializedViewController extends BaseController
                     $curRightLink = '';
                 }
 
-                echo \PHPPgAdmin\GUI::printCombo($arrFields, "formLink[$i][leftlink]", true, $curLeftLink, false);
-                echo \PHPPgAdmin\GUI::printCombo($data->joinOps, "formLink[$i][operator]", true, $formLink[$i]['operator']);
-                echo \PHPPgAdmin\GUI::printCombo($arrFields, "formLink[$i][rightlink]", true, $curRightLink, false);
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[$i][leftlink]", true, $curLeftLink, false);
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($data->joinOps, "formLink[$i][operator]", true, $formLink[$i]['operator']);
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[$i][rightlink]", true, $curRightLink, false);
                 echo "</td>\n</tr>\n";
                 $rowClass = $rowClass == 'data1' ? 'data2' : 'data1';
             }
@@ -630,8 +630,8 @@ class MaterializedViewController extends BaseController
             $rowClass = 'data1';
             for ($i = 0; $i < $linkCount; $i++) {
                 echo "<tr>\n<td class=\"$rowClass\">\n";
-                echo \PHPPgAdmin\GUI::printCombo($arrFields, "formCondition[$i][field]");
-                echo \PHPPgAdmin\GUI::printCombo($arrOperators, "formCondition[$i][operator]", false, false);
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formCondition[$i][field]");
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrOperators, "formCondition[$i][operator]", false, false);
                 echo "<input type=\"text\" name=\"formCondition[$i][txt]\" />\n";
                 echo "</td>\n</tr>\n";
                 $rowClass = $rowClass == 'data1' ? 'data2' : 'data1';
@@ -679,7 +679,7 @@ class MaterializedViewController extends BaseController
             $arrTables[$tables->fields['nspname'] . '.' . $tables->fields['relname']] = serialize($arrTmp);
             $tables->moveNext();
         }
-        echo \PHPPgAdmin\GUI::printCombo($arrTables, 'formTables[]', false, '', true);
+        echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrTables, 'formTables[]', false, '', true);
 
         echo "</td>\n</tr>\n";
         echo "</table>\n";

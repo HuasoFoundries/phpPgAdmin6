@@ -435,7 +435,7 @@ class FulltextController extends BaseController
             }
             $ftscfgs->moveNext();
         }
-        echo \PHPPgAdmin\GUI::printCombo($tpls, 'formTemplate', true, $tplsel, false);
+        echo \PHPPgAdmin\XHtml\HTMLController::printCombo($tpls, 'formTemplate', true, $tplsel, false);
         echo "\n\t\t</td>\n\t</tr>\n";
 
         // Parser
@@ -457,7 +457,7 @@ class FulltextController extends BaseController
             }
             $ftsparsers->moveNext();
         }
-        echo \PHPPgAdmin\GUI::printCombo($ftsparsers_, 'formParser', true, $ftsparsel, false);
+        echo \PHPPgAdmin\XHtml\HTMLController::printCombo($ftsparsers_, 'formParser', true, $ftsparsel, false);
         echo "\n\t\t</td>\n\t</tr>\n";
 
         // Comment
@@ -897,7 +897,7 @@ class FulltextController extends BaseController
             }
             $ftstpls->moveNext();
         }
-        echo \PHPPgAdmin\GUI::printCombo($tpls, 'formTemplate', true, $tplsel, false);
+        echo \PHPPgAdmin\XHtml\HTMLController::printCombo($tpls, 'formTemplate', true, $tplsel, false);
         echo "\n\t\t</td>\n\t</tr>\n";
 
         // TODO: what about maxlengths?

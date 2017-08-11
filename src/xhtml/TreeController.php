@@ -5,9 +5,9 @@ namespace PHPPgAdmin\XHtml;
 use \PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base TreeController controller class
  */
-class TreeController extends HTMLController
+class TreeController
 {
     use \PHPPgAdmin\HelperTrait;
 
@@ -42,11 +42,6 @@ class TreeController extends HTMLController
             $this->controller_name = $controller_name;
         }
         //\PC::debug($this->_name, 'instanced controller');
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
     }
 
     /** Produce XML data for the browser tree
@@ -100,7 +95,7 @@ class TreeController extends HTMLController
      *        'expand' - the action to return XML for the subtree
      *        'nodata' - message to display when node has no children
      */
-    public function printTreeXML(&$treedata, &$attrs)
+    private function printTreeXML(&$treedata, &$attrs)
     {
         $lang = $this->lang;
 
