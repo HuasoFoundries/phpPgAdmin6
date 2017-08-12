@@ -1,0 +1,53 @@
+<script type="text/javascript">
+if (!window.dontRedirect) {
+	if (window.parent.frames.length === 0) {
+		var redirect_to, subject = location.pathname.replace('{{subfolder}}/src/views/', '').replace('.php', '');
+		if (subject === '{{subfolder}}/redirect/server') {
+			subject = '/servers';
+		}
+		redirect_to = '{{subfolder}}/' + subject + location.search
+		var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
+		//alert(redirection_msg);
+		console.log(redirection_msg);
+		location.replace(redirect_to);
+
+	}
+
+	$(document).ready(function () {
+
+		// Check if we are inside an iframe, in which case use history API to change top URL
+		if (window.parent.frames.length !== 0) {
+
+			var stateObj = {
+				realurl: location.href.replace(location.origin, ''),
+				path: '{{path}}'
+			};
+			stateObj.newurl = stateObj.realurl.replace('src/views/', '').replace('.php', '');
+			stateObj.parenturl = window.parent.location.href.replace(window.parent.location.origin, '');
+
+
+			if (stateObj.newurl !== stateObj.parenturl) {
+				console.log('will pushState', stateObj);
+				window.parent.history.pushState(stateObj, document.title, stateObj.newurl);
+			} else {
+
+				console.log('no changes in stateObj', stateObj);
+			}
+		} else {
+			console.log('parent frames are 0, wont pushState')
+		}
+
+
+		if (jQuery.fn) {
+			if (jQuery.fn.select2) {
+				jQuery('.select2').select2();
+			}
+			if (jQuery.fn.DataTable) {
+				$('.will_be_datatable').DataTable({
+					"pageLength": 100
+				});
+			}
+		}
+	});
+}
+</script>

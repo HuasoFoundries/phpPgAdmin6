@@ -1,18 +1,4 @@
-<script>
-$(document).ready(function () {
-	if (jQuery.fn) {
-		if (jQuery.fn.select2) {
-			jQuery('.select2').select2();
-		}
-		if (jQuery.fn.DataTable) {
-			$('.will_be_datatable').DataTable({
-				"pageLength": 100
-			});
-		}
-	}
-});
-</script>
-
+ {% include 'footer_scripts.twig' %}
 </body>
 
 </html>

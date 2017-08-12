@@ -84,25 +84,13 @@ class DisplayController extends BaseController
         // Set the title based on the subject of the request
         if (isset($_REQUEST['subject']) && isset($_REQUEST[$_REQUEST['subject']])) {
             if ($_REQUEST['subject'] == 'table') {
-                $this->printHeader(
-                    $lang['strtables'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-                    $scripts, true, $header_template
-                );
+                $this->printHeader($lang['strtables'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             } else if ($_REQUEST['subject'] == 'view') {
-                $this->printHeader(
-                    $lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-                    $scripts, true, $header_template
-                );
+                $this->printHeader($lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             } else if ($_REQUEST['subject'] == 'matview') {
-                $this->printHeader(
-                    'M' . $lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-                    $scripts, true, $header_template
-                );
+                $this->printHeader('M' . $lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             } else if ($_REQUEST['subject'] == 'column') {
-                $this->printHeader(
-                    $lang['strcolumn'] . ': ' . $_REQUEST[$_REQUEST['subject']],
-                    $scripts, true, $header_template
-                );
+                $this->printHeader($lang['strcolumn'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             }
         } else {
             $this->printHeader($lang['strqueryresults'], $scripts, true, $header_template);

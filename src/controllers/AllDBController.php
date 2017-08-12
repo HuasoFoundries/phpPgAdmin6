@@ -226,23 +226,14 @@ class AllDBController extends BaseController
 
         $reqvars = $misc->getRequestVars('database');
 
-        $this->prtrace($reqvars);
+        //$this->prtrace($reqvars);
 
         $attrs = [
             'text'    => Decorator::field('datname'),
             'icon'    => 'Database',
             'toolTip' => Decorator::field('datcomment'),
-            'action'  => Decorator::redirecturl('redirect.php',
-                $reqvars,
-                [
-                    'database' => Decorator::field('datname'),
-                ]),
-            'branch'  => Decorator::url('database.php',
-                $reqvars,
-                [
-                    'action'   => 'tree',
-                    'database' => Decorator::field('datname'),
-                ]),
+            'action'  => Decorator::redirecturl('redirect.php', $reqvars, ['database' => Decorator::field('datname')]),
+            'branch'  => Decorator::url('database.php', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
         ];
 
         return $this->printTree($databases, $attrs, 'databases');

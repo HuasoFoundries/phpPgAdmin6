@@ -123,7 +123,7 @@ class DatabaseController extends BaseController
 
         $reqvars = $misc->getRequestVars('database');
 
-        $this->prtrace($reqvars);
+        //$this->prtrace($reqvars);
 
         $tabs = $misc->getNavTabs('database');
 

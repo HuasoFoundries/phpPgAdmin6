@@ -28,6 +28,8 @@ class HTMLNavbarController extends HTMLController
             $trail = $this->getTrail($trail);
         }
 
+        //$this->prtrace($trail);
+
         $trail_html .= '<div class="trail" data-controller="' . $this->controller_name . '"><table><tr>';
 
         foreach ($trail as $crumb) {
@@ -90,6 +92,7 @@ class HTMLNavbarController extends HTMLController
         if ($from === null || $from === false) {
             $from = __METHOD__;
         }
+        //$this->prtrace($navlinks);
         $plugin_manager = $this->plugin_manager;
 
         // Navlinks hook's place
@@ -116,7 +119,7 @@ class HTMLNavbarController extends HTMLController
      * @param $activetab The name of the tab to be highlighted.
      * @param  $print if false, return html
      */
-    public function printTabs($tabs, $activetab, $do_print = true, $from = null)
+    public function printTabs($alltabs, $activetab, $do_print = true, $from = null)
     {
         if ($from === null || $from === false) {
             $from = __METHOD__;
@@ -126,51 +129,44 @@ class HTMLNavbarController extends HTMLController
         $misc = $this->misc;
         $data = $misc->getDatabaseAccessor();
 
-        if (is_string($tabs)) {
-            $_SESSION['webdbLastTab'][$tabs] = $activetab;
-            $tabs                            = $misc->getNavTabs($tabs);
+        if (is_string($alltabs)) {
+            $_SESSION['webdbLastTab'][$alltabs] = $activetab;
+            $alltabs                            = $misc->getNavTabs($alltabs);
         }
         //$this->prtrace($tabs);
         $tabs_html = '';
-        if (count($tabs) > 0) {
 
-            $tabs_html .= '<table class="tabs" data-controller="' . $this->controller_name . '"><tr>' . "\n";
-
-            # FIXME: don't count hidden tabs
-            $width = (int) (100 / count($tabs)) . '%';
-            foreach ($tabs as $tab_id => $tab) {
-
-                //$this->prtrace('tab', $tab);
-
-                $tabs[$tab_id]['active'] = $active = ($tab_id == $activetab) ? ' active' : '';
-
-                $tabs[$tab_id]['width'] = $width;
-
+        //Getting only visible tabs
+        $tabs = [];
+        if (count($alltabs) > 0) {
+            foreach ($alltabs as $tab_id => $tab) {
                 if (!isset($tab['hide']) || $tab['hide'] !== true) {
-
+                    $tabs[$tab_id]            = $tab;
+                    $tabs[$tab_id]['active']  = $active  = ($tab_id == $activetab) ? ' active' : '';
                     $tabs[$tab_id]['tablink'] = htmlentities($this->getActionUrl($tab, $_REQUEST, $from));
-
-                    $tablink = '<a href="' . SUBFOLDER . '/' . str_replace('.php', '', $tabs[$tab_id]['tablink']) . '" target="_parent">';
-
                     if (isset($tab['icon']) && $icon = $misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
-                        $tablink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$tab['title']}\" /></span>";
+
                     }
-
-                    $tablink .= "<span class=\"label\">{$tab['title']}</span></a>";
-
-                    $tabs_html .= "<td style=\"width: {$width}\" class=\"tab{$active}\">";
-
                     if (isset($tab['help'])) {
-                        $tabs_html .= $this->misc->printHelp($tablink, $tab['help'], false);
-                    } else {
-                        $tabs_html .= $tablink;
+                        $tabs[$tab_id]['helpurl'] = $this->misc->getHelpLink($tab['help']);
                     }
-
-                    $tabs_html .= "</td>\n";
                 }
             }
-            $tabs_html .= "</tr></table>\n";
+        }
+
+        if (count($tabs) > 0) {
+
+            $width = (int) (100 / count($tabs)) . '%';
+
+            $viewVars = [
+                'width'           => $width,
+                'tabs'            => $tabs,
+                'controller_name' => $this->controller_name,
+            ];
+
+            $tabs_html = $this->getContainer()->view->fetch('components/tabs.twig', $viewVars);
+
         }
 
         if ($do_print) {
@@ -196,7 +192,7 @@ class HTMLNavbarController extends HTMLController
         } else {
             $tab = reset($tabs);
         }
-        \PC::debug(['section' => $section, 'tabs' => $tabs, 'tab' => $tab], 'getLastTabURL');
+        $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab], 'getLastTabURL');
         return isset($tab['url']) ? $tab : null;
     }
 
@@ -368,6 +364,7 @@ class HTMLNavbarController extends HTMLController
     private function getHREFSubject($subject)
     {
         $vars = $this->misc->getSubjectParams($subject);
+        ksort($vars['params']);
         return "{$vars['url']}?" . http_build_query($vars['params'], '', '&amp;');
     }
 
@@ -543,6 +540,8 @@ class HTMLNavbarController extends HTMLController
         ];
 
         $plugin_manager->do_hook('trail', $plugin_functions_parameters);
+
+        //$this->prtrace($trail);
 
         return $trail;
     }

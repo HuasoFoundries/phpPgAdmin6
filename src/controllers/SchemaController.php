@@ -194,7 +194,7 @@ class SchemaController extends BaseController
 
         $reqvars = $misc->getRequestVars('schema');
 
-        $this->prtrace($reqvars);
+        //$this->prtrace($reqvars);
 
         $attrs = [
             'text'    => Decorator::field('nspname'),
@@ -234,7 +234,7 @@ class SchemaController extends BaseController
 
         $reqvars = $misc->getRequestVars('schema');
 
-        $this->prtrace($reqvars);
+        //$this->prtrace($reqvars);
 
         $attrs = [
             'text'   => Decorator::field('title'),
