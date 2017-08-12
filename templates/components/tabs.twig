@@ -1,0 +1,18 @@
+<table class="tabs" data-controller="{{controller_name}}">
+    <tr>
+        {% for tab in tabs %}
+
+        <td style="width: {{width}};" class="tab {{tab.active}}">
+            <a href="{{tab.tablink}}">
+                {% if tab.iconurl %}
+                <span class="icon"><img src="{{tab.iconurl}}" alt="{{tab.title}}"  /></span>
+            {% endif %}
+                <span class="label">{{tab.title}}</span>
+            </a> {% if tab.helpurl %}
+            <a class="help" href="{{tab.helpurl}}" title="{{lang.strhelp}}" target="phppgadminhelp">{{lang.strhelpicon}}</a> {% endif %}
+        </td>
+
+        {% endfor %}
+
+    </tr>
+</table>

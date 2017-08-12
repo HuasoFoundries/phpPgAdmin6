@@ -23,17 +23,22 @@ class RedirectUrlDecorator extends Decorator
             return '';
         }
 
+        $this->prtrace('url', $url);
+
         if (!empty($this->q)) {
             $queryVars = Decorator::get_sanitized_value($this->q, $fields);
 
             $sep = '?';
+            ksort($queryVars);
             foreach ($queryVars as $var => $value) {
                 $varname  = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
                 if ($varname == 'subject') {
                     $url = '/' . str_replace('.php', '/' . $varvalue, $url);
+                } else {
+                    $url .= $sep . $varname . '=' . $varvalue;
                 }
-                $url .= $sep . $varname . '=' . $varvalue;
+
                 $sep = '&';
             }
         }

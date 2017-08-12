@@ -140,7 +140,7 @@ class Misc
         }
     }
 
-    private function getHelpLink($help)
+    public function getHelpLink($help)
     {
         return htmlspecialchars(SUBFOLDER . '/help?help=' . urlencode($help) . '&server=' . urlencode($this->getServerId()));
 

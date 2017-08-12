@@ -25,6 +25,7 @@ class UrlDecorator extends Decorator
             $queryVars = Decorator::get_sanitized_value($this->q, $fields);
 
             $sep = '?';
+            ksort($queryVars);
             foreach ($queryVars as $var => $value) {
                 $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($value, $fields);
                 $sep = '&';

@@ -20,6 +20,8 @@ class HistoryController extends BaseController
 
         $data = $misc->getDatabaseAccessor();
 
+        $this->scripts = '<script type="text/javascript">window.dontRedirect=true;</script>';
+
         switch ($action) {
             case 'confdelhistory':
                 $this->doDelHistory($_REQUEST['queryid'], true);
@@ -63,7 +65,7 @@ class HistoryController extends BaseController
 
         $onchange = "onchange=\"location.href='" . SUBFOLDER . "/src/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
-        $this->printHeader($lang['strhistory'], null, true, 'iframe_header.twig');
+        $this->printHeader($lang['strhistory'], $this->scripts, true, 'header.twig');
 
         // Bring to the front always
         echo "<body onload=\"window.focus();\">\n";
@@ -189,7 +191,7 @@ class HistoryController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if ($confirm) {
-            $this->printHeader($lang['strhistory']);
+            $this->printHeader($lang['strhistory'], $this->scripts);
 
             // Bring to the front always
             echo "<body onload=\"window.focus();\">\n";
@@ -219,7 +221,7 @@ class HistoryController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if ($confirm) {
-            $this->printHeader($lang['strhistory']);
+            $this->printHeader($lang['strhistory'], $this->scripts);
 
             // Bring to the front always
             echo "<body onload=\"window.focus();\">\n";

@@ -266,6 +266,8 @@ $container['view'] = function ($c) {
     $view->offsetSet('theme', $c->misc->getConf('theme'));
     $view->offsetSet('Favicon', $c->misc->icon('Favicon'));
     $view->offsetSet('Introduction', $c->misc->icon('Introduction'));
+    $view->offsetSet('lang', $c->lang);
+    $view->offsetSet('appName', $c->get('settings')['appName']);
 
     $misc->setView($view);
 

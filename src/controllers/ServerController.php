@@ -168,7 +168,7 @@ class ServerController extends BaseController
 
         $reqvars = $misc->getRequestVars('server');
 
-        $this->prtrace($reqvars);
+        //$this->prtrace($reqvars);
 
         $attrs = [
             'text'    => Decorator::field('desc'),

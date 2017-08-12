@@ -145,6 +145,7 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 });
 
 $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $container) {
+
     $subject = (isset($args['subject'])) ? $args['subject'] : 'intro';
 
     $_server_info = $this->misc->getServerInfo();
@@ -153,16 +154,13 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
         $subject = 'login';
     }
 
-    \PC::debug($subject, 'subject on route /{subject}');
+    //\PC::debug($subject, 'subject on route /{subject}');
     //die('subject on route /{subject} is ' . $subject);
 
-    $uri         = $request->getUri();
-    $base_and_qs = explode('?', $uri->getQuery());
+    $uri  = $request->getUri();
+    $path = $uri->getPath();
 
     $query_string = $uri->getQuery();
-    if (count($base_and_qs) >= 2) {
-        $query_string = $base_and_qs[1];
-    }
 
     $server_id = $request->getQueryParam('server');
     if ($subject === 'login' && $server_id === null) {
@@ -171,23 +169,19 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
 
     $url = '/src/views/' . $subject . '.php' . ($query_string ? '?' . $query_string : '');
 
-    \PC::debug(['subject' => $subject, 'url' => $url, 'query_string' => $query_string], 'subject');
-    $viewVars = $this->lang;
+    $rtl = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
 
-    $viewVars['appName'] = $this->get('settings')['appName'];
+    $viewVars = [
+        'path'           => $path,
+        'url'            => $url,
+        'headertemplate' => 'header.twig',
+    ];
 
-    $viewVars['rtl'] = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
-
-    if ($viewVars['rtl']) {
-        $viewVars['cols'] = '*,' . $this->conf['left_width'];
-        $template         = 'iframe_view_rtl.twig';
+    if ($rtl) {
+        $template = 'iframe_view_rtl.twig';
     } else {
-        $viewVars['cols'] = $this->conf['left_width'] . ',*';
-        $template         = 'iframe_view.twig';
+        $template = 'iframe_view.twig';
     }
-    $viewVars['headertemplate'] = 'iframe_header.twig';
-
-    $viewVars['url'] = $url;
 
     return $this->view->render($response, $template, $viewVars);
 })->setName('subject');

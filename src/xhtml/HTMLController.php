@@ -96,6 +96,8 @@ class HTMLController
         }
 
         $sep = '?';
+
+        ksort($urlvars);
         foreach ($urlvars as $var => $varfield) {
             $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($varfield, $fields);
             $sep = '&';

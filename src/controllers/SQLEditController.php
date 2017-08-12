@@ -37,7 +37,9 @@ class SQLEditController extends BaseController
 
         $this->setWindowName('sqledit');
 
-        $this->printHeader($title, null, true, 'sqledit_header.twig');
+        $this->scripts = '<script type="text/javascript">window.dontRedirect=true;</script>';
+
+        $this->printHeader($title, $this->scripts, true, 'sqledit_header.twig');
         $this->printBody(true, '');
         echo $body_text;
 

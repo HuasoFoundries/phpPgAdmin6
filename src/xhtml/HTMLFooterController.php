@@ -76,9 +76,9 @@ class HTMLFooterController extends HTMLController
         $reload = "<script type=\"text/javascript\">\n";
         //$reload .= " alert('will reload');";
         if ($database) {
-            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.href=\"" . SUBFOLDER . "/src/views/browser.php\";\n";
+            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"" . SUBFOLDER . "/src/views/browser.php\";\n";
         } else {
-            $reload .= "\tif(parent.frames && parent.frames.browser) { parent.frames.browser.location.reload();} else { location.replace(location.href);}\n";
+            $reload .= "\tif(parent.frames && parent.frames.browser) { console.log('will reload frame browser'); parent.frames.browser.location.reload();} else { console.log('will do location replace'); location.replace(location.href);}\n";
             //$reload .= "\tparent.frames.detail.location.href=\"".SUBFOLDER . "/src/views/intro\";\n";
             //$reload .= "\tparent.frames.detail.location.reload();\n";
         }

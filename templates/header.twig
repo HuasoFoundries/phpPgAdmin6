@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xml:lang="{{applocale}}" lang="{{applocale}}" isolang="{{isolang}}" {{dir}}>
+<html xml:lang="{{applocale}}" lang="{{applocale}}" isolang="{{isolang}}" dir="{{dir}}">
 
-    <head isolang="{{isolang}}" {{dir}}>
+    <head isolang="{{isolang}}">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
         <link rel="stylesheet/less" href="{{subfolder}}/src/themes/global.less" type="text/css" id="cssmain" />
@@ -14,21 +14,10 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
 
-        <title data-headertemplate="{{headertemplate}}">{{appName}}</title>
-
-        <script type="text/javascript">
-        if (window.parent.frames.length === 0) {
-            var redirect_to, subject = location.pathname.replace('{{subfolder}}/src/views/', '').replace('.php', '');
-            if (subject === '{{subfolder}}/redirect/server') {
-                subject = '/server';
-                redirect_to = '{{subfolder}}' + subject + location.search
-                console.log('location subject', subject, 'redirect_to', redirect_to);;
-            } else {
-                redirect_to = '{{subfolder}}/' + subject + location.search
-                var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
-                //alert(redirection_msg);
-                console.log(redirection_msg);
-                location.href = redirect_to;
-            }
+        <style type="text/css">
+        .ui-resizable-helper {
+            border: 2px dotted #00F;
         }
-        </script>
+        </style>
+
+        <title data-headertemplate="{{headertemplate}}" data-subfolder="{{subfolder}}">{{appName}} - {{title}}</title>
