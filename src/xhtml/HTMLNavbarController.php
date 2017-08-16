@@ -155,7 +155,7 @@ class HTMLNavbarController extends HTMLController
             }
         }
 
-        $this->prtrace($tabs);
+        //$this->prtrace($tabs);
 
         if (count($tabs) > 0) {
 
