@@ -13,15 +13,14 @@ class SQLQueryController extends BaseController
     public $start_time = null;
     public $duration   = null;
 
-    /* Constructor */
-    public function __construct(\Slim\Container $container)
+    public function render()
     {
-        parent::__construct($container);
+        $conf = $this->conf;
+        $lang = $this->lang;
+        $misc = $this->misc;
+        $data = $misc->getDatabaseAccessor();
 
-        // Prevent timeouts on large exports (non-safe mode only)
-        if (!ini_get('safe_mode')) {
-            set_time_limit(0);
-        }
+        set_time_limit(0);
 
         // We need to store the query in a session for editing purposes
         // We avoid GPC vars to avoid truncating long queries
@@ -48,15 +47,6 @@ class SQLQueryController extends BaseController
         if (isset($_REQUEST['subject'])) {
             $this->subject = $_REQUEST['subject'];
         }
-
-    }
-
-    public function render()
-    {
-        $conf = $this->conf;
-        $lang = $this->lang;
-        $misc = $this->misc;
-        $data = $misc->getDatabaseAccessor();
 
         // Check to see if pagination has been specified. In that case, send to display
         // script for pagination

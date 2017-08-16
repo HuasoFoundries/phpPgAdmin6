@@ -17,16 +17,6 @@ class ServerController extends BaseController
     public $start_time  = null;
     public $duration    = null;
 
-    /* Constructor */
-    public function __construct(\Slim\Container $container)
-    {
-        $this->misc = $container->get('misc');
-
-        $this->misc->setNoDBConnection(true);
-
-        parent::__construct($container);
-    }
-
     public function render()
     {
         $conf = $this->conf;

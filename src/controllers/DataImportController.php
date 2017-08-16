@@ -9,21 +9,15 @@ class DataImportController extends BaseController
 {
     public $_name = 'DataImportController';
 
-    /* Constructor */
-    public function __construct(\Slim\Container $container)
-    {
-        parent::__construct($container);
-
-        // Prevent timeouts on large exports
-        set_time_limit(0);
-    }
-
     public function render()
     {
         $misc   = $this->misc;
         $lang   = $this->lang;
         $action = $this->action;
         $data   = $misc->getDatabaseAccessor();
+
+        // Prevent timeouts on large exports
+        set_time_limit(0);
 
         $this->printHeader($lang['strimport']);
         $this->printTrail('table');

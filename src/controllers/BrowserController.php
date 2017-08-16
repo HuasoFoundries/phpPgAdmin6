@@ -9,21 +9,13 @@ class BrowserController extends BaseController
 {
     public $_name = 'BrowserController';
 
-    /* Constructor */
-    public function __construct(\Slim\Container $container)
-    {
-        $this->misc = $container->get('misc');
-
-        $this->misc->setNoDBConnection(true);
-
-        parent::__construct($container);
-    }
-
     public function render()
     {
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
+
+        $misc->setNoDBConnection(true);
 
         $this->setNoBottomLink(true);
 
