@@ -143,17 +143,19 @@ class HTMLNavbarController extends HTMLController
                 if (!isset($tab['hide']) || $tab['hide'] !== true) {
                     $tabs[$tab_id]            = $tab;
                     $tabs[$tab_id]['active']  = $active  = ($tab_id == $activetab) ? ' active' : '';
-                    $tabs[$tab_id]['tablink'] = htmlentities($this->getActionUrl($tab, $_REQUEST, $from));
+                    $tabs[$tab_id]['tablink'] = str_replace('&amp;', '&', htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
                     if (isset($tab['icon']) && $icon = $misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
 
                     }
                     if (isset($tab['help'])) {
-                        $tabs[$tab_id]['helpurl'] = $this->misc->getHelpLink($tab['help']);
+                        $tabs[$tab_id]['helpurl'] = str_replace('&amp;', '&', $this->misc->getHelpLink($tab['help']));
                     }
                 }
             }
         }
+
+        $this->prtrace($tabs);
 
         if (count($tabs) > 0) {
 
