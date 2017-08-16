@@ -33,8 +33,12 @@ class BaseController
     protected $header_controller = null;
     public $msg                  = '';
 
-    /* Constructor */
-    public function __construct(\Slim\Container $container)
+    /**
+     * Constructs the base controller (common for almost all controllers)
+     * @param \Slim\Container $container        the $app container
+     * @param boolean         $no_db_connection [optional] if true, sets  $this->misc->setNoDBConnection(true);
+     */
+    public function __construct(\Slim\Container $container, $no_db_connection = false)
     {
         $this->container = $container;
         $this->lang      = $container->get('lang');
@@ -56,6 +60,11 @@ class BaseController
         $this->phpMinVer        = $container->get('settings')['phpMinVer'];
 
         $msg = $container->get('msg');
+
+        if ($no_db_connection === true) {
+            $this->misc->setNoDBConnection(true);
+        }
+
         if ($this->misc->getNoDBConnection() === false) {
             if ($this->misc->getServerId() === null) {
                 echo $this->lang['strnoserversupplied'];

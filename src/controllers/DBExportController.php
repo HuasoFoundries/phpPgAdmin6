@@ -9,15 +9,6 @@ class DBExportController extends BaseController
 {
     public $_name = 'DBExportController';
 
-    /* Constructor */
-    public function __construct(\Slim\Container $container)
-    {
-        parent::__construct($container);
-
-        // Prevent timeouts on large exports
-        set_time_limit(0);
-    }
-
     public function render()
     {
         $conf   = $this->conf;
@@ -25,6 +16,9 @@ class DBExportController extends BaseController
         $lang   = $this->lang;
         $data   = $misc->getDatabaseAccessor();
         $action = $this->action;
+
+        // Prevent timeouts on large exports
+        set_time_limit(0);
 
         // Include application functions
         $f_schema = $f_object = '';

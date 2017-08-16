@@ -73,7 +73,7 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
                 $this->misc->setNoDBConnection(true);
 
-                $controller = new \PHPPgAdmin\Controller\LoginController($this);
+                $controller = new \PHPPgAdmin\Controller\LoginController($this, true);
                 $body_html  = $controller->doLoginForm($msg);
                 $body->write($body_html);
             }
@@ -107,7 +107,7 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
             $this->misc->setNoDBConnection(true);
 
-            $controller = new \PHPPgAdmin\Controller\LoginController($this);
+            $controller = new \PHPPgAdmin\Controller\LoginController($this, true);
             $body_html  = $controller->doLoginForm($msg);
             $body->write($body_html);
         }

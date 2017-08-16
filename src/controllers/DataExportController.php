@@ -17,15 +17,6 @@ class DataExportController extends BaseController
         'xml'  => 'xml',
     ];
 
-    /* Constructor */
-    public function __construct(\Slim\Container $container)
-    {
-        parent::__construct($container);
-
-        set_time_limit(0);
-
-    }
-
     public function render()
     {
 
@@ -34,6 +25,8 @@ class DataExportController extends BaseController
         $lang   = $this->lang;
         $data   = $misc->getDatabaseAccessor();
         $action = $this->action;
+
+        set_time_limit(0);
 
         // if (!isset($_REQUEST['table']) && !isset($_REQUEST['query']))
         // What must we do in this case? Maybe redirect to the homepage?

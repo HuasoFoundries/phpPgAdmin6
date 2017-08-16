@@ -9,17 +9,6 @@ class DisplayController extends BaseController
 {
     public $_name = 'DisplayController';
 
-    /* Constructor */
-    public function __construct(\Slim\Container $container)
-    {
-        parent::__construct($container);
-
-        // Prevent timeouts on large exports (non-safe mode only)
-        if (!ini_get('safe_mode')) {
-            set_time_limit(0);
-        }
-    }
-
     public function render()
     {
         $conf           = $this->conf;
@@ -33,6 +22,8 @@ class DisplayController extends BaseController
         if ($action == 'dobrowsefk') {
             $this->doBrowseFK();
         }
+
+        set_time_limit(0);
 
         $scripts = '<script src="' . SUBFOLDER . '/js/display.js" type="text/javascript"></script>';
 
