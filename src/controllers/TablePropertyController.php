@@ -49,7 +49,7 @@ class TablePropertyController extends BaseController
                 if (isset($_POST['cancel'])) {
                     $this->doDefault();
                 } else {
-                    $header_template = 'select2_header.twig';
+                    $header_template = 'header_select2.twig';
                     $this->doAddColumn();
                 }
 

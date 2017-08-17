@@ -41,7 +41,7 @@ class TableController extends BaseController
                 if (isset($_POST['cancel'])) {
                     $this->doDefault();
                 } else {
-                    $header_template = 'select2_header.twig';
+                    $header_template = 'header_select2.twig';
                     $this->doCreate();
                 }
 
@@ -51,7 +51,7 @@ class TableController extends BaseController
                 break;
             case 'confcreatelike':
                 if (isset($_POST['cancel'])) {
-                    $header_template = 'datatables_header.twig';
+                    $header_template = 'header_datatables.twig';
                     $this->doDefault();
                 } else {
                     $this->doCreateLike(true);
@@ -62,7 +62,7 @@ class TableController extends BaseController
                 if (!isset($_POST['cancel'])) {
                     $this->doSelectRows(false);
                 } else {
-                    $header_template = 'datatables_header.twig';
+                    $header_template = 'header_datatables.twig';
                     $this->doDefault();
                 }
 
@@ -74,7 +74,7 @@ class TableController extends BaseController
                 if (!isset($_POST['cancel'])) {
                     $this->doInsertRow(false);
                 } else {
-                    $header_template = 'datatables_header.twig';
+                    $header_template = 'header_datatables.twig';
                     $this->doDefault();
                 }
 
@@ -86,7 +86,7 @@ class TableController extends BaseController
                 if (isset($_POST['empty'])) {
                     $this->doEmpty(false);
                 } else {
-                    $header_template = 'datatables_header.twig';
+                    $header_template = 'header_datatables.twig';
                     $this->doDefault();
                 }
 
@@ -98,7 +98,7 @@ class TableController extends BaseController
                 if (isset($_POST['drop'])) {
                     $this->doDrop(false);
                 } else {
-                    $header_template = 'datatables_header.twig';
+                    $header_template = 'header_datatables.twig';
                     $this->doDefault();
                 }
 
@@ -108,7 +108,7 @@ class TableController extends BaseController
                 break;
             default:
                 if ($this->adminActions($action, 'table') === false) {
-                    $header_template = 'datatables_header.twig';
+                    $header_template = 'header_datatables.twig';
                     $this->doDefault();
                 }
 

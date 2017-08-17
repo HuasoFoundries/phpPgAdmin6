@@ -59,7 +59,7 @@ class SQLQueryController extends BaseController
             return $display_controller->render();
         }
 
-        $this->printHeader($lang['strqueryresults']);
+        $this->printHeader($lang['strqueryresults'], null, true, 'header_sqledit.twig');
         $this->printBody();
         $this->printTrail('database');
         $this->printTitle($lang['strqueryresults']);
@@ -79,7 +79,7 @@ class SQLQueryController extends BaseController
 
         $this->doDefault();
 
-        $this->doFooter();
+        $this->doFooter(true, 'footer_sqledit.twig');
     }
 
     public function doDefault()
@@ -238,7 +238,7 @@ class SQLQueryController extends BaseController
 
     }
 
-    public function doFooter($doBody = true, $template = 'footer.twig')
+    private function doFooter($doBody = true, $template = 'footer.twig')
     {
         $conf = $this->conf;
         $misc = $this->misc;

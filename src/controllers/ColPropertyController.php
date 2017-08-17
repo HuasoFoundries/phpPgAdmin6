@@ -29,7 +29,7 @@ class ColPropertyController extends BaseController
         $action = $this->action;
         $data   = $misc->getDatabaseAccessor();
 
-        $this->printHeader($lang['strtables'] . ' - ' . $this->tableName, null, true, 'select2_header.twig');
+        $this->printHeader($lang['strtables'] . ' - ' . $this->tableName, null, true, 'header_select2.twig');
         $this->printBody();
 
         if (isset($_REQUEST['view'])) {

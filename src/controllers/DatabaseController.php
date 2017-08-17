@@ -74,8 +74,8 @@ class DatabaseController extends BaseController
                 break;
             case 'sql':
                 $this->doSQL();
-                $header_template = 'sqledit_header.twig';
-                $footer_template = 'sqledit_footer.twig';
+                $header_template = 'header_sqledit.twig';
+                $footer_template = 'footer_sqledit.twig';
                 break;
             case 'variables':
                 $this->doVariables();
@@ -94,8 +94,8 @@ class DatabaseController extends BaseController
                 break;
             default:
                 if ($this->adminActions($action, 'database') === false) {
-                    $header_template = 'sqledit_header.twig';
-                    $footer_template = 'sqledit_footer.twig';
+                    $header_template = 'header_sqledit.twig';
+                    $footer_template = 'footer_sqledit.twig';
                     $this->doSQL();
                 }
 
