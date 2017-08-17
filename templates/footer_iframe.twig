@@ -1,0 +1,22 @@
+<script type="text/javascript">
+/* beautify preserve:start */
+        /*if(window.parent.frames.length!==0) {
+            console.log('should load '+"{{subfolder}}{{url}}");
+        }*/
+        /* beautify preserve:end */
+jQuery('#browser_container').resizable({
+	handles: "e"
+});
+window.onpopstate = function (event) {
+	console.log('onpopstate', {
+		state: event.state
+	});
+	if (event.state && event.state.realurl) {
+		var ifr = document.getElementById('detail')
+		ifr.contentWindow.location.replace(event.state.realurl);
+	}
+};
+</script>
+</body>
+
+</html>
