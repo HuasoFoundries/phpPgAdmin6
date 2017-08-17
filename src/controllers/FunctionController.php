@@ -24,7 +24,7 @@ class FunctionController extends BaseController
         }
         $data = $misc->getDatabaseAccessor();
 
-        $this->printHeader($lang['strfunctions'], null, true, 'datatables_header.twig');
+        $this->printHeader($lang['strfunctions'], null, true, 'header_datatables.twig');
         $this->printBody();
 
         switch ($action) {
@@ -1091,9 +1091,9 @@ class FunctionController extends BaseController
         $szJS = '';
 
         echo '<script src="' . SUBFOLDER . '/js/functions.js" type="text/javascript"></script>';
-        echo '<script type="text/javascript">' . buildJSData() . '</script>';
+        echo '<script type="text/javascript">' . $this->buildJSData() . '</script>';
         if (!empty($_POST['formArgName'])) {
-            $szJS = buildJSRows(buildFunctionArguments($_POST));
+            $szJS = $this->buildJSRows($this->buildFunctionArguments($_POST));
         } else {
             $szJS = '<script type="text/javascript" src="' . SUBFOLDER . '/js/functions.js">noArgsRebuild(addArg());</script>';
         }
@@ -1115,7 +1115,7 @@ class FunctionController extends BaseController
             $this->doCreate($lang['strfunctionneedsdef'], $szJS);
         } else {
             // Append array symbol to type if chosen
-            $status = $data->createFunction($_POST['formFunction'], empty($_POST['nojs']) ? buildFunctionArguments($_POST) : $_POST['formArguments'],
+            $status = $data->createFunction($_POST['formFunction'], empty($_POST['nojs']) ? $this->buildFunctionArguments($_POST) : $_POST['formArguments'],
                 $_POST['formReturns'] . $_POST['formArray'], $def, $_POST['formLanguage'],
                 $_POST['formProperties'], $_POST['formSetOf'] == 'SETOF',
                 $cost, $rows, $_POST['formComment'], false);
@@ -1127,10 +1127,10 @@ class FunctionController extends BaseController
         }
     }
 
-/**
- * Build out the function arguments string
- */
-    public function buildFunctionArguments($arrayVars)
+    /**
+     * Build out the function arguments string
+     */
+    private function buildFunctionArguments($arrayVars)
     {
         if (isset($_POST['formArgName'])) {
             $arrayArgs = [];
@@ -1142,10 +1142,10 @@ class FunctionController extends BaseController
         return '';
     }
 
-/**
- * Build out JS to re-create table rows for arguments
- */
-    public function buildJSRows($szArgs)
+    /**
+     * Build out JS to re-create table rows for arguments
+     */
+    private function buildJSRows($szArgs)
     {
         $arrayModes      = ['IN', 'OUT', 'INOUT'];
         $arrayArgs       = explode(',', $szArgs);
@@ -1173,7 +1173,7 @@ class FunctionController extends BaseController
         return $szReturn;
     }
 
-    public function buildJSData()
+    private function buildJSData()
     {
         $conf = $this->conf;
         $misc = $this->misc;

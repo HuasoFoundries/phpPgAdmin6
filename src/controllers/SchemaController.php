@@ -61,7 +61,7 @@ class SchemaController extends BaseController
                 $this->doExport();
                 break;
             default:
-                $header_template = 'datatables_header.twig';
+                $header_template = 'header_datatables.twig';
                 $this->doDefault();
                 break;
         }

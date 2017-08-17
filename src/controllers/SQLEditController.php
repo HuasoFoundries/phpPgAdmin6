@@ -39,11 +39,11 @@ class SQLEditController extends BaseController
 
         $this->scripts = '<script type="text/javascript">window.dontRedirect=true;</script>';
 
-        $this->printHeader($title, $this->scripts, true, 'sqledit_header.twig');
+        $this->printHeader($title, $this->scripts, true, 'header_sqledit.twig');
         $this->printBody(true, '');
         echo $body_text;
 
-        $this->printFooter(true, 'sqledit_footer.twig');
+        $this->printFooter(true, 'footer_sqledit.twig');
 
     }
 

@@ -42,8 +42,8 @@ class DisplayController extends BaseController
                 if (isset($_POST['save'])) {
                     $this->doEditRow(false);
                 } else {
-                    $header_template = 'sqledit_header.twig';
-                    $footer_template = 'sqledit_footer.twig';
+                    $header_template = 'header_sqledit.twig';
+                    $footer_template = 'footer_sqledit.twig';
                     $this->doBrowse();
                 }
 
@@ -55,8 +55,8 @@ class DisplayController extends BaseController
                 if (isset($_POST['yes'])) {
                     $this->doDelRow(false);
                 } else {
-                    $header_template = 'sqledit_header.twig';
-                    $footer_template = 'sqledit_footer.twig';
+                    $header_template = 'header_sqledit.twig';
+                    $footer_template = 'footer_sqledit.twig';
                     $this->doBrowse();
                 }
 
@@ -65,8 +65,8 @@ class DisplayController extends BaseController
                 $this->doDelRow(true);
                 break;
             default:
-                $header_template = 'sqledit_header.twig';
-                $footer_template = 'sqledit_footer.twig';
+                $header_template = 'header_sqledit.twig';
+                $footer_template = 'footer_sqledit.twig';
                 $this->doBrowse();
                 break;
         }
