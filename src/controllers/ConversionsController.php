@@ -7,9 +7,9 @@ use PHPPgAdmin\Decorators\Decorator;
 /**
  * Base controller class
  */
-class ConversionController extends BaseController
+class ConversionsController extends BaseController
 {
-    public $_name = 'ConversionController';
+    public $_name = 'ConversionsController';
 
     public function render()
     {

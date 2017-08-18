@@ -7,10 +7,10 @@ use \PHPPgAdmin\Decorators\Decorator;
 /**
  * Base controller class
  */
-class AllDBController extends BaseController
+class AlldbController extends BaseController
 {
-    public $_name       = 'AllDBController';
-    public $table_place = 'all_db-databases';
+    public $_name       = 'AlldbController';
+    public $table_place = 'alldb-databases';
 
     public function render()
     {
@@ -132,14 +132,14 @@ class AllDBController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['database' => 'datname'],
-                'url'     => 'all_db.php',
+                'url'     => 'alldb.php',
                 'default' => null,
             ],
             'drop'         => [
                 'content'     => $lang['strdrop'],
                 'attr'        => [
                     'href' => [
-                        'url'     => 'all_db.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => [
                             'subject'      => 'database',
                             'action'       => 'confirm_drop',
@@ -167,7 +167,7 @@ class AllDBController extends BaseController
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'all_db.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => [
                             'subject'       => 'database',
                             'action'        => 'confirm_alter',
@@ -200,7 +200,7 @@ class AllDBController extends BaseController
             'create' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'all_db.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => [
                             'action' => 'create',
                             'server' => $_REQUEST['server'],
@@ -253,7 +253,7 @@ class AllDBController extends BaseController
             $this->printTrail('database');
             $this->printTitle($lang['stralter'], 'pg.database.alter');
 
-            echo '<form action="' . SUBFOLDER . "/src/views/all_db.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -332,7 +332,7 @@ class AllDBController extends BaseController
             $this->printTrail('database');
             $this->printTitle($lang['strdrop'], 'pg.database.drop');
 
-            echo '<form action="' . SUBFOLDER . "/src/views/all_db.php\" method=\"post\">\n";
+            echo '<form action="' . SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
 
@@ -425,7 +425,7 @@ class AllDBController extends BaseController
             $tablespaces = $data->getTablespaces();
         }
 
-        echo '<form action="' . SUBFOLDER . "/src/views/all_db.php\" method=\"post\">\n";
+        echo '<form action="' . SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

@@ -169,7 +169,7 @@ class PrivilegesController extends BaseController
                 break;
             case 'database':
                 $alllabel = 'showalldatabases';
-                $allurl   = 'all_db.php';
+                $allurl   = 'alldb.php';
                 $alltxt   = $lang['strshowalldatabases'];
                 break;
         }

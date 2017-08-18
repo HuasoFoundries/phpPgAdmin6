@@ -924,7 +924,7 @@ class Misc
                 $tabs = [
                     'databases' => [
                         'title'   => $lang['strdatabases'],
-                        'url'     => 'all_db.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => ['subject' => 'server'],
                         'help'    => 'pg.database',
                         'icon'    => 'Databases',
@@ -981,7 +981,7 @@ class Misc
                     ],
                     'export'      => [
                         'title'   => $lang['strexport'],
-                        'url'     => 'all_db.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => ['subject' => 'server', 'action' => 'export'],
                         'hide'    => !$this->isDumpEnabled(),
                         'icon'    => 'Export',
@@ -1911,7 +1911,7 @@ class Misc
                 );
                 if (isset($srvs[$server_id]['username'])) {
                     $srvs[$server_id]['icon']   = 'Server';
-                    $srvs[$server_id]['branch'] = Decorator::url('/src/views/all_db.php',
+                    $srvs[$server_id]['branch'] = Decorator::url('/src/views/alldb.php',
                         [
                             'action'  => 'tree',
                             'subject' => 'server',

@@ -7,9 +7,9 @@ use \PHPPgAdmin\Decorators\Decorator;
 /**
  * Base controller class
  */
-class ColPropertyController extends BaseController
+class ColpropertiesController extends BaseController
 {
-    public $_name       = 'ColPropertyController';
+    public $_name       = 'ColpropertiesController';
     public $tableName   = '';
     public $table_place = 'colproperties-colproperties';
 

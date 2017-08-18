@@ -7,9 +7,9 @@ use \PHPPgAdmin\Decorators\Decorator;
 /**
  * Base controller class
  */
-class ConstraintController extends BaseController
+class ConstraintsController extends BaseController
 {
-    public $_name = 'ConstraintController';
+    public $_name = 'ConstraintsController';
 
     public function render()
     {

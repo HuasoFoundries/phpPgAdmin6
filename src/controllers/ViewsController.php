@@ -10,7 +10,7 @@ use \PHPPgAdmin\Decorators\Decorator;
 class ViewsController extends BaseController
 {
     public $script      = 'views.php';
-    public $_name       = 'ViewController';
+    public $_name       = 'ViewsController';
     public $table_place = 'views-views';
 
     public function render()
