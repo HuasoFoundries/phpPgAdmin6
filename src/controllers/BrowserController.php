@@ -19,9 +19,7 @@ class BrowserController extends BaseController
 
         $this->setNoBottomLink(true);
 
-        $viewVars            = $this->lang;
-        $viewVars['appName'] = $this->misc->appName;
-        $viewVars['icon']    = [
+        $viewVars = ['icon' => [
             'blank'          => $this->misc->icon('blank'),
             'I'              => $this->misc->icon('I'),
             'L'              => $this->misc->icon('L'),
@@ -35,7 +33,7 @@ class BrowserController extends BaseController
             'Tminus'         => $this->misc->icon('Tminus'),
             'Tplus'          => $this->misc->icon('Tplus'),
 
-        ];
+        ]];
 
         echo $this->view->fetch('browser.twig', $viewVars);
     }

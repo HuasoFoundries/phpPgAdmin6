@@ -83,9 +83,9 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
     return $response;
 
-});
+})->setName('POST|redirect/subject');
 
-$app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($msg, $container) {
+$app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
 
     $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
 
@@ -142,9 +142,48 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
     }
-});
+})->setName('GET|redirect/subject');
 
-$app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $container) {
+$app->get('/browser', function ($request, $response, $args) use ($msg) {
+
+    $viewVars = ['icon' => [
+        'blank'          => $this->misc->icon('blank'),
+        'I'              => $this->misc->icon('I'),
+        'L'              => $this->misc->icon('L'),
+        'Lminus'         => $this->misc->icon('Lminus'),
+        'Loading'        => $this->misc->icon('Loading'),
+        'Lplus'          => $this->misc->icon('Lplus'),
+        'ObjectNotFound' => $this->misc->icon('ObjectNotFound'),
+        'Refresh'        => $this->misc->icon('Refresh'),
+        'Servers'        => $this->misc->icon('Servers'),
+        'T'              => $this->misc->icon('T'),
+        'Tminus'         => $this->misc->icon('Tminus'),
+        'Tplus'          => $this->misc->icon('Tplus'),
+
+    ]];
+
+    return $this->view->render($response, 'browser.twig', $viewVars);
+
+})->setName('browser');
+
+$app->get('/src/views/{subject}', function ($request, $response, $args) use ($msg) {
+    $query_params = $request->getQueryParams();
+    $action       = isset($query_params['action']) ? $query_params['action'] : '';
+
+    $container = $this;
+    $subject   = $args['subject'];
+
+    $this->utils->prtrace($this->requestobj->getAttribute('route')->getName() . "(subject:  $subject , action: $action)");
+
+    include './src/views/' . $subject . '.php';
+    return $controller->render();
+
+})->setName('GET|src/views/subject');
+
+$app->get('/[{subject}]', function ($request, $response, $args) use ($msg) {
+
+    $query_params = $request->getQueryParams();
+    $action       = isset($query_params['action']) ? $query_params['action'] : '';
 
     $subject = (isset($args['subject'])) ? $args['subject'] : 'intro';
 
@@ -153,6 +192,8 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
     if (!isset($_server_info['username']) && ($subject === 'server' || $subject === 'root')) {
         $subject = 'login';
     }
+
+    //\Kint::dump(\PC);
 
     //\PC::debug($subject, 'subject on route /{subject}');
     //die('subject on route /{subject} is ' . $subject);
@@ -166,6 +207,10 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
     if ($subject === 'login' && $server_id === null) {
         $subject = 'servers';
     }
+
+    // Parse the query string into $request_vars variable
+
+    $this->utils->prtrace($this->requestobj->getAttribute('route')->getName() . "(subject:  $subject , action: $action)");
 
     $url = '/src/views/' . $subject . '.php' . ($query_string ? '?' . $query_string : '');
 
@@ -184,7 +229,7 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg, $cont
     }
 
     return $this->view->render($response, $template, $viewVars);
-})->setName('subject');
+})->setName('GET|subject');
 
 // Run app
 $app->run();

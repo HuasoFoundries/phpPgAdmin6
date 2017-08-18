@@ -178,10 +178,10 @@ class BaseController
         return $tree->adjustTabsForTree($tabs);
     }
 
-    public function printTree(&$_treedata, &$attrs, $section)
+    public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
         $tree = $this->getTreeController();
-        return $tree->printTree($_treedata, $attrs, $section);
+        return $tree->printTree($_treedata, $attrs, $section, $print);
     }
 
     public function printTrail($trail = [], $do_print = true)

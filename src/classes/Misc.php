@@ -52,20 +52,21 @@ class Misc
         $this->phpMinVer        = $container->get('settings')['phpMinVer'];
 
         $base_version = $container->get('settings')['base_version'];
+
         // Check for config file version mismatch
         if (!isset($this->conf['version']) || $base_version > $this->conf['version']) {
-            die($this->lang['strbadconfig']);
+            $container->get('utils')->addError($this->lang['strbadconfig']);
 
         }
+
         // Check database support is properly compiled in
         if (!function_exists('pg_connect')) {
-            //$container['add_error']($this->lang['strnotloaded']);
-            die($this->lang['strnotloaded']);
+            $container->get('utils')->addError($this->lang['strnotloaded']);
         }
 
         // Check the version of PHP
         if (version_compare(phpversion(), $this->phpMinVer, '<')) {
-            exit(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
+            $container->get('utils')->addError(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
         }
 
         if (count($this->conf['servers']) === 1) {
@@ -274,7 +275,7 @@ class Misc
 
             //$this->prtrace('_connection', $_connection);
             if (!$_connection) {
-                die($lang['strloginfailed']);
+                $this->container->utils->addError($lang['strloginfailed']);
             }
             // Get the name of the database driver we need to use.
             // The description of the server is returned in $platform.
@@ -283,7 +284,7 @@ class Misc
             //$this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
 
             if ($_type === null) {
-                die(sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer));
+                $this->container->utils->addError(sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer));
             }
             $_type = '\PHPPgAdmin\Database\\' . $_type;
 
@@ -316,9 +317,7 @@ class Misc
             $status = $this->data->setSchema($_REQUEST['schema']);
 
             if ($status != 0) {
-                \Kint::dump($status);
-                echo $this->lang['strbadschema'];
-                exit;
+                $this->container->utils->addError($this->lang['strbadschema']);
             }
         }
 

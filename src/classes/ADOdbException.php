@@ -16,7 +16,6 @@ namespace PHPPgAdmin;
  *
  * Exception-handling code using PHP5 exceptions (try-catch-throw).
  */
-
 class ADOdbException extends \Exception
 {
     public $dbms;

@@ -43,9 +43,9 @@ if (!ini_get('session.auto_start')) {
 
 $handler             = PhpConsole\Handler::getInstance();
 \Kint::$enabled_mode = DEBUGMODE;
+ini_set('display_errors', intval(DEBUGMODE));
+ini_set('display_startup_errors', intval(DEBUGMODE));
 if (DEBUGMODE) {
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 } else {
     $handler->setHandleErrors(false); // disable errors handling
@@ -68,23 +68,24 @@ $config = [
         'bootstrap'  => 'Bootstrap3',
     ],
     'settings'  => [
-        'base_path'              => BASE_PATH,
-        'debug'                  => DEBUGMODE,
+        'determineRouteBeforeAppMiddleware' => true,
+        'base_path'                         => BASE_PATH,
+        'debug'                             => DEBUGMODE,
 
         // Configuration file version.  If this is greater than that in config.inc.php, then
         // the app will refuse to run.  This and $conf['version'] should be incremented whenever
         // backwards incompatible changes are made to config.inc.php-dist.
-        'base_version'           => 60,
+        'base_version'                      => 60,
         // Application version
-        'appVersion'             => 'v' . $appVersion,
+        'appVersion'                        => 'v' . $appVersion,
         // Application name
-        'appName'                => 'phpPgAdmin6',
+        'appName'                           => 'phpPgAdmin6',
 
         // PostgreSQL and PHP minimum version
-        'postgresqlMinVer'       => '9.3',
-        'phpMinVer'              => '5.6',
-        'displayErrorDetails'    => true,
-        'addContentLengthHeader' => false,
+        'postgresqlMinVer'                  => '9.3',
+        'phpMinVer'                         => '5.6',
+        'displayErrorDetails'               => DEBUGMODE,
+        'addContentLengthHeader'            => false,
     ],
 ];
 
@@ -93,19 +94,19 @@ $app = new \Slim\App($config);
 // Fetch DI Container
 $container = $app->getContainer();
 
+//\Kint::dump($container->environment);die();
+
 $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
 $subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
 define('SUBFOLDER', $subfolder);
 
-$container['errors'] = [];
+$container['errors']      = [];
+$container['requestobj']  = $container['request'];
+$container['responseobj'] = $container['response'];
 
-$container['add_error'] = function ($c) {
-
-    return function ($errormsg) use ($c) {
-        $errors   = $c->offsetGet('errors');
-        $errors[] = $errormsg;
-        $c->offsetSet('errors', $errors);
-    };
+$container['utils'] = function ($c) {
+    $utils = new \PHPPgAdmin\ContainerUtils($c);
+    return $utils;
 };
 
 $container['conf'] = function ($c) use ($conf) {
@@ -279,7 +280,7 @@ $container['view'] = function ($c) {
 };
 
 $container['haltHandler'] = function ($c) {
-    return function ($request, $response, $exits) use ($c) {
+    return function ($request, $response, $exits, $status = 500) use ($c) {
 
         $title = 'PHPPgAdmin Error';
 
@@ -301,23 +302,29 @@ $container['haltHandler'] = function ($c) {
         $body = new \Slim\Http\Body(fopen('php://temp', 'r+'));
         $body->write($output);
 
-        return $c['response']
-            ->withStatus(500)
+        return $response
+            ->withStatus($status)
             ->withHeader('Content-type', 'text/html')
             ->withBody($body);
     };
 };
 
-$app->add(function ($request, $response, $next) use ($container) {
+// Set the requestobj and responseobj properties of the container
+// as the value of $request and $response, which already contain the route
+$app->add(function ($request, $response, $next) {
+
+    $this['requestobj']  = $request;
+    $this['responseobj'] = $response;
+
+    $misc = $this->get('misc');
+
+    //return $this->utils->die('hola');
+
+    if (count($this['errors']) > 0) {
+        return ($this->haltHandler)($this->requestobj, $this->responseobj, $this['errors'], 412);
+    }
     // First execute anything else
     $response = $next($request, $response);
-
-    $misc = $container->misc;
-
-    if (count($container['errors']) > 0) {
-        $handler = $container['haltHandler'];
-        return $handler($request, $response, $container['errors']);
-    }
 
     // Any other request, pass on current response
     return $response;
