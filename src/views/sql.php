@@ -11,8 +11,13 @@
  */
 
 // Include application functions
-require_once '../lib.inc.php';
 
-$sqlquery_controller = new \PHPPgAdmin\Controller\SQLQueryController($container);
-
-$sqlquery_controller->render();
+$do_render = false;
+if (!defined('BASE_PATH')) {
+    require_once '../lib.inc.php';
+    $do_render = true;
+}
+$controller = new \PHPPgAdmin\Controller\SqlController($container);
+if ($do_render) {
+    $controller->render();
+}

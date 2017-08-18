@@ -1,9 +1,11 @@
 <?php
 
+$do_render = false;
 if (!defined('BASE_PATH')) {
     require_once '../lib.inc.php';
+    $do_render = true;
 }
-
-$intro_controller = new \PHPPgAdmin\Controller\IntroController($container, true);
-
-$intro_controller->render();
+$controller = new \PHPPgAdmin\Controller\IntroController($container, true);
+if ($do_render) {
+    $controller->render();
+}

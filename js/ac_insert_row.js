@@ -74,7 +74,7 @@ function openlist(e) {
     };
 
     jQuery.ajax({
-        url: '/srv/views/ajax-ac-insert.php?server=' + server,
+        url: subfolder + '/src/views/acinsert.php?server=' + server,
         type: 'post',
         data: datas,
         dataType: 'html',

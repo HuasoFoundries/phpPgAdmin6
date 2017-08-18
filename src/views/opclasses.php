@@ -1,13 +1,18 @@
 <?php
 
-    /**
-     * Manage opclasss in a database
-     *
-     * $Id: opclasses.php,v 1.10 2007/08/31 18:30:11 ioguix Exp $
-     */
+/**
+ * Manage opclasss in a database
+ *
+ * $Id: opclasses.php,v 1.10 2007/08/31 18:30:11 ioguix Exp $
+ */
 
 // Include application functions
+$do_render = false;
+if (!defined('BASE_PATH')) {
     require_once '../lib.inc.php';
-
-    $opclasses_controller = new \PHPPgAdmin\Controller\OpClassesController($container);
-    $opclasses_controller->render();
+    $do_render = true;
+}
+$controller = new \PHPPgAdmin\Controller\OpclassesController($container);
+if ($do_render) {
+    $controller->render();
+}

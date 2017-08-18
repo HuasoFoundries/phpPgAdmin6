@@ -173,7 +173,7 @@ class HTMLController
         {
             $htmlOut .= "<select rel=\"printCombo\" name=\"$szName\" id=\"$szName\" multiple=\"multiple\" size=\"$iSize\">" . "\n";
         } else {
-            $htmlOut .= "<select rel=\"printCombo\" name=\"$szName\" id=\"$szName\">" . "\n";
+            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"$szName\" id=\"$szName\">" . "\n";
         }
 
         if ($bBlankEntry) {

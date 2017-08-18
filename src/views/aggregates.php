@@ -12,7 +12,7 @@ if (!defined('BASE_PATH')) {
     require_once '../lib.inc.php';
     $do_render = true;
 }
-$controller = new \PHPPgAdmin\Controller\AggregateController($container);
+$controller = new \PHPPgAdmin\Controller\AggregatesController($container);
 if ($do_render) {
     $controller->render();
 }

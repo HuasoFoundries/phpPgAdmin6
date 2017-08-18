@@ -1097,7 +1097,7 @@ class Misc
                     ],
                     'matviews'    => [
                         'title'   => 'M ' . $lang['strviews'],
-                        'url'     => 'materialized_views.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.matview',
                         'icon'    => 'MViews',
@@ -1379,7 +1379,7 @@ class Misc
                     'select'     => [
                         'title'   => $lang['strselect'],
                         'icon'    => 'Search',
-                        'url'     => 'materialized_views.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => ['action' => 'confselectrows', 'matview' => Decorator::field('matview')],
                         'help'    => 'pg.sql.select',
                     ],
@@ -2228,6 +2228,7 @@ class Misc
             $fksprops['code'] .= "var table='" . addslashes(htmlentities($table, ENT_QUOTES, 'UTF-8')) . "';";
             $fksprops['code'] .= "var server='" . htmlentities($_REQUEST['server'], ENT_QUOTES, 'UTF-8') . "';";
             $fksprops['code'] .= "var database='" . addslashes(htmlentities($_REQUEST['database'], ENT_QUOTES, 'UTF-8')) . "';";
+            $fksprops['code'] .= "var subfolder='" . SUBFOLDER . "';";
             $fksprops['code'] .= "</script>\n";
 
             $fksprops['code'] .= '<div id="fkbg"></div>';

@@ -50,7 +50,7 @@ class HTMLTableController extends HTMLController
      * @param $pre_fn    (optional) callback closure for each row. It will be passed two params: $rowdata and $actions,
      *  it may be used to derive new fields or modify actions.
      *  It can return an array of actions specific to the row,  or if nothing is returned then the standard actions are used.
-     *  (see TablePropertyController and ConstraintController for examples)
+     *  (see TblpropertiesController and ConstraintController for examples)
      *  The function must not must not store urls because     they are relative and won't work out of context.
      */
     public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null)

@@ -6,8 +6,12 @@
  * $Id: servers.php,v 1.12 2008/02/18 22:20:26 ioguix Exp $
  */
 
-require_once '../lib.inc.php';
-
-$server_controller = new \PHPPgAdmin\Controller\ServerController($container, true);
-
-$server_controller->render();
+$do_render = false;
+if (!defined('BASE_PATH')) {
+    require_once '../lib.inc.php';
+    $do_render = true;
+}
+$controller = new \PHPPgAdmin\Controller\ServersController($container);
+if ($do_render) {
+    $controller->render();
+}
