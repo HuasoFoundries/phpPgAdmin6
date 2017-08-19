@@ -1,17 +1,9 @@
+</div>
+</div>
 <script type="text/javascript">
+var dir = '{{lang.applangdir}}';
 if (!window.dontRedirect) {
-	if (window.parent.frames.length === 0) {
-		var redirect_to, subject = location.pathname.replace('{{subfolder}}/src/views/', '').replace('.php', '');
-		if (subject === '{{subfolder}}/redirect/server') {
-			subject = '/servers';
-		}
-		redirect_to = '{{subfolder}}/' + subject + location.search
-		var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
-		//alert(redirection_msg);
-		console.log(redirection_msg);
-		location.replace(redirect_to);
 
-	}
 
 	$(document).ready(function () {
 
@@ -34,7 +26,30 @@ if (!window.dontRedirect) {
 				console.log('no changes in stateObj', stateObj);
 			}
 		} else {
-			console.log('parent frames are 0, wont pushState')
+			var redirect_to, subject = location.pathname.replace('{{subfolder}}/src/views/', '').replace('.php', '');
+			if (subject === '{{subfolder}}/redirect/server') {
+				subject = '/servers';
+			}
+			redirect_to = '{{subfolder}}/' + subject + location.search
+			var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
+			//alert(redirection_msg);
+			console.log(redirection_msg);
+			location.replace(redirect_to);
+
+			/*jQuery('body').addClass('flexbox_body');
+			jQuery('#flexbox_wrapper').addClass('flexbox_wrapper');
+			jQuery('#detail_container').addClass('detail_container');
+
+			var browser_container = jQuery('<div id="browser_container"></div>');
+			browser_container.append('<iframe src="{{subfolder}}/src/views/browser" name="browser" id="browser" class="browser_container" frameborder="0" />');
+
+
+			browser_container.prependTo('#flexbox_wrapper');
+
+			jQuery('#browser_container').resizable({
+				handles: (dir === 'ltr') ? "e" : "w"
+			});*/
+
 		}
 
 

@@ -233,7 +233,8 @@ class AlldbController extends BaseController
             'icon'    => 'Database',
             'toolTip' => Decorator::field('datcomment'),
             'action'  => Decorator::redirecturl('redirect.php', $reqvars, ['database' => Decorator::field('datname')]),
-            'branch'  => Decorator::url('database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
+            'branch'  => Decorator::url('/src/views/database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
+
         ];
 
         return $this->printTree($databases, $attrs, 'databases');

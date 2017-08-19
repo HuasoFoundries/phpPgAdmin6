@@ -32,6 +32,6 @@ class ActionUrlDecorator extends Decorator
                 $sep = '&';
             }
         }
-        return SUBFOLDER . '/src/views/' . $url;
+        return SUBFOLDER . '/src/views/' . str_replace('.php', '', $url);
     }
 }

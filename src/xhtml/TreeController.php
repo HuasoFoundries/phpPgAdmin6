@@ -120,9 +120,9 @@ class TreeController
 
                 $tree_xml .= ' >';
 
-                $tree_xml .= Decorator::value_xml_attr_tag('text', $attrs['text'], $rec);
-                $tree_xml .= Decorator::value_xml_attr_tag('action', $attrs['action'], $rec);
-                $tree_xml .= Decorator::value_xml_attr_tag('src', $attrs['branch'], $rec);
+                //$tree_xml .= Decorator::value_xml_attr_tag('text', $attrs['text'], $rec);
+                //$tree_xml .= Decorator::value_xml_attr_tag('action', $attrs['action'], $rec);
+                //$tree_xml .= Decorator::value_xml_attr_tag('src', $attrs['branch'], $rec);
 
                 $tree_xml .= "</tree>\n";
             }

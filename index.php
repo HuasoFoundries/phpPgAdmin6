@@ -67,7 +67,7 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
             // but if server_id isn't set, then you will be redirected to intro
             if ($server_id === null) {
 
-                return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/intro.php');
+                return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/intro');
 
             } else {
 
@@ -101,7 +101,7 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
         // but if server_id isn't set, then you will be redirected to intro
         if ($server_id === null) {
 
-            return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/intro.php');
+            return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/intro');
 
         } else {
 
@@ -144,7 +144,7 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
     }
 })->setName('GET|redirect/subject');
 
-$app->get('/browser', function ($request, $response, $args) use ($msg) {
+$app->get('/src/views/browser', function ($request, $response, $args) use ($msg) {
 
     $viewVars = ['icon' => [
         'blank'          => $this->misc->icon('blank'),
@@ -164,9 +164,23 @@ $app->get('/browser', function ($request, $response, $args) use ($msg) {
 
     return $this->view->render($response, 'browser.twig', $viewVars);
 
-})->setName('browser');
+})->setName('/src/views/browser');
 
-$app->get('/src/views/{subject}', function ($request, $response, $args) use ($msg) {
+$app->get('/src/views/intro', function ($request, $response, $args) use ($msg) {
+
+    $controller = new \PHPPgAdmin\Controller\IntroController($this, true);
+    return $controller->render();
+
+})->setName('/src/views/intro');
+
+$app->get('/src/views/login', function ($request, $response, $args) use ($msg) {
+
+    $controller = new \PHPPgAdmin\Controller\LoginController($this, true);
+    return $controller->render();
+
+})->setName('/src/views/login');
+
+$app->map(['GET', 'POST'], '/src/views/{subject}', function ($request, $response, $args) use ($msg) {
     $query_params = $request->getQueryParams();
     $action       = isset($query_params['action']) ? $query_params['action'] : '';
 
@@ -175,10 +189,13 @@ $app->get('/src/views/{subject}', function ($request, $response, $args) use ($ms
 
     $this->utils->prtrace($this->requestobj->getAttribute('route')->getName() . "(subject:  $subject , action: $action)");
 
-    include './src/views/' . $subject . '.php';
+    $className = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
+
+    $controller = new $className($this);
+
     return $controller->render();
 
-})->setName('GET|src/views/subject');
+})->setName('src/views/subject');
 
 $app->get('/[{subject}]', function ($request, $response, $args) use ($msg) {
 
@@ -212,9 +229,7 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg) {
 
     $this->utils->prtrace($this->requestobj->getAttribute('route')->getName() . "(subject:  $subject , action: $action)");
 
-    $url = '/src/views/' . $subject . '.php' . ($query_string ? '?' . $query_string : '');
-
-    $rtl = (strcasecmp($this->lang['applangdir'], 'rtl') == 0);
+    $url = '/src/views/' . $subject . ($query_string ? '?' . $query_string : '');
 
     $viewVars = [
         'path'           => $path,
@@ -222,11 +237,7 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg) {
         'headertemplate' => 'header.twig',
     ];
 
-    if ($rtl) {
-        $template = 'iframe_view_rtl.twig';
-    } else {
-        $template = 'iframe_view.twig';
-    }
+    $template = 'iframe_view.twig';
 
     return $this->view->render($response, $template, $viewVars);
 })->setName('GET|subject');

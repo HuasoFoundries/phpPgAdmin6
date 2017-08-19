@@ -124,6 +124,7 @@ $container['lang'] = function ($c) {
     $c['appLangFiles'] = $appLangFiles;
     $c['language']     = $_language;
     $c['isolang']      = $_isolang;
+
     return $lang;
 };
 
@@ -268,6 +269,9 @@ $container['view'] = function ($c) {
     $view->offsetSet('Favicon', $c->misc->icon('Favicon'));
     $view->offsetSet('Introduction', $c->misc->icon('Introduction'));
     $view->offsetSet('lang', $c->lang);
+
+    $view->offsetSet('applangdir', $c->lang['applangdir']);
+
     $view->offsetSet('appName', $c->get('settings')['appName']);
 
     $misc->setView($view);

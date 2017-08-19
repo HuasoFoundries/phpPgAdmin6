@@ -27,63 +27,122 @@ p.comment {
   padding-left: 5pt;
 }
 
-.flexbox_wrapper,
-html,
-body.flexbox_body {
+
+html {
   height: 100%;
   margin: 0;
 }
 
-.flexbox_wrapper {
-  display: flex;
+body {
+  &.flexbox_body {
+    height: 100%;
+    margin: 0;
+    .flexbox_wrapper {
+
+      display: flex;
+      height: 100%;
+      margin: 0;
+
+      &>.detail_container {
+        height: 100%;
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+        text-align: left;
+        float: left;
+        flex: 1 1;
+      }
+
+      &>#browser_container {
+
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        text-align: left;
+        float: left;
+        flex: 0 0 300px;
+
+        &>.browser_container {
+          height: 100%;
+          margin: 0px;
+          padding: 0px;
+          text-align: left;
+          float: left;
+          width: 100%;
+        }
+        &.ui-resizable {
+          width: 300px;
+          flex: unset;
+          border-right: 8px solid #cfd8dc;
+
+          .ui-resizable-handle.ui-resizable-e {
+            width: 8px;
+            right: -8px;
+            background: #84a0ad;
+            top: 45%;
+            height: 50px
+          }
+        }
+      }
+    }
+
+    &.detailbody {
+      margin-top: 90px;
+      margin-bottom: -90px;
+      margin-left: 0 !important;
+      .detail_container {
+        margin-left: 10px !important;
+      }
+      #browser_container {
+        margin-top: -90px;
+      }
+    }
+
+    &.rtl {
+      .flexbox_wrapper {
+
+        &>.detail_container {
+          float: right;
+          flex-grow: 1;
+        }
+
+        &>#browser_container {
+
+          float: right;
+          flex: 0 0 300px;
+
+
+          &.ui-resizable {
+            flex: unset;
+            border-right: 0 none;
+            border-left: 8px solid #cfd8dc;
+
+            .ui-resizable-handle.ui-resizable-w {
+              width: 8px;
+              left: -8px;
+              background: #84a0ad;
+              top: 45%;
+              height: 50px
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.sql_edit {
+    #flexbox_wrapper {
+      height: 100%;
+      margin-top: 25px;
+    }
+
+    table.tabs {
+      top: 0;
+    }
+  }
 }
 
-.flexbox_wrapper>#browser_container {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-  float: left;
-  flex: 0 0 300px;
-}
 
-.flexbox_wrapper>#browser_container.ui-resizable {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-  float: left;
-  width: 300px;
-  flex: unset;
-  border-right: 8px solid #cfd8dc;
-}
-
-.flexbox_wrapper>#browser_container.ui-resizable .ui-resizable-handle.ui-resizable-e {
-  width: 8px;
-  right: -8px;
-  background: #84a0ad;
-  top: 45%;
-  height: 50px
-}
-
-.flexbox_wrapper>#browser_container>.browser_container {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-  float: left;
-  width: 100%;
-}
-
-.flexbox_wrapper>.detail_container {
-  height: 100%;
-  width: 100%;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-  float: left;
-  flex: 1 1;
-}
 
 .topbar {
   position: fixed;
@@ -102,14 +161,55 @@ body.flexbox_body {
 }
 
 .detailbody {
-  margin-top: 58px;
-  margin-bottom: -58px;
+  margin-top: 90px;
+  margin-bottom: -90px;
   margin-left: 10px !important;
 }
 
 table.tabs {
-  margin-left: -10px !important;
+  position: fixed;
+  top: 55px;
+  z-index: 50;
+  margin-left: -10px;
+  z-index: 50;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -154,6 +254,43 @@ body.browser {
 .webfx-tree-hide-root {
   display: none
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -212,6 +349,43 @@ p.errmsg {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /** bottom link back to top **/
 
 .bottom_link {
@@ -225,6 +399,43 @@ p.errmsg {
   border-left: 1px dotted #999;
   font-size: smaller;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -258,6 +469,43 @@ div.fk_value {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /** Syntax highlighting **/
 
 .comment {
@@ -271,6 +519,43 @@ div.fk_value {
 .literal {
   color: #808080
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

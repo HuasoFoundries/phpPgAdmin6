@@ -1733,6 +1733,10 @@ class Misc
                 return SUBFOLDER . $path . '.gif';
             }
 
+            if (file_exists(BASE_PATH . $path . '.ico')) {
+                return SUBFOLDER . $path . '.ico';
+            }
+
             $path = "/images/themes/default/{$icon}";
             if (file_exists(BASE_PATH . $path . '.png')) {
                 return SUBFOLDER . $path . '.png';
@@ -1740,6 +1744,10 @@ class Misc
 
             if (file_exists(BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
+            }
+
+            if (file_exists(BASE_PATH . $path . '.ico')) {
+                return SUBFOLDER . $path . '.ico';
             }
 
         } else {
@@ -1751,6 +1759,10 @@ class Misc
 
             if (file_exists(BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
+            }
+
+            if (file_exists(BASE_PATH . $path . '.ico')) {
+                return SUBFOLDER . $path . '.ico';
             }
 
         }
@@ -1911,7 +1923,7 @@ class Misc
                 );
                 if (isset($srvs[$server_id]['username'])) {
                     $srvs[$server_id]['icon']   = 'Server';
-                    $srvs[$server_id]['branch'] = Decorator::url('/src/views/alldb.php',
+                    $srvs[$server_id]['branch'] = Decorator::url('/src/views/alldb',
                         [
                             'action'  => 'tree',
                             'subject' => 'server',

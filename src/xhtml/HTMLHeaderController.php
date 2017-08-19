@@ -90,7 +90,11 @@ class HTMLHeaderController extends HTMLController
     {
 
         $bodyClass = htmlspecialchars($bodyClass);
-        $bodyHtml  = '<body data-controller="' . $this->controller_name . '" class="' . $bodyClass . '" >';
+        $bodyHtml  = '<body data-controller="' . $this->controller_name . '" class="' . $this->lang['applangdir'] . ' ' . $bodyClass . '" >';
+        $bodyHtml .= "\n";
+        $bodyHtml .= '<div id="flexbox_wrapper">';
+        $bodyHtml .= "\n";
+        $bodyHtml .= '<div id="detail_container">';
         $bodyHtml .= "\n";
 
         if (!$this->_no_output && $doBody) {
