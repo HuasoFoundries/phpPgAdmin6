@@ -144,41 +144,23 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
     }
 })->setName('GET|redirect/subject');
 
-$app->get('/src/views/browser', function ($request, $response, $args) use ($msg) {
+$app->get('/src/views/{subject:[intro|login|servers|browser]+}', function ($request, $response, $args) use ($msg) {
 
-    $viewVars = ['icon' => [
-        'blank'          => $this->misc->icon('blank'),
-        'I'              => $this->misc->icon('I'),
-        'L'              => $this->misc->icon('L'),
-        'Lminus'         => $this->misc->icon('Lminus'),
-        'Loading'        => $this->misc->icon('Loading'),
-        'Lplus'          => $this->misc->icon('Lplus'),
-        'ObjectNotFound' => $this->misc->icon('ObjectNotFound'),
-        'Refresh'        => $this->misc->icon('Refresh'),
-        'Servers'        => $this->misc->icon('Servers'),
-        'T'              => $this->misc->icon('T'),
-        'Tminus'         => $this->misc->icon('Tminus'),
-        'Tplus'          => $this->misc->icon('Tplus'),
+    $query_params = $request->getQueryParams();
+    $action       = isset($query_params['action']) ? $query_params['action'] : '';
 
-    ]];
+    $container = $this;
+    $subject   = $args['subject'];
 
-    return $this->view->render($response, 'browser.twig', $viewVars);
+    $this->utils->prtrace($this->requestobj->getAttribute('route')->getPattern() . "(subject:  $subject , action: $action)");
 
-})->setName('/src/views/browser');
+    $className = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
 
-$app->get('/src/views/intro', function ($request, $response, $args) use ($msg) {
+    $controller = new $className($this, true);
 
-    $controller = new \PHPPgAdmin\Controller\IntroController($this, true);
     return $controller->render();
 
-})->setName('/src/views/intro');
-
-$app->get('/src/views/login', function ($request, $response, $args) use ($msg) {
-
-    $controller = new \PHPPgAdmin\Controller\LoginController($this, true);
-    return $controller->render();
-
-})->setName('/src/views/login');
+});
 
 $app->map(['GET', 'POST'], '/src/views/{subject}', function ($request, $response, $args) use ($msg) {
     $query_params = $request->getQueryParams();
@@ -187,7 +169,7 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function ($request, $response
     $container = $this;
     $subject   = $args['subject'];
 
-    $this->utils->prtrace($this->requestobj->getAttribute('route')->getName() . "(subject:  $subject , action: $action)");
+    $this->utils->prtrace($this->requestobj->getAttribute('route')->getPattern() . "(subject:  $subject , action: $action)");
 
     $className = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
 
@@ -227,7 +209,7 @@ $app->get('/[{subject}]', function ($request, $response, $args) use ($msg) {
 
     // Parse the query string into $request_vars variable
 
-    $this->utils->prtrace($this->requestobj->getAttribute('route')->getName() . "(subject:  $subject , action: $action)");
+    $this->utils->prtrace($this->requestobj->getAttribute('route')->getPattern() . "(subject:  $subject , action: $action)");
 
     $url = '/src/views/' . $subject . ($query_string ? '?' . $query_string : '');
 

@@ -11,7 +11,7 @@ if (!defined('BASE_PATH')) {
     require_once '../lib.inc.php';
     $do_render = true;
 }
-$controller = new \PHPPgAdmin\Controller\ServersController($container);
+$controller = new \PHPPgAdmin\Controller\ServersController($container, true);
 if ($do_render) {
     $controller->render();
 

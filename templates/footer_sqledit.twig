@@ -2,24 +2,6 @@
 jQuery(document).ready(function () {
 
 
-    if (window.parent.frames.length !== 0) {
-
-        var stateObj = {
-                realurl: location.href.replace(location.origin, '')
-            },
-            newurl = stateObj.realurl.replace('src/views/', '').replace('.php', ''),
-            parenturl = window.parent.location.href.replace(window.parent.location.origin, '');
-
-
-        if (newurl !== parenturl) {
-            console.log('pushState', {
-                newurl: newurl,
-                parenturl: parenturl
-            });
-            window.parent.history.pushState(stateObj, document.title, newurl);
-        }
-    }
-
     jQuery('#query').focus();
     CodeMirror.commands.sendQuery = function () {
         console.log('SEND QUERY');
@@ -45,13 +27,14 @@ jQuery(document).ready(function () {
     jQuery('table.tabs').prependTo('body');
     jQuery('table.printconnection').prependTo('.sqlform');
 
-    if (window.parent.frames.length > 1) {
+    /*if (window.parent.frames.length > 1) {
         $('#csstheme', window.parent.frames[0].document).attr('href', '{{subfolder}}/src/themes/default/global.css');
-    }
+    }*/
     //jQuery('.CodeMirror').focus().css('height', $('#query').attr('rows') * 30).resizable();
     jQuery('.CodeMirror')
         .focus()
         .css('height', $('#query').attr('rows') * 30);
+
     if (location.pathname.indexOf('sqledit.php') !== -1) {
 
         var windowsize = {

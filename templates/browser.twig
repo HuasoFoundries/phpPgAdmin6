@@ -43,7 +43,8 @@
     webFXTreeConfig.errorLoadingText = "{{lang.strerrorloading}}";
     webFXTreeConfig.reloadText = "{{lang.strclicktoreload}}";
     // Set default target frame:
-    WebFXTreeAbstractNode.prototype.target = '_parent';
+    //WebFXTreeAbstractNode.prototype.target = '_parent';
+    WebFXTreeAbstractNode.prototype.target = 'detail';
     // Disable double click:
     WebFXTreeAbstractNode.prototype._ondblclick = function () {}
     // Show tree XML on double click - for debugging purposes only
