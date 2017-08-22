@@ -29,16 +29,13 @@ class LoginController extends BaseController
 
     public function render()
     {
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $action = $this->action;
 
-        $misc->setNoDBConnection(true);
-
-        switch ($action) {
-            default:
-                echo $this->doLoginForm();
-                break;
+        if ($this->container->requestobj->getAttribute('route') === null) {
+            echo $this->doLoginForm();
+        } else {
+            $body = $this->container->responseobj->getBody();
+            $body->write($this->doLoginForm());
+            return $this->container->responseobj;
         }
     }
 
@@ -51,13 +48,13 @@ class LoginController extends BaseController
 
         $misc->setNoDBConnection(true);
 
-        $server_id = $this->container['request']->getQueryParam('server');
+        $server_id = $this->container->requestobj->getQueryParam('server');
 
         if ($server_id === null) {
             return $this->lang['strinvalidserverparam'];
         }
 
-        $login_html = $this->printHeader($lang[$this->_title], null, false);
+        $login_html = $this->printHeader($lang[$this->_title], $this->scripts, false);
         $login_html .= $this->printBody(false);
         $login_html .= $this->printTrail('root', false);
 
@@ -84,7 +81,7 @@ class LoginController extends BaseController
             $login_html .= $this->printMsg($msg, false);
         }
 
-        $login_html .= '<form id="login_form"  method="post" name="login_form">';
+        $login_html .= '<form id="login_form"  method="post" name="login_form" action="' . SUBFOLDER . '/redirect/server?server=' . htmlspecialchars($server_id) . '">';
 
         $md5_server = md5($server_id);
         // Pass request vars through form (is this a security risk???)

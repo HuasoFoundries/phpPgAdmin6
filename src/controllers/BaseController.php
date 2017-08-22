@@ -31,6 +31,7 @@ class BaseController
     protected $tree_controller   = null;
     protected $footer_controller = null;
     protected $header_controller = null;
+    protected $scripts           = '';
     public $msg                  = '';
 
     /**

@@ -322,6 +322,15 @@ $app->add(function ($request, $response, $next) {
 
     $misc = $this->get('misc');
 
+    $this->view->offsetSet('METHOD', $request->getMethod());
+    $this->view->offsetSet('subject', $request->getAttribute('route')->getArgument('subject'));
+
+    $query_string = $request->getUri()->getQuery();
+    $this->view->offsetSet('query_string', $query_string);
+    $path = SUBFOLDER . '/' . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
+    $this->view->offsetSet('path', $path);
+    $this->view->offsetSet('params', $request->getParams());
+
     //return $this->utils->die('hola');
 
     if (count($this['errors']) > 0) {

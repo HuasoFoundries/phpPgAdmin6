@@ -193,6 +193,7 @@ class IndexesController extends BaseController
                             'database' => $_REQUEST['database'],
                             'schema'   => $_REQUEST['schema'],
                             $subject   => $object,
+                            'subject'  => $subject,
                         ],
                     ],
                 ],
@@ -319,7 +320,7 @@ class IndexesController extends BaseController
             $_REQUEST['subject'] = 'table';
         }
         $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object  = urlencode($_REQUEST[$subject]);
 
         if (!isset($_POST['formIndexName'])) {
             $_POST['formIndexName'] = '';
@@ -376,12 +377,13 @@ class IndexesController extends BaseController
         echo '<form onsubmit="doSelectAll();" name="formIndex" action="indexes.php" method="post">' . "\n";
 
         echo '<table>' . "\n";
-        echo "<tr><th class=\"data required\" colspan=\"3\">{$lang['strindexname']}</th></tr>";
+        echo '<tr><th class="data required" colspan="3">' . $lang['strindexname'] . '</th></tr>';
         echo '<tr>';
-        echo "<td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"formIndexName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formIndexName']), '" /></td></tr>';
-        echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th>";
-        echo "<th class=\"data required\">{$lang['strindexcolumnlist']}</th></tr>" . "\n";
+        echo '<td class="data1" colspan="3">';
+        echo '<input type="text" name="formIndexName" size="32" maxlength="' . $data->_maxNameLen . '" value="' . htmlspecialchars($_POST['formIndexName']) . '" />';
+        echo '</td></tr>';
+        echo '<tr><th class="data">' . $lang['strtablecolumnlist'] . '</th><th class="data">&nbsp;</th>';
+        echo '<th class="data required">' . $lang['strindexcolumnlist'] . '</th></tr>' . "\n";
         echo '<tr><td class="data1">' . $selColumns->fetch() . '</td>' . "\n";
         echo '<td class="data1">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
         echo '<td class="data1">' . $selIndex->fetch() . '</td></tr>' . "\n";
@@ -389,7 +391,7 @@ class IndexesController extends BaseController
 
         echo '<table> ' . "\n";
         echo '<tr>';
-        echo "<th class=\"data left required\" scope=\"row\">{$lang['strindextype']}</th>";
+        echo '<th class="data left required" scope="row">' . $lang['strindextype'] . '</th>';
         echo '<td class="data1"><select name="formIndexType">';
         foreach ($data->typIndexes as $v) {
             echo '<option value="', htmlspecialchars($v), '"',
@@ -402,8 +404,7 @@ class IndexesController extends BaseController
         echo '</tr>';
         echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\">{$lang['strwhere']}</th>";
-        echo "<td class=\"data1\">(<input name=\"formWhere\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formWhere']), '" />)</td>';
+        echo '<td class="data1">(<input name="formWhere" size="32" maxlength="' . $data->_maxNameLen . '" value="' . htmlspecialchars($_POST['formWhere']) . '" />)</td>';
         echo '</tr>';
 
         // Tablespace (if there are any)
@@ -434,22 +435,29 @@ class IndexesController extends BaseController
 
         echo '<p><input type="hidden" name="action" value="save_create_index" />' . "\n";
         echo $misc->form;
-        echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />' . "\n";
+        echo '<input type="hidden" name="subject" value="', htmlspecialchars($subject), '" />' . "\n";
+        echo '<input type="hidden" name="' . $subject . '" value="', htmlspecialchars($object), '" />' . "\n";
         echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />" . "\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>" . "\n";
         echo '</form>' . "\n";
     }
 
-/**
- * Actually creates the new index in the database
- * @@ Note: this function can't handle columns with commas in them
- */
+    /**
+     * Actually creates the new index in the database
+     * @@ Note: this function can't handle columns with commas in them
+     */
     public function doSaveCreateIndex()
     {
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
+
+        if (!isset($_POST['subject'])) {
+            $_POST['subject'] = 'table';
+        }
+        $subject = urlencode($_POST['subject']);
+        $object  = urlencode($_POST[$subject]);
 
         // Handle databases that don't have partial indexes
         if (!isset($_POST['formWhere'])) {
@@ -467,7 +475,7 @@ class IndexesController extends BaseController
         } elseif (!isset($_POST['IndexColumnList']) || $_POST['IndexColumnList'] == '') {
             $this->doCreateIndex($lang['strindexneedscols']);
         } else {
-            $status = $data->createIndex($_POST['formIndexName'], $_POST['table'], $_POST['IndexColumnList'],
+            $status = $data->createIndex($_POST['formIndexName'], $object, $_POST['IndexColumnList'],
                 $_POST['formIndexType'], isset($_POST['formUnique']), $_POST['formWhere'], $_POST['formSpc'],
                 isset($_POST['formConcur']));
             if ($status == 0) {

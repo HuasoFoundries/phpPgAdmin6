@@ -59,6 +59,7 @@ class Connection
         } catch (\PHPPgAdmin\ADOdbException $e) {
         $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
          */
+
         $this->conn->connect($pghost, $user, $password, $database);
     }
 

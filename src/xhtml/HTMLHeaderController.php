@@ -50,26 +50,21 @@ class HTMLHeaderController extends HTMLController
 
         $viewVars['dir']            = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = $title;
+        $viewVars['title']          = ($title !== '') ? ' - ' . $title : '';
         $viewVars['appName']        = htmlspecialchars($this->appName) . (($title != '') ? htmlspecialchars(" - {$title}") : '');
 
+        $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
         $header_html = $this->view->fetch($template, $viewVars);
 
-        if ($script) {
-            $header_html .= "{$script}\n";
-        }
-
-        $plugins_head = [];
+        /*$plugins_head = [];
         $_params      = ['heads' => &$plugins_head];
 
         $plugin_manager->do_hook('head', $_params);
 
         foreach ($plugins_head as $tag) {
-            $header_html .= $tag;
-        }
-
-        $header_html .= "</head>\n";
+        $header_html .= $tag;
+        }*/
 
         if (!$this->_no_output && $do_print) {
 

@@ -29,13 +29,13 @@ class ServersController extends BaseController
             return $this->doTree();
         }
 
-        $msg  = $this->msg;
-        $data = $misc->getDatabaseAccessor();
+        $msg = $this->msg;
 
-        $this->printHeader($this->lang['strservers'], null);
-        $this->printBody();
-        $this->printTrail('root');
+        $server_html = $this->printHeader($this->lang['strservers'], null, false);
+        $server_html .= $this->printBody(false);
+        $server_html .= $this->printTrail('root', false);
 
+        ob_start();
         switch ($action) {
             case 'logout':
                 $this->doLogout();
@@ -46,7 +46,17 @@ class ServersController extends BaseController
                 break;
         }
 
-        return $this->printFooter();
+        $server_html .= ob_get_clean();
+
+        $server_html .= $this->printFooter(false);
+
+        if ($this->container->requestobj->getAttribute('route') === null) {
+            echo $server_html;
+        } else {
+            $body = $this->container->responseobj->getBody();
+            $body->write($server_html);
+            return $this->container->responseobj;
+        }
 
     }
 
@@ -72,7 +82,7 @@ class ServersController extends BaseController
             ],
         ];
         $actions = [];
-        if (($group !== false) and (isset($conf['srv_groups'][$group])) and ($groups->recordCount() > 0)) {
+        if (($group !== false) && (isset($conf['srv_groups'][$group])) && ($groups->recordCount() > 0)) {
             $this->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
         }
         $this->printTable($groups, $columns, $actions, $this->table_place);

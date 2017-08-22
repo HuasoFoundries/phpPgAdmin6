@@ -163,9 +163,9 @@ class MaterializedviewpropertiesController extends BaseController
                             'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                             'schema'   => $_REQUEST['schema'],
-                            'view'     => $_REQUEST['matview'],
-                            'subject'  => 'view',
-                            'return'   => 'view',
+                            'matview'  => $_REQUEST['matview'],
+                            'subject'  => 'matview',
+                            'return'   => 'matview',
                         ],
                     ],
                 ],
@@ -174,13 +174,13 @@ class MaterializedviewpropertiesController extends BaseController
             'select' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'views.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => [
                             'action'   => 'confselectrows',
                             'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                             'schema'   => $_REQUEST['schema'],
-                            'view'     => $_REQUEST['matview'],
+                            'matview'  => $_REQUEST['matview'],
                         ],
                     ],
                 ],
@@ -189,13 +189,13 @@ class MaterializedviewpropertiesController extends BaseController
             'drop'   => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'views.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => [
                             'action'   => 'confirm_drop',
                             'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                             'schema'   => $_REQUEST['schema'],
-                            'view'     => $_REQUEST['matview'],
+                            'matview'  => $_REQUEST['matview'],
                         ],
                     ],
                 ],
@@ -210,7 +210,7 @@ class MaterializedviewpropertiesController extends BaseController
                             'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                             'schema'   => $_REQUEST['schema'],
-                            'view'     => $_REQUEST['matview'],
+                            'matview'  => $_REQUEST['matview'],
                         ],
                     ],
                 ],

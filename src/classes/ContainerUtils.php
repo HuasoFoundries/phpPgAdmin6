@@ -14,6 +14,53 @@ class ContainerUtils
         $this->container = $container;
     }
 
+    public function getRedirectUrl()
+    {
+
+        $query_string = $this->container->requestobj->getUri()->getQuery();
+
+        // but if server_id isn't set, then you will be redirected to intro
+        if ($this->container->requestobj->getQueryParam('server') === null) {
+            $destinationurl = SUBFOLDER . '/src/views/intro';
+        } else {
+            $destinationurl = SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+        }
+
+        return $destinationurl;
+    }
+
+    public function getDestinationWithLastTab($subject)
+    {
+
+        $_server_info = $this->container->misc->getServerInfo();
+
+        // If username isn't set in server_info, you should login
+        if (!isset($_server_info['username'])) {
+
+            $destinationurl = $this->getRedirectUrl();
+
+        } else {
+
+            $url = $this->container->misc->getLastTabURL($subject);
+
+            // Load query vars into superglobal arrays
+            if (isset($url['urlvars'])) {
+                $urlvars = [];
+                foreach ($url['urlvars'] as $key => $urlvar) {
+                    $urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
+                }
+                $_REQUEST = array_merge($_REQUEST, $urlvars);
+                $_GET     = array_merge($_GET, $urlvars);
+            }
+
+            $actionurl      = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
+            $destinationurl = $actionurl->value($_GET);
+        }
+
+        return $destinationurl;
+
+    }
+
     public function addError($errormsg)
     {
         $errors   = $this->container->get('errors');

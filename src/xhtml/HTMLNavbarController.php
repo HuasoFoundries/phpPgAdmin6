@@ -479,7 +479,7 @@ class HTMLNavbarController extends HTMLController
                 'icon'  => 'Fts',
             ];
         }
-        if ($subject == 'table' || $subject == 'view' || $subject == 'ftscfg') {
+        if ($subject == 'table' || $subject == 'view' || $subject == 'matview' || $subject == 'ftscfg') {
             $done = true;
         }
 

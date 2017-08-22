@@ -1,5 +1,6 @@
 <!--</div>
 </div>-->
+
 <script type="text/javascript">
 var dir = '{{lang.applangdir}}';
 if (!window.inPopUp) {
@@ -10,20 +11,33 @@ if (!window.inPopUp) {
 		// Check if we are inside an iframe, in which case use history API to change top URL
 		if (window.parent.frames.length !== 0) {
 
+			/* beautify preserve:start */
 			var stateObj = {
-				realurl: location.href.replace(location.origin, ''),
-				path: '{{path}}'
+				'realurl': location.href.replace(location.origin, ''),
+				'path': '{{path}}', //path will only be defined inside a route
+				'query_string': '{{query_string}}',
+/*{% for key,value in params %}*/
+				'{{key}}':'{{value}}',
+/*{% endfor %}*/
+				'method': '{{METHOD}}'
 			};
+			/* beautify preserve:end */
 			stateObj.newurl = stateObj.realurl.replace('src/views/', '').replace('.php', '');
 			stateObj.parenturl = window.parent.location.href.replace(window.parent.location.origin, '');
 
+			if (stateObj.method !== 'GET') {
 
-			if (stateObj.newurl !== stateObj.parenturl) {
+				console.log('Will not pushState with Method', stateObj.method);
+
+			} else if (stateObj.newurl !== stateObj.parenturl) {
 				console.log('will pushState', stateObj);
 				window.parent.history.pushState(stateObj, document.title, stateObj.newurl);
 			} else {
 
-				console.log('no changes in stateObj', stateObj);
+				console.log('no changes in stateObj', {
+					newurl: stateObj.newurl,
+					parenturl: stateObj.parenturl
+				});
 			}
 
 			if (jQuery.fn) {
@@ -38,30 +52,15 @@ if (!window.inPopUp) {
 			}
 
 		} else {
-			var redirect_to, subject = location.pathname.replace('{{subfolder}}/src/views/', '').replace('.php', '');
+			var redirect_to,
+				subject = location.pathname.replace('{{subfolder}}/src/views/', '').replace('.php', '');
+
 			if (subject === '{{subfolder}}/redirect/server') {
 				subject = '/servers';
 			}
 			redirect_to = '{{subfolder}}/' + subject + location.search
 			var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
-			//alert(redirection_msg);
-			console.log(redirection_msg);
 			location.replace(redirect_to);
-
-			/*jQuery('body').addClass('flexbox_body');
-			jQuery('#flexbox_wrapper').addClass('flexbox_wrapper');
-			jQuery('#detail_container').addClass('detail_container');
-
-			var browser_container = jQuery('<div id="browser_container"></div>');
-			browser_container.append('<iframe src="{{subfolder}}/src/views/browser" name="browser" id="browser" class="browser_container" frameborder="0" />');
-
-
-			browser_container.prependTo('#flexbox_wrapper');
-
-			jQuery('#browser_container').resizable({
-				handles: (dir === 'ltr') ? "e" : "w"
-			});*/
-
 		}
 
 
