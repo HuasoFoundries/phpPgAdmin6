@@ -8,7 +8,14 @@ var dir = '{{lang.applangdir}}';
 
 
 jQuery('#browser_container').resizable({
-	handles: (dir === 'ltr') ? "e" : "w"
+	handles: (dir === 'ltr') ? "e" : "w",
+	start: function () {
+		jQuery('#masking_overlay').css('display', 'block');
+	},
+	stop: function () {
+		jQuery('#masking_overlay').css('display', 'none');
+	}
+
 });
 
 window.onpopstate = function (event) {
