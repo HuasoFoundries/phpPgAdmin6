@@ -3,6 +3,8 @@
 
 
 
+
+
 /**
  * Default style sheet
  */
@@ -308,6 +310,8 @@ table.tabs {
 
 
 
+
+
 /*.tab .label {
     display: inline-block;
     float: left;
@@ -418,6 +422,8 @@ pre.error {
     border-left: 1px dotted #999;
     font-size: smaller;
 }
+
+
 
 
 

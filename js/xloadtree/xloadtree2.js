@@ -81,7 +81,7 @@ function WebFXLoadTree(sText, sXmlSrc, oAction, sBehavior, sIcon, oIconAction, s
 
 WebFXLoadTree.createLoadingItem = function () {
 	return new WebFXTreeItem(webFXTreeConfig.loadingText, null, null,
-							 webFXTreeConfig.loadingIcon);
+		webFXTreeConfig.loadingIcon);
 };
 
 _p = WebFXLoadTree.prototype = new WebFXTree;
@@ -100,7 +100,7 @@ _p.setExpanded = function (b) {
 function WebFXLoadTreeItem(sText, sXmlSrc, oAction, eParent, sIcon, oIconAction, sOpenIcon) {
 	WebFXTreeItem.call(this, sText, oAction, eParent, sIcon, oIconAction, sOpenIcon);
 
-// setup default property values
+	// setup default property values
 	this.src = sXmlSrc;
 	this.loading = !sXmlSrc;
 	this.loaded = !sXmlSrc;
@@ -132,77 +132,75 @@ _p.setExpanded = function (b) {
 
 // reloads the src file if already loaded
 WebFXLoadTree.prototype.reload =
-_p.reload = function () {
-	// if loading do nothing
-	if (this.loaded) {
-		var t = this.getTree();
-		var expanded = this.getExpanded();
-		var sr = t.getSuspendRedraw();
-		t.setSuspendRedraw(true);
+	_p.reload = function () {
+		// if loading do nothing
+		if (this.loaded) {
+			var t = this.getTree();
+			var expanded = this.getExpanded();
+			var sr = t.getSuspendRedraw();
+			t.setSuspendRedraw(true);
 
-		// remove
-		while (this.childNodes.length > 0) {
-			this.remove(this.childNodes[this.childNodes.length - 1]);
+			// remove
+			while (this.childNodes.length > 0) {
+				this.remove(this.childNodes[this.childNodes.length - 1]);
+			}
+
+			this.loaded = false;
+
+			this._loadingItem = WebFXLoadTree.createLoadingItem();
+			this.add(this._loadingItem);
+
+			if (expanded) {
+				this.setExpanded(true);
+			}
+
+			t.setSuspendRedraw(sr);
+			this.update();
+		} else if (this.open && !this.loading) {
+			WebFXLoadTree.loadXmlDocument(this);
 		}
-
-		this.loaded = false;
-
-		this._loadingItem = WebFXLoadTree.createLoadingItem();
-		this.add(this._loadingItem);
-
-		if (expanded) {
-			this.setExpanded(true);
-		}
-
-		t.setSuspendRedraw(sr);
-		this.update();
-	} else if (this.open && !this.loading) {
-		WebFXLoadTree.loadXmlDocument(this);
-	}
-};
-
+	};
 
 
 WebFXLoadTree.prototype.setSrc =
-_p.setSrc = function (sSrc) {
-	var oldSrc = this.src;
-	if (sSrc == oldSrc) return;
+	_p.setSrc = function (sSrc) {
+		var oldSrc = this.src;
+		if (sSrc == oldSrc) return;
 
-	var expanded = this.getExpanded();
+		var expanded = this.getExpanded();
 
-	// remove all
-	this._callSuspended(function () {
-		// remove
-		while (this.childNodes.length > 0)
-			this.remove(this.childNodes[this.childNodes.length - 1]);
-	});
-	this.update();
+		// remove all
+		this._callSuspended(function () {
+			// remove
+			while (this.childNodes.length > 0)
+				this.remove(this.childNodes[this.childNodes.length - 1]);
+		});
+		this.update();
 
-	this.loaded = false;
-	this.loading = false;
-	if (this._loadingItem) {
-		this._loadingItem.dispose();
-		this._loadingItem = null;
-	}
-	this.src = sSrc;
+		this.loaded = false;
+		this.loading = false;
+		if (this._loadingItem) {
+			this._loadingItem.dispose();
+			this._loadingItem = null;
+		}
+		this.src = sSrc;
 
-	if (sSrc) {
-		this._loadingItem = WebFXLoadTree.createLoadingItem();
-		this.add(this._loadingItem);
-	}
+		if (sSrc) {
+			this._loadingItem = WebFXLoadTree.createLoadingItem();
+			this.add(this._loadingItem);
+		}
 
-	this.setExpanded(expanded);
-};
+		this.setExpanded(expanded);
+	};
 
 WebFXLoadTree.prototype.getSrc =
-_p.getSrc = function () {
-	return this.src;
-};
+	_p.getSrc = function () {
+		return this.src;
+	};
 
 WebFXLoadTree.prototype.dispose = function () {
 	WebFXTree.prototype.dispose.call(this);
-	if (this._xmlHttp)
-	{
+	if (this._xmlHttp) {
 		if (this._xmlHttp.dispose) {
 			this._xmlHttp.dispose();
 		}
@@ -231,44 +229,44 @@ _p.dispose = function () {
 
 // The path is divided by '/' and the item is identified by the text
 WebFXLoadTree.prototype.openPath =
-_p.openPath = function (sPath, bSelect, bFocus) {
-	// remove any old pending paths to open
-	delete this._pathToOpen;
-	//delete this._pathToOpenById;
-	this._selectPathOnLoad = bSelect;
-	this._focusPathOnLoad = bFocus;
+	_p.openPath = function (sPath, bSelect, bFocus) {
+		// remove any old pending paths to open
+		delete this._pathToOpen;
+		//delete this._pathToOpenById;
+		this._selectPathOnLoad = bSelect;
+		this._focusPathOnLoad = bFocus;
 
-	if (sPath == "") {
-		if (bSelect) {
-			this.select();
-		}
-		if (bFocus) {
-			window.setTimeout("WebFXTreeAbstractNode._onTimeoutFocus(\"" + this.getId() + "\")", 10);
-		}
-		return;
-	}
-
-	var parts = sPath.split("/");
-	var remainingPath = parts.slice(1).join("/");
-
-	if (sPath.charAt(0) == "/") {
-		this.getTree().openPath(remainingPath, bSelect, bFocus);
-	} else {
-		// open
-		this.setExpanded(true);
-		if (this.loaded) {
-			parts = sPath.split("/");
-			var ti = this.findChildByText(parts[0]);
-			if (!ti) {
-				throw "Could not find child node with text \"" + parts[0] + "\"";
+		if (sPath == "") {
+			if (bSelect) {
+				this.select();
 			}
-
-			ti.openPath(remainingPath, bSelect, bFocus);
-		} else {
-			this._pathToOpen = sPath;
+			if (bFocus) {
+				window.setTimeout("WebFXTreeAbstractNode._onTimeoutFocus(\"" + this.getId() + "\")", 10);
+			}
+			return;
 		}
-	}
-};
+
+		var parts = sPath.split("/");
+		var remainingPath = parts.slice(1).join("/");
+
+		if (sPath.charAt(0) == "/") {
+			this.getTree().openPath(remainingPath, bSelect, bFocus);
+		} else {
+			// open
+			this.setExpanded(true);
+			if (this.loaded) {
+				parts = sPath.split("/");
+				var ti = this.findChildByText(parts[0]);
+				if (!ti) {
+					throw "Could not find child node with text \"" + parts[0] + "\"";
+				}
+
+				ti.openPath(remainingPath, bSelect, bFocus);
+			} else {
+				this._pathToOpen = sPath;
+			}
+		}
+	};
 
 
 // Opera has some serious attribute problems. We need to use getAttribute
@@ -276,17 +274,34 @@ _p.openPath = function (sPath, bSelect, bFocus) {
 WebFXLoadTree._attrs = ["text", "src", "action", "id", "target"];
 
 WebFXLoadTree.createItemFromElement = function (oNode) {
-	var jsAttrs = {};
-	var i, l;
+	var jsAttrs = {},
+		jsAttrs2 = {},
+		i,
+		l;
 
- 	l = oNode.attributes.length;
+
+	var children = oNode.childNodes;
+	l = children.length;
+	if (l > 0) {
+		for (i = 0; i < l; i++) {
+			if (children[i].tagName !== "tree" && children[i].innerHTML.length) {
+				jsAttrs[children[i].tagName] = children[i].innerHTML;
+			}
+		}
+		//console.log('jsAttrs', jsAttrs);
+	}
+
+
+	/*l = oNode.attributes.length;
 	for (i = 0; i < l; i++) {
- 		oNode.attributes[i].nodeValue = String(oNode.attributes[i].nodeValue).replace(/&#38;/g, "&"); // replace for Safari fix for DOM Bug
- 		if (oNode.attributes[i] == null) {
+		oNode.attributes[i].nodeValue = String(oNode.attributes[i].nodeValue).replace(/&#38;/g, "&"); // replace for Safari fix for DOM Bug
+		if (oNode.attributes[i] == null) {
 			continue;
 		}
- 		jsAttrs[oNode.attributes[i].nodeName] = oNode.attributes[i].nodeValue;
+		jsAttrs2[oNode.attributes[i].nodeName] = oNode.attributes[i].nodeValue;
 	}
+
+	//console.log('jsAttrs2', jsAttrs2);
 
 	var name, val;
 	for (i = 0; i < WebFXLoadTree._attrs.length; i++) {
@@ -295,7 +310,7 @@ WebFXLoadTree.createItemFromElement = function (oNode) {
 		if (value) {
 			jsAttrs[name] = value;
 		}
-	}
+	}*/
 
 	var action;
 	if (jsAttrs.onaction) {
@@ -304,7 +319,7 @@ WebFXLoadTree.createItemFromElement = function (oNode) {
 		action = jsAttrs.action;
 	}
 	var jsNode = new WebFXLoadTreeItem(jsAttrs.html || "", jsAttrs.src, action,
-										null, jsAttrs.icon, jsAttrs.iconaction, jsAttrs.openicon);
+		null, jsAttrs.icon, jsAttrs.iconaction, jsAttrs.openicon);
 	if (jsAttrs.text) {
 		jsNode.setText(jsAttrs.text);
 	}
@@ -349,7 +364,7 @@ WebFXLoadTree.loadXmlDocument = function (jsNode) {
 	jsNode.loading = true;
 	var id = jsNode.getId();
 	jsNode._xmlHttp = window.XMLHttpRequest ? new XMLHttpRequest : new window.ActiveXObject("Microsoft.XmlHttp");
-	jsNode._xmlHttp.open("GET", jsNode.src, true);	// async
+	jsNode._xmlHttp.open("GET", jsNode.src, true); // async
 	jsNode._xmlHttp.onreadystatechange = new Function("WebFXLoadTree._onload(\"" + id + "\")");
 
 	// call in new thread to allow ui to update
@@ -373,7 +388,6 @@ WebFXLoadTree._ontimeout = function (sId) {
 };
 
 
-
 // Inserts an xml document as a subtree to the provided node
 WebFXLoadTree.documentLoaded = function (jsNode) {
 	if (jsNode.loaded) {
@@ -391,7 +405,7 @@ WebFXLoadTree.documentLoaded = function (jsNode) {
 	var doc = jsNode._xmlHttp.responseXML;
 
 	// check that the load of the xml file went well
-	if(!doc || doc.parserError && doc.parseError.errorCode != 0 || !doc.documentElement) {
+	if (!doc || doc.parserError && doc.parseError.errorCode != 0 || !doc.documentElement) {
 		if (!doc || doc.parseError.errorCode == 0) {
 			jsNode.errorText = webFXTreeConfig.errorLoadingText + " " + jsNode.src + " (" + jsNode._xmlHttp.status + ": " + jsNode._xmlHttp.statusText + ")";
 		} else {
@@ -408,14 +422,14 @@ WebFXLoadTree.documentLoaded = function (jsNode) {
 		var newNode;
 		for (var i = 0; i < l; i++) {
 			if (cs[i].tagName == "tree") {
-				newNode=WebFXLoadTree.createItemFromElement(cs[i]);
+				newNode = WebFXLoadTree.createItemFromElement(cs[i]);
 				jsNode.add(newNode);
 				count++;
 			}
 		}
 
 		if (count == 1 && newNode.childNodes.length) {
-			var parent=jsNode.parentNode;
+			var parent = jsNode.parentNode;
 			newNode.setExpanded(true);
 		}
 		// if no children we got an error
@@ -460,11 +474,6 @@ WebFXLoadTree._reloadParent = function () {
 };
 
 
-
-
-
-
-
 var webFXLoadTreeQueue = {
 	_nodes: [],
 	_ie: /msie/i.test(navigator.userAgent),
@@ -491,7 +500,7 @@ var webFXLoadTreeQueue = {
 	},
 
 	// IE only
-	_send:	function () {
+	_send: function () {
 		var id = this._nodes[0].getId();
 		var jsNode = webFXTreeHandler.all[id];
 		if (!jsNode) {

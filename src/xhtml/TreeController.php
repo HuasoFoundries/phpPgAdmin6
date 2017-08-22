@@ -110,19 +110,23 @@ class TreeController
                 }
 
                 $tree_xml .= '<tree';
-                $tree_xml .= Decorator::value_xml_attr('text', $attrs['text'], $rec);
+                /*$tree_xml .= Decorator::value_xml_attr('text', $attrs['text'], $rec);
                 $tree_xml .= Decorator::value_xml_attr('action', $attrs['action'], $rec);
                 $tree_xml .= Decorator::value_xml_attr('src', $attrs['branch'], $rec);
                 $tree_xml .= Decorator::value_xml_attr('icon', $icon, $rec);
                 $tree_xml .= Decorator::value_xml_attr('iconaction', $attrs['iconAction'], $rec);
                 $tree_xml .= Decorator::value_xml_attr('openicon', $icon, $rec);
-                $tree_xml .= Decorator::value_xml_attr('tooltip', $attrs['toolTip'], $rec);
+                $tree_xml .= Decorator::value_xml_attr('tooltip', $attrs['toolTip'], $rec);*/
 
                 $tree_xml .= ' >';
 
-                //$tree_xml .= Decorator::value_xml_attr_tag('text', $attrs['text'], $rec);
-                //$tree_xml .= Decorator::value_xml_attr_tag('action', $attrs['action'], $rec);
-                //$tree_xml .= Decorator::value_xml_attr_tag('src', $attrs['branch'], $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('text', $attrs['text'], $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('action', $attrs['action'], $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('src', $attrs['branch'], $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('icon', $icon, $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('iconaction', $attrs['iconAction'], $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('openicon', $icon, $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('tooltip', $attrs['toolTip'], $rec);
 
                 $tree_xml .= "</tree>\n";
             }

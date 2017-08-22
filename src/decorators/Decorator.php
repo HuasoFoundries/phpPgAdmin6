@@ -59,7 +59,7 @@ class Decorator
     {
         $val = self::get_sanitized_value($var, $fields, 'xml');
         if (!empty($val)) {
-            return "<{$attr} {$attr}=\"{$val}\" />";
+            return "<{$attr}>{$val}</{$attr}>";
         } else {
             return '';
         }

@@ -998,7 +998,7 @@ class DisplayController extends BaseController
         $rs = $data->browseQuery('SELECT', $_REQUEST['table'], $_REQUEST['query'],
             null, null, 1, 1, $max_pages);
 
-        echo '<a href="" style="display:table-cell;" class="fk_delete"><img alt="[delete]" src="' . $misc->icon('Delete') . "\" /></a>\n";
+        echo '<a href="javascript:void(0);" style="display:table-cell;" class="fk_delete"><img alt="[delete]" src="' . $misc->icon('Delete') . "\" /></a>\n";
         echo '<div style="display:table-cell;">';
 
         if (is_object($rs) && $rs->recordCount() > 0) {
