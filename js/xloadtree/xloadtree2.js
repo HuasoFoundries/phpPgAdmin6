@@ -285,7 +285,7 @@ WebFXLoadTree.createItemFromElement = function (oNode) {
 	if (l > 0) {
 		for (i = 0; i < l; i++) {
 			if (children[i].tagName !== "tree" && children[i].innerHTML.length) {
-				jsAttrs[children[i].tagName] = children[i].innerHTML;
+				jsAttrs[children[i].tagName] = children[i].innerHTML.replace(/&#38;/g, "&").replace(/\&amp;/g, '&'); // replace for Safari fix for DOM Bug;
 			}
 		}
 		//console.log('jsAttrs', jsAttrs);
