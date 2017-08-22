@@ -58,7 +58,7 @@ class TreeController
      *        'nodata' - message to display when node has no children
      * @param $section The section where the branch is linked in the tree
      */
-    public function printTree(&$_treedata, &$attrs, $section)
+    public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
         $plugin_manager = $this->plugin_manager;
 
@@ -79,7 +79,7 @@ class TreeController
 
         $plugin_manager->do_hook('tree', $tree_params);
 
-        $this->printTreeXML($treedata, $attrs);
+        return $this->printTreeXML($treedata, $attrs, $print);
     }
 
     /** Produce XML data for the browser tree
@@ -95,47 +95,66 @@ class TreeController
      *        'expand' - the action to return XML for the subtree
      *        'nodata' - message to display when node has no children
      */
-    private function printTreeXML(&$treedata, &$attrs)
+    private function printTreeXML(&$treedata, &$attrs, $print = true)
     {
         $lang = $this->lang;
 
-        header('Content-Type: text/xml; charset=UTF-8');
-        header('Cache-Control: no-cache');
-
-        echo "<tree>\n";
-
-        /*$this->prtrace([
-        'treedata' => $treedata,
-        'attrs'    => $attrs,
-        ]);*/
+        $tree_xml = "<tree>\n";
 
         if (count($treedata) > 0) {
             foreach ($treedata as $rec) {
 
-                echo '<tree';
-                echo Decorator::value_xml_attr('text', $attrs['text'], $rec);
-                echo Decorator::value_xml_attr('action', $attrs['action'], $rec);
-                echo Decorator::value_xml_attr('src', $attrs['branch'], $rec);
-
                 $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
-                echo Decorator::value_xml_attr('icon', $icon, $rec);
-                echo Decorator::value_xml_attr('iconaction', $attrs['iconAction'], $rec);
-
                 if (!empty($attrs['openicon'])) {
                     $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
                 }
-                echo Decorator::value_xml_attr('openicon', $icon, $rec);
 
-                echo Decorator::value_xml_attr('tooltip', $attrs['toolTip'], $rec);
+                $tree_xml .= '<tree';
+                /*$tree_xml .= Decorator::value_xml_attr('text', $attrs['text'], $rec);
+                $tree_xml .= Decorator::value_xml_attr('action', $attrs['action'], $rec);
+                $tree_xml .= Decorator::value_xml_attr('src', $attrs['branch'], $rec);
+                $tree_xml .= Decorator::value_xml_attr('icon', $icon, $rec);
+                $tree_xml .= Decorator::value_xml_attr('iconaction', $attrs['iconAction'], $rec);
+                $tree_xml .= Decorator::value_xml_attr('openicon', $icon, $rec);
+                $tree_xml .= Decorator::value_xml_attr('tooltip', $attrs['toolTip'], $rec);*/
 
-                echo " />\n";
+                $tree_xml .= ' >';
+
+                $tree_xml .= Decorator::value_xml_attr_tag('text', $attrs['text'], $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('action', $attrs['action'], $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('src', $attrs['branch'], $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('icon', $icon, $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('iconaction', $attrs['iconAction'], $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('openicon', $icon, $rec);
+                $tree_xml .= Decorator::value_xml_attr_tag('tooltip', $attrs['toolTip'], $rec);
+
+                $tree_xml .= "</tree>\n";
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
-            echo "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"", $this->misc->icon('ObjectNotFound'), '" />' . "\n";
+            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"" . $this->misc->icon('ObjectNotFound') . '" />' . "\n";
         }
 
-        echo "</tree>\n";
+        $tree_xml .= "</tree>\n";
+        if ($print === true) {
+
+            if ($this->container->requestobj->getAttribute('route') === null) {
+                header('Content-Type: text/xml; charset=UTF-8');
+                header('Cache-Control: no-cache');
+                echo $tree_xml;
+
+            } else {
+                return $this
+                    ->container
+                    ->responseobj
+                    ->withStatus(200)
+                    ->withHeader('Content-Type', 'text/xml;charset=utf-8')
+                    ->write($tree_xml);
+            }
+
+        } else {
+            return $tree_xml;
+        }
     }
 
     public function adjustTabsForTree(&$tabs)

@@ -2,7 +2,6 @@
 
 namespace PHPPgAdmin;
 
-use \PHPPgAdmin\Controller\LoginController;
 use \PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -31,6 +30,7 @@ class Misc
     public $_name              = 'Misc';
     public $lang               = [];
     private $server_info       = null;
+    private $error_msg         = '';
 
     private $container = null;
 
@@ -52,20 +52,21 @@ class Misc
         $this->phpMinVer        = $container->get('settings')['phpMinVer'];
 
         $base_version = $container->get('settings')['base_version'];
+
         // Check for config file version mismatch
         if (!isset($this->conf['version']) || $base_version > $this->conf['version']) {
-            die($this->lang['strbadconfig']);
+            $container->get('utils')->addError($this->lang['strbadconfig']);
 
         }
+
         // Check database support is properly compiled in
         if (!function_exists('pg_connect')) {
-            //$container['add_error']($this->lang['strnotloaded']);
-            die($this->lang['strnotloaded']);
+            $container->get('utils')->addError($this->lang['strnotloaded']);
         }
 
         // Check the version of PHP
         if (version_compare(phpversion(), $this->phpMinVer, '<')) {
-            exit(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
+            $container->get('utils')->addError(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
         }
 
         if (count($this->conf['servers']) === 1) {
@@ -186,6 +187,7 @@ class Misc
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = [
+            'msg'      => 'ADOdbException at ',
             'class'    => $backtrace[1]['class'],
             'type'     => $backtrace[1]['type'],
             'function' => $backtrace[1]['function'],
@@ -201,11 +203,9 @@ class Misc
                 $sql         = $p1;
                 $inputparams = $p2;
 
-                /*$s = "<p><b>{$lang['strsqlerror']}</b><br />" . $misc->printVal($errmsg, 'errormsg') . "</p> <p><b>{$lang['strinstatement']}</b><br />" . $misc->printVal($sql). "</p>    ";*/
+                $error_msg = '<p><b>strsqlerror</b><br />' . nl2br($errmsg) . '</p> <p><b>SQL:</b><br />' . nl2br($sql) . '</p>	';
 
-                $s = '<p><b>strsqlerror</b><br />' . nl2br($errmsg) . '</p> <p><b>SQL:</b><br />' . nl2br($sql) . '</p>	';
-
-                echo '<table class="error" cellpadding="5"><tr><td>' . nl2br($s) . '</td></tr></table><br />' . "\n";
+                echo '<table class="error" cellpadding="5"><tr><td>' . nl2br($error_msg) . '</td></tr></table><br />' . "\n";
 
                 break;
 
@@ -249,6 +249,21 @@ class Misc
     }
 
     /**
+     * Sets the last error message to display afterwards instead of just dying with the error msg
+     * @param [string] $msg error message string
+     */
+    public function setErrorMsg($msg)
+    {
+        $this->error_msg = $msg;
+        return $this;
+    }
+
+    public function getErrorMsg()
+    {
+        return $this->error_msg;
+    }
+
+    /**
      * Creates a database accessor
      *
      * @param string $database
@@ -270,11 +285,21 @@ class Misc
         }
 
         if ($this->data === null) {
-            $_connection = $this->getConnection($database, $this->server_id);
+
+            try {
+                $_connection = $this->getConnection($database, $this->server_id);
+            } catch (\Exception $e) {
+                $this->setServerInfo(null, null, $this->server_id);
+                $this->setNoDBConnection(true);
+                $this->setErrorMsg($e->getMessage());
+                return null;
+            }
 
             //$this->prtrace('_connection', $_connection);
             if (!$_connection) {
-                die($lang['strloginfailed']);
+                $this->container->utils->addError($lang['strloginfailed']);
+                $this->setErrorMsg($lang['strloginfailed']);
+                return null;
             }
             // Get the name of the database driver we need to use.
             // The description of the server is returned in $platform.
@@ -283,7 +308,10 @@ class Misc
             //$this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
 
             if ($_type === null) {
-                die(sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer));
+                $errormsg = sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer);
+                $this->container->utils->addError($errormsg);
+                $this->setErrorMsg($errormsg);
+                return null;
             }
             $_type = '\PHPPgAdmin\Database\\' . $_type;
 
@@ -299,7 +327,7 @@ class Misc
             $this->data->conf        = $this->conf;
             $this->data->lang        = $this->lang;
 
-            $this->data->getHelpPages();
+            //$this->data->getHelpPages();
 
             //$this->prtrace('help_page has ' . count($this->data->help_page) . ' items');
 
@@ -316,9 +344,9 @@ class Misc
             $status = $this->data->setSchema($_REQUEST['schema']);
 
             if ($status != 0) {
-                \Kint::dump($status);
-                echo $this->lang['strbadschema'];
-                exit;
+                $this->container->utils->addError($this->lang['strbadschema']);
+                $this->setErrorMsg($this->lang['strbadschema']);
+                return null;
             }
         }
 
@@ -348,23 +376,20 @@ class Misc
                 ];
 
                 if (isset($server_info['username']) && array_key_exists(strtolower($server_info['username']), $bad_usernames)) {
-                    unset($_SESSION['webdbLogin'][$this->server_id]);
+
                     $msg = $lang['strlogindisallowed'];
-                    $this->prtrace('msg', $msg);
-                    $login_controller = new LoginController($this->container);
-                    return $login_controller->render();
+                    throw new \Exception($msg);
                 }
 
                 if (!isset($server_info['password']) || $server_info['password'] == '') {
-                    unset($_SESSION['webdbLogin'][$this->server_id]);
+
                     $msg = $lang['strlogindisallowed'];
-                    $this->prtrace('msg', $msg);
-                    $login_controller = new LoginController($this->container);
-                    return $login_controller->render();
+
+                    throw new \Exception($msg);
                 }
             }
-            try {
 
+            try {
                 // Create the connection object and make the connection
                 $this->_connection = new \PHPPgAdmin\Database\Connection(
                     $server_info['host'],
@@ -374,16 +399,98 @@ class Misc
                     $server_info['password'],
                     $database_to_use
                 );
-
             } catch (\PHPPgAdmin\ADOdbException $e) {
-                unset($_SESSION['webdbLogin'][$this->server_id]);
-                $msg              = $lang['strloginfailed'];
-                $login_controller = new LoginController($this->container);
-                return $login_controller->render();
+                throw new \Exception($lang['strloginfailed']);
+            }
+        }
+        return $this->_connection;
+    }
+
+    /**
+     * Validate and retrieve information on a server.
+     * If the parameter isn't supplied then the currently
+     * connected server is returned.
+     * @param $server_id A server identifier (host:port)
+     * @return An associative array of server properties
+     */
+    public function getServerInfo($server_id = null)
+    {
+
+        //\PC::debug(['$server_id' => $server_id]);
+
+        if ($server_id !== null) {
+            $this->server_id = $server_id;
+        } else if ($this->server_info !== null) {
+            return $this->server_info;
+        }
+
+        // Check for the server in the logged-in list
+        if (isset($_SESSION['webdbLogin'][$this->server_id])) {
+            $this->server_info = $_SESSION['webdbLogin'][$this->server_id];
+            return $this->server_info;
+        }
+
+        // Otherwise, look for it in the conf file
+        foreach ($this->conf['servers'] as $idx => $info) {
+            if ($this->server_id == $info['host'] . ':' . $info['port'] . ':' . $info['sslmode']) {
+                // Automatically use shared credentials if available
+                if (!isset($info['username']) && isset($_SESSION['sharedUsername'])) {
+                    $info['username'] = $_SESSION['sharedUsername'];
+                    $info['password'] = $_SESSION['sharedPassword'];
+                    $this->setReloadBrowser(true);
+                    $this->setServerInfo(null, $info, $this->server_id);
+                }
+                $this->server_info = $info;
+                return $this->server_info;
+
+            }
+        }
+
+        if ($server_id === null) {
+            $this->server_info = null;
+            return $this->server_info;
+
+        }
+
+        $this->server_info = null;
+        // Unable to find a matching server, are we being hacked?
+        echo $this->lang['strinvalidserverparam'];
+
+        exit;
+    }
+
+    /**
+     * Set server information.
+     * @param $key parameter name to set, or null to replace all
+     *             params with the assoc-array in $value.
+     * @param $value the new value, or null to unset the parameter
+     * @param $server_id the server identifier, or null for current
+     *                   server.
+     */
+    public function setServerInfo($key, $value, $server_id = null)
+    {
+        //\PC::debug('setsetverinfo');
+        if ($server_id === null && isset($_REQUEST['server'])) {
+            $server_id = $_REQUEST['server'];
+        }
+
+        if ($key === null) {
+            if ($value === null) {
+                unset($_SESSION['webdbLogin'][$server_id]);
+            } else {
+                //\PC::debug(['server_id' => $server_id, 'value' => $value], 'webdbLogin null key');
+                $_SESSION['webdbLogin'][$server_id] = $value;
+            }
+
+        } else {
+            if ($value === null) {
+                unset($_SESSION['webdbLogin'][$server_id][$key]);
+            } else {
+                //\PC::debug(['server_id' => $server_id, 'key' => $key, 'value' => $value], __FILE__ . ' ' . __LINE__ . ' webdbLogin key ' . $key);
+                $_SESSION['webdbLogin'][$server_id][$key] = $value;
             }
 
         }
-        return $this->_connection;
     }
 
     public function getDatabase($database = '')
@@ -409,6 +516,159 @@ class Misc
 
         return $this->database;
 
+    }
+
+    /**
+     * Get list of server groups
+     *
+     * @param bool $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array.
+     * @param mixed $group_id     a group name to filter the returned servers using $this->conf[srv_groups]
+     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
+     */
+    public function getServersGroups($recordset = false, $group_id = false)
+    {
+        $lang = $this->lang;
+        $grps = [];
+
+        if (isset($this->conf['srv_groups'])) {
+            foreach ($this->conf['srv_groups'] as $i => $group) {
+                if (
+                    (($group_id === false) and (!isset($group['parents']))) /* root */
+                    or (
+                        ($group_id !== false)
+                        and isset($group['parents'])
+                        and in_array($group_id, explode(',',
+                            preg_replace('/\s/', '', $group['parents'])
+                        ))
+                    ) /* nested group */
+                ) {
+                    $grps[$i] = [
+                        'id'     => $i,
+                        'desc'   => $group['desc'],
+                        'icon'   => 'Servers',
+                        'action' => Decorator::url('/views/servers',
+                            [
+                                'group' => Decorator::field('id'),
+                            ]
+                        ),
+                        'branch' => Decorator::url('/tree/servers',
+                            [
+                                'group' => $i,
+                            ]
+                        ),
+                    ];
+                }
+
+            }
+
+            if ($group_id === false) {
+                $grps['all'] = [
+                    'id'     => 'all',
+                    'desc'   => $lang['strallservers'],
+                    'icon'   => 'Servers',
+                    'action' => Decorator::url('/views/servers',
+                        [
+                            'group' => Decorator::field('id'),
+                        ]
+                    ),
+                    'branch' => Decorator::url('/tree/servers',
+                        [
+                            'group' => 'all',
+                        ]
+                    ),
+                ];
+            }
+
+        }
+
+        if ($recordset) {
+            return new ArrayRecordSet($grps);
+        }
+
+        return $grps;
+    }
+
+    /**
+     * Get list of servers
+     *
+     * @param bool $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array.
+     * @param mixed $group     a group name to filter the returned servers using $this->conf[srv_groups]
+     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
+     */
+    public function getServers($recordset = false, $group = false)
+    {
+
+        $logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
+        $srvs   = [];
+
+        if (($group !== false) && ($group !== 'all')) {
+            if (isset($this->conf['srv_groups'][$group]['servers'])) {
+                $group = array_fill_keys(explode(',', preg_replace('/\s/', '',
+                    $this->conf['srv_groups'][$group]['servers'])), 1);
+            } else {
+                $group = '';
+            }
+        }
+
+        foreach ($this->conf['servers'] as $idx => $info) {
+            $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+            if ($group === false || isset($group[$idx]) || ($group === 'all')) {
+                $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+
+                if (isset($logins[$server_id])) {
+                    $srvs[$server_id] = $logins[$server_id];
+                } else {
+                    $srvs[$server_id] = $info;
+                }
+
+                $srvs[$server_id]['id']     = $server_id;
+                $srvs[$server_id]['action'] = Decorator::url('/redirect/server',
+                    [
+                        'server' => Decorator::field('id'),
+                    ]
+                );
+                if (isset($srvs[$server_id]['username'])) {
+                    $srvs[$server_id]['icon']   = 'Server';
+                    $srvs[$server_id]['branch'] = Decorator::url('/src/views/alldb',
+                        [
+                            'action'  => 'tree',
+                            'subject' => 'server',
+                            'server'  => Decorator::field('id'),
+                        ]
+                    );
+                } else {
+                    $srvs[$server_id]['icon']   = 'DisconnectedServer';
+                    $srvs[$server_id]['branch'] = false;
+                }
+            }
+        }
+
+        uasort($srvs, ['self', '_cmp_desc']);
+
+        if ($recordset) {
+            return new ArrayRecordSet($srvs);
+        }
+        return $srvs;
+    }
+
+    /**
+     * Set the current schema
+     *
+     * @param $schema The schema name
+     * @return int 0 on success
+     */
+    public function setCurrentSchema($schema)
+    {
+        $data = $this->getDatabaseAccessor();
+
+        $status = $data->setSchema($schema);
+        if ($status != 0) {
+            return $status;
+        }
+
+        $_REQUEST['schema'] = $schema;
+        $this->setHREF();
+        return 0;
     }
 
     public static function _cmp_desc($a, $b)
@@ -925,7 +1185,7 @@ class Misc
                 $tabs = [
                     'databases' => [
                         'title'   => $lang['strdatabases'],
-                        'url'     => 'all_db.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => ['subject' => 'server'],
                         'help'    => 'pg.database',
                         'icon'    => 'Databases',
@@ -982,7 +1242,7 @@ class Misc
                     ],
                     'export'      => [
                         'title'   => $lang['strexport'],
-                        'url'     => 'all_db.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => ['subject' => 'server', 'action' => 'export'],
                         'hide'    => !$this->isDumpEnabled(),
                         'icon'    => 'Export',
@@ -1098,7 +1358,7 @@ class Misc
                     ],
                     'matviews'    => [
                         'title'   => 'M ' . $lang['strviews'],
-                        'url'     => 'materialized_views.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.matview',
                         'icon'    => 'MViews',
@@ -1380,7 +1640,7 @@ class Misc
                     'select'     => [
                         'title'   => $lang['strselect'],
                         'icon'    => 'Search',
-                        'url'     => 'materialized_views.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => ['action' => 'confselectrows', 'matview' => Decorator::field('matview')],
                         'help'    => 'pg.sql.select',
                     ],
@@ -1734,6 +1994,10 @@ class Misc
                 return SUBFOLDER . $path . '.gif';
             }
 
+            if (file_exists(BASE_PATH . $path . '.ico')) {
+                return SUBFOLDER . $path . '.ico';
+            }
+
             $path = "/images/themes/default/{$icon}";
             if (file_exists(BASE_PATH . $path . '.png')) {
                 return SUBFOLDER . $path . '.png';
@@ -1741,6 +2005,10 @@ class Misc
 
             if (file_exists(BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
+            }
+
+            if (file_exists(BASE_PATH . $path . '.ico')) {
+                return SUBFOLDER . $path . '.ico';
             }
 
         } else {
@@ -1752,6 +2020,10 @@ class Misc
 
             if (file_exists(BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
+            }
+
+            if (file_exists(BASE_PATH . $path . '.ico')) {
+                return SUBFOLDER . $path . '.ico';
             }
 
         }
@@ -1799,246 +2071,6 @@ class Misc
         }
 
         return escapeshellcmd($str);
-    }
-
-    /**
-     * Get list of server groups
-     *
-     * @param bool $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array.
-     * @param mixed $group_id     a group name to filter the returned servers using $this->conf[srv_groups]
-     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
-     */
-    public function getServersGroups($recordset = false, $group_id = false)
-    {
-        $lang = $this->lang;
-        $grps = [];
-
-        if (isset($this->conf['srv_groups'])) {
-            foreach ($this->conf['srv_groups'] as $i => $group) {
-                if (
-                    (($group_id === false) and (!isset($group['parents']))) /* root */
-                    or (
-                        ($group_id !== false)
-                        and isset($group['parents'])
-                        and in_array($group_id, explode(',',
-                            preg_replace('/\s/', '', $group['parents'])
-                        ))
-                    ) /* nested group */
-                ) {
-                    $grps[$i] = [
-                        'id'     => $i,
-                        'desc'   => $group['desc'],
-                        'icon'   => 'Servers',
-                        'action' => Decorator::url('/views/servers',
-                            [
-                                'group' => Decorator::field('id'),
-                            ]
-                        ),
-                        'branch' => Decorator::url('/tree/servers',
-                            [
-                                'group' => $i,
-                            ]
-                        ),
-                    ];
-                }
-
-            }
-
-            if ($group_id === false) {
-                $grps['all'] = [
-                    'id'     => 'all',
-                    'desc'   => $lang['strallservers'],
-                    'icon'   => 'Servers',
-                    'action' => Decorator::url('/views/servers',
-                        [
-                            'group' => Decorator::field('id'),
-                        ]
-                    ),
-                    'branch' => Decorator::url('/tree/servers',
-                        [
-                            'group' => 'all',
-                        ]
-                    ),
-                ];
-            }
-
-        }
-
-        if ($recordset) {
-            return new ArrayRecordSet($grps);
-        }
-
-        return $grps;
-    }
-
-    /**
-     * Get list of servers
-     *
-     * @param bool $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array.
-     * @param mixed $group     a group name to filter the returned servers using $this->conf[srv_groups]
-     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
-     */
-    public function getServers($recordset = false, $group = false)
-    {
-
-        $logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
-        $srvs   = [];
-
-        if (($group !== false) && ($group !== 'all')) {
-            if (isset($this->conf['srv_groups'][$group]['servers'])) {
-                $group = array_fill_keys(explode(',', preg_replace('/\s/', '',
-                    $this->conf['srv_groups'][$group]['servers'])), 1);
-            } else {
-                $group = '';
-            }
-        }
-
-        foreach ($this->conf['servers'] as $idx => $info) {
-            $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
-            if ($group === false || isset($group[$idx]) || ($group === 'all')) {
-                $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
-
-                if (isset($logins[$server_id])) {
-                    $srvs[$server_id] = $logins[$server_id];
-                } else {
-                    $srvs[$server_id] = $info;
-                }
-
-                $srvs[$server_id]['id']     = $server_id;
-                $srvs[$server_id]['action'] = Decorator::url('/redirect/server',
-                    [
-                        'server' => Decorator::field('id'),
-                    ]
-                );
-                if (isset($srvs[$server_id]['username'])) {
-                    $srvs[$server_id]['icon']   = 'Server';
-                    $srvs[$server_id]['branch'] = Decorator::url('/src/views/all_db.php',
-                        [
-                            'action'  => 'tree',
-                            'subject' => 'server',
-                            'server'  => Decorator::field('id'),
-                        ]
-                    );
-                } else {
-                    $srvs[$server_id]['icon']   = 'DisconnectedServer';
-                    $srvs[$server_id]['branch'] = false;
-                }
-            }
-        }
-
-        uasort($srvs, ['self', '_cmp_desc']);
-
-        if ($recordset) {
-            return new ArrayRecordSet($srvs);
-        }
-        return $srvs;
-    }
-
-    /**
-     * Validate and retrieve information on a server.
-     * If the parameter isn't supplied then the currently
-     * connected server is returned.
-     * @param $server_id A server identifier (host:port)
-     * @return An associative array of server properties
-     */
-    public function getServerInfo($server_id = null)
-    {
-
-        //\PC::debug(['$server_id' => $server_id]);
-
-        if ($server_id !== null) {
-            $this->server_id = $server_id;
-        } else if ($this->server_info !== null) {
-            return $this->server_info;
-        }
-
-        // Check for the server in the logged-in list
-        if (isset($_SESSION['webdbLogin'][$this->server_id])) {
-            $this->server_info = $_SESSION['webdbLogin'][$this->server_id];
-            return $this->server_info;
-        }
-
-        // Otherwise, look for it in the conf file
-        foreach ($this->conf['servers'] as $idx => $info) {
-            if ($this->server_id == $info['host'] . ':' . $info['port'] . ':' . $info['sslmode']) {
-                // Automatically use shared credentials if available
-                if (!isset($info['username']) && isset($_SESSION['sharedUsername'])) {
-                    $info['username'] = $_SESSION['sharedUsername'];
-                    $info['password'] = $_SESSION['sharedPassword'];
-                    $this->setReloadBrowser(true);
-                    $this->setServerInfo(null, $info, $this->server_id);
-                }
-                $this->server_info = $info;
-                return $this->server_info;
-
-            }
-        }
-
-        if ($server_id === null) {
-            $this->server_info = null;
-            return $this->server_info;
-
-        }
-
-        $this->server_info = null;
-        // Unable to find a matching server, are we being hacked?
-        echo $this->lang['strinvalidserverparam'];
-
-        exit;
-    }
-
-    /**
-     * Set server information.
-     * @param $key parameter name to set, or null to replace all
-     *             params with the assoc-array in $value.
-     * @param $value the new value, or null to unset the parameter
-     * @param $server_id the server identifier, or null for current
-     *                   server.
-     */
-    public function setServerInfo($key, $value, $server_id = null)
-    {
-        //\PC::debug('setsetverinfo');
-        if ($server_id === null && isset($_REQUEST['server'])) {
-            $server_id = $_REQUEST['server'];
-        }
-
-        if ($key === null) {
-            if ($value === null) {
-                unset($_SESSION['webdbLogin'][$server_id]);
-            } else {
-                //\PC::debug(['server_id' => $server_id, 'value' => $value], 'webdbLogin null key');
-                $_SESSION['webdbLogin'][$server_id] = $value;
-            }
-
-        } else {
-            if ($value === null) {
-                unset($_SESSION['webdbLogin'][$server_id][$key]);
-            } else {
-                //\PC::debug(['server_id' => $server_id, 'key' => $key, 'value' => $value], __FILE__ . ' ' . __LINE__ . ' webdbLogin key ' . $key);
-                $_SESSION['webdbLogin'][$server_id][$key] = $value;
-            }
-
-        }
-    }
-
-    /**
-     * Set the current schema
-     *
-     * @param $schema The schema name
-     * @return int 0 on success
-     */
-    public function setCurrentSchema($schema)
-    {
-        $data = $this->getDatabaseAccessor();
-
-        $status = $data->setSchema($schema);
-        if ($status != 0) {
-            return $status;
-        }
-
-        $_REQUEST['schema'] = $schema;
-        $this->setHREF();
-        return 0;
     }
 
     /**
@@ -2229,6 +2261,7 @@ class Misc
             $fksprops['code'] .= "var table='" . addslashes(htmlentities($table, ENT_QUOTES, 'UTF-8')) . "';";
             $fksprops['code'] .= "var server='" . htmlentities($_REQUEST['server'], ENT_QUOTES, 'UTF-8') . "';";
             $fksprops['code'] .= "var database='" . addslashes(htmlentities($_REQUEST['database'], ENT_QUOTES, 'UTF-8')) . "';";
+            $fksprops['code'] .= "var subfolder='" . SUBFOLDER . "';";
             $fksprops['code'] .= "</script>\n";
 
             $fksprops['code'] .= '<div id="fkbg"></div>';

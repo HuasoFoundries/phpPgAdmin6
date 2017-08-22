@@ -3,7 +3,7 @@ VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)",/\1/p')
 SHELL = /usr/bin/env bash
 
 default: install
-.PHONY: tag install
+.PHONY: tag install test
 
 version:
 	@echo $(VERSION)
@@ -29,3 +29,6 @@ tag_and_push:
 		git push --tags
 
 tag: update_version tag_and_push	
+
+test:
+	./vendor/bin/codecept run unit --debug

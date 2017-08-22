@@ -4,9 +4,20 @@
             console.log('should load '+"{{subfolder}}{{url}}");
         }*/
         /* beautify preserve:end */
+var dir = '{{lang.applangdir}}';
+
+
 jQuery('#browser_container').resizable({
-	handles: "e"
+	handles: (dir === 'ltr') ? "e" : "w",
+	start: function () {
+		jQuery('#masking_overlay').css('display', 'block');
+	},
+	stop: function () {
+		jQuery('#masking_overlay').css('display', 'none');
+	}
+
 });
+
 window.onpopstate = function (event) {
 	console.log('onpopstate', {
 		state: event.state

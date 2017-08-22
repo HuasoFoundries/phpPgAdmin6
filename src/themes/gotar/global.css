@@ -1,8 +1,7 @@
-@import url(../global.css);
-
 /**
  * Default style sheet
  */
+
 
 /** ELEMENTS */
 
@@ -10,7 +9,8 @@ body {
     background-color: #336;
     margin: 0px;
     padding: 0px;
-    font-size: smaller; /*0.8em;*/
+    font-size: smaller;
+    /*0.8em;*/
     font-family: sans-serif;
     color: #fff;
 }
@@ -19,7 +19,8 @@ p {
     color: #fff;
 }
 
-p.comment, td.comment_cell {
+p.comment,
+td.comment_cell {
     color: #aff;
 }
 
@@ -30,7 +31,8 @@ table {
 body.browser {
     background-color: #447;
     color: #4bf;
-    font-size: smaller; /*1em;*/
+    font-size: smaller;
+    /*1em;*/
     border-right: 1px dashed #c0c0c0;
 }
 
@@ -48,7 +50,8 @@ body.browser div.webfx-tree-row:hover {
 
 h2 {
     color: #fff;
-    font-size: medium; /*1.3em;*/
+    font-size: medium;
+    /*1.3em;*/
     font-weight: bold;
     border: 0;
     background-color: #558;
@@ -74,10 +77,14 @@ table.error td {
 th.data {
     color: #ada;
     background-color: #241;
-    font-size: smaller; /* 0.9em */
+    font-size: smaller;
+    /* 0.9em */
 }
 
-th.data a:active, th.data a:link, th.data a:visited, th.data a:hover {
+th.data a:active,
+th.data a:link,
+th.data a:visited,
+th.data a:hover {
     font-weight: bold;
     display: block;
 }
@@ -91,7 +98,8 @@ th.required {
     text-decoration: underline
 }
 
-ul.toplink, ul.navlink {
+ul.toplink,
+ul.navlink {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -101,39 +109,51 @@ ul.navlink {
     margin: 20px 0
 }
 
-ul.toplink li, ul.navlink li {
+ul.toplink li,
+ul.navlink li {
     display: inline;
     border-left: 1px solid #eee;
     margin: 0;
     padding: 0 2px 0 5px;
 }
 
-ul.toplink li:first-child, ul.navlink li:first-child {
+ul.toplink li:first-child,
+ul.navlink li:first-child {
     border: none;
     padding-left: 0;
 }
 
-tr.data1, tr.data2, tr.data3 {
+tr.data1,
+tr.data2,
+tr.data3 {
     color: #eed;
     font-family: sans-serif;
-    font-size: smaller; /*0.8em;*/
+    font-size: smaller;
+    /*0.8em;*/
 }
 
-tr.data1:hover, tr.data2:hover, tr.data3:hover {
+tr.data1:hover,
+tr.data2:hover,
+tr.data3:hover {
     background-color: #39663e;
 }
 
-.row1, .data1 {
+.row1,
+.data1 {
     background-color: #2b482e;
     text-align: left;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
     border: 1px #200 solid;
     background: #ddf;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
     color: #210;
 }
 
@@ -150,34 +170,45 @@ td label span {
     vertical-align: middle;
 }
 
-.data1 select, .data2 select {
+.data1 select,
+.data2 select {
     font-weight: bold;
 }
 
-p input:focus, .data input:focus, .data1 input:focus, .data2 input:focus, textarea:focus, .data1 select, .data2 select {
-    /*	background:#bbf;	*/
+p input:focus,
+.data input:focus,
+.data1 input:focus,
+.data2 input:focus,
+textarea:focus,
+.data1 select,
+.data2 select {
+    /*  background:#bbf;    */
     background: #eef;
     color: #000;
 }
 
-.row2, .data2 {
+.row2,
+.data2 {
     background-color: #1a3f1e;
     text-align: left;
 }
 
 td.opbutton1 {
     border: 1px solid #484;
-    font-size: smaller; /*0.8em;*/
+    font-size: smaller;
+    /*0.8em;*/
     text-align: center;
 }
 
 td.opbutton2 {
     border: 1px solid #484;
-    font-size: smaller; /*0.8em;*/
+    font-size: smaller;
+    /*0.8em;*/
     text-align: center;
 }
 
-td.opbutton1 a, td.opbutton2 a {
+td.opbutton1 a,
+td.opbutton2 a {
     padding-left: 6px;
     padding-right: 6px;
 }
@@ -186,22 +217,31 @@ td.opbutton1 a, td.opbutton2 a {
     border: 0
 }
 
-.topbar, .topbar *, .trail, .tab, .crumb {
+.topbar,
+.topbar *,
+.trail,
+.tab,
+.crumb {
     border: 0;
     background: #336;
 }
 
-.topbar .platform, .topbar .host, .topbar .username {
+.topbar .platform,
+.topbar .host,
+.topbar .username {
     font-weight: bold;
 }
 
-.topbar, .trail, .tab {
+.topbar,
+.trail,
+.tab {
     padding: 2px 1ex;
     font-size: smaller;
     color: #ddf;
 }
 
-.crumb, .tab {
+.crumb,
+.tab {
     vertical-align: top;
 }
 
@@ -228,25 +268,32 @@ table.tabs {
     display: block
 }
 
-tr, td {
+tr,
+td {
     height: 100%
 }
 
-td:not(.constraint_cell) a:not(.help), th a {
+td:not(.constraint_cell) a:not(.help),
+th a {
     display: inline-block;
     height: 100%
 }
 
+
 /* vertical-align:middle doesn't work for block elements, CSS sux */
-td.crumb a, td.tab a {
+
+td.crumb a,
+td.tab a {
     width: 90%
 }
 
-tr.data1 a, tr.data2 a {
+tr.data1 a,
+tr.data2 a {
     width: 100%
 }
 
-td.opbutton1 a, td.opbutton2 a {
+td.opbutton1 a,
+td.opbutton2 a {
     width: inherit
 }
 
@@ -271,7 +318,8 @@ a:active {
     text-decoration: underline;
 }
 
-a, a:link {
+a,
+a:link {
     color: #afa;
     text-decoration: none;
 }
@@ -290,25 +338,37 @@ a:active {
     color: #c00;
 }
 
-a.navlink:link, a.toplink:link, ul.navlink li a, ul.toplink li a {
+a.navlink:link,
+a.toplink:link,
+ul.navlink li a,
+ul.toplink li a {
     color: #afa;
     font-weight: bold;
     text-decoration: none;
 }
 
-a.navlink:visited, a.toplink:visited, ul.navlink li a:visited, ul.toplink li a:visited {
+a.navlink:visited,
+a.toplink:visited,
+ul.navlink li a:visited,
+ul.toplink li a:visited {
     color: #df8;
     font-weight: bold;
     text-decoration: none;
 }
 
-a.navlink:hover, a.toplink:hover, ul.navlink li a:hover, ul.toplink li a:hover {
+a.navlink:hover,
+a.toplink:hover,
+ul.navlink li a:hover,
+ul.toplink li a:hover {
     color: red;
     font-weight: bold;
     text-decoration: none;
 }
 
-a.navlink:active, a.toplink:active, ul.navlink li a:active, ul.toplink li a:active {
+a.navlink:active,
+a.toplink:active,
+ul.navlink li a:active,
+ul.toplink li a:active {
     color: #c00;
     font-weight: bold;
     text-decoration: none;
@@ -364,8 +424,10 @@ a.bottom_link:hover {
     background: #68f
 }
 
+
 /** FK browsing **/
-div#root > div.fk {
+
+div#root>div.fk {
     border: 1px solid #000;
 }
 

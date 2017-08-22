@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     /* init some needed tags and values */
 
@@ -9,19 +9,21 @@ $(document).ready(function() {
         root: $('#root')
     };
 
-    $("a.fk").on('click', function(event) {
+    $("a.fk").on('click', function (event) {
         /* make the cursor being a waiting cursor */
         $('body').css('cursor', 'wait');
 
         query = $.ajax({
             type: 'GET',
             dataType: 'html',
-            data: { action: 'dobrowsefk' },
+            data: {
+                action: 'dobrowsefk'
+            },
             url: $(this).attr('href'),
             cache: false,
             context: $(this),
             contentType: 'application/x-www-form-urlencoded',
-            success: function(answer) {
+            success: function (answer) {
                 pdiv = this.closest('div.fk');
                 divclass = this.attr('class').split(' ')[1];
 
@@ -56,22 +58,30 @@ $(document).ready(function() {
 
                 /* highlight referencing fields */
                 newdiv.data('ref', this).data('refclass', $(this).attr('class').split(' ')[1])
-                    .mouseenter(function(event) {
+                    .mouseenter(function (event) {
                         $(this).data('ref').closest('tr').find('a.' + $(this).data('refclass')).closest('div').addClass('highlight');
                     })
-                    .mouseleave(function(event) {
+                    .mouseleave(function (event) {
                         $(this).data('ref').closest('tr').find('a.' + $(this).data('refclass')).closest('div').removeClass('highlight');
                     });
 
                 /* appending it to the level-1 div */
                 pdiv.append(newdiv);
+
+                newdiv.on('click', '.fk_delete', function (event) {
+                    console.log('clicked .fk_delete', jQuery(this));
+                    with($(this).closest('div')) {
+                        data('ref').closest('tr').find('a.' + data('refclass')).closest('div').removeClass('highlight');
+                        remove();
+                    }
+                });
             },
 
-            error: function() {
+            error: function () {
                 this.closest('div.fk').append('<p class="errmsg">' + Display.errmsg + '</p>');
             },
 
-            complete: function() {
+            complete: function () {
                 $('body').css('cursor', 'auto');
             }
         });
@@ -79,11 +89,5 @@ $(document).ready(function() {
         return false; // do not refresh the page
     });
 
-    $(".fk_delete").on('click', function(event) {
-        with($(this).closest('div')) {
-            data('ref').closest('tr').find('a.' + data('refclass')).closest('div').removeClass('highlight');
-            remove();
-        }
-        return false; // do not refresh the page
-    });
+
 });

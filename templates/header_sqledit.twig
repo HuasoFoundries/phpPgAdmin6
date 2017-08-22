@@ -2,23 +2,15 @@
 <html xml:lang="{{applocale}}" lang="{{applocale}}" isolang="{{isolang}}" dir="{{dir}}">
 
     <head data-headertemplate="{{headertemplate}}">
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        {% include 'components/common_head.twig' %}
 
-        <link rel="stylesheet" href="{{subfolder}}/src/themes/default/global.css" type="text/css" id="csstheme" />
-        <link rel="stylesheet" href="{{subfolder}}/src/themes/{{theme}}/global.css" type="text/css" id="csstheme" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" type="text/css" />
         <link rel="stylesheet" href="{{subfolder}}/js/codemirror/addon/hint/show-hint.css" type="text/css" />
         <link rel="stylesheet" href="{{subfolder}}/js/codemirror/codemirror.css" type="text/css" />
         <link rel="stylesheet" href="{{subfolder}}/js/codemirror/addon/fold/foldgutter.css" type="text/css" />
-        <link rel="shortcut icon" href="{{Favicon}}" type="image/vnd.microsoft.icon" />
-        <link rel="icon" href="{{Introduction}}" type="image/png" />
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
         <script src="{{subfolder}}/js/codemirror/codemirror.js"></script>
         <script src="{{subfolder}}/js/codemirror/mode/sql/sql.js"></script>
         <script src="{{subfolder}}/js/codemirror/addon/fold/foldcode.js"></script>
         <script src="{{subfolder}}/js/codemirror/addon/fold/foldgutter.js"></script>
         <script src="{{subfolder}}/js/codemirror/addon/fold/indent-fold.js"></script>
-
-        <title data-headertemplate="{{headertemplate}}">{{appName}}</title>
+    </head>

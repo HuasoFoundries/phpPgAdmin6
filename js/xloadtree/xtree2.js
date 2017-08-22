@@ -290,6 +290,7 @@ function WebFXTreeAbstractNode(sText, oAction, oIconAction) {
 	if (sText) this.text = sText;
 	if (oAction) this.action = oAction;
 	if (oIconAction) this.iconAction = oIconAction;
+
 	this.id = webFXTreeHandler.getUniqueId();
 	if (webFXTreeConfig.usePersistence) {
 		this.open = webFXTreeHandler.persistenceManager.getExpanded(this);

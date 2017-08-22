@@ -460,15 +460,19 @@ class Postgres extends ADOdbBase
         }
 
         $sql = "
-			SELECT pdb.datname AS datname, pr.rolname AS datowner, pg_encoding_to_char(encoding) AS datencoding,
-				(SELECT description FROM pg_catalog.pg_shdescription pd WHERE pdb.oid=pd.objoid AND pd.classoid='pg_database'::regclass) AS datcomment,
-				(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=pdb.dattablespace) AS tablespace,
+			SELECT pdb.datname AS datname,
+                    pr.rolname AS datowner,
+                    pg_encoding_to_char(encoding) AS datencoding,
+				    (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pdb.oid=pd.objoid AND pd.classoid='pg_database'::regclass) AS datcomment,
+				    (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=pdb.dattablespace) AS tablespace,
 				CASE WHEN pg_catalog.has_database_privilege(current_user, pdb.oid, 'CONNECT')
 					THEN pg_catalog.pg_database_size(pdb.oid)
 					ELSE -1 -- set this magic value, which we will convert to no access later
-				END as dbsize, pdb.datcollate, pdb.datctype
+				END as dbsize,
+                pdb.datcollate,
+                pdb.datctype
 			FROM pg_catalog.pg_database pdb
-				LEFT JOIN pg_catalog.pg_roles pr ON (pdb.datdba = pr.oid)
+            LEFT JOIN pg_catalog.pg_roles pr ON (pdb.datdba = pr.oid)
 			WHERE true
 				{$where}
 				{$clause}

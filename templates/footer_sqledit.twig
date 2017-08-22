@@ -2,30 +2,12 @@
 jQuery(document).ready(function () {
 
 
-    if (window.parent.frames.length !== 0) {
-
-        var stateObj = {
-                realurl: location.href.replace(location.origin, '')
-            },
-            newurl = stateObj.realurl.replace('src/views/', '').replace('.php', ''),
-            parenturl = window.parent.location.href.replace(window.parent.location.origin, '');
-
-
-        if (newurl !== parenturl) {
-            console.log('pushState', {
-                newurl: newurl,
-                parenturl: parenturl
-            });
-            window.parent.history.pushState(stateObj, document.title, newurl);
-        }
-    }
-
     jQuery('#query').focus();
     CodeMirror.commands.sendQuery = function () {
         console.log('SEND QUERY');
         jQuery('#sqlform').submit();
     };
-    if (jQuery('#query').length) {
+    if (jQuery('textarea#query').length) {
         window.editor = CodeMirror.fromTextArea($('#query')[0], {
             mode: 'text/x-sql',
             indentWithTabs: true,
@@ -41,17 +23,18 @@ jQuery(document).ready(function () {
             gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
         });
     }
-
-    jQuery('table.tabs').prependTo('body');
-    jQuery('table.printconnection').prependTo('.sqlform');
-
-    if (window.parent.frames.length > 1) {
-        $('#csstheme', window.parent.frames[0].document).attr('href', '{{subfolder}}/src/themes/default/global.css');
+    if (window.inPopUp) {
+        jQuery('table.tabs').prependTo('body');
+        jQuery('table.printconnection').prependTo('.sqlform');
     }
+    /*if (window.parent.frames.length > 1) {
+        $('#csstheme', window.parent.frames[0].document).attr('href', '{{subfolder}}/src/themes/default/global.css');
+    }*/
     //jQuery('.CodeMirror').focus().css('height', $('#query').attr('rows') * 30).resizable();
     jQuery('.CodeMirror')
         .focus()
         .css('height', $('#query').attr('rows') * 30);
+
     if (location.pathname.indexOf('sqledit.php') !== -1) {
 
         var windowsize = {
@@ -61,6 +44,7 @@ jQuery(document).ready(function () {
         };
         console.log('window size', windowsize);
         var height_difference = windowsize.height - jQuery('.CodeMirror').innerHeight();
+
         jQuery(window).on('resize', function () {
             var windowsize = {
                 height: jQuery(window).innerHeight(),
@@ -76,7 +60,7 @@ jQuery(document).ready(function () {
     }
 });
 </script>
-{% include 'footer_scripts.twig' %}
+{% include 'components/footer_scripts.twig' %}
 </body>
 
 </html>

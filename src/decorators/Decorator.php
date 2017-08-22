@@ -30,8 +30,10 @@ class Decorator
                 case 'xml':
                     return strtr($val, [
                         '&' => '&amp;',
-                        "'" => '&apos;', '"' => '&quot;',
-                        '<' => '&lt;', '>'   => '&gt;',
+                        "'" => '&apos;',
+                        '"' => '&quot;',
+                        '<' => '&lt;',
+                        '>' => '&gt;',
                     ]);
                 case 'html':
                     return htmlentities($val, ENT_COMPAT, 'UTF-8');
@@ -47,6 +49,17 @@ class Decorator
         $val = self::get_sanitized_value($var, $fields, 'xml');
         if (!empty($val)) {
             return " {$attr}=\"{$val}\"";
+        } else {
+            return '';
+        }
+
+    }
+
+    public static function value_xml_attr_tag($attr, &$var, &$fields)
+    {
+        $val = self::get_sanitized_value($var, $fields, 'xml');
+        if (!empty($val)) {
+            return "<{$attr}>{$val}</{$attr}>";
         } else {
             return '';
         }
@@ -127,8 +140,8 @@ class Decorator
         // at value evaluation time.
 
         if (func_num_args() > 2) {
-            $v = func_get_args();
-            array_shift($v);
+            $v    = func_get_args();
+            $base = array_shift($v);
             return new UrlDecorator($base, new ArrayMergeDecorator($v));
         }
         return new UrlDecorator($base, $vars);

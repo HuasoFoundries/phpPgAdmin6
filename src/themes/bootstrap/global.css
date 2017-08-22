@@ -1,5 +1,5 @@
-@import url(../global.css);
 @import url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css);
+
 
 /**
  * Default style sheet
@@ -13,6 +13,7 @@ frame {
     color: #336699 !important;
     font-size: 12px;
 }
+
 
 /** ELEMENTS */
 
@@ -38,8 +39,7 @@ body.bottombar {
 }
 
 h2 {
-    color: #336699 !important
-    font-weight: bold;
+    color: #336699 !important font-weight: bold;
     border: 2px solid #DFFBFD;
     background-color: #FDFDFD;
     padding: 2px 1em;
@@ -410,9 +410,10 @@ pre.error {
     font-size: smaller;
 }
 
+
 /** FK browsing **/
 
-div#root > div.fk {
+div#root>div.fk {
     border: 1px solid #000;
 }
 

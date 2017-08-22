@@ -1,5 +1,7 @@
-@import url(../global.css);
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700,400italic);
+
+
+
 
 
 
@@ -307,6 +309,9 @@ table.tabs {
 
 
 
+
+
+
 /*.tab .label {
     display: inline-block;
     float: left;
@@ -417,6 +422,9 @@ pre.error {
     border-left: 1px dotted #999;
     font-size: smaller;
 }
+
+
+
 
 
 

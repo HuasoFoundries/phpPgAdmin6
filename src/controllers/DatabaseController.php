@@ -112,7 +112,7 @@ class DatabaseController extends BaseController
 
     }
 
-    public function doTree()
+    public function doTree($print = true)
     {
 
         $conf = $this->conf;
@@ -122,8 +122,6 @@ class DatabaseController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $reqvars = $misc->getRequestVars('database');
-
-        //$this->prtrace($reqvars);
 
         $tabs = $misc->getNavTabs('database');
 
@@ -136,7 +134,7 @@ class DatabaseController extends BaseController
             'branch' => Decorator::url(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['action' => 'tree']),
         ];
 
-        return $this->printTree($items, $attrs, 'database');
+        return $this->printTree($items, $attrs, 'database', $print);
 
     }
 

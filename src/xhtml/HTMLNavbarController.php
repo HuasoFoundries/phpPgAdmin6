@@ -143,7 +143,7 @@ class HTMLNavbarController extends HTMLController
                 if (!isset($tab['hide']) || $tab['hide'] !== true) {
                     $tabs[$tab_id]            = $tab;
                     $tabs[$tab_id]['active']  = $active  = ($tab_id == $activetab) ? ' active' : '';
-                    $tabs[$tab_id]['tablink'] = str_replace('&amp;', '&', htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
+                    $tabs[$tab_id]['tablink'] = str_replace(['&amp;', '.php'], ['&', ''], htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
                     if (isset($tab['icon']) && $icon = $misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
 
@@ -239,7 +239,7 @@ class HTMLNavbarController extends HTMLController
                 'sql'     => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER . '/src/views/sqledit.php',
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'sql',
                             ]),
@@ -252,7 +252,7 @@ class HTMLNavbarController extends HTMLController
                 'history' => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER . '/src/views/history.php',
+                            'url'     => SUBFOLDER . '/src/views/history',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
@@ -264,7 +264,7 @@ class HTMLNavbarController extends HTMLController
                 'find'    => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER . '/src/views/sqledit.php',
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'find',
                             ]),
@@ -277,7 +277,7 @@ class HTMLNavbarController extends HTMLController
                 'logout'  => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER . '/src/views/servers.php',
+                            'url'     => SUBFOLDER . '/src/views/servers',
                             'urlvars' => [
                                 'action'       => 'logout',
                                 'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}",
@@ -389,7 +389,7 @@ class HTMLNavbarController extends HTMLController
 
         $trail['root'] = [
             'text' => $appName,
-            'url'  => SUBFOLDER . '/redirect/root',
+            'url'  => SUBFOLDER . '/src/views/servers',
             'icon' => 'Introduction',
         ];
 
@@ -479,7 +479,7 @@ class HTMLNavbarController extends HTMLController
                 'icon'  => 'Fts',
             ];
         }
-        if ($subject == 'table' || $subject == 'view' || $subject == 'ftscfg') {
+        if ($subject == 'table' || $subject == 'view' || $subject == 'matview' || $subject == 'ftscfg') {
             $done = true;
         }
 
@@ -565,7 +565,7 @@ class HTMLNavbarController extends HTMLController
         $list_html = "<ul class=\"{$class}\">\n";
         foreach ($links as $link) {
             $list_html .= "\t<li>";
-            $list_html .= $this->printLink($link, false, $from);
+            $list_html .= str_replace('.php', '', $this->printLink($link, false, $from));
             $list_html .= "</li>\n";
         }
         $list_html .= "</ul>\n";

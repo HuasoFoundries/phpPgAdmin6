@@ -1,8 +1,7 @@
-@import url(../global.css);
-
 /**
  * cappuccino style sheet
  */
+
 
 /* ELEMENTS */
 
@@ -15,7 +14,7 @@ body {
     /*0.8em;*/
 }
 
-body > * {
+body>* {
     margin-left: 20px
 }
 
@@ -26,7 +25,7 @@ body.browser {
     color: #fff;
 }
 
-body.browser > * {
+body.browser>* {
     margin: 0
 }
 
@@ -285,6 +284,7 @@ pre.error {
     border-top: 1px dotted #887f5c;
     border-left: 1px dotted #887f5c;
 }
+
 
 /** FK browsing **/
 

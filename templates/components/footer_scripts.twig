@@ -1,0 +1,69 @@
+<!--</div>
+</div>-->
+
+<script type="text/javascript">
+var dir = '{{lang.applangdir}}';
+if (!window.inPopUp) {
+
+
+	$(document).ready(function () {
+
+		// Check if we are inside an iframe, in which case use history API to change top URL
+		if (window.parent.frames.length !== 0) {
+
+			/* beautify preserve:start */
+			var stateObj = {
+				'realurl': location.href.replace(location.origin, ''),
+				'path': '{{path}}', //path will only be defined inside a route
+				'query_string': '{{query_string}}',
+/*{% for key,value in params %}*/
+				'{{key}}':'{{value}}',
+/*{% endfor %}*/
+				'method': '{{METHOD}}'
+			};
+			/* beautify preserve:end */
+			stateObj.newurl = stateObj.realurl.replace('src/views/', '').replace('.php', '');
+			stateObj.parenturl = window.parent.location.href.replace(window.parent.location.origin, '');
+
+			if (stateObj.method !== 'GET') {
+
+				console.log('Will not pushState with Method', stateObj.method);
+
+			} else if (stateObj.newurl !== stateObj.parenturl) {
+				console.log('will pushState', stateObj);
+				window.parent.history.pushState(stateObj, document.title, stateObj.newurl);
+			} else {
+
+				console.log('no changes in stateObj', {
+					newurl: stateObj.newurl,
+					parenturl: stateObj.parenturl
+				});
+			}
+
+			if (jQuery.fn) {
+				if (jQuery.fn.select2) {
+					jQuery('.select2').select2();
+				}
+				if (jQuery.fn.DataTable) {
+					$('.will_be_datatable').DataTable({
+						"pageLength": 100
+					});
+				}
+			}
+
+		} else {
+			var redirect_to,
+				subject = location.pathname.replace('{{subfolder}}/src/views/', '').replace('.php', '');
+
+			if (subject === '{{subfolder}}/redirect/server') {
+				subject = '/servers';
+			}
+			redirect_to = '{{subfolder}}/' + subject + location.search
+			var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
+			location.replace(redirect_to);
+		}
+
+
+	});
+}
+</script>

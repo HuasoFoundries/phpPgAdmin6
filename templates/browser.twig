@@ -9,16 +9,16 @@
 </style>
 </head>
 
-<body>
+<body class="browser">
 
-    <div dir="ltr">
+    <div dir="{{lang.applangdir}}">
 
         <div class="logo">
             <a href="{{subfolder}}/" target="_parent">{{appName}}</a>
         </div>
         <div class="refreshTree">
-            <a href="{{subfolder}}/src/views/browser.php" target="browser">
-                    <img src="{{icon.Refresh}}" alt="{{strrefresh}}" title="{{strrefresh}}" />
+            <a href="{{subfolder}}/src/views/browser" target="browser">
+                    <img src="{{icon.Refresh}}" alt="{{lang.strrefresh}}" title="{{lang.strrefresh}}" />
                 </a>
         </div>
 
@@ -39,10 +39,11 @@
     webFXTreeConfig.blankIcon = "{{icon.blank}}";
     webFXTreeConfig.loadingIcon = "{{icon.Loading}}";
     webFXTreeConfig.errorIcon = "{{icon.ObjectNotFound}}";
-    webFXTreeConfig.loadingText = "{{strloading}}";
-    webFXTreeConfig.errorLoadingText = "{{strerrorloading}}";
-    webFXTreeConfig.reloadText = "{{strclicktoreload}}";
+    webFXTreeConfig.loadingText = "{{lang.strloading}}";
+    webFXTreeConfig.errorLoadingText = "{{lang.strerrorloading}}";
+    webFXTreeConfig.reloadText = "{{lang.strclicktoreload}}";
     // Set default target frame:
+    //WebFXTreeAbstractNode.prototype.target = '_parent';
     WebFXTreeAbstractNode.prototype.target = 'detail';
     // Disable double click:
     WebFXTreeAbstractNode.prototype._ondblclick = function () {}
@@ -58,7 +59,7 @@
     };
     */
     //var tree = new WebFXLoadTree("{{strservers}}", "/tree/servers" /* src for sub branches */ , "/src/views/servers.php" /* action */ );
-    var tree = new WebFXLoadTree("{{strservers}}", "{{subfolder}}/src/views/servers.php?action=tree" /* src for sub branches */ , "servers.php" /* action */ );
+    var tree = new WebFXLoadTree("{{lang.strservers}}", "{{subfolder}}/src/views/servers?action=tree", "servers");
     tree.write();
     tree.setExpanded(true);
     </script>

@@ -20,7 +20,7 @@ class HistoryController extends BaseController
 
         $data = $misc->getDatabaseAccessor();
 
-        $this->scripts = '<script type="text/javascript">window.dontRedirect=true;</script>';
+        $this->scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
 
         switch ($action) {
             case 'confdelhistory':

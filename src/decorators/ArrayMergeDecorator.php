@@ -1,6 +1,6 @@
 <?php
 
-    namespace PHPPgAdmin\Decorators;
+namespace PHPPgAdmin\Decorators;
 
 class ArrayMergeDecorator extends Decorator
 {
@@ -18,4 +18,4 @@ class ArrayMergeDecorator extends Decorator
 
         return $accum;
     }
-    }
+}
