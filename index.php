@@ -40,7 +40,7 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
         }
 
         $misc->setReloadBrowser(true);
-        $all_db_controller = new \PHPPgAdmin\Controller\AllDBController($this);
+        $all_db_controller = new \PHPPgAdmin\Controller\AlldbController($this);
         return $all_db_controller->render();
 
     } else {

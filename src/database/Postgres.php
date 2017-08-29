@@ -352,9 +352,9 @@ class Postgres extends ADOdbBase
             case 'xml':
             case 'xml[]':
                 $n = substr_count($value, "\n");
-                $n = $n < 5 ? 5 : $n;
+                $n = $n < 5 ? max(2, $n) : $n;
                 $n = $n > 20 ? 20 : $n;
-                echo '<textarea name="', htmlspecialchars($name), "\" rows=\"{$n}\" cols=\"75\"{$extra_str}>\n";
+                echo '<textarea name="', htmlspecialchars($name), "\" rows=\"{$n}\" cols=\"85\"{$extra_str}>\n";
                 echo htmlspecialchars($value);
                 echo "</textarea>\n";
                 break;
