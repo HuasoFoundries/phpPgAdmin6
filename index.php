@@ -5,7 +5,7 @@
  */
 require_once './src/lib.inc.php';
 
-$app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
+$app->post('/redirect[/{subject}]', function ($request, $response, $args) {
 
     $body         = $response->getBody();
     $query_string = $request->getUri()->getQuery();
@@ -55,7 +55,7 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) use ($
 
 });
 
-$app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($msg) {
+$app->get('/redirect[/{subject}]', function ($request, $response, $args) {
 
     $subject        = (isset($args['subject'])) ? $args['subject'] : 'root';
     $destinationurl = $this->utils->getDestinationWithLastTab($subject);
@@ -63,23 +63,40 @@ $app->get('/redirect[/{subject}]', function ($request, $response, $args) use ($m
 
 });
 
-$app->get('/src/views/{subject:[intro|login|servers|browser]+}', function ($request, $response, $args) use ($msg) {
+$app->get('/src/views/browser', function ($request, $response, $args) {
 
-    $subject    = $args['subject'];
-    $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
-    $controller = new $className($this, true);
+    $controller = new \PHPPgAdmin\Controller\BrowserController($this, true);
     return $controller->render();
 });
 
-$app->map(['GET', 'POST'], '/src/views/{subject}', function ($request, $response, $args) use ($msg) {
+$app->get('/src/views/login', function ($request, $response, $args) {
 
-    $subject    = $args['subject'];
+    $controller = new \PHPPgAdmin\Controller\LoginController($this, true);
+    return $controller->render();
+});
+
+$app->get('/src/views/servers', function ($request, $response, $args) {
+
+    $controller = new \PHPPgAdmin\Controller\ServersController($this, true);
+    return $controller->render();
+});
+
+$app->get('/src/views/intro', function ($request, $response, $args) {
+
+    $controller = new \PHPPgAdmin\Controller\IntroController($this, true);
+    return $controller->render();
+});
+
+$app->map(['GET', 'POST'], '/src/views/{subject}', function ($request, $response, $args) {
+
+    $subject = $args['subject'];
+
     $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
     $controller = new $className($this);
     return $controller->render();
 });
 
-$app->get('/[{subject}]', function ($request, $response, $args) use ($msg) {
+$app->get('/[{subject}]', function ($request, $response, $args) {
 
     $subject      = (isset($args['subject'])) ? $args['subject'] : 'intro';
     $_server_info = $this->misc->getServerInfo();
