@@ -1,0 +1,53 @@
+var avoid_bogus_character = true;
+if (avoid_bogus_character) {
+	jQuery(document).ready(function () {
+		jQuery('#query').focus();
+		CodeMirror.commands.sendQuery = function () {
+			console.log('SEND QUERY');
+			jQuery('#sqlform').submit();
+		};
+		if (jQuery('textarea#query').length) {
+			window.editor = CodeMirror.fromTextArea($('#query')[0], {
+				mode: 'text/x-sql',
+				indentWithTabs: true,
+				smartIndent: true,
+				lineNumbers: true,
+				matchBrackets: true,
+				autofocus: true,
+				extraKeys: {
+					"Ctrl-Space": "autocomplete",
+					"Ctrl-Enter": "sendQuery"
+				},
+				foldGutter: true,
+				gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+			});
+		}
+		if (window.inPopUp) {
+			jQuery('table.tabs').prependTo('body');
+			jQuery('table.printconnection').prependTo('.sqlform');
+		}
+
+		jQuery('.CodeMirror').focus().css('height', $('#query').attr('rows') * 30);
+
+		if (location.pathname.indexOf('sqledit.php') !== -1) {
+			var windowsize = {
+				height: jQuery(window).innerHeight(),
+				width: jQuery(window).innerWidth(),
+				height_difference: height_difference
+			};
+
+			var height_difference = windowsize.height - jQuery('.CodeMirror').innerHeight();
+			jQuery(window).on('resize', function () {
+				var windowsize = {
+					height: jQuery(window).innerHeight(),
+					width: jQuery(window).innerWidth(),
+					height_difference: height_difference
+				};
+				//console.log('window size', windowsize);
+				jQuery('.CodeMirror').css('height', (windowsize.height - height_difference));
+			});
+		} else {
+			jQuery('.CodeMirror').resizable();
+		}
+	});
+}
