@@ -89,6 +89,16 @@ $app->get('/src/views/intro', function ($request, $response, $args) {
 
 $app->map(['GET', 'POST'], '/src/views/{subject}', function ($request, $response, $args) {
 
+    if ($this->misc->getServerId() === null) {
+        return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/servers');
+    }
+    $_server_info = $this->misc->getServerInfo();
+
+    if (!isset($_server_info['username'])) {
+        $destinationurl = SUBFOLDER . '/src/views/login?server=' . $this->misc->getServerId();
+        return $response->withStatus(302)->withHeader('Location', $destinationurl);
+    }
+
     $subject = $args['subject'];
 
     $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';

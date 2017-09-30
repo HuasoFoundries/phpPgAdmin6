@@ -68,16 +68,18 @@ class BaseController
 
         if ($this->misc->getNoDBConnection() === false) {
             if ($this->misc->getServerId() === null) {
-                echo $this->lang['strnoserversupplied'];
+                $servers_controller = new \PHPPgAdmin\Controller\ServersController($container, true);
+                return $servers_controller->render();
                 exit;
             }
             $_server_info = $this->misc->getServerInfo();
             // Redirect to the login form if not logged in
             if (!isset($_server_info['username'])) {
 
-                $login_controller = new \PHPPgAdmin\Controller\LoginController($container);
-                echo $login_controller->doLoginForm($msg);
+                $msg = sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
 
+                $servers_controller = new \PHPPgAdmin\Controller\ServersController($container, true);
+                return $servers_controller->render();
                 exit;
             }
         }
