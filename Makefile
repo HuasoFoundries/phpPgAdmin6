@@ -11,6 +11,7 @@ version:
 
 
 install: 
+	sudo rm -R --force temp/twigcache/*
 	composer install --no-dev
 	chmod 777 temp -R
 

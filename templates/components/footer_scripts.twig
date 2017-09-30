@@ -1,7 +1,7 @@
 <!--</div>
 </div>-->
 
-<script type="text/javascript">
+<script>
 var dir = '{{lang.applangdir}}';
 if (!window.inPopUp) {
 
@@ -16,9 +16,9 @@ if (!window.inPopUp) {
 				'realurl': location.href.replace(location.origin, ''),
 				'path': '{{path}}', //path will only be defined inside a route
 				'query_string': '{{query_string}}',
-/*{% for key,value in params %}*/
-				'{{key}}':'{{value}}',
-/*{% endfor %}*/
+{% for key,value in params %}
+				'{{key}}': '{{value}}',
+{% endfor %}
 				'method': '{{METHOD}}'
 			};
 			/* beautify preserve:end */
@@ -58,7 +58,7 @@ if (!window.inPopUp) {
 			if (subject === '{{subfolder}}/redirect/server') {
 				subject = '/servers';
 			}
-			redirect_to = '{{subfolder}}/' + subject + location.search
+			redirect_to = '{{subfolder}}/' + subject + location.search;
 			var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
 			location.replace(redirect_to);
 		}
