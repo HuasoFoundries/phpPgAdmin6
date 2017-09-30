@@ -20,7 +20,7 @@ update_version:
 	@echo "Current version is " ${VERSION}
 	@echo "Next version is " $(v)
 	sed -i s/"$(VERSION)"/"$(v)"/g composer.json
-	composer update nothing
+	composer update nothing --lock
 
 tag_and_push:
 		git add --all
@@ -29,7 +29,7 @@ tag_and_push:
 		git push
 		git push --tags
 
-tag: update_version tag_and_push	
+tag: test update_version tag_and_push	
 
 test:
 	./vendor/bin/codecept run unit --debug

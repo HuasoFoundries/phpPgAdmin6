@@ -329,7 +329,14 @@ $app->add(function ($request, $response, $next) {
     $this->view->offsetSet('query_string', $query_string);
     $path = SUBFOLDER . '/' . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
     $this->view->offsetSet('path', $path);
-    $this->view->offsetSet('params', $request->getParams());
+
+    $params = $request->getParams();
+
+    // remove tabs and linebreaks from query
+    if (isset($params['query'])) {
+        $params['query'] = str_replace(["\r", "\n", "\t"], ' ', $params['query']);
+    }
+    $this->view->offsetSet('params', $params);
 
     //return $this->utils->die('hola');
 

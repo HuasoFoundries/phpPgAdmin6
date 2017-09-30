@@ -17,7 +17,7 @@ if (!window.inPopUp) {
 				'path': '{{path}}', //path will only be defined inside a route
 				'query_string': '{{query_string}}',
 {% for key,value in params %}
-				'{{key}}': '{{value}}',
+				'{{key}}': "{{value}}",
 {% endfor %}
 				'method': '{{METHOD}}'
 			};
