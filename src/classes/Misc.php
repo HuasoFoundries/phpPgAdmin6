@@ -12,7 +12,6 @@ use \PHPPgAdmin\Decorators\Decorator;
 
 class Misc
 {
-
     use \PHPPgAdmin\HelperTrait;
 
     private $_connection       = null;
@@ -37,7 +36,6 @@ class Misc
     /* Constructor */
     public function __construct(\Slim\Container $container)
     {
-
         $this->container = $container;
 
         $this->lang = $container->get('lang');
@@ -56,7 +54,6 @@ class Misc
         // Check for config file version mismatch
         if (!isset($this->conf['version']) || $base_version > $this->conf['version']) {
             $container->get('utils')->addError($this->lang['strbadconfig']);
-
         }
 
         // Check database support is properly compiled in
@@ -72,9 +69,9 @@ class Misc
         if (count($this->conf['servers']) === 1) {
             $info            = $this->conf['servers'][0];
             $this->server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
-        } else if (isset($_REQUEST['server'])) {
+        } elseif (isset($_REQUEST['server'])) {
             $this->server_id = $_REQUEST['server'];
-        } else if (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
+        } elseif (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
             $this->server_id = array_keys($_SESSION['webdbLogin'])[0];
         }
     }
@@ -109,7 +106,7 @@ class Misc
     {
         if ($key === null) {
             return $this->conf;
-        } else if (array_key_exists($key, $this->conf)) {
+        } elseif (array_key_exists($key, $this->conf)) {
             return $this->conf[$key];
         }
         return null;
@@ -132,7 +129,6 @@ class Misc
         if ($help !== null) {
             $helplink = $this->getHelpLink($help);
             $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">' . $this->lang['strhelpicon'] . '</a>';
-
         }
         if ($do_print) {
             echo $str;
@@ -144,7 +140,6 @@ class Misc
     public function getHelpLink($help)
     {
         return htmlspecialchars(SUBFOLDER . '/help?help=' . urlencode($help) . '&server=' . urlencode($this->getServerId()));
-
     }
 
     /**
@@ -179,7 +174,6 @@ class Misc
      */
     public static function adodb_throw($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection)
     {
-
         if (error_reporting() == 0) {
             return;
         }
@@ -285,7 +279,6 @@ class Misc
         }
 
         if ($this->data === null) {
-
             try {
                 $_connection = $this->getConnection($database, $this->server_id);
             } catch (\Exception $e) {
@@ -337,7 +330,6 @@ class Misc
             if ($this->data->hasByteaHexDefault()) {
                 $this->data->execute('SET bytea_output TO escape');
             }
-
         }
 
         if ($this->_no_db_connection === false && $this->getDatabase() !== null && isset($_REQUEST['schema'])) {
@@ -376,13 +368,11 @@ class Misc
                 ];
 
                 if (isset($server_info['username']) && array_key_exists(strtolower($server_info['username']), $bad_usernames)) {
-
                     $msg = $lang['strlogindisallowed'];
                     throw new \Exception($msg);
                 }
 
                 if (!isset($server_info['password']) || $server_info['password'] == '') {
-
                     $msg = $lang['strlogindisallowed'];
 
                     throw new \Exception($msg);
@@ -420,7 +410,7 @@ class Misc
 
         if ($server_id !== null) {
             $this->server_id = $server_id;
-        } else if ($this->server_info !== null) {
+        } elseif ($this->server_info !== null) {
             return $this->server_info;
         }
 
@@ -442,14 +432,12 @@ class Misc
                 }
                 $this->server_info = $info;
                 return $this->server_info;
-
             }
         }
 
         if ($server_id === null) {
             $this->server_info = null;
             return $this->server_info;
-
         }
 
         $this->server_info = null;
@@ -481,7 +469,6 @@ class Misc
                 //\PC::debug(['server_id' => $server_id, 'value' => $value], 'webdbLogin null key');
                 $_SESSION['webdbLogin'][$server_id] = $value;
             }
-
         } else {
             if ($value === null) {
                 unset($_SESSION['webdbLogin'][$server_id][$key]);
@@ -489,13 +476,11 @@ class Misc
                 //\PC::debug(['server_id' => $server_id, 'key' => $key, 'value' => $value], __FILE__ . ' ' . __LINE__ . ' webdbLogin key ' . $key);
                 $_SESSION['webdbLogin'][$server_id][$key] = $value;
             }
-
         }
     }
 
     public function getDatabase($database = '')
     {
-
         if ($this->server_id === null && !isset($_REQUEST['database'])) {
             return null;
         }
@@ -504,9 +489,9 @@ class Misc
 
         if ($this->server_id !== null && isset($server_info['useonlydefaultdb']) && $server_info['useonlydefaultdb'] === true) {
             $this->database = $server_info['defaultdb'];
-        } else if ($database !== '') {
+        } elseif ($database !== '') {
             $this->database = $database;
-        } else if (isset($_REQUEST['database'])) {
+        } elseif (isset($_REQUEST['database'])) {
             // Connect to the current database
             $this->database = $_REQUEST['database'];
         } else {
@@ -515,7 +500,6 @@ class Misc
         }
 
         return $this->database;
-
     }
 
     /**
@@ -558,7 +542,6 @@ class Misc
                         ),
                     ];
                 }
-
             }
 
             if ($group_id === false) {
@@ -578,7 +561,6 @@ class Misc
                     ),
                 ];
             }
-
         }
 
         if ($recordset) {
@@ -597,7 +579,6 @@ class Misc
      */
     public function getServers($recordset = false, $group = false)
     {
-
         $logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
         $srvs   = [];
 
@@ -696,7 +677,6 @@ class Misc
         $this->href = $this->getHREF();
         //\PC::debug($this->href, 'Misc::href');
         return $this;
-
     }
 
     /**
@@ -1062,7 +1042,6 @@ class Misc
                                     if ($str < $limit * $mult) {
                                         $out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strtb'];
                                     }
-
                                 }
                             }
                         }
@@ -1141,7 +1120,6 @@ class Misc
         } else {
             $var = stripslashes($var);
         }
-
     }
 
     /**
@@ -1152,7 +1130,6 @@ class Misc
      */
     public function getNavTabs($section)
     {
-
         $data           = $this->data;
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
@@ -1916,7 +1893,6 @@ class Misc
                 } else {
                     echo "$i\n";
                 }
-
             }
             if ($page != $pages) {
                 $temp = $page + 1;
@@ -2010,7 +1986,6 @@ class Misc
             if (file_exists(BASE_PATH . $path . '.ico')) {
                 return SUBFOLDER . $path . '.ico';
             }
-
         } else {
             // Icon from plugins
             $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
@@ -2025,7 +2000,6 @@ class Misc
             if (file_exists(BASE_PATH . $path . '.ico')) {
                 return SUBFOLDER . $path . '.ico';
             }
-
         }
         return '';
     }
@@ -2053,7 +2027,6 @@ class Misc
         } else {
             return escapeshellarg($str);
         }
-
     }
 
     /**
@@ -2126,16 +2099,13 @@ class Misc
         $connection_html .= "</td><td class=\"popup_select2\" style=\"text-align: right\">\n";
 
         if (count($servers) === 1 && isset($servers[$this->server_id]['useonlydefaultdb']) && $servers[$this->server_id]['useonlydefaultdb'] === true) {
-
             $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($servers[$this->server_id]['defaultdb']) . "\" />\n";
-
         } else {
 
             // Get the list of all databases
             $data      = $this->getDatabaseAccessor();
             $databases = $data->getDatabases();
             if ($databases->recordCount() > 0) {
-
                 $connection_html .= '<label>';
                 $connection_html .= $this->printHelp($lang['strdatabase'], 'pg.database', false);
                 $connection_html .= ": <select name=\"database\" {$onchange}>\n";
@@ -2166,7 +2136,6 @@ class Misc
         } else {
             return $connection_html;
         }
-
     }
 
     /**

@@ -6,7 +6,6 @@ namespace PHPPgAdmin;
  */
 class ContainerUtils
 {
-
     private $container;
 
     public function __construct($container)
@@ -16,7 +15,6 @@ class ContainerUtils
 
     public function getRedirectUrl()
     {
-
         $query_string = $this->container->requestobj->getUri()->getQuery();
 
         // but if server_id isn't set, then you will be redirected to intro
@@ -31,16 +29,12 @@ class ContainerUtils
 
     public function getDestinationWithLastTab($subject)
     {
-
         $_server_info = $this->container->misc->getServerInfo();
 
         // If username isn't set in server_info, you should login
         if (!isset($_server_info['username'])) {
-
             $destinationurl = $this->getRedirectUrl();
-
         } else {
-
             $url = $this->container->misc->getLastTabURL($subject);
 
             // Load query vars into superglobal arrays
@@ -58,7 +52,6 @@ class ContainerUtils
         }
 
         return $destinationurl;
-
     }
 
     public function addError($errormsg)
@@ -68,7 +61,6 @@ class ContainerUtils
         $this->container->offsetSet('errors', $errors);
 
         return $this->container;
-
     }
 
     /**
@@ -77,7 +69,6 @@ class ContainerUtils
      */
     public function prtrace()
     {
-
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = ([
@@ -154,5 +145,4 @@ class ContainerUtils
     {
         return str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
     }
-
 }

@@ -70,7 +70,6 @@ class AlldbController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
@@ -211,12 +210,10 @@ class AlldbController extends BaseController
             ],
         ];
         $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
-
     }
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -309,7 +306,6 @@ class AlldbController extends BaseController
             } else {
                 $this->doDefault($lang['strdatabasealteredbad']);
             }
-
         }
     }
 
@@ -329,20 +325,17 @@ class AlldbController extends BaseController
         }
 
         if ($confirm) {
-
             $this->printTrail('database');
             $this->printTitle($lang['strdrop'], 'pg.database.drop');
 
             echo '<form action="' . SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
-
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfdropdatabase'], $misc->printVal($a['database'])), "</p>\n";
                     printf('<input type="hidden" name="dropdatabase[]" value="%s" />', htmlspecialchars($a['database']));
                 }
-
             } else {
                 echo '<p>', sprintf($lang['strconfdropdatabase'], $misc->printVal($_REQUEST['dropdatabase'])), "</p>\n";
                 echo '<input type="hidden" name="dropdatabase" value="', htmlspecialchars($_REQUEST['dropdatabase']), "\" />\n";
@@ -377,7 +370,6 @@ class AlldbController extends BaseController
                 } else {
                     $this->doDefault($lang['strdatabasedroppedbad']);
                 }
-
             }
         } //END DROP
     }
@@ -561,7 +553,6 @@ class AlldbController extends BaseController
             } else {
                 $this->doCreate($lang['strdatabasecreatedbad']);
             }
-
         }
     }
 
@@ -616,5 +607,4 @@ class AlldbController extends BaseController
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }
-
 }

@@ -64,7 +64,6 @@ class ColpropertiesController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata) use ($data) {
-
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
         };
 
@@ -381,5 +380,4 @@ class ColpropertiesController extends BaseController
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
         }
     }
-
 }
