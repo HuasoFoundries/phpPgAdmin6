@@ -2,7 +2,7 @@
 
     namespace PHPPgAdmin\Database;
 
-    /**
+/**
      * PostgreSQL 8.2 support
      *
      * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
@@ -10,7 +10,6 @@
 
     class Postgres82 extends Postgres83
     {
-
         public $major_version = 8.2;
 
         // Select operators
@@ -297,7 +296,6 @@
          */
         public function clusterIndex($table = '', $index = '')
         {
-
             $sql = 'CLUSTER';
 
             // We don't bother with a transaction here, as there's no point rolling
@@ -417,5 +415,4 @@
         {
             return false;
         }
-
     }

@@ -368,5 +368,4 @@ class InfoController extends BaseController
             }
         }
     }
-
 }

@@ -57,7 +57,6 @@ class OperatorsController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
@@ -65,7 +64,6 @@ class OperatorsController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -235,12 +233,11 @@ class OperatorsController extends BaseController
         } else {
             $this->doDefault($lang['strinvalidparam']);
         }
-
     }
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+    /**
+     * Show confirmation of drop and perform actual drop
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -270,9 +267,6 @@ class OperatorsController extends BaseController
             } else {
                 $this->doDefault($lang['stroperatordroppedbad']);
             }
-
         }
-
     }
-
 }

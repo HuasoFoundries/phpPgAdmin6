@@ -90,7 +90,6 @@ class SequencesController extends BaseController
 
         // Print footer
         return $this->printFooter();
-
     }
 
     /**
@@ -198,7 +197,6 @@ class SequencesController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -377,7 +375,6 @@ class SequencesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
@@ -443,7 +440,6 @@ class SequencesController extends BaseController
                 } else {
                     $this->doDefault($lang['strsequencedroppedbad']);
                 }
-
             } else {
                 $status = $data->dropSequence($_POST['sequence'], isset($_POST['cascade']));
                 if ($status == 0) {
@@ -452,7 +448,6 @@ class SequencesController extends BaseController
                 } else {
                     $this->doDrop(true, $lang['strsequencedroppedbad']);
                 }
-
             }
         }
     }
@@ -576,7 +571,6 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequencerestartbad']);
         }
-
     }
 
     /**
@@ -595,7 +589,6 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequenceresetbad']);
         }
-
     }
 
     /**
@@ -614,7 +607,6 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequencenextvalbad']);
         }
-
     }
 
     /**
@@ -633,7 +625,6 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequencesetvalbad']);
         }
-
     }
 
     /**
@@ -670,7 +661,6 @@ class SequencesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
@@ -739,7 +729,6 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequencealteredbad']);
         }
-
     }
 
     /**
@@ -863,7 +852,5 @@ class SequencesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
-
 }

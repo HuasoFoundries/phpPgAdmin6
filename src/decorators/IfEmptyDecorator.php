@@ -22,6 +22,6 @@ class IfEmptyDecorator extends Decorator
             return isset($this->f) ? Decorator::get_sanitized_value($this->f, $fields) : $val;
         }
 
-            return isset($this->f) ? Decorator::get_sanitized_value($this->f, $fields) : $val;
+        return isset($this->f) ? Decorator::get_sanitized_value($this->f, $fields) : $val;
     }
-    }
+}

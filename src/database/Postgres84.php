@@ -2,7 +2,7 @@
 
     namespace PHPPgAdmin\Database;
 
-    /**
+/**
      * PostgreSQL 8.4 support
      *
      * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
@@ -10,7 +10,6 @@
 
     class Postgres84 extends Postgres90
     {
-
         public $major_version = 8.4;
 
         // List of all legal privileges that can be applied to different types
@@ -215,5 +214,4 @@
         {
             return false;
         }
-
     }
