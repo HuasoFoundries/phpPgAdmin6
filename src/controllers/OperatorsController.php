@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class OperatorsController extends BaseController
 {
@@ -57,7 +57,6 @@ class OperatorsController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
@@ -65,7 +64,6 @@ class OperatorsController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -96,7 +94,7 @@ class OperatorsController extends BaseController
     }
 
     /**
-     * Show default list of operators in the database
+     * Show default list of operators in the database.
      */
     public function doDefault($msg = '')
     {
@@ -164,7 +162,7 @@ class OperatorsController extends BaseController
     }
 
     /**
-     * Show read only properties for an operator
+     * Show read only properties for an operator.
      */
     public function doProperties($msg = '')
     {
@@ -177,7 +175,7 @@ class OperatorsController extends BaseController
         $this->printTitle($lang['strproperties'], 'pg.operator');
         $this->printMsg($msg);
 
-        $oprdata                       = $data->getOperator($_REQUEST['operator_oid']);
+        $oprdata = $data->getOperator($_REQUEST['operator_oid']);
         $oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
 
         if ($oprdata->recordCount() > 0) {
@@ -230,17 +228,16 @@ class OperatorsController extends BaseController
                         ],
                     ],
                     'content' => $lang['strshowalloperators'],
-                ]], 'operators-properties', get_defined_vars()
+                ], ], 'operators-properties', get_defined_vars()
             );
         } else {
             $this->doDefault($lang['strinvalidparam']);
         }
-
     }
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+    /**
+     * Show confirmation of drop and perform actual drop.
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -254,7 +251,7 @@ class OperatorsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropoperator'], $misc->printVal($_REQUEST['operator'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/operators.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/operators.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="operator" value="', htmlspecialchars($_REQUEST['operator']), "\" />\n";
@@ -270,9 +267,6 @@ class OperatorsController extends BaseController
             } else {
                 $this->doDefault($lang['stroperatordroppedbad']);
             }
-
         }
-
     }
-
 }

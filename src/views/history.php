@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Alternative SQL editing window
+ * Alternative SQL editing window.
  *
  * $Id: history.php,v 1.3 2008/01/10 19:37:07 xzilla Exp $
  */

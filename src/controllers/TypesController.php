@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class TypesController extends BaseController
 {
@@ -73,11 +73,10 @@ class TypesController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
-     * Show default list of types in the database
+     * Show default list of types in the database.
      */
     public function doDefault($msg = '')
     {
@@ -205,7 +204,6 @@ class TypesController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -229,11 +227,10 @@ class TypesController extends BaseController
         ];
 
         return $this->printTree($types, $attrs, 'types');
-
     }
 
     /**
-     * Show read only properties for a type
+     * Show read only properties for a type.
      */
     public function doProperties($msg = '')
     {
@@ -296,14 +293,13 @@ class TypesController extends BaseController
                     echo "<tr><th class=\"data left\">{$lang['stralignment']}</th>\n";
                     echo '<td class="data1">', $misc->printVal($typedata->fields['typalign']), "</td></tr>\n";
                     if ($data->hasEnumTypes() && $vals) {
-                        $vals   = $vals->getArray();
+                        $vals = $vals->getArray();
                         $nbVals = count($vals);
                         echo "<tr>\n\t<th class=\"data left\" rowspan=\"$nbVals\">{$lang['strenumvalues']}</th>\n";
                         echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>\n";
                         for ($i = 1; $i < $nbVals; $i++) {
                             echo '<td class="data', 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>\n";
                         }
-
                     }
                     echo "</table>\n";
             }
@@ -324,12 +320,11 @@ class TypesController extends BaseController
         } else {
             $this->doDefault($lang['strinvalidparam']);
         }
-
     }
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+    /**
+     * Show confirmation of drop and perform actual drop.
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -343,7 +338,7 @@ class TypesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdroptype'], $misc->printVal($_REQUEST['type'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
@@ -358,14 +353,12 @@ class TypesController extends BaseController
             } else {
                 $this->doDefault($lang['strtypedroppedbad']);
             }
-
         }
-
     }
 
-/**
- * Displays a screen where they can enter a new composite type
- */
+    /**
+     * Displays a screen where they can enter a new composite type.
+     */
     public function doCreateComposite($msg = '')
     {
         $conf = $this->conf;
@@ -395,7 +388,7 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -423,10 +416,12 @@ class TypesController extends BaseController
                 if (trim($_REQUEST['name']) == '') {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedsname']);
+
                     return;
                 } elseif ($fields == '' || !is_numeric($fields) || $fields != (int) $fields || $fields < 1) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedscols']);
+
                     return;
                 }
 
@@ -436,7 +431,7 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -500,10 +495,12 @@ class TypesController extends BaseController
                 if (trim($_REQUEST['name']) == '') {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedsname']);
+
                     return;
                 } elseif ($fields == '' || !is_numeric($fields) || $fields != (int) $fields || $fields <= 0) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedscols']);
+
                     return;
                 }
 
@@ -516,10 +513,12 @@ class TypesController extends BaseController
                 } elseif ($status == -1) {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateComposite($lang['strtypeneedsfield']);
+
                     return;
                 } else {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateComposite($lang['strtypecreatedbad']);
+
                     return;
                 }
                 break;
@@ -528,9 +527,9 @@ class TypesController extends BaseController
         }
     }
 
-/**
- * Displays a screen where they can enter a new enum type
- */
+    /**
+     * Displays a screen where they can enter a new enum type.
+     */
     public function doCreateEnum($msg = '')
     {
         $conf = $this->conf;
@@ -560,7 +559,7 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -588,10 +587,12 @@ class TypesController extends BaseController
                 if (trim($_REQUEST['name']) == '') {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsname']);
+
                     return;
                 } elseif ($values == '' || !is_numeric($values) || $values != (int) $values || $values < 1) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsvals']);
+
                     return;
                 }
 
@@ -599,7 +600,7 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -633,10 +634,12 @@ class TypesController extends BaseController
                 if (trim($_REQUEST['name']) == '') {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsname']);
+
                     return;
                 } elseif ($values == '' || !is_numeric($values) || $values != (int) $values || $values <= 0) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsvals']);
+
                     return;
                 }
 
@@ -647,10 +650,12 @@ class TypesController extends BaseController
                 } elseif ($status == -1) {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateEnum($lang['strtypeneedsvalue']);
+
                     return;
                 } else {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateEnum($lang['strtypecreatedbad']);
+
                     return;
                 }
                 break;
@@ -659,9 +664,9 @@ class TypesController extends BaseController
         }
     }
 
-/**
- * Displays a screen where they can enter a new type
- */
+    /**
+     * Displays a screen where they can enter a new type.
+     */
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
@@ -713,7 +718,7 @@ class TypesController extends BaseController
         $this->printTitle($lang['strcreatetype'], 'pg.type.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -737,7 +742,7 @@ class TypesController extends BaseController
             $funcs->moveNext();
         }
         echo "</select></td></tr>\n";
-        echo '<tr><th class="data left' . (version_compare($data->major_version, '7.4', '<') ? ' required' : '') . "\">{$lang['strlength']}</th>\n";
+        echo '<tr><th class="data left'.(version_compare($data->major_version, '7.4', '<') ? ' required' : '')."\">{$lang['strlength']}</th>\n";
         echo '<td class="data1"><input name="typlen" size="8" value="',
         htmlspecialchars($_POST['typlen']), '" /></td></tr>';
         echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
@@ -781,9 +786,9 @@ class TypesController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Actually creates the new type in the database
- */
+    /**
+     * Actually creates the new type in the database.
+     */
     public function doSaveCreate()
     {
         $conf = $this->conf;
@@ -816,8 +821,6 @@ class TypesController extends BaseController
             } else {
                 $this->doCreate($lang['strtypecreatedbad']);
             }
-
         }
     }
-
 }

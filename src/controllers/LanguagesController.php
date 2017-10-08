@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class LanguagesController extends BaseController
 {
@@ -13,9 +13,9 @@ class LanguagesController extends BaseController
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
         if ($action == 'tree') {
             return $this->doTree();
@@ -31,11 +31,10 @@ class LanguagesController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
-     * Show default list of languages in the database
+     * Show default list of languages in the database.
      */
     public function doDefault($msg = '')
     {
@@ -76,7 +75,6 @@ class LanguagesController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -90,7 +88,5 @@ class LanguagesController extends BaseController
         ];
 
         return $this->printTree($languages, $attrs, 'languages');
-
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Helper;
 
 // here you can define custom actions
@@ -6,7 +7,6 @@ namespace Helper;
 
 class Unit extends \Codeception\Module
 {
-
     const DIRNAME = __DIR__;
 
     private static $container;
@@ -19,12 +19,10 @@ class Unit extends \Codeception\Module
     public static function getContainer()
     {
         if (!static::$container) {
-            require_once self::DIRNAME . '/../../../src/lib.inc.php';
+            require_once self::DIRNAME.'/../../../src/lib.inc.php';
             self::$container = $container;
         }
 
         return self::$container;
-
     }
-
 }

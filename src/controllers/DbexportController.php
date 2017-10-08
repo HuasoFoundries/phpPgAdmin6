@@ -3,7 +3,7 @@
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class DbexportController extends BaseController
 {
@@ -11,10 +11,10 @@ class DbexportController extends BaseController
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
         $action = $this->action;
 
         // Prevent timeouts on large exports
@@ -32,7 +32,6 @@ class DbexportController extends BaseController
 
         // Check that database dumps are enabled.
         if ($misc->isDumpEnabled($dumpall)) {
-
             $server_info = $misc->getServerInfo();
 
             // Get the path of the pg_dump/pg_dumpall executable
@@ -40,7 +39,7 @@ class DbexportController extends BaseController
 
             // Obtain the pg_dump version number and check if the path is good
             $version = [];
-            preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($exe . ' --version'), $version);
+            preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($exe.' --version'), $version);
 
             $this->prtrace('$exe', $exe, 'version', $version[1]);
 
@@ -78,20 +77,20 @@ class DbexportController extends BaseController
             }
 
             // Set environmental variables that pg_dump uses
-            putenv('PGPASSWORD=' . $server_info['password']);
-            putenv('PGUSER=' . $server_info['username']);
+            putenv('PGPASSWORD='.$server_info['password']);
+            putenv('PGUSER='.$server_info['username']);
             $hostname = $server_info['host'];
             if ($hostname !== null && $hostname != '') {
-                putenv('PGHOST=' . $hostname);
+                putenv('PGHOST='.$hostname);
             }
             $port = $server_info['port'];
             if ($port !== null && $port != '') {
-                putenv('PGPORT=' . $port);
+                putenv('PGPORT='.$port);
             }
 
             // Build command for executing pg_dump.  '-i' means ignore version differences.
             if (((float) $version[1]) < 9.5) {
-                $cmd = $exe . ' -i';
+                $cmd = $exe.' -i';
             } else {
                 $cmd = $exe;
             }
@@ -106,7 +105,7 @@ class DbexportController extends BaseController
             switch ($_REQUEST['subject']) {
                 case 'schema':
                     // This currently works for 8.2+ (due to the orthoganl -t -n issue introduced then)
-                    $cmd .= ' -n ' . $misc->escapeShellArg("\"{$f_schema}\"");
+                    $cmd .= ' -n '.$misc->escapeShellArg("\"{$f_schema}\"");
                     break;
                 case 'table':
                 case 'view':
@@ -117,13 +116,13 @@ class DbexportController extends BaseController
                     // Starting in 8.2, -n and -t are orthagonal, so we now schema qualify
                     // the table name in the -t argument and quote both identifiers
                     if (((float) $version[1]) >= 8.2) {
-                        $cmd .= ' -t ' . $misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
+                        $cmd .= ' -t '.$misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
                     } else {
                         // If we are 7.4 or higher, assume they are using 7.4 pg_dump and
                         // set dump schema as well.  Also, mixed case dumping has been fixed
                         // then..
-                        $cmd .= ' -t ' . $misc->escapeShellArg($f_object)
-                        . ' -n ' . $misc->escapeShellArg($f_schema);
+                        $cmd .= ' -t '.$misc->escapeShellArg($f_object)
+                        .' -n '.$misc->escapeShellArg($f_schema);
                     }
             }
 
@@ -164,7 +163,7 @@ class DbexportController extends BaseController
             }
 
             if (!$dumpall) {
-                putenv('PGDATABASE=' . $_REQUEST['database']);
+                putenv('PGDATABASE='.$_REQUEST['database']);
             }
 
             $this->prtrace('ENV VARS', [
@@ -180,5 +179,4 @@ class DbexportController extends BaseController
             passthru($cmd);
         }
     }
-
 }

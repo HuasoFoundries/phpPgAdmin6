@@ -3,14 +3,12 @@
 namespace PHPPgAdmin\Database;
 
 /**
- * Class to represent a database connection
+ * Class to represent a database connection.
  *
  * $Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
  */
-
 class Connection
 {
-
     use \PHPPgAdmin\HelperTrait;
 
     public $conn;
@@ -38,7 +36,7 @@ class Connection
         // Ignore host if null
         if ($host === null || $host == '') {
             if ($port !== null && $port != '') {
-                $pghost = ':' . $port;
+                $pghost = ':'.$port;
             } else {
                 $pghost = '';
             }
@@ -48,7 +46,7 @@ class Connection
 
         // Add sslmode to $pghost as needed
         if (($sslmode == 'disable') || ($sslmode == 'allow') || ($sslmode == 'prefer') || ($sslmode == 'require')) {
-            $pghost .= ':' . $sslmode;
+            $pghost .= ':'.$sslmode;
         } elseif ($sslmode == 'legacy') {
             $pghost .= ' requiressl=1';
         }
@@ -72,14 +70,14 @@ class Connection
      * Gets the name of the correct database driver to use.  As a side effect,
      * sets the platform.
      *
-     * @param  (return-by-ref) $description A description of the database and version
-     * @return The class name of the driver eg. Postgres84
+     * @param (return-by-ref) $description A description of the database and version
+     *
+     * @return The  class name of the driver eg. Postgres84
      * @return null if version is < 7.4
-     * @return -3 Database-specific failure
+     * @return -3   Database-specific failure
      */
     public function getDriver(&$description)
     {
-
         $v = pg_version($this->conn->_connectionID);
 
         //\PhpConsole\Handler::getInstance()->debug($v, 'pg_version');
@@ -92,7 +90,7 @@ class Connection
         if (!isset($version)) {
             $adodb = new ADOdbBase($this->conn);
 
-            $sql   = 'SELECT VERSION() AS version';
+            $sql = 'SELECT VERSION() AS version';
             $field = $adodb->selectField($sql, 'version');
 
             // Check the platform, if it's mingw, set it
@@ -114,8 +112,8 @@ class Connection
 
         // Detect version and choose appropriate database driver
         switch (substr($version, 0, 3)) {
-            case '10.0';
-		        return 'Postgres96';
+            case '10.0':
+                return 'Postgres96';
                 break;
             case '9.7':
                 return 'Postgres96';
@@ -166,7 +164,7 @@ class Connection
         // if major version is 7 or less and wasn't cought in the
         // switch/case block, we have an unsupported version.
         if ((int) substr($version, 0, 1) < 8) {
-            return null;
+            return;
         }
 
         // If unknown version, then default to latest driver
@@ -174,7 +172,7 @@ class Connection
     }
 
     /**
-     * Get the last error in the connection
+     * Get the last error in the connection.
      *
      * @return Error string
      */

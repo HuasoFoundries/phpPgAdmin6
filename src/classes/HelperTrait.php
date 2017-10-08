@@ -1,15 +1,16 @@
 <?php
+
 namespace PHPPgAdmin;
 
 trait HelperTrait
 {
     /**
-     * Receives N parameters and sends them to the console adding where was it called from
+     * Receives N parameters and sends them to the console adding where was it called from.
+     *
      * @return [type] [description]
      */
     public function prtrace()
     {
-
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = ([
@@ -59,13 +60,14 @@ trait HelperTrait
     }
 
     /**
-     * Returns a string with html <br> variant replaced with a new line
-     * @param  string $msg [description]
-     * @return string      [description]
+     * Returns a string with html <br> variant replaced with a new line.
+     *
+     * @param string $msg [description]
+     *
+     * @return string [description]
      */
     public static function br2ln(string $msg)
     {
         return str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
     }
-
 }

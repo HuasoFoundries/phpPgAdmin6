@@ -5,7 +5,7 @@ namespace PHPPgAdmin\Controller;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class ConversionsController extends BaseController
 {
@@ -35,14 +35,14 @@ class ConversionsController extends BaseController
     }
 
     /**
-     * Show default list of conversions in the database
+     * Show default list of conversions in the database.
      *
      * @param string $msg
+     *
      * @return string|void
      */
     public function doDefault($msg = '')
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -85,7 +85,6 @@ class ConversionsController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -115,5 +114,4 @@ class ConversionsController extends BaseController
 
         return $this->printTree($constraints, $attrs, 'constraints');
     }
-
 }

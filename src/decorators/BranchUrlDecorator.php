@@ -28,22 +28,23 @@ class BranchUrlDecorator extends Decorator
 
             $sep = '?';
             foreach ($queryVars as $var => $value) {
-                $varname  = Decorator::value_url($var, $fields);
+                $varname = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
                 if ($varname == 'action') {
                     if ($varvalue == 'subtree') {
-                        $url = '/tree/' . str_replace('.php', '/subtree', $url);
+                        $url = '/tree/'.str_replace('.php', '/subtree', $url);
                     } else {
-                        $url = '/tree/' . str_replace('.php', '', $url);
+                        $url = '/tree/'.str_replace('.php', '', $url);
                     }
                 }
-                $url .= $sep . $varname . '=' . $varvalue;
+                $url .= $sep.$varname.'='.$varvalue;
                 $sep = '&';
             }
         }
         if (SUBFOLDER !== '' && (strpos($url, '/') === 0) && (strpos($url, SUBFOLDER) === false)) {
-            $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
+            $url = str_replace('//', '/', SUBFOLDER.'/'.$url);
         }
+
         return str_replace('.php', '', $url);
     }
 }

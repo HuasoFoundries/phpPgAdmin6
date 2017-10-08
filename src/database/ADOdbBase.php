@@ -18,7 +18,7 @@ class ADOdbBase
     public $platform = 'UNKNOWN';
 
     /**
-     * Base constructor
+     * Base constructor.
      *
      * @param &$conn The connection object
      */
@@ -29,7 +29,7 @@ class ADOdbBase
     }
 
     /**
-     * Turns on or off query debugging
+     * Turns on or off query debugging.
      *
      * @param $debug True to turn on debugging, false otherwise
      */
@@ -39,9 +39,10 @@ class ADOdbBase
     }
 
     /**
-     * Cleans (escapes) an array
+     * Cleans (escapes) an array.
      *
      * @param $arr The array to clean, by reference
+     *
      * @return The cleaned array
      */
     public function arrayClean(&$arr)
@@ -55,9 +56,10 @@ class ADOdbBase
     }
 
     /**
-     * Executes a query on the underlying connection
+     * Executes a query on the underlying connection.
      *
      * @param $sql The SQL query to execute
+     *
      * @return A recordset
      */
     public function execute($sql)
@@ -79,9 +81,10 @@ class ADOdbBase
     }
 
     /**
-     * Retrieves a ResultSet from a query
+     * Retrieves a ResultSet from a query.
      *
      * @param $sql The SQL statement to be executed
+     *
      * @return A recordset
      */
     public function selectSet($sql)
@@ -97,13 +100,14 @@ class ADOdbBase
     }
 
     /**
-     * Retrieves a single value from a query
+     * Retrieves a single value from a query.
      *
      * @@ assumes that the query will return only one row - returns field value in the first row
      *
      * @param $sql   The SQL statement to be executed
      * @param $field The field name to be returned
-     * @return A single field value
+     *
+     * @return A  single field value
      * @return -1 No rows were found
      */
     public function selectField($sql, $field)
@@ -124,11 +128,12 @@ class ADOdbBase
     }
 
     /**
-     * Delete from the database
+     * Delete from the database.
      *
      * @param        $table      The name of the table
      * @param        $conditions (array) A map of field names to conditions
      * @param string $schema     (optional) The table's schema
+     *
      * @return int 0 success
      */
     public function delete($table, $conditions, $schema = '')
@@ -171,9 +176,10 @@ class ADOdbBase
     }
 
     /**
-     * Cleans (escapes) an object name (eg. table, field)
+     * Cleans (escapes) an object name (eg. table, field).
      *
      * @param $str The string to clean, by reference
+     *
      * @return The cleaned string
      */
     public function fieldClean(&$str)
@@ -184,9 +190,10 @@ class ADOdbBase
     }
 
     /**
-     * Cleans (escapes) a string
+     * Cleans (escapes) a string.
      *
-     * @param  string $str The string to clean, by reference
+     * @param string $str The string to clean, by reference
+     *
      * @return string The cleaned string
      */
     public function clean(&$str)
@@ -197,10 +204,11 @@ class ADOdbBase
     }
 
     /**
-     * Insert a set of values into the database
+     * Insert a set of values into the database.
      *
      * @param $table The table to insert into
      * @param $vars  (array) A mapping of the field names to the values to be inserted
+     *
      * @return int 0 success
      */
     public function insert($table, $vars)
@@ -208,7 +216,7 @@ class ADOdbBase
         $this->fieldClean($table);
 
         // Build clause
-        if (sizeof($vars) > 0) {
+        if (count($vars) > 0) {
             $fields = '';
             $values = '';
             foreach ($vars as $key => $value) {
@@ -227,7 +235,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields . $values . ')';
+            $sql = $fields.$values.')';
         }
 
         // Check for failures
@@ -246,19 +254,20 @@ class ADOdbBase
     }
 
     /**
-     * Update a row in the database
+     * Update a row in the database.
      *
      * @param       $table The table that is to be updated
      * @param       $vars  (array) A mapping of the field names to the values to be updated
      * @param       $where (array) A mapping of field names to values for the where clause
      * @param array $nulls (array, optional) An array of fields to be set null
+     *
      * @return int 0 success
      */
     public function update($table, $vars, $where, $nulls = [])
     {
         $this->fieldClean($table);
 
-        $setClause   = '';
+        $setClause = '';
         $whereClause = '';
 
         // Populate the syntax arrays
@@ -295,7 +304,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause . $whereClause)) {
+        if (!$this->conn->Execute($setClause.$whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
@@ -315,7 +324,7 @@ class ADOdbBase
     }
 
     /**
-     * Begin a transaction
+     * Begin a transaction.
      *
      * @return bool 0 success
      */
@@ -325,7 +334,7 @@ class ADOdbBase
     }
 
     /**
-     * End a transaction
+     * End a transaction.
      *
      * @return bool 0 success
      */
@@ -335,7 +344,7 @@ class ADOdbBase
     }
 
     /**
-     * Roll back a transaction
+     * Roll back a transaction.
      *
      * @return bool 0 success
      */
@@ -345,7 +354,7 @@ class ADOdbBase
     }
 
     /**
-     * Get the backend platform
+     * Get the backend platform.
      *
      * @return The backend platform
      */
@@ -358,9 +367,10 @@ class ADOdbBase
     // Type conversion routines
 
     /**
-     * Change the value of a parameter to database representation depending on whether it evaluates to true or false
+     * Change the value of a parameter to database representation depending on whether it evaluates to true or false.
      *
      * @param $parameter the parameter
+     *
      * @return \PHPPgAdmin\Database\the
      */
     public function dbBool(&$parameter)
@@ -369,9 +379,10 @@ class ADOdbBase
     }
 
     /**
-     * Change a parameter from database representation to a boolean, (others evaluate to false)
+     * Change a parameter from database representation to a boolean, (others evaluate to false).
      *
      * @param $parameter the parameter
+     *
      * @return \PHPPgAdmin\Database\the
      */
     public function phpBool($parameter)
@@ -380,10 +391,12 @@ class ADOdbBase
     }
 
     /**
-     * Change a db array into a PHP array
+     * Change a db array into a PHP array.
      *
      * @param $dbarr
+     *
      * @return \PHPPgAdmin\Database\A PHP array
+     *
      * @internal param String $arr representing the DB array
      */
     public function phpArray($dbarr)
@@ -393,8 +406,8 @@ class ADOdbBase
 
         // Pick out array entries by carefully parsing.  This is necessary in order
         // to cope with double quotes and commas, etc.
-        $elements  = [];
-        $i         = $j         = 0;
+        $elements = [];
+        $i = $j = 0;
         $in_quotes = false;
         while ($i < strlen($arr)) {
             // If current char is a double quote and it's not escaped, then
@@ -405,7 +418,7 @@ class ADOdbBase
             } elseif ($char == ',' && !$in_quotes) {
                 // Add text so far to the array
                 $elements[] = substr($arr, $j, $i - $j);
-                $j          = $i + 1;
+                $j = $i + 1;
             }
             $i++;
         }
@@ -414,12 +427,12 @@ class ADOdbBase
 
         // Do one further loop over the elements array to remote double quoting
         // and escaping of double quotes and backslashes
-        for ($i = 0; $i < sizeof($elements); $i++) {
+        for ($i = 0; $i < count($elements); $i++) {
             $v = $elements[$i];
             if (strpos($v, '"') === 0) {
-                $v            = substr($v, 1, strlen($v) - 2);
-                $v            = str_replace('\\"', '"', $v);
-                $v            = str_replace('\\\\', '\\', $v);
+                $v = substr($v, 1, strlen($v) - 2);
+                $v = str_replace('\\"', '"', $v);
+                $v = str_replace('\\\\', '\\', $v);
                 $elements[$i] = $v;
             }
         }

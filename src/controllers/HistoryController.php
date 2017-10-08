@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class HistoryController extends BaseController
 {
@@ -13,9 +13,9 @@ class HistoryController extends BaseController
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
 
         $data = $misc->getDatabaseAccessor();
@@ -52,8 +52,8 @@ class HistoryController extends BaseController
 
         // Set the name of the window
         $this->setWindowName('history');
-        return $this->printFooter();
 
+        return $this->printFooter();
     }
 
     public function doDefault()
@@ -63,24 +63,24 @@ class HistoryController extends BaseController
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
-        $onchange = "onchange=\"location.href='" . SUBFOLDER . "/src/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
+        $onchange = "onchange=\"location.href='".SUBFOLDER."/src/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
         $this->printHeader($lang['strhistory'], $this->scripts, true, 'header.twig');
 
         // Bring to the front always
         echo "<body onload=\"window.focus();\">\n";
 
-        echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/history.php\" method=\"post\">\n";
         $misc->printConnection($onchange);
         echo '</form><br />';
 
         if (!isset($_REQUEST['database'])) {
             echo "<p>{$lang['strnodatabaseselected']}</p>\n";
+
             return;
         }
 
         if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
-
             $history = new \PHPPgAdmin\ArrayRecordSet($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
 
             //Kint::dump($history);
@@ -200,7 +200,7 @@ class HistoryController extends BaseController
             echo "<p>{$lang['strconfdelhistory']}</p>\n";
 
             echo '<pre>', htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), '</pre>';
-            echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/history.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
             echo "<input type=\"hidden\" name=\"queryid\" value=\"$qid\" />\n";
             echo $misc->form;
@@ -210,7 +210,6 @@ class HistoryController extends BaseController
         } else {
             unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]);
         }
-
     }
 
     public function doClearHistory($confirm)
@@ -229,7 +228,7 @@ class HistoryController extends BaseController
             echo "<h3>{$lang['strclearhistory']}</h3>\n";
             echo "<p>{$lang['strconfclearhistory']}</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/history.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"clearhistory\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
@@ -238,7 +237,6 @@ class HistoryController extends BaseController
         } else {
             unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
         }
-
     }
 
     public function doDownloadHistory()
@@ -259,5 +257,4 @@ class HistoryController extends BaseController
 
         exit;
     }
-
 }

@@ -3,11 +3,11 @@
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class DataexportController extends BaseController
 {
-    public $_name      = 'DataexportController';
+    public $_name = 'DataexportController';
     public $extensions = [
         'sql'  => 'sql',
         'copy' => 'sql',
@@ -19,11 +19,10 @@ class DataexportController extends BaseController
 
     public function render()
     {
-
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
         $action = $this->action;
 
         set_time_limit(0);
@@ -33,7 +32,6 @@ class DataexportController extends BaseController
 
         // If format is set, then perform the export
         if (isset($_REQUEST['what'])) {
-
             $this->prtrace("REQUEST['what']", $_REQUEST['what']);
 
             // Include application functions
@@ -46,12 +44,12 @@ class DataexportController extends BaseController
                     if ($misc->isDumpEnabled() && ($_REQUEST['d_format'] == 'copy' || $_REQUEST['d_format'] == 'sql')) {
                         $this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
                         $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
-                        return $dbexport_controller->render();
 
+                        return $dbexport_controller->render();
                     } else {
                         $this->prtrace('d_format is', $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
                         $format = $_REQUEST['d_format'];
-                        $oids   = isset($_REQUEST['d_oids']);
+                        $oids = isset($_REQUEST['d_oids']);
                     }
                     break;
                 case 'structureonly':
@@ -59,6 +57,7 @@ class DataexportController extends BaseController
                     // instead of custom dump code
                     if ($misc->isDumpEnabled()) {
                         $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
+
                         return $dbexport_controller->render();
                     } else {
                         $clean = isset($_REQUEST['s_clean']);
@@ -70,11 +69,12 @@ class DataexportController extends BaseController
                     // instead of custom dump code
                     if ($misc->isDumpEnabled()) {
                         $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
+
                         return $dbexport_controller->render();
                     } else {
                         $format = $_REQUEST['sd_format'];
-                        $clean  = isset($_REQUEST['sd_clean']);
-                        $oids   = isset($_REQUEST['sd_oids']);
+                        $clean = isset($_REQUEST['sd_clean']);
+                        $oids = isset($_REQUEST['sd_oids']);
                     }
                     break;
             }
@@ -94,7 +94,7 @@ class DataexportController extends BaseController
                         $ext = 'txt';
                     }
 
-                    header('Content-Disposition: attachment; filename=dump.' . $ext);
+                    header('Content-Disposition: attachment; filename=dump.'.$ext);
                 }
             } else {
                 header('Content-Type: text/plain');
@@ -154,7 +154,6 @@ class DataexportController extends BaseController
                             } else {
                                 echo "\t", (is_null($v)) ? '\\N' : $v;
                             }
-
                         }
                         echo "\n";
                         $rs->moveNext();
@@ -209,8 +208,8 @@ class DataexportController extends BaseController
                         echo "\t<header>\n";
                         foreach ($rs->fields as $k => $v) {
                             $finfo = $rs->fetchField($j++);
-                            $name  = htmlspecialchars($finfo->name);
-                            $type  = htmlspecialchars($finfo->type);
+                            $name = htmlspecialchars($finfo->name);
+                            $type = htmlspecialchars($finfo->type);
                             echo "\t\t<column name=\"{$name}\" type=\"{$type}\" />\n";
                         }
                         echo "\t</header>\n";
@@ -221,7 +220,7 @@ class DataexportController extends BaseController
                         echo "\t\t<row>\n";
                         foreach ($rs->fields as $k => $v) {
                             $finfo = $rs->fetchField($j++);
-                            $name  = htmlspecialchars($finfo->name);
+                            $name = htmlspecialchars($finfo->name);
                             if (!is_null($v)) {
                                 $v = htmlspecialchars($v);
                             }
@@ -238,10 +237,10 @@ class DataexportController extends BaseController
                     while (!$rs->EOF) {
                         echo "INSERT INTO \"{$_REQUEST['table']}\" (";
                         $first = true;
-                        $j     = 0;
+                        $j = 0;
                         foreach ($rs->fields as $k => $v) {
                             $finfo = $rs->fetchField($j++);
-                            $k     = $finfo->name;
+                            $k = $finfo->name;
                             // SQL (INSERT) format cannot handle oids
                             //                        if ($k == $data->id) continue;
                             // Output field
@@ -256,7 +255,7 @@ class DataexportController extends BaseController
                                 // Output value
                                 // addCSlashes converts all weird ASCII characters to octal representation,
                                 // EXCEPT the 'special' ones like \r \n \t, etc.
-                                $v = addCSlashes($v, "\0..\37\177..\377");
+                                $v = addcslashes($v, "\0..\37\177..\377");
                                 // We add an extra escaping slash onto octal encoded characters
                                 $v = preg_replace('/\\\\([0-7]{3})/', '\\\1', $v);
                                 // Finally, escape all apostrophes
@@ -264,11 +263,10 @@ class DataexportController extends BaseController
                             }
                             if ($first) {
                                 $values = (is_null($v) ? 'NULL' : "'{$v}'");
-                                $first  = false;
+                                $first = false;
                             } else {
-                                $values .= ', ' . ((is_null($v) ? 'NULL' : "'{$v}'"));
+                                $values .= ', '.((is_null($v) ? 'NULL' : "'{$v}'"));
                             }
-
                         }
                         echo ") VALUES ({$values});\n";
                         $rs->moveNext();
@@ -288,7 +286,7 @@ class DataexportController extends BaseController
                         $first = true;
                         foreach ($rs->fields as $k => $v) {
                             $finfo = $rs->fetchField($k);
-                            $v     = $finfo->name;
+                            $v = $finfo->name;
                             if (!is_null($v)) {
                                 $v = str_replace('"', '""', $v);
                             }
@@ -299,7 +297,6 @@ class DataexportController extends BaseController
                             } else {
                                 echo "{$sep}\"{$v}\"";
                             }
-
                         }
                         echo "\r\n";
                     }
@@ -316,7 +313,6 @@ class DataexportController extends BaseController
                             } else {
                                 echo is_null($v) ? "{$sep}\"\\N\"" : "{$sep}\"{$v}\"";
                             }
-
                         }
                         echo "\r\n";
                         $rs->moveNext();
@@ -340,10 +336,10 @@ class DataexportController extends BaseController
 
     public function doDefault($msg = '')
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
         $action = $this->action;
 
         if (!isset($_REQUEST['query']) or empty($_REQUEST['query'])) {
@@ -358,7 +354,7 @@ class DataexportController extends BaseController
             $this->printMsg($msg);
         }
 
-        echo '<form action="' . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}:</th><td><select name=\"d_format\">\n";
         // COPY and SQL require a table
@@ -391,6 +387,5 @@ class DataexportController extends BaseController
         echo "</form>\n";
 
         $this->printFooter();
-
     }
 }

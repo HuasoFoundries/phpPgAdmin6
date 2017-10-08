@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class CastsController extends BaseController
 {
@@ -13,9 +13,9 @@ class CastsController extends BaseController
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
         if ($action == 'tree') {
             return $this->doTree();
@@ -33,11 +33,10 @@ class CastsController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
-     * Show default list of casts in the database
+     * Show default list of casts in the database.
      */
     public function doDefault($msg = '')
     {
@@ -47,7 +46,6 @@ class CastsController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $renderCastContext = function ($val) use ($lang) {
-
             switch ($val) {
                 case 'e':return $lang['strno'];
                 case 'a':return $lang['strinassignment'];
@@ -97,7 +95,6 @@ class CastsController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -113,7 +110,5 @@ class CastsController extends BaseController
         ];
 
         return $this->printTree($casts, $attrs, 'casts');
-
     }
-
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Manage functions in a database
+ * Manage functions in a database.
  *
  * $Id: functions.php,v 1.78 2008/01/08 22:50:29 xzilla Exp $
  */

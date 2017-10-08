@@ -31,20 +31,21 @@ class RedirectUrlDecorator extends Decorator
             $sep = '?';
             ksort($queryVars);
             foreach ($queryVars as $var => $value) {
-                $varname  = Decorator::value_url($var, $fields);
+                $varname = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
                 if ($varname == 'subject') {
-                    $url = '/' . str_replace('.php', '/' . $varvalue, $url);
+                    $url = '/'.str_replace('.php', '/'.$varvalue, $url);
                 } else {
-                    $url .= $sep . $varname . '=' . $varvalue;
+                    $url .= $sep.$varname.'='.$varvalue;
                 }
 
                 $sep = '&';
             }
         }
         if (SUBFOLDER !== '' && (strpos($url, '/') === 0) && (strpos($url, SUBFOLDER) === false)) {
-            $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
+            $url = str_replace('//', '/', SUBFOLDER.'/'.$url);
         }
+
         return str_replace('.php', '', $url);
     }
 }
