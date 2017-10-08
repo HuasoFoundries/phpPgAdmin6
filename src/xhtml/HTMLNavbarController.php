@@ -109,7 +109,6 @@ class HTMLNavbarController extends HTMLController
             } else {
                 return $this->printLinksList($navlinks, 'navlink', false, $from);
             }
-
         }
     }
 
@@ -146,7 +145,6 @@ class HTMLNavbarController extends HTMLController
                     $tabs[$tab_id]['tablink'] = str_replace(['&amp;', '.php'], ['&', ''], htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
                     if (isset($tab['icon']) && $icon = $misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
-
                     }
                     if (isset($tab['help'])) {
                         $tabs[$tab_id]['helpurl'] = str_replace('&amp;', '&', $this->misc->getHelpLink($tab['help']));
@@ -158,7 +156,6 @@ class HTMLNavbarController extends HTMLController
         //$this->prtrace($tabs);
 
         if (count($tabs) > 0) {
-
             $width = (int) (100 / count($tabs)) . '%';
 
             $viewVars = [
@@ -168,7 +165,6 @@ class HTMLNavbarController extends HTMLController
             ];
 
             $tabs_html = $this->getContainer()->view->fetch('components/tabs.twig', $viewVars);
-
         }
 
         if ($do_print) {
@@ -176,7 +172,6 @@ class HTMLNavbarController extends HTMLController
         } else {
             return $tabs_html;
         }
-
     }
 
     /**
@@ -205,7 +200,6 @@ class HTMLNavbarController extends HTMLController
      */
     private function printTopbar($do_print = true, $from = null)
     {
-
         if ($from === null || $from === false) {
             $from = __METHOD__;
         }
@@ -469,7 +463,6 @@ class HTMLNavbarController extends HTMLController
                 'help'  => 'pg.matview',
                 'icon'  => 'MViews',
             ];
-
         } elseif (isset($_REQUEST['ftscfg']) && !$done) {
             $trail['ftscfg'] = [
                 'title' => $lang['strftsconfig'],
@@ -575,5 +568,4 @@ class HTMLNavbarController extends HTMLController
             return $list_html;
         }
     }
-
 }

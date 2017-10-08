@@ -2,7 +2,7 @@
 
     namespace PHPPgAdmin\Database;
 
-    /**
+/**
      * PostgreSQL 8.1 support
      *
      * $Id: Postgres81.php,v 1.21 2008/01/19 13:46:15 ioguix Exp $
@@ -10,7 +10,6 @@
 
     class Postgres81 extends Postgres82
     {
-
         public $major_version = 8.1;
         // List of all legal privileges that can be applied to different types
         // of objects.

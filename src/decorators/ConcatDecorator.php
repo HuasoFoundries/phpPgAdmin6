@@ -18,4 +18,4 @@ class ConcatDecorator extends Decorator
 
         return trim($accum);
     }
-    }
+}
