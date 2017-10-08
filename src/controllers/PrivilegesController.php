@@ -3,21 +3,20 @@
 namespace PHPPgAdmin\Controller;
 
 /**
- * PrivilegesController controller class
+ * PrivilegesController controller class.
  */
 class PrivilegesController extends BaseController
 {
-    public $_name       = 'PrivilegesController';
+    public $_name = 'PrivilegesController';
     public $table_place = 'privileges-privileges';
 
     public function render()
     {
-
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+        $data = $misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strprivileges']);
         $this->printBody();
@@ -43,23 +42,22 @@ class PrivilegesController extends BaseController
     }
 
     /**
-     * Show permissions on a database, namespace, relation, language or function
+     * Show permissions on a database, namespace, relation, language or function.
      */
     public function doDefault($msg = '')
     {
-
-        $conf     = $this->conf;
-        $misc     = $this->misc;
-        $lang     = $this->lang;
-        $action   = $this->action;
-        $data     = $misc->getDatabaseAccessor();
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $action = $this->action;
+        $data = $misc->getDatabaseAccessor();
         $database = $misc->getDatabase();
 
         $this->printTrail($_REQUEST['subject']);
 
-        # @@@FIXME: This switch is just a temporary solution,
-        # need a better way, maybe every type of object should
-        # have a tab bar???
+        // @@@FIXME: This switch is just a temporary solution,
+        // need a better way, maybe every type of object should
+        // have a tab bar???
         switch ($_REQUEST['subject']) {
             case 'server':
             case 'database':
@@ -75,8 +73,8 @@ class PrivilegesController extends BaseController
         $this->printMsg($msg);
 
         // Determine whether object should be ref'd by name or oid.
-        if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-            $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
+        if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+            $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
         } else {
             $object = $_REQUEST[$_REQUEST['subject']];
         }
@@ -88,7 +86,7 @@ class PrivilegesController extends BaseController
             $privileges = $data->getPrivileges($object, $_REQUEST['subject']);
         }
 
-        if (sizeof($privileges) > 0) {
+        if (count($privileges) > 0) {
             echo "<table>\n";
             if ($data->hasRoles()) {
                 echo "<tr><th class=\"data\">{$lang['strrole']}</th>";
@@ -159,27 +157,27 @@ class PrivilegesController extends BaseController
             case 'function':
             case 'tablespace':
                 $alllabel = "showall{$_REQUEST['subject']}s";
-                $allurl   = "{$_REQUEST['subject']}s.php";
-                $alltxt   = $lang["strshowall{$_REQUEST['subject']}s"];
+                $allurl = "{$_REQUEST['subject']}s.php";
+                $alltxt = $lang["strshowall{$_REQUEST['subject']}s"];
                 break;
             case 'schema':
                 $alllabel = 'showallschemas';
-                $allurl   = 'schemas.php';
-                $alltxt   = $lang['strshowallschemas'];
+                $allurl = 'schemas.php';
+                $alltxt = $lang['strshowallschemas'];
                 break;
             case 'database':
                 $alllabel = 'showalldatabases';
-                $allurl   = 'alldb.php';
-                $alltxt   = $lang['strshowalldatabases'];
+                $allurl = 'alldb.php';
+                $alltxt = $lang['strshowalldatabases'];
                 break;
         }
 
         $subject = $_REQUEST['subject'];
-        $object  = $_REQUEST[$_REQUEST['subject']];
+        $object = $_REQUEST[$_REQUEST['subject']];
 
         if ($_REQUEST['subject'] == 'function') {
-            $objectoid = $_REQUEST[$_REQUEST['subject'] . '_oid'];
-            $urlvars   = [
+            $objectoid = $_REQUEST[$_REQUEST['subject'].'_oid'];
+            $urlvars = [
                 'action'         => 'alter',
                 'server'         => $_REQUEST['server'],
                 'database'       => $_REQUEST['database'],
@@ -188,7 +186,7 @@ class PrivilegesController extends BaseController
                 "{$subject}_oid" => $objectoid,
                 'subject'        => $subject,
             ];
-        } else if ($_REQUEST['subject'] == 'column') {
+        } elseif ($_REQUEST['subject'] == 'column') {
             $urlvars = [
                 'action'   => 'alter',
                 'server'   => $_REQUEST['server'],
@@ -203,7 +201,6 @@ class PrivilegesController extends BaseController
             } else {
                 $urlvars['view'] = $_REQUEST['view'];
             }
-
         } else {
             $urlvars = [
                 'action'   => 'alter',
@@ -260,18 +257,19 @@ class PrivilegesController extends BaseController
     }
 
     /**
-     * Grant permissions on an object to a user
+     * Grant permissions on an object to a user.
+     *
      * @param $confirm To show entry screen
      * @param $mode 'grant' or 'revoke'
      * @param $msg (optional) A message to show
      */
     public function doAlter($confirm, $mode, $msg = '')
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+        $data = $misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['username'])) {
             $_REQUEST['username'] = [];
@@ -303,7 +301,7 @@ class PrivilegesController extends BaseController
             }
             $this->printMsg($msg);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/privileges.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left\">{$lang['strusers']}</th>\n";
             echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";
@@ -357,9 +355,9 @@ class PrivilegesController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
             echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), "\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
-            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'] . '_oid'),
-                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), "\" />\n";
+            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'].'_oid'),
+                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'].'_oid']), "\" />\n";
             }
 
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
@@ -380,8 +378,8 @@ class PrivilegesController extends BaseController
             echo "</form>\n";
         } else {
             // Determine whether object should be ref'd by name or oid.
-            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-                $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
+            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+                $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
             } else {
                 $object = $_REQUEST[$_REQUEST['subject']];
             }
@@ -403,8 +401,6 @@ class PrivilegesController extends BaseController
             } else {
                 $this->doAlter(true, $_REQUEST['mode'], $lang['strgrantfailed']);
             }
-
         }
     }
-
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * List Columns properties in tables
+ * List Columns properties in tables.
  *
  * $Id: colproperties.php
  */

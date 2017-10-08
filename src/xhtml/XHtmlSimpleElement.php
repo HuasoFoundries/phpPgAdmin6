@@ -3,14 +3,13 @@
 namespace PHPPgAdmin\XHtml;
 
 /**
- *  XHtmlSimpleElement
+ *  XHtmlSimpleElement.
  *
  *  Used to generate Xhtml-Code for simple xhtml elements
  *  (i.e. elements, that can't contain child elements)
  *
  *
  *  @author    Felix Meinhold
- *
  */
 class XHtmlSimpleElement
 {
@@ -20,18 +19,16 @@ class XHtmlSimpleElement
     public $_attributes = [];
 
     use \PHPPgAdmin\HelperTrait;
+
     /**
-     * Constructor
+     * Constructor.
      *
      * @param    string    The element's name. Defaults to name of the
      * derived class
-     *
      */
     public function __construct($element = null)
     {
-
         $this->_element = $this->is_element();
-
     }
 
     public function set_style($style)
@@ -46,16 +43,14 @@ class XHtmlSimpleElement
 
     public function is_element()
     {
-        $lower_classname   = strtolower(get_class($this));
+        $lower_classname = strtolower(get_class($this));
         $is_element_string = str_replace('phppgadmin\xhtml\xhtml', '', $lower_classname);
         //$this->prtrace('is_element_string', $is_element_string, 'lower_classname', $lower_classname, '__CLASS__');
         return $is_element_string;
-
     }
 
     /**
-     * Private function generates xhtml
-     * @access private
+     * Private function generates xhtml.
      */
     public function _html()
     {
@@ -64,7 +59,6 @@ class XHtmlSimpleElement
             if (!empty($value)) {
                 $this->_htmlcode .= " {$attribute}=\"{$value}\"";
             }
-
         }
         $this->_htmlcode .= '/>';
 
@@ -72,8 +66,7 @@ class XHtmlSimpleElement
     }
 
     /**
-     * Returns xhtml code
-     *
+     * Returns xhtml code.
      */
     public function fetch()
     {
@@ -81,8 +74,7 @@ class XHtmlSimpleElement
     }
 
     /**
-     * Echoes xhtml
-     *
+     * Echoes xhtml.
      */
     public function show()
     {
@@ -93,5 +85,4 @@ class XHtmlSimpleElement
     {
         $this->_attributes[$attr] = $value;
     }
-
 }

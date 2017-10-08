@@ -3,7 +3,7 @@
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class DataimportController extends BaseController
 {
@@ -11,10 +11,10 @@ class DataimportController extends BaseController
 
     public function render()
     {
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+        $data = $misc->getDatabaseAccessor();
 
         // Prevent timeouts on large exports
         set_time_limit(0);
@@ -24,14 +24,14 @@ class DataimportController extends BaseController
         $this->printTabs('table', 'import');
 
         // Default state for XML parser
-        $state         = 'XML';
+        $state = 'XML';
         $curr_col_name = null;
-        $curr_col_val  = null;
+        $curr_col_val = null;
         $curr_col_null = false;
-        $curr_row      = [];
+        $curr_row = [];
 
         /**
-         * Character data handler for XML import feature
+         * Character data handler for XML import feature.
          *
          * @param $parser
          * @param $cdata
@@ -43,14 +43,13 @@ class DataimportController extends BaseController
         };
 
         /**
-         * Open tag handler for XML import feature
+         * Open tag handler for XML import feature.
          *
          * @param $parser
          * @param $name
          * @param $attrs
          */
         $_startElement = function ($parser, $name, $attrs) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null) {
-
             switch ($name) {
                 case 'DATA':
                     if ($state != 'XML') {
@@ -82,13 +81,13 @@ class DataimportController extends BaseController
                         $this->printMsg($lang['strimporterror']);
                         exit;
                     }
-                    $state    = 'ROW';
+                    $state = 'ROW';
                     $curr_row = [];
                     break;
                 case 'COLUMN':
                     // We handle columns in rows
                     if ($state == 'ROW') {
-                        $state         = 'COLUMN';
+                        $state = 'COLUMN';
                         $curr_col_name = $attrs['NAME'];
                         $curr_col_null = isset($attrs['NULL']);
                     }
@@ -108,13 +107,12 @@ class DataimportController extends BaseController
         };
 
         /**
-         * Close tag handler for XML import feature
+         * Close tag handler for XML import feature.
          *
          * @param $parser
          * @param $name
          */
         $_endElement = function ($parser, $name) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null, &$curr_col_val) {
-
             switch ($name) {
                 case 'DATA':
                     $state = 'READ_DATA';
@@ -128,11 +126,11 @@ class DataimportController extends BaseController
                 case 'ROW':
                     // Build value map in order to insert row into table
                     $fields = [];
-                    $vars   = [];
-                    $nulls  = [];
+                    $vars = [];
+                    $nulls = [];
                     $format = [];
-                    $types  = [];
-                    $i      = 0;
+                    $types = [];
+                    $i = 0;
                     foreach ($curr_row as $k => $v) {
                         $fields[$i] = $k;
                         // Check for nulls
@@ -155,14 +153,14 @@ class DataimportController extends BaseController
                         exit;
                     }
                     $curr_row = [];
-                    $state    = 'RECORDS';
+                    $state = 'RECORDS';
                     break;
                 case 'COLUMN':
                     $curr_row[$curr_col_name] = ($curr_col_null ? null : $curr_col_val);
-                    $curr_col_name            = null;
-                    $curr_col_val             = null;
-                    $curr_col_null            = false;
-                    $state                    = 'ROW';
+                    $curr_col_name = null;
+                    $curr_col_val = null;
+                    $curr_col_null = false;
+                    $state = 'ROW';
                     break;
                 default:
                     // An unrecognised tag means failure
@@ -174,12 +172,11 @@ class DataimportController extends BaseController
 
         // Check that file is specified and is an uploaded file
         if (isset($_FILES['source']) && is_uploaded_file($_FILES['source']['tmp_name']) && is_readable($_FILES['source']['tmp_name'])) {
-
             $fd = fopen($_FILES['source']['tmp_name'], 'rb');
             // Check that file was opened successfully
             if ($fd !== false) {
                 $null_array = self::loadNULLArray();
-                $status     = $data->beginTransaction();
+                $status = $data->beginTransaction();
                 if ($status != 0) {
                     $this->printMsg($lang['strimporterror']);
                     exit;
@@ -220,15 +217,15 @@ class DataimportController extends BaseController
 
                         // Get first line of field names
                         $fields = fgetcsv($fd, $csv_max_line, $csv_delimiter);
-                        $row    = 2; //We start on the line AFTER the field names
+                        $row = 2; //We start on the line AFTER the field names
                         while ($line = fgetcsv($fd, $csv_max_line, $csv_delimiter)) {
                             // Build value map
                             $t_fields = [];
-                            $vars     = [];
-                            $nulls    = [];
-                            $format   = [];
-                            $types    = [];
-                            $i        = 0;
+                            $vars = [];
+                            $nulls = [];
+                            $format = [];
+                            $types = [];
+                            $i = 0;
                             foreach ($fields as $f) {
                                 // Check that there is a column
                                 if (!isset($line[$i])) {

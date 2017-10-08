@@ -1,6 +1,6 @@
 <?php
     /**
-     * Supported Translations for phpPgAdmin
+     * Supported Translations for phpPgAdmin.
      *
      * $Id: translations.php,v 1.4 2007/02/10 03:48:34 xzilla Exp $
      */
@@ -90,7 +90,7 @@
     }
 
     $lang = [];
-    include_once BASE_PATH . '/src/lang/english.php';
+    include_once BASE_PATH.'/src/lang/english.php';
 
 // Determine language file to import:
     unset($_language);
@@ -151,7 +151,7 @@
 
 // Import the language file
     if (isset($_language)) {
-        include BASE_PATH . "/src/lang/{$_language}.php";
+        include BASE_PATH."/src/lang/{$_language}.php";
         $_SESSION['webdbLanguage'] = $_language;
 
         if (array_key_exists($_language, $languages_iso_code)) {

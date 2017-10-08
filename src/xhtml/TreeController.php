@@ -2,42 +2,42 @@
 
 namespace PHPPgAdmin\XHtml;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base TreeController controller class
+ * Base TreeController controller class.
  */
 class TreeController
 {
     use \PHPPgAdmin\HelperTrait;
 
-    private $container      = null;
-    private $data           = null;
-    private $database       = null;
-    private $server_id      = null;
-    public $form            = '';
-    public $href            = '';
-    public $lang            = [];
-    public $action          = '';
-    public $_name           = 'TreeController';
+    private $container = null;
+    private $data = null;
+    private $database = null;
+    private $server_id = null;
+    public $form = '';
+    public $href = '';
+    public $lang = [];
+    public $action = '';
+    public $_name = 'TreeController';
     public $controller_name = 'TreeController';
-    public $_title          = 'base';
+    public $_title = 'base';
 
     /* Constructor */
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
         $this->container = $container;
-        $this->lang      = $container->get('lang');
+        $this->lang = $container->get('lang');
         //$this->conf           = $container->get('conf');
-        $this->view           = $container->get('view');
+        $this->view = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
-        $this->appName        = $container->get('settings')['appName'];
-        $this->appVersion     = $container->get('settings')['appVersion'];
-        $this->appLangFiles   = $container->get('appLangFiles');
-        $this->misc           = $container->get('misc');
-        $this->conf           = $this->misc->getConf();
-        $this->appThemes      = $container->get('appThemes');
-        $this->action         = $container->get('action');
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
+        $this->appLangFiles = $container->get('appLangFiles');
+        $this->misc = $container->get('misc');
+        $this->conf = $this->misc->getConf();
+        $this->appThemes = $container->get('appThemes');
+        $this->action = $container->get('action');
         if ($controller_name !== null) {
             $this->controller_name = $controller_name;
         }
@@ -103,7 +103,6 @@ class TreeController
 
         if (count($treedata) > 0) {
             foreach ($treedata as $rec) {
-
                 $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
                 if (!empty($attrs['openicon'])) {
                     $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
@@ -132,17 +131,15 @@ class TreeController
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
-            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"" . $this->misc->icon('ObjectNotFound') . '" />' . "\n";
+            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"".$this->misc->icon('ObjectNotFound').'" />'."\n";
         }
 
         $tree_xml .= "</tree>\n";
         if ($print === true) {
-
             if ($this->container->requestobj->getAttribute('route') === null) {
                 header('Content-Type: text/xml; charset=UTF-8');
                 header('Cache-Control: no-cache');
                 echo $tree_xml;
-
             } else {
                 return $this
                     ->container
@@ -151,7 +148,6 @@ class TreeController
                     ->withHeader('Content-Type', 'text/xml;charset=utf-8')
                     ->write($tree_xml);
             }
-
         } else {
             return $tree_xml;
         }
@@ -159,13 +155,12 @@ class TreeController
 
     public function adjustTabsForTree(&$tabs)
     {
-
         foreach ($tabs as $i => $tab) {
             if ((isset($tab['hide']) && $tab['hide'] === true) || (isset($tab['tree']) && $tab['tree'] === false)) {
                 unset($tabs[$i]);
             }
         }
+
         return new \PHPPgAdmin\ArrayRecordSet($tabs);
     }
-
 }

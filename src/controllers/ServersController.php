@@ -2,20 +2,20 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class ServersController extends BaseController
 {
-    public $_name       = 'ServersController';
+    public $_name = 'ServersController';
     public $table_place = 'servers-servers';
-    public $section     = 'servers';
-    public $query       = '';
-    public $subject     = '';
-    public $start_time  = null;
-    public $duration    = null;
+    public $section = 'servers';
+    public $query = '';
+    public $subject = '';
+    public $start_time = null;
+    public $duration = null;
 
     public function render()
     {
@@ -55,14 +55,13 @@ class ServersController extends BaseController
         } else {
             $body = $this->container->responseobj->getBody();
             $body->write($server_html);
+
             return $this->container->responseobj;
         }
-
     }
 
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $conf = $this->conf;
         $misc = $this->misc;
@@ -72,7 +71,7 @@ class ServersController extends BaseController
         $this->printMsg($msg);
         $group = isset($_GET['group']) ? $_GET['group'] : false;
 
-        $groups  = $misc->getServersGroups(true, $group);
+        $groups = $misc->getServersGroups(true, $group);
         $columns = [
             'group' => [
                 'title' => $lang['strgroup'],
@@ -92,7 +91,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => SUBFOLDER . '/redirect/server?',
+                'url'   => SUBFOLDER.'/redirect/server?',
                 'vars'  => ['server' => 'id'],
             ],
             'host'     => [
@@ -129,6 +128,7 @@ class ServersController extends BaseController
 
         $svPre = function (&$rowdata) use ($actions) {
             $actions['logout']['disable'] = empty($rowdata->fields['username']);
+
             return $actions;
         };
 
@@ -137,23 +137,21 @@ class ServersController extends BaseController
             $actions['logout']['attr']['href']['urlvars']['group'] = $group;
         }
         echo $this->printTable($servers, $columns, $actions, $this->table_place, $lang['strnoobjects'], $svPre);
-
     }
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
 
-        $nodes    = [];
+        $nodes = [];
         $group_id = isset($_GET['group']) ? $_GET['group'] : false;
 
         /* root with srv_groups */
         if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0
             and $group_id === false) {
             $nodes = $misc->getServersGroups(true);
-        } else if (isset($conf['srv_groups']) and $group_id !== false) {
+        } elseif (isset($conf['srv_groups']) and $group_id !== false) {
             /* group subtree */
             if ($group_id !== 'all') {
                 $nodes = $misc->getServersGroups(false, $group_id);
@@ -186,17 +184,15 @@ class ServersController extends BaseController
         'section' => $this->section,
         ]);*/
         return $this->printTree($nodes, $attrs, $this->section);
-
     }
 
     public function doLogout()
     {
-
         $plugin_manager = $this->plugin_manager;
-        $lang           = $this->lang;
-        $misc           = $this->misc;
-        $conf           = $this->conf;
-        $data           = $misc->getDatabaseAccessor();
+        $lang = $this->lang;
+        $misc = $this->misc;
+        $conf = $this->conf;
+        $data = $misc->getDatabaseAccessor();
 
         $plugin_manager->do_hook('logout', $_REQUEST['logoutServer']);
 
@@ -208,7 +204,5 @@ class ServersController extends BaseController
         $misc->setReloadBrowser(true);
 
         echo sprintf($lang['strlogoutmsg'], $server_info['desc']);
-
     }
-
 }

@@ -1,9 +1,9 @@
 <?php
 
-    namespace PHPPgAdmin\Help;
+namespace PHPPgAdmin\Help;
 
-    /**
-     * Help links for PostgreSQL 7.4 documentation
+/**
+     * Help links for PostgreSQL 7.4 documentation.
      */
     class PostgresDoc74
     {
@@ -16,9 +16,9 @@
         public function __construct($conf, $major_version)
         {
             $this->major_version = $major_version;
-            $this->conf          = $conf;
+            $this->conf = $conf;
 
-            # TODO: Check and fix links
+            // TODO: Check and fix links
             $this->help_page = [
 
                 'pg.database'               => 'managing-databases.html',
@@ -164,7 +164,6 @@
 
         public function getHelpBase()
         {
-
             return sprintf($this->conf['help_base'], strval($this->major_version));
         }
 

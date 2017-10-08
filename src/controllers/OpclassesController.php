@@ -5,7 +5,7 @@ namespace PHPPgAdmin\Controller;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class OpclassesController extends BaseController
 {
@@ -35,9 +35,10 @@ class OpclassesController extends BaseController
     }
 
     /**
-     * Show default list of opclasss in the database
+     * Show default list of opclasss in the database.
      *
      * @param string $msg
+     *
      * @return string|void
      */
     public function doDefault($msg = '')
@@ -87,7 +88,6 @@ class OpclassesController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -106,5 +106,4 @@ class OpclassesController extends BaseController
 
         return $this->printTree($opclasses, $attrs, 'opclasses');
     }
-
 }

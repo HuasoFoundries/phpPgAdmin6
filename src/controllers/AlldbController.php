@@ -2,21 +2,21 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class AlldbController extends BaseController
 {
-    public $_name       = 'AlldbController';
+    public $_name = 'AlldbController';
     public $table_place = 'alldb-databases';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
 
         if ($action == 'tree') {
@@ -70,11 +70,10 @@ class AlldbController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
-     * Show default list of databases in the server
+     * Show default list of databases in the server.
      */
     public function doDefault($msg = '')
     {
@@ -85,14 +84,14 @@ class AlldbController extends BaseController
         $this->printTrail('server');
         $this->printTabs('server', 'databases');
         $this->printMsg($msg);
-        $data      = $misc->getDatabaseAccessor();
+        $data = $misc->getDatabaseAccessor();
         $databases = $data->getDatabases();
 
         $columns = [
             'database'   => [
                 'title' => $lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url'   => SUBFOLDER . "/redirect/database?{$misc->href}&amp;",
+                'url'   => SUBFOLDER."/redirect/database?{$misc->href}&amp;",
                 'vars'  => ['database' => 'datname'],
             ],
             'owner'      => [
@@ -211,12 +210,10 @@ class AlldbController extends BaseController
             ],
         ];
         $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
-
     }
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -241,7 +238,7 @@ class AlldbController extends BaseController
     }
 
     /**
-     * Display a form for alter and perform actual alter
+     * Display a form for alter and perform actual alter.
      */
     public function doAlter($confirm)
     {
@@ -254,7 +251,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($lang['stralter'], 'pg.database.alter');
 
-            echo '<form action="' . SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/alldb.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -264,7 +261,7 @@ class AlldbController extends BaseController
             if ($data->hasAlterDatabaseOwner() && $data->isSuperUser()) {
                 // Fetch all users
 
-                $rs    = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
+                $rs = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
                 $owner = isset($rs->fields['usename']) ? $rs->fields['usename'] : '';
                 $users = $data->getUsers();
 
@@ -279,7 +276,7 @@ class AlldbController extends BaseController
                 echo "</select></td></tr>\n";
             }
             if ($data->hasSharedComments()) {
-                $rs      = $data->getDatabaseComment($_REQUEST['alterdatabase']);
+                $rs = $data->getDatabaseComment($_REQUEST['alterdatabase']);
                 $comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
                 echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
                 echo '<td class="data1">';
@@ -309,12 +306,11 @@ class AlldbController extends BaseController
             } else {
                 $this->doDefault($lang['strdatabasealteredbad']);
             }
-
         }
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
      */
     public function doDrop($confirm)
     {
@@ -329,20 +325,17 @@ class AlldbController extends BaseController
         }
 
         if ($confirm) {
-
             $this->printTrail('database');
             $this->printTitle($lang['strdrop'], 'pg.database.drop');
 
-            echo '<form action="' . SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/alldb.php\" method=\"post\">\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
-
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfdropdatabase'], $misc->printVal($a['database'])), "</p>\n";
                     printf('<input type="hidden" name="dropdatabase[]" value="%s" />', htmlspecialchars($a['database']));
                 }
-
             } else {
                 echo '<p>', sprintf($lang['strconfdropdatabase'], $misc->printVal($_REQUEST['dropdatabase'])), "</p>\n";
                 echo '<input type="hidden" name="dropdatabase" value="', htmlspecialchars($_REQUEST['dropdatabase']), "\" />\n";
@@ -364,6 +357,7 @@ class AlldbController extends BaseController
                         $msg .= sprintf('%s: %s<br />', htmlentities($d, ENT_QUOTES, 'UTF-8'), $lang['strdatabasedropped']);
                     } else {
                         $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($d, ENT_QUOTES, 'UTF-8'), $lang['strdatabasedroppedbad']));
+
                         return;
                     }
                 } // Everything went fine, back to Default page...
@@ -377,7 +371,6 @@ class AlldbController extends BaseController
                 } else {
                     $this->doDefault($lang['strdatabasedroppedbad']);
                 }
-
             }
         } //END DROP
     }
@@ -385,7 +378,7 @@ class AlldbController extends BaseController
     // END FUNCTION
 
     /**
-     * Displays a screen where they can enter a new database
+     * Displays a screen where they can enter a new database.
      */
     public function doCreate($msg = '')
     {
@@ -426,7 +419,7 @@ class AlldbController extends BaseController
             $tablespaces = $data->getTablespaces();
         }
 
-        echo '<form action="' . SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/alldb.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -520,7 +513,7 @@ class AlldbController extends BaseController
     }
 
     /**
-     * Actually creates the new view in the database
+     * Actually creates the new view in the database.
      */
     public function doSaveCreate()
     {
@@ -561,12 +554,11 @@ class AlldbController extends BaseController
             } else {
                 $this->doCreate($lang['strdatabasecreatedbad']);
             }
-
         }
     }
 
     /**
-     * Displays options for cluster download
+     * Displays options for cluster download.
      */
     public function doExport($msg = '')
     {
@@ -579,7 +571,7 @@ class AlldbController extends BaseController
         $this->printTabs('server', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/dbexport.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/dbexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -616,5 +608,4 @@ class AlldbController extends BaseController
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }
-
 }

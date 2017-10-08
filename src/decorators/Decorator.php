@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPPgAdmin\Decorators;
 
 class Decorator
@@ -41,6 +42,7 @@ class Decorator
                     return urlencode($val);
             }
         }
+
         return $val;
     }
 
@@ -52,7 +54,6 @@ class Decorator
         } else {
             return '';
         }
-
     }
 
     public static function value_xml_attr_tag($attr, &$var, &$fields)
@@ -63,7 +64,6 @@ class Decorator
         } else {
             return '';
         }
-
     }
 
     public static function callback($callback, $params = null)
@@ -76,7 +76,7 @@ class Decorator
         return self::get_sanitized_value($var, $fields, 'url');
     }
 
-    public static function concat( /* ... */)
+    public static function concat(/* ... */)
     {
         return new \PHPPgAdmin\Decorators\ConcatDecorator(func_get_args());
     }
@@ -102,6 +102,7 @@ class Decorator
 
             return new BranchUrlDecorator($base, new ArrayMergeDecorator($v));
         }
+
         return new BranchUrlDecorator($base, $vars);
     }
 
@@ -116,6 +117,7 @@ class Decorator
 
             return new ActionUrlDecorator($base, new ArrayMergeDecorator($v));
         }
+
         return new ActionUrlDecorator($base, $vars);
     }
 
@@ -130,6 +132,7 @@ class Decorator
 
             return new RedirectUrlDecorator($base, new ArrayMergeDecorator($v));
         }
+
         return new RedirectUrlDecorator($base, $vars);
     }
 
@@ -140,10 +143,12 @@ class Decorator
         // at value evaluation time.
 
         if (func_num_args() > 2) {
-            $v    = func_get_args();
+            $v = func_get_args();
             $base = array_shift($v);
+
             return new UrlDecorator($base, new ArrayMergeDecorator($v));
         }
+
         return new UrlDecorator($base, $vars);
     }
 
@@ -151,5 +156,4 @@ class Decorator
     {
         return new IfEmptyDecorator($value, $empty, $full);
     }
-
 }
