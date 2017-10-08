@@ -48,7 +48,7 @@ class HTMLFooterController extends HTMLController
         //$this->prtrace(['$_reload_browser' => $this->_reload_browser, 'template' => $template]);
         if ($this->misc->getReloadBrowser()) {
             $footer_html .= $this->printReload(false, false);
-        } else if ($this->_reload_drop_database) {
+        } elseif ($this->_reload_drop_database) {
             $footer_html .= $this->printReload(true, false);
         }
         if (!$this->_no_bottom_link) {
@@ -62,7 +62,6 @@ class HTMLFooterController extends HTMLController
         } else {
             return $footer_html;
         }
-
     }
 
     /**
@@ -72,7 +71,6 @@ class HTMLFooterController extends HTMLController
      */
     public function printReload($database, $do_print = true)
     {
-
         $reload = "<script type=\"text/javascript\">\n";
         //$reload .= " alert('will reload');";
         if ($database) {

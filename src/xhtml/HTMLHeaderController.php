@@ -31,7 +31,6 @@ class HTMLHeaderController extends HTMLController
      */
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
-
         if (function_exists('newrelic_disable_autorum')) {
             newrelic_disable_autorum();
         }
@@ -67,10 +66,8 @@ class HTMLHeaderController extends HTMLController
         }*/
 
         if (!$this->_no_output && $do_print) {
-
             header('Content-Type: text/html; charset=utf-8');
             echo $header_html;
-
         } else {
             return $header_html;
         }
@@ -83,7 +80,6 @@ class HTMLHeaderController extends HTMLController
      */
     public function printBody($doBody = true, $bodyClass = 'detailbody')
     {
-
         $bodyClass = htmlspecialchars($bodyClass);
         $bodyHtml  = '<body data-controller="' . $this->controller_name . '" class="' . $this->lang['applangdir'] . ' ' . $bodyClass . '" >';
         $bodyHtml .= "\n";
@@ -106,7 +102,6 @@ class HTMLHeaderController extends HTMLController
      */
     public function printTitle($title, $help = null, $do_print = true)
     {
-
         $lang = $this->lang;
 
         $title_html = '<h2>';

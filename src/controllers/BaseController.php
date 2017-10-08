@@ -7,7 +7,6 @@ namespace PHPPgAdmin\Controller;
  */
 class BaseController
 {
-
     use \PHPPgAdmin\HelperTrait;
 
     protected $container         = null;
@@ -75,7 +74,6 @@ class BaseController
             $_server_info = $this->misc->getServerInfo();
             // Redirect to the login form if not logged in
             if (!isset($_server_info['username'])) {
-
                 $msg = sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
 
                 $servers_controller = new \PHPPgAdmin\Controller\ServersController($container, true);
@@ -280,21 +278,18 @@ class BaseController
     {
         $header_controller = $this->getHeaderController();
         return $header_controller->printHeader($title, $script, $do_print, $template);
-
     }
 
     public function printBody($doBody = true, $bodyClass = 'detailbody')
     {
         $header_controller = $this->getHeaderController();
         return $header_controller->printBody($doBody, $bodyClass);
-
     }
 
     public function printTitle($title, $help = null, $do_print = true)
     {
         $header_controller = $this->getHeaderController();
         return $header_controller->printTitle($title, $help, $do_print);
-
     }
 
     /**
@@ -309,7 +304,6 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
         if ($msg != '') {
-
             $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
         }
         if ($do_print) {
@@ -317,7 +311,5 @@ class BaseController
         } else {
             return $html;
         }
-
     }
-
 }

@@ -20,7 +20,7 @@ class SchemasController extends BaseController
 
         if ($action == 'tree') {
             return $this->doTree();
-        } else if ($action == 'subtree') {
+        } elseif ($action == 'subtree') {
             return $this->doSubTree();
         }
 
@@ -74,7 +74,6 @@ class SchemasController extends BaseController
         echo $output;
 
         return $this->printFooter();
-
     }
 
     /**
@@ -184,7 +183,6 @@ class SchemasController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -217,12 +215,10 @@ class SchemasController extends BaseController
         ];
 
         $this->printTree($schemas, $attrs, 'schemas');
-
     }
 
     public function doSubTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -251,7 +247,6 @@ class SchemasController extends BaseController
         ];
 
         $this->printTree($items, $attrs, 'schema');
-
     }
 
     /**
@@ -338,7 +333,6 @@ class SchemasController extends BaseController
             } else {
                 $this->doCreate($lang['strschemacreatedbad']);
             }
-
         }
     }
 
@@ -348,7 +342,6 @@ class SchemasController extends BaseController
      */
     public function doAlter($msg = '')
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -433,7 +426,6 @@ class SchemasController extends BaseController
         } else {
             $this->doAlter($lang['strschemaalteredbad']);
         }
-
     }
 
     /**
@@ -497,7 +489,6 @@ class SchemasController extends BaseController
                 } else {
                     $this->doDefault($lang['strschemadroppedbad']);
                 }
-
             } else {
                 $status = $data->dropSchema($_POST['nsp'], isset($_POST['cascade']));
                 if ($status == 0) {
@@ -506,7 +497,6 @@ class SchemasController extends BaseController
                 } else {
                     $this->doDefault($lang['strschemadroppedbad']);
                 }
-
             }
         }
     }

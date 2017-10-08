@@ -11,7 +11,6 @@ namespace PHPPgAdmin\Database;
 
 class Postgres extends ADOdbBase
 {
-
     use \PHPPgAdmin\HelperTrait;
 
     public $major_version = 9.6;
@@ -558,7 +557,6 @@ class Postgres extends ADOdbBase
      */
     public function getDefaultWithOid()
     {
-
         $sql = 'SHOW default_with_oids';
 
         return $this->selectField($sql, 'default_with_oids');
@@ -743,7 +741,6 @@ class Postgres extends ADOdbBase
      */
     public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '')
     {
-
         $status = $this->beginTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -2241,7 +2238,6 @@ class Postgres extends ADOdbBase
         if ($triggers->recordCount() > 0) {
             $sql .= "\n-- Triggers\n\n";
             while (!$triggers->EOF) {
-
                 $sql .= $triggers->fields['tgdef'];
                 $sql .= ";\n";
 
@@ -2546,7 +2542,6 @@ class Postgres extends ADOdbBase
      */
     public function createTableLike($name, $like, $defaults = false, $constraints = false, $idx = false, $tablespace = '')
     {
-
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($name);
@@ -2613,7 +2608,6 @@ class Postgres extends ADOdbBase
      */
     public function alterTable($table, $name, $owner, $schema, $comment, $tablespace)
     {
-
         $data = $this->getTable($table);
 
         if ($data->recordCount() != 1) {
@@ -2652,7 +2646,6 @@ class Postgres extends ADOdbBase
      */
     protected function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace)
     {
-
         $this->fieldArrayClean($tblrs->fields);
 
         // Comment
@@ -3241,7 +3234,6 @@ class Postgres extends ADOdbBase
      */
     public function getTableAutovacuum($table = '')
     {
-
         $sql = '';
 
         if ($table !== '') {
@@ -3363,7 +3355,6 @@ class Postgres extends ADOdbBase
      */
     public function insertRow($table, $fields, $values, $nulls, $format, $types)
     {
-
         if (!is_array($fields) || !is_array($values) || !is_array($nulls)
             || !is_array($format) || !is_array($types)
             || (count($fields) != count($values))
@@ -3371,7 +3362,7 @@ class Postgres extends ADOdbBase
             return -1;
         }
 
-// Build clause
+        // Build clause
         if (count($values) > 0) {
             // Escape all field names
             $fields   = array_map(['\PHPPgAdmin\Database\Postgres', 'fieldClean'], $fields);
@@ -3484,7 +3475,6 @@ class Postgres extends ADOdbBase
 
         // Build clause
         if (sizeof($vars) > 0) {
-
             foreach ($vars as $key => $value) {
                 $this->fieldClean($key);
 
@@ -3556,7 +3546,7 @@ class Postgres extends ADOdbBase
             return -1;
         }
 
-// Begin transaction.  We do this so that we can ensure only one row is
+        // Begin transaction.  We do this so that we can ensure only one row is
         // deleted
         $status = $this->beginTransaction();
         if ($status != 0) {
@@ -3659,7 +3649,6 @@ class Postgres extends ADOdbBase
      */
     public function restartSequence($sequence)
     {
-
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($sequence);
@@ -3811,7 +3800,6 @@ class Postgres extends ADOdbBase
         $cycledvalue = null,
         $startvalue = null
     ) {
-
         $this->fieldClean($sequence);
 
         $data = $this->getSequence($sequence);
@@ -3871,7 +3859,6 @@ class Postgres extends ADOdbBase
         $cycledvalue,
         $startvalue
     ) {
-
         $this->fieldArrayClean($seqrs->fields);
 
         // Comment
@@ -3968,7 +3955,6 @@ class Postgres extends ADOdbBase
         $cycledvalue,
         $startvalue
     ) {
-
         $sql = '';
         /* vars are cleaned in _alterSequence */
         if (!empty($increment) && ($increment != $seqrs->fields['increment_by'])) {
@@ -4194,7 +4180,6 @@ class Postgres extends ADOdbBase
      */
     public function alterView($view, $name, $owner, $schema, $comment)
     {
-
         $data = $this->getView($view);
         if ($data->recordCount() != 1) {
             return -2;
@@ -4254,7 +4239,6 @@ class Postgres extends ADOdbBase
      */
     protected function _alterView($vwrs, $name, $owner, $schema, $comment)
     {
-
         $this->fieldArrayClean($vwrs->fields);
 
         // Comment
@@ -4393,7 +4377,6 @@ class Postgres extends ADOdbBase
      */
     public function alreadyClustered($table)
     {
-
         $c_schema = $this->_schema;
         $this->clean($c_schema);
         $this->clean($table);
@@ -4532,7 +4515,6 @@ class Postgres extends ADOdbBase
      */
     public function clusterIndex($table = '', $index = '')
     {
-
         $sql = 'CLUSTER';
 
         // We don't bother with a transaction here, as there's no point rolling
@@ -4563,7 +4545,6 @@ class Postgres extends ADOdbBase
      */
     public function getConstraintsWithFields($table)
     {
-
         $c_schema = $this->_schema;
         $this->clean($c_schema);
         $this->clean($table);
@@ -6171,7 +6152,6 @@ class Postgres extends ADOdbBase
      */
     public function getTriggerDef($trigger)
     {
-
         $this->fieldArrayClean($trigger);
         // Constants to figure out tgtype
         if (!defined('TRIGGER_TYPE_ROW')) {
@@ -6683,7 +6663,6 @@ class Postgres extends ADOdbBase
      */
     public function getFtsConfigurationMap($ftscfg)
     {
-
         $c_schema = $this->_schema;
         $this->clean($c_schema);
         $this->fieldClean($ftscfg);
@@ -6775,7 +6754,6 @@ class Postgres extends ADOdbBase
      */
     public function getFtsDictionaryTemplates()
     {
-
         $sql = "
  			SELECT
 				n.nspname as schema,
@@ -6851,7 +6829,6 @@ class Postgres extends ADOdbBase
      */
     public function updateFtsConfiguration($cfgname, $comment, $name)
     {
-
         $status = $this->beginTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -6907,7 +6884,6 @@ class Postgres extends ADOdbBase
         $option = '',
         $comment = ''
     ) {
-
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($dictname);
@@ -6988,7 +6964,6 @@ class Postgres extends ADOdbBase
      */
     public function updateFtsDictionary($dictname, $comment, $name)
     {
-
         $status = $this->beginTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -7031,7 +7006,6 @@ class Postgres extends ADOdbBase
      */
     public function getFtsDictionaryByName($ftsdict)
     {
-
         $c_schema = $this->_schema;
         $this->clean($c_schema);
         $this->clean($ftsdict);
@@ -7067,7 +7041,6 @@ class Postgres extends ADOdbBase
      */
     public function changeFtsMapping($ftscfg, $mapping, $action, $dictname = null)
     {
-
         if (count($mapping) > 0) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
@@ -7148,7 +7121,6 @@ class Postgres extends ADOdbBase
      */
     public function getFtsMappings($ftscfg)
     {
-
         $cfg = $this->getFtsConfigurationByName($ftscfg);
 
         $sql = "SELECT alias AS name, description
@@ -7683,7 +7655,6 @@ class Postgres extends ADOdbBase
         $adminmembersold,
         $newrolename
     ) {
-
         $status = $this->beginTransaction();
         if ($status != 0) {
             return -1;
@@ -8555,7 +8526,6 @@ class Postgres extends ADOdbBase
      */
     public function vacuumDB($table = '', $analyze = false, $full = false, $freeze = false)
     {
-
         $sql = 'VACUUM';
         if ($full) {
             $sql .= ' FULL';
@@ -8586,7 +8556,6 @@ class Postgres extends ADOdbBase
      */
     public function getAutovacuum()
     {
-
         $_defaults = $this->selectSet("SELECT name, setting
 			FROM pg_catalog.pg_settings
 			WHERE
@@ -9621,5 +9590,4 @@ class Postgres extends ADOdbBase
     {
         return true;
     }
-
 }

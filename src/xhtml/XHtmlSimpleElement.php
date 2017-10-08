@@ -29,9 +29,7 @@ class XHtmlSimpleElement
      */
     public function __construct($element = null)
     {
-
         $this->_element = $this->is_element();
-
     }
 
     public function set_style($style)
@@ -50,7 +48,6 @@ class XHtmlSimpleElement
         $is_element_string = str_replace('phppgadmin\xhtml\xhtml', '', $lower_classname);
         //$this->prtrace('is_element_string', $is_element_string, 'lower_classname', $lower_classname, '__CLASS__');
         return $is_element_string;
-
     }
 
     /**
@@ -64,7 +61,6 @@ class XHtmlSimpleElement
             if (!empty($value)) {
                 $this->_htmlcode .= " {$attribute}=\"{$value}\"";
             }
-
         }
         $this->_htmlcode .= '/>';
 
@@ -93,5 +89,4 @@ class XHtmlSimpleElement
     {
         $this->_attributes[$attr] = $value;
     }
-
 }

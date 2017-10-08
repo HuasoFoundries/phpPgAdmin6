@@ -20,7 +20,6 @@ if (file_exists(BASE_PATH . '/config.inc.php')) {
     include BASE_PATH . '/config.inc.php';
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
-
 }
 $debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
 DEFINE('DEBUGMODE', $debugmode);
@@ -144,7 +143,6 @@ $container['serializer'] = function ($c) {
 
 // Create Misc class references
 $container['misc'] = function ($c) {
-
     $misc = new \PHPPgAdmin\Misc($c);
 
     $conf = $c->get('conf');
@@ -173,7 +171,6 @@ $container['misc'] = function ($c) {
             // if $folderpath if indeed a folder and contains a global.css file, then it's a theme
             if (is_dir($folderpath) && is_file($folderpath . DIRECTORY_SEPARATOR . 'global.css')) {
                 $themefolders[$foldername] = $folderpath;
-
             }
         }
 
@@ -194,16 +191,15 @@ $container['misc'] = function ($c) {
         $_theme = $_REQUEST['theme'];
     }
     // 2. Check for theme session var
-    else if (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
+    elseif (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
         $_theme = $_SESSION['ppaTheme'];
     }
     // 3. Check for theme in cookie var
-    else if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
+    elseif (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
         $_theme = $_COOKIE['ppaTheme'];
     }
 
     if (!isset($_theme) && !is_null($_server_info) && array_key_exists('theme', $_server_info)) {
-
         $server_theme = $_server_info['theme'];
 
         if (isset($server_theme['default']) && array_key_exists($server_theme['default'], $themefolders)) {
@@ -224,7 +220,6 @@ $container['misc'] = function ($c) {
         ) {
             $_theme = $server_theme['user'][$_server_info['username']];
         }
-
     }
     // if any of the above conditions had set the $_theme variable
     // then we store it in the session and a cookie
@@ -234,7 +229,6 @@ $container['misc'] = function ($c) {
         setcookie('ppaTheme', $_theme, time() + 31536000, '/');
         $_SESSION['ppaTheme'] = $_theme;
         $conf['theme']        = $_theme;
-
     }
 
     $misc->setConf('theme', $conf['theme']);
@@ -247,7 +241,6 @@ $container['misc'] = function ($c) {
 
 // Register Twig View helper
 $container['view'] = function ($c) {
-
     $conf = $c->get('conf');
     $misc = $c->misc;
 
@@ -285,7 +278,6 @@ $container['view'] = function ($c) {
 
 $container['haltHandler'] = function ($c) {
     return function ($request, $response, $exits, $status = 500) use ($c) {
-
         $title = 'PHPPgAdmin Error';
 
         $html = '<p>The application could not run because of the following error:</p>';
@@ -316,7 +308,6 @@ $container['haltHandler'] = function ($c) {
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route
 $app->add(function ($request, $response, $next) {
-
     $this['requestobj']  = $request;
     $this['responseobj'] = $response;
 

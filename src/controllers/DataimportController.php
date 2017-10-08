@@ -50,7 +50,6 @@ class DataimportController extends BaseController
          * @param $attrs
          */
         $_startElement = function ($parser, $name, $attrs) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null) {
-
             switch ($name) {
                 case 'DATA':
                     if ($state != 'XML') {
@@ -114,7 +113,6 @@ class DataimportController extends BaseController
          * @param $name
          */
         $_endElement = function ($parser, $name) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null, &$curr_col_val) {
-
             switch ($name) {
                 case 'DATA':
                     $state = 'READ_DATA';
@@ -174,7 +172,6 @@ class DataimportController extends BaseController
 
         // Check that file is specified and is an uploaded file
         if (isset($_FILES['source']) && is_uploaded_file($_FILES['source']['tmp_name']) && is_readable($_FILES['source']['tmp_name'])) {
-
             $fd = fopen($_FILES['source']['tmp_name'], 'rb');
             // Check that file was opened successfully
             if ($fd !== false) {
