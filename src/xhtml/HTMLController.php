@@ -61,7 +61,6 @@ class HTMLController
      */
     protected function getActionUrl(&$action, &$fields, $from = null)
     {
-
         if ($from === null) {
             $from = __METHOD__;
         }
@@ -127,7 +126,6 @@ class HTMLController
      */
     public function printLink($link, $do_print = true, $from = null)
     {
-
         if (!isset($link['fields'])) {
             $link['fields'] = $_REQUEST;
         }
@@ -170,8 +168,7 @@ class HTMLController
     public static function printCombo(&$arrOptions, $szName, $bBlankEntry = true, $szDefault = '', $bMultiple = false, $iSize = 10)
     {
         $htmlOut = '';
-        if ($bMultiple) // If multiple select combo
-        {
+        if ($bMultiple) { // If multiple select combo
             $htmlOut .= "<select rel=\"printCombo\" name=\"$szName\" id=\"$szName\" multiple=\"multiple\" size=\"$iSize\">" . "\n";
         } else {
             $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"$szName\" id=\"$szName\">" . "\n";
@@ -194,5 +191,4 @@ class HTMLController
 
         return $htmlOut;
     }
-
 }

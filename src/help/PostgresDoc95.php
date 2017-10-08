@@ -8,11 +8,8 @@ namespace PHPPgAdmin\Help;
  */
 class PostgresDoc95 extends PostgresDoc94
 {
-
     public function __construct($conf, $major_version)
     {
         parent::__construct($conf, $major_version);
-
     }
-
 }

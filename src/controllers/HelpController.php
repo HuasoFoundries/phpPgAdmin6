@@ -21,7 +21,6 @@ class HelpController extends BaseController
                 $this->doDefault();
                 break;
         }
-
     }
 
     public function doDefault()
@@ -104,5 +103,4 @@ class HelpController extends BaseController
 
         $this->printFooter();
     }
-
 }

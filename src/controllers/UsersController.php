@@ -13,7 +13,6 @@ class UsersController extends BaseController
 
     public function render()
     {
-
         $this->printHeader($lang['strusers']);
         $this->printBody();
 
@@ -71,7 +70,6 @@ class UsersController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
@@ -165,7 +163,6 @@ class UsersController extends BaseController
             ],
             'content' => $lang['strcreateuser'],
         ]], 'users-users', get_defined_vars());
-
     }
 
     /**
@@ -277,7 +274,6 @@ class UsersController extends BaseController
                 } else {
                     $this->doAccount($lang['strpasswordchangedbad']);
                 }
-
             }
         }
     }
@@ -347,7 +343,6 @@ class UsersController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
@@ -363,7 +358,7 @@ class UsersController extends BaseController
         // Check name and password
         if (isset($_POST['newname']) && $_POST['newname'] == '') {
             $this->doEdit($lang['struserneedsname']);
-        } else if ($_POST['formPassword'] != $_POST['formConfirm']) {
+        } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doEdit($lang['strpasswordconfirm']);
         } else {
             if (isset($_POST['newname'])) {
@@ -377,7 +372,6 @@ class UsersController extends BaseController
             } else {
                 $this->doEdit($lang['struserupdatedbad']);
             }
-
         }
     }
 
@@ -411,7 +405,6 @@ class UsersController extends BaseController
             } else {
                 $this->doDefault($lang['struserdroppedbad']);
             }
-
         }
     }
 
@@ -482,7 +475,7 @@ class UsersController extends BaseController
         // Check data
         if ($_POST['formUsername'] == '') {
             $this->doCreate($lang['struserneedsname']);
-        } else if ($_POST['formPassword'] != $_POST['formConfirm']) {
+        } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doCreate($lang['strpasswordconfirm']);
         } else {
             $status = $data->createUser($_POST['formUsername'], $_POST['formPassword'],
@@ -492,8 +485,6 @@ class UsersController extends BaseController
             } else {
                 $this->doCreate($lang['strusercreatedbad']);
             }
-
         }
     }
-
 }

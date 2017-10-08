@@ -9,7 +9,6 @@ namespace PHPPgAdmin\Help;
  */
 class PostgresDoc93 extends PostgresDoc92
 {
-
     public function __construct($conf, $major_version)
     {
         parent::__construct($conf, $major_version);
@@ -22,7 +21,5 @@ class PostgresDoc93 extends PostgresDoc92
         $this->help_page['pg.matview.refresh'] = 'sql-refreshmaterializedview.html';
 
         $this->help_page['pg.rule.matview'] = 'rules-materializedviews.html';
-
     }
-
 }

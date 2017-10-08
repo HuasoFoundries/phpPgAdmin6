@@ -109,12 +109,10 @@ class DatabaseController extends BaseController
         echo $output;
 
         $this->printFooter(true, $footer_template);
-
     }
 
     public function doTree($print = true)
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -135,7 +133,6 @@ class DatabaseController extends BaseController
         ];
 
         return $this->printTree($items, $attrs, 'database', $print);
-
     }
 
     /**
@@ -154,7 +151,6 @@ class DatabaseController extends BaseController
         } else {
             $this->doProcesses($lang['strsignalsentbad']);
         }
-
     }
 
     /**
@@ -431,7 +427,6 @@ class DatabaseController extends BaseController
             } else {
                 echo "<p>{$lang['strnoobjects']}</p>\n";
             }
-
         }
     }
 
@@ -659,7 +654,6 @@ class DatabaseController extends BaseController
             if (!$data->hasQueryCancel()) {
                 unset($actions['cancel']);
             }
-
         }
 
         if (count($actions) == 0) {
@@ -671,7 +665,6 @@ class DatabaseController extends BaseController
         if ($isAjax) {
             exit;
         }
-
     }
 
     public function currentLocks($isAjax = false)
@@ -726,7 +719,6 @@ class DatabaseController extends BaseController
         if ($isAjax) {
             exit;
         }
-
     }
 
     /**
@@ -791,5 +783,4 @@ class DatabaseController extends BaseController
         // Default focus
         $this->setFocus('forms[0].query');
     }
-
 }

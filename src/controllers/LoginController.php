@@ -7,7 +7,6 @@ namespace PHPPgAdmin\Controller;
  */
 class LoginController extends BaseController
 {
-
     protected $container   = null;
     protected $_connection = null;
     protected $app         = null;
@@ -29,7 +28,6 @@ class LoginController extends BaseController
 
     public function render()
     {
-
         if ($this->container->requestobj->getAttribute('route') === null) {
             echo $this->doLoginForm();
         } else {
@@ -41,7 +39,6 @@ class LoginController extends BaseController
 
     public function doLoginForm($msg = '')
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -132,5 +129,4 @@ class LoginController extends BaseController
 
         return $login_html;
     }
-
 }

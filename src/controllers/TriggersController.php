@@ -87,7 +87,6 @@ class TriggersController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
@@ -218,7 +217,6 @@ class TriggersController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -234,7 +232,6 @@ class TriggersController extends BaseController
         ];
 
         return $this->printTree($triggers, $attrs, 'triggers');
-
     }
 
     /**
@@ -253,7 +250,6 @@ class TriggersController extends BaseController
         } else {
             $this->doAlter($lang['strtriggeralteredbad']);
         }
-
     }
 
     /**
@@ -273,7 +269,6 @@ class TriggersController extends BaseController
         $triggerdata = $data->getTrigger($_REQUEST['table'], $_REQUEST['trigger']);
 
         if ($triggerdata->recordCount() > 0) {
-
             if (!isset($_POST['name'])) {
                 $_POST['name'] = $triggerdata->fields['tgname'];
             }
@@ -295,7 +290,6 @@ class TriggersController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
@@ -331,9 +325,7 @@ class TriggersController extends BaseController
             } else {
                 $this->doDefault($lang['strtriggerdroppedbad']);
             }
-
         }
-
     }
 
     /**
@@ -368,9 +360,7 @@ class TriggersController extends BaseController
             } else {
                 $this->doDefault($lang['strtriggerenabledbad']);
             }
-
         }
-
     }
 
     /**
@@ -405,9 +395,7 @@ class TriggersController extends BaseController
             } else {
                 $this->doDefault($lang['strtriggerdisabledbad']);
             }
-
         }
-
     }
 
     /**
@@ -508,8 +496,6 @@ class TriggersController extends BaseController
             } else {
                 $this->doCreate($lang['strtriggercreatedbad']);
             }
-
         }
     }
-
 }

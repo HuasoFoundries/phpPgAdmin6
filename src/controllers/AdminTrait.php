@@ -11,7 +11,6 @@ trait AdminTrait
  */
     public function doCluster($type, $confirm = false)
     {
-
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 
         $script = $this->script;
@@ -82,7 +81,6 @@ trait AdminTrait
                     } else {
                         $this->doAdmin($type, $lang['strclusteredbad']);
                     }
-
                 }
             } else {
                 // Cluster all tables in database
@@ -92,17 +90,15 @@ trait AdminTrait
                 } else {
                     $this->doAdmin($type, $lang['strclusteredbad']);
                 }
-
             }
         }
     }
 
-/**
- * Show confirmation of reindex and perform reindex
- */
+    /**
+     * Show confirmation of reindex and perform reindex
+     */
     public function doReindex($type, $confirm = false)
     {
-
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
         $script       = $this->script;
         $misc         = $this->misc;
@@ -176,14 +172,13 @@ trait AdminTrait
                 } else {
                     $this->doAdmin($type, $lang['strreindexbad']);
                 }
-
             }
         }
     }
 
-/**
- * Show confirmation of analyze and perform analyze
- */
+    /**
+     * Show confirmation of analyze and perform analyze
+     */
     public function doAnalyze($type, $confirm = false)
     {
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
@@ -199,7 +194,6 @@ trait AdminTrait
         }
 
         if ($confirm) {
-
             if (isset($_REQUEST['ma'])) {
                 $this->printTrail('schema');
                 $this->printTitle($lang['stranalyze'], 'pg.analyze');
@@ -258,17 +252,15 @@ trait AdminTrait
                 } else {
                     $this->doAdmin($type, $lang['stranalyzebad']);
                 }
-
             }
         }
     }
 
-/**
- * Show confirmation of vacuum and perform actual vacuum
- */
+    /**
+     * Show confirmation of vacuum and perform actual vacuum
+     */
     public function doVacuum($type, $confirm = false)
     {
-
         $script = ($type == 'database') ? 'database.php' : 'tables.php';
 
         $misc = $this->misc;
@@ -340,14 +332,13 @@ trait AdminTrait
                 } else {
                     $this->doAdmin($type, $lang['strvacuumbad']);
                 }
-
             }
         }
     }
 
-/**
- * Add or Edit autovacuum params and save them
- */
+    /**
+     * Add or Edit autovacuum params and save them
+     */
     public function doEditAutovacuum($type, $confirm, $msg = '')
     {
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
@@ -458,13 +449,12 @@ trait AdminTrait
             } else {
                 $this->doEditAutovacuum($type, true, $lang['strsetvacuumtablefail']);
             }
-
         }
     }
 
-/**
- * confirm drop autovacuum params for a table and drop it
- */
+    /**
+     * confirm drop autovacuum params for a table and drop it
+     */
     public function doDropAutovacuum($type, $confirm)
     {
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
@@ -503,7 +493,6 @@ trait AdminTrait
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
             echo "</form>\n";
         } else {
-
             $status = $data->dropAutovacuum($_POST['table']);
 
             if ($status == 0) {
@@ -511,15 +500,14 @@ trait AdminTrait
             } else {
                 $this->doAdmin($type, '', sprintf($lang['strdelvacuumtablefail'], $misc->printVal($_POST['table'])));
             }
-
         }
     }
 
-/**
- * database/table administration and tuning tasks
- *
- * $Id: admin.php
- */
+    /**
+     * database/table administration and tuning tasks
+     *
+     * $Id: admin.php
+     */
 
     public function doAdmin($type, $msg = '')
     {
@@ -750,7 +738,6 @@ trait AdminTrait
 
     public function adminActions($action, $type)
     {
-
         if ($type == 'database') {
             $_REQUEST['object'] = $_REQUEST['database'];
             $this->script       = 'database.php';
@@ -781,7 +768,7 @@ trait AdminTrait
                 }
 
                 // if multi-action from table canceled: back to the schema default page
-                else if (($type == 'table') && is_array($_REQUEST['object'])) {
+                elseif (($type == 'table') && is_array($_REQUEST['object'])) {
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -794,7 +781,7 @@ trait AdminTrait
                 }
 
                 // if multi-action from table canceled: back to the schema default page
-                else if (($type == 'table') && is_array($_REQUEST['object'])) {
+                elseif (($type == 'table') && is_array($_REQUEST['object'])) {
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -807,7 +794,7 @@ trait AdminTrait
                 }
 
                 // if multi-action from table canceled: back to the schema default page
-                else if (($type == 'table') && is_array($_REQUEST['object'])) {
+                elseif (($type == 'table') && is_array($_REQUEST['object'])) {
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -820,7 +807,7 @@ trait AdminTrait
                 }
 
                 // if multi-action from table canceled: back to the schema default page
-                else if (($type == 'table') && is_array($_REQUEST['object'])) {
+                elseif (($type == 'table') && is_array($_REQUEST['object'])) {
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -855,5 +842,4 @@ trait AdminTrait
         }
         return true;
     }
-
 }

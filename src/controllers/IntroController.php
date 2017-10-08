@@ -11,7 +11,6 @@ class IntroController extends BaseController
 
     public function render()
     {
-
         if ($this->container->requestobj->getAttribute('route') === null) {
             echo $this->doDefault();
         } else {
@@ -19,7 +18,6 @@ class IntroController extends BaseController
             $body->write($this->doDefault());
             return $this->container->responseobj;
         }
-
     }
 
     /**
@@ -29,7 +27,6 @@ class IntroController extends BaseController
      */
     public function doDefault()
     {
-
         $intro_html = $this->printHeader('Intro', $this->scripts, false);
         $intro_html .= $this->printBody(false);
 
@@ -89,5 +86,4 @@ class IntroController extends BaseController
 
         return $intro_html;
     }
-
 }

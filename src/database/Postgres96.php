@@ -9,7 +9,6 @@ namespace PHPPgAdmin\Database;
 
 class Postgres96 extends Postgres95
 {
-
     public $major_version = 9.6;
 
     // Administration functions
