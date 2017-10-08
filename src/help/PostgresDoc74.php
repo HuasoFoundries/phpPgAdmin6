@@ -3,8 +3,8 @@
     namespace PHPPgAdmin\Help;
 
 /**
-     * Help links for PostgreSQL 7.4 documentation
-     */
+ * Help links for PostgreSQL 7.4 documentation
+ */
     class PostgresDoc74
     {
         use \PHPPgAdmin\HelperTrait;
