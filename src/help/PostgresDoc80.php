@@ -3,10 +3,10 @@
     namespace PHPPgAdmin\Help;
 
 /**
-     * Help links for PostgreSQL 8.0 documentation
-     *
-     * $Id: PostgresDoc80.php,v 1.5 2005/02/16 10:27:44 jollytoad Exp $
-     */
+ * Help links for PostgreSQL 8.0 documentation
+ *
+ * $Id: PostgresDoc80.php,v 1.5 2005/02/16 10:27:44 jollytoad Exp $
+ */
     class PostgresDoc80 extends PostgresDoc74
     {
         public function __construct($conf, $major_version)
