@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class RulesController extends BaseController
 {
@@ -23,7 +23,7 @@ class RulesController extends BaseController
         }
 
         // Different header if we're view rules or table rules
-        $this->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $lang['strrules']);
+        $this->printHeader($_REQUEST[$_REQUEST['subject']].' - '.$lang['strrules']);
         $this->printBody();
 
         switch ($action) {
@@ -55,11 +55,10 @@ class RulesController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
-     * List all the rules on the table
+     * List all the rules on the table.
      */
     public function doDefault($msg = '')
     {
@@ -89,7 +88,7 @@ class RulesController extends BaseController
         ];
 
         $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object = urlencode($_REQUEST[$_REQUEST['subject']]);
 
         $actions = [
             'drop' => [
@@ -131,7 +130,6 @@ class RulesController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -150,7 +148,7 @@ class RulesController extends BaseController
     }
 
     /**
-     * Confirm and then actually create a rule
+     * Confirm and then actually create a rule.
      */
     public function createRule($confirm, $msg = '')
     {
@@ -184,7 +182,7 @@ class RulesController extends BaseController
             $this->printTitle($lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/rules.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -219,7 +217,6 @@ class RulesController extends BaseController
             echo "<p><input type=\"submit\" name=\"ok\" value=\"{$lang['strcreate']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
-
         } else {
             if (trim($_POST['name']) == '') {
                 $this->createRule(true, $lang['strruleneedsname']);
@@ -232,14 +229,13 @@ class RulesController extends BaseController
                 } else {
                     $this->createRule(true, $lang['strrulecreatedbad']);
                 }
-
             }
         }
     }
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+    /**
+     * Show confirmation of drop and perform actual drop.
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -254,7 +250,7 @@ class RulesController extends BaseController
             echo '<p>', sprintf($lang['strconfdroprule'], $misc->printVal($_REQUEST['rule']),
                 $misc->printVal($_REQUEST[$_REQUEST['reltype']])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/rules.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['reltype']), "\" />\n";
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['reltype']),
@@ -272,9 +268,6 @@ class RulesController extends BaseController
             } else {
                 $this->doDefault($lang['strruledroppedbad']);
             }
-
         }
-
     }
-
 }

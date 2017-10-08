@@ -2,14 +2,14 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class FunctionsController extends BaseController
 {
-    public $_name       = 'FunctionsController';
+    public $_name = 'FunctionsController';
     public $table_place = 'functions-functions';
 
     public function render()
@@ -70,11 +70,10 @@ class FunctionsController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
-     * Show default list of functions in the database
+     * Show default list of functions in the database.
      */
     public function doDefault($msg = '')
     {
@@ -93,7 +92,7 @@ class FunctionsController extends BaseController
             'function'     => [
                 'title' => $lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url'   => SUBFOLDER . "/redirect/function?action=properties&amp;{$misc->href}&amp;",
+                'url'   => SUBFOLDER."/redirect/function?action=properties&amp;{$misc->href}&amp;",
                 'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns'      => [
@@ -214,7 +213,6 @@ class FunctionsController extends BaseController
         ];
 
         $this->printNavLinks($navlinks, 'functions-functions', get_defined_vars());
-
     }
 
     /**
@@ -222,7 +220,6 @@ class FunctionsController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -252,11 +249,10 @@ class FunctionsController extends BaseController
     }
 
     /**
-     * Function to save after editing a function
+     * Function to save after editing a function.
      */
     public function doSaveEdit()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -266,7 +262,7 @@ class FunctionsController extends BaseController
 
         if ($fnlang == 'c') {
             $def = [$_POST['formObjectFile'], $_POST['formLinkSymbol']];
-        } else if ($fnlang == 'internal') {
+        } elseif ($fnlang == 'internal') {
             $def = $_POST['formLinkSymbol'];
         } else {
             $def = $_POST['formDefinition'];
@@ -298,7 +294,7 @@ class FunctionsController extends BaseController
     }
 
     /**
-     * Function to allow editing of a Function
+     * Function to allow editing of a Function.
      */
     public function doEdit($msg = '')
     {
@@ -357,7 +353,6 @@ class FunctionsController extends BaseController
                 if (!isset($_POST['formRows'])) {
                     $_POST['formRows'] = $fndata->fields['prorows'];
                 }
-
             }
 
             // Deal with named parameters
@@ -369,9 +364,9 @@ class FunctionsController extends BaseController
                 }
                 $names_arr = $data->phpArray($fndata->fields['proargnames']);
                 $modes_arr = $data->phpArray($fndata->fields['proargmodes']);
-                $args      = '';
-                $i         = 0;
-                for ($i = 0; $i < sizeof($args_arr); $i++) {
+                $args = '';
+                $i = 0;
+                for ($i = 0; $i < count($args_arr); $i++) {
                     if ($i != 0) {
                         $args .= ', ';
                     }
@@ -392,7 +387,7 @@ class FunctionsController extends BaseController
                     }
                     if (isset($names_arr[$i]) && $names_arr[$i] != '') {
                         $data->fieldClean($names_arr[$i]);
-                        $args .= '"' . $names_arr[$i] . '" ';
+                        $args .= '"'.$names_arr[$i].'" ';
                     }
                     $args .= $args_arr[$i];
                 }
@@ -400,8 +395,8 @@ class FunctionsController extends BaseController
                 $args = $fndata->fields['proarguments'];
             }
 
-            $func_full = $fndata->fields['proname'] . '(' . $fndata->fields['proarguments'] . ')';
-            echo '<form action="' . SUBFOLDER . "/src/views/functions.php\" method=\"post\">\n";
+            $func_full = $fndata->fields['proname'].'('.$fndata->fields['proarguments'].')';
+            echo '<form action="'.SUBFOLDER."/src/views/functions.php\" method=\"post\">\n";
             echo "<table style=\"width: 90%\">\n";
             echo "<tr>\n";
             echo "<th class=\"data required\">{$lang['strschema']}</th>\n";
@@ -464,7 +459,7 @@ class FunctionsController extends BaseController
                 htmlspecialchars($_POST['formObjectFile']), "\" /></td>\n";
                 echo '<td class="data1" colspan="2"><input type="text" name="formLinkSymbol" style="width:100%" value="',
                 htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
-            } else if ($fnlang == 'internal') {
+            } elseif ($fnlang == 'internal') {
                 echo "<tr><th class=\"data\" colspan=\"5\">{$lang['strlinksymbol']}</th></tr>\n";
                 echo '<tr><td class="data1" colspan="5"><input type="text" name="formLinkSymbol" style="width:100%" value="',
                 htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
@@ -482,14 +477,14 @@ class FunctionsController extends BaseController
             // Display function cost options
             if ($data->hasFunctionCosting()) {
                 echo "<tr><th class=\"data required\" colspan=\"5\">{$lang['strfunctioncosting']}</th></tr>\n";
-                echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
-                htmlspecialchars($_POST['formCost']) . '" /></td>';
+                echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
+                htmlspecialchars($_POST['formCost']).'" /></td>';
                 echo "<td class=\"data1\" colspan=\"2\">{$lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"",
                 htmlspecialchars($_POST['formRows']), '"', (!$fndata->fields['proretset']) ? 'disabled' : '', '/></td>';
             }
 
             // Display function properties
-            if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+            if (is_array($data->funcprops) && count($data->funcprops) > 0) {
                 echo "<tr><th class=\"data\" colspan=\"5\">{$lang['strproperties']}</th></tr>\n";
                 echo "<tr><td class=\"data1\" colspan=\"5\">\n";
                 $i = 0;
@@ -531,11 +526,10 @@ class FunctionsController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
-     * Show read only properties of a function
+     * Show read only properties of a function.
      */
     public function doProperties($msg = '')
     {
@@ -561,9 +555,9 @@ class FunctionsController extends BaseController
                 }
                 $names_arr = $data->phpArray($funcdata->fields['proargnames']);
                 $modes_arr = $data->phpArray($funcdata->fields['proargmodes']);
-                $args      = '';
-                $i         = 0;
-                for ($i = 0; $i < sizeof($args_arr); $i++) {
+                $args = '';
+                $i = 0;
+                for ($i = 0; $i < count($args_arr); $i++) {
                     if ($i != 0) {
                         $args .= ', ';
                     }
@@ -589,7 +583,7 @@ class FunctionsController extends BaseController
                     }
                     if (isset($names_arr[$i]) && $names_arr[$i] != '') {
                         $data->fieldClean($names_arr[$i]);
-                        $args .= '"' . $names_arr[$i] . '" ';
+                        $args .= '"'.$names_arr[$i].'" ';
                     }
                     $args .= $args_arr[$i];
                 }
@@ -603,7 +597,7 @@ class FunctionsController extends BaseController
             }
 
             $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-            $func_full                     = $funcdata->fields['proname'] . '(' . $funcdata->fields['proarguments'] . ')';
+            $func_full = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
             echo "<table style=\"width: 90%\">\n";
             echo "<tr><th class=\"data\">{$lang['strfunction']}</th>\n";
             echo "<th class=\"data\">{$lang['strarguments']}</th>\n";
@@ -625,7 +619,7 @@ class FunctionsController extends BaseController
                 echo "<th class=\"data\" colspan=\"2\">{$lang['strlinksymbol']}</th></tr>\n";
                 echo '<tr><td class="data1" colspan="2">', $misc->printVal($funcdata->fields['probin']), "</td>\n";
                 echo '<td class="data1" colspan="2">', $misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
-            } else if ($fnlang == 'internal') {
+            } elseif ($fnlang == 'internal') {
                 echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strlinksymbol']}</th></tr>\n";
                 echo '<tr><td class="data1" colspan="4">', $misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
             } else {
@@ -634,12 +628,11 @@ class FunctionsController extends BaseController
                 echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strdefinition']}</th></tr>\n";
                 // Check to see if we have syntax highlighting for this language
                 if (array_key_exists($fnlang, $data->langmap)) {
-
                     $temp = $highlight->syntax_highlight(htmlspecialchars($funcdata->fields['prosrc']), $data->langmap[$fnlang]);
-                    $tag  = 'prenoescape';
+                    $tag = 'prenoescape';
                 } else {
                     $temp = $funcdata->fields['prosrc'];
-                    $tag  = 'pre';
+                    $tag = 'pre';
                 }
                 echo '<tr><td class="data1" colspan="4">', $misc->printVal($temp, $tag, ['lineno' => true, 'class' => 'data1']), "</td></tr>\n";
             }
@@ -652,7 +645,7 @@ class FunctionsController extends BaseController
             }
 
             // Show flags
-            if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+            if (is_array($data->funcprops) && count($data->funcprops) > 0) {
                 // Fetch an array of the function properties
                 $funcprops = $data->getFunctionProperties($funcdata->fields);
                 echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strproperties']}</th></tr>\n";
@@ -722,7 +715,7 @@ class FunctionsController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
      */
     public function doDrop($confirm)
     {
@@ -740,7 +733,7 @@ class FunctionsController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($lang['strdrop'], 'pg.function.drop');
 
-            echo '<form action="' . SUBFOLDER . "/src/views/functions.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/functions.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -765,7 +758,7 @@ class FunctionsController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['function_oid'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if ($status == 0) {
                     foreach ($_POST['function_oid'] as $k => $s) {
@@ -775,6 +768,7 @@ class FunctionsController extends BaseController
                         } else {
                             $data->endTransaction();
                             $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($_POST['function'][$k], ENT_QUOTES, 'UTF-8'), $lang['strfunctiondroppedbad']));
+
                             return;
                         }
                     }
@@ -786,7 +780,6 @@ class FunctionsController extends BaseController
                 } else {
                     $this->doDefault($lang['strfunctiondroppedbad']);
                 }
-
             } else {
                 $status = $data->dropFunction($_POST['function_oid'], isset($_POST['cascade']));
                 if ($status == 0) {
@@ -797,11 +790,10 @@ class FunctionsController extends BaseController
                 }
             }
         }
-
     }
 
     /**
-     * Displays a screen where they can enter a new function
+     * Displays a screen where they can enter a new function.
      */
     public function doCreate($msg = '', $szJS = '')
     {
@@ -863,8 +855,8 @@ class FunctionsController extends BaseController
             $_POST['formComment'] = '';
         }
 
-        $types  = $data->getTypes(true, true, true);
-        $langs  = $data->getLanguages(true);
+        $types = $data->getTypes(true, true, true);
+        $langs = $data->getLanguages(true);
         $fnlang = strtolower($_POST['formLanguage']);
 
         switch ($fnlang) {
@@ -888,22 +880,22 @@ class FunctionsController extends BaseController
                 $szSelected = ' selected="selected"';
             }
             /* this variable is include in the JS code bellow, so we need to ENT_QUOTES */
-            $szTypes .= '<option value="' . htmlspecialchars($types->fields['typname'], ENT_QUOTES) . "\"{$szSelected}>";
-            $szTypes .= htmlspecialchars($types->fields['typname'], ENT_QUOTES) . '</option>';
+            $szTypes .= '<option value="'.htmlspecialchars($types->fields['typname'], ENT_QUOTES)."\"{$szSelected}>";
+            $szTypes .= htmlspecialchars($types->fields['typname'], ENT_QUOTES).'</option>';
             $types->moveNext();
         }
 
-        $szFunctionName = "<td class=\"data1\"><input name=\"formFunction\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"" .
-        htmlspecialchars($_POST['formFunction']) . '" /></td>';
+        $szFunctionName = "<td class=\"data1\"><input name=\"formFunction\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"".
+        htmlspecialchars($_POST['formFunction']).'" /></td>';
 
-        $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="' .
-        htmlspecialchars($_POST['formArguments']) . '" /></td>';
+        $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="'.
+        htmlspecialchars($_POST['formArguments']).'" /></td>';
 
-        $szSetOfSelected    = '';
+        $szSetOfSelected = '';
         $szNotSetOfSelected = '';
         if ($_POST['formSetOf'] == '') {
             $szNotSetOfSelected = ' selected="selected"';
-        } else if ($_POST['formSetOf'] == 'SETOF') {
+        } elseif ($_POST['formSetOf'] == 'SETOF') {
             $szSetOfSelected = ' selected="selected"';
         }
         $szReturns = '<td class="data1" colspan="2">';
@@ -912,15 +904,15 @@ class FunctionsController extends BaseController
         $szReturns .= "<option value=\"SETOF\"{$szSetOfSelected}>SETOF</option>";
         $szReturns .= '</select>';
 
-        $szReturns .= '<select name="formReturns">' . $szTypes . '</select>';
+        $szReturns .= '<select name="formReturns">'.$szTypes.'</select>';
 
         // Create string array type selector
 
-        $szArraySelected    = '';
+        $szArraySelected = '';
         $szNotArraySelected = '';
         if ($_POST['formArray'] == '') {
             $szNotArraySelected = ' selected="selected"';
-        } else if ($_POST['formArray'] == '[]') {
+        } elseif ($_POST['formArray'] == '[]') {
             $szArraySelected = ' selected="selected"';
         }
 
@@ -932,7 +924,7 @@ class FunctionsController extends BaseController
         // Create string for language
         $szLanguage = '<td class="data1">';
         if ($fnlang == 'c' || $fnlang == 'internal') {
-            $szLanguage .= $_POST['formLanguage'] . "\n";
+            $szLanguage .= $_POST['formLanguage']."\n";
             $szLanguage .= "<input type=\"hidden\" name=\"formLanguage\" value=\"{$_POST['formLanguage']}\" />\n";
         } else {
             $szLanguage .= "<select name=\"formLanguage\">\n";
@@ -942,8 +934,8 @@ class FunctionsController extends BaseController
                     $szSelected = ' selected="selected"';
                 }
                 if (strtolower($langs->fields['lanname']) != 'c' && strtolower($langs->fields['lanname']) != 'internal') {
-                    $szLanguage .= '<option value="' . htmlspecialchars($langs->fields['lanname']) . "\"{$szSelected}>\n" .
-                    $misc->printVal($langs->fields['lanname']) . '</option>';
+                    $szLanguage .= '<option value="'.htmlspecialchars($langs->fields['lanname'])."\"{$szSelected}>\n".
+                    $misc->printVal($langs->fields['lanname']).'</option>';
                 }
 
                 $langs->moveNext();
@@ -953,8 +945,8 @@ class FunctionsController extends BaseController
 
         $szLanguage .= '</td>';
         $szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$lang['strarguments']}</th></tr>";
-        $arrayModes    = ['IN', 'OUT', 'INOUT'];
-        $szModes       = '<select name="formArgModes[]" style="width:100%;">';
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $szModes = '<select name="formArgModes[]" style="width:100%;">';
         foreach ($arrayModes as $pV) {
             $szModes .= "<option value=\"{$pV}\">{$pV}</option>";
         }
@@ -975,7 +967,7 @@ class FunctionsController extends BaseController
         }
         $szJSAddTR = "<tr id=\"parent_add_tr\" onclick=\"addArg();\" onmouseover=\"this.style.cursor='pointer'\">\n<td style=\"text-align: right\" colspan=\"6\" class=\"data3\"><table><tr><td class=\"data3\"><img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td><td class=\"data3\"><span style=\"font-size: 8pt\">{$lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
 
-        echo '<script src="' . SUBFOLDER . "/js/functions.js\" type=\"text/javascript\"></script>
+        echo '<script src="'.SUBFOLDER."/js/functions.js\" type=\"text/javascript\"></script>
 		<script type=\"text/javascript\">
 			//<![CDATA[
 			var g_types_select = '<select name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
@@ -992,7 +984,7 @@ class FunctionsController extends BaseController
 			//]]>
 		</script>
 		";
-        echo '<form action="' . SUBFOLDER . "/src/views//views/functions.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views//views/functions.php\" method=\"post\">\n";
         echo "<table><tbody id=\"args_table\">\n";
         echo "<tr><th class=\"data required\">{$lang['strname']}</th>\n";
         echo "<th class=\"data required\" colspan=\"2\">{$lang['strreturns']}</th>\n";
@@ -1017,7 +1009,7 @@ class FunctionsController extends BaseController
             htmlspecialchars($_POST['formObjectFile']), "\" /></td>\n";
             echo '<td class="data1" colspan="2"><input type="text" name="formLinkSymbol" style="width:100%" value="',
             htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
-        } else if ($fnlang == 'internal') {
+        } elseif ($fnlang == 'internal') {
             echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strlinksymbol']}</th></tr>\n";
             echo '<tr><td class="data1" colspan="4"><input type="text" name="formLinkSymbol" style="width:100%" value="',
             htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
@@ -1035,14 +1027,14 @@ class FunctionsController extends BaseController
         // Display function cost options
         if ($data->hasFunctionCosting()) {
             echo "<tr><th class=\"data required\" colspan=\"4\">{$lang['strfunctioncosting']}</th></tr>\n";
-            echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
-            htmlspecialchars($_POST['formCost']) . '" /></td>';
-            echo "<td class=\"data1\" colspan=\"2\">{$lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"" .
-            htmlspecialchars($_POST['formRows']) . '" /></td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
+            htmlspecialchars($_POST['formCost']).'" /></td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"".
+            htmlspecialchars($_POST['formRows']).'" /></td>';
         }
 
         // Display function properties
-        if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+        if (is_array($data->funcprops) && count($data->funcprops) > 0) {
             echo "<tr><th class=\"data required\" colspan=\"4\">{$lang['strproperties']}</th></tr>\n";
             echo "<tr><td class=\"data1\" colspan=\"4\">\n";
             $i = 0;
@@ -1069,7 +1061,7 @@ class FunctionsController extends BaseController
     }
 
     /**
-     * Actually creates the new function in the database
+     * Actually creates the new function in the database.
      */
     public function doSaveCreate()
     {
@@ -1082,7 +1074,7 @@ class FunctionsController extends BaseController
 
         if ($fnlang == 'c') {
             $def = [$_POST['formObjectFile'], $_POST['formLinkSymbol']];
-        } else if ($fnlang == 'internal') {
+        } elseif ($fnlang == 'internal') {
             $def = $_POST['formLinkSymbol'];
         } else {
             $def = $_POST['formDefinition'];
@@ -1090,12 +1082,12 @@ class FunctionsController extends BaseController
 
         $szJS = '';
 
-        echo '<script src="' . SUBFOLDER . '/js/functions.js" type="text/javascript"></script>';
-        echo '<script type="text/javascript">' . $this->buildJSData() . '</script>';
+        echo '<script src="'.SUBFOLDER.'/js/functions.js" type="text/javascript"></script>';
+        echo '<script type="text/javascript">'.$this->buildJSData().'</script>';
         if (!empty($_POST['formArgName'])) {
             $szJS = $this->buildJSRows($this->buildFunctionArguments($_POST));
         } else {
-            $szJS = '<script type="text/javascript" src="' . SUBFOLDER . '/js/functions.js">noArgsRebuild(addArg());</script>';
+            $szJS = '<script type="text/javascript" src="'.SUBFOLDER.'/js/functions.js">noArgsRebuild(addArg());</script>';
         }
 
         $cost = (isset($_POST['formCost'])) ? $_POST['formCost'] : null;
@@ -1116,7 +1108,7 @@ class FunctionsController extends BaseController
         } else {
             // Append array symbol to type if chosen
             $status = $data->createFunction($_POST['formFunction'], empty($_POST['nojs']) ? $this->buildFunctionArguments($_POST) : $_POST['formArguments'],
-                $_POST['formReturns'] . $_POST['formArray'], $def, $_POST['formLanguage'],
+                $_POST['formReturns'].$_POST['formArray'], $def, $_POST['formLanguage'],
                 $_POST['formProperties'], $_POST['formSetOf'] == 'SETOF',
                 $cost, $rows, $_POST['formComment'], false);
             if ($status == 0) {
@@ -1128,30 +1120,32 @@ class FunctionsController extends BaseController
     }
 
     /**
-     * Build out the function arguments string
+     * Build out the function arguments string.
      */
     private function buildFunctionArguments($arrayVars)
     {
         if (isset($_POST['formArgName'])) {
             $arrayArgs = [];
             foreach ($arrayVars['formArgName'] as $pK => $pV) {
-                $arrayArgs[] = $arrayVars['formArgModes'][$pK] . ' ' . trim($pV) . ' ' . trim($arrayVars['formArgType'][$pK]) . $arrayVars['formArgArray'][$pK];
+                $arrayArgs[] = $arrayVars['formArgModes'][$pK].' '.trim($pV).' '.trim($arrayVars['formArgType'][$pK]).$arrayVars['formArgArray'][$pK];
             }
+
             return implode(',', $arrayArgs);
         }
+
         return '';
     }
 
     /**
-     * Build out JS to re-create table rows for arguments
+     * Build out JS to re-create table rows for arguments.
      */
     private function buildJSRows($szArgs)
     {
-        $arrayModes      = ['IN', 'OUT', 'INOUT'];
-        $arrayArgs       = explode(',', $szArgs);
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $arrayArgs = explode(',', $szArgs);
         $arrayProperArgs = [];
-        $nC              = 0;
-        $szReturn        = '';
+        $nC = 0;
+        $szReturn = '';
         foreach ($arrayArgs as $pV) {
             $arrayWords = explode(' ', $pV);
             if (in_array($arrayWords[0], $arrayModes) === true) {
@@ -1160,16 +1154,17 @@ class FunctionsController extends BaseController
             }
             $szArgName = array_shift($arrayWords);
             if (strpos($arrayWords[count($arrayWords) - 1], '[]') === false) {
-                $szArgType   = implode(' ', $arrayWords);
+                $szArgType = implode(' ', $arrayWords);
                 $bArgIsArray = 'false';
             } else {
-                $szArgType   = str_replace('[]', '', implode(' ', $arrayWords));
+                $szArgType = str_replace('[]', '', implode(' ', $arrayWords));
                 $bArgIsArray = 'true';
             }
             $arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
             $szReturn .= "<script type=\"text/javascript\">RebuildArgTR('{$szMode}','{$szArgName}','{$szArgType}',new Boolean({$bArgIsArray}));</script>";
             $nC++;
         }
+
         return $szReturn;
     }
 
@@ -1180,14 +1175,14 @@ class FunctionsController extends BaseController
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
-        $arrayModes  = ['IN', 'OUT', 'INOUT'];
-        $arrayTypes  = $data->getTypes(true, true, true);
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $arrayTypes = $data->getTypes(true, true, true);
         $arrayPTypes = [];
         $arrayPModes = [];
-        $szTypes     = '';
+        $szTypes = '';
 
         while (!$arrayTypes->EOF) {
-            $arrayPTypes[] = "'" . $arrayTypes->fields['typname'] . "'";
+            $arrayPTypes[] = "'".$arrayTypes->fields['typname']."'";
             $arrayTypes->moveNext();
         }
 
@@ -1195,9 +1190,9 @@ class FunctionsController extends BaseController
             $arrayPModes[] = "'{$pV}'";
         }
 
-        $szTypes = 'g_main_types = new Array(' . implode(',', $arrayPTypes) . ');';
-        $szModes = 'g_main_modes = new Array(' . implode(',', $arrayPModes) . ');';
-        return $szTypes . $szModes;
-    }
+        $szTypes = 'g_main_types = new Array('.implode(',', $arrayPTypes).');';
+        $szModes = 'g_main_modes = new Array('.implode(',', $arrayPModes).');';
 
+        return $szTypes.$szModes;
+    }
 }

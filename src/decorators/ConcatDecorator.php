@@ -1,6 +1,6 @@
 <?php
 
-    namespace PHPPgAdmin\Decorators;
+namespace PHPPgAdmin\Decorators;
 
 class ConcatDecorator extends Decorator
 {
@@ -18,4 +18,4 @@ class ConcatDecorator extends Decorator
 
         return trim($accum);
     }
-    }
+}

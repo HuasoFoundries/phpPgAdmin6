@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Manage types in a database
+ * Manage types in a database.
  *
  * $Id: types.php,v 1.42 2007/11/30 15:25:23 soranzo Exp $
  */

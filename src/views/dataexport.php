@@ -6,7 +6,6 @@
  *
  * $Id: dataexport.php,v 1.26 2007/07/12 19:26:22 xzilla Exp $
  */
-
 $do_render = false;
 if (!defined('BASE_PATH')) {
     require_once '../lib.inc.php';

@@ -1,16 +1,14 @@
 <?php
 
-    namespace PHPPgAdmin\Database;
+namespace PHPPgAdmin\Database;
 
-    /**
-     * PostgreSQL 8.0 support
+/**
+     * PostgreSQL 8.0 support.
      *
      * $Id: Postgres80.php,v 1.28 2007/12/12 04:11:10 xzilla Exp $
      */
-
     class Postgres80 extends Postgres81
     {
-
         public $major_version = 8.0;
         // Map of database encoding names to HTTP encoding names.  If a
         // database encoding does not appear in this list, then its HTTP
@@ -50,14 +48,15 @@
         // Database functions
 
         /**
-         * Return all database available on the server
+         * Return all database available on the server.
          *
          * @param null $currentdatabase
+         *
          * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
          */
         public function getDatabases($currentdatabase = null)
         {
-            $conf        = $this->conf;
+            $conf = $this->conf;
             $server_info = $this->server_info;
 
             if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -122,9 +121,10 @@
         }
 
         /**
-         * Return all information relating to a schema
+         * Return all information relating to a schema.
          *
          * @param $schema The name of the schema
+         *
          * @return Schema information
          */
         public function getSchemaByName($schema)
@@ -143,10 +143,11 @@
         // Table functions
 
         /**
-         * Changes a user's password
+         * Changes a user's password.
          *
          * @param $username The username
          * @param $password The new password
+         *
          * @return \PHPPgAdmin\Database\A 0 success
          */
         public function changePassword($username, $password)
@@ -163,10 +164,11 @@
         // View functions
 
         /**
-         * Gets all information for an aggregate
+         * Gets all information for an aggregate.
          *
          * @param $name     The name of the aggregate
          * @param $basetype The input data type of the aggregate
+         *
          * @return A recordset
          */
         public function getAggregate($name, $basetype)
@@ -250,7 +252,7 @@
 
         /**
          * Protected method which alter a table
-         * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+         * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
          *
          * @param $tblrs      The table recordSet returned by getTable()
          * @param $name       The new name for the table
@@ -258,6 +260,7 @@
          * @param $schema     The new schema for the table
          * @param $comment    The comment on the table
          * @param $tablespace The new tablespace for the table ('' means leave as is)
+         *
          * @return int 0 success
          */
         protected function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace)
@@ -297,13 +300,14 @@
 
         /**
          * Protected method which alter a view
-         * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+         * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
          *
          * @param $vwrs    The view recordSet returned by getView()
          * @param $name    The new name for the view
          * @param $owner   The new owner for the view
          * @param $schema
          * @param $comment The comment on the view
+         *
          * @return int 0 success
          */
         protected function _alterView($vwrs, $name, $owner, $schema, $comment)
@@ -336,7 +340,7 @@
 
         /**
          * Protected method which alter a sequence
-         * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+         * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
          *
          * @param $seqrs        The sequence recordSet returned by getSequence()
          * @param $name         The new name for the sequence
@@ -350,6 +354,7 @@
          * @param $cachevalue   The cache value
          * @param $cycledvalue  True if cycled, false otherwise
          * @param $startvalue   The sequence start value when issueing a restart
+         *
          * @return int 0 success
          */
         protected function _alterSequence(

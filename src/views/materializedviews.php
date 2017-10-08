@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Manage views in a database
+ * Manage views in a database.
  *
  * $Id: views.php,v 1.75 2007/12/15 22:57:43 ioguix Exp $
  */

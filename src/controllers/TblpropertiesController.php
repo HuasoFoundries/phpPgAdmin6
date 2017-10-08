@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class TblpropertiesController extends BaseController
 {
@@ -80,17 +80,16 @@ class TblpropertiesController extends BaseController
 
         $output = ob_get_clean();
 
-        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'], null, true, $header_template);
+        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'], null, true, $header_template);
         $this->printBody();
 
         echo $output;
 
         return $this->printFooter();
-
     }
 
     /**
-     * Show default list of columns in the table
+     * Show default list of columns in the table.
      */
     public function doDefault($msg = '')
     {
@@ -100,10 +99,9 @@ class TblpropertiesController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata, $actions) use ($data) {
-
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-            $attname                  = $rowdata->fields['attname'];
-            $table                    = $_REQUEST['table'];
+            $attname = $rowdata->fields['attname'];
+            $table = $_REQUEST['table'];
             $data->fieldClean($attname);
             $data->fieldClean($table);
 
@@ -114,35 +112,32 @@ class TblpropertiesController extends BaseController
         };
 
         $cstrRender = function ($s, $p) use ($misc, $data) {
-
             $str = '';
             foreach ($p['keys'] as $k => $c) {
-
                 if (is_null($p['keys'][$k]['consrc'])) {
-                    $atts        = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
-                    $c['consrc'] = ($c['contype'] == 'u' ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
+                    $atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
+                    $c['consrc'] = ($c['contype'] == 'u' ? 'UNIQUE (' : 'PRIMARY KEY (').implode(',', $atts).')';
                 }
 
                 if ($c['p_field'] == $s) {
                     switch ($c['contype']) {
                         case 'p':
-                            $str .= '<a href="constraints.php?' . $misc->href . '&amp;table=' . urlencode($c['p_table']) . '&amp;schema=' . urlencode($c['p_schema']) . '"><img src="' .
-                            $misc->icon('PrimaryKey') . '" alt="[pk]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
+                            $str .= '<a href="constraints.php?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
+                            $misc->icon('PrimaryKey').'" alt="[pk]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
                             break;
                         case 'f':
-                            $str .= '<a href="tblproperties.php?' . $misc->href . '&amp;table=' . urlencode($c['f_table']) . '&amp;schema=' . urlencode($c['f_schema']) . '"><img src="' .
-                            $misc->icon('ForeignKey') . '" alt="[fk]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
+                            $str .= '<a href="tblproperties.php?'.$misc->href.'&amp;table='.urlencode($c['f_table']).'&amp;schema='.urlencode($c['f_schema']).'"><img src="'.
+                            $misc->icon('ForeignKey').'" alt="[fk]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
                             break;
                         case 'u':
-                            $str .= '<a href="constraints.php?' . $misc->href . '&amp;table=' . urlencode($c['p_table']) . '&amp;schema=' . urlencode($c['p_schema']) . '"><img src="' .
-                            $misc->icon('UniqueConstraint') . '" alt="[uniq]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
+                            $str .= '<a href="constraints.php?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
+                            $misc->icon('UniqueConstraint').'" alt="[uniq]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
                             break;
                         case 'c':
-                            $str .= '<a href="constraints.php?' . $misc->href . '&amp;table=' . urlencode($c['p_table']) . '&amp;schema=' . urlencode($c['p_schema']) . '"><img src="' .
-                            $misc->icon('CheckConstraint') . '" alt="[check]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
+                            $str .= '<a href="constraints.php?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
+                            $misc->icon('CheckConstraint').'" alt="[check]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
                     }
                 }
-
             }
 
             return $str;
@@ -168,7 +163,7 @@ class TblpropertiesController extends BaseController
             'column'  => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
+                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
@@ -207,22 +202,22 @@ class TblpropertiesController extends BaseController
         $actions = [
             'browse'     => [
                 'title' => $lang['strbrowse'],
-                'url'   => "display.php?{$misc->href}&amp;subject=column&amp;return=table&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
+                'url'   => "display.php?{$misc->href}&amp;subject=column&amp;return=table&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'alter'      => [
                 'title' => $lang['stralter'],
-                'url'   => "colproperties.php?action=properties&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
+                'url'   => "colproperties.php?action=properties&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'privileges' => [
                 'title' => $lang['strprivileges'],
-                'url'   => "privileges.php?subject=column&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
+                'url'   => "privileges.php?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'drop'       => [
                 'title' => $lang['strdrop'],
-                'url'   => "tblproperties.php?action=confirm_drop&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
+                'url'   => "tblproperties.php?action=confirm_drop&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
         ];
@@ -396,12 +391,10 @@ class TblpropertiesController extends BaseController
             ],
         ];
         $this->printNavLinks($navlinks, 'tblproperties-tblproperties', get_defined_vars());
-
     }
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -481,11 +474,10 @@ class TblpropertiesController extends BaseController
         } else {
             $this->doAlter($lang['strtablealteredbad']);
         }
-
     }
 
     /**
-     * Function to allow altering of a table
+     * Function to allow altering of a table.
      */
     public function doAlter($msg = '')
     {
@@ -508,7 +500,6 @@ class TblpropertiesController extends BaseController
         }
 
         if ($table->recordCount() > 0) {
-
             if (!isset($_POST['name'])) {
                 $_POST['name'] = $table->fields['relname'];
             }
@@ -529,7 +520,7 @@ class TblpropertiesController extends BaseController
                 $_POST['tablespace'] = $table->fields['tablespace'];
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tblproperties.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/tblproperties.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -592,7 +583,6 @@ class TblpropertiesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     public function doExport($msg = '')
@@ -609,7 +599,7 @@ class TblpropertiesController extends BaseController
         $this->printTabs('table', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -671,8 +661,8 @@ class TblpropertiesController extends BaseController
         if (ini_get('file_uploads')) {
             // Don't show upload option if max size of uploads is zero
             $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
-            if (is_double($max_size) && $max_size > 0) {
-                echo '<form action="' . SUBFOLDER . "/src/views/dataimport.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
+            if (is_float($max_size) && $max_size > 0) {
+                echo '<form action="'.SUBFOLDER."/src/views/dataimport.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strformat']}</th>\n";
                 echo "\t\t<td><select name=\"format\">\n";
@@ -700,11 +690,10 @@ class TblpropertiesController extends BaseController
         } else {
             echo "<p>{$lang['strnouploads']}</p>\n";
         }
-
     }
 
     /**
-     * Displays a screen where they can add a column
+     * Displays a screen where they can add a column.
      */
     public function doAddColumn($msg = '')
     {
@@ -745,15 +734,15 @@ class TblpropertiesController extends BaseController
                 }
 
                 // Fetch all available types
-                $types        = $data->getTypes(true, false, true);
+                $types = $data->getTypes(true, false, true);
                 $types_for_js = [];
 
                 $this->printTrail('table');
                 $this->printTitle($lang['straddcolumn'], 'pg.column.add');
                 $this->printMsg($msg);
 
-                echo '<script src="' . SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . SUBFOLDER . "/src/views/tblproperties.php\" method=\"post\">\n";
+                echo '<script src="'.SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="'.SUBFOLDER."/src/views/tblproperties.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -778,7 +767,7 @@ class TblpropertiesController extends BaseController
                     }
                 }
                 while (!$types->EOF) {
-                    $typname        = $types->fields['typname'];
+                    $typname = $types->fields['typname'];
                     $types_for_js[] = $typname;
                     echo "\t<option value=\"", htmlspecialchars($typname), '"', ($typname == $_POST['type']) ? ' selected="selected"' : '', '>',
                     $misc->printVal($typname), "</option>\n";
@@ -792,7 +781,7 @@ class TblpropertiesController extends BaseController
                 echo "\t<option value=\"[]\"", ($_POST['array'] == '[]') ? ' selected="selected"' : '', ">[ ]</option>\n";
                 echo "</select></td>\n";
                 $predefined_size_types = array_intersect($data->predefined_size_types, $types_for_js);
-                $escaped_predef_types  = []; // the JS escaped array elements
+                $escaped_predef_types = []; // the JS escaped array elements
                 foreach ($predefined_size_types as $value) {
                     $escaped_predef_types[] = "'{$value}'";
                 }
@@ -819,13 +808,14 @@ class TblpropertiesController extends BaseController
                 echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
-                echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>\n";
+                echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");checkLengths(document.getElementById('type').value,'');</script>\n";
                 break;
             case 2:
                 // Check inputs
                 if (trim($_POST['field']) == '') {
                     $_REQUEST['stage'] = 1;
                     $this->doAddColumn($lang['strcolneedsname']);
+
                     return;
                 }
                 if (!isset($_POST['length'])) {
@@ -841,6 +831,7 @@ class TblpropertiesController extends BaseController
                 } else {
                     $_REQUEST['stage'] = 1;
                     $this->doAddColumn($lang['strcolumnaddedbad']);
+
                     return;
                 }
                 break;
@@ -850,7 +841,7 @@ class TblpropertiesController extends BaseController
     }
 
     /**
-     * Show confirmation of drop column and perform actual drop
+     * Show confirmation of drop column and perform actual drop.
      */
     public function doDrop($confirm)
     {
@@ -866,7 +857,7 @@ class TblpropertiesController extends BaseController
             echo '<p>', sprintf($lang['strconfdropcolumn'], $misc->printVal($_REQUEST['column']),
                 $misc->printVal($_REQUEST['table'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tblproperties.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/tblproperties.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), "\" />\n";
@@ -883,9 +874,6 @@ class TblpropertiesController extends BaseController
             } else {
                 $this->doDefault($lang['strcolumndroppedbad']);
             }
-
         }
-
     }
-
 }

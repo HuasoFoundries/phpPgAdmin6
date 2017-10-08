@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Manage schemas within a database
+ * Manage schemas within a database.
  *
  * $Id: database.php,v 1.104 2007/11/30 06:04:43 xzilla Exp $
  */

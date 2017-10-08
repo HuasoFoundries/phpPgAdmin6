@@ -1,7 +1,7 @@
 <?php
 
 /**
- * List constraints on a table
+ * List constraints on a table.
  *
  * $Id: constraints.php,v 1.56 2007/12/31 16:46:07 xzilla Exp $
  */

@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class UsersController extends BaseController
 {
@@ -13,7 +13,6 @@ class UsersController extends BaseController
 
     public function render()
     {
-
         $this->printHeader($lang['strusers']);
         $this->printBody();
 
@@ -71,11 +70,10 @@ class UsersController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
-     * Show default list of users in the database
+     * Show default list of users in the database.
      */
     public function doDefault($msg = '')
     {
@@ -165,7 +163,6 @@ class UsersController extends BaseController
             ],
             'content' => $lang['strcreateuser'],
         ]], 'users-users', get_defined_vars());
-
     }
 
     /**
@@ -183,7 +180,7 @@ class UsersController extends BaseController
 
         $server_info = $misc->getServerInfo();
 
-        $userdata         = $data->getUser($server_info['username']);
+        $userdata = $data->getUser($server_info['username']);
         $_REQUEST['user'] = $server_info['username'];
 
         $this->printTrail('user');
@@ -191,7 +188,7 @@ class UsersController extends BaseController
         $this->printMsg($msg);
 
         if ($userdata->recordCount() > 0) {
-            $userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
+            $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
             $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strusername']}</th><th class=\"data\">{$lang['strsuper']}</th><th class=\"data\">{$lang['strcreatedb']}</th><th class=\"data\">{$lang['strexpires']}</th>";
@@ -222,7 +219,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * Show confirmation of change password and actually change password
+     * Show confirmation of change password and actually change password.
      */
     public function doChangePassword($confirm, $msg = '')
     {
@@ -247,7 +244,7 @@ class UsersController extends BaseController
                 $_POST['confirm'] = '';
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
@@ -277,13 +274,12 @@ class UsersController extends BaseController
                 } else {
                     $this->doAccount($lang['strpasswordchangedbad']);
                 }
-
             }
         }
     }
 
     /**
-     * Function to allow editing of a user
+     * Function to allow editing of a user.
      */
     public function doEdit($msg = '')
     {
@@ -299,9 +295,9 @@ class UsersController extends BaseController
         $userdata = $data->getUser($_REQUEST['username']);
 
         if ($userdata->recordCount() > 0) {
-            $server_info                     = $misc->getServerInfo();
-            $canRename                       = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
-            $userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
+            $server_info = $misc->getServerInfo();
+            $canRename = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
+            $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
             $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
 
             if (!isset($_POST['formExpires'])) {
@@ -317,14 +313,14 @@ class UsersController extends BaseController
                     $_POST['formCreateDB'] = '';
                 }
 
-                $_POST['formExpires']  = $userdata->fields['useexpires'] == 'infinity' ? '' : $userdata->fields['useexpires'];
+                $_POST['formExpires'] = $userdata->fields['useexpires'] == 'infinity' ? '' : $userdata->fields['useexpires'];
                 $_POST['formPassword'] = '';
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strusername']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . '" />' : $misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['newname']).'" />' : $misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$lang['strsuper']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
             (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
@@ -347,11 +343,10 @@ class UsersController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
-     * Function to save after editing a user
+     * Function to save after editing a user.
      */
     public function doSaveEdit()
     {
@@ -363,7 +358,7 @@ class UsersController extends BaseController
         // Check name and password
         if (isset($_POST['newname']) && $_POST['newname'] == '') {
             $this->doEdit($lang['struserneedsname']);
-        } else if ($_POST['formPassword'] != $_POST['formConfirm']) {
+        } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doEdit($lang['strpasswordconfirm']);
         } else {
             if (isset($_POST['newname'])) {
@@ -377,12 +372,11 @@ class UsersController extends BaseController
             } else {
                 $this->doEdit($lang['struserupdatedbad']);
             }
-
         }
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
      */
     public function doDrop($confirm)
     {
@@ -397,7 +391,7 @@ class UsersController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropuser'], $misc->printVal($_REQUEST['username'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="username" value="', htmlspecialchars($_REQUEST['username']), "\" />\n";
             echo $misc->form;
@@ -411,12 +405,11 @@ class UsersController extends BaseController
             } else {
                 $this->doDefault($lang['struserdroppedbad']);
             }
-
         }
     }
 
     /**
-     * Displays a screen where they can enter a new user
+     * Displays a screen where they can enter a new user.
      */
     public function doCreate($msg = '')
     {
@@ -445,7 +438,7 @@ class UsersController extends BaseController
         $this->printTitle($lang['strcreateuser'], 'pg.user.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strusername']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formUsername\" value=\"", htmlspecialchars($_POST['formUsername']), "\" /></td>\n\t</tr>\n";
@@ -470,7 +463,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * Actually creates the new user in the database
+     * Actually creates the new user in the database.
      */
     public function doSaveCreate()
     {
@@ -482,7 +475,7 @@ class UsersController extends BaseController
         // Check data
         if ($_POST['formUsername'] == '') {
             $this->doCreate($lang['struserneedsname']);
-        } else if ($_POST['formPassword'] != $_POST['formConfirm']) {
+        } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doCreate($lang['strpasswordconfirm']);
         } else {
             $status = $data->createUser($_POST['formUsername'], $_POST['formPassword'],
@@ -492,8 +485,6 @@ class UsersController extends BaseController
             } else {
                 $this->doCreate($lang['strusercreatedbad']);
             }
-
         }
     }
-
 }

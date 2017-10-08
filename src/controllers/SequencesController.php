@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class SequencesController extends BaseController
 {
@@ -90,11 +90,10 @@ class SequencesController extends BaseController
 
         // Print footer
         return $this->printFooter();
-
     }
 
     /**
-     * Display list of all sequences in the database/schema
+     * Display list of all sequences in the database/schema.
      */
     public function doDefault($msg = '')
     {
@@ -198,7 +197,6 @@ class SequencesController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -225,7 +223,7 @@ class SequencesController extends BaseController
     }
 
     /**
-     * Display the properties of a sequence
+     * Display the properties of a sequence.
      */
     public function doProperties($msg = '')
     {
@@ -377,11 +375,10 @@ class SequencesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
-     * Drop a sequence
+     * Drop a sequence.
      */
     public function doDrop($confirm, $msg = '')
     {
@@ -400,7 +397,7 @@ class SequencesController extends BaseController
             $this->printTitle($lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -422,7 +419,7 @@ class SequencesController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['sequence'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if ($status == 0) {
                     foreach ($_POST['sequence'] as $s) {
@@ -432,6 +429,7 @@ class SequencesController extends BaseController
                         } else {
                             $data->endTransaction();
                             $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strsequencedroppedbad']));
+
                             return;
                         }
                     }
@@ -443,7 +441,6 @@ class SequencesController extends BaseController
                 } else {
                     $this->doDefault($lang['strsequencedroppedbad']);
                 }
-
             } else {
                 $status = $data->dropSequence($_POST['sequence'], isset($_POST['cascade']));
                 if ($status == 0) {
@@ -452,13 +449,12 @@ class SequencesController extends BaseController
                 } else {
                     $this->doDrop(true, $lang['strsequencedroppedbad']);
                 }
-
             }
         }
     }
 
     /**
-     * Displays a screen where they can enter a new sequence
+     * Displays a screen where they can enter a new sequence.
      */
     public function doCreateSequence($msg = '')
     {
@@ -495,7 +491,7 @@ class SequencesController extends BaseController
         $this->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
         echo "<table>\n";
 
         echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -535,7 +531,7 @@ class SequencesController extends BaseController
     }
 
     /**
-     * Actually creates the new sequence in the database
+     * Actually creates the new sequence in the database.
      */
     public function doSaveCreateSequence()
     {
@@ -561,7 +557,7 @@ class SequencesController extends BaseController
     }
 
     /**
-     * Restarts a sequence
+     * Restarts a sequence.
      */
     public function doRestart()
     {
@@ -576,11 +572,10 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequencerestartbad']);
         }
-
     }
 
     /**
-     * Resets a sequence
+     * Resets a sequence.
      */
     public function doReset()
     {
@@ -595,11 +590,10 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequenceresetbad']);
         }
-
     }
 
     /**
-     * Set Nextval of a sequence
+     * Set Nextval of a sequence.
      */
     public function doNextval()
     {
@@ -614,11 +608,10 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequencenextvalbad']);
         }
-
     }
 
     /**
-     * Function to save after 'setval'ing a sequence
+     * Function to save after 'setval'ing a sequence.
      */
     public function doSaveSetval()
     {
@@ -633,11 +626,10 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequencesetvalbad']);
         }
-
     }
 
     /**
-     * Function to allow 'setval'ing of a sequence
+     * Function to allow 'setval'ing of a sequence.
      */
     public function doSetval($msg = '')
     {
@@ -654,7 +646,7 @@ class SequencesController extends BaseController
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
         if (is_object($sequence) && $sequence->recordCount() > 0) {
-            echo '<form action="' . SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
             echo '<table border="0">';
             echo "<tr><th class=\"data left required\">{$lang['strlastvalue']}</th>\n";
             echo '<td class="data1">';
@@ -670,11 +662,10 @@ class SequencesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
-     * Function to save after altering a sequence
+     * Function to save after altering a sequence.
      */
     public function doSaveAlter()
     {
@@ -739,11 +730,10 @@ class SequencesController extends BaseController
         } else {
             $this->doProperties($lang['strsequencealteredbad']);
         }
-
     }
 
     /**
-     * Function to allow altering of a sequence
+     * Function to allow altering of a sequence.
      */
     public function doAlter($msg = '')
     {
@@ -782,7 +772,7 @@ class SequencesController extends BaseController
                 $_POST['formCycledValue'] = 'on';
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -863,7 +853,5 @@ class SequencesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
-
 }

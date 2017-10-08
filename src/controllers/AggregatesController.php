@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class AggregatesController extends BaseController
 {
@@ -68,11 +68,10 @@ class AggregatesController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
-     * Show default list of aggregate functions in the database
+     * Show default list of aggregate functions in the database.
      */
     public function doDefault($msg = '')
     {
@@ -90,7 +89,7 @@ class AggregatesController extends BaseController
             'aggrname'    => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('proname'),
-                'url'   => SUBFOLDER . "/redirect/aggregate?action=properties&amp;{$misc->href}&amp;",
+                'url'   => SUBFOLDER."/redirect/aggregate?action=properties&amp;{$misc->href}&amp;",
                 'vars'  => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
             ],
             'aggrtype'    => [
@@ -170,7 +169,6 @@ class AggregatesController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -178,7 +176,7 @@ class AggregatesController extends BaseController
 
         $aggregates = $data->getAggregates();
 
-        $proto   = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
+        $proto = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
         $reqvars = $misc->getRequestVars('aggregate');
 
         $attrs = [
@@ -199,7 +197,7 @@ class AggregatesController extends BaseController
     }
 
     /**
-     * Actually creates the new aggregate in the database
+     * Actually creates the new aggregate in the database.
      */
     public function doSaveCreate()
     {
@@ -210,15 +208,19 @@ class AggregatesController extends BaseController
         // Check inputs
         if (trim($_REQUEST['name']) == '') {
             $this->doCreate($lang['straggrneedsname']);
+
             return;
-        } else if (trim($_REQUEST['basetype']) == '') {
+        } elseif (trim($_REQUEST['basetype']) == '') {
             $this->doCreate($lang['straggrneedsbasetype']);
+
             return;
-        } else if (trim($_REQUEST['sfunc']) == '') {
+        } elseif (trim($_REQUEST['sfunc']) == '') {
             $this->doCreate($lang['straggrneedssfunc']);
+
             return;
-        } else if (trim($_REQUEST['stype']) == '') {
+        } elseif (trim($_REQUEST['stype']) == '') {
             $this->doCreate($lang['straggrneedsstype']);
+
             return;
         }
 
@@ -233,9 +235,9 @@ class AggregatesController extends BaseController
         }
     }
 
-/**
- * Displays a screen for create a new aggregate function
- */
+    /**
+     * Displays a screen for create a new aggregate function.
+     */
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
@@ -279,7 +281,7 @@ class AggregatesController extends BaseController
         $this->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/aggregates.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -314,9 +316,9 @@ class AggregatesController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Function to save after altering an aggregate
- */
+    /**
+     * Function to save after altering an aggregate.
+     */
     public function doSaveAlter()
     {
         $conf = $this->conf;
@@ -327,6 +329,7 @@ class AggregatesController extends BaseController
         // Check inputs
         if (trim($_REQUEST['aggrname']) == '') {
             $this->doAlter($lang['straggrneedsname']);
+
             return;
         }
 
@@ -337,13 +340,14 @@ class AggregatesController extends BaseController
             $this->doDefault($lang['straggraltered']);
         } else {
             $this->doAlter($lang['straggralteredbad']);
+
             return;
         }
     }
 
-/**
- * Function to allow editing an aggregate function
- */
+    /**
+     * Function to allow editing an aggregate function.
+     */
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
@@ -355,7 +359,7 @@ class AggregatesController extends BaseController
         $this->printTitle($lang['stralter'], 'pg.aggregate.alter');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/aggregates.php\" method=\"post\">\n";
         $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
         if ($aggrdata->recordCount() > 0) {
             // Output table header
@@ -388,9 +392,9 @@ class AggregatesController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Show confirmation of drop and perform actual drop of the aggregate function selected
- */
+    /**
+     * Show confirmation of drop and perform actual drop of the aggregate function selected.
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -404,7 +408,7 @@ class AggregatesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/aggregates.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="aggrname" value="', htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
@@ -421,13 +425,12 @@ class AggregatesController extends BaseController
             } else {
                 $this->doDefault($lang['straggregatedroppedbad']);
             }
-
         }
     }
 
-/**
- * Show the properties of an aggregate
- */
+    /**
+     * Show the properties of an aggregate.
+     */
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
@@ -523,5 +526,4 @@ class AggregatesController extends BaseController
 
         $this->printNavLinks($navlinks, 'aggregates-properties', get_defined_vars());
     }
-
 }

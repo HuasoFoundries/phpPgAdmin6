@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Manage fulltext configurations, dictionaries and mappings
+ * Manage fulltext configurations, dictionaries and mappings.
  *
  * $Id: fulltext.php,v 1.6 2008/03/17 21:35:48 ioguix Exp $
  */

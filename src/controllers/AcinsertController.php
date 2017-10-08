@@ -3,7 +3,7 @@
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class AcinsertController extends BaseController
 {
@@ -11,17 +11,17 @@ class AcinsertController extends BaseController
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
         $action = $this->action;
 
         if (isset($_POST['offset'])) {
             $offset = " OFFSET {$_POST['offset']}";
         } else {
             $_POST['offset'] = 0;
-            $offset          = ' OFFSET 0';
+            $offset = ' OFFSET 0';
         }
 
         $keynames = [];
@@ -52,7 +52,7 @@ class AcinsertController extends BaseController
                 echo '<th>';
 
                 if (in_array($h, $fkeynames)) {
-                    echo '<img src="' . $misc->icon('ForeignKey') . '" alt="[referenced key]" />';
+                    echo '<img src="'.$misc->icon('ForeignKey').'" alt="[referenced key]" />';
                 }
 
                 echo htmlentities($h, ENT_QUOTES, 'UTF-8'), '</th>';
@@ -98,7 +98,7 @@ class AcinsertController extends BaseController
                 $js .= "fkl_hasnext=false;\n";
             }
 
-            echo $js . '</script>';
+            echo $js.'</script>';
         } else {
             printf("<p>{$lang['strnofkref']}</p>", "\"{$_POST['f_schema']}\".\"{$_POST['f_table']}\".\"{$fkeynames[$_POST['fattpos']]}\"");
 
