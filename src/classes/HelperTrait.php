@@ -9,7 +9,6 @@ trait HelperTrait
      */
     public function prtrace()
     {
-
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = ([
@@ -67,5 +66,4 @@ trait HelperTrait
     {
         return str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
     }
-
 }

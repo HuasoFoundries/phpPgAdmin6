@@ -15,7 +15,6 @@ class MaterializedviewsController extends BaseController
 
     public function render()
     {
-
         $conf   = $this->conf;
         $misc   = $this->misc;
         $lang   = $this->lang;
@@ -23,7 +22,7 @@ class MaterializedviewsController extends BaseController
 
         if ($action == 'tree') {
             return $this->doTree();
-        } else if ($action == 'subtree') {
+        } elseif ($action == 'subtree') {
             return $this->doSubTree();
         }
 
@@ -91,7 +90,6 @@ class MaterializedviewsController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
@@ -230,7 +228,6 @@ class MaterializedviewsController extends BaseController
             ],
         ];
         $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
-
     }
 
     /**
@@ -238,7 +235,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -262,7 +258,6 @@ class MaterializedviewsController extends BaseController
 
     public function doSubTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -416,7 +411,6 @@ class MaterializedviewsController extends BaseController
                 return $display_controller->render();
             }
         }
-
     }
 
     /**
@@ -482,7 +476,6 @@ class MaterializedviewsController extends BaseController
                 } else {
                     $this->doDefault($lang['strviewdroppedbad']);
                 }
-
             } else {
                 $status = $data->dropView($_POST['view'], isset($_POST['cascade']));
                 if ($status == 0) {
@@ -491,10 +484,8 @@ class MaterializedviewsController extends BaseController
                 } else {
                     $this->doDefault($lang['strviewdroppedbad']);
                 }
-
             }
         }
-
     }
 
     /**
@@ -620,7 +611,6 @@ class MaterializedviewsController extends BaseController
                 if ($v == 'i') {
                     $arrOperators[$k] = $k;
                 }
-
             }
 
             // Output additional conditions, note that this portion of the wizard treats the right hand side as literal values
@@ -710,7 +700,6 @@ class MaterializedviewsController extends BaseController
             } else {
                 $_REQUEST['formDefinition'] = 'SELECT ';
             }
-
         }
         if (!isset($_REQUEST['formComment'])) {
             $_REQUEST['formComment'] = '';
@@ -762,7 +751,6 @@ class MaterializedviewsController extends BaseController
             } else {
                 $this->doCreate($lang['strviewcreatedbad']);
             }
-
         }
     }
 
@@ -780,7 +768,7 @@ class MaterializedviewsController extends BaseController
 
         if (!strlen($_POST['formView'])) {
             $this->doSetParamsCreate($lang['strviewneedsname']);
-        } else if (!isset($_POST['formFields']) || !count($_POST['formFields'])) {
+        } elseif (!isset($_POST['formFields']) || !count($_POST['formFields'])) {
             $this->doSetParamsCreate($lang['strviewneedsfields']);
         } else {
             $selFields = '';
@@ -798,7 +786,7 @@ class MaterializedviewsController extends BaseController
                         // field does not exist
                         $selFields .= "\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\", ";
                         $tmpHsh[$arrTmp['fieldname']] = 1;
-                    } else if ($_POST['dblFldMeth'] == 'rename') {
+                    } elseif ($_POST['dblFldMeth'] == 'rename') {
                         // field exist and must be renamed
                         $tmpHsh[$arrTmp['fieldname']]++;
                         $selFields .= "\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\" AS \"{$arrTmp['schemaname']}_{$arrTmp['tablename']}_{$arrTmp['fieldname']}{$tmpHsh[$arrTmp['fieldname']]}\", ";
@@ -833,7 +821,6 @@ class MaterializedviewsController extends BaseController
                     $j = 0;
                     while ($j < $count) {
                         foreach ($arrLinks as $curLink) {
-
                             $arrLeftLink  = unserialize($curLink['leftlink']);
                             $arrRightLink = unserialize($curLink['rightlink']);
                             $data->fieldArrayClean($arrLeftLink);
@@ -859,7 +846,6 @@ class MaterializedviewsController extends BaseController
                                 if (!in_array($tbl2, $arrUsedTbls)) {
                                     $arrUsedTbls[] = $tbl2;
                                 }
-
                             }
                         }
                         $j++;
@@ -903,8 +889,6 @@ class MaterializedviewsController extends BaseController
             } else {
                 $this->doSetParamsCreate($lang['strviewcreatedbad']);
             }
-
         }
     }
-
 }

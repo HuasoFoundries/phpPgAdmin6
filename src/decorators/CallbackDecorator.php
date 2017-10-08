@@ -4,7 +4,6 @@
 
 class CallbackDecorator extends Decorator
 {
-
     public function __construct($callback, $param = null)
     {
         $this->fn = $callback;
@@ -15,4 +14,4 @@ class CallbackDecorator extends Decorator
     {
         return call_user_func($this->fn, $fields, $this->p);
     }
-    }
+}

@@ -42,7 +42,6 @@ class ConversionsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -85,7 +84,6 @@ class ConversionsController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -115,5 +113,4 @@ class ConversionsController extends BaseController
 
         return $this->printTree($constraints, $attrs, 'constraints');
     }
-
 }

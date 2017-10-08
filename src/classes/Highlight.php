@@ -2,7 +2,7 @@
 
     namespace PHPPgAdmin;
 
-    /* This software is licensed through a BSD-style License.
+/* This software is licensed through a BSD-style License.
      * http://www.opensource.org/licenses/bsd-license.php
 
     Copyright (c) 2003, 2004, Jacob D. Cohen
@@ -37,32 +37,31 @@
 
     class Highlight
     {
-
-        const NORMAL_TEXT   = 1;
-        const DQ_LITERAL    = 2;
-        const DQ_ESCAPE     = 3;
-        const SQ_LITERAL    = 4;
-        const SQ_ESCAPE     = 5;
-        const SLASH_BEGIN   = 6;
-        const STAR_COMMENT  = 7;
-        const STAR_END      = 8;
-        const LINE_COMMENT  = 9;
-        const HTML_ENTITY   = 10;
-        const LC_ESCAPE     = 11;
-        const BLOCK_COMMENT = 12;
-        const PAREN_BEGIN   = 13;
-        const DASH_BEGIN    = 14;
-        const BT_LITERAL    = 15;
-        const BT_ESCAPE     = 16;
-        const XML_TAG_BEGIN = 17;
-        const XML_TAG       = 18;
-        const XML_PI        = 19;
-        const SCH_NORMAL    = 20;
-        const SCH_STRESC    = 21;
-        const SCH_IDEXPR    = 22;
-        const SCH_NUMLIT    = 23;
-        const SCH_CHRLIT    = 24;
-        const SCH_STRLIT    = 25;
+        const NORMAL_TEXT     = 1;
+        const DQ_LITERAL      = 2;
+        const DQ_ESCAPE       = 3;
+        const SQ_LITERAL      = 4;
+        const SQ_ESCAPE       = 5;
+        const SLASH_BEGIN     = 6;
+        const STAR_COMMENT    = 7;
+        const STAR_END        = 8;
+        const LINE_COMMENT    = 9;
+        const HTML_ENTITY     = 10;
+        const LC_ESCAPE       = 11;
+        const BLOCK_COMMENT   = 12;
+        const PAREN_BEGIN     = 13;
+        const DASH_BEGIN      = 14;
+        const BT_LITERAL      = 15;
+        const BT_ESCAPE       = 16;
+        const XML_TAG_BEGIN   = 17;
+        const XML_TAG         = 18;
+        const XML_PI          = 19;
+        const SCH_NORMAL      = 20;
+        const SCH_STRESC      = 21;
+        const SCH_IDEXPR      = 22;
+        const SCH_NUMLIT      = 23;
+        const SCH_CHRLIT      = 24;
+        const SCH_STRLIT      = 25;
         public $initial_state = ['Scheme' => self::SCH_NORMAL];
         public $sch           = [];
         public $c89           = [];
@@ -89,7 +88,6 @@
 
         public function __construct()
         {
-
             $keyword_replace = function ($keywords, $text, $ncs = false) {
                 $cm = $ncs ? 'i' : '';
                 foreach ($keywords as $keyword) {

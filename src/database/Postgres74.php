@@ -2,16 +2,15 @@
 
     namespace PHPPgAdmin\Database;
 
-    /**
-     * A class that implements the DB interface for Postgres
-     * Note: This class uses ADODB and returns RecordSets.
-     *
-     * $Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
-     */
+/**
+ * A class that implements the DB interface for Postgres
+ * Note: This class uses ADODB and returns RecordSets.
+ *
+ * $Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
+ */
 
     class Postgres74 extends Postgres80
     {
-
         public $major_version = 7.4;
         // List of all legal privileges that can be applied to different types
         // of objects.
@@ -443,7 +442,6 @@
          */
         public function getConstraintsWithFields($table)
         {
-
             $c_schema = $this->_schema;
             $this->clean($c_schema);
             $this->clean($table);

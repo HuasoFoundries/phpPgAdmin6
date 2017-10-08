@@ -9,7 +9,6 @@ namespace PHPPgAdmin;
  */
 class ArrayRecordSet
 {
-
     public $_array;
     public $_count;
     public $EOF = false;

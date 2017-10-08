@@ -18,13 +18,11 @@ class XHtmlElement extends XHtmlSimpleElement
 
     public function __construct($text = null)
     {
-
         parent::__construct();
 
         if ($text) {
             $this->set_text($text);
         }
-
     }
 
     /*
@@ -47,7 +45,6 @@ class XHtmlElement extends XHtmlSimpleElement
         if ($text) {
             $this->_text = htmlspecialchars($text);
         }
-
     }
 
     public function fetch()
@@ -57,13 +54,11 @@ class XHtmlElement extends XHtmlSimpleElement
 
     public function _html()
     {
-
         $this->_htmlcode = "<{$this->_element}";
         foreach ($this->_attributes as $attribute => $value) {
             if (!empty($value)) {
                 $this->_htmlcode .= " {$attribute} =\"{$value}\"";
             }
-
         }
         $this->_htmlcode .= ">";
 
