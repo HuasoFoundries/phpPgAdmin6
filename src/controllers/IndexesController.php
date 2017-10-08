@@ -73,7 +73,6 @@ class IndexesController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     public function doDefault($msg = '')
@@ -204,7 +203,6 @@ class IndexesController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -279,16 +277,13 @@ class IndexesController extends BaseController
                     } else {
                         $this->doDefault($lang['stranalyzebad']);
                     }
-
                 } else {
                     $this->doDefault($lang['strclusteredgood']);
                 }
             } else {
                 $this->doDefault($lang['strclusteredbad']);
             }
-
         }
-
     }
 
     public function doReindex()
@@ -303,7 +298,6 @@ class IndexesController extends BaseController
         } else {
             $this->doDefault($lang['strreindexbad']);
         }
-
     }
 
     /**
@@ -483,13 +477,12 @@ class IndexesController extends BaseController
             } else {
                 $this->doCreateIndex($lang['strindexcreatedbad']);
             }
-
         }
     }
 
-/**
- * Show confirmation of drop index and perform actual drop
- */
+    /**
+     * Show confirmation of drop index and perform actual drop
+     */
     public function doDropIndex($confirm)
     {
         $conf = $this->conf;
@@ -525,9 +518,6 @@ class IndexesController extends BaseController
             } else {
                 $this->doDefault($lang['strindexdroppedbad']);
             }
-
         }
-
     }
-
 }

@@ -199,7 +199,6 @@ class DomainsController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -242,7 +241,6 @@ class DomainsController extends BaseController
         } else {
             $this->doAlter($lang['strdomainalteredbad']);
         }
-
     }
 
     /**
@@ -307,7 +305,6 @@ class DomainsController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
@@ -351,7 +348,6 @@ class DomainsController extends BaseController
             echo "<input type=\"submit\" name=\"add\" value=\"{$lang['stradd']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
-
         } else {
             if (trim($_POST['definition']) == '') {
                 $this->addCheck(true, $lang['strcheckneedsdefinition']);
@@ -363,7 +359,6 @@ class DomainsController extends BaseController
                 } else {
                     $this->addCheck(true, $lang['strcheckaddedbad']);
                 }
-
             }
         }
     }
@@ -401,9 +396,7 @@ class DomainsController extends BaseController
             } else {
                 $this->doDropConstraint(true, $lang['strconstraintdroppedbad']);
             }
-
         }
-
     }
 
     /**
@@ -568,9 +561,7 @@ class DomainsController extends BaseController
             } else {
                 $this->doDefault($lang['strdomaindroppedbad']);
             }
-
         }
-
     }
 
     /**
@@ -683,8 +674,6 @@ class DomainsController extends BaseController
             } else {
                 $this->doCreate($lang['strdomaincreatedbad']);
             }
-
         }
     }
-
 }

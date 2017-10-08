@@ -13,7 +13,6 @@ class GroupsController extends BaseController
 
     public function render()
     {
-
         $this->printHeader($lang['strgroups']);
         $this->printBody();
 
@@ -128,7 +127,6 @@ class GroupsController extends BaseController
             ],
             'content' => $lang['strcreategroup'],
         ]], 'groups-groups', get_defined_vars());
-
     }
 
     /**
@@ -147,7 +145,6 @@ class GroupsController extends BaseController
         } else {
             $this->doProperties($lang['strmemberaddedbad']);
         }
-
     }
 
     /**
@@ -181,7 +178,6 @@ class GroupsController extends BaseController
             } else {
                 $this->doDropMember(true, $lang['strmemberdroppedbad']);
             }
-
         }
     }
 
@@ -295,7 +291,6 @@ class GroupsController extends BaseController
             } else {
                 $this->doDefault($lang['strgroupdroppedbad']);
             }
-
         }
     }
 
@@ -373,8 +368,6 @@ class GroupsController extends BaseController
             } else {
                 $this->doCreate($lang['strgroupcreatedbad']);
             }
-
         }
     }
-
 }
