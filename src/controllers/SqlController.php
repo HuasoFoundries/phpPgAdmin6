@@ -96,10 +96,8 @@ class SqlController extends BaseController
                 return $this->execute_script();
             } else {
                 return $this->execute_query();
-
             }
         } catch (\PHPPgAdmin\ADOdbException $e) {
-
             $message   = $e->getMessage();
             $trace     = $e->getTraceAsString();
             $lastError = $_connection->getLastError();
@@ -226,16 +224,14 @@ class SqlController extends BaseController
                 }
                 echo "</table>\n";
                 echo '<p>', $rs->recordCount(), " {$lang['strrows']}</p>\n";
-            } else if ($data->conn->Affected_Rows() > 0) {
+            } elseif ($data->conn->Affected_Rows() > 0) {
                 // Otherwise if any rows have been affected
                 echo '<p>', $data->conn->Affected_Rows(), " {$lang['strrowsaff']}</p>\n";
             } else {
                 // Otherwise nodata to print
                 echo '<p>', $lang['strnodata'], "</p>\n";
             }
-
         }
-
     }
 
     private function doFooter($doBody = true, $template = 'footer.twig')

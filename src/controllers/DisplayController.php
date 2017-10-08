@@ -76,11 +76,11 @@ class DisplayController extends BaseController
         if (isset($_REQUEST['subject']) && isset($_REQUEST[$_REQUEST['subject']])) {
             if ($_REQUEST['subject'] == 'table') {
                 $this->printHeader($lang['strtables'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
-            } else if ($_REQUEST['subject'] == 'view') {
+            } elseif ($_REQUEST['subject'] == 'view') {
                 $this->printHeader($lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
-            } else if ($_REQUEST['subject'] == 'matview') {
+            } elseif ($_REQUEST['subject'] == 'matview') {
                 $this->printHeader('M' . $lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
-            } else if ($_REQUEST['subject'] == 'column') {
+            } elseif ($_REQUEST['subject'] == 'column') {
                 $this->printHeader($lang['strcolumn'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             }
         } else {
@@ -120,7 +120,6 @@ class DisplayController extends BaseController
             if (isset($_REQUEST[$subject])) {
                 $object = $_REQUEST[$subject];
             }
-
         } else {
             $subject = '';
         }
@@ -248,8 +247,7 @@ class DisplayController extends BaseController
 
         $_gets['strings'] = $_REQUEST['strings'];
 
-        if ($save_history && is_object($rs) && ($type == 'QUERY')) //{
-        {
+        if ($save_history && is_object($rs) && ($type == 'QUERY')) { //{
             $misc->saveScriptHistory($_REQUEST['query']);
         }
 
@@ -259,7 +257,7 @@ class DisplayController extends BaseController
             $query = "SELECT * FROM {$_REQUEST['schema']}";
             if ($_REQUEST['subject'] == 'matview') {
                 $query = "{$query}.{$_REQUEST['matview']};";
-            } else if ($_REQUEST['subject'] == 'view') {
+            } elseif ($_REQUEST['subject'] == 'view') {
                 $query = "{$query}.{$_REQUEST['view']};";
             } else {
                 $query = "{$query}.{$_REQUEST['table']};";
@@ -369,7 +367,6 @@ class DisplayController extends BaseController
                     if ($has_nulls) {
                         echo "<td colspan=\"{$colspan}\">&nbsp;</td>" . "\n";
                     } else {
-
                         if (isset($actions['actionbuttons']['edit'])) {
                             $actions['actionbuttons']['edit']                            = $edit_params;
                             $actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
@@ -490,7 +487,6 @@ class DisplayController extends BaseController
 
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
-
                 $navlinks['createview'] = [
                     'attr'    => [
                         'href' => [
@@ -585,7 +581,6 @@ class DisplayController extends BaseController
                 if ($fksprops !== false) {
                     echo $fksprops['code'];
                 }
-
             } else {
                 $fksprops = false;
             }
@@ -613,7 +608,6 @@ class DisplayController extends BaseController
 
                 $i = 0;
                 while (!$attrs->EOF) {
-
                     $attrs->fields['attnotnull'] = $data->phpBool($attrs->fields['attnotnull']);
                     $id                          = (($i % 2) == 0 ? '1' : '2');
 
@@ -724,7 +718,6 @@ class DisplayController extends BaseController
                 } else {
                     echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$lang['strac']}</label>" . "\n";
                 }
-
             }
 
             echo '</p>' . "\n";
@@ -747,9 +740,7 @@ class DisplayController extends BaseController
             } else {
                 $this->doEditRow(true, $lang['strrowupdatedbad']);
             }
-
         }
-
     }
 
     /**
@@ -829,9 +820,7 @@ class DisplayController extends BaseController
             } else {
                 $this->doBrowse($lang['strrowdeletedbad']);
             }
-
         }
-
     }
 
     /**
@@ -852,14 +841,12 @@ class DisplayController extends BaseController
         if (isset($_REQUEST['table'])) {
             $constraints = $data->getConstraintsWithFields($_REQUEST['table']);
             if ($constraints->recordCount() > 0) {
-
                 $fkey_information['common_url'] = $misc->getHREF('schema') . '&amp;subject=table';
 
                 /* build the FK constraints data structure */
                 while (!$constraints->EOF) {
                     $constr = &$constraints->fields;
                     if ($constr['contype'] == 'f') {
-
                         if (!isset($fkey_information['byconstr'][$constr['conid']])) {
                             $fkey_information['byconstr'][$constr['conid']] = [
                                 'url_data' => 'table=' . urlencode($constr['f_table']) . '&amp;schema=' . urlencode($constr['f_schema']),
@@ -898,7 +885,6 @@ class DisplayController extends BaseController
         $j    = 0;
 
         foreach ($rs->fields as $k => $v) {
-
             if (($k === $data->id) && (!($withOid && $conf['show_oids']))) {
                 $j++;
                 continue;
@@ -926,7 +912,6 @@ class DisplayController extends BaseController
                     } else {
                         echo '<img src="' . $misc->icon('LowerArgument') . '" alt="desc">';
                     }
-
                 }
                 echo '</a></th>' . "\n";
             }
@@ -961,7 +946,6 @@ class DisplayController extends BaseController
 
                 if (($v !== null) && isset($fkey_information['byfield'][$k])) {
                     foreach ($fkey_information['byfield'][$k] as $conid) {
-
                         $query_params = $fkey_information['byconstr'][$conid]['url_data'];
 
                         foreach ($fkey_information['byconstr'][$conid]['fkeys'] as $p_field => $f_field) {
@@ -1033,5 +1017,4 @@ class DisplayController extends BaseController
 
         exit;
     }
-
 }

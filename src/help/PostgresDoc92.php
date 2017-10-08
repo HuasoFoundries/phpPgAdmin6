@@ -9,12 +9,10 @@ namespace PHPPgAdmin\Help;
  */
 class PostgresDoc92 extends PostgresDoc91
 {
-
     public function __construct($conf, $major_version)
     {
         parent::__construct($conf, $major_version);
 
         $this->help_page['pg.rule.view'] = 'rules-views.html';
     }
-
 }

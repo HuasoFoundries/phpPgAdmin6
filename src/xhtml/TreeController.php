@@ -103,7 +103,6 @@ class TreeController
 
         if (count($treedata) > 0) {
             foreach ($treedata as $rec) {
-
                 $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
                 if (!empty($attrs['openicon'])) {
                     $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
@@ -137,12 +136,10 @@ class TreeController
 
         $tree_xml .= "</tree>\n";
         if ($print === true) {
-
             if ($this->container->requestobj->getAttribute('route') === null) {
                 header('Content-Type: text/xml; charset=UTF-8');
                 header('Cache-Control: no-cache');
                 echo $tree_xml;
-
             } else {
                 return $this
                     ->container
@@ -151,7 +148,6 @@ class TreeController
                     ->withHeader('Content-Type', 'text/xml;charset=utf-8')
                     ->write($tree_xml);
             }
-
         } else {
             return $tree_xml;
         }
@@ -159,7 +155,6 @@ class TreeController
 
     public function adjustTabsForTree(&$tabs)
     {
-
         foreach ($tabs as $i => $tab) {
             if ((isset($tab['hide']) && $tab['hide'] === true) || (isset($tab['tree']) && $tab['tree'] === false)) {
                 unset($tabs[$i]);
@@ -167,5 +162,4 @@ class TreeController
         }
         return new \PHPPgAdmin\ArrayRecordSet($tabs);
     }
-
 }

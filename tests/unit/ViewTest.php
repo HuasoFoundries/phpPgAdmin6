@@ -19,7 +19,9 @@ class ViewTest extends \Codeception\Test\Unit
         $this->container = $Helper->getContainer();
     }
 
-    protected function _after() {}
+    protected function _after()
+    {
+    }
 
     // tests
 
@@ -374,5 +376,4 @@ class ViewTest extends \Codeception\Test\Unit
         require BASE_PATH . '/src/views/views.php';
         $this->assertTrue($controller->_name == 'ViewsController');
     }
-
 }

@@ -68,7 +68,6 @@ class AggregatesController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
@@ -170,7 +169,6 @@ class AggregatesController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -211,13 +209,13 @@ class AggregatesController extends BaseController
         if (trim($_REQUEST['name']) == '') {
             $this->doCreate($lang['straggrneedsname']);
             return;
-        } else if (trim($_REQUEST['basetype']) == '') {
+        } elseif (trim($_REQUEST['basetype']) == '') {
             $this->doCreate($lang['straggrneedsbasetype']);
             return;
-        } else if (trim($_REQUEST['sfunc']) == '') {
+        } elseif (trim($_REQUEST['sfunc']) == '') {
             $this->doCreate($lang['straggrneedssfunc']);
             return;
-        } else if (trim($_REQUEST['stype']) == '') {
+        } elseif (trim($_REQUEST['stype']) == '') {
             $this->doCreate($lang['straggrneedsstype']);
             return;
         }
@@ -233,9 +231,9 @@ class AggregatesController extends BaseController
         }
     }
 
-/**
- * Displays a screen for create a new aggregate function
- */
+    /**
+     * Displays a screen for create a new aggregate function
+     */
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
@@ -314,9 +312,9 @@ class AggregatesController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Function to save after altering an aggregate
- */
+    /**
+     * Function to save after altering an aggregate
+     */
     public function doSaveAlter()
     {
         $conf = $this->conf;
@@ -341,9 +339,9 @@ class AggregatesController extends BaseController
         }
     }
 
-/**
- * Function to allow editing an aggregate function
- */
+    /**
+     * Function to allow editing an aggregate function
+     */
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
@@ -388,9 +386,9 @@ class AggregatesController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Show confirmation of drop and perform actual drop of the aggregate function selected
- */
+    /**
+     * Show confirmation of drop and perform actual drop of the aggregate function selected
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -421,13 +419,12 @@ class AggregatesController extends BaseController
             } else {
                 $this->doDefault($lang['straggregatedroppedbad']);
             }
-
         }
     }
 
-/**
- * Show the properties of an aggregate
- */
+    /**
+     * Show the properties of an aggregate
+     */
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
@@ -523,5 +520,4 @@ class AggregatesController extends BaseController
 
         $this->printNavLinks($navlinks, 'aggregates-properties', get_defined_vars());
     }
-
 }

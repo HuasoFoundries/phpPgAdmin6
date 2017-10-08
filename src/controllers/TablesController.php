@@ -16,7 +16,6 @@ class TablesController extends BaseController
 
     public function render()
     {
-
         $conf   = $this->conf;
         $misc   = $this->misc;
         $lang   = $this->lang;
@@ -24,7 +23,7 @@ class TablesController extends BaseController
 
         if ($action == 'tree') {
             return $this->doTree();
-        } else if ($action == 'subtree') {
+        } elseif ($action == 'subtree') {
             return $this->doSubTree();
         }
 
@@ -125,7 +124,6 @@ class TablesController extends BaseController
         echo $output;
 
         return $this->printFooter();
-
     }
 
     /**
@@ -338,7 +336,6 @@ class TablesController extends BaseController
             ];
         }
         $this->printNavLinks($navlinks, 'tables-tables', get_defined_vars());
-
     }
 
     /**
@@ -346,7 +343,6 @@ class TablesController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -372,7 +368,6 @@ class TablesController extends BaseController
 
     public function doSubTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -419,7 +414,6 @@ class TablesController extends BaseController
             if ($default_with_oids == 'off') {
                 $_REQUEST['withoutoids'] = 'on';
             }
-
         }
 
         if (!isset($_REQUEST['name'])) {
@@ -680,7 +674,6 @@ class TablesController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if (!$confirm) {
-
             if (!isset($_REQUEST['name'])) {
                 $_REQUEST['name'] = '';
             }
@@ -709,7 +702,6 @@ class TablesController extends BaseController
                 if ($_REQUEST['like'] == $tables["\"{$a['nspname']}\".\"{$a['relname']}\""]) {
                     $tblsel = htmlspecialchars($tables["\"{$a['nspname']}\".\"{$a['relname']}\""]);
                 }
-
             }
 
             unset($tbltmp);
@@ -759,7 +751,6 @@ class TablesController extends BaseController
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-
             if (trim($_REQUEST['name']) == '') {
                 $this->doCreateLike(false, $lang['strtableneedsname']);
                 return;
@@ -908,7 +899,6 @@ class TablesController extends BaseController
                 $display_controller = new DisplayController($this->getContainer());
 
                 return $display_controller->render();
-
             }
         }
     }
@@ -936,7 +926,6 @@ class TablesController extends BaseController
                 if ($fksprops !== false) {
                     echo $fksprops['code'];
                 }
-
             } else {
                 $fksprops = false;
             }
@@ -1005,7 +994,9 @@ class TablesController extends BaseController
                 }
                 echo "</table>\n";
 
-                if (!isset($_SESSION['counter'])) {$_SESSION['counter'] = 0;}
+                if (!isset($_SESSION['counter'])) {
+                    $_SESSION['counter'] = 0;
+                }
 
                 echo "<input type=\"hidden\" name=\"action\" value=\"insertrow\" />\n";
                 echo '<input type="hidden" name="fields" value="', htmlentities(serialize($fields), ENT_QUOTES, 'UTF-8'), "\" />\n";
@@ -1021,7 +1012,6 @@ class TablesController extends BaseController
                     } else {
                         echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$lang['strac']}</label>\n";
                     }
-
                 }
                 echo "</p>\n";
             } else {
@@ -1054,13 +1044,10 @@ class TablesController extends BaseController
                 } else {
                     $this->doInsertRow(true, $lang['strrowinsertedbad']);
                 }
-
             } else {
                 $this->doInsertRow(true, $lang['strrowduplicate']);
             }
-
         }
-
     }
 
     /**
@@ -1127,7 +1114,6 @@ class TablesController extends BaseController
                 } else {
                     return $this->doDefault($lang['strtableemptiedbad']);
                 }
-
             } // END not mutli empty
         } // END do Empty
     }
@@ -1150,7 +1136,6 @@ class TablesController extends BaseController
         if ($confirm) {
             //If multi drop
             if (isset($_REQUEST['ma'])) {
-
                 $this->printTrail('schema');
                 $this->printTitle($lang['strdrop'], 'pg.table.drop');
 
@@ -1161,7 +1146,6 @@ class TablesController extends BaseController
                     printf('<input type="hidden" name="table[]" value="%s" />', htmlspecialchars($a['table']));
                 }
             } else {
-
                 $this->printTrail('table');
                 $this->printTitle($lang['strdrop'], 'pg.table.drop');
 
@@ -1202,7 +1186,6 @@ class TablesController extends BaseController
                 } else {
                     return $this->doDefault($lang['strtabledroppedbad']);
                 }
-
             } else {
                 $status = $data->dropTable($_POST['table'], isset($_POST['cascade']));
                 if ($status == 0) {
@@ -1211,11 +1194,9 @@ class TablesController extends BaseController
                 } else {
                     return $this->doDefault($lang['strtabledroppedbad']);
                 }
-
             }
         } // END DROP
     }
 
     // END Function
-
 }

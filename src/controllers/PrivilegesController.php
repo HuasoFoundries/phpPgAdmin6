@@ -12,7 +12,6 @@ class PrivilegesController extends BaseController
 
     public function render()
     {
-
         $conf   = $this->conf;
         $misc   = $this->misc;
         $lang   = $this->lang;
@@ -47,7 +46,6 @@ class PrivilegesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $conf     = $this->conf;
         $misc     = $this->misc;
         $lang     = $this->lang;
@@ -188,7 +186,7 @@ class PrivilegesController extends BaseController
                 "{$subject}_oid" => $objectoid,
                 'subject'        => $subject,
             ];
-        } else if ($_REQUEST['subject'] == 'column') {
+        } elseif ($_REQUEST['subject'] == 'column') {
             $urlvars = [
                 'action'   => 'alter',
                 'server'   => $_REQUEST['server'],
@@ -203,7 +201,6 @@ class PrivilegesController extends BaseController
             } else {
                 $urlvars['view'] = $_REQUEST['view'];
             }
-
         } else {
             $urlvars = [
                 'action'   => 'alter',
@@ -403,8 +400,6 @@ class PrivilegesController extends BaseController
             } else {
                 $this->doAlter(true, $_REQUEST['mode'], $lang['strgrantfailed']);
             }
-
         }
     }
-
 }

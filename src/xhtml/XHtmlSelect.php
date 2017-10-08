@@ -18,7 +18,6 @@ class XHtmlSelect extends XHtmlElement
         if ($size) {
             $this->set_attribute('size', $size);
         }
-
     }
 
     public function set_data(&$data, $delim = ',')
@@ -39,9 +38,10 @@ class XHtmlSelect extends XHtmlElement
     public function fetch()
     {
         if (isset($this->_data) && $this->_data) {
-            foreach ($this->_data as $value) {$this->add(new XHtmlOption($value));}
+            foreach ($this->_data as $value) {
+                $this->add(new XHtmlOption($value));
+            }
         }
         return parent::fetch();
     }
-
 }

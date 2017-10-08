@@ -86,7 +86,6 @@ class TblpropertiesController extends BaseController
         echo $output;
 
         return $this->printFooter();
-
     }
 
     /**
@@ -100,7 +99,6 @@ class TblpropertiesController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata, $actions) use ($data) {
-
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
             $attname                  = $rowdata->fields['attname'];
             $table                    = $_REQUEST['table'];
@@ -114,10 +112,8 @@ class TblpropertiesController extends BaseController
         };
 
         $cstrRender = function ($s, $p) use ($misc, $data) {
-
             $str = '';
             foreach ($p['keys'] as $k => $c) {
-
                 if (is_null($p['keys'][$k]['consrc'])) {
                     $atts        = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
                     $c['consrc'] = ($c['contype'] == 'u' ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
@@ -142,7 +138,6 @@ class TblpropertiesController extends BaseController
                             $misc->icon('CheckConstraint') . '" alt="[check]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
                     }
                 }
-
             }
 
             return $str;
@@ -396,12 +391,10 @@ class TblpropertiesController extends BaseController
             ],
         ];
         $this->printNavLinks($navlinks, 'tblproperties-tblproperties', get_defined_vars());
-
     }
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -481,7 +474,6 @@ class TblpropertiesController extends BaseController
         } else {
             $this->doAlter($lang['strtablealteredbad']);
         }
-
     }
 
     /**
@@ -508,7 +500,6 @@ class TblpropertiesController extends BaseController
         }
 
         if ($table->recordCount() > 0) {
-
             if (!isset($_POST['name'])) {
                 $_POST['name'] = $table->fields['relname'];
             }
@@ -592,7 +583,6 @@ class TblpropertiesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     public function doExport($msg = '')
@@ -700,7 +690,6 @@ class TblpropertiesController extends BaseController
         } else {
             echo "<p>{$lang['strnouploads']}</p>\n";
         }
-
     }
 
     /**
@@ -883,9 +872,6 @@ class TblpropertiesController extends BaseController
             } else {
                 $this->doDefault($lang['strcolumndroppedbad']);
             }
-
         }
-
     }
-
 }

@@ -10,7 +10,5 @@ namespace PHPPgAdmin\Database;
 
 class Postgres90 extends Postgres
 {
-
     public $major_version = 9.0;
-
 }

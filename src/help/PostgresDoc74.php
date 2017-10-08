@@ -2,7 +2,7 @@
 
     namespace PHPPgAdmin\Help;
 
-    /**
+/**
      * Help links for PostgreSQL 7.4 documentation
      */
     class PostgresDoc74
@@ -164,7 +164,6 @@
 
         public function getHelpBase()
         {
-
             return sprintf($this->conf['help_base'], strval($this->major_version));
         }
 

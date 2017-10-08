@@ -55,7 +55,6 @@ class RulesController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
@@ -131,7 +130,6 @@ class RulesController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -219,7 +217,6 @@ class RulesController extends BaseController
             echo "<p><input type=\"submit\" name=\"ok\" value=\"{$lang['strcreate']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
-
         } else {
             if (trim($_POST['name']) == '') {
                 $this->createRule(true, $lang['strruleneedsname']);
@@ -232,14 +229,13 @@ class RulesController extends BaseController
                 } else {
                     $this->createRule(true, $lang['strrulecreatedbad']);
                 }
-
             }
         }
     }
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+    /**
+     * Show confirmation of drop and perform actual drop
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -272,9 +268,6 @@ class RulesController extends BaseController
             } else {
                 $this->doDefault($lang['strruledroppedbad']);
             }
-
         }
-
     }
-
 }

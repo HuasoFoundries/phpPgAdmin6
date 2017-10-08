@@ -16,11 +16,10 @@ class FieldDecorator extends Decorator
     {
         if (isset($fields[$this->f])) {
             return Decorator::get_sanitized_value($fields[$this->f], $fields);
-        } else if (isset($this->d)) {
+        } elseif (isset($this->d)) {
             return $this->d;
         } else {
             return null;
         }
     }
-
 }

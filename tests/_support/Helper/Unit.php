@@ -6,7 +6,6 @@ namespace Helper;
 
 class Unit extends \Codeception\Module
 {
-
     const DIRNAME = __DIR__;
 
     private static $container;
@@ -24,7 +23,5 @@ class Unit extends \Codeception\Module
         }
 
         return self::$container;
-
     }
-
 }
