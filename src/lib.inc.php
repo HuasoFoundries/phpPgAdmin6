@@ -1,31 +1,29 @@
 <?php
 
 /**
- * Function library read in upon startup
+ * Function library read in upon startup.
  *
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
+defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
 
-defined('BASE_PATH') or DEFINE('BASE_PATH', dirname(__DIR__));
-
-DEFINE('THEME_PATH', BASE_PATH . '/src/themes');
+define('THEME_PATH', BASE_PATH.'/src/themes');
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 
-ini_set('error_log', BASE_PATH . '/temp/logs/phppga.php_error.log');
+ini_set('error_log', BASE_PATH.'/temp/logs/phppga.php_error.log');
 
 // Check to see if the configuration file exists, if not, explain
-if (file_exists(BASE_PATH . '/config.inc.php')) {
+if (file_exists(BASE_PATH.'/config.inc.php')) {
     $conf = [];
-    include BASE_PATH . '/config.inc.php';
+    include BASE_PATH.'/config.inc.php';
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
-
 }
 $debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
-DEFINE('DEBUGMODE', $debugmode);
+define('DEBUGMODE', $debugmode);
 
-require_once BASE_PATH . '/vendor/autoload.php';
+require_once BASE_PATH.'/vendor/autoload.php';
 
 if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
     define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
@@ -41,7 +39,7 @@ if (!ini_get('session.auto_start')) {
     session_start();
 }
 
-$handler             = PhpConsole\Handler::getInstance();
+$handler = PhpConsole\Handler::getInstance();
 \Kint::$enabled_mode = DEBUGMODE;
 ini_set('display_errors', intval(DEBUGMODE));
 ini_set('display_startup_errors', intval(DEBUGMODE));
@@ -56,8 +54,8 @@ if (DEBUGMODE) {
 $handler->start(); // initialize handlers*/
 \PhpConsole\Helper::register(); // it will register global PC class
 
-$composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
-$appVersion   = $composerinfo->version;
+$composerinfo = json_decode(file_get_contents(BASE_PATH.'/composer.json'));
+$appVersion = $composerinfo->version;
 
 $config = [
     'msg'       => '',
@@ -77,7 +75,7 @@ $config = [
         // backwards incompatible changes are made to config.inc.php-dist.
         'base_version'                      => 60,
         // Application version
-        'appVersion'                        => 'v' . $appVersion,
+        'appVersion'                        => 'v'.$appVersion,
         // Application name
         'appName'                           => 'phpPgAdmin6',
 
@@ -97,15 +95,16 @@ $container = $app->getContainer();
 //\Kint::dump($container->environment);die();
 
 $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
-$subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
+$subfolder = str_replace('/'.basename($normalized_php_self), '', $normalized_php_self);
 define('SUBFOLDER', $subfolder);
 
-$container['errors']      = [];
-$container['requestobj']  = $container['request'];
+$container['errors'] = [];
+$container['requestobj'] = $container['request'];
 $container['responseobj'] = $container['response'];
 
 $container['utils'] = function ($c) {
     $utils = new \PHPPgAdmin\ContainerUtils($c);
+
     return $utils;
 };
 
@@ -119,32 +118,33 @@ $container['conf'] = function ($c) use ($conf) {
 };
 
 $container['lang'] = function ($c) {
-    include_once BASE_PATH . '/src/translations.php';
+    include_once BASE_PATH.'/src/translations.php';
 
     $c['appLangFiles'] = $appLangFiles;
-    $c['language']     = $_language;
-    $c['isolang']      = $_isolang;
+    $c['language'] = $_language;
+    $c['isolang'] = $_isolang;
 
     return $lang;
 };
 
 $container['plugin_manager'] = function ($c) {
     $plugin_manager = new \PHPPgAdmin\PluginManager($c);
+
     return $plugin_manager;
 };
 
 $container['serializer'] = function ($c) {
     $serializerbuilder = \JMS\Serializer\SerializerBuilder::create();
-    $serializer        = $serializerbuilder
-        ->setCacheDir(BASE_PATH . '/temp/jms')
+    $serializer = $serializerbuilder
+        ->setCacheDir(BASE_PATH.'/temp/jms')
         ->setDebug($c->get('settings')['debug'])
         ->build();
+
     return $serializer;
 };
 
 // Create Misc class references
 $container['misc'] = function ($c) {
-
     $misc = new \PHPPgAdmin\Misc($c);
 
     $conf = $c->get('conf');
@@ -156,7 +156,7 @@ $container['misc'] = function ($c) {
 
     /* starting with PostgreSQL 9.0, we can set the application name */
     if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {
-        putenv('PGAPPNAME=' . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
+        putenv('PGAPPNAME='.$c->get('settings')['appName'].'_'.$c->get('settings')['appVersion']);
     }
 
     $themefolders = [];
@@ -168,12 +168,11 @@ $container['misc'] = function ($c) {
                 continue;
             }
 
-            $folderpath = THEME_PATH . DIRECTORY_SEPARATOR . $foldername;
+            $folderpath = THEME_PATH.DIRECTORY_SEPARATOR.$foldername;
 
             // if $folderpath if indeed a folder and contains a global.css file, then it's a theme
-            if (is_dir($folderpath) && is_file($folderpath . DIRECTORY_SEPARATOR . 'global.css')) {
+            if (is_dir($folderpath) && is_file($folderpath.DIRECTORY_SEPARATOR.'global.css')) {
                 $themefolders[$foldername] = $folderpath;
-
             }
         }
 
@@ -194,16 +193,15 @@ $container['misc'] = function ($c) {
         $_theme = $_REQUEST['theme'];
     }
     // 2. Check for theme session var
-    else if (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
+    elseif (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
         $_theme = $_SESSION['ppaTheme'];
     }
     // 3. Check for theme in cookie var
-    else if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
+    elseif (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
         $_theme = $_COOKIE['ppaTheme'];
     }
 
     if (!isset($_theme) && !is_null($_server_info) && array_key_exists('theme', $_server_info)) {
-
         $server_theme = $_server_info['theme'];
 
         if (isset($server_theme['default']) && array_key_exists($server_theme['default'], $themefolders)) {
@@ -224,7 +222,6 @@ $container['misc'] = function ($c) {
         ) {
             $_theme = $server_theme['user'][$_server_info['username']];
         }
-
     }
     // if any of the above conditions had set the $_theme variable
     // then we store it in the session and a cookie
@@ -233,8 +230,7 @@ $container['misc'] = function ($c) {
         /* save the selected theme in cookie for a year */
         setcookie('ppaTheme', $_theme, time() + 31536000, '/');
         $_SESSION['ppaTheme'] = $_theme;
-        $conf['theme']        = $_theme;
-
+        $conf['theme'] = $_theme;
     }
 
     $misc->setConf('theme', $conf['theme']);
@@ -247,18 +243,17 @@ $container['misc'] = function ($c) {
 
 // Register Twig View helper
 $container['view'] = function ($c) {
-
     $conf = $c->get('conf');
     $misc = $c->misc;
 
-    $view = new \Slim\Views\Twig(BASE_PATH . '/templates', [
-        'cache'       => BASE_PATH . '/temp/twigcache',
+    $view = new \Slim\Views\Twig(BASE_PATH.'/templates', [
+        'cache'       => BASE_PATH.'/temp/twigcache',
         'auto_reload' => $c->get('settings')['debug'],
         'debug'       => $c->get('settings')['debug'],
     ]);
-    $environment               = $c->get('environment');
+    $environment = $c->get('environment');
     $base_script_trailing_shit = substr($environment['SCRIPT_NAME'], 1);
-    $request_basepath          = $c['request']->getUri()->getBasePath();
+    $request_basepath = $c['request']->getUri()->getBasePath();
     // Instantiate and add Slim specific extension
     $basePath = rtrim(str_ireplace($base_script_trailing_shit, '', $request_basepath), '/');
 
@@ -285,17 +280,16 @@ $container['view'] = function ($c) {
 
 $container['haltHandler'] = function ($c) {
     return function ($request, $response, $exits, $status = 500) use ($c) {
-
         $title = 'PHPPgAdmin Error';
 
         $html = '<p>The application could not run because of the following error:</p>';
 
         $output = sprintf(
-            "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
-            '<title>%s</title><style>' .
-            'body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}' .
-            'h3{margin:0;font-size:28px;font-weight:normal;line-height:30px;}' .
-            'span{display:inline-block;font-size:16px;}' .
+            "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>".
+            '<title>%s</title><style>'.
+            'body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}'.
+            'h3{margin:0;font-size:28px;font-weight:normal;line-height:30px;}'.
+            'span{display:inline-block;font-size:16px;}'.
             '</style></head><body><h3>%s</h3><p>%s</p><span>%s</span></body></html>',
             $title,
             $title,
@@ -316,8 +310,7 @@ $container['haltHandler'] = function ($c) {
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route
 $app->add(function ($request, $response, $next) {
-
-    $this['requestobj']  = $request;
+    $this['requestobj'] = $request;
     $this['responseobj'] = $response;
 
     $misc = $this->get('misc');
@@ -327,7 +320,7 @@ $app->add(function ($request, $response, $next) {
 
     $query_string = $request->getUri()->getQuery();
     $this->view->offsetSet('query_string', $query_string);
-    $path = SUBFOLDER . '/' . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
+    $path = SUBFOLDER.'/'.$request->getUri()->getPath().($query_string ? '?'.$query_string : '');
     $this->view->offsetSet('path', $path);
 
     $params = $request->getParams();

@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class SchemasController extends BaseController
 {
@@ -13,14 +13,14 @@ class SchemasController extends BaseController
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
 
         if ($action == 'tree') {
             return $this->doTree();
-        } else if ($action == 'subtree') {
+        } elseif ($action == 'subtree') {
             return $this->doSubTree();
         }
 
@@ -74,11 +74,10 @@ class SchemasController extends BaseController
         echo $output;
 
         return $this->printFooter();
-
     }
 
     /**
-     * Show default list of schemas in the database
+     * Show default list of schemas in the database.
      */
     public function doDefault($msg = '')
     {
@@ -98,7 +97,7 @@ class SchemasController extends BaseController
             'schema'  => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => SUBFOLDER . "/redirect/schema?{$misc->href}&amp;",
+                'url'   => SUBFOLDER."/redirect/schema?{$misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
             'owner'   => [
@@ -184,7 +183,6 @@ class SchemasController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -217,12 +215,10 @@ class SchemasController extends BaseController
         ];
 
         $this->printTree($schemas, $attrs, 'schemas');
-
     }
 
     public function doSubTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -251,11 +247,10 @@ class SchemasController extends BaseController
         ];
 
         $this->printTree($items, $attrs, 'schema');
-
     }
 
     /**
-     * Displays a screen where they can enter a new schema
+     * Displays a screen where they can enter a new schema.
      */
     public function doCreate($msg = '')
     {
@@ -288,7 +283,7 @@ class SchemasController extends BaseController
         $this->printTitle($lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
+        echo '<form action="'.SUBFOLDER.'/src/views/schemas.php" method="post">'."\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -319,7 +314,7 @@ class SchemasController extends BaseController
     }
 
     /**
-     * Actually creates the new schema in the database
+     * Actually creates the new schema in the database.
      */
     public function doSaveCreate()
     {
@@ -338,17 +333,15 @@ class SchemasController extends BaseController
             } else {
                 $this->doCreate($lang['strschemacreatedbad']);
             }
-
         }
     }
 
     /**
      * Display a form to permit editing schema properies.
-     * TODO: permit changing owner
+     * TODO: permit changing owner.
      */
     public function doAlter($msg = '')
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -375,7 +368,7 @@ class SchemasController extends BaseController
                 $_POST['owner'] = $schema->fields['ownername'];
             }
 
-            echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
+            echo '<form action="'.SUBFOLDER.'/src/views/schemas.php" method="post">'."\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -418,7 +411,7 @@ class SchemasController extends BaseController
     }
 
     /**
-     * Save the form submission containing changes to a schema
+     * Save the form submission containing changes to a schema.
      */
     public function doSaveAlter($msg = '')
     {
@@ -433,11 +426,10 @@ class SchemasController extends BaseController
         } else {
             $this->doAlter($lang['strschemaalteredbad']);
         }
-
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
      */
     public function doDrop($confirm)
     {
@@ -454,7 +446,7 @@ class SchemasController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($lang['strdrop'], 'pg.schema.drop');
 
-            echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
+            echo '<form action="'.SUBFOLDER.'/src/views/schemas.php" method="post">'."\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -476,7 +468,7 @@ class SchemasController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['nsp'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if ($status == 0) {
                     foreach ($_POST['nsp'] as $s) {
@@ -486,6 +478,7 @@ class SchemasController extends BaseController
                         } else {
                             $data->endTransaction();
                             $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadroppedbad']));
+
                             return;
                         }
                     }
@@ -497,7 +490,6 @@ class SchemasController extends BaseController
                 } else {
                     $this->doDefault($lang['strschemadroppedbad']);
                 }
-
             } else {
                 $status = $data->dropSchema($_POST['nsp'], isset($_POST['cascade']));
                 if ($status == 0) {
@@ -506,13 +498,12 @@ class SchemasController extends BaseController
                 } else {
                     $this->doDefault($lang['strschemadroppedbad']);
                 }
-
             }
         }
     }
 
     /**
-     * Displays options for database download
+     * Displays options for database download.
      */
     public function doExport($msg = '')
     {
@@ -524,7 +515,7 @@ class SchemasController extends BaseController
         $this->printTabs('schema', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . '/src/views/dbexport.php" method="post">' . "\n";
+        echo '<form action="'.SUBFOLDER.'/src/views/dbexport.php" method="post">'."\n";
 
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";

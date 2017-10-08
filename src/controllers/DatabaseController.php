@@ -2,16 +2,16 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class DatabaseController extends BaseController
 {
     use AdminTrait;
-    public $script      = 'database.php';
-    public $_name       = 'DatabaseController';
+    public $script = 'database.php';
+    public $_name = 'DatabaseController';
     public $table_place = 'database-variables';
 
     public function _highlight($string, $term)
@@ -21,11 +21,11 @@ class DatabaseController extends BaseController
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+        $data = $misc->getDatabaseAccessor();
 
         if ($action == 'tree') {
             return $this->doTree();
@@ -41,20 +41,20 @@ class DatabaseController extends BaseController
         $scripts = '';
         /* normal flow */
         if ($action == 'locks' || $action == 'processes') {
-            $scripts .= '<script src="' . SUBFOLDER . '/js/database.js" type="text/javascript"></script>';
+            $scripts .= '<script src="'.SUBFOLDER.'/js/database.js" type="text/javascript"></script>';
 
             $refreshTime = $conf['ajax_refresh'] * 1000;
 
             $scripts .= "<script type=\"text/javascript\">\n";
             $scripts .= "var Database = {\n";
             $scripts .= "ajax_time_refresh: {$refreshTime},\n";
-            $scripts .= "str_start: {text:'{$lang['strstart']}',icon: '" . $misc->icon('Execute') . "'},\n";
-            $scripts .= "str_stop: {text:'{$lang['strstop']}',icon: '" . $misc->icon('Stop') . "'},\n";
-            $scripts .= "load_icon: '" . $misc->icon('Loading') . "',\n";
+            $scripts .= "str_start: {text:'{$lang['strstart']}',icon: '".$misc->icon('Execute')."'},\n";
+            $scripts .= "str_stop: {text:'{$lang['strstop']}',icon: '".$misc->icon('Stop')."'},\n";
+            $scripts .= "load_icon: '".$misc->icon('Loading')."',\n";
             $scripts .= "server:'{$_REQUEST['server']}',\n";
             $scripts .= "dbname:'{$_REQUEST['database']}',\n";
             $scripts .= "action:'refresh_{$action}',\n";
-            $scripts .= "errmsg: '" . str_replace("'", "\'", $lang['strconnectionfail']) . "'\n";
+            $scripts .= "errmsg: '".str_replace("'", "\'", $lang['strconnectionfail'])."'\n";
             $scripts .= "};\n";
             $scripts .= "</script>\n";
         }
@@ -109,12 +109,10 @@ class DatabaseController extends BaseController
         echo $output;
 
         $this->printFooter(true, $footer_template);
-
     }
 
     public function doTree($print = true)
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -135,11 +133,10 @@ class DatabaseController extends BaseController
         ];
 
         return $this->printTree($items, $attrs, 'database', $print);
-
     }
 
     /**
-     * Sends a signal to a process
+     * Sends a signal to a process.
      */
     public function doSignal()
     {
@@ -154,11 +151,10 @@ class DatabaseController extends BaseController
         } else {
             $this->doProcesses($lang['strsignalsentbad']);
         }
-
     }
 
     /**
-     * Searches for a named database object
+     * Searches for a named database object.
      */
     public function doFind($confirm = true, $msg = '')
     {
@@ -179,7 +175,7 @@ class DatabaseController extends BaseController
         $this->printTabs('database', 'find');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/database.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/database.php\" method=\"post\">\n";
         echo '<p><input name="term" value="', htmlspecialchars($_REQUEST['term']),
             "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
@@ -300,18 +296,18 @@ class DatabaseController extends BaseController
 
                     switch ($curr) {
                         case 'SCHEMA':
-                            echo '<li><a href="' . SUBFOLDER . "/redirect/schema?{$misc->href}&amp;schema=", $misc->printVal($rs->fields['name']), '">', $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
+                            echo '<li><a href="'.SUBFOLDER."/redirect/schema?{$misc->href}&amp;schema=", $misc->printVal($rs->fields['name']), '">', $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
                             break;
                         case 'TABLE':
                             echo '<li>';
                             echo "<a href=\"tables.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="' . SUBFOLDER . "/redirect/table?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
+                            echo '<a href="'.SUBFOLDER."/redirect/table?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
                             break;
                         case 'VIEW':
                             echo '<li>';
                             echo "<a href=\"views.php?subject=schema&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="' . SUBFOLDER . "/redirect/view?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
+                            echo '<a href="'.SUBFOLDER."/redirect/view?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
                             break;
                         case 'SEQUENCE':
@@ -322,7 +318,7 @@ class DatabaseController extends BaseController
                             break;
                         case 'COLUMNTABLE':
                             echo '<li>';
-                            echo '<a href="' . SUBFOLDER . "/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
                             echo "<a href=\"tblproperties.php?subject=table&amp;{$misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"colproperties.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['relname']), '&amp;column=', urlencode($rs->fields['name']), '">',
@@ -330,7 +326,7 @@ class DatabaseController extends BaseController
                             break;
                         case 'COLUMNVIEW':
                             echo '<li>';
-                            echo '<a href="' . SUBFOLDER . "/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
                             echo "<a href=\"viewproperties.php?subject=view&amp;{$misc->href}&amp;view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"colproperties.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
                             urlencode($rs->fields['relname']), '&amp;column=', urlencode($rs->fields['name']), '">',
@@ -338,14 +334,14 @@ class DatabaseController extends BaseController
                             break;
                         case 'INDEX':
                             echo '<li>';
-                            echo '<a href="' . SUBFOLDER . "/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="' . SUBFOLDER . "/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"indexes.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">', $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
                             break;
                         case 'CONSTRAINTTABLE':
                             echo '<li>';
-                            echo '<a href="' . SUBFOLDER . "/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="' . SUBFOLDER . "/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"constraints.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
                             break;
@@ -357,22 +353,22 @@ class DatabaseController extends BaseController
                             break;
                         case 'TRIGGER':
                             echo '<li>';
-                            echo '<a href="' . SUBFOLDER . "/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="' . SUBFOLDER . "/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"triggers.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">',
                             $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
                             break;
                         case 'RULETABLE':
                             echo '<li>';
-                            echo '<a href="' . SUBFOLDER . "/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="' . SUBFOLDER . "/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/table?{$misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"rules.php?subject=table&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=table&amp;table=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
                             break;
                         case 'RULEVIEW':
                             echo '<li>';
-                            echo '<a href="' . SUBFOLDER . "/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="' . SUBFOLDER . "/redirect/view?{$misc->href}&amp;view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/view?{$misc->href}&amp;view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"rules.php?subject=view&amp;{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=view&amp;view=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
                             break;
@@ -418,7 +414,7 @@ class DatabaseController extends BaseController
                             break;
                         case 'OPCLASS':
                             echo '<li>';
-                            echo '<a href="' . SUBFOLDER . "/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="'.SUBFOLDER."/redirect/schema?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $misc->printVal($rs->fields['schemaname']), '</a>.';
                             echo "<a href=\"opclasses.php?{$misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">',
                             $this->_highlight($misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
                             break;
@@ -431,12 +427,11 @@ class DatabaseController extends BaseController
             } else {
                 echo "<p>{$lang['strnoobjects']}</p>\n";
             }
-
         }
     }
 
     /**
-     * Displays options for database download
+     * Displays options for database download.
      */
     public function doExport($msg = '')
     {
@@ -449,7 +444,7 @@ class DatabaseController extends BaseController
         $this->printTabs('database', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/dbexport.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/dbexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -492,7 +487,7 @@ class DatabaseController extends BaseController
     }
 
     /**
-     * Show the current status of all database variables
+     * Show the current status of all database variables.
      */
     public function doVariables()
     {
@@ -538,7 +533,7 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         if (strlen($msg) === 0) {
-            echo '<br /><a id="control" href=""><img src="' . $misc->icon('Refresh') . "\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
+            echo '<br /><a id="control" href=""><img src="'.$misc->icon('Refresh')."\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
         }
 
         echo '<div id="data_block">';
@@ -659,7 +654,6 @@ class DatabaseController extends BaseController
             if (!$data->hasQueryCancel()) {
                 unset($actions['cancel']);
             }
-
         }
 
         if (count($actions) == 0) {
@@ -671,7 +665,6 @@ class DatabaseController extends BaseController
         if ($isAjax) {
             exit;
         }
-
     }
 
     public function currentLocks($isAjax = false)
@@ -726,11 +719,10 @@ class DatabaseController extends BaseController
         if ($isAjax) {
             exit;
         }
-
     }
 
     /**
-     * Show the existing table locks in the current database
+     * Show the existing table locks in the current database.
      */
     public function doLocks()
     {
@@ -742,7 +734,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'locks');
 
-        echo '<br /><a id="control" href=""><img src="' . $misc->icon('Refresh') . "\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
+        echo '<br /><a id="control" href=""><img src="'.$misc->icon('Refresh')."\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
 
         echo '<div id="data_block">';
         $this->currentLocks();
@@ -750,7 +742,7 @@ class DatabaseController extends BaseController
     }
 
     /**
-     * Allow execution of arbitrary SQL statements on a database
+     * Allow execution of arbitrary SQL statements on a database.
      */
     public function doSQL()
     {
@@ -767,7 +759,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'sql');
         echo "<p>{$lang['strentersql']}</p>\n";
-        echo '<form action="' . SUBFOLDER . '/src/views/sql.php" method="post" enctype="multipart/form-data" id="sqlform">' . "\n";
+        echo '<form action="'.SUBFOLDER.'/src/views/sql.php" method="post" enctype="multipart/form-data" id="sqlform">'."\n";
         echo "<p>{$lang['strsql']}<br />\n";
         echo '<textarea style="width:95%;" rows="15" cols="50" name="query" id="query">',
         htmlspecialchars($_SESSION['sqlquery']), "</textarea></p>\n";
@@ -776,7 +768,7 @@ class DatabaseController extends BaseController
         if (ini_get('file_uploads')) {
             // Don't show upload option if max size of uploads is zero
             $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
-            if (is_double($max_size) && $max_size > 0) {
+            if (is_float($max_size) && $max_size > 0) {
                 echo "<p><input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"{$max_size}\" />\n";
                 echo "<label for=\"script\">{$lang['struploadscript']}</label> <input id=\"script\" name=\"script\" type=\"file\" /></p>\n";
             }
@@ -791,5 +783,4 @@ class DatabaseController extends BaseController
         // Default focus
         $this->setFocus('forms[0].query');
     }
-
 }

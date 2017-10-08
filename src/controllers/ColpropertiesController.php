@@ -2,15 +2,15 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class ColpropertiesController extends BaseController
 {
-    public $_name       = 'ColpropertiesController';
-    public $tableName   = '';
+    public $_name = 'ColpropertiesController';
+    public $tableName = '';
     public $table_place = 'colproperties-colproperties';
 
     public function render()
@@ -23,13 +23,13 @@ class ColpropertiesController extends BaseController
             die($lang['strnotableprovided']);
         }
 
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+        $data = $misc->getDatabaseAccessor();
 
-        $this->printHeader($lang['strtables'] . ' - ' . $this->tableName, null, true, 'header_select2.twig');
+        $this->printHeader($lang['strtables'].' - '.$this->tableName, null, true, 'header_select2.twig');
         $this->printBody();
 
         if (isset($_REQUEST['view'])) {
@@ -54,7 +54,7 @@ class ColpropertiesController extends BaseController
     }
 
     /**
-     * Show default list of columns in the table
+     * Show default list of columns in the table.
      */
     public function doDefault($msg = '', $isTable = true)
     {
@@ -64,7 +64,6 @@ class ColpropertiesController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata) use ($data) {
-
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
         };
 
@@ -118,8 +117,8 @@ class ColpropertiesController extends BaseController
             echo "<br />\n";
 
             $f_attname = $_REQUEST['column'];
-            $f_table   = $this->tableName;
-            $f_schema  = $data->_schema;
+            $f_table = $this->tableName;
+            $f_schema = $data->_schema;
             $data->fieldClean($f_attname);
             $data->fieldClean($f_table);
             $data->fieldClean($f_schema);
@@ -212,7 +211,7 @@ class ColpropertiesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can alter a column
+     * Displays a screen where they can alter a column.
      */
     public function doAlter($msg = '')
     {
@@ -233,8 +232,8 @@ class ColpropertiesController extends BaseController
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<script src="' . SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . SUBFOLDER . "/src/views/colproperties.php\" method=\"post\">\n";
+                echo '<script src="'.SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="'.SUBFOLDER."/src/views/colproperties.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -247,21 +246,21 @@ class ColpropertiesController extends BaseController
                 }
                 echo "<th class=\"data\">{$lang['strnotnull']}</th>\n<th class=\"data\">{$lang['strdefault']}</th>\n<th class=\"data\">{$lang['strcomment']}</th></tr>\n";
 
-                $column                       = $data->getTableAttributes($_REQUEST['table'], $_REQUEST['column']);
+                $column = $data->getTableAttributes($_REQUEST['table'], $_REQUEST['column']);
                 $column->fields['attnotnull'] = $data->phpBool($column->fields['attnotnull']);
 
                 // Upon first drawing the screen, load the existing column information
                 // from the database.
                 if (!isset($_REQUEST['default'])) {
                     $_REQUEST['field'] = $column->fields['attname'];
-                    $_REQUEST['type']  = $column->fields['base_type'];
+                    $_REQUEST['type'] = $column->fields['base_type'];
                     // Check to see if its' an array type...
                     // XXX: HACKY
                     if (substr($column->fields['base_type'], strlen($column->fields['base_type']) - 2) == '[]') {
-                        $_REQUEST['type']  = substr($column->fields['base_type'], 0, strlen($column->fields['base_type']) - 2);
+                        $_REQUEST['type'] = substr($column->fields['base_type'], 0, strlen($column->fields['base_type']) - 2);
                         $_REQUEST['array'] = '[]';
                     } else {
-                        $_REQUEST['type']  = $column->fields['base_type'];
+                        $_REQUEST['type'] = $column->fields['base_type'];
                         $_REQUEST['array'] = '';
                     }
                     // To figure out the length, look in the brackets :(
@@ -288,12 +287,12 @@ class ColpropertiesController extends BaseController
                 $escaped_predef_types = []; // the JS escaped array elements
                 if ($data->hasAlterColumnType()) {
                     // Fetch all available types
-                    $types        = $data->getTypes(true, false, true);
+                    $types = $data->getTypes(true, false, true);
                     $types_for_js = [];
 
-                    echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">" . "\n";
+                    echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">"."\n";
                     while (!$types->EOF) {
-                        $typname        = $types->fields['typname'];
+                        $typname = $types->fields['typname'];
                         $types_for_js[] = $typname;
                         echo "\t<option value=\"", htmlspecialchars($typname), '"', ($typname == $_REQUEST['type']) ? ' selected="selected"' : '', '>',
                         $misc->printVal($typname), "</option>\n";
@@ -345,13 +344,14 @@ class ColpropertiesController extends BaseController
                 echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
-                echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>\n";
+                echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");checkLengths(document.getElementById('type').value,'');</script>\n";
                 break;
             case 2:
                 // Check inputs
                 if (trim($_REQUEST['field']) == '') {
                     $_REQUEST['stage'] = 1;
                     $this->doAlter($lang['strcolneedsname']);
+
                     return;
                 }
                 if (!isset($_REQUEST['length'])) {
@@ -370,10 +370,11 @@ class ColpropertiesController extends BaseController
                         $_REQUEST['column'] = $_REQUEST['field'];
                         $misc->setReloadBrowser(true);
                     }
-                    $this->doDefault($sql . "<br/>{$lang['strcolumnaltered']}");
+                    $this->doDefault($sql."<br/>{$lang['strcolumnaltered']}");
                 } else {
                     $_REQUEST['stage'] = 1;
-                    $this->doAlter($sql . "<br/>{$lang['strcolumnalteredbad']}");
+                    $this->doAlter($sql."<br/>{$lang['strcolumnalteredbad']}");
+
                     return;
                 }
                 break;
@@ -381,5 +382,4 @@ class ColpropertiesController extends BaseController
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
         }
     }
-
 }

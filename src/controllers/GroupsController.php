@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class GroupsController extends BaseController
 {
@@ -13,7 +13,6 @@ class GroupsController extends BaseController
 
     public function render()
     {
-
         $this->printHeader($lang['strgroups']);
         $this->printBody();
 
@@ -72,7 +71,7 @@ class GroupsController extends BaseController
     }
 
     /**
-     * Show default list of groups in the database
+     * Show default list of groups in the database.
      */
     public function doDefault($msg = '')
     {
@@ -128,11 +127,10 @@ class GroupsController extends BaseController
             ],
             'content' => $lang['strcreategroup'],
         ]], 'groups-groups', get_defined_vars());
-
     }
 
     /**
-     * Add user to a group
+     * Add user to a group.
      */
     public function doAddMember()
     {
@@ -147,11 +145,10 @@ class GroupsController extends BaseController
         } else {
             $this->doProperties($lang['strmemberaddedbad']);
         }
-
     }
 
     /**
-     * Show confirmation of drop user from group and perform actual drop
+     * Show confirmation of drop user from group and perform actual drop.
      */
     public function doDropMember($confirm)
     {
@@ -166,7 +163,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropmember'], $misc->printVal($_REQUEST['user']), $misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
             echo $misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -181,12 +178,11 @@ class GroupsController extends BaseController
             } else {
                 $this->doDropMember(true, $lang['strmemberdroppedbad']);
             }
-
         }
     }
 
     /**
-     * Show read only properties for a group
+     * Show read only properties for a group.
      */
     public function doProperties($msg = '')
     {
@@ -204,7 +200,7 @@ class GroupsController extends BaseController
         $this->printMsg($msg);
 
         $groupdata = $data->getGroup($_REQUEST['group']);
-        $users     = $data->getUsers();
+        $users = $data->getUsers();
 
         if ($groupdata->recordCount() > 0) {
             $columns = [
@@ -237,7 +233,7 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="' . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
         echo '<select name="user">';
         while (!$users->EOF) {
             $uname = $misc->printVal($users->fields['usename']);
@@ -266,7 +262,7 @@ class GroupsController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
      */
     public function doDrop($confirm)
     {
@@ -281,7 +277,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropgroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
             echo $misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -295,12 +291,11 @@ class GroupsController extends BaseController
             } else {
                 $this->doDefault($lang['strgroupdroppedbad']);
             }
-
         }
     }
 
     /**
-     * Displays a screen where they can enter a new group
+     * Displays a screen where they can enter a new group.
      */
     public function doCreate($msg = '')
     {
@@ -350,7 +345,7 @@ class GroupsController extends BaseController
     }
 
     /**
-     * Actually creates the new group in the database
+     * Actually creates the new group in the database.
      */
     public function doSaveCreate()
     {
@@ -373,8 +368,6 @@ class GroupsController extends BaseController
             } else {
                 $this->doCreate($lang['strgroupcreatedbad']);
             }
-
         }
     }
-
 }

@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class TriggersController extends BaseController
 {
@@ -22,7 +22,7 @@ class TriggersController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strtriggers']);
+        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strtriggers']);
         $this->printBody();
 
         switch ($action) {
@@ -87,11 +87,10 @@ class TriggersController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
-     * List all the triggers on the table
+     * List all the triggers on the table.
      */
     public function doDefault($msg = '')
     {
@@ -107,6 +106,7 @@ class TriggersController extends BaseController
             } else {
                 unset($actions['enable']);
             }
+
             return $actions;
         };
 
@@ -218,7 +218,6 @@ class TriggersController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -234,11 +233,10 @@ class TriggersController extends BaseController
         ];
 
         return $this->printTree($triggers, $attrs, 'triggers');
-
     }
 
     /**
-     * Function to save after altering a trigger
+     * Function to save after altering a trigger.
      */
     public function doSaveAlter()
     {
@@ -253,11 +251,10 @@ class TriggersController extends BaseController
         } else {
             $this->doAlter($lang['strtriggeralteredbad']);
         }
-
     }
 
     /**
-     * Function to allow altering of a trigger
+     * Function to allow altering of a trigger.
      */
     public function doAlter($msg = '')
     {
@@ -273,12 +270,11 @@ class TriggersController extends BaseController
         $triggerdata = $data->getTrigger($_REQUEST['table'], $_REQUEST['trigger']);
 
         if ($triggerdata->recordCount() > 0) {
-
             if (!isset($_POST['name'])) {
                 $_POST['name'] = $triggerdata->fields['tgname'];
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -295,11 +291,10 @@ class TriggersController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
      */
     public function doDrop($confirm)
     {
@@ -315,7 +310,7 @@ class TriggersController extends BaseController
             echo '<p>', sprintf($lang['strconfdroptrigger'], $misc->printVal($_REQUEST['trigger']),
                 $misc->printVal($_REQUEST['table'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -331,13 +326,11 @@ class TriggersController extends BaseController
             } else {
                 $this->doDefault($lang['strtriggerdroppedbad']);
             }
-
         }
-
     }
 
     /**
-     * Show confirmation of enable trigger and perform enabling the trigger
+     * Show confirmation of enable trigger and perform enabling the trigger.
      */
     public function doEnable($confirm)
     {
@@ -353,7 +346,7 @@ class TriggersController extends BaseController
             echo '<p>', sprintf($lang['strconfenabletrigger'], $misc->printVal($_REQUEST['trigger']),
                 $misc->printVal($_REQUEST['table'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"enable\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -368,13 +361,11 @@ class TriggersController extends BaseController
             } else {
                 $this->doDefault($lang['strtriggerenabledbad']);
             }
-
         }
-
     }
 
     /**
-     * Show confirmation of disable trigger and perform disabling the trigger
+     * Show confirmation of disable trigger and perform disabling the trigger.
      */
     public function doDisable($confirm)
     {
@@ -390,7 +381,7 @@ class TriggersController extends BaseController
             echo '<p>', sprintf($lang['strconfdisabletrigger'], $misc->printVal($_REQUEST['trigger']),
                 $misc->printVal($_REQUEST['table'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"disable\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -405,9 +396,7 @@ class TriggersController extends BaseController
             } else {
                 $this->doDefault($lang['strtriggerdisabledbad']);
             }
-
         }
-
     }
 
     /**
@@ -428,6 +417,7 @@ class TriggersController extends BaseController
         $funcs = $data->getTriggerFunctions();
         if ($funcs->recordCount() == 0) {
             $this->doDefault($lang['strnofunctions']);
+
             return;
         }
 
@@ -450,7 +440,7 @@ class TriggersController extends BaseController
         $sel3 = new \PHPPgAdmin\XHtml\XHtmlSelect('formFrequency');
         $sel3->set_data($data->triggerFrequency);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr>\n";
         echo "		<th class=\"data\">{$lang['strname']}</th>\n";
@@ -482,7 +472,7 @@ class TriggersController extends BaseController
     }
 
     /**
-     * Actually creates the new trigger in the database
+     * Actually creates the new trigger in the database.
      */
     public function doSaveCreate()
     {
@@ -508,8 +498,6 @@ class TriggersController extends BaseController
             } else {
                 $this->doCreate($lang['strtriggercreatedbad']);
             }
-
         }
     }
-
 }

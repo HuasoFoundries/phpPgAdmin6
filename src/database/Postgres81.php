@@ -1,16 +1,14 @@
 <?php
 
-    namespace PHPPgAdmin\Database;
+namespace PHPPgAdmin\Database;
 
-    /**
-     * PostgreSQL 8.1 support
+/**
+     * PostgreSQL 8.1 support.
      *
      * $Id: Postgres81.php,v 1.21 2008/01/19 13:46:15 ioguix Exp $
      */
-
     class Postgres81 extends Postgres82
     {
-
         public $major_version = 8.1;
         // List of all legal privileges that can be applied to different types
         // of objects.
@@ -45,14 +43,15 @@
         // Database functions
 
         /**
-         * Returns all databases available on the server
+         * Returns all databases available on the server.
          *
          * @param null $currentdatabase
+         *
          * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
          */
         public function getDatabases($currentdatabase = null)
         {
-            $conf        = $this->conf;
+            $conf = $this->conf;
             $server_info = $this->server_info;
 
             if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -91,12 +90,13 @@
 
         /**
          * Alters a database
-         * the multiple return vals are for postgres 8+ which support more functionality in alter database
+         * the multiple return vals are for postgres 8+ which support more functionality in alter database.
          *
          * @param                                 $dbName   The name of the database
          * @param                                 $newName  new name for the database
          * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
          * @param string                          $comment
+         *
          * @return bool|int 0 success
          */
         public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '')
@@ -195,7 +195,7 @@
             $status = -1; // ini
             if ($rs->recordCount() and ($rs->fields['vacrelid'] == $toid)) {
                 // table exists in pg_autovacuum, UPDATE
-                $sql    = sprintf("UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
+                $sql = sprintf("UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
 						enabled = '%s',
 						vac_base_thresh = %s,
 						vac_scale_factor = %s,
@@ -216,7 +216,7 @@
                 $status = $this->execute($sql);
             } else {
                 // table doesn't exists in pg_autovacuum, INSERT
-                $sql    = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
+                $sql = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
 				VALUES (%s, '%s', %s, %s, %s, %s, %s, %s)",
                     $toid,
                     ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
@@ -237,6 +237,7 @@
          * Returns all available process information.
          *
          * @param $database (optional) Find only connections to specified database
+         *
          * @return A recordset
          */
         public function getProcesses($database = null)
@@ -261,9 +262,10 @@
         // Tablespace functions
 
         /**
-         * Retrieves a tablespace's information
+         * Retrieves a tablespace's information.
          *
          * @param $spcname
+         *
          * @return \PHPPgAdmin\Database\A recordset
          */
         public function getTablespace($spcname)
@@ -277,9 +279,10 @@
         }
 
         /**
-         * Retrieves information for all tablespaces
+         * Retrieves information for all tablespaces.
          *
          * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+         *
          * @return \PHPPgAdmin\Database\A recordset
          */
         public function getTablespaces($all = false)

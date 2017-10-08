@@ -1,17 +1,15 @@
 <?php
 
-    namespace PHPPgAdmin\Database;
+namespace PHPPgAdmin\Database;
 
-    /**
+/**
      * A class that implements the DB interface for Postgres
      * Note: This class uses ADODB and returns RecordSets.
      *
      * $Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
      */
-
     class Postgres74 extends Postgres80
     {
-
         public $major_version = 7.4;
         // List of all legal privileges that can be applied to different types
         // of objects.
@@ -29,12 +27,13 @@
 
         /**
          * Alters a database
-         * the multiple return vals are for postgres 8+ which support more functionality in alter database
+         * the multiple return vals are for postgres 8+ which support more functionality in alter database.
          *
          * @param                                 $dbName   The name of the database
          * @param                                 $newName  new name for the database
          * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
          * @param string                          $comment
+         *
          * @return bool|int 0 success
          */
         public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '')
@@ -53,14 +52,15 @@
         }
 
         /**
-         * Return all database available on the server
+         * Return all database available on the server.
          *
          * @param null $currentdatabase
+         *
          * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
          */
         public function getDatabases($currentdatabase = null)
         {
-            $conf        = $this->conf;
+            $conf = $this->conf;
             $server_info = $this->server_info;
 
             if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -100,6 +100,7 @@
          *
          * @param $term   The search term
          * @param $filter The object type to restrict to ('' means no restriction)
+         *
          * @return A recordset
          */
         public function findObject($term, $filter)
@@ -124,10 +125,10 @@
             if (!$conf['show_system']) {
                 // XXX: The mention of information_schema here is in the wrong place, but
                 // it's the quickest fix to exclude the info schema from 7.4
-                $where     = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
+                $where = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
                 $lan_where = 'AND pl.lanispl';
             } else {
-                $where     = '';
+                $where = '';
                 $lan_where = '';
             }
 
@@ -244,7 +245,7 @@
         }
 
         /**
-         * Returns table locks information in the current database
+         * Returns table locks information in the current database.
          *
          * @return A recordset
          */
@@ -267,7 +268,7 @@
         }
 
         /**
-         * Returns the current database encoding
+         * Returns the current database encoding.
          *
          * @return The encoding.  eg. SQL_ASCII, UTF-8, etc.
          */
@@ -281,7 +282,7 @@
         // Table functions
 
         /**
-         * Alters a column in a table OR view
+         * Alters a column in a table OR view.
          *
          * @param $table      The table in which the column resides
          * @param $column     The column to alter
@@ -295,6 +296,7 @@
          * @param $array      True if array type, false otherwise
          * @param $oldtype    The old type for the column
          * @param $comment    Comment for the column
+         *
          * @return array|bool|int 0 success
          */
         public function alterColumn(
@@ -366,9 +368,10 @@
         }
 
         /**
-         * Returns table information
+         * Returns table information.
          *
          * @param $table The name of the table
+         *
          * @return A recordset
          */
         public function getTable($table)
@@ -392,9 +395,10 @@
         }
 
         /**
-         * Return all tables in current database (and schema)
+         * Return all tables in current database (and schema).
          *
-         * @param bool|True $all True to fetch all tables, false for just in current schema
+         * @param bool|true $all True to fetch all tables, false for just in current schema
+         *
          * @return \PHPPgAdmin\Database\All tables, sorted alphabetically
          */
         public function getTables($all = false)
@@ -422,7 +426,7 @@
         }
 
         /**
-         * Returns the current default_with_oids setting
+         * Returns the current default_with_oids setting.
          *
          * @return default_with_oids setting
          */
@@ -436,14 +440,14 @@
         /**
          * Returns a list of all constraints on a table,
          * including constraint name, definition, related col and referenced namespace,
-         * table and col if needed
+         * table and col if needed.
          *
          * @param $table the table where we are looking for fk
+         *
          * @return a recordset
          */
         public function getConstraintsWithFields($table)
         {
-
             $c_schema = $this->_schema;
             $this->clean($c_schema);
             $this->clean($table);
@@ -501,9 +505,10 @@
         // Constraint functions
 
         /**
-         * Returns all sequences in the current database
+         * Returns all sequences in the current database.
          *
          * @param bool $all
+         *
          * @return \PHPPgAdmin\Database\A recordset
          */
         public function getSequences($all = false)
@@ -531,10 +536,12 @@
         // Sequence functions
 
         /**
-         * Returns all details for a particular function
+         * Returns all details for a particular function.
          *
          * @param $function_oid
+         *
          * @return \PHPPgAdmin\Database\Function info
+         *
          * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
          */
         public function getFunction($function_oid)
@@ -571,7 +578,7 @@
         // Function functions
 
         /**
-         * Returns a list of all casts in the database
+         * Returns a list of all casts in the database.
          *
          * @return All casts
          */
@@ -664,7 +671,7 @@
 
         /**
          * Protected method which alter a table
-         * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+         * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
          *
          * @param $tblrs      The table recordSet returned by getTable()
          * @param $name       The new name for the table
@@ -672,6 +679,7 @@
          * @param $schema     The new schema for the table
          * @param $comment    The comment on the table
          * @param $tablespace The new tablespace for the table ('' means leave as is)
+         *
          * @return int 0 success
          */
         protected function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace)

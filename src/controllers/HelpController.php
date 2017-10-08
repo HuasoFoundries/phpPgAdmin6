@@ -3,7 +3,7 @@
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class HelpController extends BaseController
 {
@@ -21,7 +21,6 @@ class HelpController extends BaseController
                 $this->doDefault();
                 break;
         }
-
     }
 
     public function doDefault()
@@ -37,6 +36,7 @@ class HelpController extends BaseController
             \PC::debug(['url' => $url], 'HelpController::doDefault');
             if (is_array($url)) {
                 $this->doChoosePage($url);
+
                 return;
             }
 
@@ -104,5 +104,4 @@ class HelpController extends BaseController
 
         $this->printFooter();
     }
-
 }

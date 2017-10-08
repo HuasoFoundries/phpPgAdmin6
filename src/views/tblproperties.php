@@ -1,7 +1,7 @@
 <?php
 
 /**
- * List tables in a database
+ * List tables in a database.
  *
  * $Id: tblproperties.php,v 1.92 2008/01/19 13:46:15 ioguix Exp $
  */

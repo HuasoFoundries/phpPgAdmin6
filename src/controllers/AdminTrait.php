@@ -1,26 +1,26 @@
 <?php
+
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 trait AdminTrait
 {
-
-/**
- * Show confirmation of cluster and perform cluster
- */
+    /**
+     * Show confirmation of cluster and perform cluster.
+     */
     public function doCluster($type, $confirm = false)
     {
-
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 
         $script = $this->script;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
 
         if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($lang['strspecifytabletocluster']);
+
             return;
         }
 
@@ -29,7 +29,7 @@ trait AdminTrait
                 $this->printTrail('schema');
                 $this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfclustertable'], $misc->printVal($a['table'])), "</p>\n";
@@ -40,7 +40,7 @@ trait AdminTrait
                 $this->printTrail($type);
                 $this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
 
                 if ($type == 'table') {
                     echo '<p>', sprintf($lang['strconfclustertable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -70,6 +70,7 @@ trait AdminTrait
                             $msg .= sprintf('%s: %s<br />', htmlentities($o, ENT_QUOTES, 'UTF-8'), $lang['strclusteredgood']);
                         } else {
                             $this->doDefault($type, sprintf('%s%s: %s<br />', $msg, htmlentities($o, ENT_QUOTES, 'UTF-8'), $lang['strclusteredbad']));
+
                             return;
                         }
                     }
@@ -82,7 +83,6 @@ trait AdminTrait
                     } else {
                         $this->doAdmin($type, $lang['strclusteredbad']);
                     }
-
                 }
             } else {
                 // Cluster all tables in database
@@ -92,25 +92,24 @@ trait AdminTrait
                 } else {
                     $this->doAdmin($type, $lang['strclusteredbad']);
                 }
-
             }
         }
     }
 
-/**
- * Show confirmation of reindex and perform reindex
- */
+    /**
+     * Show confirmation of reindex and perform reindex.
+     */
     public function doReindex($type, $confirm = false)
     {
-
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
-        $script       = $this->script;
-        $misc         = $this->misc;
-        $lang         = $this->lang;
-        $data         = $misc->getDatabaseAccessor();
+        $script = $this->script;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
 
         if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($lang['strspecifytabletoreindex']);
+
             return;
         }
 
@@ -119,7 +118,7 @@ trait AdminTrait
                 $this->printTrail('schema');
                 $this->printTitle($lang['strreindex'], 'pg.reindex');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfreindextable'], $misc->printVal($a['table'])), "</p>\n";
@@ -130,7 +129,7 @@ trait AdminTrait
                 $this->printTrail($type);
                 $this->printTitle($lang['strreindex'], 'pg.reindex');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
 
                 if ($type == 'table') {
                     echo '<p>', sprintf($lang['strconfreindextable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -162,6 +161,7 @@ trait AdminTrait
                         $msg .= sprintf('%s: %s<br />', htmlentities($o, ENT_QUOTES, 'UTF-8'), $lang['strreindexgood']);
                     } else {
                         $this->doDefault($type, sprintf('%s%s: %s<br />', $msg, htmlentities($o, ENT_QUOTES, 'UTF-8'), $lang['strreindexbad']));
+
                         return;
                     }
                 }
@@ -176,35 +176,34 @@ trait AdminTrait
                 } else {
                     $this->doAdmin($type, $lang['strreindexbad']);
                 }
-
             }
         }
     }
 
-/**
- * Show confirmation of analyze and perform analyze
- */
+    /**
+     * Show confirmation of analyze and perform analyze.
+     */
     public function doAnalyze($type, $confirm = false)
     {
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
 
         $script = $this->script;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
 
         if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($lang['strspecifytabletoanalyze']);
+
             return;
         }
 
         if ($confirm) {
-
             if (isset($_REQUEST['ma'])) {
                 $this->printTrail('schema');
                 $this->printTitle($lang['stranalyze'], 'pg.analyze');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     \Kint::dump($a);
@@ -216,7 +215,7 @@ trait AdminTrait
                 $this->printTrail($type);
                 $this->printTitle($lang['stranalyze'], 'pg.analyze');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
 
                 if ($type == 'table') {
                     echo '<p>', sprintf($lang['strconfanalyzetable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -243,6 +242,7 @@ trait AdminTrait
                         $msg .= sprintf('%s: %s<br />', htmlentities($o, ENT_QUOTES, 'UTF-8'), $lang['stranalyzegood']);
                     } else {
                         $this->doDefault($type, sprintf('%s%s: %s<br />', $msg, htmlentities($o, ENT_QUOTES, 'UTF-8'), $lang['stranalyzebad']));
+
                         return;
                     }
                 }
@@ -258,17 +258,15 @@ trait AdminTrait
                 } else {
                     $this->doAdmin($type, $lang['stranalyzebad']);
                 }
-
             }
         }
     }
 
-/**
- * Show confirmation of vacuum and perform actual vacuum
- */
+    /**
+     * Show confirmation of vacuum and perform actual vacuum.
+     */
     public function doVacuum($type, $confirm = false)
     {
-
         $script = ($type == 'database') ? 'database.php' : 'tables.php';
 
         $misc = $this->misc;
@@ -277,6 +275,7 @@ trait AdminTrait
 
         if (($type == 'table') && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($lang['strspecifytabletovacuum']);
+
             return;
         }
 
@@ -285,7 +284,7 @@ trait AdminTrait
                 $this->printTrail('schema');
                 $this->printTitle($lang['strvacuum'], 'pg.vacuum');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfvacuumtable'], $misc->printVal($a['table'])), "</p>\n";
@@ -296,7 +295,7 @@ trait AdminTrait
                 $this->printTrail($type);
                 $this->printTitle($lang['strvacuum'], 'pg.vacuum');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
 
                 if ($type == 'table') {
                     echo '<p>', sprintf($lang['strconfvacuumtable'], $misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -325,6 +324,7 @@ trait AdminTrait
                         $msg .= sprintf('%s: %s<br />', htmlentities($t, ENT_QUOTES, 'UTF-8'), $lang['strvacuumgood']);
                     } else {
                         $this->doDefault($type, sprintf('%s%s: %s<br />', $msg, htmlentities($t, ENT_QUOTES, 'UTF-8'), $lang['strvacuumbad']));
+
                         return;
                     }
                 }
@@ -340,18 +340,17 @@ trait AdminTrait
                 } else {
                     $this->doAdmin($type, $lang['strvacuumbad']);
                 }
-
             }
         }
     }
 
-/**
- * Add or Edit autovacuum params and save them
- */
+    /**
+     * Add or Edit autovacuum params and save them.
+     */
     public function doEditAutovacuum($type, $confirm, $msg = '')
     {
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
-        $script       = $this->script;
+        $script = $this->script;
 
         $misc = $this->misc;
         $lang = $this->lang;
@@ -359,6 +358,7 @@ trait AdminTrait
 
         if (empty($_REQUEST['table'])) {
             $this->doAdmin($type, '', $lang['strspecifyeditvacuumtable']);
+
             return;
         }
 
@@ -371,18 +371,19 @@ trait AdminTrait
 
             if (empty($_REQUEST['table'])) {
                 $this->doAdmin($type, '', $lang['strspecifyeditvacuumtable']);
+
                 return;
             }
 
-            $old_val  = $data->getTableAutovacuum($_REQUEST['table']);
+            $old_val = $data->getTableAutovacuum($_REQUEST['table']);
             $defaults = $data->getAutovacuum();
-            $old_val  = $old_val->fields;
+            $old_val = $old_val->fields;
 
             if (isset($old_val['autovacuum_enabled']) and ($old_val['autovacuum_enabled'] == 'off')) {
-                $enabled  = '';
+                $enabled = '';
                 $disabled = 'checked="checked"';
             } else {
-                $enabled  = 'checked="checked"';
+                $enabled = 'checked="checked"';
                 $disabled = '';
             }
 
@@ -410,7 +411,7 @@ trait AdminTrait
                 $old_val['autovacuum_vacuum_cost_limit'] = '';
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
             echo $misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"editautovac\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
@@ -458,17 +459,16 @@ trait AdminTrait
             } else {
                 $this->doEditAutovacuum($type, true, $lang['strsetvacuumtablefail']);
             }
-
         }
     }
 
-/**
- * confirm drop autovacuum params for a table and drop it
- */
+    /**
+     * confirm drop autovacuum params for a table and drop it.
+     */
     public function doDropAutovacuum($type, $confirm)
     {
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
-        $script       = $this->script;
+        $script = $this->script;
 
         $misc = $this->misc;
         $lang = $this->lang;
@@ -476,6 +476,7 @@ trait AdminTrait
 
         if (empty($_REQUEST['table'])) {
             $this->doAdmin($type, '', $lang['strspecifydelvacuumtable']);
+
             return;
         }
 
@@ -496,14 +497,13 @@ trait AdminTrait
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "</form>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"admin\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo $misc->form;
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
             echo "</form>\n";
         } else {
-
             $status = $data->dropAutovacuum($_POST['table']);
 
             if ($status == 0) {
@@ -511,16 +511,14 @@ trait AdminTrait
             } else {
                 $this->doAdmin($type, '', sprintf($lang['strdelvacuumtablefail'], $misc->printVal($_POST['table'])));
             }
-
         }
     }
 
-/**
- * database/table administration and tuning tasks
- *
- * $Id: admin.php
- */
-
+    /**
+     * database/table administration and tuning tasks.
+     *
+     * $Id: admin.php
+     */
     public function doAdmin($type, $msg = '')
     {
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
@@ -545,7 +543,7 @@ trait AdminTrait
         echo "<table style=\"width: 50%\">\n";
         echo "<tr>\n";
         echo '<th class="data">';
-        $this->misc->printHelp($lang['strvacuum'], 'pg.admin.vacuum') . "</th>\n";
+        $this->misc->printHelp($lang['strvacuum'], 'pg.admin.vacuum')."</th>\n";
         echo '</th>';
         echo '<th class="data">';
         $this->misc->printHelp($lang['stranalyze'], 'pg.admin.analyze');
@@ -563,7 +561,7 @@ trait AdminTrait
         // Vacuum
         echo "<tr class=\"row1\">\n";
         echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-        echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
 
         echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_vacuum\" />\n";
         echo $misc->form;
@@ -577,7 +575,7 @@ trait AdminTrait
 
         // Analyze
         echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-        echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_analyze\" />\n";
         echo $misc->form;
         if ($type == 'table') {
@@ -592,7 +590,7 @@ trait AdminTrait
         if ($data->hasRecluster()) {
             $disabled = '';
             echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-            echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
             echo $misc->form;
             if ($type == 'table') {
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
@@ -610,7 +608,7 @@ trait AdminTrait
 
         // Reindex
         echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-        echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/{$script}\" method=\"post\">\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_reindex\" />\n";
         echo $misc->form;
         if ($type == 'table') {
@@ -635,12 +633,12 @@ trait AdminTrait
             }
 
             echo "<br /><br /><h2>{$lang['strvacuumpertable']}</h2>";
-            echo '<p>' . (($defaults['autovacuum'] == 'on') ? $lang['strturnedon'] : $lang['strturnedoff']) . '</p>';
+            echo '<p>'.(($defaults['autovacuum'] == 'on') ? $lang['strturnedon'] : $lang['strturnedoff']).'</p>';
             echo "<p class=\"message\">{$lang['strnotdefaultinred']}</p>";
 
             $enlight = function ($f, $p) {
                 if (isset($f[$p[0]]) and ($f[$p[0]] != $p[1])) {
-                    return '<span style="color:#F33;font-weight:bold">' . htmlspecialchars($f[$p[0]]) . '</span>';
+                    return '<span style="color:#F33;font-weight:bold">'.htmlspecialchars($f[$p[0]]).'</span>';
                 }
 
                 return htmlspecialchars($p[1]);
@@ -650,13 +648,13 @@ trait AdminTrait
                 'namespace'                       => [
                     'title' => $lang['strschema'],
                     'field' => Decorator::field('nspname'),
-                    'url'   => SUBFOLDER . "/redirect/schema?{$misc->href}&amp;",
+                    'url'   => SUBFOLDER."/redirect/schema?{$misc->href}&amp;",
                     'vars'  => ['schema' => 'nspname'],
                 ],
                 'relname'                         => [
                     'title' => $lang['strtable'],
                     'field' => Decorator::field('relname'),
-                    'url'   => SUBFOLDER . "/redirect/table?{$misc->href}&amp;",
+                    'url'   => SUBFOLDER."/redirect/table?{$misc->href}&amp;",
                     'vars'  => ['table' => 'relname', 'schema' => 'nspname'],
                 ],
                 'autovacuum_enabled'              => [
@@ -750,14 +748,13 @@ trait AdminTrait
 
     public function adminActions($action, $type)
     {
-
         if ($type == 'database') {
             $_REQUEST['object'] = $_REQUEST['database'];
-            $this->script       = 'database.php';
+            $this->script = 'database.php';
         } else {
             // $_REQUEST['table'] is no set if we are in the schema page
             $_REQUEST['object'] = (isset($_REQUEST['table']) ? $_REQUEST['table'] : '');
-            $this->script       = 'tables.php';
+            $this->script = 'tables.php';
         }
 
         $script = $this->script;
@@ -781,7 +778,7 @@ trait AdminTrait
                 }
 
                 // if multi-action from table canceled: back to the schema default page
-                else if (($type == 'table') && is_array($_REQUEST['object'])) {
+                elseif (($type == 'table') && is_array($_REQUEST['object'])) {
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -794,7 +791,7 @@ trait AdminTrait
                 }
 
                 // if multi-action from table canceled: back to the schema default page
-                else if (($type == 'table') && is_array($_REQUEST['object'])) {
+                elseif (($type == 'table') && is_array($_REQUEST['object'])) {
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -807,7 +804,7 @@ trait AdminTrait
                 }
 
                 // if multi-action from table canceled: back to the schema default page
-                else if (($type == 'table') && is_array($_REQUEST['object'])) {
+                elseif (($type == 'table') && is_array($_REQUEST['object'])) {
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -820,7 +817,7 @@ trait AdminTrait
                 }
 
                 // if multi-action from table canceled: back to the schema default page
-                else if (($type == 'table') && is_array($_REQUEST['object'])) {
+                elseif (($type == 'table') && is_array($_REQUEST['object'])) {
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -853,7 +850,7 @@ trait AdminTrait
             default:
                 return false;
         }
+
         return true;
     }
-
 }

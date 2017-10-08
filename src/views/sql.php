@@ -3,7 +3,7 @@
 /**
  * Process an arbitrary SQL query - tricky!  The main problem is that
  * unless we implement a full SQL parser, there's no way of knowing
- * how many SQL statements have been strung together with semi-colons
+ * how many SQL statements have been strung together with semi-colons.
  *
  * @param $_SESSION ['sqlquery'] The SQL query string to execute
  *

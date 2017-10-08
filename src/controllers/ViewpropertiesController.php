@@ -2,10 +2,10 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class ViewpropertiesController extends BaseController
 {
@@ -22,7 +22,7 @@ class ViewpropertiesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strviews'] . ' - ' . $_REQUEST['view']);
+        $this->printHeader($lang['strviews'].' - '.$_REQUEST['view']);
         $this->printBody();
 
         switch ($action) {
@@ -79,11 +79,10 @@ class ViewpropertiesController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
-     * Show view definition and virtual columns
+     * Show view definition and virtual columns.
      */
     public function doDefault($msg = '')
     {
@@ -114,7 +113,7 @@ class ViewpropertiesController extends BaseController
             'column'  => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['view']) . '&amp;',
+                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=".urlencode($_REQUEST['view']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
@@ -223,7 +222,6 @@ class ViewpropertiesController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -260,11 +258,10 @@ class ViewpropertiesController extends BaseController
         ];
 
         return $this->printTree($columns, $attrs, 'viewcolumns');
-
     }
 
     /**
-     * Function to save after editing a view
+     * Function to save after editing a view.
      */
     public function doSaveEdit()
     {
@@ -279,11 +276,10 @@ class ViewpropertiesController extends BaseController
         } else {
             $this->doEdit($lang['strviewupdatedbad']);
         }
-
     }
 
     /**
-     * Function to allow editing of a view
+     * Function to allow editing of a view.
      */
     public function doEdit($msg = '')
     {
@@ -299,13 +295,12 @@ class ViewpropertiesController extends BaseController
         $viewdata = $data->getView($_REQUEST['view']);
 
         if ($viewdata->recordCount() > 0) {
-
             if (!isset($_POST['formDefinition'])) {
                 $_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
-                $_POST['formComment']    = $viewdata->fields['relcomment'];
+                $_POST['formComment'] = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/viewproperties.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/viewproperties.php\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -323,16 +318,15 @@ class ViewpropertiesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
-/**
- * Allow the dumping of the data "in" a view
- * NOTE:: PostgreSQL doesn't currently support dumping the data in a view
- *        so I have disabled the data related parts for now. In the future
- *        we should allow it conditionally if it becomes supported.  This is
- *        a SMOP since it is based on pg_dump version not backend version.
- */
+    /**
+     * Allow the dumping of the data "in" a view
+     * NOTE:: PostgreSQL doesn't currently support dumping the data in a view
+     *        so I have disabled the data related parts for now. In the future
+     *        we should allow it conditionally if it becomes supported.  This is
+     *        a SMOP since it is based on pg_dump version not backend version.
+     */
     public function doExport($msg = '')
     {
         $conf = $this->conf;
@@ -344,7 +338,7 @@ class ViewpropertiesController extends BaseController
         $this->printTabs('view', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -390,9 +384,9 @@ class ViewpropertiesController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Show definition for a view
- */
+    /**
+     * Show definition for a view.
+     */
     public function doDefinition($msg = '')
     {
         $conf = $this->conf;
@@ -438,9 +432,9 @@ class ViewpropertiesController extends BaseController
         ]], 'viewproperties-definition', get_defined_vars());
     }
 
-/**
- * Displays a screen where they can alter a column in a view
- */
+    /**
+     * Displays a screen where they can alter a column in a view.
+     */
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
@@ -459,7 +453,7 @@ class ViewpropertiesController extends BaseController
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . "/src/views/viewproperties.php\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/viewproperties.php\" method=\"post\">\n";
 
                 // Output view header
                 echo "<table>\n";
@@ -469,7 +463,7 @@ class ViewpropertiesController extends BaseController
                 $column = $data->getTableAttributes($_REQUEST['view'], $_REQUEST['column']);
 
                 if (!isset($_REQUEST['default'])) {
-                    $_REQUEST['field']   = $column->fields['attname'];
+                    $_REQUEST['field'] = $column->fields['attname'];
                     $_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
                     $_REQUEST['comment'] = $column->fields['comment'];
                 }
@@ -501,6 +495,7 @@ class ViewpropertiesController extends BaseController
                 if (trim($_REQUEST['field']) == '') {
                     $_REQUEST['stage'] = 1;
                     $this->doProperties($lang['strcolneedsname']);
+
                     return;
                 }
 
@@ -513,6 +508,7 @@ class ViewpropertiesController extends BaseController
                 } else {
                     $_REQUEST['stage'] = 1;
                     $this->doProperties($lang['strcolumnalteredbad']);
+
                     return;
                 }
                 break;
@@ -529,7 +525,6 @@ class ViewpropertiesController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if ($confirm) {
-
             $this->printTrail('view');
             $this->printTitle($lang['stralter'], 'pg.view.alter');
             $this->printMsg($msg);
@@ -554,7 +549,7 @@ class ViewpropertiesController extends BaseController
                     $_POST['comment'] = $view->fields['relcomment'];
                 }
 
-                echo '<form action="' . SUBFOLDER . "/src/views/viewproperties.php\" method=\"post\">\n";
+                echo '<form action="'.SUBFOLDER."/src/views/viewproperties.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo '<td class="data1">';
@@ -604,7 +599,6 @@ class ViewpropertiesController extends BaseController
             } else {
                 echo "<p>{$lang['strnodata']}</p>\n";
             }
-
         } else {
 
             // For databases that don't allow owner change
@@ -636,8 +630,6 @@ class ViewpropertiesController extends BaseController
             } else {
                 $this->doAlter(true, $lang['strviewalteredbad']);
             }
-
         }
     }
-
 }

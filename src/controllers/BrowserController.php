@@ -3,7 +3,7 @@
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class BrowserController extends BaseController
 {

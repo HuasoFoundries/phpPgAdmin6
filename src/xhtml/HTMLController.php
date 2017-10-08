@@ -2,41 +2,41 @@
 
 namespace PHPPgAdmin\XHtml;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base HTMLController controller class
+ * Base HTMLController controller class.
  */
 class HTMLController
 {
     use \PHPPgAdmin\HelperTrait;
 
-    private $container      = null;
-    private $data           = null;
-    private $database       = null;
-    private $server_id      = null;
-    public $form            = '';
-    public $href            = '';
-    public $lang            = [];
-    public $action          = '';
-    public $_name           = 'HTMLController';
+    private $container = null;
+    private $data = null;
+    private $database = null;
+    private $server_id = null;
+    public $form = '';
+    public $href = '';
+    public $lang = [];
+    public $action = '';
+    public $_name = 'HTMLController';
     public $controller_name = 'HTMLController';
-    public $_title          = 'base';
+    public $_title = 'base';
 
     /* Constructor */
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
-        $this->container      = $container;
-        $this->lang           = $container->get('lang');
-        $this->view           = $container->get('view');
+        $this->container = $container;
+        $this->lang = $container->get('lang');
+        $this->view = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
-        $this->appName        = $container->get('settings')['appName'];
-        $this->appVersion     = $container->get('settings')['appVersion'];
-        $this->appLangFiles   = $container->get('appLangFiles');
-        $this->misc           = $container->get('misc');
-        $this->conf           = $this->misc->getConf();
-        $this->appThemes      = $container->get('appThemes');
-        $this->action         = $container->get('action');
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
+        $this->appLangFiles = $container->get('appLangFiles');
+        $this->misc = $container->get('misc');
+        $this->conf = $this->misc->getConf();
+        $this->appThemes = $container->get('appThemes');
+        $this->action = $container->get('action');
 
         if ($controller_name !== null) {
             $this->controller_name = $controller_name;
@@ -52,7 +52,8 @@ class HTMLController
 
     /**
      * Returns URL given an action associative array.
-     * NOTE: this function does not html-escape, only url-escape
+     * NOTE: this function does not html-escape, only url-escape.
+     *
      * @param $action An associative array of the follow properties:
      *            'url'  => The first part of the URL (before the ?)
      *            'urlvars' => Associative array of (URL variable => field name)
@@ -61,7 +62,6 @@ class HTMLController
      */
     protected function getActionUrl(&$action, &$fields, $from = null)
     {
-
         if ($from === null) {
             $from = __METHOD__;
         }
@@ -99,7 +99,7 @@ class HTMLController
 
         ksort($urlvars);
         foreach ($urlvars as $var => $varfield) {
-            $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($varfield, $fields);
+            $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($varfield, $fields);
             $sep = '&';
         }
 
@@ -112,7 +112,8 @@ class HTMLController
     }
 
     /**
-     * Display a link
+     * Display a link.
+     *
      * @param $link An associative array of link parameters to print
      *     link = array(
      *       'attr' => array( // list of A tag attribute
@@ -127,7 +128,6 @@ class HTMLController
      */
     public function printLink($link, $do_print = true, $from = null)
     {
-
         if (!isset($link['fields'])) {
             $link['fields'] = $_REQUEST;
         }
@@ -138,12 +138,12 @@ class HTMLController
         $tag = '<a ';
         foreach ($link['attr'] as $attr => $value) {
             if ($attr == 'href' and is_array($value)) {
-                $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'], $from)) . '" ';
+                $tag .= 'href="'.htmlentities($this->getActionUrl($value, $link['fields'], $from)).'" ';
             } else {
-                $tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
+                $tag .= htmlentities($attr).'="'.Decorator::get_sanitized_value($value, $link['fields'], 'html').'" ';
             }
         }
-        $tag .= '>' . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
+        $tag .= '>'.Decorator::get_sanitized_value($link['content'], $link['fields'], 'html')."</a>\n";
 
         if ($do_print) {
             echo $tag;
@@ -153,15 +153,17 @@ class HTMLController
     }
 
     /**
-     * Prints a combox box
+     * Prints a combox box.
      *
-     * @param        $arrOptions associative array storing options and values of combo should be Option => Value
-     * @param        $szName     string to specify the name of the form element
+     * @param        $arrOptions  associative array storing options and values of combo should be Option => Value
+     * @param        $szName      string to specify the name of the form element
      * @param bool   $bBlankEntry
      * @param string $szDefault
      * @param bool   $bMultiple
      * @param int    $iSize
+     *
      * @return string with the generated HTML select box
+     *
      * @internal param $ (optional) $bBlankEntry bool to specify whether or not we want a blank selection
      * @internal param $ (optional) $szDefault string to specify the default VALUE selected
      * @internal param $ (optional) $bMultiple bool to specify whether or not we want a multi select combo box
@@ -170,11 +172,10 @@ class HTMLController
     public static function printCombo(&$arrOptions, $szName, $bBlankEntry = true, $szDefault = '', $bMultiple = false, $iSize = 10)
     {
         $htmlOut = '';
-        if ($bMultiple) // If multiple select combo
-        {
-            $htmlOut .= "<select rel=\"printCombo\" name=\"$szName\" id=\"$szName\" multiple=\"multiple\" size=\"$iSize\">" . "\n";
+        if ($bMultiple) { // If multiple select combo
+            $htmlOut .= "<select rel=\"printCombo\" name=\"$szName\" id=\"$szName\" multiple=\"multiple\" size=\"$iSize\">"."\n";
         } else {
-            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"$szName\" id=\"$szName\">" . "\n";
+            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"$szName\" id=\"$szName\">"."\n";
         }
 
         if ($bBlankEntry) {
@@ -194,5 +195,4 @@ class HTMLController
 
         return $htmlOut;
     }
-
 }

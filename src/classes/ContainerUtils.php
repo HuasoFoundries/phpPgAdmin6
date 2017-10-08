@@ -1,12 +1,12 @@
 <?php
+
 namespace PHPPgAdmin;
 
 /**
- * A class that adds convenience methods to the container
+ * A class that adds convenience methods to the container.
  */
 class ContainerUtils
 {
-
     private $container;
 
     public function __construct($container)
@@ -16,14 +16,13 @@ class ContainerUtils
 
     public function getRedirectUrl()
     {
-
         $query_string = $this->container->requestobj->getUri()->getQuery();
 
         // but if server_id isn't set, then you will be redirected to intro
         if ($this->container->requestobj->getQueryParam('server') === null) {
-            $destinationurl = SUBFOLDER . '/src/views/intro';
+            $destinationurl = SUBFOLDER.'/src/views/intro';
         } else {
-            $destinationurl = SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = SUBFOLDER.'/src/views/login'.($query_string ? '?'.$query_string : '');
         }
 
         return $destinationurl;
@@ -31,16 +30,12 @@ class ContainerUtils
 
     public function getDestinationWithLastTab($subject)
     {
-
         $_server_info = $this->container->misc->getServerInfo();
 
         // If username isn't set in server_info, you should login
         if (!isset($_server_info['username'])) {
-
             $destinationurl = $this->getRedirectUrl();
-
         } else {
-
             $url = $this->container->misc->getLastTabURL($subject);
 
             // Load query vars into superglobal arrays
@@ -50,34 +45,32 @@ class ContainerUtils
                     $urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
                 }
                 $_REQUEST = array_merge($_REQUEST, $urlvars);
-                $_GET     = array_merge($_GET, $urlvars);
+                $_GET = array_merge($_GET, $urlvars);
             }
 
-            $actionurl      = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
+            $actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
             $destinationurl = $actionurl->value($_GET);
         }
 
         return $destinationurl;
-
     }
 
     public function addError($errormsg)
     {
-        $errors   = $this->container->get('errors');
+        $errors = $this->container->get('errors');
         $errors[] = $errormsg;
         $this->container->offsetSet('errors', $errors);
 
         return $this->container;
-
     }
 
     /**
-     * Receives N parameters and sends them to the console adding where was it called from
+     * Receives N parameters and sends them to the console adding where was it called from.
+     *
      * @return [type] [description]
      */
     public function prtrace()
     {
-
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = ([
@@ -107,6 +100,7 @@ class ContainerUtils
         $tag = implode('', $btarray0);
 
         \PC::debug(func_get_args(), $tag);
+
         return $this->container;
     }
 
@@ -146,13 +140,14 @@ class ContainerUtils
     }
 
     /**
-     * Returns a string with html <br> variant replaced with a new line
-     * @param  string $msg [description]
-     * @return string      [description]
+     * Returns a string with html <br> variant replaced with a new line.
+     *
+     * @param string $msg [description]
+     *
+     * @return string [description]
      */
     public static function br2ln(string $msg)
     {
         return str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
     }
-
 }

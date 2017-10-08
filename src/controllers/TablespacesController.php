@@ -2,10 +2,8 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
-
 /**
- * Base controller class
+ * Base controller class.
  */
 class TablespacesController extends BaseController
 {
@@ -13,10 +11,10 @@ class TablespacesController extends BaseController
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $conf = $this->conf;
+        $misc = $this->misc;
+        $lang = $this->lang;
+        $data = $misc->getDatabaseAccessor();
         $action = $this->action;
 
         $this->printHeader($lang['strtablespaces']);
@@ -65,7 +63,7 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Show default list of tablespaces in the cluster
+     * Show default list of tablespaces in the cluster.
      */
     public function doDefault($msg = '')
     {
@@ -161,7 +159,7 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Function to allow altering of a tablespace
+     * Function to allow altering of a tablespace.
      */
     public function doAlter($msg = '')
     {
@@ -180,7 +178,6 @@ class TablespacesController extends BaseController
         $users = $data->getUsers();
 
         if ($tablespace->recordCount() > 0) {
-
             if (!isset($_POST['name'])) {
                 $_POST['name'] = $tablespace->fields['spcname'];
             }
@@ -193,7 +190,7 @@ class TablespacesController extends BaseController
                 $_POST['comment'] = ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '';
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/tablespaces.php\" method=\"post\">\n";
             echo $misc->form;
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -224,11 +221,10 @@ class TablespacesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
-     * Function to save after altering a tablespace
+     * Function to save after altering a tablespace.
      */
     public function doSaveAlter()
     {
@@ -252,12 +248,11 @@ class TablespacesController extends BaseController
             } else {
                 $this->doAlter($lang['strtablespacealteredbad']);
             }
-
         }
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
      */
     public function doDrop($confirm)
     {
@@ -272,7 +267,7 @@ class TablespacesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdroptablespace'], $misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+            echo '<form action="'.SUBFOLDER."/src/views/tablespaces.php\" method=\"post\">\n";
             echo $misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
@@ -286,12 +281,11 @@ class TablespacesController extends BaseController
             } else {
                 $this->doDefault($lang['strtablespacedroppedbad']);
             }
-
         }
     }
 
     /**
-     * Displays a screen where they can enter a new tablespace
+     * Displays a screen where they can enter a new tablespace.
      */
     public function doCreate($msg = '')
     {
@@ -325,7 +319,7 @@ class TablespacesController extends BaseController
         $this->printTitle($lang['strcreatetablespace'], 'pg.tablespace.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+        echo '<form action="'.SUBFOLDER."/src/views/tablespaces.php\" method=\"post\">\n";
         echo $misc->form;
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -355,7 +349,7 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Actually creates the new tablespace in the cluster
+     * Actually creates the new tablespace in the cluster.
      */
     public function doSaveCreate()
     {
@@ -381,8 +375,6 @@ class TablespacesController extends BaseController
             } else {
                 $this->doCreate($lang['strtablespacecreatedbad']);
             }
-
         }
     }
-
 }
