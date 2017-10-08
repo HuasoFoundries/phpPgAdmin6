@@ -1,0 +1,63 @@
+---
+engines:
+ csslint:
+   enabled: false
+ eslint:
+   enabled: true
+ jshint:
+   enabled: false
+ phpmd:
+   enabled: true
+   exclude_paths:
+     - temp/**/*
+     - ".tests/**/*"
+ jacksonlinter:
+   enabled: false
+ node_security:
+   enabled: false
+ php_code_sniffer:
+   enabled: true
+   exclude_paths:
+     - temp/**/*
+     - '.test/**/*'   
+ php_mess_detector:
+   enabled: true
+   exclude_paths:
+     - temp/**/*
+     - '.test/**/*'
+ pmd:
+   enabled: false
+ sqlint:
+   enabled: true
+ stylelink:
+   enabled: false   
+ duplication:
+   enabled: true
+   exclude_paths:
+     - temp/**/*
+     - ".tests/**/*"
+ metrics:
+   enabled: true
+   exclude_paths:
+    - temp/**/*
+    - ".tests/**/*"
+ coverage:
+   enabled: true
+   exclude_paths:
+     - temp/**/*
+     - ".tests/**/*"
+languages:
+  css:
+    extensions:
+      - "*.css"
+      - "*.less"
+  php:
+    extensions:
+      - "*.php"
+
+exclude_paths:
+  - vendor/  
+  - .temp/**
+  - .tests/**/*
+  - "*.min.js"
+  - "*.min.css"
