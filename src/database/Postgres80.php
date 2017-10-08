@@ -3,10 +3,10 @@
     namespace PHPPgAdmin\Database;
 
 /**
-     * PostgreSQL 8.0 support
-     *
-     * $Id: Postgres80.php,v 1.28 2007/12/12 04:11:10 xzilla Exp $
-     */
+ * PostgreSQL 8.0 support
+ *
+ * $Id: Postgres80.php,v 1.28 2007/12/12 04:11:10 xzilla Exp $
+ */
 
     class Postgres80 extends Postgres81
     {

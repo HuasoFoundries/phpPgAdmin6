@@ -3,10 +3,10 @@
     namespace PHPPgAdmin\Database;
 
 /**
-     * PostgreSQL 8.2 support
-     *
-     * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
-     */
+ * PostgreSQL 8.2 support
+ *
+ * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+ */
 
     class Postgres82 extends Postgres83
     {
