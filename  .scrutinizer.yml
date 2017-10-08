@@ -1,0 +1,39 @@
+# .scrutinizer.yml
+
+checks:
+    php:
+        code_rating: true
+        duplication: true
+
+filter:
+    excluded_paths:
+        - 'tests/*'
+        - '*.min.js'
+        - 'js/'
+
+build:
+    environment:
+      php: '7.1'
+
+    tests:
+        override:
+            - 'php vendor/bin/codecept run'
+
+        
+checks:
+    php:
+        fix_php_opening_tag: false
+        remove_php_closing_tag: false
+        no_mixed_inline_html: false
+        require_braces_around_control_structures: false
+        psr2_control_structure_declaration: false
+        avoid_superglobals: false
+        security_vulnerabilities: false
+        no_exit: false
+    javascript: true
+
+coding_style:
+    php:
+        spaces:
+            around_operators:
+                concatenation: true
