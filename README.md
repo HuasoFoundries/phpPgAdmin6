@@ -37,7 +37,7 @@ composer create-project huasofoundries/phppgadmin6 <FOLDER> *@beta
 Alternatively, clone this repo and run (inside then folder where the project was cloned)
 
 ```sh
-composer install
+composer install --no-dev
 ```
 
 
