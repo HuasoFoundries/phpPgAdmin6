@@ -89,17 +89,17 @@ class FunctionsController extends BaseController
         $funcs = $data->getFunctions();
 
         $columns = [
-            'function'     => [
+            'function' => [
                 'title' => $lang['strfunction'],
                 'field' => Decorator::field('proproto'),
                 'url'   => SUBFOLDER . "/redirect/function?action=properties&amp;{$misc->href}&amp;",
                 'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
-            'returns'      => [
+            'returns' => [
                 'title' => $lang['strreturns'],
                 'field' => Decorator::field('proreturns'),
             ],
-            'owner'        => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('proowner'),
             ],
@@ -107,10 +107,10 @@ class FunctionsController extends BaseController
                 'title' => $lang['strproglanguage'],
                 'field' => Decorator::field('prolanguage'),
             ],
-            'actions'      => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'      => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('procomment'),
             ],
@@ -121,7 +121,7 @@ class FunctionsController extends BaseController
                 'keycols' => ['function' => 'proproto', 'function_oid' => 'prooid'],
                 'url'     => 'functions.php',
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -134,7 +134,7 @@ class FunctionsController extends BaseController
                     ],
                 ],
             ],
-            'drop'         => [
+            'drop' => [
                 'multiaction' => 'confirm_drop',
                 'content'     => $lang['strdrop'],
                 'attr'        => [
@@ -148,7 +148,7 @@ class FunctionsController extends BaseController
                     ],
                 ],
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $lang['strprivileges'],
                 'attr'    => [
                     'href' => [
@@ -166,8 +166,8 @@ class FunctionsController extends BaseController
         echo $this->printTable($funcs, $columns, $actions, $this->table_place, $lang['strnofunctions']);
 
         $navlinks = [
-            'createpl'       => [
-                'attr'    => [
+            'createpl' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'functions.php',
                         'urlvars' => [
@@ -181,7 +181,7 @@ class FunctionsController extends BaseController
                 'content' => $lang['strcreateplfunction'],
             ],
             'createinternal' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'functions.php',
                         'urlvars' => [
@@ -195,8 +195,8 @@ class FunctionsController extends BaseController
                 ],
                 'content' => $lang['strcreateinternalfunction'],
             ],
-            'createc'        => [
-                'attr'    => [
+            'createc' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'functions.php',
                         'urlvars' => [
@@ -665,7 +665,7 @@ class FunctionsController extends BaseController
 
         $navlinks = [
             'showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'functions.php',
                         'urlvars' => [
@@ -677,8 +677,8 @@ class FunctionsController extends BaseController
                 ],
                 'content' => $lang['strshowallfunctions'],
             ],
-            'alter'   => [
-                'attr'    => [
+            'alter' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'functions.php',
                         'urlvars' => [
@@ -693,8 +693,8 @@ class FunctionsController extends BaseController
                 ],
                 'content' => $lang['stralter'],
             ],
-            'drop'    => [
-                'attr'    => [
+            'drop' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'functions.php',
                         'urlvars' => [

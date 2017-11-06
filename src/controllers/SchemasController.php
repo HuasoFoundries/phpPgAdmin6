@@ -94,13 +94,13 @@ class SchemasController extends BaseController
         $schemas = $data->getSchemas();
 
         $columns = [
-            'schema'  => [
+            'schema' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('nspname'),
                 'url'   => SUBFOLDER . "/redirect/schema?{$misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
-            'owner'   => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('nspowner'),
             ],
@@ -118,9 +118,9 @@ class SchemasController extends BaseController
                 'keycols' => ['nsp' => 'nspname'],
                 'url'     => 'schemas.php',
             ],
-            'drop'         => [
-                'content'     => $lang['strdrop'],
-                'attr'        => [
+            'drop' => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
                     'href' => [
                         'url'     => 'schemas.php',
                         'urlvars' => [
@@ -131,7 +131,7 @@ class SchemasController extends BaseController
                 ],
                 'multiaction' => 'drop',
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $lang['strprivileges'],
                 'attr'    => [
                     'href' => [
@@ -143,7 +143,7 @@ class SchemasController extends BaseController
                     ],
                 ],
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -164,7 +164,7 @@ class SchemasController extends BaseController
         echo $this->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'schemas.php',
                     'urlvars' => [
@@ -205,7 +205,7 @@ class SchemasController extends BaseController
                     'schema'  => Decorator::field('nspname'),
                 ]
             ),
-            'branch'  => Decorator::url('schemas.php',
+            'branch' => Decorator::url('schemas.php',
                 $reqvars,
                 [
                     'action' => 'subtree',

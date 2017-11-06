@@ -93,7 +93,7 @@ class UsersController extends BaseController
         $users = $data->getUsers();
 
         $columns = [
-            'user'      => [
+            'user' => [
                 'title' => $lang['strusername'],
                 'field' => Decorator::field('usename'),
             ],
@@ -102,22 +102,22 @@ class UsersController extends BaseController
                 'field' => Decorator::field('usesuper'),
                 'type'  => 'yesno',
             ],
-            'createdb'  => [
+            'createdb' => [
                 'title' => $lang['strcreatedb'],
                 'field' => Decorator::field('usecreatedb'),
                 'type'  => 'yesno',
             ],
-            'expires'   => [
+            'expires' => [
                 'title'  => $lang['strexpires'],
                 'field'  => Decorator::field('useexpires'),
                 'type'   => 'callback',
                 'params' => ['function' => $renderUseExpires, 'null' => $lang['strnever']],
             ],
-            'defaults'  => [
+            'defaults' => [
                 'title' => $lang['strsessiondefaults'],
                 'field' => Decorator::field('useconfig'),
             ],
-            'actions'   => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -135,7 +135,7 @@ class UsersController extends BaseController
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -152,7 +152,7 @@ class UsersController extends BaseController
         echo $this->printTable($users, $columns, $actions, 'users-users', $lang['strnousers']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'users.php',
                     'urlvars' => [
@@ -205,7 +205,7 @@ class UsersController extends BaseController
         }
 
         $this->printNavLinks(['changepassword' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'users.php',
                     'urlvars' => [

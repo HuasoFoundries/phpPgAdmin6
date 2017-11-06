@@ -125,9 +125,8 @@ $lang['strfile']            = 'Файл';
 $lang['strfileimported']    = 'Файл импортирован.';
 
 // Error handling
-$lang['strbadconfig'] = 'Ваш config.inc.php является устаревшим. Вам необходимо обновить его из config.inc.php-dist.';
-$lang['strnotloaded'] =
-    'Ваша инсталяция PHP не поддерживает PostgreSQL. Вам необходимо пересобрать PHP, используя параметр --with-pgsql для configure.';
+$lang['strbadconfig']       = 'Ваш config.inc.php является устаревшим. Вам необходимо обновить его из config.inc.php-dist.';
+$lang['strnotloaded']       = 'Ваша инсталяция PHP не поддерживает PostgreSQL. Вам необходимо пересобрать PHP, используя параметр --with-pgsql для configure.';
 $lang['strbadschema']       = 'Обнаружена неверная схема.';
 $lang['strbadencoding']     = 'Failed to set client encoding in database.';
 $lang['strsqlerror']        = 'Ошибка SQL:';

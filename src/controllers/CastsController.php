@@ -68,18 +68,18 @@ class CastsController extends BaseController
                 'title' => $lang['strtargettype'],
                 'field' => Decorator::field('casttarget'),
             ],
-            'function'    => [
+            'function' => [
                 'title'  => $lang['strfunction'],
                 'field'  => Decorator::field('castfunc'),
                 'params' => ['null' => $lang['strbinarycompat']],
             ],
-            'implicit'    => [
+            'implicit' => [
                 'title'  => $lang['strimplicit'],
                 'field'  => Decorator::field('castcontext'),
                 'type'   => 'callback',
                 'params' => ['function' => $renderCastContext, 'align' => 'center'],
             ],
-            'comment'     => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('castcomment'),
             ],
