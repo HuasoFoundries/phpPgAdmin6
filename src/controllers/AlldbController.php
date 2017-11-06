@@ -50,7 +50,7 @@ class AlldbController extends BaseController
 
                 break;
             case 'confirm_drop':
-                doDrop(true);
+                $this->doDrop(true);
                 break;
             case 'alter':
                 if (isset($_POST['oldname']) && isset($_POST['newname']) && !isset($_POST['cancel'])) {
