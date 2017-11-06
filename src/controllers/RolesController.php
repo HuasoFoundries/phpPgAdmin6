@@ -105,18 +105,18 @@ class RolesController extends BaseController
         $roles = $data->getRoles();
 
         $columns = [
-            'role'       => [
+            'role' => [
                 'title' => $lang['strrole'],
                 'field' => Decorator::field('rolname'),
                 'url'   => SUBFOLDER . "/redirect/role?action=properties&amp;{$misc->href}&amp;",
                 'vars'  => ['rolename' => 'rolname'],
             ],
-            'superuser'  => [
+            'superuser' => [
                 'title' => $lang['strsuper'],
                 'field' => Decorator::field('rolsuper'),
                 'type'  => 'yesno',
             ],
-            'createdb'   => [
+            'createdb' => [
                 'title' => $lang['strcreatedb'],
                 'field' => Decorator::field('rolcreatedb'),
                 'type'  => 'yesno',
@@ -126,29 +126,29 @@ class RolesController extends BaseController
                 'field' => Decorator::field('rolcreaterole'),
                 'type'  => 'yesno',
             ],
-            'inherits'   => [
+            'inherits' => [
                 'title' => $lang['strinheritsprivs'],
                 'field' => Decorator::field('rolinherit'),
                 'type'  => 'yesno',
             ],
-            'canloging'  => [
+            'canloging' => [
                 'title' => $lang['strcanlogin'],
                 'field' => Decorator::field('rolcanlogin'),
                 'type'  => 'yesno',
             ],
-            'connlimit'  => [
+            'connlimit' => [
                 'title'  => $lang['strconnlimit'],
                 'field'  => Decorator::field('rolconnlimit'),
                 'type'   => 'callback',
                 'params' => ['function' => $renderRoleConnLimit],
             ],
-            'expires'    => [
+            'expires' => [
                 'title'  => $lang['strexpires'],
                 'field'  => Decorator::field('rolvaliduntil'),
                 'type'   => 'callback',
                 'params' => ['function' => $renderRoleExpires, 'null' => $lang['strnever']],
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -166,7 +166,7 @@ class RolesController extends BaseController
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -184,7 +184,7 @@ class RolesController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'roles.php',
                         'urlvars' => [
@@ -699,7 +699,7 @@ class RolesController extends BaseController
 
         $navlinks = [
             'showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'roles.php',
                         'urlvars' => [
@@ -709,8 +709,8 @@ class RolesController extends BaseController
                 ],
                 'content' => $lang['strshowallroles'],
             ],
-            'alter'   => [
-                'attr'    => [
+            'alter' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'roles.php',
                         'urlvars' => [
@@ -722,8 +722,8 @@ class RolesController extends BaseController
                 ],
                 'content' => $lang['stralter'],
             ],
-            'drop'    => [
-                'attr'    => [
+            'drop' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'roles.php',
                         'urlvars' => [
@@ -791,7 +791,7 @@ class RolesController extends BaseController
         }
 
         $this->printNavLinks(['changepassword' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'roles.php',
                     'urlvars' => [

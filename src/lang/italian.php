@@ -146,13 +146,10 @@ $lang['strgb']    = 'GB';
 $lang['strtb']    = 'TB';
 
 // Error handling - Gestione degli errori
-$lang['strnoframes'] =
-    'Questa applicazione funziona al meglio utilizzando un browser che supporti i frame, ma può essere usata senza frame seguendo il link sottostante.';
-$lang['strnoframeslink'] = 'Usa senza frame';
-$lang['strbadconfig']    =
-    'Il file config.inc.php è obsoleto. È necessario rigenerarlo utilizzando il nuovo file config.inc.php-dist .';
-$lang['strnotloaded'] =
-    'La tua installazione di PHP non supporta PostgreSQL. È necessario ricompilare PHP usando l\'opzione di configurazione --with-pgsql .';
+$lang['strnoframes']                      = 'Questa applicazione funziona al meglio utilizzando un browser che supporti i frame, ma può essere usata senza frame seguendo il link sottostante.';
+$lang['strnoframeslink']                  = 'Usa senza frame';
+$lang['strbadconfig']                     = 'Il file config.inc.php è obsoleto. È necessario rigenerarlo utilizzando il nuovo file config.inc.php-dist .';
+$lang['strnotloaded']                     = 'La tua installazione di PHP non supporta PostgreSQL. È necessario ricompilare PHP usando l\'opzione di configurazione --with-pgsql .';
 $lang['strpostgresqlversionnotsupported'] = 'Versione di PostgreSQL non supportata. È necessario aggiornarlo alla versione %s o successiva.';
 $lang['strbadschema']                     = 'Schema specificato non valido.';
 $lang['strbadencoding']                   = 'Impostazione della codifica del client nel database fallito.';
@@ -169,8 +166,7 @@ $lang['strimporterrorline']               = 'Errore durante l\'import alla linea
 $lang['strimporterrorline-badcolumnnum']  = 'Errore durante l\'import alla linea %s: la linea non possiede il numero corretto di colonne.';
 $lang['strimporterror-uploadedfile']      = 'Errore durante l\'import: non è stato possibile caricare il file sul server';
 $lang['strcannotdumponwindows']           = 'Il dump di nomi complessi di tabelle o schemi sotto Windows non è supportato.';
-$lang['strinvalidserverparam']            =
-    'Tentativo di connessione al server con parametri non validi, è possibile che qualcuno stia cercando di forzare il sistema.';
+$lang['strinvalidserverparam']            = 'Tentativo di connessione al server con parametri non validi, è possibile che qualcuno stia cercando di forzare il sistema.';
 
 // Tables - Tabelle
 $lang['strtable']                 = 'Tabella';

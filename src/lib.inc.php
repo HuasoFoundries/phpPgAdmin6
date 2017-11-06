@@ -66,7 +66,7 @@ $config = [
         'gotar'      => 'Blue/Green',
         'bootstrap'  => 'Bootstrap3',
     ],
-    'settings'  => [
+    'settings' => [
         'determineRouteBeforeAppMiddleware' => true,
         'base_path'                         => BASE_PATH,
         'debug'                             => DEBUGMODE,
@@ -74,17 +74,17 @@ $config = [
         // Configuration file version.  If this is greater than that in config.inc.php, then
         // the app will refuse to run.  This and $conf['version'] should be incremented whenever
         // backwards incompatible changes are made to config.inc.php-dist.
-        'base_version'                      => 60,
+        'base_version' => 60,
         // Application version
-        'appVersion'                        => 'v' . $appVersion,
+        'appVersion' => 'v' . $appVersion,
         // Application name
-        'appName'                           => 'phpPgAdmin6',
+        'appName' => 'phpPgAdmin6',
 
         // PostgreSQL and PHP minimum version
-        'postgresqlMinVer'                  => '9.3',
-        'phpMinVer'                         => '5.6',
-        'displayErrorDetails'               => DEBUGMODE,
-        'addContentLengthHeader'            => false,
+        'postgresqlMinVer'       => '9.3',
+        'phpMinVer'              => '5.6',
+        'displayErrorDetails'    => DEBUGMODE,
+        'addContentLengthHeader' => false,
     ],
 ];
 
@@ -308,7 +308,7 @@ $container['haltHandler'] = function ($c) {
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route
 $app->add(function ($request, $response, $next) {
-    $this['requestobj']  = $request;
+    $this['requestobj'] = $request;
     $this['responseobj'] = $response;
 
     $misc = $this->get('misc');

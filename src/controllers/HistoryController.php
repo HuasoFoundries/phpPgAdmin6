@@ -83,7 +83,7 @@ class HistoryController extends BaseController
 
             //Kint::dump($history);
             $columns = [
-                'query'    => [
+                'query' => [
                     'title' => $lang['strsql'],
                     'field' => Decorator::field('query'),
                 ],
@@ -92,16 +92,16 @@ class HistoryController extends BaseController
                     'field' => Decorator::field('paginate'),
                     'type'  => 'yesno',
                 ],
-                'actions'  => [
+                'actions' => [
                     'title' => $lang['stractions'],
                 ],
             ];
 
             $actions = [
-                'run'    => [
+                'run' => [
                     'content' => $lang['strexecute'],
                     'attr'    => [
-                        'href'   => [
+                        'href' => [
                             'url'     => 'sql.php',
                             'urlvars' => [
                                 'subject'   => 'history',
@@ -134,7 +134,7 @@ class HistoryController extends BaseController
 
         $navlinks = [
             'refresh' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'history.php',
                         'urlvars' => [
@@ -151,7 +151,7 @@ class HistoryController extends BaseController
         if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])
             && count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
             $navlinks['download'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'history.php',
                         'urlvars' => [
@@ -164,7 +164,7 @@ class HistoryController extends BaseController
                 'content' => $lang['strdownload'],
             ];
             $navlinks['clear'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'history.php',
                         'urlvars' => [

@@ -116,14 +116,14 @@ class SequencesController extends BaseController
                 'url'   => "sequences.php?action=properties&amp;{$misc->href}&amp;",
                 'vars'  => ['sequence' => 'seqname'],
             ],
-            'owner'    => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('seqowner'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'  => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('seqcomment'),
             ],
@@ -134,7 +134,7 @@ class SequencesController extends BaseController
                 'keycols' => ['sequence' => 'seqname'],
                 'url'     => 'sequences.php',
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -147,9 +147,9 @@ class SequencesController extends BaseController
                     ],
                 ],
             ],
-            'drop'         => [
-                'content'     => $lang['strdrop'],
-                'attr'        => [
+            'drop' => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
                     'href' => [
                         'url'     => 'sequences.php',
                         'urlvars' => [
@@ -160,7 +160,7 @@ class SequencesController extends BaseController
                 ],
                 'multiaction' => 'confirm_drop',
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $lang['strprivileges'],
                 'attr'    => [
                     'href' => [
@@ -177,7 +177,7 @@ class SequencesController extends BaseController
         echo $this->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'sequences.php',
                     'urlvars' => [
@@ -277,8 +277,8 @@ class SequencesController extends BaseController
             echo '</table>';
 
             $navlinks = [
-                'alter'   => [
-                    'attr'    => [
+                'alter' => [
+                    'attr' => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -292,8 +292,8 @@ class SequencesController extends BaseController
                     ],
                     'content' => $lang['stralter'],
                 ],
-                'setval'  => [
-                    'attr'    => [
+                'setval' => [
+                    'attr' => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -308,7 +308,7 @@ class SequencesController extends BaseController
                     'content' => $lang['strsetval'],
                 ],
                 'nextval' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -323,7 +323,7 @@ class SequencesController extends BaseController
                     'content' => $lang['strnextval'],
                 ],
                 'restart' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -337,8 +337,8 @@ class SequencesController extends BaseController
                     ],
                     'content' => $lang['strrestart'],
                 ],
-                'reset'   => [
-                    'attr'    => [
+                'reset' => [
+                    'attr' => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -353,7 +353,7 @@ class SequencesController extends BaseController
                     'content' => $lang['strreset'],
                 ],
                 'showall' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [

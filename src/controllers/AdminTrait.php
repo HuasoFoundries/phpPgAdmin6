@@ -635,34 +635,34 @@ trait AdminTrait
             };
 
             $columns = [
-                'namespace'                       => [
+                'namespace' => [
                     'title' => $lang['strschema'],
                     'field' => Decorator::field('nspname'),
                     'url'   => SUBFOLDER . "/redirect/schema?{$misc->href}&amp;",
                     'vars'  => ['schema' => 'nspname'],
                 ],
-                'relname'                         => [
+                'relname' => [
                     'title' => $lang['strtable'],
                     'field' => Decorator::field('relname'),
                     'url'   => SUBFOLDER . "/redirect/table?{$misc->href}&amp;",
                     'vars'  => ['table' => 'relname', 'schema' => 'nspname'],
                 ],
-                'autovacuum_enabled'              => [
+                'autovacuum_enabled' => [
                     'title' => $lang['strenabled'],
                     'field' => Decorator::callback($enlight, ['autovacuum_enabled', $defaults['autovacuum']]),
                     'type'  => 'verbatim',
                 ],
-                'autovacuum_vacuum_threshold'     => [
+                'autovacuum_vacuum_threshold' => [
                     'title' => $lang['strvacuumbasethreshold'],
                     'field' => Decorator::callback($enlight, ['autovacuum_vacuum_threshold', $defaults['autovacuum_vacuum_threshold']]),
                     'type'  => 'verbatim',
                 ],
-                'autovacuum_vacuum_scale_factor'  => [
+                'autovacuum_vacuum_scale_factor' => [
                     'title' => $lang['strvacuumscalefactor'],
                     'field' => Decorator::callback($enlight, ['autovacuum_vacuum_scale_factor', $defaults['autovacuum_vacuum_scale_factor']]),
                     'type'  => 'verbatim',
                 ],
-                'autovacuum_analyze_threshold'    => [
+                'autovacuum_analyze_threshold' => [
                     'title' => $lang['stranalybasethreshold'],
                     'field' => Decorator::callback($enlight, ['autovacuum_analyze_threshold', $defaults['autovacuum_analyze_threshold']]),
                     'type'  => 'verbatim',
@@ -672,12 +672,12 @@ trait AdminTrait
                     'field' => Decorator::callback($enlight, ['autovacuum_analyze_scale_factor', $defaults['autovacuum_analyze_scale_factor']]),
                     'type'  => 'verbatim',
                 ],
-                'autovacuum_vacuum_cost_delay'    => [
+                'autovacuum_vacuum_cost_delay' => [
                     'title' => $lang['strvacuumcostdelay'],
                     'field' => Decorator::concat(Decorator::callback($enlight, ['autovacuum_vacuum_cost_delay', $defaults['autovacuum_vacuum_cost_delay']]), 'ms'),
                     'type'  => 'verbatim',
                 ],
-                'autovacuum_vacuum_cost_limit'    => [
+                'autovacuum_vacuum_cost_limit' => [
                     'title' => $lang['strvacuumcostlimit'],
                     'field' => Decorator::callback($enlight, ['autovacuum_vacuum_cost_limit', $defaults['autovacuum_vacuum_cost_limit']]),
                     'type'  => 'verbatim',
@@ -688,7 +688,7 @@ trait AdminTrait
             $columns['actions'] = ['title' => $lang['stractions']];
 
             $actions = [
-                'edit'   => [
+                'edit' => [
                     'content' => $lang['stredit'],
                     'attr'    => [
                         'href' => [

@@ -88,17 +88,17 @@ class AlldbController extends BaseController
         $databases = $data->getDatabases();
 
         $columns = [
-            'database'   => [
+            'database' => [
                 'title' => $lang['strdatabase'],
                 'field' => Decorator::field('datname'),
                 'url'   => SUBFOLDER . "/redirect/database?{$misc->href}&amp;",
                 'vars'  => ['database' => 'datname'],
             ],
-            'owner'      => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('datowner'),
             ],
-            'encoding'   => [
+            'encoding' => [
                 'title' => $lang['strencoding'],
                 'field' => Decorator::field('datencoding'),
             ],
@@ -106,7 +106,7 @@ class AlldbController extends BaseController
                 'title' => $lang['strcollation'],
                 'field' => Decorator::field('datcollate'),
             ],
-            'lc_ctype'   => [
+            'lc_ctype' => [
                 'title' => $lang['strctype'],
                 'field' => Decorator::field('datctype'),
             ],
@@ -114,15 +114,15 @@ class AlldbController extends BaseController
                 'title' => $lang['strtablespace'],
                 'field' => Decorator::field('tablespace'),
             ],
-            'dbsize'     => [
+            'dbsize' => [
                 'title' => $lang['strsize'],
                 'field' => Decorator::field('dbsize'),
                 'type'  => 'prettysize',
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'    => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('datcomment'),
             ],
@@ -134,9 +134,9 @@ class AlldbController extends BaseController
                 'url'     => 'alldb.php',
                 'default' => null,
             ],
-            'drop'         => [
-                'content'     => $lang['strdrop'],
-                'attr'        => [
+            'drop' => [
+                'content' => $lang['strdrop'],
+                'attr'    => [
                     'href' => [
                         'url'     => 'alldb.php',
                         'urlvars' => [
@@ -148,7 +148,7 @@ class AlldbController extends BaseController
                 ],
                 'multiaction' => 'confirm_drop',
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $lang['strprivileges'],
                 'attr'    => [
                     'href' => [
@@ -197,7 +197,7 @@ class AlldbController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'alldb.php',
                         'urlvars' => [

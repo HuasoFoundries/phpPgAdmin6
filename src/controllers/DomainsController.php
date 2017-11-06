@@ -109,13 +109,13 @@ class DomainsController extends BaseController
         $domains = $data->getDomains();
 
         $columns = [
-            'domain'  => [
+            'domain' => [
                 'title' => $lang['strdomain'],
                 'field' => Decorator::field('domname'),
                 'url'   => "domains.php?action=properties&amp;{$misc->href}&amp;",
                 'vars'  => ['domain' => 'domname'],
             ],
-            'type'    => [
+            'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('domtype'),
             ],
@@ -129,7 +129,7 @@ class DomainsController extends BaseController
                 'title' => $lang['strdefault'],
                 'field' => Decorator::field('domdef'),
             ],
-            'owner'   => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('domowner'),
             ],
@@ -155,7 +155,7 @@ class DomainsController extends BaseController
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -177,7 +177,7 @@ class DomainsController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'domains.php',
                         'urlvars' => [
@@ -442,7 +442,7 @@ class DomainsController extends BaseController
                 $domaincons = $data->getDomainConstraints($_REQUEST['domain']);
 
                 $columns = [
-                    'name'       => [
+                    'name' => [
                         'title' => $lang['strname'],
                         'field' => Decorator::field('conname'),
                     ],
@@ -450,7 +450,7 @@ class DomainsController extends BaseController
                         'title' => $lang['strdefinition'],
                         'field' => Decorator::field('consrc'),
                     ],
-                    'actions'    => [
+                    'actions' => [
                         'title' => $lang['stractions'],
                     ],
                 ];
@@ -480,7 +480,7 @@ class DomainsController extends BaseController
 
         $navlinks = [
             'drop' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'domains.php',
                         'urlvars' => [
@@ -497,7 +497,7 @@ class DomainsController extends BaseController
         ];
         if ($data->hasAlterDomains()) {
             $navlinks['addcheck'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'domains.php',
                         'urlvars' => [
@@ -512,7 +512,7 @@ class DomainsController extends BaseController
                 'content' => $lang['straddcheck'],
             ];
             $navlinks['alter'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'domains.php',
                         'urlvars' => [

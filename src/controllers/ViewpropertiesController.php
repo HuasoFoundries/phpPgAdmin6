@@ -110,13 +110,13 @@ class ViewpropertiesController extends BaseController
         }
 
         $columns = [
-            'column'  => [
+            'column' => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
                 'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['view']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
-            'type'    => [
+            'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('+type'),
             ],
@@ -155,7 +155,7 @@ class ViewpropertiesController extends BaseController
 
         $navlinks = [
             'browse' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'display.php',
                         'urlvars' => [
@@ -171,7 +171,7 @@ class ViewpropertiesController extends BaseController
                 'content' => $lang['strbrowse'],
             ],
             'select' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'views.php',
                         'urlvars' => [
@@ -185,8 +185,8 @@ class ViewpropertiesController extends BaseController
                 ],
                 'content' => $lang['strselect'],
             ],
-            'drop'   => [
-                'attr'    => [
+            'drop' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'views.php',
                         'urlvars' => [
@@ -200,8 +200,8 @@ class ViewpropertiesController extends BaseController
                 ],
                 'content' => $lang['strdrop'],
             ],
-            'alter'  => [
-                'attr'    => [
+            'alter' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'viewproperties.php',
                         'urlvars' => [
@@ -231,8 +231,8 @@ class ViewpropertiesController extends BaseController
         $columns = $data->getTableAttributes($_REQUEST['view']);
 
         $attrs = [
-            'text'       => Decorator::field('attname'),
-            'action'     => Decorator::actionurl('colproperties.php',
+            'text'   => Decorator::field('attname'),
+            'action' => Decorator::actionurl('colproperties.php',
                 $reqvars,
                 [
                     'view'   => $_REQUEST['view'],
@@ -254,7 +254,7 @@ class ViewpropertiesController extends BaseController
                     ),
                 ]
             ),
-            'toolTip'    => Decorator::field('comment'),
+            'toolTip' => Decorator::field('comment'),
         ];
 
         return $this->printTree($columns, $attrs, 'viewcolumns');
@@ -416,7 +416,7 @@ class ViewpropertiesController extends BaseController
         }
 
         $this->printNavLinks(['alter' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'viewproperties.php',
                     'urlvars' => [

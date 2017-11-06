@@ -125,10 +125,8 @@ $lang['strfile']            = 'קובץ';
 $lang['strfileimported']    = 'קובץ יובא';
 
 // Error handling
-$lang['strbadconfig'] =
-    'קובץ ה config.inc.php שלך אינו מעודכן. אתה תיצטרך ליצור אחד חדש יותר מהקובץ config.inc.php-dist החדש';
-$lang['strnotloaded'] =
-    'התקנת ה PHP שלך אינה תומכת ב PostgreSQL. אתה תיצטרך להדר אותה מחדש אם הפקודה --with-pqlsql בזמן ההגדרה';
+$lang['strbadconfig']                     = 'קובץ ה config.inc.php שלך אינו מעודכן. אתה תיצטרך ליצור אחד חדש יותר מהקובץ config.inc.php-dist החדש';
+$lang['strnotloaded']                     = 'התקנת ה PHP שלך אינה תומכת ב PostgreSQL. אתה תיצטרך להדר אותה מחדש אם הפקודה --with-pqlsql בזמן ההגדרה';
 $lang['strphpversionnotsupported']        = 'גירסת ה PHP שלך אינה ניתמכת. אנא עדכן אותה לגירסה %s או חדשה יותר.';
 $lang['strpostgresqlversionnotsupported'] = 'גערסת ה PostgrSQL שלך אינה ניתמכת. אנא עדכן אותה לגירסה %s או חדשה יותר.';
 $lang['strbadschema']                     = 'תרשים שגוי צויין';
