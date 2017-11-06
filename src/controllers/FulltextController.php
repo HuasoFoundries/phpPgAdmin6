@@ -147,21 +147,21 @@ class FulltextController extends BaseController
                 'url'   => "fulltext.php?action=viewconfig&amp;{$misc->href}&amp;",
                 'vars'  => ['ftscfg' => 'name'],
             ],
-            'schema'        => [
+            'schema' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('schema'),
             ],
-            'actions'       => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'       => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('comment'),
             ],
         ];
 
         $actions = [
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -191,7 +191,7 @@ class FulltextController extends BaseController
 
         $navlinks = [
             'createconf' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'fulltext.php',
                         'urlvars' => [
@@ -277,7 +277,7 @@ class FulltextController extends BaseController
                 $reqvars,
                 $urlvars
             ),
-            'branch'  => Decorator::ifempty(Decorator::field('branch'),
+            'branch' => Decorator::ifempty(Decorator::field('branch'),
                 '',
                 url('fulltext.php',
                     $reqvars,
@@ -611,11 +611,11 @@ class FulltextController extends BaseController
         $parsers = $data->getFtsParsers(false);
 
         $columns = [
-            'schema'  => [
+            'schema' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('schema'),
             ],
-            'name'    => [
+            'name' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('name'),
             ],
@@ -650,11 +650,11 @@ class FulltextController extends BaseController
         $dicts = $data->getFtsDictionaries(false);
 
         $columns = [
-            'schema'  => [
+            'schema' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('schema'),
             ],
-            'name'    => [
+            'name' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('name'),
             ],
@@ -668,7 +668,7 @@ class FulltextController extends BaseController
         ];
 
         $actions = [
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -698,7 +698,7 @@ class FulltextController extends BaseController
 
         $navlinks = [
             'createdict' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'fulltext.php',
                         'urlvars' => [
@@ -736,7 +736,7 @@ class FulltextController extends BaseController
         $map = $data->getFtsConfigurationMap($ftscfg);
 
         $columns = [
-            'name'         => [
+            'name' => [
                 'title' => $lang['strftsmapping'],
                 'field' => Decorator::field('name'),
             ],
@@ -744,17 +744,17 @@ class FulltextController extends BaseController
                 'title' => $lang['strftsdicts'],
                 'field' => Decorator::field('dictionaries'),
             ],
-            'actions'      => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'      => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('description'),
             ],
         ];
 
         $actions = [
-            'drop'         => [
+            'drop' => [
                 'multiaction' => 'dropmapping',
                 'content'     => $lang['strdrop'],
                 'attr'        => [
@@ -768,7 +768,7 @@ class FulltextController extends BaseController
                     ],
                 ],
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -794,7 +794,7 @@ class FulltextController extends BaseController
 
         $navlinks = [
             'addmapping' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'fulltext.php',
                         'urlvars' => [

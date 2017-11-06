@@ -109,13 +109,13 @@ class ViewsController extends BaseController
         $views = $data->getViews();
 
         $columns = [
-            'view'    => [
+            'view' => [
                 'title' => $lang['strview'],
                 'field' => Decorator::field('relname'),
                 'url'   => SUBFOLDER . "/redirect/view?{$misc->href}&amp;",
                 'vars'  => ['view' => 'relname'],
             ],
-            'owner'   => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('relowner'),
             ],
@@ -133,7 +133,7 @@ class ViewsController extends BaseController
                 'keycols' => ['view' => 'relname'],
                 'url'     => 'views.php',
             ],
-            'browse'       => [
+            'browse' => [
                 'content' => $lang['strbrowse'],
                 'attr'    => [
                     'href' => [
@@ -147,7 +147,7 @@ class ViewsController extends BaseController
                     ],
                 ],
             ],
-            'select'       => [
+            'select' => [
                 'content' => $lang['strselect'],
                 'attr'    => [
                     'href' => [
@@ -167,7 +167,7 @@ class ViewsController extends BaseController
             //                'vars'    => array('view' => 'relname'),
             //            ),
 
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -179,7 +179,7 @@ class ViewsController extends BaseController
                     ],
                 ],
             ],
-            'drop'         => [
+            'drop' => [
                 'multiaction' => 'confirm_drop',
                 'content'     => $lang['strdrop'],
                 'attr'        => [
@@ -197,8 +197,8 @@ class ViewsController extends BaseController
         echo $this->printTable($views, $columns, $actions, $this->table_place, $lang['strnoviews']);
 
         $navlinks = [
-            'create'    => [
-                'attr'    => [
+            'create' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'views.php',
                         'urlvars' => [
@@ -212,7 +212,7 @@ class ViewsController extends BaseController
                 'content' => $lang['strcreateview'],
             ],
             'createwiz' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'views.php',
                         'urlvars' => [

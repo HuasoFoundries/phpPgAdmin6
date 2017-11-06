@@ -173,8 +173,7 @@ $lang['strgb']       = 'GB';
 $lang['strtb']       = 'TB';
 
 // Error handling
-$lang['strnoframes'] =
-    'Ez alkalmazás legjobban kereteket támogató böngészővel működik, de használható keretek nélkül is az alábbi hivatkozásra kattintva.';
+$lang['strnoframes']                      = 'Ez alkalmazás legjobban kereteket támogató böngészővel működik, de használható keretek nélkül is az alábbi hivatkozásra kattintva.';
 $lang['strnoframeslink']                  = 'Keretek nélküli használat';
 $lang['strbadconfig']                     = 'A config.inc.php elavult. Újra kell teremteni az új config.inc.php-dist fájlból.';
 $lang['strnotloaded']                     = 'Az ön PHP rendszere nem támogatja a PostgreSQL-t.';
@@ -194,14 +193,11 @@ $lang['strimporterrorline']               = 'Behozatali hiba a %s. sorban.';
 $lang['strimporterrorline-badcolumnnum']  = 'Behozatali hiba a(z) %s. számú sorban:  A sor nem tartalmazza a megfelelő számú sort.';
 $lang['strimporterror-uploadedfile']      = 'Behozatali hiba: A fájlt nem sikerült feltülteni a kiszolgálóra.';
 $lang['strcannotdumponwindows']           = 'Összetett tábla ömlesztése és séma nevek Windows-on nem támogatottak.';
-$lang['strinvalidserverparam']            =
-    'Érvénytelen kiszolgáló paraméterrel próbáltak csatlakozni. Lehet, hogy valaki betörni próbál a rendszerbe.';
-$lang['strnoserversupplied'] = 'Nincs megadva kiszolgáló!';
-$lang['strbadpgdumppath']    =
-    'Kiviteli hiba: Elbukott a pg_dump végrehajtása (conf/config.inc.php fájlban megadott ösvény: %s). Kérem, javítsa ki ezt a beállításban, és ismételjen.';
-$lang['strbadpgdumpallpath'] =
-    'Kiviteli hiba: Elbukott a pg_dumpall végrehajtása (conf/config.inc.php fájlban megadott ösvény: %s). Kérem, javítsa ki ezt a beállításban, és ismételjen.';
-$lang['strconnectionfail'] = 'Nem csatlakozhatok a szolgálóhoz.';
+$lang['strinvalidserverparam']            = 'Érvénytelen kiszolgáló paraméterrel próbáltak csatlakozni. Lehet, hogy valaki betörni próbál a rendszerbe.';
+$lang['strnoserversupplied']              = 'Nincs megadva kiszolgáló!';
+$lang['strbadpgdumppath']                 = 'Kiviteli hiba: Elbukott a pg_dump végrehajtása (conf/config.inc.php fájlban megadott ösvény: %s). Kérem, javítsa ki ezt a beállításban, és ismételjen.';
+$lang['strbadpgdumpallpath']              = 'Kiviteli hiba: Elbukott a pg_dumpall végrehajtása (conf/config.inc.php fájlban megadott ösvény: %s). Kérem, javítsa ki ezt a beállításban, és ismételjen.';
+$lang['strconnectionfail']                = 'Nem csatlakozhatok a szolgálóhoz.';
 
 // Tables
 $lang['strtable']                     = 'Tábla';

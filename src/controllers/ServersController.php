@@ -87,17 +87,17 @@ class ServersController extends BaseController
         $servers = $misc->getServers(true, $group);
 
         $columns = [
-            'server'   => [
+            'server' => [
                 'title' => $lang['strserver'],
                 'field' => Decorator::field('desc'),
                 'url'   => SUBFOLDER . '/redirect/server?',
                 'vars'  => ['server' => 'id'],
             ],
-            'host'     => [
+            'host' => [
                 'title' => $lang['strhost'],
                 'field' => Decorator::field('host'),
             ],
-            'port'     => [
+            'port' => [
                 'title' => $lang['strport'],
                 'field' => Decorator::field('port'),
             ],
@@ -105,7 +105,7 @@ class ServersController extends BaseController
                 'title' => $lang['strusername'],
                 'field' => Decorator::field('username'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -167,14 +167,14 @@ class ServersController extends BaseController
         //$this->prtrace($reqvars);
 
         $attrs = [
-            'text'    => Decorator::field('desc'),
+            'text' => Decorator::field('desc'),
             // Show different icons for logged in/out
             'icon'    => Decorator::field('icon'),
             'toolTip' => Decorator::field('id'),
             'action'  => Decorator::field('action'),
             // Only create a branch url if the user has
             // logged into the server.
-            'branch'  => Decorator::field('branch'),
+            'branch' => Decorator::field('branch'),
         ];
         /*$this->prtrace([
         'nodes'   => $nodes,

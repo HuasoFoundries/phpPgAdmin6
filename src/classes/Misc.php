@@ -1140,7 +1140,7 @@ class Misc
         switch ($section) {
             case 'root':
                 $tabs = [
-                    'intro'   => [
+                    'intro' => [
                         'title' => $lang['strintroduction'],
                         'url'   => 'intro.php',
                         'icon'  => 'Introduction',
@@ -1181,7 +1181,7 @@ class Misc
                     ]);
                 } else {
                     $tabs = array_merge($tabs, [
-                        'users'  => [
+                        'users' => [
                             'title'   => $lang['strusers'],
                             'url'     => 'users.php',
                             'urlvars' => ['subject' => 'server'],
@@ -1201,7 +1201,7 @@ class Misc
                 }
 
                 $tabs = array_merge($tabs, [
-                    'account'     => [
+                    'account' => [
                         'title'   => $lang['straccount'],
                         'url'     => ($data && $data->hasRoles()) ? 'roles.php' : 'users.php',
                         'urlvars' => ['subject' => 'server', 'action' => 'account'],
@@ -1217,7 +1217,7 @@ class Misc
                         'help'    => 'pg.tablespace',
                         'icon'    => 'Tablespaces',
                     ],
-                    'export'      => [
+                    'export' => [
                         'title'   => $lang['strexport'],
                         'url'     => 'alldb.php',
                         'urlvars' => ['subject' => 'server', 'action' => 'export'],
@@ -1228,14 +1228,14 @@ class Misc
                 break;
             case 'database':
                 $tabs = [
-                    'schemas'    => [
+                    'schemas' => [
                         'title'   => $lang['strschemas'],
                         'url'     => 'schemas.php',
                         'urlvars' => ['subject' => 'database'],
                         'help'    => 'pg.schema',
                         'icon'    => 'Schemas',
                     ],
-                    'sql'        => [
+                    'sql' => [
                         'title'   => $lang['strsql'],
                         'url'     => 'database.php',
                         'urlvars' => ['subject' => 'database', 'action' => 'sql', 'new' => 1],
@@ -1243,14 +1243,14 @@ class Misc
                         'tree'    => false,
                         'icon'    => 'SqlEditor',
                     ],
-                    'find'       => [
+                    'find' => [
                         'title'   => $lang['strfind'],
                         'url'     => 'database.php',
                         'urlvars' => ['subject' => 'database', 'action' => 'find'],
                         'tree'    => false,
                         'icon'    => 'Search',
                     ],
-                    'variables'  => [
+                    'variables' => [
                         'title'   => $lang['strvariables'],
                         'url'     => 'database.php',
                         'urlvars' => ['subject' => 'database', 'action' => 'variables'],
@@ -1258,7 +1258,7 @@ class Misc
                         'tree'    => false,
                         'icon'    => 'Variables',
                     ],
-                    'processes'  => [
+                    'processes' => [
                         'title'   => $lang['strprocesses'],
                         'url'     => 'database.php',
                         'urlvars' => ['subject' => 'database', 'action' => 'processes'],
@@ -1266,7 +1266,7 @@ class Misc
                         'tree'    => false,
                         'icon'    => 'Processes',
                     ],
-                    'locks'      => [
+                    'locks' => [
                         'title'   => $lang['strlocks'],
                         'url'     => 'database.php',
                         'urlvars' => ['subject' => 'database', 'action' => 'locks'],
@@ -1274,7 +1274,7 @@ class Misc
                         'tree'    => false,
                         'icon'    => 'Key',
                     ],
-                    'admin'      => [
+                    'admin' => [
                         'title'   => $lang['stradmin'],
                         'url'     => 'database.php',
                         'urlvars' => ['subject' => 'database', 'action' => 'admin'],
@@ -1290,7 +1290,7 @@ class Misc
                         'tree'    => false,
                         'icon'    => 'Privileges',
                     ],
-                    'languages'  => [
+                    'languages' => [
                         'title'   => $lang['strlanguages'],
                         'url'     => 'languages.php',
                         'urlvars' => ['subject' => 'database'],
@@ -1298,7 +1298,7 @@ class Misc
                         'help'    => 'pg.language',
                         'icon'    => 'Languages',
                     ],
-                    'casts'      => [
+                    'casts' => [
                         'title'   => $lang['strcasts'],
                         'url'     => 'casts.php',
                         'urlvars' => ['subject' => 'database'],
@@ -1306,7 +1306,7 @@ class Misc
                         'help'    => 'pg.cast',
                         'icon'    => 'Casts',
                     ],
-                    'export'     => [
+                    'export' => [
                         'title'   => $lang['strexport'],
                         'url'     => 'database.php',
                         'urlvars' => ['subject' => 'database', 'action' => 'export'],
@@ -1319,42 +1319,42 @@ class Misc
 
             case 'schema':
                 $tabs = [
-                    'tables'      => [
+                    'tables' => [
                         'title'   => $lang['strtables'],
                         'url'     => 'tables.php',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.table',
                         'icon'    => 'Tables',
                     ],
-                    'views'       => [
+                    'views' => [
                         'title'   => $lang['strviews'],
                         'url'     => 'views.php',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.view',
                         'icon'    => 'Views',
                     ],
-                    'matviews'    => [
+                    'matviews' => [
                         'title'   => 'M ' . $lang['strviews'],
                         'url'     => 'materializedviews.php',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.matview',
                         'icon'    => 'MViews',
                     ],
-                    'sequences'   => [
+                    'sequences' => [
                         'title'   => $lang['strsequences'],
                         'url'     => 'sequences.php',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.sequence',
                         'icon'    => 'Sequences',
                     ],
-                    'functions'   => [
+                    'functions' => [
                         'title'   => $lang['strfunctions'],
                         'url'     => 'functions.php',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.function',
                         'icon'    => 'Functions',
                     ],
-                    'fulltext'    => [
+                    'fulltext' => [
                         'title'   => $lang['strfulltext'],
                         'url'     => 'fulltext.php',
                         'urlvars' => ['subject' => 'schema'],
@@ -1362,14 +1362,14 @@ class Misc
                         'tree'    => true,
                         'icon'    => 'Fts',
                     ],
-                    'domains'     => [
+                    'domains' => [
                         'title'   => $lang['strdomains'],
                         'url'     => 'domains.php',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.domain',
                         'icon'    => 'Domains',
                     ],
-                    'aggregates'  => [
+                    'aggregates' => [
                         'title'   => $lang['straggregates'],
                         'url'     => 'aggregates.php',
                         'urlvars' => ['subject' => 'schema'],
@@ -1377,7 +1377,7 @@ class Misc
                         'help'    => 'pg.aggregate',
                         'icon'    => 'Aggregates',
                     ],
-                    'types'       => [
+                    'types' => [
                         'title'   => $lang['strtypes'],
                         'url'     => 'types.php',
                         'urlvars' => ['subject' => 'schema'],
@@ -1385,7 +1385,7 @@ class Misc
                         'help'    => 'pg.type',
                         'icon'    => 'Types',
                     ],
-                    'operators'   => [
+                    'operators' => [
                         'title'   => $lang['stroperators'],
                         'url'     => 'operators.php',
                         'urlvars' => ['subject' => 'schema'],
@@ -1393,7 +1393,7 @@ class Misc
                         'help'    => 'pg.operator',
                         'icon'    => 'Operators',
                     ],
-                    'opclasses'   => [
+                    'opclasses' => [
                         'title'   => $lang['stropclasses'],
                         'url'     => 'opclasses.php',
                         'urlvars' => ['subject' => 'schema'],
@@ -1409,7 +1409,7 @@ class Misc
                         'help'    => 'pg.conversion',
                         'icon'    => 'Conversions',
                     ],
-                    'privileges'  => [
+                    'privileges' => [
                         'title'   => $lang['strprivileges'],
                         'url'     => 'privileges.php',
                         'urlvars' => ['subject' => 'schema'],
@@ -1417,7 +1417,7 @@ class Misc
                         'tree'    => false,
                         'icon'    => 'Privileges',
                     ],
-                    'export'      => [
+                    'export' => [
                         'title'   => $lang['strexport'],
                         'url'     => 'schemas.php',
                         'urlvars' => ['subject' => 'schema', 'action' => 'export'],
@@ -1434,14 +1434,14 @@ class Misc
 
             case 'table':
                 $tabs = [
-                    'columns'     => [
+                    'columns' => [
                         'title'   => $lang['strcolumns'],
                         'url'     => 'tblproperties.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
                         'icon'    => 'Columns',
                         'branch'  => true,
                     ],
-                    'browse'      => [
+                    'browse' => [
                         'title'   => $lang['strbrowse'],
                         'icon'    => 'Columns',
                         'url'     => 'display.php',
@@ -1449,24 +1449,24 @@ class Misc
                         'return'  => 'table',
                         'branch'  => true,
                     ],
-                    'select'      => [
+                    'select' => [
                         'title'   => $lang['strselect'],
                         'icon'    => 'Search',
                         'url'     => 'tables.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'confselectrows'],
                         'help'    => 'pg.sql.select',
                     ],
-                    'insert'      => [
+                    'insert' => [
                         'title'   => $lang['strinsert'],
                         'url'     => 'tables.php',
                         'urlvars' => [
                             'action' => 'confinsertrow',
                             'table'  => Decorator::field('table'),
                         ],
-                        'help'    => 'pg.sql.insert',
-                        'icon'    => 'Operator',
+                        'help' => 'pg.sql.insert',
+                        'icon' => 'Operator',
                     ],
-                    'indexes'     => [
+                    'indexes' => [
                         'title'   => $lang['strindexes'],
                         'url'     => 'indexes.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
@@ -1482,7 +1482,7 @@ class Misc
                         'icon'    => 'Constraints',
                         'branch'  => true,
                     ],
-                    'triggers'    => [
+                    'triggers' => [
                         'title'   => $lang['strtriggers'],
                         'url'     => 'triggers.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
@@ -1490,7 +1490,7 @@ class Misc
                         'icon'    => 'Triggers',
                         'branch'  => true,
                     ],
-                    'rules'       => [
+                    'rules' => [
                         'title'   => $lang['strrules'],
                         'url'     => 'rules.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
@@ -1498,33 +1498,33 @@ class Misc
                         'icon'    => 'Rules',
                         'branch'  => true,
                     ],
-                    'admin'       => [
+                    'admin' => [
                         'title'   => $lang['stradmin'],
                         'url'     => 'tables.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'admin'],
                         'icon'    => 'Admin',
                     ],
-                    'info'        => [
+                    'info' => [
                         'title'   => $lang['strinfo'],
                         'url'     => 'info.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
                         'icon'    => 'Statistics',
                     ],
-                    'privileges'  => [
+                    'privileges' => [
                         'title'   => $lang['strprivileges'],
                         'url'     => 'privileges.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
                         'help'    => 'pg.privilege',
                         'icon'    => 'Privileges',
                     ],
-                    'import'      => [
+                    'import' => [
                         'title'   => $lang['strimport'],
                         'url'     => 'tblproperties.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'import'],
                         'icon'    => 'Import',
                         'hide'    => false,
                     ],
-                    'export'      => [
+                    'export' => [
                         'title'   => $lang['strexport'],
                         'url'     => 'tblproperties.php',
                         'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'export'],
@@ -1536,14 +1536,14 @@ class Misc
 
             case 'view':
                 $tabs = [
-                    'columns'    => [
+                    'columns' => [
                         'title'   => $lang['strcolumns'],
                         'url'     => 'viewproperties.php',
                         'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
                         'icon'    => 'Columns',
                         'branch'  => true,
                     ],
-                    'browse'     => [
+                    'browse' => [
                         'title'   => $lang['strbrowse'],
                         'icon'    => 'Columns',
                         'url'     => 'display.php',
@@ -1553,9 +1553,9 @@ class Misc
                             'subject' => 'view',
                             'view'    => Decorator::field('view'),
                         ],
-                        'branch'  => true,
+                        'branch' => true,
                     ],
-                    'select'     => [
+                    'select' => [
                         'title'   => $lang['strselect'],
                         'icon'    => 'Search',
                         'url'     => 'views.php',
@@ -1568,7 +1568,7 @@ class Misc
                         'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'definition'],
                         'icon'    => 'Definition',
                     ],
-                    'rules'      => [
+                    'rules' => [
                         'title'   => $lang['strrules'],
                         'url'     => 'rules.php',
                         'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
@@ -1583,7 +1583,7 @@ class Misc
                         'help'    => 'pg.privilege',
                         'icon'    => 'Privileges',
                     ],
-                    'export'     => [
+                    'export' => [
                         'title'   => $lang['strexport'],
                         'url'     => 'viewproperties.php',
                         'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'export'],
@@ -1595,14 +1595,14 @@ class Misc
 
             case 'matview':
                 $tabs = [
-                    'columns'    => [
+                    'columns' => [
                         'title'   => $lang['strcolumns'],
                         'url'     => 'materializedviewproperties.php',
                         'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
                         'icon'    => 'Columns',
                         'branch'  => true,
                     ],
-                    'browse'     => [
+                    'browse' => [
                         'title'   => $lang['strbrowse'],
                         'icon'    => 'Columns',
                         'url'     => 'display.php',
@@ -1612,9 +1612,9 @@ class Misc
                             'subject' => 'matview',
                             'matview' => Decorator::field('matview'),
                         ],
-                        'branch'  => true,
+                        'branch' => true,
                     ],
-                    'select'     => [
+                    'select' => [
                         'title'   => $lang['strselect'],
                         'icon'    => 'Search',
                         'url'     => 'materializedviews.php',
@@ -1627,7 +1627,7 @@ class Misc
                         'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'definition'],
                         'icon'    => 'Definition',
                     ],
-                    'indexes'    => [
+                    'indexes' => [
                         'title'   => $lang['strindexes'],
                         'url'     => 'indexes.php',
                         'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
@@ -1644,7 +1644,7 @@ class Misc
                     'branch' => true,
                      */
 
-                    'rules'      => [
+                    'rules' => [
                         'title'   => $lang['strrules'],
                         'url'     => 'rules.php',
                         'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
@@ -1659,7 +1659,7 @@ class Misc
                         'help'    => 'pg.privilege',
                         'icon'    => 'Privileges',
                     ],
-                    'export'     => [
+                    'export' => [
                         'title'   => $lang['strexport'],
                         'url'     => 'materializedviewproperties.php',
                         'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'export'],
@@ -1680,7 +1680,7 @@ class Misc
                             'function_oid' => Decorator::field('function_oid'),
                             'action'       => 'properties',
                         ],
-                        'icon'    => 'Definition',
+                        'icon' => 'Definition',
                     ],
                     'privileges' => [
                         'title'   => $lang['strprivileges'],
@@ -1690,7 +1690,7 @@ class Misc
                             'function'     => Decorator::field('function'),
                             'function_oid' => Decorator::field('function_oid'),
                         ],
-                        'icon'    => 'Privileges',
+                        'icon' => 'Privileges',
                     ],
                 ];
                 break;
@@ -1706,7 +1706,7 @@ class Misc
                             'aggrtype' => Decorator::field('aggrtype'),
                             'action'   => 'properties',
                         ],
-                        'icon'    => 'Definition',
+                        'icon' => 'Definition',
                     ],
                 ];
                 break;
@@ -1721,14 +1721,14 @@ class Misc
                             'rolename' => Decorator::field('rolename'),
                             'action'   => 'properties',
                         ],
-                        'icon'    => 'Definition',
+                        'icon' => 'Definition',
                     ],
                 ];
                 break;
 
             case 'popup':
                 $tabs = [
-                    'sql'  => [
+                    'sql' => [
                         'title'   => $lang['strsql'],
                         'url'     => '/src/views/sqledit.php',
                         'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
@@ -1754,7 +1754,7 @@ class Misc
                             'table'   => Decorator::field('table'),
                             'column'  => Decorator::field('column'),
                         ],
-                        'icon'    => 'Column',
+                        'icon' => 'Column',
                     ],
                     'privileges' => [
                         'title'   => $lang['strprivileges'],
@@ -1764,8 +1764,8 @@ class Misc
                             'table'   => Decorator::field('table'),
                             'column'  => Decorator::field('column'),
                         ],
-                        'help'    => 'pg.privilege',
-                        'icon'    => 'Privileges',
+                        'help' => 'pg.privilege',
+                        'icon' => 'Privileges',
                     ],
                 ];
                 break;
@@ -1781,7 +1781,7 @@ class Misc
                         'tree'    => true,
                         'icon'    => 'FtsCfg',
                     ],
-                    'ftsdicts'   => [
+                    'ftsdicts' => [
                         'title'   => $lang['strftstabdicts'],
                         'url'     => 'fulltext.php',
                         'urlvars' => ['subject' => 'schema', 'action' => 'viewdicts'],
