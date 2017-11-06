@@ -92,13 +92,13 @@ class TypesController extends BaseController
         $types = $data->getTypes();
 
         $columns = [
-            'type'    => [
+            'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('typname'),
                 'url'   => "types.php?action=properties&amp;{$misc->href}&amp;",
                 'vars'  => ['type' => 'basename'],
             ],
-            'owner'   => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('typowner'),
             ],
@@ -107,7 +107,7 @@ class TypesController extends BaseController
                 'field'  => Decorator::field('typtype'),
                 'type'   => 'verbatim',
                 'params' => [
-                    'map'   => [
+                    'map' => [
                         'b' => $lang['strbasetype'],
                         'c' => $lang['strcompositetype'],
                         'd' => $lang['strdomain'],
@@ -148,8 +148,8 @@ class TypesController extends BaseController
         echo $this->printTable($types, $columns, $actions, 'types-types', $lang['strnotypes']);
 
         $navlinks = [
-            'create'     => [
-                'attr'    => [
+            'create' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'types.php',
                         'urlvars' => [
@@ -163,7 +163,7 @@ class TypesController extends BaseController
                 'content' => $lang['strcreatetype'],
             ],
             'createcomp' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'types.php',
                         'urlvars' => [
@@ -177,7 +177,7 @@ class TypesController extends BaseController
                 'content' => $lang['strcreatecomptype'],
             ],
             'createenum' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'types.php',
                         'urlvars' => [
@@ -256,11 +256,11 @@ class TypesController extends BaseController
                     $attrs = $data->getTableAttributes($_REQUEST['type']);
 
                     $columns = [
-                        'field'   => [
+                        'field' => [
                             'title' => $lang['strfield'],
                             'field' => Decorator::field('attname'),
                         ],
-                        'type'    => [
+                        'type' => [
                             'title' => $lang['strtype'],
                             'field' => Decorator::field('+type'),
                         ],
@@ -305,7 +305,7 @@ class TypesController extends BaseController
             }
 
             $this->printNavLinks(['showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'types.php',
                         'urlvars' => [

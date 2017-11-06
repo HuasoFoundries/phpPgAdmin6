@@ -85,7 +85,7 @@ class TablespacesController extends BaseController
                 'title' => $lang['strname'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
             ],
-            'owner'    => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spcowner'),
             ],
@@ -93,7 +93,7 @@ class TablespacesController extends BaseController
                 'title' => $lang['strlocation'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spclocation'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -106,7 +106,7 @@ class TablespacesController extends BaseController
         }
 
         $actions = [
-            'alter'      => [
+            'alter' => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -118,7 +118,7 @@ class TablespacesController extends BaseController
                     ],
                 ],
             ],
-            'drop'       => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -147,7 +147,7 @@ class TablespacesController extends BaseController
         echo $this->printTable($tablespaces, $columns, $actions, 'tablespaces-tablespaces', $lang['strnotablespaces']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'tablespaces.php',
                     'urlvars' => [

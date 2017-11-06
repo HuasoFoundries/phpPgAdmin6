@@ -516,8 +516,7 @@ class Postgres extends ADOdbBase
     public function getDatabaseComment($database)
     {
         $this->clean($database);
-        $sql =
-            "SELECT description FROM pg_catalog.pg_database JOIN pg_catalog.pg_shdescription ON (oid=objoid AND classoid='pg_database'::regclass) WHERE pg_database.datname = '{$database}' ";
+        $sql = "SELECT description FROM pg_catalog.pg_database JOIN pg_catalog.pg_shdescription ON (oid=objoid AND classoid='pg_database'::regclass) WHERE pg_database.datname = '{$database}' ";
 
         return $this->selectSet($sql);
     }
@@ -7670,8 +7669,7 @@ class Postgres extends ADOdbBase
             $rolename = $newrolename;
         }
 
-        $status =
-        $this->setRole($rolename, $password, $superuser, $createdb, $createrole, $inherits, $login, $connlimit, $expiry, $memberof, $members,
+        $status = $this->setRole($rolename, $password, $superuser, $createdb, $createrole, $inherits, $login, $connlimit, $expiry, $memberof, $members,
             $adminmembers, $memberofold, $membersold, $adminmembersold);
         if ($status != 0) {
             $this->rollbackTransaction();

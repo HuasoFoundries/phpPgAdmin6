@@ -109,11 +109,11 @@ class IndexesController extends BaseController
         $indexes = $data->getIndexes($_REQUEST[$_REQUEST['subject']]);
 
         $columns = [
-            'index'       => [
+            'index' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('indname'),
             ],
-            'definition'  => [
+            'definition' => [
                 'title' => $lang['strdefinition'],
                 'field' => Decorator::field('inddef'),
             ],
@@ -123,15 +123,15 @@ class IndexesController extends BaseController
                 'type'   => 'verbatim',
                 'params' => ['align' => 'center'],
             ],
-            'clustered'   => [
+            'clustered' => [
                 'title' => $lang['strclustered'],
                 'field' => Decorator::field('indisclustered'),
                 'type'  => 'yesno',
             ],
-            'actions'     => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'     => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('idxcomment'),
             ],
@@ -164,7 +164,7 @@ class IndexesController extends BaseController
                     ],
                 ],
             ],
-            'drop'    => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -183,7 +183,7 @@ class IndexesController extends BaseController
 
         $this->printNavLinks([
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'indexes.php',
                         'urlvars' => [
