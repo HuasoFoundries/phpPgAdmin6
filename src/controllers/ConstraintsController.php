@@ -138,10 +138,10 @@ class ConstraintsController extends BaseController
                 'field' => Decorator::field('+definition'),
                 'type'  => 'pre',
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'    => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('constcomment'),
             ],
@@ -168,7 +168,7 @@ class ConstraintsController extends BaseController
 
         $navlinks = [
             'addcheck' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'constraints.php',
                         'urlvars' => [
@@ -182,8 +182,8 @@ class ConstraintsController extends BaseController
                 ],
                 'content' => $lang['straddcheck'],
             ],
-            'adduniq'  => [
-                'attr'    => [
+            'adduniq' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'constraints.php',
                         'urlvars' => [
@@ -197,8 +197,8 @@ class ConstraintsController extends BaseController
                 ],
                 'content' => $lang['stradduniq'],
             ],
-            'addpk'    => [
-                'attr'    => [
+            'addpk' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'constraints.php',
                         'urlvars' => [
@@ -212,8 +212,8 @@ class ConstraintsController extends BaseController
                 ],
                 'content' => $lang['straddpk'],
             ],
-            'addfk'    => [
-                'attr'    => [
+            'addfk' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'constraints.php',
                         'urlvars' => [

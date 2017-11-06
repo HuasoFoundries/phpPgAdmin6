@@ -32,18 +32,18 @@
             'LATIN4'     => 'ISO-8859-4',
             // The following encoding map is a known error in PostgreSQL < 7.2
             // See the constructor for Postgres72.
-            'LATIN5'     => 'ISO-8859-5',
-            'LATIN6'     => 'ISO-8859-10',
-            'LATIN7'     => 'ISO-8859-13',
-            'LATIN8'     => 'ISO-8859-14',
-            'LATIN9'     => 'ISO-8859-15',
-            'LATIN10'    => 'ISO-8859-16',
-            'SQL_ASCII'  => 'US-ASCII',
-            'TCVN'       => 'CP1258',
-            'UNICODE'    => 'UTF-8',
-            'WIN'        => 'CP1251',
-            'WIN874'     => 'CP874',
-            'WIN1256'    => 'CP1256',
+            'LATIN5'    => 'ISO-8859-5',
+            'LATIN6'    => 'ISO-8859-10',
+            'LATIN7'    => 'ISO-8859-13',
+            'LATIN8'    => 'ISO-8859-14',
+            'LATIN9'    => 'ISO-8859-15',
+            'LATIN10'   => 'ISO-8859-16',
+            'SQL_ASCII' => 'US-ASCII',
+            'TCVN'      => 'CP1258',
+            'UNICODE'   => 'UTF-8',
+            'WIN'       => 'CP1251',
+            'WIN874'    => 'CP874',
+            'WIN1256'   => 'CP1256',
         ];
 
         // Database functions

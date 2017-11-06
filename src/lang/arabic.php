@@ -125,10 +125,8 @@ $lang['strfile']            = 'ملف';
 $lang['strfileimported']    = 'تم استيراد الملف.';
 
 // Error handling
-$lang['strbadconfig'] =
-    'إن الملف config.inc.php الذي لديك اصبح قديما. ستحتاج الى إعادة توليده من الملف الجديد config.inc.php-dist.';
-$lang['strnotloaded'] =
-    'إن اعداد  PHP الموجود على هذا الخادم لاتدعم PostgreSQL. تحتاج الى اعادة تثبيت PHP بإستخدام الخيار  --with-pgsql configure option.';
+$lang['strbadconfig']                     = 'إن الملف config.inc.php الذي لديك اصبح قديما. ستحتاج الى إعادة توليده من الملف الجديد config.inc.php-dist.';
+$lang['strnotloaded']                     = 'إن اعداد  PHP الموجود على هذا الخادم لاتدعم PostgreSQL. تحتاج الى اعادة تثبيت PHP بإستخدام الخيار  --with-pgsql configure option.';
 $lang['strpostgresqlversionnotsupported'] = 'هذا الاصدار من PostgreSQL غير مدعوم. الرجاء الترقية الى الإصدار %s او أعلى.';
 $lang['strbadschema']                     = 'Invalid schema specified.';
 $lang['strbadencoding']                   = 'لقد فشل ضبط شيفرة العميل client encoding في قاعدة البيانات.';

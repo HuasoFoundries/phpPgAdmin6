@@ -116,7 +116,7 @@ class OperatorsController extends BaseController
                 'url'   => "operators.php?action=properties&amp;{$misc->href}&amp;",
                 'vars'  => ['operator' => 'oprname', 'operator_oid' => 'oid'],
             ],
-            'leftarg'  => [
+            'leftarg' => [
                 'title' => $lang['strleftarg'],
                 'field' => Decorator::field('oprleftname'),
             ],
@@ -124,14 +124,14 @@ class OperatorsController extends BaseController
                 'title' => $lang['strrightarg'],
                 'field' => Decorator::field('oprrightname'),
             ],
-            'returns'  => [
+            'returns' => [
                 'title' => $lang['strreturns'],
                 'field' => Decorator::field('resultname'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'  => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('oprcomment'),
             ],
@@ -217,7 +217,7 @@ class OperatorsController extends BaseController
 
             $this->printNavLinks([
                 'showall' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
                             'url'     => 'operators.php',
                             'urlvars' => [

@@ -215,8 +215,8 @@ class PrivilegesController extends BaseController
         }
 
         $navlinks = [
-            'grant'  => [
-                'attr'    => [
+            'grant' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'privileges.php',
                         'urlvars' => array_merge($urlvars, ['mode' => 'grant']),
@@ -225,7 +225,7 @@ class PrivilegesController extends BaseController
                 'content' => $lang['strgrant'],
             ],
             'revoke' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'privileges.php',
                         'urlvars' => array_merge($urlvars, ['mode' => 'revoke']),
@@ -237,7 +237,7 @@ class PrivilegesController extends BaseController
 
         if (isset($allurl)) {
             $navlinks[$alllabel] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => $allurl,
                         'urlvars' => [
