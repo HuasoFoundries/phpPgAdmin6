@@ -211,7 +211,7 @@
             $status = -1; // ini
             if ($rs->recordCount() and ($rs->fields['vacrelid'] == $toid)) {
                 // table exists in pg_autovacuum, UPDATE
-                $sql    = sprintf("UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
+                $sql = sprintf("UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
 						enabled = '%s',
 						vac_base_thresh = %s,
 						vac_scale_factor = %s,
@@ -236,7 +236,7 @@
                 $status = $this->execute($sql);
             } else {
                 // table doesn't exists in pg_autovacuum, INSERT
-                $sql    = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
+                $sql = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
 				VALUES (%s, '%s', %s, %s, %s, %s, %s, %s, %s, %s )",
                     $toid,
                     ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',

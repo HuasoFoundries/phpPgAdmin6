@@ -506,7 +506,7 @@ class DatabaseController extends BaseController
                 'title' => $lang['strname'],
                 'field' => Decorator::field('name'),
             ],
-            'value'    => [
+            'value' => [
                 'title' => $lang['strsetting'],
                 'field' => Decorator::field('setting'),
             ],
@@ -558,15 +558,15 @@ class DatabaseController extends BaseController
                     'title' => $lang['strxactid'],
                     'field' => Decorator::field('transaction'),
                 ],
-                'gid'         => [
+                'gid' => [
                     'title' => $lang['strgid'],
                     'field' => Decorator::field('gid'),
                 ],
-                'prepared'    => [
+                'prepared' => [
                     'title' => $lang['strstarttime'],
                     'field' => Decorator::field('prepared'),
                 ],
-                'owner'       => [
+                'owner' => [
                     'title' => $lang['strowner'],
                     'field' => Decorator::field('owner'),
                 ],
@@ -582,11 +582,11 @@ class DatabaseController extends BaseController
         $processes = $data->getProcesses($_REQUEST['database']);
 
         $columns = [
-            'user'             => [
+            'user' => [
                 'title' => $lang['strusername'],
                 'field' => Decorator::field('usename'),
             ],
-            'process'          => [
+            'process' => [
                 'title' => $lang['strprocess'],
                 'field' => Decorator::field('pid'),
             ],
@@ -594,19 +594,19 @@ class DatabaseController extends BaseController
                 'title' => 'application',
                 'field' => Decorator::field('application_name'),
             ],
-            'client_addr'      => [
+            'client_addr' => [
                 'title' => 'address',
                 'field' => Decorator::field('client_addr'),
             ],
-            'blocked'          => [
+            'blocked' => [
                 'title' => $lang['strblocked'],
                 'field' => Decorator::field('waiting'),
             ],
-            'query'            => [
+            'query' => [
                 'title' => $lang['strsql'],
                 'field' => Decorator::field('query'),
             ],
-            'start_time'       => [
+            'start_time' => [
                 'title' => $lang['strstarttime'],
                 'field' => Decorator::field('query_start'),
             ],
@@ -631,7 +631,7 @@ class DatabaseController extends BaseController
                         ],
                     ],
                 ],
-                'kill'   => [
+                'kill' => [
                     'content' => $lang['strkill'],
                     'attr'    => [
                         'href' => [
@@ -678,15 +678,15 @@ class DatabaseController extends BaseController
         $variables = $data->getLocks();
 
         $columns = [
-            'namespace'     => [
+            'namespace' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('nspname'),
             ],
-            'tablename'     => [
+            'tablename' => [
                 'title' => $lang['strtablename'],
                 'field' => Decorator::field('tablename'),
             ],
-            'vxid'          => [
+            'vxid' => [
                 'title' => $lang['strvirtualtransaction'],
                 'field' => Decorator::field('virtualtransaction'),
             ],
@@ -694,15 +694,15 @@ class DatabaseController extends BaseController
                 'title' => $lang['strtransaction'],
                 'field' => Decorator::field('transaction'),
             ],
-            'processid'     => [
+            'processid' => [
                 'title' => $lang['strprocessid'],
                 'field' => Decorator::field('pid'),
             ],
-            'mode'          => [
+            'mode' => [
                 'title' => $lang['strmode'],
                 'field' => Decorator::field('mode'),
             ],
-            'granted'       => [
+            'granted' => [
                 'title' => $lang['strislockheld'],
                 'field' => Decorator::field('granted'),
                 'type'  => 'yesno',

@@ -6,12 +6,12 @@
 require_once './src/lib.inc.php';
 
 $app->post('/redirect[/{subject}]', function ($request, $response, $args) {
-    $body         = $response->getBody();
+    $body = $response->getBody();
     $query_string = $request->getUri()->getQuery();
-    $misc         = $this->misc;
+    $misc = $this->misc;
 
-    $loginShared   = $request->getParsedBodyParam('loginShared');
-    $loginServer   = $request->getParsedBodyParam('loginServer');
+    $loginShared = $request->getParsedBodyParam('loginShared');
+    $loginServer = $request->getParsedBodyParam('loginServer');
     $loginUsername = $request->getParsedBodyParam('loginUsername');
     $loginPassword = $request->getParsedBodyParam('loginPassword_' . md5($loginServer));
 
@@ -51,7 +51,7 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) {
 });
 
 $app->get('/redirect[/{subject}]', function ($request, $response, $args) {
-    $subject        = (isset($args['subject'])) ? $args['subject'] : 'root';
+    $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
     $destinationurl = $this->utils->getDestinationWithLastTab($subject);
     return $response->withStatus(302)->withHeader('Location', $destinationurl);
 });
@@ -89,16 +89,16 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function ($request, $response
 
     $subject = $args['subject'];
 
-    $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
+    $className = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
     $controller = new $className($this);
     return $controller->render();
 });
 
 $app->get('/[{subject}]', function ($request, $response, $args) {
-    $subject      = (isset($args['subject'])) ? $args['subject'] : 'intro';
+    $subject = (isset($args['subject'])) ? $args['subject'] : 'intro';
     $_server_info = $this->misc->getServerInfo();
     $query_string = $request->getUri()->getQuery();
-    $server_id    = $request->getQueryParam('server');
+    $server_id = $request->getQueryParam('server');
 
     if (!isset($_server_info['username']) && ($subject === 'server' || $subject === 'root')) {
         $subject = 'login';

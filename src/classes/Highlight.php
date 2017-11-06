@@ -1919,7 +1919,7 @@
                     'PL/I'   => true,
                     'SQL'    => true,
                 ];
-                $ncs              = false;
+                $ncs = false;
                 if (array_key_exists($language, $case_insensitive)) {
                     $ncs = true;
                 }
@@ -2449,10 +2449,10 @@
                     if (array_key_exists($language, $this->process) &&
                         array_key_exists($oldstate, $this->process[$language])) {
                         if (array_key_exists($state, $this->process[$language][$oldstate])) {
-                            $pf     = $this->process[$language][$oldstate][$state];
+                            $pf = $this->process[$language][$oldstate][$state];
                             $output .= $pf($span, $language, $ch);
                         } else {
-                            $pf     = $this->process[$language][$oldstate][0];
+                            $pf = $this->process[$language][$oldstate][0];
                             $output .= $pf($span, $language, $ch);
                         }
                     } else {
