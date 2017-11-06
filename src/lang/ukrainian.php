@@ -123,9 +123,8 @@ $lang['strfile']            = 'Файл';
 $lang['strfileimported']    = 'Файл ╕мпортовано.';
 
 // Error handling
-$lang['strbadconfig'] = 'Ваш config.inc.php застар╕в. Вам необх╕дно оновити його ╕з config.inc.php-dist.';
-$lang['strnotloaded'] =
-    'Ваша ╕нсталяц╕я PHP не п╕дтриму╓ PostgreSQL. Вам необх╕дно перекомп╕лювати PHP, використавши параметр --with-pgsql для configure.';
+$lang['strbadconfig']       = 'Ваш config.inc.php застар╕в. Вам необх╕дно оновити його ╕з config.inc.php-dist.';
+$lang['strnotloaded']       = 'Ваша ╕нсталяц╕я PHP не п╕дтриму╓ PostgreSQL. Вам необх╕дно перекомп╕лювати PHP, використавши параметр --with-pgsql для configure.';
 $lang['strbadschema']       = 'Виявлено неправильну схему.';
 $lang['strbadencoding']     = 'Неможливо встановити Ваше кодування в баз╕ даних.';
 $lang['strsqlerror']        = 'Помилка SQL:';

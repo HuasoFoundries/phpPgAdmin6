@@ -116,7 +116,7 @@ class TriggersController extends BaseController
         $triggers = $data->getTriggers($_REQUEST['table']);
 
         $columns = [
-            'trigger'    => [
+            'trigger' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('tgname'),
             ],
@@ -124,7 +124,7 @@ class TriggersController extends BaseController
                 'title' => $lang['strdefinition'],
                 'field' => Decorator::field('tgdef'),
             ],
-            'function'   => [
+            'function' => [
                 'title' => $lang['strfunction'],
                 'field' => Decorator::field('proproto'),
                 'url'   => "functions.php?action=properties&amp;server={$_REQUEST['server']}&amp;database={$_REQUEST['database']}&amp;",
@@ -134,7 +134,7 @@ class TriggersController extends BaseController
                     'function_oid' => 'prooid',
                 ],
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -153,7 +153,7 @@ class TriggersController extends BaseController
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -199,7 +199,7 @@ class TriggersController extends BaseController
         echo $this->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnotriggers'], $tgPre);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'triggers.php',
                     'urlvars' => [

@@ -230,9 +230,9 @@ class HTMLNavbarController extends HTMLController
             /* top right informations when connected */
 
             $toplinks = [
-                'sql'     => [
-                    'attr'    => [
-                        'href'   => [
+                'sql' => [
+                    'attr' => [
+                        'href' => [
                             'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'sql',
@@ -244,20 +244,20 @@ class HTMLNavbarController extends HTMLController
                     'content' => $lang['strsql'],
                 ],
                 'history' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
                             'url'     => SUBFOLDER . '/src/views/history',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
                         ],
-                        'id'   => 'toplink_history',
+                        'id' => 'toplink_history',
                     ],
                     'content' => $lang['strhistory'],
                 ],
-                'find'    => [
-                    'attr'    => [
-                        'href'   => [
+                'find' => [
+                    'attr' => [
+                        'href' => [
                             'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'find',
@@ -268,8 +268,8 @@ class HTMLNavbarController extends HTMLController
                     ],
                     'content' => $lang['strfind'],
                 ],
-                'logout'  => [
-                    'attr'    => [
+                'logout' => [
+                    'attr' => [
                         'href' => [
                             'url'     => SUBFOLDER . '/src/views/servers',
                             'urlvars' => [
@@ -277,7 +277,7 @@ class HTMLNavbarController extends HTMLController
                                 'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}",
                             ],
                         ],
-                        'id'   => 'toplink_logout',
+                        'id' => 'toplink_logout',
                     ],
                     'content' => $lang['strlogout'],
                 ],

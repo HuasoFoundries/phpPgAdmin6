@@ -86,13 +86,13 @@ class AggregatesController extends BaseController
         $aggregates = $data->getAggregates();
 
         $columns = [
-            'aggrname'    => [
+            'aggrname' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('proname'),
                 'url'   => SUBFOLDER . "/redirect/aggregate?action=properties&amp;{$misc->href}&amp;",
                 'vars'  => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
             ],
-            'aggrtype'    => [
+            'aggrtype' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('proargtypes'),
             ],
@@ -100,14 +100,14 @@ class AggregatesController extends BaseController
                 'title' => $lang['straggrsfunc'],
                 'field' => Decorator::field('aggtransfn'),
             ],
-            'owner'       => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('usename'),
             ],
-            'actions'     => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'     => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('aggrcomment'),
             ],
@@ -127,7 +127,7 @@ class AggregatesController extends BaseController
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -150,7 +150,7 @@ class AggregatesController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'aggregates.php',
                         'urlvars' => [
@@ -468,7 +468,7 @@ class AggregatesController extends BaseController
 
         $navlinks = [
             'showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'aggregates.php',
                         'urlvars' => [
@@ -484,7 +484,7 @@ class AggregatesController extends BaseController
 
         if ($data->hasAlterAggregate()) {
             $navlinks['alter'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'aggregates.php',
                         'urlvars' => [
@@ -502,7 +502,7 @@ class AggregatesController extends BaseController
         }
 
         $navlinks['drop'] = [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'aggregates.php',
                     'urlvars' => [

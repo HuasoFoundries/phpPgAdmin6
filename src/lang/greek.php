@@ -141,29 +141,26 @@ $lang['strgb']    = 'GB';
 $lang['strtb']    = 'TB';
 
 // Error handling
-$lang['strnoframes'] =
-    'Το phpPgAdmin6 λειτουργεί καλύτερα με προγράμματα πλοήγησης που υποστηρίζουν πλαίσια (frames). Εαν επιθυμείτε να συνεχίσετε ακολουθήστε την παρακάτω σύνδεση.';
-$lang['strnoframeslink'] = 'Χρήση χωρίς πλαίσια';
-$lang['strbadconfig']    = 'Το αρχείο config.inc.php είναι παλιό. Επαναδημιουργήστε το χρησιμοποιώντας το config.inc.php-dist.';
-$lang['strnotloaded']    =
-    'Η τρέχουσα εγκατάσταση της PHP δεν υποστηρίζει PostgreSQL. Εγκαταστήστε την πάλι με την επιλογή --with-pgsql (compilation option).';
-$lang['strpostgresqlversionnotsupported'] =
-    'Η τρέχουσα έκδοση της PostgreSQL δεν υποστηρίζεται από το phpPgAdmin6. Παρακαλώ αναβαθμίστε στην έκδοση %s ή νεότερη.';
-$lang['strbadschema']                    = 'Το σχήμα που δηλώθηκε δεν είναι έγκυρο.';
-$lang['strbadencoding']                  = 'Αποτυχία ορισμού κωδικοποίησης στη βάση δεδομένων.';
-$lang['strsqlerror']                     = 'Σφάλμα στην SQL:';
-$lang['strinstatement']                  = 'Στη δήλωση:';
-$lang['strinvalidparam']                 = 'Λάθος παράμετροι.';
-$lang['strnodata']                       = 'Δε βρέθηκαν γραμμές.';
-$lang['strnoobjects']                    = 'Δε βρέθηκαν αντικείμενα.';
-$lang['strrownotunique']                 = 'Δε βρέθηκε μοναδικό κλειδί στη γραμμή.';
-$lang['strnouploads']                    = 'Η αποστολή αρχείων είναι απενεργοποιημένη.';
-$lang['strimporterror']                  = 'Σφάλμα κατά την εισαγωγή.';
-$lang['strimporterror-fileformat']       = 'Σφάλμα κατά την εισαγωγή: απέτυχε η αυτόματη αναγνώριση του τύπου του αρχείου.';
-$lang['strimporterrorline']              = 'Σφάλμα κατά την εισαγωγή της γραμμής %s.';
-$lang['strimporterrorline-badcolumnnum'] = 'Σφάλμα κατά την εισαγωγή της γραμμής %s: δεν περιέχει το σωστό αριθμό στηλών.';
-$lang['strimporterror-uploadedfile']     = 'Σφάλμα κατά την εισαγωγή: αποτυχία αποστολής στο διακομιστή.';
-$lang['strcannotdumponwindows']          = 'Η αποτύπωση (dumping) περίπλοκων πινάκων και σχημάτων (schemas) δεν υποστηρίζεται στα Windows.';
+$lang['strnoframes']                      = 'Το phpPgAdmin6 λειτουργεί καλύτερα με προγράμματα πλοήγησης που υποστηρίζουν πλαίσια (frames). Εαν επιθυμείτε να συνεχίσετε ακολουθήστε την παρακάτω σύνδεση.';
+$lang['strnoframeslink']                  = 'Χρήση χωρίς πλαίσια';
+$lang['strbadconfig']                     = 'Το αρχείο config.inc.php είναι παλιό. Επαναδημιουργήστε το χρησιμοποιώντας το config.inc.php-dist.';
+$lang['strnotloaded']                     = 'Η τρέχουσα εγκατάσταση της PHP δεν υποστηρίζει PostgreSQL. Εγκαταστήστε την πάλι με την επιλογή --with-pgsql (compilation option).';
+$lang['strpostgresqlversionnotsupported'] = 'Η τρέχουσα έκδοση της PostgreSQL δεν υποστηρίζεται από το phpPgAdmin6. Παρακαλώ αναβαθμίστε στην έκδοση %s ή νεότερη.';
+$lang['strbadschema']                     = 'Το σχήμα που δηλώθηκε δεν είναι έγκυρο.';
+$lang['strbadencoding']                   = 'Αποτυχία ορισμού κωδικοποίησης στη βάση δεδομένων.';
+$lang['strsqlerror']                      = 'Σφάλμα στην SQL:';
+$lang['strinstatement']                   = 'Στη δήλωση:';
+$lang['strinvalidparam']                  = 'Λάθος παράμετροι.';
+$lang['strnodata']                        = 'Δε βρέθηκαν γραμμές.';
+$lang['strnoobjects']                     = 'Δε βρέθηκαν αντικείμενα.';
+$lang['strrownotunique']                  = 'Δε βρέθηκε μοναδικό κλειδί στη γραμμή.';
+$lang['strnouploads']                     = 'Η αποστολή αρχείων είναι απενεργοποιημένη.';
+$lang['strimporterror']                   = 'Σφάλμα κατά την εισαγωγή.';
+$lang['strimporterror-fileformat']        = 'Σφάλμα κατά την εισαγωγή: απέτυχε η αυτόματη αναγνώριση του τύπου του αρχείου.';
+$lang['strimporterrorline']               = 'Σφάλμα κατά την εισαγωγή της γραμμής %s.';
+$lang['strimporterrorline-badcolumnnum']  = 'Σφάλμα κατά την εισαγωγή της γραμμής %s: δεν περιέχει το σωστό αριθμό στηλών.';
+$lang['strimporterror-uploadedfile']      = 'Σφάλμα κατά την εισαγωγή: αποτυχία αποστολής στο διακομιστή.';
+$lang['strcannotdumponwindows']           = 'Η αποτύπωση (dumping) περίπλοκων πινάκων και σχημάτων (schemas) δεν υποστηρίζεται στα Windows.';
 
 // Tables
 $lang['strtable']             = 'Πίνακας';

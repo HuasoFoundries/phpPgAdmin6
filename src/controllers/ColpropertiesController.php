@@ -92,7 +92,7 @@ class ColpropertiesController extends BaseController
                     'title' => $lang['strcolumn'],
                     'field' => Decorator::field('attname'),
                 ],
-                'type'   => [
+                'type' => [
                     'title' => $lang['strtype'],
                     'field' => Decorator::field('+type'),
                 ],
@@ -132,7 +132,7 @@ class ColpropertiesController extends BaseController
 
                 $navlinks = [
                     'browse' => [
-                        'attr'    => [
+                        'attr' => [
                             'href' => [
                                 'url'     => 'display.php',
                                 'urlvars' => [
@@ -149,8 +149,8 @@ class ColpropertiesController extends BaseController
                         ],
                         'content' => $lang['strbrowse'],
                     ],
-                    'alter'  => [
-                        'attr'    => [
+                    'alter' => [
+                        'attr' => [
                             'href' => [
                                 'url'     => 'colproperties.php',
                                 'urlvars' => [
@@ -165,8 +165,8 @@ class ColpropertiesController extends BaseController
                         ],
                         'content' => $lang['stralter'],
                     ],
-                    'drop'   => [
-                        'attr'    => [
+                    'drop' => [
+                        'attr' => [
                             'href' => [
                                 'url'     => 'tblproperties.php',
                                 'urlvars' => [
@@ -186,7 +186,7 @@ class ColpropertiesController extends BaseController
                 /* Browse link */
                 $navlinks = [
                     'browse' => [
-                        'attr'    => [
+                        'attr' => [
                             'href' => [
                                 'url'     => 'display.php',
                                 'urlvars' => [

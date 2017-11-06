@@ -125,10 +125,8 @@ $lang['strfile']            = 'Lêer';
 $lang['strfileimported']    = 'Lêer is ingetrek.';
 
 // Error handling
-$lang['strnoframes'] =
-    'Hierdie toepassing maak gebruik van HTML-rame. U het \'n blaaier nodig wat rame ondersteun om hierdie toepassing te kan gebruik. ';
-$lang['strbadconfig'] =
-    'Die lêer config.inc.php is verouderd. Jy kan  verbeterde weergawe aflei van die lêer config.inc.php-dist.';
+$lang['strnoframes']                      = 'Hierdie toepassing maak gebruik van HTML-rame. U het \'n blaaier nodig wat rame ondersteun om hierdie toepassing te kan gebruik. ';
+$lang['strbadconfig']                     = 'Die lêer config.inc.php is verouderd. Jy kan  verbeterde weergawe aflei van die lêer config.inc.php-dist.';
 $lang['strnotloaded']                     = 'Hierdie PHP-installasie is sonder ondersteuning van hierdie tipe database nie gekompileerd.';
 $lang['strpostgresqlversionnotsupported'] = 'Weergawe van  PostgreSQL word nie ondersteun nie. Probeer asb. weergawe %s of later.';
 $lang['strbadschema']                     = 'Ongeldige skema gespesifiseer.';
