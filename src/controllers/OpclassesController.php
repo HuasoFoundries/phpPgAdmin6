@@ -87,7 +87,6 @@ class OpclassesController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -106,5 +105,4 @@ class OpclassesController extends BaseController
 
         return $this->printTree($opclasses, $attrs, 'opclasses');
     }
-
 }

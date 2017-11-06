@@ -73,7 +73,6 @@ class TypesController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
@@ -205,7 +204,6 @@ class TypesController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -229,7 +227,6 @@ class TypesController extends BaseController
         ];
 
         return $this->printTree($types, $attrs, 'types');
-
     }
 
     /**
@@ -303,7 +300,6 @@ class TypesController extends BaseController
                         for ($i = 1; $i < $nbVals; $i++) {
                             echo '<td class="data', 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>\n";
                         }
-
                     }
                     echo "</table>\n";
             }
@@ -324,12 +320,11 @@ class TypesController extends BaseController
         } else {
             $this->doDefault($lang['strinvalidparam']);
         }
-
     }
 
-/**
- * Show confirmation of drop and perform actual drop
- */
+    /**
+     * Show confirmation of drop and perform actual drop
+     */
     public function doDrop($confirm)
     {
         $conf = $this->conf;
@@ -358,14 +353,12 @@ class TypesController extends BaseController
             } else {
                 $this->doDefault($lang['strtypedroppedbad']);
             }
-
         }
-
     }
 
-/**
- * Displays a screen where they can enter a new composite type
- */
+    /**
+     * Displays a screen where they can enter a new composite type
+     */
     public function doCreateComposite($msg = '')
     {
         $conf = $this->conf;
@@ -528,9 +521,9 @@ class TypesController extends BaseController
         }
     }
 
-/**
- * Displays a screen where they can enter a new enum type
- */
+    /**
+     * Displays a screen where they can enter a new enum type
+     */
     public function doCreateEnum($msg = '')
     {
         $conf = $this->conf;
@@ -659,9 +652,9 @@ class TypesController extends BaseController
         }
     }
 
-/**
- * Displays a screen where they can enter a new type
- */
+    /**
+     * Displays a screen where they can enter a new type
+     */
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
@@ -781,9 +774,9 @@ class TypesController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Actually creates the new type in the database
- */
+    /**
+     * Actually creates the new type in the database
+     */
     public function doSaveCreate()
     {
         $conf = $this->conf;
@@ -816,8 +809,6 @@ class TypesController extends BaseController
             } else {
                 $this->doCreate($lang['strtypecreatedbad']);
             }
-
         }
     }
-
 }

@@ -52,7 +52,6 @@ class Decorator
         } else {
             return '';
         }
-
     }
 
     public static function value_xml_attr_tag($attr, &$var, &$fields)
@@ -63,7 +62,6 @@ class Decorator
         } else {
             return '';
         }
-
     }
 
     public static function callback($callback, $params = null)
@@ -76,7 +74,7 @@ class Decorator
         return self::get_sanitized_value($var, $fields, 'url');
     }
 
-    public static function concat( /* ... */)
+    public static function concat(/* ... */)
     {
         return new \PHPPgAdmin\Decorators\ConcatDecorator(func_get_args());
     }
@@ -151,5 +149,4 @@ class Decorator
     {
         return new IfEmptyDecorator($value, $empty, $full);
     }
-
 }

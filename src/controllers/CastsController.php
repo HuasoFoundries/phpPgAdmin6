@@ -33,7 +33,6 @@ class CastsController extends BaseController
         }
 
         return $this->printFooter();
-
     }
 
     /**
@@ -47,7 +46,6 @@ class CastsController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $renderCastContext = function ($val) use ($lang) {
-
             switch ($val) {
                 case 'e':return $lang['strno'];
                 case 'a':return $lang['strinassignment'];
@@ -97,7 +95,6 @@ class CastsController extends BaseController
      */
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -113,7 +110,5 @@ class CastsController extends BaseController
         ];
 
         return $this->printTree($casts, $attrs, 'casts');
-
     }
-
 }

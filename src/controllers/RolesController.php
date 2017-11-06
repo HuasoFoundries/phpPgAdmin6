@@ -13,7 +13,6 @@ class RolesController extends BaseController
 
     public function render()
     {
-
         $conf   = $this->conf;
         $misc   = $this->misc;
         $lang   = $this->lang;
@@ -348,7 +347,7 @@ class RolesController extends BaseController
         // Check data
         if ($_POST['formRolename'] == '') {
             $this->doCreate($lang['strroleneedsname']);
-        } else if ($_POST['formPassword'] != $_POST['formConfirm']) {
+        } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doCreate($lang['strpasswordconfirm']);
         } else {
             $status = $data->createRole($_POST['formRolename'], $_POST['formPassword'], isset($_POST['formSuper']),
@@ -360,7 +359,6 @@ class RolesController extends BaseController
             } else {
                 $this->doCreate($lang['strrolecreatedbad']);
             }
-
         }
     }
 
@@ -544,7 +542,6 @@ class RolesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
     /**
@@ -572,7 +569,7 @@ class RolesController extends BaseController
         // Check name and password
         if (isset($_POST['formNewRoleName']) && $_POST['formNewRoleName'] == '') {
             $this->doAlter($lang['strroleneedsname']);
-        } else if ($_POST['formPassword'] != $_POST['formConfirm']) {
+        } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doAlter($lang['strpasswordconfirm']);
         } else {
             if (isset($_POST['formNewRoleName'])) {
@@ -586,7 +583,6 @@ class RolesController extends BaseController
             } else {
                 $this->doAlter($lang['strrolealteredbad']);
             }
-
         }
     }
 
@@ -620,7 +616,6 @@ class RolesController extends BaseController
             } else {
                 $this->doDefault($lang['strroledroppedbad']);
             }
-
         }
     }
 
@@ -864,9 +859,7 @@ class RolesController extends BaseController
                 } else {
                     $this->doAccount($lang['strpasswordchangedbad']);
                 }
-
             }
         }
     }
-
 }

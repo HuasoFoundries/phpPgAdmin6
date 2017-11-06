@@ -79,7 +79,6 @@ class MaterializedviewpropertiesController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
@@ -223,7 +222,6 @@ class MaterializedviewpropertiesController extends BaseController
 
     public function doTree()
     {
-
         $conf = $this->conf;
         $misc = $this->misc;
         $lang = $this->lang;
@@ -260,7 +258,6 @@ class MaterializedviewpropertiesController extends BaseController
         ];
 
         return $this->printTree($columns, $attrs, 'viewcolumns');
-
     }
 
     /**
@@ -279,7 +276,6 @@ class MaterializedviewpropertiesController extends BaseController
         } else {
             $this->doEdit($lang['strviewupdatedbad']);
         }
-
     }
 
     /**
@@ -299,7 +295,6 @@ class MaterializedviewpropertiesController extends BaseController
         $viewdata = $data->getView($_REQUEST['matview']);
 
         if ($viewdata->recordCount() > 0) {
-
             if (!isset($_POST['formDefinition'])) {
                 $_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
@@ -323,16 +318,15 @@ class MaterializedviewpropertiesController extends BaseController
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
         }
-
     }
 
-/**
- * Allow the dumping of the data "in" a view
- * NOTE:: PostgreSQL doesn't currently support dumping the data in a view
- *        so I have disabled the data related parts for now. In the future
- *        we should allow it conditionally if it becomes supported.  This is
- *        a SMOP since it is based on pg_dump version not backend version.
- */
+    /**
+     * Allow the dumping of the data "in" a view
+     * NOTE:: PostgreSQL doesn't currently support dumping the data in a view
+     *        so I have disabled the data related parts for now. In the future
+     *        we should allow it conditionally if it becomes supported.  This is
+     *        a SMOP since it is based on pg_dump version not backend version.
+     */
     public function doExport($msg = '')
     {
         $conf = $this->conf;
@@ -390,9 +384,9 @@ class MaterializedviewpropertiesController extends BaseController
         echo "</form>\n";
     }
 
-/**
- * Show definition for a view
- */
+    /**
+     * Show definition for a view
+     */
     public function doDefinition($msg = '')
     {
         $conf = $this->conf;
@@ -438,9 +432,9 @@ class MaterializedviewpropertiesController extends BaseController
         ]], 'materializedviewproperties-definition', get_defined_vars());
     }
 
-/**
- * Displays a screen where they can alter a column in a view
- */
+    /**
+     * Displays a screen where they can alter a column in a view
+     */
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
@@ -529,7 +523,6 @@ class MaterializedviewpropertiesController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if ($confirm) {
-
             $this->printTrail('view');
             $this->printTitle($lang['stralter'], 'pg.matview.alter');
             $this->printMsg($msg);
@@ -604,7 +597,6 @@ class MaterializedviewpropertiesController extends BaseController
             } else {
                 echo "<p>{$lang['strnodata']}</p>\n";
             }
-
         } else {
 
             // For databases that don't allow owner change
@@ -636,8 +628,6 @@ class MaterializedviewpropertiesController extends BaseController
             } else {
                 $this->doAlter(true, $lang['strviewalteredbad']);
             }
-
         }
     }
-
 }

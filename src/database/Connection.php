@@ -10,7 +10,6 @@ namespace PHPPgAdmin\Database;
 
 class Connection
 {
-
     use \PHPPgAdmin\HelperTrait;
 
     public $conn;
@@ -79,7 +78,6 @@ class Connection
      */
     public function getDriver(&$description)
     {
-
         $v = pg_version($this->conn->_connectionID);
 
         //\PhpConsole\Handler::getInstance()->debug($v, 'pg_version');
@@ -114,6 +112,9 @@ class Connection
 
         // Detect version and choose appropriate database driver
         switch (substr($version, 0, 3)) {
+            case '10.0':
+                return 'Postgres96';
+                break;
             case '9.7':
                 return 'Postgres96';
                 break;

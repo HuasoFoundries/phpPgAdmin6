@@ -101,7 +101,6 @@ class ConstraintsController extends BaseController
         }
 
         $this->printFooter();
-
     }
 
     /**
@@ -115,7 +114,6 @@ class ConstraintsController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         $cnPre = function (&$rowdata) use ($data) {
-
             if (is_null($rowdata->fields['consrc'])) {
                 $atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
                 $rowdata->fields['+definition'] = ($rowdata->fields['contype'] == 'u' ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
@@ -403,7 +401,6 @@ class ConstraintsController extends BaseController
                     } else {
                         $this->addForeignKey(2, $lang['strfkaddedbad']);
                     }
-
                 }
                 break;
             default:
@@ -471,7 +468,6 @@ class ConstraintsController extends BaseController
                 //echo "<script>jQuery('select[name=\"target\"]').select2()</script>";
                 break;
         }
-
     }
 
     /**
@@ -597,7 +593,6 @@ class ConstraintsController extends BaseController
                     } else {
                         $this->addPrimaryOrUniqueKey($_POST['type'], true, $lang['strpkaddedbad']);
                     }
-
                 }
             } elseif ($_POST['type'] == 'unique') {
                 // Check that they've given at least one column
@@ -611,12 +606,10 @@ class ConstraintsController extends BaseController
                     } else {
                         $this->addPrimaryOrUniqueKey($_POST['type'], true, $lang['struniqaddedbad']);
                     }
-
                 }
             } else {
                 $this->doDefault($lang['strinvalidparam']);
             }
-
         }
     }
 
@@ -661,7 +654,6 @@ class ConstraintsController extends BaseController
             echo "<p><input type=\"submit\" name=\"ok\" value=\"{$lang['stradd']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
-
         } else {
             if (trim($_POST['definition']) == '') {
                 $this->addCheck(true, $lang['strcheckneedsdefinition']);
@@ -673,7 +665,6 @@ class ConstraintsController extends BaseController
                 } else {
                     $this->addCheck(true, $lang['strcheckaddedbad']);
                 }
-
             }
         }
     }
@@ -712,8 +703,6 @@ class ConstraintsController extends BaseController
             } else {
                 $this->doDefault($lang['strconstraintdroppedbad']);
             }
-
         }
     }
-
 }
