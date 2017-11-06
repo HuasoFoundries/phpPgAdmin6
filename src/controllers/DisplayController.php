@@ -292,7 +292,7 @@ class DisplayController extends BaseController
             }
 
             $buttons = [
-                'edit'   => [
+                'edit' => [
                     'content' => $lang['stredit'],
                     'attr'    => [
                         'href' => [
@@ -423,7 +423,7 @@ class DisplayController extends BaseController
             $urlvars = $misc->getSubjectParams($_REQUEST['return']);
 
             $navlinks['back'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => $urlvars['url'],
                         'urlvars' => $urlvars['params'],
@@ -436,7 +436,7 @@ class DisplayController extends BaseController
         // Edit SQL link
         if ($type == 'QUERY') {
             $navlinks['edit'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'database.php',
                         'urlvars' => array_merge($fields, [
@@ -452,7 +452,7 @@ class DisplayController extends BaseController
         // Expand/Collapse
         if ($_REQUEST['strings'] == 'expanded') {
             $navlinks['collapse'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'display.php',
                         'urlvars' => array_merge(
@@ -467,7 +467,7 @@ class DisplayController extends BaseController
             ];
         } else {
             $navlinks['collapse'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'display.php',
                         'urlvars' => array_merge(
@@ -488,7 +488,7 @@ class DisplayController extends BaseController
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
                             'url'     => 'views.php',
                             'urlvars' => array_merge($fields, [
@@ -507,7 +507,7 @@ class DisplayController extends BaseController
             }
 
             $navlinks['download'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'dataexport.php',
                         'urlvars' => array_merge($fields, $urlvars),
@@ -520,7 +520,7 @@ class DisplayController extends BaseController
         // Insert
         if (isset($object) && (isset($subject) && $subject == 'table')) {
             $navlinks['insert'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => array_merge($fields, [
@@ -535,7 +535,7 @@ class DisplayController extends BaseController
 
         // Refresh
         $navlinks['refresh'] = [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'display.php',
                     'urlvars' => array_merge(

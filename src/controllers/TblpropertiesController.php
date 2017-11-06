@@ -160,13 +160,13 @@ class TblpropertiesController extends BaseController
         }
 
         $columns = [
-            'column'  => [
+            'column' => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
                 'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
-            'type'    => [
+            'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('+type'),
             ],
@@ -200,12 +200,12 @@ class TblpropertiesController extends BaseController
         ];
 
         $actions = [
-            'browse'     => [
+            'browse' => [
                 'title' => $lang['strbrowse'],
                 'url'   => "display.php?{$misc->href}&amp;subject=column&amp;return=table&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
-            'alter'      => [
+            'alter' => [
                 'title' => $lang['stralter'],
                 'url'   => "colproperties.php?action=properties&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
@@ -215,7 +215,7 @@ class TblpropertiesController extends BaseController
                 'url'   => "privileges.php?subject=column&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
-            'drop'       => [
+            'drop' => [
                 'title' => $lang['strdrop'],
                 'url'   => "tblproperties.php?action=confirm_drop&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
@@ -223,7 +223,7 @@ class TblpropertiesController extends BaseController
         ];
 
         $actions = [
-            'browse'     => [
+            'browse' => [
                 'content' => $lang['strbrowse'],
                 'attr'    => [
                     'href' => [
@@ -237,7 +237,7 @@ class TblpropertiesController extends BaseController
                     ],
                 ],
             ],
-            'alter'      => [
+            'alter' => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -264,7 +264,7 @@ class TblpropertiesController extends BaseController
                     ],
                 ],
             ],
-            'drop'       => [
+            'drop' => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -283,8 +283,8 @@ class TblpropertiesController extends BaseController
         echo $this->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', null, $attPre);
 
         $navlinks = [
-            'browse'    => [
-                'attr'    => [
+            'browse' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'display.php',
                         'urlvars' => [
@@ -299,8 +299,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['strbrowse'],
             ],
-            'select'    => [
-                'attr'    => [
+            'select' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -314,8 +314,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['strselect'],
             ],
-            'insert'    => [
-                'attr'    => [
+            'insert' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -329,8 +329,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['strinsert'],
             ],
-            'empty'     => [
-                'attr'    => [
+            'empty' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -344,8 +344,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['strempty'],
             ],
-            'drop'      => [
-                'attr'    => [
+            'drop' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -360,7 +360,7 @@ class TblpropertiesController extends BaseController
                 'content' => $lang['strdrop'],
             ],
             'addcolumn' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'tblproperties.php',
                         'urlvars' => [
@@ -374,8 +374,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['straddcolumn'],
             ],
-            'alter'     => [
-                'attr'    => [
+            'alter' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'tblproperties.php',
                         'urlvars' => [
@@ -404,8 +404,8 @@ class TblpropertiesController extends BaseController
         $reqvars = $misc->getRequestVars('column');
 
         $attrs = [
-            'text'       => Decorator::field('attname'),
-            'action'     => Decorator::actionurl('colproperties.php',
+            'text'   => Decorator::field('attname'),
+            'action' => Decorator::actionurl('colproperties.php',
                 $reqvars,
                 [
                     'table'  => $_REQUEST['table'],
@@ -427,7 +427,7 @@ class TblpropertiesController extends BaseController
                     ),
                 ]
             ),
-            'toolTip'    => Decorator::field('comment'),
+            'toolTip' => Decorator::field('comment'),
         ];
 
         return $this->printTree($columns, $attrs, 'tblcolumns');
