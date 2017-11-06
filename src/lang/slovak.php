@@ -134,8 +134,7 @@ $lang['strtrycred']         = 'Použiť tieto hodnoty pre všetky hodnoty';
 $lang['strexecute']         = 'Execute';
 
 // Error handling
-$lang['strnoframes'] =
-    'Táto aplikácia funguje najlapšie s prehliadačom, ktorý podporuje technológiu frame-ov, no môže byť použitý aj takým, ktorý to nepodporuje nasledovaním tohto odkazu:';
+$lang['strnoframes']                      = 'Táto aplikácia funguje najlapšie s prehliadačom, ktorý podporuje technológiu frame-ov, no môže byť použitý aj takým, ktorý to nepodporuje nasledovaním tohto odkazu:';
 $lang['strnoframeslink']                  = 'Nepoužívať frame-y';
 $lang['strbadconfig']                     = 'Tvoj config.inc.php je zastaralý. Musíš vygenerovať nový zo súboru config.inc.php-dist.';
 $lang['strnotloaded']                     = 'Tvoje PHP nie je skompilované s potrebnou podporou databáz.';

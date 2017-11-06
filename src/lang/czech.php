@@ -173,12 +173,10 @@ $lang['strgb']       = 'GB';
 $lang['strtb']       = 'TB';
 
 // Error handling
-$lang['strnoframes'] =
-    'Tato aplikace pracuje nejlépe, pokud jsou v prohlížeči povolené rámy. Může ale pracovat i bez rámů, stačí kliknout na následující odkaz.';
-$lang['strnoframeslink'] = 'Použít bez rámů';
-$lang['strbadconfig']    = 'Váš config.inc.php je zastaralý. Potřebujete jej vygenerovat znovu z nového config.inc.php-dist.';
-$lang['strnotloaded']    =
-    'Vaše instalace PHP nepodporuje PostgreSQL. Potřebujete znovu přeložit PHP s použitím volby --with-pgsql.';
+$lang['strnoframes']                      = 'Tato aplikace pracuje nejlépe, pokud jsou v prohlížeči povolené rámy. Může ale pracovat i bez rámů, stačí kliknout na následující odkaz.';
+$lang['strnoframeslink']                  = 'Použít bez rámů';
+$lang['strbadconfig']                     = 'Váš config.inc.php je zastaralý. Potřebujete jej vygenerovat znovu z nového config.inc.php-dist.';
+$lang['strnotloaded']                     = 'Vaše instalace PHP nepodporuje PostgreSQL. Potřebujete znovu přeložit PHP s použitím volby --with-pgsql.';
 $lang['strpostgresqlversionnotsupported'] = 'Verze PostgreSQL není podporovaná. Přejděte prosím na verzi %s nebo novější.';
 $lang['strbadschema']                     = 'Zadáno neplatné schéma.';
 $lang['strbadencoding']                   = 'Nezdařilo se nastavit kódování klienta v databázi.';
@@ -195,14 +193,11 @@ $lang['strimporterrorline']               = 'Chyba při importu na řádku %s.';
 $lang['strimporterrorline-badcolumnnum']  = 'Chyba při importu na řádku %s: Řádek nemá správný počet sloupců.';
 $lang['strimporterror-uploadedfile']      = 'Chyba při importu: Soubor nelze nahrát na server';
 $lang['strcannotdumponwindows']           = 'Ve Windows není podporovaný výpis názvů komplexních tabulek a schémat.';
-$lang['strinvalidserverparam']            =
-    'Pokus o připojení s neplatnými parametry serveru, možná se někdo snaží neoprávněně napojit do vašeho systému.';
-$lang['strnoserversupplied'] = 'Není nabízen žádný server!';
-$lang['strbadpgdumppath']    =
-    'Chyba při exportu: Nezdařilo se spustit pg_dump (s cestou danou ve vašem conf/config.inc.php: %s). Opravte prosím cestu ve svém nastavení a zkuste to znovu.';
-$lang['strbadpgdumpallpath'] =
-    'Chyba při exportu: Nezdařilo se spustit pg_dumpall (s cestou danou ve vašem conf/config.inc.php: %s). Opravte prosím cestu ve svém nastavení a zkuste to znovu.';
-$lang['strconnectionfail'] = 'Nelze se připojit k serveru.';
+$lang['strinvalidserverparam']            = 'Pokus o připojení s neplatnými parametry serveru, možná se někdo snaží neoprávněně napojit do vašeho systému.';
+$lang['strnoserversupplied']              = 'Není nabízen žádný server!';
+$lang['strbadpgdumppath']                 = 'Chyba při exportu: Nezdařilo se spustit pg_dump (s cestou danou ve vašem conf/config.inc.php: %s). Opravte prosím cestu ve svém nastavení a zkuste to znovu.';
+$lang['strbadpgdumpallpath']              = 'Chyba při exportu: Nezdařilo se spustit pg_dumpall (s cestou danou ve vašem conf/config.inc.php: %s). Opravte prosím cestu ve svém nastavení a zkuste to znovu.';
+$lang['strconnectionfail']                = 'Nelze se připojit k serveru.';
 
 // Tables
 $lang['strtable']                     = 'Tabulka';

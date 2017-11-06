@@ -273,7 +273,7 @@ class SqlController extends BaseController
         if (isset($_REQUEST['return'])) {
             $urlvars          = $misc->getSubjectParams($_REQUEST['return']);
             $navlinks['back'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => $urlvars['url'],
                         'urlvars' => $urlvars['params'],
@@ -285,7 +285,7 @@ class SqlController extends BaseController
 
         // Edit
         $navlinks['alter'] = [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'database.php',
                     'urlvars' => array_merge($fields, [
@@ -301,7 +301,7 @@ class SqlController extends BaseController
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
                             'url'     => 'views.php',
                             'urlvars' => array_merge($fields, [
@@ -318,7 +318,7 @@ class SqlController extends BaseController
             }
 
             $navlinks['download'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'dataexport.php',
                         'urlvars' => $fields,

@@ -136,11 +136,9 @@ $lang['strtrycred']         = 'Giriş bilgilerini tüm sunucular için kullan';
 $lang['strexecute']         = 'Execute';
 
 // Error handling
-$lang['strnoframes'] =
-    'Bu uygulama en iyi olarak frame destekli bir tarayıcı ile kullanılabilir; ancak frameler ile kullanmak istemiyorsanız aşağıdaki linke tıklayabilirsiniz.';
-$lang['strnoframeslink'] = 'Frame olmadan kullan';
-$lang['strbadconfig']    =
-    'config.inc.php dosyaniz güncel değil. Bu dosyayı yeni config.inc.php-dist dosyasından yaratmanız gerekmektedir.';
+$lang['strnoframes']                      = 'Bu uygulama en iyi olarak frame destekli bir tarayıcı ile kullanılabilir; ancak frameler ile kullanmak istemiyorsanız aşağıdaki linke tıklayabilirsiniz.';
+$lang['strnoframeslink']                  = 'Frame olmadan kullan';
+$lang['strbadconfig']                     = 'config.inc.php dosyaniz güncel değil. Bu dosyayı yeni config.inc.php-dist dosyasından yaratmanız gerekmektedir.';
 $lang['strnotloaded']                     = 'PHP kurulumunuzda PostgreSQL desteği bulunamamıştır.';
 $lang['strpostgresqlversionnotsupported'] = 'Bu PostgreSQL sürümü desteklenmemektedir. Lütfen %s ya da üstü bir sürüme güncelleyiniz.';
 $lang['strbadschema']                     = 'Geçersiz şema.';

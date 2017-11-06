@@ -112,9 +112,8 @@ $lang['stroids']            = 'OIDs';
 $lang['stradvanced']        = 'юмЭмЬд';
 
 // Error handling
-$lang['strbadconfig'] = 'єСЮй config.inc.php ШееоЩвгСЮ ТСЪЮС. config.inc.php-dist ?ССг ФСШЩЮ ??гЧм.';
-$lang['strnotloaded'] =
-    'єСЮй PHP гееЬЧСЬд Юи PostgreSQL ?Ч?ЧФЬЩЪЮ гСЮдСЪ ШСЭдвСЮ СжЭЬЬСШ ТЯЬЯжЧ?Ъ ТСЪЮС. єС  PHP ?ЧСС ФСШЩЮ --with-pgsql дЯШЩвЧЯЯдЯЪ гееЬЧС.';
+$lang['strbadconfig']    = 'єСЮй config.inc.php ШееоЩвгСЮ ТСЪЮС. config.inc.php-dist ?ССг ФСШЩЮ ??гЧм.';
+$lang['strnotloaded']    = 'єСЮй PHP гееЬЧСЬд Юи PostgreSQL ?Ч?ЧФЬЩЪЮ гСЮдСЪ ШСЭдвСЮ СжЭЬЬСШ ТЯЬЯжЧ?Ъ ТСЪЮС. єС  PHP ?ЧСС ФСШЩЮ --with-pgsql дЯШЩвЧЯЯдЯЪ гееЬЧС.';
 $lang['strbadschema']    = 'єЯШЩвЧЯЯ Тевее';
 $lang['strbadencoding']  = 'Failed to set client encoding in database.';
 $lang['strsqlerror']     = 'SQL СЬФСС:';
