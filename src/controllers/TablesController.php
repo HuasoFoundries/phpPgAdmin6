@@ -143,13 +143,13 @@ class TablesController extends BaseController
         $tables = $data->getTables();
 
         $columns = [
-            'table'      => [
+            'table' => [
                 'title' => $lang['strtable'],
                 'field' => Decorator::field('relname'),
                 'url'   => SUBFOLDER . "/redirect/table?{$misc->href}&amp;",
                 'vars'  => ['table' => 'relname'],
             ],
-            'owner'      => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('relowner'),
             ],
@@ -157,15 +157,15 @@ class TablesController extends BaseController
                 'title' => $lang['strtablespace'],
                 'field' => Decorator::field('tablespace'),
             ],
-            'tuples'     => [
+            'tuples' => [
                 'title' => $lang['strestimatedrowcount'],
                 'field' => Decorator::field('reltuples'),
                 'type'  => 'numeric',
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'    => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('relcomment'),
             ],
@@ -177,7 +177,7 @@ class TablesController extends BaseController
                 'url'     => 'tables.php',
                 'default' => 'analyze',
             ],
-            'browse'       => [
+            'browse' => [
                 'content' => $lang['strbrowse'],
                 'attr'    => [
                     'href' => [
@@ -190,7 +190,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'select'       => [
+            'select' => [
                 'content' => $lang['strselect'],
                 'attr'    => [
                     'href' => [
@@ -202,7 +202,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'insert'       => [
+            'insert' => [
                 'content' => $lang['strinsert'],
                 'attr'    => [
                     'href' => [
@@ -214,7 +214,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'empty'        => [
+            'empty' => [
                 'multiaction' => 'confirm_empty',
                 'content'     => $lang['strempty'],
                 'attr'        => [
@@ -227,7 +227,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -239,7 +239,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'drop'         => [
+            'drop' => [
                 'multiaction' => 'confirm_drop',
                 'content'     => $lang['strdrop'],
                 'attr'        => [
@@ -252,7 +252,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'vacuum'       => [
+            'vacuum' => [
                 'multiaction' => 'confirm_vacuum',
                 'content'     => $lang['strvacuum'],
                 'attr'        => [
@@ -265,7 +265,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'analyze'      => [
+            'analyze' => [
                 'multiaction' => 'confirm_analyze',
                 'content'     => $lang['stranalyze'],
                 'attr'        => [
@@ -278,7 +278,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'reindex'      => [
+            'reindex' => [
                 'multiaction' => 'confirm_reindex',
                 'content'     => $lang['strreindex'],
                 'attr'        => [
@@ -304,7 +304,7 @@ class TablesController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -321,7 +321,7 @@ class TablesController extends BaseController
 
         if (($tables->recordCount() > 0) && $data->hasCreateTableLike()) {
             $navlinks['createlike'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [

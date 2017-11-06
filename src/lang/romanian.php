@@ -143,13 +143,10 @@ $lang['strgb']    = 'GB';
 $lang['strtb']    = 'TB';
 
 // Error handling
-$lang['strnoframes'] =
-    'Această aplicaţie funcţionează cel mai bine într-un browser ce suportă frame-uri , dar poate fi folosită şi fără frame-uri, urmând legătura de mai jos.';
-$lang['strnoframeslink'] = 'Fără frame-uri';
-$lang['strbadconfig']    =
-    'Fişierul config.inc.php este învechit. Trebuie să-l re-generaţi folosind noul fişier config.inc.php-dist.';
-$lang['strnotloaded'] =
-    'Instalarea de PHP nu suportă PostgreSQL. Trebuie să re-compilaţi PHP folosind opţiunea --with-pgsql la configurare.';
+$lang['strnoframes']                      = 'Această aplicaţie funcţionează cel mai bine într-un browser ce suportă frame-uri , dar poate fi folosită şi fără frame-uri, urmând legătura de mai jos.';
+$lang['strnoframeslink']                  = 'Fără frame-uri';
+$lang['strbadconfig']                     = 'Fişierul config.inc.php este învechit. Trebuie să-l re-generaţi folosind noul fişier config.inc.php-dist.';
+$lang['strnotloaded']                     = 'Instalarea de PHP nu suportă PostgreSQL. Trebuie să re-compilaţi PHP folosind opţiunea --with-pgsql la configurare.';
 $lang['strpostgresqlversionnotsupported'] = 'Versiune de PostgreSQL ne-suportată. Actualizaţi la versiunea %s sau ulterioară.';
 $lang['strbadschema']                     = 'Schemă specificată incorectă.';
 $lang['strbadencoding']                   = 'Imposibil de setat codificarea client în baza de date.';

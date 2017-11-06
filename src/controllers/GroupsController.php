@@ -87,7 +87,7 @@ class GroupsController extends BaseController
         $groups = $data->getGroups();
 
         $columns = [
-            'group'   => [
+            'group' => [
                 'title' => $lang['strgroup'],
                 'field' => Decorator::field('groname'),
                 'url'   => "groups.php?action=properties&amp;{$misc->href}&amp;",
@@ -116,7 +116,7 @@ class GroupsController extends BaseController
         echo $this->printTable($groups, $columns, $actions, 'groups-properties', $lang['strnogroups']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'groups.php',
                     'urlvars' => [
@@ -249,7 +249,7 @@ class GroupsController extends BaseController
         echo "</form>\n";
 
         $this->printNavLinks(['showall' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'groups.php',
                     'urlvars' => [

@@ -116,7 +116,7 @@ class MaterializedviewsController extends BaseController
                 'url'   => SUBFOLDER . "/redirect/matview?{$misc->href}&amp;",
                 'vars'  => ['matview' => 'relname'],
             ],
-            'owner'   => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('relowner'),
             ],
@@ -134,7 +134,7 @@ class MaterializedviewsController extends BaseController
                 'keycols' => ['matview' => 'relname'],
                 'url'     => 'materializedviews.php',
             ],
-            'browse'       => [
+            'browse' => [
                 'content' => $lang['strbrowse'],
                 'attr'    => [
                     'href' => [
@@ -148,7 +148,7 @@ class MaterializedviewsController extends BaseController
                     ],
                 ],
             ],
-            'select'       => [
+            'select' => [
                 'content' => $lang['strselect'],
                 'attr'    => [
                     'href' => [
@@ -168,7 +168,7 @@ class MaterializedviewsController extends BaseController
             //                'vars'    => array('view' => 'relname'),
             //            ),
 
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -180,7 +180,7 @@ class MaterializedviewsController extends BaseController
                     ],
                 ],
             ],
-            'drop'         => [
+            'drop' => [
                 'multiaction' => 'confirm_drop',
                 'content'     => $lang['strdrop'],
                 'attr'        => [
@@ -198,8 +198,8 @@ class MaterializedviewsController extends BaseController
         echo $this->printTable($matviews, $columns, $actions, $this->table_place, $lang['strnoviews']);
 
         $navlinks = [
-            'create'    => [
-                'attr'    => [
+            'create' => [
+                'attr' => [
                     'href' => [
                         'url'     => 'materializedviews.php',
                         'urlvars' => [
@@ -213,7 +213,7 @@ class MaterializedviewsController extends BaseController
                 'content' => $lang['strcreateview'],
             ],
             'createwiz' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
                         'url'     => 'materializedviews.php',
                         'urlvars' => [

@@ -147,11 +147,9 @@ $lang['strgb']    = 'GB';
 $lang['strtb']    = 'TB';
 
 // Error handling
-$lang['strnoframes'] =
-    'Ta aplikacja najlepiej działa w przeglądarce obsługującej ramki, ale możesz jej użyć również bez ramek, klikając poniższy link.';
-$lang['strnoframeslink'] = 'Otwórz bez ramek';
-$lang['strbadconfig']    =
-    'Twój plik config.inc.php jest przestarzały. Musisz go utworzyć ponownie wykorzystując nowy config.inc.php-dist.';
+$lang['strnoframes']                      = 'Ta aplikacja najlepiej działa w przeglądarce obsługującej ramki, ale możesz jej użyć również bez ramek, klikając poniższy link.';
+$lang['strnoframeslink']                  = 'Otwórz bez ramek';
+$lang['strbadconfig']                     = 'Twój plik config.inc.php jest przestarzały. Musisz go utworzyć ponownie wykorzystując nowy config.inc.php-dist.';
 $lang['strnotloaded']                     = 'Nie wkompilowałeś do PHP obsługi tej bazy danych.';
 $lang['strpostgresqlversionnotsupported'] = 'Nieobsługiwana wersja PostgreSQL. Uaktualnij do wersji %s lub nowszej.';
 $lang['strbadschema']                     = 'Podano błędny schemat.';

@@ -74,7 +74,7 @@ class RulesController extends BaseController
         $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
 
         $columns = [
-            'rule'       => [
+            'rule' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('rulename'),
             ],
@@ -82,7 +82,7 @@ class RulesController extends BaseController
                 'title' => $lang['strdefinition'],
                 'field' => Decorator::field('definition'),
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -111,7 +111,7 @@ class RulesController extends BaseController
         echo $this->printTable($rules, $columns, $actions, 'rules-rules', $lang['strnorules']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
                     'url'     => 'rules.php',
                     'urlvars' => [
