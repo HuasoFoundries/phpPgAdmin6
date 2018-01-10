@@ -423,8 +423,9 @@ class Misc
         // Otherwise, look for it in the conf file
         foreach ($this->conf['servers'] as $idx => $info) {
             if ($this->server_id == $info['host'] . ':' . $info['port'] . ':' . $info['sslmode']) {
-                // Automatically use shared credentials if available
-                if (!isset($info['username']) && isset($_SESSION['sharedUsername'])) {
+                if (isset($info['username'])) {
+                    $this->setServerInfo(null, $info, $this->server_id);
+                } elseif (isset($_SESSION['sharedUsername'])) {
                     $info['username'] = $_SESSION['sharedUsername'];
                     $info['password'] = $_SESSION['sharedPassword'];
                     $this->setReloadBrowser(true);
