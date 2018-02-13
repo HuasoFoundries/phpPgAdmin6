@@ -27,7 +27,7 @@ if (avoid_bogus_character) {
 			jQuery('table.printconnection').prependTo('.sqlform');
 		}
 
-		jQuery('.CodeMirror').focus().css('height', $('#query').attr('rows') * 30);
+		jQuery('.CodeMirror').focus().css('height', $('#query').attr('rows') * 26);
 
 		if (location.pathname.indexOf('sqledit.php') !== -1) {
 			var windowsize = {

@@ -99,6 +99,7 @@ $normalized_php_self = str_replace('/src/views', '', $container->environment->ge
 $subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
 define('SUBFOLDER', $subfolder);
 
+$container['version']     = 'v' . $appVersion;
 $container['errors']      = [];
 $container['requestobj']  = $container['request'];
 $container['responseobj'] = $container['response'];

@@ -301,7 +301,7 @@ class HTMLNavbarController extends HTMLController
 
             $topbar_html .= "<script type=\"text/javascript\">
 						$('#toplink_sql').click(function() {
-							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=750,height=520,resizable=yes,scrollbars=yes').focus();
 							return false;
 						});
 
@@ -311,7 +311,7 @@ class HTMLNavbarController extends HTMLController
 						});
 
 						$('#toplink_find').click(function() {
-							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=750,height=520,resizable=yes,scrollbars=yes').focus();
 							return false;
 						});
 						";

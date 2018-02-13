@@ -78,8 +78,9 @@ class SqleditController extends BaseController
         $default_html .= '<label>';
         $default_html .= $this->misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
 
-        $default_html .= ': <input type="text" name="search_path" size="50" value="' . $search_path . '" />';
+        $default_html .= ': <input type="text" name="search_path" size="45" value="' . $search_path . '" />';
         $default_html .= "</label>\n";
+
         $default_html .= "</div>\n";
 
         $default_html .= '<div id="queryedition" style="padding:1%;width:98%;float:left;">';
@@ -88,27 +89,37 @@ class SqleditController extends BaseController
         $default_html .= "\n";
         $default_html .= "</div>\n";
 
-        // Check that file uploads are enabled
+        $default_html .= '<div class="sqledit_bottom_inputs" >';
+
         if (ini_get('file_uploads')) {
             // Don't show upload option if max size of uploads is zero
             $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
             if (is_double($max_size) && $max_size > 0) {
-                $default_html .= '<p>';
+                $default_html .= '<p class="upload_sql_script">';
                 $default_html .= '<input type="hidden" name="MAX_FILE_SIZE" value="' . $max_size . '" />';
                 $default_html .= "\n";
                 $default_html .= '<label for="script">' . $lang['struploadscript'] . '</label>';
-                $default_html .= ' <input id="script" name="script" type="file" /></p>';
+                $default_html .= '&nbsp;&nbsp; <input class="btn btn-small"  id="script" name="script" type="file" /></p>';
                 $default_html .= "</p>\n";
             }
         }
+
+        // Check that file uploads are enabled
         $checked = (isset($_REQUEST['paginate']) ? ' checked="checked"' : '');
+
+        $default_html .= '<p><input type="submit" class="btn btn-small" name="execute" accesskey="r" value="' . $lang['strexecute'] . '" />';
+        $default_html .= "\n";
+
+        $default_html .= '<input type="reset" class="btn btn-small"  accesskey="q" value="' . $lang['strreset'] . '" /></p>';
+        $default_html .= "\n";
+
         $default_html .= '<p>';
-        $default_html .= '<label for="paginate"><input type="checkbox" id="paginate" name="paginate"' . $checked . ' />&nbsp;' . $lang['strpaginate'] . '</label>';
+        $default_html .= '<label for="paginate">';
+        $default_html .= '<input type="checkbox" id="paginate" name="paginate"' . $checked . ' />&nbsp;' . $lang['strpaginate'] . '&nbsp;';
+        $default_html .= "</label>\n";
         $default_html .= "</p>\n";
-        $default_html .= '<p><input type="submit" name="execute" accesskey="r" value="' . $lang['strexecute'] . '" />';
-        $default_html .= "\n";
-        $default_html .= '<input type="reset" accesskey="q" value="' . $lang['strreset'] . '" /></p>';
-        $default_html .= "\n";
+
+        $default_html .= "</div>\n";
         $default_html .= '</form>';
         $default_html .= "\n";
 
