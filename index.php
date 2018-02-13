@@ -6,11 +6,9 @@
 require_once './src/lib.inc.php';
 
 $app->get('/status', function ($request, $response, $args) {
-
     return $response
         ->withHeader('Content-type', 'application/json')
         ->withJson(['version' => $this->version]);
-
 });
 
 $app->post('/redirect[/{subject}]', function ($request, $response, $args) {
