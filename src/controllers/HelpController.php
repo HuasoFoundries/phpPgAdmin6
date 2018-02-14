@@ -41,7 +41,7 @@ class HelpController extends BaseController
 
             if ($url) {
                 header("Location: $url");
-                exit;
+                return;
             }
         }
 

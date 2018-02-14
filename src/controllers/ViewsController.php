@@ -423,8 +423,7 @@ class ViewsController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['view']) && empty($_REQUEST['ma'])) {
-            $this->doDefault($lang['strspecifyviewtodrop']);
-            exit();
+            return $this->doDefault($lang['strspecifyviewtodrop']);
         }
 
         if ($confirm) {

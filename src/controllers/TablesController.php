@@ -1062,7 +1062,6 @@ class TablesController extends BaseController
 
         if (empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             return $this->doDefault($lang['strspecifytabletoempty']);
-            exit();
         }
 
         if ($confirm) {
@@ -1130,7 +1129,6 @@ class TablesController extends BaseController
 
         if (empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             return $this->doDefault($lang['strspecifytabletodrop']);
-            exit();
         }
 
         if ($confirm) {

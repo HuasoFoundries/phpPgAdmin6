@@ -438,8 +438,7 @@ class SchemasController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['nsp']) && empty($_REQUEST['ma'])) {
-            $this->doDefault($lang['strspecifyschematodrop']);
-            exit();
+            return $this->doDefault($lang['strspecifyschematodrop']);
         }
 
         if ($confirm) {

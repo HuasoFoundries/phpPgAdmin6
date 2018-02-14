@@ -19,7 +19,7 @@ class ConstraintsController extends BaseController
 
         $action = $this->action;
         if ($action == 'tree') {
-            return $this->doTree();
+            return $this->/** @scrutinizer ignore-call */doTree();
         }
 
         $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
@@ -79,10 +79,12 @@ class ConstraintsController extends BaseController
 
                 break;
             case 'save_create':
-                $this->doSaveCreate();
+                $this->/** @scrutinizer ignore-call */
+                doSaveCreate();
                 break;
             case 'create':
-                $this->doCreate();
+                $this->/** @scrutinizer ignore-call */
+                doCreate();
                 break;
             case 'drop':
                 if (isset($_POST['drop'])) {

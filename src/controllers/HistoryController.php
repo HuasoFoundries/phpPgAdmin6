@@ -44,8 +44,7 @@ class HistoryController extends BaseController
                 $this->doDefault();
                 break;
             case 'download':
-                $this->doDownloadHistory();
-                break;
+                return $this->doDownloadHistory();
             default:
                 $this->doDefault();
         }
@@ -252,7 +251,5 @@ class HistoryController extends BaseController
 
             echo "\n";
         }
-
-        exit;
     }
 }

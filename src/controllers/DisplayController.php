@@ -20,7 +20,7 @@ class DisplayController extends BaseController
 
         /* shortcuts: this function exit the script for ajax purpose */
         if ($action == 'dobrowsefk') {
-            $this->doBrowseFK();
+            return $this->doBrowseFK();
         }
 
         set_time_limit(0);
@@ -247,7 +247,8 @@ class DisplayController extends BaseController
 
         $_gets['strings'] = $_REQUEST['strings'];
 
-        if ($save_history && is_object($rs) && ($type == 'QUERY')) { //{
+        if ($save_history && is_object($rs) && ($type == 'QUERY')) {
+            //{
             $misc->saveScriptHistory($_REQUEST['query']);
         }
 
@@ -1015,6 +1016,5 @@ class DisplayController extends BaseController
 
         echo '</div>';
 
-        exit;
     }
 }
