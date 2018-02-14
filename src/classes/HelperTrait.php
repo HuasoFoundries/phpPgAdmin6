@@ -3,14 +3,12 @@ namespace PHPPgAdmin;
 
 trait HelperTrait
 {
-
     public function halt($msg)
     {
         $body = $this->container->responseobj->getBody();
         $body->write($msg);
 
         throw new \Slim\Exception\SlimException($this->container->requestobj, $this->container->responseobj);
-
     }
 
     /**
