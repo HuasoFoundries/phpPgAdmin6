@@ -83,7 +83,6 @@ class PluginManager
         foreach ($hooks as $hook => $functions) {
             if (!in_array($hook, $this->available_hooks)) {
                 $this->halt(sprintf($this->lang['strhooknotfound'] . "\t\n", $hook));
-
             }
             $this->hooks[$hook][$plugin_name] = $functions;
         }
@@ -133,7 +132,6 @@ class PluginManager
         if (!isset($this->plugins_list[$plugin_name])) {
             // Show an error and stop the application
             $this->halt(sprintf($this->lang['strpluginnotfound'] . "\t\n", $plugin_name));
-
         }
         $plugin = $this->plugins_list[$plugin_name];
 
