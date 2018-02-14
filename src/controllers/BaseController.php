@@ -302,9 +302,9 @@ class BaseController
      * Print out a message
      *
      * @param string  $msg       The message
-     * @param bool    $do_print
+     * @param bool    $do_print if true, print the message. Return the string otherwise
      *
-     * @return string
+     * @return string a paragraph containing the message, whose linebreaks are replaced by <br> elements
      */
     public function printMsg($msg, $do_print = true)
     {
@@ -315,6 +315,7 @@ class BaseController
         }
         if ($do_print) {
             echo $html;
+            return $html;
         } else {
             return $html;
         }

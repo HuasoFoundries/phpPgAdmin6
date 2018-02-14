@@ -781,4 +781,17 @@ class DatabaseController extends BaseController
         // Default focus
         $this->setFocus('forms[0].query');
     }
+
+    /**
+     * This functions does pretty much nothing. It's meant to implement
+     * an abstract method of AdminTrait
+     *
+     * @param string  $msg  The message
+     *
+     * @return string  The message
+     */
+    public function doDefault($msg = '')
+    {
+        return $msg;
+    }
 }

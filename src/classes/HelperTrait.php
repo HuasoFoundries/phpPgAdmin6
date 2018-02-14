@@ -3,7 +3,15 @@ namespace PHPPgAdmin;
 
 trait HelperTrait
 {
-    public function halt($msg)
+
+    /**
+     * Halts the execution of the program. It's like calling exit() but using builtin Slim Exceptions
+     *
+     * @param string  $msg  The message to show to the user
+     *
+     * @throws \Slim\Exception\SlimException  (description)
+     */
+    public function halt($msg = 'An error has happened')
     {
         $body = $this->container->responseobj->getBody();
         $body->write($msg);
@@ -12,14 +20,14 @@ trait HelperTrait
 
     /**
      * Receives N parameters and sends them to the console adding where was it called from
-     * @return [type] [description]
+     * @return null
      */
     public function prtrace()
     {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = ([
-            'class0'    => $backtrace[3]['class'],
+            /*'class0'    => $backtrace[3]['class'],
             'type0'     => $backtrace[3]['type'],
             'function0' => $backtrace[3]['function'],
             'spacer0'   => ' ',
@@ -33,7 +41,7 @@ trait HelperTrait
             'spacer2'   => ' ',
             'line1'     => $backtrace[1]['line'],
 
-            'spacer3'   => "\n",
+            'spacer3'   => "\n",*/
 
             'class2'    => $backtrace[1]['class'],
             'type2'     => $backtrace[1]['type'],
@@ -45,8 +53,14 @@ trait HelperTrait
         $tag = implode('', $btarray0);
 
         \PC::debug(func_get_args(), $tag);
+        return;
     }
 
+    /**
+     * Receives N parameters and sends them to the console adding where was it
+     * called from
+     * @return null
+     */
     public static function statictrace()
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
@@ -62,12 +76,15 @@ trait HelperTrait
         $tag = implode('', $btarray0);
 
         \PC::debug(func_get_args(), $tag);
+        return;
     }
 
     /**
      * Returns a string with html <br> variant replaced with a new line
-     * @param  string $msg [description]
-     * @return string      [description]
+     *
+     * @param string  $msg  message to convert
+     *
+     * @return string  converted message
      */
     public static function br2ln(string $msg)
     {

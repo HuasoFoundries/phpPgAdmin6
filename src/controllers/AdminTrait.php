@@ -844,7 +844,7 @@ trait AdminTrait
         return true;
     }
 
-    abstract public function doDefault();
+    abstract public function doDefault($msg = '');
 
     abstract public function printTrail($trail = [], $do_print = true);
 

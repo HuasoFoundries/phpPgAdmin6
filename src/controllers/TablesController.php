@@ -1173,7 +1173,6 @@ class TablesController extends BaseController
                         } else {
                             $data->endTransaction();
                             return $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($t, ENT_QUOTES, 'UTF-8'), $lang['strtabledroppedbad']));
-                            return;
                         }
                     }
                 }
