@@ -43,7 +43,7 @@ class DatabaseController extends BaseController
         if ($action == 'locks' || $action == 'processes') {
             $scripts .= '<script src="' . SUBFOLDER . '/js/database.js" type="text/javascript"></script>';
 
-            $refreshTime = $conf['ajax_refresh'] * 1000;
+            $refreshTime = $conf['ajax_refresh'] * 1500;
 
             $scripts .= "<script type=\"text/javascript\">\n";
             $scripts .= "var Database = {\n";
@@ -109,6 +109,8 @@ class DatabaseController extends BaseController
         echo $output;
 
         $this->printFooter(true, $footer_template);
+
+        return;
     }
 
     public function doTree($print = true)
@@ -662,9 +664,7 @@ class DatabaseController extends BaseController
 
         echo $this->printTable($processes, $columns, $actions, 'database-processes', $lang['strnodata']);
 
-        if ($isAjax) {
-            exit;
-        }
+        return;
     }
 
     public function currentLocks($isAjax = false)
@@ -716,9 +716,7 @@ class DatabaseController extends BaseController
         $actions = [];
         echo $this->printTable($variables, $columns, $actions, 'database-locks', $lang['strnodata']);
 
-        if ($isAjax) {
-            exit;
-        }
+        return;
     }
 
     /**
