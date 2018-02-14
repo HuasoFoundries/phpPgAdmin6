@@ -1015,6 +1015,5 @@ class DisplayController extends BaseController
         }
 
         echo '</div>';
-
     }
 }
