@@ -48,6 +48,7 @@ class LoginController extends BaseController
         $server_id = $this->container->requestobj->getQueryParam('server');
 
         if ($server_id === null) {
+            $this->prtrace('invalid server param');
             return $this->lang['strinvalidserverparam'];
         }
 

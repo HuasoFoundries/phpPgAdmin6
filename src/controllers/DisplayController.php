@@ -18,7 +18,6 @@ class DisplayController extends BaseController
         $data           = $misc->getDatabaseAccessor();
         $action         = $this->action;
 
-        /* shortcuts: this function exit the script for ajax purpose */
         if ($action == 'dobrowsefk') {
             return $this->doBrowseFK();
         }
