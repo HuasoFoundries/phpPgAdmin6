@@ -855,5 +855,4 @@ trait AdminTrait
     abstract public function printTabs($tabs, $activetab, $do_print = true);
 
     abstract public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null);
-
 }

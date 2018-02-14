@@ -1002,7 +1002,6 @@ class DisplayController extends BaseController
              * we should show OID if show_oids is true
              * so we give true to withOid in functions bellow
              */
-
             echo '<table><tr>';
             $this->printTableHeaderCells($rs, false, true);
             echo '</tr>';
@@ -1013,8 +1012,6 @@ class DisplayController extends BaseController
         } else {
             echo $lang['strnodata'];
         }
-
         echo '</div>';
-
     }
 }
