@@ -6,9 +6,9 @@ use \PHPPgAdmin\Decorators\Decorator;
 trait AdminTrait
 {
 
-/**
- * Show confirmation of cluster and perform cluster
- */
+    /**
+     * Show confirmation of cluster and perform cluster
+     */
     public function doCluster($type, $confirm = false)
     {
         $this->script = ($type == 'database') ? 'database.php' : 'tables.php';
@@ -824,7 +824,8 @@ trait AdminTrait
                 $this->doDropAutovacuum($type, true);
                 break;
             case 'confaddautovac':
-                $this->doAddAutovacuum(true);
+                $this->/** @scrutinizer ignore-call */
+                doAddAutovacuum(true);
                 break;
             case 'editautovac':
                 if (isset($_POST['save'])) {
@@ -842,4 +843,17 @@ trait AdminTrait
         }
         return true;
     }
+
+    abstract public function doDefault();
+
+    abstract public function printTrail($trail = [], $do_print = true);
+
+    abstract public function printTitle($title, $help = null, $do_print = true);
+
+    abstract public function printMsg($msg, $do_print = true);
+
+    abstract public function printTabs($tabs, $activetab, $do_print = true);
+
+    abstract public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null);
+
 }
