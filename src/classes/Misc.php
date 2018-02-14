@@ -446,7 +446,6 @@ class Misc
         // Unable to find a matching server, are we being hacked?
 
         return $this->halt($this->lang['strinvalidserverparam']);
-
     }
 
     /**
