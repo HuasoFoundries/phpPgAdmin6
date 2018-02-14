@@ -13,6 +13,8 @@ $(document).ready(function () {
 		.insertAfter(controlLink)
 		.hide();
 
+	controlLink.show();
+
 
 	function refreshTable() {
 		if (Database.ajax_time_refresh > 0) {
@@ -31,6 +33,7 @@ $(document).ready(function () {
 				success: function (html) {
 					$('#data_block').html(html);
 					timeid = window.setTimeout(refreshTable, Database.ajax_time_refresh)
+					loading.hide();
 				},
 				error: function () {
 					controlLink.click();
@@ -43,20 +46,20 @@ $(document).ready(function () {
 		}
 	}
 
-	controlLink.toggle(
-		function () {
-			//$(errmsg).hide();
+	controlLink.on('click', function () {
+		console.log(timeid);
+		if (timeid === null) {
+			console.log('toggle 1');
 			timeid = window.setTimeout(refreshTable, Database.ajax_time_refresh);
-			controlLink.html('<img src="' + Database.str_stop.icon + '" alt="" />&nbsp;' + Database.str_stop.text + '&nbsp;&nbsp;&nbsp;');
-		},
-		function () {
-			//$(errmsg).hide();
-			//$(loading).hide();
+			controlLink.empty().append('<img src="' + Database.str_stop.icon + '" alt="" />&nbsp;' + Database.str_stop.text + '&nbsp;&nbsp;&nbsp;');
+		} else {
+			console.log('toggle 2');
 			window.clearInterval(timeid);
 			if (query) query.abort();
-			controlLink.html('<img src="' + Database.str_start.icon + '" alt="" />&nbsp;' + Database.str_start.text);
+			controlLink.empty().append('<img src="' + Database.str_start.icon + '" alt="" />&nbsp;' + Database.str_start.text);
 		}
-	);
+	});
+
 
 	/* preload images */
 	$('#control img').hide()
