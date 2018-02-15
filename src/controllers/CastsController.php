@@ -22,7 +22,7 @@ class CastsController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
         if ('tree' == $action) {
             return $this->doTree();
@@ -78,14 +78,14 @@ class CastsController extends BaseController
                 'field' => Decorator::field('casttarget'),
             ],
             'function' => [
-                'title' => $lang['strfunction'],
-                'field' => Decorator::field('castfunc'),
+                'title'  => $lang['strfunction'],
+                'field'  => Decorator::field('castfunc'),
                 'params' => ['null' => $lang['strbinarycompat']],
             ],
             'implicit' => [
-                'title' => $lang['strimplicit'],
-                'field' => Decorator::field('castcontext'),
-                'type' => 'callback',
+                'title'  => $lang['strimplicit'],
+                'field'  => Decorator::field('castcontext'),
+                'type'   => 'callback',
                 'params' => ['function' => $renderCastContext, 'align' => 'center'],
             ],
             'comment' => [

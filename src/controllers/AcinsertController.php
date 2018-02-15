@@ -20,15 +20,15 @@ class AcinsertController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
+        $lang   = $this->lang;
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         if (isset($_POST['offset'])) {
             $offset = " OFFSET {$_POST['offset']}";
         } else {
             $_POST['offset'] = 0;
-            $offset = ' OFFSET 0';
+            $offset          = ' OFFSET 0';
         }
 
         $keynames = [];

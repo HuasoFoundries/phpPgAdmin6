@@ -107,8 +107,8 @@ class GroupsController extends BaseController
             'group' => [
                 'title' => $lang['strgroup'],
                 'field' => Decorator::field('groname'),
-                'url' => "groups.php?action=properties&amp;{$this->misc->href}&amp;",
-                'vars' => ['group' => 'groname'],
+                'url'   => "groups.php?action=properties&amp;{$this->misc->href}&amp;",
+                'vars'  => ['group' => 'groname'],
             ],
             'actions' => [
                 'title' => $lang['stractions'],
@@ -118,12 +118,12 @@ class GroupsController extends BaseController
         $actions = [
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'groups.php',
+                        'url'     => 'groups.php',
                         'urlvars' => [
                             'action' => 'confirm_drop',
-                            'group' => Decorator::field('groname'),
+                            'group'  => Decorator::field('groname'),
                         ],
                     ],
                 ],
@@ -135,7 +135,7 @@ class GroupsController extends BaseController
         $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
-                    'url' => 'groups.php',
+                    'url'     => 'groups.php',
                     'urlvars' => [
                         'action' => 'create',
                         'server' => $_REQUEST['server'],
@@ -221,7 +221,7 @@ class GroupsController extends BaseController
         $this->printMsg($msg);
 
         $groupdata = $data->getGroup($_REQUEST['group']);
-        $users = $data->getUsers();
+        $users     = $data->getUsers();
 
         if ($groupdata->recordCount() > 0) {
             $columns = [
@@ -237,13 +237,13 @@ class GroupsController extends BaseController
             $actions = [
                 'drop' => [
                     'content' => $lang['strdrop'],
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
-                            'url' => 'groups.php',
+                            'url'     => 'groups.php',
                             'urlvars' => [
                                 'action' => 'confirm_drop_member',
-                                'group' => $_REQUEST['group'],
-                                'user' => Decorator::field('usename'),
+                                'group'  => $_REQUEST['group'],
+                                'user'   => Decorator::field('usename'),
                             ],
                         ],
                     ],
@@ -272,7 +272,7 @@ class GroupsController extends BaseController
         $this->printNavLinks(['showall' => [
             'attr' => [
                 'href' => [
-                    'url' => 'groups.php',
+                    'url'     => 'groups.php',
                     'urlvars' => [
                         'server' => $_REQUEST['server'],
                     ],

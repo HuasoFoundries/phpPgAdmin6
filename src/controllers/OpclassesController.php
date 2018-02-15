@@ -78,7 +78,7 @@ class OpclassesController extends BaseController
             'default' => [
                 'title' => $lang['strdefault'],
                 'field' => Decorator::field('opcdefault'),
-                'type' => 'yesno',
+                'type'  => 'yesno',
             ],
             'comment' => [
                 'title' => $lang['strcomment'],
@@ -107,8 +107,8 @@ class OpclassesController extends BaseController
         $proto = Decorator::concat(Decorator::field('opcname'), '/', Decorator::field('amname'));
 
         $attrs = [
-            'text' => $proto,
-            'icon' => 'OperatorClass',
+            'text'    => $proto,
+            'icon'    => 'OperatorClass',
             'toolTip' => Decorator::field('opccomment'),
         ];
 

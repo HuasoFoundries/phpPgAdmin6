@@ -78,7 +78,7 @@ class ConversionsController extends BaseController
             'default' => [
                 'title' => $lang['strdefault'],
                 'field' => Decorator::field('condefault'),
-                'type' => 'yesno',
+                'type'  => 'yesno',
             ],
             'comment' => [
                 'title' => $lang['strcomment'],

@@ -22,7 +22,7 @@ class LanguagesController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
         if ('tree' == $action) {
             return $this->doTree();
@@ -67,7 +67,7 @@ class LanguagesController extends BaseController
             'trusted' => [
                 'title' => $lang['strtrusted'],
                 'field' => Decorator::field('lanpltrusted'),
-                'type' => 'yesno',
+                'type'  => 'yesno',
             ],
             'function' => [
                 'title' => $lang['strfunction'],

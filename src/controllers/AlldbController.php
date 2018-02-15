@@ -14,7 +14,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class AlldbController extends BaseController
 {
     public $controller_name = 'AlldbController';
-    public $table_place = 'alldb-databases';
+    public $table_place     = 'alldb-databases';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -23,7 +23,7 @@ class AlldbController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
 
         if ('tree' == $action) {
@@ -97,15 +97,15 @@ class AlldbController extends BaseController
         $this->printTrail('server');
         $this->printTabs('server', 'databases');
         $this->printMsg($msg);
-        $data = $this->misc->getDatabaseAccessor();
+        $data      = $this->misc->getDatabaseAccessor();
         $databases = $data->getDatabases();
 
         $columns = [
             'database' => [
                 'title' => $lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url' => \SUBFOLDER."/redirect/database?{$this->misc->href}&amp;",
-                'vars' => ['database' => 'datname'],
+                'url'   => \SUBFOLDER."/redirect/database?{$this->misc->href}&amp;",
+                'vars'  => ['database' => 'datname'],
             ],
             'owner' => [
                 'title' => $lang['strowner'],
@@ -130,7 +130,7 @@ class AlldbController extends BaseController
             'dbsize' => [
                 'title' => $lang['strsize'],
                 'field' => Decorator::field('dbsize'),
-                'type' => 'prettysize',
+                'type'  => 'prettysize',
             ],
             'actions' => [
                 'title' => $lang['stractions'],
@@ -144,17 +144,17 @@ class AlldbController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['database' => 'datname'],
-                'url' => 'alldb.php',
+                'url'     => 'alldb.php',
                 'default' => null,
             ],
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'alldb.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => [
-                            'subject' => 'database',
-                            'action' => 'confirm_drop',
+                            'subject'      => 'database',
+                            'action'       => 'confirm_drop',
                             'dropdatabase' => Decorator::field('datname'),
                         ],
                     ],
@@ -163,11 +163,11 @@ class AlldbController extends BaseController
             ],
             'privileges' => [
                 'content' => $lang['strprivileges'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'privileges.php',
+                        'url'     => 'privileges.php',
                         'urlvars' => [
-                            'subject' => 'database',
+                            'subject'  => 'database',
                             'database' => Decorator::field('datname'),
                         ],
                     ],
@@ -177,12 +177,12 @@ class AlldbController extends BaseController
         if ($data->hasAlterDatabase()) {
             $actions['alter'] = [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'alldb.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => [
-                            'subject' => 'database',
-                            'action' => 'confirm_alter',
+                            'subject'       => 'database',
+                            'action'        => 'confirm_alter',
                             'alterdatabase' => Decorator::field('datname'),
                         ],
                     ],
@@ -212,7 +212,7 @@ class AlldbController extends BaseController
             'create' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'alldb.php',
+                        'url'     => 'alldb.php',
                         'urlvars' => [
                             'action' => 'create',
                             'server' => $_REQUEST['server'],
@@ -239,11 +239,11 @@ class AlldbController extends BaseController
         //$this->prtrace($reqvars);
 
         $attrs = [
-            'text' => Decorator::field('datname'),
-            'icon' => 'Database',
+            'text'    => Decorator::field('datname'),
+            'icon'    => 'Database',
             'toolTip' => Decorator::field('datcomment'),
-            'action' => Decorator::redirecturl('redirect.php', $reqvars, ['database' => Decorator::field('datname')]),
-            'branch' => Decorator::url('/src/views/database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
+            'action'  => Decorator::redirecturl('redirect.php', $reqvars, ['database' => Decorator::field('datname')]),
+            'branch'  => Decorator::url('/src/views/database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
         ];
 
         return $this->printTree($databases, $attrs, 'databases');
@@ -275,7 +275,7 @@ class AlldbController extends BaseController
             if ($data->hasAlterDatabaseOwner() && $data->isSuperUser()) {
                 // Fetch all users
 
-                $rs = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
+                $rs    = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
                 $owner = isset($rs->fields['usename']) ? $rs->fields['usename'] : '';
                 $users = $data->getUsers();
 
@@ -290,7 +290,7 @@ class AlldbController extends BaseController
                 echo "</select></td></tr>\n";
             }
             if ($data->hasSharedComments()) {
-                $rs = $data->getDatabaseComment($_REQUEST['alterdatabase']);
+                $rs      = $data->getDatabaseComment($_REQUEST['alterdatabase']);
                 $comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
                 echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
                 echo '<td class="data1">';

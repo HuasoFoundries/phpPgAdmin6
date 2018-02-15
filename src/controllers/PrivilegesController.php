@@ -12,7 +12,7 @@ namespace PHPPgAdmin\Controller;
 class PrivilegesController extends BaseController
 {
     public $controller_name = 'PrivilegesController';
-    public $table_place = 'privileges-privileges';
+    public $table_place     = 'privileges-privileges';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -21,9 +21,9 @@ class PrivilegesController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
-        $data = $this->misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strprivileges']);
         $this->printBody();
@@ -59,9 +59,9 @@ class PrivilegesController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
-        $action = $this->action;
-        $data = $this->misc->getDatabaseAccessor();
+        $lang     = $this->lang;
+        $action   = $this->action;
+        $data     = $this->misc->getDatabaseAccessor();
         $database = $this->misc->getDatabase();
 
         $this->printTrail($_REQUEST['subject']);
@@ -169,46 +169,46 @@ class PrivilegesController extends BaseController
             case 'function':
             case 'tablespace':
                 $alllabel = "showall{$_REQUEST['subject']}s";
-                $allurl = "{$_REQUEST['subject']}s.php";
-                $alltxt = $lang["strshowall{$_REQUEST['subject']}s"];
+                $allurl   = "{$_REQUEST['subject']}s.php";
+                $alltxt   = $lang["strshowall{$_REQUEST['subject']}s"];
 
                 break;
             case 'schema':
                 $alllabel = 'showallschemas';
-                $allurl = 'schemas.php';
-                $alltxt = $lang['strshowallschemas'];
+                $allurl   = 'schemas.php';
+                $alltxt   = $lang['strshowallschemas'];
 
                 break;
             case 'database':
                 $alllabel = 'showalldatabases';
-                $allurl = 'alldb.php';
-                $alltxt = $lang['strshowalldatabases'];
+                $allurl   = 'alldb.php';
+                $alltxt   = $lang['strshowalldatabases'];
 
                 break;
         }
 
         $subject = $_REQUEST['subject'];
-        $object = $_REQUEST[$_REQUEST['subject']];
+        $object  = $_REQUEST[$_REQUEST['subject']];
 
         if ('function' == $_REQUEST['subject']) {
             $objectoid = $_REQUEST[$_REQUEST['subject'].'_oid'];
-            $urlvars = [
-                'action' => 'alter',
-                'server' => $_REQUEST['server'],
-                'database' => $_REQUEST['database'],
-                'schema' => $_REQUEST['schema'],
-                $subject => $object,
+            $urlvars   = [
+                'action'         => 'alter',
+                'server'         => $_REQUEST['server'],
+                'database'       => $_REQUEST['database'],
+                'schema'         => $_REQUEST['schema'],
+                $subject         => $object,
                 "{$subject}_oid" => $objectoid,
-                'subject' => $subject,
+                'subject'        => $subject,
             ];
         } elseif ('column' == $_REQUEST['subject']) {
             $urlvars = [
-                'action' => 'alter',
-                'server' => $_REQUEST['server'],
+                'action'   => 'alter',
+                'server'   => $_REQUEST['server'],
                 'database' => $_REQUEST['database'],
-                'schema' => $_REQUEST['schema'],
-                $subject => $object,
-                'subject' => $subject,
+                'schema'   => $_REQUEST['schema'],
+                $subject   => $object,
+                'subject'  => $subject,
             ];
 
             if (isset($_REQUEST['table'])) {
@@ -218,11 +218,11 @@ class PrivilegesController extends BaseController
             }
         } else {
             $urlvars = [
-                'action' => 'alter',
-                'server' => $_REQUEST['server'],
+                'action'   => 'alter',
+                'server'   => $_REQUEST['server'],
                 'database' => $_REQUEST['database'],
-                $subject => $object,
-                'subject' => $subject,
+                $subject   => $object,
+                'subject'  => $subject,
             ];
             if (isset($_REQUEST['schema'])) {
                 $urlvars['schema'] = $_REQUEST['schema'];
@@ -233,7 +233,7 @@ class PrivilegesController extends BaseController
             'grant' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'privileges.php',
+                        'url'     => 'privileges.php',
                         'urlvars' => array_merge($urlvars, ['mode' => 'grant']),
                     ],
                 ],
@@ -242,7 +242,7 @@ class PrivilegesController extends BaseController
             'revoke' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'privileges.php',
+                        'url'     => 'privileges.php',
                         'urlvars' => array_merge($urlvars, ['mode' => 'revoke']),
                     ],
                 ],
@@ -254,9 +254,9 @@ class PrivilegesController extends BaseController
             $navlinks[$alllabel] = [
                 'attr' => [
                     'href' => [
-                        'url' => $allurl,
+                        'url'     => $allurl,
                         'urlvars' => [
-                            'server' => $_REQUEST['server'],
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                         ],
                     ],
@@ -282,9 +282,9 @@ class PrivilegesController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
-        $data = $this->misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['username'])) {
             $_REQUEST['username'] = [];

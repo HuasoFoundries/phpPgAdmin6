@@ -131,8 +131,8 @@ class SequencesController extends BaseController
             'sequence' => [
                 'title' => $lang['strsequence'],
                 'field' => Decorator::field('seqname'),
-                'url' => "sequences.php?action=properties&amp;{$this->misc->href}&amp;",
-                'vars' => ['sequence' => 'seqname'],
+                'url'   => "sequences.php?action=properties&amp;{$this->misc->href}&amp;",
+                'vars'  => ['sequence' => 'seqname'],
             ],
             'owner' => [
                 'title' => $lang['strowner'],
@@ -150,16 +150,16 @@ class SequencesController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['sequence' => 'seqname'],
-                'url' => 'sequences.php',
+                'url'     => 'sequences.php',
             ],
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'sequences.php',
+                        'url'     => 'sequences.php',
                         'urlvars' => [
-                            'action' => 'confirm_alter',
-                            'subject' => 'sequence',
+                            'action'   => 'confirm_alter',
+                            'subject'  => 'sequence',
                             'sequence' => Decorator::field('seqname'),
                         ],
                     ],
@@ -167,11 +167,11 @@ class SequencesController extends BaseController
             ],
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'sequences.php',
+                        'url'     => 'sequences.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
+                            'action'   => 'confirm_drop',
                             'sequence' => Decorator::field('seqname'),
                         ],
                     ],
@@ -180,11 +180,11 @@ class SequencesController extends BaseController
             ],
             'privileges' => [
                 'content' => $lang['strprivileges'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'privileges.php',
+                        'url'     => 'privileges.php',
                         'urlvars' => [
-                            'subject' => 'sequence',
+                            'subject'  => 'sequence',
                             'sequence' => Decorator::field('seqname'),
                         ],
                     ],
@@ -197,12 +197,12 @@ class SequencesController extends BaseController
         $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
-                    'url' => 'sequences.php',
+                    'url'     => 'sequences.php',
                     'urlvars' => [
-                        'action' => 'create',
-                        'server' => $_REQUEST['server'],
+                        'action'   => 'create',
+                        'server'   => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema' => $_REQUEST['schema'],
+                        'schema'   => $_REQUEST['schema'],
                     ],
                 ],
             ],
@@ -225,14 +225,14 @@ class SequencesController extends BaseController
         $reqvars = $this->misc->getRequestVars('sequence');
 
         $attrs = [
-            'text' => Decorator::field('seqname'),
-            'icon' => 'Sequence',
+            'text'    => Decorator::field('seqname'),
+            'icon'    => 'Sequence',
             'toolTip' => Decorator::field('seqcomment'),
-            'action' => Decorator::actionurl(
+            'action'  => Decorator::actionurl(
                 'sequences.php',
                 $reqvars,
                 [
-                    'action' => 'properties',
+                    'action'   => 'properties',
                     'sequence' => Decorator::field('seqname'),
                 ]
             ),
@@ -301,12 +301,12 @@ class SequencesController extends BaseController
                 'alter' => [
                     'attr' => [
                         'href' => [
-                            'url' => 'sequences.php',
+                            'url'     => 'sequences.php',
                             'urlvars' => [
-                                'action' => 'confirm_alter',
-                                'server' => $_REQUEST['server'],
+                                'action'   => 'confirm_alter',
+                                'server'   => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema' => $_REQUEST['schema'],
+                                'schema'   => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
@@ -316,12 +316,12 @@ class SequencesController extends BaseController
                 'setval' => [
                     'attr' => [
                         'href' => [
-                            'url' => 'sequences.php',
+                            'url'     => 'sequences.php',
                             'urlvars' => [
-                                'action' => 'confirm_setval',
-                                'server' => $_REQUEST['server'],
+                                'action'   => 'confirm_setval',
+                                'server'   => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema' => $_REQUEST['schema'],
+                                'schema'   => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
@@ -331,12 +331,12 @@ class SequencesController extends BaseController
                 'nextval' => [
                     'attr' => [
                         'href' => [
-                            'url' => 'sequences.php',
+                            'url'     => 'sequences.php',
                             'urlvars' => [
-                                'action' => 'nextval',
-                                'server' => $_REQUEST['server'],
+                                'action'   => 'nextval',
+                                'server'   => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema' => $_REQUEST['schema'],
+                                'schema'   => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
@@ -346,12 +346,12 @@ class SequencesController extends BaseController
                 'restart' => [
                     'attr' => [
                         'href' => [
-                            'url' => 'sequences.php',
+                            'url'     => 'sequences.php',
                             'urlvars' => [
-                                'action' => 'restart',
-                                'server' => $_REQUEST['server'],
+                                'action'   => 'restart',
+                                'server'   => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema' => $_REQUEST['schema'],
+                                'schema'   => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
@@ -361,12 +361,12 @@ class SequencesController extends BaseController
                 'reset' => [
                     'attr' => [
                         'href' => [
-                            'url' => 'sequences.php',
+                            'url'     => 'sequences.php',
                             'urlvars' => [
-                                'action' => 'reset',
-                                'server' => $_REQUEST['server'],
+                                'action'   => 'reset',
+                                'server'   => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema' => $_REQUEST['schema'],
+                                'schema'   => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
@@ -376,11 +376,11 @@ class SequencesController extends BaseController
                 'showall' => [
                     'attr' => [
                         'href' => [
-                            'url' => 'sequences.php',
+                            'url'     => 'sequences.php',
                             'urlvars' => [
-                                'server' => $_REQUEST['server'],
+                                'server'   => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema' => $_REQUEST['schema'],
+                                'schema'   => $_REQUEST['schema'],
                             ],
                         ],
                     ],
@@ -442,7 +442,7 @@ class SequencesController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['sequence'])) {
-                $msg = '';
+                $msg    = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['sequence'] as $s) {

@@ -138,7 +138,7 @@ class ConstraintsController extends BaseController
 
         $cnPre = function (&$rowdata) use ($data) {
             if (is_null($rowdata->fields['consrc'])) {
-                $atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
+                $atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
                 $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
             } else {
                 $rowdata->fields['+definition'] = $rowdata->fields['consrc'];
@@ -159,7 +159,7 @@ class ConstraintsController extends BaseController
             'definition' => [
                 'title' => $lang['strdefinition'],
                 'field' => Decorator::field('+definition'),
-                'type' => 'pre',
+                'type'  => 'pre',
             ],
             'actions' => [
                 'title' => $lang['stractions'],
@@ -173,14 +173,14 @@ class ConstraintsController extends BaseController
         $actions = [
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'constraints.php',
+                        'url'     => 'constraints.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'table' => $_REQUEST['table'],
+                            'action'     => 'confirm_drop',
+                            'table'      => $_REQUEST['table'],
                             'constraint' => Decorator::field('conname'),
-                            'type' => Decorator::field('contype'),
+                            'type'       => Decorator::field('contype'),
                         ],
                     ],
                 ],
@@ -193,13 +193,13 @@ class ConstraintsController extends BaseController
             'addcheck' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'constraints.php',
+                        'url'     => 'constraints.php',
                         'urlvars' => [
-                            'action' => 'add_check',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'add_check',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -208,13 +208,13 @@ class ConstraintsController extends BaseController
             'adduniq' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'constraints.php',
+                        'url'     => 'constraints.php',
                         'urlvars' => [
-                            'action' => 'add_unique_key',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'add_unique_key',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -223,13 +223,13 @@ class ConstraintsController extends BaseController
             'addpk' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'constraints.php',
+                        'url'     => 'constraints.php',
                         'urlvars' => [
-                            'action' => 'add_primary_key',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'add_primary_key',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -238,13 +238,13 @@ class ConstraintsController extends BaseController
             'addfk' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'constraints.php',
+                        'url'     => 'constraints.php',
                         'urlvars' => [
-                            'action' => 'add_foreign_key',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'add_foreign_key',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -446,7 +446,7 @@ class ConstraintsController extends BaseController
                 $this->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
                 $this->printMsg($msg);
 
-                $attrs = $data->getTableAttributes($_REQUEST['table']);
+                $attrs  = $data->getTableAttributes($_REQUEST['table']);
                 $tables = $data->getTables(true);
 
                 $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);

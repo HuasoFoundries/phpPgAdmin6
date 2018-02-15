@@ -13,9 +13,9 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class MaterializedviewsController extends BaseController
 {
-    public $script = 'materializedviews.php';
+    public $script          = 'materializedviews.php';
     public $controller_name = 'MaterializedviewsController';
-    public $table_place = 'matviews-matviews';
+    public $table_place     = 'matviews-matviews';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -24,7 +24,7 @@ class MaterializedviewsController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
 
         if ('tree' == $action) {
@@ -128,8 +128,8 @@ class MaterializedviewsController extends BaseController
             'matview' => [
                 'title' => 'M '.$lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url' => \SUBFOLDER."/redirect/matview?{$this->misc->href}&amp;",
-                'vars' => ['matview' => 'relname'],
+                'url'   => \SUBFOLDER."/redirect/matview?{$this->misc->href}&amp;",
+                'vars'  => ['matview' => 'relname'],
             ],
             'owner' => [
                 'title' => $lang['strowner'],
@@ -147,17 +147,17 @@ class MaterializedviewsController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['matview' => 'relname'],
-                'url' => 'materializedviews.php',
+                'url'     => 'materializedviews.php',
             ],
             'browse' => [
                 'content' => $lang['strbrowse'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'display.php',
+                        'url'     => 'display.php',
                         'urlvars' => [
-                            'action' => 'confselectrows',
+                            'action'  => 'confselectrows',
                             'subject' => 'matview',
-                            'return' => 'schema',
+                            'return'  => 'schema',
                             'matview' => Decorator::field('relname'),
                         ],
                     ],
@@ -165,11 +165,11 @@ class MaterializedviewsController extends BaseController
             ],
             'select' => [
                 'content' => $lang['strselect'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'materializedviews.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => [
-                            'action' => 'confselectrows',
+                            'action'  => 'confselectrows',
                             'matview' => Decorator::field('relname'),
                         ],
                     ],
@@ -185,11 +185,11 @@ class MaterializedviewsController extends BaseController
 
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'materializedviewproperties.php',
+                        'url'     => 'materializedviewproperties.php',
                         'urlvars' => [
-                            'action' => 'confirm_alter',
+                            'action'  => 'confirm_alter',
                             'matview' => Decorator::field('relname'),
                         ],
                     ],
@@ -197,12 +197,12 @@ class MaterializedviewsController extends BaseController
             ],
             'drop' => [
                 'multiaction' => 'confirm_drop',
-                'content' => $lang['strdrop'],
-                'attr' => [
+                'content'     => $lang['strdrop'],
+                'attr'        => [
                     'href' => [
-                        'url' => 'materializedviews.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
+                            'action'  => 'confirm_drop',
                             'matview' => Decorator::field('relname'),
                         ],
                     ],
@@ -216,12 +216,12 @@ class MaterializedviewsController extends BaseController
             'create' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'materializedviews.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => [
-                            'action' => 'create',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -230,12 +230,12 @@ class MaterializedviewsController extends BaseController
             'createwiz' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'materializedviews.php',
+                        'url'     => 'materializedviews.php',
                         'urlvars' => [
-                            'action' => 'wiz_create',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'wiz_create',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -260,12 +260,12 @@ class MaterializedviewsController extends BaseController
         $reqvars = $this->misc->getRequestVars('matview');
 
         $attrs = [
-            'text' => Decorator::field('relname'),
-            'icon' => 'MView',
+            'text'       => Decorator::field('relname'),
+            'icon'       => 'MView',
             'iconAction' => Decorator::url('display.php', $reqvars, ['matview' => Decorator::field('relname')]),
-            'toolTip' => Decorator::field('relcomment'),
-            'action' => Decorator::redirecturl('redirect.php', $reqvars, ['matview' => Decorator::field('relname')]),
-            'branch' => Decorator::url('materializedviews.php', $reqvars, ['action' => 'subtree', 'matview' => Decorator::field('relname')]),
+            'toolTip'    => Decorator::field('relcomment'),
+            'action'     => Decorator::redirecturl('redirect.php', $reqvars, ['matview' => Decorator::field('relname')]),
+            'branch'     => Decorator::url('materializedviews.php', $reqvars, ['action' => 'subtree', 'matview' => Decorator::field('relname')]),
         ];
 
         return $this->printTree($matviews, $attrs, 'matviews');
@@ -278,13 +278,13 @@ class MaterializedviewsController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $tabs = $this->misc->getNavTabs('matview');
-        $items = $this->adjustTabsForTree($tabs);
+        $tabs    = $this->misc->getNavTabs('matview');
+        $items   = $this->adjustTabsForTree($tabs);
         $reqvars = $this->misc->getRequestVars('matview');
 
         $attrs = [
-            'text' => Decorator::field('title'),
-            'icon' => Decorator::field('icon'),
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
             'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['matview' => $_REQUEST['matview']]),
             'branch' => Decorator::ifempty(
                 Decorator::field('branch'),
@@ -294,7 +294,7 @@ class MaterializedviewsController extends BaseController
                     Decorator::field('urlvars'),
                     $reqvars,
                     [
-                        'action' => 'tree',
+                        'action'  => 'tree',
                         'matview' => $_REQUEST['matview'],
                     ]
                 )
@@ -429,7 +429,7 @@ class MaterializedviewsController extends BaseController
         // Generate query SQL
         $query = $data->getSelectSQL($_REQUEST['matview'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
 
-        $_REQUEST['query'] = $query;
+        $_REQUEST['query']  = $query;
         $_REQUEST['return'] = 'schema';
 
         $this->setNoOutput(true);
@@ -482,7 +482,7 @@ class MaterializedviewsController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['view'])) {
-                $msg = '';
+                $msg    = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['view'] as $s) {
@@ -555,7 +555,7 @@ class MaterializedviewsController extends BaseController
 
             //get linking keys
             $rsLinkKeys = $data->getLinkingKeys($arrSelTables);
-            $linkCount = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
+            $linkCount  = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
 
             $arrFields = []; //array that will hold all our table/field names
 
@@ -572,8 +572,8 @@ class MaterializedviewsController extends BaseController
                     $arrFields["{$arrSelTables[$i]['schemaname']}.{$arrSelTables[$i]['tablename']}.{$attrs->fields['attname']}"] = serialize(
                         [
                             'schemaname' => $arrSelTables[$i]['schemaname'],
-                            'tablename' => $arrSelTables[$i]['tablename'],
-                            'fieldname' => $attrs->fields['attname'], ]
+                            'tablename'  => $arrSelTables[$i]['tablename'],
+                            'fieldname'  => $attrs->fields['attname'], ]
                     );
                     $attrs->moveNext();
                 }
@@ -620,11 +620,11 @@ class MaterializedviewsController extends BaseController
                 echo "<tr>\n<td class=\"${rowClass}\">\n";
 
                 if (!$rsLinkKeys->EOF) {
-                    $curLeftLink = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
+                    $curLeftLink  = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
                     $curRightLink = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['f_schema'], 'tablename' => $rsLinkKeys->fields['f_table'], 'fieldname' => $rsLinkKeys->fields['f_field']]));
                     $rsLinkKeys->moveNext();
                 } else {
-                    $curLeftLink = '';
+                    $curLeftLink  = '';
                     $curRightLink = '';
                 }
 
@@ -696,9 +696,9 @@ class MaterializedviewsController extends BaseController
 
         $arrTables = [];
         while (!$tables->EOF) {
-            $arrTmp = [];
-            $arrTmp['schemaname'] = $tables->fields['nspname'];
-            $arrTmp['tablename'] = $tables->fields['relname'];
+            $arrTmp                                                               = [];
+            $arrTmp['schemaname']                                                 = $tables->fields['nspname'];
+            $arrTmp['tablename']                                                  = $tables->fields['relname'];
             $arrTables[$tables->fields['nspname'].'.'.$tables->fields['relname']] = serialize($arrTmp);
             $tables->moveNext();
         }
@@ -847,8 +847,8 @@ class MaterializedviewsController extends BaseController
                     }
                 }
                 // We must perform some magic to make sure that we have a valid join order
-                $count = sizeof($arrLinks);
-                $arrJoined = [];
+                $count       = sizeof($arrLinks);
+                $arrJoined   = [];
                 $arrUsedTbls = [];
 
                 // If we have at least one join condition, output it
@@ -856,7 +856,7 @@ class MaterializedviewsController extends BaseController
                     $j = 0;
                     while ($j < $count) {
                         foreach ($arrLinks as $curLink) {
-                            $arrLeftLink = unserialize($curLink['leftlink']);
+                            $arrLeftLink  = unserialize($curLink['leftlink']);
                             $arrRightLink = unserialize($curLink['rightlink']);
                             $data->fieldArrayClean($arrLeftLink);
                             $data->fieldArrayClean($arrRightLink);
