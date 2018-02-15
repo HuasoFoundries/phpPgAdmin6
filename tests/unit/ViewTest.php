@@ -17,6 +17,7 @@ class ViewTest extends \Codeception\Test\Unit
     {
         $Helper          = $this->getModule('\Helper\Unit');
         $this->container = $Helper->getContainer();
+        //\Codeception\Util\Debug::debug('BASE_PATH is ' . \BASE_PATH);
     }
 
     protected function _after() {}

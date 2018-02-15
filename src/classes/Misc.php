@@ -1962,42 +1962,42 @@ class Misc
     {
         if (is_string($icon)) {
             $path = "/images/themes/{$this->conf['theme']}/{$icon}";
-            if (file_exists(BASE_PATH . $path . '.png')) {
+            if (file_exists(\BASE_PATH . $path . '.png')) {
                 return SUBFOLDER . $path . '.png';
             }
 
-            if (file_exists(BASE_PATH . $path . '.gif')) {
+            if (file_exists(\BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
             }
 
-            if (file_exists(BASE_PATH . $path . '.ico')) {
+            if (file_exists(\BASE_PATH . $path . '.ico')) {
                 return SUBFOLDER . $path . '.ico';
             }
 
             $path = "/images/themes/default/{$icon}";
-            if (file_exists(BASE_PATH . $path . '.png')) {
+            if (file_exists(\BASE_PATH . $path . '.png')) {
                 return SUBFOLDER . $path . '.png';
             }
 
-            if (file_exists(BASE_PATH . $path . '.gif')) {
+            if (file_exists(\BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
             }
 
-            if (file_exists(BASE_PATH . $path . '.ico')) {
+            if (file_exists(\BASE_PATH . $path . '.ico')) {
                 return SUBFOLDER . $path . '.ico';
             }
         } else {
             // Icon from plugins
             $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
-            if (file_exists(BASE_PATH . $path . '.png')) {
+            if (file_exists(\BASE_PATH . $path . '.png')) {
                 return SUBFOLDER . $path . '.png';
             }
 
-            if (file_exists(BASE_PATH . $path . '.gif')) {
+            if (file_exists(\BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
             }
 
-            if (file_exists(BASE_PATH . $path . '.ico')) {
+            if (file_exists(\BASE_PATH . $path . '.ico')) {
                 return SUBFOLDER . $path . '.ico';
             }
         }
