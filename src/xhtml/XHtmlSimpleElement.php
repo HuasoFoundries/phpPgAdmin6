@@ -1,16 +1,19 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 /**
- *  XHtmlSimpleElement
+ *  XHtmlSimpleElement.
  *
  *  Used to generate Xhtml-Code for simple xhtml elements
  *  (i.e. elements, that can't contain child elements)
  *
  *
  *  @author    Felix Meinhold
- *
  */
 class XHtmlSimpleElement
 {
@@ -20,12 +23,13 @@ class XHtmlSimpleElement
     public $_attributes = [];
 
     use \PHPPgAdmin\HelperTrait;
+
     /**
-     * Constructor
+     * Constructor.
      *
      * @param    string    The element's name. Defaults to name of the
      * derived class
-     *
+     * @param null|mixed $element
      */
     public function __construct($element = null)
     {
@@ -51,8 +55,7 @@ class XHtmlSimpleElement
     }
 
     /**
-     * Private function generates xhtml
-     * @access private
+     * Private function generates xhtml.
      */
     public function _html()
     {
@@ -68,8 +71,7 @@ class XHtmlSimpleElement
     }
 
     /**
-     * Returns xhtml code
-     *
+     * Returns xhtml code.
      */
     public function fetch()
     {
@@ -77,8 +79,7 @@ class XHtmlSimpleElement
     }
 
     /**
-     * Echoes xhtml
-     *
+     * Echoes xhtml.
      */
     public function show()
     {

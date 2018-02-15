@@ -1,14 +1,21 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class HelpController extends BaseController
 {
-    public $_name = 'HelpController';
+    public $controller_name = 'HelpController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
         $action = $this->action;
@@ -16,19 +23,19 @@ class HelpController extends BaseController
         switch ($action) {
             case 'browse':
                 $this->doBrowse();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
     }
 
     public function doDefault()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (isset($_REQUEST['help'])) {
             $url = $data->getHelp($_REQUEST['help']);
@@ -36,11 +43,13 @@ class HelpController extends BaseController
             \PC::debug(['url' => $url], 'HelpController::doDefault');
             if (is_array($url)) {
                 $this->doChoosePage($url);
+
                 return;
             }
 
             if ($url) {
-                header("Location: $url");
+                header("Location: ${url}");
+
                 return;
             }
         }
@@ -50,10 +59,8 @@ class HelpController extends BaseController
 
     public function doBrowse($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strhelppagebrowser']);
         $this->printBody();
@@ -85,10 +92,7 @@ class HelpController extends BaseController
 
     public function doChoosePage($urls)
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strhelppagebrowser']);
         $this->printBody();

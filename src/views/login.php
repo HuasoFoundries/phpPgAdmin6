@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Login screen
- *
- * $Id: login.php,v 1.38 2007/09/04 19:39:48 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 $do_render = false;

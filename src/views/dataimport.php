@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Does an import to a particular table from a text file
- *
- * $Id: dataimport.php,v 1.11 2007/01/22 16:33:01 soranzo Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 $do_render = false;

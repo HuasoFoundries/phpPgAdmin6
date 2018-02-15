@@ -1,9 +1,7 @@
 <?php
 
-/**
- * List tables in a database
- *
- * $Id: tblproperties.php,v 1.92 2008/01/19 13:46:15 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

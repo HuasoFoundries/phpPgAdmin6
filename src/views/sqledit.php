@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Alternative SQL editing window
- *
- * $Id: sqledit.php,v 1.40 2008/01/10 19:37:07 xzilla Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

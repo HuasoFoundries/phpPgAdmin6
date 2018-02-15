@@ -6,9 +6,9 @@
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
 
-defined('BASE_PATH') or DEFINE('BASE_PATH', dirname(__DIR__));
+defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
 
-DEFINE('THEME_PATH', BASE_PATH . '/src/themes');
+define('THEME_PATH', BASE_PATH . '/src/themes');
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 
@@ -22,7 +22,7 @@ if (file_exists(BASE_PATH . '/config.inc.php')) {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 }
 $debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
-DEFINE('DEBUGMODE', $debugmode);
+define('DEBUGMODE', $debugmode);
 
 require_once BASE_PATH . '/vendor/autoload.php';
 
@@ -51,9 +51,6 @@ if (DEBUGMODE) {
     $handler->setHandleExceptions(false); // disable exceptions handling
     $handler->setCallOldHandlers(true); // disable passing errors & exceptions to prviously defined handlers
 }
-
-$handler->start(); // initialize handlers*/
-\PhpConsole\Helper::register(); // it will register global PC class
 
 $composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
 $appVersion   = $composerinfo->version;
@@ -93,11 +90,16 @@ $app = new \Slim\App($config);
 // Fetch DI Container
 $container = $app->getContainer();
 
-//\Kint::dump($container->environment);die();
+if ($container instanceof \Psr\Container\ContainerInterface) {
+    $handler->start(); // initialize handlers*/
+    \PhpConsole\Helper::register(); // it will register global PC class
 
-$normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
-$subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
-define('SUBFOLDER', $subfolder);
+    $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
+    $subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
+    define('SUBFOLDER', $subfolder);
+} else {
+    trigger_error("App Container must be an instance of \Psr\Container\ContainerInterface", E_USER_ERROR);
+}
 
 $container['version']     = 'v' . $appVersion;
 $container['errors']      = [];

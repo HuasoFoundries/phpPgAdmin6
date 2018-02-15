@@ -1,30 +1,34 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class HistoryController extends BaseController
 {
-    public $_name = 'HistoryController';
+    public $controller_name = 'HistoryController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
         $lang   = $this->lang;
         $action = $this->action;
-
-        $data = $misc->getDatabaseAccessor();
 
         $this->scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
 
         switch ($action) {
             case 'confdelhistory':
                 $this->doDelHistory($_REQUEST['queryid'], true);
+
                 break;
             case 'delhistory':
                 if (isset($_POST['yes'])) {
@@ -32,9 +36,11 @@ class HistoryController extends BaseController
                 }
 
                 $this->doDefault();
+
                 break;
             case 'confclearhistory':
                 $this->doClearHistory(true);
+
                 break;
             case 'clearhistory':
                 if (isset($_POST['yes'])) {
@@ -42,6 +48,7 @@ class HistoryController extends BaseController
                 }
 
                 $this->doDefault();
+
                 break;
             case 'download':
                 return $this->doDownloadHistory();
@@ -51,29 +58,29 @@ class HistoryController extends BaseController
 
         // Set the name of the window
         $this->setWindowName('history');
+
         return $this->printFooter();
     }
 
     public function doDefault()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
-        $onchange = "onchange=\"location.href='" . SUBFOLDER . "/src/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
+        $onchange = "onchange=\"location.href='" . \SUBFOLDER . "/src/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
         $this->printHeader($lang['strhistory'], $this->scripts, true, 'header.twig');
 
         // Bring to the front always
         echo "<body onload=\"window.focus();\">\n";
 
-        echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
-        $misc->printConnection($onchange);
+        echo '<form action="' . \SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
+        $this->misc->printConnection($onchange);
         echo '</form><br />';
 
         if (!isset($_REQUEST['database'])) {
             echo "<p>{$lang['strnodatabaseselected']}</p>\n";
+
             return;
         }
 
@@ -182,10 +189,8 @@ class HistoryController extends BaseController
 
     public function doDelHistory($qid, $confirm)
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printHeader($lang['strhistory'], $this->scripts);
@@ -197,10 +202,10 @@ class HistoryController extends BaseController
             echo "<p>{$lang['strconfdelhistory']}</p>\n";
 
             echo '<pre>', htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), '</pre>';
-            echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
-            echo "<input type=\"hidden\" name=\"queryid\" value=\"$qid\" />\n";
-            echo $misc->form;
+            echo "<input type=\"hidden\" name=\"queryid\" value=\"${qid}\" />\n";
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
             echo "</form>\n";
@@ -211,10 +216,8 @@ class HistoryController extends BaseController
 
     public function doClearHistory($confirm)
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printHeader($lang['strhistory'], $this->scripts);
@@ -225,9 +228,9 @@ class HistoryController extends BaseController
             echo "<h3>{$lang['strclearhistory']}</h3>\n";
             echo "<p>{$lang['strconfclearhistory']}</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"clearhistory\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
             echo "</form>\n";
@@ -245,7 +248,7 @@ class HistoryController extends BaseController
         foreach ($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']] as $queries) {
             $query = rtrim($queries['query']);
             echo $query;
-            if (substr($query, -1) != ';') {
+            if (';' != substr($query, -1)) {
                 echo ';';
             }
 

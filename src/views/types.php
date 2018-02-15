@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Manage types in a database
- *
- * $Id: types.php,v 1.42 2007/11/30 15:25:23 soranzo Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

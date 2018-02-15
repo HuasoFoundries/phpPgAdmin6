@@ -1,20 +1,25 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class InfoController extends BaseController
 {
-    public $_name = 'InfoController';
+    public $controller_name = 'InfoController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
 
         $action = $this->action;
@@ -25,6 +30,7 @@ class InfoController extends BaseController
         switch ($action) {
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -32,17 +38,16 @@ class InfoController extends BaseController
     }
 
     /**
-     * List all the information on the table
+     * List all the information on the table.
      *
      * @param string $msg
+     *
      * @return string|void
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('table');
         $this->printTabs('table', 'info');
@@ -61,10 +66,10 @@ class InfoController extends BaseController
         $indexstatsio   = $data->getStatsIndexIO($_REQUEST['table']);
 
         // Check that there is some info
-        if (($referrers === -99 || ($referrers !== -99 && $referrers->recordCount() == 0))
-            && $parents->recordCount() == 0 && $children->recordCount() == 0
-            && ($tablestatstups->recordCount() == 0 && $tablestatsio->recordCount() == 0
-                && $indexstatstups->recordCount() == 0 && $indexstatsio->recordCount() == 0)) {
+        if (($referrers === -99 || ($referrers !== -99 && 0 == $referrers->recordCount()))
+            && 0 == $parents->recordCount() && 0 == $children->recordCount()
+            && (0 == $tablestatstups->recordCount() && 0 == $tablestatsio->recordCount()
+                && 0 == $indexstatstups->recordCount() && 0 == $indexstatsio->recordCount())) {
             $this->printMsg($lang['strnoinfo']);
         } else {
             // Referring foreign tables
@@ -205,18 +210,18 @@ class InfoController extends BaseController
                 $i = 0;
 
                 while (!$tablestatstups->EOF) {
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "\t<tr class=\"data{$id}\">\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatstups->fields['seq_scan'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatstups->fields['seq_tup_read'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatstups->fields['idx_scan'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatstups->fields['idx_tup_fetch'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatstups->fields['n_tup_ins'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatstups->fields['n_tup_upd'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatstups->fields['n_tup_del'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['seq_scan'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['seq_tup_read'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['idx_scan'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['idx_tup_fetch'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['n_tup_ins'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['n_tup_upd'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['n_tup_del'], 'int4', $shownull), "</td>\n";
                     echo "\t</tr>\n";
                     $tablestatstups->movenext();
-                    $i++;
+                    ++$i;
                 }
 
                 echo "</table>\n";
@@ -250,7 +255,7 @@ class InfoController extends BaseController
                 $i = 0;
 
                 while (!$tablestatsio->EOF) {
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "\t<tr class=\"data{$id}\">\n";
 
                     $total = $tablestatsio->fields['heap_blks_hit'] + $tablestatsio->fields['heap_blks_read'];
@@ -260,8 +265,8 @@ class InfoController extends BaseController
                         $percentage = 0;
                     }
 
-                    echo "\t\t<td>", $misc->printVal($tablestatsio->fields['heap_blks_read'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatsio->fields['heap_blks_hit'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['heap_blks_read'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['heap_blks_hit'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
 
                     $total = $tablestatsio->fields['idx_blks_hit'] + $tablestatsio->fields['idx_blks_read'];
@@ -271,8 +276,8 @@ class InfoController extends BaseController
                         $percentage = 0;
                     }
 
-                    echo "\t\t<td>", $misc->printVal($tablestatsio->fields['idx_blks_read'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatsio->fields['idx_blks_hit'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['idx_blks_read'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['idx_blks_hit'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
 
                     $total = $tablestatsio->fields['toast_blks_hit'] + $tablestatsio->fields['toast_blks_read'];
@@ -282,8 +287,8 @@ class InfoController extends BaseController
                         $percentage = 0;
                     }
 
-                    echo "\t\t<td>", $misc->printVal($tablestatsio->fields['toast_blks_read'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatsio->fields['toast_blks_hit'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['toast_blks_read'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['toast_blks_hit'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
 
                     $total = $tablestatsio->fields['tidx_blks_hit'] + $tablestatsio->fields['tidx_blks_read'];
@@ -293,12 +298,12 @@ class InfoController extends BaseController
                         $percentage = 0;
                     }
 
-                    echo "\t\t<td>", $misc->printVal($tablestatsio->fields['tidx_blks_read'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($tablestatsio->fields['tidx_blks_hit'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['tidx_blks_read'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['tidx_blks_hit'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
                     echo "\t</tr>\n";
                     $tablestatsio->movenext();
-                    $i++;
+                    ++$i;
                 }
 
                 echo "</table>\n";
@@ -318,15 +323,15 @@ class InfoController extends BaseController
                 $i = 0;
 
                 while (!$indexstatstups->EOF) {
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "\t<tr class=\"data{$id}\">\n";
-                    echo "\t\t<td>", $misc->printVal($indexstatstups->fields['indexrelname']), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($indexstatstups->fields['idx_scan'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($indexstatstups->fields['idx_tup_read'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($indexstatstups->fields['idx_tup_fetch'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['indexrelname']), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_scan'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_tup_read'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_tup_fetch'], 'int4', $shownull), "</td>\n";
                     echo "\t</tr>\n";
                     $indexstatstups->movenext();
-                    $i++;
+                    ++$i;
                 }
 
                 echo "</table>\n";
@@ -346,7 +351,7 @@ class InfoController extends BaseController
                 $i = 0;
 
                 while (!$indexstatsio->EOF) {
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "\t<tr class=\"data{$id}\">\n";
                     $total = $indexstatsio->fields['idx_blks_hit'] + $indexstatsio->fields['idx_blks_read'];
                     if ($total > 0) {
@@ -355,13 +360,13 @@ class InfoController extends BaseController
                         $percentage = 0;
                     }
 
-                    echo "\t\t<td>", $misc->printVal($indexstatsio->fields['indexrelname']), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($indexstatsio->fields['idx_blks_read'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>", $misc->printVal($indexstatsio->fields['idx_blks_hit'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['indexrelname']), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['idx_blks_read'], 'int4', $shownull), "</td>\n";
+                    echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['idx_blks_hit'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
                     echo "\t</tr>\n";
                     $indexstatsio->movenext();
-                    $i++;
+                    ++$i;
                 }
 
                 echo "</table>\n";

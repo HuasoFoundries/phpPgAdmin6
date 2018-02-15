@@ -1,9 +1,7 @@
 <?php
-/**
- * Does an export of a database, schema, or table (via pg_dump)
- * to the screen or as a download.
- *
- * $Id: dbexport.php,v 1.22 2007/03/25 03:15:09 xzilla Exp $
+
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 $do_render = false;

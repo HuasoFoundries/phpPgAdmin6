@@ -1,24 +1,29 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class DomainsController extends BaseController
 {
-    public $_name = 'DomainsController';
+    public $controller_name = 'DomainsController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -28,6 +33,7 @@ class DomainsController extends BaseController
         switch ($action) {
             case 'add_check':
                 $this->addCheck(true);
+
                 break;
             case 'save_add_check':
                 if (isset($_POST['cancel'])) {
@@ -47,6 +53,7 @@ class DomainsController extends BaseController
                 break;
             case 'confirm_drop_con':
                 $this->doDropConstraint(true);
+
                 break;
             case 'save_create':
                 if (isset($_POST['cancel'])) {
@@ -58,6 +65,7 @@ class DomainsController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_POST['drop'])) {
@@ -69,6 +77,7 @@ class DomainsController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'save_alter':
                 if (isset($_POST['alter'])) {
@@ -80,12 +89,15 @@ class DomainsController extends BaseController
                 break;
             case 'alter':
                 $this->doAlter();
+
                 break;
             case 'properties':
                 $this->doProperties();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -93,14 +105,14 @@ class DomainsController extends BaseController
     }
 
     /**
-     * Show default list of domains in the database
+     * Show default list of domains in the database.
+     *
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'domains');
@@ -112,7 +124,7 @@ class DomainsController extends BaseController
             'domain'  => [
                 'title' => $lang['strdomain'],
                 'field' => Decorator::field('domname'),
-                'url'   => "domains.php?action=properties&amp;{$misc->href}&amp;",
+                'url'   => "domains.php?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['domain' => 'domname'],
             ],
             'type'    => [
@@ -199,20 +211,19 @@ class DomainsController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $domains = $data->getDomains();
 
-        $reqvars = $misc->getRequestVars('domain');
+        $reqvars = $this->misc->getRequestVars('domain');
 
         $attrs = [
             'text'    => Decorator::field('domname'),
             'icon'    => 'Domain',
             'toolTip' => Decorator::field('domcomment'),
-            'action'  => Decorator::actionurl('domains.php',
+            'action'  => Decorator::actionurl(
+                'domains.php',
                 $reqvars,
                 [
                     'action' => 'properties',
@@ -225,18 +236,20 @@ class DomainsController extends BaseController
     }
 
     /**
-     * Function to save after altering a domain
+     * Function to save after altering a domain.
      */
     public function doSaveAlter()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
-        $status = $data->alterDomain($_POST['domain'], $_POST['domdefault'],
-            isset($_POST['domnotnull']), $_POST['domowner']);
-        if ($status == 0) {
+        $status = $data->alterDomain(
+            $_POST['domain'],
+            $_POST['domdefault'],
+            isset($_POST['domnotnull']),
+            $_POST['domowner']
+        );
+        if (0 == $status) {
             $this->doProperties($lang['strdomainaltered']);
         } else {
             $this->doAlter($lang['strdomainalteredbad']);
@@ -244,14 +257,14 @@ class DomainsController extends BaseController
     }
 
     /**
-     * Allow altering a domain
+     * Allow altering a domain.
+     *
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('domain');
         $this->printTitle($lang['stralter'], 'pg.domain.alter');
@@ -275,12 +288,12 @@ class DomainsController extends BaseController
             }
 
             // Display domain info
-            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
             echo "<tr><th class=\"data left required\">{$lang['strtype']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
             echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$lang['strnotnull']}</label></th>\n";
             echo '<td class="data1"><input type="checkbox" id="domnotnull" name="domnotnull"', (isset($_POST['domnotnull']) ? ' checked="checked"' : ''), " /></td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
@@ -298,7 +311,7 @@ class DomainsController extends BaseController
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_alter\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -308,14 +321,15 @@ class DomainsController extends BaseController
     }
 
     /**
-     * Confirm and then actually add a CHECK constraint
+     * Confirm and then actually add a CHECK constraint.
+     *
+     * @param mixed $confirm
+     * @param mixed $msg
      */
     public function addCheck($confirm, $msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
             $_POST['name'] = '';
@@ -330,7 +344,7 @@ class DomainsController extends BaseController
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
@@ -344,17 +358,20 @@ class DomainsController extends BaseController
 
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_add_check\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"add\" value=\"{$lang['stradd']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            if (trim($_POST['definition']) == '') {
+            if ('' == trim($_POST['definition'])) {
                 $this->addCheck(true, $lang['strcheckneedsdefinition']);
             } else {
-                $status = $data->addDomainCheckConstraint($_POST['domain'],
-                    $_POST['definition'], $_POST['name']);
-                if ($status == 0) {
+                $status = $data->addDomainCheckConstraint(
+                    $_POST['domain'],
+                    $_POST['definition'],
+                    $_POST['name']
+                );
+                if (0 == $status) {
                     $this->doProperties($lang['strcheckadded']);
                 } else {
                     $this->addCheck(true, $lang['strcheckaddedbad']);
@@ -364,34 +381,38 @@ class DomainsController extends BaseController
     }
 
     /**
-     * Show confirmation of drop constraint and perform actual drop
+     * Show confirmation of drop constraint and perform actual drop.
+     *
+     * @param mixed $confirm
+     * @param mixed $msg
      */
     public function doDropConstraint($confirm, $msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('domain');
             $this->printTitle($lang['strdrop'], 'pg.constraint.drop');
             $this->printMsg($msg);
 
-            echo '<p>', sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
-                $misc->printVal($_REQUEST['domain'])), "</p>\n";
-            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<p>', sprintf(
+                $lang['strconfdropconstraint'],
+                $this->misc->printVal($_REQUEST['constraint']),
+                $this->misc->printVal($_REQUEST['domain'])
+            ), "</p>\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_con\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
             $status = $data->dropDomainConstraint($_POST['domain'], $_POST['constraint'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doProperties($lang['strconstraintdropped']);
             } else {
                 $this->doDropConstraint(true, $lang['strconstraintdroppedbad']);
@@ -401,13 +422,13 @@ class DomainsController extends BaseController
 
     /**
      * Show properties for a domain.  Allow manipulating constraints as well.
+     *
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('domain');
         $this->printTitle($lang['strproperties'], 'pg.domain');
@@ -417,23 +438,23 @@ class DomainsController extends BaseController
 
         if ($domaindata->recordCount() > 0) {
             // Show comment if any
-            if ($domaindata->fields['domcomment'] !== null) {
-                echo '<p class="comment">', $misc->printVal($domaindata->fields['domcomment']), "</p>\n";
+            if (null !== $domaindata->fields['domcomment']) {
+                echo '<p class="comment">', $this->misc->printVal($domaindata->fields['domcomment']), "</p>\n";
             }
 
             // Display domain info
             $domaindata->fields['domnotnull'] = $data->phpBool($domaindata->fields['domnotnull']);
             echo "<table>\n";
             echo "<tr><th class=\"data left\" style=\"width: 70px\">{$lang['strname']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strtype']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strnotnull']}</th>\n";
             echo '<td class="data1">', ($domaindata->fields['domnotnull'] ? 'NOT NULL' : ''), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($domaindata->fields['domdef']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domdef']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strowner']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($domaindata->fields['domowner']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domowner']), "</td></tr>\n";
             echo "</table>\n";
 
             // Display domain constraints
@@ -532,31 +553,31 @@ class DomainsController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('domain');
             $this->printTitle($lang['strdrop'], 'pg.domain.drop');
 
-            echo '<p>', sprintf($lang['strconfdropdomain'], $misc->printVal($_REQUEST['domain'])), "</p>\n";
-            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<p>', sprintf($lang['strconfdropdomain'], $this->misc->printVal($_REQUEST['domain'])), "</p>\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
             $status = $data->dropDomain($_POST['domain'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strdomaindropped']);
             } else {
                 $this->doDefault($lang['strdomaindroppedbad']);
@@ -565,14 +586,14 @@ class DomainsController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new domain
+     * Displays a screen where they can enter a new domain.
+     *
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['domname'])) {
             $_POST['domname'] = '';
@@ -604,7 +625,7 @@ class DomainsController extends BaseController
         $this->printTitle($lang['strcreatedomain'], 'pg.domain.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"domname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -616,7 +637,7 @@ class DomainsController extends BaseController
         while (!$types->EOF) {
             echo '<option value="', htmlspecialchars($types->fields['typname']), '"',
             ($types->fields['typname'] == $_POST['domtype']) ? ' selected="selected"' : '', '>',
-            $misc->printVal($types->fields['typname']), "</option>\n";
+            $this->misc->printVal($types->fields['typname']), "</option>\n";
             $types->moveNext();
         }
         echo "</select>\n";
@@ -626,8 +647,8 @@ class DomainsController extends BaseController
 
         // Output array type selector
         echo "<select name=\"domarray\">\n";
-        echo '<option value=""', ($_POST['domarray'] == '') ? ' selected="selected"' : '', "></option>\n";
-        echo '<option value="[]"', ($_POST['domarray'] == '[]') ? ' selected="selected"' : '', ">[ ]</option>\n";
+        echo '<option value=""', ('' == $_POST['domarray']) ? ' selected="selected"' : '', "></option>\n";
+        echo '<option value="[]"', ('[]' == $_POST['domarray']) ? ' selected="selected"' : '', ">[ ]</option>\n";
         echo "</select></td></tr>\n";
 
         echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$lang['strnotnull']}</label></th>\n";
@@ -643,33 +664,38 @@ class DomainsController extends BaseController
         }
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
     }
 
     /**
-     * Actually creates the new domain in the database
+     * Actually creates the new domain in the database.
      */
     public function doSaveCreate()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['domcheck'])) {
             $_POST['domcheck'] = '';
         }
 
         // Check that they've given a name and a definition
-        if ($_POST['domname'] == '') {
+        if ('' == $_POST['domname']) {
             $this->doCreate($lang['strdomainneedsname']);
         } else {
-            $status = $data->createDomain($_POST['domname'], $_POST['domtype'], $_POST['domlength'], $_POST['domarray'] != '',
-                isset($_POST['domnotnull']), $_POST['domdefault'], $_POST['domcheck']);
-            if ($status == 0) {
+            $status = $data->createDomain(
+                $_POST['domname'],
+                $_POST['domtype'],
+                $_POST['domlength'],
+                '' != $_POST['domarray'],
+                isset($_POST['domnotnull']),
+                $_POST['domdefault'],
+                $_POST['domcheck']
+            );
+            if (0 == $status) {
                 $this->doDefault($lang['strdomaincreated']);
             } else {
                 $this->doCreate($lang['strdomaincreatedbad']);

@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Manage servers
- *
- * $Id: servers.php,v 1.12 2008/02/18 22:20:26 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 $do_render = false;

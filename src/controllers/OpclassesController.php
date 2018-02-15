@@ -1,24 +1,29 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class OpclassesController extends BaseController
 {
-    public $_name = 'OpclassesController';
+    public $controller_name = 'OpclassesController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -28,6 +33,7 @@ class OpclassesController extends BaseController
         switch ($action) {
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -35,17 +41,16 @@ class OpclassesController extends BaseController
     }
 
     /**
-     * Show default list of opclasss in the database
+     * Show default list of opclasss in the database.
      *
      * @param string $msg
+     *
      * @return string|void
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'opclasses');
@@ -87,10 +92,8 @@ class OpclassesController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $opclasses = $data->getOpClasses();
 

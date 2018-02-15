@@ -1,20 +1,25 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class AcinsertController extends BaseController
 {
-    public $_name = 'AcinsertController';
+    public $controller_name = 'AcinsertController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         if (isset($_POST['offset'])) {
@@ -51,8 +56,8 @@ class AcinsertController extends BaseController
             foreach (array_keys($res->fields) as $h) {
                 echo '<th>';
 
-                if (in_array($h, $fkeynames)) {
-                    echo '<img src="' . $misc->icon('ForeignKey') . '" alt="[referenced key]" />';
+                if (in_array($h, $fkeynames, true)) {
+                    echo '<img src="' . $this->misc->icon('ForeignKey') . '" alt="[referenced key]" />';
                 }
 
                 echo htmlentities($h, ENT_QUOTES, 'UTF-8'), '</th>';
@@ -64,18 +69,18 @@ class AcinsertController extends BaseController
                 echo '<tr class="acline">';
                 foreach ($res->fields as $n => $v) {
                     $finfo = $res->fetchField($j++);
-                    if (in_array($n, $fkeynames)) {
+                    if (in_array($n, $fkeynames, true)) {
                         echo "<td><a href=\"javascript:void(0)\" class=\"fkval\" name=\"{$keyspos[$n]}\">",
-                        $misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
+                        $this->misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
                             '</a></td>';
                     } else {
                         echo '<td><a href="javascript:void(0)">',
-                        $misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
+                        $this->misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
                             '</a></td>';
                     }
                 }
                 echo "</tr>\n";
-                $i++;
+                ++$i;
                 $res->moveNext();
             }
             echo "</table>\n";
@@ -91,7 +96,7 @@ class AcinsertController extends BaseController
                 $js .= "fkl_hasprev=false;\n";
             }
 
-            if ($res->recordCount() == 12) {
+            if (12 == $res->recordCount()) {
                 $js .= "fkl_hasnext=true;\n";
                 echo '&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="fknext">Next &gt;&gt;</a>';
             } else {

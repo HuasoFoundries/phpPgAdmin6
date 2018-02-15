@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
 namespace PHPPgAdmin;
 
 /**
@@ -47,7 +49,7 @@ class PluginManager
         $plugins = $this->conf['plugins'];
 
         foreach ($plugins as $activated_plugin) {
-            $plugin_file = BASE_PATH . '/src/plugins/' . $activated_plugin . '/plugin.php';
+            $plugin_file = \BASE_PATH . '/src/plugins/' . $activated_plugin . '/plugin.php';
 
             // Verify is the activated plugin exists
             if (file_exists($plugin_file)) {
