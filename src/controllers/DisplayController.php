@@ -31,13 +31,13 @@ class DisplayController extends BaseController
 
         set_time_limit(0);
 
-        $scripts = '<script src="'.\SUBFOLDER.'/js/display.js" type="text/javascript"></script>';
+        $scripts = '<script src="' . \SUBFOLDER . '/js/display.js" type="text/javascript"></script>';
 
-        $scripts .= '<script type="text/javascript">'."\n";
+        $scripts .= '<script type="text/javascript">' . "\n";
         $scripts .= "var Display = {\n";
-        $scripts .= "errmsg: '".str_replace("'", "\\'", $lang['strconnectionfail'])."'\n";
+        $scripts .= "errmsg: '" . str_replace("'", "\\'", $lang['strconnectionfail']) . "'\n";
         $scripts .= "};\n";
-        $scripts .= '</script>'."\n";
+        $scripts .= '</script>' . "\n";
 
         $footer_template = 'footer.twig';
         $header_template = 'header.twig';
@@ -84,13 +84,13 @@ class DisplayController extends BaseController
         // Set the title based on the subject of the request
         if (isset($_REQUEST['subject'], $_REQUEST[$_REQUEST['subject']])) {
             if ('table' == $_REQUEST['subject']) {
-                $this->printHeader($lang['strtables'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
+                $this->printHeader($lang['strtables'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             } elseif ('view' == $_REQUEST['subject']) {
-                $this->printHeader($lang['strviews'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
+                $this->printHeader($lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             } elseif ('matview' == $_REQUEST['subject']) {
-                $this->printHeader('M'.$lang['strviews'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
+                $this->printHeader('M' . $lang['strviews'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             } elseif ('column' == $_REQUEST['subject']) {
-                $this->printHeader($lang['strcolumn'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
+                $this->printHeader($lang['strcolumn'] . ': ' . $_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             }
         } else {
             $this->printHeader($lang['strqueryresults'], $scripts, true, $header_template);
@@ -284,7 +284,7 @@ class DisplayController extends BaseController
         $this->prtrace($query);
         //die(htmlspecialchars($query));
 
-        echo '<form method="post" id="sqlform" action="'.$_SERVER['REQUEST_URI'].'">';
+        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($query);
@@ -310,7 +310,7 @@ class DisplayController extends BaseController
             }
 
             $buttons = [
-                'edit' => [
+                'edit'   => [
                     'content' => $lang['stredit'],
                     'attr'    => [
                         'href' => [
@@ -358,19 +358,19 @@ class DisplayController extends BaseController
             // Display edit and delete actions if we have a key
             $colspan = count($buttons);
             if ($colspan > 0 and count($key) > 0) {
-                echo "<th colspan=\"{$colspan}\" class=\"data\">{$lang['stractions']}</th>"."\n";
+                echo "<th colspan=\"{$colspan}\" class=\"data\">{$lang['stractions']}</th>" . "\n";
             }
 
             // we show OIDs only if we are in TABLE or SELECT type browsing
             $this->printTableHeaderCells($rs, $_gets, isset($object));
 
-            echo '</tr>'."\n";
+            echo '</tr>' . "\n";
 
             $i = 0;
             reset($rs->fields);
             while (!$rs->EOF) {
                 $id = (0 == ($i % 2) ? '1' : '2');
-                echo "<tr class=\"data{$id}\">"."\n";
+                echo "<tr class=\"data{$id}\">" . "\n";
                 // Display edit and delete links if we have a key
                 if ($colspan > 0 and count($key) > 0) {
                     $keys_array = [];
@@ -384,7 +384,7 @@ class DisplayController extends BaseController
                         $keys_array["key[{$v}]"] = $rs->fields[$v];
                     }
                     if ($has_nulls) {
-                        echo "<td colspan=\"{$colspan}\">&nbsp;</td>"."\n";
+                        echo "<td colspan=\"{$colspan}\">&nbsp;</td>" . "\n";
                     } else {
                         if (isset($actions['actionbuttons']['edit'])) {
                             $actions['actionbuttons']['edit']                            = $edit_params;
@@ -405,24 +405,24 @@ class DisplayController extends BaseController
                         foreach ($actions['actionbuttons'] as $action) {
                             echo "<td class=\"opbutton{$id}\">";
                             $this->printLink($action, true, __METHOD__);
-                            echo '</td>'."\n";
+                            echo '</td>' . "\n";
                         }
                     }
                 }
 
                 $this->printTableRowCells($rs, $fkey_information, isset($object));
 
-                echo '</tr>'."\n";
+                echo '</tr>' . "\n";
                 $rs->moveNext();
                 ++$i;
             }
-            echo '</table>'."\n";
+            echo '</table>' . "\n";
 
-            echo '<p>', $rs->recordCount(), " {$lang['strrows']}</p>"."\n";
+            echo '<p>', $rs->recordCount(), " {$lang['strrows']}</p>" . "\n";
             // Show page navigation
             $this->misc->printPages($_REQUEST['page'], $max_pages, $_gets);
         } else {
-            echo "<p>{$lang['strnodata']}</p>"."\n";
+            echo "<p>{$lang['strnodata']}</p>" . "\n";
         }
 
         // Navigation links
@@ -442,7 +442,7 @@ class DisplayController extends BaseController
             $urlvars = $this->misc->getSubjectParams($_REQUEST['return']);
 
             $navlinks['back'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => $urlvars['url'],
                         'urlvars' => $urlvars['params'],
@@ -455,7 +455,7 @@ class DisplayController extends BaseController
         // Edit SQL link
         if ('QUERY' == $type) {
             $navlinks['edit'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'database.php',
                         'urlvars' => array_merge($fields, [
@@ -471,7 +471,7 @@ class DisplayController extends BaseController
         // Expand/Collapse
         if ('expanded' == $_REQUEST['strings']) {
             $navlinks['collapse'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'display.php',
                         'urlvars' => array_merge(
@@ -487,7 +487,7 @@ class DisplayController extends BaseController
             ];
         } else {
             $navlinks['collapse'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'display.php',
                         'urlvars' => array_merge(
@@ -508,7 +508,7 @@ class DisplayController extends BaseController
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
                             'url'     => 'views.php',
                             'urlvars' => array_merge($fields, [
@@ -527,7 +527,7 @@ class DisplayController extends BaseController
             }
 
             $navlinks['download'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'dataexport.php',
                         'urlvars' => array_merge($fields, $urlvars),
@@ -540,7 +540,7 @@ class DisplayController extends BaseController
         // Insert
         if (isset($object) && (isset($subject) && 'table' == $subject)) {
             $navlinks['insert'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => array_merge($fields, [
@@ -555,7 +555,7 @@ class DisplayController extends BaseController
 
         // Refresh
         $navlinks['refresh'] = [
-            'attr' => [
+            'attr'    => [
                 'href' => [
                     'url'     => 'display.php',
                     'urlvars' => array_merge(
@@ -581,7 +581,6 @@ class DisplayController extends BaseController
      */
     public function doEditRow($confirm, $msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -609,7 +608,7 @@ class DisplayController extends BaseController
                 $fksprops = false;
             }
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/display.php" method="post" id="ac_form">'."\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/display.php" method="post" id="ac_form">' . "\n";
 
             /*echo '<p>';
             if (!$error) {
@@ -623,11 +622,11 @@ class DisplayController extends BaseController
             $elements = 0;
             $error    = true;
             if (1 == $rs->recordCount() && $attrs->recordCount() > 0) {
-                echo '<table>'."\n";
+                echo '<table>' . "\n";
 
                 // Output table header
                 echo "<tr><th class=\"data\">{$lang['strcolumn']}</th><th class=\"data\">{$lang['strtype']}</th>";
-                echo "<th class=\"data\">{$lang['strformat']}</th>"."\n";
+                echo "<th class=\"data\">{$lang['strformat']}</th>" . "\n";
                 echo "<th class=\"data\">{$lang['strnull']}</th><th class=\"data\">{$lang['strvalue']}</th></tr>";
 
                 $i = 0;
@@ -640,19 +639,19 @@ class DisplayController extends BaseController
                         $_REQUEST['format'][$attrs->fields['attname']] = 'VALUE';
                     }
 
-                    echo "<tr class=\"data{$id}\">"."\n";
+                    echo "<tr class=\"data{$id}\">" . "\n";
                     echo '<td style="white-space:nowrap;">', $this->misc->printVal($attrs->fields['attname']), '</td>';
-                    echo '<td style="white-space:nowrap;">'."\n";
+                    echo '<td style="white-space:nowrap;">' . "\n";
                     echo $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
                     echo '<input type="hidden" name="types[', htmlspecialchars($attrs->fields['attname']), ']" value="',
                     htmlspecialchars($attrs->fields['type']), '" /></td>';
                     ++$elements;
-                    echo '<td style="white-space:nowrap;">'."\n";
-                    echo '<select name="format['.htmlspecialchars($attrs->fields['attname']), ']">'."\n";
-                    echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attname']] == 'VALUE') ? ' selected="selected"' : '', ">{$lang['strvalue']}</option>"."\n";
+                    echo '<td style="white-space:nowrap;">' . "\n";
+                    echo '<select name="format[' . htmlspecialchars($attrs->fields['attname']), ']">' . "\n";
+                    echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attname']] == 'VALUE') ? ' selected="selected"' : '', ">{$lang['strvalue']}</option>" . "\n";
                     $selected = ($_REQUEST['format'][$attrs->fields['attname']] == 'EXPRESSION') ? ' selected="selected"' : '';
-                    echo '<option value="EXPRESSION"'.$selected.">{$lang['strexpression']}</option>"."\n";
-                    echo "</select>\n</td>"."\n";
+                    echo '<option value="EXPRESSION"' . $selected . ">{$lang['strexpression']}</option>" . "\n";
+                    echo "</select>\n</td>" . "\n";
                     ++$elements;
                     echo '<td style="white-space:nowrap;">';
                     // Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
@@ -662,7 +661,7 @@ class DisplayController extends BaseController
                             $_REQUEST['nulls'][$attrs->fields['attname']] = 'on';
                         }
                         echo "<label><span><input type=\"checkbox\" name=\"nulls[{$attrs->fields['attname']}]\"",
-                        isset($_REQUEST['nulls'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></span></label></td>'."\n";
+                        isset($_REQUEST['nulls'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></span></label></td>' . "\n";
                         ++$elements;
                     } else {
                         echo '&nbsp;</td>';
@@ -677,7 +676,7 @@ class DisplayController extends BaseController
                     // keep track of which element offset we're up to.  We can't refer to the null checkbox by name
                     // as it contains '[' and ']' characters.
                     if (!$attrs->fields['attnotnull']) {
-                        $extras['onChange'] = 'elements['.($elements - 1).'].checked = false;';
+                        $extras['onChange'] = 'elements[' . ($elements - 1) . '].checked = false;';
                     }
 
                     if ((false !== $fksprops) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
@@ -689,63 +688,63 @@ class DisplayController extends BaseController
 
                     echo '</td>';
                     ++$elements;
-                    echo '</tr>'."\n";
+                    echo '</tr>' . "\n";
                     ++$i;
                     $attrs->moveNext();
                 }
-                echo '</table>'."\n";
+                echo '</table>' . "\n";
 
                 $error = false;
             } elseif (1 != $rs->recordCount()) {
-                echo "<p>{$lang['strrownotunique']}</p>"."\n";
+                echo "<p>{$lang['strrownotunique']}</p>" . "\n";
             } else {
-                echo "<p>{$lang['strinvalidparam']}</p>"."\n";
+                echo "<p>{$lang['strinvalidparam']}</p>" . "\n";
             }
 
-            echo '<input type="hidden" name="action" value="editrow" />'."\n";
+            echo '<input type="hidden" name="action" value="editrow" />' . "\n";
             echo $this->misc->form;
             if (isset($_REQUEST['table'])) {
-                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'."\n";
+                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />' . "\n";
             }
 
             if (isset($_REQUEST['subject'])) {
-                echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), '" />'."\n";
+                echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), '" />' . "\n";
             }
 
             if (isset($_REQUEST['query'])) {
-                echo '<input type="hidden" name="query" value="', htmlspecialchars($_REQUEST['query']), '" />'."\n";
+                echo '<input type="hidden" name="query" value="', htmlspecialchars($_REQUEST['query']), '" />' . "\n";
             }
 
             if (isset($_REQUEST['count'])) {
-                echo '<input type="hidden" name="count" value="', htmlspecialchars($_REQUEST['count']), '" />'."\n";
+                echo '<input type="hidden" name="count" value="', htmlspecialchars($_REQUEST['count']), '" />' . "\n";
             }
 
             if (isset($_REQUEST['return'])) {
-                echo '<input type="hidden" name="return" value="', htmlspecialchars($_REQUEST['return']), '" />'."\n";
+                echo '<input type="hidden" name="return" value="', htmlspecialchars($_REQUEST['return']), '" />' . "\n";
             }
 
-            echo '<input type="hidden" name="page" value="', htmlspecialchars($_REQUEST['page']), '" />'."\n";
-            echo '<input type="hidden" name="sortkey" value="', htmlspecialchars($_REQUEST['sortkey']), '" />'."\n";
-            echo '<input type="hidden" name="sortdir" value="', htmlspecialchars($_REQUEST['sortdir']), '" />'."\n";
-            echo '<input type="hidden" name="strings" value="', htmlspecialchars($_REQUEST['strings']), '" />'."\n";
-            echo '<input type="hidden" name="key" value="', htmlspecialchars(urlencode(serialize($key))), '" />'."\n";
+            echo '<input type="hidden" name="page" value="', htmlspecialchars($_REQUEST['page']), '" />' . "\n";
+            echo '<input type="hidden" name="sortkey" value="', htmlspecialchars($_REQUEST['sortkey']), '" />' . "\n";
+            echo '<input type="hidden" name="sortdir" value="', htmlspecialchars($_REQUEST['sortdir']), '" />' . "\n";
+            echo '<input type="hidden" name="strings" value="', htmlspecialchars($_REQUEST['strings']), '" />' . "\n";
+            echo '<input type="hidden" name="key" value="', htmlspecialchars(urlencode(serialize($key))), '" />' . "\n";
             echo '<p>';
             if (!$error) {
-                echo "<input type=\"submit\" name=\"save\" accesskey=\"r\" value=\"{$lang['strsave']}\" />"."\n";
+                echo "<input type=\"submit\" name=\"save\" accesskey=\"r\" value=\"{$lang['strsave']}\" />" . "\n";
             }
 
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />"."\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
 
             if (false !== $fksprops) {
                 if ('default off' != $conf['autocomplete']) {
-                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$lang['strac']}</label>"."\n";
+                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$lang['strac']}</label>" . "\n";
                 } else {
-                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$lang['strac']}</label>"."\n";
+                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$lang['strac']}</label>" . "\n";
                 }
             }
 
-            echo '</p>'."\n";
-            echo '</form>'."\n";
+            echo '</p>' . "\n";
+            echo '</form>' . "\n";
         } else {
             if (!isset($_POST['values'])) {
                 $_POST['values'] = [];
@@ -780,7 +779,6 @@ class DisplayController extends BaseController
      */
     public function doDelRow($confirm)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -791,58 +789,58 @@ class DisplayController extends BaseController
 
             $rs = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/display.php" method="post">'."\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/display.php" method="post">' . "\n";
             echo $this->misc->form;
 
             if (1 == $rs->recordCount()) {
-                echo "<p>{$lang['strconfdeleterow']}</p>"."\n";
+                echo "<p>{$lang['strconfdeleterow']}</p>" . "\n";
 
                 $fkinfo = [];
                 echo '<table><tr>';
                 $this->printTableHeaderCells($rs, false, true);
                 echo '</tr>';
-                echo '<tr class="data1">'."\n";
+                echo '<tr class="data1">' . "\n";
                 $this->printTableRowCells($rs, $fkinfo, true);
-                echo '</tr>'."\n";
-                echo '</table>'."\n";
-                echo '<br />'."\n";
+                echo '</tr>' . "\n";
+                echo '</table>' . "\n";
+                echo '<br />' . "\n";
 
-                echo '<input type="hidden" name="action" value="delrow" />'."\n";
-                echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />"."\n";
-                echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />"."\n";
+                echo '<input type="hidden" name="action" value="delrow" />' . "\n";
+                echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />" . "\n";
+                echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />" . "\n";
             } elseif (1 != $rs->recordCount()) {
-                echo "<p>{$lang['strrownotunique']}</p>"."\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />"."\n";
+                echo "<p>{$lang['strrownotunique']}</p>" . "\n";
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
             } else {
-                echo "<p>{$lang['strinvalidparam']}</p>"."\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />"."\n";
+                echo "<p>{$lang['strinvalidparam']}</p>" . "\n";
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
             }
             if (isset($_REQUEST['table'])) {
-                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'."\n";
+                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />' . "\n";
             }
 
             if (isset($_REQUEST['subject'])) {
-                echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), '" />'."\n";
+                echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), '" />' . "\n";
             }
 
             if (isset($_REQUEST['query'])) {
-                echo '<input type="hidden" name="query" value="', htmlspecialchars($_REQUEST['query']), '" />'."\n";
+                echo '<input type="hidden" name="query" value="', htmlspecialchars($_REQUEST['query']), '" />' . "\n";
             }
 
             if (isset($_REQUEST['count'])) {
-                echo '<input type="hidden" name="count" value="', htmlspecialchars($_REQUEST['count']), '" />'."\n";
+                echo '<input type="hidden" name="count" value="', htmlspecialchars($_REQUEST['count']), '" />' . "\n";
             }
 
             if (isset($_REQUEST['return'])) {
-                echo '<input type="hidden" name="return" value="', htmlspecialchars($_REQUEST['return']), '" />'."\n";
+                echo '<input type="hidden" name="return" value="', htmlspecialchars($_REQUEST['return']), '" />' . "\n";
             }
 
-            echo '<input type="hidden" name="page" value="', htmlspecialchars($_REQUEST['page']), '" />'."\n";
-            echo '<input type="hidden" name="sortkey" value="', htmlspecialchars($_REQUEST['sortkey']), '" />'."\n";
-            echo '<input type="hidden" name="sortdir" value="', htmlspecialchars($_REQUEST['sortdir']), '" />'."\n";
-            echo '<input type="hidden" name="strings" value="', htmlspecialchars($_REQUEST['strings']), '" />'."\n";
-            echo '<input type="hidden" name="key" value="', htmlspecialchars(urlencode(serialize($_REQUEST['key']))), '" />'."\n";
-            echo '</form>'."\n";
+            echo '<input type="hidden" name="page" value="', htmlspecialchars($_REQUEST['page']), '" />' . "\n";
+            echo '<input type="hidden" name="sortkey" value="', htmlspecialchars($_REQUEST['sortkey']), '" />' . "\n";
+            echo '<input type="hidden" name="sortdir" value="', htmlspecialchars($_REQUEST['sortdir']), '" />' . "\n";
+            echo '<input type="hidden" name="strings" value="', htmlspecialchars($_REQUEST['strings']), '" />' . "\n";
+            echo '<input type="hidden" name="key" value="', htmlspecialchars(urlencode(serialize($_REQUEST['key']))), '" />' . "\n";
+            echo '</form>' . "\n";
         } else {
             $status = $data->deleteRow($_POST['table'], unserialize(urldecode($_POST['key'])));
             if (0 == $status) {
@@ -863,7 +861,6 @@ class DisplayController extends BaseController
      */
     public function &getFKInfo()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -874,7 +871,7 @@ class DisplayController extends BaseController
         if (isset($_REQUEST['table'])) {
             $constraints = $data->getConstraintsWithFields($_REQUEST['table']);
             if ($constraints->recordCount() > 0) {
-                $fkey_information['common_url'] = $this->misc->getHREF('schema').'&amp;subject=table';
+                $fkey_information['common_url'] = $this->misc->getHREF('schema') . '&amp;subject=table';
 
                 // build the FK constraints data structure
                 while (!$constraints->EOF) {
@@ -882,7 +879,7 @@ class DisplayController extends BaseController
                     if ('f' == $constr['contype']) {
                         if (!isset($fkey_information['byconstr'][$constr['conid']])) {
                             $fkey_information['byconstr'][$constr['conid']] = [
-                                'url_data' => 'table='.urlencode($constr['f_table']).'&amp;schema='.urlencode($constr['f_schema']),
+                                'url_data' => 'table=' . urlencode($constr['f_table']) . '&amp;schema=' . urlencode($constr['f_schema']),
                                 'fkeys'    => [],
                                 'consrc'   => $constr['consrc'],
                             ];
@@ -912,7 +909,6 @@ class DisplayController extends BaseController
      */
     public function printTableHeaderCells(&$rs, $args, $withOid)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -927,7 +923,7 @@ class DisplayController extends BaseController
             $finfo = $rs->fetchField($j);
 
             if (false === $args) {
-                echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>'."\n";
+                echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>' . "\n";
             } else {
                 $args['page']    = $_REQUEST['page'];
                 $args['sortkey'] = $j + 1;
@@ -943,12 +939,12 @@ class DisplayController extends BaseController
                 , $this->misc->printVal($finfo->name);
                 if ($_REQUEST['sortkey'] == ($j + 1)) {
                     if ('asc' == $_REQUEST['sortdir']) {
-                        echo '<img src="'.$this->misc->icon('RaiseArgument').'" alt="asc">';
+                        echo '<img src="' . $this->misc->icon('RaiseArgument') . '" alt="asc">';
                     } else {
-                        echo '<img src="'.$this->misc->icon('LowerArgument').'" alt="desc">';
+                        echo '<img src="' . $this->misc->icon('LowerArgument') . '" alt="desc">';
                     }
                 }
-                echo '</a></th>'."\n";
+                echo '</a></th>' . "\n";
             }
             ++$j;
         }
@@ -959,7 +955,6 @@ class DisplayController extends BaseController
     // Print data-row cells
     public function printTableRowCells(&$rs, &$fkey_information, $withOid)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -985,16 +980,16 @@ class DisplayController extends BaseController
                         $query_params = $fkey_information['byconstr'][$conid]['url_data'];
 
                         foreach ($fkey_information['byconstr'][$conid]['fkeys'] as $p_field => $f_field) {
-                            $query_params .= '&amp;'.urlencode("fkey[{$f_field}]").'='.urlencode($rs->fields[$p_field]);
+                            $query_params .= '&amp;' . urlencode("fkey[{$f_field}]") . '=' . urlencode($rs->fields[$p_field]);
                         }
 
                         // $fkey_information['common_url'] is already urlencoded
-                        $query_params .= '&amp;'.$fkey_information['common_url'];
+                        $query_params .= '&amp;' . $fkey_information['common_url'];
                         echo '<div style="display:inline-block;">';
-                        echo '<a class="fk fk_'.htmlentities($conid, ENT_QUOTES, 'UTF-8')."\" href=\"display.php?{$query_params}\">";
-                        echo '<img src="'.$this->misc->icon('ForeignKey').'" style="vertical-align:middle;" alt="[fk]" title="'
-                        .htmlentities($fkey_information['byconstr'][$conid]['consrc'], ENT_QUOTES, 'UTF-8')
-                            .'" />';
+                        echo '<a class="fk fk_' . htmlentities($conid, ENT_QUOTES, 'UTF-8') . "\" href=\"display.php?{$query_params}\">";
+                        echo '<img src="' . $this->misc->icon('ForeignKey') . '" style="vertical-align:middle;" alt="[fk]" title="'
+                        . htmlentities($fkey_information['byconstr'][$conid]['consrc'], ENT_QUOTES, 'UTF-8')
+                            . '" />';
                         echo '</a>';
                         echo '</div>';
                     }
@@ -1010,7 +1005,6 @@ class DisplayController extends BaseController
     // Print the FK row, used in ajax requests
     public function doBrowseFK()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -1037,7 +1031,7 @@ class DisplayController extends BaseController
             $max_pages
         );
 
-        echo '<a href="javascript:void(0);" style="display:table-cell;" class="fk_delete"><img alt="[delete]" src="'.$this->misc->icon('Delete').'" /></a>'."\n";
+        echo '<a href="javascript:void(0);" style="display:table-cell;" class="fk_delete"><img alt="[delete]" src="' . $this->misc->icon('Delete') . '" /></a>' . "\n";
         echo '<div style="display:table-cell;">';
 
         if (is_object($rs) && $rs->recordCount() > 0) {
@@ -1048,10 +1042,10 @@ class DisplayController extends BaseController
             echo '<table><tr>';
             $this->printTableHeaderCells($rs, false, true);
             echo '</tr>';
-            echo '<tr class="data1">'."\n";
+            echo '<tr class="data1">' . "\n";
             $this->printTableRowCells($rs, $fkinfo, true);
-            echo '</tr>'."\n";
-            echo '</table>'."\n";
+            echo '</tr>' . "\n";
+            echo '</table>' . "\n";
         } else {
             echo $lang['strnodata'];
         }

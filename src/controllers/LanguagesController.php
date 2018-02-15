@@ -20,7 +20,6 @@ class LanguagesController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang   = $this->lang;
         $action = $this->action;
@@ -48,7 +47,6 @@ class LanguagesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -64,7 +62,7 @@ class LanguagesController extends BaseController
                 'title' => $lang['strname'],
                 'field' => Decorator::field('lanname'),
             ],
-            'trusted' => [
+            'trusted'  => [
                 'title' => $lang['strtrusted'],
                 'field' => Decorator::field('lanpltrusted'),
                 'type'  => 'yesno',
@@ -85,7 +83,6 @@ class LanguagesController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();

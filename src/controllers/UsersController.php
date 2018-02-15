@@ -92,7 +92,6 @@ class UsersController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -108,7 +107,7 @@ class UsersController extends BaseController
         $users = $data->getUsers();
 
         $columns = [
-            'user' => [
+            'user'      => [
                 'title' => $lang['strusername'],
                 'field' => Decorator::field('usename'),
             ],
@@ -117,22 +116,22 @@ class UsersController extends BaseController
                 'field' => Decorator::field('usesuper'),
                 'type'  => 'yesno',
             ],
-            'createdb' => [
+            'createdb'  => [
                 'title' => $lang['strcreatedb'],
                 'field' => Decorator::field('usecreatedb'),
                 'type'  => 'yesno',
             ],
-            'expires' => [
+            'expires'   => [
                 'title'  => $lang['strexpires'],
                 'field'  => Decorator::field('useexpires'),
                 'type'   => 'callback',
                 'params' => ['function' => $renderUseExpires, 'null' => $lang['strnever']],
             ],
-            'defaults' => [
+            'defaults'  => [
                 'title' => $lang['strsessiondefaults'],
                 'field' => Decorator::field('useconfig'),
             ],
-            'actions' => [
+            'actions'   => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -150,7 +149,7 @@ class UsersController extends BaseController
                     ],
                 ],
             ],
-            'drop' => [
+            'drop'  => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -167,7 +166,7 @@ class UsersController extends BaseController
         echo $this->printTable($users, $columns, $actions, 'users-users', $lang['strnousers']);
 
         $this->printNavLinks(['create' => [
-            'attr' => [
+            'attr'    => [
                 'href' => [
                     'url'     => 'users.php',
                     'urlvars' => [
@@ -190,7 +189,6 @@ class UsersController extends BaseController
      */
     public function doAccount($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -222,7 +220,7 @@ class UsersController extends BaseController
         }
 
         $this->printNavLinks(['changepassword' => [
-            'attr' => [
+            'attr'    => [
                 'href' => [
                     'url'     => 'users.php',
                     'urlvars' => [
@@ -243,7 +241,6 @@ class UsersController extends BaseController
      */
     public function doChangePassword($confirm, $msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -264,7 +261,7 @@ class UsersController extends BaseController
                 $_POST['confirm'] = '';
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
@@ -307,7 +304,6 @@ class UsersController extends BaseController
      */
     public function doEdit($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -341,10 +337,10 @@ class UsersController extends BaseController
                 $_POST['formPassword'] = '';
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strusername']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['newname']).'" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . '" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$lang['strsuper']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
             (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
@@ -374,7 +370,6 @@ class UsersController extends BaseController
      */
     public function doSaveEdit()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -406,7 +401,6 @@ class UsersController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -417,7 +411,7 @@ class UsersController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropuser'], $this->misc->printVal($_REQUEST['username'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="username" value="', htmlspecialchars($_REQUEST['username']), "\" />\n";
             echo $this->misc->form;
@@ -441,7 +435,6 @@ class UsersController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -466,7 +459,7 @@ class UsersController extends BaseController
         $this->printTitle($lang['strcreateuser'], 'pg.user.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strusername']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formUsername\" value=\"", htmlspecialchars($_POST['formUsername']), "\" /></td>\n\t</tr>\n";
@@ -495,7 +488,6 @@ class UsersController extends BaseController
      */
     public function doSaveCreate()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();

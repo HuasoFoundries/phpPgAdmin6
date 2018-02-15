@@ -20,7 +20,6 @@ class CastsController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang   = $this->lang;
         $action = $this->action;
@@ -49,7 +48,6 @@ class CastsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -77,18 +75,18 @@ class CastsController extends BaseController
                 'title' => $lang['strtargettype'],
                 'field' => Decorator::field('casttarget'),
             ],
-            'function' => [
+            'function'    => [
                 'title'  => $lang['strfunction'],
                 'field'  => Decorator::field('castfunc'),
                 'params' => ['null' => $lang['strbinarycompat']],
             ],
-            'implicit' => [
+            'implicit'    => [
                 'title'  => $lang['strimplicit'],
                 'field'  => Decorator::field('castcontext'),
                 'type'   => 'callback',
                 'params' => ['function' => $renderCastContext, 'align' => 'center'],
             ],
-            'comment' => [
+            'comment'     => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('castcomment'),
             ],
@@ -104,7 +102,6 @@ class CastsController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();

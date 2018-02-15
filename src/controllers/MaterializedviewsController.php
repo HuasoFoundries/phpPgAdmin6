@@ -22,7 +22,6 @@ class MaterializedviewsController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang   = $this->lang;
         $action = $this->action;
@@ -36,7 +35,7 @@ class MaterializedviewsController extends BaseController
 
         $data = $this->misc->getDatabaseAccessor();
 
-        $this->printHeader('M '.$lang['strviews']);
+        $this->printHeader('M ' . $lang['strviews']);
         $this->printBody();
 
         switch ($action) {
@@ -112,7 +111,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -126,12 +124,12 @@ class MaterializedviewsController extends BaseController
 
         $columns = [
             'matview' => [
-                'title' => 'M '.$lang['strview'],
+                'title' => 'M ' . $lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url'   => \SUBFOLDER."/redirect/matview?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/matview?{$this->misc->href}&amp;",
                 'vars'  => ['matview' => 'relname'],
             ],
-            'owner' => [
+            'owner'   => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('relowner'),
             ],
@@ -149,7 +147,7 @@ class MaterializedviewsController extends BaseController
                 'keycols' => ['matview' => 'relname'],
                 'url'     => 'materializedviews.php',
             ],
-            'browse' => [
+            'browse'       => [
                 'content' => $lang['strbrowse'],
                 'attr'    => [
                     'href' => [
@@ -163,7 +161,7 @@ class MaterializedviewsController extends BaseController
                     ],
                 ],
             ],
-            'select' => [
+            'select'       => [
                 'content' => $lang['strselect'],
                 'attr'    => [
                     'href' => [
@@ -183,7 +181,7 @@ class MaterializedviewsController extends BaseController
             //                'vars'    => array('view' => 'relname'),
             //            ),
 
-            'alter' => [
+            'alter'        => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -195,7 +193,7 @@ class MaterializedviewsController extends BaseController
                     ],
                 ],
             ],
-            'drop' => [
+            'drop'         => [
                 'multiaction' => 'confirm_drop',
                 'content'     => $lang['strdrop'],
                 'attr'        => [
@@ -213,8 +211,8 @@ class MaterializedviewsController extends BaseController
         echo $this->printTable($matviews, $columns, $actions, $this->table_place, $lang['strnoviews']);
 
         $navlinks = [
-            'create' => [
-                'attr' => [
+            'create'    => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'materializedviews.php',
                         'urlvars' => [
@@ -228,7 +226,7 @@ class MaterializedviewsController extends BaseController
                 'content' => $lang['strcreateview'],
             ],
             'createwiz' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'materializedviews.php',
                         'urlvars' => [
@@ -250,7 +248,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -273,7 +270,6 @@ class MaterializedviewsController extends BaseController
 
     public function doSubTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -312,7 +308,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doSelectRows($confirm, $msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -324,7 +319,7 @@ class MaterializedviewsController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['matview']);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/'.$this->script.'" method="post" id="selectform">';
+            echo '<form action="' . \SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
             echo "\n";
 
             if ($attrs->recordCount() > 0) {
@@ -446,7 +441,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -459,7 +453,7 @@ class MaterializedviewsController extends BaseController
             $this->printTrail('getTrail');
             $this->printTitle($lang['strdrop'], 'pg.matview.drop');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/materializedviews.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -523,7 +517,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doSetParamsCreate($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -573,7 +566,7 @@ class MaterializedviewsController extends BaseController
                         [
                             'schemaname' => $arrSelTables[$i]['schemaname'],
                             'tablename'  => $arrSelTables[$i]['tablename'],
-                            'fieldname'  => $attrs->fields['attname'], ]
+                            'fieldname'  => $attrs->fields['attname']]
                     );
                     $attrs->moveNext();
                 }
@@ -582,7 +575,7 @@ class MaterializedviewsController extends BaseController
             }
             asort($arrFields);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/materializedviews.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strviewname']}</th></tr>";
             echo "<tr>\n<td class=\"data1\">\n";
@@ -661,7 +654,7 @@ class MaterializedviewsController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create_wiz\" />\n";
 
             foreach ($arrSelTables as $curTable) {
-                echo '<input type="hidden" name="formTables[]" value="'.htmlspecialchars(serialize($curTable))."\" />\n";
+                echo '<input type="hidden" name="formTables[]" value="' . htmlspecialchars(serialize($curTable)) . "\" />\n";
             }
 
             echo $this->misc->form;
@@ -678,7 +671,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doWizardCreate($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -689,17 +681,17 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($lang['strcreateviewwiz'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/materializedviews.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">\n";
 
         $arrTables = [];
         while (!$tables->EOF) {
-            $arrTmp                                                               = [];
-            $arrTmp['schemaname']                                                 = $tables->fields['nspname'];
-            $arrTmp['tablename']                                                  = $tables->fields['relname'];
-            $arrTables[$tables->fields['nspname'].'.'.$tables->fields['relname']] = serialize($arrTmp);
+            $arrTmp                                                                   = [];
+            $arrTmp['schemaname']                                                     = $tables->fields['nspname'];
+            $arrTmp['tablename']                                                      = $tables->fields['relname'];
+            $arrTables[$tables->fields['nspname'] . '.' . $tables->fields['relname']] = serialize($arrTmp);
             $tables->moveNext();
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrTables, 'formTables[]', false, '', true);
@@ -720,7 +712,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -744,7 +735,7 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($lang['strcreateview'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/materializedviews.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -768,7 +759,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doSaveCreate()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -794,7 +784,6 @@ class MaterializedviewsController extends BaseController
      */
     public function doSaveCreateWiz()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -867,7 +856,7 @@ class MaterializedviewsController extends BaseController
                             if ((!in_array($curLink, $arrJoined, true) && in_array($tbl1, $arrUsedTbls, true)) || !count($arrJoined)) {
                                 // Make sure for multi-column foreign keys that we use a table alias tables joined to more than once
                                 // This can (and should be) more optimized for multi-column foreign keys
-                                $adj_tbl2 = in_array($tbl2, $arrUsedTbls, true) ? "${tbl2} AS alias_ppa_".mktime() : $tbl2;
+                                $adj_tbl2 = in_array($tbl2, $arrUsedTbls, true) ? "${tbl2} AS alias_ppa_" . mktime() : $tbl2;
 
                                 $linkFields .= strlen($linkFields) ? "{$curLink['operator']} ${adj_tbl2} ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") "
                                 : "${tbl1} {$curLink['operator']} ${adj_tbl2} ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") ";
@@ -913,7 +902,7 @@ class MaterializedviewsController extends BaseController
 
             //add where from additional conditions
             if (strlen($addConditions)) {
-                $viewQuery .= ' WHERE '.$addConditions;
+                $viewQuery .= ' WHERE ' . $addConditions;
             }
 
             $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment']);

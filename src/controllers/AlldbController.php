@@ -21,7 +21,6 @@ class AlldbController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang   = $this->lang;
         $action = $this->action;
@@ -90,7 +89,6 @@ class AlldbController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
 
@@ -227,7 +225,6 @@ class AlldbController extends BaseController
 
     public function doTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -256,7 +253,6 @@ class AlldbController extends BaseController
      */
     public function doAlter($confirm)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -330,7 +326,6 @@ class AlldbController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -399,7 +394,6 @@ class AlldbController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -535,7 +529,6 @@ class AlldbController extends BaseController
      */
     public function doSaveCreate()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -589,7 +582,6 @@ class AlldbController extends BaseController
      */
     public function doExport($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();

@@ -20,7 +20,7 @@ class TblpropertiesController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
+
         $misc = $this->misc;
         $lang = $this->lang;
 
@@ -92,7 +92,7 @@ class TblpropertiesController extends BaseController
 
         $output = ob_get_clean();
 
-        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'], null, true, $header_template);
+        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'], null, true, $header_template);
         $this->printBody();
 
         echo $output;
@@ -107,7 +107,7 @@ class TblpropertiesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
+
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -130,29 +130,29 @@ class TblpropertiesController extends BaseController
             foreach ($p['keys'] as $k => $c) {
                 if (is_null($p['keys'][$k]['consrc'])) {
                     $atts        = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
-                    $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
+                    $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
                 }
 
                 if ($c['p_field'] == $s) {
                     switch ($c['contype']) {
                         case 'p':
-                            $str .= '<a href="constraints.php?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
-                            $misc->icon('PrimaryKey').'" alt="[pk]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
+                            $str .= '<a href="constraints.php?' . $misc->href . '&amp;table=' . urlencode($c['p_table']) . '&amp;schema=' . urlencode($c['p_schema']) . '"><img src="' .
+                            $misc->icon('PrimaryKey') . '" alt="[pk]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
 
                             break;
                         case 'f':
-                            $str .= '<a href="tblproperties.php?'.$misc->href.'&amp;table='.urlencode($c['f_table']).'&amp;schema='.urlencode($c['f_schema']).'"><img src="'.
-                            $misc->icon('ForeignKey').'" alt="[fk]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
+                            $str .= '<a href="tblproperties.php?' . $misc->href . '&amp;table=' . urlencode($c['f_table']) . '&amp;schema=' . urlencode($c['f_schema']) . '"><img src="' .
+                            $misc->icon('ForeignKey') . '" alt="[fk]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
 
                             break;
                         case 'u':
-                            $str .= '<a href="constraints.php?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
-                            $misc->icon('UniqueConstraint').'" alt="[uniq]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
+                            $str .= '<a href="constraints.php?' . $misc->href . '&amp;table=' . urlencode($c['p_table']) . '&amp;schema=' . urlencode($c['p_schema']) . '"><img src="' .
+                            $misc->icon('UniqueConstraint') . '" alt="[uniq]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
 
                             break;
                         case 'c':
-                            $str .= '<a href="constraints.php?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
-                            $misc->icon('CheckConstraint').'" alt="[check]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
+                            $str .= '<a href="constraints.php?' . $misc->href . '&amp;table=' . urlencode($c['p_table']) . '&amp;schema=' . urlencode($c['p_schema']) . '"><img src="' .
+                            $misc->icon('CheckConstraint') . '" alt="[check]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
                     }
                 }
             }
@@ -177,13 +177,13 @@ class TblpropertiesController extends BaseController
         }
 
         $columns = [
-            'column' => [
+            'column'  => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
-            'type' => [
+            'type'    => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('+type'),
             ],
@@ -217,30 +217,30 @@ class TblpropertiesController extends BaseController
         ];
 
         $actions = [
-            'browse' => [
+            'browse'     => [
                 'title' => $lang['strbrowse'],
-                'url'   => "display.php?{$misc->href}&amp;subject=column&amp;return=table&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'url'   => "display.php?{$misc->href}&amp;subject=column&amp;return=table&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
-            'alter' => [
+            'alter'      => [
                 'title' => $lang['stralter'],
-                'url'   => "colproperties.php?action=properties&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'url'   => "colproperties.php?action=properties&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'privileges' => [
                 'title' => $lang['strprivileges'],
-                'url'   => "privileges.php?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'url'   => "privileges.php?subject=column&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
-            'drop' => [
+            'drop'       => [
                 'title' => $lang['strdrop'],
-                'url'   => "tblproperties.php?action=confirm_drop&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'url'   => "tblproperties.php?action=confirm_drop&amp;{$misc->href}&amp;table=" . urlencode($_REQUEST['table']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
         ];
 
         $actions = [
-            'browse' => [
+            'browse'     => [
                 'content' => $lang['strbrowse'],
                 'attr'    => [
                     'href' => [
@@ -254,7 +254,7 @@ class TblpropertiesController extends BaseController
                     ],
                 ],
             ],
-            'alter' => [
+            'alter'      => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -281,7 +281,7 @@ class TblpropertiesController extends BaseController
                     ],
                 ],
             ],
-            'drop' => [
+            'drop'       => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -300,8 +300,8 @@ class TblpropertiesController extends BaseController
         echo $this->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', null, $attPre);
 
         $navlinks = [
-            'browse' => [
-                'attr' => [
+            'browse'    => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'display.php',
                         'urlvars' => [
@@ -316,8 +316,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['strbrowse'],
             ],
-            'select' => [
-                'attr' => [
+            'select'    => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -331,8 +331,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['strselect'],
             ],
-            'insert' => [
-                'attr' => [
+            'insert'    => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -346,8 +346,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['strinsert'],
             ],
-            'empty' => [
-                'attr' => [
+            'empty'     => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -361,8 +361,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['strempty'],
             ],
-            'drop' => [
-                'attr' => [
+            'drop'      => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -377,7 +377,7 @@ class TblpropertiesController extends BaseController
                 'content' => $lang['strdrop'],
             ],
             'addcolumn' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'tblproperties.php',
                         'urlvars' => [
@@ -391,8 +391,8 @@ class TblpropertiesController extends BaseController
                 ],
                 'content' => $lang['straddcolumn'],
             ],
-            'alter' => [
-                'attr' => [
+            'alter'     => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'tblproperties.php',
                         'urlvars' => [
@@ -412,7 +412,7 @@ class TblpropertiesController extends BaseController
 
     public function doTree()
     {
-        $conf = $this->conf;
+
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -421,8 +421,8 @@ class TblpropertiesController extends BaseController
         $reqvars = $misc->getRequestVars('column');
 
         $attrs = [
-            'text'   => Decorator::field('attname'),
-            'action' => Decorator::actionurl(
+            'text'       => Decorator::field('attname'),
+            'action'     => Decorator::actionurl(
                 'colproperties.php',
                 $reqvars,
                 [
@@ -446,7 +446,7 @@ class TblpropertiesController extends BaseController
                     ),
                 ]
             ),
-            'toolTip' => Decorator::field('comment'),
+            'toolTip'    => Decorator::field('comment'),
         ];
 
         return $this->printTree($columns, $attrs, 'tblcolumns');
@@ -454,7 +454,7 @@ class TblpropertiesController extends BaseController
 
     public function doSaveAlter()
     {
-        $conf = $this->conf;
+
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -502,7 +502,7 @@ class TblpropertiesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-        $conf = $this->conf;
+
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -541,7 +541,7 @@ class TblpropertiesController extends BaseController
                 $_POST['tablespace'] = $table->fields['tablespace'];
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tblproperties.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tblproperties.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -608,7 +608,7 @@ class TblpropertiesController extends BaseController
 
     public function doExport($msg = '')
     {
-        $conf = $this->conf;
+
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -620,7 +620,7 @@ class TblpropertiesController extends BaseController
         $this->printTabs('table', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -669,7 +669,7 @@ class TblpropertiesController extends BaseController
 
     public function doImport($msg = '')
     {
-        $conf = $this->conf;
+
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -683,7 +683,7 @@ class TblpropertiesController extends BaseController
             // Don't show upload option if max size of uploads is zero
             $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
             if (is_double($max_size) && $max_size > 0) {
-                echo '<form action="'.\SUBFOLDER."/src/views/dataimport.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/dataimport.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strformat']}</th>\n";
                 echo "\t\t<td><select name=\"format\">\n";
@@ -720,7 +720,7 @@ class TblpropertiesController extends BaseController
      */
     public function doAddColumn($msg = '')
     {
-        $conf = $this->conf;
+
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -764,8 +764,8 @@ class TblpropertiesController extends BaseController
                 $this->printTitle($lang['straddcolumn'], 'pg.column.add');
                 $this->printMsg($msg);
 
-                echo '<script src="'.\SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="'.\SUBFOLDER."/src/views/tblproperties.php\" method=\"post\">\n";
+                echo '<script src="' . \SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \SUBFOLDER . "/src/views/tblproperties.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -831,7 +831,7 @@ class TblpropertiesController extends BaseController
                 echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
-                echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");checkLengths(document.getElementById('type').value,'');</script>\n";
+                echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>\n";
 
                 break;
             case 2:
@@ -879,7 +879,7 @@ class TblpropertiesController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $conf = $this->conf;
+
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -894,7 +894,7 @@ class TblpropertiesController extends BaseController
                 $misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tblproperties.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tblproperties.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), "\" />\n";

@@ -26,7 +26,6 @@ class DataexportController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang   = $this->lang;
         $data   = $this->misc->getDatabaseAccessor();
@@ -345,7 +344,6 @@ class DataexportController extends BaseController
 
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang   = $this->lang;
         $data   = $this->misc->getDatabaseAccessor();

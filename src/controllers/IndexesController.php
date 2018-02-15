@@ -20,7 +20,6 @@ class IndexesController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
 
@@ -29,7 +28,7 @@ class IndexesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strindexes'], '<script src="'.\SUBFOLDER.'/js/indexes.js" type="text/javascript"></script>');
+        $this->printHeader($lang['strindexes'], '<script src="' . \SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>');
 
         if ('create_index' == $action || 'save_create_index' == $action) {
             echo '<body onload="init();">';
@@ -89,7 +88,6 @@ class IndexesController extends BaseController
 
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -121,11 +119,11 @@ class IndexesController extends BaseController
         $indexes = $data->getIndexes($_REQUEST[$_REQUEST['subject']]);
 
         $columns = [
-            'index' => [
+            'index'       => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('indname'),
             ],
-            'definition' => [
+            'definition'  => [
                 'title' => $lang['strdefinition'],
                 'field' => Decorator::field('inddef'),
             ],
@@ -135,15 +133,15 @@ class IndexesController extends BaseController
                 'type'   => 'verbatim',
                 'params' => ['align' => 'center'],
             ],
-            'clustered' => [
+            'clustered'   => [
                 'title' => $lang['strclustered'],
                 'field' => Decorator::field('indisclustered'),
                 'type'  => 'yesno',
             ],
-            'actions' => [
+            'actions'     => [
                 'title' => $lang['stractions'],
             ],
-            'comment' => [
+            'comment'     => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('idxcomment'),
             ],
@@ -176,7 +174,7 @@ class IndexesController extends BaseController
                     ],
                 ],
             ],
-            'drop' => [
+            'drop'    => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
@@ -195,7 +193,7 @@ class IndexesController extends BaseController
 
         $this->printNavLinks([
             'create' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'indexes.php',
                         'urlvars' => [
@@ -215,7 +213,6 @@ class IndexesController extends BaseController
 
     public function doTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -257,7 +254,6 @@ class IndexesController extends BaseController
      */
     public function doClusterIndex($confirm)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -269,25 +265,25 @@ class IndexesController extends BaseController
             $this->printTrail('index');
             $this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<p>', sprintf($lang['strconfcluster'], $this->misc->printVal($_REQUEST['index'])), '</p>'."\n";
+            echo '<p>', sprintf($lang['strconfcluster'], $this->misc->printVal($_REQUEST['index'])), '</p>' . "\n";
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/indexes.php" method="post">'."\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/indexes.php" method="post">' . "\n";
             echo '<p><input type="checkbox" id="analyze" name="analyze"', (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), ' />';
-            echo "<label for=\"analyze\">{$lang['stranalyze']}</label></p>"."\n";
-            echo '<input type="hidden" name="action" value="cluster_index" />'."\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'."\n";
-            echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />'."\n";
+            echo "<label for=\"analyze\">{$lang['stranalyze']}</label></p>" . "\n";
+            echo '<input type="hidden" name="action" value="cluster_index" />' . "\n";
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />' . "\n";
+            echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />' . "\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"cluster\" value=\"{$lang['strclusterindex']}\" />"."\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />"."\n";
-            echo '</form>'."\n";
+            echo "<input type=\"submit\" name=\"cluster\" value=\"{$lang['strclusterindex']}\" />" . "\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
+            echo '</form>' . "\n";
         } else {
             $status = $data->clusterIndex($_POST['table'], $_POST['index']);
             if (0 == $status) {
                 if (isset($_POST['analyze'])) {
                     $status = $data->analyzeDB($_POST['table']);
                     if (0 == $status) {
-                        $this->doDefault($lang['strclusteredgood'].' '.$lang['stranalyzegood']);
+                        $this->doDefault($lang['strclusteredgood'] . ' ' . $lang['stranalyzegood']);
                     } else {
                         $this->doDefault($lang['stranalyzebad']);
                     }
@@ -302,7 +298,6 @@ class IndexesController extends BaseController
 
     public function doReindex()
     {
-        $conf = $this->conf;
 
         $lang   = $this->lang;
         $data   = $this->misc->getDatabaseAccessor();
@@ -321,7 +316,6 @@ class IndexesController extends BaseController
      */
     public function doCreateIndex($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -384,54 +378,54 @@ class IndexesController extends BaseController
         $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
         $buttonRemove->set_attribute('type', 'button');
 
-        echo '<form onsubmit="doSelectAll();" name="formIndex" action="indexes.php" method="post">'."\n";
+        echo '<form onsubmit="doSelectAll();" name="formIndex" action="indexes.php" method="post">' . "\n";
 
-        echo '<table>'."\n";
-        echo '<tr><th class="data required" colspan="3">'.$lang['strindexname'].'</th></tr>';
+        echo '<table>' . "\n";
+        echo '<tr><th class="data required" colspan="3">' . $lang['strindexname'] . '</th></tr>';
         echo '<tr>';
         echo '<td class="data1" colspan="3">';
-        echo '<input type="text" name="formIndexName" size="32" maxlength="'.$data->_maxNameLen.'" value="'.htmlspecialchars($_POST['formIndexName']).'" />';
+        echo '<input type="text" name="formIndexName" size="32" maxlength="' . $data->_maxNameLen . '" value="' . htmlspecialchars($_POST['formIndexName']) . '" />';
         echo '</td></tr>';
-        echo '<tr><th class="data">'.$lang['strtablecolumnlist'].'</th><th class="data">&nbsp;</th>';
-        echo '<th class="data required">'.$lang['strindexcolumnlist'].'</th></tr>'."\n";
-        echo '<tr><td class="data1">'.$selColumns->fetch().'</td>'."\n";
-        echo '<td class="data1">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
-        echo '<td class="data1">'.$selIndex->fetch().'</td></tr>'."\n";
-        echo '</table>'."\n";
+        echo '<tr><th class="data">' . $lang['strtablecolumnlist'] . '</th><th class="data">&nbsp;</th>';
+        echo '<th class="data required">' . $lang['strindexcolumnlist'] . '</th></tr>' . "\n";
+        echo '<tr><td class="data1">' . $selColumns->fetch() . '</td>' . "\n";
+        echo '<td class="data1">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
+        echo '<td class="data1">' . $selIndex->fetch() . '</td></tr>' . "\n";
+        echo '</table>' . "\n";
 
-        echo '<table> '."\n";
+        echo '<table> ' . "\n";
         echo '<tr>';
-        echo '<th class="data left required" scope="row">'.$lang['strindextype'].'</th>';
+        echo '<th class="data left required" scope="row">' . $lang['strindextype'] . '</th>';
         echo '<td class="data1"><select name="formIndexType">';
         foreach ($data->typIndexes as $v) {
             echo '<option value="', htmlspecialchars($v), '"',
-            ($v == $_POST['formIndexType']) ? ' selected="selected"' : '', '>', htmlspecialchars($v), '</option>'."\n";
+            ($v == $_POST['formIndexType']) ? ' selected="selected"' : '', '>', htmlspecialchars($v), '</option>' . "\n";
         }
-        echo '</select></td></tr>'."\n";
+        echo '</select></td></tr>' . "\n";
         echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\"><label for=\"formUnique\">{$lang['strunique']}</label></th>";
         echo '<td class="data1"><input type="checkbox" id="formUnique" name="formUnique"', (isset($_POST['formUnique']) ? 'checked="checked"' : ''), ' /></td>';
         echo '</tr>';
         echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\">{$lang['strwhere']}</th>";
-        echo '<td class="data1">(<input name="formWhere" size="32" maxlength="'.$data->_maxNameLen.'" value="'.htmlspecialchars($_POST['formWhere']).'" />)</td>';
+        echo '<td class="data1">(<input name="formWhere" size="32" maxlength="' . $data->_maxNameLen . '" value="' . htmlspecialchars($_POST['formWhere']) . '" />)</td>';
         echo '</tr>';
 
         // Tablespace (if there are any)
         if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strtablespace']}</th>"."\n";
-            echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formSpc\">"."\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strtablespace']}</th>" . "\n";
+            echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formSpc\">" . "\n";
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
-            ('' == $_POST['formSpc']) ? ' selected="selected"' : '', '></option>'."\n";
+            ('' == $_POST['formSpc']) ? ' selected="selected"' : '', '></option>' . "\n";
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
                 $spcname = htmlspecialchars($tablespaces->fields['spcname']);
                 echo "\t\t\t\t<option value=\"{$spcname}\"",
-                ($spcname == $_POST['formSpc']) ? ' selected="selected"' : '', ">{$spcname}</option>"."\n";
+                ($spcname == $_POST['formSpc']) ? ' selected="selected"' : '', ">{$spcname}</option>" . "\n";
                 $tablespaces->moveNext();
             }
-            echo "\t\t\t</select>\n\t\t</td>\n\t</tr>"."\n";
+            echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . "\n";
         }
 
         if ($data->hasConcurrentIndexBuild()) {
@@ -443,13 +437,13 @@ class IndexesController extends BaseController
 
         echo '</table>';
 
-        echo '<p><input type="hidden" name="action" value="save_create_index" />'."\n";
+        echo '<p><input type="hidden" name="action" value="save_create_index" />' . "\n";
         echo $this->misc->form;
-        echo '<input type="hidden" name="subject" value="', htmlspecialchars($subject), '" />'."\n";
-        echo '<input type="hidden" name="'.$subject.'" value="', htmlspecialchars($object), '" />'."\n";
-        echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />"."\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>"."\n";
-        echo '</form>'."\n";
+        echo '<input type="hidden" name="subject" value="', htmlspecialchars($subject), '" />' . "\n";
+        echo '<input type="hidden" name="' . $subject . '" value="', htmlspecialchars($object), '" />' . "\n";
+        echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />" . "\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>" . "\n";
+        echo '</form>' . "\n";
     }
 
     /**
@@ -459,7 +453,6 @@ class IndexesController extends BaseController
      */
     public function doSaveCreateIndex()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -511,7 +504,6 @@ class IndexesController extends BaseController
      */
     public function doDropIndex($confirm)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -526,17 +518,17 @@ class IndexesController extends BaseController
             $this->printTrail('index');
             $this->printTitle($lang['strdrop'], 'pg.index.drop');
 
-            echo '<p>', sprintf($lang['strconfdropindex'], $this->misc->printVal($_REQUEST['index'])), '</p>'."\n";
+            echo '<p>', sprintf($lang['strconfdropindex'], $this->misc->printVal($_REQUEST['index'])), '</p>' . "\n";
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/indexes.php" method="post">'."\n";
-            echo '<input type="hidden" name="action" value="drop_index" />'."\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />'."\n";
-            echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />'."\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/indexes.php" method="post">' . "\n";
+            echo '<input type="hidden" name="action" value="drop_index" />' . "\n";
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />' . "\n";
+            echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />' . "\n";
             echo $this->misc->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>"."\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />"."\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />"."\n";
-            echo '</form>'."\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>" . "\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />" . "\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
+            echo '</form>' . "\n";
         } else {
             $status = $data->dropIndex($_POST['index'], isset($_POST['cascade']));
             if (0 == $status) {

@@ -20,7 +20,6 @@ class OpclassesController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
 
@@ -51,7 +50,6 @@ class OpclassesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -67,20 +65,20 @@ class OpclassesController extends BaseController
                 'title' => $lang['straccessmethod'],
                 'field' => Decorator::field('amname'),
             ],
-            'opclass' => [
+            'opclass'      => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('opcname'),
             ],
-            'type' => [
+            'type'         => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('opcintype'),
             ],
-            'default' => [
+            'default'      => [
                 'title' => $lang['strdefault'],
                 'field' => Decorator::field('opcdefault'),
                 'type'  => 'yesno',
             ],
-            'comment' => [
+            'comment'      => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('opccomment'),
             ],
@@ -96,7 +94,6 @@ class OpclassesController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();

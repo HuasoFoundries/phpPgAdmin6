@@ -92,7 +92,6 @@ class GroupsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -104,7 +103,7 @@ class GroupsController extends BaseController
         $groups = $data->getGroups();
 
         $columns = [
-            'group' => [
+            'group'   => [
                 'title' => $lang['strgroup'],
                 'field' => Decorator::field('groname'),
                 'url'   => "groups.php?action=properties&amp;{$this->misc->href}&amp;",
@@ -133,7 +132,7 @@ class GroupsController extends BaseController
         echo $this->printTable($groups, $columns, $actions, 'groups-properties', $lang['strnogroups']);
 
         $this->printNavLinks(['create' => [
-            'attr' => [
+            'attr'    => [
                 'href' => [
                     'url'     => 'groups.php',
                     'urlvars' => [
@@ -151,7 +150,6 @@ class GroupsController extends BaseController
      */
     public function doAddMember()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -171,7 +169,6 @@ class GroupsController extends BaseController
      */
     public function doDropMember($confirm)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -182,7 +179,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -207,7 +204,6 @@ class GroupsController extends BaseController
      */
     public function doProperties($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -254,7 +250,7 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="'.\SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
         echo '<select name="user">';
         while (!$users->EOF) {
             $uname = $this->misc->printVal($users->fields['usename']);
@@ -270,7 +266,7 @@ class GroupsController extends BaseController
         echo "</form>\n";
 
         $this->printNavLinks(['showall' => [
-            'attr' => [
+            'attr'    => [
                 'href' => [
                     'url'     => 'groups.php',
                     'urlvars' => [
@@ -289,7 +285,6 @@ class GroupsController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -300,7 +295,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -324,7 +319,6 @@ class GroupsController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -374,7 +368,6 @@ class GroupsController extends BaseController
      */
     public function doSaveCreate()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();

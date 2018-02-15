@@ -34,7 +34,6 @@ class HelpController extends BaseController
 
     public function doDefault()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -61,7 +60,6 @@ class HelpController extends BaseController
 
     public function doBrowse($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -96,7 +94,6 @@ class HelpController extends BaseController
 
     public function doChoosePage($urls)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();

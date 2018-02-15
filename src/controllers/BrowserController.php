@@ -18,7 +18,6 @@ class BrowserController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
 

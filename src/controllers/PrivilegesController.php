@@ -19,7 +19,6 @@ class PrivilegesController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang   = $this->lang;
         $action = $this->action;
@@ -57,7 +56,6 @@ class PrivilegesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang     = $this->lang;
         $action   = $this->action;
@@ -85,8 +83,8 @@ class PrivilegesController extends BaseController
         $this->printMsg($msg);
 
         // Determine whether object should be ref'd by name or oid.
-        if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-            $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
+        if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+            $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
         } else {
             $object = $_REQUEST[$_REQUEST['subject']];
         }
@@ -191,7 +189,7 @@ class PrivilegesController extends BaseController
         $object  = $_REQUEST[$_REQUEST['subject']];
 
         if ('function' == $_REQUEST['subject']) {
-            $objectoid = $_REQUEST[$_REQUEST['subject'].'_oid'];
+            $objectoid = $_REQUEST[$_REQUEST['subject'] . '_oid'];
             $urlvars   = [
                 'action'         => 'alter',
                 'server'         => $_REQUEST['server'],
@@ -230,8 +228,8 @@ class PrivilegesController extends BaseController
         }
 
         $navlinks = [
-            'grant' => [
-                'attr' => [
+            'grant'  => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'privileges.php',
                         'urlvars' => array_merge($urlvars, ['mode' => 'grant']),
@@ -240,7 +238,7 @@ class PrivilegesController extends BaseController
                 'content' => $lang['strgrant'],
             ],
             'revoke' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'privileges.php',
                         'urlvars' => array_merge($urlvars, ['mode' => 'revoke']),
@@ -252,7 +250,7 @@ class PrivilegesController extends BaseController
 
         if (isset($allurl)) {
             $navlinks[$alllabel] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => $allurl,
                         'urlvars' => [
@@ -280,7 +278,6 @@ class PrivilegesController extends BaseController
      */
     public function doAlter($confirm, $mode, $msg = '')
     {
-        $conf = $this->conf;
 
         $lang   = $this->lang;
         $action = $this->action;
@@ -318,7 +315,7 @@ class PrivilegesController extends BaseController
             }
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/privileges.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left\">{$lang['strusers']}</th>\n";
             echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";
@@ -372,9 +369,9 @@ class PrivilegesController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
             echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), "\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
-            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'].'_oid'),
-                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'].'_oid']), "\" />\n";
+            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'] . '_oid'),
+                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), "\" />\n";
             }
 
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
@@ -395,8 +392,8 @@ class PrivilegesController extends BaseController
             echo "</form>\n";
         } else {
             // Determine whether object should be ref'd by name or oid.
-            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-                $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
+            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+                $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
             } else {
                 $object = $_REQUEST[$_REQUEST['subject']];
             }

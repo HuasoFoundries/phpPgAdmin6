@@ -20,7 +20,6 @@ class ConversionsController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
 
@@ -51,7 +50,6 @@ class ConversionsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -63,7 +61,7 @@ class ConversionsController extends BaseController
         $conversions = $data->getconversions();
 
         $columns = [
-            'conversion' => [
+            'conversion'      => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('conname'),
             ],
@@ -75,12 +73,12 @@ class ConversionsController extends BaseController
                 'title' => $lang['strtargetencoding'],
                 'field' => Decorator::field('contoencoding'),
             ],
-            'default' => [
+            'default'         => [
                 'title' => $lang['strdefault'],
                 'field' => Decorator::field('condefault'),
                 'type'  => 'yesno',
             ],
-            'comment' => [
+            'comment'         => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('concomment'),
             ],
@@ -93,7 +91,6 @@ class ConversionsController extends BaseController
 
     public function doTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();

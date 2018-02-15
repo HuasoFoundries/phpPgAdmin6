@@ -30,13 +30,11 @@ class ColpropertiesController extends BaseController
             die($lang['strnotableprovided']);
         }
 
-        $conf = $this->conf;
-
         $lang   = $this->lang;
         $action = $this->action;
         $data   = $this->misc->getDatabaseAccessor();
 
-        $this->printHeader($lang['strtables'].' - '.$this->tableName, null, true, 'header_select2.twig');
+        $this->printHeader($lang['strtables'] . ' - ' . $this->tableName, null, true, 'header_select2.twig');
         $this->printBody();
 
         if (isset($_REQUEST['view'])) {
@@ -69,7 +67,6 @@ class ColpropertiesController extends BaseController
      */
     public function doDefault($msg = '', $isTable = true)
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -103,7 +100,7 @@ class ColpropertiesController extends BaseController
                     'title' => $lang['strcolumn'],
                     'field' => Decorator::field('attname'),
                 ],
-                'type' => [
+                'type'   => [
                     'title' => $lang['strtype'],
                     'field' => Decorator::field('+type'),
                 ],
@@ -142,7 +139,7 @@ class ColpropertiesController extends BaseController
 
                 $navlinks = [
                     'browse' => [
-                        'attr' => [
+                        'attr'    => [
                             'href' => [
                                 'url'     => 'display.php',
                                 'urlvars' => [
@@ -159,8 +156,8 @@ class ColpropertiesController extends BaseController
                         ],
                         'content' => $lang['strbrowse'],
                     ],
-                    'alter' => [
-                        'attr' => [
+                    'alter'  => [
+                        'attr'    => [
                             'href' => [
                                 'url'     => 'colproperties.php',
                                 'urlvars' => [
@@ -175,8 +172,8 @@ class ColpropertiesController extends BaseController
                         ],
                         'content' => $lang['stralter'],
                     ],
-                    'drop' => [
-                        'attr' => [
+                    'drop'   => [
+                        'attr'    => [
                             'href' => [
                                 'url'     => 'tblproperties.php',
                                 'urlvars' => [
@@ -196,7 +193,7 @@ class ColpropertiesController extends BaseController
                 // Browse link
                 $navlinks = [
                     'browse' => [
-                        'attr' => [
+                        'attr'    => [
                             'href' => [
                                 'url'     => 'display.php',
                                 'urlvars' => [
@@ -227,7 +224,6 @@ class ColpropertiesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -244,8 +240,8 @@ class ColpropertiesController extends BaseController
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<script src="'.\SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="'.\SUBFOLDER."/src/views/colproperties.php\" method=\"post\">\n";
+                echo '<script src="' . \SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \SUBFOLDER . "/src/views/colproperties.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -302,7 +298,7 @@ class ColpropertiesController extends BaseController
                     $types        = $data->getTypes(true, false, true);
                     $types_for_js = [];
 
-                    echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">"."\n";
+                    echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">" . "\n";
                     while (!$types->EOF) {
                         $typname        = $types->fields['typname'];
                         $types_for_js[] = $typname;
@@ -356,7 +352,7 @@ class ColpropertiesController extends BaseController
                 echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
-                echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");checkLengths(document.getElementById('type').value,'');</script>\n";
+                echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>\n";
 
                 break;
             case 2:
@@ -392,10 +388,10 @@ class ColpropertiesController extends BaseController
                         $_REQUEST['column'] = $_REQUEST['field'];
                         $this->misc->setReloadBrowser(true);
                     }
-                    $this->doDefault($sql."<br/>{$lang['strcolumnaltered']}");
+                    $this->doDefault($sql . "<br/>{$lang['strcolumnaltered']}");
                 } else {
                     $_REQUEST['stage'] = 1;
-                    $this->doAlter($sql."<br/>{$lang['strcolumnalteredbad']}");
+                    $this->doAlter($sql . "<br/>{$lang['strcolumnalteredbad']}");
 
                     return;
                 }

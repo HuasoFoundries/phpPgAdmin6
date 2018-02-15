@@ -20,7 +20,6 @@ class SequencesController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
 
@@ -115,7 +114,6 @@ class SequencesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -134,14 +132,14 @@ class SequencesController extends BaseController
                 'url'   => "sequences.php?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['sequence' => 'seqname'],
             ],
-            'owner' => [
+            'owner'    => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('seqowner'),
             ],
-            'actions' => [
+            'actions'  => [
                 'title' => $lang['stractions'],
             ],
-            'comment' => [
+            'comment'  => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('seqcomment'),
             ],
@@ -152,7 +150,7 @@ class SequencesController extends BaseController
                 'keycols' => ['sequence' => 'seqname'],
                 'url'     => 'sequences.php',
             ],
-            'alter' => [
+            'alter'        => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -165,9 +163,9 @@ class SequencesController extends BaseController
                     ],
                 ],
             ],
-            'drop' => [
-                'content' => $lang['strdrop'],
-                'attr'    => [
+            'drop'         => [
+                'content'     => $lang['strdrop'],
+                'attr'        => [
                     'href' => [
                         'url'     => 'sequences.php',
                         'urlvars' => [
@@ -178,7 +176,7 @@ class SequencesController extends BaseController
                 ],
                 'multiaction' => 'confirm_drop',
             ],
-            'privileges' => [
+            'privileges'   => [
                 'content' => $lang['strprivileges'],
                 'attr'    => [
                     'href' => [
@@ -195,7 +193,7 @@ class SequencesController extends BaseController
         echo $this->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences']);
 
         $this->printNavLinks(['create' => [
-            'attr' => [
+            'attr'    => [
                 'href' => [
                     'url'     => 'sequences.php',
                     'urlvars' => [
@@ -215,7 +213,6 @@ class SequencesController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -248,7 +245,6 @@ class SequencesController extends BaseController
      */
     public function doProperties($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -298,8 +294,8 @@ class SequencesController extends BaseController
             echo '</table>';
 
             $navlinks = [
-                'alter' => [
-                    'attr' => [
+                'alter'   => [
+                    'attr'    => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -313,8 +309,8 @@ class SequencesController extends BaseController
                     ],
                     'content' => $lang['stralter'],
                 ],
-                'setval' => [
-                    'attr' => [
+                'setval'  => [
+                    'attr'    => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -329,7 +325,7 @@ class SequencesController extends BaseController
                     'content' => $lang['strsetval'],
                 ],
                 'nextval' => [
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -344,7 +340,7 @@ class SequencesController extends BaseController
                     'content' => $lang['strnextval'],
                 ],
                 'restart' => [
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -358,8 +354,8 @@ class SequencesController extends BaseController
                     ],
                     'content' => $lang['strrestart'],
                 ],
-                'reset' => [
-                    'attr' => [
+                'reset'   => [
+                    'attr'    => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -374,7 +370,7 @@ class SequencesController extends BaseController
                     'content' => $lang['strreset'],
                 ],
                 'showall' => [
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
                             'url'     => 'sequences.php',
                             'urlvars' => [
@@ -406,7 +402,6 @@ class SequencesController extends BaseController
      */
     public function doDrop($confirm, $msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -420,7 +415,7 @@ class SequencesController extends BaseController
             $this->printTitle($lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -483,7 +478,6 @@ class SequencesController extends BaseController
      */
     public function doCreateSequence($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -516,7 +510,7 @@ class SequencesController extends BaseController
         $this->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
         echo "<table>\n";
 
         echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -560,7 +554,6 @@ class SequencesController extends BaseController
      */
     public function doSaveCreateSequence()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -591,7 +584,6 @@ class SequencesController extends BaseController
      */
     public function doRestart()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -609,7 +601,6 @@ class SequencesController extends BaseController
      */
     public function doReset()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -627,7 +618,6 @@ class SequencesController extends BaseController
      */
     public function doNextval()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -645,7 +635,6 @@ class SequencesController extends BaseController
      */
     public function doSaveSetval()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -665,7 +654,6 @@ class SequencesController extends BaseController
      */
     public function doSetval($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -678,7 +666,7 @@ class SequencesController extends BaseController
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
         if (is_object($sequence) && $sequence->recordCount() > 0) {
-            echo '<form action="'.\SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
             echo '<table border="0">';
             echo "<tr><th class=\"data left required\">{$lang['strlastvalue']}</th>\n";
             echo '<td class="data1">';
@@ -701,7 +689,6 @@ class SequencesController extends BaseController
      */
     public function doSaveAlter()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -782,7 +769,6 @@ class SequencesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -817,7 +803,7 @@ class SequencesController extends BaseController
                 $_POST['formCycledValue'] = 'on';
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";

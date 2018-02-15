@@ -22,7 +22,7 @@ class SqlController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
+
         $lang = $this->lang;
 
         $data = $this->misc->getDatabaseAccessor();
@@ -181,7 +181,6 @@ class SqlController extends BaseController
 
     private function execute_query()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -191,7 +190,7 @@ class SqlController extends BaseController
 
         $rs = $data->conn->Execute($this->query);
 
-        echo '<form method="post" id="sqlform" action="'.$_SERVER['REQUEST_URI'].'">';
+        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($this->query);
@@ -242,7 +241,6 @@ class SqlController extends BaseController
 
     private function doFooter($doBody = true, $template = 'footer.twig')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -279,7 +277,7 @@ class SqlController extends BaseController
         if (isset($_REQUEST['return'])) {
             $urlvars          = $this->misc->getSubjectParams($_REQUEST['return']);
             $navlinks['back'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => $urlvars['url'],
                         'urlvars' => $urlvars['params'],
@@ -291,7 +289,7 @@ class SqlController extends BaseController
 
         // Edit
         $navlinks['alter'] = [
-            'attr' => [
+            'attr'    => [
                 'href' => [
                     'url'     => 'database.php',
                     'urlvars' => array_merge($fields, [
@@ -307,7 +305,7 @@ class SqlController extends BaseController
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
                             'url'     => 'views.php',
                             'urlvars' => array_merge($fields, [
@@ -324,7 +322,7 @@ class SqlController extends BaseController
             }
 
             $navlinks['download'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'dataexport.php',
                         'urlvars' => $fields,

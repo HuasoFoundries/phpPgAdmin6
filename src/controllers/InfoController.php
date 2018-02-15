@@ -20,13 +20,12 @@ class InfoController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
 
         $action = $this->action;
 
-        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strinfo']);
+        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strinfo']);
         $this->printBody();
 
         switch ($action) {
@@ -48,7 +47,6 @@ class InfoController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -81,15 +79,15 @@ class InfoController extends BaseController
                 echo "<h3>{$lang['strreferringtables']}</h3>\n";
 
                 $columns = [
-                    'schema' => [
+                    'schema'     => [
                         'title' => $lang['strschema'],
                         'field' => Decorator::field('nspname'),
                     ],
-                    'table' => [
+                    'table'      => [
                         'title' => $lang['strtable'],
                         'field' => Decorator::field('relname'),
                     ],
-                    'name' => [
+                    'name'       => [
                         'title' => $lang['strname'],
                         'field' => Decorator::field('conname'),
                     ],
@@ -97,7 +95,7 @@ class InfoController extends BaseController
                         'title' => $lang['strdefinition'],
                         'field' => Decorator::field('consrc'),
                     ],
-                    'actions' => [
+                    'actions'    => [
                         'title' => $lang['stractions'],
                     ],
                 ];
@@ -125,11 +123,11 @@ class InfoController extends BaseController
                 echo "<h3>{$lang['strparenttables']}</h3>\n";
 
                 $columns = [
-                    'schema' => [
+                    'schema'  => [
                         'title' => $lang['strschema'],
                         'field' => Decorator::field('nspname'),
                     ],
-                    'table' => [
+                    'table'   => [
                         'title' => $lang['strtable'],
                         'field' => Decorator::field('relname'),
                     ],
@@ -161,11 +159,11 @@ class InfoController extends BaseController
                 echo "<h3>{$lang['strchildtables']}</h3>\n";
 
                 $columns = [
-                    'schema' => [
+                    'schema'  => [
                         'title' => $lang['strschema'],
                         'field' => Decorator::field('nspname'),
                     ],
-                    'table' => [
+                    'table'   => [
                         'title' => $lang['strtable'],
                         'field' => Decorator::field('relname'),
                     ],

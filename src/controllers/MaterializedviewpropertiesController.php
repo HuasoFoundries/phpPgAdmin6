@@ -20,7 +20,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
 
@@ -29,7 +28,7 @@ class MaterializedviewpropertiesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strviews'].' - '.$_REQUEST['matview']);
+        $this->printHeader($lang['strviews'] . ' - ' . $_REQUEST['matview']);
         $this->printBody();
 
         switch ($action) {
@@ -101,7 +100,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -125,13 +123,13 @@ class MaterializedviewpropertiesController extends BaseController
         }
 
         $columns = [
-            'column' => [
+            'column'  => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties.php?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST['matview']).'&amp;',
+                'url'   => "colproperties.php?subject=column&amp;{$this->misc->href}&amp;view=" . urlencode($_REQUEST['matview']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
-            'type' => [
+            'type'    => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('+type'),
             ],
@@ -170,7 +168,7 @@ class MaterializedviewpropertiesController extends BaseController
 
         $navlinks = [
             'browse' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'display.php',
                         'urlvars' => [
@@ -186,7 +184,7 @@ class MaterializedviewpropertiesController extends BaseController
                 'content' => $lang['strbrowse'],
             ],
             'select' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'materializedviews.php',
                         'urlvars' => [
@@ -200,8 +198,8 @@ class MaterializedviewpropertiesController extends BaseController
                 ],
                 'content' => $lang['strselect'],
             ],
-            'drop' => [
-                'attr' => [
+            'drop'   => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'materializedviews.php',
                         'urlvars' => [
@@ -215,8 +213,8 @@ class MaterializedviewpropertiesController extends BaseController
                 ],
                 'content' => $lang['strdrop'],
             ],
-            'alter' => [
-                'attr' => [
+            'alter'  => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'materializedviewproperties.php',
                         'urlvars' => [
@@ -237,7 +235,6 @@ class MaterializedviewpropertiesController extends BaseController
 
     public function doTree()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -246,8 +243,8 @@ class MaterializedviewpropertiesController extends BaseController
         $columns = $data->getTableAttributes($_REQUEST['matview']);
 
         $attrs = [
-            'text'   => Decorator::field('attname'),
-            'action' => Decorator::actionurl(
+            'text'       => Decorator::field('attname'),
+            'action'     => Decorator::actionurl(
                 'colproperties.php',
                 $reqvars,
                 [
@@ -271,7 +268,7 @@ class MaterializedviewpropertiesController extends BaseController
                     ),
                 ]
             ),
-            'toolTip' => Decorator::field('comment'),
+            'toolTip'    => Decorator::field('comment'),
         ];
 
         return $this->printTree($columns, $attrs, 'viewcolumns');
@@ -282,7 +279,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doSaveEdit()
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -302,7 +298,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doEdit($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -319,7 +314,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -350,7 +345,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doExport($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -359,7 +353,7 @@ class MaterializedviewpropertiesController extends BaseController
         $this->printTabs('view', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -412,7 +406,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doDefinition($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -439,7 +432,7 @@ class MaterializedviewpropertiesController extends BaseController
         }
 
         $this->printNavLinks(['alter' => [
-            'attr' => [
+            'attr'    => [
                 'href' => [
                     'url'     => 'materializedviewproperties.php',
                     'urlvars' => [
@@ -462,7 +455,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doProperties($msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -478,7 +470,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
 
                 // Output view header
                 echo "<table>\n";
@@ -556,7 +548,6 @@ class MaterializedviewpropertiesController extends BaseController
 
     public function doAlter($confirm = false, $msg = '')
     {
-        $conf = $this->conf;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -586,7 +577,7 @@ class MaterializedviewpropertiesController extends BaseController
                     $_POST['comment'] = $view->fields['relcomment'];
                 }
 
-                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo '<td class="data1">';
