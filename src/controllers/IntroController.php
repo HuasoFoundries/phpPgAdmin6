@@ -13,6 +13,9 @@ class IntroController extends BaseController
 {
     public $controller_name = 'IntroController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         if (null === $this->container->requestobj->getAttribute('route')) {

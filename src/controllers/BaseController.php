@@ -19,23 +19,23 @@ class BaseController
     protected $data;
     protected $database;
     protected $server_id;
-    public $appLangFiles         = [];
-    public $appThemes            = [];
-    public $appName              = '';
-    public $appVersion           = '';
-    public $form                 = '';
-    public $href                 = '';
-    public $lang                 = [];
-    public $action               = '';
-    public $controller_name      = 'BaseController';
-    public $controller_title     = 'base';
+    public $appLangFiles     = [];
+    public $appThemes        = [];
+    public $appName          = '';
+    public $appVersion       = '';
+    public $form             = '';
+    public $href             = '';
+    public $lang             = [];
+    public $action           = '';
+    public $controller_name  = 'BaseController';
+    public $controller_title = 'base';
     protected $table_controller;
     protected $trail_controller;
     protected $tree_controller;
     protected $footer_controller;
     protected $header_controller;
-    protected $scripts           = '';
-    public $msg                  = '';
+    protected $scripts = '';
+    public $msg        = '';
     public $view;
     public $plugin_manager;
     public $misc;
@@ -94,6 +94,9 @@ class BaseController
         //\PC::debug(['name' => $this->controller_name, 'no_db_connection' => $this->misc->getNoDBConnection()], 'instanced controller');
     }
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $this->misc = $this->misc;

@@ -18,6 +18,9 @@ class TablesController extends BaseController
     public $controller_name = 'TablesController';
     public $table_place     = 'tables-tables';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;
@@ -404,9 +407,9 @@ class TablesController extends BaseController
                     Decorator::field('url'),
                     $reqvars,
                     [
-                    'action' => 'tree',
-                    'table'  => $_REQUEST['table'],
-                ]
+                        'action' => 'tree',
+                        'table'  => $_REQUEST['table'],
+                    ]
                 )
             ),
         ];
@@ -690,10 +693,10 @@ class TablesController extends BaseController
 
                     return;
                 }
-                    $_REQUEST['stage'] = 2;
-                    $this->doCreate($lang['strtablecreatedbad']);
+                $_REQUEST['stage'] = 2;
+                $this->doCreate($lang['strtablecreatedbad']);
 
-                    return;
+                return;
                 break;
             default:
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
@@ -946,11 +949,11 @@ class TablesController extends BaseController
         } else {
             // Generate query SQL
             $query = $data->getSelectSQL(
-                    $_REQUEST['table'],
-                    array_keys($_POST['show']),
-                    $_POST['values'],
-                    $_POST['ops']
-                );
+                $_REQUEST['table'],
+                array_keys($_POST['show']),
+                $_POST['values'],
+                $_POST['ops']
+            );
             $_REQUEST['query']  = $query;
             $_REQUEST['return'] = 'selectrows';
 

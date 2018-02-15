@@ -13,6 +13,9 @@ class DisplayController extends BaseController
 {
     public $controller_name = 'DisplayController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf           = $this->conf;
@@ -500,7 +503,7 @@ class DisplayController extends BaseController
         }
 
         // Create view and download
-        if (isset($_REQUEST['query'], $rs)   && is_object($rs) && $rs->recordCount() > 0) {
+        if (isset($_REQUEST['query'], $rs) && is_object($rs) && $rs->recordCount() > 0) {
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [

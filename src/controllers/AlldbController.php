@@ -16,6 +16,9 @@ class AlldbController extends BaseController
     public $controller_name = 'AlldbController';
     public $table_place     = 'alldb-databases';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;
@@ -60,7 +63,7 @@ class AlldbController extends BaseController
 
                 break;
             case 'alter':
-                if (isset($_POST['oldname'], $_POST['newname'])   && !isset($_POST['cancel'])) {
+                if (isset($_POST['oldname'], $_POST['newname']) && !isset($_POST['cancel'])) {
                     $this->doAlter(false);
                 } else {
                     $this->doDefault();

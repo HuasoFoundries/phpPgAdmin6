@@ -13,6 +13,9 @@ class DataimportController extends BaseController
 {
     public $controller_name = 'DataimportController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $misc   = $this->misc;

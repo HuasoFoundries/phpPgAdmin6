@@ -15,6 +15,9 @@ class TablespacesController extends BaseController
 {
     public $controller_name = 'TablespacesController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;

@@ -23,6 +23,9 @@ class DatabaseController extends BaseController
         return str_replace($term, "<b>{$term}</b>", $string);
     }
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;

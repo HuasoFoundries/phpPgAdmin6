@@ -13,6 +13,9 @@ class DbexportController extends BaseController
 {
     public $controller_name = 'DbexportController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;
@@ -43,7 +46,7 @@ class DbexportController extends BaseController
 
             // Obtain the pg_dump version number and check if the path is good
             $version = [];
-            preg_match("/(\\d+(?:\\.\\d+)?)(?:\\.\\d+)?.*$/", exec($exe . ' --version'), $version);
+            preg_match('/(\\d+(?:\\.\\d+)?)(?:\\.\\d+)?.*$/', exec($exe . ' --version'), $version);
 
             $this->prtrace('$exe', $exe, 'version', $version[1]);
 

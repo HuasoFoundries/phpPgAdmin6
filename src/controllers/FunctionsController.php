@@ -16,6 +16,9 @@ class FunctionsController extends BaseController
     public $controller_name = 'FunctionsController';
     public $table_place     = 'functions-functions';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;

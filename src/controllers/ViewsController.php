@@ -17,6 +17,9 @@ class ViewsController extends BaseController
     public $controller_name = 'ViewsController';
     public $table_place     = 'views-views';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;
@@ -563,9 +566,9 @@ class ViewsController extends BaseController
                 while (!$attrs->EOF) {
                     $arrFields["{$arrSelTables[$i]['schemaname']}.{$arrSelTables[$i]['tablename']}.{$attrs->fields['attname']}"] = serialize(
                         [
-                        'schemaname' => $arrSelTables[$i]['schemaname'],
-                        'tablename'  => $arrSelTables[$i]['tablename'],
-                        'fieldname'  => $attrs->fields['attname']]
+                            'schemaname' => $arrSelTables[$i]['schemaname'],
+                            'tablename'  => $arrSelTables[$i]['tablename'],
+                            'fieldname'  => $attrs->fields['attname']]
                     );
                     $attrs->moveNext();
                 }

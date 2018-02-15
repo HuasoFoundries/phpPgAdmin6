@@ -15,6 +15,9 @@ class TriggersController extends BaseController
 {
     public $controller_name = 'TriggersController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;

@@ -15,6 +15,9 @@ class GroupsController extends BaseController
 {
     public $controller_name = 'GroupsController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $this->printHeader($lang['strgroups']);

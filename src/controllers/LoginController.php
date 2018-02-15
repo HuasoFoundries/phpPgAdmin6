@@ -28,8 +28,9 @@ class LoginController extends BaseController
     public $controller_name  = 'LoginController';
     public $controller_title = 'strlogin';
 
-    // Constructor
-
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         if (null === $this->container->requestobj->getAttribute('route')) {

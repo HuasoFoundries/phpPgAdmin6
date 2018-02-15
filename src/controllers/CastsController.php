@@ -15,6 +15,9 @@ class CastsController extends BaseController
 {
     public $controller_name = 'CastsController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;

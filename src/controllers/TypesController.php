@@ -15,6 +15,9 @@ class TypesController extends BaseController
 {
     public $controller_name = 'TypesController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;
@@ -288,7 +291,7 @@ class TypesController extends BaseController
                     break;
                 case 'e':
                     $vals = $data->getEnumValues($typedata->fields['typname']);
-                    // no break
+                // no break
                 default:
                     $byval = $data->phpBool($typedata->fields['typbyval']);
                     echo "<table>\n";

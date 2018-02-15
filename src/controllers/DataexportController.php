@@ -21,6 +21,9 @@ class DataexportController extends BaseController
         'xml'  => 'xml',
     ];
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;
@@ -51,10 +54,10 @@ class DataexportController extends BaseController
 
                         return $dbexport_controller->render();
                     }
-                        $this->prtrace('d_format is', $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
-                        $format = $_REQUEST['d_format'];
-                        $oids   = isset($_REQUEST['d_oids']);
-                    
+                    $this->prtrace('d_format is', $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
+                    $format = $_REQUEST['d_format'];
+                    $oids   = isset($_REQUEST['d_oids']);
+
                     break;
                 case 'structureonly':
                     // Check to see if they have pg_dump set up and if they do, use that
@@ -64,8 +67,8 @@ class DataexportController extends BaseController
 
                         return $dbexport_controller->render();
                     }
-                        $clean = isset($_REQUEST['s_clean']);
-                    
+                    $clean = isset($_REQUEST['s_clean']);
+
                     break;
                 case 'structureanddata':
                     // Check to see if they have pg_dump set up and if they do, use that
@@ -75,10 +78,10 @@ class DataexportController extends BaseController
 
                         return $dbexport_controller->render();
                     }
-                        $format = $_REQUEST['sd_format'];
-                        $clean  = isset($_REQUEST['sd_clean']);
-                        $oids   = isset($_REQUEST['sd_oids']);
-                    
+                    $format = $_REQUEST['sd_format'];
+                    $clean  = isset($_REQUEST['sd_clean']);
+                    $oids   = isset($_REQUEST['sd_oids']);
+
                     break;
             }
 

@@ -15,6 +15,9 @@ class OperatorsController extends BaseController
 {
     public $controller_name = 'OperatorsController';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         $conf = $this->conf;
@@ -228,19 +231,19 @@ class OperatorsController extends BaseController
 
             $this->printNavLinks(
                 [
-                'showall' => [
-                    'attr'    => [
-                        'href' => [
-                            'url'     => 'operators.php',
-                            'urlvars' => [
-                                'server'   => $_REQUEST['server'],
-                                'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                    'showall' => [
+                        'attr'    => [
+                            'href' => [
+                                'url'     => 'operators.php',
+                                'urlvars' => [
+                                    'server'   => $_REQUEST['server'],
+                                    'database' => $_REQUEST['database'],
+                                    'schema'   => $_REQUEST['schema'],
+                                ],
                             ],
                         ],
-                    ],
-                    'content' => $lang['strshowalloperators'],
-                ]],
+                        'content' => $lang['strshowalloperators'],
+                    ]],
                 'operators-properties',
                 get_defined_vars()
             );

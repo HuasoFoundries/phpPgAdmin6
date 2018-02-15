@@ -17,6 +17,9 @@ class ColpropertiesController extends BaseController
     public $tableName       = '';
     public $table_place     = 'colproperties-colproperties';
 
+    /**
+     * Default method to render the controller according to the action parameter
+     */
     public function render()
     {
         if (isset($_REQUEST['table'])) {
