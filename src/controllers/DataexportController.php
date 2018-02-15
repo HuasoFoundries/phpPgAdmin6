@@ -344,7 +344,6 @@ class DataexportController extends BaseController
     public function doDefault($msg = '')
     {
         $lang   = $this->lang;
-        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         if (!isset($_REQUEST['query']) or empty($_REQUEST['query'])) {

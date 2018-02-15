@@ -23,8 +23,6 @@ class HistoryController extends BaseController
         $lang   = $this->lang;
         $action = $this->action;
 
-        $data = $this->misc->getDatabaseAccessor();
-
         $this->scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
 
         switch ($action) {

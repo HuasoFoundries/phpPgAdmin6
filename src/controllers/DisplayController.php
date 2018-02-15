@@ -22,7 +22,6 @@ class DisplayController extends BaseController
         $this->misc     = $this->misc;
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $data           = $this->misc->getDatabaseAccessor();
         $action         = $this->action;
 
         if ('dobrowsefk' == $action) {
@@ -195,14 +194,14 @@ class DisplayController extends BaseController
 
         try {
             // Retrieve page from query.  $max_pages is returned by reference.
-            $rs = $data->browseQuery(
+            $resultset = $data->browseQuery(
                 $type,
                 isset($object) ? $object : null,
                 isset($_SESSION['sqlquery']) ? $_SESSION['sqlquery'] : null,
                 $_REQUEST['sortkey'],
                 $_REQUEST['sortdir'],
                 $_REQUEST['page'],
-                $conf['max_rows'],
+                $this->conf['max_rows'],
                 $max_pages
             );
         } catch (\PHPPgAdmin\ADOdbException $e) {
@@ -263,7 +262,7 @@ class DisplayController extends BaseController
 
         $_gets['strings'] = $_REQUEST['strings'];
 
-        if ($save_history && is_object($rs) && ('QUERY' == $type)) {
+        if ($save_history && is_object($resultset) && ('QUERY' == $type)) {
             //{
             $this->misc->saveScriptHistory($_REQUEST['query']);
         }
@@ -290,7 +289,7 @@ class DisplayController extends BaseController
         echo htmlspecialchars($query);
         echo '</textarea><br><input type="submit"/></form>';
 
-        if (is_object($rs) && $rs->recordCount() > 0) {
+        if (is_object($resultset) && $resultset->recordCount() > 0) {
             // Show page navigation
             $this->misc->printPages($_REQUEST['page'], $max_pages, $_gets);
 
@@ -302,7 +301,7 @@ class DisplayController extends BaseController
             foreach ($key as $v) {
                 // If a key column is not found in the record set, then we
                 // can't use the key.
-                if (!in_array($v, array_keys($rs->fields), true)) {
+                if (!in_array($v, array_keys($resultset->fields), true)) {
                     $key = [];
 
                     break;
@@ -362,13 +361,13 @@ class DisplayController extends BaseController
             }
 
             // we show OIDs only if we are in TABLE or SELECT type browsing
-            $this->printTableHeaderCells($rs, $_gets, isset($object));
+            $this->printTableHeaderCells($resultset, $_gets, isset($object));
 
             echo '</tr>' . "\n";
 
             $i = 0;
-            reset($rs->fields);
-            while (!$rs->EOF) {
+            reset($resultset->fields);
+            while (!$resultset->EOF) {
                 $id = (0 == ($i % 2) ? '1' : '2');
                 echo "<tr class=\"data{$id}\">" . "\n";
                 // Display edit and delete links if we have a key
@@ -376,12 +375,12 @@ class DisplayController extends BaseController
                     $keys_array = [];
                     $has_nulls  = false;
                     foreach ($key as $v) {
-                        if (null === $rs->fields[$v]) {
+                        if (null === $resultset->fields[$v]) {
                             $has_nulls = true;
 
                             break;
                         }
-                        $keys_array["key[{$v}]"] = $rs->fields[$v];
+                        $keys_array["key[{$v}]"] = $resultset->fields[$v];
                     }
                     if ($has_nulls) {
                         echo "<td colspan=\"{$colspan}\">&nbsp;</td>" . "\n";
@@ -410,15 +409,15 @@ class DisplayController extends BaseController
                     }
                 }
 
-                $this->printTableRowCells($rs, $fkey_information, isset($object));
+                $this->printTableRowCells($resultset, $fkey_information, isset($object));
 
                 echo '</tr>' . "\n";
-                $rs->moveNext();
+                $resultset->moveNext();
                 ++$i;
             }
             echo '</table>' . "\n";
 
-            echo '<p>', $rs->recordCount(), " {$lang['strrows']}</p>" . "\n";
+            echo '<p>', $resultset->recordCount(), " {$lang['strrows']}</p>" . "\n";
             // Show page navigation
             $this->misc->printPages($_REQUEST['page'], $max_pages, $_gets);
         } else {
@@ -504,7 +503,7 @@ class DisplayController extends BaseController
         }
 
         // Create view and download
-        if (isset($_REQUEST['query'], $rs) && is_object($rs) && $rs->recordCount() > 0) {
+        if (isset($_REQUEST['query'], $resultset) && is_object($resultset) && $resultset->recordCount() > 0) {
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [
@@ -595,10 +594,10 @@ class DisplayController extends BaseController
             $this->printTitle($lang['streditrow']);
             $this->printMsg($msg);
 
-            $attrs = $data->getTableAttributes($_REQUEST['table']);
-            $rs    = $data->browseRow($_REQUEST['table'], $key);
+            $attrs     = $data->getTableAttributes($_REQUEST['table']);
+            $resultset = $data->browseRow($_REQUEST['table'], $key);
 
-            if (('disable' != $conf['autocomplete'])) {
+            if (('disable' != $this->conf['autocomplete'])) {
                 $fksprops = $this->misc->getAutocompleteFKProperties($_REQUEST['table']);
                 if (false !== $fksprops) {
                     echo $fksprops['code'];
@@ -620,7 +619,7 @@ class DisplayController extends BaseController
 
             $elements = 0;
             $error    = true;
-            if (1 == $rs->recordCount() && $attrs->recordCount() > 0) {
+            if (1 == $resultset->recordCount() && $attrs->recordCount() > 0) {
                 echo '<table>' . "\n";
 
                 // Output table header
@@ -656,7 +655,7 @@ class DisplayController extends BaseController
                     // Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
                     if (!$attrs->fields['attnotnull']) {
                         // Set initial null values
-                        if ('confeditrow' == $_REQUEST['action'] && null === $rs->fields[$attrs->fields['attname']]) {
+                        if ('confeditrow' == $_REQUEST['action'] && null === $resultset->fields[$attrs->fields['attname']]) {
                             $_REQUEST['nulls'][$attrs->fields['attname']] = 'on';
                         }
                         echo "<label><span><input type=\"checkbox\" name=\"nulls[{$attrs->fields['attname']}]\"",
@@ -683,7 +682,7 @@ class DisplayController extends BaseController
                         $extras['autocomplete'] = 'off';
                     }
 
-                    echo $data->printField("values[{$attrs->fields['attname']}]", $rs->fields[$attrs->fields['attname']], $attrs->fields['type'], $extras);
+                    echo $data->printField("values[{$attrs->fields['attname']}]", $resultset->fields[$attrs->fields['attname']], $attrs->fields['type'], $extras);
 
                     echo '</td>';
                     ++$elements;
@@ -694,7 +693,7 @@ class DisplayController extends BaseController
                 echo '</table>' . "\n";
 
                 $error = false;
-            } elseif (1 != $rs->recordCount()) {
+            } elseif (1 != $resultset->recordCount()) {
                 echo "<p>{$lang['strrownotunique']}</p>" . "\n";
             } else {
                 echo "<p>{$lang['strinvalidparam']}</p>" . "\n";
@@ -735,7 +734,7 @@ class DisplayController extends BaseController
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
 
             if (false !== $fksprops) {
-                if ('default off' != $conf['autocomplete']) {
+                if ('default off' != $this->conf['autocomplete']) {
                     echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$lang['strac']}</label>" . "\n";
                 } else {
                     echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$lang['strac']}</label>" . "\n";
@@ -785,20 +784,20 @@ class DisplayController extends BaseController
             $this->printTrail($_REQUEST['subject']);
             $this->printTitle($lang['strdeleterow']);
 
-            $rs = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
+            $resultset = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
             echo '<form action="' . \SUBFOLDER . '/src/views/display.php" method="post">' . "\n";
             echo $this->misc->form;
 
-            if (1 == $rs->recordCount()) {
+            if (1 == $resultset->recordCount()) {
                 echo "<p>{$lang['strconfdeleterow']}</p>" . "\n";
 
                 $fkinfo = [];
                 echo '<table><tr>';
-                $this->printTableHeaderCells($rs, false, true);
+                $this->printTableHeaderCells($resultset, false, true);
                 echo '</tr>';
                 echo '<tr class="data1">' . "\n";
-                $this->printTableRowCells($rs, $fkinfo, true);
+                $this->printTableRowCells($resultset, $fkinfo, true);
                 echo '</tr>' . "\n";
                 echo '</table>' . "\n";
                 echo '<br />' . "\n";
@@ -806,7 +805,7 @@ class DisplayController extends BaseController
                 echo '<input type="hidden" name="action" value="delrow" />' . "\n";
                 echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />" . "\n";
                 echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />" . "\n";
-            } elseif (1 != $rs->recordCount()) {
+            } elseif (1 != $resultset->recordCount()) {
                 echo "<p>{$lang['strrownotunique']}</p>" . "\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
             } else {
@@ -904,19 +903,19 @@ class DisplayController extends BaseController
      * @param $args - associative array for sort link parameters
      * @param mixed $withOid
      */
-    public function printTableHeaderCells(&$rs, $args, $withOid)
+    public function printTableHeaderCells(&$resultset, $args, $withOid)
     {
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         $j    = 0;
 
-        foreach ($rs->fields as $k => $v) {
-            if (($k === $data->id) && (!($withOid && $conf['show_oids']))) {
+        foreach ($resultset->fields as $k => $v) {
+            if (($k === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 ++$j;
 
                 continue;
             }
-            $finfo = $rs->fetchField($j);
+            $finfo = $resultset->fetchField($j);
 
             if (false === $args) {
                 echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>' . "\n";
@@ -945,11 +944,11 @@ class DisplayController extends BaseController
             ++$j;
         }
 
-        reset($rs->fields);
+        reset($resultset->fields);
     }
 
     // Print data-row cells
-    public function printTableRowCells(&$rs, &$fkey_information, $withOid)
+    public function printTableRowCells(&$resultset, &$fkey_information, $withOid)
     {
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -959,10 +958,10 @@ class DisplayController extends BaseController
             $_REQUEST['strings'] = 'collapsed';
         }
 
-        foreach ($rs->fields as $k => $v) {
-            $finfo = $rs->fetchField($j++);
+        foreach ($resultset->fields as $k => $v) {
+            $finfo = $resultset->fetchField($j++);
 
-            if (($k === $data->id) && (!($withOid && $conf['show_oids']))) {
+            if (($k === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
             }
             if (null !== $v && '' == $v) {
@@ -975,7 +974,7 @@ class DisplayController extends BaseController
                         $query_params = $fkey_information['byconstr'][$conid]['url_data'];
 
                         foreach ($fkey_information['byconstr'][$conid]['fkeys'] as $p_field => $f_field) {
-                            $query_params .= '&amp;' . urlencode("fkey[{$f_field}]") . '=' . urlencode($rs->fields[$p_field]);
+                            $query_params .= '&amp;' . urlencode("fkey[{$f_field}]") . '=' . urlencode($resultset->fields[$p_field]);
                         }
 
                         // $fkey_information['common_url'] is already urlencoded
@@ -1014,7 +1013,7 @@ class DisplayController extends BaseController
 
         $max_pages = 1;
         // Retrieve page from query.  $max_pages is returned by reference.
-        $rs = $data->browseQuery(
+        $resultset = $data->browseQuery(
             'SELECT',
             $_REQUEST['table'],
             $_REQUEST['query'],
@@ -1028,16 +1027,16 @@ class DisplayController extends BaseController
         echo '<a href="javascript:void(0);" style="display:table-cell;" class="fk_delete"><img alt="[delete]" src="' . $this->misc->icon('Delete') . '" /></a>' . "\n";
         echo '<div style="display:table-cell;">';
 
-        if (is_object($rs) && $rs->recordCount() > 0) {
+        if (is_object($resultset) && $resultset->recordCount() > 0) {
             /* we are browsing a referenced table here
              * we should show OID if show_oids is true
              * so we give true to withOid in functions bellow
              */
             echo '<table><tr>';
-            $this->printTableHeaderCells($rs, false, true);
+            $this->printTableHeaderCells($resultset, false, true);
             echo '</tr>';
             echo '<tr class="data1">' . "\n";
-            $this->printTableRowCells($rs, $fkinfo, true);
+            $this->printTableRowCells($resultset, $fkinfo, true);
             echo '</tr>' . "\n";
             echo '</table>' . "\n";
         } else {

@@ -93,7 +93,6 @@ class HelpController extends BaseController
     public function doChoosePage($urls)
     {
         $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strhelppagebrowser']);
         $this->printBody();

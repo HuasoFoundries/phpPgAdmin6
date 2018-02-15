@@ -441,7 +441,7 @@ class AlldbController extends BaseController
         while (!$templatedbs->EOF) {
             $dbname = htmlspecialchars($templatedbs->fields['datname']);
             if ('template1' != $dbname) {
-                // filter out for $conf[show_system] users so we dont get duplicates
+                // filter out for $this->conf[show_system] users so we dont get duplicates
                 echo "\t\t\t\t<option value=\"{$dbname}\"",
                 ($dbname == $_POST['formTemplate']) ? ' selected="selected"' : '', ">{$dbname}</option>\n";
             }
@@ -456,7 +456,7 @@ class AlldbController extends BaseController
         echo "\t\t\t<select name=\"formEncoding\">\n";
         echo "\t\t\t\t<option value=\"\"></option>\n";
 
-        foreach ($data->codemap as $index => $key) {
+        foreach ($data->codemap as $key) {
             echo "\t\t\t\t<option value=\"", htmlspecialchars($key), '"',
             ($key == $_POST['formEncoding']) ? ' selected="selected"' : '', '>',
             $this->misc->printVal($key), "</option>\n";
@@ -576,7 +576,6 @@ class AlldbController extends BaseController
     public function doExport($msg = '')
     {
         $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('server');
         $this->printTabs('server', 'export');

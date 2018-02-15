@@ -30,7 +30,6 @@ class DatabaseController extends BaseController
     {
         $lang   = $this->lang;
         $action = $this->action;
-        $data   = $this->misc->getDatabaseAccessor();
 
         if ('tree' == $action) {
             return $this->doTree();
@@ -48,7 +47,7 @@ class DatabaseController extends BaseController
         if ('locks' == $action || 'processes' == $action) {
             $scripts .= '<script src="' . \SUBFOLDER . '/js/database.js" type="text/javascript"></script>';
 
-            $refreshTime = $conf['ajax_refresh'] * 1500;
+            $refreshTime = $this->conf['ajax_refresh'] * 1500;
 
             $scripts .= "<script type=\"text/javascript\">\n";
             $scripts .= "var Database = {\n";
@@ -200,7 +199,7 @@ class DatabaseController extends BaseController
         echo "\t<option value=\"CONSTRAINT\"", ('CONSTRAINT' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strconstraints']}</option>\n";
         echo "\t<option value=\"FUNCTION\"", ('FUNCTION' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strfunctions']}</option>\n";
         echo "\t<option value=\"DOMAIN\"", ('DOMAIN' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strdomains']}</option>\n";
-        if ($conf['show_advanced']) {
+        if ($this->conf['show_advanced']) {
             echo "\t<option value=\"AGGREGATE\"", ('AGGREGATE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['straggregates']}</option>\n";
             echo "\t<option value=\"TYPE\"", ('TYPE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strtypes']}</option>\n";
             echo "\t<option value=\"OPERATOR\"", ('OPERATOR' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['stroperators']}</option>\n";

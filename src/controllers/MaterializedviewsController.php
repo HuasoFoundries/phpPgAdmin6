@@ -32,8 +32,6 @@ class MaterializedviewsController extends BaseController
             return $this->doSubTree();
         }
 
-        $data = $this->misc->getDatabaseAccessor();
-
         $this->printHeader('M ' . $lang['strviews']);
         $this->printBody();
 

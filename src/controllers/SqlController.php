@@ -91,7 +91,6 @@ class SqlController extends BaseController
         $conf        = $this->conf;
         $this->misc  = $this->misc;
         $lang        = $this->lang;
-        $data        = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();
 
         try {

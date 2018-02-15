@@ -25,7 +25,6 @@ class SqleditController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        $data   = $this->misc->getDatabaseAccessor();
 
         switch ($action) {
             case 'find':
@@ -194,7 +193,7 @@ class SqleditController extends BaseController
         $default_html .= "\t<option value=\"CONSTRAINT\"" . ('CONSTRAINT' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strconstraints']}</option>\n";
         $default_html .= "\t<option value=\"FUNCTION\"" . ('FUNCTION' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strfunctions']}</option>\n";
         $default_html .= "\t<option value=\"DOMAIN\"" . ('DOMAIN' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strdomains']}</option>\n";
-        if ($conf['show_advanced']) {
+        if ($this->conf['show_advanced']) {
             $default_html .= "\t<option value=\"AGGREGATE\"" . ('AGGREGATE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['straggregates']}</option>\n";
             $default_html .= "\t<option value=\"TYPE\"" . ('TYPE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strtypes']}</option>\n";
             $default_html .= "\t<option value=\"OPERATOR\"" . ('OPERATOR' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['stroperators']}</option>\n";

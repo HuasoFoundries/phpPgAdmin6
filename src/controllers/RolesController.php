@@ -863,7 +863,7 @@ class RolesController extends BaseController
             echo "</p></form>\n";
         } else {
             // Check that password is minimum length
-            if (strlen($_POST['password']) < $conf['min_password_length']) {
+            if (strlen($_POST['password']) < $this->conf['min_password_length']) {
                 $this->doChangePassword(true, $lang['strpasswordshort']);
             }
 

@@ -222,7 +222,6 @@ class FulltextController extends BaseController
     public function doTree()
     {
         $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
 
         $tabs  = $this->misc->getNavTabs('fulltext');
         $items = $this->adjustTabsForTree($tabs);
@@ -376,8 +375,6 @@ class FulltextController extends BaseController
     {
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
-
-        $server_info = $this->misc->getServerInfo();
 
         if (!isset($_POST['formName'])) {
             $_POST['formName'] = '';

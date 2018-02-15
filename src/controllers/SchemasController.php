@@ -228,7 +228,6 @@ class SchemasController extends BaseController
     public function doSubTree()
     {
         $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
 
         $tabs = $this->misc->getNavTabs('schema');
 

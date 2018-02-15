@@ -21,7 +21,6 @@ class PrivilegesController extends BaseController
     {
         $lang   = $this->lang;
         $action = $this->action;
-        $data   = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strprivileges']);
         $this->printBody();
@@ -55,10 +54,9 @@ class PrivilegesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang     = $this->lang;
-        $action   = $this->action;
-        $data     = $this->misc->getDatabaseAccessor();
-        $database = $this->misc->getDatabase();
+        $lang   = $this->lang;
+        $action = $this->action;
+        $data   = $this->misc->getDatabaseAccessor();
 
         $this->printTrail($_REQUEST['subject']);
 

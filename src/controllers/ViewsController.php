@@ -32,8 +32,6 @@ class ViewsController extends BaseController
             return $this->doSubTree();
         }
 
-        $data = $this->misc->getDatabaseAccessor();
-
         $this->printHeader($lang['strviews']);
         $this->printBody();
 

@@ -32,7 +32,6 @@ class ColpropertiesController extends BaseController
 
         $lang   = $this->lang;
         $action = $this->action;
-        $data   = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strtables'] . ' - ' . $this->tableName, null, true, 'header_select2.twig');
         $this->printBody();

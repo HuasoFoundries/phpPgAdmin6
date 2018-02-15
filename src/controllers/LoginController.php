@@ -112,7 +112,7 @@ class LoginController extends BaseController
         $login_html .= '<td><input id="loginPassword" type="password" name="loginPassword_' . $md5_server . '" size="24" /></td>';
         $login_html .= '</tr>';
         $login_html .= '</table>';
-        if (sizeof($conf['servers']) > 1) {
+        if (sizeof($this->conf['servers']) > 1) {
             $checked = isset($_POST['loginShared']) ? 'checked="checked"' : '';
             $login_html .= '<p><input type="checkbox" id="loginShared" name="loginShared" ' . $checked . ' />';
             $login_html .= '<label for="loginShared">' . $lang['strtrycred'] . '</label></p>';

@@ -70,8 +70,6 @@ class ServersController extends BaseController
     {
         $lang = $this->lang;
 
-        $data = $this->misc->getDatabaseAccessor();
-
         $this->printTabs('root', 'servers');
         $this->printMsg($msg);
         $group = isset($_GET['group']) ? $_GET['group'] : false;
@@ -86,8 +84,8 @@ class ServersController extends BaseController
             ],
         ];
         $actions = [];
-        if ((false !== $group) && (isset($conf['srv_groups'][$group])) && ($groups->recordCount() > 0)) {
-            $this->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
+        if ((false !== $group) && (isset($this->conf['srv_groups'][$group])) && ($groups->recordCount() > 0)) {
+            $this->printTitle(sprintf($lang['strgroupgroups'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
         }
         $this->printTable($groups, $columns, $actions, $this->table_place);
         $servers = $this->misc->getServers(true, $group);
@@ -137,8 +135,8 @@ class ServersController extends BaseController
             return $actions;
         };
 
-        if ((false !== $group) and isset($conf['srv_groups'][$group])) {
-            $this->printTitle(sprintf($lang['strgroupservers'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
+        if ((false !== $group) and isset($this->conf['srv_groups'][$group])) {
+            $this->printTitle(sprintf($lang['strgroupservers'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
             $actions['logout']['attr']['href']['urlvars']['group'] = $group;
         }
         echo $this->printTable($servers, $columns, $actions, $this->table_place, $lang['strnoobjects'], $svPre);
@@ -150,10 +148,10 @@ class ServersController extends BaseController
         $group_id = isset($_GET['group']) ? $_GET['group'] : false;
 
         // root with srv_groups
-        if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0
+        if (isset($this->conf['srv_groups']) and count($this->conf['srv_groups']) > 0
             and false === $group_id) {
             $nodes = $this->misc->getServersGroups(true);
-        } elseif (isset($conf['srv_groups']) and false !== $group_id) {
+        } elseif (isset($this->conf['srv_groups']) and false !== $group_id) {
             // group subtree
             if ('all' !== $group_id) {
                 $nodes = $this->misc->getServersGroups(false, $group_id);

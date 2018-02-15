@@ -25,7 +25,6 @@ class CastsController extends BaseController
         if ('tree' == $action) {
             return $this->doTree();
         }
-        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strcasts']);
         $this->printBody();

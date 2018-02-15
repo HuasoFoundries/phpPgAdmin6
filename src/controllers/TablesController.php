@@ -33,8 +33,6 @@ class TablesController extends BaseController
             return $this->doSubTree();
         }
 
-        $data = $this->misc->getDatabaseAccessor();
-
         $header_template = 'header.twig';
         $footer_template = 'footer.twig';
 
@@ -974,7 +972,7 @@ class TablesController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            if (('disable' != $conf['autocomplete'])) {
+            if (('disable' != $this->conf['autocomplete'])) {
                 $fksprops = $this->misc->getAutocompleteFKProperties($_REQUEST['table']);
                 if (false !== $fksprops) {
                     echo $fksprops['code'];
@@ -1063,7 +1061,7 @@ class TablesController extends BaseController
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
 
                 if (false !== $fksprops) {
-                    if ('default off' != $conf['autocomplete']) {
+                    if ('default off' != $this->conf['autocomplete']) {
                         echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$lang['strac']}</label>\n";
                     } else {
                         echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$lang['strac']}</label>\n";

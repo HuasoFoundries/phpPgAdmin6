@@ -341,7 +341,6 @@ class ViewpropertiesController extends BaseController
     public function doExport($msg = '')
     {
         $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('view');
         $this->printTabs('view', 'export');

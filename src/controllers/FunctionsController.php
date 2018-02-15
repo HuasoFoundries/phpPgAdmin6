@@ -27,7 +27,6 @@ class FunctionsController extends BaseController
         if ('tree' == $action) {
             return $this->doTree();
         }
-        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strfunctions'], null, true, 'header_datatables.twig');
         $this->printBody();
@@ -986,8 +985,8 @@ class FunctionsController extends BaseController
         $szArgReturns .= '<option value=""></option>';
         $szArgReturns .= '<option value="[]">[]</option>';
         $szArgReturns .= '</select>';
-        if (!empty($conf['theme'])) {
-            $szImgPath = "images/themes/{$conf['theme']}";
+        if (!empty($this->conf['theme'])) {
+            $szImgPath = "images/themes/{$this->conf['theme']}";
         } else {
             $szImgPath = 'images/themes/default';
         }
