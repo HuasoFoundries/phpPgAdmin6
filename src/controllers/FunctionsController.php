@@ -725,8 +725,7 @@ class FunctionsController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['function']) && empty($_REQUEST['ma'])) {
-            $this->doDefault($lang['strspecifyfunctiontodrop']);
-            exit();
+            return $this->doDefault($lang['strspecifyfunctiontodrop']);
         }
 
         if ($confirm) {

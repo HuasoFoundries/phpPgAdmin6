@@ -32,6 +32,11 @@ class BaseController
     protected $header_controller = null;
     protected $scripts           = '';
     public $msg                  = '';
+    public $view;
+    public $plugin_manager;
+    public $misc;
+    public $conf;
+    public $phpMinVer;
 
     /**
      * Constructs the base controller (common for almost all controllers)
@@ -69,7 +74,6 @@ class BaseController
             if ($this->misc->getServerId() === null) {
                 $servers_controller = new \PHPPgAdmin\Controller\ServersController($container, true);
                 return $servers_controller->render();
-                exit;
             }
             $_server_info = $this->misc->getServerInfo();
             // Redirect to the login form if not logged in
@@ -78,7 +82,6 @@ class BaseController
 
                 $servers_controller = new \PHPPgAdmin\Controller\ServersController($container, true);
                 return $servers_controller->render();
-                exit;
             }
         }
 
@@ -248,7 +251,7 @@ class BaseController
 
     /**
      * Outputs JavaScript to set default focus
-     * @param $object eg. forms[0].username
+     * @param mixed $object eg. forms[0].username
      */
     public function setFocus($object)
     {
@@ -258,9 +261,12 @@ class BaseController
 
     /**
      * Outputs JavaScript to set the name of the browser window.
-     * @param $name the window name
-     * @param $addServer if true (default) then the server id is
-     *        attached to the name.
+     *
+     * @param string   $name       the window name
+     * @param boolean  $addServer  if true (default) then the server id is
+     *                             attached to the name.
+     *
+     * @return null  sets window name
      */
     public function setWindowName($name, $addServer = true)
     {
@@ -295,9 +301,10 @@ class BaseController
     /**
      * Print out a message
      *
-     * @param      $msg The message to print
-     * @param bool $do_print
-     * @return string
+     * @param string  $msg       The message
+     * @param bool    $do_print if true, print the message. Return the string otherwise
+     *
+     * @return string a paragraph containing the message, whose linebreaks are replaced by <br> elements
      */
     public function printMsg($msg, $do_print = true)
     {
@@ -308,6 +315,7 @@ class BaseController
         }
         if ($do_print) {
             echo $html;
+            return $html;
         } else {
             return $html;
         }

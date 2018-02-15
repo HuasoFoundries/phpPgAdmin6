@@ -388,8 +388,7 @@ class SequencesController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['sequence']) && empty($_REQUEST['ma'])) {
-            $this->doDefault($lang['strspecifysequencetodrop']);
-            exit();
+            return $this->doDefault($lang['strspecifysequencetodrop']);
         }
 
         if ($confirm) {

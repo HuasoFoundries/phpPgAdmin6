@@ -424,8 +424,7 @@ class MaterializedviewsController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['matview']) && empty($_REQUEST['ma'])) {
-            $this->doDefault($lang['strspecifyviewtodrop']);
-            exit();
+            return $this->doDefault($lang['strspecifyviewtodrop']);
         }
 
         if ($confirm) {

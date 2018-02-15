@@ -441,11 +441,10 @@ class Misc
             return $this->server_info;
         }
 
+        $this->prtrace('Invalid server param');
         $this->server_info = null;
         // Unable to find a matching server, are we being hacked?
-        echo $this->lang['strinvalidserverparam'];
-
-        exit;
+        return $this->halt($this->lang['strinvalidserverparam']);
     }
 
     /**
@@ -2023,8 +2022,7 @@ class Misc
                 return $str;
             }
 
-            echo $lang['strcannotdumponwindows'];
-            exit;
+            return $this->halt($lang['strcannotdumponwindows']);
         } else {
             return escapeshellarg($str);
         }

@@ -18,9 +18,8 @@ class DisplayController extends BaseController
         $data           = $misc->getDatabaseAccessor();
         $action         = $this->action;
 
-        /* shortcuts: this function exit the script for ajax purpose */
         if ($action == 'dobrowsefk') {
-            $this->doBrowseFK();
+            return $this->doBrowseFK();
         }
 
         set_time_limit(0);
@@ -247,7 +246,8 @@ class DisplayController extends BaseController
 
         $_gets['strings'] = $_REQUEST['strings'];
 
-        if ($save_history && is_object($rs) && ($type == 'QUERY')) { //{
+        if ($save_history && is_object($rs) && ($type == 'QUERY')) {
+            //{
             $misc->saveScriptHistory($_REQUEST['query']);
         }
 
@@ -1001,7 +1001,6 @@ class DisplayController extends BaseController
              * we should show OID if show_oids is true
              * so we give true to withOid in functions bellow
              */
-
             echo '<table><tr>';
             $this->printTableHeaderCells($rs, false, true);
             echo '</tr>';
@@ -1012,9 +1011,6 @@ class DisplayController extends BaseController
         } else {
             echo $lang['strnodata'];
         }
-
         echo '</div>';
-
-        exit;
     }
 }

@@ -128,7 +128,7 @@ class ContainerUtils
         call_user_func_array('\Kint::dump', func_get_args());
 
         $body = new \Slim\Http\Body(fopen('php://temp', 'r+'));
-        $body->write('got exit msg');
+        $body->write('terminating script');
 
         return $this->container->responseobj
                     ->withStatus(200)

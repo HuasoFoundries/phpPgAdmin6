@@ -320,8 +320,7 @@ class AlldbController extends BaseController
         $data = $misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['dropdatabase']) && empty($_REQUEST['ma'])) {
-            $this->doDefault($lang['strspecifydatabasetodrop']);
-            exit();
+            return $this->doDefault($lang['strspecifydatabasetodrop']);
         }
 
         if ($confirm) {
