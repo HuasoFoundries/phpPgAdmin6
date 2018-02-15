@@ -15,10 +15,7 @@ class TreeController
 {
     use \PHPPgAdmin\HelperTrait;
 
-    private $container;
-    private $data;
-    private $database;
-    private $server_id;
+    protected $container;
     public $form             = '';
     public $href             = '';
     public $lang             = [];
@@ -136,7 +133,7 @@ class TreeController
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
-            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"".$this->misc->icon('ObjectNotFound').'" />'."\n";
+            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"" . $this->misc->icon('ObjectNotFound') . '" />' . "\n";
         }
 
         $tree_xml .= "</tree>\n";

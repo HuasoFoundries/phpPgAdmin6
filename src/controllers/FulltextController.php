@@ -493,7 +493,7 @@ class FulltextController extends BaseController
             $err .= "{$lang['strftscantparsercopy']}<br />";
         }
 
-        if ('' != $err) {
+        if ($err !== '') {
             return doCreateConfig($err);
         }
 

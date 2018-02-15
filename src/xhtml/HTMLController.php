@@ -15,10 +15,7 @@ class HTMLController
 {
     use \PHPPgAdmin\HelperTrait;
 
-    private $container;
-    private $data;
-    private $database;
-    private $server_id;
+    protected $container;
     public $form             = '';
     public $href             = '';
     public $lang             = [];
@@ -103,7 +100,7 @@ class HTMLController
 
         ksort($urlvars);
         foreach ($urlvars as $var => $varfield) {
-            $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($varfield, $fields);
+            $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($varfield, $fields);
             $sep = '&';
         }
 
@@ -144,12 +141,12 @@ class HTMLController
         $tag = '<a ';
         foreach ($link['attr'] as $attr => $value) {
             if ('href' == $attr and is_array($value)) {
-                $tag .= 'href="'.htmlentities($this->getActionUrl($value, $link['fields'], $from)).'" ';
+                $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'], $from)) . '" ';
             } else {
-                $tag .= htmlentities($attr).'="'.Decorator::get_sanitized_value($value, $link['fields'], 'html').'" ';
+                $tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
             }
         }
-        $tag .= '>'.Decorator::get_sanitized_value($link['content'], $link['fields'], 'html')."</a>\n";
+        $tag .= '>' . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
 
         if ($do_print) {
             echo $tag;
@@ -180,9 +177,9 @@ class HTMLController
         $htmlOut = '';
         if ($bMultiple) {
             // If multiple select combo
-            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">"."\n";
+            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">" . "\n";
         } else {
-            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"${szName}\" id=\"${szName}\">"."\n";
+            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"${szName}\" id=\"${szName}\">" . "\n";
         }
 
         if ($bBlankEntry) {
