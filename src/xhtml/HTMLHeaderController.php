@@ -1,33 +1,41 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 /**
- * Class to render tables. Formerly part of Misc.php
- *
+ * Class to render tables. Formerly part of Misc.php.
  */
 class HTMLHeaderController extends HTMLController
 {
-    public $_name       = 'HTMLHeaderController';
-    private $_no_output = false;
+    public $controller_name = 'HTMLHeaderController';
+    private $_no_output     = false;
 
     /**
-     * sets the value of private member variable $_no_output
-     * @param boolean $flag [description]
-     * @return  $this
+     * sets the value of private member variable $_no_output.
+     *
+     * @param bool $flag [description]
+     *
+     * @return $this
      */
     public function setNoOutput($flag)
     {
-        $this->_no_output = boolval($flag);
+        $this->_no_output = (bool) $flag;
+
         return $this;
     }
 
     /**
      * Prints the page header.  If member variable $this->_no_output is
      * set then no header is drawn.
+     *
      * @param $title The title of the page
      * @param $script script tag
      * @param $do_print boolean if false, the function will return the header content
+     * @param mixed $template
      */
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
@@ -47,10 +55,10 @@ class HTMLHeaderController extends HTMLController
             $viewVars['applocale'] = $lang['applocale'];
         }
 
-        $viewVars['dir']            = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
+        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ($title !== '') ? ' - ' . $title : '';
-        $viewVars['appName']        = htmlspecialchars($this->appName) . (($title != '') ? htmlspecialchars(" - {$title}") : '');
+        $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
+        $viewVars['appName']        = htmlspecialchars($this->appName).(('' != $title) ? htmlspecialchars(" - {$title}") : '');
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
@@ -75,13 +83,14 @@ class HTMLHeaderController extends HTMLController
 
     /**
      * Prints the page body.
+     *
      * @param $doBody True to output body tag, false to return
      * @param $bodyClass - name of body class
      */
     public function printBody($doBody = true, $bodyClass = 'detailbody')
     {
         $bodyClass = htmlspecialchars($bodyClass);
-        $bodyHtml  = '<body data-controller="' . $this->controller_name . '" class="' . $this->lang['applangdir'] . ' ' . $bodyClass . '" >';
+        $bodyHtml  = '<body data-controller="'.$this->controller_name.'" class="'.$this->lang['applangdir'].' '.$bodyClass.'" >';
         $bodyHtml .= "\n";
         /*$bodyHtml .= '<div id="flexbox_wrapper">';
         $bodyHtml .= "\n";
@@ -96,9 +105,11 @@ class HTMLHeaderController extends HTMLController
     }
 
     /**
-     * Print out the page heading and help link
+     * Print out the page heading and help link.
+     *
      * @param $title Title, already escaped
      * @param $help (optional) The identifier for the help link
+     * @param mixed $do_print
      */
     public function printTitle($title, $help = null, $do_print = true)
     {

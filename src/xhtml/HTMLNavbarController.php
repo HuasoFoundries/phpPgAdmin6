@@ -1,26 +1,32 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 /**
- * Class to render tables. Formerly part of Misc.php
- *
+ * Class to render tables. Formerly part of Misc.php.
  */
 class HTMLNavbarController extends HTMLController
 {
-    public $_name = 'HTMLNavbarController';
+    public $controller_name = 'HTMLNavbarController';
 
     /**
      * Display a bread crumb trail.
+     *
      * @param  $do_print true to echo, false to return html
+     * @param mixed      $trail
+     * @param null|mixed $from
      */
     public function printTrail($trail = [], $do_print = true, $from = null)
     {
-        if ($from === null) {
+        if (null === $from) {
             $from = __METHOD__;
         }
-        $lang = $this->lang;
-        $misc = $this->misc;
+        $lang       = $this->lang;
+        $this->misc = $this->misc;
 
         $trail_html = $this->printTopbar(false, $from);
 
@@ -53,7 +59,7 @@ class HTMLNavbarController extends HTMLController
                 $iconalt = 'Database Root';
             }
 
-            if (isset($crumb['icon']) && $icon = $misc->icon($crumb['icon'])) {
+            if (isset($crumb['icon']) && $icon = $this->misc->icon($crumb['icon'])) {
                 $crumblink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$iconalt}\" /></span>";
             }
 
@@ -78,18 +84,19 @@ class HTMLNavbarController extends HTMLController
     }
 
     /**
-     * Display the navlinks
+     * Display the navlinks.
      *
      * @param $navlinks - An array with the the attributes and values that will be shown. See printLinksList for array format.
      * @param $place - Place where the $navlinks are displayed. Like 'display-browse', where 'display' is the file (display.php)
      * @param $env - Associative array of defined variables in the scope of the caller.
      *               Allows to give some environnement details to plugins.
      * and 'browse' is the place inside that code (doBrowse).
-     * @param bool $do_print if true, print html, if false, return html
+     * @param bool  $do_print if true, print html, if false, return html
+     * @param mixed $from
      */
-    public function printNavLinks($navlinks, $place, $env = [], $do_print = true, $from)
+    public function printNavLinks($navlinks, $place, $env, $do_print, $from)
     {
-        if ($from === null || $from === false) {
+        if (null === $from || false === $from) {
             $from = __METHOD__;
         }
         //$this->prtrace($navlinks);
@@ -113,24 +120,27 @@ class HTMLNavbarController extends HTMLController
     }
 
     /**
-     * Display navigation tabs
+     * Display navigation tabs.
+     *
      * @param $tabs The name of current section (Ex: intro, server, ...), or an array with tabs (Ex: sqledit.php doFind function)
-     * @param $activetab The name of the tab to be highlighted.
+     * @param $activetab the name of the tab to be highlighted
      * @param  $print if false, return html
+     * @param mixed      $alltabs
+     * @param mixed      $do_print
+     * @param null|mixed $from
      */
     public function printTabs($alltabs, $activetab, $do_print = true, $from = null)
     {
-        if ($from === null || $from === false) {
+        if (null === $from || false === $from) {
             $from = __METHOD__;
         }
 
-        $lang = $this->lang;
-        $misc = $this->misc;
-        $data = $misc->getDatabaseAccessor();
+        $lang       = $this->lang;
+        $this->misc = $this->misc;
 
         if (is_string($alltabs)) {
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
-            $alltabs                            = $misc->getNavTabs($alltabs);
+            $alltabs                            = $this->misc->getNavTabs($alltabs);
         }
         //$this->prtrace($tabs);
         $tabs_html = '';
@@ -139,11 +149,11 @@ class HTMLNavbarController extends HTMLController
         $tabs = [];
         if (count($alltabs) > 0) {
             foreach ($alltabs as $tab_id => $tab) {
-                if (!isset($tab['hide']) || $tab['hide'] !== true) {
+                if (!isset($tab['hide']) || true !== $tab['hide']) {
                     $tabs[$tab_id]            = $tab;
                     $tabs[$tab_id]['active']  = $active  = ($tab_id == $activetab) ? ' active' : '';
                     $tabs[$tab_id]['tablink'] = str_replace(['&amp;', '.php'], ['&', ''], htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
-                    if (isset($tab['icon']) && $icon = $misc->icon($tab['icon'])) {
+                    if (isset($tab['icon']) && $icon = $this->misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
                     }
                     if (isset($tab['help'])) {
@@ -176,58 +186,65 @@ class HTMLNavbarController extends HTMLController
 
     /**
      * Get the URL for the last active tab of a particular tab bar.
+     *
+     * @param mixed $section
      */
     public function getLastTabURL($section)
     {
-        $lang = $this->lang;
-        $misc = $this->misc;
+        $lang       = $this->lang;
+        $this->misc = $this->misc;
 
-        $tabs = $misc->getNavTabs($section);
+        $tabs = $this->misc->getNavTabs($section);
 
-        if (isset($_SESSION['webdbLastTab'][$section]) && isset($tabs[$_SESSION['webdbLastTab'][$section]])) {
+        if (isset($_SESSION['webdbLastTab'][$section], $tabs[$_SESSION['webdbLastTab'][$section]])) {
             $tab = $tabs[$_SESSION['webdbLastTab'][$section]];
         } else {
             $tab = reset($tabs);
         }
         $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab], 'getLastTabURL');
+
         return isset($tab['url']) ? $tab : null;
     }
 
     /**
-     * [printTopbar description]
-     * @param  bool $do_print true to print, false to return html
+     * [printTopbar description].
+     *
+     * @param bool       $do_print true to print, false to return html
+     * @param null|mixed $from
+     *
      * @return string
      */
     private function printTopbar($do_print = true, $from = null)
     {
-        if ($from === null || $from === false) {
+        if (null === $from || false === $from) {
             $from = __METHOD__;
         }
 
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $misc           = $this->misc;
-        $appName        = $misc->appName;
-        $appVersion     = $misc->appVersion;
-        $appLangFiles   = $misc->appLangFiles;
+        $this->misc     = $this->misc;
+        $appName        = $this->misc->appName;
+        $appVersion     = $this->misc->appVersion;
 
-        $server_info = $misc->getServerInfo();
-        $server_id   = $misc->getServerId();
-        $reqvars     = $misc->getRequestVars('table');
+        $server_info = $this->misc->getServerInfo();
+        $server_id   = $this->misc->getServerId();
+        $reqvars     = $this->misc->getRequestVars('table');
 
         $topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><table style="width: 100%"><tr><td>';
 
-        if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
-            /* top left informations when connected */
-            $topbar_html .= sprintf($lang['strtopbar'],
+        if ($server_info && isset($server_info['platform'], $server_info['username'])) {
+            // top left informations when connected
+            $topbar_html .= sprintf(
+                $lang['strtopbar'],
                 '<span class="platform">' . htmlspecialchars($server_info['platform']) . '</span>',
                 '<span class="host">' . htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']) . '</span>',
                 '<span class="port">' . htmlspecialchars($server_info['port']) . '</span>',
-                '<span class="username">' . htmlspecialchars($server_info['username']) . '</span>');
+                '<span class="username">' . htmlspecialchars($server_info['username']) . '</span>'
+            );
 
             $topbar_html .= '</td>';
 
-            /* top right informations when connected */
+            // top right informations when connected
 
             $toplinks = [
                 'sql'     => [
@@ -320,7 +337,7 @@ class HTMLNavbarController extends HTMLController
                 $topbar_html .= sprintf("
 						$('#toplink_logout').click(function() {
 							return confirm('%s');
-						});", str_replace("'", "\'", $lang['strconfdropcred']));
+						});", str_replace("'", "\\'", $lang['strconfdropcred']));
             }
 
             $topbar_html .= '
@@ -361,21 +378,24 @@ class HTMLNavbarController extends HTMLController
     {
         $vars = $this->misc->getSubjectParams($subject);
         ksort($vars['params']);
+
         return "{$vars['url']}?" . http_build_query($vars['params'], '', '&amp;');
     }
 
     /**
      * Create a bread crumb trail of the object hierarchy.
-     * @param $object The type of object at the end of the trail.
+     *
+     * @param $object the type of object at the end of the trail
+     * @param null|mixed $subject
      */
     private function getTrail($subject = null)
     {
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $misc           = $this->misc;
-        $appName        = $misc->appName;
+        $this->misc     = $this->misc;
+        $appName        = $this->misc->appName;
 
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $trail = [];
         $vars  = '';
@@ -387,12 +407,12 @@ class HTMLNavbarController extends HTMLController
             'icon' => 'Introduction',
         ];
 
-        if ($subject == 'root') {
+        if ('root' == $subject) {
             $done = true;
         }
 
         if (!$done) {
-            $server_info     = $misc->getServerInfo();
+            $server_info     = $this->misc->getServerInfo();
             $trail['server'] = [
                 'title' => $lang['strserver'],
                 'text'  => $server_info['desc'],
@@ -401,7 +421,7 @@ class HTMLNavbarController extends HTMLController
                 'icon'  => 'Server',
             ];
         }
-        if ($subject == 'server') {
+        if ('server' == $subject) {
             $done = true;
         }
 
@@ -422,7 +442,7 @@ class HTMLNavbarController extends HTMLController
                 'icon'  => 'Roles',
             ];
         }
-        if ($subject == 'database' || $subject == 'role') {
+        if ('database' == $subject || 'role' == $subject) {
             $done = true;
         }
 
@@ -435,7 +455,7 @@ class HTMLNavbarController extends HTMLController
                 'icon'  => 'Schema',
             ];
         }
-        if ($subject == 'schema') {
+        if ('schema' == $subject) {
             $done = true;
         }
 
@@ -472,7 +492,7 @@ class HTMLNavbarController extends HTMLController
                 'icon'  => 'Fts',
             ];
         }
-        if ($subject == 'table' || $subject == 'view' || $subject == 'matview' || $subject == 'ftscfg') {
+        if ('table' == $subject || 'view' == $subject || 'matview' == $subject || 'ftscfg' == $subject) {
             $done = true;
         }
 
@@ -486,6 +506,7 @@ class HTMLNavbarController extends HTMLController
                         'help'  => 'pg.function',
                         'icon'  => 'Function',
                     ];
+
                     break;
                 case 'aggregate':
                     $trail[$subject] = [
@@ -495,6 +516,7 @@ class HTMLNavbarController extends HTMLController
                         'help'  => 'pg.aggregate',
                         'icon'  => 'Aggregate',
                     ];
+
                     break;
                 case 'column':
                     $trail['column'] = [
@@ -503,19 +525,25 @@ class HTMLNavbarController extends HTMLController
                         'icon'  => 'Column',
                         'url'   => $this->getHREFSubject('column'),
                     ];
+
                     break;
                 default:
                     if (isset($_REQUEST[$subject])) {
                         switch ($subject) {
                             case 'domain':$icon = 'Domain';
+
                                 break;
                             case 'sequence':$icon = 'Sequence';
+
                                 break;
                             case 'type':$icon = 'Type';
+
                                 break;
                             case 'operator':$icon = 'Operator';
+
                                 break;
                             default:$icon = null;
+
                                 break;
                         }
                         $trail[$subject] = [
@@ -542,20 +570,22 @@ class HTMLNavbarController extends HTMLController
     }
 
     /**
-     * Display a list of links
+     * Display a list of links.
+     *
      * @param $links An associative array of links to print. See printLink function for
      *               the links array format.
-     * @param $class An optional class or list of classes seprated by a space
-     *   WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
-     * @param  boolean $do_print true to echo, false to return
+     * @param $class an optional class or list of classes seprated by a space
+     *   WARNING: This field is NOT escaped! No user should be able to inject something here, use with care
+     * @param bool       $do_print true to echo, false to return
+     * @param null|mixed $from
      */
     private function printLinksList($links, $class = '', $do_print = true, $from = null)
     {
-        if ($from === null || $from === false) {
+        if (null === $from || false === $from) {
             $from = __METHOD__;
         }
-        $misc      = $this->misc;
-        $list_html = "<ul class=\"{$class}\">\n";
+        $this->misc = $this->misc;
+        $list_html  = "<ul class=\"{$class}\">\n";
         foreach ($links as $link) {
             $list_html .= "\t<li>";
             $list_html .= str_replace('.php', '', $this->printLink($link, false, $from));

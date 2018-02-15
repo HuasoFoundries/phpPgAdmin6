@@ -1,21 +1,26 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class BrowserController extends BaseController
 {
-    public $_name = 'BrowserController';
+    public $controller_name = 'BrowserController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
 
-        $misc->setNoDBConnection(true);
+        $this->misc->setNoDBConnection(true);
 
         $this->setNoBottomLink(true);
 
@@ -32,7 +37,6 @@ class BrowserController extends BaseController
             'T'              => $this->misc->icon('T'),
             'Tminus'         => $this->misc->icon('Tminus'),
             'Tplus'          => $this->misc->icon('Tplus'),
-
         ]];
 
         echo $this->view->fetch('browser.twig', $viewVars);

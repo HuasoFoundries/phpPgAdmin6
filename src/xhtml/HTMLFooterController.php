@@ -1,44 +1,53 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 /**
- * Class to render tables. Formerly part of Misc.php
- *
+ * Class to render tables. Formerly part of Misc.php.
  */
 class HTMLFooterController extends HTMLController
 {
-    public $_name                  = 'HTMLFooterController';
+    public $controller_name        = 'HTMLFooterController';
     private $_reload_drop_database = false;
     private $_no_bottom_link       = false;
 
     /**
-     * [setReloadBrowser description]
+     * [setReloadBrowser description].
      *
-     * @param boolean $flag sets internal $_reload_drop_database var which will be passed to the footer methods
+     * @param bool $flag sets internal $_reload_drop_database var which will be passed to the footer methods
+     *
      * @return $this
      */
     public function setReloadDropDatabase($flag)
     {
-        $this->_reload_drop_database = boolval($flag);
+        $this->_reload_drop_database = (bool) $flag;
+
         return $this;
     }
 
     /**
-     * sets $_no_bottom_link boolean value
+     * sets $_no_bottom_link boolean value.
      *
-     * @param boolean $flag [description]
+     * @param bool $flag [description]
+     *
      * @return $this
      */
     public function setNoBottomLink($flag)
     {
-        $this->_no_bottom_link = boolval($flag);
+        $this->_no_bottom_link = (bool) $flag;
+
         return $this;
     }
 
     /**
-     * Prints the page footer
+     * Prints the page footer.
+     *
      * @param $doBody True to output body tag, false to return the html
+     * @param mixed $template
      */
     public function printFooter($doBody = true, $template = 'footer.twig')
     {
@@ -52,7 +61,7 @@ class HTMLFooterController extends HTMLController
             $footer_html .= $this->printReload(true, false);
         }
         if (!$this->_no_bottom_link) {
-            $footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . '</a>';
+            $footer_html .= '<a data-footertemplate="'.$template.'" href="#" class="bottom_link">'.$lang['strgotoppage'].'</a>';
         }
 
         $footer_html .= $this->view->fetch($template);
@@ -65,7 +74,8 @@ class HTMLFooterController extends HTMLController
     }
 
     /**
-     * Outputs JavaScript code that will reload the browser
+     * Outputs JavaScript code that will reload the browser.
+     *
      * @param $database True if dropping a database, false otherwise
      * @param $do_print true to echo, false to return;
      */
@@ -74,7 +84,7 @@ class HTMLFooterController extends HTMLController
         $reload = "<script type=\"text/javascript\">\n";
         //$reload .= " alert('will reload');";
         if ($database) {
-            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"" . SUBFOLDER . "/src/views/browser.php\";\n";
+            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"".SUBFOLDER."/src/views/browser.php\";\n";
         } else {
             $reload .= "\tif(parent.frames && parent.frames.browser) { console.log('will reload frame browser'); parent.frames.browser.location.reload();} else { console.log('will do location replace'); location.replace(location.href);}\n";
             //$reload .= "\tparent.frames.detail.location.href=\"".SUBFOLDER . "/src/views/intro\";\n";
@@ -90,7 +100,8 @@ class HTMLFooterController extends HTMLController
     }
 
     /**
-     * Outputs JavaScript to set default focus
+     * Outputs JavaScript to set default focus.
+     *
      * @param $object eg. forms[0].username
      */
     public function setFocus($object)
@@ -102,15 +113,16 @@ class HTMLFooterController extends HTMLController
 
     /**
      * Outputs JavaScript to set the name of the browser window.
+     *
      * @param $name the window name
      * @param $addServer if true (default) then the server id is
-     *        attached to the name.
+     *        attached to the name
      */
     public function setWindowName($name, $addServer = true)
     {
         echo "<script type=\"text/javascript\">\n";
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
         echo "//]]>\n";
         echo "</script>\n";
     }

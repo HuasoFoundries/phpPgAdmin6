@@ -1,10 +1,7 @@
 <?php
 
-/**
- * Does an export to the screen or as a download.  This checks to
- * see if they have pg_dump set up, and will use it if possible.
- *
- * $Id: dataexport.php,v 1.26 2007/07/12 19:26:22 xzilla Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 $do_render = false;

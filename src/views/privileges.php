@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Manage privileges in a database
- *
- * $Id: privileges.php,v 1.45 2007/09/13 13:41:01 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 $do_render = false;

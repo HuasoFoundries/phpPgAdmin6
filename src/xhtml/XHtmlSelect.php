@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 class XHtmlSelect extends XHtmlElement
@@ -25,11 +29,12 @@ class XHtmlSelect extends XHtmlElement
         switch (gettype($data)) {
             case 'string':
                 $this->_data = explode($delim, $data);
+
                 break;
             case 'array':
                 $this->_data = $data;
-                break;
 
+                break;
             default:
                 break;
         }
@@ -42,6 +47,7 @@ class XHtmlSelect extends XHtmlElement
                 $this->add(new XHtmlOption($value));
             }
         }
+
         return parent::fetch();
     }
 }

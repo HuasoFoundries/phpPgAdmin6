@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Decorators;
 
 class ActionUrlDecorator extends Decorator
@@ -7,7 +11,7 @@ class ActionUrlDecorator extends Decorator
     public function __construct($base, $queryVars = null)
     {
         $this->b = $base;
-        if ($queryVars !== null) {
+        if (null !== $queryVars) {
             $this->q = $queryVars;
         }
     }
@@ -17,7 +21,7 @@ class ActionUrlDecorator extends Decorator
         //$this->prtrace($fields);
         $url = Decorator::get_sanitized_value($this->b, $fields);
 
-        if ($url === false) {
+        if (false === $url) {
             return '';
         }
 
@@ -27,10 +31,11 @@ class ActionUrlDecorator extends Decorator
             $sep = '?';
             ksort($queryVars);
             foreach ($queryVars as $var => $value) {
-                $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($value, $fields);
+                $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($value, $fields);
                 $sep = '&';
             }
         }
-        return SUBFOLDER . '/src/views/' . str_replace('.php', '', $url);
+
+        return \SUBFOLDER.'/src/views/'.str_replace('.php', '', $url);
     }
 }

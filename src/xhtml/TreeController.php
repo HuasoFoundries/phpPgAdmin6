@@ -1,29 +1,29 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base TreeController controller class
+ * Base TreeController controller class.
  */
 class TreeController
 {
     use \PHPPgAdmin\HelperTrait;
 
-    private $container      = null;
-    private $data           = null;
-    private $database       = null;
-    private $server_id      = null;
-    public $form            = '';
-    public $href            = '';
-    public $lang            = [];
-    public $action          = '';
-    public $_name           = 'TreeController';
-    public $controller_name = 'TreeController';
-    public $_title          = 'base';
+    protected $container;
+    public $form             = '';
+    public $href             = '';
+    public $lang             = [];
+    public $action           = '';
+    public $controller_name  = 'TreeController';
+    public $controller_title = 'base';
 
-    /* Constructor */
+    // Constructor
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
         $this->container = $container;
@@ -38,14 +38,14 @@ class TreeController
         $this->conf           = $this->misc->getConf();
         $this->appThemes      = $container->get('appThemes');
         $this->action         = $container->get('action');
-        if ($controller_name !== null) {
+        if (null !== $controller_name) {
             $this->controller_name = $controller_name;
         }
-        //\PC::debug($this->_name, 'instanced controller');
+        //\PC::debug($this->controller_name, 'instanced controller');
     }
 
     /** Produce XML data for the browser tree
-     * @param $treedata A set of records to populate the tree.
+     * @param $treedata a set of records to populate the tree
      * @param $attrs Attributes for tree items
      *        'text' - the text for the tree node
      *        'icon' - an icon for node
@@ -57,6 +57,7 @@ class TreeController
      *        'expand' - the action to return XML for the subtree
      *        'nodata' - message to display when node has no children
      * @param $section The section where the branch is linked in the tree
+     * @param mixed $print
      */
     public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
@@ -83,7 +84,7 @@ class TreeController
     }
 
     /** Produce XML data for the browser tree
-     * @param $treedata A set of records to populate the tree.
+     * @param $treedata a set of records to populate the tree
      * @param $attrs Attributes for tree items
      *        'text' - the text for the tree node
      *        'icon' - an icon for node
@@ -94,6 +95,7 @@ class TreeController
      *        'branch' - URL for child nodes (tree XML)
      *        'expand' - the action to return XML for the subtree
      *        'nodata' - message to display when node has no children
+     * @param mixed $print
      */
     private function printTreeXML(&$treedata, &$attrs, $print = true)
     {
@@ -135,8 +137,8 @@ class TreeController
         }
 
         $tree_xml .= "</tree>\n";
-        if ($print === true) {
-            if ($this->container->requestobj->getAttribute('route') === null) {
+        if (true === $print) {
+            if (null === $this->container->requestobj->getAttribute('route')) {
                 header('Content-Type: text/xml; charset=UTF-8');
                 header('Cache-Control: no-cache');
                 echo $tree_xml;
@@ -156,10 +158,11 @@ class TreeController
     public function adjustTabsForTree(&$tabs)
     {
         foreach ($tabs as $i => $tab) {
-            if ((isset($tab['hide']) && $tab['hide'] === true) || (isset($tab['tree']) && $tab['tree'] === false)) {
+            if ((isset($tab['hide']) && true === $tab['hide']) || (isset($tab['tree']) && false === $tab['tree'])) {
                 unset($tabs[$i]);
             }
         }
+
         return new \PHPPgAdmin\ArrayRecordSet($tabs);
     }
 }

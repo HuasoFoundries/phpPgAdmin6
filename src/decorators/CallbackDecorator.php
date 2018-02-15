@@ -1,6 +1,10 @@
 <?php
 
-    namespace PHPPgAdmin\Decorators;
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
+namespace PHPPgAdmin\Decorators;
 
 class CallbackDecorator extends Decorator
 {

@@ -1,22 +1,24 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
-
 /**
- * Base controller class
+ * Base controller class.
  */
 class TablespacesController extends BaseController
 {
-    public $_name = 'TablespacesController';
+    public $controller_name = 'TablespacesController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
         $action = $this->action;
 
         $this->printHeader($lang['strtablespaces']);
@@ -33,6 +35,7 @@ class TablespacesController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_REQUEST['cancel'])) {
@@ -44,6 +47,7 @@ class TablespacesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'save_edit':
                 if (isset($_REQUEST['cancel'])) {
@@ -55,9 +59,11 @@ class TablespacesController extends BaseController
                 break;
             case 'edit':
                 $this->doAlter();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -65,14 +71,14 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Show default list of tablespaces in the cluster
+     * Show default list of tablespaces in the cluster.
+     *
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('server');
         $this->printTabs('server', 'tablespaces');
@@ -161,14 +167,14 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Function to allow altering of a tablespace
+     * Function to allow altering of a tablespace.
+     *
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('tablespace');
         $this->printTitle($lang['stralter'], 'pg.tablespace.alter');
@@ -192,8 +198,8 @@ class TablespacesController extends BaseController
                 $_POST['comment'] = ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '';
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
-            echo $misc->form;
+            echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+            echo $this->misc->form;
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -226,21 +232,19 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Function to save after altering a tablespace
+     * Function to save after altering a tablespace.
      */
     public function doSaveAlter()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check data
-        if (trim($_POST['name']) == '') {
+        if ('' == trim($_POST['name'])) {
             $this->doAlter($lang['strtablespaceneedsname']);
         } else {
             $status = $data->alterTablespace($_POST['tablespace'], $_POST['name'], $_POST['owner'], $_POST['comment']);
-            if ($status == 0) {
+            if (0 == $status) {
                 // If tablespace has been renamed, need to change to the new name
                 if ($_POST['tablespace'] != $_POST['name']) {
                     // Jump them to the new table name
@@ -254,23 +258,23 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('tablespace');
             $this->printTitle($lang['strdrop'], 'pg.tablespace.drop');
 
-            echo '<p>', sprintf($lang['strconfdroptablespace'], $misc->printVal($_REQUEST['tablespace'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
-            echo $misc->form;
+            echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+            echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
@@ -278,7 +282,7 @@ class TablespacesController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->droptablespace($_REQUEST['tablespace']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strtablespacedropped']);
             } else {
                 $this->doDefault($lang['strtablespacedroppedbad']);
@@ -287,16 +291,16 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new tablespace
+     * Displays a screen where they can enter a new tablespace.
+     *
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
-        $server_info = $misc->getServerInfo();
+        $server_info = $this->misc->getServerInfo();
 
         if (!isset($_POST['formSpcname'])) {
             $_POST['formSpcname'] = '';
@@ -321,8 +325,8 @@ class TablespacesController extends BaseController
         $this->printTitle($lang['strcreatetablespace'], 'pg.tablespace.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
-        echo $misc->form;
+        echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+        echo $this->misc->form;
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formSpcname\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_POST['formSpcname']), "\" /></td>\n\t</tr>\n";
@@ -351,19 +355,17 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Actually creates the new tablespace in the cluster
+     * Actually creates the new tablespace in the cluster.
      */
     public function doSaveCreate()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check data
-        if (trim($_POST['formSpcname']) == '') {
+        if ('' == trim($_POST['formSpcname'])) {
             $this->doCreate($lang['strtablespaceneedsname']);
-        } elseif (trim($_POST['formLoc']) == '') {
+        } elseif ('' == trim($_POST['formLoc'])) {
             $this->doCreate($lang['strtablespaceneedsloc']);
         } else {
             // Default comment to blank if it isn't set
@@ -372,7 +374,7 @@ class TablespacesController extends BaseController
             }
 
             $status = $data->createTablespace($_POST['formSpcname'], $_POST['formOwner'], $_POST['formLoc'], $_POST['formComment']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strtablespacecreated']);
             } else {
                 $this->doCreate($lang['strtablespacecreatedbad']);

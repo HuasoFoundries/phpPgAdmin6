@@ -5,16 +5,24 @@
  */
 require_once './src/lib.inc.php';
 
-$app->get('/status', function ($request, $response, $args) {
+$app->get('/status', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
     return $response
         ->withHeader('Content-type', 'application/json')
         ->withJson(['version' => $this->version]);
 });
 
-$app->post('/redirect[/{subject}]', function ($request, $response, $args) {
-    $body         = $response->getBody();
-    $query_string = $request->getUri()->getQuery();
-    $misc         = $this->misc;
+$app->post('/redirect[/{subject}]', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
+    $body    = $response->getBody();
+    $misc    = $this->misc;
+    $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
 
     $loginShared   = $request->getParsedBodyParam('loginShared');
     $loginServer   = $request->getParsedBodyParam('loginServer');
@@ -56,33 +64,57 @@ $app->post('/redirect[/{subject}]', function ($request, $response, $args) {
     }
 });
 
-$app->get('/redirect[/{subject}]', function ($request, $response, $args) {
+$app->get('/redirect[/{subject}]', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
     $subject        = (isset($args['subject'])) ? $args['subject'] : 'root';
     $destinationurl = $this->utils->getDestinationWithLastTab($subject);
     return $response->withStatus(302)->withHeader('Location', $destinationurl);
 });
 
-$app->get('/src/views/browser', function ($request, $response, $args) {
+$app->get('/src/views/browser', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
     $controller = new \PHPPgAdmin\Controller\BrowserController($this, true);
     return $controller->render();
 });
 
-$app->get('/src/views/login', function ($request, $response, $args) {
+$app->get('/src/views/login', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
     $controller = new \PHPPgAdmin\Controller\LoginController($this, true);
     return $controller->render();
 });
 
-$app->get('/src/views/servers', function ($request, $response, $args) {
+$app->get('/src/views/servers', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
     $controller = new \PHPPgAdmin\Controller\ServersController($this, true);
     return $controller->render();
 });
 
-$app->get('/src/views/intro', function ($request, $response, $args) {
+$app->get('/src/views/intro', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
     $controller = new \PHPPgAdmin\Controller\IntroController($this, true);
     return $controller->render();
 });
 
-$app->map(['GET', 'POST'], '/src/views/{subject}', function ($request, $response, $args) {
+$app->map(['GET', 'POST'], '/src/views/{subject}', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
     if ($this->misc->getServerId() === null) {
         return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/servers');
     }
@@ -100,7 +132,11 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function ($request, $response
     return $controller->render();
 });
 
-$app->get('/[{subject}]', function ($request, $response, $args) {
+$app->get('/[{subject}]', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
     $subject      = (isset($args['subject'])) ? $args['subject'] : 'intro';
     $_server_info = $this->misc->getServerInfo();
     $query_string = $request->getUri()->getQuery();

@@ -1,26 +1,32 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class SchemasController extends BaseController
 {
-    public $_name = 'SchemasController';
+    public $controller_name = 'SchemasController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
         $lang   = $this->lang;
         $action = $this->action;
 
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
-        } elseif ($action == 'subtree') {
+        }
+        if ('subtree' == $action) {
             return $this->doSubTree();
         }
 
@@ -59,10 +65,12 @@ class SchemasController extends BaseController
                 break;
             case 'export':
                 $this->doExport();
+
                 break;
             default:
                 $header_template = 'header_datatables.twig';
                 $this->doDefault();
+
                 break;
         }
 
@@ -77,14 +85,14 @@ class SchemasController extends BaseController
     }
 
     /**
-     * Show default list of schemas in the database
+     * Show default list of schemas in the database.
+     *
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('database');
         $this->printTabs('database', 'schemas');
@@ -97,7 +105,7 @@ class SchemasController extends BaseController
             'schema'  => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => SUBFOLDER . "/redirect/schema?{$misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
             'owner'   => [
@@ -183,14 +191,12 @@ class SchemasController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $schemas = $data->getSchemas();
 
-        $reqvars = $misc->getRequestVars('schema');
+        $reqvars = $this->misc->getRequestVars('schema');
 
         //$this->prtrace($reqvars);
 
@@ -198,14 +204,16 @@ class SchemasController extends BaseController
             'text'    => Decorator::field('nspname'),
             'icon'    => 'Schema',
             'toolTip' => Decorator::field('nspcomment'),
-            'action'  => Decorator::redirecturl('redirect.php',
+            'action'  => Decorator::redirecturl(
+                'redirect.php',
                 $reqvars,
                 [
                     'subject' => 'schema',
                     'schema'  => Decorator::field('nspname'),
                 ]
             ),
-            'branch'  => Decorator::url('schemas.php',
+            'branch'  => Decorator::url(
+                'schemas.php',
                 $reqvars,
                 [
                     'action' => 'subtree',
@@ -219,27 +227,26 @@ class SchemasController extends BaseController
 
     public function doSubTree()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $tabs = $misc->getNavTabs('schema');
+        $tabs = $this->misc->getNavTabs('schema');
 
         $items = $this->adjustTabsForTree($tabs);
 
-        $reqvars = $misc->getRequestVars('schema');
+        $reqvars = $this->misc->getRequestVars('schema');
 
         //$this->prtrace($reqvars);
 
         $attrs = [
             'text'   => Decorator::field('title'),
             'icon'   => Decorator::field('icon'),
-            'action' => Decorator::actionurl(Decorator::field('url'),
+            'action' => Decorator::actionurl(
+                Decorator::field('url'),
                 $reqvars,
                 Decorator::field('urlvars', [])
             ),
-            'branch' => Decorator::url(Decorator::field('url'),
+            'branch' => Decorator::url(
+                Decorator::field('url'),
                 $reqvars,
                 Decorator::field('urlvars'),
                 ['action' => 'tree']
@@ -250,15 +257,16 @@ class SchemasController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new schema
+     * Displays a screen where they can enter a new schema.
+     *
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
-        $server_info = $misc->getServerInfo();
+        $server_info = $this->misc->getServerInfo();
 
         if (!isset($_POST['formName'])) {
             $_POST['formName'] = '';
@@ -283,7 +291,7 @@ class SchemasController extends BaseController
         $this->printTitle($lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
+        echo '<form action="' . \SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -306,7 +314,7 @@ class SchemasController extends BaseController
         echo "<p>\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"create\" />\n";
         echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
         echo "</p>\n";
@@ -314,20 +322,19 @@ class SchemasController extends BaseController
     }
 
     /**
-     * Actually creates the new schema in the database
+     * Actually creates the new schema in the database.
      */
     public function doSaveCreate()
     {
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name
-        if ($_POST['formName'] == '') {
+        if ('' == $_POST['formName']) {
             $this->doCreate($lang['strschemaneedsname']);
         } else {
             $status = $data->createSchema($_POST['formName'], $_POST['formAuth'], $_POST['formComment']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($lang['strschemacreated']);
             } else {
@@ -338,13 +345,14 @@ class SchemasController extends BaseController
 
     /**
      * Display a form to permit editing schema properies.
-     * TODO: permit changing owner
+     * TODO: permit changing owner.
+     *
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTitle($lang['stralter'], 'pg.schema.alter');
@@ -368,7 +376,7 @@ class SchemasController extends BaseController
                 $_POST['owner'] = $schema->fields['ownername'];
             }
 
-            echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -401,7 +409,7 @@ class SchemasController extends BaseController
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
             echo '<input type="hidden" name="schema" value="', htmlspecialchars($_POST['schema']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -411,16 +419,17 @@ class SchemasController extends BaseController
     }
 
     /**
-     * Save the form submission containing changes to a schema
+     * Save the form submission containing changes to a schema.
+     *
+     * @param mixed $msg
      */
     public function doSaveAlter($msg = '')
     {
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->updateSchema($_POST['schema'], $_POST['comment'], $_POST['name'], $_POST['owner']);
-        if ($status == 0) {
+        if (0 == $status) {
             $this->misc->setReloadBrowser(true);
             $this->doDefault($lang['strschemaaltered']);
         } else {
@@ -429,13 +438,14 @@ class SchemasController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['nsp']) && empty($_REQUEST['ma'])) {
             return $this->doDefault($lang['strspecifyschematodrop']);
@@ -445,23 +455,23 @@ class SchemasController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($lang['strdrop'], 'pg.schema.drop');
 
-            echo '<form action="' . SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfdropschema'], $misc->printVal($a['nsp'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfdropschema'], $this->misc->printVal($a['nsp'])), "</p>\n";
                     echo '<input type="hidden" name="nsp[]" value="', htmlspecialchars($a['nsp']), "\" />\n";
                 }
             } else {
-                echo '<p>', sprintf($lang['strconfdropschema'], $misc->printVal($_REQUEST['nsp'])), "</p>\n";
+                echo '<p>', sprintf($lang['strconfdropschema'], $this->misc->printVal($_REQUEST['nsp'])), "</p>\n";
                 echo '<input type="hidden" name="nsp" value="', htmlspecialchars($_REQUEST['nsp']), "\" />\n";
             }
 
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -469,19 +479,20 @@ class SchemasController extends BaseController
             if (is_array($_POST['nsp'])) {
                 $msg    = '';
                 $status = $data->beginTransaction();
-                if ($status == 0) {
+                if (0 == $status) {
                     foreach ($_POST['nsp'] as $s) {
                         $status = $data->dropSchema($s, isset($_POST['cascade']));
-                        if ($status == 0) {
+                        if (0 == $status) {
                             $msg .= sprintf('%s: %s<br />', htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadropped']);
                         } else {
                             $data->endTransaction();
                             $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadroppedbad']));
+
                             return;
                         }
                     }
                 }
-                if ($data->endTransaction() == 0) {
+                if (0 == $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($msg);
@@ -490,7 +501,7 @@ class SchemasController extends BaseController
                 }
             } else {
                 $status = $data->dropSchema($_POST['nsp'], isset($_POST['cascade']));
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($lang['strschemadropped']);
                 } else {
@@ -501,19 +512,20 @@ class SchemasController extends BaseController
     }
 
     /**
-     * Displays options for database download
+     * Displays options for database download.
+     *
+     * @param mixed $msg
      */
     public function doExport($msg = '')
     {
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . '/src/views/dbexport.php" method="post">' . "\n";
+        echo '<form action="' . \SUBFOLDER . '/src/views/dbexport.php" method="post">' . "\n";
 
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
@@ -553,7 +565,7 @@ class SchemasController extends BaseController
         echo "<input type=\"hidden\" name=\"subject\" value=\"schema\" />\n";
         echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
         echo '<input type="hidden" name="schema" value="', htmlspecialchars($_REQUEST['schema']), "\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }

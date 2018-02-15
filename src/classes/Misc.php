@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
 namespace PHPPgAdmin;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -17,23 +19,25 @@ class Misc
     private $_connection       = null;
     private $_no_db_connection = false;
     private $_reload_browser   = false;
-    private $app               = null;
-    private $data              = null;
-    private $database          = null;
-    private $server_id         = null;
-    public $appLangFiles       = [];
-    public $appName            = '';
-    public $appVersion         = '';
-    public $form               = '';
-    public $href               = '';
-    public $_name              = 'Misc';
-    public $lang               = [];
-    private $server_info       = null;
-    private $error_msg         = '';
+    private $_data             = null;
+    private $_database         = null;
+    private $_server_id        = null;
+    private $_server_info      = null;
+    private $_error_msg        = '';
 
-    private $container = null;
+    public $appLangFiles    = [];
+    public $appName         = '';
+    public $appVersion      = '';
+    public $form            = '';
+    public $href            = '';
+    public $controller_name = 'Misc';
+    public $lang            = [];
 
-    /* Constructor */
+    protected $container = null;
+
+    /**
+     * @param \Slim\Container  $container  The container
+     */
     public function __construct(\Slim\Container $container)
     {
         $this->container = $container;
@@ -67,12 +71,12 @@ class Misc
         }
 
         if (count($this->conf['servers']) === 1) {
-            $info            = $this->conf['servers'][0];
-            $this->server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+            $info             = $this->conf['servers'][0];
+            $this->_server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
         } elseif (isset($_REQUEST['server'])) {
-            $this->server_id = $_REQUEST['server'];
+            $this->_server_id = $_REQUEST['server'];
         } elseif (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
-            $this->server_id = array_keys($_SESSION['webdbLogin'])[0];
+            $this->_server_id = array_keys($_SESSION['webdbLogin'])[0];
         }
     }
 
@@ -87,8 +91,9 @@ class Misc
 
     /**
      * Adds or modifies a key in the $conf instance property of this class
-     * @param string $key   [description]
-     * @param mixed $value [description]
+     * @param string $key   name of the key to set
+     * @param mixed $value value of the key to set
+     *
      * @return $this
      */
     public function setConf(string $key, $value)
@@ -100,6 +105,7 @@ class Misc
     /**
      * gets the value of a config property, or the array of all config properties
      * @param  mixed $key value of the key to be retrieved. If null, the full array is returnes
+     *
      * @return mixed the whole $conf array, the value of $conf[key] or null if said key does not exist
      */
     public function getConf($key = null)
@@ -114,13 +120,14 @@ class Misc
 
     public function getServerId()
     {
-        return $this->server_id;
+        return $this->_server_id;
     }
 
     /**
      * Displays link to the context help.
-     * @param $str   - the string that the context help is related to (already escaped)
-     * @param $help  - help section identifier
+     *
+     * @param $str   the string that the context help is related to (already escaped)
+     * @param $help  help section identifier
      * @param $do_print true to echo, false to return
      */
     public function printHelp($str, $help = null, $do_print = true)
@@ -143,9 +150,10 @@ class Misc
     }
 
     /**
-     * [setReloadBrowser description]
+     * Internally sets the reload browser property
      *
      * @param boolean $flag sets internal $_reload_browser var which will be passed to the footer methods
+     *
      * @return $this
      */
     public function setReloadBrowser($flag)
@@ -167,8 +175,9 @@ class Misc
      * @param $errno        the native error number from the database
      * @param $errmsg       the native error msg from the database
      * @param $p1           $fn specific parameter - see below
-     * @param $p2
-     * @param $thisConnection
+     * @param $p2           parameter 2
+     * @param $thisConnection connection
+     *
      * @throws \PHPPgAdmin\ADOdbException
      * @internal param $P2 $fn specific parameter - see below
      */
@@ -228,7 +237,8 @@ class Misc
     /**
      * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session
      *
-     * @param boolean $flag [description]
+     * @param boolean $flag true or false to allow unconnected clients to access the view
+     *
      * @return $this
      */
     public function setNoDBConnection($flag)
@@ -244,24 +254,25 @@ class Misc
 
     /**
      * Sets the last error message to display afterwards instead of just dying with the error msg
-     * @param [string] $msg error message string
+     * @param string $msg error message string
      */
     public function setErrorMsg($msg)
     {
-        $this->error_msg = $msg;
+        $this->_error_msg = $msg;
         return $this;
     }
 
     public function getErrorMsg()
     {
-        return $this->error_msg;
+        return $this->_error_msg;
     }
 
     /**
      * Creates a database accessor
      *
-     * @param string $database
-     * @param null   $server_id
+     * @param string $database the name of the database
+     * @param mixed   $server_id the id of the server
+     *
      * @return null
      */
     public function getDatabaseAccessor($database = '', $server_id = null)
@@ -269,20 +280,20 @@ class Misc
         $lang = $this->lang;
 
         if ($server_id !== null) {
-            $this->server_id = $server_id;
+            $this->_server_id = $server_id;
         }
 
-        $server_info = $this->getServerInfo($this->server_id);
+        $server_info = $this->getServerInfo($this->_server_id);
 
         if ($this->_no_db_connection || !isset($server_info['username'])) {
             return null;
         }
 
-        if ($this->data === null) {
+        if ($this->_data === null) {
             try {
-                $_connection = $this->getConnection($database, $this->server_id);
+                $_connection = $this->getConnection($database, $this->_server_id);
             } catch (\Exception $e) {
-                $this->setServerInfo(null, null, $this->server_id);
+                $this->setServerInfo(null, null, $this->_server_id);
                 $this->setNoDBConnection(true);
                 $this->setErrorMsg($e->getMessage());
                 return null;
@@ -308,32 +319,32 @@ class Misc
             }
             $_type = '\PHPPgAdmin\Database\\' . $_type;
 
-            $this->setServerInfo('platform', $platform, $this->server_id);
-            $this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $this->server_id);
+            $this->setServerInfo('platform', $platform, $this->_server_id);
+            $this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $this->_server_id);
 
             // Create a database wrapper class for easy manipulation of the
             // connection.
 
-            $this->data              = new $_type($_connection->conn, $this->conf);
-            $this->data->platform    = $_connection->platform;
-            $this->data->server_info = $server_info;
-            $this->data->conf        = $this->conf;
-            $this->data->lang        = $this->lang;
+            $this->_data              = new $_type($_connection->conn, $this->conf);
+            $this->_data->platform    = $_connection->platform;
+            $this->_data->server_info = $server_info;
+            $this->_data->conf        = $this->conf;
+            $this->_data->lang        = $this->lang;
 
-            //$this->data->getHelpPages();
+            //$this->_data->getHelpPages();
 
-            //$this->prtrace('help_page has ' . count($this->data->help_page) . ' items');
+            //$this->prtrace('help_page has ' . count($this->_data->help_page) . ' items');
 
             /* we work on UTF-8 only encoding */
-            $this->data->execute("SET client_encoding TO 'UTF-8'");
+            $this->_data->execute("SET client_encoding TO 'UTF-8'");
 
-            if ($this->data->hasByteaHexDefault()) {
-                $this->data->execute('SET bytea_output TO escape');
+            if ($this->_data->hasByteaHexDefault()) {
+                $this->_data->execute('SET bytea_output TO escape');
             }
         }
 
         if ($this->_no_db_connection === false && $this->getDatabase() !== null && isset($_REQUEST['schema'])) {
-            $status = $this->data->setSchema($_REQUEST['schema']);
+            $status = $this->_data->setSchema($_REQUEST['schema']);
 
             if ($status != 0) {
                 $this->container->utils->addError($this->lang['strbadschema']);
@@ -342,7 +353,7 @@ class Misc
             }
         }
 
-        return $this->data;
+        return $this->_data;
     }
 
     public function getConnection($database = '', $server_id = null)
@@ -351,9 +362,9 @@ class Misc
 
         if ($this->_connection === null) {
             if ($server_id !== null) {
-                $this->server_id = $server_id;
+                $this->_server_id = $server_id;
             }
-            $server_info     = $this->getServerInfo($this->server_id);
+            $server_info     = $this->getServerInfo($this->_server_id);
             $database_to_use = $this->getDatabase($database);
 
             // Perform extra security checks if this config option is set
@@ -400,7 +411,9 @@ class Misc
      * Validate and retrieve information on a server.
      * If the parameter isn't supplied then the currently
      * connected server is returned.
+     *
      * @param $server_id A server identifier (host:port)
+     *
      * @return An associative array of server properties
      */
     public function getServerInfo($server_id = null)
@@ -409,40 +422,40 @@ class Misc
         //\PC::debug(['$server_id' => $server_id]);
 
         if ($server_id !== null) {
-            $this->server_id = $server_id;
-        } elseif ($this->server_info !== null) {
-            return $this->server_info;
+            $this->_server_id = $server_id;
+        } elseif ($this->_server_info !== null) {
+            return $this->_server_info;
         }
 
         // Check for the server in the logged-in list
-        if (isset($_SESSION['webdbLogin'][$this->server_id])) {
-            $this->server_info = $_SESSION['webdbLogin'][$this->server_id];
-            return $this->server_info;
+        if (isset($_SESSION['webdbLogin'][$this->_server_id])) {
+            $this->_server_info = $_SESSION['webdbLogin'][$this->_server_id];
+            return $this->_server_info;
         }
 
         // Otherwise, look for it in the conf file
         foreach ($this->conf['servers'] as $idx => $info) {
-            if ($this->server_id == $info['host'] . ':' . $info['port'] . ':' . $info['sslmode']) {
+            if ($this->_server_id == $info['host'] . ':' . $info['port'] . ':' . $info['sslmode']) {
                 if (isset($info['username'])) {
-                    $this->setServerInfo(null, $info, $this->server_id);
+                    $this->setServerInfo(null, $info, $this->_server_id);
                 } elseif (isset($_SESSION['sharedUsername'])) {
                     $info['username'] = $_SESSION['sharedUsername'];
                     $info['password'] = $_SESSION['sharedPassword'];
                     $this->setReloadBrowser(true);
-                    $this->setServerInfo(null, $info, $this->server_id);
+                    $this->setServerInfo(null, $info, $this->_server_id);
                 }
-                $this->server_info = $info;
-                return $this->server_info;
+                $this->_server_info = $info;
+                return $this->_server_info;
             }
         }
 
         if ($server_id === null) {
-            $this->server_info = null;
-            return $this->server_info;
+            $this->_server_info = null;
+            return $this->_server_info;
         }
 
         $this->prtrace('Invalid server param');
-        $this->server_info = null;
+        $this->_server_info = null;
         // Unable to find a matching server, are we being hacked?
         return $this->halt($this->lang['strinvalidserverparam']);
     }
@@ -452,8 +465,7 @@ class Misc
      * @param $key parameter name to set, or null to replace all
      *             params with the assoc-array in $value.
      * @param $value the new value, or null to unset the parameter
-     * @param $server_id the server identifier, or null for current
-     *                   server.
+     * @param $server_id the server identifier, or null for current server
      */
     public function setServerInfo($key, $value, $server_id = null)
     {
@@ -481,25 +493,25 @@ class Misc
 
     public function getDatabase($database = '')
     {
-        if ($this->server_id === null && !isset($_REQUEST['database'])) {
+        if ($this->_server_id === null && !isset($_REQUEST['database'])) {
             return null;
         }
 
-        $server_info = $this->getServerInfo($this->server_id);
+        $server_info = $this->getServerInfo($this->_server_id);
 
-        if ($this->server_id !== null && isset($server_info['useonlydefaultdb']) && $server_info['useonlydefaultdb'] === true) {
-            $this->database = $server_info['defaultdb'];
+        if ($this->_server_id !== null && isset($server_info['useonlydefaultdb']) && $server_info['useonlydefaultdb'] === true) {
+            $this->_database = $server_info['defaultdb'];
         } elseif ($database !== '') {
-            $this->database = $database;
+            $this->_database = $database;
         } elseif (isset($_REQUEST['database'])) {
             // Connect to the current database
-            $this->database = $_REQUEST['database'];
+            $this->_database = $_REQUEST['database'];
         } else {
             // or if one is not specified then connect to the default database.
-            $this->database = $server_info['defaultdb'];
+            $this->_database = $server_info['defaultdb'];
         }
 
-        return $this->database;
+        return $this->_database;
     }
 
     /**
@@ -507,6 +519,7 @@ class Misc
      *
      * @param bool $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array.
      * @param mixed $group_id     a group name to filter the returned servers using $this->conf[srv_groups]
+     *
      * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
      */
     public function getServersGroups($recordset = false, $group_id = false)
@@ -575,6 +588,7 @@ class Misc
      *
      * @param bool $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array.
      * @param mixed $group     a group name to filter the returned servers using $this->conf[srv_groups]
+     *
      * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
      */
     public function getServers($recordset = false, $group = false)
@@ -636,6 +650,7 @@ class Misc
      * Set the current schema
      *
      * @param $schema The schema name
+     *
      * @return int 0 on success
      */
     public function setCurrentSchema($schema)
@@ -921,7 +936,7 @@ class Misc
     public function printVal($str, $type = null, $params = [])
     {
         $lang = $this->lang;
-        $data = $this->data;
+        $data = $this->_data;
 
         // Shortcircuit for a NULL value
         if (is_null($str)) {
@@ -1130,7 +1145,7 @@ class Misc
      */
     public function getNavTabs($section)
     {
-        $data           = $this->data;
+        $data           = $this->_data;
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
 
@@ -1945,10 +1960,10 @@ class Misc
             $v['subject'] = $subject;
         }
 
-        if ($this->server_id !== null && $subject != 'root') {
-            $v['server'] = $this->server_id;
-            if ($this->database !== null && $subject != 'server') {
-                $v['database'] = $this->database;
+        if ($this->_server_id !== null && $subject != 'root') {
+            $v['server'] = $this->_server_id;
+            if ($this->_database !== null && $subject != 'server') {
+                $v['database'] = $this->_database;
                 if (isset($_REQUEST['schema']) && $subject != 'database') {
                     $v['schema'] = $_REQUEST['schema'];
                 }
@@ -1962,42 +1977,42 @@ class Misc
     {
         if (is_string($icon)) {
             $path = "/images/themes/{$this->conf['theme']}/{$icon}";
-            if (file_exists(BASE_PATH . $path . '.png')) {
+            if (file_exists(\BASE_PATH . $path . '.png')) {
                 return SUBFOLDER . $path . '.png';
             }
 
-            if (file_exists(BASE_PATH . $path . '.gif')) {
+            if (file_exists(\BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
             }
 
-            if (file_exists(BASE_PATH . $path . '.ico')) {
+            if (file_exists(\BASE_PATH . $path . '.ico')) {
                 return SUBFOLDER . $path . '.ico';
             }
 
             $path = "/images/themes/default/{$icon}";
-            if (file_exists(BASE_PATH . $path . '.png')) {
+            if (file_exists(\BASE_PATH . $path . '.png')) {
                 return SUBFOLDER . $path . '.png';
             }
 
-            if (file_exists(BASE_PATH . $path . '.gif')) {
+            if (file_exists(\BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
             }
 
-            if (file_exists(BASE_PATH . $path . '.ico')) {
+            if (file_exists(\BASE_PATH . $path . '.ico')) {
                 return SUBFOLDER . $path . '.ico';
             }
         } else {
             // Icon from plugins
             $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
-            if (file_exists(BASE_PATH . $path . '.png')) {
+            if (file_exists(\BASE_PATH . $path . '.png')) {
                 return SUBFOLDER . $path . '.png';
             }
 
-            if (file_exists(BASE_PATH . $path . '.gif')) {
+            if (file_exists(\BASE_PATH . $path . '.gif')) {
                 return SUBFOLDER . $path . '.gif';
             }
 
-            if (file_exists(BASE_PATH . $path . '.ico')) {
+            if (file_exists(\BASE_PATH . $path . '.ico')) {
                 return SUBFOLDER . $path . '.ico';
             }
         }
@@ -2075,8 +2090,8 @@ class Misc
         $servers      = $this->getServers();
         $forcedserver = null;
         if (count($servers) === 1) {
-            $forcedserver = $this->server_id;
-            $connection_html .= '<input type="hidden" readonly="readonly" value="' . $this->server_id . '" name="server">';
+            $forcedserver = $this->_server_id;
+            $connection_html .= '<input type="hidden" readonly="readonly" value="' . $this->_server_id . '" name="server">';
         } else {
             $connection_html .= '<label>';
             $connection_html .= $this->printHelp($lang['strserver'], 'pg.server', false);
@@ -2097,8 +2112,8 @@ class Misc
 
         $connection_html .= "</td><td class=\"popup_select2\" style=\"text-align: right\">\n";
 
-        if (count($servers) === 1 && isset($servers[$this->server_id]['useonlydefaultdb']) && $servers[$this->server_id]['useonlydefaultdb'] === true) {
-            $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($servers[$this->server_id]['defaultdb']) . "\" />\n";
+        if (count($servers) === 1 && isset($servers[$this->_server_id]['useonlydefaultdb']) && $servers[$this->_server_id]['useonlydefaultdb'] === true) {
+            $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($servers[$this->_server_id]['defaultdb']) . "\" />\n";
         } else {
 
             // Get the list of all databases
@@ -2123,7 +2138,7 @@ class Misc
                 }
                 $connection_html .= "</select></label>\n";
             } else {
-                $server_info = $misc->getServerInfo();
+                $server_info = $this->misc->getServerInfo();
                 $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($server_info['defaultdb']) . "\" />\n";
             }
         }

@@ -1,58 +1,63 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
- * Login controller class
+ * Login controller class.
  */
 class LoginController extends BaseController
 {
-    protected $container   = null;
-    protected $_connection = null;
-    protected $app         = null;
-    protected $data        = null;
-    protected $database    = null;
-    protected $server_id   = null;
-    public $appLangFiles   = [];
-    public $appThemes      = [];
-    public $appName        = '';
-    public $appVersion     = '';
-    public $form           = '';
-    public $href           = '';
-    public $lang           = [];
-    public $action         = '';
-    public $_name          = 'LoginController';
-    public $_title         = 'strlogin';
+    protected $container;
+    protected $_connection;
+    protected $app;
+    protected $data;
+    protected $database;
+    protected $server_id;
+    public $appLangFiles     = [];
+    public $appThemes        = [];
+    public $appName          = '';
+    public $appVersion       = '';
+    public $form             = '';
+    public $href             = '';
+    public $lang             = [];
+    public $action           = '';
+    public $controller_name  = 'LoginController';
+    public $controller_title = 'strlogin';
 
-    /* Constructor */
-
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        if ($this->container->requestobj->getAttribute('route') === null) {
+        if (null === $this->container->requestobj->getAttribute('route')) {
             echo $this->doLoginForm();
         } else {
             $body = $this->container->responseobj->getBody();
             $body->write($this->doLoginForm());
+
             return $this->container->responseobj;
         }
     }
 
     public function doLoginForm($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
 
-        $misc->setNoDBConnection(true);
+        $this->misc->setNoDBConnection(true);
 
         $server_id = $this->container->requestobj->getQueryParam('server');
 
-        if ($server_id === null) {
+        if (null === $server_id) {
             $this->prtrace('invalid server param');
+
             return $this->lang['strinvalidserverparam'];
         }
 
-        $login_html = $this->printHeader($lang[$this->_title], $this->scripts, false);
+        $login_html = $this->printHeader($lang[$this->controller_title], $this->scripts, false);
         $login_html .= $this->printBody(false);
         $login_html .= $this->printTrail('root', false);
 
@@ -62,13 +67,13 @@ class LoginController extends BaseController
             $vars = &$_GET;
         }
         foreach ($_REQUEST as $key => $val) {
-            if (strpos($key, '?') !== false) {
+            if (false !== strpos($key, '?')) {
                 $namexploded               = explode('?', $key);
                 $_REQUEST[$namexploded[1]] = htmlspecialchars($val);
             }
         }
 
-        $server_info = $misc->getServerInfo($server_id);
+        $server_info = $this->misc->getServerInfo($server_id);
         $title       = sprintf($lang['strlogintitle'], $server_info['desc']);
 
         $printTitle = $this->printTitle($title, null, false);
@@ -79,15 +84,15 @@ class LoginController extends BaseController
             $login_html .= $this->printMsg($msg, false);
         }
 
-        $login_html .= '<form id="login_form"  method="post" name="login_form" action="' . SUBFOLDER . '/redirect/server?server=' . htmlspecialchars($server_id) . '">';
+        $login_html .= '<form id="login_form"  method="post" name="login_form" action="' . \SUBFOLDER . '/redirect/server?server=' . htmlspecialchars($server_id) . '">';
 
         $md5_server = md5($server_id);
         // Pass request vars through form (is this a security risk???)
         foreach ($vars as $key => $val) {
-            if (substr($key, 0, 5) == 'login') {
+            if ('login' == substr($key, 0, 5)) {
                 continue;
             }
-            if (strpos($key, '?') !== false) {
+            if (false !== strpos($key, '?')) {
                 $key = explode('?', $key)[1];
             }
 
@@ -107,7 +112,7 @@ class LoginController extends BaseController
         $login_html .= '<td><input id="loginPassword" type="password" name="loginPassword_' . $md5_server . '" size="24" /></td>';
         $login_html .= '</tr>';
         $login_html .= '</table>';
-        if (sizeof($conf['servers']) > 1) {
+        if (sizeof($this->conf['servers']) > 1) {
             $checked = isset($_POST['loginShared']) ? 'checked="checked"' : '';
             $login_html .= '<p><input type="checkbox" id="loginShared" name="loginShared" ' . $checked . ' />';
             $login_html .= '<label for="loginShared">' . $lang['strtrycred'] . '</label></p>';

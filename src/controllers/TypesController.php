@@ -1,24 +1,29 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class TypesController extends BaseController
 {
-    public $_name = 'TypesController';
+    public $controller_name = 'TypesController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -52,6 +57,7 @@ class TypesController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_POST['cancel'])) {
@@ -63,12 +69,15 @@ class TypesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'properties':
                 $this->doProperties();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -76,14 +85,14 @@ class TypesController extends BaseController
     }
 
     /**
-     * Show default list of types in the database
+     * Show default list of types in the database.
+     *
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'types');
@@ -95,7 +104,7 @@ class TypesController extends BaseController
             'type'    => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('typname'),
-                'url'   => "types.php?action=properties&amp;{$misc->href}&amp;",
+                'url'   => "types.php?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['type' => 'basename'],
             ],
             'owner'   => [
@@ -204,20 +213,19 @@ class TypesController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $types = $data->getTypes();
 
-        $reqvars = $misc->getRequestVars('type');
+        $reqvars = $this->misc->getRequestVars('type');
 
         $attrs = [
             'text'    => Decorator::field('typname'),
             'icon'    => 'Type',
             'toolTip' => Decorator::field('typcomment'),
-            'action'  => Decorator::actionurl('types.php',
+            'action'  => Decorator::actionurl(
+                'types.php',
                 $reqvars,
                 [
                     'action' => 'properties',
@@ -230,14 +238,14 @@ class TypesController extends BaseController
     }
 
     /**
-     * Show read only properties for a type
+     * Show read only properties for a type.
+     *
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         // Get type (using base name)
         $typedata = $data->getType($_REQUEST['type']);
 
@@ -277,27 +285,28 @@ class TypesController extends BaseController
                     break;
                 case 'e':
                     $vals = $data->getEnumValues($typedata->fields['typname']);
+                // no break
                 default:
                     $byval = $data->phpBool($typedata->fields['typbyval']);
                     echo "<table>\n";
                     echo "<tr><th class=\"data left\">{$lang['strname']}</th>\n";
-                    echo '<td class="data1">', $misc->printVal($typedata->fields['typname']), "</td></tr>\n";
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typname']), "</td></tr>\n";
                     echo "<tr><th class=\"data left\">{$lang['strinputfn']}</th>\n";
-                    echo '<td class="data1">', $misc->printVal($typedata->fields['typin']), "</td></tr>\n";
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typin']), "</td></tr>\n";
                     echo "<tr><th class=\"data left\">{$lang['stroutputfn']}</th>\n";
-                    echo '<td class="data1">', $misc->printVal($typedata->fields['typout']), "</td></tr>\n";
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typout']), "</td></tr>\n";
                     echo "<tr><th class=\"data left\">{$lang['strlength']}</th>\n";
-                    echo '<td class="data1">', $misc->printVal($typedata->fields['typlen']), "</td></tr>\n";
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typlen']), "</td></tr>\n";
                     echo "<tr><th class=\"data left\">{$lang['strpassbyval']}</th>\n";
                     echo '<td class="data1">', ($byval) ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
                     echo "<tr><th class=\"data left\">{$lang['stralignment']}</th>\n";
-                    echo '<td class="data1">', $misc->printVal($typedata->fields['typalign']), "</td></tr>\n";
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typalign']), "</td></tr>\n";
                     if ($data->hasEnumTypes() && $vals) {
                         $vals   = $vals->getArray();
                         $nbVals = count($vals);
-                        echo "<tr>\n\t<th class=\"data left\" rowspan=\"$nbVals\">{$lang['strenumvalues']}</th>\n";
+                        echo "<tr>\n\t<th class=\"data left\" rowspan=\"${nbVals}\">{$lang['strenumvalues']}</th>\n";
                         echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>\n";
-                        for ($i = 1; $i < $nbVals; $i++) {
+                        for ($i = 1; $i < $nbVals; ++$i) {
                             echo '<td class="data', 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>\n";
                         }
                     }
@@ -323,32 +332,32 @@ class TypesController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('type');
             $this->printTitle($lang['strdrop'], 'pg.type.drop');
 
-            echo '<p>', sprintf($lang['strconfdroptype'], $misc->printVal($_REQUEST['type'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdroptype'], $this->misc->printVal($_REQUEST['type'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
             $status = $data->dropType($_POST['type'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strtypedropped']);
             } else {
                 $this->doDefault($lang['strtypedroppedbad']);
@@ -357,14 +366,14 @@ class TypesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new composite type
+     * Displays a screen where they can enter a new composite type.
+     *
+     * @param mixed $msg
      */
     public function doCreateComposite($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['stage'])) {
             $_REQUEST['stage'] = 1;
@@ -388,7 +397,7 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -404,22 +413,26 @@ class TypesController extends BaseController
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"create_comp\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo "<input type=\"submit\" value=\"{$lang['strnext']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
+
                 break;
             case 2:
 
                 // Check inputs
                 $fields = trim($_REQUEST['fields']);
-                if (trim($_REQUEST['name']) == '') {
+                if ('' == trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedsname']);
+
                     return;
-                } elseif ($fields == '' || !is_numeric($fields) || $fields != (int) $fields || $fields < 1) {
+                }
+                if ('' == $fields || !is_numeric($fields) || $fields != (int) $fields || $fields < 1) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedscols']);
+
                     return;
                 }
 
@@ -429,14 +442,14 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
                 echo "\t<tr><th colspan=\"2\" class=\"data required\">{$lang['strfield']}</th><th colspan=\"2\" class=\"data required\">{$lang['strtype']}</th>";
                 echo "<th class=\"data\">{$lang['strlength']}</th><th class=\"data\">{$lang['strcomment']}</th></tr>\n";
 
-                for ($i = 0; $i < $_REQUEST['fields']; $i++) {
+                for ($i = 0; $i < $_REQUEST['fields']; ++$i) {
                     if (!isset($_REQUEST['field'][$i])) {
                         $_REQUEST['field'][$i] = '';
                     }
@@ -457,8 +470,8 @@ class TypesController extends BaseController
                     while (!$types->EOF) {
                         $typname = $types->fields['typname'];
                         echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), '"',
-                        (isset($_REQUEST['type'][$i]) && $typname == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', '>',
-                        $misc->printVal($typname), "</option>\n";
+                        (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] == $typname) ? ' selected="selected"' : '', '>',
+                        $this->misc->printVal($typname), "</option>\n";
                         $types->moveNext();
                     }
                     echo "\t\t\t</select>\n\t\t</td>\n";
@@ -477,7 +490,7 @@ class TypesController extends BaseController
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"create_comp\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
                 echo '<input type="hidden" name="fields" value="', htmlspecialchars($_REQUEST['fields']), "\" />\n";
                 echo '<input type="hidden" name="typcomment" value="', htmlspecialchars($_REQUEST['typcomment']), "\" />\n";
@@ -490,31 +503,44 @@ class TypesController extends BaseController
 
                 // Check inputs
                 $fields = trim($_REQUEST['fields']);
-                if (trim($_REQUEST['name']) == '') {
+                if ('' == trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedsname']);
+
                     return;
-                } elseif ($fields == '' || !is_numeric($fields) || $fields != (int) $fields || $fields <= 0) {
+                }
+                if ('' == $fields || !is_numeric($fields) || $fields != (int) $fields || $fields <= 0) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedscols']);
+
                     return;
                 }
 
-                $status = $data->createCompositeType($_REQUEST['name'], $_REQUEST['fields'], $_REQUEST['field'],
-                    $_REQUEST['type'], $_REQUEST['array'], $_REQUEST['length'], $_REQUEST['colcomment'],
-                    $_REQUEST['typcomment']);
+                $status = $data->createCompositeType(
+                    $_REQUEST['name'],
+                    $_REQUEST['fields'],
+                    $_REQUEST['field'],
+                    $_REQUEST['type'],
+                    $_REQUEST['array'],
+                    $_REQUEST['length'],
+                    $_REQUEST['colcomment'],
+                    $_REQUEST['typcomment']
+                );
 
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->doDefault($lang['strtypecreated']);
                 } elseif ($status == -1) {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateComposite($lang['strtypeneedsfield']);
+
                     return;
                 } else {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateComposite($lang['strtypecreatedbad']);
+
                     return;
                 }
+
                 break;
             default:
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
@@ -522,14 +548,14 @@ class TypesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new enum type
+     * Displays a screen where they can enter a new enum type.
+     *
+     * @param mixed $msg
      */
     public function doCreateEnum($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['stage'])) {
             $_REQUEST['stage'] = 1;
@@ -553,7 +579,7 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -569,22 +595,26 @@ class TypesController extends BaseController
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"create_enum\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo "<input type=\"submit\" value=\"{$lang['strnext']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
+
                 break;
             case 2:
 
                 // Check inputs
                 $values = trim($_REQUEST['values']);
-                if (trim($_REQUEST['name']) == '') {
+                if ('' == trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsname']);
+
                     return;
-                } elseif ($values == '' || !is_numeric($values) || $values != (int) $values || $values < 1) {
+                }
+                if ('' == $values || !is_numeric($values) || $values != (int) $values || $values < 1) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsvals']);
+
                     return;
                 }
 
@@ -592,13 +622,13 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
                 echo "\t<tr><th colspan=\"2\" class=\"data required\">{$lang['strvalue']}</th></tr>\n";
 
-                for ($i = 0; $i < $_REQUEST['values']; $i++) {
+                for ($i = 0; $i < $_REQUEST['values']; ++$i) {
                     if (!isset($_REQUEST['value'][$i])) {
                         $_REQUEST['value'][$i] = '';
                     }
@@ -610,7 +640,7 @@ class TypesController extends BaseController
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"create_enum\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
                 echo '<input type="hidden" name="values" value="', htmlspecialchars($_REQUEST['values']), "\" />\n";
                 echo '<input type="hidden" name="typcomment" value="', htmlspecialchars($_REQUEST['typcomment']), "\" />\n";
@@ -623,29 +653,35 @@ class TypesController extends BaseController
 
                 // Check inputs
                 $values = trim($_REQUEST['values']);
-                if (trim($_REQUEST['name']) == '') {
+                if ('' == trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsname']);
+
                     return;
-                } elseif ($values == '' || !is_numeric($values) || $values != (int) $values || $values <= 0) {
+                }
+                if ('' == $values || !is_numeric($values) || $values != (int) $values || $values <= 0) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsvals']);
+
                     return;
                 }
 
                 $status = $data->createEnumType($_REQUEST['name'], $_REQUEST['value'], $_REQUEST['typcomment']);
 
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->doDefault($lang['strtypecreated']);
                 } elseif ($status == -1) {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateEnum($lang['strtypeneedsvalue']);
+
                     return;
                 } else {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateEnum($lang['strtypecreatedbad']);
+
                     return;
                 }
+
                 break;
             default:
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
@@ -653,14 +689,14 @@ class TypesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new type
+     * Displays a screen where they can enter a new type.
+     *
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['typname'])) {
             $_POST['typname'] = '';
@@ -706,7 +742,7 @@ class TypesController extends BaseController
         $this->printTitle($lang['strcreatetype'], 'pg.type.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -768,28 +804,26 @@ class TypesController extends BaseController
         echo "</select></td></tr>\n";
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
     }
 
     /**
-     * Actually creates the new type in the database
+     * Actually creates the new type in the database.
      */
     public function doSaveCreate()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name and a length.
         // Note: We're assuming they've given in and out functions here
         // which might be unwise...
-        if ($_POST['typname'] == '') {
+        if ('' == $_POST['typname']) {
             $this->doCreate($lang['strtypeneedsname']);
-        } elseif ($_POST['typlen'] == '') {
+        } elseif ('' == $_POST['typlen']) {
             $this->doCreate($lang['strtypeneedslen']);
         } else {
             $status = $data->createType(
@@ -804,7 +838,7 @@ class TypesController extends BaseController
                 $_POST['typalign'],
                 $_POST['typstorage']
             );
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strtypecreated']);
             } else {
                 $this->doCreate($lang['strtypecreatedbad']);

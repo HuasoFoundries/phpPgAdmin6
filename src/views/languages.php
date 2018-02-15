@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Manage languages in a database
- *
- * $Id: languages.php,v 1.13 2007/08/31 18:30:11 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

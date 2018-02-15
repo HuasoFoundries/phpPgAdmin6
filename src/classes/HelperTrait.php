@@ -1,6 +1,12 @@
 <?php
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
 namespace PHPPgAdmin;
 
+/**
+ * A trait with helpers methods to debug, halt the app and format text to html
+ */
 trait HelperTrait
 {
 

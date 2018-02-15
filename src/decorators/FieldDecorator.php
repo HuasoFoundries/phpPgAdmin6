@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Decorators;
 
 class FieldDecorator extends Decorator
@@ -7,7 +11,7 @@ class FieldDecorator extends Decorator
     public function __construct($fieldName, $default = null)
     {
         $this->f = $fieldName;
-        if ($default !== null) {
+        if (null !== $default) {
             $this->d = $default;
         }
     }
@@ -16,10 +20,11 @@ class FieldDecorator extends Decorator
     {
         if (isset($fields[$this->f])) {
             return Decorator::get_sanitized_value($fields[$this->f], $fields);
-        } elseif (isset($this->d)) {
-            return $this->d;
-        } else {
-            return null;
         }
+        if (isset($this->d)) {
+            return $this->d;
+        }
+
+        return null;
     }
 }

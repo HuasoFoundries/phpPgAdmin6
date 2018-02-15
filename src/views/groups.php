@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Manage groups in a database cluster
- *
- * $Id: groups.php,v 1.27 2007/08/31 18:30:11 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

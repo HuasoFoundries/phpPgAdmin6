@@ -1,34 +1,38 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class CastsController extends BaseController
 {
-    public $_name = 'CastsController';
+    public $controller_name = 'CastsController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
         $lang   = $this->lang;
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
-        $data = $misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strcasts']);
         $this->printBody();
 
         switch ($action) {
-
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -36,14 +40,14 @@ class CastsController extends BaseController
     }
 
     /**
-     * Show default list of casts in the database
+     * Show default list of casts in the database.
+     *
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $renderCastContext = function ($val) use ($lang) {
             switch ($val) {
@@ -95,10 +99,8 @@ class CastsController extends BaseController
      */
     public function doTree()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $casts = $data->getCasts();
 

@@ -1,24 +1,29 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class RulesController extends BaseController
 {
-    public $_name = 'RulesController';
+    public $controller_name = 'RulesController';
 
+    /**
+     * Default method to render the controller according to the action parameter.
+     */
     public function render()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -29,6 +34,7 @@ class RulesController extends BaseController
         switch ($action) {
             case 'create_rule':
                 $this->createRule(true);
+
                 break;
             case 'save_create_rule':
                 if (isset($_POST['cancel'])) {
@@ -48,9 +54,11 @@ class RulesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -58,14 +66,14 @@ class RulesController extends BaseController
     }
 
     /**
-     * List all the rules on the table
+     * List all the rules on the table.
+     *
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail($_REQUEST['subject']);
         $this->printTabs($_REQUEST['subject'], 'rules');
@@ -130,14 +138,12 @@ class RulesController extends BaseController
 
     public function doTree()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
 
-        $reqvars = $misc->getRequestVars($_REQUEST['subject']);
+        $reqvars = $this->misc->getRequestVars($_REQUEST['subject']);
 
         $attrs = [
             'text' => Decorator::field('rulename'),
@@ -148,14 +154,15 @@ class RulesController extends BaseController
     }
 
     /**
-     * Confirm and then actually create a rule
+     * Confirm and then actually create a rule.
+     *
+     * @param mixed $confirm
+     * @param mixed $msg
      */
     public function createRule($confirm, $msg = '')
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
             $_POST['name'] = '';
@@ -182,7 +189,7 @@ class RulesController extends BaseController
             $this->printTitle($lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -203,8 +210,8 @@ class RulesController extends BaseController
             echo "</td></tr>\n";
             echo "<tr><th class=\"data left required\">{$lang['straction']}</th>\n";
             echo '<td class="data1">';
-            echo '<input type="radio" id="type1" name="type" value="NOTHING"', ($_POST['type'] == 'NOTHING') ? ' checked="checked"' : '', " /> <label for=\"type1\">NOTHING</label><br />\n";
-            echo '<input type="radio" name="type" value="SOMETHING"', ($_POST['type'] == 'SOMETHING') ? ' checked="checked"' : '', " />\n";
+            echo '<input type="radio" id="type1" name="type" value="NOTHING"', ('NOTHING' == $_POST['type']) ? ' checked="checked"' : '', " /> <label for=\"type1\">NOTHING</label><br />\n";
+            echo '<input type="radio" name="type" value="SOMETHING"', ('SOMETHING' == $_POST['type']) ? ' checked="checked"' : '', " />\n";
             echo '(<input name="raction" size="32" value="',
             htmlspecialchars($_POST['raction']), "\" />)</td></tr>\n";
             echo "</table>\n";
@@ -213,18 +220,24 @@ class RulesController extends BaseController
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
             '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"submit\" name=\"ok\" value=\"{$lang['strcreate']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            if (trim($_POST['name']) == '') {
+            if ('' == trim($_POST['name'])) {
                 $this->createRule(true, $lang['strruleneedsname']);
             } else {
-                $status = $data->createRule($_POST['name'],
-                    $_POST['event'], $_POST[$_POST['subject']], $_POST['where'],
-                    isset($_POST['instead']), $_POST['type'], $_POST['raction']);
-                if ($status == 0) {
+                $status = $data->createRule(
+                    $_POST['name'],
+                    $_POST['event'],
+                    $_POST[$_POST['subject']],
+                    $_POST['where'],
+                    isset($_POST['instead']),
+                    $_POST['type'],
+                    $_POST['raction']
+                );
+                if (0 == $status) {
                     $this->doDefault($lang['strrulecreated']);
                 } else {
                     $this->createRule(true, $lang['strrulecreatedbad']);
@@ -234,36 +247,39 @@ class RulesController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail($_REQUEST['subject']);
             $this->printTitle($lang['strdrop'], 'pg.rule.drop');
 
-            echo '<p>', sprintf($lang['strconfdroprule'], $misc->printVal($_REQUEST['rule']),
-                $misc->printVal($_REQUEST[$_REQUEST['reltype']])), "</p>\n";
+            echo '<p>', sprintf(
+                $lang['strconfdroprule'],
+                $this->misc->printVal($_REQUEST['rule']),
+                $this->misc->printVal($_REQUEST[$_REQUEST['reltype']])
+            ), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['reltype']), "\" />\n";
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['reltype']),
             '" value="', htmlspecialchars($_REQUEST[$_REQUEST['reltype']]), "\" />\n";
             echo '<input type="hidden" name="rule" value="', htmlspecialchars($_REQUEST['rule']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
             echo "</form>\n";
         } else {
             $status = $data->dropRule($_POST['rule'], $_POST[$_POST['subject']], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strruledropped']);
             } else {
                 $this->doDefault($lang['strruledroppedbad']);

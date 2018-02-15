@@ -3,7 +3,7 @@ VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)",/\1/p')
 SHELL = /usr/bin/env bash
 
 default: install
-.PHONY: tag install test
+.PHONY: tag install test csfixer
 
 version:
 	@echo $(VERSION)
@@ -33,3 +33,6 @@ tag: test update_version tag_and_push
 
 test:
 	./vendor/bin/codecept run unit --debug
+
+csfixer:
+	./vendor/bin/php-cs-fixer --verbose fix	

@@ -1,10 +1,13 @@
 <?php
 
-    namespace PHPPgAdmin\Help;
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
+namespace PHPPgAdmin\Help;
 
 /**
- * Help links for PostgreSQL 9.6 documentation
- *
+ * Help links for PostgreSQL 9.6 documentation.
  */
     class PostgresDoc96 extends PostgresDoc95
     {

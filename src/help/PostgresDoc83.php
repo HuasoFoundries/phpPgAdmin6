@@ -1,9 +1,13 @@
 <?php
 
-    namespace PHPPgAdmin\Help;
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
+namespace PHPPgAdmin\Help;
 
 /**
- * Help links for PostgreSQL 8.3 documentation
+ * Help links for PostgreSQL 8.3 documentation.
  *
  * $Id: PostgresDoc83.php,v 1.3 2008/03/17 21:35:48 ioguix Exp $
  */

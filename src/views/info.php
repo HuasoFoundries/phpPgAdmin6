@@ -1,9 +1,7 @@
 <?php
 
-/**
- * List extra information on a table
- *
- * $Id: info.php,v 1.14 2007/05/28 17:30:32 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

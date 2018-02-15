@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Manage opclasss in a database
- *
- * $Id: opclasses.php,v 1.10 2007/08/31 18:30:11 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

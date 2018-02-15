@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Manage casts in a database
- *
- * $Id: casts.php,v 1.16 2007/09/25 16:08:05 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions
