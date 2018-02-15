@@ -115,17 +115,11 @@ class DatabaseController extends BaseController
 
     public function doTree($print = true)
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
 
-        $data = $misc->getDatabaseAccessor();
-
+        $misc    = $this->misc;
         $reqvars = $misc->getRequestVars('database');
-
-        $tabs = $misc->getNavTabs('database');
-
-        $items = $this->adjustTabsForTree($tabs);
+        $tabs    = $misc->getNavTabs('database');
+        $items   = $this->adjustTabsForTree($tabs);
 
         $attrs = [
             'text'   => Decorator::field('title'),
