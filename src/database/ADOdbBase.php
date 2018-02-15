@@ -47,7 +47,9 @@ class ADOdbBase
     public function arrayClean(&$arr)
     {
         reset($arr);
-        while (list($k, $v) = each($arr)) {
+        //while (list($k, $v) = each($arr)) {
+        foreach ($arr as $k => $v) {
+
             $arr[$k] = addslashes($v);
         }
 
@@ -144,7 +146,8 @@ class ADOdbBase
 
         // Build clause
         $sql = '';
-        while (list($key, $value) = each($conditions)) {
+        //while (list($key, $value) = each($conditions)) {
+        foreach ($conditions as $key => $value) {
             $this->clean($key);
             $this->clean($value);
             if ($sql) {
@@ -263,7 +266,8 @@ class ADOdbBase
 
         // Populate the syntax arrays
         reset($vars);
-        while (list($key, $value) = each($vars)) {
+        //while (list($key, $value) = each($vars)) {
+        foreach ($vars as $key => $value) {
             $this->fieldClean($key);
             $this->clean($value);
             if ($setClause) {
@@ -274,7 +278,8 @@ class ADOdbBase
         }
 
         reset($nulls);
-        while (list(, $value) = each($nulls)) {
+        //while (list(, $value) = each($nulls)) {
+        foreach ($nulls as $key => $value) {
             $this->fieldClean($value);
             if ($setClause) {
                 $setClause .= ", \"{$value}\"=NULL";
@@ -284,7 +289,8 @@ class ADOdbBase
         }
 
         reset($where);
-        while (list($key, $value) = each($where)) {
+        //while (list($key, $value) = each($where)) {
+        foreach ($where as $key => $value) {
             $this->fieldClean($key);
             $this->clean($value);
             if ($whereClause) {

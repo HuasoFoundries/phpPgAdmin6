@@ -100,7 +100,7 @@ class DataexportController extends BaseController
                         $ext = 'txt';
                     }
 
-                    header('Content-Disposition: attachment; filename=dump.'.$ext);
+                    header('Content-Disposition: attachment; filename=dump.' . $ext);
                 }
             } else {
                 header('Content-Type: text/plain');
@@ -148,7 +148,8 @@ class DataexportController extends BaseController
                     echo " FROM stdin;\n";
                     while (!$rs->EOF) {
                         $first = true;
-                        while (list($k, $v) = each($rs->fields)) {
+                        //while (list($k, $v) = each($rs->fields)) {
+                        foreach ($rs->fields as $k => $v) {
                             // Escape value
                             $v = $data->escapeBytea($v);
 
@@ -271,7 +272,7 @@ class DataexportController extends BaseController
                                 $values = (is_null($v) ? 'NULL' : "'{$v}'");
                                 $first  = false;
                             } else {
-                                $values .= ', '.((is_null($v) ? 'NULL' : "'{$v}'"));
+                                $values .= ', ' . ((is_null($v) ? 'NULL' : "'{$v}'"));
                             }
                         }
                         echo ") VALUES ({$values});\n";
@@ -362,7 +363,7 @@ class DataexportController extends BaseController
             $this->printMsg($msg);
         }
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}:</th><td><select name=\"d_format\">\n";
         // COPY and SQL require a table
