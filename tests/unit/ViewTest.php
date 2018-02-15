@@ -3,7 +3,7 @@
 /**
  * This test aims to check that every view {viewname}.php instances a class {Viewname}Controller
  * As a side effect, it checks if said class exists
- * Asserts that the instanced class has a $_name member property equal to the classname.
+ * Asserts that the instanced class has a $controller_name member property equal to the classname.
  */
 class ViewTest extends \Codeception\Test\Unit
 {
@@ -19,9 +19,7 @@ class ViewTest extends \Codeception\Test\Unit
         $this->container = $Helper->getContainer();
     }
 
-    protected function _after()
-    {
-    }
+    protected function _after() {}
 
     // tests
 
