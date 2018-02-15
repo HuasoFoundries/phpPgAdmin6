@@ -91,7 +91,6 @@ $app = new \Slim\App($config);
 $container = $app->getContainer();
 
 if ($container instanceof \Psr\Container\ContainerInterface) {
-
     $handler->start(); // initialize handlers*/
     \PhpConsole\Helper::register(); // it will register global PC class
 
