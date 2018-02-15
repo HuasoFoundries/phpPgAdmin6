@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -25,6 +29,7 @@ class HistoryController extends BaseController
         switch ($action) {
             case 'confdelhistory':
                 $this->doDelHistory($_REQUEST['queryid'], true);
+
                 break;
             case 'delhistory':
                 if (isset($_POST['yes'])) {
@@ -32,9 +37,11 @@ class HistoryController extends BaseController
                 }
 
                 $this->doDefault();
+
                 break;
             case 'confclearhistory':
                 $this->doClearHistory(true);
+
                 break;
             case 'clearhistory':
                 if (isset($_POST['yes'])) {
@@ -42,6 +49,7 @@ class HistoryController extends BaseController
                 }
 
                 $this->doDefault();
+
                 break;
             case 'download':
                 return $this->doDownloadHistory();
@@ -51,6 +59,7 @@ class HistoryController extends BaseController
 
         // Set the name of the window
         $this->setWindowName('history');
+
         return $this->printFooter();
     }
 
@@ -74,6 +83,7 @@ class HistoryController extends BaseController
 
         if (!isset($_REQUEST['database'])) {
             echo "<p>{$lang['strnodatabaseselected']}</p>\n";
+
             return;
         }
 
@@ -199,7 +209,7 @@ class HistoryController extends BaseController
             echo '<pre>', htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), '</pre>';
             echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
-            echo "<input type=\"hidden\" name=\"queryid\" value=\"$qid\" />\n";
+            echo "<input type=\"hidden\" name=\"queryid\" value=\"${qid}\" />\n";
             echo $this->misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
@@ -245,7 +255,7 @@ class HistoryController extends BaseController
         foreach ($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']] as $queries) {
             $query = rtrim($queries['query']);
             echo $query;
-            if (substr($query, -1) != ';') {
+            if (';' != substr($query, -1)) {
                 echo ';';
             }
 

@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -18,7 +22,7 @@ class AggregatesController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -28,6 +32,7 @@ class AggregatesController extends BaseController
         switch ($action) {
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'save_create':
                 if (isset($_POST['cancel'])) {
@@ -39,6 +44,7 @@ class AggregatesController extends BaseController
                 break;
             case 'alter':
                 $this->doAlter();
+
                 break;
             case 'save_alter':
                 if (isset($_POST['alter'])) {
@@ -58,12 +64,15 @@ class AggregatesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
             case 'properties':
                 $this->doProperties();
+
                 break;
         }
 
@@ -72,6 +81,7 @@ class AggregatesController extends BaseController
 
     /**
      * Show default list of aggregate functions in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -183,7 +193,8 @@ class AggregatesController extends BaseController
             'text'    => $proto,
             'icon'    => 'Aggregate',
             'toolTip' => Decorator::field('aggcomment'),
-            'action'  => Decorator::redirecturl('redirect.php',
+            'action'  => Decorator::redirecturl(
+                'redirect.php',
                 $reqvars,
                 [
                     'action'   => 'properties',
@@ -206,24 +217,39 @@ class AggregatesController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         // Check inputs
-        if (trim($_REQUEST['name']) == '') {
+        if ('' == trim($_REQUEST['name'])) {
             $this->doCreate($lang['straggrneedsname']);
+
             return;
-        } elseif (trim($_REQUEST['basetype']) == '') {
+        }
+        if ('' == trim($_REQUEST['basetype'])) {
             $this->doCreate($lang['straggrneedsbasetype']);
+
             return;
-        } elseif (trim($_REQUEST['sfunc']) == '') {
+        }
+        if ('' == trim($_REQUEST['sfunc'])) {
             $this->doCreate($lang['straggrneedssfunc']);
+
             return;
-        } elseif (trim($_REQUEST['stype']) == '') {
+        }
+        if ('' == trim($_REQUEST['stype'])) {
             $this->doCreate($lang['straggrneedsstype']);
+
             return;
         }
 
-        $status = $data->createAggregate($_REQUEST['name'], $_REQUEST['basetype'], $_REQUEST['sfunc'], $_REQUEST['stype'],
-            $_REQUEST['ffunc'], $_REQUEST['initcond'], $_REQUEST['sortop'], $_REQUEST['aggrcomment']);
+        $status = $data->createAggregate(
+            $_REQUEST['name'],
+            $_REQUEST['basetype'],
+            $_REQUEST['sfunc'],
+            $_REQUEST['stype'],
+            $_REQUEST['ffunc'],
+            $_REQUEST['initcond'],
+            $_REQUEST['sortop'],
+            $_REQUEST['aggrcomment']
+        );
 
-        if ($status == 0) {
+        if (0 == $status) {
             $this->misc->setReloadBrowser(true);
             $this->doDefault($lang['straggrcreated']);
         } else {
@@ -233,6 +259,7 @@ class AggregatesController extends BaseController
 
     /**
      * Displays a screen for create a new aggregate function
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -323,24 +350,35 @@ class AggregatesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Check inputs
-        if (trim($_REQUEST['aggrname']) == '') {
+        if ('' == trim($_REQUEST['aggrname'])) {
             $this->doAlter($lang['straggrneedsname']);
+
             return;
         }
 
-        $status = $data->alterAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype'], $_REQUEST['aggrowner'],
-            $_REQUEST['aggrschema'], $_REQUEST['aggrcomment'], $_REQUEST['newaggrname'], $_REQUEST['newaggrowner'],
-            $_REQUEST['newaggrschema'], $_REQUEST['newaggrcomment']);
-        if ($status == 0) {
+        $status = $data->alterAggregate(
+            $_REQUEST['aggrname'],
+            $_REQUEST['aggrtype'],
+            $_REQUEST['aggrowner'],
+            $_REQUEST['aggrschema'],
+            $_REQUEST['aggrcomment'],
+            $_REQUEST['newaggrname'],
+            $_REQUEST['newaggrowner'],
+            $_REQUEST['newaggrschema'],
+            $_REQUEST['newaggrcomment']
+        );
+        if (0 == $status) {
             $this->doDefault($lang['straggraltered']);
         } else {
             $this->doAlter($lang['straggralteredbad']);
+
             return;
         }
     }
 
     /**
      * Function to allow editing an aggregate function
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
@@ -388,6 +426,7 @@ class AggregatesController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop of the aggregate function selected
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -413,7 +452,7 @@ class AggregatesController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropAggregate($_POST['aggrname'], $_POST['aggrtype'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($lang['straggregatedropped']);
             } else {
@@ -424,6 +463,7 @@ class AggregatesController extends BaseController
 
     /**
      * Show the properties of an aggregate
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {

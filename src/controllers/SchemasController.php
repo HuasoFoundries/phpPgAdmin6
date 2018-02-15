@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -18,9 +22,10 @@ class SchemasController extends BaseController
         $lang   = $this->lang;
         $action = $this->action;
 
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
-        } elseif ($action == 'subtree') {
+        }
+        if ('subtree' == $action) {
             return $this->doSubTree();
         }
 
@@ -59,10 +64,12 @@ class SchemasController extends BaseController
                 break;
             case 'export':
                 $this->doExport();
+
                 break;
             default:
                 $header_template = 'header_datatables.twig';
                 $this->doDefault();
+
                 break;
         }
 
@@ -78,6 +85,7 @@ class SchemasController extends BaseController
 
     /**
      * Show default list of schemas in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -198,14 +206,16 @@ class SchemasController extends BaseController
             'text'    => Decorator::field('nspname'),
             'icon'    => 'Schema',
             'toolTip' => Decorator::field('nspcomment'),
-            'action'  => Decorator::redirecturl('redirect.php',
+            'action'  => Decorator::redirecturl(
+                'redirect.php',
                 $reqvars,
                 [
                     'subject' => 'schema',
                     'schema'  => Decorator::field('nspname'),
                 ]
             ),
-            'branch'  => Decorator::url('schemas.php',
+            'branch'  => Decorator::url(
+                'schemas.php',
                 $reqvars,
                 [
                     'action' => 'subtree',
@@ -235,11 +245,13 @@ class SchemasController extends BaseController
         $attrs = [
             'text'   => Decorator::field('title'),
             'icon'   => Decorator::field('icon'),
-            'action' => Decorator::actionurl(Decorator::field('url'),
+            'action' => Decorator::actionurl(
+                Decorator::field('url'),
                 $reqvars,
                 Decorator::field('urlvars', [])
             ),
-            'branch' => Decorator::url(Decorator::field('url'),
+            'branch' => Decorator::url(
+                Decorator::field('url'),
                 $reqvars,
                 Decorator::field('urlvars'),
                 ['action' => 'tree']
@@ -251,6 +263,7 @@ class SchemasController extends BaseController
 
     /**
      * Displays a screen where they can enter a new schema
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -321,11 +334,11 @@ class SchemasController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name
-        if ($_POST['formName'] == '') {
+        if ('' == $_POST['formName']) {
             $this->doCreate($lang['strschemaneedsname']);
         } else {
             $status = $data->createSchema($_POST['formName'], $_POST['formAuth'], $_POST['formComment']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($lang['strschemacreated']);
             } else {
@@ -337,6 +350,7 @@ class SchemasController extends BaseController
     /**
      * Display a form to permit editing schema properies.
      * TODO: permit changing owner
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
@@ -409,6 +423,7 @@ class SchemasController extends BaseController
 
     /**
      * Save the form submission containing changes to a schema
+     * @param mixed $msg
      */
     public function doSaveAlter($msg = '')
     {
@@ -416,7 +431,7 @@ class SchemasController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->updateSchema($_POST['schema'], $_POST['comment'], $_POST['name'], $_POST['owner']);
-        if ($status == 0) {
+        if (0 == $status) {
             $this->misc->setReloadBrowser(true);
             $this->doDefault($lang['strschemaaltered']);
         } else {
@@ -426,6 +441,7 @@ class SchemasController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -464,19 +480,20 @@ class SchemasController extends BaseController
             if (is_array($_POST['nsp'])) {
                 $msg    = '';
                 $status = $data->beginTransaction();
-                if ($status == 0) {
+                if (0 == $status) {
                     foreach ($_POST['nsp'] as $s) {
                         $status = $data->dropSchema($s, isset($_POST['cascade']));
-                        if ($status == 0) {
+                        if (0 == $status) {
                             $msg .= sprintf('%s: %s<br />', htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadropped']);
                         } else {
                             $data->endTransaction();
                             $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadroppedbad']));
+
                             return;
                         }
                     }
                 }
-                if ($data->endTransaction() == 0) {
+                if (0 == $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($msg);
@@ -485,7 +502,7 @@ class SchemasController extends BaseController
                 }
             } else {
                 $status = $data->dropSchema($_POST['nsp'], isset($_POST['cascade']));
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($lang['strschemadropped']);
                 } else {
@@ -497,6 +514,7 @@ class SchemasController extends BaseController
 
     /**
      * Displays options for database download
+     * @param mixed $msg
      */
     public function doExport($msg = '')
     {

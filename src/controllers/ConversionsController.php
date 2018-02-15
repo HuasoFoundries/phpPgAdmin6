@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
@@ -18,7 +22,7 @@ class ConversionsController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -28,6 +32,7 @@ class ConversionsController extends BaseController
         switch ($action) {
             default:
                 $this->doDefault();
+
                 break;
         }
 

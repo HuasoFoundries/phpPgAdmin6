@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -32,9 +36,11 @@ class PrivilegesController extends BaseController
                 break;
             case 'alter':
                 $this->doAlter(true, $_REQUEST['mode']);
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -43,6 +49,7 @@ class PrivilegesController extends BaseController
 
     /**
      * Show permissions on a database, namespace, relation, language or function
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -55,9 +62,9 @@ class PrivilegesController extends BaseController
 
         $this->printTrail($_REQUEST['subject']);
 
-        # @@@FIXME: This switch is just a temporary solution,
-        # need a better way, maybe every type of object should
-        # have a tab bar???
+        // @@@FIXME: This switch is just a temporary solution,
+        // need a better way, maybe every type of object should
+        // have a tab bar???
         switch ($_REQUEST['subject']) {
             case 'server':
             case 'database':
@@ -66,6 +73,7 @@ class PrivilegesController extends BaseController
             case 'column':
             case 'view':
                 $this->printTabs($_REQUEST['subject'], 'privileges');
+
                 break;
             default:
                 $this->printTitle($lang['strprivileges'], 'pg.privilege');
@@ -80,7 +88,7 @@ class PrivilegesController extends BaseController
         }
 
         // Get the privileges on the object, given its type
-        if ($_REQUEST['subject'] == 'column') {
+        if ('column' == $_REQUEST['subject']) {
             $privileges = $data->getPrivileges($object, 'column', $_REQUEST['table']);
         } else {
             $privileges = $data->getPrivileges($object, $_REQUEST['subject']);
@@ -96,7 +104,7 @@ class PrivilegesController extends BaseController
 
             foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
                 // Skip over ALL PRIVILEGES
-                if ($v2 == 'ALL PRIVILEGES') {
+                if ('ALL PRIVILEGES' == $v2) {
                     continue;
                 }
 
@@ -110,7 +118,7 @@ class PrivilegesController extends BaseController
             // Loop over privileges, outputting them
             $i = 0;
             foreach ($privileges as $v) {
-                $id = (($i % 2) == 0 ? '1' : '2');
+                $id = (0 == ($i % 2) ? '1' : '2');
                 echo "<tr class=\"data{$id}\">\n";
                 if (!$data->hasRoles()) {
                     echo '<td>', $this->misc->printVal($v[0]), "</td>\n";
@@ -119,19 +127,19 @@ class PrivilegesController extends BaseController
                 echo '<td>', $this->misc->printVal($v[1]), "</td>\n";
                 foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
                     // Skip over ALL PRIVILEGES
-                    if ($v2 == 'ALL PRIVILEGES') {
+                    if ('ALL PRIVILEGES' == $v2) {
                         continue;
                     }
 
                     echo '<td>';
-                    if (in_array($v2, $v[2])) {
+                    if (in_array($v2, $v[2], true)) {
                         echo $lang['stryes'];
                     } else {
                         echo $lang['strno'];
                     }
 
                     // If we have grant option for this, end mark
-                    if ($data->hasGrantOption() && in_array($v2, $v[4])) {
+                    if ($data->hasGrantOption() && in_array($v2, $v[4], true)) {
                         echo $lang['strasterisk'];
                     }
 
@@ -159,23 +167,26 @@ class PrivilegesController extends BaseController
                 $alllabel = "showall{$_REQUEST['subject']}s";
                 $allurl   = "{$_REQUEST['subject']}s.php";
                 $alltxt   = $lang["strshowall{$_REQUEST['subject']}s"];
+
                 break;
             case 'schema':
                 $alllabel = 'showallschemas';
                 $allurl   = 'schemas.php';
                 $alltxt   = $lang['strshowallschemas'];
+
                 break;
             case 'database':
                 $alllabel = 'showalldatabases';
                 $allurl   = 'alldb.php';
                 $alltxt   = $lang['strshowalldatabases'];
+
                 break;
         }
 
         $subject = $_REQUEST['subject'];
         $object  = $_REQUEST[$_REQUEST['subject']];
 
-        if ($_REQUEST['subject'] == 'function') {
+        if ('function' == $_REQUEST['subject']) {
             $objectoid = $_REQUEST[$_REQUEST['subject'] . '_oid'];
             $urlvars   = [
                 'action'         => 'alter',
@@ -186,7 +197,7 @@ class PrivilegesController extends BaseController
                 "{$subject}_oid" => $objectoid,
                 'subject'        => $subject,
             ];
-        } elseif ($_REQUEST['subject'] == 'column') {
+        } elseif ('column' == $_REQUEST['subject']) {
             $urlvars = [
                 'action'   => 'alter',
                 'server'   => $_REQUEST['server'],
@@ -293,9 +304,11 @@ class PrivilegesController extends BaseController
             switch ($mode) {
                 case 'grant':
                     $this->printTitle($lang['strgrant'], 'pg.privilege.grant');
+
                     break;
                 case 'revoke':
                     $this->printTitle($lang['strrevoke'], 'pg.privilege.revoke');
+
                     break;
             }
             $this->printMsg($msg);
@@ -307,7 +320,7 @@ class PrivilegesController extends BaseController
             while (!$users->EOF) {
                 $uname = htmlspecialchars($users->fields['usename']);
                 echo "<option value=\"{$uname}\"",
-                in_array($users->fields['usename'], $_REQUEST['username']) ? ' selected="selected"' : '', ">{$uname}</option>\n";
+                in_array($users->fields['usename'], $_REQUEST['username'], true) ? ' selected="selected"' : '', ">{$uname}</option>\n";
                 $users->moveNext();
             }
             echo "</select></td></tr>\n";
@@ -320,7 +333,7 @@ class PrivilegesController extends BaseController
                 while (!$groups->EOF) {
                     $gname = htmlspecialchars($groups->fields['groname']);
                     echo "<option value=\"{$gname}\"",
-                    in_array($groups->fields['groname'], $_REQUEST['groupname']) ? ' selected="selected"' : '', ">{$gname}</option>\n";
+                    in_array($groups->fields['groname'], $_REQUEST['groupname'], true) ? ' selected="selected"' : '', ">{$gname}</option>\n";
                     $groups->moveNext();
                 }
                 echo "</select>\n";
@@ -330,18 +343,18 @@ class PrivilegesController extends BaseController
             echo "<td class=\"data1\">\n";
             foreach ($data->privlist[$_REQUEST['subject']] as $v) {
                 $v = htmlspecialchars($v);
-                echo "<input type=\"checkbox\" id=\"privilege[$v]\" name=\"privilege[$v]\"",
-                isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', " /><label for=\"privilege[$v]\">{$v}</label><br />\n";
+                echo "<input type=\"checkbox\" id=\"privilege[${v}]\" name=\"privilege[${v}]\"",
+                isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', " /><label for=\"privilege[${v}]\">{$v}</label><br />\n";
             }
             echo "</td></tr>\n";
             // Grant option
             if ($data->hasGrantOption()) {
                 echo "<tr><th class=\"data left\">{$lang['stroptions']}</th>\n";
                 echo "<td class=\"data1\">\n";
-                if ($mode == 'grant') {
+                if ('grant' == $mode) {
                     echo '<input type="checkbox" id="grantoption" name="grantoption"',
                     isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION</label>\n";
-                } elseif ($mode == 'revoke') {
+                } elseif ('revoke' == $mode) {
                     echo '<input type="checkbox" id="grantoption" name="grantoption"',
                     isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION FOR</label><br />\n";
                     echo '<input type="checkbox" id="cascade" name="cascade"',
@@ -361,15 +374,15 @@ class PrivilegesController extends BaseController
 
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
             '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
-            if ($_REQUEST['subject'] == 'column') {
+            if ('column' == $_REQUEST['subject']) {
                 echo '<input type="hidden" name="table" value="',
                 htmlspecialchars($_REQUEST['table']), "\" />\n";
             }
 
             echo $this->misc->form;
-            if ($mode == 'grant') {
+            if ('grant' == $mode) {
                 echo "<input type=\"submit\" name=\"grant\" value=\"{$lang['strgrant']}\" />\n";
-            } elseif ($mode == 'revoke') {
+            } elseif ('revoke' == $mode) {
                 echo "<input type=\"submit\" name=\"revoke\" value=\"{$lang['strrevoke']}\" />\n";
             }
 
@@ -389,11 +402,20 @@ class PrivilegesController extends BaseController
                 $table = null;
             }
 
-            $status = $data->setPrivileges(($mode == 'grant') ? 'GRANT' : 'REVOKE', $_REQUEST['subject'], $object,
-                isset($_REQUEST['public']), $_REQUEST['username'], $_REQUEST['groupname'], array_keys($_REQUEST['privilege']),
-                isset($_REQUEST['grantoption']), isset($_REQUEST['cascade']), $table);
+            $status = $data->setPrivileges(
+                ('grant' == $mode) ? 'GRANT' : 'REVOKE',
+                $_REQUEST['subject'],
+                $object,
+                isset($_REQUEST['public']),
+                $_REQUEST['username'],
+                $_REQUEST['groupname'],
+                array_keys($_REQUEST['privilege']),
+                isset($_REQUEST['grantoption']),
+                isset($_REQUEST['cascade']),
+                $table
+            );
 
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strgranted']);
             } elseif ($status == -3 || $status == -4) {
                 $this->doAlter(true, $_REQUEST['mode'], $lang['strgrantbad']);

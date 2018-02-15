@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -11,11 +15,12 @@ class IntroController extends BaseController
 
     public function render()
     {
-        if ($this->container->requestobj->getAttribute('route') === null) {
+        if (null === $this->container->requestobj->getAttribute('route')) {
             echo $this->doDefault();
         } else {
             $body = $this->container->responseobj->getBody();
             $body->write($this->doDefault());
+
             return $this->container->responseobj;
         }
     }

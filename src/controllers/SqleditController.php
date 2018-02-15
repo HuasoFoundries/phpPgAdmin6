@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -10,8 +14,8 @@ class SqleditController extends BaseController
     public $controller_name = 'SqleditController';
     public $query           = '';
     public $subject         = '';
-    public $start_time      = null;
-    public $duration        = null;
+    public $start_time;
+    public $duration;
 
     public function render()
     {
@@ -25,8 +29,8 @@ class SqleditController extends BaseController
             case 'find':
                 $title     = $this->lang['strfind'];
                 $body_text = $this->doFind();
-                break;
 
+                break;
             case 'sql':
             default:
                 $title     = $this->lang['strsql'];
@@ -130,6 +134,7 @@ class SqleditController extends BaseController
 
     /**
      * Private function to display server and list of databases
+     * @param mixed $action
      */
     public function _printConnection($action)
     {
@@ -145,7 +150,7 @@ class SqleditController extends BaseController
         urlencode($action) . "?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + ";
 
         // The exact URL to reload to is different between SQL and Find mode, however.
-        if ($action == 'find') {
+        if ('find' == $action) {
             $onchange .= "'&amp;term=' + encodeURI(term.value) + '&amp;filter=' + encodeURI(filter.value) + '&amp;'\"";
         } else {
             $onchange .= "'&amp;query=' + encodeURI(query.value) + '&amp;search_path=' + encodeURI(search_path.value) + (paginate.checked ? '&amp;paginate=on' : '')  + '&amp;'\"";
@@ -180,25 +185,25 @@ class SqleditController extends BaseController
 
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
         $default_html .= "<select name=\"filter\">\n";
-        $default_html .= "\t<option value=\"\"" . ($_REQUEST['filter'] == '' ? ' selected="selected" ' : '') . ">{$lang['strallobjects']}</option>\n";
-        $default_html .= "\t<option value=\"SCHEMA\"" . ($_REQUEST['filter'] == 'SCHEMA' ? ' selected="selected" ' : '') . ">{$lang['strschemas']}</option>\n";
-        $default_html .= "\t<option value=\"TABLE\"" . ($_REQUEST['filter'] == 'TABLE' ? ' selected="selected" ' : '') . ">{$lang['strtables']}</option>\n";
-        $default_html .= "\t<option value=\"VIEW\"" . ($_REQUEST['filter'] == 'VIEW' ? ' selected="selected" ' : '') . ">{$lang['strviews']}</option>\n";
-        $default_html .= "\t<option value=\"SEQUENCE\"" . ($_REQUEST['filter'] == 'SEQUENCE' ? ' selected="selected" ' : '') . ">{$lang['strsequences']}</option>\n";
-        $default_html .= "\t<option value=\"COLUMN\"" . ($_REQUEST['filter'] == 'COLUMN' ? ' selected="selected" ' : '') . ">{$lang['strcolumns']}</option>\n";
-        $default_html .= "\t<option value=\"RULE\"" . ($_REQUEST['filter'] == 'RULE' ? ' selected="selected" ' : '') . ">{$lang['strrules']}</option>\n";
-        $default_html .= "\t<option value=\"INDEX\"" . ($_REQUEST['filter'] == 'INDEX' ? ' selected="selected" ' : '') . ">{$lang['strindexes']}</option>\n";
-        $default_html .= "\t<option value=\"TRIGGER\"" . ($_REQUEST['filter'] == 'TRIGGER' ? ' selected="selected" ' : '') . ">{$lang['strtriggers']}</option>\n";
-        $default_html .= "\t<option value=\"CONSTRAINT\"" . ($_REQUEST['filter'] == 'CONSTRAINT' ? ' selected="selected" ' : '') . ">{$lang['strconstraints']}</option>\n";
-        $default_html .= "\t<option value=\"FUNCTION\"" . ($_REQUEST['filter'] == 'FUNCTION' ? ' selected="selected" ' : '') . ">{$lang['strfunctions']}</option>\n";
-        $default_html .= "\t<option value=\"DOMAIN\"" . ($_REQUEST['filter'] == 'DOMAIN' ? ' selected="selected" ' : '') . ">{$lang['strdomains']}</option>\n";
+        $default_html .= "\t<option value=\"\"" . ('' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strallobjects']}</option>\n";
+        $default_html .= "\t<option value=\"SCHEMA\"" . ('SCHEMA' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strschemas']}</option>\n";
+        $default_html .= "\t<option value=\"TABLE\"" . ('TABLE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strtables']}</option>\n";
+        $default_html .= "\t<option value=\"VIEW\"" . ('VIEW' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strviews']}</option>\n";
+        $default_html .= "\t<option value=\"SEQUENCE\"" . ('SEQUENCE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strsequences']}</option>\n";
+        $default_html .= "\t<option value=\"COLUMN\"" . ('COLUMN' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strcolumns']}</option>\n";
+        $default_html .= "\t<option value=\"RULE\"" . ('RULE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strrules']}</option>\n";
+        $default_html .= "\t<option value=\"INDEX\"" . ('INDEX' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strindexes']}</option>\n";
+        $default_html .= "\t<option value=\"TRIGGER\"" . ('TRIGGER' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strtriggers']}</option>\n";
+        $default_html .= "\t<option value=\"CONSTRAINT\"" . ('CONSTRAINT' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strconstraints']}</option>\n";
+        $default_html .= "\t<option value=\"FUNCTION\"" . ('FUNCTION' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strfunctions']}</option>\n";
+        $default_html .= "\t<option value=\"DOMAIN\"" . ('DOMAIN' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strdomains']}</option>\n";
         if ($conf['show_advanced']) {
-            $default_html .= "\t<option value=\"AGGREGATE\"" . ($_REQUEST['filter'] == 'AGGREGATE' ? ' selected="selected" ' : '') . ">{$lang['straggregates']}</option>\n";
-            $default_html .= "\t<option value=\"TYPE\"" . ($_REQUEST['filter'] == 'TYPE' ? ' selected="selected" ' : '') . ">{$lang['strtypes']}</option>\n";
-            $default_html .= "\t<option value=\"OPERATOR\"" . ($_REQUEST['filter'] == 'OPERATOR' ? ' selected="selected" ' : '') . ">{$lang['stroperators']}</option>\n";
-            $default_html .= "\t<option value=\"OPCLASS\"" . ($_REQUEST['filter'] == 'OPCLASS' ? ' selected="selected" ' : '') . ">{$lang['stropclasses']}</option>\n";
-            $default_html .= "\t<option value=\"CONVERSION\"" . ($_REQUEST['filter'] == 'CONVERSION' ? ' selected="selected" ' : '') . ">{$lang['strconversions']}</option>\n";
-            $default_html .= "\t<option value=\"LANGUAGE\"" . ($_REQUEST['filter'] == 'LANGUAGE' ? ' selected="selected" ' : '') . ">{$lang['strlanguages']}</option>\n";
+            $default_html .= "\t<option value=\"AGGREGATE\"" . ('AGGREGATE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['straggregates']}</option>\n";
+            $default_html .= "\t<option value=\"TYPE\"" . ('TYPE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strtypes']}</option>\n";
+            $default_html .= "\t<option value=\"OPERATOR\"" . ('OPERATOR' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['stroperators']}</option>\n";
+            $default_html .= "\t<option value=\"OPCLASS\"" . ('OPCLASS' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['stropclasses']}</option>\n";
+            $default_html .= "\t<option value=\"CONVERSION\"" . ('CONVERSION' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strconversions']}</option>\n";
+            $default_html .= "\t<option value=\"LANGUAGE\"" . ('LANGUAGE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strlanguages']}</option>\n";
         }
         $default_html .= "</select>\n";
 
@@ -208,6 +213,7 @@ class SqleditController extends BaseController
 
         // Default focus
         $this->setFocus('forms[0].term');
+
         return $default_html;
     }
 }

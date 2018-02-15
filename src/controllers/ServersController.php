@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -14,8 +18,8 @@ class ServersController extends BaseController
     public $section         = 'servers';
     public $query           = '';
     public $subject         = '';
-    public $start_time      = null;
-    public $duration        = null;
+    public $start_time;
+    public $duration;
 
     public function render()
     {
@@ -25,7 +29,7 @@ class ServersController extends BaseController
 
         $action = $this->action;
 
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -43,6 +47,7 @@ class ServersController extends BaseController
                 break;
             default:
                 $this->doDefault($msg);
+
                 break;
         }
 
@@ -50,11 +55,12 @@ class ServersController extends BaseController
 
         $server_html .= $this->printFooter(false);
 
-        if ($this->container->requestobj->getAttribute('route') === null) {
+        if (null === $this->container->requestobj->getAttribute('route')) {
             echo $server_html;
         } else {
             $body = $this->container->responseobj->getBody();
             $body->write($server_html);
+
             return $this->container->responseobj;
         }
     }
@@ -80,7 +86,7 @@ class ServersController extends BaseController
             ],
         ];
         $actions = [];
-        if (($group !== false) && (isset($conf['srv_groups'][$group])) && ($groups->recordCount() > 0)) {
+        if ((false !== $group) && (isset($conf['srv_groups'][$group])) && ($groups->recordCount() > 0)) {
             $this->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
         }
         $this->printTable($groups, $columns, $actions, $this->table_place);
@@ -127,10 +133,11 @@ class ServersController extends BaseController
 
         $svPre = function (&$rowdata) use ($actions) {
             $actions['logout']['disable'] = empty($rowdata->fields['username']);
+
             return $actions;
         };
 
-        if (($group !== false) and isset($conf['srv_groups'][$group])) {
+        if ((false !== $group) and isset($conf['srv_groups'][$group])) {
             $this->printTitle(sprintf($lang['strgroupservers'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
             $actions['logout']['attr']['href']['urlvars']['group'] = $group;
         }
@@ -144,20 +151,20 @@ class ServersController extends BaseController
         $nodes    = [];
         $group_id = isset($_GET['group']) ? $_GET['group'] : false;
 
-        /* root with srv_groups */
+        // root with srv_groups
         if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0
-            and $group_id === false) {
+            and false === $group_id) {
             $nodes = $this->misc->getServersGroups(true);
-        } elseif (isset($conf['srv_groups']) and $group_id !== false) {
-            /* group subtree */
-            if ($group_id !== 'all') {
+        } elseif (isset($conf['srv_groups']) and false !== $group_id) {
+            // group subtree
+            if ('all' !== $group_id) {
                 $nodes = $this->misc->getServersGroups(false, $group_id);
             }
 
             $nodes = array_merge($nodes, $this->misc->getServers(false, $group_id));
             $nodes = new \PHPPgAdmin\ArrayRecordSet($nodes);
         } else {
-            /* no srv_group */
+            // no srv_group
             $nodes = $this->misc->getServers(true, false);
         }
 

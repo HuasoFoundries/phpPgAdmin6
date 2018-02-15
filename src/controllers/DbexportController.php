@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -27,7 +31,7 @@ class DbexportController extends BaseController
         ini_set('memory_limit', '768M');
 
         // Are we doing a cluster-wide dump or just a per-database dump
-        $dumpall = ($_REQUEST['subject'] == 'server');
+        $dumpall = ('server' == $_REQUEST['subject']);
         $this->prtrace('REQUEST[subject]', $_REQUEST['subject']);
 
         // Check that database dumps are enabled.
@@ -39,7 +43,7 @@ class DbexportController extends BaseController
 
             // Obtain the pg_dump version number and check if the path is good
             $version = [];
-            preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($exe . ' --version'), $version);
+            preg_match("/(\\d+(?:\\.\\d+)?)(?:\\.\\d+)?.*$/", exec($exe . ' --version'), $version);
 
             $this->prtrace('$exe', $exe, 'version', $version[1]);
 
@@ -58,6 +62,7 @@ class DbexportController extends BaseController
             switch ($_REQUEST['output']) {
                 case 'show':
                     header('Content-Type: text/plain');
+
                     break;
                 case 'download':
                     // Set headers.  MSIE is totally broken for SSL downloading, so
@@ -68,11 +73,13 @@ class DbexportController extends BaseController
                         header('Content-Type: application/download');
                         header('Content-Disposition: attachment; filename=dump.sql');
                     }
+
                     break;
                 case 'gzipped':
                     // MSIE in SSL mode cannot do this - it should never get to this point
                     header('Content-Type: application/download');
                     header('Content-Disposition: attachment; filename=dump.sql.gz');
+
                     break;
             }
 
@@ -80,11 +87,11 @@ class DbexportController extends BaseController
             putenv('PGPASSWORD=' . $server_info['password']);
             putenv('PGUSER=' . $server_info['username']);
             $hostname = $server_info['host'];
-            if ($hostname !== null && $hostname != '') {
+            if (null !== $hostname && '' != $hostname) {
                 putenv('PGHOST=' . $hostname);
             }
             $port = $server_info['port'];
-            if ($port !== null && $port != '') {
+            if (null !== $port && '' != $port) {
                 putenv('PGPORT=' . $port);
             }
 
@@ -106,6 +113,7 @@ class DbexportController extends BaseController
                 case 'schema':
                     // This currently works for 8.2+ (due to the orthoganl -t -n issue introduced then)
                     $cmd .= ' -n ' . $this->misc->escapeShellArg("\"{$f_schema}\"");
+
                     break;
                 case 'table':
                 case 'view':
@@ -127,14 +135,14 @@ class DbexportController extends BaseController
             }
 
             // Check for GZIP compression specified
-            if ($_REQUEST['output'] == 'gzipped' && !$dumpall) {
+            if ('gzipped' == $_REQUEST['output'] && !$dumpall) {
                 $cmd .= ' -Z 9';
             }
 
             switch ($_REQUEST['what']) {
                 case 'dataonly':
                     $cmd .= ' -a';
-                    if ($_REQUEST['d_format'] == 'sql') {
+                    if ('sql' == $_REQUEST['d_format']) {
                         $cmd .= ' --inserts';
                     } elseif (isset($_REQUEST['d_oids'])) {
                         $cmd .= ' -o';
@@ -149,7 +157,7 @@ class DbexportController extends BaseController
 
                     break;
                 case 'structureanddata':
-                    if ($_REQUEST['sd_format'] == 'sql') {
+                    if ('sql' == $_REQUEST['sd_format']) {
                         $cmd .= ' --inserts';
                     } elseif (isset($_REQUEST['sd_oids'])) {
                         $cmd .= ' -o';

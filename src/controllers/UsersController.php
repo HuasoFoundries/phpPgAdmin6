@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -27,9 +31,11 @@ class UsersController extends BaseController
                 break;
             case 'confchangepassword':
                 $this->doChangePassword(true);
+
                 break;
             case 'account':
                 $this->doAccount();
+
                 break;
             case 'save_create':
                 if (isset($_REQUEST['cancel'])) {
@@ -41,6 +47,7 @@ class UsersController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_REQUEST['cancel'])) {
@@ -52,6 +59,7 @@ class UsersController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'save_edit':
                 if (isset($_REQUEST['cancel'])) {
@@ -63,9 +71,11 @@ class UsersController extends BaseController
                 break;
             case 'edit':
                 $this->doEdit();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -74,6 +84,7 @@ class UsersController extends BaseController
 
     /**
      * Show default list of users in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -83,7 +94,7 @@ class UsersController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $renderUseExpires = function ($val) use ($lang) {
-            return $val == 'infinity' ? $lang['strnever'] : htmlspecialchars($val);
+            return 'infinity' == $val ? $lang['strnever'] : htmlspecialchars($val);
         };
 
         $this->printTrail('server');
@@ -170,6 +181,7 @@ class UsersController extends BaseController
      * where they can change their password, etc.  We don't prevent them from
      * messing with the URL to gain access to other user admin stuff, because
      * the PostgreSQL permissions will prevent them changing anything anyway.
+     * @param mixed $msg
      */
     public function doAccount($msg = '')
     {
@@ -197,7 +209,7 @@ class UsersController extends BaseController
             echo "<tr>\n\t<td class=\"data1\">", $this->misc->printVal($userdata->fields['usename']), "</td>\n";
             echo "\t<td class=\"data1\">", $this->misc->printVal($userdata->fields['usesuper'], 'yesno'), "</td>\n";
             echo "\t<td class=\"data1\">", $this->misc->printVal($userdata->fields['usecreatedb'], 'yesno'), "</td>\n";
-            echo "\t<td class=\"data1\">", ($userdata->fields['useexpires'] == 'infinity' || is_null($userdata->fields['useexpires']) ? $lang['strnever'] : $this->misc->printVal($userdata->fields['useexpires'])), "</td>\n";
+            echo "\t<td class=\"data1\">", ('infinity' == $userdata->fields['useexpires'] || is_null($userdata->fields['useexpires']) ? $lang['strnever'] : $this->misc->printVal($userdata->fields['useexpires'])), "</td>\n";
             echo "\t<td class=\"data1\">", $this->misc->printVal($userdata->fields['useconfig']), "</td>\n";
             echo "</tr>\n</table>\n";
         } else {
@@ -220,6 +232,8 @@ class UsersController extends BaseController
 
     /**
      * Show confirmation of change password and actually change password
+     * @param mixed $confirm
+     * @param mixed $msg
      */
     public function doChangePassword($confirm, $msg = '')
     {
@@ -267,9 +281,11 @@ class UsersController extends BaseController
             elseif ($_POST['password'] != $_POST['confirm']) {
                 $this->doChangePassword(true, $lang['strpasswordconfirm']);
             } else {
-                $status = $data->changePassword($server_info['username'],
-                    $_POST['password']);
-                if ($status == 0) {
+                $status = $data->changePassword(
+                    $server_info['username'],
+                    $_POST['password']
+                );
+                if (0 == $status) {
                     $this->doAccount($lang['strpasswordchanged']);
                 } else {
                     $this->doAccount($lang['strpasswordchangedbad']);
@@ -280,6 +296,7 @@ class UsersController extends BaseController
 
     /**
      * Function to allow editing of a user
+     * @param mixed $msg
      */
     public function doEdit($msg = '')
     {
@@ -313,7 +330,7 @@ class UsersController extends BaseController
                     $_POST['formCreateDB'] = '';
                 }
 
-                $_POST['formExpires']  = $userdata->fields['useexpires'] == 'infinity' ? '' : $userdata->fields['useexpires'];
+                $_POST['formExpires']  = 'infinity' == $userdata->fields['useexpires'] ? '' : $userdata->fields['useexpires'];
                 $_POST['formPassword'] = '';
             }
 
@@ -356,7 +373,7 @@ class UsersController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Check name and password
-        if (isset($_POST['newname']) && $_POST['newname'] == '') {
+        if (isset($_POST['newname']) && '' == $_POST['newname']) {
             $this->doEdit($lang['struserneedsname']);
         } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doEdit($lang['strpasswordconfirm']);
@@ -367,7 +384,7 @@ class UsersController extends BaseController
                 $status = $data->setUser($_POST['username'], $_POST['formPassword'], isset($_POST['formCreateDB']), isset($_POST['formSuper']), $_POST['formExpires']);
             }
 
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['struserupdated']);
             } else {
                 $this->doEdit($lang['struserupdatedbad']);
@@ -377,6 +394,7 @@ class UsersController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -400,7 +418,7 @@ class UsersController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropUser($_REQUEST['username']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['struserdropped']);
             } else {
                 $this->doDefault($lang['struserdroppedbad']);
@@ -410,6 +428,7 @@ class UsersController extends BaseController
 
     /**
      * Displays a screen where they can enter a new user
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -473,14 +492,20 @@ class UsersController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Check data
-        if ($_POST['formUsername'] == '') {
+        if ('' == $_POST['formUsername']) {
             $this->doCreate($lang['struserneedsname']);
         } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doCreate($lang['strpasswordconfirm']);
         } else {
-            $status = $data->createUser($_POST['formUsername'], $_POST['formPassword'],
-                isset($_POST['formCreateDB']), isset($_POST['formSuper']), $_POST['formExpires'], []);
-            if ($status == 0) {
+            $status = $data->createUser(
+                $_POST['formUsername'],
+                $_POST['formPassword'],
+                isset($_POST['formCreateDB']),
+                isset($_POST['formSuper']),
+                $_POST['formExpires'],
+                []
+            );
+            if (0 == $status) {
                 $this->doDefault($lang['strusercreated']);
             } else {
                 $this->doCreate($lang['strusercreatedbad']);

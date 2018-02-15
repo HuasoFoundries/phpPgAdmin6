@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -18,7 +22,7 @@ class OperatorsController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -36,6 +40,7 @@ class OperatorsController extends BaseController
                 break;
             case 'create':
                 doCreate();
+
                 break;
             case 'drop':
                 if (isset($_POST['cancel'])) {
@@ -47,12 +52,15 @@ class OperatorsController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'properties':
                 $this->doProperties();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -80,7 +88,8 @@ class OperatorsController extends BaseController
             'text'    => $proto,
             'icon'    => 'Operator',
             'toolTip' => Decorator::field('oprcomment'),
-            'action'  => Decorator::actionurl('operators.php',
+            'action'  => Decorator::actionurl(
+                'operators.php',
                 $reqvars,
                 [
                     'action'       => 'properties',
@@ -95,6 +104,7 @@ class OperatorsController extends BaseController
 
     /**
      * Show default list of operators in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -163,6 +173,7 @@ class OperatorsController extends BaseController
 
     /**
      * Show read only properties for an operator
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {
@@ -195,10 +206,10 @@ class OperatorsController extends BaseController
             echo "<tr><th class=\"data left\">{$lang['strhashes']}</th>\n";
             echo '<td class="data1">', ($oprdata->fields['oprcanhash']) ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
 
-            /* these field only exists in 8.2 and before in pg_catalog */
+            // these field only exists in 8.2 and before in pg_catalog
             if (isset($oprdata->fields['oprlsortop'])) {
                 echo "<tr><th class=\"data left\">{$lang['strmerges']}</th>\n";
-                echo '<td class="data1">', ($oprdata->fields['oprlsortop'] !== '0' && $oprdata->fields['oprrsortop'] !== '0') ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
+                echo '<td class="data1">', ('0' !== $oprdata->fields['oprlsortop'] && '0' !== $oprdata->fields['oprrsortop']) ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
                 echo "<tr><th class=\"data left\">{$lang['strrestrict']}</th>\n";
                 echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrest']), "</td></tr>\n";
                 echo "<tr><th class=\"data left\">{$lang['strleftsort']}</th>\n";
@@ -215,7 +226,8 @@ class OperatorsController extends BaseController
             }
             echo "</table>\n";
 
-            $this->printNavLinks([
+            $this->printNavLinks(
+                [
                 'showall' => [
                     'attr'    => [
                         'href' => [
@@ -228,7 +240,9 @@ class OperatorsController extends BaseController
                         ],
                     ],
                     'content' => $lang['strshowalloperators'],
-                ]], 'operators-properties', get_defined_vars()
+                ]],
+                'operators-properties',
+                get_defined_vars()
             );
         } else {
             $this->doDefault($lang['strinvalidparam']);
@@ -237,6 +251,7 @@ class OperatorsController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -262,7 +277,7 @@ class OperatorsController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropOperator($_POST['operator_oid'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['stroperatordropped']);
             } else {
                 $this->doDefault($lang['stroperatordroppedbad']);

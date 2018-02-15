@@ -51,7 +51,7 @@ $config = PhpCsFixer\Config::create()
         'phpdoc_types_order' => true,
         'semicolon_after_instruction' => true,
         'single_line_comment_style' => true,
-        'strict_comparison' => true,
+        'strict_comparison' => false,
         'strict_param' => true,
         'yoda_style' => true,
     ])

@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -25,6 +29,7 @@ class RolesController extends BaseController
         switch ($action) {
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'save_create':
                 if (isset($_POST['create'])) {
@@ -36,6 +41,7 @@ class RolesController extends BaseController
                 break;
             case 'alter':
                 $this->doAlter();
+
                 break;
             case 'save_alter':
                 if (isset($_POST['alter'])) {
@@ -47,6 +53,7 @@ class RolesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'drop':
                 if (isset($_POST['drop'])) {
@@ -58,9 +65,11 @@ class RolesController extends BaseController
                 break;
             case 'properties':
                 $this->doProperties();
+
                 break;
             case 'confchangepassword':
                 $this->doChangePassword(true);
+
                 break;
             case 'changepassword':
                 if (isset($_REQUEST['ok'])) {
@@ -72,6 +81,7 @@ class RolesController extends BaseController
                 break;
             case 'account':
                 $this->doAccount();
+
                 break;
             default:
                 $this->doDefault();
@@ -82,6 +92,7 @@ class RolesController extends BaseController
 
     /**
      * Show default list of roles in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -91,11 +102,11 @@ class RolesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $renderRoleConnLimit = function ($val) use ($lang) {
-            return $val == '-1' ? $lang['strnolimit'] : htmlspecialchars($val);
+            return '-1' == $val ? $lang['strnolimit'] : htmlspecialchars($val);
         };
 
         $renderRoleExpires = function ($val) use ($lang) {
-            return $val == 'infinity' ? $lang['strnever'] : htmlspecialchars($val);
+            return 'infinity' == $val ? $lang['strnever'] : htmlspecialchars($val);
         };
 
         $this->printTrail('server');
@@ -201,6 +212,7 @@ class RolesController extends BaseController
 
     /**
      * Displays a screen for create a new role
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -281,7 +293,7 @@ class RolesController extends BaseController
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
+                (in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                 $roles->moveNext();
             }
             echo "\t\t\t</select>\n";
@@ -294,7 +306,7 @@ class RolesController extends BaseController
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
+                (in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                 $roles->moveNext();
             }
             echo "\t\t\t</select>\n";
@@ -307,7 +319,7 @@ class RolesController extends BaseController
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
+                (in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                 $roles->moveNext();
             }
             echo "\t\t\t</select>\n";
@@ -345,16 +357,26 @@ class RolesController extends BaseController
         }
 
         // Check data
-        if ($_POST['formRolename'] == '') {
+        if ('' == $_POST['formRolename']) {
             $this->doCreate($lang['strroleneedsname']);
         } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doCreate($lang['strpasswordconfirm']);
         } else {
-            $status = $data->createRole($_POST['formRolename'], $_POST['formPassword'], isset($_POST['formSuper']),
-                isset($_POST['formCreateDB']), isset($_POST['formCreateRole']), isset($_POST['formInherits']),
-                isset($_POST['formCanLogin']), $_POST['formConnLimit'], $_POST['formExpires'], $_POST['memberof'], $_POST['members'],
-                $_POST['adminmembers']);
-            if ($status == 0) {
+            $status = $data->createRole(
+                $_POST['formRolename'],
+                $_POST['formPassword'],
+                isset($_POST['formSuper']),
+                isset($_POST['formCreateDB']),
+                isset($_POST['formCreateRole']),
+                isset($_POST['formInherits']),
+                isset($_POST['formCanLogin']),
+                $_POST['formConnLimit'],
+                $_POST['formExpires'],
+                $_POST['memberof'],
+                $_POST['members'],
+                $_POST['adminmembers']
+            );
+            if (0 == $status) {
                 $this->doDefault($lang['strrolecreated']);
             } else {
                 $this->doCreate($lang['strrolecreatedbad']);
@@ -364,6 +386,7 @@ class RolesController extends BaseController
 
     /**
      * Function to allow alter a role
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
@@ -412,8 +435,8 @@ class RolesController extends BaseController
                     $_POST['formCanLogin'] = '';
                 }
 
-                $_POST['formConnLimit'] = $roledata->fields['rolconnlimit'] == '-1' ? '' : $roledata->fields['rolconnlimit'];
-                $_POST['formExpires']   = $roledata->fields['rolvaliduntil'] == 'infinity' ? '' : $roledata->fields['rolvaliduntil'];
+                $_POST['formConnLimit'] = '-1' == $roledata->fields['rolconnlimit'] ? '' : $roledata->fields['rolconnlimit'];
+                $_POST['formExpires']   = 'infinity' == $roledata->fields['rolvaliduntil'] ? '' : $roledata->fields['rolvaliduntil'];
                 $_POST['formPassword']  = '';
             }
 
@@ -496,7 +519,7 @@ class RolesController extends BaseController
                 while (!$roles->EOF) {
                     $rolename = $roles->fields['rolname'];
                     echo "\t\t\t\t<option value=\"{$rolename}\"",
-                    (in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
+                    (in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                     $roles->moveNext();
                 }
                 echo "\t\t\t</select>\n";
@@ -509,7 +532,7 @@ class RolesController extends BaseController
                 while (!$roles->EOF) {
                     $rolename = $roles->fields['rolname'];
                     echo "\t\t\t\t<option value=\"{$rolename}\"",
-                    (in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
+                    (in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                     $roles->moveNext();
                 }
                 echo "\t\t\t</select>\n";
@@ -522,7 +545,7 @@ class RolesController extends BaseController
                 while (!$roles->EOF) {
                     $rolename = $roles->fields['rolname'];
                     echo "\t\t\t\t<option value=\"{$rolename}\"",
-                    (in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
+                    (in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                     $roles->moveNext();
                 }
                 echo "\t\t\t</select>\n";
@@ -567,7 +590,7 @@ class RolesController extends BaseController
         }
 
         // Check name and password
-        if (isset($_POST['formNewRoleName']) && $_POST['formNewRoleName'] == '') {
+        if (isset($_POST['formNewRoleName']) && '' == $_POST['formNewRoleName']) {
             $this->doAlter($lang['strroleneedsname']);
         } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
             $this->doAlter($lang['strpasswordconfirm']);
@@ -578,7 +601,7 @@ class RolesController extends BaseController
                 $status = $data->setRole($_POST['rolename'], $_POST['formPassword'], isset($_POST['formSuper']), isset($_POST['formCreateDB']), isset($_POST['formCreateRole']), isset($_POST['formInherits']), isset($_POST['formCanLogin']), $_POST['formConnLimit'], $_POST['formExpires'], $_POST['memberof'], $_POST['members'], $_POST['adminmembers'], $_POST['memberofold'], $_POST['membersold'], $_POST['adminmembersold']);
             }
 
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strrolealtered']);
             } else {
                 $this->doAlter($lang['strrolealteredbad']);
@@ -588,6 +611,7 @@ class RolesController extends BaseController
 
     /**
      * Show confirmation of drop a role and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -611,7 +635,7 @@ class RolesController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropRole($_REQUEST['rolename']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strroledropped']);
             } else {
                 $this->doDefault($lang['strroledroppedbad']);
@@ -621,6 +645,7 @@ class RolesController extends BaseController
 
     /**
      * Show the properties of a role
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {
@@ -657,9 +682,9 @@ class RolesController extends BaseController
             echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strcanlogin']}</td>\n";
             echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcanlogin']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
             echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strconnlimit']}</td>\n";
-            echo "\t\t<td class=\"data1\">", ($roledata->fields['rolconnlimit'] == '-1' ? $lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
+            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
             echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strexpires']}</td>\n";
-            echo "\t\t<td class=\"data2\">", ($roledata->fields['rolvaliduntil'] == 'infinity' || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
+            echo "\t\t<td class=\"data2\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
             echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strsessiondefaults']}</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), "</td>\n";
             echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strmemberof']}</td>\n";
@@ -745,6 +770,7 @@ class RolesController extends BaseController
      * page for change his password, etc.  We don't prevent them from
      * messing with the URL to gain access to other role admin stuff, because
      * the PostgreSQL permissions will prevent them changing anything anyway.
+     * @param mixed $msg
      */
     public function doAccount($msg = '')
     {
@@ -782,8 +808,8 @@ class RolesController extends BaseController
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreatedb'], 'yesno'), "</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreaterole'], 'yesno'), "</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolinherit'], 'yesno'), "</td>\n";
-            echo "\t\t<td class=\"data1\">", ($roledata->fields['rolconnlimit'] == '-1' ? $lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
-            echo "\t\t<td class=\"data1\">", ($roledata->fields['rolvaliduntil'] == 'infinity' || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
+            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
+            echo "\t\t<td class=\"data1\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), "</td>\n";
             echo "\t</tr>\n</table>\n";
         } else {
@@ -806,6 +832,8 @@ class RolesController extends BaseController
 
     /**
      * Show confirmation of change password and actually change password
+     * @param mixed $confirm
+     * @param mixed $msg
      */
     public function doChangePassword($confirm, $msg = '')
     {
@@ -854,7 +882,7 @@ class RolesController extends BaseController
                 $this->doChangePassword(true, $lang['strpasswordconfirm']);
             } else {
                 $status = $data->changePassword($server_info['username'], $_POST['password']);
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->doAccount($lang['strpasswordchanged']);
                 } else {
                     $this->doAccount($lang['strpasswordchangedbad']);

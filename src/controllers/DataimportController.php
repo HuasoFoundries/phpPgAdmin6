@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -37,7 +41,7 @@ class DataimportController extends BaseController
          * @param $cdata
          */
         $_charHandler = function ($parser, $cdata) use (&$state, &$curr_col_val) {
-            if ($state == 'COLUMN') {
+            if ('COLUMN' == $state) {
                 $curr_col_val .= $cdata;
             }
         };
@@ -52,51 +56,56 @@ class DataimportController extends BaseController
         $_startElement = function ($parser, $name, $attrs) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null) {
             switch ($name) {
                 case 'DATA':
-                    if ($state != 'XML') {
+                    if ('XML' != $state) {
                         $data->rollbackTransaction();
                         $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $state = 'DATA';
+
                     break;
                 case 'HEADER':
-                    if ($state != 'DATA') {
+                    if ('DATA' != $state) {
                         $data->rollbackTransaction();
                         $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $state = 'HEADER';
+
                     break;
                 case 'RECORDS':
-                    if ($state != 'READ_HEADER') {
+                    if ('READ_HEADER' != $state) {
                         $data->rollbackTransaction();
                         $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $state = 'RECORDS';
+
                     break;
                 case 'ROW':
-                    if ($state != 'RECORDS') {
+                    if ('RECORDS' != $state) {
                         $data->rollbackTransaction();
                         $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $state    = 'ROW';
                     $curr_row = [];
+
                     break;
                 case 'COLUMN':
                     // We handle columns in rows
-                    if ($state == 'ROW') {
+                    if ('ROW' == $state) {
                         $state         = 'COLUMN';
                         $curr_col_name = $attrs['NAME'];
                         $curr_col_null = isset($attrs['NULL']);
                     }
                     // And we ignore columns in headers and fail in any other context
-                    elseif ($state != 'HEADER') {
+                    elseif ('HEADER' != $state) {
                         $data->rollbackTransaction();
                         $this->printMsg($lang['strimporterror']);
                         exit;
                     }
+
                     break;
                 default:
                     // An unrecognised tag means failure
@@ -116,12 +125,15 @@ class DataimportController extends BaseController
             switch ($name) {
                 case 'DATA':
                     $state = 'READ_DATA';
+
                     break;
                 case 'HEADER':
                     $state = 'READ_HEADER';
+
                     break;
                 case 'RECORDS':
                     $state = 'READ_RECORDS';
+
                     break;
                 case 'ROW':
                     // Build value map in order to insert row into table
@@ -134,7 +146,7 @@ class DataimportController extends BaseController
                     foreach ($curr_row as $k => $v) {
                         $fields[$i] = $k;
                         // Check for nulls
-                        if ($v === null) {
+                        if (null === $v) {
                             $nulls[$i] = 'on';
                         }
 
@@ -147,13 +159,14 @@ class DataimportController extends BaseController
                         $i++;
                     }
                     $status = $data->insertRow($_REQUEST['table'], $fields, $vars, $nulls, $format, $types);
-                    if ($status != 0) {
+                    if (0 != $status) {
                         $data->rollbackTransaction();
                         $this->printMsg($lang['strimporterror']);
                         exit;
                     }
                     $curr_row = [];
                     $state    = 'RECORDS';
+
                     break;
                 case 'COLUMN':
                     $curr_row[$curr_col_name] = ($curr_col_null ? null : $curr_col_val);
@@ -161,6 +174,7 @@ class DataimportController extends BaseController
                     $curr_col_val             = null;
                     $curr_col_null            = false;
                     $state                    = 'ROW';
+
                     break;
                 default:
                     // An unrecognised tag means failure
@@ -174,26 +188,29 @@ class DataimportController extends BaseController
         if (isset($_FILES['source']) && is_uploaded_file($_FILES['source']['tmp_name']) && is_readable($_FILES['source']['tmp_name'])) {
             $fd = fopen($_FILES['source']['tmp_name'], 'rb');
             // Check that file was opened successfully
-            if ($fd !== false) {
+            if (false !== $fd) {
                 $null_array = self::loadNULLArray();
                 $status     = $data->beginTransaction();
-                if ($status != 0) {
+                if (0 != $status) {
                     $this->printMsg($lang['strimporterror']);
                     exit;
                 }
 
                 // If format is set to 'auto', then determine format automatically from file name
-                if ($_REQUEST['format'] == 'auto') {
+                if ('auto' == $_REQUEST['format']) {
                     $extension = substr(strrchr($_FILES['source']['name'], '.'), 1);
                     switch ($extension) {
                         case 'csv':
                             $_REQUEST['format'] = 'csv';
+
                             break;
                         case 'txt':
                             $_REQUEST['format'] = 'tab';
+
                             break;
                         case 'xml':
                             $_REQUEST['format'] = 'xml';
+
                             break;
                         default:
                             $data->rollbackTransaction();
@@ -209,7 +226,7 @@ class DataimportController extends BaseController
                         // XXX: Length of CSV lines limited to 100k
                         $csv_max_line = 100000;
                         // Set delimiter to tabs or commas
-                        if ($_REQUEST['format'] == 'csv') {
+                        if ('csv' == $_REQUEST['format']) {
                             $csv_delimiter = ',';
                         } else {
                             $csv_delimiter = "\t";
@@ -248,13 +265,14 @@ class DataimportController extends BaseController
                             }
 
                             $status = $data->insertRow($_REQUEST['table'], $t_fields, $vars, $nulls, $format, $types);
-                            if ($status != 0) {
+                            if (0 != $status) {
                                 $data->rollbackTransaction();
                                 $this->printMsg(sprintf($lang['strimporterrorline'], $row));
                                 exit;
                             }
                             $row++;
                         }
+
                         break;
                     case 'xml':
                         $parser = xml_parser_create();
@@ -267,6 +285,7 @@ class DataimportController extends BaseController
                         }
 
                         xml_parser_free($parser);
+
                         break;
                     default:
                         // Unknown type
@@ -276,7 +295,7 @@ class DataimportController extends BaseController
                 }
 
                 $status = $data->endTransaction();
-                if ($status != 0) {
+                if (0 != $status) {
                     $this->printMsg($lang['strimporterror']);
                     exit;
                 }
@@ -309,6 +328,6 @@ class DataimportController extends BaseController
 
     public static function determineNull($field, $null_array)
     {
-        return in_array($field, $null_array);
+        return in_array($field, $null_array, true);
     }
 }

@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -18,7 +22,7 @@ class MaterializedviewpropertiesController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -36,12 +40,15 @@ class MaterializedviewpropertiesController extends BaseController
                 break;
             case 'edit':
                 $this->doEdit();
+
                 break;
             case 'export':
                 $this->doExport();
+
                 break;
             case 'definition':
                 $this->doDefinition();
+
                 break;
             case 'properties':
                 if (isset($_POST['cancel'])) {
@@ -61,6 +68,7 @@ class MaterializedviewpropertiesController extends BaseController
                 break;
             case 'confirm_alter':
                 doAlter(true);
+
                 break;
             case 'drop':
                 if (isset($_POST['drop'])) {
@@ -72,9 +80,11 @@ class MaterializedviewpropertiesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -83,6 +93,7 @@ class MaterializedviewpropertiesController extends BaseController
 
     /**
      * Show view definition and virtual columns
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -105,7 +116,7 @@ class MaterializedviewpropertiesController extends BaseController
         $attrs = $data->getTableAttributes($_REQUEST['matview']);
 
         // Show comment if any
-        if ($vdata->fields['relcomment'] !== null) {
+        if (null !== $vdata->fields['relcomment']) {
             echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), "</p>\n";
         }
 
@@ -232,7 +243,8 @@ class MaterializedviewpropertiesController extends BaseController
 
         $attrs = [
             'text'       => Decorator::field('attname'),
-            'action'     => Decorator::actionurl('colproperties.php',
+            'action'     => Decorator::actionurl(
+                'colproperties.php',
                 $reqvars,
                 [
                     'view'   => $_REQUEST['matview'],
@@ -240,7 +252,8 @@ class MaterializedviewpropertiesController extends BaseController
                 ]
             ),
             'icon'       => 'Column',
-            'iconAction' => Decorator::url('display.php',
+            'iconAction' => Decorator::url(
+                'display.php',
                 $reqvars,
                 [
                     'view'   => $_REQUEST['matview'],
@@ -271,7 +284,7 @@ class MaterializedviewpropertiesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->setView($_POST['view'], $_POST['formDefinition'], $_POST['formComment']);
-        if ($status == 0) {
+        if (0 == $status) {
             $this->doDefinition($lang['strviewupdated']);
         } else {
             $this->doEdit($lang['strviewupdatedbad']);
@@ -280,6 +293,7 @@ class MaterializedviewpropertiesController extends BaseController
 
     /**
      * Function to allow editing of a view
+     * @param mixed $msg
      */
     public function doEdit($msg = '')
     {
@@ -326,6 +340,7 @@ class MaterializedviewpropertiesController extends BaseController
      *        so I have disabled the data related parts for now. In the future
      *        we should allow it conditionally if it becomes supported.  This is
      *        a SMOP since it is based on pg_dump version not backend version.
+     * @param mixed $msg
      */
     public function doExport($msg = '')
     {
@@ -386,6 +401,7 @@ class MaterializedviewpropertiesController extends BaseController
 
     /**
      * Show definition for a view
+     * @param mixed $msg
      */
     public function doDefinition($msg = '')
     {
@@ -403,7 +419,7 @@ class MaterializedviewpropertiesController extends BaseController
 
         if ($vdata->recordCount() > 0) {
             // Show comment if any
-            if ($vdata->fields['relcomment'] !== null) {
+            if (null !== $vdata->fields['relcomment']) {
                 echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), "</p>\n";
             }
 
@@ -434,6 +450,7 @@ class MaterializedviewpropertiesController extends BaseController
 
     /**
      * Displays a screen where they can alter a column in a view
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {
@@ -492,23 +509,37 @@ class MaterializedviewpropertiesController extends BaseController
             case 2:
 
                 // Check inputs
-                if (trim($_REQUEST['field']) == '') {
+                if ('' == trim($_REQUEST['field'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doProperties($lang['strcolneedsname']);
+
                     return;
                 }
 
                 // Alter the view column
-                list($status, $sql) = $data->alterColumn($_REQUEST['matview'], $_REQUEST['column'], $_REQUEST['field'],
-                    false, false, $_REQUEST['default'], $_REQUEST['olddefault'],
-                    '', '', '', '', $_REQUEST['comment']);
-                if ($status == 0) {
+                list($status, $sql) = $data->alterColumn(
+                    $_REQUEST['matview'],
+                    $_REQUEST['column'],
+                    $_REQUEST['field'],
+                    false,
+                    false,
+                    $_REQUEST['default'],
+                    $_REQUEST['olddefault'],
+                    '',
+                    '',
+                    '',
+                    '',
+                    $_REQUEST['comment']
+                );
+                if (0 == $status) {
                     $this->doDefault($lang['strcolumnaltered']);
                 } else {
                     $_REQUEST['stage'] = 1;
                     $this->doProperties($lang['strcolumnalteredbad']);
+
                     return;
                 }
+
                 break;
             default:
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
@@ -555,7 +586,6 @@ class MaterializedviewpropertiesController extends BaseController
                 htmlspecialchars($_POST['name']), "\" /></td></tr>\n";
 
                 if ($data->isSuperUser()) {
-
                     // Fetch all users
                     $users = $data->getUsers();
 
@@ -598,7 +628,6 @@ class MaterializedviewpropertiesController extends BaseController
                 echo "<p>{$lang['strnodata']}</p>\n";
             }
         } else {
-
             // For databases that don't allow owner change
             if (!isset($_POST['owner'])) {
                 $_POST['owner'] = '';
@@ -609,7 +638,7 @@ class MaterializedviewpropertiesController extends BaseController
             }
 
             $status = $data->alterView($_POST['view'], $_POST['name'], $_POST['owner'], $_POST['newschema'], $_POST['comment']);
-            if ($status == 0) {
+            if (0 == $status) {
                 // If view has been renamed, need to change to the new name and
                 // reload the browser frame.
                 if ($_POST['view'] != $_POST['name']) {

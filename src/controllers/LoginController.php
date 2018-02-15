@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -7,12 +11,12 @@ namespace PHPPgAdmin\Controller;
  */
 class LoginController extends BaseController
 {
-    protected $container     = null;
-    protected $_connection   = null;
-    protected $app           = null;
-    protected $data          = null;
-    protected $database      = null;
-    protected $server_id     = null;
+    protected $container;
+    protected $_connection;
+    protected $app;
+    protected $data;
+    protected $database;
+    protected $server_id;
     public $appLangFiles     = [];
     public $appThemes        = [];
     public $appName          = '';
@@ -24,15 +28,16 @@ class LoginController extends BaseController
     public $controller_name  = 'LoginController';
     public $controller_title = 'strlogin';
 
-    /* Constructor */
+    // Constructor
 
     public function render()
     {
-        if ($this->container->requestobj->getAttribute('route') === null) {
+        if (null === $this->container->requestobj->getAttribute('route')) {
             echo $this->doLoginForm();
         } else {
             $body = $this->container->responseobj->getBody();
             $body->write($this->doLoginForm());
+
             return $this->container->responseobj;
         }
     }
@@ -47,8 +52,9 @@ class LoginController extends BaseController
 
         $server_id = $this->container->requestobj->getQueryParam('server');
 
-        if ($server_id === null) {
+        if (null === $server_id) {
             $this->prtrace('invalid server param');
+
             return $this->lang['strinvalidserverparam'];
         }
 
@@ -62,7 +68,7 @@ class LoginController extends BaseController
             $vars = &$_GET;
         }
         foreach ($_REQUEST as $key => $val) {
-            if (strpos($key, '?') !== false) {
+            if (false !== strpos($key, '?')) {
                 $namexploded               = explode('?', $key);
                 $_REQUEST[$namexploded[1]] = htmlspecialchars($val);
             }
@@ -84,10 +90,10 @@ class LoginController extends BaseController
         $md5_server = md5($server_id);
         // Pass request vars through form (is this a security risk???)
         foreach ($vars as $key => $val) {
-            if (substr($key, 0, 5) == 'login') {
+            if ('login' == substr($key, 0, 5)) {
                 continue;
             }
-            if (strpos($key, '?') !== false) {
+            if (false !== strpos($key, '?')) {
                 $key = explode('?', $key)[1];
             }
 

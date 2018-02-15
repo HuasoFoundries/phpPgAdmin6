@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -32,7 +36,6 @@ class BrowserController extends BaseController
             'T'              => $this->misc->icon('T'),
             'Tminus'         => $this->misc->icon('Tminus'),
             'Tplus'          => $this->misc->icon('Tplus'),
-
         ]];
 
         echo $this->view->fetch('browser.twig', $viewVars);

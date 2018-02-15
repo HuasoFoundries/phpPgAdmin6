@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -18,7 +22,7 @@ class SequencesController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -29,6 +33,7 @@ class SequencesController extends BaseController
         switch ($action) {
             case 'create':
                 $this->doCreateSequence();
+
                 break;
             case 'save_create_sequence':
                 if (isset($_POST['create'])) {
@@ -40,6 +45,7 @@ class SequencesController extends BaseController
                 break;
             case 'properties':
                 $this->doProperties();
+
                 break;
             case 'drop':
                 if (isset($_POST['drop'])) {
@@ -51,15 +57,19 @@ class SequencesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'restart':
                 $this->doRestart();
+
                 break;
             case 'reset':
                 $this->doReset();
+
                 break;
             case 'nextval':
                 $this->doNextval();
+
                 break;
             case 'setval':
                 if (isset($_POST['setval'])) {
@@ -71,6 +81,7 @@ class SequencesController extends BaseController
                 break;
             case 'confirm_setval':
                 $this->doSetval();
+
                 break;
             case 'alter':
                 if (isset($_POST['alter'])) {
@@ -82,9 +93,11 @@ class SequencesController extends BaseController
                 break;
             case 'confirm_alter':
                 $this->doAlter();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -94,6 +107,7 @@ class SequencesController extends BaseController
 
     /**
      * Display list of all sequences in the database/schema
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -210,7 +224,8 @@ class SequencesController extends BaseController
             'text'    => Decorator::field('seqname'),
             'icon'    => 'Sequence',
             'toolTip' => Decorator::field('seqcomment'),
-            'action'  => Decorator::actionurl('sequences.php',
+            'action'  => Decorator::actionurl(
+                'sequences.php',
                 $reqvars,
                 [
                     'action'   => 'properties',
@@ -224,6 +239,7 @@ class SequencesController extends BaseController
 
     /**
      * Display the properties of a sequence
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {
@@ -243,7 +259,7 @@ class SequencesController extends BaseController
             $sequence->fields['is_called'] = $data->phpBool($sequence->fields['is_called']);
 
             // Show comment if any
-            if ($sequence->fields['seqcomment'] !== null) {
+            if (null !== $sequence->fields['seqcomment']) {
                 echo '<p class="comment">', $this->misc->printVal($sequence->fields['seqcomment']), "</p>\n";
             }
 
@@ -379,6 +395,8 @@ class SequencesController extends BaseController
 
     /**
      * Drop a sequence
+     * @param mixed $confirm
+     * @param mixed $msg
      */
     public function doDrop($confirm, $msg = '')
     {
@@ -420,19 +438,20 @@ class SequencesController extends BaseController
             if (is_array($_POST['sequence'])) {
                 $msg    = '';
                 $status = $data->beginTransaction();
-                if ($status == 0) {
+                if (0 == $status) {
                     foreach ($_POST['sequence'] as $s) {
                         $status = $data->dropSequence($s, isset($_POST['cascade']));
-                        if ($status == 0) {
+                        if (0 == $status) {
                             $msg .= sprintf('%s: %s<br />', htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strsequencedropped']);
                         } else {
                             $data->endTransaction();
                             $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strsequencedroppedbad']));
+
                             return;
                         }
                     }
                 }
-                if ($data->endTransaction() == 0) {
+                if (0 == $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($msg);
@@ -441,7 +460,7 @@ class SequencesController extends BaseController
                 }
             } else {
                 $status = $data->dropSequence($_POST['sequence'], isset($_POST['cascade']));
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($lang['strsequencedropped']);
                 } else {
@@ -453,6 +472,7 @@ class SequencesController extends BaseController
 
     /**
      * Displays a screen where they can enter a new sequence
+     * @param mixed $msg
      */
     public function doCreateSequence($msg = '')
     {
@@ -539,14 +559,19 @@ class SequencesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name and at least one column
-        if ($_POST['formSequenceName'] == '') {
+        if ('' == $_POST['formSequenceName']) {
             $this->doCreateSequence($lang['strsequenceneedsname']);
         } else {
-            $status = $data->createSequence($_POST['formSequenceName'],
-                $_POST['formIncrement'], $_POST['formMinValue'],
-                $_POST['formMaxValue'], $_POST['formStartValue'],
-                $_POST['formCacheValue'], isset($_POST['formCycledValue']));
-            if ($status == 0) {
+            $status = $data->createSequence(
+                $_POST['formSequenceName'],
+                $_POST['formIncrement'],
+                $_POST['formMinValue'],
+                $_POST['formMaxValue'],
+                $_POST['formStartValue'],
+                $_POST['formCacheValue'],
+                isset($_POST['formCycledValue'])
+            );
+            if (0 == $status) {
                 $this->doDefault($lang['strsequencecreated']);
             } else {
                 $this->doCreateSequence($lang['strsequencecreatedbad']);
@@ -565,7 +590,7 @@ class SequencesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->restartSequence($_REQUEST['sequence']);
-        if ($status == 0) {
+        if (0 == $status) {
             $this->doProperties($lang['strsequencerestart']);
         } else {
             $this->doProperties($lang['strsequencerestartbad']);
@@ -583,7 +608,7 @@ class SequencesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->resetSequence($_REQUEST['sequence']);
-        if ($status == 0) {
+        if (0 == $status) {
             $this->doProperties($lang['strsequencereset']);
         } else {
             $this->doProperties($lang['strsequenceresetbad']);
@@ -601,7 +626,7 @@ class SequencesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->nextvalSequence($_REQUEST['sequence']);
-        if ($status == 0) {
+        if (0 == $status) {
             $this->doProperties($lang['strsequencenextval']);
         } else {
             $this->doProperties($lang['strsequencenextvalbad']);
@@ -619,7 +644,7 @@ class SequencesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->setvalSequence($_POST['sequence'], $_POST['nextvalue']);
-        if ($status == 0) {
+        if (0 == $status) {
             $this->doProperties($lang['strsequencesetval']);
         } else {
             $this->doProperties($lang['strsequencesetvalbad']);
@@ -628,6 +653,7 @@ class SequencesController extends BaseController
 
     /**
      * Function to allow 'setval'ing of a sequence
+     * @param mixed $msg
      */
     public function doSetval($msg = '')
     {
@@ -708,11 +734,22 @@ class SequencesController extends BaseController
             $_POST['formCycledValue'] = null;
         }
 
-        $status = $data->alterSequence($_POST['sequence'], $_POST['name'], $_POST['comment'], $_POST['owner'],
-            $_POST['newschema'], $_POST['formIncrement'], $_POST['formMinValue'], $_POST['formMaxValue'],
-            $_POST['formRestartValue'], $_POST['formCacheValue'], isset($_POST['formCycledValue']), $_POST['formStartValue']);
+        $status = $data->alterSequence(
+            $_POST['sequence'],
+            $_POST['name'],
+            $_POST['comment'],
+            $_POST['owner'],
+            $_POST['newschema'],
+            $_POST['formIncrement'],
+            $_POST['formMinValue'],
+            $_POST['formMaxValue'],
+            $_POST['formRestartValue'],
+            $_POST['formCacheValue'],
+            isset($_POST['formCycledValue']),
+            $_POST['formStartValue']
+        );
 
-        if ($status == 0) {
+        if (0 == $status) {
             if ($_POST['sequence'] != $_POST['name']) {
                 // Jump them to the new view name
                 $_REQUEST['sequence'] = $_POST['name'];
@@ -732,6 +769,7 @@ class SequencesController extends BaseController
 
     /**
      * Function to allow altering of a sequence
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {

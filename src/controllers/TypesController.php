@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -18,7 +22,7 @@ class TypesController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -52,6 +56,7 @@ class TypesController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_POST['cancel'])) {
@@ -63,12 +68,15 @@ class TypesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'properties':
                 $this->doProperties();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -77,6 +85,7 @@ class TypesController extends BaseController
 
     /**
      * Show default list of types in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -217,7 +226,8 @@ class TypesController extends BaseController
             'text'    => Decorator::field('typname'),
             'icon'    => 'Type',
             'toolTip' => Decorator::field('typcomment'),
-            'action'  => Decorator::actionurl('types.php',
+            'action'  => Decorator::actionurl(
+                'types.php',
                 $reqvars,
                 [
                     'action' => 'properties',
@@ -231,6 +241,7 @@ class TypesController extends BaseController
 
     /**
      * Show read only properties for a type
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {
@@ -277,6 +288,7 @@ class TypesController extends BaseController
                     break;
                 case 'e':
                     $vals = $data->getEnumValues($typedata->fields['typname']);
+                    // no break
                 default:
                     $byval = $data->phpBool($typedata->fields['typbyval']);
                     echo "<table>\n";
@@ -295,7 +307,7 @@ class TypesController extends BaseController
                     if ($data->hasEnumTypes() && $vals) {
                         $vals   = $vals->getArray();
                         $nbVals = count($vals);
-                        echo "<tr>\n\t<th class=\"data left\" rowspan=\"$nbVals\">{$lang['strenumvalues']}</th>\n";
+                        echo "<tr>\n\t<th class=\"data left\" rowspan=\"${nbVals}\">{$lang['strenumvalues']}</th>\n";
                         echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>\n";
                         for ($i = 1; $i < $nbVals; $i++) {
                             echo '<td class="data', 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>\n";
@@ -324,6 +336,7 @@ class TypesController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -348,7 +361,7 @@ class TypesController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropType($_POST['type'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strtypedropped']);
             } else {
                 $this->doDefault($lang['strtypedroppedbad']);
@@ -358,6 +371,7 @@ class TypesController extends BaseController
 
     /**
      * Displays a screen where they can enter a new composite type
+     * @param mixed $msg
      */
     public function doCreateComposite($msg = '')
     {
@@ -408,18 +422,22 @@ class TypesController extends BaseController
                 echo "<input type=\"submit\" value=\"{$lang['strnext']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
+
                 break;
             case 2:
 
                 // Check inputs
                 $fields = trim($_REQUEST['fields']);
-                if (trim($_REQUEST['name']) == '') {
+                if ('' == trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedsname']);
+
                     return;
-                } elseif ($fields == '' || !is_numeric($fields) || $fields != (int) $fields || $fields < 1) {
+                }
+                if ('' == $fields || !is_numeric($fields) || $fields != (int) $fields || $fields < 1) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedscols']);
+
                     return;
                 }
 
@@ -457,7 +475,7 @@ class TypesController extends BaseController
                     while (!$types->EOF) {
                         $typname = $types->fields['typname'];
                         echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), '"',
-                        (isset($_REQUEST['type'][$i]) && $typname == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', '>',
+                        (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] == $typname) ? ' selected="selected"' : '', '>',
                         $this->misc->printVal($typname), "</option>\n";
                         $types->moveNext();
                     }
@@ -490,31 +508,44 @@ class TypesController extends BaseController
 
                 // Check inputs
                 $fields = trim($_REQUEST['fields']);
-                if (trim($_REQUEST['name']) == '') {
+                if ('' == trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedsname']);
+
                     return;
-                } elseif ($fields == '' || !is_numeric($fields) || $fields != (int) $fields || $fields <= 0) {
+                }
+                if ('' == $fields || !is_numeric($fields) || $fields != (int) $fields || $fields <= 0) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateComposite($lang['strtypeneedscols']);
+
                     return;
                 }
 
-                $status = $data->createCompositeType($_REQUEST['name'], $_REQUEST['fields'], $_REQUEST['field'],
-                    $_REQUEST['type'], $_REQUEST['array'], $_REQUEST['length'], $_REQUEST['colcomment'],
-                    $_REQUEST['typcomment']);
+                $status = $data->createCompositeType(
+                    $_REQUEST['name'],
+                    $_REQUEST['fields'],
+                    $_REQUEST['field'],
+                    $_REQUEST['type'],
+                    $_REQUEST['array'],
+                    $_REQUEST['length'],
+                    $_REQUEST['colcomment'],
+                    $_REQUEST['typcomment']
+                );
 
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->doDefault($lang['strtypecreated']);
                 } elseif ($status == -1) {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateComposite($lang['strtypeneedsfield']);
+
                     return;
                 } else {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateComposite($lang['strtypecreatedbad']);
+
                     return;
                 }
+
                 break;
             default:
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
@@ -523,6 +554,7 @@ class TypesController extends BaseController
 
     /**
      * Displays a screen where they can enter a new enum type
+     * @param mixed $msg
      */
     public function doCreateEnum($msg = '')
     {
@@ -573,18 +605,22 @@ class TypesController extends BaseController
                 echo "<input type=\"submit\" value=\"{$lang['strnext']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
+
                 break;
             case 2:
 
                 // Check inputs
                 $values = trim($_REQUEST['values']);
-                if (trim($_REQUEST['name']) == '') {
+                if ('' == trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsname']);
+
                     return;
-                } elseif ($values == '' || !is_numeric($values) || $values != (int) $values || $values < 1) {
+                }
+                if ('' == $values || !is_numeric($values) || $values != (int) $values || $values < 1) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsvals']);
+
                     return;
                 }
 
@@ -623,29 +659,35 @@ class TypesController extends BaseController
 
                 // Check inputs
                 $values = trim($_REQUEST['values']);
-                if (trim($_REQUEST['name']) == '') {
+                if ('' == trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsname']);
+
                     return;
-                } elseif ($values == '' || !is_numeric($values) || $values != (int) $values || $values <= 0) {
+                }
+                if ('' == $values || !is_numeric($values) || $values != (int) $values || $values <= 0) {
                     $_REQUEST['stage'] = 1;
                     $this->doCreateEnum($lang['strtypeneedsvals']);
+
                     return;
                 }
 
                 $status = $data->createEnumType($_REQUEST['name'], $_REQUEST['value'], $_REQUEST['typcomment']);
 
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->doDefault($lang['strtypecreated']);
                 } elseif ($status == -1) {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateEnum($lang['strtypeneedsvalue']);
+
                     return;
                 } else {
                     $_REQUEST['stage'] = 2;
                     $this->doCreateEnum($lang['strtypecreatedbad']);
+
                     return;
                 }
+
                 break;
             default:
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
@@ -654,6 +696,7 @@ class TypesController extends BaseController
 
     /**
      * Displays a screen where they can enter a new type
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -787,9 +830,9 @@ class TypesController extends BaseController
         // Check that they've given a name and a length.
         // Note: We're assuming they've given in and out functions here
         // which might be unwise...
-        if ($_POST['typname'] == '') {
+        if ('' == $_POST['typname']) {
             $this->doCreate($lang['strtypeneedsname']);
-        } elseif ($_POST['typlen'] == '') {
+        } elseif ('' == $_POST['typlen']) {
             $this->doCreate($lang['strtypeneedslen']);
         } else {
             $status = $data->createType(
@@ -804,7 +847,7 @@ class TypesController extends BaseController
                 $_POST['typalign'],
                 $_POST['typstorage']
             );
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strtypecreated']);
             } else {
                 $this->doCreate($lang['strtypecreatedbad']);

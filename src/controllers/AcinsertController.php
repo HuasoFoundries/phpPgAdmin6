@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -51,7 +55,7 @@ class AcinsertController extends BaseController
             foreach (array_keys($res->fields) as $h) {
                 echo '<th>';
 
-                if (in_array($h, $fkeynames)) {
+                if (in_array($h, $fkeynames, true)) {
                     echo '<img src="' . $this->misc->icon('ForeignKey') . '" alt="[referenced key]" />';
                 }
 
@@ -64,7 +68,7 @@ class AcinsertController extends BaseController
                 echo '<tr class="acline">';
                 foreach ($res->fields as $n => $v) {
                     $finfo = $res->fetchField($j++);
-                    if (in_array($n, $fkeynames)) {
+                    if (in_array($n, $fkeynames, true)) {
                         echo "<td><a href=\"javascript:void(0)\" class=\"fkval\" name=\"{$keyspos[$n]}\">",
                         $this->misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
                             '</a></td>';
@@ -91,7 +95,7 @@ class AcinsertController extends BaseController
                 $js .= "fkl_hasprev=false;\n";
             }
 
-            if ($res->recordCount() == 12) {
+            if (12 == $res->recordCount()) {
                 $js .= "fkl_hasnext=true;\n";
                 echo '&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="fknext">Next &gt;&gt;</a>';
             } else {

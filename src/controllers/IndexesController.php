@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -18,13 +22,13 @@ class IndexesController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
         $this->printHeader($lang['strindexes'], '<script src="' . SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>');
 
-        if ($action == 'create_index' || $action == 'save_create_index') {
+        if ('create_index' == $action || 'save_create_index' == $action) {
             echo '<body onload="init();">';
         } else {
             $this->printBody();
@@ -41,9 +45,11 @@ class IndexesController extends BaseController
                 break;
             case 'confirm_cluster_index':
                 $this->doClusterIndex(true);
+
                 break;
             case 'reindex':
                 $this->doReindex();
+
                 break;
             case 'save_create_index':
                 if (isset($_POST['cancel'])) {
@@ -55,6 +61,7 @@ class IndexesController extends BaseController
                 break;
             case 'create_index':
                 $this->doCreateIndex();
+
                 break;
             case 'drop_index':
                 if (isset($_POST['drop'])) {
@@ -66,9 +73,11 @@ class IndexesController extends BaseController
                 break;
             case 'confirm_drop_index':
                 $this->doDropIndex(true);
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -219,11 +228,11 @@ class IndexesController extends BaseController
         $reqvars = $this->misc->getRequestVars($subject);
 
         $getIcon = function ($f) {
-            if ($f['indisprimary'] == 't') {
+            if ('t' == $f['indisprimary']) {
                 return 'PrimaryKey';
             }
 
-            if ($f['indisunique'] == 't') {
+            if ('t' == $f['indisunique']) {
                 return 'UniqueConstraint';
             }
 
@@ -240,6 +249,7 @@ class IndexesController extends BaseController
 
     /**
      * Show confirmation of cluster index and perform actual cluster
+     * @param mixed $confirm
      */
     public function doClusterIndex($confirm)
     {
@@ -269,10 +279,10 @@ class IndexesController extends BaseController
             echo '</form>' . "\n";
         } else {
             $status = $data->clusterIndex($_POST['table'], $_POST['index']);
-            if ($status == 0) {
+            if (0 == $status) {
                 if (isset($_POST['analyze'])) {
                     $status = $data->analyzeDB($_POST['table']);
-                    if ($status == 0) {
+                    if (0 == $status) {
                         $this->doDefault($lang['strclusteredgood'] . ' ' . $lang['stranalyzegood']);
                     } else {
                         $this->doDefault($lang['stranalyzebad']);
@@ -293,7 +303,7 @@ class IndexesController extends BaseController
         $lang   = $this->lang;
         $data   = $this->misc->getDatabaseAccessor();
         $status = $data->reindex('INDEX', $_REQUEST['index']);
-        if ($status == 0) {
+        if (0 == $status) {
             $this->doDefault($lang['strreindexgood']);
         } else {
             $this->doDefault($lang['strreindexbad']);
@@ -302,6 +312,7 @@ class IndexesController extends BaseController
 
     /**
      * Displays a screen where they can enter a new index
+     * @param mixed $msg
      */
     public function doCreateIndex($msg = '')
     {
@@ -407,7 +418,7 @@ class IndexesController extends BaseController
             echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formSpc\">" . "\n";
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
-            ($_POST['formSpc'] == '') ? ' selected="selected"' : '', '></option>' . "\n";
+            ('' == $_POST['formSpc']) ? ' selected="selected"' : '', '></option>' . "\n";
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
                 $spcname = htmlspecialchars($tablespaces->fields['spcname']);
@@ -464,15 +475,22 @@ class IndexesController extends BaseController
         }
 
         // Check that they've given a name and at least one column
-        if ($_POST['formIndexName'] == '') {
+        if ('' == $_POST['formIndexName']) {
             $this->doCreateIndex($lang['strindexneedsname']);
-        } elseif (!isset($_POST['IndexColumnList']) || $_POST['IndexColumnList'] == '') {
+        } elseif (!isset($_POST['IndexColumnList']) || '' == $_POST['IndexColumnList']) {
             $this->doCreateIndex($lang['strindexneedscols']);
         } else {
-            $status = $data->createIndex($_POST['formIndexName'], $object, $_POST['IndexColumnList'],
-                $_POST['formIndexType'], isset($_POST['formUnique']), $_POST['formWhere'], $_POST['formSpc'],
-                isset($_POST['formConcur']));
-            if ($status == 0) {
+            $status = $data->createIndex(
+                $_POST['formIndexName'],
+                $object,
+                $_POST['IndexColumnList'],
+                $_POST['formIndexType'],
+                isset($_POST['formUnique']),
+                $_POST['formWhere'],
+                $_POST['formSpc'],
+                isset($_POST['formConcur'])
+            );
+            if (0 == $status) {
                 $this->doDefault($lang['strindexcreated']);
             } else {
                 $this->doCreateIndex($lang['strindexcreatedbad']);
@@ -482,6 +500,7 @@ class IndexesController extends BaseController
 
     /**
      * Show confirmation of drop index and perform actual drop
+     * @param mixed $confirm
      */
     public function doDropIndex($confirm)
     {
@@ -513,7 +532,7 @@ class IndexesController extends BaseController
             echo '</form>' . "\n";
         } else {
             $status = $data->dropIndex($_POST['index'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strindexdropped']);
             } else {
                 $this->doDefault($lang['strindexdroppedbad']);

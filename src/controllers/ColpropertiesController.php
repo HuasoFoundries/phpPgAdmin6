@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -46,6 +50,7 @@ class ColpropertiesController extends BaseController
                     break;
                 default:
                     $this->doDefault();
+
                     break;
             }
         }
@@ -55,6 +60,8 @@ class ColpropertiesController extends BaseController
 
     /**
      * Show default list of columns in the table
+     * @param mixed $msg
+     * @param mixed $isTable
      */
     public function doDefault($msg = '', $isTable = true)
     {
@@ -83,7 +90,7 @@ class ColpropertiesController extends BaseController
             $attrs = $data->getTableAttributes($this->tableName, $_REQUEST['column']);
 
             // Show comment if any
-            if ($attrs->fields['comment'] !== null) {
+            if (null !== $attrs->fields['comment']) {
                 echo '<p class="comment">', $this->misc->printVal($attrs->fields['comment']), "</p>\n";
             }
 
@@ -125,8 +132,7 @@ class ColpropertiesController extends BaseController
             $query = "SELECT \"{$f_attname}\", count(*) AS \"count\" FROM \"{$f_schema}\".\"{$f_table}\" GROUP BY \"{$f_attname}\" ORDER BY \"{$f_attname}\"";
 
             if ($isTable) {
-
-                /* Browse link */
+                // Browse link
                 /* FIXME browsing a col should somehow be a action so we don't
                  * send an ugly SQL in the URL */
 
@@ -183,7 +189,7 @@ class ColpropertiesController extends BaseController
                     ],
                 ];
             } else {
-                /* Browse link */
+                // Browse link
                 $navlinks = [
                     'browse' => [
                         'attr'    => [
@@ -212,6 +218,7 @@ class ColpropertiesController extends BaseController
 
     /**
      * Displays a screen where they can alter a column
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
@@ -256,7 +263,7 @@ class ColpropertiesController extends BaseController
                     $_REQUEST['type']  = $column->fields['base_type'];
                     // Check to see if its' an array type...
                     // XXX: HACKY
-                    if (substr($column->fields['base_type'], strlen($column->fields['base_type']) - 2) == '[]') {
+                    if ('[]' == substr($column->fields['base_type'], strlen($column->fields['base_type']) - 2)) {
                         $_REQUEST['type']  = substr($column->fields['base_type'], 0, strlen($column->fields['base_type']) - 2);
                         $_REQUEST['array'] = '[]';
                     } else {
@@ -303,8 +310,8 @@ class ColpropertiesController extends BaseController
 
                     // Output array type selector
                     echo "<td><select name=\"array\">\n";
-                    echo "\t<option value=\"\"", ($_REQUEST['array'] == '') ? ' selected="selected"' : '', "></option>\n";
-                    echo "\t<option value=\"[]\"", ($_REQUEST['array'] == '[]') ? ' selected="selected"' : '', ">[ ]</option>\n";
+                    echo "\t<option value=\"\"", ('' == $_REQUEST['array']) ? ' selected="selected"' : '', "></option>\n";
+                    echo "\t<option value=\"[]\"", ('[]' == $_REQUEST['array']) ? ' selected="selected"' : '', ">[ ]</option>\n";
                     echo "</select></td>\n";
                     $predefined_size_types = array_intersect($data->predefined_size_types, $types_for_js);
                     foreach ($predefined_size_types as $value) {
@@ -345,26 +352,37 @@ class ColpropertiesController extends BaseController
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
                 echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>\n";
+
                 break;
             case 2:
                 // Check inputs
-                if (trim($_REQUEST['field']) == '') {
+                if ('' == trim($_REQUEST['field'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doAlter($lang['strcolneedsname']);
+
                     return;
                 }
                 if (!isset($_REQUEST['length'])) {
                     $_REQUEST['length'] = '';
                 }
 
-                list($status, $sql) = $data->alterColumn($_REQUEST['table'], $_REQUEST['column'], $_REQUEST['field'],
-                    isset($_REQUEST['notnull']), isset($_REQUEST['oldnotnull']),
-                    $_REQUEST['default'], $_REQUEST['olddefault'],
-                    $_REQUEST['type'], $_REQUEST['length'], $_REQUEST['array'], $_REQUEST['oldtype'],
-                    $_REQUEST['comment']);
+                list($status, $sql) = $data->alterColumn(
+                    $_REQUEST['table'],
+                    $_REQUEST['column'],
+                    $_REQUEST['field'],
+                    isset($_REQUEST['notnull']),
+                    isset($_REQUEST['oldnotnull']),
+                    $_REQUEST['default'],
+                    $_REQUEST['olddefault'],
+                    $_REQUEST['type'],
+                    $_REQUEST['length'],
+                    $_REQUEST['array'],
+                    $_REQUEST['oldtype'],
+                    $_REQUEST['comment']
+                );
 
                 $this->prtrace('status', $status, 'sql', $sql);
-                if ($status == 0) {
+                if (0 == $status) {
                     if ($_REQUEST['column'] != $_REQUEST['field']) {
                         $_REQUEST['column'] = $_REQUEST['field'];
                         $this->misc->setReloadBrowser(true);
@@ -373,8 +391,10 @@ class ColpropertiesController extends BaseController
                 } else {
                     $_REQUEST['stage'] = 1;
                     $this->doAlter($sql . "<br/>{$lang['strcolumnalteredbad']}");
+
                     return;
                 }
+
                 break;
             default:
                 echo "<p>{$lang['strinvalidparam']}</p>\n";

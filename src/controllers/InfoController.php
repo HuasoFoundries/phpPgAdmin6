@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
@@ -25,6 +29,7 @@ class InfoController extends BaseController
         switch ($action) {
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -61,10 +66,10 @@ class InfoController extends BaseController
         $indexstatsio   = $data->getStatsIndexIO($_REQUEST['table']);
 
         // Check that there is some info
-        if (($referrers === -99 || ($referrers !== -99 && $referrers->recordCount() == 0))
-            && $parents->recordCount() == 0 && $children->recordCount() == 0
-            && ($tablestatstups->recordCount() == 0 && $tablestatsio->recordCount() == 0
-                && $indexstatstups->recordCount() == 0 && $indexstatsio->recordCount() == 0)) {
+        if (($referrers === -99 || ($referrers !== -99 && 0 == $referrers->recordCount()))
+            && 0 == $parents->recordCount() && 0 == $children->recordCount()
+            && (0 == $tablestatstups->recordCount() && 0 == $tablestatsio->recordCount()
+                && 0 == $indexstatstups->recordCount() && 0 == $indexstatsio->recordCount())) {
             $this->printMsg($lang['strnoinfo']);
         } else {
             // Referring foreign tables
@@ -205,7 +210,7 @@ class InfoController extends BaseController
                 $i = 0;
 
                 while (!$tablestatstups->EOF) {
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "\t<tr class=\"data{$id}\">\n";
                     echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['seq_scan'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['seq_tup_read'], 'int4', $shownull), "</td>\n";
@@ -250,7 +255,7 @@ class InfoController extends BaseController
                 $i = 0;
 
                 while (!$tablestatsio->EOF) {
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "\t<tr class=\"data{$id}\">\n";
 
                     $total = $tablestatsio->fields['heap_blks_hit'] + $tablestatsio->fields['heap_blks_read'];
@@ -318,7 +323,7 @@ class InfoController extends BaseController
                 $i = 0;
 
                 while (!$indexstatstups->EOF) {
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "\t<tr class=\"data{$id}\">\n";
                     echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['indexrelname']), "</td>\n";
                     echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_scan'], 'int4', $shownull), "</td>\n";
@@ -346,7 +351,7 @@ class InfoController extends BaseController
                 $i = 0;
 
                 while (!$indexstatsio->EOF) {
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "\t<tr class=\"data{$id}\">\n";
                     $total = $indexstatsio->fields['idx_blks_hit'] + $indexstatsio->fields['idx_blks_read'];
                     if ($total > 0) {

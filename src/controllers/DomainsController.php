@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -18,7 +22,7 @@ class DomainsController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -28,6 +32,7 @@ class DomainsController extends BaseController
         switch ($action) {
             case 'add_check':
                 $this->addCheck(true);
+
                 break;
             case 'save_add_check':
                 if (isset($_POST['cancel'])) {
@@ -47,6 +52,7 @@ class DomainsController extends BaseController
                 break;
             case 'confirm_drop_con':
                 $this->doDropConstraint(true);
+
                 break;
             case 'save_create':
                 if (isset($_POST['cancel'])) {
@@ -58,6 +64,7 @@ class DomainsController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_POST['drop'])) {
@@ -69,6 +76,7 @@ class DomainsController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'save_alter':
                 if (isset($_POST['alter'])) {
@@ -80,12 +88,15 @@ class DomainsController extends BaseController
                 break;
             case 'alter':
                 $this->doAlter();
+
                 break;
             case 'properties':
                 $this->doProperties();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -94,6 +105,7 @@ class DomainsController extends BaseController
 
     /**
      * Show default list of domains in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -212,7 +224,8 @@ class DomainsController extends BaseController
             'text'    => Decorator::field('domname'),
             'icon'    => 'Domain',
             'toolTip' => Decorator::field('domcomment'),
-            'action'  => Decorator::actionurl('domains.php',
+            'action'  => Decorator::actionurl(
+                'domains.php',
                 $reqvars,
                 [
                     'action' => 'properties',
@@ -234,9 +247,13 @@ class DomainsController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $status = $data->alterDomain($_POST['domain'], $_POST['domdefault'],
-            isset($_POST['domnotnull']), $_POST['domowner']);
-        if ($status == 0) {
+        $status = $data->alterDomain(
+            $_POST['domain'],
+            $_POST['domdefault'],
+            isset($_POST['domnotnull']),
+            $_POST['domowner']
+        );
+        if (0 == $status) {
             $this->doProperties($lang['strdomainaltered']);
         } else {
             $this->doAlter($lang['strdomainalteredbad']);
@@ -245,6 +262,7 @@ class DomainsController extends BaseController
 
     /**
      * Allow altering a domain
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
@@ -309,6 +327,8 @@ class DomainsController extends BaseController
 
     /**
      * Confirm and then actually add a CHECK constraint
+     * @param mixed $confirm
+     * @param mixed $msg
      */
     public function addCheck($confirm, $msg = '')
     {
@@ -349,12 +369,15 @@ class DomainsController extends BaseController
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            if (trim($_POST['definition']) == '') {
+            if ('' == trim($_POST['definition'])) {
                 $this->addCheck(true, $lang['strcheckneedsdefinition']);
             } else {
-                $status = $data->addDomainCheckConstraint($_POST['domain'],
-                    $_POST['definition'], $_POST['name']);
-                if ($status == 0) {
+                $status = $data->addDomainCheckConstraint(
+                    $_POST['domain'],
+                    $_POST['definition'],
+                    $_POST['name']
+                );
+                if (0 == $status) {
                     $this->doProperties($lang['strcheckadded']);
                 } else {
                     $this->addCheck(true, $lang['strcheckaddedbad']);
@@ -365,6 +388,8 @@ class DomainsController extends BaseController
 
     /**
      * Show confirmation of drop constraint and perform actual drop
+     * @param mixed $confirm
+     * @param mixed $msg
      */
     public function doDropConstraint($confirm, $msg = '')
     {
@@ -378,8 +403,11 @@ class DomainsController extends BaseController
             $this->printTitle($lang['strdrop'], 'pg.constraint.drop');
             $this->printMsg($msg);
 
-            echo '<p>', sprintf($lang['strconfdropconstraint'], $this->misc->printVal($_REQUEST['constraint']),
-                $this->misc->printVal($_REQUEST['domain'])), "</p>\n";
+            echo '<p>', sprintf(
+                $lang['strconfdropconstraint'],
+                $this->misc->printVal($_REQUEST['constraint']),
+                $this->misc->printVal($_REQUEST['domain'])
+            ), "</p>\n";
             echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_con\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
@@ -391,7 +419,7 @@ class DomainsController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropDomainConstraint($_POST['domain'], $_POST['constraint'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doProperties($lang['strconstraintdropped']);
             } else {
                 $this->doDropConstraint(true, $lang['strconstraintdroppedbad']);
@@ -401,6 +429,7 @@ class DomainsController extends BaseController
 
     /**
      * Show properties for a domain.  Allow manipulating constraints as well.
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {
@@ -417,7 +446,7 @@ class DomainsController extends BaseController
 
         if ($domaindata->recordCount() > 0) {
             // Show comment if any
-            if ($domaindata->fields['domcomment'] !== null) {
+            if (null !== $domaindata->fields['domcomment']) {
                 echo '<p class="comment">', $this->misc->printVal($domaindata->fields['domcomment']), "</p>\n";
             }
 
@@ -533,6 +562,7 @@ class DomainsController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -556,7 +586,7 @@ class DomainsController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropDomain($_POST['domain'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strdomaindropped']);
             } else {
                 $this->doDefault($lang['strdomaindroppedbad']);
@@ -566,6 +596,7 @@ class DomainsController extends BaseController
 
     /**
      * Displays a screen where they can enter a new domain
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -626,8 +657,8 @@ class DomainsController extends BaseController
 
         // Output array type selector
         echo "<select name=\"domarray\">\n";
-        echo '<option value=""', ($_POST['domarray'] == '') ? ' selected="selected"' : '', "></option>\n";
-        echo '<option value="[]"', ($_POST['domarray'] == '[]') ? ' selected="selected"' : '', ">[ ]</option>\n";
+        echo '<option value=""', ('' == $_POST['domarray']) ? ' selected="selected"' : '', "></option>\n";
+        echo '<option value="[]"', ('[]' == $_POST['domarray']) ? ' selected="selected"' : '', ">[ ]</option>\n";
         echo "</select></td></tr>\n";
 
         echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$lang['strnotnull']}</label></th>\n";
@@ -664,12 +695,19 @@ class DomainsController extends BaseController
         }
 
         // Check that they've given a name and a definition
-        if ($_POST['domname'] == '') {
+        if ('' == $_POST['domname']) {
             $this->doCreate($lang['strdomainneedsname']);
         } else {
-            $status = $data->createDomain($_POST['domname'], $_POST['domtype'], $_POST['domlength'], $_POST['domarray'] != '',
-                isset($_POST['domnotnull']), $_POST['domdefault'], $_POST['domcheck']);
-            if ($status == 0) {
+            $status = $data->createDomain(
+                $_POST['domname'],
+                $_POST['domtype'],
+                $_POST['domlength'],
+                '' != $_POST['domarray'],
+                isset($_POST['domnotnull']),
+                $_POST['domdefault'],
+                $_POST['domcheck']
+            );
+            if (0 == $status) {
                 $this->doDefault($lang['strdomaincreated']);
             } else {
                 $this->doCreate($lang['strdomaincreatedbad']);

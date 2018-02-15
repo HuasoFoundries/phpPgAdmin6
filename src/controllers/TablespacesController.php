@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -33,6 +37,7 @@ class TablespacesController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_REQUEST['cancel'])) {
@@ -44,6 +49,7 @@ class TablespacesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'save_edit':
                 if (isset($_REQUEST['cancel'])) {
@@ -55,9 +61,11 @@ class TablespacesController extends BaseController
                 break;
             case 'edit':
                 $this->doAlter();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -66,6 +74,7 @@ class TablespacesController extends BaseController
 
     /**
      * Show default list of tablespaces in the cluster
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -162,6 +171,7 @@ class TablespacesController extends BaseController
 
     /**
      * Function to allow altering of a tablespace
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
@@ -236,11 +246,11 @@ class TablespacesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Check data
-        if (trim($_POST['name']) == '') {
+        if ('' == trim($_POST['name'])) {
             $this->doAlter($lang['strtablespaceneedsname']);
         } else {
             $status = $data->alterTablespace($_POST['tablespace'], $_POST['name'], $_POST['owner'], $_POST['comment']);
-            if ($status == 0) {
+            if (0 == $status) {
                 // If tablespace has been renamed, need to change to the new name
                 if ($_POST['tablespace'] != $_POST['name']) {
                     // Jump them to the new table name
@@ -255,6 +265,7 @@ class TablespacesController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -278,7 +289,7 @@ class TablespacesController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->droptablespace($_REQUEST['tablespace']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strtablespacedropped']);
             } else {
                 $this->doDefault($lang['strtablespacedroppedbad']);
@@ -288,6 +299,7 @@ class TablespacesController extends BaseController
 
     /**
      * Displays a screen where they can enter a new tablespace
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -361,9 +373,9 @@ class TablespacesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Check data
-        if (trim($_POST['formSpcname']) == '') {
+        if ('' == trim($_POST['formSpcname'])) {
             $this->doCreate($lang['strtablespaceneedsname']);
-        } elseif (trim($_POST['formLoc']) == '') {
+        } elseif ('' == trim($_POST['formLoc'])) {
             $this->doCreate($lang['strtablespaceneedsloc']);
         } else {
             // Default comment to blank if it isn't set
@@ -372,7 +384,7 @@ class TablespacesController extends BaseController
             }
 
             $status = $data->createTablespace($_POST['formSpcname'], $_POST['formOwner'], $_POST['formLoc'], $_POST['formComment']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strtablespacecreated']);
             } else {
                 $this->doCreate($lang['strtablespacecreatedbad']);

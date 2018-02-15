@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -17,7 +21,7 @@ class LanguagesController extends BaseController
 
         $lang   = $this->lang;
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -27,6 +31,7 @@ class LanguagesController extends BaseController
         switch ($action) {
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -35,6 +40,7 @@ class LanguagesController extends BaseController
 
     /**
      * Show default list of languages in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {

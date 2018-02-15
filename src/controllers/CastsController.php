@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -17,7 +21,7 @@ class CastsController extends BaseController
 
         $lang   = $this->lang;
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
         $data = $this->misc->getDatabaseAccessor();
@@ -26,9 +30,9 @@ class CastsController extends BaseController
         $this->printBody();
 
         switch ($action) {
-
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -37,6 +41,7 @@ class CastsController extends BaseController
 
     /**
      * Show default list of casts in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {

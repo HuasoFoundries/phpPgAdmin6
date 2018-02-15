@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -19,6 +23,7 @@ class GroupsController extends BaseController
         switch ($action) {
             case 'add_member':
                 $this->doAddMember();
+
                 break;
             case 'drop_member':
                 if (isset($_REQUEST['drop'])) {
@@ -30,6 +35,7 @@ class GroupsController extends BaseController
                 break;
             case 'confirm_drop_member':
                 $this->doDropMember(true);
+
                 break;
             case 'save_create':
                 if (isset($_REQUEST['cancel'])) {
@@ -41,6 +47,7 @@ class GroupsController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_REQUEST['drop'])) {
@@ -52,18 +59,23 @@ class GroupsController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'save_edit':
                 $this->doSaveEdit();
+
                 break;
             case 'edit':
                 $this->doEdit();
+
                 break;
             case 'properties':
                 $this->doProperties();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -72,6 +84,7 @@ class GroupsController extends BaseController
 
     /**
      * Show default list of groups in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -140,7 +153,7 @@ class GroupsController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->addGroupMember($_REQUEST['group'], $_REQUEST['user']);
-        if ($status == 0) {
+        if (0 == $status) {
             $this->doProperties($lang['strmemberadded']);
         } else {
             $this->doProperties($lang['strmemberaddedbad']);
@@ -149,6 +162,7 @@ class GroupsController extends BaseController
 
     /**
      * Show confirmation of drop user from group and perform actual drop
+     * @param mixed $confirm
      */
     public function doDropMember($confirm)
     {
@@ -173,7 +187,7 @@ class GroupsController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropGroupMember($_REQUEST['group'], $_REQUEST['user']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doProperties($lang['strmemberdropped']);
             } else {
                 $this->doDropMember(true, $lang['strmemberdroppedbad']);
@@ -183,6 +197,7 @@ class GroupsController extends BaseController
 
     /**
      * Show read only properties for a group
+     * @param mixed $msg
      */
     public function doProperties($msg = '')
     {
@@ -263,6 +278,7 @@ class GroupsController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -286,7 +302,7 @@ class GroupsController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropGroup($_REQUEST['group']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strgroupdropped']);
             } else {
                 $this->doDefault($lang['strgroupdroppedbad']);
@@ -296,6 +312,7 @@ class GroupsController extends BaseController
 
     /**
      * Displays a screen where they can enter a new group
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -331,7 +348,7 @@ class GroupsController extends BaseController
             while (!$users->EOF) {
                 $username = $users->fields['usename'];
                 echo "\t\t\t\t<option value=\"{$username}\"",
-                (in_array($username, $_POST['members']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($username), "</option>\n";
+                (in_array($username, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($username), "</option>\n";
                 $users->moveNext();
             }
             echo "\t\t\t</select>\n";
@@ -359,11 +376,11 @@ class GroupsController extends BaseController
         }
 
         // Check form vars
-        if (trim($_POST['name']) == '') {
+        if ('' == trim($_POST['name'])) {
             $this->doCreate($lang['strgroupneedsname']);
         } else {
             $status = $data->createGroup($_POST['name'], $_POST['members']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->doDefault($lang['strgroupcreated']);
             } else {
                 $this->doCreate($lang['strgroupcreatedbad']);

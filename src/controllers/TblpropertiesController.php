@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -18,7 +22,7 @@ class TblpropertiesController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
         $data = $misc->getDatabaseAccessor();
@@ -38,12 +42,15 @@ class TblpropertiesController extends BaseController
                 break;
             case 'confirm_alter':
                 $this->doAlter();
+
                 break;
             case 'import':
                 $this->doImport();
+
                 break;
             case 'export':
                 $this->doExport();
+
                 break;
             case 'add_column':
                 if (isset($_POST['cancel'])) {
@@ -72,9 +79,11 @@ class TblpropertiesController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -90,6 +99,7 @@ class TblpropertiesController extends BaseController
 
     /**
      * Show default list of columns in the table
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -116,7 +126,7 @@ class TblpropertiesController extends BaseController
             foreach ($p['keys'] as $k => $c) {
                 if (is_null($p['keys'][$k]['consrc'])) {
                     $atts        = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
-                    $c['consrc'] = ($c['contype'] == 'u' ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
+                    $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
                 }
 
                 if ($c['p_field'] == $s) {
@@ -124,14 +134,17 @@ class TblpropertiesController extends BaseController
                         case 'p':
                             $str .= '<a href="constraints.php?' . $misc->href . '&amp;table=' . urlencode($c['p_table']) . '&amp;schema=' . urlencode($c['p_schema']) . '"><img src="' .
                             $misc->icon('PrimaryKey') . '" alt="[pk]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
+
                             break;
                         case 'f':
                             $str .= '<a href="tblproperties.php?' . $misc->href . '&amp;table=' . urlencode($c['f_table']) . '&amp;schema=' . urlencode($c['f_schema']) . '"><img src="' .
                             $misc->icon('ForeignKey') . '" alt="[fk]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
+
                             break;
                         case 'u':
                             $str .= '<a href="constraints.php?' . $misc->href . '&amp;table=' . urlencode($c['p_table']) . '&amp;schema=' . urlencode($c['p_schema']) . '"><img src="' .
                             $misc->icon('UniqueConstraint') . '" alt="[uniq]" title="' . htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') . '" /></a>';
+
                             break;
                         case 'c':
                             $str .= '<a href="constraints.php?' . $misc->href . '&amp;table=' . urlencode($c['p_table']) . '&amp;schema=' . urlencode($c['p_schema']) . '"><img src="' .
@@ -155,7 +168,7 @@ class TblpropertiesController extends BaseController
         $ck = $data->getConstraintsWithFields($_REQUEST['table']);
 
         // Show comment if any
-        if ($tdata->fields['relcomment'] !== null) {
+        if (null !== $tdata->fields['relcomment']) {
             echo '<p class="comment">', $misc->printVal($tdata->fields['relcomment']), "</p>\n";
         }
 
@@ -405,7 +418,8 @@ class TblpropertiesController extends BaseController
 
         $attrs = [
             'text'       => Decorator::field('attname'),
-            'action'     => Decorator::actionurl('colproperties.php',
+            'action'     => Decorator::actionurl(
+                'colproperties.php',
                 $reqvars,
                 [
                     'table'  => $_REQUEST['table'],
@@ -413,7 +427,8 @@ class TblpropertiesController extends BaseController
                 ]
             ),
             'icon'       => 'Column',
-            'iconAction' => Decorator::url('display.php',
+            'iconAction' => Decorator::url(
+                'display.php',
                 $reqvars,
                 [
                     'table'  => $_REQUEST['table'],
@@ -455,7 +470,7 @@ class TblpropertiesController extends BaseController
         }
 
         $status = $data->alterTable($_POST['table'], $_POST['name'], $_POST['owner'], $_POST['newschema'], $_POST['comment'], $_POST['tablespace']);
-        if ($status == 0) {
+        if (0 == $status) {
             // If table has been renamed, need to change to the new name and
             // reload the browser frame.
             if ($_POST['table'] != $_POST['name']) {
@@ -478,6 +493,7 @@ class TblpropertiesController extends BaseController
 
     /**
      * Function to allow altering of a table
+     * @param mixed $msg
      */
     public function doAlter($msg = '')
     {
@@ -558,7 +574,7 @@ class TblpropertiesController extends BaseController
                 echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"tablespace\">\n";
                 // Always offer the default (empty) option
                 echo "\t\t\t\t<option value=\"\"",
-                ($_POST['tablespace'] == '') ? ' selected="selected"' : '', "></option>\n";
+                ('' == $_POST['tablespace']) ? ' selected="selected"' : '', "></option>\n";
                 // Display all other tablespaces
                 while (!$tablespaces->EOF) {
                     $spcname = htmlspecialchars($tablespaces->fields['spcname']);
@@ -694,6 +710,7 @@ class TblpropertiesController extends BaseController
 
     /**
      * Displays a screen where they can add a column
+     * @param mixed $msg
      */
     public function doAddColumn($msg = '')
     {
@@ -777,8 +794,8 @@ class TblpropertiesController extends BaseController
 
                 // Output array type selector
                 echo "<td><select name=\"array\">\n";
-                echo "\t<option value=\"\"", ($_POST['array'] == '') ? ' selected="selected"' : '', "></option>\n";
-                echo "\t<option value=\"[]\"", ($_POST['array'] == '[]') ? ' selected="selected"' : '', ">[ ]</option>\n";
+                echo "\t<option value=\"\"", ('' == $_POST['array']) ? ' selected="selected"' : '', "></option>\n";
+                echo "\t<option value=\"[]\"", ('[]' == $_POST['array']) ? ' selected="selected"' : '', ">[ ]</option>\n";
                 echo "</select></td>\n";
                 $predefined_size_types = array_intersect($data->predefined_size_types, $types_for_js);
                 $escaped_predef_types  = []; // the JS escaped array elements
@@ -809,29 +826,40 @@ class TblpropertiesController extends BaseController
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
                 echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>\n";
+
                 break;
             case 2:
                 // Check inputs
-                if (trim($_POST['field']) == '') {
+                if ('' == trim($_POST['field'])) {
                     $_REQUEST['stage'] = 1;
                     $this->doAddColumn($lang['strcolneedsname']);
+
                     return;
                 }
                 if (!isset($_POST['length'])) {
                     $_POST['length'] = '';
                 }
 
-                $status = $data->addColumn($_POST['table'], $_POST['field'],
-                    $_POST['type'], $_POST['array'] != '', $_POST['length'], isset($_POST['notnull']),
-                    $_POST['default'], $_POST['comment']);
-                if ($status == 0) {
+                $status = $data->addColumn(
+                    $_POST['table'],
+                    $_POST['field'],
+                    $_POST['type'],
+                    '' != $_POST['array'],
+                    $_POST['length'],
+                    isset($_POST['notnull']),
+                    $_POST['default'],
+                    $_POST['comment']
+                );
+                if (0 == $status) {
                     $misc->setReloadBrowser(true);
                     $this->doDefault($lang['strcolumnadded']);
                 } else {
                     $_REQUEST['stage'] = 1;
                     $this->doAddColumn($lang['strcolumnaddedbad']);
+
                     return;
                 }
+
                 break;
             default:
                 echo "<p>{$lang['strinvalidparam']}</p>\n";
@@ -840,6 +868,7 @@ class TblpropertiesController extends BaseController
 
     /**
      * Show confirmation of drop column and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -852,8 +881,11 @@ class TblpropertiesController extends BaseController
             $this->printTrail('column');
             $this->printTitle($lang['strdrop'], 'pg.column.drop');
 
-            echo '<p>', sprintf($lang['strconfdropcolumn'], $misc->printVal($_REQUEST['column']),
-                $misc->printVal($_REQUEST['table'])), "</p>\n";
+            echo '<p>', sprintf(
+                $lang['strconfdropcolumn'],
+                $misc->printVal($_REQUEST['column']),
+                $misc->printVal($_REQUEST['table'])
+            ), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/tblproperties.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
@@ -866,7 +898,7 @@ class TblpropertiesController extends BaseController
             echo "</form>\n";
         } else {
             $status = $data->dropColumn($_POST['table'], $_POST['column'], isset($_POST['cascade']));
-            if ($status == 0) {
+            if (0 == $status) {
                 $misc->setReloadBrowser(true);
                 $this->doDefault($lang['strcolumndropped']);
             } else {

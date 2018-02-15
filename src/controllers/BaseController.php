@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -9,12 +13,12 @@ class BaseController
 {
     use \PHPPgAdmin\HelperTrait;
 
-    protected $container         = null;
-    protected $_connection       = null;
-    protected $app               = null;
-    protected $data              = null;
-    protected $database          = null;
-    protected $server_id         = null;
+    protected $container;
+    protected $_connection;
+    protected $app;
+    protected $data;
+    protected $database;
+    protected $server_id;
     public $appLangFiles         = [];
     public $appThemes            = [];
     public $appName              = '';
@@ -25,11 +29,11 @@ class BaseController
     public $action               = '';
     public $controller_name      = 'BaseController';
     public $controller_title     = 'base';
-    protected $table_controller  = null;
-    protected $trail_controller  = null;
-    protected $tree_controller   = null;
-    protected $footer_controller = null;
-    protected $header_controller = null;
+    protected $table_controller;
+    protected $trail_controller;
+    protected $tree_controller;
+    protected $footer_controller;
+    protected $header_controller;
     protected $scripts           = '';
     public $msg                  = '';
     public $view;
@@ -66,13 +70,14 @@ class BaseController
 
         $msg = $container->get('msg');
 
-        if ($no_db_connection === true) {
+        if (true === $no_db_connection) {
             $this->misc->setNoDBConnection(true);
         }
 
-        if ($this->misc->getNoDBConnection() === false) {
-            if ($this->misc->getServerId() === null) {
+        if (false === $this->misc->getNoDBConnection()) {
+            if (null === $this->misc->getServerId()) {
                 $servers_controller = new \PHPPgAdmin\Controller\ServersController($container, true);
+
                 return $servers_controller->render();
             }
             $_server_info = $this->misc->getServerInfo();
@@ -81,6 +86,7 @@ class BaseController
                 $msg = sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
 
                 $servers_controller = new \PHPPgAdmin\Controller\ServersController($container, true);
+
                 return $servers_controller->render();
             }
         }
@@ -100,6 +106,7 @@ class BaseController
         switch ($action) {
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -110,6 +117,7 @@ class BaseController
     {
         $html = '<div><h2>Section title</h2> <p>Main content</p></div>';
         echo $html;
+
         return $html;
     }
 
@@ -120,31 +128,34 @@ class BaseController
 
     private function getTableController()
     {
-        if ($this->table_controller === null) {
+        if (null === $this->table_controller) {
             $this->table_controller = new \PHPPgAdmin\XHtml\HTMLTableController($this->getContainer(), $this->controller_name);
         }
+
         return $this->table_controller;
     }
 
     private function getFooterController()
     {
-        if ($this->footer_controller === null) {
+        if (null === $this->footer_controller) {
             $this->footer_controller = new \PHPPgAdmin\XHtml\HTMLFooterController($this->getContainer(), $this->controller_name);
         }
+
         return $this->footer_controller;
     }
 
     private function getHeaderController()
     {
-        if ($this->header_controller === null) {
+        if (null === $this->header_controller) {
             $this->header_controller = new \PHPPgAdmin\XHtml\HTMLHeaderController($this->getContainer(), $this->controller_name);
         }
+
         return $this->header_controller;
     }
 
     private function getNavbarController()
     {
-        if ($this->trail_controller === null) {
+        if (null === $this->trail_controller) {
             $this->trail_controller = new \PHPPgAdmin\XHtml\HTMLNavbarController($this->getContainer(), $this->controller_name);
         }
 
@@ -153,7 +164,7 @@ class BaseController
 
     private function getTreeController()
     {
-        if ($this->tree_controller === null) {
+        if (null === $this->tree_controller) {
             $this->tree_controller = new \PHPPgAdmin\XHtml\TreeController($this->getContainer(), $this->controller_name);
         }
 
@@ -173,18 +184,21 @@ class BaseController
     public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null)
     {
         $html_table = $this->getTableController();
+
         return $html_table->printTable($tabledata, $columns, $actions, $place, $nodata, $pre_fn);
     }
 
     public function adjustTabsForTree($tabs)
     {
         $tree = $this->getTreeController();
+
         return $tree->adjustTabsForTree($tabs);
     }
 
     public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
         $tree = $this->getTreeController();
+
         return $tree->printTree($_treedata, $attrs, $section, $print);
     }
 
@@ -192,6 +206,7 @@ class BaseController
     {
         $from       = __METHOD__;
         $html_trail = $this->getNavbarController();
+
         return $html_trail->printTrail($trail, $do_print, $from);
     }
 
@@ -199,6 +214,7 @@ class BaseController
     {
         $from       = __METHOD__;
         $html_trail = $this->getNavbarController();
+
         return $html_trail->printNavLinks($navlinks, $place, $env, $do_print, $from);
     }
 
@@ -206,46 +222,53 @@ class BaseController
     {
         $from       = __METHOD__;
         $html_trail = $this->getNavbarController();
+
         return $html_trail->printTabs($tabs, $activetab, $do_print, $from);
     }
 
     public function getLastTabURL($section)
     {
         $html_trail = $this->getNavbarController();
+
         return $html_trail->getLastTabURL($section);
     }
 
     public function printLink($link, $do_print = true, $from = null)
     {
-        if ($from === null) {
+        if (null === $from) {
             $from = __METHOD__;
         }
 
         $html_trail = $this->getNavbarController();
+
         return $html_trail->printLink($link, $do_print, $from);
     }
 
     public function setReloadDropDatabase($flag)
     {
         $footer_controller = $this->getFooterController();
+
         return $footer_controller->setReloadDropDatabase($flag);
     }
 
     public function setNoBottomLink($flag)
     {
         $footer_controller = $this->getFooterController();
+
         return $footer_controller->setNoBottomLink($flag);
     }
 
     public function printFooter($doBody = true, $template = 'footer.twig')
     {
         $footer_controller = $this->getFooterController();
+
         return $footer_controller->printFooter($doBody, $template);
     }
 
     public function printReload($database, $do_print = true)
     {
         $footer_controller = $this->getFooterController();
+
         return $footer_controller->printReload($database, $do_print);
     }
 
@@ -256,6 +279,7 @@ class BaseController
     public function setFocus($object)
     {
         $footer_controller = $this->getFooterController();
+
         return $footer_controller->setFocus($object);
     }
 
@@ -271,30 +295,35 @@ class BaseController
     public function setWindowName($name, $addServer = true)
     {
         $footer_controller = $this->getFooterController();
+
         return $footer_controller->setWindowName($name, $addServer);
     }
 
     public function setNoOutput($flag)
     {
         $header_controller = $this->getHeaderController();
+
         return $header_controller->setNoOutput(boolval($flag));
     }
 
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
         $header_controller = $this->getHeaderController();
+
         return $header_controller->printHeader($title, $script, $do_print, $template);
     }
 
     public function printBody($doBody = true, $bodyClass = 'detailbody')
     {
         $header_controller = $this->getHeaderController();
+
         return $header_controller->printBody($doBody, $bodyClass);
     }
 
     public function printTitle($title, $help = null, $do_print = true)
     {
         $header_controller = $this->getHeaderController();
+
         return $header_controller->printTitle($title, $help, $do_print);
     }
 
@@ -310,14 +339,15 @@ class BaseController
     {
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
-        if ($msg != '') {
+        if ('' != $msg) {
             $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
         }
         if ($do_print) {
             echo $html;
-            return $html;
-        } else {
+
             return $html;
         }
+
+        return $html;
     }
 }

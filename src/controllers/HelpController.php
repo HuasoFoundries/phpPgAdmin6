@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -16,9 +20,11 @@ class HelpController extends BaseController
         switch ($action) {
             case 'browse':
                 $this->doBrowse();
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
     }
@@ -36,11 +42,13 @@ class HelpController extends BaseController
             \PC::debug(['url' => $url], 'HelpController::doDefault');
             if (is_array($url)) {
                 $this->doChoosePage($url);
+
                 return;
             }
 
             if ($url) {
-                header("Location: $url");
+                header("Location: ${url}");
+
                 return;
             }
         }

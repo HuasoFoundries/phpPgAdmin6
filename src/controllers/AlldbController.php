@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -19,7 +23,7 @@ class AlldbController extends BaseController
         $lang   = $this->lang;
         $action = $this->action;
 
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
         }
 
@@ -29,6 +33,7 @@ class AlldbController extends BaseController
         switch ($action) {
             case 'export':
                 $this->doExport();
+
                 break;
             case 'save_create':
                 if (isset($_POST['cancel'])) {
@@ -40,6 +45,7 @@ class AlldbController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_REQUEST['drop'])) {
@@ -51,9 +57,10 @@ class AlldbController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             case 'alter':
-                if (isset($_POST['oldname']) && isset($_POST['newname']) && !isset($_POST['cancel'])) {
+                if (isset($_POST['oldname'], $_POST['newname'])   && !isset($_POST['cancel'])) {
                     $this->doAlter(false);
                 } else {
                     $this->doDefault();
@@ -62,6 +69,7 @@ class AlldbController extends BaseController
                 break;
             case 'confirm_alter':
                 $this->doAlter(true);
+
                 break;
             default:
                 $this->doDefault();
@@ -74,6 +82,7 @@ class AlldbController extends BaseController
 
     /**
      * Show default list of databases in the server
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -231,7 +240,6 @@ class AlldbController extends BaseController
             'toolTip' => Decorator::field('datcomment'),
             'action'  => Decorator::redirecturl('redirect.php', $reqvars, ['database' => Decorator::field('datname')]),
             'branch'  => Decorator::url('/src/views/database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
-
         ];
 
         return $this->printTree($databases, $attrs, 'databases');
@@ -239,6 +247,7 @@ class AlldbController extends BaseController
 
     /**
      * Display a form for alter and perform actual alter
+     * @param mixed $confirm
      */
     public function doAlter($confirm)
     {
@@ -300,7 +309,7 @@ class AlldbController extends BaseController
                 $_POST['dbcomment'] = '';
             }
 
-            if ($data->alterDatabase($_POST['oldname'], $_POST['newname'], $_POST['owner'], $_POST['dbcomment']) == 0) {
+            if (0 == $data->alterDatabase($_POST['oldname'], $_POST['newname'], $_POST['owner'], $_POST['dbcomment'])) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($lang['strdatabasealtered']);
             } else {
@@ -311,6 +320,7 @@ class AlldbController extends BaseController
 
     /**
      * Show confirmation of drop and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -352,10 +362,11 @@ class AlldbController extends BaseController
                 $msg = '';
                 foreach ($_REQUEST['dropdatabase'] as $d) {
                     $status = $data->dropDatabase($d);
-                    if ($status == 0) {
+                    if (0 == $status) {
                         $msg .= sprintf('%s: %s<br />', htmlentities($d, ENT_QUOTES, 'UTF-8'), $lang['strdatabasedropped']);
                     } else {
                         $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($d, ENT_QUOTES, 'UTF-8'), $lang['strdatabasedroppedbad']));
+
                         return;
                     }
                 } // Everything went fine, back to Default page...
@@ -363,7 +374,7 @@ class AlldbController extends BaseController
                 $this->doDefault($msg);
             } else {
                 $status = $data->dropDatabase($_POST['dropdatabase']);
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->setReloadDropDatabase(true);
                     $this->doDefault($lang['strdatabasedropped']);
                 } else {
@@ -377,6 +388,7 @@ class AlldbController extends BaseController
 
     /**
      * Displays a screen where they can enter a new database
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -428,12 +440,12 @@ class AlldbController extends BaseController
         echo "\t\t\t<select name=\"formTemplate\">\n";
         // Always offer template0 and template1
         echo "\t\t\t\t<option value=\"template0\"",
-        ($_POST['formTemplate'] == 'template0') ? ' selected="selected"' : '', ">template0</option>\n";
+        ('template0' == $_POST['formTemplate']) ? ' selected="selected"' : '', ">template0</option>\n";
         echo "\t\t\t\t<option value=\"template1\"",
-        ($_POST['formTemplate'] == 'template1') ? ' selected="selected"' : '', ">template1</option>\n";
+        ('template1' == $_POST['formTemplate']) ? ' selected="selected"' : '', ">template1</option>\n";
         while (!$templatedbs->EOF) {
             $dbname = htmlspecialchars($templatedbs->fields['datname']);
-            if ($dbname != 'template1') {
+            if ('template1' != $dbname) {
                 // filter out for $conf[show_system] users so we dont get duplicates
                 echo "\t\t\t\t<option value=\"{$dbname}\"",
                 ($dbname == $_POST['formTemplate']) ? ' selected="selected"' : '', ">{$dbname}</option>\n";
@@ -484,7 +496,7 @@ class AlldbController extends BaseController
             echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formSpc\">\n";
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
-            ($_POST['formSpc'] == '') ? ' selected="selected"' : '', "></option>\n";
+            ('' == $_POST['formSpc']) ? ' selected="selected"' : '', "></option>\n";
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
                 $spcname = htmlspecialchars($tablespaces->fields['spcname']);
@@ -541,12 +553,19 @@ class AlldbController extends BaseController
         }
 
         // Check that they've given a name and a definition
-        if ($_POST['formName'] == '') {
+        if ('' == $_POST['formName']) {
             $this->doCreate($lang['strdatabaseneedsname']);
         } else {
-            $status = $data->createDatabase($_POST['formName'], $_POST['formEncoding'], $_POST['formSpc'],
-                $_POST['formComment'], $_POST['formTemplate'], $_POST['formCollate'], $_POST['formCType']);
-            if ($status == 0) {
+            $status = $data->createDatabase(
+                $_POST['formName'],
+                $_POST['formEncoding'],
+                $_POST['formSpc'],
+                $_POST['formComment'],
+                $_POST['formTemplate'],
+                $_POST['formCollate'],
+                $_POST['formCType']
+            );
+            if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($lang['strdatabasecreated']);
             } else {
@@ -557,6 +576,7 @@ class AlldbController extends BaseController
 
     /**
      * Displays options for cluster download
+     * @param mixed $msg
      */
     public function doExport($msg = '')
     {

@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -20,9 +24,10 @@ class MaterializedviewsController extends BaseController
         $lang   = $this->lang;
         $action = $this->action;
 
-        if ($action == 'tree') {
+        if ('tree' == $action) {
             return $this->doTree();
-        } elseif ($action == 'subtree') {
+        }
+        if ('subtree' == $action) {
             return $this->doSubTree();
         }
 
@@ -42,6 +47,7 @@ class MaterializedviewsController extends BaseController
                 break;
             case 'confselectrows':
                 $this->doSelectRows(true);
+
                 break;
             case 'save_create_wiz':
                 if (isset($_REQUEST['cancel'])) {
@@ -53,6 +59,7 @@ class MaterializedviewsController extends BaseController
                 break;
             case 'wiz_create':
                 $this->doWizardCreate();
+
                 break;
             case 'set_params_create':
                 if (isset($_POST['cancel'])) {
@@ -72,6 +79,7 @@ class MaterializedviewsController extends BaseController
                 break;
             case 'create':
                 $this->doCreate();
+
                 break;
             case 'drop':
                 if (isset($_POST['drop'])) {
@@ -83,9 +91,11 @@ class MaterializedviewsController extends BaseController
                 break;
             case 'confirm_drop':
                 $this->doDrop(true);
+
                 break;
             default:
                 $this->doDefault();
+
                 break;
         }
 
@@ -94,6 +104,7 @@ class MaterializedviewsController extends BaseController
 
     /**
      * Show default list of views in the database
+     * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
@@ -272,7 +283,12 @@ class MaterializedviewsController extends BaseController
             'icon'   => Decorator::field('icon'),
             'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['matview' => $_REQUEST['matview']]),
             'branch' => Decorator::ifempty(
-                Decorator::field('branch'), '', Decorator::url(Decorator::field('url'), Decorator::field('urlvars'), $reqvars,
+                Decorator::field('branch'),
+                '',
+                Decorator::url(
+                    Decorator::field('url'),
+                    Decorator::field('urlvars'),
+                    $reqvars,
                     [
                         'action'  => 'tree',
                         'matview' => $_REQUEST['matview'],
@@ -286,6 +302,8 @@ class MaterializedviewsController extends BaseController
 
     /**
      * Ask for select parameters and perform select
+     * @param mixed $confirm
+     * @param mixed $msg
      */
     public function doSelectRows($confirm, $msg = '')
     {
@@ -339,7 +357,7 @@ class MaterializedviewsController extends BaseController
                     }
 
                     // Continue drawing row
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "<tr class=\"data{$id}\">\n";
                     echo '<td style="white-space:nowrap;">';
                     echo '<input type="checkbox" name="show[', htmlspecialchars($attrs->fields['attname']), ']"',
@@ -349,12 +367,15 @@ class MaterializedviewsController extends BaseController
                     echo '<td style="white-space:nowrap;">';
                     echo "<select name=\"ops[{$attrs->fields['attname']}]\">\n";
                     foreach (array_keys($data->selectOps) as $v) {
-                        echo '<option value="', htmlspecialchars($v), '"', ($v == $_REQUEST['ops'][$attrs->fields['attname']]) ? ' selected="selected"' : '',
+                        echo '<option value="', htmlspecialchars($v), '"', ($_REQUEST['ops'][$attrs->fields['attname']] == $v) ? ' selected="selected"' : '',
                         '>', htmlspecialchars($v), "</option>\n";
                     }
                     echo "</select></td>\n";
-                    echo '<td style="white-space:nowrap;">', $data->printField("values[{$attrs->fields['attname']}]",
-                        $_REQUEST['values'][$attrs->fields['attname']], $attrs->fields['type']), '</td>';
+                    echo '<td style="white-space:nowrap;">', $data->printField(
+                        "values[{$attrs->fields['attname']}]",
+                        $_REQUEST['values'][$attrs->fields['attname']],
+                        $attrs->fields['type']
+                    ), '</td>';
                     echo "</tr>\n";
                     $i++;
                     $attrs->moveNext();
@@ -373,48 +394,49 @@ class MaterializedviewsController extends BaseController
             echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$lang['strselect']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
+
             return;
-        } else {
-            if (!isset($_POST['show'])) {
-                $_POST['show'] = [];
-            }
+        }
+        if (!isset($_POST['show'])) {
+            $_POST['show'] = [];
+        }
 
-            if (!isset($_POST['values'])) {
-                $_POST['values'] = [];
-            }
+        if (!isset($_POST['values'])) {
+            $_POST['values'] = [];
+        }
 
-            if (!isset($_POST['nulls'])) {
-                $_POST['nulls'] = [];
-            }
+        if (!isset($_POST['nulls'])) {
+            $_POST['nulls'] = [];
+        }
 
-            // Verify that they haven't supplied a value for unary operators
-            foreach ($_POST['ops'] as $k => $v) {
-                if ($data->selectOps[$v] == 'p' && $_POST['values'][$k] != '') {
-                    $this->doSelectRows(true, $lang['strselectunary']);
-                    return;
-                }
-            }
+        // Verify that they haven't supplied a value for unary operators
+        foreach ($_POST['ops'] as $k => $v) {
+            if ('p' == $data->selectOps[$v] && $_POST['values'][$k] != '') {
+                $this->doSelectRows(true, $lang['strselectunary']);
 
-            if (sizeof($_POST['show']) == 0) {
-                return $this->doSelectRows(true, $lang['strselectneedscol']);
-            } else {
-                // Generate query SQL
-                $query = $data->getSelectSQL($_REQUEST['matview'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
-
-                $_REQUEST['query']  = $query;
-                $_REQUEST['return'] = 'schema';
-
-                $this->setNoOutput(true);
-
-                $display_controller = new DisplayController($this->getContainer());
-
-                return $display_controller->render();
+                return;
             }
         }
+
+        if (0 == sizeof($_POST['show'])) {
+            return $this->doSelectRows(true, $lang['strselectneedscol']);
+        }
+        // Generate query SQL
+        $query = $data->getSelectSQL($_REQUEST['matview'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
+
+        $_REQUEST['query']  = $query;
+        $_REQUEST['return'] = 'schema';
+
+        $this->setNoOutput(true);
+
+        $display_controller = new DisplayController($this->getContainer());
+
+        return $display_controller->render();
     }
 
     /**
      * Show confirmation of drop and perform actual drop
+     * @param mixed $confirm
      */
     public function doDrop($confirm)
     {
@@ -456,19 +478,20 @@ class MaterializedviewsController extends BaseController
             if (is_array($_POST['view'])) {
                 $msg    = '';
                 $status = $data->beginTransaction();
-                if ($status == 0) {
+                if (0 == $status) {
                     foreach ($_POST['view'] as $s) {
                         $status = $data->dropView($s, isset($_POST['cascade']));
-                        if ($status == 0) {
+                        if (0 == $status) {
                             $msg .= sprintf('%s: %s<br />', htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strviewdropped']);
                         } else {
                             $data->endTransaction();
                             $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strviewdroppedbad']));
+
                             return;
                         }
                     }
                 }
-                if ($data->endTransaction() == 0) {
+                if (0 == $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($msg);
@@ -477,7 +500,7 @@ class MaterializedviewsController extends BaseController
                 }
             } else {
                 $status = $data->dropView($_POST['view'], isset($_POST['cascade']));
-                if ($status == 0) {
+                if (0 == $status) {
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($lang['strviewdropped']);
                 } else {
@@ -489,6 +512,7 @@ class MaterializedviewsController extends BaseController
 
     /**
      * Sets up choices for table linkage, and which fields to select for the view we're creating
+     * @param mixed $msg
      */
     public function doSetParamsCreate($msg = '')
     {
@@ -532,13 +556,14 @@ class MaterializedviewsController extends BaseController
             //with getTableAttributes
             $curSchema = $data->_schema;
             for ($i = 0; $i < $tblCount; $i++) {
-                if ($data->_schema != $arrSelTables[$i]['schemaname']) {
+                if ($arrSelTables[$i]['schemaname'] != $data->_schema) {
                     $data->setSchema($arrSelTables[$i]['schemaname']);
                 }
 
                 $attrs = $data->getTableAttributes($arrSelTables[$i]['tablename']);
                 while (!$attrs->EOF) {
-                    $arrFields["{$arrSelTables[$i]['schemaname']}.{$arrSelTables[$i]['tablename']}.{$attrs->fields['attname']}"] = serialize([
+                    $arrFields["{$arrSelTables[$i]['schemaname']}.{$arrSelTables[$i]['tablename']}.{$attrs->fields['attname']}"] = serialize(
+                        [
                         'schemaname' => $arrSelTables[$i]['schemaname'],
                         'tablename'  => $arrSelTables[$i]['tablename'],
                         'fieldname'  => $attrs->fields['attname']]
@@ -585,7 +610,7 @@ class MaterializedviewsController extends BaseController
                     $formLink[$i]['operator'] = 'INNER JOIN';
                 }
 
-                echo "<tr>\n<td class=\"$rowClass\">\n";
+                echo "<tr>\n<td class=\"${rowClass}\">\n";
 
                 if (!$rsLinkKeys->EOF) {
                     $curLeftLink  = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
@@ -596,18 +621,18 @@ class MaterializedviewsController extends BaseController
                     $curRightLink = '';
                 }
 
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[$i][leftlink]", true, $curLeftLink, false);
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($data->joinOps, "formLink[$i][operator]", true, $formLink[$i]['operator']);
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[$i][rightlink]", true, $curRightLink, false);
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[${i}][leftlink]", true, $curLeftLink, false);
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($data->joinOps, "formLink[${i}][operator]", true, $formLink[$i]['operator']);
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[${i}][rightlink]", true, $curRightLink, false);
                 echo "</td>\n</tr>\n";
-                $rowClass = $rowClass == 'data1' ? 'data2' : 'data1';
+                $rowClass = 'data1' == $rowClass ? 'data2' : 'data1';
             }
             echo "</table>\n<br />\n";
 
             // Build list of available operators (infix only)
             $arrOperators = [];
             foreach ($data->selectOps as $k => $v) {
-                if ($v == 'i') {
+                if ('i' == $v) {
                     $arrOperators[$k] = $k;
                 }
             }
@@ -618,12 +643,12 @@ class MaterializedviewsController extends BaseController
             echo "<tr><th class=\"data\">{$lang['strviewconditions']}</th></tr>";
             $rowClass = 'data1';
             for ($i = 0; $i < $linkCount; $i++) {
-                echo "<tr>\n<td class=\"$rowClass\">\n";
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formCondition[$i][field]");
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrOperators, "formCondition[$i][operator]", false, false);
-                echo "<input type=\"text\" name=\"formCondition[$i][txt]\" />\n";
+                echo "<tr>\n<td class=\"${rowClass}\">\n";
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formCondition[${i}][field]");
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrOperators, "formCondition[${i}][operator]", false, false);
+                echo "<input type=\"text\" name=\"formCondition[${i}][txt]\" />\n";
                 echo "</td>\n</tr>\n";
-                $rowClass = $rowClass == 'data1' ? 'data2' : 'data1';
+                $rowClass = 'data1' == $rowClass ? 'data2' : 'data1';
             }
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create_wiz\" />\n";
@@ -641,6 +666,7 @@ class MaterializedviewsController extends BaseController
 
     /**
      * Display a wizard where they can enter a new view
+     * @param mixed $msg
      */
     public function doWizardCreate($msg = '')
     {
@@ -681,6 +707,7 @@ class MaterializedviewsController extends BaseController
 
     /**
      * Displays a screen where they can enter a new view
+     * @param mixed $msg
      */
     public function doCreate($msg = '')
     {
@@ -738,13 +765,13 @@ class MaterializedviewsController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name and a definition
-        if ($_POST['formView'] == '') {
+        if ('' == $_POST['formView']) {
             $this->doCreate($lang['strviewneedsname']);
-        } elseif ($_POST['formDefinition'] == '') {
+        } elseif ('' == $_POST['formDefinition']) {
             $this->doCreate($lang['strviewneedsdef']);
         } else {
             $status = $data->createView($_POST['formView'], $_POST['formDefinition'], false, $_POST['formComment']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($lang['strviewcreated']);
             } else {
@@ -785,12 +812,12 @@ class MaterializedviewsController extends BaseController
                         // field does not exist
                         $selFields .= "\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\", ";
                         $tmpHsh[$arrTmp['fieldname']] = 1;
-                    } elseif ($_POST['dblFldMeth'] == 'rename') {
+                    } elseif ('rename' == $_POST['dblFldMeth']) {
                         // field exist and must be renamed
                         $tmpHsh[$arrTmp['fieldname']]++;
                         $selFields .= "\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\" AS \"{$arrTmp['schemaname']}_{$arrTmp['tablename']}_{$arrTmp['fieldname']}{$tmpHsh[$arrTmp['fieldname']]}\", ";
                     }
-                    /* field already exist, just ignore this one */
+                    // field already exist, just ignore this one
                 } else {
                     // no doublon control
                     $selFields .= "\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\", ";
@@ -828,21 +855,20 @@ class MaterializedviewsController extends BaseController
                             $tbl1 = "\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\"";
                             $tbl2 = "\"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\"";
 
-                            if ((!in_array($curLink, $arrJoined) && in_array($tbl1, $arrUsedTbls)) || !count($arrJoined)) {
-
+                            if ((!in_array($curLink, $arrJoined, true) && in_array($tbl1, $arrUsedTbls, true)) || !count($arrJoined)) {
                                 // Make sure for multi-column foreign keys that we use a table alias tables joined to more than once
                                 // This can (and should be) more optimized for multi-column foreign keys
-                                $adj_tbl2 = in_array($tbl2, $arrUsedTbls) ? "$tbl2 AS alias_ppa_" . mktime() : $tbl2;
+                                $adj_tbl2 = in_array($tbl2, $arrUsedTbls, true) ? "${tbl2} AS alias_ppa_" . mktime() : $tbl2;
 
-                                $linkFields .= strlen($linkFields) ? "{$curLink['operator']} $adj_tbl2 ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") "
-                                : "$tbl1 {$curLink['operator']} $adj_tbl2 ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") ";
+                                $linkFields .= strlen($linkFields) ? "{$curLink['operator']} ${adj_tbl2} ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") "
+                                : "${tbl1} {$curLink['operator']} ${adj_tbl2} ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") ";
 
                                 $arrJoined[] = $curLink;
-                                if (!in_array($tbl1, $arrUsedTbls)) {
+                                if (!in_array($tbl1, $arrUsedTbls, true)) {
                                     $arrUsedTbls[] = $tbl1;
                                 }
 
-                                if (!in_array($tbl2, $arrUsedTbls)) {
+                                if (!in_array($tbl2, $arrUsedTbls, true)) {
                                     $arrUsedTbls[] = $tbl2;
                                 }
                             }
@@ -874,7 +900,7 @@ class MaterializedviewsController extends BaseController
                 }
             }
 
-            $viewQuery = "SELECT $selFields FROM $linkFields ";
+            $viewQuery = "SELECT ${selFields} FROM ${linkFields} ";
 
             //add where from additional conditions
             if (strlen($addConditions)) {
@@ -882,7 +908,7 @@ class MaterializedviewsController extends BaseController
             }
 
             $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment']);
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($lang['strviewcreated']);
             } else {

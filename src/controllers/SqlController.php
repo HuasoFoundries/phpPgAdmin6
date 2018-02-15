@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -10,8 +14,8 @@ class SqlController extends BaseController
     public $controller_name = 'SqlController';
     public $query           = '';
     public $subject         = '';
-    public $start_time      = null;
-    public $duration        = null;
+    public $start_time;
+    public $duration;
 
     public function render()
     {
@@ -24,7 +28,7 @@ class SqlController extends BaseController
 
         // We need to store the query in a session for editing purposes
         // We avoid GPC vars to avoid truncating long queries
-        if (isset($_REQUEST['subject']) && $_REQUEST['subject'] == 'history') {
+        if (isset($_REQUEST['subject']) && 'history' == $_REQUEST['subject']) {
             // Or maybe we came from the history popup
             $_SESSION['sqlquery'] = $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$_GET['queryid']]['query'];
             $this->query          = $_SESSION['sqlquery'];
@@ -38,10 +42,8 @@ class SqlController extends BaseController
 
         // Pagination maybe set by a get link that has it as FALSE,
         // if that's the case, unset the variable.
-        if (isset($_REQUEST['paginate']) && $_REQUEST['paginate'] == 'f') {
-            unset($_REQUEST['paginate']);
-            unset($_POST['paginate']);
-            unset($_GET['paginate']);
+        if (isset($_REQUEST['paginate']) && 'f' == $_REQUEST['paginate']) {
+            unset($_REQUEST['paginate'], $_POST['paginate'], $_GET['paginate']);
         }
 
         if (isset($_REQUEST['subject'])) {
@@ -50,8 +52,8 @@ class SqlController extends BaseController
 
         // Check to see if pagination has been specified. In that case, send to display
         // script for pagination
-        /* if a file is given or the request is an explain, do not paginate */
-        if (isset($_REQUEST['paginate']) && !(isset($_FILES['script']) && $_FILES['script']['size'] > 0) && (preg_match('/^\s*explain/i', $this->query) == 0)) {
+        // if a file is given or the request is an explain, do not paginate
+        if (isset($_REQUEST['paginate']) && !(isset($_FILES['script']) && $_FILES['script']['size'] > 0) && (0 == preg_match('/^\s*explain/i', $this->query))) {
             //if (!(isset($_FILES['script']) && $_FILES['script']['size'] > 0)) {
 
             $display_controller = new DisplayController($this->getContainer());
@@ -66,7 +68,7 @@ class SqlController extends BaseController
 
         // Set the schema search path
         if (isset($_REQUEST['search_path'])) {
-            if ($data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path']))) != 0) {
+            if (0 != $data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path'])))) {
                 return $this->printFooter();
             }
         }
@@ -94,9 +96,9 @@ class SqlController extends BaseController
             // Execute the query.  If it's a script upload, special handling is necessary
             if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
                 return $this->execute_script();
-            } else {
-                return $this->execute_query();
             }
+
+            return $this->execute_query();
         } catch (\PHPPgAdmin\ADOdbException $e) {
             $message   = $e->getMessage();
             $trace     = $e->getTraceAsString();
@@ -120,9 +122,8 @@ class SqlController extends BaseController
          * @param ADORecordSet $rs The recordset returned by the script execetor
          */
         $sqlCallback = function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection) {
-
             // Check if $rs is false, if so then there was a fatal error
-            if ($rs === false) {
+            if (false === $rs) {
                 echo htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', nl2br(htmlspecialchars($_connection->getLastError())), "<br/>\n";
             } else {
                 // Print query results
@@ -137,8 +138,8 @@ class SqlController extends BaseController
 
                         $i   = 0;
                         $row = pg_fetch_row($rs);
-                        while ($row !== false) {
-                            $id = (($i % 2) == 0 ? '1' : '2');
+                        while (false !== $row) {
+                            $id = (0 == ($i % 2) ? '1' : '2');
                             echo "<tr class=\"data{$id}\">\n";
                             foreach ($row as $k => $v) {
                                 echo '<td style="white-space:nowrap;">', $misc->printVal($v, pg_fieldtype($rs, $k), ['null' => true]), '</td>';
@@ -150,6 +151,7 @@ class SqlController extends BaseController
                         ;
                         echo "</table><br/>\n";
                         echo $i, " {$lang['strrows']}</p>\n";
+
                         break;
                     case PGSQL_COMMAND_OK:
                         // If we have the command completion tag
@@ -212,7 +214,7 @@ class SqlController extends BaseController
                 echo "</tr>\n";
                 $i = 0;
                 while (!$rs->EOF) {
-                    $id = (($i % 2) == 0 ? '1' : '2');
+                    $id = (0 == ($i % 2) ? '1' : '2');
                     echo "<tr class=\"data{$id}\">\n";
                     foreach ($rs->fields as $k => $v) {
                         $finfo = $rs->fetchField($k);
@@ -242,7 +244,7 @@ class SqlController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // May as well try to time the query
-        if ($this->start_time !== null) {
+        if (null !== $this->start_time) {
             list($usec, $sec) = explode(' ', microtime());
             $end_time         = ((float) $usec + (float) $sec);
             // Get duration in milliseconds, round to 3dp's
@@ -253,7 +255,7 @@ class SqlController extends BaseController
         $this->misc->setReloadBrowser(true);
 
         // Display duration if we know it
-        if ($this->duration !== null) {
+        if (null !== $this->duration) {
             echo '<p>', sprintf($lang['strruntime'], $this->duration), "</p>\n";
         }
 
@@ -297,7 +299,7 @@ class SqlController extends BaseController
         ];
 
         // Create view and download
-        if ($this->query !== '' && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
+        if ('' !== $this->query && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [

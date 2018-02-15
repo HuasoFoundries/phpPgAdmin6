@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Controller;
 
 /**
@@ -41,43 +45,45 @@ class DataexportController extends BaseController
                 case 'dataonly':
                     // Check to see if they have pg_dump set up and if they do, use that
                     // instead of custom dump code
-                    if ($this->misc->isDumpEnabled() && ($_REQUEST['d_format'] == 'copy' || $_REQUEST['d_format'] == 'sql')) {
+                    if ($this->misc->isDumpEnabled() && ('copy' == $_REQUEST['d_format'] || 'sql' == $_REQUEST['d_format'])) {
                         $this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
                         $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
+
                         return $dbexport_controller->render();
-                    } else {
+                    }
                         $this->prtrace('d_format is', $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
                         $format = $_REQUEST['d_format'];
                         $oids   = isset($_REQUEST['d_oids']);
-                    }
+                    
                     break;
                 case 'structureonly':
                     // Check to see if they have pg_dump set up and if they do, use that
                     // instead of custom dump code
                     if ($this->misc->isDumpEnabled()) {
                         $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
-                        return $dbexport_controller->render();
-                    } else {
-                        $clean = isset($_REQUEST['s_clean']);
-                    }
 
+                        return $dbexport_controller->render();
+                    }
+                        $clean = isset($_REQUEST['s_clean']);
+                    
                     break;
                 case 'structureanddata':
                     // Check to see if they have pg_dump set up and if they do, use that
                     // instead of custom dump code
                     if ($this->misc->isDumpEnabled()) {
                         $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
+
                         return $dbexport_controller->render();
-                    } else {
+                    }
                         $format = $_REQUEST['sd_format'];
                         $clean  = isset($_REQUEST['sd_clean']);
                         $oids   = isset($_REQUEST['sd_oids']);
-                    }
+                    
                     break;
             }
 
             // Make it do a download, if necessary
-            if ($_REQUEST['output'] == 'download') {
+            if ('download' == $_REQUEST['output']) {
                 // Set headers.  MSIE is totally broken for SSL downloading, so
                 // we need to have it download in-place as plain text
                 if (strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])) {
@@ -110,12 +116,12 @@ class DataexportController extends BaseController
             $status = $data->beginDump();
 
             // If the dump is not dataonly then dump the structure prefix
-            if ($_REQUEST['what'] != 'dataonly') {
+            if ('dataonly' != $_REQUEST['what']) {
                 echo $data->getTableDefPrefix($_REQUEST['table'], $clean);
             }
 
             // If the dump is not structureonly then dump the actual data
-            if ($_REQUEST['what'] != 'structureonly') {
+            if ('structureonly' != $_REQUEST['what']) {
                 // Get database encoding
                 $dbEncoding = $data->getDatabaseEncoding();
 
@@ -129,7 +135,7 @@ class DataexportController extends BaseController
                     $rs = $data->conn->Execute($_REQUEST['query']);
                 }
 
-                if ($format == 'copy') {
+                if ('copy' == $format) {
                     $data->fieldClean($_REQUEST['table']);
                     echo "COPY \"{$_REQUEST['table']}\"";
                     if ($oids) {
@@ -156,7 +162,7 @@ class DataexportController extends BaseController
                         $rs->moveNext();
                     }
                     echo "\\.\n";
-                } elseif ($format == 'html') {
+                } elseif ('html' == $format) {
                     echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n";
                     echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n";
                     echo "<head>\r\n";
@@ -196,7 +202,7 @@ class DataexportController extends BaseController
                     echo "</table>\r\n";
                     echo "</body>\r\n";
                     echo "</html>\r\n";
-                } elseif ($format == 'xml') {
+                } elseif ('xml' == $format) {
                     echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n";
                     echo "<data>\n";
                     if (!$rs->EOF) {
@@ -229,7 +235,7 @@ class DataexportController extends BaseController
                     }
                     echo "\t</records>\n";
                     echo "</data>\n";
-                } elseif ($format == 'sql') {
+                } elseif ('sql' == $format) {
                     $data->fieldClean($_REQUEST['table']);
                     while (!$rs->EOF) {
                         echo "INSERT INTO \"{$_REQUEST['table']}\" (";
@@ -272,10 +278,12 @@ class DataexportController extends BaseController
                     switch ($format) {
                         case 'tab':
                             $sep = "\t";
+
                             break;
                         case 'csv':
                         default:
                             $sep = ',';
+
                             break;
                     }
                     if (!$rs->EOF) {
@@ -318,7 +326,7 @@ class DataexportController extends BaseController
             }
 
             // If the dump is not dataonly then dump the structure suffix
-            if ($_REQUEST['what'] != 'dataonly') {
+            if ('dataonly' != $_REQUEST['what']) {
                 // Set fetch mode back to ASSOC for the table suffix to work
                 $data->conn->setFetchMode(ADODB_FETCH_ASSOC);
                 echo $data->getTableDefSuffix($_REQUEST['table']);
