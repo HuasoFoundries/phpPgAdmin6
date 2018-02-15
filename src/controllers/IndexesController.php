@@ -20,7 +20,6 @@ class IndexesController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -88,7 +87,6 @@ class IndexesController extends BaseController
 
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -213,7 +211,6 @@ class IndexesController extends BaseController
 
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         if (!isset($_REQUEST['subject'])) {
@@ -254,7 +251,6 @@ class IndexesController extends BaseController
      */
     public function doClusterIndex($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -298,7 +294,6 @@ class IndexesController extends BaseController
 
     public function doReindex()
     {
-
         $lang   = $this->lang;
         $data   = $this->misc->getDatabaseAccessor();
         $status = $data->reindex('INDEX', $_REQUEST['index']);
@@ -316,7 +311,6 @@ class IndexesController extends BaseController
      */
     public function doCreateIndex($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -453,7 +447,6 @@ class IndexesController extends BaseController
      */
     public function doSaveCreateIndex()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -504,7 +497,6 @@ class IndexesController extends BaseController
      */
     public function doDropIndex($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

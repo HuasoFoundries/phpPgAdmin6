@@ -20,7 +20,6 @@ class SchemasController extends BaseController
      */
     public function render()
     {
-
         $lang   = $this->lang;
         $action = $this->action;
 
@@ -92,7 +91,6 @@ class SchemasController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -193,7 +191,6 @@ class SchemasController extends BaseController
      */
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -230,7 +227,6 @@ class SchemasController extends BaseController
 
     public function doSubTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

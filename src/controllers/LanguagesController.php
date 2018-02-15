@@ -20,7 +20,6 @@ class LanguagesController extends BaseController
      */
     public function render()
     {
-
         $lang   = $this->lang;
         $action = $this->action;
         if ('tree' == $action) {
@@ -47,7 +46,6 @@ class LanguagesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -83,7 +81,6 @@ class LanguagesController extends BaseController
      */
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

@@ -20,7 +20,6 @@ class RulesController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -73,7 +72,6 @@ class RulesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -140,7 +138,6 @@ class RulesController extends BaseController
 
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -164,7 +161,6 @@ class RulesController extends BaseController
      */
     public function createRule($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -257,7 +253,6 @@ class RulesController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

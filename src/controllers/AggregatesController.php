@@ -16,23 +16,28 @@ class AggregatesController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render() {}
+    public function render()
+    {
+    }
 
     /**
      * Show default list of aggregate functions in the database.
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '') {}
+    public function doDefault($msg = '')
+    {
+    }
 
-    public function doTree() {}
+    public function doTree()
+    {
+    }
 
     /**
      * Actually creates the new aggregate in the database.
      */
     public function doSaveCreate()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         // Check inputs
@@ -83,7 +88,6 @@ class AggregatesController extends BaseController
      */
     public function doCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -163,7 +167,6 @@ class AggregatesController extends BaseController
      */
     public function doSaveAlter()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -201,7 +204,6 @@ class AggregatesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -249,7 +251,6 @@ class AggregatesController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -286,7 +287,6 @@ class AggregatesController extends BaseController
      */
     public function doProperties($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

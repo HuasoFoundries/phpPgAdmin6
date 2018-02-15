@@ -18,7 +18,6 @@ class BrowserController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $this->misc->setNoDBConnection(true);

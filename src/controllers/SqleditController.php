@@ -22,7 +22,6 @@ class SqleditController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -58,7 +57,6 @@ class SqleditController extends BaseController
      */
     public function doDefault()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -141,7 +139,6 @@ class SqleditController extends BaseController
      */
     public function _printConnection($action)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -166,7 +163,6 @@ class SqleditController extends BaseController
      */
     public function doFind()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

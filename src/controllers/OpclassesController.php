@@ -20,7 +20,6 @@ class OpclassesController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -50,7 +49,6 @@ class OpclassesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -94,7 +92,6 @@ class OpclassesController extends BaseController
      */
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

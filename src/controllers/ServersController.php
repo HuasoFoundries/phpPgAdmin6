@@ -26,7 +26,6 @@ class ServersController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -147,7 +146,6 @@ class ServersController extends BaseController
 
     public function doTree()
     {
-
         $nodes    = [];
         $group_id = isset($_GET['group']) ? $_GET['group'] : false;
 

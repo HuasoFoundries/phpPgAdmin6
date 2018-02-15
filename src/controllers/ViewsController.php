@@ -22,7 +22,6 @@ class ViewsController extends BaseController
      */
     public function render()
     {
-
         $lang   = $this->lang;
         $action = $this->action;
 
@@ -111,7 +110,6 @@ class ViewsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -247,7 +245,6 @@ class ViewsController extends BaseController
      */
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -269,7 +266,6 @@ class ViewsController extends BaseController
 
     public function doSubTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -307,7 +303,6 @@ class ViewsController extends BaseController
      */
     public function doSelectRows($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -440,7 +435,6 @@ class ViewsController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -516,7 +510,6 @@ class ViewsController extends BaseController
      */
     public function doSetParamsCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -670,7 +663,6 @@ class ViewsController extends BaseController
      */
     public function doWizardCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -711,7 +703,6 @@ class ViewsController extends BaseController
      */
     public function doCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -758,7 +749,6 @@ class ViewsController extends BaseController
      */
     public function doSaveCreate()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -783,7 +773,6 @@ class ViewsController extends BaseController
      */
     public function doSaveCreateWiz()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
