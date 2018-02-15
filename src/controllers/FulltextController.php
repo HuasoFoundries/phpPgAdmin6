@@ -6,17 +6,17 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class FulltextController extends BaseController
 {
     public $controller_name = 'FulltextController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -155,28 +155,28 @@ class FulltextController extends BaseController
             'configuration' => [
                 'title' => $lang['strftsconfig'],
                 'field' => Decorator::field('name'),
-                'url'   => "fulltext.php?action=viewconfig&amp;{$this->misc->href}&amp;",
-                'vars'  => ['ftscfg' => 'name'],
+                'url' => "fulltext.php?action=viewconfig&amp;{$this->misc->href}&amp;",
+                'vars' => ['ftscfg' => 'name'],
             ],
-            'schema'        => [
+            'schema' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('schema'),
             ],
-            'actions'       => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'       => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('comment'),
             ],
         ];
 
         $actions = [
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url' => 'fulltext.php',
                         'urlvars' => [
                             'action' => 'dropconfig',
                             'ftscfg' => Decorator::field('name'),
@@ -186,9 +186,9 @@ class FulltextController extends BaseController
             ],
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url' => 'fulltext.php',
                         'urlvars' => [
                             'action' => 'alterconfig',
                             'ftscfg' => Decorator::field('name'),
@@ -202,14 +202,14 @@ class FulltextController extends BaseController
 
         $navlinks = [
             'createconf' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url' => 'fulltext.php',
                         'urlvars' => [
-                            'action'   => 'createconfig',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'createconfig',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -230,14 +230,14 @@ class FulltextController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $tabs  = $this->misc->getNavTabs('fulltext');
+        $tabs = $this->misc->getNavTabs('fulltext');
         $items = $this->adjustTabsForTree($tabs);
 
         $reqvars = $this->misc->getRequestVars('ftscfg');
 
         $attrs = [
-            'text'   => Decorator::field('title'),
-            'icon'   => Decorator::field('icon'),
+            'text' => Decorator::field('title'),
+            'icon' => Decorator::field('icon'),
             'action' => Decorator::actionurl(
                 'fulltext.php',
                 $reqvars,
@@ -248,7 +248,7 @@ class FulltextController extends BaseController
                 $reqvars,
                 [
                     'action' => 'subtree',
-                    'what'   => Decorator::field('icon'), // IZ: yeah, it's ugly, but I do not want to change navigation tabs arrays
+                    'what' => Decorator::field('icon'), // IZ: yeah, it's ugly, but I do not want to change navigation tabs arrays
                 ]
             ),
         ];
@@ -265,17 +265,17 @@ class FulltextController extends BaseController
 
         switch ($what) {
             case 'FtsCfg':
-                $items   = $data->getFtsConfigurations(false);
+                $items = $data->getFtsConfigurations(false);
                 $urlvars = ['action' => 'viewconfig', 'ftscfg' => Decorator::field('name')];
 
                 break;
             case 'FtsDict':
-                $items   = $data->getFtsDictionaries(false);
+                $items = $data->getFtsDictionaries(false);
                 $urlvars = ['action' => 'viewdicts'];
 
                 break;
             case 'FtsParser':
-                $items   = $data->getFtsParsers(false);
+                $items = $data->getFtsParsers(false);
                 $urlvars = ['action' => 'viewparsers'];
 
                 break;
@@ -286,15 +286,15 @@ class FulltextController extends BaseController
         $reqvars = $this->misc->getRequestVars('ftscfg');
 
         $attrs = [
-            'text'    => Decorator::field('name'),
-            'icon'    => $what,
+            'text' => Decorator::field('name'),
+            'icon' => $what,
             'toolTip' => Decorator::field('comment'),
-            'action'  => Decorator::actionurl(
+            'action' => Decorator::actionurl(
                 'fulltext.php',
                 $reqvars,
                 $urlvars
             ),
-            'branch'  => Decorator::ifempty(
+            'branch' => Decorator::ifempty(
                 Decorator::field('branch'),
                 '',
                 Decorator::url(
@@ -324,7 +324,7 @@ class FulltextController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropftsconfig'], $this->misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/fulltext.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"dropconfig\" />\n";
             echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
@@ -357,7 +357,7 @@ class FulltextController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropftsdict'], $this->misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/fulltext.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"dropdict\" />\n";
             echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
@@ -380,7 +380,8 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Displays a screen where one can enter a new FTS configuration
+     * Displays a screen where one can enter a new FTS configuration.
+     *
      * @param mixed $msg
      */
     public function doCreateConfig($msg = '')
@@ -421,7 +422,7 @@ class FulltextController extends BaseController
         $this->printTitle($lang['strftscreateconfig'], 'pg.ftscfg.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/fulltext.php\" method=\"post\">\n";
         echo "<table>\n";
         // conf name
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -432,14 +433,14 @@ class FulltextController extends BaseController
         echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftstemplate']}</th>\n";
         echo "\t\t<td class=\"data1\">";
 
-        $tpls   = [];
+        $tpls = [];
         $tplsel = '';
         while (!$ftscfgs->EOF) {
             $data->fieldClean($ftscfgs->fields['schema']);
             $data->fieldClean($ftscfgs->fields['name']);
-            $tplname        = $ftscfgs->fields['schema'] . '.' . $ftscfgs->fields['name'];
+            $tplname = $ftscfgs->fields['schema'].'.'.$ftscfgs->fields['name'];
             $tpls[$tplname] = serialize([
-                'name'   => $ftscfgs->fields['name'],
+                'name' => $ftscfgs->fields['name'],
                 'schema' => $ftscfgs->fields['schema'],
             ]);
             if ($_POST['formTemplate'] == $tpls[$tplname]) {
@@ -454,11 +455,11 @@ class FulltextController extends BaseController
         echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftsparser']}</th>\n";
         echo "\t\t<td class=\"data1\">\n";
         $ftsparsers_ = [];
-        $ftsparsel   = '';
+        $ftsparsel = '';
         while (!$ftsparsers->EOF) {
             $data->fieldClean($ftsparsers->fields['schema']);
             $data->fieldClean($ftsparsers->fields['name']);
-            $parsername = $ftsparsers->fields['schema'] . '.' . $ftsparsers->fields['name'];
+            $parsername = $ftsparsers->fields['schema'].'.'.$ftsparsers->fields['name'];
 
             $ftsparsers_[$parsername] = serialize([
                 'parser' => $ftsparsers->fields['name'],
@@ -489,7 +490,7 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Actually creates the new FTS configuration in the database
+     * Actually creates the new FTS configuration in the database.
      */
     public function doSaveCreateConfig()
     {
@@ -535,6 +536,7 @@ class FulltextController extends BaseController
 
     /**
      * Display a form to permit editing FTS configuration properies.
+     *
      * @param mixed $msg
      */
     public function doAlterConfig($msg = '')
@@ -569,7 +571,7 @@ class FulltextController extends BaseController
             // Fetch all FTS parsers from the database
             $ftsparsers = $data->getFtsParsers();
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/fulltext.php\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -598,14 +600,14 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Save the form submission containing changes to a FTS configuration
+     * Save the form submission containing changes to a FTS configuration.
      */
     public function doSaveAlterConfig()
     {
         $conf = $this->conf;
 
-        $lang   = $this->lang;
-        $data   = $this->misc->getDatabaseAccessor();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
         $status = $data->updateFtsConfiguration($_POST['ftscfg'], $_POST['formComment'], $_POST['formName']);
         if (0 == $status) {
             $this->doDefault($lang['strftsconfigaltered']);
@@ -615,7 +617,8 @@ class FulltextController extends BaseController
     }
 
     /**
-     * View list of FTS parsers
+     * View list of FTS parsers.
+     *
      * @param mixed $msg
      */
     public function doViewParsers($msg = '')
@@ -633,11 +636,11 @@ class FulltextController extends BaseController
         $parsers = $data->getFtsParsers(false);
 
         $columns = [
-            'schema'  => [
+            'schema' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('schema'),
             ],
-            'name'    => [
+            'name' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('name'),
             ],
@@ -655,7 +658,8 @@ class FulltextController extends BaseController
     }
 
     /**
-     * View list of FTS dictionaries
+     * View list of FTS dictionaries.
+     *
      * @param mixed $msg
      */
     public function doViewDicts($msg = '')
@@ -673,11 +677,11 @@ class FulltextController extends BaseController
         $dicts = $data->getFtsDictionaries(false);
 
         $columns = [
-            'schema'  => [
+            'schema' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('schema'),
             ],
-            'name'    => [
+            'name' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('name'),
             ],
@@ -691,13 +695,13 @@ class FulltextController extends BaseController
         ];
 
         $actions = [
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url' => 'fulltext.php',
                         'urlvars' => [
-                            'action'  => 'dropdict',
+                            'action' => 'dropdict',
                             'ftsdict' => Decorator::field('name'),
                         ],
                     ],
@@ -705,11 +709,11 @@ class FulltextController extends BaseController
             ],
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url' => 'fulltext.php',
                         'urlvars' => [
-                            'action'  => 'alterdict',
+                            'action' => 'alterdict',
                             'ftsdict' => Decorator::field('name'),
                         ],
                     ],
@@ -721,14 +725,14 @@ class FulltextController extends BaseController
 
         $navlinks = [
             'createdict' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url' => 'fulltext.php',
                         'urlvars' => [
-                            'action'   => 'createdict',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'createdict',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -740,7 +744,8 @@ class FulltextController extends BaseController
     }
 
     /**
-     * View details of FTS configuration given
+     * View details of FTS configuration given.
+     *
      * @param mixed $ftscfg
      * @param mixed $msg
      */
@@ -761,7 +766,7 @@ class FulltextController extends BaseController
         $map = $data->getFtsConfigurationMap($ftscfg);
 
         $columns = [
-            'name'         => [
+            'name' => [
                 'title' => $lang['strftsmapping'],
                 'field' => Decorator::field('name'),
             ],
@@ -769,48 +774,48 @@ class FulltextController extends BaseController
                 'title' => $lang['strftsdicts'],
                 'field' => Decorator::field('dictionaries'),
             ],
-            'actions'      => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'      => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('description'),
             ],
         ];
 
         $actions = [
-            'drop'         => [
+            'drop' => [
                 'multiaction' => 'dropmapping',
-                'content'     => $lang['strdrop'],
-                'attr'        => [
+                'content' => $lang['strdrop'],
+                'attr' => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url' => 'fulltext.php',
                         'urlvars' => [
-                            'action'  => 'dropmapping',
+                            'action' => 'dropmapping',
                             'mapping' => Decorator::field('name'),
-                            'ftscfg'  => Decorator::field('cfgname'),
+                            'ftscfg' => Decorator::field('cfgname'),
                         ],
                     ],
                 ],
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url' => 'fulltext.php',
                         'urlvars' => [
-                            'action'  => 'altermapping',
+                            'action' => 'altermapping',
                             'mapping' => Decorator::field('name'),
-                            'ftscfg'  => Decorator::field('cfgname'),
+                            'ftscfg' => Decorator::field('cfgname'),
                         ],
                     ],
                 ],
             ],
             'multiactions' => [
                 'keycols' => ['mapping' => 'name'],
-                'url'     => 'fulltext.php',
+                'url' => 'fulltext.php',
                 'default' => null,
-                'vars'    => ['ftscfg' => $ftscfg],
+                'vars' => ['ftscfg' => $ftscfg],
             ],
         ];
 
@@ -818,15 +823,15 @@ class FulltextController extends BaseController
 
         $navlinks = [
             'addmapping' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url' => 'fulltext.php',
                         'urlvars' => [
-                            'action'   => 'addmapping',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'addmapping',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'ftscfg'   => $ftscfg,
+                            'schema' => $_REQUEST['schema'],
+                            'ftscfg' => $ftscfg,
                         ],
                     ],
                 ],
@@ -838,7 +843,8 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Displays a screen where one can enter a details of a new FTS dictionary
+     * Displays a screen where one can enter a details of a new FTS dictionary.
+     *
      * @param mixed $msg
      */
     public function doCreateDict($msg = '')
@@ -886,7 +892,7 @@ class FulltextController extends BaseController
         $this->printTitle($lang['strftscreatedict'], 'pg.ftsdict.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/fulltext.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -897,14 +903,14 @@ class FulltextController extends BaseController
         // Template
         echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strftstemplate']}</th>\n";
         echo "\t\t<td class=\"data1\">";
-        $tpls   = [];
+        $tpls = [];
         $tplsel = '';
         while (!$ftstpls->EOF) {
             $data->fieldClean($ftstpls->fields['schema']);
             $data->fieldClean($ftstpls->fields['name']);
-            $tplname        = $ftstpls->fields['schema'] . '.' . $ftstpls->fields['name'];
+            $tplname = $ftstpls->fields['schema'].'.'.$ftstpls->fields['name'];
             $tpls[$tplname] = serialize([
-                'name'   => $ftstpls->fields['name'],
+                'name' => $ftstpls->fields['name'],
                 'schema' => $ftstpls->fields['schema'],
             ]);
             if ($_POST['formTemplate'] == $tpls[$tplname]) {
@@ -963,7 +969,7 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Actually creates the new FTS dictionary in the database
+     * Actually creates the new FTS dictionary in the database.
      */
     public function doSaveCreateDict()
     {
@@ -1019,6 +1025,7 @@ class FulltextController extends BaseController
 
     /**
      * Display a form to permit editing FTS dictionary properies.
+     *
      * @param mixed $msg
      */
     public function doAlterDict($msg = '')
@@ -1046,7 +1053,7 @@ class FulltextController extends BaseController
                 $_POST['formName'] = $_REQUEST['ftsdict'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/fulltext.php\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -1076,7 +1083,7 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Save the form submission containing changes to a FTS dictionary
+     * Save the form submission containing changes to a FTS dictionary.
      */
     public function doSaveAlterDict()
     {
@@ -1094,7 +1101,8 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop of FTS mapping
+     * Show confirmation of drop and perform actual drop of FTS mapping.
+     *
      * @param mixed $confirm
      */
     public function doDropMapping($confirm)
@@ -1120,7 +1128,7 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: proper breadcrumbs
             $this->printTitle($lang['strdrop'], 'pg.ftscfg.alter');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/fulltext.php\" method=\"post\">\n";
 
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
@@ -1186,7 +1194,7 @@ class FulltextController extends BaseController
                 $_POST['ftscfg'] = $_REQUEST['ftscfg'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/fulltext.php\" method=\"post\">\n";
 
             echo "<table>\n";
             echo "\t<tr>\n";
@@ -1195,12 +1203,12 @@ class FulltextController extends BaseController
 
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
-                $ma_mappings       = [];
+                $ma_mappings = [];
                 $ma_mappings_names = [];
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     printf('<input type="hidden" name="formMapping[]" value="%s" />', htmlspecialchars($a['mapping']));
-                    $ma_mappings[]       = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
+                    $ma_mappings[] = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
                     $ma_mappings_names[] = $a['mapping'];
                 }
                 echo implode(', ', $ma_mappings_names);
@@ -1243,7 +1251,7 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Save the form submission containing changes to a FTS mapping
+     * Save the form submission containing changes to a FTS mapping.
      */
     public function doSaveAlterMapping()
     {
@@ -1253,7 +1261,7 @@ class FulltextController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
-        $status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
+        $status = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
         if (0 == $status) {
             $this->doViewConfig($_POST['ftscfg'], $lang['strftsmappingaltered']);
         } else {
@@ -1262,7 +1270,8 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Show the form to enter parameters of a new FTS mapping
+     * Show the form to enter parameters of a new FTS mapping.
+     *
      * @param mixed $msg
      */
     public function doAddMapping($msg = '')
@@ -1292,14 +1301,14 @@ class FulltextController extends BaseController
 
             $mappings = $data->getFtsMappings($_POST['ftscfg']);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/fulltext.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n";
             echo "\t\t<th class=\"data left required\">{$lang['strftsmapping']}</th>\n";
             echo "\t\t<td class=\"data1\">";
             echo "\t\t\t<select name=\"formMapping\">\n";
             while (!$mappings->EOF) {
-                $mapping      = htmlspecialchars($mappings->fields['name']);
+                $mapping = htmlspecialchars($mappings->fields['name']);
                 $mapping_desc = htmlspecialchars($mappings->fields['description']);
                 echo "\t\t\t\t<option value=\"{$mapping}\"",
                 $mapping == $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : '', "</option>\n";
@@ -1337,7 +1346,7 @@ class FulltextController extends BaseController
     }
 
     /**
-     * Save the form submission containing parameters of a new FTS mapping
+     * Save the form submission containing parameters of a new FTS mapping.
      */
     public function doSaveAddMapping()
     {
@@ -1347,7 +1356,7 @@ class FulltextController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
-        $status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);
+        $status = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);
         if (0 == $status) {
             $this->doViewConfig($_POST['ftscfg'], $lang['strftsmappingadded']);
         } else {

@@ -31,11 +31,11 @@ class ActionUrlDecorator extends Decorator
             $sep = '?';
             ksort($queryVars);
             foreach ($queryVars as $var => $value) {
-                $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($value, $fields);
+                $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($value, $fields);
                 $sep = '&';
             }
         }
 
-        return \SUBFOLDER . '/src/views/' . str_replace('.php', '', $url);
+        return \SUBFOLDER.'/src/views/'.str_replace('.php', '', $url);
     }
 }

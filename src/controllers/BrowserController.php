@@ -7,14 +7,14 @@
 namespace PHPPgAdmin\Controller;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class BrowserController extends BaseController
 {
     public $controller_name = 'BrowserController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -27,18 +27,18 @@ class BrowserController extends BaseController
         $this->setNoBottomLink(true);
 
         $viewVars = ['icon' => [
-            'blank'          => $this->misc->icon('blank'),
-            'I'              => $this->misc->icon('I'),
-            'L'              => $this->misc->icon('L'),
-            'Lminus'         => $this->misc->icon('Lminus'),
-            'Loading'        => $this->misc->icon('Loading'),
-            'Lplus'          => $this->misc->icon('Lplus'),
+            'blank' => $this->misc->icon('blank'),
+            'I' => $this->misc->icon('I'),
+            'L' => $this->misc->icon('L'),
+            'Lminus' => $this->misc->icon('Lminus'),
+            'Loading' => $this->misc->icon('Loading'),
+            'Lplus' => $this->misc->icon('Lplus'),
             'ObjectNotFound' => $this->misc->icon('ObjectNotFound'),
-            'Refresh'        => $this->misc->icon('Refresh'),
-            'Servers'        => $this->misc->icon('Servers'),
-            'T'              => $this->misc->icon('T'),
-            'Tminus'         => $this->misc->icon('Tminus'),
-            'Tplus'          => $this->misc->icon('Tplus'),
+            'Refresh' => $this->misc->icon('Refresh'),
+            'Servers' => $this->misc->icon('Servers'),
+            'T' => $this->misc->icon('T'),
+            'Tminus' => $this->misc->icon('Tminus'),
+            'Tplus' => $this->misc->icon('Tplus'),
         ]];
 
         echo $this->view->fetch('browser.twig', $viewVars);

@@ -12,7 +12,7 @@ $config = PhpCsFixer\Config::create()
     ->setRules([
         '@PHP56Migration' => true,
         '@PHPUnit60Migration:risky' => true,
-        '@Symfony' => false,
+        '@Symfony' => true,
         '@Symfony:risky' => false,
         '@PSR1'=>true,
         '@PSR2'=>true,
@@ -29,6 +29,7 @@ $config = PhpCsFixer\Config::create()
         'modernize_types_casting'=>true,
         'header_comment' => ['header' => $header],
         'heredoc_to_nowdoc' => true,
+
         'list_syntax' => ['syntax' => 'long'],
         'method_chaining_indentation' => true,
         'method_argument_space' => ['ensure_fully_multiline' => true],
@@ -54,6 +55,7 @@ $config = PhpCsFixer\Config::create()
         'single_line_comment_style' => true,
         'strict_comparison' => false,
         'strict_param' => true,
+        'single_quote'=>true,
         'yoda_style' => true,
     ])
     ->setFinder(

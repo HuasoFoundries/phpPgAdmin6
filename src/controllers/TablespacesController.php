@@ -6,24 +6,22 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
-
 /**
- * Base controller class
+ * Base controller class.
  */
 class TablespacesController extends BaseController
 {
     public $controller_name = 'TablespacesController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
         $conf = $this->conf;
 
-        $lang   = $this->lang;
-        $data   = $this->misc->getDatabaseAccessor();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         $this->printHeader($lang['strtablespaces']);
@@ -76,7 +74,8 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Show default list of tablespaces in the cluster
+     * Show default list of tablespaces in the cluster.
+     *
      * @param mixed $msg
      */
     public function doDefault($msg = '')
@@ -97,7 +96,7 @@ class TablespacesController extends BaseController
                 'title' => $lang['strname'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
             ],
-            'owner'    => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spcowner'),
             ],
@@ -105,7 +104,7 @@ class TablespacesController extends BaseController
                 'title' => $lang['strlocation'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spclocation'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -118,25 +117,25 @@ class TablespacesController extends BaseController
         }
 
         $actions = [
-            'alter'      => [
+            'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'tablespaces.php',
+                        'url' => 'tablespaces.php',
                         'urlvars' => [
-                            'action'     => 'edit',
+                            'action' => 'edit',
                             'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
                         ],
                     ],
                 ],
             ],
-            'drop'       => [
+            'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'tablespaces.php',
+                        'url' => 'tablespaces.php',
                         'urlvars' => [
-                            'action'     => 'confirm_drop',
+                            'action' => 'confirm_drop',
                             'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
                         ],
                     ],
@@ -144,11 +143,11 @@ class TablespacesController extends BaseController
             ],
             'privileges' => [
                 'content' => $lang['strprivileges'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges.php',
+                        'url' => 'privileges.php',
                         'urlvars' => [
-                            'subject'    => 'tablespace',
+                            'subject' => 'tablespace',
                             'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
                         ],
                     ],
@@ -159,9 +158,9 @@ class TablespacesController extends BaseController
         echo $this->printTable($tablespaces, $columns, $actions, 'tablespaces-tablespaces', $lang['strnotablespaces']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'tablespaces.php',
+                    'url' => 'tablespaces.php',
                     'urlvars' => [
                         'action' => 'create',
                         'server' => $_REQUEST['server'],
@@ -173,7 +172,8 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Function to allow altering of a tablespace
+     * Function to allow altering of a tablespace.
+     *
      * @param mixed $msg
      */
     public function doAlter($msg = '')
@@ -205,7 +205,7 @@ class TablespacesController extends BaseController
                 $_POST['comment'] = ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/tablespaces.php\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -239,7 +239,7 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Function to save after altering a tablespace
+     * Function to save after altering a tablespace.
      */
     public function doSaveAlter()
     {
@@ -267,7 +267,8 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
      * @param mixed $confirm
      */
     public function doDrop($confirm)
@@ -283,7 +284,7 @@ class TablespacesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/tablespaces.php\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
@@ -301,7 +302,8 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new tablespace
+     * Displays a screen where they can enter a new tablespace.
+     *
      * @param mixed $msg
      */
     public function doCreate($msg = '')
@@ -336,7 +338,7 @@ class TablespacesController extends BaseController
         $this->printTitle($lang['strcreatetablespace'], 'pg.tablespace.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/tablespaces.php\" method=\"post\">\n";
         echo $this->misc->form;
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -366,7 +368,7 @@ class TablespacesController extends BaseController
     }
 
     /**
-     * Actually creates the new tablespace in the cluster
+     * Actually creates the new tablespace in the cluster.
      */
     public function doSaveCreate()
     {

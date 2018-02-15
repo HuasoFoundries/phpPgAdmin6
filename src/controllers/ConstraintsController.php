@@ -6,17 +6,17 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class ConstraintsController extends BaseController
 {
     public $controller_name = 'ConstraintsController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -26,12 +26,12 @@ class ConstraintsController extends BaseController
 
         $action = $this->action;
         if ('tree' == $action) {
-            return $this->/** @scrutinizer ignore-call */doTree();
+            return $this->/* @scrutinizer ignore-call */doTree();
         }
 
         $this->printHeader(
-            $lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
-            '<script src="' . \SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>',
+            $lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strconstraints'],
+            '<script src="'.\SUBFOLDER.'/js/indexes.js" type="text/javascript"></script>',
             true,
             'header_select2.twig'
         );
@@ -94,12 +94,12 @@ class ConstraintsController extends BaseController
 
                 break;
             case 'save_create':
-                $this->/** @scrutinizer ignore-call */
+                $this->// @scrutinizer ignore-call
                 doSaveCreate();
 
                 break;
             case 'create':
-                $this->/** @scrutinizer ignore-call */
+                $this->// @scrutinizer ignore-call
                 doCreate();
 
                 break;
@@ -125,7 +125,8 @@ class ConstraintsController extends BaseController
     }
 
     /**
-     * List all the constraints on the table
+     * List all the constraints on the table.
+     *
      * @param mixed $msg
      */
     public function doDefault($msg = '')
@@ -137,8 +138,8 @@ class ConstraintsController extends BaseController
 
         $cnPre = function (&$rowdata) use ($data) {
             if (is_null($rowdata->fields['consrc'])) {
-                $atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
-                $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
+                $atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
+                $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
             } else {
                 $rowdata->fields['+definition'] = $rowdata->fields['consrc'];
             }
@@ -158,12 +159,12 @@ class ConstraintsController extends BaseController
             'definition' => [
                 'title' => $lang['strdefinition'],
                 'field' => Decorator::field('+definition'),
-                'type'  => 'pre',
+                'type' => 'pre',
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'    => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('constcomment'),
             ],
@@ -172,14 +173,14 @@ class ConstraintsController extends BaseController
         $actions = [
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints.php',
+                        'url' => 'constraints.php',
                         'urlvars' => [
-                            'action'     => 'confirm_drop',
-                            'table'      => $_REQUEST['table'],
+                            'action' => 'confirm_drop',
+                            'table' => $_REQUEST['table'],
                             'constraint' => Decorator::field('conname'),
-                            'type'       => Decorator::field('contype'),
+                            'type' => Decorator::field('contype'),
                         ],
                     ],
                 ],
@@ -190,60 +191,60 @@ class ConstraintsController extends BaseController
 
         $navlinks = [
             'addcheck' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints.php',
+                        'url' => 'constraints.php',
                         'urlvars' => [
-                            'action'   => 'add_check',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'add_check',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
+                            'schema' => $_REQUEST['schema'],
+                            'table' => $_REQUEST['table'],
                         ],
                     ],
                 ],
                 'content' => $lang['straddcheck'],
             ],
-            'adduniq'  => [
-                'attr'    => [
+            'adduniq' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints.php',
+                        'url' => 'constraints.php',
                         'urlvars' => [
-                            'action'   => 'add_unique_key',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'add_unique_key',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
+                            'schema' => $_REQUEST['schema'],
+                            'table' => $_REQUEST['table'],
                         ],
                     ],
                 ],
                 'content' => $lang['stradduniq'],
             ],
-            'addpk'    => [
-                'attr'    => [
+            'addpk' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints.php',
+                        'url' => 'constraints.php',
                         'urlvars' => [
-                            'action'   => 'add_primary_key',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'add_primary_key',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
+                            'schema' => $_REQUEST['schema'],
+                            'table' => $_REQUEST['table'],
                         ],
                     ],
                 ],
                 'content' => $lang['straddpk'],
             ],
-            'addfk'    => [
-                'attr'    => [
+            'addfk' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints.php',
+                        'url' => 'constraints.php',
                         'urlvars' => [
-                            'action'   => 'add_foreign_key',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'add_foreign_key',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
+                            'schema' => $_REQUEST['schema'],
+                            'table' => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -254,7 +255,8 @@ class ConstraintsController extends BaseController
     }
 
     /**
-     * Confirm and then actually add a FOREIGN KEY constraint
+     * Confirm and then actually add a FOREIGN KEY constraint.
+     *
      * @param mixed $stage
      * @param mixed $msg
      */
@@ -343,9 +345,9 @@ class ConstraintsController extends BaseController
                     echo "<table>\n";
                     echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strfktarget']}</th></tr>";
                     echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$lang['strfkcolumnlist']}</th></tr>\n";
-                    echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
-                    echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
-                    echo '<td class="data1">' . $selIndex->fetch() . "</td></tr>\n";
+                    echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
+                    echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
+                    echo '<td class="data1">'.$selIndex->fetch()."</td></tr>\n";
                     echo "<tr><th class=\"data\" colspan=\"3\">{$lang['stractions']}</th></tr>";
                     echo '<tr>';
                     echo "<td class=\"data1\" colspan=\"3\">\n";
@@ -444,7 +446,7 @@ class ConstraintsController extends BaseController
                 $this->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
                 $this->printMsg($msg);
 
-                $attrs  = $data->getTableAttributes($_REQUEST['table']);
+                $attrs = $data->getTableAttributes($_REQUEST['table']);
                 $tables = $data->getTables(true);
 
                 $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
@@ -474,9 +476,9 @@ class ConstraintsController extends BaseController
                 echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strname']}</th></tr>\n";
                 echo "<tr><td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>\n";
                 echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$lang['strfkcolumnlist']}</th></tr>\n";
-                echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
-                echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . "</td>\n";
-                echo '<td class=data1>' . $selIndex->fetch() . "</td></tr>\n";
+                echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
+                echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch()."</td>\n";
+                echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
                 echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strfktarget']}</th></tr>";
                 echo '<tr>';
                 echo '<td class="data1" colspan="3"><select class="select2" name="target">';
@@ -507,7 +509,8 @@ class ConstraintsController extends BaseController
     }
 
     /**
-     * Confirm and then actually add a PRIMARY KEY or UNIQUE constraint
+     * Confirm and then actually add a PRIMARY KEY or UNIQUE constraint.
+     *
      * @param mixed $type
      * @param mixed $confirm
      * @param mixed $msg
@@ -587,9 +590,9 @@ class ConstraintsController extends BaseController
             echo '<td class="data1" colspan="3"><input type="text" name="name" value="', htmlspecialchars($_POST['name']),
                 "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>";
             echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$lang['strindexcolumnlist']}</th></tr>\n";
-            echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
-            echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
-            echo '<td class=data1>' . $selIndex->fetch() . "</td></tr>\n";
+            echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
+            echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
+            echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
 
             // Tablespace (if there are any)
             if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
@@ -656,7 +659,8 @@ class ConstraintsController extends BaseController
     }
 
     /**
-     * Confirm and then actually add a CHECK constraint
+     * Confirm and then actually add a CHECK constraint.
+     *
      * @param mixed $confirm
      * @param mixed $msg
      */
@@ -680,7 +684,7 @@ class ConstraintsController extends BaseController
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/constraints.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
@@ -717,7 +721,8 @@ class ConstraintsController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
      * @param mixed $confirm
      */
     public function doDrop($confirm)
@@ -737,7 +742,7 @@ class ConstraintsController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/constraints.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";

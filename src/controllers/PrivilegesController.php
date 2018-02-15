@@ -7,23 +7,23 @@
 namespace PHPPgAdmin\Controller;
 
 /**
- * PrivilegesController controller class
+ * PrivilegesController controller class.
  */
 class PrivilegesController extends BaseController
 {
     public $controller_name = 'PrivilegesController';
-    public $table_place     = 'privileges-privileges';
+    public $table_place = 'privileges-privileges';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
         $conf = $this->conf;
 
-        $lang   = $this->lang;
+        $lang = $this->lang;
         $action = $this->action;
-        $data   = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strprivileges']);
         $this->printBody();
@@ -51,16 +51,17 @@ class PrivilegesController extends BaseController
     }
 
     /**
-     * Show permissions on a database, namespace, relation, language or function
+     * Show permissions on a database, namespace, relation, language or function.
+     *
      * @param mixed $msg
      */
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
 
-        $lang     = $this->lang;
-        $action   = $this->action;
-        $data     = $this->misc->getDatabaseAccessor();
+        $lang = $this->lang;
+        $action = $this->action;
+        $data = $this->misc->getDatabaseAccessor();
         $database = $this->misc->getDatabase();
 
         $this->printTrail($_REQUEST['subject']);
@@ -84,8 +85,8 @@ class PrivilegesController extends BaseController
         $this->printMsg($msg);
 
         // Determine whether object should be ref'd by name or oid.
-        if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-            $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
+        if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+            $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
         } else {
             $object = $_REQUEST[$_REQUEST['subject']];
         }
@@ -152,7 +153,7 @@ class PrivilegesController extends BaseController
                     echo '<td>', $this->misc->printVal($v[3]), "</td>\n";
                 }
                 echo "</tr>\n";
-                $i++;
+                ++$i;
             }
 
             echo '</table>';
@@ -168,46 +169,46 @@ class PrivilegesController extends BaseController
             case 'function':
             case 'tablespace':
                 $alllabel = "showall{$_REQUEST['subject']}s";
-                $allurl   = "{$_REQUEST['subject']}s.php";
-                $alltxt   = $lang["strshowall{$_REQUEST['subject']}s"];
+                $allurl = "{$_REQUEST['subject']}s.php";
+                $alltxt = $lang["strshowall{$_REQUEST['subject']}s"];
 
                 break;
             case 'schema':
                 $alllabel = 'showallschemas';
-                $allurl   = 'schemas.php';
-                $alltxt   = $lang['strshowallschemas'];
+                $allurl = 'schemas.php';
+                $alltxt = $lang['strshowallschemas'];
 
                 break;
             case 'database':
                 $alllabel = 'showalldatabases';
-                $allurl   = 'alldb.php';
-                $alltxt   = $lang['strshowalldatabases'];
+                $allurl = 'alldb.php';
+                $alltxt = $lang['strshowalldatabases'];
 
                 break;
         }
 
         $subject = $_REQUEST['subject'];
-        $object  = $_REQUEST[$_REQUEST['subject']];
+        $object = $_REQUEST[$_REQUEST['subject']];
 
         if ('function' == $_REQUEST['subject']) {
-            $objectoid = $_REQUEST[$_REQUEST['subject'] . '_oid'];
-            $urlvars   = [
-                'action'         => 'alter',
-                'server'         => $_REQUEST['server'],
-                'database'       => $_REQUEST['database'],
-                'schema'         => $_REQUEST['schema'],
-                $subject         => $object,
+            $objectoid = $_REQUEST[$_REQUEST['subject'].'_oid'];
+            $urlvars = [
+                'action' => 'alter',
+                'server' => $_REQUEST['server'],
+                'database' => $_REQUEST['database'],
+                'schema' => $_REQUEST['schema'],
+                $subject => $object,
                 "{$subject}_oid" => $objectoid,
-                'subject'        => $subject,
+                'subject' => $subject,
             ];
         } elseif ('column' == $_REQUEST['subject']) {
             $urlvars = [
-                'action'   => 'alter',
-                'server'   => $_REQUEST['server'],
+                'action' => 'alter',
+                'server' => $_REQUEST['server'],
                 'database' => $_REQUEST['database'],
-                'schema'   => $_REQUEST['schema'],
-                $subject   => $object,
-                'subject'  => $subject,
+                'schema' => $_REQUEST['schema'],
+                $subject => $object,
+                'subject' => $subject,
             ];
 
             if (isset($_REQUEST['table'])) {
@@ -217,11 +218,11 @@ class PrivilegesController extends BaseController
             }
         } else {
             $urlvars = [
-                'action'   => 'alter',
-                'server'   => $_REQUEST['server'],
+                'action' => 'alter',
+                'server' => $_REQUEST['server'],
                 'database' => $_REQUEST['database'],
-                $subject   => $object,
-                'subject'  => $subject,
+                $subject => $object,
+                'subject' => $subject,
             ];
             if (isset($_REQUEST['schema'])) {
                 $urlvars['schema'] = $_REQUEST['schema'];
@@ -229,19 +230,19 @@ class PrivilegesController extends BaseController
         }
 
         $navlinks = [
-            'grant'  => [
-                'attr'    => [
+            'grant' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges.php',
+                        'url' => 'privileges.php',
                         'urlvars' => array_merge($urlvars, ['mode' => 'grant']),
                     ],
                 ],
                 'content' => $lang['strgrant'],
             ],
             'revoke' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges.php',
+                        'url' => 'privileges.php',
                         'urlvars' => array_merge($urlvars, ['mode' => 'revoke']),
                     ],
                 ],
@@ -251,11 +252,11 @@ class PrivilegesController extends BaseController
 
         if (isset($allurl)) {
             $navlinks[$alllabel] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => $allurl,
+                        'url' => $allurl,
                         'urlvars' => [
-                            'server'   => $_REQUEST['server'],
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                         ],
                     ],
@@ -271,7 +272,8 @@ class PrivilegesController extends BaseController
     }
 
     /**
-     * Grant permissions on an object to a user
+     * Grant permissions on an object to a user.
+     *
      * @param $confirm To show entry screen
      * @param $mode 'grant' or 'revoke'
      * @param $msg (optional) A message to show
@@ -280,9 +282,9 @@ class PrivilegesController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang   = $this->lang;
+        $lang = $this->lang;
         $action = $this->action;
-        $data   = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['username'])) {
             $_REQUEST['username'] = [];
@@ -316,7 +318,7 @@ class PrivilegesController extends BaseController
             }
             $this->printMsg($msg);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/privileges.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left\">{$lang['strusers']}</th>\n";
             echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";
@@ -370,9 +372,9 @@ class PrivilegesController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
             echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), "\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
-            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'] . '_oid'),
-                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), "\" />\n";
+            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'].'_oid'),
+                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'].'_oid']), "\" />\n";
             }
 
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
@@ -393,8 +395,8 @@ class PrivilegesController extends BaseController
             echo "</form>\n";
         } else {
             // Determine whether object should be ref'd by name or oid.
-            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-                $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
+            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+                $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
             } else {
                 $object = $_REQUEST[$_REQUEST['subject']];
             }

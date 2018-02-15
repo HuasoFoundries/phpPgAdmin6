@@ -9,14 +9,14 @@ namespace PHPPgAdmin\Controller;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class OpclassesController extends BaseController
 {
     public $controller_name = 'OpclassesController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -43,9 +43,10 @@ class OpclassesController extends BaseController
     }
 
     /**
-     * Show default list of opclasss in the database
+     * Show default list of opclasss in the database.
      *
      * @param string $msg
+     *
      * @return string|void
      */
     public function doDefault($msg = '')
@@ -66,20 +67,20 @@ class OpclassesController extends BaseController
                 'title' => $lang['straccessmethod'],
                 'field' => Decorator::field('amname'),
             ],
-            'opclass'      => [
+            'opclass' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('opcname'),
             ],
-            'type'         => [
+            'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('opcintype'),
             ],
-            'default'      => [
+            'default' => [
                 'title' => $lang['strdefault'],
                 'field' => Decorator::field('opcdefault'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'comment'      => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('opccomment'),
             ],
@@ -106,8 +107,8 @@ class OpclassesController extends BaseController
         $proto = Decorator::concat(Decorator::field('opcname'), '/', Decorator::field('amname'));
 
         $attrs = [
-            'text'    => $proto,
-            'icon'    => 'OperatorClass',
+            'text' => $proto,
+            'icon' => 'OperatorClass',
             'toolTip' => Decorator::field('opccomment'),
         ];
 

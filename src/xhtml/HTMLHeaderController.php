@@ -7,22 +7,23 @@
 namespace PHPPgAdmin\XHtml;
 
 /**
- * Class to render tables. Formerly part of Misc.php
- *
+ * Class to render tables. Formerly part of Misc.php.
  */
 class HTMLHeaderController extends HTMLController
 {
     public $controller_name = 'HTMLHeaderController';
-    private $_no_output     = false;
+    private $_no_output = false;
 
     /**
-     * sets the value of private member variable $_no_output
-     * @param boolean $flag [description]
-     * @return  $this
+     * sets the value of private member variable $_no_output.
+     *
+     * @param bool $flag [description]
+     *
+     * @return $this
      */
     public function setNoOutput($flag)
     {
-        $this->_no_output = boolval($flag);
+        $this->_no_output = (bool) $flag;
 
         return $this;
     }
@@ -30,6 +31,7 @@ class HTMLHeaderController extends HTMLController
     /**
      * Prints the page header.  If member variable $this->_no_output is
      * set then no header is drawn.
+     *
      * @param $title The title of the page
      * @param $script script tag
      * @param $do_print boolean if false, the function will return the header content
@@ -40,8 +42,8 @@ class HTMLHeaderController extends HTMLController
         if (function_exists('newrelic_disable_autorum')) {
             newrelic_disable_autorum();
         }
-        $appName        = $this->appName;
-        $lang           = $this->lang;
+        $appName = $this->appName;
+        $lang = $this->lang;
         $plugin_manager = $this->plugin_manager;
 
         //$this->prtrace('appName', $appName);
@@ -49,14 +51,14 @@ class HTMLHeaderController extends HTMLController
         $viewVars = [];
         //$viewVars = $this->lang;
         if (isset($_SESSION['isolang'])) {
-            $viewVars['isolang']   = $_SESSION['isolang'];
+            $viewVars['isolang'] = $_SESSION['isolang'];
             $viewVars['applocale'] = $lang['applocale'];
         }
 
-        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
+        $viewVars['dir'] = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
-        $viewVars['appName']        = htmlspecialchars($this->appName) . (('' != $title) ? htmlspecialchars(" - {$title}") : '');
+        $viewVars['title'] = ('' !== $title) ? ' - '.$title : '';
+        $viewVars['appName'] = htmlspecialchars($this->appName).(('' != $title) ? htmlspecialchars(" - {$title}") : '');
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
@@ -81,13 +83,14 @@ class HTMLHeaderController extends HTMLController
 
     /**
      * Prints the page body.
+     *
      * @param $doBody True to output body tag, false to return
      * @param $bodyClass - name of body class
      */
     public function printBody($doBody = true, $bodyClass = 'detailbody')
     {
         $bodyClass = htmlspecialchars($bodyClass);
-        $bodyHtml  = '<body data-controller="' . $this->controller_name . '" class="' . $this->lang['applangdir'] . ' ' . $bodyClass . '" >';
+        $bodyHtml = '<body data-controller="'.$this->controller_name.'" class="'.$this->lang['applangdir'].' '.$bodyClass.'" >';
         $bodyHtml .= "\n";
         /*$bodyHtml .= '<div id="flexbox_wrapper">';
         $bodyHtml .= "\n";
@@ -102,7 +105,8 @@ class HTMLHeaderController extends HTMLController
     }
 
     /**
-     * Print out the page heading and help link
+     * Print out the page heading and help link.
+     *
      * @param $title Title, already escaped
      * @param $help (optional) The identifier for the help link
      * @param mixed $do_print

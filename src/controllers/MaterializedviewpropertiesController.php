@@ -6,17 +6,17 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class MaterializedviewpropertiesController extends BaseController
 {
     public $controller_name = 'MaterializedviewpropertiesController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -29,7 +29,7 @@ class MaterializedviewpropertiesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strviews'] . ' - ' . $_REQUEST['matview']);
+        $this->printHeader($lang['strviews'].' - '.$_REQUEST['matview']);
         $this->printBody();
 
         switch ($action) {
@@ -95,7 +95,8 @@ class MaterializedviewpropertiesController extends BaseController
     }
 
     /**
-     * Show view definition and virtual columns
+     * Show view definition and virtual columns.
+     *
      * @param mixed $msg
      */
     public function doDefault($msg = '')
@@ -124,13 +125,13 @@ class MaterializedviewpropertiesController extends BaseController
         }
 
         $columns = [
-            'column'  => [
+            'column' => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties.php?subject=column&amp;{$this->misc->href}&amp;view=" . urlencode($_REQUEST['matview']) . '&amp;',
-                'vars'  => ['column' => 'attname'],
+                'url' => "colproperties.php?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST['matview']).'&amp;',
+                'vars' => ['column' => 'attname'],
             ],
-            'type'    => [
+            'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('+type'),
             ],
@@ -150,12 +151,12 @@ class MaterializedviewpropertiesController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'materializedviewproperties.php',
+                        'url' => 'materializedviewproperties.php',
                         'urlvars' => [
                             'action' => 'properties',
-                            'view'   => $_REQUEST['matview'],
+                            'view' => $_REQUEST['matview'],
                             'column' => Decorator::field('attname'),
                         ],
                     ],
@@ -169,61 +170,61 @@ class MaterializedviewpropertiesController extends BaseController
 
         $navlinks = [
             'browse' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'display.php',
+                        'url' => 'display.php',
                         'urlvars' => [
-                            'server'   => $_REQUEST['server'],
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'matview'  => $_REQUEST['matview'],
-                            'subject'  => 'matview',
-                            'return'   => 'matview',
+                            'schema' => $_REQUEST['schema'],
+                            'matview' => $_REQUEST['matview'],
+                            'subject' => 'matview',
+                            'return' => 'matview',
                         ],
                     ],
                 ],
                 'content' => $lang['strbrowse'],
             ],
             'select' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'materializedviews.php',
+                        'url' => 'materializedviews.php',
                         'urlvars' => [
-                            'action'   => 'confselectrows',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'confselectrows',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'matview'  => $_REQUEST['matview'],
+                            'schema' => $_REQUEST['schema'],
+                            'matview' => $_REQUEST['matview'],
                         ],
                     ],
                 ],
                 'content' => $lang['strselect'],
             ],
-            'drop'   => [
-                'attr'    => [
+            'drop' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'materializedviews.php',
+                        'url' => 'materializedviews.php',
                         'urlvars' => [
-                            'action'   => 'confirm_drop',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'confirm_drop',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'matview'  => $_REQUEST['matview'],
+                            'schema' => $_REQUEST['schema'],
+                            'matview' => $_REQUEST['matview'],
                         ],
                     ],
                 ],
                 'content' => $lang['strdrop'],
             ],
-            'alter'  => [
-                'attr'    => [
+            'alter' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'materializedviewproperties.php',
+                        'url' => 'materializedviewproperties.php',
                         'urlvars' => [
-                            'action'   => 'confirm_alter',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'confirm_alter',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'matview'  => $_REQUEST['matview'],
+                            'schema' => $_REQUEST['schema'],
+                            'matview' => $_REQUEST['matview'],
                         ],
                     ],
                 ],
@@ -245,39 +246,39 @@ class MaterializedviewpropertiesController extends BaseController
         $columns = $data->getTableAttributes($_REQUEST['matview']);
 
         $attrs = [
-            'text'       => Decorator::field('attname'),
-            'action'     => Decorator::actionurl(
+            'text' => Decorator::field('attname'),
+            'action' => Decorator::actionurl(
                 'colproperties.php',
                 $reqvars,
                 [
-                    'view'   => $_REQUEST['matview'],
+                    'view' => $_REQUEST['matview'],
                     'column' => Decorator::field('attname'),
                 ]
             ),
-            'icon'       => 'Column',
+            'icon' => 'Column',
             'iconAction' => Decorator::url(
                 'display.php',
                 $reqvars,
                 [
-                    'view'   => $_REQUEST['matview'],
+                    'view' => $_REQUEST['matview'],
                     'column' => Decorator::field('attname'),
-                    'query'  => Decorator::replace(
+                    'query' => Decorator::replace(
                         'SELECT "%column%", count(*) AS "count" FROM %view% GROUP BY "%column%" ORDER BY "%column%"',
                         [
                             '%column%' => Decorator::field('attname'),
-                            '%view%'   => $_REQUEST['matview'],
+                            '%view%' => $_REQUEST['matview'],
                         ]
                     ),
                 ]
             ),
-            'toolTip'    => Decorator::field('comment'),
+            'toolTip' => Decorator::field('comment'),
         ];
 
         return $this->printTree($columns, $attrs, 'viewcolumns');
     }
 
     /**
-     * Function to save after editing a view
+     * Function to save after editing a view.
      */
     public function doSaveEdit()
     {
@@ -295,7 +296,8 @@ class MaterializedviewpropertiesController extends BaseController
     }
 
     /**
-     * Function to allow editing of a view
+     * Function to allow editing of a view.
+     *
      * @param mixed $msg
      */
     public function doEdit($msg = '')
@@ -314,10 +316,10 @@ class MaterializedviewpropertiesController extends BaseController
         if ($viewdata->recordCount() > 0) {
             if (!isset($_POST['formDefinition'])) {
                 $_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
-                $_POST['formComment']    = $viewdata->fields['relcomment'];
+                $_POST['formComment'] = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties.php\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -343,6 +345,7 @@ class MaterializedviewpropertiesController extends BaseController
      *        so I have disabled the data related parts for now. In the future
      *        we should allow it conditionally if it becomes supported.  This is
      *        a SMOP since it is based on pg_dump version not backend version.
+     *
      * @param mixed $msg
      */
     public function doExport($msg = '')
@@ -356,7 +359,7 @@ class MaterializedviewpropertiesController extends BaseController
         $this->printTabs('view', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/dataexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -403,7 +406,8 @@ class MaterializedviewpropertiesController extends BaseController
     }
 
     /**
-     * Show definition for a view
+     * Show definition for a view.
+     *
      * @param mixed $msg
      */
     public function doDefinition($msg = '')
@@ -435,15 +439,15 @@ class MaterializedviewpropertiesController extends BaseController
         }
 
         $this->printNavLinks(['alter' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'materializedviewproperties.php',
+                    'url' => 'materializedviewproperties.php',
                     'urlvars' => [
-                        'action'   => 'edit',
-                        'server'   => $_REQUEST['server'],
+                        'action' => 'edit',
+                        'server' => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        'view'     => $_REQUEST['matview'],
+                        'schema' => $_REQUEST['schema'],
+                        'view' => $_REQUEST['matview'],
                     ],
                 ],
             ],
@@ -452,7 +456,8 @@ class MaterializedviewpropertiesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can alter a column in a view
+     * Displays a screen where they can alter a column in a view.
+     *
      * @param mixed $msg
      */
     public function doProperties($msg = '')
@@ -473,7 +478,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties.php\" method=\"post\">\n";
 
                 // Output view header
                 echo "<table>\n";
@@ -483,7 +488,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $column = $data->getTableAttributes($_REQUEST['matview'], $_REQUEST['column']);
 
                 if (!isset($_REQUEST['default'])) {
-                    $_REQUEST['field']   = $column->fields['attname'];
+                    $_REQUEST['field'] = $column->fields['attname'];
                     $_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
                     $_REQUEST['comment'] = $column->fields['comment'];
                 }
@@ -581,7 +586,7 @@ class MaterializedviewpropertiesController extends BaseController
                     $_POST['comment'] = $view->fields['relcomment'];
                 }
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties.php\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo '<td class="data1">';

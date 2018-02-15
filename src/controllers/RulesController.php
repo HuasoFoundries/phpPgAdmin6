@@ -6,17 +6,17 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class RulesController extends BaseController
 {
     public $controller_name = 'RulesController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -30,7 +30,7 @@ class RulesController extends BaseController
         }
 
         // Different header if we're view rules or table rules
-        $this->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $lang['strrules']);
+        $this->printHeader($_REQUEST[$_REQUEST['subject']].' - '.$lang['strrules']);
         $this->printBody();
 
         switch ($action) {
@@ -68,7 +68,8 @@ class RulesController extends BaseController
     }
 
     /**
-     * List all the rules on the table
+     * List all the rules on the table.
+     *
      * @param mixed $msg
      */
     public function doDefault($msg = '')
@@ -85,7 +86,7 @@ class RulesController extends BaseController
         $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
 
         $columns = [
-            'rule'       => [
+            'rule' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('rulename'),
             ],
@@ -93,26 +94,26 @@ class RulesController extends BaseController
                 'title' => $lang['strdefinition'],
                 'field' => Decorator::field('definition'),
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
 
         $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object = urlencode($_REQUEST[$_REQUEST['subject']]);
 
         $actions = [
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'rules.php',
+                        'url' => 'rules.php',
                         'urlvars' => [
-                            'action'  => 'confirm_drop',
+                            'action' => 'confirm_drop',
                             'reltype' => $subject,
-                            $subject  => $object,
+                            $subject => $object,
                             'subject' => 'rule',
-                            'rule'    => Decorator::field('rulename'),
+                            'rule' => Decorator::field('rulename'),
                         ],
                     ],
                 ],
@@ -122,16 +123,16 @@ class RulesController extends BaseController
         echo $this->printTable($rules, $columns, $actions, 'rules-rules', $lang['strnorules']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'rules.php',
+                    'url' => 'rules.php',
                     'urlvars' => [
-                        'action'   => 'create_rule',
-                        'server'   => $_REQUEST['server'],
+                        'action' => 'create_rule',
+                        'server' => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        $subject   => $object,
-                        'subject'  => $subject,
+                        'schema' => $_REQUEST['schema'],
+                        $subject => $object,
+                        'subject' => $subject,
                     ],
                 ],
             ],
@@ -159,7 +160,8 @@ class RulesController extends BaseController
     }
 
     /**
-     * Confirm and then actually create a rule
+     * Confirm and then actually create a rule.
+     *
      * @param mixed $confirm
      * @param mixed $msg
      */
@@ -195,7 +197,7 @@ class RulesController extends BaseController
             $this->printTitle($lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/rules.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -253,7 +255,8 @@ class RulesController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
      * @param mixed $confirm
      */
     public function doDrop($confirm)
@@ -273,7 +276,7 @@ class RulesController extends BaseController
                 $this->misc->printVal($_REQUEST[$_REQUEST['reltype']])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/rules.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['reltype']), "\" />\n";
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['reltype']),

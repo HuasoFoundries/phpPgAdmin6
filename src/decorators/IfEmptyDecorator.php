@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.30
  */
 
-    namespace PHPPgAdmin\Decorators;
+namespace PHPPgAdmin\Decorators;
 
 class IfEmptyDecorator extends Decorator
 {

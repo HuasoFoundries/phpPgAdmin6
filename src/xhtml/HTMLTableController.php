@@ -6,20 +6,21 @@
 
 namespace PHPPgAdmin\XHtml;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Class to render tables. Formerly part of Misc.php
- *
+ * Class to render tables. Formerly part of Misc.php.
  */
 class HTMLTableController extends HTMLController
 {
     public $controller_name = 'HTMLTableController';
-    private $ma             = [];
-    private $class          = '';
+    private $ma = [];
+    private $class = '';
+
     /**
      * Display a table of data.
-     * @param $tabledata A set of data to be formatted, as returned by $data->getDatabases() etc.
+     *
+     * @param $tabledata a set of data to be formatted, as returned by $data->getDatabases() etc
      * @param $columns   An associative array of columns to be displayed:
      *            $columns = array(
      *                column_id => array(
@@ -50,7 +51,7 @@ class HTMLTableController extends HTMLController
      *            );
      * @param $place     Place where the $actions are displayed. Like 'display-browse',  where 'display'
      * is the entrypoint (/src/views/display.php) and 'browse' is the action used inside its controller (in this case, doBrowse).
-     * @param $nodata    (optional) Message to display if data set is empty.
+     * @param $nodata    (optional) Message to display if data set is empty
      * @param $pre_fn    (optional) callback closure for each row. It will be passed two params: $rowdata and $actions,
      *  it may be used to derive new fields or modify actions.
      *  It can return an array of actions specific to the row,  or if nothing is returned then the standard actions are used.
@@ -59,15 +60,15 @@ class HTMLTableController extends HTMLController
      */
     public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null)
     {
-        $this->misc     = $this->misc;
-        $lang           = $this->lang;
+        $this->misc = $this->misc;
+        $lang = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $data           = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Action buttons hook's place
         $plugin_functions_parameters = [
             'actionbuttons' => &$actions,
-            'place'         => $place,
+            'place' => $place,
         ];
         $plugin_manager->do_hook('actionbuttons', $plugin_functions_parameters);
 
@@ -91,7 +92,7 @@ class HTMLTableController extends HTMLController
             }
 
             if ($this->has_ma) {
-                $tablehtml .= '<script src="' . SUBFOLDER . "/js/multiactionform.js\" type=\"text/javascript\"></script>\n";
+                $tablehtml .= '<script src="'.SUBFOLDER."/js/multiactionform.js\" type=\"text/javascript\"></script>\n";
                 $tablehtml .= "<form id=\"multi_form\" action=\"{$this->ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
                 if (isset($this->ma['vars'])) {
                     foreach ($this->ma['vars'] as $k => $v) {
@@ -100,7 +101,7 @@ class HTMLTableController extends HTMLController
                 }
             }
 
-            $tablehtml .= '<table width="auto" class="will_be_datatable ' . $place . '">' . "\n";
+            $tablehtml .= '<table width="auto" class="will_be_datatable '.$place.'">'."\n";
 
             $tablehtml .= $this->getThead($columns, $actions);
 
@@ -139,7 +140,7 @@ class HTMLTableController extends HTMLController
                     if (isset($a['multiaction'])) {
                         $selected = $this->ma['default'] == $k ? ' selected="selected" ' : '';
                         $tablehtml .= "\t\t";
-                        $tablehtml .= '<option value="' . $a['multiaction'] . '" ' . $selected . ' rel="' . $k . '">' . $a['content'] . '</option>';
+                        $tablehtml .= '<option value="'.$a['multiaction'].'" '.$selected.' rel="'.$k.'">'.$a['content'].'</option>';
                         $tablehtml .= "\n";
                     }
                 }
@@ -151,7 +152,7 @@ class HTMLTableController extends HTMLController
                 $tablehtml .= "</tr>\n";
                 $tablehtml .= "</table>\n";
                 $tablehtml .= '</form>';
-            };
+            }
         } else {
             if (!is_null($nodata)) {
                 $tablehtml .= "<p>{$nodata}</p>\n";
@@ -164,7 +165,7 @@ class HTMLTableController extends HTMLController
     private function getTbody($columns, $actions, $tabledata, $pre_fn)
     {
         // Display table rows
-        $i          = 0;
+        $i = 0;
         $tbody_html = '<tbody>';
 
         while (!$tabledata->EOF) {
@@ -187,7 +188,7 @@ class HTMLTableController extends HTMLController
                 }
                 //\Kint::dump($a);
                 $tbody_html .= '<td>';
-                $tbody_html .= '<input type="checkbox" name="ma[]" value="' . htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') . '" />';
+                $tbody_html .= '<input type="checkbox" name="ma[]" value="'.htmlentities(serialize($a), ENT_COMPAT, 'UTF-8').'" />';
                 $tbody_html .= "</td>\n";
             }
 
@@ -231,7 +232,7 @@ class HTMLTableController extends HTMLController
                                 $tbody_html .= $this->printUrlVars($column['vars'], $tabledata->fields, false);
                                 $tbody_html .= '">';
                             }
-                            $type   = isset($column['type']) ? $column['type'] : null;
+                            $type = isset($column['type']) ? $column['type'] : null;
                             $params = isset($column['params']) ? $column['params'] : [];
                             $tbody_html .= $this->misc->printVal($val, $type, $params);
                             if (isset($column['url'])) {
@@ -247,7 +248,7 @@ class HTMLTableController extends HTMLController
             $tbody_html .= "</tr>\n";
 
             $tabledata->moveNext();
-            $i++;
+            ++$i;
         }
 
         $tbody_html .= '</tbody>';
@@ -275,12 +276,12 @@ class HTMLTableController extends HTMLController
             switch ($column_id) {
                 case 'actions':
                     if (sizeof($actions) > 0) {
-                        $thead_html .= '<th class="data" colspan="' . count($actions) . '">' . $column['title'] . '</th>' . "\n";
+                        $thead_html .= '<th class="data" colspan="'.count($actions).'">'.$column['title'].'</th>'."\n";
                     }
 
                     break;
                 default:
-                    $thead_html .= '<th class="data' . $this->class . '">';
+                    $thead_html .= '<th class="data'.$this->class.'">';
                     if (isset($column['help'])) {
                         $thead_html .= $this->misc->printHelp($column['title'], $column['help'], false);
                     } else {
@@ -317,7 +318,7 @@ class HTMLTableController extends HTMLController
             switch ($column_id) {
                 case 'actions':
                     if (sizeof($actions) > 0) {
-                        $tfoot_html .= '<td class="data" colspan="' . count($actions) . "\"></td>\n";
+                        $tfoot_html .= '<td class="data" colspan="'.count($actions)."\"></td>\n";
                     }
 
                     break;
@@ -345,7 +346,7 @@ class HTMLTableController extends HTMLController
     {
         $url_vars_html = '';
         foreach ($vars as $var => $varfield) {
-            $url_vars_html .= "{$var}=" . urlencode($fields[$varfield]) . '&amp;';
+            $url_vars_html .= "{$var}=".urlencode($fields[$varfield]).'&amp;';
         }
         if ($do_print) {
             echo $url_vars_html;

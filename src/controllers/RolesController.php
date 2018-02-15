@@ -6,24 +6,24 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class RolesController extends BaseController
 {
     public $controller_name = 'RolesController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
         $conf = $this->conf;
 
-        $lang   = $this->lang;
-        $data   = $this->misc->getDatabaseAccessor();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         $this->printHeader($lang['strroles']);
@@ -94,7 +94,8 @@ class RolesController extends BaseController
     }
 
     /**
-     * Show default list of roles in the database
+     * Show default list of roles in the database.
+     *
      * @param mixed $msg
      */
     public function doDefault($msg = '')
@@ -119,50 +120,50 @@ class RolesController extends BaseController
         $roles = $data->getRoles();
 
         $columns = [
-            'role'       => [
+            'role' => [
                 'title' => $lang['strrole'],
                 'field' => Decorator::field('rolname'),
-                'url'   => \SUBFOLDER . "/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['rolename' => 'rolname'],
+                'url' => \SUBFOLDER."/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['rolename' => 'rolname'],
             ],
-            'superuser'  => [
+            'superuser' => [
                 'title' => $lang['strsuper'],
                 'field' => Decorator::field('rolsuper'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'createdb'   => [
+            'createdb' => [
                 'title' => $lang['strcreatedb'],
                 'field' => Decorator::field('rolcreatedb'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
             'createrole' => [
                 'title' => $lang['strcancreaterole'],
                 'field' => Decorator::field('rolcreaterole'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'inherits'   => [
+            'inherits' => [
                 'title' => $lang['strinheritsprivs'],
                 'field' => Decorator::field('rolinherit'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'canloging'  => [
+            'canloging' => [
                 'title' => $lang['strcanlogin'],
                 'field' => Decorator::field('rolcanlogin'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'connlimit'  => [
-                'title'  => $lang['strconnlimit'],
-                'field'  => Decorator::field('rolconnlimit'),
-                'type'   => 'callback',
+            'connlimit' => [
+                'title' => $lang['strconnlimit'],
+                'field' => Decorator::field('rolconnlimit'),
+                'type' => 'callback',
                 'params' => ['function' => $renderRoleConnLimit],
             ],
-            'expires'    => [
-                'title'  => $lang['strexpires'],
-                'field'  => Decorator::field('rolvaliduntil'),
-                'type'   => 'callback',
+            'expires' => [
+                'title' => $lang['strexpires'],
+                'field' => Decorator::field('rolvaliduntil'),
+                'type' => 'callback',
                 'params' => ['function' => $renderRoleExpires, 'null' => $lang['strnever']],
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -170,23 +171,23 @@ class RolesController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles.php',
+                        'url' => 'roles.php',
                         'urlvars' => [
-                            'action'   => 'alter',
+                            'action' => 'alter',
                             'rolename' => Decorator::field('rolname'),
                         ],
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles.php',
+                        'url' => 'roles.php',
                         'urlvars' => [
-                            'action'   => 'confirm_drop',
+                            'action' => 'confirm_drop',
                             'rolename' => Decorator::field('rolname'),
                         ],
                     ],
@@ -198,9 +199,9 @@ class RolesController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles.php',
+                        'url' => 'roles.php',
                         'urlvars' => [
                             'action' => 'create',
                             'server' => $_REQUEST['server'],
@@ -214,7 +215,8 @@ class RolesController extends BaseController
     }
 
     /**
-     * Displays a screen for create a new role
+     * Displays a screen for create a new role.
+     *
      * @param mixed $msg
      */
     public function doCreate($msg = '')
@@ -260,7 +262,7 @@ class RolesController extends BaseController
         $this->printTitle($lang['strcreaterole'], 'pg.role.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/roles.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/roles.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\" style=\"width: 130px\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formRolename\" value=\"", htmlspecialchars($_POST['formRolename']), "\" /></td>\n\t</tr>\n";
@@ -338,7 +340,7 @@ class RolesController extends BaseController
     }
 
     /**
-     * Actually creates the new role in the database
+     * Actually creates the new role in the database.
      */
     public function doSaveCreate()
     {
@@ -388,7 +390,8 @@ class RolesController extends BaseController
     }
 
     /**
-     * Function to allow alter a role
+     * Function to allow alter a role.
+     *
      * @param mixed $msg
      */
     public function doAlter($msg = '')
@@ -405,13 +408,13 @@ class RolesController extends BaseController
         $roledata = $data->getRole($_REQUEST['rolename']);
 
         if ($roledata->recordCount() > 0) {
-            $server_info                       = $this->misc->getServerInfo();
-            $canRename                         = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
-            $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-            $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+            $server_info = $this->misc->getServerInfo();
+            $canRename = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
+            $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+            $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-            $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-            $roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
+            $roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
+            $roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
 
             if (!isset($_POST['formExpires'])) {
                 if ($canRename) {
@@ -439,14 +442,14 @@ class RolesController extends BaseController
                 }
 
                 $_POST['formConnLimit'] = '-1' == $roledata->fields['rolconnlimit'] ? '' : $roledata->fields['rolconnlimit'];
-                $_POST['formExpires']   = 'infinity' == $roledata->fields['rolvaliduntil'] ? '' : $roledata->fields['rolvaliduntil'];
-                $_POST['formPassword']  = '';
+                $_POST['formExpires'] = 'infinity' == $roledata->fields['rolvaliduntil'] ? '' : $roledata->fields['rolvaliduntil'];
+                $_POST['formPassword'] = '';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/roles.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/roles.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$lang['strname']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['formNewRoleName']) . '" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['formNewRoleName']).'" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strpassword']}</th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strconfirm']}</th>\n";
@@ -571,7 +574,7 @@ class RolesController extends BaseController
     }
 
     /**
-     * Function to save after editing a role
+     * Function to save after editing a role.
      */
     public function doSaveAlter()
     {
@@ -613,7 +616,8 @@ class RolesController extends BaseController
     }
 
     /**
-     * Show confirmation of drop a role and perform actual drop
+     * Show confirmation of drop a role and perform actual drop.
+     *
      * @param mixed $confirm
      */
     public function doDrop($confirm)
@@ -629,7 +633,7 @@ class RolesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdroprole'], $this->misc->printVal($_REQUEST['rolename'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/roles.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/roles.php\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), "\" />\n";
             echo $this->misc->form;
@@ -647,7 +651,8 @@ class RolesController extends BaseController
     }
 
     /**
-     * Show the properties of a role
+     * Show the properties of a role.
+     *
      * @param mixed $msg
      */
     public function doProperties($msg = '')
@@ -663,11 +668,11 @@ class RolesController extends BaseController
 
         $roledata = $data->getRole($_REQUEST['rolename']);
         if ($roledata->recordCount() > 0) {
-            $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-            $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+            $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+            $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-            $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-            $roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
+            $roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
+            $roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
 
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data\" style=\"width: 130px\">Description</th>\n";
@@ -727,9 +732,9 @@ class RolesController extends BaseController
 
         $navlinks = [
             'showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles.php',
+                        'url' => 'roles.php',
                         'urlvars' => [
                             'server' => $_REQUEST['server'],
                         ],
@@ -737,26 +742,26 @@ class RolesController extends BaseController
                 ],
                 'content' => $lang['strshowallroles'],
             ],
-            'alter'   => [
-                'attr'    => [
+            'alter' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles.php',
+                        'url' => 'roles.php',
                         'urlvars' => [
-                            'action'   => 'alter',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'alter',
+                            'server' => $_REQUEST['server'],
                             'rolename' => $_REQUEST['rolename'],
                         ],
                     ],
                 ],
                 'content' => $lang['stralter'],
             ],
-            'drop'    => [
-                'attr'    => [
+            'drop' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles.php',
+                        'url' => 'roles.php',
                         'urlvars' => [
-                            'action'   => 'confirm_drop',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'confirm_drop',
+                            'server' => $_REQUEST['server'],
                             'rolename' => $_REQUEST['rolename'],
                         ],
                     ],
@@ -773,6 +778,7 @@ class RolesController extends BaseController
      * page for change his password, etc.  We don't prevent them from
      * messing with the URL to gain access to other role admin stuff, because
      * the PostgreSQL permissions will prevent them changing anything anyway.
+     *
      * @param mixed $msg
      */
     public function doAccount($msg = '')
@@ -784,7 +790,7 @@ class RolesController extends BaseController
 
         $server_info = $this->misc->getServerInfo();
 
-        $roledata             = $data->getRole($server_info['username']);
+        $roledata = $data->getRole($server_info['username']);
         $_REQUEST['rolename'] = $server_info['username'];
 
         $this->printTrail('role');
@@ -792,10 +798,10 @@ class RolesController extends BaseController
         $this->printMsg($msg);
 
         if ($roledata->recordCount() > 0) {
-            $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-            $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+            $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+            $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-            $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
+            $roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data\">{$lang['strname']}</th>\n";
             echo "\t\t<th class=\"data\">{$lang['strsuper']}</th>\n";
@@ -820,9 +826,9 @@ class RolesController extends BaseController
         }
 
         $this->printNavLinks(['changepassword' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'roles.php',
+                    'url' => 'roles.php',
                     'urlvars' => [
                         'action' => 'confchangepassword',
                         'server' => $_REQUEST['server'],
@@ -834,7 +840,8 @@ class RolesController extends BaseController
     }
 
     /**
-     * Show confirmation of change password and actually change password
+     * Show confirmation of change password and actually change password.
+     *
      * @param mixed $confirm
      * @param mixed $msg
      */
@@ -861,7 +868,7 @@ class RolesController extends BaseController
                 $_POST['confirm'] = '';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/roles.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/roles.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",

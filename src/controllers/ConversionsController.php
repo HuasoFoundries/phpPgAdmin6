@@ -9,14 +9,14 @@ namespace PHPPgAdmin\Controller;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class ConversionsController extends BaseController
 {
     public $controller_name = 'ConversionsController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -43,9 +43,10 @@ class ConversionsController extends BaseController
     }
 
     /**
-     * Show default list of conversions in the database
+     * Show default list of conversions in the database.
      *
      * @param string $msg
+     *
      * @return string|void
      */
     public function doDefault($msg = '')
@@ -62,7 +63,7 @@ class ConversionsController extends BaseController
         $conversions = $data->getconversions();
 
         $columns = [
-            'conversion'      => [
+            'conversion' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('conname'),
             ],
@@ -74,12 +75,12 @@ class ConversionsController extends BaseController
                 'title' => $lang['strtargetencoding'],
                 'field' => Decorator::field('contoencoding'),
             ],
-            'default'         => [
+            'default' => [
                 'title' => $lang['strdefault'],
                 'field' => Decorator::field('condefault'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'comment'         => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('concomment'),
             ],

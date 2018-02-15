@@ -6,10 +6,10 @@
 
 namespace PHPPgAdmin\XHtml;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base TreeController controller class
+ * Base TreeController controller class.
  */
 class TreeController
 {
@@ -19,28 +19,28 @@ class TreeController
     private $data;
     private $database;
     private $server_id;
-    public $form             = '';
-    public $href             = '';
-    public $lang             = [];
-    public $action           = '';
-    public $controller_name  = 'TreeController';
+    public $form = '';
+    public $href = '';
+    public $lang = [];
+    public $action = '';
+    public $controller_name = 'TreeController';
     public $controller_title = 'base';
 
     // Constructor
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
         $this->container = $container;
-        $this->lang      = $container->get('lang');
+        $this->lang = $container->get('lang');
         //$this->conf           = $container->get('conf');
-        $this->view           = $container->get('view');
+        $this->view = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
-        $this->appName        = $container->get('settings')['appName'];
-        $this->appVersion     = $container->get('settings')['appVersion'];
-        $this->appLangFiles   = $container->get('appLangFiles');
-        $this->misc           = $container->get('misc');
-        $this->conf           = $this->misc->getConf();
-        $this->appThemes      = $container->get('appThemes');
-        $this->action         = $container->get('action');
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
+        $this->appLangFiles = $container->get('appLangFiles');
+        $this->misc = $container->get('misc');
+        $this->conf = $this->misc->getConf();
+        $this->appThemes = $container->get('appThemes');
+        $this->action = $container->get('action');
         if (null !== $controller_name) {
             $this->controller_name = $controller_name;
         }
@@ -48,7 +48,7 @@ class TreeController
     }
 
     /** Produce XML data for the browser tree
-     * @param $treedata A set of records to populate the tree.
+     * @param $treedata a set of records to populate the tree
      * @param $attrs Attributes for tree items
      *        'text' - the text for the tree node
      *        'icon' - an icon for node
@@ -77,8 +77,8 @@ class TreeController
 
         $tree_params = [
             'treedata' => &$treedata,
-            'attrs'    => &$attrs,
-            'section'  => $section,
+            'attrs' => &$attrs,
+            'section' => $section,
         ];
 
         $plugin_manager->do_hook('tree', $tree_params);
@@ -87,7 +87,7 @@ class TreeController
     }
 
     /** Produce XML data for the browser tree
-     * @param $treedata A set of records to populate the tree.
+     * @param $treedata a set of records to populate the tree
      * @param $attrs Attributes for tree items
      *        'text' - the text for the tree node
      *        'icon' - an icon for node
@@ -136,7 +136,7 @@ class TreeController
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
-            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"" . $this->misc->icon('ObjectNotFound') . '" />' . "\n";
+            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"".$this->misc->icon('ObjectNotFound').'" />'."\n";
         }
 
         $tree_xml .= "</tree>\n";

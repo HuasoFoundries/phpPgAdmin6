@@ -6,23 +6,23 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class ServersController extends BaseController
 {
     public $controller_name = 'ServersController';
-    public $table_place     = 'servers-servers';
-    public $section         = 'servers';
-    public $query           = '';
-    public $subject         = '';
+    public $table_place = 'servers-servers';
+    public $section = 'servers';
+    public $query = '';
+    public $subject = '';
     public $start_time;
     public $duration;
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -79,13 +79,13 @@ class ServersController extends BaseController
         $this->printMsg($msg);
         $group = isset($_GET['group']) ? $_GET['group'] : false;
 
-        $groups  = $this->misc->getServersGroups(true, $group);
+        $groups = $this->misc->getServersGroups(true, $group);
         $columns = [
             'group' => [
                 'title' => $lang['strgroup'],
                 'field' => Decorator::field('desc'),
-                'url'   => 'servers.php?',
-                'vars'  => ['group' => 'id'],
+                'url' => 'servers.php?',
+                'vars' => ['group' => 'id'],
             ],
         ];
         $actions = [];
@@ -96,17 +96,17 @@ class ServersController extends BaseController
         $servers = $this->misc->getServers(true, $group);
 
         $columns = [
-            'server'   => [
+            'server' => [
                 'title' => $lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => \SUBFOLDER . '/redirect/server?',
-                'vars'  => ['server' => 'id'],
+                'url' => \SUBFOLDER.'/redirect/server?',
+                'vars' => ['server' => 'id'],
             ],
-            'host'     => [
+            'host' => [
                 'title' => $lang['strhost'],
                 'field' => Decorator::field('host'),
             ],
-            'port'     => [
+            'port' => [
                 'title' => $lang['strport'],
                 'field' => Decorator::field('port'),
             ],
@@ -114,7 +114,7 @@ class ServersController extends BaseController
                 'title' => $lang['strusername'],
                 'field' => Decorator::field('username'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -122,11 +122,11 @@ class ServersController extends BaseController
         $actions = [
             'logout' => [
                 'content' => $lang['strlogout'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'servers.php',
+                        'url' => 'servers.php',
                         'urlvars' => [
-                            'action'       => 'logout',
+                            'action' => 'logout',
                             'logoutServer' => Decorator::field('id'),
                         ],
                     ],
@@ -151,7 +151,7 @@ class ServersController extends BaseController
     {
         $conf = $this->conf;
 
-        $nodes    = [];
+        $nodes = [];
         $group_id = isset($_GET['group']) ? $_GET['group'] : false;
 
         // root with srv_groups
@@ -176,14 +176,14 @@ class ServersController extends BaseController
         //$this->prtrace($reqvars);
 
         $attrs = [
-            'text'    => Decorator::field('desc'),
+            'text' => Decorator::field('desc'),
             // Show different icons for logged in/out
-            'icon'    => Decorator::field('icon'),
+            'icon' => Decorator::field('icon'),
             'toolTip' => Decorator::field('id'),
-            'action'  => Decorator::field('action'),
+            'action' => Decorator::field('action'),
             // Only create a branch url if the user has
             // logged into the server.
-            'branch'  => Decorator::field('branch'),
+            'branch' => Decorator::field('branch'),
         ];
         /*$this->prtrace([
         'nodes'   => $nodes,
@@ -196,10 +196,10 @@ class ServersController extends BaseController
     public function doLogout()
     {
         $plugin_manager = $this->plugin_manager;
-        $lang           = $this->lang;
-        $this->misc     = $this->misc;
-        $conf           = $this->conf;
-        $data           = $this->misc->getDatabaseAccessor();
+        $lang = $this->lang;
+        $this->misc = $this->misc;
+        $conf = $this->conf;
+        $data = $this->misc->getDatabaseAccessor();
 
         $plugin_manager->do_hook('logout', $_REQUEST['logoutServer']);
 

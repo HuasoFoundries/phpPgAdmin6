@@ -30,13 +30,13 @@ class UrlDecorator extends Decorator
             $sep = '?';
             ksort($queryVars);
             foreach ($queryVars as $var => $value) {
-                $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($value, $fields);
+                $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($value, $fields);
                 $sep = '&';
             }
         }
         //$this->prtrace('url before', $url);
         if (\SUBFOLDER !== '' && (0 === strpos($url, '/')) && (false === strpos($url, \SUBFOLDER))) {
-            $url = str_replace('//', '/', \SUBFOLDER . '/' . $url);
+            $url = str_replace('//', '/', \SUBFOLDER.'/'.$url);
         }
         //$this->prtrace('url after', $url);
         return $url;

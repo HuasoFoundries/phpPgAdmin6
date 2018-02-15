@@ -6,17 +6,17 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class TriggersController extends BaseController
 {
     public $controller_name = 'TriggersController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -29,7 +29,7 @@ class TriggersController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strtriggers']);
+        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strtriggers']);
         $this->printBody();
 
         switch ($action) {
@@ -103,7 +103,8 @@ class TriggersController extends BaseController
     }
 
     /**
-     * List all the triggers on the table
+     * List all the triggers on the table.
+     *
      * @param mixed $msg
      */
     public function doDefault($msg = '')
@@ -131,7 +132,7 @@ class TriggersController extends BaseController
         $triggers = $data->getTriggers($_REQUEST['table']);
 
         $columns = [
-            'trigger'    => [
+            'trigger' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('tgname'),
             ],
@@ -139,17 +140,17 @@ class TriggersController extends BaseController
                 'title' => $lang['strdefinition'],
                 'field' => Decorator::field('tgdef'),
             ],
-            'function'   => [
+            'function' => [
                 'title' => $lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url'   => "functions.php?action=properties&amp;server={$_REQUEST['server']}&amp;database={$_REQUEST['database']}&amp;",
-                'vars'  => [
-                    'schema'       => 'pronamespace',
-                    'function'     => 'proproto',
+                'url' => "functions.php?action=properties&amp;server={$_REQUEST['server']}&amp;database={$_REQUEST['database']}&amp;",
+                'vars' => [
+                    'schema' => 'pronamespace',
+                    'function' => 'proproto',
                     'function_oid' => 'prooid',
                 ],
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -157,25 +158,25 @@ class TriggersController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'triggers.php',
+                        'url' => 'triggers.php',
                         'urlvars' => [
-                            'action'  => 'confirm_alter',
-                            'table'   => $_REQUEST['table'],
+                            'action' => 'confirm_alter',
+                            'table' => $_REQUEST['table'],
                             'trigger' => Decorator::field('tgname'),
                         ],
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'triggers.php',
+                        'url' => 'triggers.php',
                         'urlvars' => [
-                            'action'  => 'confirm_drop',
-                            'table'   => $_REQUEST['table'],
+                            'action' => 'confirm_drop',
+                            'table' => $_REQUEST['table'],
                             'trigger' => Decorator::field('tgname'),
                         ],
                     ],
@@ -185,12 +186,12 @@ class TriggersController extends BaseController
         if ($data->hasDisableTriggers()) {
             $actions['enable'] = [
                 'content' => $lang['strenable'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'triggers.php',
+                        'url' => 'triggers.php',
                         'urlvars' => [
-                            'action'  => 'confirm_enable',
-                            'table'   => $_REQUEST['table'],
+                            'action' => 'confirm_enable',
+                            'table' => $_REQUEST['table'],
                             'trigger' => Decorator::field('tgname'),
                         ],
                     ],
@@ -198,12 +199,12 @@ class TriggersController extends BaseController
             ];
             $actions['disable'] = [
                 'content' => $lang['strdisable'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'triggers.php',
+                        'url' => 'triggers.php',
                         'urlvars' => [
-                            'action'  => 'confirm_disable',
-                            'table'   => $_REQUEST['table'],
+                            'action' => 'confirm_disable',
+                            'table' => $_REQUEST['table'],
                             'trigger' => Decorator::field('tgname'),
                         ],
                     ],
@@ -214,15 +215,15 @@ class TriggersController extends BaseController
         echo $this->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnotriggers'], $tgPre);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'triggers.php',
+                    'url' => 'triggers.php',
                     'urlvars' => [
-                        'action'   => 'create',
-                        'server'   => $_REQUEST['server'],
+                        'action' => 'create',
+                        'server' => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        'table'    => $_REQUEST['table'],
+                        'schema' => $_REQUEST['schema'],
+                        'table' => $_REQUEST['table'],
                     ],
                 ],
             ],
@@ -250,7 +251,7 @@ class TriggersController extends BaseController
     }
 
     /**
-     * Function to save after altering a trigger
+     * Function to save after altering a trigger.
      */
     public function doSaveAlter()
     {
@@ -268,7 +269,8 @@ class TriggersController extends BaseController
     }
 
     /**
-     * Function to allow altering of a trigger
+     * Function to allow altering of a trigger.
+     *
      * @param mixed $msg
      */
     public function doAlter($msg = '')
@@ -289,7 +291,7 @@ class TriggersController extends BaseController
                 $_POST['name'] = $triggerdata->fields['tgname'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -309,7 +311,8 @@ class TriggersController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
      * @param mixed $confirm
      */
     public function doDrop($confirm)
@@ -329,7 +332,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -349,7 +352,8 @@ class TriggersController extends BaseController
     }
 
     /**
-     * Show confirmation of enable trigger and perform enabling the trigger
+     * Show confirmation of enable trigger and perform enabling the trigger.
+     *
      * @param mixed $confirm
      */
     public function doEnable($confirm)
@@ -369,7 +373,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"enable\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -388,7 +392,8 @@ class TriggersController extends BaseController
     }
 
     /**
-     * Show confirmation of disable trigger and perform disabling the trigger
+     * Show confirmation of disable trigger and perform disabling the trigger.
+     *
      * @param mixed $confirm
      */
     public function doDisable($confirm)
@@ -408,7 +413,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"disable\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -428,6 +433,7 @@ class TriggersController extends BaseController
 
     /**
      * Let them create s.th.
+     *
      * @param mixed $msg
      */
     public function doCreate($msg = '')
@@ -468,7 +474,7 @@ class TriggersController extends BaseController
         $sel3 = new \PHPPgAdmin\XHtml\XHtmlSelect('formFrequency');
         $sel3->set_data($data->triggerFrequency);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/triggers.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr>\n";
         echo "		<th class=\"data\">{$lang['strname']}</th>\n";
@@ -500,7 +506,7 @@ class TriggersController extends BaseController
     }
 
     /**
-     * Actually creates the new trigger in the database
+     * Actually creates the new trigger in the database.
      */
     public function doSaveCreate()
     {

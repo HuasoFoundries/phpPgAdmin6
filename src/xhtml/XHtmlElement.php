@@ -7,17 +7,15 @@
 namespace PHPPgAdmin\XHtml;
 
 /**
- *  XHtmlElement
+ *  XHtmlElement.
  *
  *  Used to generate Xhtml-Code for xhtml elements
  *  that can contain child elements
- *
- *
  */
 class XHtmlElement extends XHtmlSimpleElement
 {
     public $_text;
-    public $_htmlcode = "";
+    public $_htmlcode = '';
     public $_siblings = [];
 
     public function __construct($text = null)
@@ -64,7 +62,7 @@ class XHtmlElement extends XHtmlSimpleElement
                 $this->_htmlcode .= " {$attribute} =\"{$value}\"";
             }
         }
-        $this->_htmlcode .= ">";
+        $this->_htmlcode .= '>';
 
         if ($this->_text) {
             $this->_htmlcode .= $this->_text;
@@ -87,6 +85,6 @@ class XHtmlElement extends XHtmlSimpleElement
 
     public function has_siblings()
     {
-        return (0 != count($this->_siblings));
+        return 0 != count($this->_siblings);
     }
 }

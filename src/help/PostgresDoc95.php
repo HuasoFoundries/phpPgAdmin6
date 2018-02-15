@@ -7,8 +7,7 @@
 namespace PHPPgAdmin\Help;
 
 /**
- * Help links for PostgreSQL 9.5 documentation
- *
+ * Help links for PostgreSQL 9.5 documentation.
  */
 class PostgresDoc95 extends PostgresDoc94
 {

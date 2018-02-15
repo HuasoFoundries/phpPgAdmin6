@@ -6,17 +6,17 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class TypesController extends BaseController
 {
     public $controller_name = 'TypesController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
@@ -87,7 +87,8 @@ class TypesController extends BaseController
     }
 
     /**
-     * Show default list of types in the database
+     * Show default list of types in the database.
+     *
      * @param mixed $msg
      */
     public function doDefault($msg = '')
@@ -104,22 +105,22 @@ class TypesController extends BaseController
         $types = $data->getTypes();
 
         $columns = [
-            'type'    => [
+            'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('typname'),
-                'url'   => "types.php?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['type' => 'basename'],
+                'url' => "types.php?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['type' => 'basename'],
             ],
-            'owner'   => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('typowner'),
             ],
             'flavour' => [
-                'title'  => $lang['strflavor'],
-                'field'  => Decorator::field('typtype'),
-                'type'   => 'verbatim',
+                'title' => $lang['strflavor'],
+                'field' => Decorator::field('typtype'),
+                'type' => 'verbatim',
                 'params' => [
-                    'map'   => [
+                    'map' => [
                         'b' => $lang['strbasetype'],
                         'c' => $lang['strcompositetype'],
                         'd' => $lang['strdomain'],
@@ -145,12 +146,12 @@ class TypesController extends BaseController
         $actions = [
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types.php',
+                        'url' => 'types.php',
                         'urlvars' => [
                             'action' => 'confirm_drop',
-                            'type'   => Decorator::field('basename'),
+                            'type' => Decorator::field('basename'),
                         ],
                     ],
                 ],
@@ -160,43 +161,43 @@ class TypesController extends BaseController
         echo $this->printTable($types, $columns, $actions, 'types-types', $lang['strnotypes']);
 
         $navlinks = [
-            'create'     => [
-                'attr'    => [
+            'create' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types.php',
+                        'url' => 'types.php',
                         'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
                 'content' => $lang['strcreatetype'],
             ],
             'createcomp' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types.php',
+                        'url' => 'types.php',
                         'urlvars' => [
-                            'action'   => 'create_comp',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create_comp',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
                 'content' => $lang['strcreatecomptype'],
             ],
             'createenum' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types.php',
+                        'url' => 'types.php',
                         'urlvars' => [
-                            'action'   => 'create_enum',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create_enum',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -226,15 +227,15 @@ class TypesController extends BaseController
         $reqvars = $this->misc->getRequestVars('type');
 
         $attrs = [
-            'text'    => Decorator::field('typname'),
-            'icon'    => 'Type',
+            'text' => Decorator::field('typname'),
+            'icon' => 'Type',
             'toolTip' => Decorator::field('typcomment'),
-            'action'  => Decorator::actionurl(
+            'action' => Decorator::actionurl(
                 'types.php',
                 $reqvars,
                 [
                     'action' => 'properties',
-                    'type'   => Decorator::field('basename'),
+                    'type' => Decorator::field('basename'),
                 ]
             ),
         ];
@@ -243,7 +244,8 @@ class TypesController extends BaseController
     }
 
     /**
-     * Show read only properties for a type
+     * Show read only properties for a type.
+     *
      * @param mixed $msg
      */
     public function doProperties($msg = '')
@@ -270,11 +272,11 @@ class TypesController extends BaseController
                     $attrs = $data->getTableAttributes($_REQUEST['type']);
 
                     $columns = [
-                        'field'   => [
+                        'field' => [
                             'title' => $lang['strfield'],
                             'field' => Decorator::field('attname'),
                         ],
-                        'type'    => [
+                        'type' => [
                             'title' => $lang['strtype'],
                             'field' => Decorator::field('+type'),
                         ],
@@ -308,11 +310,11 @@ class TypesController extends BaseController
                     echo "<tr><th class=\"data left\">{$lang['stralignment']}</th>\n";
                     echo '<td class="data1">', $this->misc->printVal($typedata->fields['typalign']), "</td></tr>\n";
                     if ($data->hasEnumTypes() && $vals) {
-                        $vals   = $vals->getArray();
+                        $vals = $vals->getArray();
                         $nbVals = count($vals);
                         echo "<tr>\n\t<th class=\"data left\" rowspan=\"${nbVals}\">{$lang['strenumvalues']}</th>\n";
                         echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>\n";
-                        for ($i = 1; $i < $nbVals; $i++) {
+                        for ($i = 1; $i < $nbVals; ++$i) {
                             echo '<td class="data', 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>\n";
                         }
                     }
@@ -320,13 +322,13 @@ class TypesController extends BaseController
             }
 
             $this->printNavLinks(['showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types.php',
+                        'url' => 'types.php',
                         'urlvars' => [
-                            'server'   => $_REQUEST['server'],
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -338,7 +340,8 @@ class TypesController extends BaseController
     }
 
     /**
-     * Show confirmation of drop and perform actual drop
+     * Show confirmation of drop and perform actual drop.
+     *
      * @param mixed $confirm
      */
     public function doDrop($confirm)
@@ -354,7 +357,7 @@ class TypesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdroptype'], $this->misc->printVal($_REQUEST['type'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
@@ -373,7 +376,8 @@ class TypesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new composite type
+     * Displays a screen where they can enter a new composite type.
+     *
      * @param mixed $msg
      */
     public function doCreateComposite($msg = '')
@@ -405,7 +409,7 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -450,14 +454,14 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
                 echo "\t<tr><th colspan=\"2\" class=\"data required\">{$lang['strfield']}</th><th colspan=\"2\" class=\"data required\">{$lang['strtype']}</th>";
                 echo "<th class=\"data\">{$lang['strlength']}</th><th class=\"data\">{$lang['strcomment']}</th></tr>\n";
 
-                for ($i = 0; $i < $_REQUEST['fields']; $i++) {
+                for ($i = 0; $i < $_REQUEST['fields']; ++$i) {
                     if (!isset($_REQUEST['field'][$i])) {
                         $_REQUEST['field'][$i] = '';
                     }
@@ -556,7 +560,8 @@ class TypesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new enum type
+     * Displays a screen where they can enter a new enum type.
+     *
      * @param mixed $msg
      */
     public function doCreateEnum($msg = '')
@@ -588,7 +593,7 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -631,13 +636,13 @@ class TypesController extends BaseController
                 $this->printTitle($lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
                 echo "\t<tr><th colspan=\"2\" class=\"data required\">{$lang['strvalue']}</th></tr>\n";
 
-                for ($i = 0; $i < $_REQUEST['values']; $i++) {
+                for ($i = 0; $i < $_REQUEST['values']; ++$i) {
                     if (!isset($_REQUEST['value'][$i])) {
                         $_REQUEST['value'][$i] = '';
                     }
@@ -698,7 +703,8 @@ class TypesController extends BaseController
     }
 
     /**
-     * Displays a screen where they can enter a new type
+     * Displays a screen where they can enter a new type.
+     *
      * @param mixed $msg
      */
     public function doCreate($msg = '')
@@ -752,7 +758,7 @@ class TypesController extends BaseController
         $this->printTitle($lang['strcreatetype'], 'pg.type.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/types.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/types.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -776,7 +782,7 @@ class TypesController extends BaseController
             $funcs->moveNext();
         }
         echo "</select></td></tr>\n";
-        echo '<tr><th class="data left' . (version_compare($data->major_version, '7.4', '<') ? ' required' : '') . "\">{$lang['strlength']}</th>\n";
+        echo '<tr><th class="data left'.(version_compare($data->major_version, '7.4', '<') ? ' required' : '')."\">{$lang['strlength']}</th>\n";
         echo '<td class="data1"><input name="typlen" size="8" value="',
         htmlspecialchars($_POST['typlen']), '" /></td></tr>';
         echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
@@ -821,7 +827,7 @@ class TypesController extends BaseController
     }
 
     /**
-     * Actually creates the new type in the database
+     * Actually creates the new type in the database.
      */
     public function doSaveCreate()
     {

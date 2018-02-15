@@ -6,23 +6,23 @@
 
 namespace PHPPgAdmin\Controller;
 
-use \PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Base controller class
+ * Base controller class.
  */
 class LanguagesController extends BaseController
 {
     public $controller_name = 'LanguagesController';
 
     /**
-     * Default method to render the controller according to the action parameter
+     * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
         $conf = $this->conf;
 
-        $lang   = $this->lang;
+        $lang = $this->lang;
         $action = $this->action;
         if ('tree' == $action) {
             return $this->doTree();
@@ -42,7 +42,8 @@ class LanguagesController extends BaseController
     }
 
     /**
-     * Show default list of languages in the database
+     * Show default list of languages in the database.
+     *
      * @param mixed $msg
      */
     public function doDefault($msg = '')
@@ -63,10 +64,10 @@ class LanguagesController extends BaseController
                 'title' => $lang['strname'],
                 'field' => Decorator::field('lanname'),
             ],
-            'trusted'  => [
+            'trusted' => [
                 'title' => $lang['strtrusted'],
                 'field' => Decorator::field('lanpltrusted'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
             'function' => [
                 'title' => $lang['strfunction'],
