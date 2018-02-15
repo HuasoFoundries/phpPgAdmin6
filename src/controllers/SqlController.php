@@ -12,8 +12,8 @@ namespace PHPPgAdmin\Controller;
 class SqlController extends BaseController
 {
     public $controller_name = 'SqlController';
-    public $query = '';
-    public $subject = '';
+    public $query           = '';
+    public $subject         = '';
     public $start_time;
     public $duration;
 
@@ -34,11 +34,11 @@ class SqlController extends BaseController
         if (isset($_REQUEST['subject']) && 'history' == $_REQUEST['subject']) {
             // Or maybe we came from the history popup
             $_SESSION['sqlquery'] = $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$_GET['queryid']]['query'];
-            $this->query = $_SESSION['sqlquery'];
+            $this->query          = $_SESSION['sqlquery'];
         } elseif (isset($_POST['query'])) {
             // Or maybe we came from an sql form
             $_SESSION['sqlquery'] = $_POST['query'];
-            $this->query = $_SESSION['sqlquery'];
+            $this->query          = $_SESSION['sqlquery'];
         } else {
             echo 'could not find the query!!';
         }
@@ -89,10 +89,10 @@ class SqlController extends BaseController
 
     public function doDefault()
     {
-        $conf = $this->conf;
-        $this->misc = $this->misc;
-        $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
+        $conf        = $this->conf;
+        $this->misc  = $this->misc;
+        $lang        = $this->lang;
+        $data        = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();
 
         try {
@@ -103,8 +103,8 @@ class SqlController extends BaseController
 
             return $this->execute_query();
         } catch (\PHPPgAdmin\ADOdbException $e) {
-            $message = $e->getMessage();
-            $trace = $e->getTraceAsString();
+            $message   = $e->getMessage();
+            $trace     = $e->getTraceAsString();
             $lastError = $_connection->getLastError();
             $this->prtrace(['message' => $message, 'trace' => $trace, 'lastError' => $lastError]);
 
@@ -114,10 +114,10 @@ class SqlController extends BaseController
 
     private function execute_script()
     {
-        $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
+        $conf        = $this->conf;
+        $misc        = $this->misc;
+        $lang        = $this->lang;
+        $data        = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();
 
         /**
@@ -140,7 +140,7 @@ class SqlController extends BaseController
                             echo '<th class="data">', $misc->printVal(pg_fieldname($rs, $k)), '</th>';
                         }
 
-                        $i = 0;
+                        $i   = 0;
                         $row = pg_fetch_row($rs);
                         while (false !== $row) {
                             $id = (0 == ($i % 2) ? '1' : '2');
@@ -250,7 +250,7 @@ class SqlController extends BaseController
         // May as well try to time the query
         if (null !== $this->start_time) {
             list($usec, $sec) = explode(' ', microtime());
-            $end_time = ((float) $usec + (float) $sec);
+            $end_time         = ((float) $usec + (float) $sec);
             // Get duration in milliseconds, round to 3dp's
             $this->duration = number_format(($end_time - $this->start_time) * 1000, 3);
         }
@@ -266,8 +266,8 @@ class SqlController extends BaseController
         echo "<p>{$lang['strsqlexecuted']}</p>\n";
 
         $navlinks = [];
-        $fields = [
-            'server' => $_REQUEST['server'],
+        $fields   = [
+            'server'   => $_REQUEST['server'],
             'database' => $_REQUEST['database'],
         ];
 
@@ -277,11 +277,11 @@ class SqlController extends BaseController
 
         // Return
         if (isset($_REQUEST['return'])) {
-            $urlvars = $this->misc->getSubjectParams($_REQUEST['return']);
+            $urlvars          = $this->misc->getSubjectParams($_REQUEST['return']);
             $navlinks['back'] = [
                 'attr' => [
                     'href' => [
-                        'url' => $urlvars['url'],
+                        'url'     => $urlvars['url'],
                         'urlvars' => $urlvars['params'],
                     ],
                 ],
@@ -293,7 +293,7 @@ class SqlController extends BaseController
         $navlinks['alter'] = [
             'attr' => [
                 'href' => [
-                    'url' => 'database.php',
+                    'url'     => 'database.php',
                     'urlvars' => array_merge($fields, [
                         'action' => 'sql',
                     ]),
@@ -309,7 +309,7 @@ class SqlController extends BaseController
                 $navlinks['createview'] = [
                     'attr' => [
                         'href' => [
-                            'url' => 'views.php',
+                            'url'     => 'views.php',
                             'urlvars' => array_merge($fields, [
                                 'action' => 'create',
                             ]),
@@ -326,7 +326,7 @@ class SqlController extends BaseController
             $navlinks['download'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'dataexport.php',
+                        'url'     => 'dataexport.php',
                         'urlvars' => $fields,
                     ],
                 ],

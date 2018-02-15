@@ -128,17 +128,17 @@ class DomainsController extends BaseController
             'domain' => [
                 'title' => $lang['strdomain'],
                 'field' => Decorator::field('domname'),
-                'url' => "domains.php?action=properties&amp;{$this->misc->href}&amp;",
-                'vars' => ['domain' => 'domname'],
+                'url'   => "domains.php?action=properties&amp;{$this->misc->href}&amp;",
+                'vars'  => ['domain' => 'domname'],
             ],
             'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('domtype'),
             ],
             'notnull' => [
-                'title' => $lang['strnotnull'],
-                'field' => Decorator::field('domnotnull'),
-                'type' => 'bool',
+                'title'  => $lang['strnotnull'],
+                'field'  => Decorator::field('domnotnull'),
+                'type'   => 'bool',
                 'params' => ['true' => 'NOT NULL', 'false' => ''],
             ],
             'default' => [
@@ -161,9 +161,9 @@ class DomainsController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'domains.php',
+                        'url'     => 'domains.php',
                         'urlvars' => [
                             'action' => 'alter',
                             'domain' => Decorator::field('domname'),
@@ -173,9 +173,9 @@ class DomainsController extends BaseController
             ],
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'domains.php',
+                        'url'     => 'domains.php',
                         'urlvars' => [
                             'action' => 'confirm_drop',
                             'domain' => Decorator::field('domname'),
@@ -195,12 +195,12 @@ class DomainsController extends BaseController
             'create' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'domains.php',
+                        'url'     => 'domains.php',
                         'urlvars' => [
-                            'action' => 'create',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -225,10 +225,10 @@ class DomainsController extends BaseController
         $reqvars = $this->misc->getRequestVars('domain');
 
         $attrs = [
-            'text' => Decorator::field('domname'),
-            'icon' => 'Domain',
+            'text'    => Decorator::field('domname'),
+            'icon'    => 'Domain',
             'toolTip' => Decorator::field('domcomment'),
-            'action' => Decorator::actionurl(
+            'action'  => Decorator::actionurl(
                 'domains.php',
                 $reqvars,
                 [
@@ -287,8 +287,8 @@ class DomainsController extends BaseController
 
         if ($domaindata->recordCount() > 0) {
             if (!isset($_POST['domname'])) {
-                $_POST['domtype'] = $domaindata->fields['domtype'];
-                $_POST['domdefault'] = $domaindata->fields['domdef'];
+                $_POST['domtype']                 = $domaindata->fields['domtype'];
+                $_POST['domdefault']              = $domaindata->fields['domdef'];
                 $domaindata->fields['domnotnull'] = $data->phpBool($domaindata->fields['domnotnull']);
                 if ($domaindata->fields['domnotnull']) {
                     $_POST['domnotnull'] = 'on';
@@ -495,14 +495,14 @@ class DomainsController extends BaseController
                 $actions = [
                     'drop' => [
                         'content' => $lang['strdrop'],
-                        'attr' => [
+                        'attr'    => [
                             'href' => [
-                                'url' => 'domains.php',
+                                'url'     => 'domains.php',
                                 'urlvars' => [
-                                    'action' => 'confirm_drop_con',
-                                    'domain' => $_REQUEST['domain'],
+                                    'action'     => 'confirm_drop_con',
+                                    'domain'     => $_REQUEST['domain'],
                                     'constraint' => Decorator::field('conname'),
-                                    'type' => Decorator::field('contype'),
+                                    'type'       => Decorator::field('contype'),
                                 ],
                             ],
                         ],
@@ -519,13 +519,13 @@ class DomainsController extends BaseController
             'drop' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'domains.php',
+                        'url'     => 'domains.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confirm_drop',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'domain' => $_REQUEST['domain'],
+                            'schema'   => $_REQUEST['schema'],
+                            'domain'   => $_REQUEST['domain'],
                         ],
                     ],
                 ],
@@ -536,13 +536,13 @@ class DomainsController extends BaseController
             $navlinks['addcheck'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'domains.php',
+                        'url'     => 'domains.php',
                         'urlvars' => [
-                            'action' => 'add_check',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'add_check',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'domain' => $_REQUEST['domain'],
+                            'schema'   => $_REQUEST['schema'],
+                            'domain'   => $_REQUEST['domain'],
                         ],
                     ],
                 ],
@@ -551,13 +551,13 @@ class DomainsController extends BaseController
             $navlinks['alter'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'domains.php',
+                        'url'     => 'domains.php',
                         'urlvars' => [
-                            'action' => 'alter',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'alter',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'domain' => $_REQUEST['domain'],
+                            'schema'   => $_REQUEST['schema'],
+                            'domain'   => $_REQUEST['domain'],
                         ],
                     ],
                 ],

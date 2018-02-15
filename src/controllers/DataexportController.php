@@ -12,13 +12,13 @@ namespace PHPPgAdmin\Controller;
 class DataexportController extends BaseController
 {
     public $controller_name = 'DataexportController';
-    public $extensions = [
-        'sql' => 'sql',
+    public $extensions      = [
+        'sql'  => 'sql',
         'copy' => 'sql',
-        'csv' => 'csv',
-        'tab' => 'txt',
+        'csv'  => 'csv',
+        'tab'  => 'txt',
         'html' => 'html',
-        'xml' => 'xml',
+        'xml'  => 'xml',
     ];
 
     /**
@@ -28,8 +28,8 @@ class DataexportController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
+        $lang   = $this->lang;
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         set_time_limit(0);
@@ -56,7 +56,7 @@ class DataexportController extends BaseController
                     }
                     $this->prtrace('d_format is', $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
                     $format = $_REQUEST['d_format'];
-                    $oids = isset($_REQUEST['d_oids']);
+                    $oids   = isset($_REQUEST['d_oids']);
 
                     break;
                 case 'structureonly':
@@ -79,8 +79,8 @@ class DataexportController extends BaseController
                         return $dbexport_controller->render();
                     }
                     $format = $_REQUEST['sd_format'];
-                    $clean = isset($_REQUEST['sd_clean']);
-                    $oids = isset($_REQUEST['sd_oids']);
+                    $clean  = isset($_REQUEST['sd_clean']);
+                    $oids   = isset($_REQUEST['sd_oids']);
 
                     break;
             }
@@ -214,8 +214,8 @@ class DataexportController extends BaseController
                         echo "\t<header>\n";
                         foreach ($rs->fields as $k => $v) {
                             $finfo = $rs->fetchField($j++);
-                            $name = htmlspecialchars($finfo->name);
-                            $type = htmlspecialchars($finfo->type);
+                            $name  = htmlspecialchars($finfo->name);
+                            $type  = htmlspecialchars($finfo->type);
                             echo "\t\t<column name=\"{$name}\" type=\"{$type}\" />\n";
                         }
                         echo "\t</header>\n";
@@ -226,7 +226,7 @@ class DataexportController extends BaseController
                         echo "\t\t<row>\n";
                         foreach ($rs->fields as $k => $v) {
                             $finfo = $rs->fetchField($j++);
-                            $name = htmlspecialchars($finfo->name);
+                            $name  = htmlspecialchars($finfo->name);
                             if (!is_null($v)) {
                                 $v = htmlspecialchars($v);
                             }
@@ -243,10 +243,10 @@ class DataexportController extends BaseController
                     while (!$rs->EOF) {
                         echo "INSERT INTO \"{$_REQUEST['table']}\" (";
                         $first = true;
-                        $j = 0;
+                        $j     = 0;
                         foreach ($rs->fields as $k => $v) {
                             $finfo = $rs->fetchField($j++);
-                            $k = $finfo->name;
+                            $k     = $finfo->name;
                             // SQL (INSERT) format cannot handle oids
                             //                        if ($k == $data->id) continue;
                             // Output field
@@ -269,7 +269,7 @@ class DataexportController extends BaseController
                             }
                             if ($first) {
                                 $values = (is_null($v) ? 'NULL' : "'{$v}'");
-                                $first = false;
+                                $first  = false;
                             } else {
                                 $values .= ', '.((is_null($v) ? 'NULL' : "'{$v}'"));
                             }
@@ -294,7 +294,7 @@ class DataexportController extends BaseController
                         $first = true;
                         foreach ($rs->fields as $k => $v) {
                             $finfo = $rs->fetchField($k);
-                            $v = $finfo->name;
+                            $v     = $finfo->name;
                             if (!is_null($v)) {
                                 $v = str_replace('"', '""', $v);
                             }
@@ -346,8 +346,8 @@ class DataexportController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
+        $lang   = $this->lang;
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         if (!isset($_REQUEST['query']) or empty($_REQUEST['query'])) {

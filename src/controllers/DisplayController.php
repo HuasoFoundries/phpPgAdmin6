@@ -18,12 +18,12 @@ class DisplayController extends BaseController
      */
     public function render()
     {
-        $conf = $this->conf;
-        $this->misc = $this->misc;
-        $lang = $this->lang;
+        $conf           = $this->conf;
+        $this->misc     = $this->misc;
+        $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $data = $this->misc->getDatabaseAccessor();
-        $action = $this->action;
+        $data           = $this->misc->getDatabaseAccessor();
+        $action         = $this->action;
 
         if ('dobrowsefk' == $action) {
             return $this->doBrowseFK();
@@ -110,11 +110,11 @@ class DisplayController extends BaseController
      */
     public function doBrowse($msg = '')
     {
-        $conf = $this->conf;
-        $this->misc = $this->misc;
-        $lang = $this->lang;
+        $conf           = $this->conf;
+        $this->misc     = $this->misc;
+        $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $data = $this->misc->getDatabaseAccessor();
+        $data           = $this->misc->getDatabaseAccessor();
 
         $save_history = false;
         // If current page is not set, default to first page
@@ -144,7 +144,7 @@ class DisplayController extends BaseController
             foreach ($_REQUEST['fkey'] as $x => $y) {
                 $ops[$x] = '=';
             }
-            $query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+            $query             = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
             $_REQUEST['query'] = $query;
         }
 
@@ -213,7 +213,7 @@ class DisplayController extends BaseController
 
         // Build strings for GETs in array
         $_gets = [
-            'server' => $_REQUEST['server'],
+            'server'   => $_REQUEST['server'],
             'database' => $_REQUEST['database'],
         ];
 
@@ -312,26 +312,26 @@ class DisplayController extends BaseController
             $buttons = [
                 'edit' => [
                     'content' => $lang['stredit'],
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
-                            'url' => 'display.php',
+                            'url'     => 'display.php',
                             'urlvars' => array_merge([
-                                'action' => 'confeditrow',
+                                'action'  => 'confeditrow',
                                 'strings' => $_REQUEST['strings'],
-                                'page' => $_REQUEST['page'],
+                                'page'    => $_REQUEST['page'],
                             ], $_gets),
                         ],
                     ],
                 ],
                 'delete' => [
                     'content' => $lang['strdelete'],
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
-                            'url' => 'display.php',
+                            'url'     => 'display.php',
                             'urlvars' => array_merge([
-                                'action' => 'confdelrow',
+                                'action'  => 'confdelrow',
                                 'strings' => $_REQUEST['strings'],
-                                'page' => $_REQUEST['page'],
+                                'page'    => $_REQUEST['page'],
                             ], $_gets),
                         ],
                     ],
@@ -339,7 +339,7 @@ class DisplayController extends BaseController
             ];
             $actions = [
                 'actionbuttons' => &$buttons,
-                'place' => 'display-browse',
+                'place'         => 'display-browse',
             ];
             $plugin_manager->do_hook('actionbuttons', $actions);
 
@@ -374,7 +374,7 @@ class DisplayController extends BaseController
                 // Display edit and delete links if we have a key
                 if ($colspan > 0 and count($key) > 0) {
                     $keys_array = [];
-                    $has_nulls = false;
+                    $has_nulls  = false;
                     foreach ($key as $v) {
                         if (null === $rs->fields[$v]) {
                             $has_nulls = true;
@@ -387,7 +387,7 @@ class DisplayController extends BaseController
                         echo "<td colspan=\"{$colspan}\">&nbsp;</td>"."\n";
                     } else {
                         if (isset($actions['actionbuttons']['edit'])) {
-                            $actions['actionbuttons']['edit'] = $edit_params;
+                            $actions['actionbuttons']['edit']                            = $edit_params;
                             $actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
                                 $actions['actionbuttons']['edit']['attr']['href']['urlvars'],
                                 $keys_array
@@ -395,7 +395,7 @@ class DisplayController extends BaseController
                         }
 
                         if (isset($actions['actionbuttons']['delete'])) {
-                            $actions['actionbuttons']['delete'] = $delete_params;
+                            $actions['actionbuttons']['delete']                            = $delete_params;
                             $actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
                                 $actions['actionbuttons']['delete']['attr']['href']['urlvars'],
                                 $keys_array
@@ -429,7 +429,7 @@ class DisplayController extends BaseController
         $navlinks = [];
 
         $fields = [
-            'server' => $_REQUEST['server'],
+            'server'   => $_REQUEST['server'],
             'database' => $_REQUEST['database'],
         ];
 
@@ -444,7 +444,7 @@ class DisplayController extends BaseController
             $navlinks['back'] = [
                 'attr' => [
                     'href' => [
-                        'url' => $urlvars['url'],
+                        'url'     => $urlvars['url'],
                         'urlvars' => $urlvars['params'],
                     ],
                 ],
@@ -457,9 +457,9 @@ class DisplayController extends BaseController
             $navlinks['edit'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'database.php',
+                        'url'     => 'database.php',
                         'urlvars' => array_merge($fields, [
-                            'action' => 'sql',
+                            'action'   => 'sql',
                             'paginate' => 'on',
                         ]),
                     ],
@@ -473,12 +473,12 @@ class DisplayController extends BaseController
             $navlinks['collapse'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'display.php',
+                        'url'     => 'display.php',
                         'urlvars' => array_merge(
                             $_gets,
                             [
                                 'strings' => 'collapsed',
-                                'page' => $_REQUEST['page'],
+                                'page'    => $_REQUEST['page'],
                             ]
                         ),
                     ],
@@ -489,12 +489,12 @@ class DisplayController extends BaseController
             $navlinks['collapse'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'display.php',
+                        'url'     => 'display.php',
                         'urlvars' => array_merge(
                             $_gets,
                             [
                                 'strings' => 'expanded',
-                                'page' => $_REQUEST['page'],
+                                'page'    => $_REQUEST['page'],
                             ]
                         ),
                     ],
@@ -510,9 +510,9 @@ class DisplayController extends BaseController
                 $navlinks['createview'] = [
                     'attr' => [
                         'href' => [
-                            'url' => 'views.php',
+                            'url'     => 'views.php',
                             'urlvars' => array_merge($fields, [
-                                'action' => 'create',
+                                'action'         => 'create',
                                 'formDefinition' => $_REQUEST['query'],
                             ]),
                         ],
@@ -529,7 +529,7 @@ class DisplayController extends BaseController
             $navlinks['download'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'dataexport.php',
+                        'url'     => 'dataexport.php',
                         'urlvars' => array_merge($fields, $urlvars),
                     ],
                 ],
@@ -542,10 +542,10 @@ class DisplayController extends BaseController
             $navlinks['insert'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => array_merge($fields, [
                             'action' => 'confinsertrow',
-                            'table' => $object,
+                            'table'  => $object,
                         ]),
                     ],
                 ],
@@ -557,12 +557,12 @@ class DisplayController extends BaseController
         $navlinks['refresh'] = [
             'attr' => [
                 'href' => [
-                    'url' => 'display.php',
+                    'url'     => 'display.php',
                     'urlvars' => array_merge(
                         $_gets,
                         [
                             'strings' => $_REQUEST['strings'],
-                            'page' => $_REQUEST['page'],
+                            'page'    => $_REQUEST['page'],
                         ]
                     ),
                 ],
@@ -598,7 +598,7 @@ class DisplayController extends BaseController
             $this->printMsg($msg);
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
-            $rs = $data->browseRow($_REQUEST['table'], $key);
+            $rs    = $data->browseRow($_REQUEST['table'], $key);
 
             if (('disable' != $conf['autocomplete'])) {
                 $fksprops = $this->misc->getAutocompleteFKProperties($_REQUEST['table']);
@@ -621,7 +621,7 @@ class DisplayController extends BaseController
             echo '</p>' . "\n";*/
 
             $elements = 0;
-            $error = true;
+            $error    = true;
             if (1 == $rs->recordCount() && $attrs->recordCount() > 0) {
                 echo '<table>'."\n";
 
@@ -633,7 +633,7 @@ class DisplayController extends BaseController
                 $i = 0;
                 while (!$attrs->EOF) {
                     $attrs->fields['attnotnull'] = $data->phpBool($attrs->fields['attnotnull']);
-                    $id = (0 == ($i % 2) ? '1' : '2');
+                    $id                          = (0 == ($i % 2) ? '1' : '2');
 
                     // Initialise variables
                     if (!isset($_REQUEST['format'][$attrs->fields['attname']])) {
@@ -681,7 +681,7 @@ class DisplayController extends BaseController
                     }
 
                     if ((false !== $fksprops) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
-                        $extras['id'] = "attr_{$attrs->fields['attnum']}";
+                        $extras['id']           = "attr_{$attrs->fields['attnum']}";
                         $extras['autocomplete'] = 'off';
                     }
 
@@ -883,8 +883,8 @@ class DisplayController extends BaseController
                         if (!isset($fkey_information['byconstr'][$constr['conid']])) {
                             $fkey_information['byconstr'][$constr['conid']] = [
                                 'url_data' => 'table='.urlencode($constr['f_table']).'&amp;schema='.urlencode($constr['f_schema']),
-                                'fkeys' => [],
-                                'consrc' => $constr['consrc'],
+                                'fkeys'    => [],
+                                'consrc'   => $constr['consrc'],
                             ];
                         }
 
@@ -916,7 +916,7 @@ class DisplayController extends BaseController
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
-        $j = 0;
+        $j    = 0;
 
         foreach ($rs->fields as $k => $v) {
             if (($k === $data->id) && (!($withOid && $conf['show_oids']))) {
@@ -929,7 +929,7 @@ class DisplayController extends BaseController
             if (false === $args) {
                 echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>'."\n";
             } else {
-                $args['page'] = $_REQUEST['page'];
+                $args['page']    = $_REQUEST['page'];
                 $args['sortkey'] = $j + 1;
                 // Sort direction opposite to current direction, unless it's currently ''
                 $args['sortdir'] = (
@@ -963,7 +963,7 @@ class DisplayController extends BaseController
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
-        $j = 0;
+        $j    = 0;
 
         if (!isset($_REQUEST['strings'])) {
             $_REQUEST['strings'] = 'collapsed';
@@ -1019,7 +1019,7 @@ class DisplayController extends BaseController
         foreach ($_REQUEST['fkey'] as $x => $y) {
             $ops[$x] = '=';
         }
-        $query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+        $query             = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
         $_REQUEST['query'] = $query;
 
         $fkinfo = $this->getFKInfo();

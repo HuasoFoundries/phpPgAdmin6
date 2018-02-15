@@ -12,8 +12,8 @@ namespace PHPPgAdmin\Controller;
 class SqleditController extends BaseController
 {
     public $controller_name = 'SqleditController';
-    public $query = '';
-    public $subject = '';
+    public $query           = '';
+    public $subject         = '';
     public $start_time;
     public $duration;
 
@@ -26,17 +26,17 @@ class SqleditController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-        $data = $this->misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
 
         switch ($action) {
             case 'find':
-                $title = $this->lang['strfind'];
+                $title     = $this->lang['strfind'];
                 $body_text = $this->doFind();
 
                 break;
             case 'sql':
             default:
-                $title = $this->lang['strsql'];
+                $title     = $this->lang['strsql'];
                 $body_text = $this->doDefault();
 
                 break;
@@ -71,7 +71,7 @@ class SqleditController extends BaseController
             $_REQUEST['search_path'] = implode(',', $data->getSearchPath());
         }
         $search_path = htmlspecialchars($_REQUEST['search_path']);
-        $sqlquery = htmlspecialchars($_SESSION['sqlquery']);
+        $sqlquery    = htmlspecialchars($_SESSION['sqlquery']);
 
         $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'sql', false);
 

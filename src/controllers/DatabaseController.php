@@ -14,9 +14,9 @@ use PHPPgAdmin\Decorators\Decorator;
 class DatabaseController extends BaseController
 {
     use AdminTrait;
-    public $script = 'database.php';
+    public $script          = 'database.php';
     public $controller_name = 'DatabaseController';
-    public $table_place = 'database-variables';
+    public $table_place     = 'database-variables';
 
     public function _highlight($string, $term)
     {
@@ -30,9 +30,9 @@ class DatabaseController extends BaseController
     {
         $conf = $this->conf;
 
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
-        $data = $this->misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
 
         if ('tree' == $action) {
             return $this->doTree();
@@ -139,8 +139,8 @@ class DatabaseController extends BaseController
         $items = $this->adjustTabsForTree($tabs);
 
         $attrs = [
-            'text' => Decorator::field('title'),
-            'icon' => Decorator::field('icon'),
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
             'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars', [])),
             'branch' => Decorator::url(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['action' => 'tree']),
         ];
@@ -677,26 +677,26 @@ class DatabaseController extends BaseController
             $actions = [
                 'cancel' => [
                     'content' => $lang['strcancel'],
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
-                            'url' => 'database.php',
+                            'url'     => 'database.php',
                             'urlvars' => [
                                 'action' => 'signal',
                                 'signal' => 'CANCEL',
-                                'pid' => Decorator::field('pid'),
+                                'pid'    => Decorator::field('pid'),
                             ],
                         ],
                     ],
                 ],
                 'kill' => [
                     'content' => $lang['strkill'],
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
-                            'url' => 'database.php',
+                            'url'     => 'database.php',
                             'urlvars' => [
                                 'action' => 'signal',
                                 'signal' => 'KILL',
-                                'pid' => Decorator::field('pid'),
+                                'pid'    => Decorator::field('pid'),
                             ],
                         ],
                     ],
@@ -758,7 +758,7 @@ class DatabaseController extends BaseController
             'granted' => [
                 'title' => $lang['strislockheld'],
                 'field' => Decorator::field('granted'),
-                'type' => 'yesno',
+                'type'  => 'yesno',
             ],
         ];
 

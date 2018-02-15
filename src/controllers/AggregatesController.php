@@ -103,8 +103,8 @@ class AggregatesController extends BaseController
             'aggrname' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('proname'),
-                'url' => \SUBFOLDER."/redirect/aggregate?action=properties&amp;{$this->misc->href}&amp;",
-                'vars' => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
+                'url'   => \SUBFOLDER."/redirect/aggregate?action=properties&amp;{$this->misc->href}&amp;",
+                'vars'  => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
             ],
             'aggrtype' => [
                 'title' => $lang['strtype'],
@@ -130,11 +130,11 @@ class AggregatesController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'aggregates.php',
+                        'url'     => 'aggregates.php',
                         'urlvars' => [
-                            'action' => 'alter',
+                            'action'   => 'alter',
                             'aggrname' => Decorator::field('proname'),
                             'aggrtype' => Decorator::field('proargtypes'),
                         ],
@@ -143,11 +143,11 @@ class AggregatesController extends BaseController
             ],
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'aggregates.php',
+                        'url'     => 'aggregates.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
+                            'action'   => 'confirm_drop',
                             'aggrname' => Decorator::field('proname'),
                             'aggrtype' => Decorator::field('proargtypes'),
                         ],
@@ -166,12 +166,12 @@ class AggregatesController extends BaseController
             'create' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'aggregates.php',
+                        'url'     => 'aggregates.php',
                         'urlvars' => [
-                            'action' => 'create',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -190,18 +190,18 @@ class AggregatesController extends BaseController
 
         $aggregates = $data->getAggregates();
 
-        $proto = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
+        $proto   = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
         $reqvars = $this->misc->getRequestVars('aggregate');
 
         $attrs = [
-            'text' => $proto,
-            'icon' => 'Aggregate',
+            'text'    => $proto,
+            'icon'    => 'Aggregate',
             'toolTip' => Decorator::field('aggcomment'),
-            'action' => Decorator::redirecturl(
+            'action'  => Decorator::redirecturl(
                 'redirect.php',
                 $reqvars,
                 [
-                    'action' => 'properties',
+                    'action'   => 'properties',
                     'aggrname' => Decorator::field('proname'),
                     'aggrtype' => Decorator::field('proargtypes'),
                 ]
@@ -518,11 +518,11 @@ class AggregatesController extends BaseController
             'showall' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'aggregates.php',
+                        'url'     => 'aggregates.php',
                         'urlvars' => [
-                            'server' => $_REQUEST['server'],
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -534,12 +534,12 @@ class AggregatesController extends BaseController
             $navlinks['alter'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'aggregates.php',
+                        'url'     => 'aggregates.php',
                         'urlvars' => [
-                            'action' => 'alter',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'alter',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                             'aggrname' => $_REQUEST['aggrname'],
                             'aggrtype' => $_REQUEST['aggrtype'],
                         ],
@@ -552,12 +552,12 @@ class AggregatesController extends BaseController
         $navlinks['drop'] = [
             'attr' => [
                 'href' => [
-                    'url' => 'aggregates.php',
+                    'url'     => 'aggregates.php',
                     'urlvars' => [
-                        'action' => 'confirm_drop',
-                        'server' => $_REQUEST['server'],
+                        'action'   => 'confirm_drop',
+                        'server'   => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema' => $_REQUEST['schema'],
+                        'schema'   => $_REQUEST['schema'],
                         'aggrname' => $_REQUEST['aggrname'],
                         'aggrtype' => $_REQUEST['aggrtype'],
                     ],

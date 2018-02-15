@@ -14,8 +14,8 @@ use PHPPgAdmin\Decorators\Decorator;
 class HTMLTableController extends HTMLController
 {
     public $controller_name = 'HTMLTableController';
-    private $ma = [];
-    private $class = '';
+    private $ma             = [];
+    private $class          = '';
 
     /**
      * Display a table of data.
@@ -60,15 +60,15 @@ class HTMLTableController extends HTMLController
      */
     public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null)
     {
-        $this->misc = $this->misc;
-        $lang = $this->lang;
+        $this->misc     = $this->misc;
+        $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $data = $this->misc->getDatabaseAccessor();
+        $data           = $this->misc->getDatabaseAccessor();
 
         // Action buttons hook's place
         $plugin_functions_parameters = [
             'actionbuttons' => &$actions,
-            'place' => $place,
+            'place'         => $place,
         ];
         $plugin_manager->do_hook('actionbuttons', $plugin_functions_parameters);
 
@@ -165,7 +165,7 @@ class HTMLTableController extends HTMLController
     private function getTbody($columns, $actions, $tabledata, $pre_fn)
     {
         // Display table rows
-        $i = 0;
+        $i          = 0;
         $tbody_html = '<tbody>';
 
         while (!$tabledata->EOF) {
@@ -232,7 +232,7 @@ class HTMLTableController extends HTMLController
                                 $tbody_html .= $this->printUrlVars($column['vars'], $tabledata->fields, false);
                                 $tbody_html .= '">';
                             }
-                            $type = isset($column['type']) ? $column['type'] : null;
+                            $type   = isset($column['type']) ? $column['type'] : null;
                             $params = isset($column['params']) ? $column['params'] : [];
                             $tbody_html .= $this->misc->printVal($val, $type, $params);
                             if (isset($column['url'])) {

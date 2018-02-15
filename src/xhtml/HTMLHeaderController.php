@@ -12,7 +12,7 @@ namespace PHPPgAdmin\XHtml;
 class HTMLHeaderController extends HTMLController
 {
     public $controller_name = 'HTMLHeaderController';
-    private $_no_output = false;
+    private $_no_output     = false;
 
     /**
      * sets the value of private member variable $_no_output.
@@ -42,8 +42,8 @@ class HTMLHeaderController extends HTMLController
         if (function_exists('newrelic_disable_autorum')) {
             newrelic_disable_autorum();
         }
-        $appName = $this->appName;
-        $lang = $this->lang;
+        $appName        = $this->appName;
+        $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
 
         //$this->prtrace('appName', $appName);
@@ -51,14 +51,14 @@ class HTMLHeaderController extends HTMLController
         $viewVars = [];
         //$viewVars = $this->lang;
         if (isset($_SESSION['isolang'])) {
-            $viewVars['isolang'] = $_SESSION['isolang'];
+            $viewVars['isolang']   = $_SESSION['isolang'];
             $viewVars['applocale'] = $lang['applocale'];
         }
 
-        $viewVars['dir'] = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
+        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title'] = ('' !== $title) ? ' - '.$title : '';
-        $viewVars['appName'] = htmlspecialchars($this->appName).(('' != $title) ? htmlspecialchars(" - {$title}") : '');
+        $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
+        $viewVars['appName']        = htmlspecialchars($this->appName).(('' != $title) ? htmlspecialchars(" - {$title}") : '');
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
@@ -90,7 +90,7 @@ class HTMLHeaderController extends HTMLController
     public function printBody($doBody = true, $bodyClass = 'detailbody')
     {
         $bodyClass = htmlspecialchars($bodyClass);
-        $bodyHtml = '<body data-controller="'.$this->controller_name.'" class="'.$this->lang['applangdir'].' '.$bodyClass.'" >';
+        $bodyHtml  = '<body data-controller="'.$this->controller_name.'" class="'.$this->lang['applangdir'].' '.$bodyClass.'" >';
         $bodyHtml .= "\n";
         /*$bodyHtml .= '<div id="flexbox_wrapper">';
         $bodyHtml .= "\n";

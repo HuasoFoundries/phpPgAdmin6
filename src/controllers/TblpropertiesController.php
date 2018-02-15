@@ -114,8 +114,8 @@ class TblpropertiesController extends BaseController
 
         $attPre = function (&$rowdata, $actions) use ($data) {
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-            $attname = $rowdata->fields['attname'];
-            $table = $_REQUEST['table'];
+            $attname                  = $rowdata->fields['attname'];
+            $table                    = $_REQUEST['table'];
             $data->fieldClean($attname);
             $data->fieldClean($table);
 
@@ -129,7 +129,7 @@ class TblpropertiesController extends BaseController
             $str = '';
             foreach ($p['keys'] as $k => $c) {
                 if (is_null($p['keys'][$k]['consrc'])) {
-                    $atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
+                    $atts        = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
                     $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
                 }
 
@@ -180,17 +180,17 @@ class TblpropertiesController extends BaseController
             'column' => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url' => "colproperties.php?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
-                'vars' => ['column' => 'attname'],
+                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'vars'  => ['column' => 'attname'],
             ],
             'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('+type'),
             ],
             'notnull' => [
-                'title' => $lang['strnotnull'],
-                'field' => Decorator::field('attnotnull'),
-                'type' => 'bool',
+                'title'  => $lang['strnotnull'],
+                'field'  => Decorator::field('attnotnull'),
+                'type'   => 'bool',
                 'params' => ['true' => 'NOT NULL', 'false' => ''],
             ],
             'default' => [
@@ -198,13 +198,13 @@ class TblpropertiesController extends BaseController
                 'field' => Decorator::field('adsrc'),
             ],
             'keyprop' => [
-                'title' => $lang['strconstraints'],
-                'class' => 'constraint_cell',
-                'field' => Decorator::field('attname'),
-                'type' => 'callback',
+                'title'  => $lang['strconstraints'],
+                'class'  => 'constraint_cell',
+                'field'  => Decorator::field('attname'),
+                'type'   => 'callback',
                 'params' => [
                     'function' => $cstrRender,
-                    'keys' => $ck->getArray(),
+                    'keys'     => $ck->getArray(),
                 ],
             ],
             'actions' => [
@@ -219,78 +219,78 @@ class TblpropertiesController extends BaseController
         $actions = [
             'browse' => [
                 'title' => $lang['strbrowse'],
-                'url' => "display.php?{$misc->href}&amp;subject=column&amp;return=table&amp;table=".urlencode($_REQUEST['table']).'&amp;',
-                'vars' => ['column' => 'attname'],
+                'url'   => "display.php?{$misc->href}&amp;subject=column&amp;return=table&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'vars'  => ['column' => 'attname'],
             ],
             'alter' => [
                 'title' => $lang['stralter'],
-                'url' => "colproperties.php?action=properties&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
-                'vars' => ['column' => 'attname'],
+                'url'   => "colproperties.php?action=properties&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'vars'  => ['column' => 'attname'],
             ],
             'privileges' => [
                 'title' => $lang['strprivileges'],
-                'url' => "privileges.php?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
-                'vars' => ['column' => 'attname'],
+                'url'   => "privileges.php?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'vars'  => ['column' => 'attname'],
             ],
             'drop' => [
                 'title' => $lang['strdrop'],
-                'url' => "tblproperties.php?action=confirm_drop&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
-                'vars' => ['column' => 'attname'],
+                'url'   => "tblproperties.php?action=confirm_drop&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'vars'  => ['column' => 'attname'],
             ],
         ];
 
         $actions = [
             'browse' => [
                 'content' => $lang['strbrowse'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'display.php',
+                        'url'     => 'display.php',
                         'urlvars' => [
-                            'table' => $_REQUEST['table'],
+                            'table'   => $_REQUEST['table'],
                             'subject' => 'column',
-                            'return' => 'table',
-                            'column' => Decorator::field('attname'),
+                            'return'  => 'table',
+                            'column'  => Decorator::field('attname'),
                         ],
                     ],
                 ],
             ],
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'colproperties.php',
+                        'url'     => 'colproperties.php',
                         'urlvars' => [
                             'subject' => 'column',
-                            'action' => 'properties',
-                            'table' => $_REQUEST['table'],
-                            'column' => Decorator::field('attname'),
+                            'action'  => 'properties',
+                            'table'   => $_REQUEST['table'],
+                            'column'  => Decorator::field('attname'),
                         ],
                     ],
                 ],
             ],
             'privileges' => [
                 'content' => $lang['strprivileges'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'privileges.php',
+                        'url'     => 'privileges.php',
                         'urlvars' => [
                             'subject' => 'column',
-                            'table' => $_REQUEST['table'],
-                            'column' => Decorator::field('attname'),
+                            'table'   => $_REQUEST['table'],
+                            'column'  => Decorator::field('attname'),
                         ],
                     ],
                 ],
             ],
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'tblproperties.php',
+                        'url'     => 'tblproperties.php',
                         'urlvars' => [
                             'subject' => 'column',
-                            'action' => 'confirm_drop',
-                            'table' => $_REQUEST['table'],
-                            'column' => Decorator::field('attname'),
+                            'action'  => 'confirm_drop',
+                            'table'   => $_REQUEST['table'],
+                            'column'  => Decorator::field('attname'),
                         ],
                     ],
                 ],
@@ -303,14 +303,14 @@ class TblpropertiesController extends BaseController
             'browse' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'display.php',
+                        'url'     => 'display.php',
                         'urlvars' => [
-                            'server' => $_REQUEST['server'],
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
-                            'subject' => 'table',
-                            'return' => 'table',
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
+                            'subject'  => 'table',
+                            'return'   => 'table',
                         ],
                     ],
                 ],
@@ -319,13 +319,13 @@ class TblpropertiesController extends BaseController
             'select' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
-                            'action' => 'confselectrows',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confselectrows',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -334,13 +334,13 @@ class TblpropertiesController extends BaseController
             'insert' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
-                            'action' => 'confinsertrow',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confinsertrow',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -349,13 +349,13 @@ class TblpropertiesController extends BaseController
             'empty' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
-                            'action' => 'confirm_empty',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confirm_empty',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -364,13 +364,13 @@ class TblpropertiesController extends BaseController
             'drop' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confirm_drop',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -379,13 +379,13 @@ class TblpropertiesController extends BaseController
             'addcolumn' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'tblproperties.php',
+                        'url'     => 'tblproperties.php',
                         'urlvars' => [
-                            'action' => 'add_column',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'add_column',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -394,13 +394,13 @@ class TblpropertiesController extends BaseController
             'alter' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'tblproperties.php',
+                        'url'     => 'tblproperties.php',
                         'urlvars' => [
-                            'action' => 'confirm_alter',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confirm_alter',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'table' => $_REQUEST['table'],
+                            'schema'   => $_REQUEST['schema'],
+                            'table'    => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -421,27 +421,27 @@ class TblpropertiesController extends BaseController
         $reqvars = $misc->getRequestVars('column');
 
         $attrs = [
-            'text' => Decorator::field('attname'),
+            'text'   => Decorator::field('attname'),
             'action' => Decorator::actionurl(
                 'colproperties.php',
                 $reqvars,
                 [
-                    'table' => $_REQUEST['table'],
+                    'table'  => $_REQUEST['table'],
                     'column' => Decorator::field('attname'),
                 ]
             ),
-            'icon' => 'Column',
+            'icon'       => 'Column',
             'iconAction' => Decorator::url(
                 'display.php',
                 $reqvars,
                 [
-                    'table' => $_REQUEST['table'],
+                    'table'  => $_REQUEST['table'],
                     'column' => Decorator::field('attname'),
-                    'query' => Decorator::replace(
+                    'query'  => Decorator::replace(
                         'SELECT "%column%", count(*) AS "count" FROM "%table%" GROUP BY "%column%" ORDER BY "%column%"',
                         [
                             '%column%' => Decorator::field('attname'),
-                            '%table%' => $_REQUEST['table'],
+                            '%table%'  => $_REQUEST['table'],
                         ]
                     ),
                 ]
@@ -757,7 +757,7 @@ class TblpropertiesController extends BaseController
                 }
 
                 // Fetch all available types
-                $types = $data->getTypes(true, false, true);
+                $types        = $data->getTypes(true, false, true);
                 $types_for_js = [];
 
                 $this->printTrail('table');
@@ -790,7 +790,7 @@ class TblpropertiesController extends BaseController
                     }
                 }
                 while (!$types->EOF) {
-                    $typname = $types->fields['typname'];
+                    $typname        = $types->fields['typname'];
                     $types_for_js[] = $typname;
                     echo "\t<option value=\"", htmlspecialchars($typname), '"', ($typname == $_POST['type']) ? ' selected="selected"' : '', '>',
                     $misc->printVal($typname), "</option>\n";
@@ -804,7 +804,7 @@ class TblpropertiesController extends BaseController
                 echo "\t<option value=\"[]\"", ('[]' == $_POST['array']) ? ' selected="selected"' : '', ">[ ]</option>\n";
                 echo "</select></td>\n";
                 $predefined_size_types = array_intersect($data->predefined_size_types, $types_for_js);
-                $escaped_predef_types = []; // the JS escaped array elements
+                $escaped_predef_types  = []; // the JS escaped array elements
                 foreach ($predefined_size_types as $value) {
                     $escaped_predef_types[] = "'{$value}'";
                 }

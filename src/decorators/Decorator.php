@@ -146,7 +146,7 @@ class Decorator
         // at value evaluation time.
 
         if (func_num_args() > 2) {
-            $v = func_get_args();
+            $v    = func_get_args();
             $base = array_shift($v);
 
             return new UrlDecorator($base, new ArrayMergeDecorator($v));
