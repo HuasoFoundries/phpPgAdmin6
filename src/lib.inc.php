@@ -52,9 +52,6 @@ if (DEBUGMODE) {
     $handler->setCallOldHandlers(true); // disable passing errors & exceptions to prviously defined handlers
 }
 
-$handler->start(); // initialize handlers*/
-\PhpConsole\Helper::register(); // it will register global PC class
-
 $composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
 $appVersion   = $composerinfo->version;
 
@@ -93,11 +90,17 @@ $app = new \Slim\App($config);
 // Fetch DI Container
 $container = $app->getContainer();
 
-//\Kint::dump($container->environment);die();
+if ($container instanceof \Psr\Container\ContainerInterface) {
 
-$normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
-$subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
-define('SUBFOLDER', $subfolder);
+    $handler->start(); // initialize handlers*/
+    \PhpConsole\Helper::register(); // it will register global PC class
+
+    $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
+    $subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
+    define('SUBFOLDER', $subfolder);
+} else {
+    trigger_error("App Container must be an instance of \Psr\Container\ContainerInterface", E_USER_ERROR);
+}
 
 $container['version']     = 'v' . $appVersion;
 $container['errors']      = [];
