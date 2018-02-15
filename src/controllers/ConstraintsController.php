@@ -20,7 +20,6 @@ class ConstraintsController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -130,7 +129,6 @@ class ConstraintsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -260,7 +258,6 @@ class ConstraintsController extends BaseController
      */
     public function addForeignKey($stage, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -514,7 +511,6 @@ class ConstraintsController extends BaseController
      */
     public function addPrimaryOrUniqueKey($type, $confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -662,7 +658,6 @@ class ConstraintsController extends BaseController
      */
     public function addCheck($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -722,7 +717,6 @@ class ConstraintsController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

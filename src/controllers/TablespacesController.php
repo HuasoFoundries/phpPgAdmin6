@@ -18,7 +18,6 @@ class TablespacesController extends BaseController
      */
     public function render()
     {
-
         $lang   = $this->lang;
         $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
@@ -79,7 +78,6 @@ class TablespacesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -176,7 +174,6 @@ class TablespacesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -240,7 +237,6 @@ class TablespacesController extends BaseController
      */
     public function doSaveAlter()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -269,7 +265,6 @@ class TablespacesController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -303,7 +298,6 @@ class TablespacesController extends BaseController
      */
     public function doCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -366,7 +360,6 @@ class TablespacesController extends BaseController
      */
     public function doSaveCreate()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

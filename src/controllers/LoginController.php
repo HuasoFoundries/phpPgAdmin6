@@ -45,7 +45,6 @@ class LoginController extends BaseController
 
     public function doLoginForm($msg = '')
     {
-
         $lang = $this->lang;
 
         $this->misc->setNoDBConnection(true);

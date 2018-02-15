@@ -22,7 +22,6 @@ class SqlController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $data = $this->misc->getDatabaseAccessor();
@@ -181,7 +180,6 @@ class SqlController extends BaseController
 
     private function execute_query()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -241,7 +239,6 @@ class SqlController extends BaseController
 
     private function doFooter($doBody = true, $template = 'footer.twig')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

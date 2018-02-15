@@ -581,7 +581,6 @@ class DisplayController extends BaseController
      */
     public function doEditRow($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -779,7 +778,6 @@ class DisplayController extends BaseController
      */
     public function doDelRow($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -861,7 +859,6 @@ class DisplayController extends BaseController
      */
     public function &getFKInfo()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -909,7 +906,6 @@ class DisplayController extends BaseController
      */
     public function printTableHeaderCells(&$rs, $args, $withOid)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         $j    = 0;
@@ -955,7 +951,6 @@ class DisplayController extends BaseController
     // Print data-row cells
     public function printTableRowCells(&$rs, &$fkey_information, $withOid)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         $j    = 0;
@@ -1005,7 +1000,6 @@ class DisplayController extends BaseController
     // Print the FK row, used in ajax requests
     public function doBrowseFK()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

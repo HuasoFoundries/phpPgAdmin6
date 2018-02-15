@@ -28,7 +28,6 @@ class DatabaseController extends BaseController
      */
     public function render()
     {
-
         $lang   = $this->lang;
         $action = $this->action;
         $data   = $this->misc->getDatabaseAccessor();
@@ -125,7 +124,6 @@ class DatabaseController extends BaseController
 
     public function doTree($print = true)
     {
-
         $lang = $this->lang;
 
         $data = $this->misc->getDatabaseAccessor();
@@ -151,7 +149,6 @@ class DatabaseController extends BaseController
      */
     public function doSignal()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -171,7 +168,6 @@ class DatabaseController extends BaseController
      */
     public function doFind($confirm = true, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -486,7 +482,6 @@ class DatabaseController extends BaseController
      */
     public function doExport($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -541,7 +536,6 @@ class DatabaseController extends BaseController
      */
     public function doVariables()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -574,7 +568,6 @@ class DatabaseController extends BaseController
      */
     public function doProcesses($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -593,7 +586,6 @@ class DatabaseController extends BaseController
 
     public function currentProcesses($isAjax = false)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -714,7 +706,6 @@ class DatabaseController extends BaseController
 
     public function currentLocks($isAjax = false)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -766,7 +757,6 @@ class DatabaseController extends BaseController
      */
     public function doLocks()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -785,7 +775,6 @@ class DatabaseController extends BaseController
      */
     public function doSQL()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

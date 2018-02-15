@@ -20,7 +20,6 @@ class TypesController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -92,7 +91,6 @@ class TypesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -215,7 +213,6 @@ class TypesController extends BaseController
      */
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -247,7 +244,6 @@ class TypesController extends BaseController
      */
     public function doProperties($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         // Get type (using base name)
@@ -342,7 +338,6 @@ class TypesController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -377,7 +372,6 @@ class TypesController extends BaseController
      */
     public function doCreateComposite($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -560,7 +554,6 @@ class TypesController extends BaseController
      */
     public function doCreateEnum($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -702,7 +695,6 @@ class TypesController extends BaseController
      */
     public function doCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -823,7 +815,6 @@ class TypesController extends BaseController
      */
     public function doSaveCreate()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

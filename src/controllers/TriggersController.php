@@ -20,7 +20,6 @@ class TriggersController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -108,7 +107,6 @@ class TriggersController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -231,7 +229,6 @@ class TriggersController extends BaseController
 
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -252,7 +249,6 @@ class TriggersController extends BaseController
      */
     public function doSaveAlter()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -271,7 +267,6 @@ class TriggersController extends BaseController
      */
     public function doAlter($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -312,7 +307,6 @@ class TriggersController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -352,7 +346,6 @@ class TriggersController extends BaseController
      */
     public function doEnable($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -391,7 +384,6 @@ class TriggersController extends BaseController
      */
     public function doDisable($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -430,7 +422,6 @@ class TriggersController extends BaseController
      */
     public function doCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -501,7 +492,6 @@ class TriggersController extends BaseController
      */
     public function doSaveCreate()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

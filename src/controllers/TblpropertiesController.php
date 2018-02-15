@@ -20,7 +20,6 @@ class TblpropertiesController extends BaseController
      */
     public function render()
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
 
@@ -107,7 +106,6 @@ class TblpropertiesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -412,7 +410,6 @@ class TblpropertiesController extends BaseController
 
     public function doTree()
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -454,7 +451,6 @@ class TblpropertiesController extends BaseController
 
     public function doSaveAlter()
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -502,7 +498,6 @@ class TblpropertiesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -608,7 +603,6 @@ class TblpropertiesController extends BaseController
 
     public function doExport($msg = '')
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -669,7 +663,6 @@ class TblpropertiesController extends BaseController
 
     public function doImport($msg = '')
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -720,7 +713,6 @@ class TblpropertiesController extends BaseController
      */
     public function doAddColumn($msg = '')
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
@@ -879,7 +871,6 @@ class TblpropertiesController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $misc = $this->misc;
         $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();

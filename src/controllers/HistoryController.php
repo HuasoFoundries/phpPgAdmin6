@@ -20,7 +20,6 @@ class HistoryController extends BaseController
      */
     public function render()
     {
-
         $lang   = $this->lang;
         $action = $this->action;
 
@@ -67,7 +66,6 @@ class HistoryController extends BaseController
 
     public function doDefault()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -193,7 +191,6 @@ class HistoryController extends BaseController
 
     public function doDelHistory($qid, $confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -221,7 +218,6 @@ class HistoryController extends BaseController
 
     public function doClearHistory($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

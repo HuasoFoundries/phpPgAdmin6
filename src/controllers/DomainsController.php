@@ -20,7 +20,6 @@ class DomainsController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -112,7 +111,6 @@ class DomainsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -213,7 +211,6 @@ class DomainsController extends BaseController
      */
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -243,7 +240,6 @@ class DomainsController extends BaseController
      */
     public function doSaveAlter()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -267,7 +263,6 @@ class DomainsController extends BaseController
      */
     public function doAlter($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -333,7 +328,6 @@ class DomainsController extends BaseController
      */
     public function addCheck($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -394,7 +388,6 @@ class DomainsController extends BaseController
      */
     public function doDropConstraint($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -434,7 +427,6 @@ class DomainsController extends BaseController
      */
     public function doProperties($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -567,7 +559,6 @@ class DomainsController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -601,7 +592,6 @@ class DomainsController extends BaseController
      */
     public function doCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -685,7 +675,6 @@ class DomainsController extends BaseController
      */
     public function doSaveCreate()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

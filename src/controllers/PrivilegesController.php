@@ -19,7 +19,6 @@ class PrivilegesController extends BaseController
      */
     public function render()
     {
-
         $lang   = $this->lang;
         $action = $this->action;
         $data   = $this->misc->getDatabaseAccessor();
@@ -56,7 +55,6 @@ class PrivilegesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang     = $this->lang;
         $action   = $this->action;
         $data     = $this->misc->getDatabaseAccessor();
@@ -278,7 +276,6 @@ class PrivilegesController extends BaseController
      */
     public function doAlter($confirm, $mode, $msg = '')
     {
-
         $lang   = $this->lang;
         $action = $this->action;
         $data   = $this->misc->getDatabaseAccessor();

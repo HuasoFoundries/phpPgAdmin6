@@ -20,7 +20,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -100,7 +99,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -235,7 +233,6 @@ class MaterializedviewpropertiesController extends BaseController
 
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -279,7 +276,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doSaveEdit()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -298,7 +294,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doEdit($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -345,7 +340,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doExport($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -406,7 +400,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doDefinition($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -455,7 +448,6 @@ class MaterializedviewpropertiesController extends BaseController
      */
     public function doProperties($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -548,7 +540,6 @@ class MaterializedviewpropertiesController extends BaseController
 
     public function doAlter($confirm = false, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

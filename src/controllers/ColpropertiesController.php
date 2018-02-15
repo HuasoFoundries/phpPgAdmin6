@@ -67,7 +67,6 @@ class ColpropertiesController extends BaseController
      */
     public function doDefault($msg = '', $isTable = true)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -224,7 +223,6 @@ class ColpropertiesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

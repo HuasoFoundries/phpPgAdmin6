@@ -92,7 +92,6 @@ class UsersController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -189,7 +188,6 @@ class UsersController extends BaseController
      */
     public function doAccount($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -241,7 +239,6 @@ class UsersController extends BaseController
      */
     public function doChangePassword($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -304,7 +301,6 @@ class UsersController extends BaseController
      */
     public function doEdit($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -370,7 +366,6 @@ class UsersController extends BaseController
      */
     public function doSaveEdit()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -401,7 +396,6 @@ class UsersController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -435,7 +429,6 @@ class UsersController extends BaseController
      */
     public function doCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -488,7 +481,6 @@ class UsersController extends BaseController
      */
     public function doSaveCreate()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

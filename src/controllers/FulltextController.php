@@ -20,7 +20,6 @@ class FulltextController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -138,7 +137,6 @@ class FulltextController extends BaseController
 
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -223,7 +221,6 @@ class FulltextController extends BaseController
      */
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -255,7 +252,6 @@ class FulltextController extends BaseController
 
     public function doSubTree($what)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -309,7 +305,6 @@ class FulltextController extends BaseController
 
     public function doDropConfig($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -341,7 +336,6 @@ class FulltextController extends BaseController
 
     public function doDropDict($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -380,7 +374,6 @@ class FulltextController extends BaseController
      */
     public function doCreateConfig($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -487,7 +480,6 @@ class FulltextController extends BaseController
      */
     public function doSaveCreateConfig()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -533,7 +525,6 @@ class FulltextController extends BaseController
      */
     public function doAlterConfig($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -595,7 +586,6 @@ class FulltextController extends BaseController
      */
     public function doSaveAlterConfig()
     {
-
         $lang   = $this->lang;
         $data   = $this->misc->getDatabaseAccessor();
         $status = $data->updateFtsConfiguration($_POST['ftscfg'], $_POST['formComment'], $_POST['formName']);
@@ -613,7 +603,6 @@ class FulltextController extends BaseController
      */
     public function doViewParsers($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -653,7 +642,6 @@ class FulltextController extends BaseController
      */
     public function doViewDicts($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -739,7 +727,6 @@ class FulltextController extends BaseController
      */
     public function doViewConfig($ftscfg, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -836,7 +823,6 @@ class FulltextController extends BaseController
      */
     public function doCreateDict($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -959,7 +945,6 @@ class FulltextController extends BaseController
      */
     public function doSaveCreateDict()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1015,7 +1000,6 @@ class FulltextController extends BaseController
      */
     public function doAlterDict($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1071,7 +1055,6 @@ class FulltextController extends BaseController
      */
     public function doSaveAlterDict()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1090,7 +1073,6 @@ class FulltextController extends BaseController
      */
     public function doDropMapping($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1154,7 +1136,6 @@ class FulltextController extends BaseController
 
     public function doAlterMapping($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         $this->printTrail('ftscfg');
@@ -1236,7 +1217,6 @@ class FulltextController extends BaseController
      */
     public function doSaveAlterMapping()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1256,7 +1236,6 @@ class FulltextController extends BaseController
      */
     public function doAddMapping($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1329,7 +1308,6 @@ class FulltextController extends BaseController
      */
     public function doSaveAddMapping()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

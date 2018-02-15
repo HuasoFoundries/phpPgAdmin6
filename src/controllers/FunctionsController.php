@@ -21,7 +21,6 @@ class FunctionsController extends BaseController
      */
     public function render()
     {
-
         $lang = $this->lang;
 
         $action = $this->action;
@@ -90,7 +89,6 @@ class FunctionsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -232,7 +230,6 @@ class FunctionsController extends BaseController
      */
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -265,7 +262,6 @@ class FunctionsController extends BaseController
      */
     public function doSaveEdit()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -323,7 +319,6 @@ class FunctionsController extends BaseController
      */
     public function doEdit($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -564,7 +559,6 @@ class FunctionsController extends BaseController
      */
     public function doProperties($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -755,7 +749,6 @@ class FunctionsController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -834,7 +827,6 @@ class FunctionsController extends BaseController
      */
     public function doCreate($msg = '', $szJS = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1104,7 +1096,6 @@ class FunctionsController extends BaseController
      */
     public function doSaveCreate()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1221,7 +1212,6 @@ class FunctionsController extends BaseController
 
     private function buildJSData()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

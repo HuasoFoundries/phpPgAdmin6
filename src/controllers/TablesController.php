@@ -23,7 +23,6 @@ class TablesController extends BaseController
      */
     public function render()
     {
-
         $lang   = $this->lang;
         $action = $this->action;
 
@@ -145,7 +144,6 @@ class TablesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -356,7 +354,6 @@ class TablesController extends BaseController
      */
     public function doTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -380,7 +377,6 @@ class TablesController extends BaseController
 
     public function doSubTree()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -421,7 +417,6 @@ class TablesController extends BaseController
      */
     public function doCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -710,7 +705,6 @@ class TablesController extends BaseController
      */
     public function doCreateLike($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -835,7 +829,6 @@ class TablesController extends BaseController
      */
     public function doSelectRows($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -970,7 +963,6 @@ class TablesController extends BaseController
      */
     public function doInsertRow($confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1120,7 +1112,6 @@ class TablesController extends BaseController
      */
     public function doEmpty($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1189,7 +1180,6 @@ class TablesController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

@@ -18,7 +18,6 @@ class DbexportController extends BaseController
      */
     public function render()
     {
-
         $lang   = $this->lang;
         $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
