@@ -49,7 +49,6 @@ class ADOdbBase
         reset($arr);
         //while (list($k, $v) = each($arr)) {
         foreach ($arr as $k => $v) {
-
             $arr[$k] = addslashes($v);
         }
 
