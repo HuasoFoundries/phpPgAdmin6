@@ -6,9 +6,9 @@
  * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
 
-defined('BASE_PATH') or DEFINE('BASE_PATH', dirname(__DIR__));
+defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
 
-DEFINE('THEME_PATH', BASE_PATH . '/src/themes');
+define('THEME_PATH', BASE_PATH . '/src/themes');
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 
@@ -22,7 +22,7 @@ if (file_exists(BASE_PATH . '/config.inc.php')) {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 }
 $debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
-DEFINE('DEBUGMODE', $debugmode);
+define('DEBUGMODE', $debugmode);
 
 require_once BASE_PATH . '/vendor/autoload.php';
 
