@@ -254,7 +254,6 @@ class SchemasController extends BaseController
      */
     public function doCreate($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -318,7 +317,6 @@ class SchemasController extends BaseController
      */
     public function doSaveCreate()
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -342,7 +340,6 @@ class SchemasController extends BaseController
      */
     public function doAlter($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -415,7 +412,6 @@ class SchemasController extends BaseController
      */
     public function doSaveAlter($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -433,7 +429,6 @@ class SchemasController extends BaseController
      */
     public function doDrop($confirm)
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
@@ -505,7 +500,6 @@ class SchemasController extends BaseController
      */
     public function doExport($msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 

@@ -19,7 +19,9 @@ class ViewTest extends \Codeception\Test\Unit
         $this->container = $Helper->getContainer();
     }
 
-    protected function _after() {}
+    protected function _after()
+    {
+    }
 
     // tests
 
