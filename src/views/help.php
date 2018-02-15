@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Help page redirection/browsing.
- *
- * $Id: help.php,v 1.3 2006/12/31 16:21:26 soranzo Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

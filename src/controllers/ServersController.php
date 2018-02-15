@@ -99,7 +99,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => SUBFOLDER . '/redirect/server?',
+                'url'   => \SUBFOLDER . '/redirect/server?',
                 'vars'  => ['server' => 'id'],
             ],
             'host'     => [

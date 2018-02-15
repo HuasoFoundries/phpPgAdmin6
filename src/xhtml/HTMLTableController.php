@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 use \PHPPgAdmin\Decorators\Decorator;
@@ -75,7 +79,6 @@ class HTMLTableController extends HTMLController
         unset($actions['multiactions']);
 
         if ($tabledata->recordCount() > 0) {
-
             // Remove the 'comment' column if they have been disabled
             if (!$this->conf['show_comments']) {
                 unset($columns['comment']);
@@ -92,7 +95,7 @@ class HTMLTableController extends HTMLController
                 $tablehtml .= "<form id=\"multi_form\" action=\"{$this->ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
                 if (isset($this->ma['vars'])) {
                     foreach ($this->ma['vars'] as $k => $v) {
-                        $tablehtml .= "<input type=\"hidden\" name=\"$k\" value=\"$v\" />";
+                        $tablehtml .= "<input type=\"hidden\" name=\"${k}\" value=\"${v}\" />";
                     }
                 }
             }
@@ -128,7 +131,7 @@ class HTMLTableController extends HTMLController
                 $tablehtml .= "<td>&nbsp;--->&nbsp;</td>\n";
                 $tablehtml .= "<td>\n";
                 $tablehtml .= "\t<select name=\"action\">\n";
-                if ($this->ma['default'] == null) {
+                if (null == $this->ma['default']) {
                     $tablehtml .= "\t\t<option value=\"\">--</option>\n";
                 }
 
@@ -154,6 +157,7 @@ class HTMLTableController extends HTMLController
                 $tablehtml .= "<p>{$nodata}</p>\n";
             }
         }
+
         return $tablehtml;
     }
 
@@ -188,7 +192,6 @@ class HTMLTableController extends HTMLController
             }
 
             foreach ($columns as $column_id => $column) {
-
                 // Apply default values for missing parameters
                 if (isset($column['url']) && !isset($column['vars'])) {
                     $column['vars'] = [];
@@ -198,7 +201,7 @@ class HTMLTableController extends HTMLController
                     case 'actions':
                         //$this->prtrace($column_id, $alt_actions);
                         foreach ($alt_actions as $action) {
-                            if (isset($action['disable']) && $action['disable'] === true) {
+                            if (isset($action['disable']) && true === $action['disable']) {
                                 $tbody_html .= "<td></td>\n";
                             } else {
                                 //$this->prtrace($column_id, $action);
@@ -208,6 +211,7 @@ class HTMLTableController extends HTMLController
                                 $tbody_html .= "</td>\n";
                             }
                         }
+
                         break;
                     case 'comment':
                         $tbody_html .= "<td class='comment_cell'>";
@@ -216,6 +220,7 @@ class HTMLTableController extends HTMLController
                             $tbody_html .= htmlentities($val);
                         }
                         $tbody_html .= '</td>';
+
                         break;
                     default:
                         $tbody_html .= "<td{$this->class}>";
@@ -235,6 +240,7 @@ class HTMLTableController extends HTMLController
                         }
 
                         $tbody_html .= "</td>\n";
+
                         break;
                 }
             }
@@ -245,6 +251,7 @@ class HTMLTableController extends HTMLController
         }
 
         $tbody_html .= '</tbody>';
+
         return $tbody_html;
     }
 
@@ -254,7 +261,7 @@ class HTMLTableController extends HTMLController
 
         // Handle cases where no class has been passed
         if (isset($column['class'])) {
-            $this->class = $column['class'] !== '' ? " class=\"{$column['class']}\"" : '';
+            $this->class = '' !== $column['class'] ? " class=\"{$column['class']}\"" : '';
         } else {
             $this->class = '';
         }
@@ -281,6 +288,7 @@ class HTMLTableController extends HTMLController
                     }
 
                     $thead_html .= "</th>\n";
+
                     break;
             }
         }
@@ -295,7 +303,7 @@ class HTMLTableController extends HTMLController
 
         // Handle cases where no class has been passed
         if (isset($column['class'])) {
-            $this->class = $column['class'] !== '' ? " class=\"{$column['class']}\"" : '';
+            $this->class = '' !== $column['class'] ? " class=\"{$column['class']}\"" : '';
         } else {
             $this->class = '';
         }
@@ -315,6 +323,7 @@ class HTMLTableController extends HTMLController
                     break;
                 default:
                     $tfoot_html .= "<td class=\"data{$this->class}\"></td>\n";
+
                     break;
             }
         }
@@ -328,6 +337,7 @@ class HTMLTableController extends HTMLController
         if (!$this->form) {
             $this->form = $this->misc->setForm();
         }
+
         return $this->form;
     }
 

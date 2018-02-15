@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 /**
@@ -19,6 +23,7 @@ class HTMLHeaderController extends HTMLController
     public function setNoOutput($flag)
     {
         $this->_no_output = boolval($flag);
+
         return $this;
     }
 
@@ -28,6 +33,7 @@ class HTMLHeaderController extends HTMLController
      * @param $title The title of the page
      * @param $script script tag
      * @param $do_print boolean if false, the function will return the header content
+     * @param mixed $template
      */
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
@@ -47,10 +53,10 @@ class HTMLHeaderController extends HTMLController
             $viewVars['applocale'] = $lang['applocale'];
         }
 
-        $viewVars['dir']            = (strcasecmp($lang['applangdir'], 'ltr') != 0) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
+        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ($title !== '') ? ' - ' . $title : '';
-        $viewVars['appName']        = htmlspecialchars($this->appName) . (($title != '') ? htmlspecialchars(" - {$title}") : '');
+        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
+        $viewVars['appName']        = htmlspecialchars($this->appName) . (('' != $title) ? htmlspecialchars(" - {$title}") : '');
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
@@ -99,6 +105,7 @@ class HTMLHeaderController extends HTMLController
      * Print out the page heading and help link
      * @param $title Title, already escaped
      * @param $help (optional) The identifier for the help link
+     * @param mixed $do_print
      */
     public function printTitle($title, $help = null, $do_print = true)
     {

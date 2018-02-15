@@ -26,6 +26,7 @@ $config = PhpCsFixer\Config::create()
         'explicit_indirect_variable' => true,
         'explicit_string_variable' => true,
         'final_internal_class' => true,
+        'modernize_types_casting'=>true,
         'header_comment' => ['header' => $header],
         'heredoc_to_nowdoc' => true,
         'list_syntax' => ['syntax' => 'long'],
@@ -59,6 +60,11 @@ $config = PhpCsFixer\Config::create()
         PhpCsFixer\Finder::create()
             ->exclude('tests/Fixtures')
             ->in(__DIR__.'/src/controllers')
+            ->in(__DIR__.'/src/decorators')
+            ->in(__DIR__.'/src/help')
+            ->in(__DIR__.'/src/decorators')
+            ->in(__DIR__.'/src/views')
+            ->in(__DIR__.'/src/xhtml')
     )
 ;
 

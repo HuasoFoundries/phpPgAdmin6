@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Manage schemas in a database
- *
- * $Id: schemas.php,v 1.22 2007/12/15 22:57:43 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

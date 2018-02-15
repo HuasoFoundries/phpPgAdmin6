@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 /**
@@ -21,6 +25,7 @@ class HTMLFooterController extends HTMLController
     public function setReloadDropDatabase($flag)
     {
         $this->_reload_drop_database = boolval($flag);
+
         return $this;
     }
 
@@ -33,12 +38,14 @@ class HTMLFooterController extends HTMLController
     public function setNoBottomLink($flag)
     {
         $this->_no_bottom_link = boolval($flag);
+
         return $this;
     }
 
     /**
      * Prints the page footer
      * @param $doBody True to output body tag, false to return the html
+     * @param mixed $template
      */
     public function printFooter($doBody = true, $template = 'footer.twig')
     {

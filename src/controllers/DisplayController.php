@@ -31,7 +31,7 @@ class DisplayController extends BaseController
 
         set_time_limit(0);
 
-        $scripts = '<script src="' . SUBFOLDER . '/js/display.js" type="text/javascript"></script>';
+        $scripts = '<script src="' . \SUBFOLDER . '/js/display.js" type="text/javascript"></script>';
 
         $scripts .= '<script type="text/javascript">' . "\n";
         $scripts .= "var Display = {\n";
@@ -607,7 +607,7 @@ class DisplayController extends BaseController
                 $fksprops = false;
             }
 
-            echo '<form action="' . SUBFOLDER . '/src/views/display.php" method="post" id="ac_form">' . "\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/display.php" method="post" id="ac_form">' . "\n";
 
             /*echo '<p>';
             if (!$error) {
@@ -788,7 +788,7 @@ class DisplayController extends BaseController
 
             $rs = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
-            echo '<form action="' . SUBFOLDER . '/src/views/display.php" method="post">' . "\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/display.php" method="post">' . "\n";
             echo $this->misc->form;
 
             if (1 == $rs->recordCount()) {

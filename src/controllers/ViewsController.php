@@ -126,7 +126,7 @@ class ViewsController extends BaseController
             'view'    => [
                 'title' => $lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url'   => SUBFOLDER . "/redirect/view?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/view?{$this->misc->href}&amp;",
                 'vars'  => ['view' => 'relname'],
             ],
             'owner'   => [
@@ -321,7 +321,7 @@ class ViewsController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['view']);
 
-            echo '<form action="' . SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
+            echo '<form action="' . \SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
             echo "\n";
 
             if ($attrs->recordCount() > 0) {
@@ -455,7 +455,7 @@ class ViewsController extends BaseController
             $this->printTrail('view');
             $this->printTitle($lang['strdrop'], 'pg.view.drop');
 
-            echo '<form action="' . SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -577,7 +577,7 @@ class ViewsController extends BaseController
             }
             asort($arrFields);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strviewname']}</th></tr>";
             echo "<tr>\n<td class=\"data1\">\n";
@@ -683,7 +683,7 @@ class ViewsController extends BaseController
         $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">\n";
@@ -737,7 +737,7 @@ class ViewsController extends BaseController
         $this->printTitle($lang['strcreateview'], 'pg.view.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

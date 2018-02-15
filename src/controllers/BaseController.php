@@ -44,6 +44,7 @@ class BaseController
 
     /**
      * Constructs the base controller (common for almost all controllers)
+     *
      * @param \Slim\Container $container        the $app container
      * @param boolean         $no_db_connection [optional] if true, sets  $this->misc->setNoDBConnection(true);
      */

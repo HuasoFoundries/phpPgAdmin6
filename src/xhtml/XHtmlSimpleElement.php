@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 /**
@@ -25,6 +29,7 @@ class XHtmlSimpleElement
      *
      * @param    string    The element's name. Defaults to name of the
      * derived class
+     * @param null|mixed $element
      *
      */
     public function __construct($element = null)

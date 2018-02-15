@@ -1,20 +1,26 @@
 <?php
-
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
 namespace PHPPgAdmin;
 
 /**
- * @version       v5.20.9  21-Dec-2016
- * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
- * @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
- * Released under both BSD license and Lesser GPL library license.
- * Whenever there is any discrepancy between the two licenses,
- * the BSD license will take precedence.
+ * Released under both BSD license and Lesser GPL library license. Whenever
+ * there is any discrepancy between the two licenses, the BSD license will take
+ * precedence.
  *
  * Set tabs to 4 for best viewing.
  *
  * Latest version is available at http://php.weblogs.com
  *
  * Exception-handling code using PHP5 exceptions (try-catch-throw).
+ *
+ * @copyright 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
+ * @copyright 2014      Damien Regad, Mark Newnham and the ADOdb community
+ * @version   v5.20.9
+ * @author John Lim
+ * @license MIT
+ * @package PHPPgAdmin
  */
 class ADOdbException extends \Exception
 {

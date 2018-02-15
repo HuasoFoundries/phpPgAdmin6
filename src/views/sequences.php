@@ -1,9 +1,7 @@
 <?php
 
-/**
- * Manage sequences in a database
- *
- * $Id: sequences.php,v 1.49 2007/12/15 22:21:54 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

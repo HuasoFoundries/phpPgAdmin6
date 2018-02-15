@@ -1,9 +1,7 @@
 <?php
 
-/**
- * List tables in a database
- *
- * $Id: tables.php,v 1.112 2008/06/16 22:38:46 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 $do_render = false;

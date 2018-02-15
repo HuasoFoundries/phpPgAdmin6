@@ -1,9 +1,7 @@
 <?php
 
-/**
- * List indexes on a table
- *
- * $Id: indexes.php,v 1.46 2008/01/08 22:50:29 xzilla Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

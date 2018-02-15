@@ -205,7 +205,7 @@ class TablespacesController extends BaseController
                 $_POST['comment'] = ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '';
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -283,7 +283,7 @@ class TablespacesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
@@ -336,7 +336,7 @@ class TablespacesController extends BaseController
         $this->printTitle($lang['strcreatetablespace'], 'pg.tablespace.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
         echo $this->misc->form;
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";

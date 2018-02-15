@@ -35,7 +35,7 @@ trait AdminTrait
                 $this->printTrail('schema');
                 $this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfclustertable'], $this->misc->printVal($a['table'])), "</p>\n";
@@ -46,7 +46,7 @@ trait AdminTrait
                 $this->printTrail($type);
                 $this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
 
                 if ('table' == $type) {
                     echo '<p>', sprintf($lang['strconfclustertable'], $this->misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -126,7 +126,7 @@ trait AdminTrait
                 $this->printTrail('schema');
                 $this->printTitle($lang['strreindex'], 'pg.reindex');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfreindextable'], $this->misc->printVal($a['table'])), "</p>\n";
@@ -137,7 +137,7 @@ trait AdminTrait
                 $this->printTrail($type);
                 $this->printTitle($lang['strreindex'], 'pg.reindex');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
 
                 if ('table' == $type) {
                     echo '<p>', sprintf($lang['strconfreindextable'], $this->misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -213,7 +213,7 @@ trait AdminTrait
                 $this->printTrail('schema');
                 $this->printTitle($lang['stranalyze'], 'pg.analyze');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     \Kint::dump($a);
@@ -225,7 +225,7 @@ trait AdminTrait
                 $this->printTrail($type);
                 $this->printTitle($lang['stranalyze'], 'pg.analyze');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
 
                 if ('table' == $type) {
                     echo '<p>', sprintf($lang['strconfanalyzetable'], $this->misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -295,7 +295,7 @@ trait AdminTrait
                 $this->printTrail('schema');
                 $this->printTitle($lang['strvacuum'], 'pg.vacuum');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfvacuumtable'], $this->misc->printVal($a['table'])), "</p>\n";
@@ -306,7 +306,7 @@ trait AdminTrait
                 $this->printTrail($type);
                 $this->printTitle($lang['strvacuum'], 'pg.vacuum');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
 
                 if ('table' == $type) {
                     echo '<p>', sprintf($lang['strconfvacuumtable'], $this->misc->printVal($_REQUEST['object'])), "</p>\n";
@@ -424,7 +424,7 @@ trait AdminTrait
                 $old_val['autovacuum_vacuum_cost_limit'] = '';
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"editautovac\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
@@ -520,7 +520,7 @@ trait AdminTrait
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "</form>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"admin\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo $this->misc->form;
@@ -586,7 +586,7 @@ trait AdminTrait
         // Vacuum
         echo "<tr class=\"row1\">\n";
         echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-        echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
 
         echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_vacuum\" />\n";
         echo $this->misc->form;
@@ -600,7 +600,7 @@ trait AdminTrait
 
         // Analyze
         echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-        echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_analyze\" />\n";
         echo $this->misc->form;
         if ('table' == $type) {
@@ -615,7 +615,7 @@ trait AdminTrait
         if ($data->hasRecluster()) {
             $disabled = '';
             echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-            echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
             echo $this->misc->form;
             if ('table' == $type) {
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), "\" />\n";
@@ -633,7 +633,7 @@ trait AdminTrait
 
         // Reindex
         echo "<td style=\"text-align: center; vertical-align: bottom\">\n";
-        echo '<form action="' . SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"confirm_reindex\" />\n";
         echo $this->misc->form;
         if ('table' == $type) {
@@ -673,13 +673,13 @@ trait AdminTrait
                 'namespace'                       => [
                     'title' => $lang['strschema'],
                     'field' => Decorator::field('nspname'),
-                    'url'   => SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
+                    'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
                     'vars'  => ['schema' => 'nspname'],
                 ],
                 'relname'                         => [
                     'title' => $lang['strtable'],
                     'field' => Decorator::field('relname'),
-                    'url'   => SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
+                    'url'   => \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
                     'vars'  => ['table' => 'relname', 'schema' => 'nspname'],
                 ],
                 'autovacuum_enabled'              => [

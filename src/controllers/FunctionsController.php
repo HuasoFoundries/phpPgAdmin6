@@ -105,7 +105,7 @@ class FunctionsController extends BaseController
             'function'     => [
                 'title' => $lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url'   => SUBFOLDER . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns'      => [
@@ -428,7 +428,7 @@ class FunctionsController extends BaseController
             }
 
             $func_full = $fndata->fields['proname'] . '(' . $fndata->fields['proarguments'] . ')';
-            echo '<form action="' . SUBFOLDER . "/src/views/functions.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/functions.php\" method=\"post\">\n";
             echo "<table style=\"width: 90%\">\n";
             echo "<tr>\n";
             echo "<th class=\"data required\">{$lang['strschema']}</th>\n";
@@ -770,7 +770,7 @@ class FunctionsController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($lang['strdrop'], 'pg.function.drop');
 
-            echo '<form action="' . SUBFOLDER . "/src/views/functions.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/functions.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -1009,7 +1009,7 @@ class FunctionsController extends BaseController
         }
         $szJSAddTR = "<tr id=\"parent_add_tr\" onclick=\"addArg();\" onmouseover=\"this.style.cursor='pointer'\">\n<td style=\"text-align: right\" colspan=\"6\" class=\"data3\"><table><tr><td class=\"data3\"><img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td><td class=\"data3\"><span style=\"font-size: 8pt\">{$lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
 
-        echo '<script src="' . SUBFOLDER . "/js/functions.js\" type=\"text/javascript\"></script>
+        echo '<script src="' . \SUBFOLDER . "/js/functions.js\" type=\"text/javascript\"></script>
 		<script type=\"text/javascript\">
 			//<![CDATA[
 			var g_types_select = '<select name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
@@ -1026,7 +1026,7 @@ class FunctionsController extends BaseController
 			//]]>
 		</script>
 		";
-        echo '<form action="' . SUBFOLDER . "/src/views//views/functions.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views//views/functions.php\" method=\"post\">\n";
         echo "<table><tbody id=\"args_table\">\n";
         echo "<tr><th class=\"data required\">{$lang['strname']}</th>\n";
         echo "<th class=\"data required\" colspan=\"2\">{$lang['strreturns']}</th>\n";
@@ -1124,12 +1124,12 @@ class FunctionsController extends BaseController
 
         $szJS = '';
 
-        echo '<script src="' . SUBFOLDER . '/js/functions.js" type="text/javascript"></script>';
+        echo '<script src="' . \SUBFOLDER . '/js/functions.js" type="text/javascript"></script>';
         echo '<script type="text/javascript">' . $this->buildJSData() . '</script>';
         if (!empty($_POST['formArgName'])) {
             $szJS = $this->buildJSRows($this->buildFunctionArguments($_POST));
         } else {
-            $szJS = '<script type="text/javascript" src="' . SUBFOLDER . '/js/functions.js">noArgsRebuild(addArg());</script>';
+            $szJS = '<script type="text/javascript" src="' . \SUBFOLDER . '/js/functions.js">noArgsRebuild(addArg());</script>';
         }
 
         $cost = (isset($_POST['formCost'])) ? $_POST['formCost'] : null;

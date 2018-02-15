@@ -31,7 +31,7 @@ class ConstraintsController extends BaseController
 
         $this->printHeader(
             $lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
-            '<script src="' . SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>',
+            '<script src="' . \SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>',
             true,
             'header_select2.twig'
         );
@@ -680,7 +680,7 @@ class ConstraintsController extends BaseController
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
@@ -737,7 +737,7 @@ class ConstraintsController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="' . SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";

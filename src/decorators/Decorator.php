@@ -1,4 +1,9 @@
 <?php
+
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Decorators;
 
 class Decorator
@@ -17,7 +22,6 @@ class Decorator
 
     public static function get_sanitized_value(&$var, &$fields, $esc = null)
     {
-
         //self::statictrace($var, $fields, $esc);
         if (is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
             $val = $var->value($fields);
@@ -41,6 +45,7 @@ class Decorator
                     return urlencode($val);
             }
         }
+
         return $val;
     }
 
@@ -49,9 +54,9 @@ class Decorator
         $val = self::get_sanitized_value($var, $fields, 'xml');
         if (!empty($val)) {
             return " {$attr}=\"{$val}\"";
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     public static function value_xml_attr_tag($attr, &$var, &$fields)
@@ -59,9 +64,9 @@ class Decorator
         $val = self::get_sanitized_value($var, $fields, 'xml');
         if (!empty($val)) {
             return "<{$attr}>{$val}</{$attr}>";
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     public static function callback($callback, $params = null)
@@ -100,6 +105,7 @@ class Decorator
 
             return new BranchUrlDecorator($base, new ArrayMergeDecorator($v));
         }
+
         return new BranchUrlDecorator($base, $vars);
     }
 
@@ -114,6 +120,7 @@ class Decorator
 
             return new ActionUrlDecorator($base, new ArrayMergeDecorator($v));
         }
+
         return new ActionUrlDecorator($base, $vars);
     }
 
@@ -128,6 +135,7 @@ class Decorator
 
             return new RedirectUrlDecorator($base, new ArrayMergeDecorator($v));
         }
+
         return new RedirectUrlDecorator($base, $vars);
     }
 
@@ -140,8 +148,10 @@ class Decorator
         if (func_num_args() > 2) {
             $v    = func_get_args();
             $base = array_shift($v);
+
             return new UrlDecorator($base, new ArrayMergeDecorator($v));
         }
+
         return new UrlDecorator($base, $vars);
     }
 

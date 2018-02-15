@@ -316,7 +316,7 @@ class PrivilegesController extends BaseController
             }
             $this->printMsg($msg);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/privileges.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left\">{$lang['strusers']}</th>\n";
             echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";

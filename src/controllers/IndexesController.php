@@ -29,7 +29,7 @@ class IndexesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strindexes'], '<script src="' . SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>');
+        $this->printHeader($lang['strindexes'], '<script src="' . \SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>');
 
         if ('create_index' == $action || 'save_create_index' == $action) {
             echo '<body onload="init();">';
@@ -270,7 +270,7 @@ class IndexesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfcluster'], $this->misc->printVal($_REQUEST['index'])), '</p>' . "\n";
 
-            echo '<form action="' . SUBFOLDER . '/src/views/indexes.php" method="post">' . "\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/indexes.php" method="post">' . "\n";
             echo '<p><input type="checkbox" id="analyze" name="analyze"', (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), ' />';
             echo "<label for=\"analyze\">{$lang['stranalyze']}</label></p>" . "\n";
             echo '<input type="hidden" name="action" value="cluster_index" />' . "\n";
@@ -524,7 +524,7 @@ class IndexesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropindex'], $this->misc->printVal($_REQUEST['index'])), '</p>' . "\n";
 
-            echo '<form action="' . SUBFOLDER . '/src/views/indexes.php" method="post">' . "\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/indexes.php" method="post">' . "\n";
             echo '<input type="hidden" name="action" value="drop_index" />' . "\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />' . "\n";
             echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />' . "\n";

@@ -1,9 +1,7 @@
 <?php
 
-/**
- * List views in a database
- *
- * $Id: viewproperties.php,v 1.34 2007/12/11 14:17:17 ioguix Exp $
+/*
+ * PHPPgAdmin v6.0.0-beta.30
  */
 
 // Include application functions

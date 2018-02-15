@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\Help;
 
 /**
@@ -18,9 +22,8 @@ class PostgresDoc74
         $this->major_version = $major_version;
         $this->conf          = $conf;
 
-        # TODO: Check and fix links
+        // TODO: Check and fix links
         $this->help_page = [
-
             'pg.database'                 => 'managing-databases.html',
             'pg.database.create'          => ['sql-createdatabase.html', 'manage-ag-createdb.html'],
             'pg.database.alter'           => 'sql-alterdatabase.html',

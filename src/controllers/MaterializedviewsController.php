@@ -127,7 +127,7 @@ class MaterializedviewsController extends BaseController
             'matview' => [
                 'title' => 'M ' . $lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url'   => SUBFOLDER . "/redirect/matview?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/matview?{$this->misc->href}&amp;",
                 'vars'  => ['matview' => 'relname'],
             ],
             'owner'   => [
@@ -322,7 +322,7 @@ class MaterializedviewsController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['matview']);
 
-            echo '<form action="' . SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
+            echo '<form action="' . \SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
             echo "\n";
 
             if ($attrs->recordCount() > 0) {
@@ -456,7 +456,7 @@ class MaterializedviewsController extends BaseController
             $this->printTrail('getTrail');
             $this->printTitle($lang['strdrop'], 'pg.matview.drop');
 
-            echo '<form action="' . SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -578,7 +578,7 @@ class MaterializedviewsController extends BaseController
             }
             asort($arrFields);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strviewname']}</th></tr>";
             echo "<tr>\n<td class=\"data1\">\n";
@@ -684,7 +684,7 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($lang['strcreateviewwiz'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">\n";
@@ -738,7 +738,7 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($lang['strcreateview'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

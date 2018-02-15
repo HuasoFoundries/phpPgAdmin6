@@ -75,7 +75,7 @@ class SqleditController extends BaseController
 
         $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'sql', false);
 
-        $default_html .= '<form action="' . SUBFOLDER . '/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
+        $default_html .= '<form action="' . \SUBFOLDER . '/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
         $default_html .= "\n";
         $default_html .= $this->_printConnection('sql');
 
@@ -149,7 +149,7 @@ class SqleditController extends BaseController
         // The javascript action on the select box reloads the
         // popup whenever the server or database is changed.
         // This ensures that the correct page encoding is used.
-        $onchange = "onchange=\"location.href='" . SUBFOLDER . '/sqledit/' .
+        $onchange = "onchange=\"location.href='" . \SUBFOLDER . '/sqledit/' .
         urlencode($action) . "?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + ";
 
         // The exact URL to reload to is different between SQL and Find mode, however.

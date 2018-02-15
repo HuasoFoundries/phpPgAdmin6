@@ -160,7 +160,7 @@ class TablesController extends BaseController
             'table'      => [
                 'title' => $lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url'   => SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
                 'vars'  => ['table' => 'relname'],
             ],
             'owner'      => [
@@ -464,7 +464,7 @@ class TablesController extends BaseController
                 $this->printTitle($lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . SUBFOLDER . '/src/views/' . $this->script . '" method="post">';
+                echo '<form action="' . \SUBFOLDER . '/src/views/' . $this->script . '" method="post">';
                 echo "\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -530,8 +530,8 @@ class TablesController extends BaseController
                 $this->printTitle($lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<script src="' . SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<script src="' . \SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -750,7 +750,7 @@ class TablesController extends BaseController
 
             unset($tbltmp);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
             echo "<table>\n\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
             echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strcreatetablelikeparent']}</th>\n";
@@ -849,7 +849,7 @@ class TablesController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"selectform\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"selectform\">\n";
             if ($attrs->recordCount() > 0) {
                 // JavaScript for select all feature
                 echo "<script type=\"text/javascript\">\n";
@@ -994,7 +994,7 @@ class TablesController extends BaseController
                 $fksprops = false;
             }
 
-            echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"ac_form\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"ac_form\">\n";
             if ($attrs->recordCount() > 0) {
                 echo "<table>\n";
 
@@ -1136,7 +1136,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($lang['strempty'], 'pg.table.empty');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfemptytable'], $this->misc->printVal($a['table'])), "</p>\n";
@@ -1149,7 +1149,7 @@ class TablesController extends BaseController
 
                 echo '<p>', sprintf($lang['strconfemptytable'], $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
-                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             } // END not mutli empty
 
@@ -1206,7 +1206,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($lang['strdrop'], 'pg.table.drop');
 
-                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfdroptable'], $this->misc->printVal($a['table'])), "</p>\n";
@@ -1218,7 +1218,7 @@ class TablesController extends BaseController
 
                 echo '<p>', sprintf($lang['strconfdroptable'], $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
-                echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             } // END if multi drop
 

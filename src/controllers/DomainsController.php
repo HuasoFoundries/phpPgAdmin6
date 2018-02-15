@@ -296,7 +296,7 @@ class DomainsController extends BaseController
             }
 
             // Display domain info
-            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
@@ -353,7 +353,7 @@ class DomainsController extends BaseController
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
@@ -411,7 +411,7 @@ class DomainsController extends BaseController
                 $this->misc->printVal($_REQUEST['constraint']),
                 $this->misc->printVal($_REQUEST['domain'])
             ), "</p>\n";
-            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_con\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";
@@ -579,7 +579,7 @@ class DomainsController extends BaseController
             $this->printTitle($lang['strdrop'], 'pg.domain.drop');
 
             echo '<p>', sprintf($lang['strconfdropdomain'], $this->misc->printVal($_REQUEST['domain'])), "</p>\n";
-            echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
@@ -638,7 +638,7 @@ class DomainsController extends BaseController
         $this->printTitle($lang['strcreatedomain'], 'pg.domain.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/domains.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"domname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

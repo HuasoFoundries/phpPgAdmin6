@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * PHPPgAdmin v6.0.0-beta.30
+ */
+
 namespace PHPPgAdmin\XHtml;
 
 /**
@@ -12,7 +16,7 @@ namespace PHPPgAdmin\XHtml;
  */
 class XHtmlElement extends XHtmlSimpleElement
 {
-    public $_text     = null;
+    public $_text;
     public $_htmlcode = "";
     public $_siblings = [];
 
@@ -75,10 +79,7 @@ class XHtmlElement extends XHtmlSimpleElement
         return $this->_htmlcode;
     }
 
-    /*
-     * Returns siblings of Element
-     *
-     */
+    // Returns siblings of Element
     public function get_siblings()
     {
         return $this->_siblings;
@@ -86,6 +87,6 @@ class XHtmlElement extends XHtmlSimpleElement
 
     public function has_siblings()
     {
-        return (count($this->_siblings) != 0);
+        return (0 != count($this->_siblings));
     }
 }
