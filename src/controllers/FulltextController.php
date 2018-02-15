@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class FulltextController extends BaseController
 {
-    public $_name = 'FulltextController';
+    public $controller_name = 'FulltextController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -129,9 +129,9 @@ class FulltextController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'fulltext');
@@ -144,7 +144,7 @@ class FulltextController extends BaseController
             'configuration' => [
                 'title' => $lang['strftsconfig'],
                 'field' => Decorator::field('name'),
-                'url'   => "fulltext.php?action=viewconfig&amp;{$misc->href}&amp;",
+                'url'   => "fulltext.php?action=viewconfig&amp;{$this->misc->href}&amp;",
                 'vars'  => ['ftscfg' => 'name'],
             ],
             'schema'        => [
@@ -215,23 +215,25 @@ class FulltextController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $tabs  = $misc->getNavTabs('fulltext');
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $tabs  = $this->misc->getNavTabs('fulltext');
         $items = $this->adjustTabsForTree($tabs);
 
-        $reqvars = $misc->getRequestVars('ftscfg');
+        $reqvars = $this->misc->getRequestVars('ftscfg');
 
         $attrs = [
             'text'   => Decorator::field('title'),
             'icon'   => Decorator::field('icon'),
-            'action' => Decorator::actionurl('fulltext.php',
+            'action' => Decorator::actionurl(
+                'fulltext.php',
                 $reqvars,
-                field('urlvars')
+                Decorator::field('urlvars')
             ),
-            'branch' => Decorator::url('fulltext.php',
+            'branch' => Decorator::url(
+                'fulltext.php',
                 $reqvars,
                 [
                     'action' => 'subtree',
@@ -246,9 +248,9 @@ class FulltextController extends BaseController
     public function doSubTree($what)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         switch ($what) {
             case 'FtsCfg':
@@ -267,19 +269,21 @@ class FulltextController extends BaseController
                 return;
         }
 
-        $reqvars = $misc->getRequestVars('ftscfg');
+        $reqvars = $this->misc->getRequestVars('ftscfg');
 
         $attrs = [
             'text'    => Decorator::field('name'),
             'icon'    => $what,
             'toolTip' => Decorator::field('comment'),
-            'action'  => Decorator::actionurl('fulltext.php',
+            'action'  => Decorator::actionurl(
+                'fulltext.php',
                 $reqvars,
                 $urlvars
             ),
             'branch'  => Decorator::ifempty(Decorator::field('branch'),
                 '',
-                url('fulltext.php',
+                Decorator::url(
+                    'fulltext.php',
                     $reqvars,
                     [
                         'action' => 'subtree',
@@ -295,22 +299,22 @@ class FulltextController extends BaseController
     public function doDropConfig($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('ftscfg');
             $this->printTitle($lang['strdrop'], 'pg.ftscfg.drop');
 
-            echo '<p>', sprintf($lang['strconfdropftsconfig'], $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropftsconfig'], $this->misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"dropconfig\" />\n";
             echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
             echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_REQUEST['ftscfg']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -328,15 +332,15 @@ class FulltextController extends BaseController
     public function doDropDict($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
             $this->printTitle($lang['strdrop'], 'pg.ftsdict.drop');
 
-            echo '<p>', sprintf($lang['strconfdropftsdict'], $misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropftsdict'], $this->misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
@@ -345,7 +349,7 @@ class FulltextController extends BaseController
             echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_REQUEST['ftsdict']), "\" />\n";
             //echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_REQUEST['ftscfg']), "\" />\n";
             echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewdicts\" /></p>\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -366,11 +370,11 @@ class FulltextController extends BaseController
     public function doCreateConfig($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $server_info = $misc->getServerInfo();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $server_info = $this->misc->getServerInfo();
 
         if (!isset($_POST['formName'])) {
             $_POST['formName'] = '';
@@ -461,7 +465,7 @@ class FulltextController extends BaseController
         echo "<p>\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"createconfig\" />\n";
         echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
         echo "</p>\n";
@@ -474,9 +478,9 @@ class FulltextController extends BaseController
     public function doSaveCreateConfig()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $err = '';
         // Check that they've given a name
@@ -519,9 +523,9 @@ class FulltextController extends BaseController
     public function doAlterConfig($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('ftscfg');
         $this->printTitle($lang['stralter'], 'pg.ftscfg.alter');
@@ -567,7 +571,7 @@ class FulltextController extends BaseController
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alterconfig\" />\n";
             echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -581,10 +585,10 @@ class FulltextController extends BaseController
      */
     public function doSaveAlterConfig()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
         $status = $data->updateFtsConfiguration($_POST['ftscfg'], $_POST['formComment'], $_POST['formName']);
         if ($status == 0) {
             $this->doDefault($lang['strftsconfigaltered']);
@@ -599,9 +603,9 @@ class FulltextController extends BaseController
     public function doViewParsers($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'fulltext');
@@ -638,9 +642,9 @@ class FulltextController extends BaseController
     public function doViewDicts($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'fulltext');
@@ -722,9 +726,9 @@ class FulltextController extends BaseController
     public function doViewConfig($ftscfg, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('ftscfg');
         $this->printTabs('schema', 'fulltext');
@@ -819,11 +823,11 @@ class FulltextController extends BaseController
     public function doCreateDict($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $server_info = $misc->getServerInfo();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $server_info = $this->misc->getServerInfo();
 
         if (!isset($_POST['formName'])) {
             $_POST['formName'] = '';
@@ -917,7 +921,7 @@ class FulltextController extends BaseController
         echo "<p>\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"createdict\" />\n";
         echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
         echo "</p>\n";
@@ -943,9 +947,9 @@ class FulltextController extends BaseController
     public function doSaveCreateDict()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name
         if ($_POST['formName'] == '') {
@@ -993,9 +997,9 @@ class FulltextController extends BaseController
     public function doAlterDict($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
         $this->printTitle($lang['stralter'], 'pg.ftsdict.alter');
@@ -1035,7 +1039,7 @@ class FulltextController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alterdict\" />\n";
             echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_POST['ftsdict']), "\" />\n";
             echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewdicts\" /></p>\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -1050,9 +1054,9 @@ class FulltextController extends BaseController
     public function doSaveAlterDict()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->updateFtsDictionary($_POST['ftsdict'], $_POST['formComment'], $_POST['formName']);
         if ($status == 0) {
@@ -1068,9 +1072,9 @@ class FulltextController extends BaseController
     public function doDropMapping($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['mapping']) && empty($_REQUEST['ma'])) {
             $this->doDefault($lang['strftsspecifymappingtodrop']);
@@ -1092,18 +1096,18 @@ class FulltextController extends BaseController
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfdropftsmapping'], $misc->printVal($a['mapping']), $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfdropftsmapping'], $this->misc->printVal($a['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
                     printf('<input type="hidden" name="mapping[]" value="%s" />', htmlspecialchars($a['mapping']));
                 }
             } else {
-                echo '<p>', sprintf($lang['strconfdropftsmapping'], $misc->printVal($_REQUEST['mapping']), $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
+                echo '<p>', sprintf($lang['strconfdropftsmapping'], $this->misc->printVal($_REQUEST['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
                 echo '<input type="hidden" name="mapping" value="', htmlspecialchars($_REQUEST['mapping']), "\" />\n";
             }
 
             echo "<input type=\"hidden\" name=\"ftscfg\" value=\"{$_REQUEST['ftscfg']}\" />\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"dropmapping\" />\n";
             echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewconfig\" /></p>\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
             echo "</form>\n";
@@ -1130,9 +1134,9 @@ class FulltextController extends BaseController
     public function doAlterMapping($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         $this->printTrail('ftscfg');
         $this->printTitle($lang['stralter'], 'pg.ftscfg.alter');
         $this->printMsg($msg);
@@ -1198,7 +1202,7 @@ class FulltextController extends BaseController
             echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), "\" />\n";
             echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewconfig\" /></p>\n";
 
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -1213,9 +1217,9 @@ class FulltextController extends BaseController
     public function doSaveAlterMapping()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
         $status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
@@ -1232,9 +1236,9 @@ class FulltextController extends BaseController
     public function doAddMapping($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('ftscfg');
         $this->printTitle($lang['stralter'], 'pg.ftscfg.alter');
@@ -1291,7 +1295,7 @@ class FulltextController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"addmapping\" />\n";
             echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), "\" />\n";
             echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewconfig\" /></p>\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"add\" value=\"{$lang['stradd']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -1306,9 +1310,9 @@ class FulltextController extends BaseController
     public function doSaveAddMapping()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
         $status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);

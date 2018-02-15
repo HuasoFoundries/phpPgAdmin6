@@ -9,16 +9,16 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class HistoryController extends BaseController
 {
-    public $_name = 'HistoryController';
+    public $controller_name = 'HistoryController';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
         $action = $this->action;
 
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
 
@@ -57,9 +57,9 @@ class HistoryController extends BaseController
     public function doDefault()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $onchange = "onchange=\"location.href='" . SUBFOLDER . "/src/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
@@ -69,7 +69,7 @@ class HistoryController extends BaseController
         echo "<body onload=\"window.focus();\">\n";
 
         echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
-        $misc->printConnection($onchange);
+        $this->misc->printConnection($onchange);
         echo '</form><br />';
 
         if (!isset($_REQUEST['database'])) {
@@ -183,9 +183,9 @@ class HistoryController extends BaseController
     public function doDelHistory($qid, $confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printHeader($lang['strhistory'], $this->scripts);
@@ -200,7 +200,7 @@ class HistoryController extends BaseController
             echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
             echo "<input type=\"hidden\" name=\"queryid\" value=\"$qid\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
             echo "</form>\n";
@@ -212,9 +212,9 @@ class HistoryController extends BaseController
     public function doClearHistory($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printHeader($lang['strhistory'], $this->scripts);
@@ -227,7 +227,7 @@ class HistoryController extends BaseController
 
             echo '<form action="' . SUBFOLDER . "/src/views/history.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"clearhistory\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
             echo "</form>\n";

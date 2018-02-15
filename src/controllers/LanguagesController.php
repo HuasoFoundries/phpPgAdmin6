@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class LanguagesController extends BaseController
 {
-    public $_name = 'LanguagesController';
+    public $controller_name = 'LanguagesController';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
         $action = $this->action;
         if ($action == 'tree') {
@@ -39,9 +39,9 @@ class LanguagesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('database');
         $this->printTabs('database', 'languages');
@@ -76,9 +76,9 @@ class LanguagesController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $languages = $data->getLanguages();
 

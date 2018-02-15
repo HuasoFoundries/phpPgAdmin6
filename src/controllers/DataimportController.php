@@ -7,7 +7,7 @@ namespace PHPPgAdmin\Controller;
  */
 class DataimportController extends BaseController
 {
-    public $_name = 'DataimportController';
+    public $controller_name = 'DataimportController';
 
     public function render()
     {

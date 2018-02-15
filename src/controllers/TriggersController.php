@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class TriggersController extends BaseController
 {
-    public $_name = 'TriggersController';
+    public $controller_name = 'TriggersController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -95,9 +95,9 @@ class TriggersController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $tgPre = function (&$rowdata, $actions) use ($data) {
             // toggle enable/disable trigger per trigger
@@ -218,13 +218,13 @@ class TriggersController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $triggers = $data->getTriggers($_REQUEST['table']);
 
-        $reqvars = $misc->getRequestVars('table');
+        $reqvars = $this->misc->getRequestVars('table');
 
         $attrs = [
             'text' => Decorator::field('tgname'),
@@ -240,9 +240,9 @@ class TriggersController extends BaseController
     public function doSaveAlter()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->alterTrigger($_POST['table'], $_POST['trigger'], $_POST['name']);
         if ($status == 0) {
@@ -258,9 +258,9 @@ class TriggersController extends BaseController
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('trigger');
         $this->printTitle($lang['stralter'], 'pg.trigger.alter');
@@ -283,7 +283,7 @@ class TriggersController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['strok']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -298,22 +298,22 @@ class TriggersController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('trigger');
             $this->printTitle($lang['strdrop'], 'pg.trigger.drop');
 
-            echo '<p>', sprintf($lang['strconfdroptrigger'], $misc->printVal($_REQUEST['trigger']),
-                $misc->printVal($_REQUEST['table'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdroptrigger'], $this->misc->printVal($_REQUEST['trigger']),
+                $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
@@ -334,22 +334,22 @@ class TriggersController extends BaseController
     public function doEnable($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('trigger');
             $this->printTitle($lang['strenable'], 'pg.table.alter');
 
-            echo '<p>', sprintf($lang['strconfenabletrigger'], $misc->printVal($_REQUEST['trigger']),
-                $misc->printVal($_REQUEST['table'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfenabletrigger'], $this->misc->printVal($_REQUEST['trigger']),
+                $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"enable\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
             echo "</form>\n";
@@ -369,22 +369,22 @@ class TriggersController extends BaseController
     public function doDisable($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('trigger');
             $this->printTitle($lang['strdisable'], 'pg.table.alter');
 
-            echo '<p>', sprintf($lang['strconfdisabletrigger'], $misc->printVal($_REQUEST['trigger']),
-                $misc->printVal($_REQUEST['table'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdisabletrigger'], $this->misc->printVal($_REQUEST['trigger']),
+                $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/triggers.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"disable\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
             echo "</form>\n";
@@ -404,9 +404,9 @@ class TriggersController extends BaseController
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('table');
         $this->printTitle($lang['strcreatetrigger'], 'pg.trigger.create');
@@ -465,7 +465,7 @@ class TriggersController extends BaseController
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
         echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "</form>\n";
     }
 
@@ -475,9 +475,9 @@ class TriggersController extends BaseController
     public function doSaveCreate()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name and a definition
 

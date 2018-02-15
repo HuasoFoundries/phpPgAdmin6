@@ -7,8 +7,8 @@ namespace PHPPgAdmin\Controller;
  */
 class DataexportController extends BaseController
 {
-    public $_name      = 'DataexportController';
-    public $extensions = [
+    public $controller_name = 'DataexportController';
+    public $extensions      = [
         'sql'  => 'sql',
         'copy' => 'sql',
         'csv'  => 'csv',
@@ -19,10 +19,10 @@ class DataexportController extends BaseController
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         set_time_limit(0);
@@ -41,7 +41,7 @@ class DataexportController extends BaseController
                 case 'dataonly':
                     // Check to see if they have pg_dump set up and if they do, use that
                     // instead of custom dump code
-                    if ($misc->isDumpEnabled() && ($_REQUEST['d_format'] == 'copy' || $_REQUEST['d_format'] == 'sql')) {
+                    if ($this->misc->isDumpEnabled() && ($_REQUEST['d_format'] == 'copy' || $_REQUEST['d_format'] == 'sql')) {
                         $this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
                         $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
                         return $dbexport_controller->render();
@@ -54,7 +54,7 @@ class DataexportController extends BaseController
                 case 'structureonly':
                     // Check to see if they have pg_dump set up and if they do, use that
                     // instead of custom dump code
-                    if ($misc->isDumpEnabled()) {
+                    if ($this->misc->isDumpEnabled()) {
                         $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
                         return $dbexport_controller->render();
                     } else {
@@ -65,7 +65,7 @@ class DataexportController extends BaseController
                 case 'structureanddata':
                     // Check to see if they have pg_dump set up and if they do, use that
                     // instead of custom dump code
-                    if ($misc->isDumpEnabled()) {
+                    if ($this->misc->isDumpEnabled()) {
                         $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
                         return $dbexport_controller->render();
                     } else {
@@ -175,7 +175,7 @@ class DataexportController extends BaseController
                                 continue;
                             }
 
-                            echo "\t\t<th>", $misc->printVal($finfo->name, true), "</th>\r\n";
+                            echo "\t\t<th>", $this->misc->printVal($finfo->name, true), "</th>\r\n";
                         }
                     }
                     echo "\t</tr>\r\n";
@@ -188,7 +188,7 @@ class DataexportController extends BaseController
                                 continue;
                             }
 
-                            echo "\t\t<td>", $misc->printVal($v, true, $finfo->type), "</td>\r\n";
+                            echo "\t\t<td>", $this->misc->printVal($v, true, $finfo->type), "</td>\r\n";
                         }
                         echo "\t</tr>\r\n";
                         $rs->moveNext();
@@ -333,10 +333,10 @@ class DataexportController extends BaseController
 
     public function doDefault($msg = '')
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         if (!isset($_REQUEST['query']) or empty($_REQUEST['query'])) {
@@ -379,7 +379,7 @@ class DataexportController extends BaseController
         if (isset($_REQUEST['search_path'])) {
             echo '<input type="hidden" name="search_path" value="', htmlspecialchars($_REQUEST['search_path']), "\" />\n";
         }
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
         echo "</form>\n";
 

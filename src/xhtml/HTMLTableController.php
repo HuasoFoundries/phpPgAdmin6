@@ -10,9 +10,9 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class HTMLTableController extends HTMLController
 {
-    public $_name  = 'HTMLTableController';
-    private $ma    = [];
-    private $class = '';
+    public $controller_name = 'HTMLTableController';
+    private $ma             = [];
+    private $class          = '';
     /**
      * Display a table of data.
      * @param $tabledata A set of data to be formatted, as returned by $data->getDatabases() etc.
@@ -55,10 +55,10 @@ class HTMLTableController extends HTMLController
      */
     public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null)
     {
-        $misc           = $this->misc;
+        $this->misc     = $this->misc;
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $data           = $misc->getDatabaseAccessor();
+        $data           = $this->misc->getDatabaseAccessor();
 
         // Action buttons hook's place
         $plugin_functions_parameters = [

@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class UsersController extends BaseController
 {
-    public $_name = 'UsersController';
+    public $controller_name = 'UsersController';
 
     public function render()
     {
@@ -78,9 +78,9 @@ class UsersController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $renderUseExpires = function ($val) use ($lang) {
             return $val == 'infinity' ? $lang['strnever'] : htmlspecialchars($val);
@@ -174,11 +174,11 @@ class UsersController extends BaseController
     public function doAccount($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $server_info = $misc->getServerInfo();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $server_info = $this->misc->getServerInfo();
 
         $userdata         = $data->getUser($server_info['username']);
         $_REQUEST['user'] = $server_info['username'];
@@ -194,11 +194,11 @@ class UsersController extends BaseController
             echo "<tr><th class=\"data\">{$lang['strusername']}</th><th class=\"data\">{$lang['strsuper']}</th><th class=\"data\">{$lang['strcreatedb']}</th><th class=\"data\">{$lang['strexpires']}</th>";
             echo "<th class=\"data\">{$lang['strsessiondefaults']}</th>";
             echo "</tr>\n";
-            echo "<tr>\n\t<td class=\"data1\">", $misc->printVal($userdata->fields['usename']), "</td>\n";
-            echo "\t<td class=\"data1\">", $misc->printVal($userdata->fields['usesuper'], 'yesno'), "</td>\n";
-            echo "\t<td class=\"data1\">", $misc->printVal($userdata->fields['usecreatedb'], 'yesno'), "</td>\n";
-            echo "\t<td class=\"data1\">", ($userdata->fields['useexpires'] == 'infinity' || is_null($userdata->fields['useexpires']) ? $lang['strnever'] : $misc->printVal($userdata->fields['useexpires'])), "</td>\n";
-            echo "\t<td class=\"data1\">", $misc->printVal($userdata->fields['useconfig']), "</td>\n";
+            echo "<tr>\n\t<td class=\"data1\">", $this->misc->printVal($userdata->fields['usename']), "</td>\n";
+            echo "\t<td class=\"data1\">", $this->misc->printVal($userdata->fields['usesuper'], 'yesno'), "</td>\n";
+            echo "\t<td class=\"data1\">", $this->misc->printVal($userdata->fields['usecreatedb'], 'yesno'), "</td>\n";
+            echo "\t<td class=\"data1\">", ($userdata->fields['useexpires'] == 'infinity' || is_null($userdata->fields['useexpires']) ? $lang['strnever'] : $this->misc->printVal($userdata->fields['useexpires'])), "</td>\n";
+            echo "\t<td class=\"data1\">", $this->misc->printVal($userdata->fields['useconfig']), "</td>\n";
             echo "</tr>\n</table>\n";
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
@@ -224,11 +224,11 @@ class UsersController extends BaseController
     public function doChangePassword($confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $server_info = $misc->getServerInfo();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $server_info = $this->misc->getServerInfo();
 
         if ($confirm) {
             $_REQUEST['user'] = $server_info['username'];
@@ -253,7 +253,7 @@ class UsersController extends BaseController
             echo "\t\t<td><input type=\"password\" name=\"confirm\" size=\"32\" value=\"\" /></td>\n\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"changepassword\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"ok\" value=\"{$lang['strok']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
             echo "</p></form>\n";
@@ -284,9 +284,9 @@ class UsersController extends BaseController
     public function doEdit($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('user');
         $this->printTitle($lang['stralter'], 'pg.user.alter');
@@ -295,7 +295,7 @@ class UsersController extends BaseController
         $userdata = $data->getUser($_REQUEST['username']);
 
         if ($userdata->recordCount() > 0) {
-            $server_info                     = $misc->getServerInfo();
+            $server_info                     = $this->misc->getServerInfo();
             $canRename                       = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
             $userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
             $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
@@ -320,7 +320,7 @@ class UsersController extends BaseController
             echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strusername']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . '" />' : $misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . '" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$lang['strsuper']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
             (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
@@ -336,7 +336,7 @@ class UsersController extends BaseController
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
             echo '<input type="hidden" name="username" value="', htmlspecialchars($_REQUEST['username']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -351,9 +351,9 @@ class UsersController extends BaseController
     public function doSaveEdit()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check name and password
         if (isset($_POST['newname']) && $_POST['newname'] == '') {
@@ -381,20 +381,20 @@ class UsersController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('user');
             $this->printTitle($lang['strdrop'], 'pg.user.drop');
 
-            echo '<p>', sprintf($lang['strconfdropuser'], $misc->printVal($_REQUEST['username'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropuser'], $this->misc->printVal($_REQUEST['username'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="username" value="', htmlspecialchars($_REQUEST['username']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -414,9 +414,9 @@ class UsersController extends BaseController
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['formUsername'])) {
             $_POST['formUsername'] = '';
@@ -456,7 +456,7 @@ class UsersController extends BaseController
         echo "\t\t<td class=\"data1\"><input size=\"30\" name=\"formExpires\" value=\"", htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>\n";
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
@@ -468,9 +468,9 @@ class UsersController extends BaseController
     public function doSaveCreate()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check data
         if ($_POST['formUsername'] == '') {

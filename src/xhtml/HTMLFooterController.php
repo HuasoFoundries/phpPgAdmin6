@@ -8,7 +8,7 @@ namespace PHPPgAdmin\XHtml;
  */
 class HTMLFooterController extends HTMLController
 {
-    public $_name                  = 'HTMLFooterController';
+    public $controller_name        = 'HTMLFooterController';
     private $_reload_drop_database = false;
     private $_no_bottom_link       = false;
 

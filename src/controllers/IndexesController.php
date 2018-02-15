@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class IndexesController extends BaseController
 {
-    public $_name = 'IndexesController';
+    public $controller_name = 'IndexesController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -78,9 +78,9 @@ class IndexesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $indPre = function (&$rowdata, $actions) use ($data, $lang) {
             if ($data->phpBool($rowdata->fields['indisprimary'])) {
@@ -204,9 +204,9 @@ class IndexesController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         if (!isset($_REQUEST['subject'])) {
             $_REQUEST['subject'] = 'table';
         }
@@ -216,7 +216,7 @@ class IndexesController extends BaseController
 
         $indexes = $data->getIndexes($object);
 
-        $reqvars = $misc->getRequestVars($subject);
+        $reqvars = $this->misc->getRequestVars($subject);
 
         $getIcon = function ($f) {
             if ($f['indisprimary'] == 't') {
@@ -244,9 +244,9 @@ class IndexesController extends BaseController
     public function doClusterIndex($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             // Default analyze to on
@@ -255,7 +255,7 @@ class IndexesController extends BaseController
             $this->printTrail('index');
             $this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<p>', sprintf($lang['strconfcluster'], $misc->printVal($_REQUEST['index'])), '</p>' . "\n";
+            echo '<p>', sprintf($lang['strconfcluster'], $this->misc->printVal($_REQUEST['index'])), '</p>' . "\n";
 
             echo '<form action="' . SUBFOLDER . '/src/views/indexes.php" method="post">' . "\n";
             echo '<p><input type="checkbox" id="analyze" name="analyze"', (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), ' />';
@@ -263,7 +263,7 @@ class IndexesController extends BaseController
             echo '<input type="hidden" name="action" value="cluster_index" />' . "\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />' . "\n";
             echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />' . "\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"cluster\" value=\"{$lang['strclusterindex']}\" />" . "\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
             echo '</form>' . "\n";
@@ -288,10 +288,10 @@ class IndexesController extends BaseController
 
     public function doReindex()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
         $status = $data->reindex('INDEX', $_REQUEST['index']);
         if ($status == 0) {
             $this->doDefault($lang['strreindexgood']);
@@ -306,9 +306,9 @@ class IndexesController extends BaseController
     public function doCreateIndex($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['subject'])) {
             $_REQUEST['subject'] = 'table';
@@ -428,7 +428,7 @@ class IndexesController extends BaseController
         echo '</table>';
 
         echo '<p><input type="hidden" name="action" value="save_create_index" />' . "\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo '<input type="hidden" name="subject" value="', htmlspecialchars($subject), '" />' . "\n";
         echo '<input type="hidden" name="' . $subject . '" value="', htmlspecialchars($object), '" />' . "\n";
         echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />" . "\n";
@@ -443,9 +443,9 @@ class IndexesController extends BaseController
     public function doSaveCreateIndex()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['subject'])) {
             $_POST['subject'] = 'table';
@@ -486,9 +486,9 @@ class IndexesController extends BaseController
     public function doDropIndex($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['subject'])) {
             $_REQUEST['subject'] = 'table';
@@ -500,13 +500,13 @@ class IndexesController extends BaseController
             $this->printTrail('index');
             $this->printTitle($lang['strdrop'], 'pg.index.drop');
 
-            echo '<p>', sprintf($lang['strconfdropindex'], $misc->printVal($_REQUEST['index'])), '</p>' . "\n";
+            echo '<p>', sprintf($lang['strconfdropindex'], $this->misc->printVal($_REQUEST['index'])), '</p>' . "\n";
 
             echo '<form action="' . SUBFOLDER . '/src/views/indexes.php" method="post">' . "\n";
             echo '<input type="hidden" name="action" value="drop_index" />' . "\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />' . "\n";
             echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />' . "\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>" . "\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />" . "\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";

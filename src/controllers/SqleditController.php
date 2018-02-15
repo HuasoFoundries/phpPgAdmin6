@@ -7,19 +7,19 @@ namespace PHPPgAdmin\Controller;
  */
 class SqleditController extends BaseController
 {
-    public $_name      = 'SqleditController';
-    public $query      = '';
-    public $subject    = '';
-    public $start_time = null;
-    public $duration   = null;
+    public $controller_name = 'SqleditController';
+    public $query           = '';
+    public $subject         = '';
+    public $start_time      = null;
+    public $duration        = null;
 
     public function render()
     {
-        $conf   = $this->conf;
-        $lang   = $this->lang;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+        $lang = $this->lang;
+
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
 
         switch ($action) {
             case 'find':
@@ -52,9 +52,9 @@ class SqleditController extends BaseController
     public function doDefault()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_SESSION['sqlquery'])) {
             $_SESSION['sqlquery'] = '';
@@ -66,7 +66,7 @@ class SqleditController extends BaseController
         $search_path = htmlspecialchars($_REQUEST['search_path']);
         $sqlquery    = htmlspecialchars($_SESSION['sqlquery']);
 
-        $default_html = $this->printTabs($misc->getNavTabs('popup'), 'sql', false);
+        $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'sql', false);
 
         $default_html .= '<form action="' . SUBFOLDER . '/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
         $default_html .= "\n";
@@ -93,7 +93,7 @@ class SqleditController extends BaseController
 
         if (ini_get('file_uploads')) {
             // Don't show upload option if max size of uploads is zero
-            $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
+            $max_size = $this->misc->inisizeToBytes(ini_get('upload_max_filesize'));
             if (is_double($max_size) && $max_size > 0) {
                 $default_html .= '<p class="upload_sql_script">';
                 $default_html .= '<input type="hidden" name="MAX_FILE_SIZE" value="' . $max_size . '" />';
@@ -134,9 +134,9 @@ class SqleditController extends BaseController
     public function _printConnection($action)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // The javascript action on the select box reloads the
         // popup whenever the server or database is changed.
@@ -151,7 +151,7 @@ class SqleditController extends BaseController
             $onchange .= "'&amp;query=' + encodeURI(query.value) + '&amp;search_path=' + encodeURI(search_path.value) + (paginate.checked ? '&amp;paginate=on' : '')  + '&amp;'\"";
         }
 
-        return $misc->printConnection($onchange, false);
+        return $this->misc->printConnection($onchange, false);
     }
 
     /**
@@ -160,9 +160,9 @@ class SqleditController extends BaseController
     public function doFind()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['term'])) {
             $_REQUEST['term'] = '';
@@ -172,7 +172,7 @@ class SqleditController extends BaseController
             $_REQUEST['filter'] = '';
         }
 
-        $default_html = $this->printTabs($misc->getNavTabs('popup'), 'find', false);
+        $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'find', false);
 
         $default_html .= "<form action=\"database.php\" method=\"post\" target=\"detail\">\n";
         $default_html .= $this->_printConnection('find');

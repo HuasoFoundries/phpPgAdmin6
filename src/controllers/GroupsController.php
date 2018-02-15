@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class GroupsController extends BaseController
 {
-    public $_name = 'GroupsController';
+    public $controller_name = 'GroupsController';
 
     public function render()
     {
@@ -76,9 +76,9 @@ class GroupsController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('server');
         $this->printTabs('server', 'groups');
@@ -90,7 +90,7 @@ class GroupsController extends BaseController
             'group'   => [
                 'title' => $lang['strgroup'],
                 'field' => Decorator::field('groname'),
-                'url'   => "groups.php?action=properties&amp;{$misc->href}&amp;",
+                'url'   => "groups.php?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['group' => 'groname'],
             ],
             'actions' => [
@@ -135,9 +135,9 @@ class GroupsController extends BaseController
     public function doAddMember()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->addGroupMember($_REQUEST['group'], $_REQUEST['user']);
         if ($status == 0) {
@@ -153,18 +153,18 @@ class GroupsController extends BaseController
     public function doDropMember($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('group');
             $this->printTitle($lang['strdropmember'], 'pg.group.alter');
 
-            echo '<p>', sprintf($lang['strconfdropmember'], $misc->printVal($_REQUEST['user']), $misc->printVal($_REQUEST['group'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
             echo '<input type="hidden" name="user" value="', htmlspecialchars($_REQUEST['user']), "\" />\n";
@@ -187,9 +187,9 @@ class GroupsController extends BaseController
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['user'])) {
             $_POST['user'] = '';
@@ -236,14 +236,14 @@ class GroupsController extends BaseController
         echo '<form action="' . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
         echo '<select name="user">';
         while (!$users->EOF) {
-            $uname = $misc->printVal($users->fields['usename']);
+            $uname = $this->misc->printVal($users->fields['usename']);
             echo "<option value=\"{$uname}\"",
             ($uname == $_POST['user']) ? ' selected="selected"' : '', ">{$uname}</option>\n";
             $users->moveNext();
         }
         echo "</select>\n";
         echo "<input type=\"submit\" value=\"{$lang['straddmember']}\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"add_member\" />\n";
         echo "</form>\n";
@@ -267,18 +267,18 @@ class GroupsController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('group');
             $this->printTitle($lang['strdrop'], 'pg.group.drop');
 
-            echo '<p>', sprintf($lang['strconfdropgroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
@@ -300,9 +300,9 @@ class GroupsController extends BaseController
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         if (!isset($_POST['name'])) {
             $_POST['name'] = '';
         }
@@ -319,7 +319,7 @@ class GroupsController extends BaseController
         $this->printMsg($msg);
 
         echo "<form action=\"\" method=\"post\">\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data\"><input size=\"32\" maxlength=\"{$data->_maxNameLen}\" name=\"name\" value=\"", htmlspecialchars($_POST['name']), "\" /></td>\n\t</tr>\n";
@@ -331,7 +331,7 @@ class GroupsController extends BaseController
             while (!$users->EOF) {
                 $username = $users->fields['usename'];
                 echo "\t\t\t\t<option value=\"{$username}\"",
-                (in_array($username, $_POST['members']) ? ' selected="selected"' : ''), '>', $misc->printVal($username), "</option>\n";
+                (in_array($username, $_POST['members']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($username), "</option>\n";
                 $users->moveNext();
             }
             echo "\t\t\t</select>\n";
@@ -350,9 +350,9 @@ class GroupsController extends BaseController
     public function doSaveCreate()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['members'])) {
             $_POST['members'] = [];

@@ -9,14 +9,14 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class ViewsController extends BaseController
 {
-    public $script      = 'views.php';
-    public $_name       = 'ViewsController';
-    public $table_place = 'views-views';
+    public $script          = 'views.php';
+    public $controller_name = 'ViewsController';
+    public $table_place     = 'views-views';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
         $action = $this->action;
 
@@ -26,7 +26,7 @@ class ViewsController extends BaseController
             return $this->doSubTree();
         }
 
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strviews']);
         $this->printBody();
@@ -98,9 +98,9 @@ class ViewsController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'views');
@@ -112,7 +112,7 @@ class ViewsController extends BaseController
             'view'    => [
                 'title' => $lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url'   => SUBFOLDER . "/redirect/view?{$misc->href}&amp;",
+                'url'   => SUBFOLDER . "/redirect/view?{$this->misc->href}&amp;",
                 'vars'  => ['view' => 'relname'],
             ],
             'owner'   => [
@@ -163,7 +163,7 @@ class ViewsController extends BaseController
             // Insert is possible if the relevant rule for the view has been created.
             //            'insert' => array(
             //                'title'    => $lang['strinsert'],
-            //                'url'    => "views.php?action=confinsertrow&amp;{$misc->href}&amp;",
+            //                'url'    => "views.php?action=confinsertrow&amp;{$this->misc->href}&amp;",
             //                'vars'    => array('view' => 'relname'),
             //            ),
 
@@ -235,13 +235,13 @@ class ViewsController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $views = $data->getViews();
 
-        $reqvars = $misc->getRequestVars('view');
+        $reqvars = $this->misc->getRequestVars('view');
 
         $attrs = [
             'text'       => Decorator::field('relname'),
@@ -258,13 +258,13 @@ class ViewsController extends BaseController
     public function doSubTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $tabs    = $misc->getNavTabs('view');
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $tabs    = $this->misc->getNavTabs('view');
         $items   = $this->adjustTabsForTree($tabs);
-        $reqvars = $misc->getRequestVars('view');
+        $reqvars = $this->misc->getRequestVars('view');
 
         $attrs = [
             'text'   => Decorator::field('title'),
@@ -289,9 +289,9 @@ class ViewsController extends BaseController
     public function doSelectRows($confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('view');
@@ -343,8 +343,8 @@ class ViewsController extends BaseController
                     echo '<td style="white-space:nowrap;">';
                     echo '<input type="checkbox" name="show[', htmlspecialchars($attrs->fields['attname']), ']"',
                     isset($_REQUEST['show'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></td>';
-                    echo '<td style="white-space:nowrap;">', $misc->printVal($attrs->fields['attname']), '</td>';
-                    echo '<td style="white-space:nowrap;">', $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), '</td>';
+                    echo '<td style="white-space:nowrap;">', $this->misc->printVal($attrs->fields['attname']), '</td>';
+                    echo '<td style="white-space:nowrap;">', $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), '</td>';
                     echo '<td style="white-space:nowrap;">';
                     echo "<select name=\"ops[{$attrs->fields['attname']}]\">\n";
                     foreach (array_keys($data->selectOps) as $v) {
@@ -368,7 +368,7 @@ class ViewsController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"selectrows\" />\n";
             echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
             echo "<input type=\"hidden\" name=\"subject\" value=\"view\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$lang['strselect']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -418,9 +418,9 @@ class ViewsController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['view']) && empty($_REQUEST['ma'])) {
             return $this->doDefault($lang['strspecifyviewtodrop']);
@@ -436,17 +436,17 @@ class ViewsController extends BaseController
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfdropview'], $misc->printVal($a['view'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfdropview'], $this->misc->printVal($a['view'])), "</p>\n";
                     echo '<input type="hidden" name="view[]" value="', htmlspecialchars($a['view']), "\" />\n";
                 }
             } else {
-                echo '<p>', sprintf($lang['strconfdropview'], $misc->printVal($_REQUEST['view'])), "</p>\n";
+                echo '<p>', sprintf($lang['strconfdropview'], $this->misc->printVal($_REQUEST['view'])), "</p>\n";
                 echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
             }
 
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
@@ -492,9 +492,9 @@ class ViewsController extends BaseController
     public function doSetParamsCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've chosen tables for the view definition
         if (!isset($_POST['formTables'])) {
@@ -631,7 +631,7 @@ class ViewsController extends BaseController
                 echo '<input type="hidden" name="formTables[]" value="' . htmlspecialchars(serialize($curTable)) . "\" />\n";
             }
 
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -644,9 +644,9 @@ class ViewsController extends BaseController
     public function doWizardCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $tables = $data->getTables(true);
 
@@ -672,7 +672,7 @@ class ViewsController extends BaseController
         echo "</td>\n</tr>\n";
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"set_params_create\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strnext']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
@@ -684,9 +684,9 @@ class ViewsController extends BaseController
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['formView'])) {
             $_REQUEST['formView'] = '';
@@ -720,7 +720,7 @@ class ViewsController extends BaseController
         htmlspecialchars($_REQUEST['formComment']), "</textarea></td>\n\t</tr>\n";
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
@@ -732,9 +732,9 @@ class ViewsController extends BaseController
     public function doSaveCreate()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name and a definition
         if ($_POST['formView'] == '') {
@@ -758,9 +758,9 @@ class ViewsController extends BaseController
     public function doSaveCreateWiz()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name and fields they want to select
 

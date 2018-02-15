@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class ViewpropertiesController extends BaseController
 {
-    public $_name = 'ViewpropertiesController';
+    public $controller_name = 'ViewpropertiesController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -87,9 +87,9 @@ class ViewpropertiesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata) use ($data) {
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
@@ -106,14 +106,14 @@ class ViewpropertiesController extends BaseController
 
         // Show comment if any
         if ($vdata->fields['relcomment'] !== null) {
-            echo '<p class="comment">', $misc->printVal($vdata->fields['relcomment']), "</p>\n";
+            echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), "</p>\n";
         }
 
         $columns = [
             'column'  => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties.php?subject=column&amp;{$misc->href}&amp;view=" . urlencode($_REQUEST['view']) . '&amp;',
+                'url'   => "colproperties.php?subject=column&amp;{$this->misc->href}&amp;view=" . urlencode($_REQUEST['view']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
@@ -223,11 +223,11 @@ class ViewpropertiesController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $reqvars = $misc->getRequestVars('column');
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $reqvars = $this->misc->getRequestVars('column');
         $columns = $data->getTableAttributes($_REQUEST['view']);
 
         $attrs = [
@@ -266,9 +266,9 @@ class ViewpropertiesController extends BaseController
     public function doSaveEdit()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->setView($_POST['view'], $_POST['formDefinition'], $_POST['formComment']);
         if ($status == 0) {
@@ -284,9 +284,9 @@ class ViewpropertiesController extends BaseController
     public function doEdit($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('view');
         $this->printTitle($lang['stredit'], 'pg.view.alter');
@@ -311,7 +311,7 @@ class ViewpropertiesController extends BaseController
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
             echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -330,9 +330,9 @@ class ViewpropertiesController extends BaseController
     public function doExport($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('view');
         $this->printTabs('view', 'export');
@@ -377,7 +377,7 @@ class ViewpropertiesController extends BaseController
         echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$lang['strdownload']}</label></p>\n";
 
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"hidden\" name=\"subject\" value=\"view\" />\n";
         echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
@@ -390,9 +390,9 @@ class ViewpropertiesController extends BaseController
     public function doDefinition($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Get view
         $vdata = $data->getView($_REQUEST['view']);
@@ -404,12 +404,12 @@ class ViewpropertiesController extends BaseController
         if ($vdata->recordCount() > 0) {
             // Show comment if any
             if ($vdata->fields['relcomment'] !== null) {
-                echo '<p class="comment">', $misc->printVal($vdata->fields['relcomment']), "</p>\n";
+                echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), "</p>\n";
             }
 
             echo "<table style=\"width: 100%\">\n";
             echo "<tr><th class=\"data\">{$lang['strdefinition']}</th></tr>\n";
-            echo '<tr><td class="data1">', $misc->printVal($vdata->fields['vwdefinition']), "</td></tr>\n";
+            echo '<tr><td class="data1">', $this->misc->printVal($vdata->fields['vwdefinition']), "</td></tr>\n";
             echo "</table>\n";
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
@@ -438,9 +438,9 @@ class ViewpropertiesController extends BaseController
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['stage'])) {
             $_REQUEST['stage'] = 1;
@@ -471,7 +471,7 @@ class ViewpropertiesController extends BaseController
                 echo '<tr><td><input name="field" size="32" value="',
                 htmlspecialchars($_REQUEST['field']), '" /></td>';
 
-                echo '<td>', $misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), '</td>';
+                echo '<td>', $this->misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), '</td>';
                 echo '<td><input name="default" size="20" value="',
                 htmlspecialchars($_REQUEST['default']), '" /></td>';
                 echo '<td><input name="comment" size="32" value="',
@@ -480,7 +480,7 @@ class ViewpropertiesController extends BaseController
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"properties\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
                 echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), "\" />\n";
                 echo '<input type="hidden" name="olddefault" value="', htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
@@ -518,9 +518,9 @@ class ViewpropertiesController extends BaseController
     public function doAlter($confirm = false, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('view');
@@ -590,7 +590,7 @@ class ViewpropertiesController extends BaseController
                 echo "</table>\n";
                 echo "<input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
                 echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo "<p><input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
@@ -621,7 +621,7 @@ class ViewpropertiesController extends BaseController
                 // If schema has changed, need to change to the new schema and reload the browser
                 if (!empty($_POST['newschema']) && ($_POST['newschema'] != $data->_schema)) {
                     // Jump them to the new sequence schema
-                    $misc->setCurrentSchema($_POST['newschema']);
+                    $this->misc->setCurrentSchema($_POST['newschema']);
                     $this->misc->setReloadBrowser(true);
                 }
                 $this->doDefault($lang['strviewaltered']);

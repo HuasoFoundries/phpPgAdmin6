@@ -9,18 +9,18 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class CastsController extends BaseController
 {
-    public $_name = 'CastsController';
+    public $controller_name = 'CastsController';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
         $action = $this->action;
         if ($action == 'tree') {
             return $this->doTree();
         }
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strcasts']);
         $this->printBody();
@@ -41,9 +41,9 @@ class CastsController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $renderCastContext = function ($val) use ($lang) {
             switch ($val) {
@@ -96,9 +96,9 @@ class CastsController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $casts = $data->getCasts();
 

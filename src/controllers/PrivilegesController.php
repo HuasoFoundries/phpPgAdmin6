@@ -7,16 +7,16 @@ namespace PHPPgAdmin\Controller;
  */
 class PrivilegesController extends BaseController
 {
-    public $_name       = 'PrivilegesController';
-    public $table_place = 'privileges-privileges';
+    public $controller_name = 'PrivilegesController';
+    public $table_place     = 'privileges-privileges';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strprivileges']);
         $this->printBody();
@@ -46,12 +46,12 @@ class PrivilegesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $conf     = $this->conf;
-        $misc     = $this->misc;
+        $conf = $this->conf;
+
         $lang     = $this->lang;
         $action   = $this->action;
-        $data     = $misc->getDatabaseAccessor();
-        $database = $misc->getDatabase();
+        $data     = $this->misc->getDatabaseAccessor();
+        $database = $this->misc->getDatabase();
 
         $this->printTrail($_REQUEST['subject']);
 
@@ -113,10 +113,10 @@ class PrivilegesController extends BaseController
                 $id = (($i % 2) == 0 ? '1' : '2');
                 echo "<tr class=\"data{$id}\">\n";
                 if (!$data->hasRoles()) {
-                    echo '<td>', $misc->printVal($v[0]), "</td>\n";
+                    echo '<td>', $this->misc->printVal($v[0]), "</td>\n";
                 }
 
-                echo '<td>', $misc->printVal($v[1]), "</td>\n";
+                echo '<td>', $this->misc->printVal($v[1]), "</td>\n";
                 foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
                     // Skip over ALL PRIVILEGES
                     if ($v2 == 'ALL PRIVILEGES') {
@@ -138,7 +138,7 @@ class PrivilegesController extends BaseController
                     echo "</td>\n";
                 }
                 if ($data->hasGrantOption()) {
-                    echo '<td>', $misc->printVal($v[3]), "</td>\n";
+                    echo '<td>', $this->misc->printVal($v[3]), "</td>\n";
                 }
                 echo "</tr>\n";
                 $i++;
@@ -264,11 +264,11 @@ class PrivilegesController extends BaseController
      */
     public function doAlter($confirm, $mode, $msg = '')
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['username'])) {
             $_REQUEST['username'] = [];
@@ -366,7 +366,7 @@ class PrivilegesController extends BaseController
                 htmlspecialchars($_REQUEST['table']), "\" />\n";
             }
 
-            echo $misc->form;
+            echo $this->misc->form;
             if ($mode == 'grant') {
                 echo "<input type=\"submit\" name=\"grant\" value=\"{$lang['strgrant']}\" />\n";
             } elseif ($mode == 'revoke') {

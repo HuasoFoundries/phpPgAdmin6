@@ -23,8 +23,8 @@ class BaseController
     public $href                 = '';
     public $lang                 = [];
     public $action               = '';
-    public $_name                = 'BaseController';
-    public $_title               = 'base';
+    public $controller_name      = 'BaseController';
+    public $controller_title     = 'base';
     protected $table_controller  = null;
     protected $trail_controller  = null;
     protected $tree_controller   = null;
@@ -85,16 +85,16 @@ class BaseController
             }
         }
 
-        //\PC::debug(['name' => $this->_name, 'no_db_connection' => $this->misc->getNoDBConnection()], 'instanced controller');
+        //\PC::debug(['name' => $this->controller_name, 'no_db_connection' => $this->misc->getNoDBConnection()], 'instanced controller');
     }
 
     public function render()
     {
-        $misc   = $this->misc;
-        $lang   = $this->lang;
-        $action = $this->action;
+        $this->misc = $this->misc;
+        $lang       = $this->lang;
+        $action     = $this->action;
 
-        $this->printHeader($lang[$this->_title]);
+        $this->printHeader($lang[$this->controller_title]);
         $this->printBody();
 
         switch ($action) {
@@ -121,7 +121,7 @@ class BaseController
     private function getTableController()
     {
         if ($this->table_controller === null) {
-            $this->table_controller = new \PHPPgAdmin\XHtml\HTMLTableController($this->getContainer(), $this->_name);
+            $this->table_controller = new \PHPPgAdmin\XHtml\HTMLTableController($this->getContainer(), $this->controller_name);
         }
         return $this->table_controller;
     }
@@ -129,7 +129,7 @@ class BaseController
     private function getFooterController()
     {
         if ($this->footer_controller === null) {
-            $this->footer_controller = new \PHPPgAdmin\XHtml\HTMLFooterController($this->getContainer(), $this->_name);
+            $this->footer_controller = new \PHPPgAdmin\XHtml\HTMLFooterController($this->getContainer(), $this->controller_name);
         }
         return $this->footer_controller;
     }
@@ -137,7 +137,7 @@ class BaseController
     private function getHeaderController()
     {
         if ($this->header_controller === null) {
-            $this->header_controller = new \PHPPgAdmin\XHtml\HTMLHeaderController($this->getContainer(), $this->_name);
+            $this->header_controller = new \PHPPgAdmin\XHtml\HTMLHeaderController($this->getContainer(), $this->controller_name);
         }
         return $this->header_controller;
     }
@@ -145,7 +145,7 @@ class BaseController
     private function getNavbarController()
     {
         if ($this->trail_controller === null) {
-            $this->trail_controller = new \PHPPgAdmin\XHtml\HTMLNavbarController($this->getContainer(), $this->_name);
+            $this->trail_controller = new \PHPPgAdmin\XHtml\HTMLNavbarController($this->getContainer(), $this->controller_name);
         }
 
         return $this->trail_controller;
@@ -154,7 +154,7 @@ class BaseController
     private function getTreeController()
     {
         if ($this->tree_controller === null) {
-            $this->tree_controller = new \PHPPgAdmin\XHtml\TreeController($this->getContainer(), $this->_name);
+            $this->tree_controller = new \PHPPgAdmin\XHtml\TreeController($this->getContainer(), $this->controller_name);
         }
 
         return $this->tree_controller;

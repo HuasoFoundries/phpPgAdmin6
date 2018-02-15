@@ -7,22 +7,22 @@ namespace PHPPgAdmin\Controller;
  */
 class LoginController extends BaseController
 {
-    protected $container   = null;
-    protected $_connection = null;
-    protected $app         = null;
-    protected $data        = null;
-    protected $database    = null;
-    protected $server_id   = null;
-    public $appLangFiles   = [];
-    public $appThemes      = [];
-    public $appName        = '';
-    public $appVersion     = '';
-    public $form           = '';
-    public $href           = '';
-    public $lang           = [];
-    public $action         = '';
-    public $_name          = 'LoginController';
-    public $_title         = 'strlogin';
+    protected $container     = null;
+    protected $_connection   = null;
+    protected $app           = null;
+    protected $data          = null;
+    protected $database      = null;
+    protected $server_id     = null;
+    public $appLangFiles     = [];
+    public $appThemes        = [];
+    public $appName          = '';
+    public $appVersion       = '';
+    public $form             = '';
+    public $href             = '';
+    public $lang             = [];
+    public $action           = '';
+    public $controller_name  = 'LoginController';
+    public $controller_title = 'strlogin';
 
     /* Constructor */
 
@@ -40,10 +40,10 @@ class LoginController extends BaseController
     public function doLoginForm($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
-        $misc->setNoDBConnection(true);
+        $this->misc->setNoDBConnection(true);
 
         $server_id = $this->container->requestobj->getQueryParam('server');
 
@@ -52,7 +52,7 @@ class LoginController extends BaseController
             return $this->lang['strinvalidserverparam'];
         }
 
-        $login_html = $this->printHeader($lang[$this->_title], $this->scripts, false);
+        $login_html = $this->printHeader($lang[$this->controller_title], $this->scripts, false);
         $login_html .= $this->printBody(false);
         $login_html .= $this->printTrail('root', false);
 
@@ -68,7 +68,7 @@ class LoginController extends BaseController
             }
         }
 
-        $server_info = $misc->getServerInfo($server_id);
+        $server_info = $this->misc->getServerInfo($server_id);
         $title       = sprintf($lang['strlogintitle'], $server_info['desc']);
 
         $printTitle = $this->printTitle($title, null, false);

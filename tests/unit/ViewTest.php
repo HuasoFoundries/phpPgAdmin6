@@ -19,9 +19,7 @@ class ViewTest extends \Codeception\Test\Unit
         $this->container = $Helper->getContainer();
     }
 
-    protected function _after()
-    {
-    }
+    protected function _after() {}
 
     // tests
 
@@ -30,7 +28,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/acinsert.php';
-        $this->assertTrue($controller->_name == 'AcinsertController');
+        $this->assertTrue($controller->controller_name == 'AcinsertController');
     }
 
     public function testAggregatesView()
@@ -38,7 +36,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/aggregates.php';
-        $this->assertTrue($controller->_name == 'AggregatesController');
+        $this->assertTrue($controller->controller_name == 'AggregatesController');
     }
 
     public function testAlldbView()
@@ -46,7 +44,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/alldb.php';
-        $this->assertTrue($controller->_name == 'AlldbController');
+        $this->assertTrue($controller->controller_name == 'AlldbController');
     }
 
     public function testBrowserView()
@@ -54,7 +52,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/browser.php';
-        $this->assertTrue($controller->_name == 'BrowserController');
+        $this->assertTrue($controller->controller_name == 'BrowserController');
     }
 
     public function testCastsView()
@@ -62,7 +60,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/casts.php';
-        $this->assertTrue($controller->_name == 'CastsController');
+        $this->assertTrue($controller->controller_name == 'CastsController');
     }
 
     public function testColpropertiesView()
@@ -70,7 +68,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/colproperties.php';
-        $this->assertTrue($controller->_name == 'ColpropertiesController');
+        $this->assertTrue($controller->controller_name == 'ColpropertiesController');
     }
 
     public function testConstraintsView()
@@ -78,7 +76,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/constraints.php';
-        $this->assertTrue($controller->_name == 'ConstraintsController');
+        $this->assertTrue($controller->controller_name == 'ConstraintsController');
     }
 
     public function testConversionsView()
@@ -86,7 +84,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/conversions.php';
-        $this->assertTrue($controller->_name == 'ConversionsController');
+        $this->assertTrue($controller->controller_name == 'ConversionsController');
     }
 
     public function testDatabaseView()
@@ -94,7 +92,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/database.php';
-        $this->assertTrue($controller->_name == 'DatabaseController');
+        $this->assertTrue($controller->controller_name == 'DatabaseController');
     }
 
     public function testDataexportView()
@@ -102,7 +100,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/dataexport.php';
-        $this->assertTrue($controller->_name == 'DataexportController');
+        $this->assertTrue($controller->controller_name == 'DataexportController');
     }
 
     public function testDataimportView()
@@ -110,7 +108,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/dataimport.php';
-        $this->assertTrue($controller->_name == 'DataimportController');
+        $this->assertTrue($controller->controller_name == 'DataimportController');
     }
 
     public function testDbexportView()
@@ -118,7 +116,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/dbexport.php';
-        $this->assertTrue($controller->_name == 'DbexportController');
+        $this->assertTrue($controller->controller_name == 'DbexportController');
     }
 
     public function testDisplayView()
@@ -126,7 +124,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/display.php';
-        $this->assertTrue($controller->_name == 'DisplayController');
+        $this->assertTrue($controller->controller_name == 'DisplayController');
     }
 
     public function testDomainsView()
@@ -134,7 +132,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/domains.php';
-        $this->assertTrue($controller->_name == 'DomainsController');
+        $this->assertTrue($controller->controller_name == 'DomainsController');
     }
 
     public function testFulltextView()
@@ -142,7 +140,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/fulltext.php';
-        $this->assertTrue($controller->_name == 'FulltextController');
+        $this->assertTrue($controller->controller_name == 'FulltextController');
     }
 
     public function testFunctionsView()
@@ -150,7 +148,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/functions.php';
-        $this->assertTrue($controller->_name == 'FunctionsController');
+        $this->assertTrue($controller->controller_name == 'FunctionsController');
     }
 
     public function testGroupsView()
@@ -158,7 +156,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/groups.php';
-        $this->assertTrue($controller->_name == 'GroupsController');
+        $this->assertTrue($controller->controller_name == 'GroupsController');
     }
 
     public function testHelpView()
@@ -166,7 +164,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/help.php';
-        $this->assertTrue($controller->_name == 'HelpController');
+        $this->assertTrue($controller->controller_name == 'HelpController');
     }
 
     public function testHistoryView()
@@ -174,7 +172,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/history.php';
-        $this->assertTrue($controller->_name == 'HistoryController');
+        $this->assertTrue($controller->controller_name == 'HistoryController');
     }
 
     public function testIndexesView()
@@ -182,7 +180,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/indexes.php';
-        $this->assertTrue($controller->_name == 'IndexesController');
+        $this->assertTrue($controller->controller_name == 'IndexesController');
     }
 
     public function testInfoView()
@@ -190,7 +188,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/info.php';
-        $this->assertTrue($controller->_name == 'InfoController');
+        $this->assertTrue($controller->controller_name == 'InfoController');
     }
 
     public function testIntroView()
@@ -198,7 +196,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/intro.php';
-        $this->assertTrue($controller->_name == 'IntroController');
+        $this->assertTrue($controller->controller_name == 'IntroController');
     }
 
     public function testLanguagesView()
@@ -206,7 +204,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/languages.php';
-        $this->assertTrue($controller->_name == 'LanguagesController');
+        $this->assertTrue($controller->controller_name == 'LanguagesController');
     }
 
     public function testLoginView()
@@ -214,7 +212,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/login.php';
-        $this->assertTrue($controller->_name == 'LoginController');
+        $this->assertTrue($controller->controller_name == 'LoginController');
     }
 
     public function testMaterializedviewpropertiesView()
@@ -222,7 +220,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/materializedviewproperties.php';
-        $this->assertTrue($controller->_name == 'MaterializedviewpropertiesController');
+        $this->assertTrue($controller->controller_name == 'MaterializedviewpropertiesController');
     }
 
     public function testMaterializedviewsView()
@@ -230,7 +228,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/materializedviews.php';
-        $this->assertTrue($controller->_name == 'MaterializedviewsController');
+        $this->assertTrue($controller->controller_name == 'MaterializedviewsController');
     }
 
     public function testOpclassesView()
@@ -238,7 +236,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/opclasses.php';
-        $this->assertTrue($controller->_name == 'OpclassesController');
+        $this->assertTrue($controller->controller_name == 'OpclassesController');
     }
 
     public function testOperatorsView()
@@ -246,7 +244,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/operators.php';
-        $this->assertTrue($controller->_name == 'OperatorsController');
+        $this->assertTrue($controller->controller_name == 'OperatorsController');
     }
 
     public function testPrivilegesView()
@@ -254,7 +252,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/privileges.php';
-        $this->assertTrue($controller->_name == 'PrivilegesController');
+        $this->assertTrue($controller->controller_name == 'PrivilegesController');
     }
 
     public function testRolesView()
@@ -262,7 +260,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/roles.php';
-        $this->assertTrue($controller->_name == 'RolesController');
+        $this->assertTrue($controller->controller_name == 'RolesController');
     }
 
     public function testRulesView()
@@ -270,7 +268,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/rules.php';
-        $this->assertTrue($controller->_name == 'RulesController');
+        $this->assertTrue($controller->controller_name == 'RulesController');
     }
 
     public function testSchemasView()
@@ -278,7 +276,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/schemas.php';
-        $this->assertTrue($controller->_name == 'SchemasController');
+        $this->assertTrue($controller->controller_name == 'SchemasController');
     }
 
     public function testSequencesView()
@@ -286,7 +284,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/sequences.php';
-        $this->assertTrue($controller->_name == 'SequencesController');
+        $this->assertTrue($controller->controller_name == 'SequencesController');
     }
 
     public function testServersView()
@@ -294,7 +292,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/servers.php';
-        $this->assertTrue($controller->_name == 'ServersController');
+        $this->assertTrue($controller->controller_name == 'ServersController');
     }
 
     public function testSqleditView()
@@ -302,7 +300,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/sqledit.php';
-        $this->assertTrue($controller->_name == 'SqleditController');
+        $this->assertTrue($controller->controller_name == 'SqleditController');
     }
 
     public function testSqlView()
@@ -310,7 +308,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/sql.php';
-        $this->assertTrue($controller->_name == 'SqlController');
+        $this->assertTrue($controller->controller_name == 'SqlController');
     }
 
     public function testTablespacesView()
@@ -318,7 +316,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/tablespaces.php';
-        $this->assertTrue($controller->_name == 'TablespacesController');
+        $this->assertTrue($controller->controller_name == 'TablespacesController');
     }
 
     public function testTablesView()
@@ -326,7 +324,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/tables.php';
-        $this->assertTrue($controller->_name == 'TablesController');
+        $this->assertTrue($controller->controller_name == 'TablesController');
     }
 
     public function testTblpropertiesView()
@@ -334,7 +332,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/tblproperties.php';
-        $this->assertTrue($controller->_name == 'TblpropertiesController');
+        $this->assertTrue($controller->controller_name == 'TblpropertiesController');
     }
 
     public function testTriggersView()
@@ -342,7 +340,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/triggers.php';
-        $this->assertTrue($controller->_name == 'TriggersController');
+        $this->assertTrue($controller->controller_name == 'TriggersController');
     }
 
     public function testTypesView()
@@ -350,7 +348,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/types.php';
-        $this->assertTrue($controller->_name == 'TypesController');
+        $this->assertTrue($controller->controller_name == 'TypesController');
     }
 
     public function testUsersView()
@@ -358,7 +356,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/users.php';
-        $this->assertTrue($controller->_name == 'UsersController');
+        $this->assertTrue($controller->controller_name == 'UsersController');
     }
 
     public function testViewpropertiesView()
@@ -366,7 +364,7 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/viewproperties.php';
-        $this->assertTrue($controller->_name == 'ViewpropertiesController');
+        $this->assertTrue($controller->controller_name == 'ViewpropertiesController');
     }
 
     public function testViewsView()
@@ -374,6 +372,6 @@ class ViewTest extends \Codeception\Test\Unit
         $container = $this->container;
         $container->misc->setNoDBConnection(true);
         require BASE_PATH . '/src/views/views.php';
-        $this->assertTrue($controller->_name == 'ViewsController');
+        $this->assertTrue($controller->controller_name == 'ViewsController');
     }
 }

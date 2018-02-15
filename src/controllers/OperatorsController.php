@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class OperatorsController extends BaseController
 {
-    public $_name = 'OperatorsController';
+    public $controller_name = 'OperatorsController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -65,16 +65,16 @@ class OperatorsController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $operators = $data->getOperators();
 
         // Operator prototype: "type operator type"
         $proto = Decorator::concat(Decorator::field('oprleftname'), ' ', Decorator::field('oprname'), ' ', Decorator::field('oprrightname'));
 
-        $reqvars = $misc->getRequestVars('operator');
+        $reqvars = $this->misc->getRequestVars('operator');
 
         $attrs = [
             'text'    => $proto,
@@ -99,9 +99,9 @@ class OperatorsController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'operators');
@@ -113,7 +113,7 @@ class OperatorsController extends BaseController
             'operator' => [
                 'title' => $lang['stroperator'],
                 'field' => Decorator::field('oprname'),
-                'url'   => "operators.php?action=properties&amp;{$misc->href}&amp;",
+                'url'   => "operators.php?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['operator' => 'oprname', 'operator_oid' => 'oid'],
             ],
             'leftarg'  => [
@@ -140,7 +140,7 @@ class OperatorsController extends BaseController
         $actions = [
             'drop' => [
                 // 'title' => $lang['strdrop'],
-                // 'url'   => "operators.php?action=confirm_drop&amp;{$misc->href}&amp;",
+                // 'url'   => "operators.php?action=confirm_drop&amp;{$this->misc->href}&amp;",
                 // 'vars'  => array('operator' => 'oprname', 'operator_oid' => 'oid'),
                 'content' => $lang['strdrop'],
                 'attr'    => [
@@ -167,9 +167,9 @@ class OperatorsController extends BaseController
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('operator');
         $this->printTitle($lang['strproperties'], 'pg.operator');
@@ -181,17 +181,17 @@ class OperatorsController extends BaseController
         if ($oprdata->recordCount() > 0) {
             echo "<table>\n";
             echo "<tr><th class=\"data left\">{$lang['strname']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($oprdata->fields['oprname']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprname']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strleftarg']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($oprdata->fields['oprleftname']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprleftname']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strrightarg']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($oprdata->fields['oprrightname']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrightname']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strcommutator']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($oprdata->fields['oprcom']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprcom']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strnegator']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($oprdata->fields['oprnegate']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprnegate']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strjoin']}</th>\n";
-            echo '<td class="data1">', $misc->printVal($oprdata->fields['oprjoin']), "</td></tr>\n";
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprjoin']), "</td></tr>\n";
             echo "<tr><th class=\"data left\">{$lang['strhashes']}</th>\n";
             echo '<td class="data1">', ($oprdata->fields['oprcanhash']) ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
 
@@ -200,15 +200,15 @@ class OperatorsController extends BaseController
                 echo "<tr><th class=\"data left\">{$lang['strmerges']}</th>\n";
                 echo '<td class="data1">', ($oprdata->fields['oprlsortop'] !== '0' && $oprdata->fields['oprrsortop'] !== '0') ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
                 echo "<tr><th class=\"data left\">{$lang['strrestrict']}</th>\n";
-                echo '<td class="data1">', $misc->printVal($oprdata->fields['oprrest']), "</td></tr>\n";
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrest']), "</td></tr>\n";
                 echo "<tr><th class=\"data left\">{$lang['strleftsort']}</th>\n";
-                echo '<td class="data1">', $misc->printVal($oprdata->fields['oprlsortop']), "</td></tr>\n";
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprlsortop']), "</td></tr>\n";
                 echo "<tr><th class=\"data left\">{$lang['strrightsort']}</th>\n";
-                echo '<td class="data1">', $misc->printVal($oprdata->fields['oprrsortop']), "</td></tr>\n";
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrsortop']), "</td></tr>\n";
                 echo "<tr><th class=\"data left\">{$lang['strlessthan']}</th>\n";
-                echo '<td class="data1">', $misc->printVal($oprdata->fields['oprltcmpop']), "</td></tr>\n";
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprltcmpop']), "</td></tr>\n";
                 echo "<tr><th class=\"data left\">{$lang['strgreaterthan']}</th>\n";
-                echo '<td class="data1">', $misc->printVal($oprdata->fields['oprgtcmpop']), "</td></tr>\n";
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprgtcmpop']), "</td></tr>\n";
             } else {
                 echo "<tr><th class=\"data left\">{$lang['strmerges']}</th>\n";
                 echo '<td class="data1">', $data->phpBool($oprdata->fields['oprcanmerge']) ? $lang['stryes'] : $lang['strno'], "</td></tr>\n";
@@ -241,22 +241,22 @@ class OperatorsController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('operator');
             $this->printTitle($lang['strdrop'], 'pg.operator.drop');
 
-            echo '<p>', sprintf($lang['strconfdropoperator'], $misc->printVal($_REQUEST['operator'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/operators.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="operator" value="', htmlspecialchars($_REQUEST['operator']), "\" />\n";
             echo '<input type="hidden" name="operator_oid" value="', htmlspecialchars($_REQUEST['operator_oid']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";

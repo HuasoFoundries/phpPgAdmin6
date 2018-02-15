@@ -7,7 +7,7 @@ namespace PHPPgAdmin\Controller;
  */
 class HelpController extends BaseController
 {
-    public $_name = 'HelpController';
+    public $controller_name = 'HelpController';
 
     public function render()
     {
@@ -26,9 +26,9 @@ class HelpController extends BaseController
     public function doDefault()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (isset($_REQUEST['help'])) {
             $url = $data->getHelp($_REQUEST['help']);
@@ -51,9 +51,9 @@ class HelpController extends BaseController
     public function doBrowse($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strhelppagebrowser']);
         $this->printBody();
@@ -86,9 +86,9 @@ class HelpController extends BaseController
     public function doChoosePage($urls)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strhelppagebrowser']);
         $this->printBody();

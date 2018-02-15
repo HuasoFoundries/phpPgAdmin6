@@ -11,17 +11,16 @@ class TreeController
 {
     use \PHPPgAdmin\HelperTrait;
 
-    private $container      = null;
-    private $data           = null;
-    private $database       = null;
-    private $server_id      = null;
-    public $form            = '';
-    public $href            = '';
-    public $lang            = [];
-    public $action          = '';
-    public $_name           = 'TreeController';
-    public $controller_name = 'TreeController';
-    public $_title          = 'base';
+    private $container       = null;
+    private $data            = null;
+    private $database        = null;
+    private $server_id       = null;
+    public $form             = '';
+    public $href             = '';
+    public $lang             = [];
+    public $action           = '';
+    public $controller_name  = 'TreeController';
+    public $controller_title = 'base';
 
     /* Constructor */
     public function __construct(\Slim\Container $container, $controller_name = null)
@@ -41,7 +40,7 @@ class TreeController
         if ($controller_name !== null) {
             $this->controller_name = $controller_name;
         }
-        //\PC::debug($this->_name, 'instanced controller');
+        //\PC::debug($this->controller_name, 'instanced controller');
     }
 
     /** Produce XML data for the browser tree

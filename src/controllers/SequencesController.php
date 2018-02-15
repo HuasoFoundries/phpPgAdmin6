@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class SequencesController extends BaseController
 {
-    public $_name = 'SequencesController';
+    public $controller_name = 'SequencesController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -98,9 +98,9 @@ class SequencesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'sequences');
@@ -113,7 +113,7 @@ class SequencesController extends BaseController
             'sequence' => [
                 'title' => $lang['strsequence'],
                 'field' => Decorator::field('seqname'),
-                'url'   => "sequences.php?action=properties&amp;{$misc->href}&amp;",
+                'url'   => "sequences.php?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['sequence' => 'seqname'],
             ],
             'owner'    => [
@@ -198,13 +198,13 @@ class SequencesController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $sequences = $data->getSequences();
 
-        $reqvars = $misc->getRequestVars('sequence');
+        $reqvars = $this->misc->getRequestVars('sequence');
 
         $attrs = [
             'text'    => Decorator::field('seqname'),
@@ -228,9 +228,9 @@ class SequencesController extends BaseController
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         $this->printTrail('sequence');
         $this->printTitle($lang['strproperties'], 'pg.sequence');
         $this->printMsg($msg);
@@ -244,7 +244,7 @@ class SequencesController extends BaseController
 
             // Show comment if any
             if ($sequence->fields['seqcomment'] !== null) {
-                echo '<p class="comment">', $misc->printVal($sequence->fields['seqcomment']), "</p>\n";
+                echo '<p class="comment">', $this->misc->printVal($sequence->fields['seqcomment']), "</p>\n";
             }
 
             echo '<table border="0">';
@@ -261,16 +261,16 @@ class SequencesController extends BaseController
             echo "<th class=\"data\">{$lang['strcancycle']}</th>";
             echo "<th class=\"data\">{$lang['striscalled']}</th></tr>";
             echo '<tr>';
-            echo '<td class="data1">', $misc->printVal($sequence->fields['seqname']), '</td>';
+            echo '<td class="data1">', $this->misc->printVal($sequence->fields['seqname']), '</td>';
             if ($data->hasAlterSequenceStart()) {
-                echo '<td class="data1">', $misc->printVal($sequence->fields['start_value']), '</td>';
+                echo '<td class="data1">', $this->misc->printVal($sequence->fields['start_value']), '</td>';
             }
-            echo '<td class="data1">', $misc->printVal($sequence->fields['last_value']), '</td>';
-            echo '<td class="data1">', $misc->printVal($sequence->fields['increment_by']), '</td>';
-            echo '<td class="data1">', $misc->printVal($sequence->fields['max_value']), '</td>';
-            echo '<td class="data1">', $misc->printVal($sequence->fields['min_value']), '</td>';
-            echo '<td class="data1">', $misc->printVal($sequence->fields['cache_value']), '</td>';
-            echo '<td class="data1">', $misc->printVal($sequence->fields['log_cnt']), '</td>';
+            echo '<td class="data1">', $this->misc->printVal($sequence->fields['last_value']), '</td>';
+            echo '<td class="data1">', $this->misc->printVal($sequence->fields['increment_by']), '</td>';
+            echo '<td class="data1">', $this->misc->printVal($sequence->fields['max_value']), '</td>';
+            echo '<td class="data1">', $this->misc->printVal($sequence->fields['min_value']), '</td>';
+            echo '<td class="data1">', $this->misc->printVal($sequence->fields['cache_value']), '</td>';
+            echo '<td class="data1">', $this->misc->printVal($sequence->fields['log_cnt']), '</td>';
             echo '<td class="data1">', ($sequence->fields['is_cycled'] ? $lang['stryes'] : $lang['strno']), '</td>';
             echo '<td class="data1">', ($sequence->fields['is_called'] ? $lang['stryes'] : $lang['strno']), '</td>';
             echo '</tr>';
@@ -383,9 +383,9 @@ class SequencesController extends BaseController
     public function doDrop($confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['sequence']) && empty($_REQUEST['ma'])) {
             return $this->doDefault($lang['strspecifysequencetodrop']);
@@ -402,17 +402,17 @@ class SequencesController extends BaseController
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfdropsequence'], $misc->printVal($a['sequence'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfdropsequence'], $this->misc->printVal($a['sequence'])), "</p>\n";
                     printf('<input type="hidden" name="sequence[]" value="%s" />', htmlspecialchars($a['sequence']));
                 }
             } else {
-                echo '<p>', sprintf($lang['strconfdropsequence'], $misc->printVal($_REQUEST['sequence'])), "</p>\n";
+                echo '<p>', sprintf($lang['strconfdropsequence'], $this->misc->printVal($_REQUEST['sequence'])), "</p>\n";
                 echo '<input type="hidden" name="sequence" value="', htmlspecialchars($_REQUEST['sequence']), "\" />\n";
             }
 
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -457,9 +457,9 @@ class SequencesController extends BaseController
     public function doCreateSequence($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['formSequenceName'])) {
             $_POST['formSequenceName'] = '';
@@ -522,7 +522,7 @@ class SequencesController extends BaseController
 
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create_sequence\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
@@ -534,9 +534,9 @@ class SequencesController extends BaseController
     public function doSaveCreateSequence()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name and at least one column
         if ($_POST['formSequenceName'] == '') {
@@ -560,9 +560,9 @@ class SequencesController extends BaseController
     public function doRestart()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->restartSequence($_REQUEST['sequence']);
         if ($status == 0) {
@@ -578,9 +578,9 @@ class SequencesController extends BaseController
     public function doReset()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->resetSequence($_REQUEST['sequence']);
         if ($status == 0) {
@@ -596,9 +596,9 @@ class SequencesController extends BaseController
     public function doNextval()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->nextvalSequence($_REQUEST['sequence']);
         if ($status == 0) {
@@ -614,9 +614,9 @@ class SequencesController extends BaseController
     public function doSaveSetval()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->setvalSequence($_POST['sequence'], $_POST['nextvalue']);
         if ($status == 0) {
@@ -632,9 +632,9 @@ class SequencesController extends BaseController
     public function doSetval($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('sequence');
         $this->printTitle($lang['strsetval'], 'pg.sequence');
@@ -649,11 +649,11 @@ class SequencesController extends BaseController
             echo "<tr><th class=\"data left required\">{$lang['strlastvalue']}</th>\n";
             echo '<td class="data1">';
             echo "<input name=\"nextvalue\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            $misc->printVal($sequence->fields['last_value']), "\" /></td></tr>\n";
+            $this->misc->printVal($sequence->fields['last_value']), "\" /></td></tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"setval\" />\n";
             echo '<input type="hidden" name="sequence" value="', htmlspecialchars($_REQUEST['sequence']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"setval\" value=\"{$lang['strsetval']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -668,9 +668,9 @@ class SequencesController extends BaseController
     public function doSaveAlter()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['owner'])) {
             $_POST['owner'] = null;
@@ -721,7 +721,7 @@ class SequencesController extends BaseController
             }
             if (!empty($_POST['newschema']) && ($_POST['newschema'] != $data->_schema)) {
                 // Jump them to the new sequence schema
-                $misc->setCurrentSchema($_POST['newschema']);
+                $this->misc->setCurrentSchema($_POST['newschema']);
                 $this->misc->setReloadBrowser(true);
             }
             $this->doProperties($lang['strsequencealtered']);
@@ -736,9 +736,9 @@ class SequencesController extends BaseController
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('sequence');
         $this->printTitle($lang['stralter'], 'pg.sequence.alter');
@@ -843,7 +843,7 @@ class SequencesController extends BaseController
 
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo '<input type="hidden" name="sequence" value="', htmlspecialchars($_REQUEST['sequence']), "\" />\n";
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";

@@ -9,14 +9,14 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class TablespacesController extends BaseController
 {
-    public $_name = 'TablespacesController';
+    public $controller_name = 'TablespacesController';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         $this->printHeader($lang['strtablespaces']);
@@ -70,9 +70,9 @@ class TablespacesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('server');
         $this->printTabs('server', 'tablespaces');
@@ -166,9 +166,9 @@ class TablespacesController extends BaseController
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('tablespace');
         $this->printTitle($lang['stralter'], 'pg.tablespace.alter');
@@ -193,7 +193,7 @@ class TablespacesController extends BaseController
             }
 
             echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -231,9 +231,9 @@ class TablespacesController extends BaseController
     public function doSaveAlter()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check data
         if (trim($_POST['name']) == '') {
@@ -259,18 +259,18 @@ class TablespacesController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('tablespace');
             $this->printTitle($lang['strdrop'], 'pg.tablespace.drop');
 
-            echo '<p>', sprintf($lang['strconfdroptablespace'], $misc->printVal($_REQUEST['tablespace'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
@@ -292,11 +292,11 @@ class TablespacesController extends BaseController
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $server_info = $misc->getServerInfo();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $server_info = $this->misc->getServerInfo();
 
         if (!isset($_POST['formSpcname'])) {
             $_POST['formSpcname'] = '';
@@ -322,7 +322,7 @@ class TablespacesController extends BaseController
         $this->printMsg($msg);
 
         echo '<form action="' . SUBFOLDER . "/src/views/tablespaces.php\" method=\"post\">\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formSpcname\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_POST['formSpcname']), "\" /></td>\n\t</tr>\n";
@@ -356,9 +356,9 @@ class TablespacesController extends BaseController
     public function doSaveCreate()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check data
         if (trim($_POST['formSpcname']) == '') {

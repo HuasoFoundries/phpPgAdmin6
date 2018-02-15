@@ -9,7 +9,7 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class TblpropertiesController extends BaseController
 {
-    public $_name = 'TblpropertiesController';
+    public $controller_name = 'TblpropertiesController';
 
     public function render()
     {

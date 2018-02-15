@@ -9,12 +9,12 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class OpclassesController extends BaseController
 {
-    public $_name = 'OpclassesController';
+    public $controller_name = 'OpclassesController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -43,9 +43,9 @@ class OpclassesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'opclasses');
@@ -88,9 +88,9 @@ class OpclassesController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $opclasses = $data->getOpClasses();
 

@@ -144,12 +144,12 @@ $container['serializer'] = function ($c) {
 
 // Create Misc class references
 $container['misc'] = function ($c) {
-    $misc = new \PHPPgAdmin\Misc($c);
+    $this->misc = new \PHPPgAdmin\Misc($c);
 
     $conf = $c->get('conf');
 
     // 4. Check for theme by server/db/user
-    $_server_info = $misc->getServerInfo();
+    $_server_info = $this->misc->getServerInfo();
 
     //\PC::debug($_server_info, 'server info');
 
@@ -232,18 +232,18 @@ $container['misc'] = function ($c) {
         $conf['theme']        = $_theme;
     }
 
-    $misc->setConf('theme', $conf['theme']);
+    $this->misc->setConf('theme', $conf['theme']);
 
-    $misc->setHREF();
-    $misc->setForm();
+    $this->misc->setHREF();
+    $this->misc->setForm();
 
-    return $misc;
+    return $this->misc;
 };
 
 // Register Twig View helper
 $container['view'] = function ($c) {
-    $conf = $c->get('conf');
-    $misc = $c->misc;
+    $conf       = $c->get('conf');
+    $this->misc = $c->misc;
 
     $view = new \Slim\Views\Twig(BASE_PATH . '/templates', [
         'cache'       => BASE_PATH . '/temp/twigcache',
@@ -268,7 +268,7 @@ $container['view'] = function ($c) {
 
     $view->offsetSet('appName', $c->get('settings')['appName']);
 
-    $misc->setView($view);
+    $this->misc->setView($view);
 
     //\PC::debug($c->conf, 'conf');
     //\PC::debug($c->view->offsetGet('subfolder'), 'subfolder');
@@ -312,7 +312,7 @@ $app->add(function ($request, $response, $next) {
     $this['requestobj']  = $request;
     $this['responseobj'] = $response;
 
-    $misc = $this->get('misc');
+    $this->misc = $this->get('misc');
 
     $this->view->offsetSet('METHOD', $request->getMethod());
     $this->view->offsetSet('subject', $request->getAttribute('route')->getArgument('subject'));

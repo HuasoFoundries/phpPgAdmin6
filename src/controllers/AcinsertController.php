@@ -7,14 +7,14 @@ namespace PHPPgAdmin\Controller;
  */
 class AcinsertController extends BaseController
 {
-    public $_name = 'AcinsertController';
+    public $controller_name = 'AcinsertController';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         if (isset($_POST['offset'])) {
@@ -52,7 +52,7 @@ class AcinsertController extends BaseController
                 echo '<th>';
 
                 if (in_array($h, $fkeynames)) {
-                    echo '<img src="' . $misc->icon('ForeignKey') . '" alt="[referenced key]" />';
+                    echo '<img src="' . $this->misc->icon('ForeignKey') . '" alt="[referenced key]" />';
                 }
 
                 echo htmlentities($h, ENT_QUOTES, 'UTF-8'), '</th>';
@@ -66,11 +66,11 @@ class AcinsertController extends BaseController
                     $finfo = $res->fetchField($j++);
                     if (in_array($n, $fkeynames)) {
                         echo "<td><a href=\"javascript:void(0)\" class=\"fkval\" name=\"{$keyspos[$n]}\">",
-                        $misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
+                        $this->misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
                             '</a></td>';
                     } else {
                         echo '<td><a href="javascript:void(0)">',
-                        $misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
+                        $this->misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
                             '</a></td>';
                     }
                 }

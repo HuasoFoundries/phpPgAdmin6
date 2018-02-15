@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class ConstraintsController extends BaseController
 {
-    public $_name = 'ConstraintsController';
+    public $controller_name = 'ConstraintsController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -111,9 +111,9 @@ class ConstraintsController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $cnPre = function (&$rowdata) use ($data) {
             if (is_null($rowdata->fields['consrc'])) {
@@ -239,9 +239,9 @@ class ConstraintsController extends BaseController
     public function addForeignKey($stage, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
             $_POST['name'] = '';
@@ -370,7 +370,7 @@ class ConstraintsController extends BaseController
                     echo "</table>\n";
 
                     echo "<p><input type=\"hidden\" name=\"action\" value=\"save_add_foreign_key\" />\n";
-                    echo $misc->form;
+                    echo $this->misc->form;
                     echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
                     echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
                     echo '<input type="hidden" name="target" value="', htmlspecialchars(serialize($_REQUEST['target'])), "\" />\n";
@@ -461,7 +461,7 @@ class ConstraintsController extends BaseController
                 echo "</table>\n";
 
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"save_add_foreign_key\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
                 echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
@@ -478,9 +478,9 @@ class ConstraintsController extends BaseController
     public function addPrimaryOrUniqueKey($type, $confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
             $_POST['name'] = '';
@@ -571,7 +571,7 @@ class ConstraintsController extends BaseController
             echo "</table>\n";
 
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_add_primary_key\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="type" value="', htmlspecialchars($type), "\" />\n";
             echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
@@ -621,9 +621,9 @@ class ConstraintsController extends BaseController
     public function addCheck($confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
             $_POST['name'] = '';
@@ -652,7 +652,7 @@ class ConstraintsController extends BaseController
 
             echo "<input type=\"hidden\" name=\"action\" value=\"save_add_check\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"submit\" name=\"ok\" value=\"{$lang['stradd']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -677,23 +677,23 @@ class ConstraintsController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('constraint');
             $this->printTitle($lang['strdrop'], 'pg.constraint.drop');
 
-            echo '<p>', sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']),
-                $misc->printVal($_REQUEST['table'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdropconstraint'], $this->misc->printVal($_REQUEST['constraint']),
+                $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/constraints.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";
             echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";

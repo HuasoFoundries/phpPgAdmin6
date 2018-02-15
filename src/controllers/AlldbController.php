@@ -9,13 +9,13 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class AlldbController extends BaseController
 {
-    public $_name       = 'AlldbController';
-    public $table_place = 'alldb-databases';
+    public $controller_name = 'AlldbController';
+    public $table_place     = 'alldb-databases';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
         $action = $this->action;
 
@@ -78,20 +78,20 @@ class AlldbController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $this->printTrail('server');
         $this->printTabs('server', 'databases');
         $this->printMsg($msg);
-        $data      = $misc->getDatabaseAccessor();
+        $data      = $this->misc->getDatabaseAccessor();
         $databases = $data->getDatabases();
 
         $columns = [
             'database'   => [
                 'title' => $lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url'   => SUBFOLDER . "/redirect/database?{$misc->href}&amp;",
+                'url'   => SUBFOLDER . "/redirect/database?{$this->misc->href}&amp;",
                 'vars'  => ['database' => 'datname'],
             ],
             'owner'      => [
@@ -215,13 +215,13 @@ class AlldbController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $databases = $data->getDatabases();
 
-        $reqvars = $misc->getRequestVars('database');
+        $reqvars = $this->misc->getRequestVars('database');
 
         //$this->prtrace($reqvars);
 
@@ -243,9 +243,9 @@ class AlldbController extends BaseController
     public function doAlter($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('database');
@@ -285,7 +285,7 @@ class AlldbController extends BaseController
             }
             echo "</table>\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo '<input type="hidden" name="oldname" value="',
             htmlspecialchars($_REQUEST['alterdatabase']), "\" />\n";
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
@@ -315,9 +315,9 @@ class AlldbController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['dropdatabase']) && empty($_REQUEST['ma'])) {
             return $this->doDefault($lang['strspecifydatabasetodrop']);
@@ -332,16 +332,16 @@ class AlldbController extends BaseController
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfdropdatabase'], $misc->printVal($a['database'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfdropdatabase'], $this->misc->printVal($a['database'])), "</p>\n";
                     printf('<input type="hidden" name="dropdatabase[]" value="%s" />', htmlspecialchars($a['database']));
                 }
             } else {
-                echo '<p>', sprintf($lang['strconfdropdatabase'], $misc->printVal($_REQUEST['dropdatabase'])), "</p>\n";
+                echo '<p>', sprintf($lang['strconfdropdatabase'], $this->misc->printVal($_REQUEST['dropdatabase'])), "</p>\n";
                 echo '<input type="hidden" name="dropdatabase" value="', htmlspecialchars($_REQUEST['dropdatabase']), "\" />\n";
             } // END if multi drop
 
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
             echo "</form>\n";
@@ -381,9 +381,9 @@ class AlldbController extends BaseController
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('server');
         $this->printTitle($lang['strcreatedatabase'], 'pg.database.create');
@@ -451,7 +451,7 @@ class AlldbController extends BaseController
         while (list($key) = each($data->codemap)) {
             echo "\t\t\t\t<option value=\"", htmlspecialchars($key), '"',
             ($key == $_POST['formEncoding']) ? ' selected="selected"' : '', '>',
-            $misc->printVal($key), "</option>\n";
+            $this->misc->printVal($key), "</option>\n";
         }
         echo "\t\t\t</select>\n";
         echo "\t\t</td>\n\t</tr>\n";
@@ -504,7 +504,7 @@ class AlldbController extends BaseController
 
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
@@ -516,9 +516,9 @@ class AlldbController extends BaseController
     public function doSaveCreate()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Default tablespace to null if it isn't set
         if (!isset($_POST['formSpc'])) {
@@ -561,9 +561,9 @@ class AlldbController extends BaseController
     public function doExport($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('server');
         $this->printTabs('server', 'export');
@@ -602,7 +602,7 @@ class AlldbController extends BaseController
 
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo "<input type=\"hidden\" name=\"subject\" value=\"server\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }

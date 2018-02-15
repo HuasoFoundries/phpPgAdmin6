@@ -7,7 +7,7 @@ namespace PHPPgAdmin\Controller;
  */
 class IntroController extends BaseController
 {
-    public $_name = 'IntroController';
+    public $controller_name = 'IntroController';
 
     public function render()
     {

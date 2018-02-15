@@ -11,17 +11,16 @@ class HTMLController
 {
     use \PHPPgAdmin\HelperTrait;
 
-    private $container      = null;
-    private $data           = null;
-    private $database       = null;
-    private $server_id      = null;
-    public $form            = '';
-    public $href            = '';
-    public $lang            = [];
-    public $action          = '';
-    public $_name           = 'HTMLController';
-    public $controller_name = 'HTMLController';
-    public $_title          = 'base';
+    private $container       = null;
+    private $data            = null;
+    private $database        = null;
+    private $server_id       = null;
+    public $form             = '';
+    public $href             = '';
+    public $lang             = [];
+    public $action           = '';
+    public $controller_name  = 'HTMLController';
+    public $controller_title = 'html';
 
     /* Constructor */
     public function __construct(\Slim\Container $container, $controller_name = null)
@@ -168,7 +167,8 @@ class HTMLController
     public static function printCombo(&$arrOptions, $szName, $bBlankEntry = true, $szDefault = '', $bMultiple = false, $iSize = 10)
     {
         $htmlOut = '';
-        if ($bMultiple) { // If multiple select combo
+        if ($bMultiple) {
+            // If multiple select combo
             $htmlOut .= "<select rel=\"printCombo\" name=\"$szName\" id=\"$szName\" multiple=\"multiple\" size=\"$iSize\">" . "\n";
         } else {
             $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"$szName\" id=\"$szName\">" . "\n";

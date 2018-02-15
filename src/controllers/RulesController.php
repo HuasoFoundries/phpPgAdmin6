@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class RulesController extends BaseController
 {
-    public $_name = 'RulesController';
+    public $controller_name = 'RulesController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -63,9 +63,9 @@ class RulesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail($_REQUEST['subject']);
         $this->printTabs($_REQUEST['subject'], 'rules');
@@ -131,13 +131,13 @@ class RulesController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
 
-        $reqvars = $misc->getRequestVars($_REQUEST['subject']);
+        $reqvars = $this->misc->getRequestVars($_REQUEST['subject']);
 
         $attrs = [
             'text' => Decorator::field('rulename'),
@@ -153,9 +153,9 @@ class RulesController extends BaseController
     public function createRule($confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
             $_POST['name'] = '';
@@ -213,7 +213,7 @@ class RulesController extends BaseController
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
             '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"submit\" name=\"ok\" value=\"{$lang['strcreate']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -239,16 +239,16 @@ class RulesController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail($_REQUEST['subject']);
             $this->printTitle($lang['strdrop'], 'pg.rule.drop');
 
-            echo '<p>', sprintf($lang['strconfdroprule'], $misc->printVal($_REQUEST['rule']),
-                $misc->printVal($_REQUEST[$_REQUEST['reltype']])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdroprule'], $this->misc->printVal($_REQUEST['rule']),
+                $this->misc->printVal($_REQUEST[$_REQUEST['reltype']])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/rules.php\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
@@ -256,7 +256,7 @@ class RulesController extends BaseController
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['reltype']),
             '" value="', htmlspecialchars($_REQUEST[$_REQUEST['reltype']]), "\" />\n";
             echo '<input type="hidden" name="rule" value="', htmlspecialchars($_REQUEST['rule']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
             echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";

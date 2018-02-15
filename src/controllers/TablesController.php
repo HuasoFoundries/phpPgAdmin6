@@ -10,14 +10,14 @@ use \PHPPgAdmin\Decorators\Decorator;
 class TablesController extends BaseController
 {
     use AdminTrait;
-    public $script      = 'tables.php';
-    public $_name       = 'TablesController';
-    public $table_place = 'tables-tables';
+    public $script          = 'tables.php';
+    public $controller_name = 'TablesController';
+    public $table_place     = 'tables-tables';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
         $action = $this->action;
 
@@ -27,7 +27,7 @@ class TablesController extends BaseController
             return $this->doSubTree();
         }
 
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $header_template = 'header.twig';
         $footer_template = 'footer.twig';
@@ -132,9 +132,9 @@ class TablesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'tables');
@@ -146,7 +146,7 @@ class TablesController extends BaseController
             'table'      => [
                 'title' => $lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url'   => SUBFOLDER . "/redirect/table?{$misc->href}&amp;",
+                'url'   => SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
                 'vars'  => ['table' => 'relname'],
             ],
             'owner'      => [
@@ -344,15 +344,15 @@ class TablesController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        //\PC::debug($misc->getDatabase(), 'getDatabase');
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        //\PC::debug($this->misc->getDatabase(), 'getDatabase');
 
         $tables = $data->getTables();
 
-        $reqvars = $misc->getRequestVars('table');
+        $reqvars = $this->misc->getRequestVars('table');
 
         $attrs = [
             'text'       => Decorator::field('relname'),
@@ -369,13 +369,13 @@ class TablesController extends BaseController
     public function doSubTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $tabs    = $misc->getNavTabs('table');
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $tabs    = $this->misc->getNavTabs('table');
         $items   = $this->adjustTabsForTree($tabs);
-        $reqvars = $misc->getRequestVars('table');
+        $reqvars = $this->misc->getRequestVars('table');
 
         $attrs = [
             'text'   => Decorator::field('title'),
@@ -404,9 +404,9 @@ class TablesController extends BaseController
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['stage'])) {
             $_REQUEST['stage'] = 1;
@@ -480,7 +480,7 @@ class TablesController extends BaseController
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"create\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo "<input type=\"submit\" value=\"{$lang['strnext']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
@@ -542,7 +542,7 @@ class TablesController extends BaseController
                         $types_for_js[strtolower($v)] = 1;
                         echo "\t\t\t\t<option value=\"", htmlspecialchars($v), '"',
                         (isset($_REQUEST['type'][$i]) && $v == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', '>',
-                        $misc->printVal($v), "</option>\n";
+                        $this->misc->printVal($v), "</option>\n";
                     }
                     $types->moveFirst();
                     while (!$types->EOF) {
@@ -550,7 +550,7 @@ class TablesController extends BaseController
                         $types_for_js[$typname] = 1;
                         echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), '"',
                         (isset($_REQUEST['type'][$i]) && $typname == $_REQUEST['type'][$i]) ? ' selected="selected"' : '', '>',
-                        $misc->printVal($typname), "</option>\n";
+                        $this->misc->printVal($typname), "</option>\n";
                         $types->moveNext();
                     }
                     echo "\t\t\t</select>\n\t\t\n";
@@ -588,7 +588,7 @@ class TablesController extends BaseController
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"create\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
                 echo '<input type="hidden" name="fields" value="', htmlspecialchars($_REQUEST['fields']), "\" />\n";
                 if (isset($_REQUEST['withoutoids'])) {
@@ -644,7 +644,7 @@ class TablesController extends BaseController
                     $_REQUEST['uniquekey'], $_REQUEST['primarykey']);
 
                 if ($status == 0) {
-                    $misc->setReloadBrowser(true);
+                    $this->misc->setReloadBrowser(true);
                     return $this->doDefault($lang['strtablecreated']);
                 } elseif ($status == -1) {
                     $_REQUEST['stage'] = 2;
@@ -669,9 +669,9 @@ class TablesController extends BaseController
     public function doCreateLike($confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!$confirm) {
             if (!isset($_REQUEST['name'])) {
@@ -746,7 +746,7 @@ class TablesController extends BaseController
             echo '</table>';
 
             echo "<input type=\"hidden\" name=\"action\" value=\"confcreatelike\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -768,7 +768,7 @@ class TablesController extends BaseController
                 isset($_REQUEST['withconstraints']), isset($_REQUEST['withindexes']), $_REQUEST['tablespace']);
 
             if ($status == 0) {
-                $misc->setReloadBrowser(true);
+                $this->misc->setReloadBrowser(true);
                 return $this->doDefault($lang['strtablecreated']);
             } else {
                 $this->doCreateLike(false, $lang['strtablecreatedbad']);
@@ -783,9 +783,9 @@ class TablesController extends BaseController
     public function doSelectRows($confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('table');
@@ -833,8 +833,8 @@ class TablesController extends BaseController
                     echo '<td style="white-space:nowrap;">';
                     echo '<input type="checkbox" name="show[', htmlspecialchars($attrs->fields['attname']), ']"',
                     isset($_REQUEST['show'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></td>';
-                    echo '<td style="white-space:nowrap;">', $misc->printVal($attrs->fields['attname']), '</td>';
-                    echo '<td style="white-space:nowrap;">', $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), '</td>';
+                    echo '<td style="white-space:nowrap;">', $this->misc->printVal($attrs->fields['attname']), '</td>';
+                    echo '<td style="white-space:nowrap;">', $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), '</td>';
                     echo '<td style="white-space:nowrap;">';
                     echo "<select name=\"ops[{$attrs->fields['attname']}]\">\n";
                     foreach (array_keys($data->selectOps) as $v) {
@@ -858,7 +858,7 @@ class TablesController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"selectrows\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo "<input type=\"hidden\" name=\"subject\" value=\"table\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$lang['strselect']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -909,9 +909,9 @@ class TablesController extends BaseController
     public function doInsertRow($confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('table');
@@ -922,7 +922,7 @@ class TablesController extends BaseController
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
             if (($conf['autocomplete'] != 'disable')) {
-                $fksprops = $misc->getAutocompleteFKProperties($_REQUEST['table']);
+                $fksprops = $this->misc->getAutocompleteFKProperties($_REQUEST['table']);
                 if ($fksprops !== false) {
                     echo $fksprops['code'];
                 }
@@ -958,9 +958,9 @@ class TablesController extends BaseController
                     // Continue drawing row
                     $id = (($i % 2) == 0 ? '1' : '2');
                     echo "<tr class=\"data{$id}\">\n";
-                    echo '<td style="white-space:nowrap;">', $misc->printVal($attrs->fields['attname']), '</td>';
+                    echo '<td style="white-space:nowrap;">', $this->misc->printVal($attrs->fields['attname']), '</td>';
                     echo "<td style=\"white-space:nowrap;\">\n";
-                    echo $misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
+                    echo $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
                     echo "<input type=\"hidden\" name=\"types[{$attrs->fields['attnum']}]\" value=\"",
                     htmlspecialchars($attrs->fields['type']), '" /></td>';
                     echo "<td style=\"white-space:nowrap;\">\n";
@@ -1018,7 +1018,7 @@ class TablesController extends BaseController
                 echo "<p>{$lang['strnofieldsforinsert']}</p>\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
             }
-            echo $misc->form;
+            echo $this->misc->form;
             echo "</form>\n";
         } else {
             if (!isset($_POST['values'])) {
@@ -1056,9 +1056,9 @@ class TablesController extends BaseController
     public function doEmpty($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             return $this->doDefault($lang['strspecifytabletoempty']);
@@ -1072,7 +1072,7 @@ class TablesController extends BaseController
                 echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfemptytable'], $misc->printVal($a['table'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfemptytable'], $this->misc->printVal($a['table'])), "</p>\n";
                     printf('<input type="hidden" name="table[]" value="%s" />', htmlspecialchars($a['table']));
                 }
             } // END mutli empty
@@ -1080,14 +1080,14 @@ class TablesController extends BaseController
                 $this->printTrail('table');
                 $this->printTitle($lang['strempty'], 'pg.table.empty');
 
-                echo '<p>', sprintf($lang['strconfemptytable'], $misc->printVal($_REQUEST['table'])), "</p>\n";
+                echo '<p>', sprintf($lang['strconfemptytable'], $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
                 echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             } // END not mutli empty
 
             echo "<input type=\"hidden\" name=\"action\" value=\"empty\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"empty\" value=\"{$lang['strempty']}\" /> <input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
             echo "</form>\n";
         } // END if confirm
@@ -1123,9 +1123,9 @@ class TablesController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             return $this->doDefault($lang['strspecifytabletodrop']);
@@ -1140,21 +1140,21 @@ class TablesController extends BaseController
                 echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfdroptable'], $misc->printVal($a['table'])), "</p>\n";
+                    echo '<p>', sprintf($lang['strconfdroptable'], $this->misc->printVal($a['table'])), "</p>\n";
                     printf('<input type="hidden" name="table[]" value="%s" />', htmlspecialchars($a['table']));
                 }
             } else {
                 $this->printTrail('table');
                 $this->printTitle($lang['strdrop'], 'pg.table.drop');
 
-                echo '<p>', sprintf($lang['strconfdroptable'], $misc->printVal($_REQUEST['table'])), "</p>\n";
+                echo '<p>', sprintf($lang['strconfdroptable'], $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
                 echo '<form action="' . SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             } // END if multi drop
 
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
@@ -1178,7 +1178,7 @@ class TablesController extends BaseController
                 }
                 if ($data->endTransaction() == 0) {
                     // Everything went fine, back to the Default page....
-                    $misc->setReloadBrowser(true);
+                    $this->misc->setReloadBrowser(true);
                     return $this->doDefault($msg);
                 } else {
                     return $this->doDefault($lang['strtabledroppedbad']);
@@ -1186,7 +1186,7 @@ class TablesController extends BaseController
             } else {
                 $status = $data->dropTable($_POST['table'], isset($_POST['cascade']));
                 if ($status == 0) {
-                    $misc->setReloadBrowser(true);
+                    $this->misc->setReloadBrowser(true);
                     return $this->doDefault($lang['strtabledropped']);
                 } else {
                     return $this->doDefault($lang['strtabledroppedbad']);

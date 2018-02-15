@@ -9,14 +9,14 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class RolesController extends BaseController
 {
-    public $_name = 'RolesController';
+    public $controller_name = 'RolesController';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         $this->printHeader($lang['strroles']);
@@ -86,9 +86,9 @@ class RolesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $renderRoleConnLimit = function ($val) use ($lang) {
             return $val == '-1' ? $lang['strnolimit'] : htmlspecialchars($val);
@@ -108,7 +108,7 @@ class RolesController extends BaseController
             'role'       => [
                 'title' => $lang['strrole'],
                 'field' => Decorator::field('rolname'),
-                'url'   => SUBFOLDER . "/redirect/role?action=properties&amp;{$misc->href}&amp;",
+                'url'   => SUBFOLDER . "/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['rolename' => 'rolname'],
             ],
             'superuser'  => [
@@ -205,9 +205,9 @@ class RolesController extends BaseController
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['formRolename'])) {
             $_POST['formRolename'] = '';
@@ -281,7 +281,7 @@ class RolesController extends BaseController
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
+                (in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                 $roles->moveNext();
             }
             echo "\t\t\t</select>\n";
@@ -294,7 +294,7 @@ class RolesController extends BaseController
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
+                (in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                 $roles->moveNext();
             }
             echo "\t\t\t</select>\n";
@@ -307,7 +307,7 @@ class RolesController extends BaseController
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
+                (in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                 $roles->moveNext();
             }
             echo "\t\t\t</select>\n";
@@ -316,7 +316,7 @@ class RolesController extends BaseController
 
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
@@ -328,9 +328,9 @@ class RolesController extends BaseController
     public function doSaveCreate()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['memberof'])) {
             $_POST['memberof'] = [];
@@ -368,9 +368,9 @@ class RolesController extends BaseController
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('role');
         $this->printTitle($lang['stralter'], 'pg.role.alter');
@@ -379,7 +379,7 @@ class RolesController extends BaseController
         $roledata = $data->getRole($_REQUEST['rolename']);
 
         if ($roledata->recordCount() > 0) {
-            $server_info                       = $misc->getServerInfo();
+            $server_info                       = $this->misc->getServerInfo();
             $canRename                         = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
             $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
             $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
@@ -420,7 +420,7 @@ class RolesController extends BaseController
             echo '<form action="' . SUBFOLDER . "/src/views/roles.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$lang['strname']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['formNewRoleName']) . '" />' : $misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['formNewRoleName']) . '" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strpassword']}</th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strconfirm']}</th>\n";
@@ -496,7 +496,7 @@ class RolesController extends BaseController
                 while (!$roles->EOF) {
                     $rolename = $roles->fields['rolname'];
                     echo "\t\t\t\t<option value=\"{$rolename}\"",
-                    (in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
+                    (in_array($rolename, $_POST['memberof']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                     $roles->moveNext();
                 }
                 echo "\t\t\t</select>\n";
@@ -509,7 +509,7 @@ class RolesController extends BaseController
                 while (!$roles->EOF) {
                     $rolename = $roles->fields['rolname'];
                     echo "\t\t\t\t<option value=\"{$rolename}\"",
-                    (in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
+                    (in_array($rolename, $_POST['members']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                     $roles->moveNext();
                 }
                 echo "\t\t\t</select>\n";
@@ -522,7 +522,7 @@ class RolesController extends BaseController
                 while (!$roles->EOF) {
                     $rolename = $roles->fields['rolname'];
                     echo "\t\t\t\t<option value=\"{$rolename}\"",
-                    (in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), '>', $misc->printVal($rolename), "</option>\n";
+                    (in_array($rolename, $_POST['adminmembers']) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
                     $roles->moveNext();
                 }
                 echo "\t\t\t</select>\n";
@@ -535,7 +535,7 @@ class RolesController extends BaseController
             echo '<input type="hidden" name="memberofold" value="', isset($_POST['memberofold']) ? $_POST['memberofold'] : htmlspecialchars($memberofold), "\" />\n";
             echo '<input type="hidden" name="membersold" value="', isset($_POST['membersold']) ? $_POST['membersold'] : htmlspecialchars($membersold), "\" />\n";
             echo '<input type="hidden" name="adminmembersold" value="', isset($_POST['adminmembersold']) ? $_POST['adminmembersold'] : htmlspecialchars($adminmembersold), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -550,9 +550,9 @@ class RolesController extends BaseController
     public function doSaveAlter()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['memberof'])) {
             $_POST['memberof'] = [];
@@ -592,20 +592,20 @@ class RolesController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('role');
             $this->printTitle($lang['strdroprole'], 'pg.role.drop');
 
-            echo '<p>', sprintf($lang['strconfdroprole'], $misc->printVal($_REQUEST['rolename'])), "</p>\n";
+            echo '<p>', sprintf($lang['strconfdroprole'], $this->misc->printVal($_REQUEST['rolename'])), "</p>\n";
 
             echo '<form action="' . SUBFOLDER . "/src/views/roles.php\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -625,9 +625,9 @@ class RolesController extends BaseController
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('role');
         $this->printTitle($lang['strproperties'], 'pg.role');
@@ -657,17 +657,17 @@ class RolesController extends BaseController
             echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strcanlogin']}</td>\n";
             echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcanlogin']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
             echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strconnlimit']}</td>\n";
-            echo "\t\t<td class=\"data1\">", ($roledata->fields['rolconnlimit'] == '-1' ? $lang['strnolimit'] : $misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
+            echo "\t\t<td class=\"data1\">", ($roledata->fields['rolconnlimit'] == '-1' ? $lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
             echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strexpires']}</td>\n";
-            echo "\t\t<td class=\"data2\">", ($roledata->fields['rolvaliduntil'] == 'infinity' || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
+            echo "\t\t<td class=\"data2\">", ($roledata->fields['rolvaliduntil'] == 'infinity' || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
             echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strsessiondefaults']}</td>\n";
-            echo "\t\t<td class=\"data1\">", $misc->printVal($roledata->fields['rolconfig']), "</td>\n";
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), "</td>\n";
             echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strmemberof']}</td>\n";
             echo "\t\t<td class=\"data2\">";
             $memberof = $data->getMemberOf($_REQUEST['rolename']);
             if ($memberof->recordCount() > 0) {
                 while (!$memberof->EOF) {
-                    echo $misc->printVal($memberof->fields['rolname']), "<br />\n";
+                    echo $this->misc->printVal($memberof->fields['rolname']), "<br />\n";
                     $memberof->moveNext();
                 }
             }
@@ -677,7 +677,7 @@ class RolesController extends BaseController
             $members = $data->getMembers($_REQUEST['rolename']);
             if ($members->recordCount() > 0) {
                 while (!$members->EOF) {
-                    echo $misc->printVal($members->fields['rolname']), "<br />\n";
+                    echo $this->misc->printVal($members->fields['rolname']), "<br />\n";
                     $members->moveNext();
                 }
             }
@@ -687,7 +687,7 @@ class RolesController extends BaseController
             $adminmembers = $data->getMembers($_REQUEST['rolename'], 't');
             if ($adminmembers->recordCount() > 0) {
                 while (!$adminmembers->EOF) {
-                    echo $misc->printVal($adminmembers->fields['rolname']), "<br />\n";
+                    echo $this->misc->printVal($adminmembers->fields['rolname']), "<br />\n";
                     $adminmembers->moveNext();
                 }
             }
@@ -749,11 +749,11 @@ class RolesController extends BaseController
     public function doAccount($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $server_info = $misc->getServerInfo();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $server_info = $this->misc->getServerInfo();
 
         $roledata             = $data->getRole($server_info['username']);
         $_REQUEST['rolename'] = $server_info['username'];
@@ -777,14 +777,14 @@ class RolesController extends BaseController
             echo "\t\t<th class=\"data\">{$lang['strexpires']}</th>\n";
             echo "\t\t<th class=\"data\">{$lang['strsessiondefaults']}</th>\n";
             echo "\t</tr>\n";
-            echo "\t<tr>\n\t\t<td class=\"data1\">", $misc->printVal($roledata->fields['rolname']), "</td>\n";
-            echo "\t\t<td class=\"data1\">", $misc->printVal($roledata->fields['rolsuper'], 'yesno'), "</td>\n";
-            echo "\t\t<td class=\"data1\">", $misc->printVal($roledata->fields['rolcreatedb'], 'yesno'), "</td>\n";
-            echo "\t\t<td class=\"data1\">", $misc->printVal($roledata->fields['rolcreaterole'], 'yesno'), "</td>\n";
-            echo "\t\t<td class=\"data1\">", $misc->printVal($roledata->fields['rolinherit'], 'yesno'), "</td>\n";
-            echo "\t\t<td class=\"data1\">", ($roledata->fields['rolconnlimit'] == '-1' ? $lang['strnolimit'] : $misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
-            echo "\t\t<td class=\"data1\">", ($roledata->fields['rolvaliduntil'] == 'infinity' || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
-            echo "\t\t<td class=\"data1\">", $misc->printVal($roledata->fields['rolconfig']), "</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolname']), "</td>\n";
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolsuper'], 'yesno'), "</td>\n";
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreatedb'], 'yesno'), "</td>\n";
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreaterole'], 'yesno'), "</td>\n";
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolinherit'], 'yesno'), "</td>\n";
+            echo "\t\t<td class=\"data1\">", ($roledata->fields['rolconnlimit'] == '-1' ? $lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
+            echo "\t\t<td class=\"data1\">", ($roledata->fields['rolvaliduntil'] == 'infinity' || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), "</td>\n";
             echo "\t</tr>\n</table>\n";
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";
@@ -810,11 +810,11 @@ class RolesController extends BaseController
     public function doChangePassword($confirm, $msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
-        $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
 
-        $server_info = $misc->getServerInfo();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+
+        $server_info = $this->misc->getServerInfo();
 
         if ($confirm) {
             $_REQUEST['rolename'] = $server_info['username'];
@@ -839,7 +839,7 @@ class RolesController extends BaseController
             echo "\t\t<td><input type=\"password\" name=\"confirm\" size=\"32\" value=\"\" /></td>\n\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"changepassword\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"ok\" value=\"{$lang['strok']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
             echo "</p></form>\n";

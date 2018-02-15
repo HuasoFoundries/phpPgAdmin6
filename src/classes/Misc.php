@@ -26,7 +26,7 @@ class Misc
     public $appVersion         = '';
     public $form               = '';
     public $href               = '';
-    public $_name              = 'Misc';
+    public $controller_name    = 'Misc';
     public $lang               = [];
     private $server_info       = null;
     private $error_msg         = '';
@@ -2123,7 +2123,7 @@ class Misc
                 }
                 $connection_html .= "</select></label>\n";
             } else {
-                $server_info = $misc->getServerInfo();
+                $server_info = $this->misc->getServerInfo();
                 $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($server_info['defaultdb']) . "\" />\n";
             }
         }

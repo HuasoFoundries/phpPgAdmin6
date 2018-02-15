@@ -9,12 +9,12 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class ConversionsController extends BaseController
 {
-    public $_name = 'ConversionsController';
+    public $controller_name = 'ConversionsController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -43,9 +43,9 @@ class ConversionsController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'conversions');
@@ -85,13 +85,13 @@ class ConversionsController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $constraints = $data->getConstraints($_REQUEST['table']);
 
-        $reqvars = $misc->getRequestVars('schema');
+        $reqvars = $this->misc->getRequestVars('schema');
 
         $getIcon = function ($f) {
             switch ($f['contype']) {

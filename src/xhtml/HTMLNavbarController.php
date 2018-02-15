@@ -8,7 +8,7 @@ namespace PHPPgAdmin\XHtml;
  */
 class HTMLNavbarController extends HTMLController
 {
-    public $_name = 'HTMLNavbarController';
+    public $controller_name = 'HTMLNavbarController';
 
     /**
      * Display a bread crumb trail.
@@ -19,8 +19,8 @@ class HTMLNavbarController extends HTMLController
         if ($from === null) {
             $from = __METHOD__;
         }
-        $lang = $this->lang;
-        $misc = $this->misc;
+        $lang       = $this->lang;
+        $this->misc = $this->misc;
 
         $trail_html = $this->printTopbar(false, $from);
 
@@ -53,7 +53,7 @@ class HTMLNavbarController extends HTMLController
                 $iconalt = 'Database Root';
             }
 
-            if (isset($crumb['icon']) && $icon = $misc->icon($crumb['icon'])) {
+            if (isset($crumb['icon']) && $icon = $this->misc->icon($crumb['icon'])) {
                 $crumblink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$iconalt}\" /></span>";
             }
 
@@ -124,13 +124,13 @@ class HTMLNavbarController extends HTMLController
             $from = __METHOD__;
         }
 
-        $lang = $this->lang;
-        $misc = $this->misc;
-        $data = $misc->getDatabaseAccessor();
+        $lang       = $this->lang;
+        $this->misc = $this->misc;
+        $data       = $this->misc->getDatabaseAccessor();
 
         if (is_string($alltabs)) {
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
-            $alltabs                            = $misc->getNavTabs($alltabs);
+            $alltabs                            = $this->misc->getNavTabs($alltabs);
         }
         //$this->prtrace($tabs);
         $tabs_html = '';
@@ -143,7 +143,7 @@ class HTMLNavbarController extends HTMLController
                     $tabs[$tab_id]            = $tab;
                     $tabs[$tab_id]['active']  = $active  = ($tab_id == $activetab) ? ' active' : '';
                     $tabs[$tab_id]['tablink'] = str_replace(['&amp;', '.php'], ['&', ''], htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
-                    if (isset($tab['icon']) && $icon = $misc->icon($tab['icon'])) {
+                    if (isset($tab['icon']) && $icon = $this->misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
                     }
                     if (isset($tab['help'])) {
@@ -179,10 +179,10 @@ class HTMLNavbarController extends HTMLController
      */
     public function getLastTabURL($section)
     {
-        $lang = $this->lang;
-        $misc = $this->misc;
+        $lang       = $this->lang;
+        $this->misc = $this->misc;
 
-        $tabs = $misc->getNavTabs($section);
+        $tabs = $this->misc->getNavTabs($section);
 
         if (isset($_SESSION['webdbLastTab'][$section]) && isset($tabs[$_SESSION['webdbLastTab'][$section]])) {
             $tab = $tabs[$_SESSION['webdbLastTab'][$section]];
@@ -206,14 +206,14 @@ class HTMLNavbarController extends HTMLController
 
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $misc           = $this->misc;
-        $appName        = $misc->appName;
-        $appVersion     = $misc->appVersion;
-        $appLangFiles   = $misc->appLangFiles;
+        $this->misc     = $this->misc;
+        $appName        = $this->misc->appName;
+        $appVersion     = $this->misc->appVersion;
+        $appLangFiles   = $this->misc->appLangFiles;
 
-        $server_info = $misc->getServerInfo();
-        $server_id   = $misc->getServerId();
-        $reqvars     = $misc->getRequestVars('table');
+        $server_info = $this->misc->getServerInfo();
+        $server_id   = $this->misc->getServerId();
+        $reqvars     = $this->misc->getRequestVars('table');
 
         $topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><table style="width: 100%"><tr><td>';
 
@@ -372,10 +372,10 @@ class HTMLNavbarController extends HTMLController
     {
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $misc           = $this->misc;
-        $appName        = $misc->appName;
+        $this->misc     = $this->misc;
+        $appName        = $this->misc->appName;
 
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $trail = [];
         $vars  = '';
@@ -392,7 +392,7 @@ class HTMLNavbarController extends HTMLController
         }
 
         if (!$done) {
-            $server_info     = $misc->getServerInfo();
+            $server_info     = $this->misc->getServerInfo();
             $trail['server'] = [
                 'title' => $lang['strserver'],
                 'text'  => $server_info['desc'],
@@ -554,8 +554,8 @@ class HTMLNavbarController extends HTMLController
         if ($from === null || $from === false) {
             $from = __METHOD__;
         }
-        $misc      = $this->misc;
-        $list_html = "<ul class=\"{$class}\">\n";
+        $this->misc = $this->misc;
+        $list_html  = "<ul class=\"{$class}\">\n";
         foreach ($links as $link) {
             $list_html .= "\t<li>";
             $list_html .= str_replace('.php', '', $this->printLink($link, false, $from));

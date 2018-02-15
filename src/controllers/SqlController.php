@@ -7,18 +7,18 @@ namespace PHPPgAdmin\Controller;
  */
 class SqlController extends BaseController
 {
-    public $_name      = 'SqlController';
-    public $query      = '';
-    public $subject    = '';
-    public $start_time = null;
-    public $duration   = null;
+    public $controller_name = 'SqlController';
+    public $query           = '';
+    public $subject         = '';
+    public $start_time      = null;
+    public $duration        = null;
 
     public function render()
     {
         $conf = $this->conf;
         $lang = $this->lang;
-        $misc = $this->misc;
-        $data = $misc->getDatabaseAccessor();
+
+        $data = $this->misc->getDatabaseAccessor();
 
         set_time_limit(0);
 
@@ -85,10 +85,10 @@ class SqlController extends BaseController
     public function doDefault()
     {
         $conf        = $this->conf;
-        $misc        = $this->misc;
+        $this->misc  = $this->misc;
         $lang        = $this->lang;
-        $data        = $misc->getDatabaseAccessor();
-        $_connection = $misc->getConnection();
+        $data        = $this->misc->getDatabaseAccessor();
+        $_connection = $this->misc->getConnection();
 
         try {
             // Execute the query.  If it's a script upload, special handling is necessary
@@ -112,8 +112,8 @@ class SqlController extends BaseController
         $conf        = $this->conf;
         $misc        = $this->misc;
         $lang        = $this->lang;
-        $data        = $misc->getDatabaseAccessor();
-        $_connection = $misc->getConnection();
+        $data        = $this->misc->getDatabaseAccessor();
+        $_connection = $this->misc->getConnection();
 
         /**
          * This is a callback function to display the result of each separate query
@@ -176,9 +176,9 @@ class SqlController extends BaseController
     private function execute_query()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Set fetch mode to NUM so that duplicate field names are properly returned
         $data->conn->setFetchMode(ADODB_FETCH_NUM);
@@ -190,14 +190,14 @@ class SqlController extends BaseController
 
         echo htmlspecialchars($this->query);
         echo '</textarea><br>';
-        echo $misc->setForm();
+        echo $this->misc->setForm();
         echo '<input type="submit"/></form>';
 
         // $rs will only be an object if there is no error
         if (is_object($rs)) {
             // Request was run, saving it in history
             if (!isset($_REQUEST['nohistory'])) {
-                $misc->saveScriptHistory($this->query);
+                $this->misc->saveScriptHistory($this->query);
             }
 
             // Now, depending on what happened do various things
@@ -207,7 +207,7 @@ class SqlController extends BaseController
                 echo "<table>\n<tr>";
                 foreach ($rs->fields as $k => $v) {
                     $finfo = $rs->fetchField($k);
-                    echo '<th class="data">', $misc->printVal($finfo->name), '</th>';
+                    echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>';
                 }
                 echo "</tr>\n";
                 $i = 0;
@@ -216,7 +216,7 @@ class SqlController extends BaseController
                     echo "<tr class=\"data{$id}\">\n";
                     foreach ($rs->fields as $k => $v) {
                         $finfo = $rs->fetchField($k);
-                        echo '<td style="white-space:nowrap;">', $misc->printVal($v, $finfo->type, ['null' => true]), '</td>';
+                        echo '<td style="white-space:nowrap;">', $this->misc->printVal($v, $finfo->type, ['null' => true]), '</td>';
                     }
                     echo "</tr>\n";
                     $rs->moveNext();
@@ -237,9 +237,9 @@ class SqlController extends BaseController
     private function doFooter($doBody = true, $template = 'footer.twig')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // May as well try to time the query
         if ($this->start_time !== null) {
@@ -250,7 +250,7 @@ class SqlController extends BaseController
         }
 
         // Reload the browser as we may have made schema changes
-        $misc->setReloadBrowser(true);
+        $this->misc->setReloadBrowser(true);
 
         // Display duration if we know it
         if ($this->duration !== null) {
@@ -271,7 +271,7 @@ class SqlController extends BaseController
 
         // Return
         if (isset($_REQUEST['return'])) {
-            $urlvars          = $misc->getSubjectParams($_REQUEST['return']);
+            $urlvars          = $this->misc->getSubjectParams($_REQUEST['return']);
             $navlinks['back'] = [
                 'attr'    => [
                     'href' => [

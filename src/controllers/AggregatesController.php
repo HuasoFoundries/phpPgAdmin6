@@ -9,12 +9,12 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class AggregatesController extends BaseController
 {
-    public $_name = 'AggregatesController';
+    public $controller_name = 'AggregatesController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
         $action = $this->action;
@@ -76,9 +76,9 @@ class AggregatesController extends BaseController
     public function doDefault($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         $this->printTrail('schema');
         $this->printTabs('schema', 'aggregates');
         $this->printMsg($msg);
@@ -89,7 +89,7 @@ class AggregatesController extends BaseController
             'aggrname'    => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('proname'),
-                'url'   => SUBFOLDER . "/redirect/aggregate?action=properties&amp;{$misc->href}&amp;",
+                'url'   => SUBFOLDER . "/redirect/aggregate?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
             ],
             'aggrtype'    => [
@@ -170,14 +170,14 @@ class AggregatesController extends BaseController
     public function doTree()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $aggregates = $data->getAggregates();
 
         $proto   = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
-        $reqvars = $misc->getRequestVars('aggregate');
+        $reqvars = $this->misc->getRequestVars('aggregate');
 
         $attrs = [
             'text'    => $proto,
@@ -202,9 +202,9 @@ class AggregatesController extends BaseController
     public function doSaveCreate()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         // Check inputs
         if (trim($_REQUEST['name']) == '') {
             $this->doCreate($lang['straggrneedsname']);
@@ -237,9 +237,9 @@ class AggregatesController extends BaseController
     public function doCreate($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['name'])) {
             $_REQUEST['name'] = '';
@@ -306,7 +306,7 @@ class AggregatesController extends BaseController
 
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo $misc->form;
+        echo $this->misc->form;
         echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
@@ -318,9 +318,9 @@ class AggregatesController extends BaseController
     public function doSaveAlter()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Check inputs
         if (trim($_REQUEST['aggrname']) == '') {
@@ -345,9 +345,9 @@ class AggregatesController extends BaseController
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('aggregate');
         $this->printTitle($lang['stralter'], 'pg.aggregate.alter');
@@ -371,7 +371,7 @@ class AggregatesController extends BaseController
             htmlspecialchars($aggrdata->fields['aggrcomment']), "</textarea></td>\n\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_alter\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo '<input type="hidden" name="aggrname" value="', htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
             echo '<input type="hidden" name="aggrtype" value="', htmlspecialchars($_REQUEST['aggrtype']), "\" />\n";
             echo '<input type="hidden" name="aggrowner" value="', htmlspecialchars($aggrdata->fields['usename']), "\" />\n";
@@ -392,9 +392,9 @@ class AggregatesController extends BaseController
     public function doDrop($confirm)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('aggregate');
@@ -407,7 +407,7 @@ class AggregatesController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="aggrname" value="', htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
             echo '<input type="hidden" name="aggrtype" value="', htmlspecialchars($_REQUEST['aggrtype']), "\" />\n";
-            echo $misc->form;
+            echo $this->misc->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
@@ -428,9 +428,9 @@ class AggregatesController extends BaseController
     public function doProperties($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('aggregate');
         $this->printTitle($lang['strproperties'], 'pg.aggregate');
@@ -460,7 +460,7 @@ class AggregatesController extends BaseController
             echo "<tr>\n\t<th class=\"data left\">{$lang['strowner']}</th>\n";
             echo "\t<td class=\"data1\">", htmlspecialchars($aggrdata->fields['usename']), "</td>\n</tr>\n";
             echo "<tr>\n\t<th class=\"data left\">{$lang['strcomment']}</th>\n";
-            echo "\t<td class=\"data1\">", $misc->printVal($aggrdata->fields['aggrcomment']), "</td>\n</tr>\n";
+            echo "\t<td class=\"data1\">", $this->misc->printVal($aggrdata->fields['aggrcomment']), "</td>\n</tr>\n";
             echo "</table>\n";
         } else {
             echo "<p>{$lang['strnodata']}</p>\n";

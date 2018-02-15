@@ -8,8 +8,8 @@ namespace PHPPgAdmin\XHtml;
  */
 class HTMLHeaderController extends HTMLController
 {
-    public $_name       = 'HTMLHeaderController';
-    private $_no_output = false;
+    public $controller_name = 'HTMLHeaderController';
+    private $_no_output     = false;
 
     /**
      * sets the value of private member variable $_no_output

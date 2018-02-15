@@ -9,9 +9,9 @@ use \PHPPgAdmin\Decorators\Decorator;
  */
 class ColpropertiesController extends BaseController
 {
-    public $_name       = 'ColpropertiesController';
-    public $tableName   = '';
-    public $table_place = 'colproperties-colproperties';
+    public $controller_name = 'ColpropertiesController';
+    public $tableName       = '';
+    public $table_place     = 'colproperties-colproperties';
 
     public function render()
     {
@@ -23,11 +23,11 @@ class ColpropertiesController extends BaseController
             die($lang['strnotableprovided']);
         }
 
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
         $action = $this->action;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($lang['strtables'] . ' - ' . $this->tableName, null, true, 'header_select2.twig');
         $this->printBody();
@@ -59,9 +59,9 @@ class ColpropertiesController extends BaseController
     public function doDefault($msg = '', $isTable = true)
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata) use ($data) {
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
@@ -84,7 +84,7 @@ class ColpropertiesController extends BaseController
 
             // Show comment if any
             if ($attrs->fields['comment'] !== null) {
-                echo '<p class="comment">', $misc->printVal($attrs->fields['comment']), "</p>\n";
+                echo '<p class="comment">', $this->misc->printVal($attrs->fields['comment']), "</p>\n";
             }
 
             $column = [
@@ -216,9 +216,9 @@ class ColpropertiesController extends BaseController
     public function doAlter($msg = '')
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['stage'])) {
             $_REQUEST['stage'] = 1;
@@ -295,7 +295,7 @@ class ColpropertiesController extends BaseController
                         $typname        = $types->fields['typname'];
                         $types_for_js[] = $typname;
                         echo "\t<option value=\"", htmlspecialchars($typname), '"', ($typname == $_REQUEST['type']) ? ' selected="selected"' : '', '>',
-                        $misc->printVal($typname), "</option>\n";
+                        $this->misc->printVal($typname), "</option>\n";
                         $types->moveNext();
                     }
                     echo "</select>\n";
@@ -315,7 +315,7 @@ class ColpropertiesController extends BaseController
                     htmlspecialchars($_REQUEST['length']), "\" /></td>\n";
                 } else {
                     // Otherwise draw the read-only type name
-                    echo '<td>', $misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), "</td>\n";
+                    echo '<td>', $this->misc->printVal($data->formatType($column->fields['type'], $column->fields['atttypmod'])), "</td>\n";
                 }
 
                 echo '<td><input type="checkbox" name="notnull"', (isset($_REQUEST['notnull'])) ? ' checked="checked"' : '', " /></td>\n";
@@ -326,7 +326,7 @@ class ColpropertiesController extends BaseController
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"properties\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
-                echo $misc->form;
+                echo $this->misc->form;
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
                 echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), "\" />\n";
                 echo '<input type="hidden" name="olddefault" value="', htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
@@ -367,7 +367,7 @@ class ColpropertiesController extends BaseController
                 if ($status == 0) {
                     if ($_REQUEST['column'] != $_REQUEST['field']) {
                         $_REQUEST['column'] = $_REQUEST['field'];
-                        $misc->setReloadBrowser(true);
+                        $this->misc->setReloadBrowser(true);
                     }
                     $this->doDefault($sql . "<br/>{$lang['strcolumnaltered']}");
                 } else {

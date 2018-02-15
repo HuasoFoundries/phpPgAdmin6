@@ -7,14 +7,14 @@ namespace PHPPgAdmin\Controller;
  */
 class DbexportController extends BaseController
 {
-    public $_name = 'DbexportController';
+    public $controller_name = 'DbexportController';
 
     public function render()
     {
-        $conf   = $this->conf;
-        $misc   = $this->misc;
+        $conf = $this->conf;
+
         $lang   = $this->lang;
-        $data   = $misc->getDatabaseAccessor();
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         // Prevent timeouts on large exports
@@ -31,11 +31,11 @@ class DbexportController extends BaseController
         $this->prtrace('REQUEST[subject]', $_REQUEST['subject']);
 
         // Check that database dumps are enabled.
-        if ($misc->isDumpEnabled($dumpall)) {
-            $server_info = $misc->getServerInfo();
+        if ($this->misc->isDumpEnabled($dumpall)) {
+            $server_info = $this->misc->getServerInfo();
 
             // Get the path of the pg_dump/pg_dumpall executable
-            $exe = $misc->escapeShellCmd($server_info[$dumpall ? 'pg_dumpall_path' : 'pg_dump_path']);
+            $exe = $this->misc->escapeShellCmd($server_info[$dumpall ? 'pg_dumpall_path' : 'pg_dump_path']);
 
             // Obtain the pg_dump version number and check if the path is good
             $version = [];
@@ -105,7 +105,7 @@ class DbexportController extends BaseController
             switch ($_REQUEST['subject']) {
                 case 'schema':
                     // This currently works for 8.2+ (due to the orthoganl -t -n issue introduced then)
-                    $cmd .= ' -n ' . $misc->escapeShellArg("\"{$f_schema}\"");
+                    $cmd .= ' -n ' . $this->misc->escapeShellArg("\"{$f_schema}\"");
                     break;
                 case 'table':
                 case 'view':
@@ -116,13 +116,13 @@ class DbexportController extends BaseController
                     // Starting in 8.2, -n and -t are orthagonal, so we now schema qualify
                     // the table name in the -t argument and quote both identifiers
                     if (((float) $version[1]) >= 8.2) {
-                        $cmd .= ' -t ' . $misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
+                        $cmd .= ' -t ' . $this->misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
                     } else {
                         // If we are 7.4 or higher, assume they are using 7.4 pg_dump and
                         // set dump schema as well.  Also, mixed case dumping has been fixed
                         // then..
-                        $cmd .= ' -t ' . $misc->escapeShellArg($f_object)
-                        . ' -n ' . $misc->escapeShellArg($f_schema);
+                        $cmd .= ' -t ' . $this->misc->escapeShellArg($f_object)
+                        . ' -n ' . $this->misc->escapeShellArg($f_schema);
                     }
             }
 

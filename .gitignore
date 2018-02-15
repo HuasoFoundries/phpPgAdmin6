@@ -13,3 +13,4 @@ vendor
 fabfile*
 /.idea/*
 phppga
+.php_cs.cache

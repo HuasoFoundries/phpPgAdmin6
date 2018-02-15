@@ -7,15 +7,15 @@ namespace PHPPgAdmin\Controller;
  */
 class BrowserController extends BaseController
 {
-    public $_name = 'BrowserController';
+    public $controller_name = 'BrowserController';
 
     public function render()
     {
         $conf = $this->conf;
-        $misc = $this->misc;
+
         $lang = $this->lang;
 
-        $misc->setNoDBConnection(true);
+        $this->misc->setNoDBConnection(true);
 
         $this->setNoBottomLink(true);
 
