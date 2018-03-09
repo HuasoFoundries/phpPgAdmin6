@@ -297,7 +297,7 @@ class MaterializedviewpropertiesController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $this->printTrail('view');
+        $this->printTrail('matview');
         $this->printTitle($lang['stredit'], 'pg.matview.alter');
         $this->printMsg($msg);
 
@@ -342,8 +342,8 @@ class MaterializedviewpropertiesController extends BaseController
     {
         $lang = $this->lang;
 
-        $this->printTrail('view');
-        $this->printTabs('view', 'export');
+        $this->printTrail('matview');
+        $this->printTabs('matview', 'export');
         $this->printMsg($msg);
 
         echo '<form action="' . \SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
@@ -405,8 +405,8 @@ class MaterializedviewpropertiesController extends BaseController
         // Get view
         $vdata = $data->getView($_REQUEST['matview']);
 
-        $this->printTrail('view');
-        $this->printTabs('view', 'definition');
+        $this->printTrail('matview');
+        $this->printTabs('matview', 'definition');
         $this->printMsg($msg);
 
         if ($vdata->recordCount() > 0) {
@@ -543,7 +543,7 @@ class MaterializedviewpropertiesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
-            $this->printTrail('view');
+            $this->printTrail('matview');
             $this->printTitle($lang['stralter'], 'pg.matview.alter');
             $this->printMsg($msg);
 
