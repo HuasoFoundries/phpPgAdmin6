@@ -2796,17 +2796,22 @@ class Postgres extends ADOdbBase
      * Empties a table in the database
      *
      * @param $table The table to be emptied
+     * @param $cascade True to cascade truncate, false to restrict
      * @return \PHPPgAdmin\Database\A 0 success
      */
-    public function emptyTable($table)
+    public function emptyTable($table, $cascade)
     {
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($table);
 
-        $sql = "DELETE FROM \"{$f_schema}\".\"{$table}\"";
+        $sql = "TRUNCATE TABLE \"{$f_schema}\".\"{$table}\" ";
+        if ($cascade) {
+            $sql = $sql . ' CASCADE';
+        }
 
-        return $this->execute($sql);
+        $status = $this->execute($sql);
+        return [$status, $sql];
     }
 
     /**

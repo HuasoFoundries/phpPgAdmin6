@@ -1125,7 +1125,9 @@ class TablesController extends BaseController
                 echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfemptytable'], $this->misc->printVal($a['table'])), "</p>\n";
+                    echo '<p>' . sprintf($lang['strconfemptytable'], $this->misc->printVal($a['table']));
+
+                    echo "</p>\n";
                     printf('<input type="hidden" name="table[]" value="%s" />', htmlspecialchars($a['table']));
                 }
             } // END mutli empty
@@ -1136,9 +1138,10 @@ class TablesController extends BaseController
                 echo '<p>', sprintf($lang['strconfemptytable'], $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
                 echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
+
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             } // END not mutli empty
-
+            echo "<input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label>";
             echo "<input type=\"hidden\" name=\"action\" value=\"empty\" />\n";
             echo $this->misc->form;
             echo "<input type=\"submit\" name=\"empty\" value=\"{$lang['strempty']}\" /> <input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
@@ -1146,11 +1149,13 @@ class TablesController extends BaseController
         } // END if confirm
         else {
             // Do Empty
+            $msg = '';
             if (is_array($_REQUEST['table'])) {
-                $msg = '';
+
                 foreach ($_REQUEST['table'] as $t) {
-                    $status = $data->emptyTable($t);
+                    list($status, $sql) = $data->emptyTable($t, isset($_POST['cascade']));
                     if (0 == $status) {
+                        $msg .= sprintf('%s<br />', $sql);
                         $msg .= sprintf('%s: %s<br />', htmlentities($t, ENT_QUOTES, 'UTF-8'), $lang['strtableemptied']);
                     } else {
                         $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($t, ENT_QUOTES, 'UTF-8'), $lang['strtableemptiedbad']));
@@ -1161,9 +1166,11 @@ class TablesController extends BaseController
                 $this->doDefault($msg);
             } // END mutli empty
             else {
-                $status = $data->emptyTable($_POST['table']);
+                list($status, $sql) = $data->emptyTable($_POST['table'], isset($_POST['cascade']));
                 if (0 == $status) {
-                    return $this->doDefault($lang['strtableemptied']);
+                    $msg .= sprintf('%s<br />', $sql);
+                    $msg .= sprintf('%s: %s<br />', htmlentities($_POST['table'], ENT_QUOTES, 'UTF-8'), $lang['strtableemptied']);
+                    return $this->doDefault($msg);
                 }
 
                 return $this->doDefault($lang['strtableemptiedbad']);
