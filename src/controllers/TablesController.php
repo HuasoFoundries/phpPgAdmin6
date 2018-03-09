@@ -1151,7 +1151,6 @@ class TablesController extends BaseController
             // Do Empty
             $msg = '';
             if (is_array($_REQUEST['table'])) {
-
                 foreach ($_REQUEST['table'] as $t) {
                     list($status, $sql) = $data->emptyTable($t, isset($_POST['cascade']));
                     if (0 == $status) {
