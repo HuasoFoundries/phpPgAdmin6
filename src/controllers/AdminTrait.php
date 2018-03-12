@@ -66,13 +66,16 @@ trait AdminTrait
             echo "</form>\n";
         } // END single cluster
         else {
+            $msg = '';
             //If multi table cluster
             if ('table' == $type) {
+
                 // cluster one or more table
                 if (is_array($_REQUEST['table'])) {
-                    $msg = '';
+
                     foreach ($_REQUEST['table'] as $o) {
-                        $status = $data->clusterIndex($o);
+                        list($status, $sql) = $data->clusterIndex($o);
+                        $msg .= sprintf('%s<br />', htmlentities($sql, ENT_QUOTES, 'UTF-8'));
                         if (0 == $status) {
                             $msg .= sprintf('%s: %s<br />', htmlentities($o, ENT_QUOTES, 'UTF-8'), $lang['strclusteredgood']);
                         } else {
@@ -84,20 +87,22 @@ trait AdminTrait
                     // Everything went fine, back to the Default page....
                     $this->doDefault($msg);
                 } else {
-                    $status = $data->clusterIndex($_REQUEST['object']);
+                    list($status, $sql) = $data->clusterIndex($_REQUEST['object']);
+                    $msg .= sprintf('%s<br />', htmlentities($sql, ENT_QUOTES, 'UTF-8'));
                     if (0 == $status) {
-                        $this->doAdmin($type, $lang['strclusteredgood']);
+                        $this->doAdmin($type, $msg . $lang['strclusteredgood']);
                     } else {
-                        $this->doAdmin($type, $lang['strclusteredbad']);
+                        $this->doAdmin($type, $msg . $lang['strclusteredbad']);
                     }
                 }
             } else {
                 // Cluster all tables in database
-                $status = $data->clusterIndex();
+                list($status, $sql) = $data->clusterIndex();
+                $msg .= sprintf('%s<br />', htmlentities($sql, ENT_QUOTES, 'UTF-8'));
                 if (0 == $status) {
-                    $this->doAdmin($type, $lang['strclusteredgood']);
+                    $this->doAdmin($type, $msg . $lang['strclusteredgood']);
                 } else {
-                    $this->doAdmin($type, $lang['strclusteredbad']);
+                    $this->doAdmin($type, $msg . $lang['strclusteredbad']);
                 }
             }
         }

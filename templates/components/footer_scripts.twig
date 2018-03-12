@@ -1,5 +1,14 @@
 <!--</div>
 </div>-->
+<script>
+window.stateObj={
+{% for key,value in params %}
+	'{{key}}': "{{value}}",
+{% endfor %}
+	method:'{{METHOD}}'
+};
+
+</script>
 
 <script>
 var dir = '{{lang.applangdir}}';
@@ -12,22 +21,17 @@ if (!window.inPopUp) {
 		if (window.parent.frames.length !== 0) {
 
 			/* beautify preserve:start */
-			var stateObj = {
-				'realurl': location.href.replace(location.origin, ''),
-				'path': '{{path}}', //path will only be defined inside a route
-				'query_string': '{{query_string}}',
-{% for key,value in params %}
-				'{{key}}': "{{value}}",
-{% endfor %}
-				'method': '{{METHOD}}'
-			};
+			stateObj.realurl= location.href.replace(location.origin, '');
+			stateObj.path= '{{path}}'; //path will only be defined inside a route
+			stateObj.query_string= '{{query_string}}';
+
 			/* beautify preserve:end */
 			stateObj.newurl = stateObj.realurl.replace('src/views/', '').replace('.php', '');
 			stateObj.parenturl = window.parent.location.href.replace(window.parent.location.origin, '');
 
 			if (stateObj.method !== 'GET') {
 
-				console.log('Will not pushState with Method', stateObj.method);
+				console.log('Will not pushState with Method "'+stateObj.method+'"');
 
 			} else if (stateObj.newurl !== stateObj.parenturl) {
 				console.log('will pushState', stateObj);

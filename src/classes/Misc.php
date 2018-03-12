@@ -1145,7 +1145,8 @@ class Misc
      */
     public function getNavTabs($section)
     {
-        $data           = $this->_data;
+        $data = $this->getDatabaseAccessor();
+        $this->prtrace($section, $data);
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
 

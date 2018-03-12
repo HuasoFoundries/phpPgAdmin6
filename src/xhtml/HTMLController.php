@@ -134,14 +134,21 @@ class HTMLController
         if (!isset($link['fields'])) {
             $link['fields'] = $_REQUEST;
         }
+        $has_from = false;
         if (null === $from || false === $from) {
             $from = __METHOD__;
-        }
+        } else {
+            $has_from = true;
 
+        }
         $tag = '<a ';
         foreach ($link['attr'] as $attr => $value) {
+
             if ('href' == $attr and is_array($value)) {
                 $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'], $from)) . '" ';
+                /*if ($has_from && $from === 'PHPPgAdmin\XHtml\HTMLTableController::getTbody') {
+            $this->prtrace($tag);
+            }*/
             } else {
                 $tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
             }

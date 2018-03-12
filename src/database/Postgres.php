@@ -4537,7 +4537,8 @@ class Postgres extends ADOdbBase
             }
         }
 
-        return $this->execute($sql);
+        $status = $this->execute($sql);
+        return [$status, $sql];
     }
 
     /**

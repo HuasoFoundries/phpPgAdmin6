@@ -145,16 +145,19 @@ class IndexesController extends BaseController
             ],
         ];
 
+        $url = (\SUBFOLDER ? '/' . \SUBFOLDER : '') . '/src/views/indexes';
+
         $actions = [
             'cluster' => [
                 'content' => $lang['strclusterindex'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'indexes.php',
+                        'url'     => $url,
                         'urlvars' => [
-                            'action' => 'confirm_cluster_index',
-                            $subject => $object,
-                            'index'  => Decorator::field('indname'),
+                            'action'  => 'confirm_cluster_index',
+                            'subject' => $subject,
+                            $subject  => $object,
+                            'index'   => Decorator::field('indname'),
                         ],
                     ],
                 ],
@@ -163,11 +166,12 @@ class IndexesController extends BaseController
                 'content' => $lang['strreindex'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'indexes.php',
+                        'url'     => $url,
                         'urlvars' => [
-                            'action' => 'reindex',
-                            $subject => $object,
-                            'index'  => Decorator::field('indname'),
+                            'action'  => 'reindex',
+                            'subject' => $subject,
+                            $subject  => $object,
+                            'index'   => Decorator::field('indname'),
                         ],
                     ],
                 ],
@@ -176,11 +180,12 @@ class IndexesController extends BaseController
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'indexes.php',
+                        'url'     => $url,
                         'urlvars' => [
-                            'action' => 'confirm_drop_index',
-                            $subject => $object,
-                            'index'  => Decorator::field('indname'),
+                            'action'  => 'confirm_drop_index',
+                            'subject' => $subject,
+                            $subject  => $object,
+                            'index'   => Decorator::field('indname'),
                         ],
                     ],
                 ],
@@ -254,6 +259,12 @@ class IndexesController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
+        if (!isset($_REQUEST['subject'])) {
+            $_REQUEST['subject'] = 'table';
+        }
+        $subject = urlencode($_REQUEST['subject']);
+        $object  = urlencode($_REQUEST[$subject]);
+
         if ($confirm) {
             // Default analyze to on
             $_REQUEST['analyze'] = true;
@@ -267,35 +278,37 @@ class IndexesController extends BaseController
             echo '<p><input type="checkbox" id="analyze" name="analyze"', (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), ' />';
             echo "<label for=\"analyze\">{$lang['stranalyze']}</label></p>" . "\n";
             echo '<input type="hidden" name="action" value="cluster_index" />' . "\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />' . "\n";
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />' . "\n";
             echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />' . "\n";
             echo $this->misc->form;
             echo "<input type=\"submit\" name=\"cluster\" value=\"{$lang['strclusterindex']}\" />" . "\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
             echo '</form>' . "\n";
         } else {
-            $status = $data->clusterIndex($_POST['table'], $_POST['index']);
+            set_time_limit(0);
+            list($status, $sql) = $data->clusterIndex($object, $_POST['index']);
             if (0 == $status) {
                 if (isset($_POST['analyze'])) {
-                    $status = $data->analyzeDB($_POST['table']);
+                    $status = $data->analyzeDB($object);
                     if (0 == $status) {
-                        $this->doDefault($lang['strclusteredgood'] . ' ' . $lang['stranalyzegood']);
+                        $this->doDefault($sql . '<br>' . $lang['strclusteredgood'] . ' ' . $lang['stranalyzegood']);
                     } else {
-                        $this->doDefault($lang['stranalyzebad']);
+                        $this->doDefault($sql . '<br>' . $lang['stranalyzebad']);
                     }
                 } else {
-                    $this->doDefault($lang['strclusteredgood']);
+                    $this->doDefault($sql . '<br>' . $lang['strclusteredgood']);
                 }
             } else {
-                $this->doDefault($lang['strclusteredbad']);
+                $this->doDefault($sql . '<br>' . $lang['strclusteredbad']);
             }
         }
     }
 
     public function doReindex()
     {
-        $lang   = $this->lang;
-        $data   = $this->misc->getDatabaseAccessor();
+        $lang = $this->lang;
+        $data = $this->misc->getDatabaseAccessor();
+        set_time_limit(0);
         $status = $data->reindex('INDEX', $_REQUEST['index']);
         if (0 == $status) {
             $this->doDefault($lang['strreindexgood']);
@@ -345,7 +358,7 @@ class IndexesController extends BaseController
         if ($data->hasTablespaces()) {
             $tablespaces = $data->getTablespaces();
         }
-
+        $this->prtrace('tablespaces', $tablespaces->recordCount());
         $this->printTrail($subject);
         $this->printTitle($lang['strcreateindex'], 'pg.index.create');
         $this->printMsg($msg);

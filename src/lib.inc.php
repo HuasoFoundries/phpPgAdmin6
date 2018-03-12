@@ -321,7 +321,7 @@ $app->add(function ($request, $response, $next) {
 
     $query_string = $request->getUri()->getQuery();
     $this->view->offsetSet('query_string', $query_string);
-    $path = SUBFOLDER . '/' . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
+    $path = (SUBFOLDER ? (SUBFOLDER . '/') : '') . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
     $this->view->offsetSet('path', $path);
 
     $params = $request->getParams();
