@@ -72,7 +72,6 @@ trait AdminTrait
 
                 // cluster one or more table
                 if (is_array($_REQUEST['table'])) {
-
                     foreach ($_REQUEST['table'] as $o) {
                         list($status, $sql) = $data->clusterIndex($o);
                         $msg .= sprintf('%s<br />', htmlentities($sql, ENT_QUOTES, 'UTF-8'));

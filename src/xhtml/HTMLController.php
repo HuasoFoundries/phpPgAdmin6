@@ -139,14 +139,12 @@ class HTMLController
             $from = __METHOD__;
         } else {
             $has_from = true;
-
         }
         $tag = '<a ';
         foreach ($link['attr'] as $attr => $value) {
-
             if ('href' == $attr and is_array($value)) {
                 $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'], $from)) . '" ';
-                /*if ($has_from && $from === 'PHPPgAdmin\XHtml\HTMLTableController::getTbody') {
+            /*if ($has_from && $from === 'PHPPgAdmin\XHtml\HTMLTableController::getTbody') {
             $this->prtrace($tag);
             }*/
             } else {
