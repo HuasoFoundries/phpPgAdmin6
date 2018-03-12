@@ -936,7 +936,7 @@ class Misc
     public function printVal($str, $type = null, $params = [])
     {
         $lang = $this->lang;
-        $data = $this->_data;
+        $data = $this->getDatabaseAccessor();
 
         // Shortcircuit for a NULL value
         if (is_null($str)) {
@@ -1145,8 +1145,7 @@ class Misc
      */
     public function getNavTabs($section)
     {
-        $data = $this->getDatabaseAccessor();
-        $this->prtrace($section, $data);
+        $data           = $this->getDatabaseAccessor();
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
 
@@ -1837,7 +1836,7 @@ class Misc
      */
     public function getLastTabURL($section)
     {
-        $data = $this->getDatabaseAccessor();
+        //$data = $this->getDatabaseAccessor();
 
         $tabs = $this->getNavTabs($section);
 
@@ -1846,7 +1845,7 @@ class Misc
         } else {
             $tab = reset($tabs);
         }
-        $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
+        //$this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
         return isset($tab['url']) ? $tab : null;
     }
 
@@ -2027,7 +2026,7 @@ class Misc
      */
     public function escapeShellArg($str)
     {
-        $data = $this->getDatabaseAccessor();
+        //$data = $this->getDatabaseAccessor();
         $lang = $this->lang;
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
