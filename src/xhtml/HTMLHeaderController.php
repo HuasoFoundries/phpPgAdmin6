@@ -55,10 +55,10 @@ class HTMLHeaderController extends HTMLController
             $viewVars['applocale'] = $lang['applocale'];
         }
 
-        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
+        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
-        $viewVars['appName']        = htmlspecialchars($this->appName).(('' != $title) ? htmlspecialchars(" - {$title}") : '');
+        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
+        $viewVars['appName']        = htmlspecialchars($this->appName) . (('' != $title) ? htmlspecialchars(" - {$title}") : '');
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
@@ -86,11 +86,15 @@ class HTMLHeaderController extends HTMLController
      *
      * @param $doBody True to output body tag, false to return
      * @param $bodyClass - name of body class
+     * @param $onloadInit - if true, call init() on body load event
      */
-    public function printBody($doBody = true, $bodyClass = 'detailbody')
+    public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
         $bodyClass = htmlspecialchars($bodyClass);
-        $bodyHtml  = '<body data-controller="'.$this->controller_name.'" class="'.$this->lang['applangdir'].' '.$bodyClass.'" >';
+        $bodyHtml  = '<body ';
+        $bodyHtml .= ' data-controller="' . $this->controller_name . '" ';
+        $bodyHtml .= 'class="' . $this->lang['applangdir'] . ' ' . $bodyClass . '" ';
+        $bodyHtml .= ($onloadInit ? 'onload="init();" ' : '') . '>';
         $bodyHtml .= "\n";
         /*$bodyHtml .= '<div id="flexbox_wrapper">';
         $bodyHtml .= "\n";

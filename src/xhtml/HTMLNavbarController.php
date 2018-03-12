@@ -530,20 +530,23 @@ class HTMLNavbarController extends HTMLController
                 default:
                     if (isset($_REQUEST[$subject])) {
                         switch ($subject) {
-                            case 'domain':$icon = 'Domain';
-
+                            case 'domain':
+                                $icon = 'Domain';
                                 break;
-                            case 'sequence':$icon = 'Sequence';
-
+                            case 'sequence':
+                                $icon = 'Sequence';
                                 break;
-                            case 'type':$icon = 'Type';
-
+                            case 'type':
+                                $icon = 'Type';
                                 break;
-                            case 'operator':$icon = 'Operator';
-
+                            case 'operator':
+                                $icon = 'Operator';
                                 break;
-                            default:$icon = null;
-
+                            case 'index':
+                                $icon = 'Index';
+                                break;
+                            default:
+                                $icon = null;
                                 break;
                         }
                         $trail[$subject] = [

@@ -34,13 +34,13 @@ class ConstraintsController extends BaseController
             'header_select2.twig'
         );
 
+        $onloadInit = false;
         if ('add_unique_key' == $action || 'save_add_unique_key' == $action
             || 'add_primary_key' == $action || 'save_add_primary_key' == $action
             || 'add_foreign_key' == $action || 'save_add_foreign_key' == $action) {
-            echo '<body onload="init();">';
-        } else {
-            $this->printBody();
+            $onloadInit = true;
         }
+        $this->printBody(true, 'detailbody', $onloadInit);
 
         switch ($action) {
             case 'add_foreign_key':

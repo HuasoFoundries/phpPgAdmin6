@@ -29,11 +29,11 @@ class IndexesController extends BaseController
 
         $this->printHeader($lang['strindexes'], '<script src="' . \SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>');
 
+        $onloadInit = false;
         if ('create_index' == $action || 'save_create_index' == $action) {
-            echo '<body onload="init();">';
-        } else {
-            $this->printBody();
+            $onloadInit = true;
         }
+        $this->printBody(true, 'detailbody', $onloadInit);
 
         switch ($action) {
             case 'cluster_index':
@@ -145,7 +145,7 @@ class IndexesController extends BaseController
             ],
         ];
 
-        $url = (\SUBFOLDER ? '/' . \SUBFOLDER : '') . '/src/views/indexes';
+        $url = \SUBFOLDER . '/src/views/indexes';
 
         $actions = [
             'cluster' => [
@@ -265,11 +265,14 @@ class IndexesController extends BaseController
         $subject = urlencode($_REQUEST['subject']);
         $object  = urlencode($_REQUEST[$subject]);
 
+        //$this->printTrail($subject);
+
         if ($confirm) {
             // Default analyze to on
             $_REQUEST['analyze'] = true;
 
             $this->printTrail('index');
+            $this->printTabs($subject, 'indexes');
             $this->printTitle($lang['strclusterindex'], 'pg.index.cluster');
 
             echo '<p>', sprintf($lang['strconfcluster'], $this->misc->printVal($_REQUEST['index'])), '</p>' . "\n";
@@ -360,11 +363,12 @@ class IndexesController extends BaseController
         }
         $this->prtrace('tablespaces', $tablespaces->recordCount());
         $this->printTrail($subject);
+        $this->printTabs($subject, 'indexes');
         $this->printTitle($lang['strcreateindex'], 'pg.index.create');
         $this->printMsg($msg);
 
         $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
-        $selColumns->set_style('width: 10em;');
+        $selColumns->set_style('width: 14em;');
 
         if ($attrs->recordCount() > 0) {
             while (!$attrs->EOF) {
@@ -375,7 +379,7 @@ class IndexesController extends BaseController
         }
 
         $selIndex = new \PHPPgAdmin\XHtml\XHtmlSelect('IndexColumnList[]', true, 10);
-        $selIndex->set_style('width: 10em;');
+        $selIndex->set_style('width: 14em;');
         $selIndex->set_attribute('id', 'IndexColumnList');
         $buttonAdd = new \PHPPgAdmin\XHtml\XHtmlButton('add', '>>');
         $buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
@@ -391,19 +395,24 @@ class IndexesController extends BaseController
         echo '<tr><th class="data required" colspan="3">' . $lang['strindexname'] . '</th></tr>';
         echo '<tr>';
         echo '<td class="data1" colspan="3">';
-        echo '<input type="text" name="formIndexName" size="32" maxlength="' . $data->_maxNameLen . '" value="' . htmlspecialchars($_POST['formIndexName']) . '" />';
-        echo '</td></tr>';
-        echo '<tr><th class="data">' . $lang['strtablecolumnlist'] . '</th><th class="data">&nbsp;</th>';
-        echo '<th class="data required">' . $lang['strindexcolumnlist'] . '</th></tr>' . "\n";
+        echo 'Index name cannot exceed ' . $data->_maxNameLen . ' characters<br>';
+        echo '<input type="text" name="formIndexName" size="32" placeholder="Index Name" maxlength="' .
+        $data->_maxNameLen . '" value="' .
+        htmlspecialchars($_POST['formIndexName']) . '" />';
+        echo '</td>';
+        echo '</tr>';
+
+        echo '<tr>';
+        echo '<th class="data">' . $lang['strtablecolumnlist'] . '</th><th class="data">&nbsp;</th>';
+        echo '<th class="data required">' . $lang['strindexcolumnlist'] . '</th>';
+        echo '</tr>' . "\n";
+
         echo '<tr><td class="data1">' . $selColumns->fetch() . '</td>' . "\n";
         echo '<td class="data1">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
         echo '<td class="data1">' . $selIndex->fetch() . '</td></tr>' . "\n";
-        echo '</table>' . "\n";
-
-        echo '<table> ' . "\n";
         echo '<tr>';
         echo '<th class="data left required" scope="row">' . $lang['strindextype'] . '</th>';
-        echo '<td class="data1"><select name="formIndexType">';
+        echo '<td colspan="2" class="data1"><select name="formIndexType">';
         foreach ($data->typIndexes as $v) {
             echo '<option value="', htmlspecialchars($v), '"',
             ($v == $_POST['formIndexType']) ? ' selected="selected"' : '', '>', htmlspecialchars($v), '</option>' . "\n";
@@ -411,17 +420,19 @@ class IndexesController extends BaseController
         echo '</select></td></tr>' . "\n";
         echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\"><label for=\"formUnique\">{$lang['strunique']}</label></th>";
-        echo '<td class="data1"><input type="checkbox" id="formUnique" name="formUnique"', (isset($_POST['formUnique']) ? 'checked="checked"' : ''), ' /></td>';
+        echo '<td  colspan="2" class="data1"><input type="checkbox" id="formUnique" name="formUnique"', (isset($_POST['formUnique']) ? 'checked="checked"' : ''), ' /></td>';
         echo '</tr>';
         echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\">{$lang['strwhere']}</th>";
-        echo '<td class="data1">(<input name="formWhere" size="32" maxlength="' . $data->_maxNameLen . '" value="' . htmlspecialchars($_POST['formWhere']) . '" />)</td>';
+        echo '<td  colspan="2"  class="data1">(<input name="formWhere" size="32" maxlength="' . $data->_maxNameLen . '" value="' . htmlspecialchars($_POST['formWhere']) . '" />)</td>';
         echo '</tr>';
 
         // Tablespace (if there are any)
         if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strtablespace']}</th>" . "\n";
-            echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formSpc\">" . "\n";
+            echo '<tr>' . "\n";
+            echo "<th class=\"data left\">{$lang['strtablespace']}</th>" . "\n";
+            echo '<td  colspan="2" class="data1">';
+            echo "\n\t\t\t<select name=\"formSpc\">" . "\n";
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
             ('' == $_POST['formSpc']) ? ' selected="selected"' : '', '></option>' . "\n";
@@ -438,7 +449,7 @@ class IndexesController extends BaseController
         if ($data->hasConcurrentIndexBuild()) {
             echo '<tr>';
             echo "<th class=\"data left\" scope=\"row\"><label for=\"formConcur\">{$lang['strconcurrently']}</label></th>";
-            echo '<td class="data1"><input type="checkbox" id="formConcur" name="formConcur"', (isset($_POST['formConcur']) ? 'checked="checked"' : ''), ' /></td>';
+            echo '<td  colspan="2"  class="data1"><input type="checkbox" id="formConcur" name="formConcur"', (isset($_POST['formConcur']) ? 'checked="checked"' : ''), ' /></td>';
             echo '</tr>';
         }
 
