@@ -126,8 +126,8 @@ class ViewpropertiesController extends BaseController
             'column' => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url' => "colproperties.php?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST['view']).'&amp;',
-                'vars' => ['column' => 'attname'],
+                'url'   => "colproperties.php?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST['view']).'&amp;',
+                'vars'  => ['column' => 'attname'],
             ],
             'type' => [
                 'title' => $lang['strtype'],
@@ -149,12 +149,12 @@ class ViewpropertiesController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'viewproperties.php',
+                        'url'     => 'viewproperties.php',
                         'urlvars' => [
                             'action' => 'properties',
-                            'view' => $_REQUEST['view'],
+                            'view'   => $_REQUEST['view'],
                             'column' => Decorator::field('attname'),
                         ],
                     ],
@@ -170,14 +170,14 @@ class ViewpropertiesController extends BaseController
             'browse' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'display.php',
+                        'url'     => 'display.php',
                         'urlvars' => [
-                            'server' => $_REQUEST['server'],
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'view' => $_REQUEST['view'],
-                            'subject' => 'view',
-                            'return' => 'view',
+                            'schema'   => $_REQUEST['schema'],
+                            'view'     => $_REQUEST['view'],
+                            'subject'  => 'view',
+                            'return'   => 'view',
                         ],
                     ],
                 ],
@@ -186,13 +186,13 @@ class ViewpropertiesController extends BaseController
             'select' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'views.php',
+                        'url'     => 'views.php',
                         'urlvars' => [
-                            'action' => 'confselectrows',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confselectrows',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'view' => $_REQUEST['view'],
+                            'schema'   => $_REQUEST['schema'],
+                            'view'     => $_REQUEST['view'],
                         ],
                     ],
                 ],
@@ -201,13 +201,13 @@ class ViewpropertiesController extends BaseController
             'drop' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'views.php',
+                        'url'     => 'views.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confirm_drop',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'view' => $_REQUEST['view'],
+                            'schema'   => $_REQUEST['schema'],
+                            'view'     => $_REQUEST['view'],
                         ],
                     ],
                 ],
@@ -216,13 +216,13 @@ class ViewpropertiesController extends BaseController
             'alter' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'viewproperties.php',
+                        'url'     => 'viewproperties.php',
                         'urlvars' => [
-                            'action' => 'confirm_alter',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confirm_alter',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'view' => $_REQUEST['view'],
+                            'schema'   => $_REQUEST['schema'],
+                            'view'     => $_REQUEST['view'],
                         ],
                     ],
                 ],
@@ -242,27 +242,27 @@ class ViewpropertiesController extends BaseController
         $columns = $data->getTableAttributes($_REQUEST['view']);
 
         $attrs = [
-            'text' => Decorator::field('attname'),
+            'text'   => Decorator::field('attname'),
             'action' => Decorator::actionurl(
                 'colproperties.php',
                 $reqvars,
                 [
-                    'view' => $_REQUEST['view'],
+                    'view'   => $_REQUEST['view'],
                     'column' => Decorator::field('attname'),
                 ]
             ),
-            'icon' => 'Column',
+            'icon'       => 'Column',
             'iconAction' => Decorator::url(
                 'display.php',
                 $reqvars,
                 [
-                    'view' => $_REQUEST['view'],
+                    'view'   => $_REQUEST['view'],
                     'column' => Decorator::field('attname'),
-                    'query' => Decorator::replace(
+                    'query'  => Decorator::replace(
                         'SELECT "%column%", count(*) AS "count" FROM %view% GROUP BY "%column%" ORDER BY "%column%"',
                         [
                             '%column%' => Decorator::field('attname'),
-                            '%view%' => $_REQUEST['view'],
+                            '%view%'   => $_REQUEST['view'],
                         ]
                     ),
                 ]
@@ -308,7 +308,7 @@ class ViewpropertiesController extends BaseController
         if ($viewdata->recordCount() > 0) {
             if (!isset($_POST['formDefinition'])) {
                 $_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
-                $_POST['formComment'] = $viewdata->fields['relcomment'];
+                $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
             echo '<form action="'.\SUBFOLDER."/src/views/viewproperties.php\" method=\"post\">\n";
@@ -428,13 +428,13 @@ class ViewpropertiesController extends BaseController
         $this->printNavLinks(['alter' => [
             'attr' => [
                 'href' => [
-                    'url' => 'viewproperties.php',
+                    'url'     => 'viewproperties.php',
                     'urlvars' => [
-                        'action' => 'edit',
-                        'server' => $_REQUEST['server'],
+                        'action'   => 'edit',
+                        'server'   => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema' => $_REQUEST['schema'],
-                        'view' => $_REQUEST['view'],
+                        'schema'   => $_REQUEST['schema'],
+                        'view'     => $_REQUEST['view'],
                     ],
                 ],
             ],
@@ -473,7 +473,7 @@ class ViewpropertiesController extends BaseController
                 $column = $data->getTableAttributes($_REQUEST['view'], $_REQUEST['column']);
 
                 if (!isset($_REQUEST['default'])) {
-                    $_REQUEST['field'] = $column->fields['attname'];
+                    $_REQUEST['field']   = $column->fields['attname'];
                     $_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
                     $_REQUEST['comment'] = $column->fields['comment'];
                 }

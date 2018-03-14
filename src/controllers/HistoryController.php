@@ -22,7 +22,7 @@ class HistoryController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
 
         $this->scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
@@ -98,7 +98,7 @@ class HistoryController extends BaseController
                 'paginate' => [
                     'title' => $lang['strpaginate'],
                     'field' => Decorator::field('paginate'),
-                    'type' => 'yesno',
+                    'type'  => 'yesno',
                 ],
                 'actions' => [
                     'title' => $lang['stractions'],
@@ -108,14 +108,14 @@ class HistoryController extends BaseController
             $actions = [
                 'run' => [
                     'content' => $lang['strexecute'],
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
-                            'url' => 'sql.php',
+                            'url'     => 'sql.php',
                             'urlvars' => [
-                                'subject' => 'history',
+                                'subject'   => 'history',
                                 'nohistory' => 't',
-                                'queryid' => Decorator::field('queryid'),
-                                'paginate' => Decorator::field('paginate'),
+                                'queryid'   => Decorator::field('queryid'),
+                                'paginate'  => Decorator::field('paginate'),
                             ],
                         ],
                         'target' => 'detail',
@@ -123,11 +123,11 @@ class HistoryController extends BaseController
                 ],
                 'remove' => [
                     'content' => $lang['strdelete'],
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
-                            'url' => 'history.php',
+                            'url'     => 'history.php',
                             'urlvars' => [
-                                'action' => 'confdelhistory',
+                                'action'  => 'confdelhistory',
                                 'queryid' => Decorator::field('queryid'),
                             ],
                         ],
@@ -144,10 +144,10 @@ class HistoryController extends BaseController
             'refresh' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'history.php',
+                        'url'     => 'history.php',
                         'urlvars' => [
-                            'action' => 'history',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'history',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                         ],
                     ],
@@ -161,10 +161,10 @@ class HistoryController extends BaseController
             $navlinks['download'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'history.php',
+                        'url'     => 'history.php',
                         'urlvars' => [
-                            'action' => 'download',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'download',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                         ],
                     ],
@@ -174,10 +174,10 @@ class HistoryController extends BaseController
             $navlinks['clear'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'history.php',
+                        'url'     => 'history.php',
                         'urlvars' => [
-                            'action' => 'confclearhistory',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'confclearhistory',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                         ],
                     ],

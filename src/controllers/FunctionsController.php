@@ -16,7 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class FunctionsController extends BaseController
 {
     public $controller_name = 'FunctionsController';
-    public $table_place = 'functions-functions';
+    public $table_place     = 'functions-functions';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -103,8 +103,8 @@ class FunctionsController extends BaseController
             'function' => [
                 'title' => $lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url' => \SUBFOLDER."/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
-                'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
+                'url'   => \SUBFOLDER."/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
+                'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns' => [
                 'title' => $lang['strreturns'],
@@ -130,16 +130,16 @@ class FunctionsController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['function' => 'proproto', 'function_oid' => 'prooid'],
-                'url' => 'functions.php',
+                'url'     => 'functions.php',
             ],
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'functions.php',
+                        'url'     => 'functions.php',
                         'urlvars' => [
-                            'action' => 'edit',
-                            'function' => Decorator::field('proproto'),
+                            'action'       => 'edit',
+                            'function'     => Decorator::field('proproto'),
                             'function_oid' => Decorator::field('prooid'),
                         ],
                     ],
@@ -147,13 +147,13 @@ class FunctionsController extends BaseController
             ],
             'drop' => [
                 'multiaction' => 'confirm_drop',
-                'content' => $lang['strdrop'],
-                'attr' => [
+                'content'     => $lang['strdrop'],
+                'attr'        => [
                     'href' => [
-                        'url' => 'functions.php',
+                        'url'     => 'functions.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'function' => Decorator::field('proproto'),
+                            'action'       => 'confirm_drop',
+                            'function'     => Decorator::field('proproto'),
                             'function_oid' => Decorator::field('prooid'),
                         ],
                     ],
@@ -161,12 +161,12 @@ class FunctionsController extends BaseController
             ],
             'privileges' => [
                 'content' => $lang['strprivileges'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'privileges.php',
+                        'url'     => 'privileges.php',
                         'urlvars' => [
-                            'subject' => 'function',
-                            'function' => Decorator::field('proproto'),
+                            'subject'      => 'function',
+                            'function'     => Decorator::field('proproto'),
                             'function_oid' => Decorator::field('prooid'),
                         ],
                     ],
@@ -180,12 +180,12 @@ class FunctionsController extends BaseController
             'createpl' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'functions.php',
+                        'url'     => 'functions.php',
                         'urlvars' => [
-                            'action' => 'create',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -194,13 +194,13 @@ class FunctionsController extends BaseController
             'createinternal' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'functions.php',
+                        'url'     => 'functions.php',
                         'urlvars' => [
-                            'action' => 'create',
+                            'action'   => 'create',
                             'language' => 'internal',
-                            'server' => $_REQUEST['server'],
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -209,13 +209,13 @@ class FunctionsController extends BaseController
             'createc' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'functions.php',
+                        'url'     => 'functions.php',
                         'urlvars' => [
-                            'action' => 'create',
+                            'action'   => 'create',
                             'language' => 'C',
-                            'server' => $_REQUEST['server'],
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -241,15 +241,15 @@ class FunctionsController extends BaseController
         $reqvars = $this->misc->getRequestVars('function');
 
         $attrs = [
-            'text' => $proto,
-            'icon' => 'Function',
+            'text'    => $proto,
+            'icon'    => 'Function',
             'toolTip' => Decorator::field('procomment'),
-            'action' => Decorator::redirecturl(
+            'action'  => Decorator::redirecturl(
                 'redirect.php',
                 $reqvars,
                 [
-                    'action' => 'properties',
-                    'function' => $proto,
+                    'action'       => 'properties',
+                    'function'     => $proto,
                     'function_oid' => Decorator::field('prooid'),
                 ]
             ),
@@ -384,8 +384,8 @@ class FunctionsController extends BaseController
                 }
                 $names_arr = $data->phpArray($fndata->fields['proargnames']);
                 $modes_arr = $data->phpArray($fndata->fields['proargmodes']);
-                $args = '';
-                $i = 0;
+                $args      = '';
+                $i         = 0;
                 for ($i = 0; $i < sizeof($args_arr); ++$i) {
                     if (0 != $i) {
                         $args .= ', ';
@@ -579,8 +579,8 @@ class FunctionsController extends BaseController
                 }
                 $names_arr = $data->phpArray($funcdata->fields['proargnames']);
                 $modes_arr = $data->phpArray($funcdata->fields['proargmodes']);
-                $args = '';
-                $i = 0;
+                $args      = '';
+                $i         = 0;
                 for ($i = 0; $i < sizeof($args_arr); ++$i) {
                     if (0 != $i) {
                         $args .= ', ';
@@ -626,7 +626,7 @@ class FunctionsController extends BaseController
             }
 
             $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-            $func_full = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
+            $func_full                     = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
             echo "<table style=\"width: 90%\">\n";
             echo "<tr><th class=\"data\">{$lang['strfunction']}</th>\n";
             echo "<th class=\"data\">{$lang['strarguments']}</th>\n";
@@ -658,10 +658,10 @@ class FunctionsController extends BaseController
                 // Check to see if we have syntax highlighting for this language
                 if (array_key_exists($fnlang, $data->langmap)) {
                     $temp = $highlight->syntax_highlight(htmlspecialchars($funcdata->fields['prosrc']), $data->langmap[$fnlang]);
-                    $tag = 'prenoescape';
+                    $tag  = 'prenoescape';
                 } else {
                     $temp = $funcdata->fields['prosrc'];
-                    $tag = 'pre';
+                    $tag  = 'pre';
                 }
                 echo '<tr><td class="data1" colspan="4">', $this->misc->printVal($temp, $tag, ['lineno' => true, 'class' => 'data1']), "</td></tr>\n";
             }
@@ -696,11 +696,11 @@ class FunctionsController extends BaseController
             'showall' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'functions.php',
+                        'url'     => 'functions.php',
                         'urlvars' => [
-                            'server' => $_REQUEST['server'],
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -709,13 +709,13 @@ class FunctionsController extends BaseController
             'alter' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'functions.php',
+                        'url'     => 'functions.php',
                         'urlvars' => [
-                            'action' => 'edit',
-                            'server' => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'function' => $_REQUEST['function'],
+                            'action'       => 'edit',
+                            'server'       => $_REQUEST['server'],
+                            'database'     => $_REQUEST['database'],
+                            'schema'       => $_REQUEST['schema'],
+                            'function'     => $_REQUEST['function'],
                             'function_oid' => $_REQUEST['function_oid'],
                         ],
                     ],
@@ -725,13 +725,13 @@ class FunctionsController extends BaseController
             'drop' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'functions.php',
+                        'url'     => 'functions.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'server' => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            'function' => $func_full,
+                            'action'       => 'confirm_drop',
+                            'server'       => $_REQUEST['server'],
+                            'database'     => $_REQUEST['database'],
+                            'schema'       => $_REQUEST['schema'],
+                            'function'     => $func_full,
                             'function_oid' => $_REQUEST['function_oid'],
                         ],
                     ],
@@ -786,7 +786,7 @@ class FunctionsController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['function_oid'])) {
-                $msg = '';
+                $msg    = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['function_oid'] as $k => $s) {
@@ -884,8 +884,8 @@ class FunctionsController extends BaseController
             $_POST['formComment'] = '';
         }
 
-        $types = $data->getTypes(true, true, true);
-        $langs = $data->getLanguages(true);
+        $types  = $data->getTypes(true, true, true);
+        $langs  = $data->getLanguages(true);
         $fnlang = strtolower($_POST['formLanguage']);
 
         switch ($fnlang) {
@@ -923,7 +923,7 @@ class FunctionsController extends BaseController
         $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="'.
         htmlspecialchars($_POST['formArguments']).'" /></td>';
 
-        $szSetOfSelected = '';
+        $szSetOfSelected    = '';
         $szNotSetOfSelected = '';
         if ('' == $_POST['formSetOf']) {
             $szNotSetOfSelected = ' selected="selected"';
@@ -940,7 +940,7 @@ class FunctionsController extends BaseController
 
         // Create string array type selector
 
-        $szArraySelected = '';
+        $szArraySelected    = '';
         $szNotArraySelected = '';
         if ('' == $_POST['formArray']) {
             $szNotArraySelected = ' selected="selected"';
@@ -977,8 +977,8 @@ class FunctionsController extends BaseController
 
         $szLanguage .= '</td>';
         $szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$lang['strarguments']}</th></tr>";
-        $arrayModes = ['IN', 'OUT', 'INOUT'];
-        $szModes = '<select name="formArgModes[]" style="width:100%;">';
+        $arrayModes    = ['IN', 'OUT', 'INOUT'];
+        $szModes       = '<select name="formArgModes[]" style="width:100%;">';
         foreach ($arrayModes as $pV) {
             $szModes .= "<option value=\"{$pV}\">{$pV}</option>";
         }
@@ -1184,11 +1184,11 @@ class FunctionsController extends BaseController
      */
     private function buildJSRows($szArgs)
     {
-        $arrayModes = ['IN', 'OUT', 'INOUT'];
-        $arrayArgs = explode(',', $szArgs);
+        $arrayModes      = ['IN', 'OUT', 'INOUT'];
+        $arrayArgs       = explode(',', $szArgs);
         $arrayProperArgs = [];
-        $nC = 0;
-        $szReturn = '';
+        $nC              = 0;
+        $szReturn        = '';
         foreach ($arrayArgs as $pV) {
             $arrayWords = explode(' ', $pV);
             if (true === in_array($arrayWords[0], $arrayModes, true)) {
@@ -1197,10 +1197,10 @@ class FunctionsController extends BaseController
             }
             $szArgName = array_shift($arrayWords);
             if (false === strpos($arrayWords[count($arrayWords) - 1], '[]')) {
-                $szArgType = implode(' ', $arrayWords);
+                $szArgType   = implode(' ', $arrayWords);
                 $bArgIsArray = 'false';
             } else {
-                $szArgType = str_replace('[]', '', implode(' ', $arrayWords));
+                $szArgType   = str_replace('[]', '', implode(' ', $arrayWords));
                 $bArgIsArray = 'true';
             }
             $arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
@@ -1216,11 +1216,11 @@ class FunctionsController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $arrayModes = ['IN', 'OUT', 'INOUT'];
-        $arrayTypes = $data->getTypes(true, true, true);
+        $arrayModes  = ['IN', 'OUT', 'INOUT'];
+        $arrayTypes  = $data->getTypes(true, true, true);
         $arrayPTypes = [];
         $arrayPModes = [];
-        $szTypes = '';
+        $szTypes     = '';
 
         while (!$arrayTypes->EOF) {
             $arrayPTypes[] = "'".$arrayTypes->fields['typname']."'";
