@@ -28,6 +28,10 @@ tag_and_push:
 		git tag v$(v)
 		git push
 		git push --tags
+		git checkout master
+		git merge develop
+		git push
+		git checkout develop
 
 tag: test update_version tag_and_push	
 

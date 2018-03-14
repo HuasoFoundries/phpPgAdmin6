@@ -3,7 +3,7 @@
 namespace PHPPgAdmin\Database;
 
 /**
- * PostgreSQL 9.5 support
+ * PostgreSQL 9.6 support
  *
  */
 
@@ -23,13 +23,19 @@ class Postgres96 extends Postgres95
     {
         if ($database === null) {
             $sql = "SELECT datid, datname, pid, usename, application_name, client_addr, state, wait_event_type, wait_event, state_change as query_start,
-					CASE when state='idle in transaction' then ' in transaction' else query end as query
+					CASE
+                        WHEN state='active' THEN query
+                        ELSE state
+                    END AS query
 					FROM pg_catalog.pg_stat_activity
 					ORDER BY datname, usename, pid";
         } else {
             $this->clean($database);
             $sql = "SELECT datid, datname, pid, usename, application_name, client_addr, state, wait_event_type, wait_event, state_change as query_start,
-					CASE when state='idle in transaction' then ' in transaction' else query end as query
+					CASE
+                        WHEN state='active' THEN query
+                        ELSE state
+                    END AS query
 					FROM pg_catalog.pg_stat_activity
 					WHERE datname='{$database}'
 					ORDER BY usename, pid";

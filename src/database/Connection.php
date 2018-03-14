@@ -108,16 +108,22 @@ class Connection
 
         $description = "PostgreSQL {$version}";
 
-        //$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), '$version' => $version]);
+        $version_parts = explode('.', $version);
+        $major_version = $version;
 
+        if ($version_parts[0] == '10') {
+            $major_version = '10';
+        } else {
+            $major_version = implode('.', [$version_parts[0], $version_parts[1]]);
+        }
+
+        //$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), 'version' => $version, 'major_version' => $major_version]);
         // Detect version and choose appropriate database driver
-        switch (substr($version, 0, 3)) {
-            case '10.0':
-                return 'Postgres96';
+        switch ($major_version) {
+            case '10':
+                return 'Postgres10';
                 break;
             case '9.7':
-                return 'Postgres96';
-                break;
             case '9.6':
                 return 'Postgres96';
                 break;
