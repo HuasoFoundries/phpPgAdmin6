@@ -86,15 +86,15 @@ class OperatorsController extends BaseController
         $reqvars = $this->misc->getRequestVars('operator');
 
         $attrs = [
-            'text' => $proto,
-            'icon' => 'Operator',
+            'text'    => $proto,
+            'icon'    => 'Operator',
             'toolTip' => Decorator::field('oprcomment'),
-            'action' => Decorator::actionurl(
+            'action'  => Decorator::actionurl(
                 'operators.php',
                 $reqvars,
                 [
-                    'action' => 'properties',
-                    'operator' => $proto,
+                    'action'       => 'properties',
+                    'operator'     => $proto,
                     'operator_oid' => Decorator::field('oid'),
                 ]
             ),
@@ -123,8 +123,8 @@ class OperatorsController extends BaseController
             'operator' => [
                 'title' => $lang['stroperator'],
                 'field' => Decorator::field('oprname'),
-                'url' => "operators.php?action=properties&amp;{$this->misc->href}&amp;",
-                'vars' => ['operator' => 'oprname', 'operator_oid' => 'oid'],
+                'url'   => "operators.php?action=properties&amp;{$this->misc->href}&amp;",
+                'vars'  => ['operator' => 'oprname', 'operator_oid' => 'oid'],
             ],
             'leftarg' => [
                 'title' => $lang['strleftarg'],
@@ -153,12 +153,12 @@ class OperatorsController extends BaseController
                 // 'url'   => "operators.php?action=confirm_drop&amp;{$this->misc->href}&amp;",
                 // 'vars'  => array('operator' => 'oprname', 'operator_oid' => 'oid'),
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'operators.php',
+                        'url'     => 'operators.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'operator' => Decorator::field('oprname'),
+                            'action'       => 'confirm_drop',
+                            'operator'     => Decorator::field('oprname'),
                             'operator_oid' => Decorator::field('oid'),
                         ],
                     ],
@@ -185,7 +185,7 @@ class OperatorsController extends BaseController
         $this->printTitle($lang['strproperties'], 'pg.operator');
         $this->printMsg($msg);
 
-        $oprdata = $data->getOperator($_REQUEST['operator_oid']);
+        $oprdata                       = $data->getOperator($_REQUEST['operator_oid']);
         $oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
 
         if ($oprdata->recordCount() > 0) {
@@ -230,11 +230,11 @@ class OperatorsController extends BaseController
                     'showall' => [
                         'attr' => [
                             'href' => [
-                                'url' => 'operators.php',
+                                'url'     => 'operators.php',
                                 'urlvars' => [
-                                    'server' => $_REQUEST['server'],
+                                    'server'   => $_REQUEST['server'],
                                     'database' => $_REQUEST['database'],
-                                    'schema' => $_REQUEST['schema'],
+                                    'schema'   => $_REQUEST['schema'],
                                 ],
                             ],
                         ],
