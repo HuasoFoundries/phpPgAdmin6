@@ -106,17 +106,17 @@ class TypesController extends BaseController
             'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('typname'),
-                'url' => "types.php?action=properties&amp;{$this->misc->href}&amp;",
-                'vars' => ['type' => 'basename'],
+                'url'   => "types.php?action=properties&amp;{$this->misc->href}&amp;",
+                'vars'  => ['type' => 'basename'],
             ],
             'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('typowner'),
             ],
             'flavour' => [
-                'title' => $lang['strflavor'],
-                'field' => Decorator::field('typtype'),
-                'type' => 'verbatim',
+                'title'  => $lang['strflavor'],
+                'field'  => Decorator::field('typtype'),
+                'type'   => 'verbatim',
                 'params' => [
                     'map' => [
                         'b' => $lang['strbasetype'],
@@ -144,12 +144,12 @@ class TypesController extends BaseController
         $actions = [
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'types.php',
+                        'url'     => 'types.php',
                         'urlvars' => [
                             'action' => 'confirm_drop',
-                            'type' => Decorator::field('basename'),
+                            'type'   => Decorator::field('basename'),
                         ],
                     ],
                 ],
@@ -162,12 +162,12 @@ class TypesController extends BaseController
             'create' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'types.php',
+                        'url'     => 'types.php',
                         'urlvars' => [
-                            'action' => 'create',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -176,12 +176,12 @@ class TypesController extends BaseController
             'createcomp' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'types.php',
+                        'url'     => 'types.php',
                         'urlvars' => [
-                            'action' => 'create_comp',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create_comp',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -190,12 +190,12 @@ class TypesController extends BaseController
             'createenum' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'types.php',
+                        'url'     => 'types.php',
                         'urlvars' => [
-                            'action' => 'create_enum',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create_enum',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -223,15 +223,15 @@ class TypesController extends BaseController
         $reqvars = $this->misc->getRequestVars('type');
 
         $attrs = [
-            'text' => Decorator::field('typname'),
-            'icon' => 'Type',
+            'text'    => Decorator::field('typname'),
+            'icon'    => 'Type',
             'toolTip' => Decorator::field('typcomment'),
-            'action' => Decorator::actionurl(
+            'action'  => Decorator::actionurl(
                 'types.php',
                 $reqvars,
                 [
                     'action' => 'properties',
-                    'type' => Decorator::field('basename'),
+                    'type'   => Decorator::field('basename'),
                 ]
             ),
         ];
@@ -304,7 +304,7 @@ class TypesController extends BaseController
                     echo "<tr><th class=\"data left\">{$lang['stralignment']}</th>\n";
                     echo '<td class="data1">', $this->misc->printVal($typedata->fields['typalign']), "</td></tr>\n";
                     if ($data->hasEnumTypes() && $vals) {
-                        $vals = $vals->getArray();
+                        $vals   = $vals->getArray();
                         $nbVals = count($vals);
                         echo "<tr>\n\t<th class=\"data left\" rowspan=\"${nbVals}\">{$lang['strenumvalues']}</th>\n";
                         echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>\n";
@@ -318,11 +318,11 @@ class TypesController extends BaseController
             $this->printNavLinks(['showall' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'types.php',
+                        'url'     => 'types.php',
                         'urlvars' => [
-                            'server' => $_REQUEST['server'],
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],

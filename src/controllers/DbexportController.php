@@ -20,8 +20,8 @@ class DbexportController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
+        $lang   = $this->lang;
+        $data   = $this->misc->getDatabaseAccessor();
         $action = $this->action;
 
         // Prevent timeouts on large exports
@@ -178,10 +178,10 @@ class DbexportController extends BaseController
             }
 
             $this->prtrace('ENV VARS', [
-                'PGUSER' => getenv('PGUSER'),
+                'PGUSER'     => getenv('PGUSER'),
                 'PGPASSWORD' => getenv('PGPASSWORD'),
-                'PGHOST' => getenv('PGHOST'),
-                'PGPORT' => getenv('PGPORT'),
+                'PGHOST'     => getenv('PGHOST'),
+                'PGPORT'     => getenv('PGPORT'),
                 'PGDATABASE' => getenv('PGDATABASE'),
             ]);
             $this->prtrace('cmd', $cmd);

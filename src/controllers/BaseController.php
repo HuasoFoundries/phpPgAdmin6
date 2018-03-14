@@ -21,15 +21,15 @@ class BaseController
     protected $data;
     protected $database;
     protected $server_id;
-    public $appLangFiles = [];
-    public $appThemes = [];
-    public $appName = '';
-    public $appVersion = '';
-    public $form = '';
-    public $href = '';
-    public $lang = [];
-    public $action = '';
-    public $controller_name = 'BaseController';
+    public $appLangFiles     = [];
+    public $appThemes        = [];
+    public $appName          = '';
+    public $appVersion       = '';
+    public $form             = '';
+    public $href             = '';
+    public $lang             = [];
+    public $action           = '';
+    public $controller_name  = 'BaseController';
     public $controller_title = 'base';
     protected $table_controller;
     protected $trail_controller;
@@ -37,7 +37,7 @@ class BaseController
     protected $footer_controller;
     protected $header_controller;
     protected $scripts = '';
-    public $msg = '';
+    public $msg        = '';
     public $view;
     public $plugin_manager;
     public $misc;
@@ -53,23 +53,23 @@ class BaseController
     public function __construct(\Slim\Container $container, $no_db_connection = false)
     {
         $this->container = $container;
-        $this->lang = $container->get('lang');
+        $this->lang      = $container->get('lang');
 
-        $this->view = $container->get('view');
+        $this->view           = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
-        $this->msg = $container->get('msg');
-        $this->appLangFiles = $container->get('appLangFiles');
+        $this->msg            = $container->get('msg');
+        $this->appLangFiles   = $container->get('appLangFiles');
 
         $this->misc = $container->get('misc');
         $this->conf = $this->misc->getConf();
 
         $this->appThemes = $container->get('appThemes');
-        $this->action = $container->get('action');
+        $this->action    = $container->get('action');
 
-        $this->appName = $container->get('settings')['appName'];
-        $this->appVersion = $container->get('settings')['appVersion'];
+        $this->appName          = $container->get('settings')['appName'];
+        $this->appVersion       = $container->get('settings')['appVersion'];
         $this->postgresqlMinVer = $container->get('settings')['postgresqlMinVer'];
-        $this->phpMinVer = $container->get('settings')['phpMinVer'];
+        $this->phpMinVer        = $container->get('settings')['phpMinVer'];
 
         $msg = $container->get('msg');
 
@@ -103,8 +103,8 @@ class BaseController
     public function render()
     {
         $this->misc = $this->misc;
-        $lang = $this->lang;
-        $action = $this->action;
+        $lang       = $this->lang;
+        $action     = $this->action;
 
         $this->printHeader($lang[$this->controller_title]);
         $this->printBody();
@@ -212,7 +212,7 @@ class BaseController
 
     public function printTrail($trail = [], $do_print = true)
     {
-        $from = __METHOD__;
+        $from       = __METHOD__;
         $html_trail = $this->getNavbarController();
 
         return $html_trail->printTrail($trail, $do_print, $from);
@@ -220,7 +220,7 @@ class BaseController
 
     public function printNavLinks($navlinks, $place, $env = [], $do_print = true)
     {
-        $from = __METHOD__;
+        $from       = __METHOD__;
         $html_trail = $this->getNavbarController();
 
         return $html_trail->printNavLinks($navlinks, $place, $env, $do_print, $from);
@@ -228,7 +228,7 @@ class BaseController
 
     public function printTabs($tabs, $activetab, $do_print = true)
     {
-        $from = __METHOD__;
+        $from       = __METHOD__;
         $html_trail = $this->getNavbarController();
 
         return $html_trail->printTabs($tabs, $activetab, $do_print, $from);
@@ -345,7 +345,7 @@ class BaseController
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
-        $msg = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
+        $msg  = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
         if ('' != $msg) {
             $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
         }

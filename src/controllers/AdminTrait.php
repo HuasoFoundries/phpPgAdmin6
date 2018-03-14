@@ -118,10 +118,10 @@ trait AdminTrait
     public function doReindex($type, $confirm = false)
     {
         $this->script = ('database' == $type) ? 'database.php' : 'tables.php';
-        $script = $this->script;
-        $this->misc = $this->misc;
-        $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
+        $script       = $this->script;
+        $this->misc   = $this->misc;
+        $lang         = $this->lang;
+        $data         = $this->misc->getDatabaseAccessor();
 
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($lang['strspecifytabletoreindex']);
@@ -375,7 +375,7 @@ trait AdminTrait
     public function doEditAutovacuum($type, $confirm, $msg = '')
     {
         $this->script = ('database' == $type) ? 'database.php' : 'tables.php';
-        $script = $this->script;
+        $script       = $this->script;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -399,15 +399,15 @@ trait AdminTrait
                 return;
             }
 
-            $old_val = $data->getTableAutovacuum($_REQUEST['table']);
+            $old_val  = $data->getTableAutovacuum($_REQUEST['table']);
             $defaults = $data->getAutovacuum();
-            $old_val = $old_val->fields;
+            $old_val  = $old_val->fields;
 
             if (isset($old_val['autovacuum_enabled']) and ('off' == $old_val['autovacuum_enabled'])) {
-                $enabled = '';
+                $enabled  = '';
                 $disabled = 'checked="checked"';
             } else {
-                $enabled = 'checked="checked"';
+                $enabled  = 'checked="checked"';
                 $disabled = '';
             }
 
@@ -502,7 +502,7 @@ trait AdminTrait
     public function doDropAutovacuum($type, $confirm)
     {
         $this->script = ('database' == $type) ? 'database.php' : 'tables.php';
-        $script = $this->script;
+        $script       = $this->script;
 
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
@@ -685,49 +685,49 @@ trait AdminTrait
                 'namespace' => [
                     'title' => $lang['strschema'],
                     'field' => Decorator::field('nspname'),
-                    'url' => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
-                    'vars' => ['schema' => 'nspname'],
+                    'url'   => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
+                    'vars'  => ['schema' => 'nspname'],
                 ],
                 'relname' => [
                     'title' => $lang['strtable'],
                     'field' => Decorator::field('relname'),
-                    'url' => \SUBFOLDER."/redirect/table?{$this->misc->href}&amp;",
-                    'vars' => ['table' => 'relname', 'schema' => 'nspname'],
+                    'url'   => \SUBFOLDER."/redirect/table?{$this->misc->href}&amp;",
+                    'vars'  => ['table' => 'relname', 'schema' => 'nspname'],
                 ],
                 'autovacuum_enabled' => [
                     'title' => $lang['strenabled'],
                     'field' => Decorator::callback($enlight, ['autovacuum_enabled', $defaults['autovacuum']]),
-                    'type' => 'verbatim',
+                    'type'  => 'verbatim',
                 ],
                 'autovacuum_vacuum_threshold' => [
                     'title' => $lang['strvacuumbasethreshold'],
                     'field' => Decorator::callback($enlight, ['autovacuum_vacuum_threshold', $defaults['autovacuum_vacuum_threshold']]),
-                    'type' => 'verbatim',
+                    'type'  => 'verbatim',
                 ],
                 'autovacuum_vacuum_scale_factor' => [
                     'title' => $lang['strvacuumscalefactor'],
                     'field' => Decorator::callback($enlight, ['autovacuum_vacuum_scale_factor', $defaults['autovacuum_vacuum_scale_factor']]),
-                    'type' => 'verbatim',
+                    'type'  => 'verbatim',
                 ],
                 'autovacuum_analyze_threshold' => [
                     'title' => $lang['stranalybasethreshold'],
                     'field' => Decorator::callback($enlight, ['autovacuum_analyze_threshold', $defaults['autovacuum_analyze_threshold']]),
-                    'type' => 'verbatim',
+                    'type'  => 'verbatim',
                 ],
                 'autovacuum_analyze_scale_factor' => [
                     'title' => $lang['stranalyzescalefactor'],
                     'field' => Decorator::callback($enlight, ['autovacuum_analyze_scale_factor', $defaults['autovacuum_analyze_scale_factor']]),
-                    'type' => 'verbatim',
+                    'type'  => 'verbatim',
                 ],
                 'autovacuum_vacuum_cost_delay' => [
                     'title' => $lang['strvacuumcostdelay'],
                     'field' => Decorator::concat(Decorator::callback($enlight, ['autovacuum_vacuum_cost_delay', $defaults['autovacuum_vacuum_cost_delay']]), 'ms'),
-                    'type' => 'verbatim',
+                    'type'  => 'verbatim',
                 ],
                 'autovacuum_vacuum_cost_limit' => [
                     'title' => $lang['strvacuumcostlimit'],
                     'field' => Decorator::callback($enlight, ['autovacuum_vacuum_cost_limit', $defaults['autovacuum_vacuum_cost_limit']]),
-                    'type' => 'verbatim',
+                    'type'  => 'verbatim',
                 ],
             ];
 
@@ -737,28 +737,28 @@ trait AdminTrait
             $actions = [
                 'edit' => [
                     'content' => $lang['stredit'],
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
-                            'url' => $script,
+                            'url'     => $script,
                             'urlvars' => [
                                 'subject' => $type,
-                                'action' => 'confeditautovac',
-                                'schema' => Decorator::field('nspname'),
-                                'table' => Decorator::field('relname'),
+                                'action'  => 'confeditautovac',
+                                'schema'  => Decorator::field('nspname'),
+                                'table'   => Decorator::field('relname'),
                             ],
                         ],
                     ],
                 ],
                 'delete' => [
                     'content' => $lang['strdelete'],
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
-                            'url' => $script,
+                            'url'     => $script,
                             'urlvars' => [
                                 'subject' => $type,
-                                'action' => 'confdelautovac',
-                                'schema' => Decorator::field('nspname'),
-                                'table' => Decorator::field('relname'),
+                                'action'  => 'confdelautovac',
+                                'schema'  => Decorator::field('nspname'),
+                                'table'   => Decorator::field('relname'),
                             ],
                         ],
                     ],
@@ -787,11 +787,11 @@ trait AdminTrait
     {
         if ('database' == $type) {
             $_REQUEST['object'] = $_REQUEST['database'];
-            $this->script = 'database.php';
+            $this->script       = 'database.php';
         } else {
             // $_REQUEST['table'] is no set if we are in the schema page
             $_REQUEST['object'] = (isset($_REQUEST['table']) ? $_REQUEST['table'] : '');
-            $this->script = 'tables.php';
+            $this->script       = 'tables.php';
         }
 
         $script = $this->script;

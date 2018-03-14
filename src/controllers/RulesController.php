@@ -98,20 +98,20 @@ class RulesController extends BaseController
         ];
 
         $subject = urlencode($_REQUEST['subject']);
-        $object = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
 
         $actions = [
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'rules.php',
+                        'url'     => 'rules.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
+                            'action'  => 'confirm_drop',
                             'reltype' => $subject,
-                            $subject => $object,
+                            $subject  => $object,
                             'subject' => 'rule',
-                            'rule' => Decorator::field('rulename'),
+                            'rule'    => Decorator::field('rulename'),
                         ],
                     ],
                 ],
@@ -123,14 +123,14 @@ class RulesController extends BaseController
         $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
-                    'url' => 'rules.php',
+                    'url'     => 'rules.php',
                     'urlvars' => [
-                        'action' => 'create_rule',
-                        'server' => $_REQUEST['server'],
+                        'action'   => 'create_rule',
+                        'server'   => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema' => $_REQUEST['schema'],
-                        $subject => $object,
-                        'subject' => $subject,
+                        'schema'   => $_REQUEST['schema'],
+                        $subject   => $object,
+                        'subject'  => $subject,
                     ],
                 ],
             ],
