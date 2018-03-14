@@ -102,6 +102,8 @@ tools:
     php_analyzer: true
     php_mess_detector: true
     php_changetracking: true
+    php_cs_fixer:
+        config: { level: psr2 }
     php_code_sniffer:
         config:
             standard: PSR2
