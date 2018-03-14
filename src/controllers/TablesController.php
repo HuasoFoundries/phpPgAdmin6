@@ -16,16 +16,16 @@ use PHPPgAdmin\Decorators\Decorator;
 class TablesController extends BaseController
 {
     use AdminTrait;
-    public $script = 'tables.php';
+    public $script          = 'tables.php';
     public $controller_name = 'TablesController';
-    public $table_place = 'tables-tables';
+    public $table_place     = 'tables-tables';
 
     /**
      * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
 
         if ('tree' == $action) {
@@ -157,8 +157,8 @@ class TablesController extends BaseController
             'table' => [
                 'title' => $lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url' => \SUBFOLDER."/redirect/table?{$this->misc->href}&amp;",
-                'vars' => ['table' => 'relname'],
+                'url'   => \SUBFOLDER."/redirect/table?{$this->misc->href}&amp;",
+                'vars'  => ['table' => 'relname'],
             ],
             'owner' => [
                 'title' => $lang['strowner'],
@@ -171,7 +171,7 @@ class TablesController extends BaseController
             'tuples' => [
                 'title' => $lang['strestimatedrowcount'],
                 'field' => Decorator::field('reltuples'),
-                'type' => 'numeric',
+                'type'  => 'numeric',
             ],
             'actions' => [
                 'title' => $lang['stractions'],
@@ -185,119 +185,119 @@ class TablesController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['table' => 'relname'],
-                'url' => 'tables.php',
+                'url'     => 'tables.php',
                 'default' => 'analyze',
             ],
             'browse' => [
                 'content' => $lang['strbrowse'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'display.php',
+                        'url'     => 'display.php',
                         'urlvars' => [
                             'subject' => 'table',
-                            'return' => 'table',
-                            'table' => Decorator::field('relname'),
+                            'return'  => 'table',
+                            'table'   => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'select' => [
                 'content' => $lang['strselect'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
                             'action' => 'confselectrows',
-                            'table' => Decorator::field('relname'),
+                            'table'  => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'insert' => [
                 'content' => $lang['strinsert'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
                             'action' => 'confinsertrow',
-                            'table' => Decorator::field('relname'),
+                            'table'  => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'empty' => [
                 'multiaction' => 'confirm_empty',
-                'content' => $lang['strempty'],
-                'attr' => [
+                'content'     => $lang['strempty'],
+                'attr'        => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
                             'action' => 'confirm_empty',
-                            'table' => Decorator::field('relname'),
+                            'table'  => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'tblproperties.php',
+                        'url'     => 'tblproperties.php',
                         'urlvars' => [
                             'action' => 'confirm_alter',
-                            'table' => Decorator::field('relname'),
+                            'table'  => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'drop' => [
                 'multiaction' => 'confirm_drop',
-                'content' => $lang['strdrop'],
-                'attr' => [
+                'content'     => $lang['strdrop'],
+                'attr'        => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
                             'action' => 'confirm_drop',
-                            'table' => Decorator::field('relname'),
+                            'table'  => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'vacuum' => [
                 'multiaction' => 'confirm_vacuum',
-                'content' => $lang['strvacuum'],
-                'attr' => [
+                'content'     => $lang['strvacuum'],
+                'attr'        => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
                             'action' => 'confirm_vacuum',
-                            'table' => Decorator::field('relname'),
+                            'table'  => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'analyze' => [
                 'multiaction' => 'confirm_analyze',
-                'content' => $lang['stranalyze'],
-                'attr' => [
+                'content'     => $lang['stranalyze'],
+                'attr'        => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
                             'action' => 'confirm_analyze',
-                            'table' => Decorator::field('relname'),
+                            'table'  => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'reindex' => [
                 'multiaction' => 'confirm_reindex',
-                'content' => $lang['strreindex'],
-                'attr' => [
+                'content'     => $lang['strreindex'],
+                'attr'        => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
                             'action' => 'confirm_reindex',
-                            'table' => Decorator::field('relname'),
+                            'table'  => Decorator::field('relname'),
                         ],
                     ],
                 ],
@@ -317,12 +317,12 @@ class TablesController extends BaseController
             'create' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
-                            'action' => 'create',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -334,12 +334,12 @@ class TablesController extends BaseController
             $navlinks['createlike'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'tables.php',
+                        'url'     => 'tables.php',
                         'urlvars' => [
-                            'action' => 'createlike',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'createlike',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -364,12 +364,12 @@ class TablesController extends BaseController
         $reqvars = $this->misc->getRequestVars('table');
 
         $attrs = [
-            'text' => Decorator::field('relname'),
-            'icon' => 'Table',
+            'text'       => Decorator::field('relname'),
+            'icon'       => 'Table',
             'iconAction' => Decorator::url('display.php', $reqvars, ['table' => Decorator::field('relname')]),
-            'toolTip' => Decorator::field('relcomment'),
-            'action' => Decorator::redirecturl('redirect.php', $reqvars, ['table' => Decorator::field('relname')]),
-            'branch' => Decorator::url('tables.php', $reqvars, ['action' => 'subtree', 'table' => Decorator::field('relname')]),
+            'toolTip'    => Decorator::field('relcomment'),
+            'action'     => Decorator::redirecturl('redirect.php', $reqvars, ['table' => Decorator::field('relname')]),
+            'branch'     => Decorator::url('tables.php', $reqvars, ['action' => 'subtree', 'table' => Decorator::field('relname')]),
         ];
 
         return $this->printTree($tables, $attrs, 'tables');
@@ -380,13 +380,13 @@ class TablesController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $tabs = $this->misc->getNavTabs('table');
-        $items = $this->adjustTabsForTree($tabs);
+        $tabs    = $this->misc->getNavTabs('table');
+        $items   = $this->adjustTabsForTree($tabs);
         $reqvars = $this->misc->getRequestVars('table');
 
         $attrs = [
-            'text' => Decorator::field('title'),
-            'icon' => Decorator::field('icon'),
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
             'action' => Decorator::actionurl(
                 Decorator::field('url'),
                 $reqvars,
@@ -401,7 +401,7 @@ class TablesController extends BaseController
                     $reqvars,
                     [
                         'action' => 'tree',
-                        'table' => $_REQUEST['table'],
+                        'table'  => $_REQUEST['table'],
                     ]
                 )
             ),
@@ -515,7 +515,7 @@ class TablesController extends BaseController
                     return;
                 }
 
-                $types = $data->getTypes(true, false, true);
+                $types        = $data->getTypes(true, false, true);
                 $types_for_js = [];
 
                 $this->printTrail('schema');
@@ -562,7 +562,7 @@ class TablesController extends BaseController
                     }
                     $types->moveFirst();
                     while (!$types->EOF) {
-                        $typname = $types->fields['typname'];
+                        $typname                = $types->fields['typname'];
                         $types_for_js[$typname] = 1;
                         echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), '"',
                         (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] == $typname) ? ' selected="selected"' : '', '>',
@@ -573,7 +573,7 @@ class TablesController extends BaseController
                     if (0 == $i) {
                         // only define js types array once
                         $predefined_size_types = array_intersect($data->predefined_size_types, array_keys($types_for_js));
-                        $escaped_predef_types = []; // the JS escaped array elements
+                        $escaped_predef_types  = []; // the JS escaped array elements
                         foreach ($predefined_size_types as $value) {
                             $escaped_predef_types[] = "'{$value}'";
                         }
@@ -752,7 +752,7 @@ class TablesController extends BaseController
                 $tblsp_ = $data->getTablespaces();
                 if ($tblsp_->recordCount() > 0) {
                     $tblsp_ = $tblsp_->getArray();
-                    $tblsp = [];
+                    $tblsp  = [];
                     foreach ($tblsp_ as $a) {
                         $tblsp[$a['spcname']] = $a['spcname'];
                     }
@@ -944,7 +944,7 @@ class TablesController extends BaseController
                 $_POST['values'],
                 $_POST['ops']
             );
-            $_REQUEST['query'] = $query;
+            $_REQUEST['query']  = $query;
             $_REQUEST['return'] = 'selectrows';
 
             $this->setNoOutput(true);
@@ -992,11 +992,11 @@ class TablesController extends BaseController
                 echo "<th class=\"data\">{$lang['strformat']}</th>";
                 echo "<th class=\"data\">{$lang['strnull']}</th><th class=\"data\">{$lang['strvalue']}</th></tr>";
 
-                $i = 0;
+                $i      = 0;
                 $fields = [];
                 while (!$attrs->EOF) {
                     $fields[$attrs->fields['attnum']] = $attrs->fields['attname'];
-                    $attrs->fields['attnotnull'] = $data->phpBool($attrs->fields['attnotnull']);
+                    $attrs->fields['attnotnull']      = $data->phpBool($attrs->fields['attnotnull']);
                     // Set up default value if there isn't one already
                     if (!isset($_REQUEST['values'][$attrs->fields['attnum']])) {
                         $_REQUEST['values'][$attrs->fields['attnum']] = $attrs->fields['adsrc'];
@@ -1036,7 +1036,7 @@ class TablesController extends BaseController
                             $_REQUEST['values'][$attrs->fields['attnum']],
                             'fktype' /*force FK*/,
                             [
-                                'id' => "attr_{$attrs->fields['attnum']}",
+                                'id'           => "attr_{$attrs->fields['attnum']}",
                                 'autocomplete' => 'off',
                             ]
                         );
@@ -1094,7 +1094,7 @@ class TablesController extends BaseController
                         return $this->doDefault($lang['strrowinserted']);
                     }
                     $_REQUEST['values'] = [];
-                    $_REQUEST['nulls'] = [];
+                    $_REQUEST['nulls']  = [];
                     $this->doInsertRow(true, $lang['strrowinserted']);
                 } else {
                     $this->doInsertRow(true, $lang['strrowinsertedbad']);
@@ -1226,7 +1226,7 @@ class TablesController extends BaseController
         else {
             //If multi drop
             if (is_array($_REQUEST['table'])) {
-                $msg = '';
+                $msg    = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_REQUEST['table'] as $t) {

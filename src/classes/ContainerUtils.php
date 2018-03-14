@@ -13,6 +13,7 @@ namespace PHPPgAdmin;
 
 /**
  * A class that adds convenience methods to the container.
+ *
  * @package PHPPgAdmin
  */
 class ContainerUtils
@@ -30,9 +31,9 @@ class ContainerUtils
 
         // but if server_id isn't set, then you will be redirected to intro
         if ($this->container->requestobj->getQueryParam('server') === null) {
-            $destinationurl = SUBFOLDER . '/src/views/intro';
+            $destinationurl = SUBFOLDER.'/src/views/intro';
         } else {
-            $destinationurl = SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = SUBFOLDER.'/src/views/login'.($query_string ? '?'.$query_string : '');
         }
 
         return $destinationurl;
@@ -144,9 +145,9 @@ class ContainerUtils
         $body->write('terminating script');
 
         return $this->container->responseobj
-                    ->withStatus(200)
-                    ->withHeader('Content-type', 'text/html')
-                    ->withBody($body);
+            ->withStatus(200)
+            ->withHeader('Content-type', 'text/html')
+            ->withBody($body);
     }
 
     /**

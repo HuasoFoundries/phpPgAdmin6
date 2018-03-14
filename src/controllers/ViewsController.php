@@ -15,16 +15,16 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class ViewsController extends BaseController
 {
-    public $script = 'views.php';
+    public $script          = 'views.php';
     public $controller_name = 'ViewsController';
-    public $table_place = 'views-views';
+    public $table_place     = 'views-views';
 
     /**
      * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
 
         if ('tree' == $action) {
@@ -123,8 +123,8 @@ class ViewsController extends BaseController
             'view' => [
                 'title' => $lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url' => \SUBFOLDER."/redirect/view?{$this->misc->href}&amp;",
-                'vars' => ['view' => 'relname'],
+                'url'   => \SUBFOLDER."/redirect/view?{$this->misc->href}&amp;",
+                'vars'  => ['view' => 'relname'],
             ],
             'owner' => [
                 'title' => $lang['strowner'],
@@ -142,30 +142,30 @@ class ViewsController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['view' => 'relname'],
-                'url' => 'views.php',
+                'url'     => 'views.php',
             ],
             'browse' => [
                 'content' => $lang['strbrowse'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'display.php',
+                        'url'     => 'display.php',
                         'urlvars' => [
-                            'action' => 'confselectrows',
+                            'action'  => 'confselectrows',
                             'subject' => 'view',
-                            'return' => 'schema',
-                            'view' => Decorator::field('relname'),
+                            'return'  => 'schema',
+                            'view'    => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'select' => [
                 'content' => $lang['strselect'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'views.php',
+                        'url'     => 'views.php',
                         'urlvars' => [
                             'action' => 'confselectrows',
-                            'view' => Decorator::field('relname'),
+                            'view'   => Decorator::field('relname'),
                         ],
                     ],
                 ],
@@ -180,25 +180,25 @@ class ViewsController extends BaseController
 
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'viewproperties.php',
+                        'url'     => 'viewproperties.php',
                         'urlvars' => [
                             'action' => 'confirm_alter',
-                            'view' => Decorator::field('relname'),
+                            'view'   => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'drop' => [
                 'multiaction' => 'confirm_drop',
-                'content' => $lang['strdrop'],
-                'attr' => [
+                'content'     => $lang['strdrop'],
+                'attr'        => [
                     'href' => [
-                        'url' => 'views.php',
+                        'url'     => 'views.php',
                         'urlvars' => [
                             'action' => 'confirm_drop',
-                            'view' => Decorator::field('relname'),
+                            'view'   => Decorator::field('relname'),
                         ],
                     ],
                 ],
@@ -211,12 +211,12 @@ class ViewsController extends BaseController
             'create' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'views.php',
+                        'url'     => 'views.php',
                         'urlvars' => [
-                            'action' => 'create',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -225,12 +225,12 @@ class ViewsController extends BaseController
             'createwiz' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'views.php',
+                        'url'     => 'views.php',
                         'urlvars' => [
-                            'action' => 'wiz_create',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'wiz_create',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -253,12 +253,12 @@ class ViewsController extends BaseController
         $reqvars = $this->misc->getRequestVars('view');
 
         $attrs = [
-            'text' => Decorator::field('relname'),
-            'icon' => 'View',
+            'text'       => Decorator::field('relname'),
+            'icon'       => 'View',
             'iconAction' => Decorator::url('display.php', $reqvars, ['view' => Decorator::field('relname')]),
-            'toolTip' => Decorator::field('relcomment'),
-            'action' => Decorator::redirecturl('redirect.php', $reqvars, ['view' => Decorator::field('relname')]),
-            'branch' => Decorator::url('views.php', $reqvars, ['action' => 'subtree', 'view' => Decorator::field('relname')]),
+            'toolTip'    => Decorator::field('relcomment'),
+            'action'     => Decorator::redirecturl('redirect.php', $reqvars, ['view' => Decorator::field('relname')]),
+            'branch'     => Decorator::url('views.php', $reqvars, ['action' => 'subtree', 'view' => Decorator::field('relname')]),
         ];
 
         return $this->printTree($views, $attrs, 'views');
@@ -269,13 +269,13 @@ class ViewsController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $tabs = $this->misc->getNavTabs('view');
-        $items = $this->adjustTabsForTree($tabs);
+        $tabs    = $this->misc->getNavTabs('view');
+        $items   = $this->adjustTabsForTree($tabs);
         $reqvars = $this->misc->getRequestVars('view');
 
         $attrs = [
-            'text' => Decorator::field('title'),
-            'icon' => Decorator::field('icon'),
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
             'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['view' => $_REQUEST['view']]),
             'branch' => Decorator::ifempty(
                 Decorator::field('branch'),
@@ -286,7 +286,7 @@ class ViewsController extends BaseController
                     $reqvars,
                     [
                         'action' => 'tree',
-                        'view' => $_REQUEST['view'],
+                        'view'   => $_REQUEST['view'],
                     ]
                 )
             ),
@@ -418,7 +418,7 @@ class ViewsController extends BaseController
         // Generate query SQL
         $query = $data->getSelectSQL($_REQUEST['view'], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
 
-        $_REQUEST['query'] = $query;
+        $_REQUEST['query']  = $query;
         $_REQUEST['return'] = 'schema';
 
         $this->setNoOutput(true);
@@ -469,7 +469,7 @@ class ViewsController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['view'])) {
-                $msg = '';
+                $msg    = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['view'] as $s) {
@@ -540,7 +540,7 @@ class ViewsController extends BaseController
 
             //get linking keys
             $rsLinkKeys = $data->getLinkingKeys($arrSelTables);
-            $linkCount = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
+            $linkCount  = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
 
             $arrFields = []; //array that will hold all our table/field names
 
@@ -557,8 +557,8 @@ class ViewsController extends BaseController
                     $arrFields["{$arrSelTables[$i]['schemaname']}.{$arrSelTables[$i]['tablename']}.{$attrs->fields['attname']}"] = serialize(
                         [
                             'schemaname' => $arrSelTables[$i]['schemaname'],
-                            'tablename' => $arrSelTables[$i]['tablename'],
-                            'fieldname' => $attrs->fields['attname'], ]
+                            'tablename'  => $arrSelTables[$i]['tablename'],
+                            'fieldname'  => $attrs->fields['attname'], ]
                     );
                     $attrs->moveNext();
                 }
@@ -605,11 +605,11 @@ class ViewsController extends BaseController
                 echo "<tr>\n<td class=\"${rowClass}\">\n";
 
                 if (!$rsLinkKeys->EOF) {
-                    $curLeftLink = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
+                    $curLeftLink  = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
                     $curRightLink = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['f_schema'], 'tablename' => $rsLinkKeys->fields['f_table'], 'fieldname' => $rsLinkKeys->fields['f_field']]));
                     $rsLinkKeys->moveNext();
                 } else {
-                    $curLeftLink = '';
+                    $curLeftLink  = '';
                     $curRightLink = '';
                 }
 
@@ -679,9 +679,9 @@ class ViewsController extends BaseController
 
         $arrTables = [];
         while (!$tables->EOF) {
-            $arrTmp = [];
-            $arrTmp['schemaname'] = $tables->fields['nspname'];
-            $arrTmp['tablename'] = $tables->fields['relname'];
+            $arrTmp                                                               = [];
+            $arrTmp['schemaname']                                                 = $tables->fields['nspname'];
+            $arrTmp['tablename']                                                  = $tables->fields['relname'];
             $arrTables[$tables->fields['nspname'].'.'.$tables->fields['relname']] = serialize($arrTmp);
             $tables->moveNext();
         }
@@ -824,8 +824,8 @@ class ViewsController extends BaseController
                     }
                 }
                 // We must perform some magic to make sure that we have a valid join order
-                $count = sizeof($arrLinks);
-                $arrJoined = [];
+                $count       = sizeof($arrLinks);
+                $arrJoined   = [];
                 $arrUsedTbls = [];
 
                 // If we have at least one join condition, output it
@@ -833,7 +833,7 @@ class ViewsController extends BaseController
                     $j = 0;
                     while ($j < $count) {
                         foreach ($arrLinks as $curLink) {
-                            $arrLeftLink = unserialize($curLink['leftlink']);
+                            $arrLeftLink  = unserialize($curLink['leftlink']);
                             $arrRightLink = unserialize($curLink['rightlink']);
                             $data->fieldArrayClean($arrLeftLink);
                             $data->fieldArrayClean($arrRightLink);

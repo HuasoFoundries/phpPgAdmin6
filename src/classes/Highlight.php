@@ -101,7 +101,7 @@ class Highlight
         $keyword_replace = function ($keywords, $text, $ncs = false) {
             $cm = $ncs ? 'i' : '';
             foreach ($keywords as $keyword) {
-                $search[]  = "/(\\b${keyword}\\b)/" . $cm;
+                $search[]  = "/(\\b${keyword}\\b)/".$cm;
                 $replace[] = '<span class="keyword">\\0</span>';
             }
 
@@ -1964,27 +1964,27 @@ class Highlight
         };
 
         $dash_putback = function ($span, $lang, $ch) use ($syntax_highlight_helper) {
-            return $syntax_highlight_helper('-' . $span, $lang);
+            return $syntax_highlight_helper('-'.$span, $lang);
         };
 
         $slash_putback = function ($span, $lang, $ch) use ($syntax_highlight_helper) {
-            return $syntax_highlight_helper('/' . $span, $lang);
+            return $syntax_highlight_helper('/'.$span, $lang);
         };
 
         $slash_putback_rtrim1 = function ($span, $lang, $ch) use ($rtrim1) {
-            return $rtrim1('/' . $span, $lang, $ch);
+            return $rtrim1('/'.$span, $lang, $ch);
         };
 
         $lparen_putback = function ($span, $lang, $ch) use ($syntax_highlight_helper) {
-            return $syntax_highlight_helper('(' . $span, $lang);
+            return $syntax_highlight_helper('('.$span, $lang);
         };
 
         $lparen_putback_rtrim1 = function ($span, $lang, $ch) use ($rtrim1) {
-            return $rtrim1('(' . $span, $lang, $ch);
+            return $rtrim1('('.$span, $lang, $ch);
         };
 
         $prepend_xml_opentag = function ($span, $lang, $ch) {
-            return '<span class="xml_tag">&lt;' . $span;
+            return '<span class="xml_tag">&lt;'.$span;
         };
 
         $proc_void = function ($span, $lang, $ch) {
@@ -2333,88 +2333,88 @@ class Highlight
         $this->process_end['SQL']    = $this->process_end['C89'];
         $this->process_end['Scheme'] = $sch_syntax_helper;
 
-        $this->edges['C89'][self::NORMAL_TEXT . ',' . self::DQ_LITERAL]   = '<span class="literal">"';
-        $this->edges['C89'][self::NORMAL_TEXT . ',' . self::SQ_LITERAL]   = '<span class="literal">\'';
-        $this->edges['C89'][self::SLASH_BEGIN . ',' . self::STAR_COMMENT] = '<span class="comment">/*';
-        $this->edges['C89'][self::DQ_LITERAL . ',' . self::NORMAL_TEXT]   = '</span>';
-        $this->edges['C89'][self::SQ_LITERAL . ',' . self::NORMAL_TEXT]   = '</span>';
-        $this->edges['C89'][self::STAR_END . ',' . self::NORMAL_TEXT]     = '</span>';
+        $this->edges['C89'][self::NORMAL_TEXT.','.self::DQ_LITERAL]   = '<span class="literal">"';
+        $this->edges['C89'][self::NORMAL_TEXT.','.self::SQ_LITERAL]   = '<span class="literal">\'';
+        $this->edges['C89'][self::SLASH_BEGIN.','.self::STAR_COMMENT] = '<span class="comment">/*';
+        $this->edges['C89'][self::DQ_LITERAL.','.self::NORMAL_TEXT]   = '</span>';
+        $this->edges['C89'][self::SQ_LITERAL.','.self::NORMAL_TEXT]   = '</span>';
+        $this->edges['C89'][self::STAR_END.','.self::NORMAL_TEXT]     = '</span>';
 
-        $this->edges['Scheme'][self::SCH_NORMAL . ',' . self::SCH_STRLIT] = '<span class="sch_str">"';
-        $this->edges['Scheme'][self::SCH_NORMAL . ',' . self::SCH_NUMLIT] = '<span class="sch_num">';
-        $this->edges['Scheme'][self::SCH_NORMAL . ',' . self::SCH_CHRLIT] = '<span class="sch_chr">#';
-        $this->edges['Scheme'][self::SCH_STRLIT . ',' . self::SCH_NORMAL] = '</span>';
-        $this->edges['Scheme'][self::SCH_NUMLIT . ',' . self::SCH_NORMAL] = '</span>';
-        $this->edges['Scheme'][self::SCH_CHRLIT . ',' . self::SCH_NORMAL] = '</span>';
+        $this->edges['Scheme'][self::SCH_NORMAL.','.self::SCH_STRLIT] = '<span class="sch_str">"';
+        $this->edges['Scheme'][self::SCH_NORMAL.','.self::SCH_NUMLIT] = '<span class="sch_num">';
+        $this->edges['Scheme'][self::SCH_NORMAL.','.self::SCH_CHRLIT] = '<span class="sch_chr">#';
+        $this->edges['Scheme'][self::SCH_STRLIT.','.self::SCH_NORMAL] = '</span>';
+        $this->edges['Scheme'][self::SCH_NUMLIT.','.self::SCH_NORMAL] = '</span>';
+        $this->edges['Scheme'][self::SCH_CHRLIT.','.self::SCH_NORMAL] = '</span>';
 
-        $this->edges['SQL'][self::NORMAL_TEXT . ',' . self::DQ_LITERAL]   = '<span class="literal">"';
-        $this->edges['SQL'][self::NORMAL_TEXT . ',' . self::SQ_LITERAL]   = '<span class="literal">\'';
-        $this->edges['SQL'][self::DASH_BEGIN . ',' . self::LINE_COMMENT]  = '<span class="comment">--';
-        $this->edges['SQL'][self::NORMAL_TEXT . ',' . self::BT_LITERAL]   = '`';
-        $this->edges['SQL'][self::DQ_LITERAL . ',' . self::NORMAL_TEXT]   = '</span>';
-        $this->edges['SQL'][self::SQ_LITERAL . ',' . self::NORMAL_TEXT]   = '</span>';
-        $this->edges['SQL'][self::LINE_COMMENT . ',' . self::NORMAL_TEXT] = '</span>';
+        $this->edges['SQL'][self::NORMAL_TEXT.','.self::DQ_LITERAL]   = '<span class="literal">"';
+        $this->edges['SQL'][self::NORMAL_TEXT.','.self::SQ_LITERAL]   = '<span class="literal">\'';
+        $this->edges['SQL'][self::DASH_BEGIN.','.self::LINE_COMMENT]  = '<span class="comment">--';
+        $this->edges['SQL'][self::NORMAL_TEXT.','.self::BT_LITERAL]   = '`';
+        $this->edges['SQL'][self::DQ_LITERAL.','.self::NORMAL_TEXT]   = '</span>';
+        $this->edges['SQL'][self::SQ_LITERAL.','.self::NORMAL_TEXT]   = '</span>';
+        $this->edges['SQL'][self::LINE_COMMENT.','.self::NORMAL_TEXT] = '</span>';
 
         $this->edges['PL/I'] = $this->edges['C89'];
 
         $this->edges['C++']                                               = $this->edges['C89'];
-        $this->edges['C++'][self::SLASH_BEGIN . ',' . self::LINE_COMMENT] = '<span class="comment">//';
-        $this->edges['C++'][self::LINE_COMMENT . ',' . self::NORMAL_TEXT] = '</span>';
+        $this->edges['C++'][self::SLASH_BEGIN.','.self::LINE_COMMENT]     = '<span class="comment">//';
+        $this->edges['C++'][self::LINE_COMMENT.','.self::NORMAL_TEXT]     = '</span>';
 
         $this->edges['C'] = $this->edges['C++'];
 
         $this->edges['PHP']                                               = $this->edges['C++'];
-        $this->edges['PHP'][self::NORMAL_TEXT . ',' . self::LINE_COMMENT] = '<span class="comment">#';
+        $this->edges['PHP'][self::NORMAL_TEXT.','.self::LINE_COMMENT]     = '<span class="comment">#';
 
-        $this->edges['Perl'][self::NORMAL_TEXT . ',' . self::DQ_LITERAL]   = '<span class="literal">"';
-        $this->edges['Perl'][self::NORMAL_TEXT . ',' . self::SQ_LITERAL]   = '<span class="literal">\'';
-        $this->edges['Perl'][self::DQ_LITERAL . ',' . self::NORMAL_TEXT]   = '</span>';
-        $this->edges['Perl'][self::SQ_LITERAL . ',' . self::NORMAL_TEXT]   = '</span>';
-        $this->edges['Perl'][self::NORMAL_TEXT . ',' . self::LINE_COMMENT] = '<span class="comment">#';
-        $this->edges['Perl'][self::LINE_COMMENT . ',' . self::NORMAL_TEXT] = '</span>';
+        $this->edges['Perl'][self::NORMAL_TEXT.','.self::DQ_LITERAL]   = '<span class="literal">"';
+        $this->edges['Perl'][self::NORMAL_TEXT.','.self::SQ_LITERAL]   = '<span class="literal">\'';
+        $this->edges['Perl'][self::DQ_LITERAL.','.self::NORMAL_TEXT]   = '</span>';
+        $this->edges['Perl'][self::SQ_LITERAL.','.self::NORMAL_TEXT]   = '</span>';
+        $this->edges['Perl'][self::NORMAL_TEXT.','.self::LINE_COMMENT] = '<span class="comment">#';
+        $this->edges['Perl'][self::LINE_COMMENT.','.self::NORMAL_TEXT] = '</span>';
 
         $this->edges['Ruby'] = $this->edges['Perl'];
 
         $this->edges['Python'] = $this->edges['Perl'];
 
-        $this->edges['mIRC'][self::NORMAL_TEXT . ',' . self::DQ_LITERAL]   = '<span class="literal">"';
-        $this->edges['mIRC'][self::NORMAL_TEXT . ',' . self::LINE_COMMENT] = '<span class="comment">;';
-        $this->edges['mIRC'][self::DQ_LITERAL . ',' . self::NORMAL_TEXT]   = '</span>';
-        $this->edges['mIRC'][self::LINE_COMMENT . ',' . self::NORMAL_TEXT] = '</span>';
+        $this->edges['mIRC'][self::NORMAL_TEXT.','.self::DQ_LITERAL]   = '<span class="literal">"';
+        $this->edges['mIRC'][self::NORMAL_TEXT.','.self::LINE_COMMENT] = '<span class="comment">;';
+        $this->edges['mIRC'][self::DQ_LITERAL.','.self::NORMAL_TEXT]   = '</span>';
+        $this->edges['mIRC'][self::LINE_COMMENT.','.self::NORMAL_TEXT] = '</span>';
 
         $this->edges['VB']                                               = $this->edges['Perl'];
-        $this->edges['VB'][self::NORMAL_TEXT . ',' . self::LINE_COMMENT] = '<span class="comment">\'';
+        $this->edges['VB'][self::NORMAL_TEXT.','.self::LINE_COMMENT]     = '<span class="comment">\'';
 
         $this->edges['Java'] = $this->edges['C++'];
 
         $this->edges['C#'] = $this->edges['Java'];
 
         $this->edges['Pascal']                                                = $this->edges['C89'];
-        $this->edges['Pascal'][self::PAREN_BEGIN . ',' . self::STAR_COMMENT]  = '<span class="comment">(*';
-        $this->edges['Pascal'][self::PAREN_BEGIN . ',' . self::DQ_LITERAL]    = '<span class="literal">"';
-        $this->edges['Pascal'][self::PAREN_BEGIN . ',' . self::SQ_LITERAL]    = '<span class="literal">\'';
-        $this->edges['Pascal'][self::SLASH_BEGIN . ',' . self::DQ_LITERAL]    = '<span class="literal">"';
-        $this->edges['Pascal'][self::SLASH_BEGIN . ',' . self::SQ_LITERAL]    = '<span class="literal">\'';
-        $this->edges['Pascal'][self::SLASH_BEGIN . ',' . self::LINE_COMMENT]  = '<span class="comment">//';
-        $this->edges['Pascal'][self::NORMAL_TEXT . ',' . self::BLOCK_COMMENT] = '<span class="comment">{';
-        $this->edges['Pascal'][self::LINE_COMMENT . ',' . self::NORMAL_TEXT]  = '</span>';
-        $this->edges['Pascal'][self::BLOCK_COMMENT . ',' . self::NORMAL_TEXT] = '</span>';
+        $this->edges['Pascal'][self::PAREN_BEGIN.','.self::STAR_COMMENT]      = '<span class="comment">(*';
+        $this->edges['Pascal'][self::PAREN_BEGIN.','.self::DQ_LITERAL]        = '<span class="literal">"';
+        $this->edges['Pascal'][self::PAREN_BEGIN.','.self::SQ_LITERAL]        = '<span class="literal">\'';
+        $this->edges['Pascal'][self::SLASH_BEGIN.','.self::DQ_LITERAL]        = '<span class="literal">"';
+        $this->edges['Pascal'][self::SLASH_BEGIN.','.self::SQ_LITERAL]        = '<span class="literal">\'';
+        $this->edges['Pascal'][self::SLASH_BEGIN.','.self::LINE_COMMENT]      = '<span class="comment">//';
+        $this->edges['Pascal'][self::NORMAL_TEXT.','.self::BLOCK_COMMENT]     = '<span class="comment">{';
+        $this->edges['Pascal'][self::LINE_COMMENT.','.self::NORMAL_TEXT]      = '</span>';
+        $this->edges['Pascal'][self::BLOCK_COMMENT.','.self::NORMAL_TEXT]     = '</span>';
 
-        $this->edges['XML'][self::NORMAL_TEXT . ',' . self::HTML_ENTITY]    = '<span class="html_entity">&amp;';
-        $this->edges['XML'][self::HTML_ENTITY . ',' . self::NORMAL_TEXT]    = '</span>';
-        $this->edges['XML'][self::HTML_ENTITY . ',' . self::XML_TAG_BEGIN]  = '</span>';
-        $this->edges['XML'][self::XML_TAG . ',' . self::NORMAL_TEXT]        = '&gt;</span>';
-        $this->edges['XML'][self::XML_TAG_BEGIN . ',' . self::XML_PI]       = '<span class="xml_pi">&lt;?';
-        $this->edges['XML'][self::XML_TAG_BEGIN . ',' . self::LINE_COMMENT] = '<span class="comment">&lt;!';
-        $this->edges['XML'][self::LINE_COMMENT . ',' . self::NORMAL_TEXT]   = '&gt;</span>';
-        $this->edges['XML'][self::XML_TAG . ',' . self::DQ_LITERAL]         = '<span class="literal">"';
-        $this->edges['XML'][self::DQ_LITERAL . ',' . self::XML_TAG]         = '"</span>';
-        $this->edges['XML'][self::DQ_LITERAL . ',' . self::DQ_ESCAPE]       = '<span class="html_entity">&amp;';
-        $this->edges['XML'][self::DQ_ESCAPE . ',' . self::DQ_LITERAL]       = '</span>';
-        $this->edges['XML'][self::XML_TAG . ',' . self::SQ_LITERAL]         = '<span class="literal">\'';
-        $this->edges['XML'][self::SQ_LITERAL . ',' . self::XML_TAG]         = '\'</span>';
-        $this->edges['XML'][self::SQ_LITERAL . ',' . self::SQ_ESCAPE]       = '<span class="html_entity">&amp;';
-        $this->edges['XML'][self::SQ_ESCAPE . ',' . self::SQ_LITERAL]       = '</span>';
+        $this->edges['XML'][self::NORMAL_TEXT.','.self::HTML_ENTITY]    = '<span class="html_entity">&amp;';
+        $this->edges['XML'][self::HTML_ENTITY.','.self::NORMAL_TEXT]    = '</span>';
+        $this->edges['XML'][self::HTML_ENTITY.','.self::XML_TAG_BEGIN]  = '</span>';
+        $this->edges['XML'][self::XML_TAG.','.self::NORMAL_TEXT]        = '&gt;</span>';
+        $this->edges['XML'][self::XML_TAG_BEGIN.','.self::XML_PI]       = '<span class="xml_pi">&lt;?';
+        $this->edges['XML'][self::XML_TAG_BEGIN.','.self::LINE_COMMENT] = '<span class="comment">&lt;!';
+        $this->edges['XML'][self::LINE_COMMENT.','.self::NORMAL_TEXT]   = '&gt;</span>';
+        $this->edges['XML'][self::XML_TAG.','.self::DQ_LITERAL]         = '<span class="literal">"';
+        $this->edges['XML'][self::DQ_LITERAL.','.self::XML_TAG]         = '"</span>';
+        $this->edges['XML'][self::DQ_LITERAL.','.self::DQ_ESCAPE]       = '<span class="html_entity">&amp;';
+        $this->edges['XML'][self::DQ_ESCAPE.','.self::DQ_LITERAL]       = '</span>';
+        $this->edges['XML'][self::XML_TAG.','.self::SQ_LITERAL]         = '<span class="literal">\'';
+        $this->edges['XML'][self::SQ_LITERAL.','.self::XML_TAG]         = '\'</span>';
+        $this->edges['XML'][self::SQ_LITERAL.','.self::SQ_ESCAPE]       = '<span class="html_entity">&amp;';
+        $this->edges['XML'][self::SQ_ESCAPE.','.self::SQ_LITERAL]       = '</span>';
     }
 
     /**
@@ -2486,8 +2486,8 @@ class Highlight
 
         if ($state != self::NORMAL_TEXT) {
             if (array_key_exists($language, $this->edges) &&
-                array_key_exists("${state}," . self::NORMAL_TEXT, $this->edges[$language])) {
-                $output .= $this->edges[$language]["${state}," . self::NORMAL_TEXT];
+                array_key_exists("${state},".self::NORMAL_TEXT, $this->edges[$language])) {
+                $output .= $this->edges[$language]["${state},".self::NORMAL_TEXT];
             }
         }
 

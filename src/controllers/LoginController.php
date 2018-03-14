@@ -17,15 +17,15 @@ class LoginController extends BaseController
     protected $data;
     protected $database;
     protected $server_id;
-    public $appLangFiles = [];
-    public $appThemes = [];
-    public $appName = '';
-    public $appVersion = '';
-    public $form = '';
-    public $href = '';
-    public $lang = [];
-    public $action = '';
-    public $controller_name = 'LoginController';
+    public $appLangFiles     = [];
+    public $appThemes        = [];
+    public $appName          = '';
+    public $appVersion       = '';
+    public $form             = '';
+    public $href             = '';
+    public $lang             = [];
+    public $action           = '';
+    public $controller_name  = 'LoginController';
     public $controller_title = 'strlogin';
 
     /**
@@ -68,13 +68,13 @@ class LoginController extends BaseController
         }
         foreach ($_REQUEST as $key => $val) {
             if (false !== strpos($key, '?')) {
-                $namexploded = explode('?', $key);
+                $namexploded               = explode('?', $key);
                 $_REQUEST[$namexploded[1]] = htmlspecialchars($val);
             }
         }
 
         $server_info = $this->misc->getServerInfo($server_id);
-        $title = sprintf($lang['strlogintitle'], $server_info['desc']);
+        $title       = sprintf($lang['strlogintitle'], $server_info['desc']);
 
         $printTitle = $this->printTitle($title, null, false);
 
