@@ -27,9 +27,9 @@ $config = PhpCsFixer\Config::create()
         'explicit_string_variable' => true,
         'final_internal_class' => true,
         'modernize_types_casting'=>true,
-        'header_comment' => ['header' => $header],
+        'header_comment' => ['commentType'=>'PHPDoc','header' => $header],
         'heredoc_to_nowdoc' => true,
-
+        'phpdoc_no_package' => false,
         'list_syntax' => ['syntax' => 'long'],
         'method_chaining_indentation' => true,
         'method_argument_space' => ['ensure_fully_multiline' => true],

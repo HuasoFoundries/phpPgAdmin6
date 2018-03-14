@@ -2,7 +2,8 @@
 
 namespace PHPPgAdmin\Database;
 
-/*
+/**
+ * @file
  * Parent class of all ADODB objects.
  *
  * $Id: ADOdbBase.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $

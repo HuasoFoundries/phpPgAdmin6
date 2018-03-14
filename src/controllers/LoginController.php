@@ -1,7 +1,7 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\Controller;
@@ -17,15 +17,15 @@ class LoginController extends BaseController
     protected $data;
     protected $database;
     protected $server_id;
-    public $appLangFiles     = [];
-    public $appThemes        = [];
-    public $appName          = '';
-    public $appVersion       = '';
-    public $form             = '';
-    public $href             = '';
-    public $lang             = [];
-    public $action           = '';
-    public $controller_name  = 'LoginController';
+    public $appLangFiles = [];
+    public $appThemes = [];
+    public $appName = '';
+    public $appVersion = '';
+    public $form = '';
+    public $href = '';
+    public $lang = [];
+    public $action = '';
+    public $controller_name = 'LoginController';
     public $controller_title = 'strlogin';
 
     /**
@@ -68,13 +68,13 @@ class LoginController extends BaseController
         }
         foreach ($_REQUEST as $key => $val) {
             if (false !== strpos($key, '?')) {
-                $namexploded               = explode('?', $key);
+                $namexploded = explode('?', $key);
                 $_REQUEST[$namexploded[1]] = htmlspecialchars($val);
             }
         }
 
         $server_info = $this->misc->getServerInfo($server_id);
-        $title       = sprintf($lang['strlogintitle'], $server_info['desc']);
+        $title = sprintf($lang['strlogintitle'], $server_info['desc']);
 
         $printTitle = $this->printTitle($title, null, false);
 
@@ -84,7 +84,7 @@ class LoginController extends BaseController
             $login_html .= $this->printMsg($msg, false);
         }
 
-        $login_html .= '<form id="login_form"  method="post" name="login_form" action="' . \SUBFOLDER . '/redirect/server?server=' . htmlspecialchars($server_id) . '">';
+        $login_html .= '<form id="login_form"  method="post" name="login_form" action="'.\SUBFOLDER.'/redirect/server?server='.htmlspecialchars($server_id).'">';
 
         $md5_server = md5($server_id);
         // Pass request vars through form (is this a security risk???)
@@ -96,33 +96,33 @@ class LoginController extends BaseController
                 $key = explode('?', $key)[1];
             }
 
-            $login_html .= '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($val) . '" />' . "\n";
+            $login_html .= '<input type="hidden" name="'.htmlspecialchars($key).'" value="'.htmlspecialchars($val).'" />'."\n";
         }
 
-        $login_html .= '<input type="hidden" name="loginServer" value="' . htmlspecialchars($server_id) . '" />';
+        $login_html .= '<input type="hidden" name="loginServer" value="'.htmlspecialchars($server_id).'" />';
         $login_html .= '<table class="navbar" border="0" cellpadding="5" cellspacing="3">';
         $login_html .= '<tr>';
-        $login_html .= '<td>' . $lang['strusername'] . '</td>';
+        $login_html .= '<td>'.$lang['strusername'].'</td>';
         $loginusername = isset($_POST['loginUsername']) ? htmlspecialchars($_POST['loginUsername']) : '';
 
-        $login_html .= '<td><input type="text" name="loginUsername" value="' . $loginusername . '" size="24" /></td>';
+        $login_html .= '<td><input type="text" name="loginUsername" value="'.$loginusername.'" size="24" /></td>';
         $login_html .= '</tr>';
         $login_html .= '<tr>';
-        $login_html .= '<td>' . $lang['strpassword'] . '</td>';
-        $login_html .= '<td><input id="loginPassword" type="password" name="loginPassword_' . $md5_server . '" size="24" /></td>';
+        $login_html .= '<td>'.$lang['strpassword'].'</td>';
+        $login_html .= '<td><input id="loginPassword" type="password" name="loginPassword_'.$md5_server.'" size="24" /></td>';
         $login_html .= '</tr>';
         $login_html .= '</table>';
         if (sizeof($this->conf['servers']) > 1) {
             $checked = isset($_POST['loginShared']) ? 'checked="checked"' : '';
-            $login_html .= '<p><input type="checkbox" id="loginShared" name="loginShared" ' . $checked . ' />';
-            $login_html .= '<label for="loginShared">' . $lang['strtrycred'] . '</label></p>';
+            $login_html .= '<p><input type="checkbox" id="loginShared" name="loginShared" '.$checked.' />';
+            $login_html .= '<label for="loginShared">'.$lang['strtrycred'].'</label></p>';
         }
-        $login_html .= '<p><input type="submit" name="loginSubmit" value="' . $lang['strlogin'] . '" /></p>';
+        $login_html .= '<p><input type="submit" name="loginSubmit" value="'.$lang['strlogin'].'" /></p>';
         $login_html .= '</form>';
 
         $login_html .= '<script type="text/javascript">';
         $login_html .= '	var uname = document.login_form.loginUsername;';
-        $login_html .= '	var pword = document.login_form.loginPassword_' . $md5_server . ';';
+        $login_html .= '	var pword = document.login_form.loginPassword_'.$md5_server.';';
         $login_html .= '	if (uname.value == "") {';
         $login_html .= '		uname.focus();';
         $login_html .= '	} else {';

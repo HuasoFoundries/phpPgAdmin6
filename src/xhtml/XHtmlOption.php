@@ -1,11 +1,14 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\XHtml;
 
+/**
+ * Class to render options elements.
+ */
 class XHtmlOption extends XHtmlElement
 {
     public function __construct($text, $value = null)

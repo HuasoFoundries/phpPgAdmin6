@@ -5,7 +5,13 @@
 namespace PHPPgAdmin;
 
 /**
+ * @file
  * A trait with helpers methods to debug, halt the app and format text to html
+ */
+
+/**
+ * A trait with helpers methods to debug, halt the app and format text to html
+ * @package PHPPgAdmin
  */
 trait HelperTrait
 {

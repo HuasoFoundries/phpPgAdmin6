@@ -2,6 +2,11 @@
 namespace PHPPgAdmin;
 
 /**
+ * @file
+ * A class that adds convenience methods to the container
+ */
+
+/**
  * A class that adds convenience methods to the container
  */
 class ContainerUtils

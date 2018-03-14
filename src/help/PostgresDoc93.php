@@ -1,7 +1,7 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\Help;
@@ -19,9 +19,9 @@ class PostgresDoc93 extends PostgresDoc92
 
         $this->help_page['pg.matview'] = 'sql-creatematerializedview.html';
 
-        $this->help_page['pg.matview.create']  = 'sql-creatematerializedview.html';
-        $this->help_page['pg.matview.drop']    = 'sql-dropmaterializedview.html';
-        $this->help_page['pg.matview.alter']   = 'sql-altermaterializedview.html';
+        $this->help_page['pg.matview.create'] = 'sql-creatematerializedview.html';
+        $this->help_page['pg.matview.drop'] = 'sql-dropmaterializedview.html';
+        $this->help_page['pg.matview.alter'] = 'sql-altermaterializedview.html';
         $this->help_page['pg.matview.refresh'] = 'sql-refreshmaterializedview.html';
 
         $this->help_page['pg.rule.matview'] = 'rules-materializedviews.html';

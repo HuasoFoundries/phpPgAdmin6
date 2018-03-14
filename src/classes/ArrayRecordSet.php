@@ -5,6 +5,13 @@
 namespace PHPPgAdmin;
 
 /**
+ * @file
+ * Really simple RecordSet to allow printTable of arrays.
+ *
+ * $Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
+ */
+
+/**
  * Really simple RecordSet to allow printTable of arrays.
  *
  * $Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $

@@ -7,11 +7,18 @@ namespace PHPPgAdmin;
 use \PHPPgAdmin\Decorators\Decorator;
 
 /**
+ * @file
  * Class to hold various commonly used functions
  *
  * $Id: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
  */
 
+/**
+ * Class to hold various commonly used functions
+ *
+ * $Id: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
+ * @package PHPPgAdmin
+ */
 class Misc
 {
     use \PHPPgAdmin\HelperTrait;

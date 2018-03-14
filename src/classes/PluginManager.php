@@ -5,7 +5,13 @@
 namespace PHPPgAdmin;
 
 /**
+ * @file
  * A class that implements the plugin's system
+ */
+
+/**
+ * A class that implements the plugin's system
+ * @package PHPPgAdmin
  */
 class PluginManager
 {

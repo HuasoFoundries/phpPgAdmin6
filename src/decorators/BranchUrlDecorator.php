@@ -1,7 +1,7 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -31,7 +31,7 @@ class BranchUrlDecorator extends Decorator
 
             $sep = '?';
             foreach ($queryVars as $var => $value) {
-                $varname  = Decorator::value_url($var, $fields);
+                $varname = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
                 if ('action' == $varname) {
                     if ('subtree' == $varvalue) {

@@ -3,6 +3,7 @@
 namespace PHPPgAdmin\Database;
 
 /**
+ * @file
  * Class to represent a database connection
  *
  * $Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
@@ -71,10 +72,9 @@ class Connection
      * Gets the name of the correct database driver to use.  As a side effect,
      * sets the platform.
      *
-     * @param  (return-by-ref) $description A description of the database and version
-     * @return The class name of the driver eg. Postgres84
-     * @return null if version is < 7.4
-     * @return -3 Database-specific failure
+     * @param (return-by-ref)  $description  A description of the database and version
+     *
+     * @return string  The driver. e.g. Postgres96
      */
     public function getDriver(&$description)
     {
@@ -109,7 +109,6 @@ class Connection
         $description = "PostgreSQL {$version}";
 
         $version_parts = explode('.', $version);
-        $major_version = $version;
 
         if ($version_parts[0] == '10') {
             $major_version = '10';

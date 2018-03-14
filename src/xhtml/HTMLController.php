@@ -1,7 +1,7 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -16,27 +16,27 @@ class HTMLController
     use \PHPPgAdmin\HelperTrait;
 
     protected $container;
-    public $form             = '';
-    public $href             = '';
-    public $lang             = [];
-    public $action           = '';
-    public $controller_name  = 'HTMLController';
+    public $form = '';
+    public $href = '';
+    public $lang = [];
+    public $action = '';
+    public $controller_name = 'HTMLController';
     public $controller_title = 'html';
 
     // Constructor
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
-        $this->container      = $container;
-        $this->lang           = $container->get('lang');
-        $this->view           = $container->get('view');
+        $this->container = $container;
+        $this->lang = $container->get('lang');
+        $this->view = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
-        $this->appName        = $container->get('settings')['appName'];
-        $this->appVersion     = $container->get('settings')['appVersion'];
-        $this->appLangFiles   = $container->get('appLangFiles');
-        $this->misc           = $container->get('misc');
-        $this->conf           = $this->misc->getConf();
-        $this->appThemes      = $container->get('appThemes');
-        $this->action         = $container->get('action');
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
+        $this->appLangFiles = $container->get('appLangFiles');
+        $this->misc = $container->get('misc');
+        $this->conf = $this->misc->getConf();
+        $this->appThemes = $container->get('appThemes');
+        $this->action = $container->get('action');
 
         if (null !== $controller_name) {
             $this->controller_name = $controller_name;
@@ -100,7 +100,7 @@ class HTMLController
 
         ksort($urlvars);
         foreach ($urlvars as $var => $varfield) {
-            $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($varfield, $fields);
+            $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($varfield, $fields);
             $sep = '&';
         }
 
@@ -143,15 +143,15 @@ class HTMLController
         $tag = '<a ';
         foreach ($link['attr'] as $attr => $value) {
             if ('href' == $attr and is_array($value)) {
-                $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'], $from)) . '" ';
+                $tag .= 'href="'.htmlentities($this->getActionUrl($value, $link['fields'], $from)).'" ';
             /*if ($has_from && $from === 'PHPPgAdmin\XHtml\HTMLTableController::getTbody') {
             $this->prtrace($tag);
             }*/
             } else {
-                $tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
+                $tag .= htmlentities($attr).'="'.Decorator::get_sanitized_value($value, $link['fields'], 'html').'" ';
             }
         }
-        $tag .= '>' . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
+        $tag .= '>'.Decorator::get_sanitized_value($link['content'], $link['fields'], 'html')."</a>\n";
 
         if ($do_print) {
             echo $tag;
@@ -182,9 +182,9 @@ class HTMLController
         $htmlOut = '';
         if ($bMultiple) {
             // If multiple select combo
-            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">" . "\n";
+            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">"."\n";
         } else {
-            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"${szName}\" id=\"${szName}\">" . "\n";
+            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"${szName}\" id=\"${szName}\">"."\n";
         }
 
         if ($bBlankEntry) {

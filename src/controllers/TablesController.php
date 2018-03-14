@@ -1,7 +1,7 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ * @package PHPPgAdmin
  */
 class TablesController extends BaseController
 {
@@ -1169,6 +1170,7 @@ class TablesController extends BaseController
                 if (0 == $status) {
                     $msg .= sprintf('%s<br />', $sql);
                     $msg .= sprintf('%s: %s<br />', htmlentities($_POST['table'], ENT_QUOTES, 'UTF-8'), $lang['strtableemptied']);
+
                     return $this->doDefault($msg);
                 }
 

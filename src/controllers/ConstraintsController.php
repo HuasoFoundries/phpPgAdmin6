@@ -1,7 +1,7 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ * @package PHPPgAdmin
  */
 class ConstraintsController extends BaseController
 {
@@ -92,12 +93,12 @@ class ConstraintsController extends BaseController
 
                 break;
             case 'save_create':
-                $this->/** @scrutinizer ignore-call */
+                $this->/* @scrutinizer ignore-call */
                 doSaveCreate();
 
                 break;
             case 'create':
-                $this->/** @scrutinizer ignore-call */
+                $this->/* @scrutinizer ignore-call */
                 doCreate();
 
                 break;

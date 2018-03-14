@@ -5,6 +5,11 @@
 namespace PHPPgAdmin;
 
 /**
+ * @file
+ * Handles highlighting of text
+ */
+
+/**
  * This software is licensed through a BSD-style License.
  * @see {@link http://www.opensource.org/licenses/bsd-license.php}
  * Copyright (c) 2003, 2004, Jacob D. Cohen

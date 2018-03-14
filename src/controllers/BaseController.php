@@ -1,13 +1,14 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
+ * @package PHPPgAdmin
  */
 class BaseController
 {
@@ -318,11 +319,11 @@ class BaseController
         return $header_controller->printHeader($title, $script, $do_print, $template);
     }
 
-    public function printBody($doBody = true, $bodyClass = 'detailbody')
+    public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
         $header_controller = $this->getHeaderController();
 
-        return $header_controller->printBody($doBody, $bodyClass);
+        return $header_controller->printBody($doBody, $bodyClass, $onloadInit);
     }
 
     public function printTitle($title, $help = null, $do_print = true)
@@ -345,7 +346,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
+            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
         }
         if ($do_print) {
             echo $html;

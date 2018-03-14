@@ -1,7 +1,7 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ * @package PHPPgAdmin
  */
 class UsersController extends BaseController
 {

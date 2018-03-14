@@ -1,11 +1,14 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\XHtml;
 
+/**
+ * Class to render select elements.
+ */
 class XHtmlSelect extends XHtmlElement
 {
     public $_data;

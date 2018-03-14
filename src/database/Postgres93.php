@@ -3,6 +3,7 @@
 namespace PHPPgAdmin\Database;
 
 /**
+ * @file
  * PostgreSQL 9.3 support
  *
  */

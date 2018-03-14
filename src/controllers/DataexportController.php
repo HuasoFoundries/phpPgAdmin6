@@ -1,13 +1,14 @@
 <?php
 
-/*
- * PHPPgAdmin v6.0.0-beta.30
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
+ * @package PHPPgAdmin
  */
 class DataexportController extends BaseController
 {
