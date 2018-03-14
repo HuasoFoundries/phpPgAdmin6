@@ -8,6 +8,7 @@ namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class AggregatesController extends BaseController
@@ -17,16 +18,22 @@ class AggregatesController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render() {}
+    public function render()
+    {
+    }
 
     /**
      * Show default list of aggregate functions in the database.
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '') {}
+    public function doDefault($msg = '')
+    {
+    }
 
-    public function doTree() {}
+    public function doTree()
+    {
+    }
 
     /**
      * Actually creates the new aggregate in the database.
@@ -122,7 +129,7 @@ class AggregatesController extends BaseController
         $this->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/aggregates.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -206,7 +213,7 @@ class AggregatesController extends BaseController
         $this->printTitle($lang['stralter'], 'pg.aggregate.alter');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/aggregates.php\" method=\"post\">\n";
         $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
         if ($aggrdata->recordCount() > 0) {
             // Output table header
@@ -255,7 +262,7 @@ class AggregatesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/aggregates.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/aggregates.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="aggrname" value="', htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
@@ -321,13 +328,13 @@ class AggregatesController extends BaseController
 
         $navlinks = [
             'showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'aggregates.php',
+                        'url' => 'aggregates.php',
                         'urlvars' => [
-                            'server'   => $_REQUEST['server'],
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -337,14 +344,14 @@ class AggregatesController extends BaseController
 
         if ($data->hasAlterAggregate()) {
             $navlinks['alter'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'aggregates.php',
+                        'url' => 'aggregates.php',
                         'urlvars' => [
-                            'action'   => 'alter',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'alter',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                             'aggrname' => $_REQUEST['aggrname'],
                             'aggrtype' => $_REQUEST['aggrtype'],
                         ],
@@ -355,14 +362,14 @@ class AggregatesController extends BaseController
         }
 
         $navlinks['drop'] = [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'aggregates.php',
+                    'url' => 'aggregates.php',
                     'urlvars' => [
-                        'action'   => 'confirm_drop',
-                        'server'   => $_REQUEST['server'],
+                        'action' => 'confirm_drop',
+                        'server' => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
+                        'schema' => $_REQUEST['schema'],
                         'aggrname' => $_REQUEST['aggrname'],
                         'aggrtype' => $_REQUEST['aggrtype'],
                     ],

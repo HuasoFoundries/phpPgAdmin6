@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class OpclassesController extends BaseController
@@ -64,20 +65,20 @@ class OpclassesController extends BaseController
                 'title' => $lang['straccessmethod'],
                 'field' => Decorator::field('amname'),
             ],
-            'opclass'      => [
+            'opclass' => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('opcname'),
             ],
-            'type'         => [
+            'type' => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('opcintype'),
             ],
-            'default'      => [
+            'default' => [
                 'title' => $lang['strdefault'],
                 'field' => Decorator::field('opcdefault'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'comment'      => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('opccomment'),
             ],
@@ -102,8 +103,8 @@ class OpclassesController extends BaseController
         $proto = Decorator::concat(Decorator::field('opcname'), '/', Decorator::field('amname'));
 
         $attrs = [
-            'text'    => $proto,
-            'icon'    => 'OperatorClass',
+            'text' => $proto,
+            'icon' => 'OperatorClass',
             'toolTip' => Decorator::field('opccomment'),
         ];
 

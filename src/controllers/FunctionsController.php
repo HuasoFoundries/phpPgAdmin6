@@ -10,12 +10,13 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class FunctionsController extends BaseController
 {
     public $controller_name = 'FunctionsController';
-    public $table_place     = 'functions-functions';
+    public $table_place = 'functions-functions';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -99,17 +100,17 @@ class FunctionsController extends BaseController
         $funcs = $data->getFunctions();
 
         $columns = [
-            'function'     => [
+            'function' => [
                 'title' => $lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url'   => \SUBFOLDER . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
+                'url' => \SUBFOLDER."/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
-            'returns'      => [
+            'returns' => [
                 'title' => $lang['strreturns'],
                 'field' => Decorator::field('proreturns'),
             ],
-            'owner'        => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('proowner'),
             ],
@@ -117,10 +118,10 @@ class FunctionsController extends BaseController
                 'title' => $lang['strproglanguage'],
                 'field' => Decorator::field('prolanguage'),
             ],
-            'actions'      => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'      => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('procomment'),
             ],
@@ -129,43 +130,43 @@ class FunctionsController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['function' => 'proproto', 'function_oid' => 'prooid'],
-                'url'     => 'functions.php',
+                'url' => 'functions.php',
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions.php',
+                        'url' => 'functions.php',
                         'urlvars' => [
-                            'action'       => 'edit',
-                            'function'     => Decorator::field('proproto'),
+                            'action' => 'edit',
+                            'function' => Decorator::field('proproto'),
                             'function_oid' => Decorator::field('prooid'),
                         ],
                     ],
                 ],
             ],
-            'drop'         => [
+            'drop' => [
                 'multiaction' => 'confirm_drop',
-                'content'     => $lang['strdrop'],
-                'attr'        => [
+                'content' => $lang['strdrop'],
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions.php',
+                        'url' => 'functions.php',
                         'urlvars' => [
-                            'action'       => 'confirm_drop',
-                            'function'     => Decorator::field('proproto'),
+                            'action' => 'confirm_drop',
+                            'function' => Decorator::field('proproto'),
                             'function_oid' => Decorator::field('prooid'),
                         ],
                     ],
                 ],
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $lang['strprivileges'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges.php',
+                        'url' => 'privileges.php',
                         'urlvars' => [
-                            'subject'      => 'function',
-                            'function'     => Decorator::field('proproto'),
+                            'subject' => 'function',
+                            'function' => Decorator::field('proproto'),
                             'function_oid' => Decorator::field('prooid'),
                         ],
                     ],
@@ -176,45 +177,45 @@ class FunctionsController extends BaseController
         echo $this->printTable($funcs, $columns, $actions, $this->table_place, $lang['strnofunctions']);
 
         $navlinks = [
-            'createpl'       => [
-                'attr'    => [
+            'createpl' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions.php',
+                        'url' => 'functions.php',
                         'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
                 'content' => $lang['strcreateplfunction'],
             ],
             'createinternal' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions.php',
+                        'url' => 'functions.php',
                         'urlvars' => [
-                            'action'   => 'create',
+                            'action' => 'create',
                             'language' => 'internal',
-                            'server'   => $_REQUEST['server'],
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
                 'content' => $lang['strcreateinternalfunction'],
             ],
-            'createc'        => [
-                'attr'    => [
+            'createc' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions.php',
+                        'url' => 'functions.php',
                         'urlvars' => [
-                            'action'   => 'create',
+                            'action' => 'create',
                             'language' => 'C',
-                            'server'   => $_REQUEST['server'],
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -240,15 +241,15 @@ class FunctionsController extends BaseController
         $reqvars = $this->misc->getRequestVars('function');
 
         $attrs = [
-            'text'    => $proto,
-            'icon'    => 'Function',
+            'text' => $proto,
+            'icon' => 'Function',
             'toolTip' => Decorator::field('procomment'),
-            'action'  => Decorator::redirecturl(
+            'action' => Decorator::redirecturl(
                 'redirect.php',
                 $reqvars,
                 [
-                    'action'       => 'properties',
-                    'function'     => $proto,
+                    'action' => 'properties',
+                    'function' => $proto,
                     'function_oid' => Decorator::field('prooid'),
                 ]
             ),
@@ -383,8 +384,8 @@ class FunctionsController extends BaseController
                 }
                 $names_arr = $data->phpArray($fndata->fields['proargnames']);
                 $modes_arr = $data->phpArray($fndata->fields['proargmodes']);
-                $args      = '';
-                $i         = 0;
+                $args = '';
+                $i = 0;
                 for ($i = 0; $i < sizeof($args_arr); ++$i) {
                     if (0 != $i) {
                         $args .= ', ';
@@ -411,7 +412,7 @@ class FunctionsController extends BaseController
                     }
                     if (isset($names_arr[$i]) && '' != $names_arr[$i]) {
                         $data->fieldClean($names_arr[$i]);
-                        $args .= '"' . $names_arr[$i] . '" ';
+                        $args .= '"'.$names_arr[$i].'" ';
                     }
                     $args .= $args_arr[$i];
                 }
@@ -419,8 +420,8 @@ class FunctionsController extends BaseController
                 $args = $fndata->fields['proarguments'];
             }
 
-            $func_full = $fndata->fields['proname'] . '(' . $fndata->fields['proarguments'] . ')';
-            echo '<form action="' . \SUBFOLDER . "/src/views/functions.php\" method=\"post\">\n";
+            $func_full = $fndata->fields['proname'].'('.$fndata->fields['proarguments'].')';
+            echo '<form action="'.\SUBFOLDER."/src/views/functions.php\" method=\"post\">\n";
             echo "<table style=\"width: 90%\">\n";
             echo "<tr>\n";
             echo "<th class=\"data required\">{$lang['strschema']}</th>\n";
@@ -501,8 +502,8 @@ class FunctionsController extends BaseController
             // Display function cost options
             if ($data->hasFunctionCosting()) {
                 echo "<tr><th class=\"data required\" colspan=\"5\">{$lang['strfunctioncosting']}</th></tr>\n";
-                echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
-                htmlspecialchars($_POST['formCost']) . '" /></td>';
+                echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
+                htmlspecialchars($_POST['formCost']).'" /></td>';
                 echo "<td class=\"data1\" colspan=\"2\">{$lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"",
                 htmlspecialchars($_POST['formRows']), '"', (!$fndata->fields['proretset']) ? 'disabled' : '', '/></td>';
             }
@@ -578,8 +579,8 @@ class FunctionsController extends BaseController
                 }
                 $names_arr = $data->phpArray($funcdata->fields['proargnames']);
                 $modes_arr = $data->phpArray($funcdata->fields['proargmodes']);
-                $args      = '';
-                $i         = 0;
+                $args = '';
+                $i = 0;
                 for ($i = 0; $i < sizeof($args_arr); ++$i) {
                     if (0 != $i) {
                         $args .= ', ';
@@ -611,7 +612,7 @@ class FunctionsController extends BaseController
                     }
                     if (isset($names_arr[$i]) && '' != $names_arr[$i]) {
                         $data->fieldClean($names_arr[$i]);
-                        $args .= '"' . $names_arr[$i] . '" ';
+                        $args .= '"'.$names_arr[$i].'" ';
                     }
                     $args .= $args_arr[$i];
                 }
@@ -625,7 +626,7 @@ class FunctionsController extends BaseController
             }
 
             $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-            $func_full                     = $funcdata->fields['proname'] . '(' . $funcdata->fields['proarguments'] . ')';
+            $func_full = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
             echo "<table style=\"width: 90%\">\n";
             echo "<tr><th class=\"data\">{$lang['strfunction']}</th>\n";
             echo "<th class=\"data\">{$lang['strarguments']}</th>\n";
@@ -657,10 +658,10 @@ class FunctionsController extends BaseController
                 // Check to see if we have syntax highlighting for this language
                 if (array_key_exists($fnlang, $data->langmap)) {
                     $temp = $highlight->syntax_highlight(htmlspecialchars($funcdata->fields['prosrc']), $data->langmap[$fnlang]);
-                    $tag  = 'prenoescape';
+                    $tag = 'prenoescape';
                 } else {
                     $temp = $funcdata->fields['prosrc'];
-                    $tag  = 'pre';
+                    $tag = 'pre';
                 }
                 echo '<tr><td class="data1" colspan="4">', $this->misc->printVal($temp, $tag, ['lineno' => true, 'class' => 'data1']), "</td></tr>\n";
             }
@@ -693,44 +694,44 @@ class FunctionsController extends BaseController
 
         $navlinks = [
             'showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions.php',
+                        'url' => 'functions.php',
                         'urlvars' => [
-                            'server'   => $_REQUEST['server'],
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
                 'content' => $lang['strshowallfunctions'],
             ],
-            'alter'   => [
-                'attr'    => [
+            'alter' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions.php',
+                        'url' => 'functions.php',
                         'urlvars' => [
-                            'action'       => 'edit',
-                            'server'       => $_REQUEST['server'],
-                            'database'     => $_REQUEST['database'],
-                            'schema'       => $_REQUEST['schema'],
-                            'function'     => $_REQUEST['function'],
+                            'action' => 'edit',
+                            'server' => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema' => $_REQUEST['schema'],
+                            'function' => $_REQUEST['function'],
                             'function_oid' => $_REQUEST['function_oid'],
                         ],
                     ],
                 ],
                 'content' => $lang['stralter'],
             ],
-            'drop'    => [
-                'attr'    => [
+            'drop' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions.php',
+                        'url' => 'functions.php',
                         'urlvars' => [
-                            'action'       => 'confirm_drop',
-                            'server'       => $_REQUEST['server'],
-                            'database'     => $_REQUEST['database'],
-                            'schema'       => $_REQUEST['schema'],
-                            'function'     => $func_full,
+                            'action' => 'confirm_drop',
+                            'server' => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema' => $_REQUEST['schema'],
+                            'function' => $func_full,
                             'function_oid' => $_REQUEST['function_oid'],
                         ],
                     ],
@@ -760,7 +761,7 @@ class FunctionsController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($lang['strdrop'], 'pg.function.drop');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/functions.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/functions.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -785,7 +786,7 @@ class FunctionsController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['function_oid'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['function_oid'] as $k => $s) {
@@ -883,8 +884,8 @@ class FunctionsController extends BaseController
             $_POST['formComment'] = '';
         }
 
-        $types  = $data->getTypes(true, true, true);
-        $langs  = $data->getLanguages(true);
+        $types = $data->getTypes(true, true, true);
+        $langs = $data->getLanguages(true);
         $fnlang = strtolower($_POST['formLanguage']);
 
         switch ($fnlang) {
@@ -911,18 +912,18 @@ class FunctionsController extends BaseController
                 $szSelected = ' selected="selected"';
             }
             // this variable is include in the JS code bellow, so we need to ENT_QUOTES
-            $szTypes .= '<option value="' . htmlspecialchars($types->fields['typname'], ENT_QUOTES) . "\"{$szSelected}>";
-            $szTypes .= htmlspecialchars($types->fields['typname'], ENT_QUOTES) . '</option>';
+            $szTypes .= '<option value="'.htmlspecialchars($types->fields['typname'], ENT_QUOTES)."\"{$szSelected}>";
+            $szTypes .= htmlspecialchars($types->fields['typname'], ENT_QUOTES).'</option>';
             $types->moveNext();
         }
 
-        $szFunctionName = "<td class=\"data1\"><input name=\"formFunction\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"" .
-        htmlspecialchars($_POST['formFunction']) . '" /></td>';
+        $szFunctionName = "<td class=\"data1\"><input name=\"formFunction\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"".
+        htmlspecialchars($_POST['formFunction']).'" /></td>';
 
-        $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="' .
-        htmlspecialchars($_POST['formArguments']) . '" /></td>';
+        $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="'.
+        htmlspecialchars($_POST['formArguments']).'" /></td>';
 
-        $szSetOfSelected    = '';
+        $szSetOfSelected = '';
         $szNotSetOfSelected = '';
         if ('' == $_POST['formSetOf']) {
             $szNotSetOfSelected = ' selected="selected"';
@@ -935,11 +936,11 @@ class FunctionsController extends BaseController
         $szReturns .= "<option value=\"SETOF\"{$szSetOfSelected}>SETOF</option>";
         $szReturns .= '</select>';
 
-        $szReturns .= '<select name="formReturns">' . $szTypes . '</select>';
+        $szReturns .= '<select name="formReturns">'.$szTypes.'</select>';
 
         // Create string array type selector
 
-        $szArraySelected    = '';
+        $szArraySelected = '';
         $szNotArraySelected = '';
         if ('' == $_POST['formArray']) {
             $szNotArraySelected = ' selected="selected"';
@@ -955,7 +956,7 @@ class FunctionsController extends BaseController
         // Create string for language
         $szLanguage = '<td class="data1">';
         if ('c' == $fnlang || 'internal' == $fnlang) {
-            $szLanguage .= $_POST['formLanguage'] . "\n";
+            $szLanguage .= $_POST['formLanguage']."\n";
             $szLanguage .= "<input type=\"hidden\" name=\"formLanguage\" value=\"{$_POST['formLanguage']}\" />\n";
         } else {
             $szLanguage .= "<select name=\"formLanguage\">\n";
@@ -965,8 +966,8 @@ class FunctionsController extends BaseController
                     $szSelected = ' selected="selected"';
                 }
                 if ('c' != strtolower($langs->fields['lanname']) && 'internal' != strtolower($langs->fields['lanname'])) {
-                    $szLanguage .= '<option value="' . htmlspecialchars($langs->fields['lanname']) . "\"{$szSelected}>\n" .
-                    $this->misc->printVal($langs->fields['lanname']) . '</option>';
+                    $szLanguage .= '<option value="'.htmlspecialchars($langs->fields['lanname'])."\"{$szSelected}>\n".
+                    $this->misc->printVal($langs->fields['lanname']).'</option>';
                 }
 
                 $langs->moveNext();
@@ -976,8 +977,8 @@ class FunctionsController extends BaseController
 
         $szLanguage .= '</td>';
         $szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$lang['strarguments']}</th></tr>";
-        $arrayModes    = ['IN', 'OUT', 'INOUT'];
-        $szModes       = '<select name="formArgModes[]" style="width:100%;">';
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $szModes = '<select name="formArgModes[]" style="width:100%;">';
         foreach ($arrayModes as $pV) {
             $szModes .= "<option value=\"{$pV}\">{$pV}</option>";
         }
@@ -998,7 +999,7 @@ class FunctionsController extends BaseController
         }
         $szJSAddTR = "<tr id=\"parent_add_tr\" onclick=\"addArg();\" onmouseover=\"this.style.cursor='pointer'\">\n<td style=\"text-align: right\" colspan=\"6\" class=\"data3\"><table><tr><td class=\"data3\"><img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td><td class=\"data3\"><span style=\"font-size: 8pt\">{$lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
 
-        echo '<script src="' . \SUBFOLDER . "/js/functions.js\" type=\"text/javascript\"></script>
+        echo '<script src="'.\SUBFOLDER."/js/functions.js\" type=\"text/javascript\"></script>
 		<script type=\"text/javascript\">
 			//<![CDATA[
 			var g_types_select = '<select name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
@@ -1015,7 +1016,7 @@ class FunctionsController extends BaseController
 			//]]>
 		</script>
 		";
-        echo '<form action="' . \SUBFOLDER . "/src/views//views/functions.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views//views/functions.php\" method=\"post\">\n";
         echo "<table><tbody id=\"args_table\">\n";
         echo "<tr><th class=\"data required\">{$lang['strname']}</th>\n";
         echo "<th class=\"data required\" colspan=\"2\">{$lang['strreturns']}</th>\n";
@@ -1058,10 +1059,10 @@ class FunctionsController extends BaseController
         // Display function cost options
         if ($data->hasFunctionCosting()) {
             echo "<tr><th class=\"data required\" colspan=\"4\">{$lang['strfunctioncosting']}</th></tr>\n";
-            echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
-            htmlspecialchars($_POST['formCost']) . '" /></td>';
-            echo "<td class=\"data1\" colspan=\"2\">{$lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"" .
-            htmlspecialchars($_POST['formRows']) . '" /></td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
+            htmlspecialchars($_POST['formCost']).'" /></td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"".
+            htmlspecialchars($_POST['formRows']).'" /></td>';
         }
 
         // Display function properties
@@ -1111,12 +1112,12 @@ class FunctionsController extends BaseController
 
         $szJS = '';
 
-        echo '<script src="' . \SUBFOLDER . '/js/functions.js" type="text/javascript"></script>';
-        echo '<script type="text/javascript">' . $this->buildJSData() . '</script>';
+        echo '<script src="'.\SUBFOLDER.'/js/functions.js" type="text/javascript"></script>';
+        echo '<script type="text/javascript">'.$this->buildJSData().'</script>';
         if (!empty($_POST['formArgName'])) {
             $szJS = $this->buildJSRows($this->buildFunctionArguments($_POST));
         } else {
-            $szJS = '<script type="text/javascript" src="' . \SUBFOLDER . '/js/functions.js">noArgsRebuild(addArg());</script>';
+            $szJS = '<script type="text/javascript" src="'.\SUBFOLDER.'/js/functions.js">noArgsRebuild(addArg());</script>';
         }
 
         $cost = (isset($_POST['formCost'])) ? $_POST['formCost'] : null;
@@ -1139,7 +1140,7 @@ class FunctionsController extends BaseController
             $status = $data->createFunction(
                 $_POST['formFunction'],
                 empty($_POST['nojs']) ? $this->buildFunctionArguments($_POST) : $_POST['formArguments'],
-                $_POST['formReturns'] . $_POST['formArray'],
+                $_POST['formReturns'].$_POST['formArray'],
                 $def,
                 $_POST['formLanguage'],
                 $_POST['formProperties'],
@@ -1167,7 +1168,7 @@ class FunctionsController extends BaseController
         if (isset($_POST['formArgName'])) {
             $arrayArgs = [];
             foreach ($arrayVars['formArgName'] as $pK => $pV) {
-                $arrayArgs[] = $arrayVars['formArgModes'][$pK] . ' ' . trim($pV) . ' ' . trim($arrayVars['formArgType'][$pK]) . $arrayVars['formArgArray'][$pK];
+                $arrayArgs[] = $arrayVars['formArgModes'][$pK].' '.trim($pV).' '.trim($arrayVars['formArgType'][$pK]).$arrayVars['formArgArray'][$pK];
             }
 
             return implode(',', $arrayArgs);
@@ -1183,11 +1184,11 @@ class FunctionsController extends BaseController
      */
     private function buildJSRows($szArgs)
     {
-        $arrayModes      = ['IN', 'OUT', 'INOUT'];
-        $arrayArgs       = explode(',', $szArgs);
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $arrayArgs = explode(',', $szArgs);
         $arrayProperArgs = [];
-        $nC              = 0;
-        $szReturn        = '';
+        $nC = 0;
+        $szReturn = '';
         foreach ($arrayArgs as $pV) {
             $arrayWords = explode(' ', $pV);
             if (true === in_array($arrayWords[0], $arrayModes, true)) {
@@ -1196,10 +1197,10 @@ class FunctionsController extends BaseController
             }
             $szArgName = array_shift($arrayWords);
             if (false === strpos($arrayWords[count($arrayWords) - 1], '[]')) {
-                $szArgType   = implode(' ', $arrayWords);
+                $szArgType = implode(' ', $arrayWords);
                 $bArgIsArray = 'false';
             } else {
-                $szArgType   = str_replace('[]', '', implode(' ', $arrayWords));
+                $szArgType = str_replace('[]', '', implode(' ', $arrayWords));
                 $bArgIsArray = 'true';
             }
             $arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
@@ -1215,14 +1216,14 @@ class FunctionsController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $arrayModes  = ['IN', 'OUT', 'INOUT'];
-        $arrayTypes  = $data->getTypes(true, true, true);
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $arrayTypes = $data->getTypes(true, true, true);
         $arrayPTypes = [];
         $arrayPModes = [];
-        $szTypes     = '';
+        $szTypes = '';
 
         while (!$arrayTypes->EOF) {
-            $arrayPTypes[] = "'" . $arrayTypes->fields['typname'] . "'";
+            $arrayPTypes[] = "'".$arrayTypes->fields['typname']."'";
             $arrayTypes->moveNext();
         }
 
@@ -1230,9 +1231,9 @@ class FunctionsController extends BaseController
             $arrayPModes[] = "'{$pV}'";
         }
 
-        $szTypes = 'g_main_types = new Array(' . implode(',', $arrayPTypes) . ');';
-        $szModes = 'g_main_modes = new Array(' . implode(',', $arrayPModes) . ');';
+        $szTypes = 'g_main_types = new Array('.implode(',', $arrayPTypes).');';
+        $szModes = 'g_main_modes = new Array('.implode(',', $arrayPModes).');';
 
-        return $szTypes . $szModes;
+        return $szTypes.$szModes;
     }
 }

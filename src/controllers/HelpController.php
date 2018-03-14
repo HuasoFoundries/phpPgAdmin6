@@ -8,6 +8,7 @@ namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class HelpController extends BaseController

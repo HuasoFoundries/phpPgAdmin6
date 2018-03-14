@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class SchemasController extends BaseController
@@ -21,7 +22,7 @@ class SchemasController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
+        $lang = $this->lang;
         $action = $this->action;
 
         if ('tree' == $action) {
@@ -103,13 +104,13 @@ class SchemasController extends BaseController
         $schemas = $data->getSchemas();
 
         $columns = [
-            'schema'  => [
+            'schema' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
-                'vars'  => ['schema' => 'nspname'],
+                'url' => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
+                'vars' => ['schema' => 'nspname'],
             ],
-            'owner'   => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('nspowner'),
             ],
@@ -125,38 +126,38 @@ class SchemasController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['nsp' => 'nspname'],
-                'url'     => 'schemas.php',
+                'url' => 'schemas.php',
             ],
-            'drop'         => [
-                'content'     => $lang['strdrop'],
-                'attr'        => [
+            'drop' => [
+                'content' => $lang['strdrop'],
+                'attr' => [
                     'href' => [
-                        'url'     => 'schemas.php',
+                        'url' => 'schemas.php',
                         'urlvars' => [
                             'action' => 'drop',
-                            'nsp'    => Decorator::field('nspname'),
+                            'nsp' => Decorator::field('nspname'),
                         ],
                     ],
                 ],
                 'multiaction' => 'drop',
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $lang['strprivileges'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges.php',
+                        'url' => 'privileges.php',
                         'urlvars' => [
                             'subject' => 'schema',
-                            'schema'  => Decorator::field('nspname'),
+                            'schema' => Decorator::field('nspname'),
                         ],
                     ],
                 ],
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'schemas.php',
+                        'url' => 'schemas.php',
                         'urlvars' => [
                             'action' => 'alter',
                             'schema' => Decorator::field('nspname'),
@@ -173,12 +174,12 @@ class SchemasController extends BaseController
         echo $this->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'schemas.php',
+                    'url' => 'schemas.php',
                     'urlvars' => [
-                        'action'   => 'create',
-                        'server'   => $_REQUEST['server'],
+                        'action' => 'create',
+                        'server' => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
                     ],
                 ],
@@ -202,18 +203,18 @@ class SchemasController extends BaseController
         //$this->prtrace($reqvars);
 
         $attrs = [
-            'text'    => Decorator::field('nspname'),
-            'icon'    => 'Schema',
+            'text' => Decorator::field('nspname'),
+            'icon' => 'Schema',
             'toolTip' => Decorator::field('nspcomment'),
-            'action'  => Decorator::redirecturl(
+            'action' => Decorator::redirecturl(
                 'redirect.php',
                 $reqvars,
                 [
                     'subject' => 'schema',
-                    'schema'  => Decorator::field('nspname'),
+                    'schema' => Decorator::field('nspname'),
                 ]
             ),
-            'branch'  => Decorator::url(
+            'branch' => Decorator::url(
                 'schemas.php',
                 $reqvars,
                 [
@@ -239,8 +240,8 @@ class SchemasController extends BaseController
         //$this->prtrace($reqvars);
 
         $attrs = [
-            'text'   => Decorator::field('title'),
-            'icon'   => Decorator::field('icon'),
+            'text' => Decorator::field('title'),
+            'icon' => Decorator::field('icon'),
             'action' => Decorator::actionurl(
                 Decorator::field('url'),
                 $reqvars,
@@ -292,7 +293,7 @@ class SchemasController extends BaseController
         $this->printTitle($lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/schemas.php" method="post">'."\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -377,7 +378,7 @@ class SchemasController extends BaseController
                 $_POST['owner'] = $schema->fields['ownername'];
             }
 
-            echo '<form action="' . \SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/schemas.php" method="post">'."\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -456,7 +457,7 @@ class SchemasController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($lang['strdrop'], 'pg.schema.drop');
 
-            echo '<form action="' . \SUBFOLDER . '/src/views/schemas.php" method="post">' . "\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/schemas.php" method="post">'."\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -478,7 +479,7 @@ class SchemasController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['nsp'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['nsp'] as $s) {
@@ -526,7 +527,7 @@ class SchemasController extends BaseController
         $this->printTabs('schema', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . '/src/views/dbexport.php" method="post">' . "\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/dbexport.php" method="post">'."\n";
 
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";

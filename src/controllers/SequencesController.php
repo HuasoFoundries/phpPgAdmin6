@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class SequencesController extends BaseController
@@ -128,17 +129,17 @@ class SequencesController extends BaseController
             'sequence' => [
                 'title' => $lang['strsequence'],
                 'field' => Decorator::field('seqname'),
-                'url'   => "sequences.php?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['sequence' => 'seqname'],
+                'url' => "sequences.php?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['sequence' => 'seqname'],
             ],
-            'owner'    => [
+            'owner' => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('seqowner'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'  => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('seqcomment'),
             ],
@@ -147,41 +148,41 @@ class SequencesController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['sequence' => 'seqname'],
-                'url'     => 'sequences.php',
+                'url' => 'sequences.php',
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'sequences.php',
+                        'url' => 'sequences.php',
                         'urlvars' => [
-                            'action'   => 'confirm_alter',
-                            'subject'  => 'sequence',
+                            'action' => 'confirm_alter',
+                            'subject' => 'sequence',
                             'sequence' => Decorator::field('seqname'),
                         ],
                     ],
                 ],
             ],
-            'drop'         => [
-                'content'     => $lang['strdrop'],
-                'attr'        => [
+            'drop' => [
+                'content' => $lang['strdrop'],
+                'attr' => [
                     'href' => [
-                        'url'     => 'sequences.php',
+                        'url' => 'sequences.php',
                         'urlvars' => [
-                            'action'   => 'confirm_drop',
+                            'action' => 'confirm_drop',
                             'sequence' => Decorator::field('seqname'),
                         ],
                     ],
                 ],
                 'multiaction' => 'confirm_drop',
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $lang['strprivileges'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges.php',
+                        'url' => 'privileges.php',
                         'urlvars' => [
-                            'subject'  => 'sequence',
+                            'subject' => 'sequence',
                             'sequence' => Decorator::field('seqname'),
                         ],
                     ],
@@ -192,14 +193,14 @@ class SequencesController extends BaseController
         echo $this->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'sequences.php',
+                    'url' => 'sequences.php',
                     'urlvars' => [
-                        'action'   => 'create',
-                        'server'   => $_REQUEST['server'],
+                        'action' => 'create',
+                        'server' => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
+                        'schema' => $_REQUEST['schema'],
                     ],
                 ],
             ],
@@ -220,14 +221,14 @@ class SequencesController extends BaseController
         $reqvars = $this->misc->getRequestVars('sequence');
 
         $attrs = [
-            'text'    => Decorator::field('seqname'),
-            'icon'    => 'Sequence',
+            'text' => Decorator::field('seqname'),
+            'icon' => 'Sequence',
             'toolTip' => Decorator::field('seqcomment'),
-            'action'  => Decorator::actionurl(
+            'action' => Decorator::actionurl(
                 'sequences.php',
                 $reqvars,
                 [
-                    'action'   => 'properties',
+                    'action' => 'properties',
                     'sequence' => Decorator::field('seqname'),
                 ]
             ),
@@ -291,30 +292,30 @@ class SequencesController extends BaseController
             echo '</table>';
 
             $navlinks = [
-                'alter'   => [
-                    'attr'    => [
+                'alter' => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'sequences.php',
+                            'url' => 'sequences.php',
                             'urlvars' => [
-                                'action'   => 'confirm_alter',
-                                'server'   => $_REQUEST['server'],
+                                'action' => 'confirm_alter',
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
                     ],
                     'content' => $lang['stralter'],
                 ],
-                'setval'  => [
-                    'attr'    => [
+                'setval' => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'sequences.php',
+                            'url' => 'sequences.php',
                             'urlvars' => [
-                                'action'   => 'confirm_setval',
-                                'server'   => $_REQUEST['server'],
+                                'action' => 'confirm_setval',
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
@@ -322,14 +323,14 @@ class SequencesController extends BaseController
                     'content' => $lang['strsetval'],
                 ],
                 'nextval' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'sequences.php',
+                            'url' => 'sequences.php',
                             'urlvars' => [
-                                'action'   => 'nextval',
-                                'server'   => $_REQUEST['server'],
+                                'action' => 'nextval',
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
@@ -337,29 +338,29 @@ class SequencesController extends BaseController
                     'content' => $lang['strnextval'],
                 ],
                 'restart' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'sequences.php',
+                            'url' => 'sequences.php',
                             'urlvars' => [
-                                'action'   => 'restart',
-                                'server'   => $_REQUEST['server'],
+                                'action' => 'restart',
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
                     ],
                     'content' => $lang['strrestart'],
                 ],
-                'reset'   => [
-                    'attr'    => [
+                'reset' => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'sequences.php',
+                            'url' => 'sequences.php',
                             'urlvars' => [
-                                'action'   => 'reset',
-                                'server'   => $_REQUEST['server'],
+                                'action' => 'reset',
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                                 'sequence' => $sequence->fields['seqname'],
                             ],
                         ],
@@ -367,13 +368,13 @@ class SequencesController extends BaseController
                     'content' => $lang['strreset'],
                 ],
                 'showall' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'sequences.php',
+                            'url' => 'sequences.php',
                             'urlvars' => [
-                                'server'   => $_REQUEST['server'],
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                             ],
                         ],
                     ],
@@ -411,7 +412,7 @@ class SequencesController extends BaseController
             $this->printTitle($lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -433,7 +434,7 @@ class SequencesController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['sequence'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['sequence'] as $s) {
@@ -505,7 +506,7 @@ class SequencesController extends BaseController
         $this->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
         echo "<table>\n";
 
         echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -655,7 +656,7 @@ class SequencesController extends BaseController
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
         if (is_object($sequence) && $sequence->recordCount() > 0) {
-            echo '<form action="' . \SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
             echo '<table border="0">';
             echo "<tr><th class=\"data left required\">{$lang['strlastvalue']}</th>\n";
             echo '<td class="data1">';
@@ -790,7 +791,7 @@ class SequencesController extends BaseController
                 $_POST['formCycledValue'] = 'on';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/sequences.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/sequences.php\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";

@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class LanguagesController extends BaseController
@@ -21,7 +22,7 @@ class LanguagesController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
+        $lang = $this->lang;
         $action = $this->action;
         if ('tree' == $action) {
             return $this->doTree();
@@ -61,10 +62,10 @@ class LanguagesController extends BaseController
                 'title' => $lang['strname'],
                 'field' => Decorator::field('lanname'),
             ],
-            'trusted'  => [
+            'trusted' => [
                 'title' => $lang['strtrusted'],
                 'field' => Decorator::field('lanpltrusted'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
             'function' => [
                 'title' => $lang['strfunction'],

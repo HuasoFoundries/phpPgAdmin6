@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class InfoController extends BaseController
@@ -25,7 +26,7 @@ class InfoController extends BaseController
 
         $action = $this->action;
 
-        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strinfo']);
+        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strinfo']);
         $this->printBody();
 
         switch ($action) {
@@ -58,13 +59,13 @@ class InfoController extends BaseController
         $shownull = ['null' => true];
 
         // Fetch info
-        $referrers      = $data->getReferrers($_REQUEST['table']);
-        $parents        = $data->getTableParents($_REQUEST['table']);
-        $children       = $data->getTableChildren($_REQUEST['table']);
+        $referrers = $data->getReferrers($_REQUEST['table']);
+        $parents = $data->getTableParents($_REQUEST['table']);
+        $children = $data->getTableChildren($_REQUEST['table']);
         $tablestatstups = $data->getStatsTableTuples($_REQUEST['table']);
-        $tablestatsio   = $data->getStatsTableIO($_REQUEST['table']);
+        $tablestatsio = $data->getStatsTableIO($_REQUEST['table']);
         $indexstatstups = $data->getStatsIndexTuples($_REQUEST['table']);
-        $indexstatsio   = $data->getStatsIndexIO($_REQUEST['table']);
+        $indexstatsio = $data->getStatsIndexIO($_REQUEST['table']);
 
         // Check that there is some info
         if (($referrers === -99 || ($referrers !== -99 && 0 == $referrers->recordCount()))
@@ -78,15 +79,15 @@ class InfoController extends BaseController
                 echo "<h3>{$lang['strreferringtables']}</h3>\n";
 
                 $columns = [
-                    'schema'     => [
+                    'schema' => [
                         'title' => $lang['strschema'],
                         'field' => Decorator::field('nspname'),
                     ],
-                    'table'      => [
+                    'table' => [
                         'title' => $lang['strtable'],
                         'field' => Decorator::field('relname'),
                     ],
-                    'name'       => [
+                    'name' => [
                         'title' => $lang['strname'],
                         'field' => Decorator::field('conname'),
                     ],
@@ -94,7 +95,7 @@ class InfoController extends BaseController
                         'title' => $lang['strdefinition'],
                         'field' => Decorator::field('consrc'),
                     ],
-                    'actions'    => [
+                    'actions' => [
                         'title' => $lang['stractions'],
                     ],
                 ];
@@ -102,12 +103,12 @@ class InfoController extends BaseController
                 $actions = [
                     'properties' => [
                         'content' => $lang['strproperties'],
-                        'attr'    => [
+                        'attr' => [
                             'href' => [
-                                'url'     => 'constraints.php',
+                                'url' => 'constraints.php',
                                 'urlvars' => [
                                     'schema' => Decorator::field('nspname'),
-                                    'table'  => Decorator::field('relname'),
+                                    'table' => Decorator::field('relname'),
                                 ],
                             ],
                         ],
@@ -122,11 +123,11 @@ class InfoController extends BaseController
                 echo "<h3>{$lang['strparenttables']}</h3>\n";
 
                 $columns = [
-                    'schema'  => [
+                    'schema' => [
                         'title' => $lang['strschema'],
                         'field' => Decorator::field('nspname'),
                     ],
-                    'table'   => [
+                    'table' => [
                         'title' => $lang['strtable'],
                         'field' => Decorator::field('relname'),
                     ],
@@ -138,12 +139,12 @@ class InfoController extends BaseController
                 $actions = [
                     'properties' => [
                         'content' => $lang['strproperties'],
-                        'attr'    => [
+                        'attr' => [
                             'href' => [
-                                'url'     => 'tblproperties.php',
+                                'url' => 'tblproperties.php',
                                 'urlvars' => [
                                     'schema' => Decorator::field('nspname'),
-                                    'table'  => Decorator::field('relname'),
+                                    'table' => Decorator::field('relname'),
                                 ],
                             ],
                         ],
@@ -158,11 +159,11 @@ class InfoController extends BaseController
                 echo "<h3>{$lang['strchildtables']}</h3>\n";
 
                 $columns = [
-                    'schema'  => [
+                    'schema' => [
                         'title' => $lang['strschema'],
                         'field' => Decorator::field('nspname'),
                     ],
-                    'table'   => [
+                    'table' => [
                         'title' => $lang['strtable'],
                         'field' => Decorator::field('relname'),
                     ],
@@ -174,12 +175,12 @@ class InfoController extends BaseController
                 $actions = [
                     'properties' => [
                         'content' => $lang['strproperties'],
-                        'attr'    => [
+                        'attr' => [
                             'href' => [
-                                'url'     => 'tblproperties.php',
+                                'url' => 'tblproperties.php',
                                 'urlvars' => [
                                     'schema' => Decorator::field('nspname'),
-                                    'table'  => Decorator::field('relname'),
+                                    'table' => Decorator::field('relname'),
                                 ],
                             ],
                         ],

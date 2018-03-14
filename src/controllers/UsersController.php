@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class UsersController extends BaseController
@@ -107,31 +108,31 @@ class UsersController extends BaseController
         $users = $data->getUsers();
 
         $columns = [
-            'user'      => [
+            'user' => [
                 'title' => $lang['strusername'],
                 'field' => Decorator::field('usename'),
             ],
             'superuser' => [
                 'title' => $lang['strsuper'],
                 'field' => Decorator::field('usesuper'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'createdb'  => [
+            'createdb' => [
                 'title' => $lang['strcreatedb'],
                 'field' => Decorator::field('usecreatedb'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'expires'   => [
-                'title'  => $lang['strexpires'],
-                'field'  => Decorator::field('useexpires'),
-                'type'   => 'callback',
+            'expires' => [
+                'title' => $lang['strexpires'],
+                'field' => Decorator::field('useexpires'),
+                'type' => 'callback',
                 'params' => ['function' => $renderUseExpires, 'null' => $lang['strnever']],
             ],
-            'defaults'  => [
+            'defaults' => [
                 'title' => $lang['strsessiondefaults'],
                 'field' => Decorator::field('useconfig'),
             ],
-            'actions'   => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -139,23 +140,23 @@ class UsersController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'users.php',
+                        'url' => 'users.php',
                         'urlvars' => [
-                            'action'   => 'edit',
+                            'action' => 'edit',
                             'username' => Decorator::field('usename'),
                         ],
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'users.php',
+                        'url' => 'users.php',
                         'urlvars' => [
-                            'action'   => 'confirm_drop',
+                            'action' => 'confirm_drop',
                             'username' => Decorator::field('usename'),
                         ],
                     ],
@@ -166,9 +167,9 @@ class UsersController extends BaseController
         echo $this->printTable($users, $columns, $actions, 'users-users', $lang['strnousers']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'users.php',
+                    'url' => 'users.php',
                     'urlvars' => [
                         'action' => 'create',
                         'server' => $_REQUEST['server'],
@@ -194,7 +195,7 @@ class UsersController extends BaseController
 
         $server_info = $this->misc->getServerInfo();
 
-        $userdata         = $data->getUser($server_info['username']);
+        $userdata = $data->getUser($server_info['username']);
         $_REQUEST['user'] = $server_info['username'];
 
         $this->printTrail('user');
@@ -202,7 +203,7 @@ class UsersController extends BaseController
         $this->printMsg($msg);
 
         if ($userdata->recordCount() > 0) {
-            $userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
+            $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
             $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strusername']}</th><th class=\"data\">{$lang['strsuper']}</th><th class=\"data\">{$lang['strcreatedb']}</th><th class=\"data\">{$lang['strexpires']}</th>";
@@ -219,9 +220,9 @@ class UsersController extends BaseController
         }
 
         $this->printNavLinks(['changepassword' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'users.php',
+                    'url' => 'users.php',
                     'urlvars' => [
                         'action' => 'confchangepassword',
                         'server' => $_REQUEST['server'],
@@ -259,7 +260,7 @@ class UsersController extends BaseController
                 $_POST['confirm'] = '';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
@@ -312,9 +313,9 @@ class UsersController extends BaseController
         $userdata = $data->getUser($_REQUEST['username']);
 
         if ($userdata->recordCount() > 0) {
-            $server_info                     = $this->misc->getServerInfo();
-            $canRename                       = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
-            $userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
+            $server_info = $this->misc->getServerInfo();
+            $canRename = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
+            $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
             $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
 
             if (!isset($_POST['formExpires'])) {
@@ -330,14 +331,14 @@ class UsersController extends BaseController
                     $_POST['formCreateDB'] = '';
                 }
 
-                $_POST['formExpires']  = 'infinity' == $userdata->fields['useexpires'] ? '' : $userdata->fields['useexpires'];
+                $_POST['formExpires'] = 'infinity' == $userdata->fields['useexpires'] ? '' : $userdata->fields['useexpires'];
                 $_POST['formPassword'] = '';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strusername']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . '" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['newname']).'" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$lang['strsuper']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
             (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
@@ -406,7 +407,7 @@ class UsersController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropuser'], $this->misc->printVal($_REQUEST['username'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="username" value="', htmlspecialchars($_REQUEST['username']), "\" />\n";
             echo $this->misc->form;
@@ -453,7 +454,7 @@ class UsersController extends BaseController
         $this->printTitle($lang['strcreateuser'], 'pg.user.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/users.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/users.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strusername']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formUsername\" value=\"", htmlspecialchars($_POST['formUsername']), "\" /></td>\n\t</tr>\n";

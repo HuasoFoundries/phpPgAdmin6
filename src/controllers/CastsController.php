@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class CastsController extends BaseController
@@ -21,7 +22,7 @@ class CastsController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
+        $lang = $this->lang;
         $action = $this->action;
         if ('tree' == $action) {
             return $this->doTree();
@@ -73,18 +74,18 @@ class CastsController extends BaseController
                 'title' => $lang['strtargettype'],
                 'field' => Decorator::field('casttarget'),
             ],
-            'function'    => [
-                'title'  => $lang['strfunction'],
-                'field'  => Decorator::field('castfunc'),
+            'function' => [
+                'title' => $lang['strfunction'],
+                'field' => Decorator::field('castfunc'),
                 'params' => ['null' => $lang['strbinarycompat']],
             ],
-            'implicit'    => [
-                'title'  => $lang['strimplicit'],
-                'field'  => Decorator::field('castcontext'),
-                'type'   => 'callback',
+            'implicit' => [
+                'title' => $lang['strimplicit'],
+                'field' => Decorator::field('castcontext'),
+                'type' => 'callback',
                 'params' => ['function' => $renderCastContext, 'align' => 'center'],
             ],
-            'comment'     => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('castcomment'),
             ],

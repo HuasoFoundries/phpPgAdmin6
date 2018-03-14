@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class GroupsController extends BaseController
@@ -103,11 +104,11 @@ class GroupsController extends BaseController
         $groups = $data->getGroups();
 
         $columns = [
-            'group'   => [
+            'group' => [
                 'title' => $lang['strgroup'],
                 'field' => Decorator::field('groname'),
-                'url'   => "groups.php?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['group' => 'groname'],
+                'url' => "groups.php?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['group' => 'groname'],
             ],
             'actions' => [
                 'title' => $lang['stractions'],
@@ -117,12 +118,12 @@ class GroupsController extends BaseController
         $actions = [
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'groups.php',
+                        'url' => 'groups.php',
                         'urlvars' => [
                             'action' => 'confirm_drop',
-                            'group'  => Decorator::field('groname'),
+                            'group' => Decorator::field('groname'),
                         ],
                     ],
                 ],
@@ -132,9 +133,9 @@ class GroupsController extends BaseController
         echo $this->printTable($groups, $columns, $actions, 'groups-properties', $lang['strnogroups']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'groups.php',
+                    'url' => 'groups.php',
                     'urlvars' => [
                         'action' => 'create',
                         'server' => $_REQUEST['server'],
@@ -177,7 +178,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -214,7 +215,7 @@ class GroupsController extends BaseController
         $this->printMsg($msg);
 
         $groupdata = $data->getGroup($_REQUEST['group']);
-        $users     = $data->getUsers();
+        $users = $data->getUsers();
 
         if ($groupdata->recordCount() > 0) {
             $columns = [
@@ -230,13 +231,13 @@ class GroupsController extends BaseController
             $actions = [
                 'drop' => [
                     'content' => $lang['strdrop'],
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'groups.php',
+                            'url' => 'groups.php',
                             'urlvars' => [
                                 'action' => 'confirm_drop_member',
-                                'group'  => $_REQUEST['group'],
-                                'user'   => Decorator::field('usename'),
+                                'group' => $_REQUEST['group'],
+                                'user' => Decorator::field('usename'),
                             ],
                         ],
                     ],
@@ -247,7 +248,7 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="' . \SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
         echo '<select name="user">';
         while (!$users->EOF) {
             $uname = $this->misc->printVal($users->fields['usename']);
@@ -263,9 +264,9 @@ class GroupsController extends BaseController
         echo "</form>\n";
 
         $this->printNavLinks(['showall' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'groups.php',
+                    'url' => 'groups.php',
                     'urlvars' => [
                         'server' => $_REQUEST['server'],
                     ],
@@ -291,7 +292,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";

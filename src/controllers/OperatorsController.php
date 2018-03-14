@@ -10,6 +10,7 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
  * @package PHPPgAdmin
  */
 class OperatorsController extends BaseController
@@ -85,15 +86,15 @@ class OperatorsController extends BaseController
         $reqvars = $this->misc->getRequestVars('operator');
 
         $attrs = [
-            'text'    => $proto,
-            'icon'    => 'Operator',
+            'text' => $proto,
+            'icon' => 'Operator',
             'toolTip' => Decorator::field('oprcomment'),
-            'action'  => Decorator::actionurl(
+            'action' => Decorator::actionurl(
                 'operators.php',
                 $reqvars,
                 [
-                    'action'       => 'properties',
-                    'operator'     => $proto,
+                    'action' => 'properties',
+                    'operator' => $proto,
                     'operator_oid' => Decorator::field('oid'),
                 ]
             ),
@@ -122,10 +123,10 @@ class OperatorsController extends BaseController
             'operator' => [
                 'title' => $lang['stroperator'],
                 'field' => Decorator::field('oprname'),
-                'url'   => "operators.php?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['operator' => 'oprname', 'operator_oid' => 'oid'],
+                'url' => "operators.php?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['operator' => 'oprname', 'operator_oid' => 'oid'],
             ],
-            'leftarg'  => [
+            'leftarg' => [
                 'title' => $lang['strleftarg'],
                 'field' => Decorator::field('oprleftname'),
             ],
@@ -133,14 +134,14 @@ class OperatorsController extends BaseController
                 'title' => $lang['strrightarg'],
                 'field' => Decorator::field('oprrightname'),
             ],
-            'returns'  => [
+            'returns' => [
                 'title' => $lang['strreturns'],
                 'field' => Decorator::field('resultname'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $lang['stractions'],
             ],
-            'comment'  => [
+            'comment' => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('oprcomment'),
             ],
@@ -152,12 +153,12 @@ class OperatorsController extends BaseController
                 // 'url'   => "operators.php?action=confirm_drop&amp;{$this->misc->href}&amp;",
                 // 'vars'  => array('operator' => 'oprname', 'operator_oid' => 'oid'),
                 'content' => $lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'operators.php',
+                        'url' => 'operators.php',
                         'urlvars' => [
-                            'action'       => 'confirm_drop',
-                            'operator'     => Decorator::field('oprname'),
+                            'action' => 'confirm_drop',
+                            'operator' => Decorator::field('oprname'),
                             'operator_oid' => Decorator::field('oid'),
                         ],
                     ],
@@ -184,7 +185,7 @@ class OperatorsController extends BaseController
         $this->printTitle($lang['strproperties'], 'pg.operator');
         $this->printMsg($msg);
 
-        $oprdata                       = $data->getOperator($_REQUEST['operator_oid']);
+        $oprdata = $data->getOperator($_REQUEST['operator_oid']);
         $oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
 
         if ($oprdata->recordCount() > 0) {
@@ -227,18 +228,18 @@ class OperatorsController extends BaseController
             $this->printNavLinks(
                 [
                     'showall' => [
-                        'attr'    => [
+                        'attr' => [
                             'href' => [
-                                'url'     => 'operators.php',
+                                'url' => 'operators.php',
                                 'urlvars' => [
-                                    'server'   => $_REQUEST['server'],
+                                    'server' => $_REQUEST['server'],
                                     'database' => $_REQUEST['database'],
-                                    'schema'   => $_REQUEST['schema'],
+                                    'schema' => $_REQUEST['schema'],
                                 ],
                             ],
                         ],
                         'content' => $lang['strshowalloperators'],
-                    ]],
+                    ], ],
                 'operators-properties',
                 get_defined_vars()
             );
@@ -263,7 +264,7 @@ class OperatorsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/operators.php\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/operators.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="operator" value="', htmlspecialchars($_REQUEST['operator']), "\" />\n";
