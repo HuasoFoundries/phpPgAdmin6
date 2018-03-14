@@ -25,7 +25,7 @@ class HTMLNavbarController extends HTMLController
         if (null === $from) {
             $from = __METHOD__;
         }
-        $lang = $this->lang;
+        $lang       = $this->lang;
         $this->misc = $this->misc;
 
         $trail_html = $this->printTopbar(false, $from);
@@ -105,8 +105,8 @@ class HTMLNavbarController extends HTMLController
         // Navlinks hook's place
         $plugin_functions_parameters = [
             'navlinks' => &$navlinks,
-            'place' => $place,
-            'env' => $env,
+            'place'    => $place,
+            'env'      => $env,
         ];
         $plugin_manager->do_hook('navlinks', $plugin_functions_parameters);
 
@@ -135,12 +135,12 @@ class HTMLNavbarController extends HTMLController
             $from = __METHOD__;
         }
 
-        $lang = $this->lang;
+        $lang       = $this->lang;
         $this->misc = $this->misc;
 
         if (is_string($alltabs)) {
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
-            $alltabs = $this->misc->getNavTabs($alltabs);
+            $alltabs                            = $this->misc->getNavTabs($alltabs);
         }
         //$this->prtrace($tabs);
         $tabs_html = '';
@@ -150,8 +150,8 @@ class HTMLNavbarController extends HTMLController
         if (count($alltabs) > 0) {
             foreach ($alltabs as $tab_id => $tab) {
                 if (!isset($tab['hide']) || true !== $tab['hide']) {
-                    $tabs[$tab_id] = $tab;
-                    $tabs[$tab_id]['active'] = $active = ($tab_id == $activetab) ? ' active' : '';
+                    $tabs[$tab_id]            = $tab;
+                    $tabs[$tab_id]['active']  = $active  = ($tab_id == $activetab) ? ' active' : '';
                     $tabs[$tab_id]['tablink'] = str_replace(['&amp;', '.php'], ['&', ''], htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
                     if (isset($tab['icon']) && $icon = $this->misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
@@ -169,8 +169,8 @@ class HTMLNavbarController extends HTMLController
             $width = (int) (100 / count($tabs)).'%';
 
             $viewVars = [
-                'width' => $width,
-                'tabs' => $tabs,
+                'width'           => $width,
+                'tabs'            => $tabs,
                 'controller_name' => $this->controller_name,
             ];
 
@@ -191,7 +191,7 @@ class HTMLNavbarController extends HTMLController
      */
     public function getLastTabURL($section)
     {
-        $lang = $this->lang;
+        $lang       = $this->lang;
         $this->misc = $this->misc;
 
         $tabs = $this->misc->getNavTabs($section);
@@ -220,15 +220,15 @@ class HTMLNavbarController extends HTMLController
             $from = __METHOD__;
         }
 
-        $lang = $this->lang;
+        $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $this->misc = $this->misc;
-        $appName = $this->misc->appName;
-        $appVersion = $this->misc->appVersion;
+        $this->misc     = $this->misc;
+        $appName        = $this->misc->appName;
+        $appVersion     = $this->misc->appVersion;
 
         $server_info = $this->misc->getServerInfo();
-        $server_id = $this->misc->getServerId();
-        $reqvars = $this->misc->getRequestVars('table');
+        $server_id   = $this->misc->getServerId();
+        $reqvars     = $this->misc->getRequestVars('table');
 
         $topbar_html = '<div class="topbar" data-controller="'.$this->controller_name.'"><table style="width: 100%"><tr><td>';
 
@@ -250,20 +250,20 @@ class HTMLNavbarController extends HTMLController
                 'sql' => [
                     'attr' => [
                         'href' => [
-                            'url' => SUBFOLDER.'/src/views/sqledit',
+                            'url'     => SUBFOLDER.'/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'sql',
                             ]),
                         ],
                         'target' => 'sqledit',
-                        'id' => 'toplink_sql',
+                        'id'     => 'toplink_sql',
                     ],
                     'content' => $lang['strsql'],
                 ],
                 'history' => [
                     'attr' => [
                         'href' => [
-                            'url' => SUBFOLDER.'/src/views/history',
+                            'url'     => SUBFOLDER.'/src/views/history',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
@@ -275,22 +275,22 @@ class HTMLNavbarController extends HTMLController
                 'find' => [
                     'attr' => [
                         'href' => [
-                            'url' => SUBFOLDER.'/src/views/sqledit',
+                            'url'     => SUBFOLDER.'/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'find',
                             ]),
                         ],
                         'target' => 'sqledit',
-                        'id' => 'toplink_find',
+                        'id'     => 'toplink_find',
                     ],
                     'content' => $lang['strfind'],
                 ],
                 'logout' => [
                     'attr' => [
                         'href' => [
-                            'url' => SUBFOLDER.'/src/views/servers',
+                            'url'     => SUBFOLDER.'/src/views/servers',
                             'urlvars' => [
-                                'action' => 'logout',
+                                'action'       => 'logout',
                                 'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}",
                             ],
                         ],
@@ -313,7 +313,7 @@ class HTMLNavbarController extends HTMLController
 
             $topbar_html .= '</td>';
 
-            $sql_window_id = htmlentities('sqledit:'.$server_id);
+            $sql_window_id     = htmlentities('sqledit:'.$server_id);
             $history_window_id = htmlentities('history:'.$server_id);
 
             $topbar_html .= "<script type=\"text/javascript\">
@@ -390,20 +390,20 @@ class HTMLNavbarController extends HTMLController
      */
     private function getTrail($subject = null)
     {
-        $lang = $this->lang;
+        $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $this->misc = $this->misc;
-        $appName = $this->misc->appName;
+        $this->misc     = $this->misc;
+        $appName        = $this->misc->appName;
 
         $data = $this->misc->getDatabaseAccessor();
 
         $trail = [];
-        $vars = '';
-        $done = false;
+        $vars  = '';
+        $done  = false;
 
         $trail['root'] = [
             'text' => $appName,
-            'url' => SUBFOLDER.'/src/views/servers',
+            'url'  => SUBFOLDER.'/src/views/servers',
             'icon' => 'Introduction',
         ];
 
@@ -412,13 +412,13 @@ class HTMLNavbarController extends HTMLController
         }
 
         if (!$done) {
-            $server_info = $this->misc->getServerInfo();
+            $server_info     = $this->misc->getServerInfo();
             $trail['server'] = [
                 'title' => $lang['strserver'],
-                'text' => $server_info['desc'],
-                'url' => $this->getHREFSubject('server'),
-                'help' => 'pg.server',
-                'icon' => 'Server',
+                'text'  => $server_info['desc'],
+                'url'   => $this->getHREFSubject('server'),
+                'help'  => 'pg.server',
+                'icon'  => 'Server',
             ];
         }
         if ('server' == $subject) {
@@ -428,18 +428,18 @@ class HTMLNavbarController extends HTMLController
         if (isset($_REQUEST['database']) && !$done) {
             $trail['database'] = [
                 'title' => $lang['strdatabase'],
-                'text' => $_REQUEST['database'],
-                'url' => $this->getHREFSubject('database'),
-                'help' => 'pg.database',
-                'icon' => 'Database',
+                'text'  => $_REQUEST['database'],
+                'url'   => $this->getHREFSubject('database'),
+                'help'  => 'pg.database',
+                'icon'  => 'Database',
             ];
         } elseif (isset($_REQUEST['rolename']) && !$done) {
             $trail['role'] = [
                 'title' => $lang['strrole'],
-                'text' => $_REQUEST['rolename'],
-                'url' => $this->getHREFSubject('role'),
-                'help' => 'pg.role',
-                'icon' => 'Roles',
+                'text'  => $_REQUEST['rolename'],
+                'url'   => $this->getHREFSubject('role'),
+                'help'  => 'pg.role',
+                'icon'  => 'Roles',
             ];
         }
         if ('database' == $subject || 'role' == $subject) {
@@ -449,10 +449,10 @@ class HTMLNavbarController extends HTMLController
         if (isset($_REQUEST['schema']) && !$done) {
             $trail['schema'] = [
                 'title' => $lang['strschema'],
-                'text' => $_REQUEST['schema'],
-                'url' => $this->getHREFSubject('schema'),
-                'help' => 'pg.schema',
-                'icon' => 'Schema',
+                'text'  => $_REQUEST['schema'],
+                'url'   => $this->getHREFSubject('schema'),
+                'help'  => 'pg.schema',
+                'icon'  => 'Schema',
             ];
         }
         if ('schema' == $subject) {
@@ -462,34 +462,34 @@ class HTMLNavbarController extends HTMLController
         if (isset($_REQUEST['table']) && !$done) {
             $trail['table'] = [
                 'title' => $lang['strtable'],
-                'text' => $_REQUEST['table'],
-                'url' => $this->getHREFSubject('table'),
-                'help' => 'pg.table',
-                'icon' => 'Table',
+                'text'  => $_REQUEST['table'],
+                'url'   => $this->getHREFSubject('table'),
+                'help'  => 'pg.table',
+                'icon'  => 'Table',
             ];
         } elseif (isset($_REQUEST['view']) && !$done) {
             $trail['view'] = [
                 'title' => $lang['strview'],
-                'text' => $_REQUEST['view'],
-                'url' => $this->getHREFSubject('view'),
-                'help' => 'pg.view',
-                'icon' => 'View',
+                'text'  => $_REQUEST['view'],
+                'url'   => $this->getHREFSubject('view'),
+                'help'  => 'pg.view',
+                'icon'  => 'View',
             ];
         } elseif (isset($_REQUEST['matview']) && !$done) {
             $trail['matview'] = [
                 'title' => 'M'.$lang['strview'],
-                'text' => $_REQUEST['matview'],
-                'url' => $this->getHREFSubject('matview'),
-                'help' => 'pg.matview',
-                'icon' => 'MViews',
+                'text'  => $_REQUEST['matview'],
+                'url'   => $this->getHREFSubject('matview'),
+                'help'  => 'pg.matview',
+                'icon'  => 'MViews',
             ];
         } elseif (isset($_REQUEST['ftscfg']) && !$done) {
             $trail['ftscfg'] = [
                 'title' => $lang['strftsconfig'],
-                'text' => $_REQUEST['ftscfg'],
-                'url' => $this->getHREFSubject('ftscfg'),
-                'help' => 'pg.ftscfg.example',
-                'icon' => 'Fts',
+                'text'  => $_REQUEST['ftscfg'],
+                'url'   => $this->getHREFSubject('ftscfg'),
+                'help'  => 'pg.ftscfg.example',
+                'icon'  => 'Fts',
             ];
         }
         if ('table' == $subject || 'view' == $subject || 'matview' == $subject || 'ftscfg' == $subject) {
@@ -501,29 +501,29 @@ class HTMLNavbarController extends HTMLController
                 case 'function':
                     $trail[$subject] = [
                         'title' => $lang['str'.$subject],
-                        'text' => $_REQUEST[$subject],
-                        'url' => $this->getHREFSubject('function'),
-                        'help' => 'pg.function',
-                        'icon' => 'Function',
+                        'text'  => $_REQUEST[$subject],
+                        'url'   => $this->getHREFSubject('function'),
+                        'help'  => 'pg.function',
+                        'icon'  => 'Function',
                     ];
 
                     break;
                 case 'aggregate':
                     $trail[$subject] = [
                         'title' => $lang['straggregate'],
-                        'text' => $_REQUEST['aggrname'],
-                        'url' => $this->getHREFSubject('aggregate'),
-                        'help' => 'pg.aggregate',
-                        'icon' => 'Aggregate',
+                        'text'  => $_REQUEST['aggrname'],
+                        'url'   => $this->getHREFSubject('aggregate'),
+                        'help'  => 'pg.aggregate',
+                        'icon'  => 'Aggregate',
                     ];
 
                     break;
                 case 'column':
                     $trail['column'] = [
                         'title' => $lang['strcolumn'],
-                        'text' => $_REQUEST['column'],
-                        'icon' => 'Column',
-                        'url' => $this->getHREFSubject('column'),
+                        'text'  => $_REQUEST['column'],
+                        'icon'  => 'Column',
+                        'url'   => $this->getHREFSubject('column'),
                     ];
 
                     break;
@@ -557,9 +557,9 @@ class HTMLNavbarController extends HTMLController
                         }
                         $trail[$subject] = [
                             'title' => array_key_exists('str'.$subject, $lang) ? $lang['str'.$subject] : $subject,
-                            'text' => $_REQUEST[$subject],
-                            'help' => 'pg.'.$subject,
-                            'icon' => $icon,
+                            'text'  => $_REQUEST[$subject],
+                            'help'  => 'pg.'.$subject,
+                            'icon'  => $icon,
                         ];
                     }
             }
@@ -567,7 +567,7 @@ class HTMLNavbarController extends HTMLController
 
         // Trail hook's place
         $plugin_functions_parameters = [
-            'trail' => &$trail,
+            'trail'   => &$trail,
             'section' => $subject,
         ];
 
@@ -594,7 +594,7 @@ class HTMLNavbarController extends HTMLController
             $from = __METHOD__;
         }
         $this->misc = $this->misc;
-        $list_html = "<ul class=\"{$class}\">\n";
+        $list_html  = "<ul class=\"{$class}\">\n";
         foreach ($links as $link) {
             $list_html .= "\t<li>";
             $list_html .= str_replace('.php', '', $this->printLink($link, false, $from));
