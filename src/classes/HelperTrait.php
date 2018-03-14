@@ -1,7 +1,9 @@
 <?php
-/*
- * PHPPgAdmin v6.0.0-beta.30
+
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
+
 namespace PHPPgAdmin;
 
 /**
@@ -10,29 +12,29 @@ namespace PHPPgAdmin;
  */
 
 /**
- * A trait with helpers methods to debug, halt the app and format text to html
+ * A trait with helpers methods to debug, halt the app and format text to html.
+ *
  * @package PHPPgAdmin
  */
 trait HelperTrait
 {
-
     /**
-     * Halts the execution of the program. It's like calling exit() but using builtin Slim Exceptions
+     * Halts the execution of the program. It's like calling exit() but using builtin Slim Exceptions.
      *
-     * @param string  $msg  The message to show to the user
+     * @param string $msg The message to show to the user
      *
-     * @throws \Slim\Exception\SlimException  (description)
+     * @throws \Slim\Exception\SlimException (description)
      */
     public function halt($msg = 'An error has happened')
     {
         $body = $this->container->responseobj->getBody();
         $body->write($msg);
+
         throw new \Slim\Exception\SlimException($this->container->requestobj, $this->container->responseobj);
     }
 
     /**
-     * Receives N parameters and sends them to the console adding where was it called from
-     * @return null
+     * Receives N parameters and sends them to the console adding where was it called from.
      */
     public function prtrace()
     {
@@ -55,48 +57,45 @@ trait HelperTrait
 
             'spacer3'   => "\n",*/
 
-            'class2'    => $backtrace[1]['class'],
-            'type2'     => $backtrace[1]['type'],
+            'class2' => $backtrace[1]['class'],
+            'type2' => $backtrace[1]['type'],
             'function2' => $backtrace[1]['function'],
-            'spacer4'   => ' ',
-            'line2'     => $backtrace[0]['line'],
+            'spacer4' => ' ',
+            'line2' => $backtrace[0]['line'],
         ]);
 
         $tag = implode('', $btarray0);
 
         \PC::debug(func_get_args(), $tag);
-        return;
     }
 
     /**
      * Receives N parameters and sends them to the console adding where was it
-     * called from
-     * @return null
+     * called from.
      */
     public static function statictrace()
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = ([
-            'class'    => $backtrace[1]['class'],
-            'type'     => $backtrace[1]['type'],
+            'class' => $backtrace[1]['class'],
+            'type' => $backtrace[1]['type'],
             'function' => $backtrace[1]['function'],
-            'spacer'   => ' ',
-            'line'     => $backtrace[0]['line'],
+            'spacer' => ' ',
+            'line' => $backtrace[0]['line'],
         ]);
 
         $tag = implode('', $btarray0);
 
         \PC::debug(func_get_args(), $tag);
-        return;
     }
 
     /**
-     * Returns a string with html <br> variant replaced with a new line
+     * Returns a string with html <br> variant replaced with a new line.
      *
-     * @param string  $msg  message to convert
+     * @param string $msg message to convert
      *
-     * @return string  converted message
+     * @return string converted message
      */
     public static function br2ln(string $msg)
     {

@@ -1,13 +1,15 @@
 <?php
 
+/**
+ * PHPPgAdmin v6.0.0-beta.33
+ */
+
 namespace PHPPgAdmin\Database;
 
 /**
  * @file
  * PostgreSQL 9.6 support
- *
  */
-
 class Postgres96 extends Postgres95
 {
     public $major_version = 9.6;
@@ -18,6 +20,7 @@ class Postgres96 extends Postgres95
      * Returns all available process information.
      *
      * @param $database (optional) Find only connections to specified database
+     *
      * @return A recordset
      */
     public function getProcesses($database = null)

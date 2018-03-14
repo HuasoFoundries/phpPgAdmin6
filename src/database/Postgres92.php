@@ -1,13 +1,15 @@
 <?php
 
+/**
+ * PHPPgAdmin v6.0.0-beta.33
+ */
+
 namespace PHPPgAdmin\Database;
 
 /**
  * @file
  * PostgreSQL 9.2 support
- *
  */
-
 class Postgres92 extends Postgres91
 {
     public $major_version = 9.2;
@@ -16,6 +18,7 @@ class Postgres92 extends Postgres91
      * Returns all available process information.
      *
      * @param $database (optional) Find only connections to specified database
+     *
      * @return A recordset
      */
     public function getProcesses($database = null)
@@ -38,9 +41,10 @@ class Postgres92 extends Postgres91
     }
 
     /**
-     * Retrieves information for all tablespaces
+     * Retrieves information for all tablespaces.
      *
      * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+     *
      * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTablespaces($all = false)
@@ -63,9 +67,10 @@ class Postgres92 extends Postgres91
     // Misc functions
 
     /**
-     * Retrieves a tablespace's information
+     * Retrieves a tablespace's information.
      *
      * @param $spcname
+     *
      * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTablespace($spcname)

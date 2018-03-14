@@ -1,7 +1,9 @@
 <?php
-/*
- * PHPPgAdmin v6.0.0-beta.30
+
+/**
+ * PHPPgAdmin v6.0.0-beta.33
  */
+
 namespace PHPPgAdmin;
 
 /**
@@ -11,6 +13,7 @@ namespace PHPPgAdmin;
 
 /**
  * This software is licensed through a BSD-style License.
+ *
  * @see {@link http://www.opensource.org/licenses/bsd-license.php}
  * Copyright (c) 2003, 2004, Jacob D. Cohen
  * All rights reserved.
@@ -39,6 +42,8 @@ namespace PHPPgAdmin;
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package PHPPgAdmin
  */
 class Highlight
 {
@@ -96,11 +101,11 @@ class Highlight
         $keyword_replace = function ($keywords, $text, $ncs = false) {
             $cm = $ncs ? 'i' : '';
             foreach ($keywords as $keyword) {
-                $search[]  = "/(\\b$keyword\\b)/" . $cm;
+                $search[]  = "/(\\b${keyword}\\b)/" . $cm;
                 $replace[] = '<span class="keyword">\\0</span>';
             }
 
-            $search[]  = "/(\\bclass\s)/";
+            $search[]  = '/(\\bclass\\s)/';
             $replace[] = '<span class="keyword">\\0</span>';
 
             return preg_replace($search, $replace, $text);
@@ -108,7 +113,7 @@ class Highlight
 
         $preproc_replace = function ($preproc, $text) {
             foreach ($preproc as $proc) {
-                $search[]  = "/(\\s*#\s*$proc\\b)/";
+                $search[]  = "/(\\s*#\\s*${proc}\\b)/";
                 $replace[] = '<span class="keyword">\\0</span>';
             }
 
@@ -1915,7 +1920,6 @@ class Highlight
                     'year',
                     'zone',
                 ],
-
             ];
 
             $case_insensitive = [
@@ -2420,6 +2424,7 @@ class Highlight
      *
      * @param $text
      * @param $language
+     *
      * @return string
      */
     public function syntax_highlight($text, $language)
@@ -2465,8 +2470,8 @@ class Highlight
                 }
 
                 if (array_key_exists($language, $this->edges) &&
-                    array_key_exists("$oldstate,$state", $this->edges[$language])) {
-                    $output .= $this->edges[$language]["$oldstate,$state"];
+                    array_key_exists("${oldstate},${state}", $this->edges[$language])) {
+                    $output .= $this->edges[$language]["${oldstate},${state}"];
                 }
 
                 $span = '';
@@ -2481,8 +2486,8 @@ class Highlight
 
         if ($state != self::NORMAL_TEXT) {
             if (array_key_exists($language, $this->edges) &&
-                array_key_exists("$state," . self::NORMAL_TEXT, $this->edges[$language])) {
-                $output .= $this->edges[$language]["$state," . self::NORMAL_TEXT];
+                array_key_exists("${state}," . self::NORMAL_TEXT, $this->edges[$language])) {
+                $output .= $this->edges[$language]["${state}," . self::NORMAL_TEXT];
             }
         }
 

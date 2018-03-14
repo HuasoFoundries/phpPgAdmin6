@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * PHPPgAdmin v6.0.0-beta.33
+ */
+
 namespace PHPPgAdmin;
 
 /**
@@ -7,7 +12,8 @@ namespace PHPPgAdmin;
  */
 
 /**
- * A class that adds convenience methods to the container
+ * A class that adds convenience methods to the container.
+ * @package PHPPgAdmin
  */
 class ContainerUtils
 {
@@ -69,7 +75,8 @@ class ContainerUtils
     }
 
     /**
-     * Receives N parameters and sends them to the console adding where was it called from
+     * Receives N parameters and sends them to the console adding where was it called from.
+     *
      * @return [type] [description]
      */
     public function prtrace()
@@ -103,6 +110,7 @@ class ContainerUtils
         $tag = implode('', $btarray0);
 
         \PC::debug(func_get_args(), $tag);
+
         return $this->container;
     }
 
@@ -142,9 +150,11 @@ class ContainerUtils
     }
 
     /**
-     * Returns a string with html <br> variant replaced with a new line
-     * @param  string $msg [description]
-     * @return string      [description]
+     * Returns a string with html <br> variant replaced with a new line.
+     *
+     * @param string $msg [description]
+     *
+     * @return string [description]
      */
     public static function br2ln(string $msg)
     {

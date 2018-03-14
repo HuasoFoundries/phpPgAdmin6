@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * PHPPgAdmin v6.0.0-beta.33
+ */
+
 namespace PHPPgAdmin\Database;
 
 /**
@@ -8,7 +12,6 @@ namespace PHPPgAdmin\Database;
  *
  * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  */
-
 class Postgres84 extends Postgres90
 {
     public $major_version = 8.4;
@@ -16,23 +19,24 @@ class Postgres84 extends Postgres90
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
-        'table'      => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'view'       => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'sequence'   => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
-        'database'   => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
-        'function'   => ['EXECUTE', 'ALL PRIVILEGES'],
-        'language'   => ['USAGE', 'ALL PRIVILEGES'],
-        'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+        'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+        'database' => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
+        'function' => ['EXECUTE', 'ALL PRIVILEGES'],
+        'language' => ['USAGE', 'ALL PRIVILEGES'],
+        'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
         'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
-        'column'     => ['SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'],
+        'column' => ['SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'],
     ];
 
     // Database functions
 
     /**
-     * Grabs a list of triggers on a table
+     * Grabs a list of triggers on a table.
      *
      * @param \PHPPgAdmin\Database\The|string $table The name of a table whose triggers to retrieve
+     *
      * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTriggers($table = '')
@@ -64,6 +68,7 @@ class Postgres84 extends Postgres90
      *
      * @param $term   The search term
      * @param $filter The object type to restrict to ('' means no restriction)
+     *
      * @return A recordset
      */
     public function findObject($term, $filter)
@@ -88,10 +93,10 @@ class Postgres84 extends Postgres90
         if (!$conf['show_system']) {
             // XXX: The mention of information_schema here is in the wrong place, but
             // it's the quickest fix to exclude the info schema from 7.4
-            $where     = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
+            $where = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
             $lan_where = 'AND pl.lanispl';
         } else {
-            $where     = '';
+            $where = '';
             $lan_where = '';
         }
 

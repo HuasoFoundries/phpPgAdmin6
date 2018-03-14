@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * PHPPgAdmin v6.0.0-beta.33
+ */
+
 namespace PHPPgAdmin\Database;
 
 /**
@@ -8,7 +12,6 @@ namespace PHPPgAdmin\Database;
  *
  * $Id: Postgres80.php,v 1.28 2007/12/12 04:11:10 xzilla Exp $
  */
-
 class Postgres80 extends Postgres81
 {
     public $major_version = 8.0;
@@ -16,48 +19,49 @@ class Postgres80 extends Postgres81
     // database encoding does not appear in this list, then its HTTP
     // encoding name is the same as its database encoding name.
     public $codemap = [
-        'ALT'        => 'CP866',
-        'EUC_CN'     => 'GB2312',
-        'EUC_JP'     => 'EUC-JP',
-        'EUC_KR'     => 'EUC-KR',
-        'EUC_TW'     => 'EUC-TW',
+        'ALT' => 'CP866',
+        'EUC_CN' => 'GB2312',
+        'EUC_JP' => 'EUC-JP',
+        'EUC_KR' => 'EUC-KR',
+        'EUC_TW' => 'EUC-TW',
         'ISO_8859_5' => 'ISO-8859-5',
         'ISO_8859_6' => 'ISO-8859-6',
         'ISO_8859_7' => 'ISO-8859-7',
         'ISO_8859_8' => 'ISO-8859-8',
-        'JOHAB'      => 'CP1361',
-        'KOI8'       => 'KOI8-R',
-        'LATIN1'     => 'ISO-8859-1',
-        'LATIN2'     => 'ISO-8859-2',
-        'LATIN3'     => 'ISO-8859-3',
-        'LATIN4'     => 'ISO-8859-4',
+        'JOHAB' => 'CP1361',
+        'KOI8' => 'KOI8-R',
+        'LATIN1' => 'ISO-8859-1',
+        'LATIN2' => 'ISO-8859-2',
+        'LATIN3' => 'ISO-8859-3',
+        'LATIN4' => 'ISO-8859-4',
         // The following encoding map is a known error in PostgreSQL < 7.2
         // See the constructor for Postgres72.
-        'LATIN5'     => 'ISO-8859-5',
-        'LATIN6'     => 'ISO-8859-10',
-        'LATIN7'     => 'ISO-8859-13',
-        'LATIN8'     => 'ISO-8859-14',
-        'LATIN9'     => 'ISO-8859-15',
-        'LATIN10'    => 'ISO-8859-16',
-        'SQL_ASCII'  => 'US-ASCII',
-        'TCVN'       => 'CP1258',
-        'UNICODE'    => 'UTF-8',
-        'WIN'        => 'CP1251',
-        'WIN874'     => 'CP874',
-        'WIN1256'    => 'CP1256',
+        'LATIN5' => 'ISO-8859-5',
+        'LATIN6' => 'ISO-8859-10',
+        'LATIN7' => 'ISO-8859-13',
+        'LATIN8' => 'ISO-8859-14',
+        'LATIN9' => 'ISO-8859-15',
+        'LATIN10' => 'ISO-8859-16',
+        'SQL_ASCII' => 'US-ASCII',
+        'TCVN' => 'CP1258',
+        'UNICODE' => 'UTF-8',
+        'WIN' => 'CP1251',
+        'WIN874' => 'CP874',
+        'WIN1256' => 'CP1256',
     ];
 
     // Database functions
 
     /**
-     * Return all database available on the server
+     * Return all database available on the server.
      *
      * @param null $currentdatabase
+     *
      * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf        = $this->conf;
+        $conf = $this->conf;
         $server_info = $this->server_info;
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -122,9 +126,10 @@ class Postgres80 extends Postgres81
     }
 
     /**
-     * Return all information relating to a schema
+     * Return all information relating to a schema.
      *
      * @param $schema The name of the schema
+     *
      * @return Schema information
      */
     public function getSchemaByName($schema)
@@ -143,10 +148,11 @@ class Postgres80 extends Postgres81
     // Table functions
 
     /**
-     * Changes a user's password
+     * Changes a user's password.
      *
      * @param $username The username
      * @param $password The new password
+     *
      * @return \PHPPgAdmin\Database\A 0 success
      */
     public function changePassword($username, $password)
@@ -163,10 +169,11 @@ class Postgres80 extends Postgres81
     // View functions
 
     /**
-     * Gets all information for an aggregate
+     * Gets all information for an aggregate.
      *
      * @param $name     The name of the aggregate
      * @param $basetype The input data type of the aggregate
+     *
      * @return A recordset
      */
     public function getAggregate($name, $basetype)
@@ -250,7 +257,7 @@ class Postgres80 extends Postgres81
 
     /**
      * Protected method which alter a table
-     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
      * @param $tblrs      The table recordSet returned by getTable()
      * @param $name       The new name for the table
@@ -258,11 +265,11 @@ class Postgres80 extends Postgres81
      * @param $schema     The new schema for the table
      * @param $comment    The comment on the table
      * @param $tablespace The new tablespace for the table ('' means leave as is)
+     *
      * @return int 0 success
      */
     protected function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace)
     {
-
         /* $schema not supported in pg80- */
 
         // Comment
@@ -297,18 +304,18 @@ class Postgres80 extends Postgres81
 
     /**
      * Protected method which alter a view
-     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
      * @param $vwrs    The view recordSet returned by getView()
      * @param $name    The new name for the view
      * @param $owner   The new owner for the view
      * @param $schema
      * @param $comment The comment on the view
+     *
      * @return int 0 success
      */
     protected function _alterView($vwrs, $name, $owner, $schema, $comment)
     {
-
         /* $schema not supported in pg80- */
         $this->fieldArrayClean($vwrs->fields);
 
@@ -336,7 +343,7 @@ class Postgres80 extends Postgres81
 
     /**
      * Protected method which alter a sequence
-     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
      * @param $seqrs        The sequence recordSet returned by getSequence()
      * @param $name         The new name for the sequence
@@ -350,6 +357,7 @@ class Postgres80 extends Postgres81
      * @param $cachevalue   The cache value
      * @param $cycledvalue  True if cycled, false otherwise
      * @param $startvalue   The sequence start value when issueing a restart
+     *
      * @return int 0 success
      */
     protected function _alterSequence(
@@ -366,7 +374,6 @@ class Postgres80 extends Postgres81
         $cycledvalue,
         $startvalue
     ) {
-
         /* $schema not supported in pg80- */
         $this->fieldArrayClean($seqrs->fields);
 
@@ -391,8 +398,16 @@ class Postgres80 extends Postgres81
         $this->clean($cachevalue);
         $this->clean($cycledvalue);
         $this->clean($startvalue);
-        $status = $this->alterSequenceProps($seqrs, $increment, $minvalue,
-            $maxvalue, $restartvalue, $cachevalue, $cycledvalue, null);
+        $status = $this->alterSequenceProps(
+            $seqrs,
+            $increment,
+            $minvalue,
+            $maxvalue,
+            $restartvalue,
+            $cachevalue,
+            $cycledvalue,
+            null
+        );
         if ($status != 0) {
             return -6;
         }

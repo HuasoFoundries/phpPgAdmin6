@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * PHPPgAdmin v6.0.0-beta.33
+ */
+
 namespace PHPPgAdmin\Database;
 
 /**
@@ -8,7 +12,6 @@ namespace PHPPgAdmin\Database;
  *
  * $Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
  */
-
 class Connection
 {
     use \PHPPgAdmin\HelperTrait;
@@ -38,7 +41,7 @@ class Connection
         // Ignore host if null
         if ($host === null || $host == '') {
             if ($port !== null && $port != '') {
-                $pghost = ':' . $port;
+                $pghost = ':'.$port;
             } else {
                 $pghost = '';
             }
@@ -48,7 +51,7 @@ class Connection
 
         // Add sslmode to $pghost as needed
         if (($sslmode == 'disable') || ($sslmode == 'allow') || ($sslmode == 'prefer') || ($sslmode == 'require')) {
-            $pghost .= ':' . $sslmode;
+            $pghost .= ':'.$sslmode;
         } elseif ($sslmode == 'legacy') {
             $pghost .= ' requiressl=1';
         }
@@ -72,9 +75,9 @@ class Connection
      * Gets the name of the correct database driver to use.  As a side effect,
      * sets the platform.
      *
-     * @param (return-by-ref)  $description  A description of the database and version
+     * @param (return-by-ref) $description A description of the database and version
      *
-     * @return string  The driver. e.g. Postgres96
+     * @return string The driver. e.g. Postgres96
      */
     public function getDriver(&$description)
     {
@@ -90,7 +93,7 @@ class Connection
         if (!isset($version)) {
             $adodb = new ADOdbBase($this->conn);
 
-            $sql   = 'SELECT VERSION() AS version';
+            $sql = 'SELECT VERSION() AS version';
             $field = $adodb->selectField($sql, 'version');
 
             // Check the platform, if it's mingw, set it
@@ -177,7 +180,7 @@ class Connection
     }
 
     /**
-     * Get the last error in the connection
+     * Get the last error in the connection.
      *
      * @return Error string
      */

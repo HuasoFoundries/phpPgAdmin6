@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * PHPPgAdmin v6.0.0-beta.33
+ */
+
 namespace PHPPgAdmin\Database;
 
 /**
@@ -9,32 +13,32 @@ namespace PHPPgAdmin\Database;
  *
  * $Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
  */
-
 class Postgres74 extends Postgres80
 {
     public $major_version = 7.4;
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
-        'table'    => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'view'     => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
         'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
         'database' => ['CREATE', 'TEMPORARY', 'ALL PRIVILEGES'],
         'function' => ['EXECUTE', 'ALL PRIVILEGES'],
         'language' => ['USAGE', 'ALL PRIVILEGES'],
-        'schema'   => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+        'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
     ];
 
     // Database functions
 
     /**
      * Alters a database
-     * the multiple return vals are for postgres 8+ which support more functionality in alter database
+     * the multiple return vals are for postgres 8+ which support more functionality in alter database.
      *
      * @param                                 $dbName   The name of the database
      * @param                                 $newName  new name for the database
      * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
      * @param string                          $comment
+     *
      * @return bool|int 0 success
      */
     public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '')
@@ -53,14 +57,15 @@ class Postgres74 extends Postgres80
     }
 
     /**
-     * Return all database available on the server
+     * Return all database available on the server.
      *
      * @param null $currentdatabase
+     *
      * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf        = $this->conf;
+        $conf = $this->conf;
         $server_info = $this->server_info;
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -100,6 +105,7 @@ class Postgres74 extends Postgres80
      *
      * @param $term   The search term
      * @param $filter The object type to restrict to ('' means no restriction)
+     *
      * @return A recordset
      */
     public function findObject($term, $filter)
@@ -124,10 +130,10 @@ class Postgres74 extends Postgres80
         if (!$conf['show_system']) {
             // XXX: The mention of information_schema here is in the wrong place, but
             // it's the quickest fix to exclude the info schema from 7.4
-            $where     = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
+            $where = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
             $lan_where = 'AND pl.lanispl';
         } else {
-            $where     = '';
+            $where = '';
             $lan_where = '';
         }
 
@@ -244,7 +250,7 @@ class Postgres74 extends Postgres80
     }
 
     /**
-     * Returns table locks information in the current database
+     * Returns table locks information in the current database.
      *
      * @return A recordset
      */
@@ -267,7 +273,7 @@ class Postgres74 extends Postgres80
     }
 
     /**
-     * Returns the current database encoding
+     * Returns the current database encoding.
      *
      * @return The encoding.  eg. SQL_ASCII, UTF-8, etc.
      */
@@ -281,7 +287,7 @@ class Postgres74 extends Postgres80
     // Table functions
 
     /**
-     * Alters a column in a table OR view
+     * Alters a column in a table OR view.
      *
      * @param $table      The table in which the column resides
      * @param $column     The column to alter
@@ -295,6 +301,7 @@ class Postgres74 extends Postgres80
      * @param $array      True if array type, false otherwise
      * @param $oldtype    The old type for the column
      * @param $comment    Comment for the column
+     *
      * @return array|bool|int 0 success
      */
     public function alterColumn(
@@ -366,9 +373,10 @@ class Postgres74 extends Postgres80
     }
 
     /**
-     * Returns table information
+     * Returns table information.
      *
      * @param $table The name of the table
+     *
      * @return A recordset
      */
     public function getTable($table)
@@ -392,9 +400,10 @@ class Postgres74 extends Postgres80
     }
 
     /**
-     * Return all tables in current database (and schema)
+     * Return all tables in current database (and schema).
      *
-     * @param bool|True $all True to fetch all tables, false for just in current schema
+     * @param bool|true $all True to fetch all tables, false for just in current schema
+     *
      * @return \PHPPgAdmin\Database\All tables, sorted alphabetically
      */
     public function getTables($all = false)
@@ -422,7 +431,7 @@ class Postgres74 extends Postgres80
     }
 
     /**
-     * Returns the current default_with_oids setting
+     * Returns the current default_with_oids setting.
      *
      * @return default_with_oids setting
      */
@@ -436,9 +445,10 @@ class Postgres74 extends Postgres80
     /**
      * Returns a list of all constraints on a table,
      * including constraint name, definition, related col and referenced namespace,
-     * table and col if needed
+     * table and col if needed.
      *
      * @param $table the table where we are looking for fk
+     *
      * @return a recordset
      */
     public function getConstraintsWithFields($table)
@@ -475,8 +485,8 @@ class Postgres74 extends Postgres80
 				pg_catalog.pg_constraint AS c
 				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
 				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]';
-        for ($i = 2; $i <= $rs->fields['nb']; $i++) {
-            $sql .= " OR f1.attnum=c.conkey[$i]";
+        for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
+            $sql .= " OR f1.attnum=c.conkey[${i}]";
         }
         $sql .= '))
 				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
@@ -485,8 +495,8 @@ class Postgres74 extends Postgres80
 				) ON (c.confrelid=r2.oid)
 				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
 					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)';
-        for ($i = 2; $i <= $rs->fields['nb']; $i++) {
-            $sql .= " OR (c.confkey[$i]=f2.attnum AND c.conkey[$i]=f1.attnum)";
+        for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
+            $sql .= " OR (c.confkey[${i}]=f2.attnum AND c.conkey[${i}]=f1.attnum)";
         }
 
         $sql .= sprintf("))
@@ -500,9 +510,10 @@ class Postgres74 extends Postgres80
     // Constraint functions
 
     /**
-     * Returns all sequences in the current database
+     * Returns all sequences in the current database.
      *
      * @param bool $all
+     *
      * @return \PHPPgAdmin\Database\A recordset
      */
     public function getSequences($all = false)
@@ -530,10 +541,12 @@ class Postgres74 extends Postgres80
     // Sequence functions
 
     /**
-     * Returns all details for a particular function
+     * Returns all details for a particular function.
      *
      * @param $function_oid
+     *
      * @return \PHPPgAdmin\Database\Function info
+     *
      * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
      */
     public function getFunction($function_oid)
@@ -559,7 +572,7 @@ class Postgres74 extends Postgres80
 		FROM
 			pg_catalog.pg_proc pc, pg_catalog.pg_language pl, pg_catalog.pg_namespace n
 		WHERE
-			pc.oid = '$function_oid'::oid
+			pc.oid = '${function_oid}'::oid
 			AND pc.prolang = pl.oid
 			AND n.oid = pc.pronamespace
 		";
@@ -570,7 +583,7 @@ class Postgres74 extends Postgres80
     // Function functions
 
     /**
-     * Returns a list of all casts in the database
+     * Returns a list of all casts in the database.
      *
      * @return All casts
      */
@@ -663,7 +676,7 @@ class Postgres74 extends Postgres80
 
     /**
      * Protected method which alter a table
-     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION
+     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
      * @param $tblrs      The table recordSet returned by getTable()
      * @param $name       The new name for the table
@@ -671,11 +684,11 @@ class Postgres74 extends Postgres80
      * @param $schema     The new schema for the table
      * @param $comment    The comment on the table
      * @param $tablespace The new tablespace for the table ('' means leave as is)
+     *
      * @return int 0 success
      */
     protected function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace)
     {
-
         /* $schema and tablespace not supported in pg74- */
         $this->fieldArrayClean($tblrs->fields);
 

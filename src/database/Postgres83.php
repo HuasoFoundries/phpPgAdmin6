@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * PHPPgAdmin v6.0.0-beta.33
+ */
+
 namespace PHPPgAdmin\Database;
 
 /**
@@ -8,7 +12,6 @@ namespace PHPPgAdmin\Database;
  *
  * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  */
-
 class Postgres83 extends Postgres84
 {
     public $major_version = 8.3;
@@ -16,13 +19,13 @@ class Postgres83 extends Postgres84
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
-        'table'      => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'view'       => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'sequence'   => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
-        'database'   => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
-        'function'   => ['EXECUTE', 'ALL PRIVILEGES'],
-        'language'   => ['USAGE', 'ALL PRIVILEGES'],
-        'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+        'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+        'database' => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
+        'function' => ['EXECUTE', 'ALL PRIVILEGES'],
+        'language' => ['USAGE', 'ALL PRIVILEGES'],
+        'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
         'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
     ];
     // List of characters in acl lists and the privileges they
@@ -45,7 +48,7 @@ class Postgres83 extends Postgres84
     // Databse functions
 
     /**
-     * Return all database available on the server
+     * Return all database available on the server.
      *
      * @param $currentdatabase database name that should be on top of the resultset
      *
@@ -53,7 +56,7 @@ class Postgres83 extends Postgres84
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf        = $this->conf;
+        $conf = $this->conf;
         $server_info = $this->server_info;
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -97,6 +100,7 @@ class Postgres83 extends Postgres84
      * Returns all available autovacuum per table information.
      *
      * @param string $table
+     *
      * @return \PHPPgAdmin\Database\A recordset
      */
     public function getTableAutovacuum($table = '')
@@ -212,7 +216,8 @@ class Postgres83 extends Postgres84
         $status = -1; // ini
         if ($rs->recordCount() and ($rs->fields['vacrelid'] == $toid)) {
             // table exists in pg_autovacuum, UPDATE
-            $sql = sprintf("UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
+            $sql = sprintf(
+                "UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
 						enabled = '%s',
 						vac_base_thresh = %s,
 						vac_scale_factor = %s,
@@ -237,7 +242,8 @@ class Postgres83 extends Postgres84
             $status = $this->execute($sql);
         } else {
             // table doesn't exists in pg_autovacuum, INSERT
-            $sql = sprintf("INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
+            $sql = sprintf(
+                "INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
 				VALUES (%s, '%s', %s, %s, %s, %s, %s, %s, %s, %s )",
                 $toid,
                 ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
@@ -276,7 +282,7 @@ class Postgres83 extends Postgres84
     // Sequence functions
 
     /**
-     * Alter a sequence's properties
+     * Alter a sequence's properties.
      *
      * @param $seqrs        The sequence RecordSet returned by getSequence()
      * @param $increment    The sequence incremental value
@@ -286,6 +292,7 @@ class Postgres83 extends Postgres84
      * @param $cachevalue   The sequence cache value
      * @param $cycledvalue  Sequence can cycle ?
      * @param $startvalue   The sequence start value when issueing a restart (ignored)
+     *
      * @return int|\PHPPgAdmin\Database\A 0 success
      */
     public function alterSequenceProps(
@@ -322,7 +329,7 @@ class Postgres83 extends Postgres84
 
         // toggle cycle yes/no
         if (!is_null($cycledvalue)) {
-            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
+            $sql .= (!$cycledvalue ? ' NO ' : '').' CYCLE';
         }
 
         if ($sql != '') {
@@ -337,11 +344,13 @@ class Postgres83 extends Postgres84
     }
 
     /**
-     * Alter a sequence's owner
+     * Alter a sequence's owner.
      *
      * @param $seqrs The sequence RecordSet returned by getSequence()
      * @param $owner
+     *
      * @return int|\PHPPgAdmin\Database\A 0 success
+     *
      * @internal param \PHPPgAdmin\Database\The $name new owner for the sequence
      */
     public function alterSequenceOwner($seqrs, $owner)
@@ -364,10 +373,12 @@ class Postgres83 extends Postgres84
     // Function functions
 
     /**
-     * Returns all details for a particular function
+     * Returns all details for a particular function.
      *
      * @param $function_oid
+     *
      * @return \PHPPgAdmin\Database\Function info
+     *
      * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
      */
     public function getFunction($function_oid)
