@@ -95,10 +95,10 @@ class IndexesController extends BaseController
         $indPre = function (&$rowdata, $actions) use ($data, $lang) {
             if ($data->phpBool($rowdata->fields['indisprimary'])) {
                 $rowdata->fields['+constraints'] = $lang['strprimarykey'];
-                $actions['drop']['disable'] = true;
+                $actions['drop']['disable']      = true;
             } elseif ($data->phpBool($rowdata->fields['indisunique'])) {
                 $rowdata->fields['+constraints'] = $lang['struniquekey'];
-                $actions['drop']['disable'] = true;
+                $actions['drop']['disable']      = true;
             } else {
                 $rowdata->fields['+constraints'] = '';
             }
@@ -110,7 +110,7 @@ class IndexesController extends BaseController
         }
 
         $subject = urlencode($_REQUEST['subject']);
-        $object = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
 
         $this->printTrail($subject);
         $this->printTabs($subject, 'indexes');
@@ -128,15 +128,15 @@ class IndexesController extends BaseController
                 'field' => Decorator::field('inddef'),
             ],
             'constraints' => [
-                'title' => $lang['strconstraints'],
-                'field' => Decorator::field('+constraints'),
-                'type' => 'verbatim',
+                'title'  => $lang['strconstraints'],
+                'field'  => Decorator::field('+constraints'),
+                'type'   => 'verbatim',
                 'params' => ['align' => 'center'],
             ],
             'clustered' => [
                 'title' => $lang['strclustered'],
                 'field' => Decorator::field('indisclustered'),
-                'type' => 'yesno',
+                'type'  => 'yesno',
             ],
             'actions' => [
                 'title' => $lang['stractions'],
@@ -152,42 +152,42 @@ class IndexesController extends BaseController
         $actions = [
             'cluster' => [
                 'content' => $lang['strclusterindex'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => $url,
+                        'url'     => $url,
                         'urlvars' => [
-                            'action' => 'confirm_cluster_index',
+                            'action'  => 'confirm_cluster_index',
                             'subject' => $subject,
-                            $subject => $object,
-                            'index' => Decorator::field('indname'),
+                            $subject  => $object,
+                            'index'   => Decorator::field('indname'),
                         ],
                     ],
                 ],
             ],
             'reindex' => [
                 'content' => $lang['strreindex'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => $url,
+                        'url'     => $url,
                         'urlvars' => [
-                            'action' => 'reindex',
+                            'action'  => 'reindex',
                             'subject' => $subject,
-                            $subject => $object,
-                            'index' => Decorator::field('indname'),
+                            $subject  => $object,
+                            'index'   => Decorator::field('indname'),
                         ],
                     ],
                 ],
             ],
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => $url,
+                        'url'     => $url,
                         'urlvars' => [
-                            'action' => 'confirm_drop_index',
+                            'action'  => 'confirm_drop_index',
                             'subject' => $subject,
-                            $subject => $object,
-                            'index' => Decorator::field('indname'),
+                            $subject  => $object,
+                            'index'   => Decorator::field('indname'),
                         ],
                     ],
                 ],
@@ -200,14 +200,14 @@ class IndexesController extends BaseController
             'create' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'indexes.php',
+                        'url'     => 'indexes.php',
                         'urlvars' => [
-                            'action' => 'create_index',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'create_index',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
-                            $subject => $object,
-                            'subject' => $subject,
+                            'schema'   => $_REQUEST['schema'],
+                            $subject   => $object,
+                            'subject'  => $subject,
                         ],
                     ],
                 ],
@@ -225,7 +225,7 @@ class IndexesController extends BaseController
         }
 
         $subject = urlencode($_REQUEST['subject']);
-        $object = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
 
         $indexes = $data->getIndexes($object);
 
@@ -265,7 +265,7 @@ class IndexesController extends BaseController
             $_REQUEST['subject'] = 'table';
         }
         $subject = urlencode($_REQUEST['subject']);
-        $object = urlencode($_REQUEST[$subject]);
+        $object  = urlencode($_REQUEST[$subject]);
 
         //$this->printTrail($subject);
 
@@ -336,7 +336,7 @@ class IndexesController extends BaseController
             $_REQUEST['subject'] = 'table';
         }
         $subject = urlencode($_REQUEST['subject']);
-        $object = urlencode($_REQUEST[$subject]);
+        $object  = urlencode($_REQUEST[$subject]);
 
         if (!isset($_POST['formIndexName'])) {
             $_POST['formIndexName'] = '';
@@ -480,7 +480,7 @@ class IndexesController extends BaseController
             $_POST['subject'] = 'table';
         }
         $subject = urlencode($_POST['subject']);
-        $object = urlencode($_POST[$subject]);
+        $object  = urlencode($_POST[$subject]);
 
         // Handle databases that don't have partial indexes
         if (!isset($_POST['formWhere'])) {
@@ -530,7 +530,7 @@ class IndexesController extends BaseController
             $_REQUEST['subject'] = 'table';
         }
         $subject = urlencode($_REQUEST['subject']);
-        $object = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
 
         if ($confirm) {
             $this->printTrail('index');

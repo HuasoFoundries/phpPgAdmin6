@@ -273,7 +273,7 @@ class ADOdbBase
     {
         $this->fieldClean($table);
 
-        $setClause = '';
+        $setClause   = '';
         $whereClause = '';
 
         // Populate the syntax arrays
@@ -415,8 +415,8 @@ class ADOdbBase
 
         // Pick out array entries by carefully parsing.  This is necessary in order
         // to cope with double quotes and commas, etc.
-        $elements = [];
-        $i = $j = 0;
+        $elements  = [];
+        $i         = $j         = 0;
         $in_quotes = false;
         while ($i < strlen($arr)) {
             // If current char is a double quote and it's not escaped, then
@@ -427,7 +427,7 @@ class ADOdbBase
             } elseif ($char == ',' && !$in_quotes) {
                 // Add text so far to the array
                 $elements[] = substr($arr, $j, $i - $j);
-                $j = $i + 1;
+                $j          = $i + 1;
             }
             ++$i;
         }
@@ -439,9 +439,9 @@ class ADOdbBase
         for ($i = 0; $i < sizeof($elements); ++$i) {
             $v = $elements[$i];
             if (strpos($v, '"') === 0) {
-                $v = substr($v, 1, strlen($v) - 2);
-                $v = str_replace('\\"', '"', $v);
-                $v = str_replace('\\\\', '\\', $v);
+                $v            = substr($v, 1, strlen($v) - 2);
+                $v            = str_replace('\\"', '"', $v);
+                $v            = str_replace('\\\\', '\\', $v);
                 $elements[$i] = $v;
             }
         }

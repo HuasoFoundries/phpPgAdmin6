@@ -18,13 +18,13 @@ class Postgres81 extends Postgres82
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
-        'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
-        'database' => ['CREATE', 'TEMPORARY', 'ALL PRIVILEGES'],
-        'function' => ['EXECUTE', 'ALL PRIVILEGES'],
-        'language' => ['USAGE', 'ALL PRIVILEGES'],
-        'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+        'table'      => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'view'       => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'sequence'   => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+        'database'   => ['CREATE', 'TEMPORARY', 'ALL PRIVILEGES'],
+        'function'   => ['EXECUTE', 'ALL PRIVILEGES'],
+        'language'   => ['USAGE', 'ALL PRIVILEGES'],
+        'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
         'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
     ];
     // List of characters in acl lists and the privileges they
@@ -56,7 +56,7 @@ class Postgres81 extends Postgres82
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf = $this->conf;
+        $conf        = $this->conf;
         $server_info = $this->server_info;
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {

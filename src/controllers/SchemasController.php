@@ -22,7 +22,7 @@ class SchemasController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
+        $lang   = $this->lang;
         $action = $this->action;
 
         if ('tree' == $action) {
@@ -107,8 +107,8 @@ class SchemasController extends BaseController
             'schema' => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url' => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
-                'vars' => ['schema' => 'nspname'],
+                'url'   => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
+                'vars'  => ['schema' => 'nspname'],
             ],
             'owner' => [
                 'title' => $lang['strowner'],
@@ -126,16 +126,16 @@ class SchemasController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['nsp' => 'nspname'],
-                'url' => 'schemas.php',
+                'url'     => 'schemas.php',
             ],
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'schemas.php',
+                        'url'     => 'schemas.php',
                         'urlvars' => [
                             'action' => 'drop',
-                            'nsp' => Decorator::field('nspname'),
+                            'nsp'    => Decorator::field('nspname'),
                         ],
                     ],
                 ],
@@ -143,21 +143,21 @@ class SchemasController extends BaseController
             ],
             'privileges' => [
                 'content' => $lang['strprivileges'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'privileges.php',
+                        'url'     => 'privileges.php',
                         'urlvars' => [
                             'subject' => 'schema',
-                            'schema' => Decorator::field('nspname'),
+                            'schema'  => Decorator::field('nspname'),
                         ],
                     ],
                 ],
             ],
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'schemas.php',
+                        'url'     => 'schemas.php',
                         'urlvars' => [
                             'action' => 'alter',
                             'schema' => Decorator::field('nspname'),
@@ -176,10 +176,10 @@ class SchemasController extends BaseController
         $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
-                    'url' => 'schemas.php',
+                    'url'     => 'schemas.php',
                     'urlvars' => [
-                        'action' => 'create',
-                        'server' => $_REQUEST['server'],
+                        'action'   => 'create',
+                        'server'   => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
                     ],
                 ],
@@ -203,15 +203,15 @@ class SchemasController extends BaseController
         //$this->prtrace($reqvars);
 
         $attrs = [
-            'text' => Decorator::field('nspname'),
-            'icon' => 'Schema',
+            'text'    => Decorator::field('nspname'),
+            'icon'    => 'Schema',
             'toolTip' => Decorator::field('nspcomment'),
-            'action' => Decorator::redirecturl(
+            'action'  => Decorator::redirecturl(
                 'redirect.php',
                 $reqvars,
                 [
                     'subject' => 'schema',
-                    'schema' => Decorator::field('nspname'),
+                    'schema'  => Decorator::field('nspname'),
                 ]
             ),
             'branch' => Decorator::url(
@@ -240,8 +240,8 @@ class SchemasController extends BaseController
         //$this->prtrace($reqvars);
 
         $attrs = [
-            'text' => Decorator::field('title'),
-            'icon' => Decorator::field('icon'),
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
             'action' => Decorator::actionurl(
                 Decorator::field('url'),
                 $reqvars,
@@ -479,7 +479,7 @@ class SchemasController extends BaseController
             echo "</form>\n";
         } else {
             if (is_array($_POST['nsp'])) {
-                $msg = '';
+                $msg    = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['nsp'] as $s) {

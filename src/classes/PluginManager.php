@@ -22,7 +22,7 @@ class PluginManager
     /**
      * Attributes.
      */
-    private $plugins_list = [];
+    private $plugins_list    = [];
     private $available_hooks = [
         'head',
         'toplinks',
@@ -34,7 +34,7 @@ class PluginManager
         'logout',
     ];
     private $actions = [];
-    private $hooks = [];
+    private $hooks   = [];
 
     /**
      * Register the plugins.
@@ -49,8 +49,8 @@ class PluginManager
     public function __construct(\Slim\Container $container)
     {
         $this->language = $container->has('language') ? $container->get('language') : 'english';
-        $this->lang = $container->get('lang');
-        $this->conf = $container->get('conf');
+        $this->lang     = $container->get('lang');
+        $this->conf     = $container->get('conf');
 
         if (!isset($this->conf['plugins'])) {
             return;
@@ -88,7 +88,7 @@ class PluginManager
         //The $plugin_name is the identification of the plugin.
         //Example: PluginExample is the identification for PluginExample
         //It will be used to get a specific plugin from the plugins_list.
-        $plugin_name = $plugin->get_name();
+        $plugin_name                      = $plugin->get_name();
         $this->plugins_list[$plugin_name] = $plugin;
 
         //Register the plugin's functions
@@ -101,7 +101,7 @@ class PluginManager
         }
 
         //Register the plugin's actions
-        $actions = $plugin->get_actions();
+        $actions                     = $plugin->get_actions();
         $this->actions[$plugin_name] = $actions;
     }
 

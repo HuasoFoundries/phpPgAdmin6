@@ -330,11 +330,11 @@ class AggregatesController extends BaseController
             'showall' => [
                 'attr' => [
                     'href' => [
-                        'url' => 'aggregates.php',
+                        'url'     => 'aggregates.php',
                         'urlvars' => [
-                            'server' => $_REQUEST['server'],
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -346,12 +346,12 @@ class AggregatesController extends BaseController
             $navlinks['alter'] = [
                 'attr' => [
                     'href' => [
-                        'url' => 'aggregates.php',
+                        'url'     => 'aggregates.php',
                         'urlvars' => [
-                            'action' => 'alter',
-                            'server' => $_REQUEST['server'],
+                            'action'   => 'alter',
+                            'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema' => $_REQUEST['schema'],
+                            'schema'   => $_REQUEST['schema'],
                             'aggrname' => $_REQUEST['aggrname'],
                             'aggrtype' => $_REQUEST['aggrtype'],
                         ],
@@ -364,12 +364,12 @@ class AggregatesController extends BaseController
         $navlinks['drop'] = [
             'attr' => [
                 'href' => [
-                    'url' => 'aggregates.php',
+                    'url'     => 'aggregates.php',
                     'urlvars' => [
-                        'action' => 'confirm_drop',
-                        'server' => $_REQUEST['server'],
+                        'action'   => 'confirm_drop',
+                        'server'   => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema' => $_REQUEST['schema'],
+                        'schema'   => $_REQUEST['schema'],
                         'aggrname' => $_REQUEST['aggrname'],
                         'aggrtype' => $_REQUEST['aggrtype'],
                     ],

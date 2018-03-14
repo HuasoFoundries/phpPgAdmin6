@@ -32,24 +32,24 @@ class ADOdbException extends \Exception
 {
     public $dbms;
     public $fn;
-    public $sql = '';
-    public $params = '';
-    public $host = '';
+    public $sql      = '';
+    public $params   = '';
+    public $host     = '';
     public $database = '';
 
     public function __construct($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection)
     {
         switch ($fn) {
             case 'EXECUTE':
-                $this->sql = is_array($p1) ? $p1[0] : $p1;
+                $this->sql    = is_array($p1) ? $p1[0] : $p1;
                 $this->params = $p2;
-                $s = "${dbms} error: [${errno}: ${errmsg}] in ${fn}(\"{$this->sql}\")";
+                $s            = "${dbms} error: [${errno}: ${errmsg}] in ${fn}(\"{$this->sql}\")";
 
                 break;
             case 'PCONNECT':
             case 'CONNECT':
                 $user = $thisConnection->user;
-                $s = "${dbms} error: [${errno}: ${errmsg}] in ${fn}(${p1}, '${user}', '****', ${p2})";
+                $s    = "${dbms} error: [${errno}: ${errmsg}] in ${fn}(${p1}, '${user}', '****', ${p2})";
 
                 break;
             default:
@@ -60,10 +60,10 @@ class ADOdbException extends \Exception
 
         $this->dbms = $dbms;
         if ($thisConnection) {
-            $this->host = $thisConnection->host;
+            $this->host     = $thisConnection->host;
             $this->database = $thisConnection->database;
         }
-        $this->fn = $fn;
+        $this->fn  = $fn;
         $this->msg = $errmsg;
 
         if (!is_numeric($errno)) {

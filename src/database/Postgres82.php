@@ -18,30 +18,30 @@ class Postgres82 extends Postgres83
 
     // Select operators
     public $selectOps = [
-        '=' => 'i',
-        '!=' => 'i',
-        '<' => 'i',
-        '>' => 'i',
-        '<=' => 'i',
-        '>=' => 'i',
-        '<<' => 'i',
-        '>>' => 'i',
-        '<<=' => 'i',
-        '>>=' => 'i',
-        'LIKE' => 'i',
-        'NOT LIKE' => 'i',
-        'ILIKE' => 'i',
-        'NOT ILIKE' => 'i',
-        'SIMILAR TO' => 'i',
+        '='              => 'i',
+        '!='             => 'i',
+        '<'              => 'i',
+        '>'              => 'i',
+        '<='             => 'i',
+        '>='             => 'i',
+        '<<'             => 'i',
+        '>>'             => 'i',
+        '<<='            => 'i',
+        '>>='            => 'i',
+        'LIKE'           => 'i',
+        'NOT LIKE'       => 'i',
+        'ILIKE'          => 'i',
+        'NOT ILIKE'      => 'i',
+        'SIMILAR TO'     => 'i',
         'NOT SIMILAR TO' => 'i',
-        '~' => 'i',
-        '!~' => 'i',
-        '~*' => 'i',
-        '!~*' => 'i',
-        'IS NULL' => 'p',
-        'IS NOT NULL' => 'p',
-        'IN' => 'x',
-        'NOT IN' => 'x',
+        '~'              => 'i',
+        '!~'             => 'i',
+        '~*'             => 'i',
+        '!~*'            => 'i',
+        'IS NULL'        => 'p',
+        'IS NOT NULL'    => 'p',
+        'IN'             => 'x',
+        'NOT IN'         => 'x',
     ];
 
     // Database functions
@@ -85,7 +85,7 @@ class Postgres82 extends Postgres83
         if (!empty($name) && ($seqrs->fields['seqname'] != $name)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
+            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
             if ($status == 0) {
                 $seqrs->fields['seqname'] = $name;
@@ -114,7 +114,7 @@ class Postgres82 extends Postgres83
         if (!empty($name) && ($name != $vwrs->fields['relname'])) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
             if ($status == 0) {
                 $vwrs->fields['relname'] = $name;
