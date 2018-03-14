@@ -141,10 +141,10 @@ class TriggersController extends BaseController
             'function' => [
                 'title' => $lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url' => "functions.php?action=properties&amp;server={$_REQUEST['server']}&amp;database={$_REQUEST['database']}&amp;",
-                'vars' => [
-                    'schema' => 'pronamespace',
-                    'function' => 'proproto',
+                'url'   => "functions.php?action=properties&amp;server={$_REQUEST['server']}&amp;database={$_REQUEST['database']}&amp;",
+                'vars'  => [
+                    'schema'       => 'pronamespace',
+                    'function'     => 'proproto',
                     'function_oid' => 'prooid',
                 ],
             ],
@@ -156,12 +156,12 @@ class TriggersController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $lang['stralter'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'triggers.php',
+                        'url'     => 'triggers.php',
                         'urlvars' => [
-                            'action' => 'confirm_alter',
-                            'table' => $_REQUEST['table'],
+                            'action'  => 'confirm_alter',
+                            'table'   => $_REQUEST['table'],
                             'trigger' => Decorator::field('tgname'),
                         ],
                     ],
@@ -169,12 +169,12 @@ class TriggersController extends BaseController
             ],
             'drop' => [
                 'content' => $lang['strdrop'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'triggers.php',
+                        'url'     => 'triggers.php',
                         'urlvars' => [
-                            'action' => 'confirm_drop',
-                            'table' => $_REQUEST['table'],
+                            'action'  => 'confirm_drop',
+                            'table'   => $_REQUEST['table'],
                             'trigger' => Decorator::field('tgname'),
                         ],
                     ],
@@ -184,12 +184,12 @@ class TriggersController extends BaseController
         if ($data->hasDisableTriggers()) {
             $actions['enable'] = [
                 'content' => $lang['strenable'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'triggers.php',
+                        'url'     => 'triggers.php',
                         'urlvars' => [
-                            'action' => 'confirm_enable',
-                            'table' => $_REQUEST['table'],
+                            'action'  => 'confirm_enable',
+                            'table'   => $_REQUEST['table'],
                             'trigger' => Decorator::field('tgname'),
                         ],
                     ],
@@ -197,12 +197,12 @@ class TriggersController extends BaseController
             ];
             $actions['disable'] = [
                 'content' => $lang['strdisable'],
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url' => 'triggers.php',
+                        'url'     => 'triggers.php',
                         'urlvars' => [
-                            'action' => 'confirm_disable',
-                            'table' => $_REQUEST['table'],
+                            'action'  => 'confirm_disable',
+                            'table'   => $_REQUEST['table'],
                             'trigger' => Decorator::field('tgname'),
                         ],
                     ],
@@ -215,13 +215,13 @@ class TriggersController extends BaseController
         $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
-                    'url' => 'triggers.php',
+                    'url'     => 'triggers.php',
                     'urlvars' => [
-                        'action' => 'create',
-                        'server' => $_REQUEST['server'],
+                        'action'   => 'create',
+                        'server'   => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema' => $_REQUEST['schema'],
-                        'table' => $_REQUEST['table'],
+                        'schema'   => $_REQUEST['schema'],
+                        'table'    => $_REQUEST['table'],
                     ],
                 ],
             ],
