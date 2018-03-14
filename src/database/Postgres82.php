@@ -10,7 +10,8 @@ namespace PHPPgAdmin\Database;
  * @file
  * PostgreSQL 8.2 support
  *
- * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+ * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+ * @package PHPPgAdmin
  */
 class Postgres82 extends Postgres83
 {
@@ -255,13 +256,13 @@ class Postgres82 extends Postgres83
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'".$definition[0]."'";
+            $sql .= "'" . $definition[0] . "'";
             if ($definition[1]) {
-                $sql .= ",'".$definition[1]."'";
+                $sql .= ",'" . $definition[1] . "'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'".$definition."'";
+            $sql .= "'" . $definition . "'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";

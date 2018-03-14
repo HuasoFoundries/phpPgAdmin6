@@ -10,7 +10,8 @@ namespace PHPPgAdmin\Database;
  * @file
  * Class to represent a database connection
  *
- * $Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
+ * Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
+ * @package PHPPgAdmin
  */
 class Connection
 {
@@ -41,7 +42,7 @@ class Connection
         // Ignore host if null
         if ($host === null || $host == '') {
             if ($port !== null && $port != '') {
-                $pghost = ':'.$port;
+                $pghost = ':' . $port;
             } else {
                 $pghost = '';
             }
@@ -51,7 +52,7 @@ class Connection
 
         // Add sslmode to $pghost as needed
         if (($sslmode == 'disable') || ($sslmode == 'allow') || ($sslmode == 'prefer') || ($sslmode == 'require')) {
-            $pghost .= ':'.$sslmode;
+            $pghost .= ':' . $sslmode;
         } elseif ($sslmode == 'legacy') {
             $pghost .= ' requiressl=1';
         }

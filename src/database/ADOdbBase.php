@@ -10,7 +10,8 @@ namespace PHPPgAdmin\Database;
  * @file
  * Parent class of all ADODB objects.
  *
- * $Id: ADOdbBase.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
+ * Id: ADOdbBase.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
+ * @package PHPPgAdmin
  */
 class ADOdbBase
 {
@@ -241,7 +242,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql = $fields . $values . ')';
         }
 
         // Check for failures
@@ -313,7 +314,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;

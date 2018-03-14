@@ -11,7 +11,8 @@ namespace PHPPgAdmin\Database;
  * A class that implements the DB interface for Postgres
  * Note: This class uses ADODB and returns RecordSets.
  *
- * $Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
+ * Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
+ * @package PHPPgAdmin
  */
 class Postgres74 extends Postgres80
 {

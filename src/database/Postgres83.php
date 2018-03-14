@@ -10,7 +10,8 @@ namespace PHPPgAdmin\Database;
  * @file
  * PostgreSQL 8.3 support
  *
- * $Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+ * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+ * @package PHPPgAdmin
  */
 class Postgres83 extends Postgres84
 {
@@ -329,7 +330,7 @@ class Postgres83 extends Postgres84
 
         // toggle cycle yes/no
         if (!is_null($cycledvalue)) {
-            $sql .= (!$cycledvalue ? ' NO ' : '').' CYCLE';
+            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
         }
 
         if ($sql != '') {

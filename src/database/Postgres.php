@@ -10,7 +10,8 @@ namespace PHPPgAdmin\Database;
  * A Class that implements the DB Interface for Postgres
  * Note: This Class uses ADODB and returns RecordSets.
  *
- * $Id: Postgres.php,v 1.320 2008/02/20 20:43:09 ioguix Exp $
+ * Id: Postgres.php,v 1.320 2008/02/20 20:43:09 ioguix Exp $
+ * @package PHPPgAdmin
  */
 class Postgres extends ADOdbBase
 {
@@ -273,13 +274,13 @@ class Postgres extends ADOdbBase
             if (is_array($this->help_page[$help])) {
                 $urls = [];
                 foreach ($this->help_page[$help] as $link) {
-                    $urls[] = $this->help_base.$link;
+                    $urls[] = $this->help_base . $link;
                 }
 
                 return $urls;
             }
 
-            return $this->help_base.$this->help_page[$help];
+            return $this->help_base . $this->help_page[$help];
         }
 
         return null;
@@ -292,7 +293,7 @@ class Postgres extends ADOdbBase
     public function getHelpPages()
     {
         if ($this->help_page === null || $this->help_base === null) {
-            $help_classname = '\PHPPgAdmin\Help\PostgresDoc'.str_replace('.', '', $this->major_version);
+            $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . str_replace('.', '', $this->major_version);
 
             $help_class = new $help_classname($this->conf, $this->major_version);
 
@@ -318,7 +319,7 @@ class Postgres extends ADOdbBase
         // Determine actions string
         $extra_str = '';
         foreach ($extras as $k => $v) {
-            $extra_str .= " {$k}=\"".htmlspecialchars($v).'"';
+            $extra_str .= " {$k}=\"" . htmlspecialchars($v) . '"';
         }
 
         switch (substr($type, 0, 9)) {
@@ -349,7 +350,7 @@ class Postgres extends ADOdbBase
                 if (!is_null($value)) {
                     $value = $this->escapeBytea($value);
                 }
-                // no break
+            // no break
             case 'text':
             case 'text[]':
             case 'json':
@@ -453,7 +454,7 @@ class Postgres extends ADOdbBase
 
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
-            $not_in    = "('".implode("','", $hiddendbs)."')";
+            $not_in    = "('" . implode("','", $hiddendbs) . "')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 
@@ -710,7 +711,7 @@ class Postgres extends ADOdbBase
             case 'TEXT SEARCH PARSER':
             case 'TYPE':
                 $sql .= "\"{$f_schema}\".";
-                // no break
+            // no break
             case 'DATABASE':
             case 'ROLE':
             case 'SCHEMA':
@@ -1123,7 +1124,7 @@ class Postgres extends ADOdbBase
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
+        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
 
         return $this->execute($sql);
     }
@@ -1424,7 +1425,7 @@ class Postgres extends ADOdbBase
         }
 
         // Output a reconnect command to create the table as the correct user
-        $sql = $this->getChangeUserSQL($t->fields['relowner'])."\n\n";
+        $sql = $this->getChangeUserSQL($t->fields['relowner']) . "\n\n";
 
         // Set schema search path
         $sql .= "SET search_path = \"{$t->fields['nspname']}\", pg_catalog;\n\n";
@@ -1457,7 +1458,7 @@ class Postgres extends ADOdbBase
                     $sql .= ' BIGSERIAL';
                 }
             } else {
-                $sql .= ' '.$this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
+                $sql .= ' ' . $this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
 
                 // Add NOT NULL if necessary
                 if ($this->phpBool($atts->fields['attnotnull'])) {
@@ -1497,12 +1498,12 @@ class Postgres extends ADOdbBase
                 switch ($cons->fields['contype']) {
                     case 'p':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'PRIMARY KEY ('.join(',', $keys).')';
+                        $sql .= 'PRIMARY KEY (' . join(',', $keys) . ')';
 
                         break;
                     case 'u':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'UNIQUE ('.join(',', $keys).')';
+                        $sql .= 'UNIQUE (' . join(',', $keys) . ')';
 
                         break;
                     default:
@@ -1651,7 +1652,7 @@ class Postgres extends ADOdbBase
                 }
 
                 // Output privileges with no GRANT OPTION
-                $sql .= 'GRANT '.join(', ', $nongrant)." ON TABLE \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT ' . join(', ', $nongrant) . " ON TABLE \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= "PUBLIC;\n";
@@ -1693,7 +1694,7 @@ class Postgres extends ADOdbBase
                     $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
                 }
 
-                $sql .= 'GRANT '.join(', ', $v[4])." ON \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT ' . join(', ', $v[4]) . " ON \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= 'PUBLIC';
@@ -1936,7 +1937,7 @@ class Postgres extends ADOdbBase
         } elseif ($typname == 'varchar') {
             $temp = 'character varying';
             if ($typmod != -1) {
-                $temp .= '('.($typmod - $varhdrsz).')';
+                $temp .= '(' . ($typmod - $varhdrsz) . ')';
             }
         } elseif ($typname == 'numeric') {
             $temp = 'numeric';
@@ -1987,7 +1988,7 @@ class Postgres extends ADOdbBase
         $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
 			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
 			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('".join("','", $atts)."')";
+			AND attnum IN ('" . join("','", $atts) . "')";
 
         $rs = $this->selectSet($sql);
         if ($rs->recordCount() != sizeof($atts)) {
@@ -2295,7 +2296,7 @@ class Postgres extends ADOdbBase
         if ($indexes->recordCount() > 0) {
             $sql .= "\n-- Indexes\n\n";
             while (!$indexes->EOF) {
-                $sql .= $indexes->fields['inddef'].";\n";
+                $sql .= $indexes->fields['inddef'] . ";\n";
 
                 $indexes->moveNext();
             }
@@ -2330,7 +2331,7 @@ class Postgres extends ADOdbBase
         if ($rules->recordCount() > 0) {
             $sql .= "\n-- Rules\n\n";
             while (!$rules->EOF) {
-                $sql .= $rules->fields['definition']."\n";
+                $sql .= $rules->fields['definition'] . "\n";
 
                 $rules->moveNext();
             }
@@ -2560,7 +2561,7 @@ class Postgres extends ADOdbBase
             }
         }
         if (count($primarykeycolumns) > 0) {
-            $sql .= ', PRIMARY KEY ('.implode(', ', $primarykeycolumns).')';
+            $sql .= ', PRIMARY KEY (' . implode(', ', $primarykeycolumns) . ')';
         }
 
         $sql .= ')';
@@ -2899,7 +2900,7 @@ class Postgres extends ADOdbBase
 
         $sql = "TRUNCATE TABLE \"{$f_schema}\".\"{$table}\" ";
         if ($cascade) {
-            $sql = $sql.' CASCADE';
+            $sql = $sql . ' CASCADE';
         }
 
         $status = $this->execute($sql);
@@ -2989,7 +2990,7 @@ class Postgres extends ADOdbBase
 
             // DEFAULT clause
             if ($default != '') {
-                $sql .= ' DEFAULT '.$default;
+                $sql .= ' DEFAULT ' . $default;
             }
         }
 
@@ -3082,7 +3083,7 @@ class Postgres extends ADOdbBase
         $toAlter = [];
         // Create the command for changing nullability
         if ($notnull != $oldnotnull) {
-            $toAlter[] = "ALTER COLUMN \"{$name}\" ".($notnull ? 'SET' : 'DROP').' NOT NULL';
+            $toAlter[] = "ALTER COLUMN \"{$name}\" " . ($notnull ? 'SET' : 'DROP') . ' NOT NULL';
         }
 
         // Add default, if it has changed
@@ -3131,7 +3132,7 @@ class Postgres extends ADOdbBase
         if (!empty($toAlter)) {
             // Initialise an empty SQL string
             $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" "
-            .implode(',', $toAlter);
+            . implode(',', $toAlter);
 
             $status = $this->execute($sql);
             if ($status != 0) {
@@ -3211,7 +3212,7 @@ class Postgres extends ADOdbBase
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" ".($state ? 'DROP' : 'SET').' NOT NULL';
+        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . ($state ? 'DROP' : 'SET') . ' NOT NULL';
 
         return $this->execute($sql);
     }
@@ -3330,7 +3331,7 @@ class Postgres extends ADOdbBase
 
         // Actually retrieve the rows
         if ($oids) {
-            $oid_str = $this->id.', ';
+            $oid_str = $this->id . ', ';
         } else {
             $oid_str = '';
         }
@@ -3491,12 +3492,12 @@ class Postgres extends ADOdbBase
                 if (isset($nulls[$i])) {
                     $sql .= ',NULL';
                 } else {
-                    $sql .= ','.$this->formatValue($types[$i], $format[$i], $value);
+                    $sql .= ',' . $this->formatValue($types[$i], $format[$i], $value);
                 }
             }
 
-            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"".implode('","', $fields).'")
-                VALUES ('.substr($sql, 1).')';
+            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . implode('","', $fields) . '")
+                VALUES (' . substr($sql, 1) . ')';
 
             return $this->execute($sql);
         }
@@ -3529,7 +3530,7 @@ class Postgres extends ADOdbBase
                     return 'NULL';
                 }
 
-                    return $value;
+                return $value;
                 break;
             default:
                 // Checking variable fields is difficult as there might be a size
@@ -3554,13 +3555,13 @@ class Postgres extends ADOdbBase
 
                     return "'{$value}'";
                 }
-                    if ($format == 'VALUE') {
-                        $this->clean($value);
+                if ($format == 'VALUE') {
+                    $this->clean($value);
 
-                        return "'{$value}'";
-                    }
+                    return "'{$value}'";
+                }
 
-                    return $value;
+                return $value;
         }
     }
 
@@ -4131,7 +4132,7 @@ class Postgres extends ADOdbBase
 
         // toggle cycle yes/no
         if (!is_null($cycledvalue)) {
-            $sql .= (!$cycledvalue ? ' NO ' : '').' CYCLE';
+            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
         }
 
         if ($sql != '') {
@@ -4593,9 +4594,9 @@ class Postgres extends ADOdbBase
 
         if (is_array($columns)) {
             $this->arrayClean($columns);
-            $sql .= '("'.implode('","', $columns).'")';
+            $sql .= '("' . implode('","', $columns) . '")';
         } else {
-            $sql .= '('.$columns.')';
+            $sql .= '(' . $columns . ')';
         }
 
         // Tablespace
@@ -4797,7 +4798,7 @@ class Postgres extends ADOdbBase
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'PRIMARY KEY ("'.join('","', $fields).'")';
+        $sql .= 'PRIMARY KEY ("' . join('","', $fields) . '")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -4834,7 +4835,7 @@ class Postgres extends ADOdbBase
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'UNIQUE ("'.join('","', $fields).'")';
+        $sql .= 'UNIQUE ("' . join('","', $fields) . '")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -4986,9 +4987,9 @@ class Postgres extends ADOdbBase
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'FOREIGN KEY ("'.join('","', $sfields).'") ';
+        $sql .= 'FOREIGN KEY ("' . join('","', $sfields) . '") ';
         // Target table needs to be fully qualified
-        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"".join('","', $tfields).'") ';
+        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"" . join('","', $tfields) . '") ';
         if ($match != $this->fkmatches[0]) {
             $sql .= " {$match}";
         }
@@ -5678,13 +5679,13 @@ class Postgres extends ADOdbBase
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'".$definition[0]."'";
+            $sql .= "'" . $definition[0] . "'";
             if ($definition[1]) {
-                $sql .= ",'".$definition[1]."'";
+                $sql .= ",'" . $definition[1] . "'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'".$definition."'";
+            $sql .= "'" . $definition . "'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
@@ -6462,7 +6463,7 @@ class Postgres extends ADOdbBase
         // Split on escaped null characters
         $params = explode('\\000', $v);
         for ($findx = 0; $findx < $trigger['tgnargs']; ++$findx) {
-            $param = "'".str_replace('\'', '\\\'', $params[$findx])."'";
+            $param = "'" . str_replace('\'', '\\\'', $params[$findx]) . "'";
             $tgdef .= $param;
             if ($findx < ($trigger['tgnargs'] - 1)) {
                 $tgdef .= ', ';
@@ -6694,13 +6695,13 @@ class Postgres extends ADOdbBase
         $sql = "DROP OPERATOR \"{$f_schema}\".{$opr->fields['oprname']} (";
         // Quoting or formatting here???
         if ($opr->fields['oprleftname'] !== null) {
-            $sql .= $opr->fields['oprleftname'].', ';
+            $sql .= $opr->fields['oprleftname'] . ', ';
         } else {
             $sql .= 'NONE, ';
         }
 
         if ($opr->fields['oprrightname'] !== null) {
-            $sql .= $opr->fields['oprrightname'].')';
+            $sql .= $opr->fields['oprrightname'] . ')';
         } else {
             $sql .= 'NONE)';
         }
@@ -7531,11 +7532,11 @@ class Postgres extends ADOdbBase
 			FROM pg_catalog.pg_proc p, pg_catalog.pg_namespace n, pg_catalog.pg_user u, pg_catalog.pg_aggregate a
 			WHERE n.oid = p.pronamespace AND p.proowner=u.usesysid AND p.oid=a.aggfnoid
 				AND p.proisagg AND n.nspname='{$c_schema}'
-				AND p.proname='".$name."'
+				AND p.proname='" . $name . "'
 				AND CASE p.proargtypes[0]
 					WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype THEN ''
 					ELSE pg_catalog.format_type(p.proargtypes[0], NULL)
-				END ='".$basetype."'";
+				END ='" . $basetype . "'";
 
         return $this->selectSet($sql);
     }
@@ -7692,7 +7693,7 @@ class Postgres extends ADOdbBase
     public function renameAggregate($aggrschema, $aggrname, $aggrtype, $newaggrname)
     {
         /* this function is called from alterAggregate where params are cleaned */
-        $sql = "ALTER AGGREGATE \"{$aggrschema}\"".'.'."\"{$aggrname}\" (\"{$aggrtype}\") RENAME TO \"{$newaggrname}\"";
+        $sql = "ALTER AGGREGATE \"{$aggrschema}\"" . '.' . "\"{$aggrname}\" (\"{$aggrtype}\") RENAME TO \"{$newaggrname}\"";
 
         return $this->execute($sql);
     }
@@ -7834,15 +7835,15 @@ class Postgres extends ADOdbBase
         }
 
         if (is_array($memberof) && sizeof($memberof) > 0) {
-            $sql .= ' IN ROLE "'.join('", "', $memberof).'"';
+            $sql .= ' IN ROLE "' . join('", "', $memberof) . '"';
         }
 
         if (is_array($members) && sizeof($members) > 0) {
-            $sql .= ' ROLE "'.join('", "', $members).'"';
+            $sql .= ' ROLE "' . join('", "', $members) . '"';
         }
 
         if (is_array($adminmembers) && sizeof($adminmembers) > 0) {
-            $sql .= ' ADMIN "'.join('", "', $adminmembers).'"';
+            $sql .= ' ADMIN "' . join('", "', $adminmembers) . '"';
         }
 
         return $this->execute($sql);
@@ -7858,7 +7859,7 @@ class Postgres extends ADOdbBase
      */
     public function _encryptPassword($username, $password)
     {
-        return 'md5'.md5($password.$username);
+        return 'md5' . md5($password . $username);
     }
 
     /**
@@ -8195,7 +8196,7 @@ class Postgres extends ADOdbBase
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
         if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
+            $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
         }
 
         if ($expiry != '') {
@@ -8464,7 +8465,7 @@ class Postgres extends ADOdbBase
 
         if (is_array($users) && sizeof($users) > 0) {
             $this->fieldArrayClean($users);
-            $sql .= ' WITH USER "'.join('", "', $users).'"';
+            $sql .= ' WITH USER "' . join('", "', $users) . '"';
         }
 
         return $this->execute($sql);
@@ -8545,9 +8546,9 @@ class Postgres extends ADOdbBase
         } else {
             if ($type == 'column') {
                 $this->fieldClean($object);
-                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' ' . join(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' '.join(', ', $privileges);
+                $sql .= ' ' . join(', ', $privileges);
             }
         }
 
@@ -8555,7 +8556,7 @@ class Postgres extends ADOdbBase
             case 'column':
                 $sql .= " (\"{$object}\")";
                 $object = $table;
-                // no break
+            // no break
             case 'table':
             case 'view':
             case 'sequence':
@@ -8935,7 +8936,7 @@ class Postgres extends ADOdbBase
             $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
         }
 
-        $sql = $sql.implode(',', $params).');';
+        $sql = $sql . implode(',', $params) . ');';
 
         return $this->execute($sql);
     }
@@ -9458,7 +9459,7 @@ class Postgres extends ADOdbBase
         }
 
         // Actually retrieve the rows, with offset and limit
-        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET ".($page - 1) * $page_size);
+        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
         $status = $this->endTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -9500,7 +9501,7 @@ class Postgres extends ADOdbBase
                 $sql = 'SELECT "';
             }
 
-            $sql .= join('","', $show).'" FROM ';
+            $sql .= join('","', $show) . '" FROM ';
         }
 
         $this->fieldClean($table);
@@ -9568,7 +9569,7 @@ class Postgres extends ADOdbBase
                     $sql .= $k;
                 } else {
                     $this->fieldClean($k);
-                    $sql .= '"'.$k.'"';
+                    $sql .= '"' . $k . '"';
                 }
                 if (strtoupper($v) == 'DESC') {
                     $sql .= ' DESC';

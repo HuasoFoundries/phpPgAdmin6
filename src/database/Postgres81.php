@@ -10,7 +10,8 @@ namespace PHPPgAdmin\Database;
  * @file
  * PostgreSQL 8.1 support
  *
- * $Id: Postgres81.php,v 1.21 2008/01/19 13:46:15 ioguix Exp $
+ * Id: Postgres81.php,v 1.21 2008/01/19 13:46:15 ioguix Exp $
+ * @package PHPPgAdmin
  */
 class Postgres81 extends Postgres82
 {
