@@ -24,6 +24,8 @@ class ColpropertiesController extends BaseController
      */
     public function render()
     {
+        $lang = $this->lang;
+
         if (isset($_REQUEST['table'])) {
             $this->tableName = &$_REQUEST['table'];
         } elseif (isset($_REQUEST['view'])) {
@@ -32,7 +34,6 @@ class ColpropertiesController extends BaseController
             $this->halt($lang['strnotableprovided']);
         }
 
-        $lang   = $this->lang;
         $action = $this->action;
 
         $this->printHeader($lang['strtables'] . ' - ' . $this->tableName, null, true, 'header_select2.twig');

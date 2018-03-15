@@ -58,7 +58,7 @@ class DataimportController extends BaseController
          * @param $name
          * @param $attrs
          */
-        $_startElement = function ($parser, $name, $attrs) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null) {
+        $_startElement = function ($parser, $name, $attrs) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null, $lang) {
             switch ($name) {
                 case 'DATA':
                     if ('XML' != $state) {
@@ -126,7 +126,7 @@ class DataimportController extends BaseController
          * @param $parser
          * @param $name
          */
-        $_endElement = function ($parser, $name) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null, &$curr_col_val) {
+        $_endElement = function ($parser, $name) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null, &$curr_col_val, $lang) {
             switch ($name) {
                 case 'DATA':
                     $state = 'READ_DATA';
