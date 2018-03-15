@@ -53,7 +53,7 @@ class Postgres81 extends Postgres82
      *
      * @param null $currentdatabase
      *
-     * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
+     * @return ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {

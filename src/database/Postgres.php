@@ -679,7 +679,7 @@ class Postgres extends ADOdbBase
      * @param      $comment  the comment to add
      * @param null $basetype
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
     {
@@ -1064,7 +1064,7 @@ class Postgres extends ADOdbBase
      *
      * @param $schema The the name of the schema to work in
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function setSchema($schema)
     {
@@ -1099,7 +1099,7 @@ class Postgres extends ADOdbBase
      *
      * @param $paths An array of schemas in required search order
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function setSearchPath($paths)
     {
@@ -2777,7 +2777,7 @@ class Postgres extends ADOdbBase
      * @param      $tblrs The table RecordSet returned by getTable()
      * @param null $owner
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      *
      * @internal param \PHPPgAdmin\Database\The $name new table's owner
      */
@@ -2805,7 +2805,7 @@ class Postgres extends ADOdbBase
      * @param      $tblrs      The table RecordSet returned by getTable()
      * @param null $tablespace
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      *
      * @internal param \PHPPgAdmin\Database\The $name new table's tablespace
      */
@@ -2833,7 +2833,7 @@ class Postgres extends ADOdbBase
      * @param $tblrs The table RecordSet returned by getTable()
      * @param $name  The new table's name
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function alterTableName($tblrs, $name = null)
     {
@@ -2864,7 +2864,7 @@ class Postgres extends ADOdbBase
      * @param      $tblrs  The table RecordSet returned by getTable()
      * @param null $schema
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      *
      * @internal param \PHPPgAdmin\Database\The $name new table's schema
      */
@@ -3467,7 +3467,7 @@ class Postgres extends ADOdbBase
      * @param $format An array of the data type (VALUE or EXPRESSION)
      * @param $types  An array of field types
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function insertRow($table, $fields, $values, $nulls, $format, $types)
     {
@@ -3784,7 +3784,7 @@ class Postgres extends ADOdbBase
      *
      * @param $sequence Sequence name
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function resetSequence($sequence)
     {
@@ -4059,7 +4059,7 @@ class Postgres extends ADOdbBase
      * @param $seqrs The sequence RecordSet returned by getSequence()
      * @param $owner
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      *
      * @internal param \PHPPgAdmin\Database\The $name new owner for the sequence
      */
@@ -4092,7 +4092,7 @@ class Postgres extends ADOdbBase
      * @param $cycledvalue  Sequence can cycle ?
      * @param $startvalue   The sequence start value when issueing a restart
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function alterSequenceProps(
         $seqrs,
@@ -4152,7 +4152,7 @@ class Postgres extends ADOdbBase
      * @param $seqrs The sequence RecordSet returned by getSequence()
      * @param $name  The new name for the sequence
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function alterSequenceName($seqrs, $name)
     {
@@ -4178,7 +4178,7 @@ class Postgres extends ADOdbBase
      * @param $seqrs The sequence RecordSet returned by getSequence()
      * @param $schema
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      *
      * @internal param \PHPPgAdmin\Database\The $name new schema for the sequence
      */
@@ -4434,7 +4434,7 @@ class Postgres extends ADOdbBase
      * @param      $vwrs  The view recordSet returned by getView()
      * @param null $owner
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      *
      * @internal param \PHPPgAdmin\Database\The $name new view's owner
      */
@@ -4461,7 +4461,7 @@ class Postgres extends ADOdbBase
      * @param $vwrs The view recordSet returned by getView()
      * @param $name The new view's name
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function alterViewName($vwrs, $name)
     {
@@ -4488,7 +4488,7 @@ class Postgres extends ADOdbBase
      * @param $vwrs The view recordSet returned by getView()
      * @param $schema
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      *
      * @internal param \PHPPgAdmin\Database\The $name new view's schema
      */
@@ -4778,7 +4778,7 @@ class Postgres extends ADOdbBase
      * @param string $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string $tablespace (optional) The tablespace for the schema, '' indicates default
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function addPrimaryKey($table, $fields, $name = '', $tablespace = '')
     {
@@ -4815,7 +4815,7 @@ class Postgres extends ADOdbBase
      * @param string $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string $tablespace (optional) The tablespace for the schema, '' indicates default
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function addUniqueKey($table, $fields, $name = '', $tablespace = '')
     {
@@ -5768,9 +5768,9 @@ class Postgres extends ADOdbBase
      *
      * @param $function_oid
      *
-     * @return \PHPPgAdmin\Database\Function info
+     * @return ADORecordSet Function info
      *
-     * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
+     * @internal param string The $func name of the function to retrieve
      */
     public function getFunction($function_oid)
     {
@@ -7264,7 +7264,7 @@ class Postgres extends ADOdbBase
      * @param string $action   What to do with the mapping: add, alter or drop
      * @param string $dictname Dictionary that will process tokens given or null in case of drop action
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      *
      * @internal param string $cfgname The name of the FTS configuration to alter
      */
@@ -7981,7 +7981,7 @@ class Postgres extends ADOdbBase
      * @param $membersold      (array) Original roles that are members of the role
      * @param $adminmembersold (array) Original roles that are admin members of the role
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function setRole(
         $rolename,

@@ -62,7 +62,7 @@ class Postgres74 extends Postgres80
      *
      * @param null $currentdatabase
      *
-     * @return \PHPPgAdmin\Database\A list of databases, sorted alphabetically
+     * @return ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -546,9 +546,9 @@ class Postgres74 extends Postgres80
      *
      * @param $function_oid
      *
-     * @return \PHPPgAdmin\Database\Function info
+     * @return ADORecordSet Function info
      *
-     * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
+     * @internal param string The $func name of the function to retrieve
      */
     public function getFunction($function_oid)
     {

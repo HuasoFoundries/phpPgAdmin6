@@ -294,7 +294,7 @@ class Postgres83 extends Postgres84
      * @param $cycledvalue  Sequence can cycle ?
      * @param $startvalue   The sequence start value when issueing a restart (ignored)
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function alterSequenceProps(
         $seqrs,
@@ -350,9 +350,9 @@ class Postgres83 extends Postgres84
      * @param $seqrs The sequence RecordSet returned by getSequence()
      * @param $owner
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      *
-     * @internal param \PHPPgAdmin\Database\The $name new owner for the sequence
+     * @internal param string The $name new owner for the sequence
      */
     public function alterSequenceOwner($seqrs, $owner)
     {
@@ -378,9 +378,9 @@ class Postgres83 extends Postgres84
      *
      * @param $function_oid
      *
-     * @return \PHPPgAdmin\Database\Function info
+     * @return ADORecordSet Function info
      *
-     * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
+     * @internal param string $func name of the function to retrieve
      */
     public function getFunction($function_oid)
     {

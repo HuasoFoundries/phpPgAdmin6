@@ -78,7 +78,7 @@ class Postgres82 extends Postgres83
      * @param $seqrs The sequence RecordSet returned by getSequence()
      * @param $name  The new name for the sequence
      *
-     * @return int|\PHPPgAdmin\Database\A 0 success
+     * @return int 0 if operation was successful
      */
     public function alterSequenceName($seqrs, $name)
     {
@@ -103,10 +103,10 @@ class Postgres82 extends Postgres83
     /**
      * Rename a view.
      *
-     * @param $vwrs The view recordSet returned by getView()
-     * @param $name The new view's name
+     * @param ADORecordSet $vwrs The view recordSet returned by getView()
+     * @param string $name The new view's name
      *
-     * @return int|\PHPPgAdmin\Database\A -1 Failed
+     * @return int -1 if Failed
      */
     public function alterViewName($vwrs, $name)
     {
@@ -166,9 +166,9 @@ class Postgres82 extends Postgres83
      *
      * @param $function_oid
      *
-     * @return \PHPPgAdmin\Database\Function info
+     * @return ADORecordSet Function info
      *
-     * @internal param \PHPPgAdmin\Database\The $func name of the function to retrieve
+     * @internal param string The $func name of the function to retrieve
      */
     public function getFunction($function_oid)
     {
@@ -337,7 +337,7 @@ class Postgres82 extends Postgres83
      *
      * @param $operator_oid The oid of the operator
      *
-     * @return Function info
+     * @return ADORecordSet Function info
      */
     public function getOperator($operator_oid)
     {
