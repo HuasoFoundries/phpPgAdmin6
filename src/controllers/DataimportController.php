@@ -64,7 +64,6 @@ class DataimportController extends BaseController
                     if ('XML' != $state) {
                         $data->rollbackTransaction();
                         $this->halt($lang['strimporterror']);
-
                     }
                     $state = 'DATA';
 
@@ -73,7 +72,6 @@ class DataimportController extends BaseController
                     if ('DATA' != $state) {
                         $data->rollbackTransaction();
                         $this->halt($lang['strimporterror']);
-
                     }
                     $state = 'HEADER';
 
@@ -82,7 +80,6 @@ class DataimportController extends BaseController
                     if ('READ_HEADER' != $state) {
                         $data->rollbackTransaction();
                         $this->halt($lang['strimporterror']);
-
                     }
                     $state = 'RECORDS';
 
@@ -91,7 +88,6 @@ class DataimportController extends BaseController
                     if ('RECORDS' != $state) {
                         $data->rollbackTransaction();
                         $this->halt($lang['strimporterror']);
-
                     }
                     $state    = 'ROW';
                     $curr_row = [];
@@ -108,7 +104,6 @@ class DataimportController extends BaseController
                     elseif ('HEADER' != $state) {
                         $data->rollbackTransaction();
                         $this->halt($lang['strimporterror']);
-
                     }
 
                     break;
@@ -167,7 +162,6 @@ class DataimportController extends BaseController
                     if (0 != $status) {
                         $data->rollbackTransaction();
                         $this->halt($lang['strimporterror']);
-
                     }
                     $curr_row = [];
                     $state    = 'RECORDS';
@@ -198,7 +192,6 @@ class DataimportController extends BaseController
                 $status     = $data->beginTransaction();
                 if (0 != $status) {
                     $this->halt($lang['strimporterror']);
-
                 }
 
                 // If format is set to 'auto', then determine format automatically from file name
@@ -252,7 +245,6 @@ class DataimportController extends BaseController
                                 // Check that there is a column
                                 if (!isset($line[$i])) {
                                     $this->halt(sprintf($lang['strimporterrorline-badcolumnnum'], $row));
-
                                 }
                                 $t_fields[$i] = $f;
 
@@ -273,7 +265,6 @@ class DataimportController extends BaseController
                             if (0 != $status) {
                                 $data->rollbackTransaction();
                                 $this->halt(sprintf($lang['strimporterrorline'], $row));
-
                             }
                             ++$row;
                         }
@@ -302,7 +293,6 @@ class DataimportController extends BaseController
                 $status = $data->endTransaction();
                 if (0 != $status) {
                     $this->halt($lang['strimporterror']);
-
                 }
                 fclose($fd);
 
