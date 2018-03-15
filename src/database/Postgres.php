@@ -310,7 +310,7 @@ class Postgres extends ADOdbBase
      * @param                               $name   The name to give the field
      * @param                               $value  The value of the field.  Note this could be 'numeric(7,2)' sort of thing...
      * @param                               $type   The database type of the field
-     * @param array|\PHPPgAdmin\Database\An $extras An array of attributes name as key and attributes' values as value
+     * @param array $extras An array of attributes name as key and attributes' values as value
      */
     public function printField($name, $value, $type, $extras = [])
     {

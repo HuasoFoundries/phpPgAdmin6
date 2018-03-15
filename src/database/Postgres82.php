@@ -75,8 +75,8 @@ class Postgres82 extends Postgres83
     /**
      * Rename a sequence.
      *
-     * @param $seqrs The sequence RecordSet returned by getSequence()
-     * @param $name  The new name for the sequence
+     * @param \ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
+     * @param string $name  The new name for the sequence
      *
      * @return int 0 if operation was successful
      */
@@ -103,7 +103,7 @@ class Postgres82 extends Postgres83
     /**
      * Rename a view.
      *
-     * @param ADORecordSet $vwrs The view recordSet returned by getView()
+     * @param \ADORecordSet $vwrs The view recordSet returned by getView()
      * @param string $name The new view's name
      *
      * @return int -1 if Failed
@@ -164,7 +164,7 @@ class Postgres82 extends Postgres83
     /**
      * Returns all details for a particular function.
      *
-     * @param $function_oid
+     * @param int $function_oid
      *
      * @return \ADORecordSet Function info
      *
@@ -204,16 +204,16 @@ class Postgres82 extends Postgres83
     /**
      * Creates a new function.
      *
-     * @param      $funcname   The name of the function to create
-     * @param      $args       A comma separated string of types
-     * @param      $returns    The return type
-     * @param      $definition The definition for the new function
-     * @param      $language   The language the function is written for
-     * @param      $flags      An array of optional flags
-     * @param      $setof      True if it returns a set, false otherwise
-     * @param      $cost       cost the planner should use in the function execution step
-     * @param      $rows       number of rows planner should estimate will be returned
-     * @param      $comment    The comment on the function
+     * @param string $funcname   The name of the function to create
+     * @param string $args       A comma separated string of types
+     * @param string $returns    The return type
+     * @param string $definition The definition for the new function
+     * @param string $language   The language the function is written for
+     * @param array $flags      An array of optional flags
+     * @param bool $setof      True if it returns a set, false otherwise
+     * @param float $cost       cost the planner should use in the function execution step
+     * @param integer $rows       number of rows planner should estimate will be returned
+     * @param string $comment    The comment on the function
      * @param bool $replace    (optional) True if OR REPLACE, false for normal
      *
      * @return bool|int 0 success
@@ -335,7 +335,7 @@ class Postgres82 extends Postgres83
     /**
      * Returns all details for a particular operator.
      *
-     * @param $operator_oid The oid of the operator
+     * @param int $operator_oid The oid of the operator
      *
      * @return \ADORecordSet Function info
      */

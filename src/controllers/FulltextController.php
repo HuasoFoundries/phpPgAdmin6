@@ -493,7 +493,7 @@ class FulltextController extends BaseController
         }
 
         if ($err !== '') {
-            return doCreateConfig($err);
+            return $this->doCreateConfig($err);
         }
 
         if ('' != $_POST['formParser']) {
@@ -927,13 +927,13 @@ class FulltextController extends BaseController
             "<script type=\"text/javascript\">
 				function templateOpts() {
 					isTpl = document.getElementsByName('formIsTemplate')[0].checked;
-					{$this->document}.getElementsByName('formTemplate')[0].disabled = isTpl;
-					{$this->document}.getElementsByName('formOption')[0].disabled = isTpl;
-					{$this->document}.getElementsByName('formLexize')[0].disabled = !isTpl;
-					{$this->document}.getElementsByName('formInit')[0].disabled = !isTpl;
+					document.getElementsByName('formTemplate')[0].disabled = isTpl;
+					document.getElementsByName('formOption')[0].disabled = isTpl;
+					document.getElementsByName('formLexize')[0].disabled = !isTpl;
+					document.getElementsByName('formInit')[0].disabled = !isTpl;
 				}
 
-				{$this->document}.getElementsByName('formIsTemplate')[0].onchange = templateOpts;
+				document.getElementsByName('formIsTemplate')[0].onchange = templateOpts;
 
 				templateOpts();
 			</script>\n";

@@ -51,7 +51,7 @@ class Postgres81 extends Postgres82
     /**
      * Returns all databases available on the server.
      *
-     * @param null $currentdatabase
+     * @param null|string $currentdatabase
      *
      * @return \ADORecordSet A list of databases, sorted alphabetically
      */
@@ -98,10 +98,10 @@ class Postgres81 extends Postgres82
      * Alters a database
      * the multiple return vals are for postgres 8+ which support more functionality in alter database.
      *
-     * @param                                 $dbName   The name of the database
-     * @param                                 $newName  new name for the database
+     * @param string $dbName   The name of the database
+     * @param string $newName  new name for the database
      * @param string $newOwner The new owner for the database
-     * @param string                          $comment
+     * @param string $comment
      *
      * @return bool|int 0 success
      */

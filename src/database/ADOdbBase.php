@@ -25,7 +25,7 @@ class ADOdbBase
     /**
      * Base constructor.
      *
-     * @param &$conn The connection object
+     * @param \ADONewConnection &$conn The connection object
      */
     public function __construct(&$conn)
     {

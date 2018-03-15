@@ -151,8 +151,8 @@ class Postgres80 extends Postgres81
     /**
      * Changes a user's password.
      *
-     * @param $username The username
-     * @param $password The new password
+     * @param string $username The username
+     * @param string $password The new password
      *
      * @return integer 0 if operation was successful
      */
@@ -172,8 +172,8 @@ class Postgres80 extends Postgres81
     /**
      * Gets all information for an aggregate.
      *
-     * @param $name     The name of the aggregate
-     * @param $basetype The input data type of the aggregate
+     * @param string $name     The name of the aggregate
+     * @param string $basetype The input data type of the aggregate
      *
      * @return \ADORecordSet A recordset
      */

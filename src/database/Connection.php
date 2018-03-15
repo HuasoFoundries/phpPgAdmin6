@@ -31,7 +31,7 @@ class Connection
      * @param                                   $user
      * @param                                   $password
      * @param                                   $database
-     * @param int|\PHPPgAdmin\Database\Defaults $fetchMode Defaults to associative.  Override for different behaviour
+     * @param int $fetchMode Defaults to associative.  Override for different behaviour
      */
     public function __construct($host, $port, $sslmode, $user, $password, $database, $fetchMode = ADODB_FETCH_ASSOC)
     {
