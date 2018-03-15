@@ -66,7 +66,7 @@ class ADOdbBase
      *
      * @param $sql The SQL query to execute
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function execute($sql)
     {
@@ -91,7 +91,7 @@ class ADOdbBase
      *
      * @param $sql The SQL statement to be executed
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function selectSet($sql)
     {

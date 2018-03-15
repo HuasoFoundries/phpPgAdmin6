@@ -58,7 +58,7 @@ class Postgres80 extends Postgres81
      *
      * @param null $currentdatabase
      *
-     * @return ADORecordSet A list of databases, sorted alphabetically
+     * @return \ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -103,7 +103,7 @@ class Postgres80 extends Postgres81
     /**
      * Return all schemas in the current database.
      *
-     * @return All schemas, sorted alphabetically
+     * @return \ADORecordSet All schemas, sorted alphabetically
      */
     public function getSchemas()
     {
@@ -129,9 +129,9 @@ class Postgres80 extends Postgres81
     /**
      * Return all information relating to a schema.
      *
-     * @param $schema The name of the schema
+     * @param string $schema The name of the schema
      *
-     * @return Schema information
+     * @return \ADORecordSet Schema information
      */
     public function getSchemaByName($schema)
     {
@@ -175,7 +175,7 @@ class Postgres80 extends Postgres81
      * @param $name     The name of the aggregate
      * @param $basetype The input data type of the aggregate
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function getAggregate($name, $basetype)
     {

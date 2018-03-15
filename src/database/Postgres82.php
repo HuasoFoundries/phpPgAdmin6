@@ -50,7 +50,7 @@ class Postgres82 extends Postgres83
     /**
      * Returns table locks information in the current database.
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function getLocks()
     {
@@ -134,7 +134,7 @@ class Postgres82 extends Postgres83
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function getTriggers($table = '')
     {
@@ -166,7 +166,7 @@ class Postgres82 extends Postgres83
      *
      * @param $function_oid
      *
-     * @return ADORecordSet Function info
+     * @return \ADORecordSet Function info
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -337,7 +337,7 @@ class Postgres82 extends Postgres83
      *
      * @param $operator_oid The oid of the operator
      *
-     * @return ADORecordSet Function info
+     * @return \ADORecordSet Function info
      */
     public function getOperator($operator_oid)
     {
@@ -373,7 +373,7 @@ class Postgres82 extends Postgres83
     /**
      * Gets all opclasses.
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function getOpClasses()
     {

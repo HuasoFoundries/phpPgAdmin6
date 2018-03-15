@@ -62,7 +62,7 @@ class Postgres74 extends Postgres80
      *
      * @param null $currentdatabase
      *
-     * @return ADORecordSet A list of databases, sorted alphabetically
+     * @return \ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -107,7 +107,7 @@ class Postgres74 extends Postgres80
      * @param $term   The search term
      * @param $filter The object type to restrict to ('' means no restriction)
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function findObject($term, $filter)
     {
@@ -253,7 +253,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns table locks information in the current database.
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function getLocks()
     {
@@ -378,7 +378,7 @@ class Postgres74 extends Postgres80
      *
      * @param $table The name of the table
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function getTable($table)
     {
@@ -405,7 +405,7 @@ class Postgres74 extends Postgres80
      *
      * @param bool|true $all True to fetch all tables, false for just in current schema
      *
-     * @return ADORecordSet All tables, sorted alphabetically
+     * @return \ADORecordSet All tables, sorted alphabetically
      */
     public function getTables($all = false)
     {
@@ -450,7 +450,7 @@ class Postgres74 extends Postgres80
      *
      * @param $table the table where we are looking for fk
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function getConstraintsWithFields($table)
     {
@@ -515,7 +515,7 @@ class Postgres74 extends Postgres80
      *
      * @param bool $all
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function getSequences($all = false)
     {
@@ -546,7 +546,7 @@ class Postgres74 extends Postgres80
      *
      * @param $function_oid
      *
-     * @return ADORecordSet Function info
+     * @return \ADORecordSet Function info
      *
      * @internal param string The $func name of the function to retrieve
      */

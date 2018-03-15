@@ -102,7 +102,7 @@ class Postgres83 extends Postgres84
      *
      * @param string $table
      *
-     * @return ADORecordSet A recordset
+     * @return \ADORecordSet A recordset
      */
     public function getTableAutovacuum($table = '')
     {
@@ -378,7 +378,7 @@ class Postgres83 extends Postgres84
      *
      * @param $function_oid
      *
-     * @return ADORecordSet Function info
+     * @return \ADORecordSet Function info
      *
      * @internal param string $func name of the function to retrieve
      */
