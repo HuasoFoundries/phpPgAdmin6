@@ -970,7 +970,7 @@ class Misc
      *                                       nbsp     - replace all spaces with &nbsp;'s
      *                                       verbatim - render exactly as supplied, no escaping what-so-ever.
      *                                       callback - render using a callback function supplied in the 'function' param.
-     * @param array|\PHPPgAdmin\Type $params Type parameters (optional), known parameters:
+     * @param array $params Type parameters (optional), known parameters:
      *                                       null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
      *                                       otherwise nothing is rendered.
      *                                       clip     - if true, clip the value to a fixed length, and append an ellipsis...
@@ -985,7 +985,7 @@ class Misc
      *                                       lineno   - prefix each line with a line number.
      *                                       map      - an associative array.
      *
-     * @return \PHPPgAdmin\The HTML rendered value
+     * @return string The HTML rendered value
      */
     public function printVal($str, $type = null, $params = [])
     {

@@ -66,7 +66,7 @@ class ADOdbBase
      *
      * @param $sql The SQL query to execute
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function execute($sql)
     {
@@ -91,7 +91,7 @@ class ADOdbBase
      *
      * @param $sql The SQL statement to be executed
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function selectSet($sql)
     {
@@ -405,7 +405,7 @@ class ADOdbBase
      *
      * @param $dbarr
      *
-     * @return \PHPPgAdmin\Database\A PHP array
+     * @return array A PHP array
      *
      * @internal param String $arr representing the DB array
      */

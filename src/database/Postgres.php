@@ -496,7 +496,7 @@ class Postgres extends ADOdbBase
     /**
      * Determines whether or not a user is a super user.
      *
-     * @param \PHPPgAdmin\Database\The|string $username The username of the user
+     * @param string $username The username of the user
      *
      * @return true if is a super user, false otherwise
      */
@@ -526,7 +526,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $database the name of the database to get the comment for
      *
-     * @return recordset of the db comment info
+     * @return ADORecordSet recordset of the db comment info
      */
     public function getDatabaseComment($database)
     {
@@ -542,7 +542,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $database the name of the database to get the owner for
      *
-     * @return recordset of the db owner info
+     * @return ADORecordSet recordset of the db owner info
      */
     public function getDatabaseOwner($database)
     {
@@ -746,7 +746,7 @@ class Postgres extends ADOdbBase
      *
      * @param $database The name of the database to drop
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropDatabase($database)
     {
@@ -762,7 +762,7 @@ class Postgres extends ADOdbBase
      *
      * @param                                 $dbName   The name of the database
      * @param                                 $newName  new name for the database
-     * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
+     * @param string $newOwner The new owner for the database
      * @param string                          $comment
      *
      * @return bool|int 0 success
@@ -853,7 +853,7 @@ class Postgres extends ADOdbBase
      *
      * @param $database (optional) Find only prepared transactions executed in a specific database
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getPreparedXacts($database = null)
     {
@@ -874,7 +874,7 @@ class Postgres extends ADOdbBase
      * @param $term   The search term
      * @param $filter The object type to restrict to ('' means no restriction)
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function findObject($term, $filter)
     {
@@ -1022,7 +1022,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns all available variable information.
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getVariables()
     {
@@ -1282,7 +1282,7 @@ class Postgres extends ADOdbBase
      * @param $schemaname The name of the schema to drop
      * @param $cascade    True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropSchema($schemaname, $cascade)
     {
@@ -1301,7 +1301,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool|true $all True to fetch all tables, false for just in current schema
      *
-     * @return \PHPPgAdmin\Database\All tables, sorted alphabetically
+     * @return ADORecordSet All tables, sorted alphabetically
      */
     public function getTables($all = false)
     {
@@ -1333,7 +1333,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to find the parents for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTableParents($table)
     {
@@ -1363,7 +1363,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to find the children for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTableChildren($table)
     {
@@ -1394,7 +1394,7 @@ class Postgres extends ADOdbBase
      * @param           $table The table to define
      * @param bool|true $clean True to issue drop command, false otherwise
      *
-     * @return \PHPPgAdmin\Database\A string containing the formatted SQL code
+     * @return string A string containing the formatted SQL code
      */
     public function getTableDefPrefix($table, $clean = false)
     {
@@ -1734,7 +1734,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The name of the table
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTable($table)
     {
@@ -1836,7 +1836,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to find rules for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getConstraints($table)
     {
@@ -1913,7 +1913,7 @@ class Postgres extends ADOdbBase
      * @param $typname The name of the type
      * @param $typmod  The contents of the typmod field
      *
-     * @return bool|\PHPPgAdmin\Database\The|string
+     * @return bool|string
      */
     public function formatType($typname, $typmod)
     {
@@ -2343,10 +2343,10 @@ class Postgres extends ADOdbBase
     /**
      * Grabs a list of indexes for a table.
      *
-     * @param \PHPPgAdmin\Database\The|string $table  The name of a table whose indexes to retrieve
+     * @param string $table  The name of a table whose indexes to retrieve
      * @param bool|\PHPPgAdmin\Database\Only  $unique Only get unique/pk indexes
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getIndexes($table = '', $unique = false)
     {
@@ -2371,9 +2371,9 @@ class Postgres extends ADOdbBase
     /**
      * Grabs a list of triggers on a table.
      *
-     * @param \PHPPgAdmin\Database\The|string $table The name of a table whose triggers to retrieve
+     * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTriggers($table = '')
     {
@@ -2404,7 +2404,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to find rules for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getRules($table)
     {
@@ -2616,10 +2616,10 @@ class Postgres extends ADOdbBase
      *                                                     'table' => table name,
      *                                                     'schema' => the schema name,
      *                                                     )
-     * @param bool|\PHPPgAdmin\Database\if    $defaults    if true, copy the defaults values as well
-     * @param bool|\PHPPgAdmin\Database\if    $constraints if true, copy the constraints as well (CHECK on table & attr)
+     * @param bool    $defaults    if true, copy the defaults values as well
+     * @param bool    $constraints if true, copy the constraints as well (CHECK on table & attr)
      * @param bool                            $idx
-     * @param \PHPPgAdmin\Database\The|string $tablespace  The tablespace name ('' means none/default)
+     * @param string $tablespace  The tablespace name ('' means none/default)
      *
      * @return bool|int
      */
@@ -2890,7 +2890,7 @@ class Postgres extends ADOdbBase
      * @param $table The table to be emptied
      * @param $cascade True to cascade truncate, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function emptyTable($table, $cascade)
     {
@@ -2914,7 +2914,7 @@ class Postgres extends ADOdbBase
      * @param $table   The table to drop
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropTable($table, $cascade)
     {
@@ -3160,7 +3160,7 @@ class Postgres extends ADOdbBase
      * @param $column  The column to be renamed
      * @param $newName The new name for the column
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function renameColumn($table, $column, $newName)
     {
@@ -3182,7 +3182,7 @@ class Postgres extends ADOdbBase
      * @param $column  The column name to set
      * @param $default The new default value
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function setColumnDefault($table, $column, $default)
     {
@@ -3203,7 +3203,7 @@ class Postgres extends ADOdbBase
      * @param $column The column to alter
      * @param $state  True to set null, false to set not null
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function setColumnNull($table, $column, $state)
     {
@@ -3224,7 +3224,7 @@ class Postgres extends ADOdbBase
      * @param $column  The column to be dropped
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropColumn($table, $column, $cascade)
     {
@@ -3247,7 +3247,7 @@ class Postgres extends ADOdbBase
      * @param $table  The table from which to drop
      * @param $column The column name to drop default
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropColumnDefault($table, $column)
     {
@@ -3323,7 +3323,7 @@ class Postgres extends ADOdbBase
      * @param $relation The name of a relation
      * @param $oids
      *
-     * @return \PHPPgAdmin\Database\A recordset on success
+     * @return ADORecordSet A recordset on success
      */
     public function dumpRelation($relation, $oids)
     {
@@ -3344,7 +3344,7 @@ class Postgres extends ADOdbBase
      *
      * @param \PHPPgAdmin\Database\if|string $table if given, return autovacuum info for the given table or return all informations for all table
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTableAutovacuum($table = '')
     {
@@ -3692,7 +3692,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getSequences($all = false)
     {
@@ -3722,7 +3722,7 @@ class Postgres extends ADOdbBase
      *
      * @param $sequence Sequence name
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function nextvalSequence($sequence)
     {
@@ -3744,7 +3744,7 @@ class Postgres extends ADOdbBase
      * @param $sequence  Sequence name
      * @param $nextvalue The next value
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function setvalSequence($sequence, $nextvalue)
     {
@@ -3766,7 +3766,7 @@ class Postgres extends ADOdbBase
      *
      * @param $sequence Sequence name
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function restartSequence($sequence)
     {
@@ -3812,7 +3812,7 @@ class Postgres extends ADOdbBase
      *
      * @param $sequence Sequence name
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getSequence($sequence)
     {
@@ -3845,7 +3845,7 @@ class Postgres extends ADOdbBase
      * @param $cachevalue  The cache value
      * @param $cycledvalue True if cycled, false otherwise
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function createSequence(
         $sequence,
@@ -4202,7 +4202,7 @@ class Postgres extends ADOdbBase
      * @param $sequence Sequence name
      * @param $cascade  True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropSequence($sequence, $cascade)
     {
@@ -4514,7 +4514,7 @@ class Postgres extends ADOdbBase
      * @param $viewname The name of the view to drop
      * @param $cascade  True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropView($viewname, $cascade)
     {
@@ -4571,7 +4571,7 @@ class Postgres extends ADOdbBase
      * @param $tablespace The tablespaces ('' means none/default)
      * @param $concurrently
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function createIndex($name, $table, $columns, $type, $unique, $where, $tablespace, $concurrently)
     {
@@ -4619,7 +4619,7 @@ class Postgres extends ADOdbBase
      * @param $index   The index to drop
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropIndex($index, $cascade)
     {
@@ -4640,7 +4640,7 @@ class Postgres extends ADOdbBase
      *
      * @param                              $type  'DATABASE' or 'TABLE' or 'INDEX'
      * @param                              $name  The name of the specific database, table, or index to be reindexed
-     * @param bool|\PHPPgAdmin\Database\If $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in
+     * @param bool $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in
      *                                            7.2-7.3, ignored in >=7.4
      *
      * @return int|\PHPPgAdmin\Database\A
@@ -4676,10 +4676,10 @@ class Postgres extends ADOdbBase
     /**
      * Clusters an index.
      *
-     * @param \PHPPgAdmin\Database\The|string $table The table the index is on
-     * @param \PHPPgAdmin\Database\The|string $index The name of the index
+     * @param string $table The table the index is on
+     * @param string $index The name of the index
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function clusterIndex($table = '', $index = '')
     {
@@ -4712,7 +4712,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table the table where we are looking for fk
      *
-     * @return a recordset
+     * @return ADORecordSet A recordset
      */
     public function getConstraintsWithFields($table)
     {
@@ -4853,7 +4853,7 @@ class Postgres extends ADOdbBase
      * @param        $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function addCheckConstraint($table, $definition, $name = '')
     {
@@ -4950,7 +4950,7 @@ class Postgres extends ADOdbBase
      * @param        $initially
      * @param string $name       (optional) The name to give the key, otherwise default name is assigned
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      *
      * @internal param \PHPPgAdmin\Database\The $target table that contains the target columns
      * @internal param \PHPPgAdmin\Database\The $intially initial deferrability (eg. INITIALLY IMMEDIATE)
@@ -5021,7 +5021,7 @@ class Postgres extends ADOdbBase
      * @param $type       The type of constraint (c, f, u or p)
      * @param $cascade    True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropConstraint($constraint, $relation, $type, $cascade)
     {
@@ -5134,7 +5134,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to find referrers for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getReferrers($table)
     {
@@ -5178,7 +5178,7 @@ class Postgres extends ADOdbBase
      *
      * @param $domain The name of the domain to fetch
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getDomain($domain)
     {
@@ -5239,7 +5239,7 @@ class Postgres extends ADOdbBase
      *
      * @param $domain The name of the domain whose constraints to fetch
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getDomainConstraints($domain)
     {
@@ -5278,7 +5278,7 @@ class Postgres extends ADOdbBase
      * @param $default Default value for domain
      * @param $check   A CHECK constraint if there is one
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function createDomain($domain, $type, $length, $array, $notnull, $default, $check)
     {
@@ -5407,7 +5407,7 @@ class Postgres extends ADOdbBase
      * @param $domain  The name of the domain to drop
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropDomain($domain, $cascade)
     {
@@ -5430,7 +5430,7 @@ class Postgres extends ADOdbBase
      * @param        $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function addDomainCheckConstraint($domain, $definition, $name = '')
     {
@@ -5456,7 +5456,7 @@ class Postgres extends ADOdbBase
      * @param $constraint The constraint to remove
      * @param $cascade    True to cascade, false otherwise
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropDomainConstraint($domain, $constraint, $cascade)
     {
@@ -5745,7 +5745,7 @@ class Postgres extends ADOdbBase
      * @param $function_oid The OID of the function to drop
      * @param $cascade      True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropFunction($function_oid, $cascade)
     {
@@ -5822,11 +5822,11 @@ class Postgres extends ADOdbBase
     /**
      * Returns a list of all types in the database.
      *
-     * @param bool|\PHPPgAdmin\Database\If $all        If true, will find all available types, if false just those in search path
-     * @param bool|\PHPPgAdmin\Database\If $tabletypes If true, will include table types
-     * @param bool|\PHPPgAdmin\Database\If $domains    If true, will include domains
+     * @param bool $all        If true, will find all available types, if false just those in search path
+     * @param bool $tabletypes If true, will include table types
+     * @param bool $domains    If true, will include domains
      *
-     * @return \PHPPgAdmin\Database\A recordet
+     * @return ADORecordSet A recordset
      */
     public function getTypes($all = false, $tabletypes = false, $domains = false)
     {
@@ -5883,7 +5883,7 @@ class Postgres extends ADOdbBase
      * @param $typalign
      * @param $typstorage
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      *
      * @internal param $ ...
      */
@@ -5945,7 +5945,7 @@ class Postgres extends ADOdbBase
      * @param $typname The name of the type to drop
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropType($typname, $cascade)
     {
@@ -6021,7 +6021,7 @@ class Postgres extends ADOdbBase
      *
      * @param $name
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getEnumValues($name)
     {
@@ -6243,7 +6243,7 @@ class Postgres extends ADOdbBase
      * @param $type    NOTHING for a do nothing rule, SOMETHING to use given action
      * @param $action  The action to take
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function setRule($name, $event, $table, $where, $instead, $type, $action)
     {
@@ -6264,7 +6264,7 @@ class Postgres extends ADOdbBase
      * @param      $action  The action to take
      * @param bool $replace (optional) True to replace existing rule, false otherwise
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function createRule($name, $event, $table, $where, $instead, $type, $action, $replace = false)
     {
@@ -6308,7 +6308,7 @@ class Postgres extends ADOdbBase
      * @param $relation The relation from which to drop
      * @param $cascade  True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropRule($rule, $relation, $cascade)
     {
@@ -6331,7 +6331,7 @@ class Postgres extends ADOdbBase
      * @param $table   The name of a table whose triggers to retrieve
      * @param $trigger The name of the trigger to retrieve
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTrigger($table, $trigger)
     {
@@ -6487,10 +6487,10 @@ class Postgres extends ADOdbBase
     /**
      * Returns a list of all functions in the database.
      *
-     * @param bool|\PHPPgAdmin\Database\If $all  If true, will find all available functions, if false just those in search path
+     * @param bool $all  If true, will find all available functions, if false just those in search path
      * @param                              $type If not null, will find all functions with return value = type
      *
-     * @return \PHPPgAdmin\Database\All functions
+     * @return ADORecordSet All functions
      */
     public function getFunctions($all = false, $type = null)
     {
@@ -6544,7 +6544,7 @@ class Postgres extends ADOdbBase
      * @param $tgfrequency
      * @param $tgargs  The function arguments
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function createTrigger($tgname, $table, $tgproc, $tgtime, $tgevent, $tgfrequency, $tgargs)
     {
@@ -6569,7 +6569,7 @@ class Postgres extends ADOdbBase
      * @param $trigger The name of the trigger to alter
      * @param $name    The new name for the trigger
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function alterTrigger($table, $trigger, $name)
     {
@@ -6591,7 +6591,7 @@ class Postgres extends ADOdbBase
      * @param $table   The table from which to drop the trigger
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropTrigger($tgname, $table, $cascade)
     {
@@ -6614,7 +6614,7 @@ class Postgres extends ADOdbBase
      * @param $tgname The name of the trigger to enable
      * @param $table  The table in which to enable the trigger
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function enableTrigger($tgname, $table)
     {
@@ -6634,7 +6634,7 @@ class Postgres extends ADOdbBase
      * @param $tgname The name of the trigger to disable
      * @param $table  The table in which to disable the trigger
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function disableTrigger($tgname, $table)
     {
@@ -6682,7 +6682,7 @@ class Postgres extends ADOdbBase
      * @param $operator_oid The OID of the operator to drop
      * @param $cascade      True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropOperator($operator_oid, $cascade)
     {
@@ -6749,7 +6749,7 @@ class Postgres extends ADOdbBase
     /**
      *  Gets all opclasses.
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getOpClasses()
     {
@@ -6842,9 +6842,9 @@ class Postgres extends ADOdbBase
     /**
      * Returns available FTS configurations.
      *
-     * @param bool|\PHPPgAdmin\Database\if $all if false, returns schema qualified FTS confs
+     * @param bool $all if false, returns schema qualified FTS confs
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getFtsConfigurations($all = true)
     {
@@ -6878,7 +6878,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $ftscfg Name of the FTS configuration
      *
-     * @return RecordSet
+     * @return ADORecordSet recordset
      */
     public function getFtsConfigurationMap($ftscfg)
     {
@@ -6916,9 +6916,9 @@ class Postgres extends ADOdbBase
     /**
      * Returns FTS parsers available.
      *
-     * @param bool|\PHPPgAdmin\Database\if $all if false, return only Parsers from the current schema
+     * @param bool $all if false, return only Parsers from the current schema
      *
-     * @return \PHPPgAdmin\Database\RecordSet
+     * @return ADORecordSet A recordset
      */
     public function getFtsParsers($all = true)
     {
@@ -6945,9 +6945,9 @@ class Postgres extends ADOdbBase
     /**
      * Returns FTS dictionaries available.
      *
-     * @param bool|\PHPPgAdmin\Database\if $all if false, return only Dics from the current schema
+     * @param bool $all if false, return only Dics from the current schema
      *
-     * @return \PHPPgAdmin\Database\RecordSet
+     * @return ADORecordSet A recordset
      */
     public function getFtsDictionaries($all = true)
     {
@@ -7002,7 +7002,7 @@ class Postgres extends ADOdbBase
      * @param $ftscfg  The configuration's name
      * @param $cascade Cascade to dependenced objects
      *
-     * @return \PHPPgAdmin\Database\A 0 on success
+     * @return integer 0 if operation was successful
      */
     public function dropFtsConfiguration($ftscfg, $cascade)
     {
@@ -7024,7 +7024,7 @@ class Postgres extends ADOdbBase
      * @param $ftsdict The dico's name
      * @param $cascade Cascade to dependenced objects
      *
-     * @return \PHPPgAdmin\Database\A 0 on success
+     * @return integer 0 if operation was successful
      *
      * @todo Support of dictionary templates dropping
      */
@@ -7229,7 +7229,7 @@ class Postgres extends ADOdbBase
      *
      * @param $ftsdict The name of the FTS dictionary
      *
-     * @return RecordSet of FTS dictionary information
+     * @return ADORecordSet recordset of FTS dictionary information
      */
     public function getFtsDictionaryByName($ftsdict)
     {
@@ -7350,7 +7350,7 @@ class Postgres extends ADOdbBase
      *
      * @param $ftscfg The config's name that use the parser
      *
-     * @return \PHPPgAdmin\Database\A 0 on success
+     * @return integer 0 if operation was successful
      */
     public function getFtsMappings($ftscfg)
     {
@@ -7397,7 +7397,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool|true $all True to get all languages, regardless of show_system
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getLanguages($all = false)
     {
@@ -7491,7 +7491,7 @@ class Postgres extends ADOdbBase
      * @param $aggrtype The input data type of the aggregate
      * @param $cascade  True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropAggregate($aggrname, $aggrtype, $cascade)
     {
@@ -7514,7 +7514,7 @@ class Postgres extends ADOdbBase
      * @param $name     The name of the aggregate
      * @param $basetype The input data type of the aggregate
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getAggregate($name, $basetype)
     {
@@ -7544,7 +7544,7 @@ class Postgres extends ADOdbBase
     /**
      * Gets all aggregates.
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getAggregates()
     {
@@ -7647,7 +7647,7 @@ class Postgres extends ADOdbBase
      * @param $aggrtype     The input data type of the aggregate
      * @param $newaggrowner The new owner of the aggregate
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function changeAggregateOwner($aggrname, $aggrtype, $newaggrowner)
     {
@@ -7667,7 +7667,7 @@ class Postgres extends ADOdbBase
      * @param $aggrtype      The input data type of the aggregate
      * @param $newaggrschema The new schema for the aggregate
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function changeAggregateSchema($aggrname, $aggrtype, $newaggrschema)
     {
@@ -7688,7 +7688,7 @@ class Postgres extends ADOdbBase
      * @param $aggrtype    The actual input data type of the aggregate
      * @param $newaggrname The new name of the aggregate
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function renameAggregate($aggrschema, $aggrname, $aggrtype, $newaggrname)
     {
@@ -7787,7 +7787,7 @@ class Postgres extends ADOdbBase
      * @param $members      (array) Roles which are automatically added as members of the new role
      * @param $adminmembers (array) Roles which are automatically added as admin members of the new role
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function createRole(
         $rolename,
@@ -7950,7 +7950,7 @@ class Postgres extends ADOdbBase
      * @param $rolename    The name of the role to rename
      * @param $newrolename The new name of the role
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function renameRole($rolename, $newrolename)
     {
@@ -8110,7 +8110,7 @@ class Postgres extends ADOdbBase
      * @param     $rolename The name of the role that will belong to the target role
      * @param int $admin    (optional) Flag to grant the admin option
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function grantRole($role, $rolename, $admin = 0)
     {
@@ -8133,7 +8133,7 @@ class Postgres extends ADOdbBase
      * @param int    $admin    (optional) Flag to revoke only the admin option
      * @param string $type     (optional) Type of revoke: RESTRICT | CASCADE
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function revokeRole($role, $rolename, $admin = 0, $type = 'RESTRICT')
     {
@@ -8155,7 +8155,7 @@ class Postgres extends ADOdbBase
      *
      * @param $rolename The name of the role to drop
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropRole($rolename)
     {
@@ -8176,7 +8176,7 @@ class Postgres extends ADOdbBase
      * @param $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param $groups
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      *
      * @internal param $group (array) The groups to create the user in
      */
@@ -8253,7 +8253,7 @@ class Postgres extends ADOdbBase
      * @param $username The username of the user to rename
      * @param $newname  The new name of the user
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function renameUser($username, $newname)
     {
@@ -8276,7 +8276,7 @@ class Postgres extends ADOdbBase
      * @param $createuser boolean Whether or not the user can create other users
      * @param $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire.
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function setUser($username, $password, $createdb, $createuser, $expiry)
     {
@@ -8306,7 +8306,7 @@ class Postgres extends ADOdbBase
      *
      * @param $username The username of the user to drop
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropUser($username)
     {
@@ -8323,7 +8323,7 @@ class Postgres extends ADOdbBase
      * @param $rolename The role name
      * @param $password The new password
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function changePassword($rolename, $password)
     {
@@ -8342,7 +8342,7 @@ class Postgres extends ADOdbBase
      * @param $groname The name of the group
      * @param $user    The name of the user to add to the group
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function addGroupMember($groname, $user)
     {
@@ -8406,7 +8406,7 @@ class Postgres extends ADOdbBase
      * @param $groname The name of the group
      * @param $user    The name of the user to remove from the group
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropGroupMember($groname, $user)
     {
@@ -8455,7 +8455,7 @@ class Postgres extends ADOdbBase
      * @param $groname The name of the group
      * @param $users   An array of users to add to the group
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function createGroup($groname, $users)
     {
@@ -8476,7 +8476,7 @@ class Postgres extends ADOdbBase
      *
      * @param $groname The name of the group to drop
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropGroup($groname)
     {
@@ -8501,7 +8501,7 @@ class Postgres extends ADOdbBase
      * @param $cascade     True for cascade revoke, false otherwise
      * @param $table       the column's table if type=column
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function setPrivileges(
         $mode,
@@ -8637,9 +8637,9 @@ class Postgres extends ADOdbBase
     /**
      * Retrieves information for all tablespaces.
      *
-     * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+     * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTablespaces($all = false)
     {
@@ -8665,7 +8665,7 @@ class Postgres extends ADOdbBase
      *
      * @param $spcname
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTablespace($spcname)
     {
@@ -8777,7 +8777,7 @@ class Postgres extends ADOdbBase
      *
      * @param $spcname The name of the domain to drop
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function dropTablespace($spcname)
     {
@@ -8813,10 +8813,10 @@ class Postgres extends ADOdbBase
     /**
      * Vacuums a database.
      *
-     * @param \PHPPgAdmin\Database\The|string $table   The table to vacuum
-     * @param bool|\PHPPgAdmin\Database\If    $analyze If true, also does analyze
-     * @param bool|\PHPPgAdmin\Database\If    $full    If true, selects "full" vacuum
-     * @param bool|\PHPPgAdmin\Database\If    $freeze  If true, selects aggressive "freezing" of tuples
+     * @param string $table   The table to vacuum
+     * @param bool    $analyze If true, also does analyze
+     * @param bool    $full    If true, selects "full" vacuum
+     * @param bool    $freeze  If true, selects aggressive "freezing" of tuples
      *
      * @return \PHPPgAdmin\Database\A
      */
@@ -8889,7 +8889,7 @@ class Postgres extends ADOdbBase
      * @param $vaccostdelay
      * @param $vaccostlimit
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function saveAutovacuum(
         $table,
@@ -8963,7 +8963,7 @@ class Postgres extends ADOdbBase
      *
      * @param $database (optional) Find only connections to specified database
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getProcesses($database = null)
     {
@@ -8989,7 +8989,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns table locks information in the current database.
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getLocks()
     {
@@ -9606,7 +9606,7 @@ class Postgres extends ADOdbBase
      * @param $table The name of a table
      * @param $key   The associative array holding the key to retrieve
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function browseRow($table, $key)
     {
@@ -9632,7 +9632,7 @@ class Postgres extends ADOdbBase
      *
      * @param $parameter the parameter
      *
-     * @return \PHPPgAdmin\Database\the|string
+     * @return string
      */
     public function dbBool(&$parameter)
     {
@@ -9650,7 +9650,7 @@ class Postgres extends ADOdbBase
      *
      * @param $database The database to fetch stats for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getStatsDatabase($database)
     {
@@ -9666,7 +9666,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to fetch stats for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getStatsTableTuples($table)
     {
@@ -9685,7 +9685,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to fetch stats for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getStatsTableIO($table)
     {
@@ -9704,7 +9704,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to fetch index stats for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getStatsIndexTuples($table)
     {
@@ -9723,7 +9723,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to fetch index stats for
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getStatsIndexIO($table)
     {

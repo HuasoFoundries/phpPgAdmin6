@@ -102,7 +102,7 @@ class Postgres83 extends Postgres84
      *
      * @param string $table
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTableAutovacuum($table = '')
     {

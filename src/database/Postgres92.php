@@ -19,7 +19,7 @@ class Postgres92 extends Postgres91
      *
      * @param $database (optional) Find only connections to specified database
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getProcesses($database = null)
     {
@@ -43,9 +43,9 @@ class Postgres92 extends Postgres91
     /**
      * Retrieves information for all tablespaces.
      *
-     * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+     * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTablespaces($all = false)
     {
@@ -71,7 +71,7 @@ class Postgres92 extends Postgres91
      *
      * @param $spcname
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTablespace($spcname)
     {

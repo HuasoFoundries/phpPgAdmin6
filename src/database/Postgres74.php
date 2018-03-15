@@ -37,7 +37,7 @@ class Postgres74 extends Postgres80
      *
      * @param                                 $dbName   The name of the database
      * @param                                 $newName  new name for the database
-     * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
+     * @param string $newOwner The new owner for the database
      * @param string                          $comment
      *
      * @return bool|int 0 success
@@ -107,7 +107,7 @@ class Postgres74 extends Postgres80
      * @param $term   The search term
      * @param $filter The object type to restrict to ('' means no restriction)
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function findObject($term, $filter)
     {
@@ -253,7 +253,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns table locks information in the current database.
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getLocks()
     {
@@ -378,7 +378,7 @@ class Postgres74 extends Postgres80
      *
      * @param $table The name of the table
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTable($table)
     {
@@ -405,7 +405,7 @@ class Postgres74 extends Postgres80
      *
      * @param bool|true $all True to fetch all tables, false for just in current schema
      *
-     * @return \PHPPgAdmin\Database\All tables, sorted alphabetically
+     * @return ADORecordSet All tables, sorted alphabetically
      */
     public function getTables($all = false)
     {
@@ -450,7 +450,7 @@ class Postgres74 extends Postgres80
      *
      * @param $table the table where we are looking for fk
      *
-     * @return a recordset
+     * @return ADORecordSet A recordset
      */
     public function getConstraintsWithFields($table)
     {
@@ -515,7 +515,7 @@ class Postgres74 extends Postgres80
      *
      * @param bool $all
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getSequences($all = false)
     {

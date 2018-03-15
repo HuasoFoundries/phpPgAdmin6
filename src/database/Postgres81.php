@@ -100,7 +100,7 @@ class Postgres81 extends Postgres82
      *
      * @param                                 $dbName   The name of the database
      * @param                                 $newName  new name for the database
-     * @param \PHPPgAdmin\Database\The|string $newOwner The new owner for the database
+     * @param string $newOwner The new owner for the database
      * @param string                          $comment
      *
      * @return bool|int 0 success
@@ -246,7 +246,7 @@ class Postgres81 extends Postgres82
      *
      * @param $database (optional) Find only connections to specified database
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getProcesses($database = null)
     {
@@ -274,7 +274,7 @@ class Postgres81 extends Postgres82
      *
      * @param $spcname
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTablespace($spcname)
     {
@@ -289,9 +289,9 @@ class Postgres81 extends Postgres82
     /**
      * Retrieves information for all tablespaces.
      *
-     * @param bool|\PHPPgAdmin\Database\Include $all Include all tablespaces (necessary when moving objects back to the default space)
+     * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTablespaces($all = false)
     {

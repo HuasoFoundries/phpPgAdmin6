@@ -154,7 +154,7 @@ class Postgres80 extends Postgres81
      * @param $username The username
      * @param $password The new password
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function changePassword($username, $password)
     {
@@ -175,7 +175,7 @@ class Postgres80 extends Postgres81
      * @param $name     The name of the aggregate
      * @param $basetype The input data type of the aggregate
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getAggregate($name, $basetype)
     {

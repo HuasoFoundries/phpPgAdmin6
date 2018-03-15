@@ -50,7 +50,7 @@ class Postgres82 extends Postgres83
     /**
      * Returns table locks information in the current database.
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getLocks()
     {
@@ -132,9 +132,9 @@ class Postgres82 extends Postgres83
     /**
      * Grabs a list of triggers on a table.
      *
-     * @param \PHPPgAdmin\Database\The|string $table The name of a table whose triggers to retrieve
+     * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return \PHPPgAdmin\Database\A recordset
+     * @return ADORecordSet A recordset
      */
     public function getTriggers($table = '')
     {
@@ -300,10 +300,10 @@ class Postgres82 extends Postgres83
     /**
      * Clusters an index.
      *
-     * @param \PHPPgAdmin\Database\The|string $table The table the index is on
-     * @param \PHPPgAdmin\Database\The|string $index The name of the index
+     * @param string $table The table the index is on
+     * @param string $index The name of the index
      *
-     * @return \PHPPgAdmin\Database\A 0 success
+     * @return integer 0 if operation was successful
      */
     public function clusterIndex($table = '', $index = '')
     {
@@ -373,7 +373,7 @@ class Postgres82 extends Postgres83
     /**
      * Gets all opclasses.
      *
-     * @return A recordset
+     * @return ADORecordSet A recordset
      */
     public function getOpClasses()
     {

@@ -42,7 +42,7 @@ class OperatorsController extends BaseController
 
                 break;
             case 'create':
-                doCreate();
+                $this->doCreate();
 
                 break;
             case 'drop':
@@ -126,7 +126,7 @@ class OperatorsController extends BaseController
                 'url'   => "operators.php?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['operator' => 'oprname', 'operator_oid' => 'oid'],
             ],
-            'leftarg' => [
+            'leftarg'  => [
                 'title' => $lang['strleftarg'],
                 'field' => Decorator::field('oprleftname'),
             ],
@@ -134,14 +134,14 @@ class OperatorsController extends BaseController
                 'title' => $lang['strrightarg'],
                 'field' => Decorator::field('oprrightname'),
             ],
-            'returns' => [
+            'returns'  => [
                 'title' => $lang['strreturns'],
                 'field' => Decorator::field('resultname'),
             ],
-            'actions' => [
+            'actions'  => [
                 'title' => $lang['stractions'],
             ],
-            'comment' => [
+            'comment'  => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('oprcomment'),
             ],
@@ -228,7 +228,7 @@ class OperatorsController extends BaseController
             $this->printNavLinks(
                 [
                     'showall' => [
-                        'attr' => [
+                        'attr'    => [
                             'href' => [
                                 'url'     => 'operators.php',
                                 'urlvars' => [
@@ -239,7 +239,7 @@ class OperatorsController extends BaseController
                             ],
                         ],
                         'content' => $lang['strshowalloperators'],
-                    ], ],
+                    ]],
                 'operators-properties',
                 get_defined_vars()
             );
@@ -264,7 +264,7 @@ class OperatorsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/operators.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/operators.php\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="operator" value="', htmlspecialchars($_REQUEST['operator']), "\" />\n";
