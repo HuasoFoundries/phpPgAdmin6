@@ -240,9 +240,6 @@ $container['misc'] = function ($c) {
 
     $misc->setConf('theme', $conf['theme']);
 
-    $misc->setHREF();
-    $misc->setForm();
-
     return $misc;
 };
 
@@ -318,7 +315,13 @@ $app->add(function ($request, $response, $next) {
     $this['requestobj']  = $request;
     $this['responseobj'] = $response;
 
-    $misc = $this->get('misc');
+    $this['server']   = $request->getParam('server');
+    $this['database'] = $request->getParam('database');
+    $this['schema']   = $request->getParam('schema');
+    $misc             = $this->get('misc');
+
+    $misc->setHREF();
+    $misc->setForm();
 
     $this->view->offsetSet('METHOD', $request->getMethod());
     if ($request->getAttribute('route')) {

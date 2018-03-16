@@ -86,12 +86,18 @@ class HTMLController
             $subject = '';
         }
 
-        if (isset($_REQUEST['server']) and !isset($urlvars['server']) and 'root' != $subject) {
-            $urlvars['server'] = $_REQUEST['server'];
-            if (isset($_REQUEST['database']) and !isset($urlvars['database']) and 'server' != $subject) {
-                $urlvars['database'] = $_REQUEST['database'];
-                if (isset($_REQUEST['schema']) and !isset($urlvars['schema']) and 'database' != $subject) {
-                    $urlvars['schema'] = $_REQUEST['schema'];
+        $server   = $this->container->server;
+        $database = $this->container->database;
+        $schema   = $this->container->schema;
+
+        //$this->prtrace('server', $server, 'database', $database, 'schema', $schema);
+
+        if ($server && !isset($urlvars['server']) && 'root' != $subject) {
+            $urlvars['server'] = $server;
+            if ($database && !isset($urlvars['database']) && 'server' != $subject) {
+                $urlvars['database'] = $database;
+                if ($schema && !isset($urlvars['schema']) && 'database' != $subject) {
+                    $urlvars['schema'] = $schema;
                 }
             }
         }
@@ -108,7 +114,7 @@ class HTMLController
         $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
         }*/
         /*if ($from === 'PHPPgAdmin\Controller\BaseController::printTabs') {
-        $this->prtrace(['action' => $action, 'getActionUrl' => $url, 'from' => $from]);
+        $this->prtrace(['action' => $action, 'getActionUrl' => $url, 'from' => $from, 'fields' => $fields]);
         }*/
 
         return $url;

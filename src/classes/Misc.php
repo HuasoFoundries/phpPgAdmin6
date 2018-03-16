@@ -703,6 +703,7 @@ class Misc
         }
 
         $_REQUEST['schema'] = $schema;
+        $this->container->offsetSet('schema', $schema);
         $this->setHREF();
 
         return 0;
@@ -740,21 +741,26 @@ class Misc
     /**
      * Get a href query string, excluding objects below the given object type (inclusive).
      *
-     * @param null $exclude_from
+     * @param null|string $exclude_from
      *
      * @return string
      */
     public function getHREF($exclude_from = null)
     {
         $href = [];
-        if (isset($_REQUEST['server']) && $exclude_from != 'server') {
-            $href[] = 'server=' . urlencode($_REQUEST['server']);
+
+        $server   = $this->container->server;
+        $database = $this->container->database;
+        $schema   = $this->container->schema;
+
+        if ($server && $exclude_from !== 'server') {
+            $href[] = 'server=' . urlencode($server);
         }
-        if (isset($_REQUEST['database']) && $exclude_from != 'database') {
-            $href[] = 'database=' . urlencode($_REQUEST['database']);
+        if ($database && $exclude_from !== 'database') {
+            $href[] = 'database=' . urlencode($database);
         }
-        if (isset($_REQUEST['schema']) && $exclude_from != 'schema') {
-            $href[] = 'schema=' . urlencode($_REQUEST['schema']);
+        if ($schema && $exclude_from !== 'schema') {
+            $href[] = 'schema=' . urlencode($schema);
         }
 
         $this->href = htmlentities(implode('&', $href));
@@ -944,15 +950,15 @@ class Misc
     public function setForm()
     {
         $form = [];
-        if (isset($_REQUEST['server'])) {
-            $form[] = '<input type="hidden" name="server" value="' . htmlspecialchars($_REQUEST['server']) . '" />';
+        if ($this->container->server) {
+            $form[] = '<input type="hidden" name="server" value="' . htmlspecialchars($this->container->server) . '" />';
         }
-        if (isset($_REQUEST['database'])) {
-            $form[] = '<input type="hidden" name="database" value="' . htmlspecialchars($_REQUEST['database']) . '" />';
+        if ($this->container->database) {
+            $form[] = '<input type="hidden" name="database" value="' . htmlspecialchars($this->container->database) . '" />';
         }
 
-        if (isset($_REQUEST['schema'])) {
-            $form[] = '<input type="hidden" name="schema" value="' . htmlspecialchars($_REQUEST['schema']) . '" />';
+        if ($this->container->schema) {
+            $form[] = '<input type="hidden" name="schema" value="' . htmlspecialchars($this->container->schema) . '" />';
         }
         $this->form = implode("\n", $form);
 
