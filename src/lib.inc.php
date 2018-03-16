@@ -94,8 +94,12 @@ if ($container instanceof \Psr\Container\ContainerInterface) {
     $handler->start(); // initialize handlers*/
     \PhpConsole\Helper::register(); // it will register global PC class
 
-    $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
-    $subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
+    if (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
+        $subfolder = $conf['subfolder'];
+    } else {
+        $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
+        $subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
+    }
     define('SUBFOLDER', $subfolder);
 } else {
     trigger_error("App Container must be an instance of \Psr\Container\ContainerInterface", E_USER_ERROR);
@@ -317,7 +321,9 @@ $app->add(function ($request, $response, $next) {
     $misc = $this->get('misc');
 
     $this->view->offsetSet('METHOD', $request->getMethod());
-    $this->view->offsetSet('subject', $request->getAttribute('route')->getArgument('subject'));
+    if ($request->getAttribute('route')) {
+        $this->view->offsetSet('subject', $request->getAttribute('route')->getArgument('subject'));
+    }
 
     $query_string = $request->getUri()->getQuery();
     $this->view->offsetSet('query_string', $query_string);

@@ -27,15 +27,15 @@ class ContainerUtils
         $this->container = $container;
     }
 
-    public function getRedirectUrl()
+    public function getRedirectUrl($subject = '')
     {
         $query_string = $this->container->requestobj->getUri()->getQuery();
 
         // but if server_id isn't set, then you will be redirected to intro
         if ($this->container->requestobj->getQueryParam('server') === null) {
-            $destinationurl = SUBFOLDER . '/src/views/intro';
+            $destinationurl = \SUBFOLDER . '/src/views/intro';
         } else {
-            $destinationurl = SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = \SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
         }
 
         return $destinationurl;
@@ -44,17 +44,18 @@ class ContainerUtils
     public function getDestinationWithLastTab($subject)
     {
         $_server_info = $this->container->misc->getServerInfo();
-
+        $this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
         if (!isset($_server_info['username'])) {
             $destinationurl = $this->getRedirectUrl();
         } else {
             $url = $this->container->misc->getLastTabURL($subject);
-
+            $this->prtrace('getLastTabURL for ' . $subject, $url);
             // Load query vars into superglobal arrays
             if (isset($url['urlvars'])) {
                 $urlvars = [];
                 foreach ($url['urlvars'] as $key => $urlvar) {
+                    $this->prtrace($key, $urlvar);
                     $urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
                 }
                 $_REQUEST = array_merge($_REQUEST, $urlvars);
@@ -64,7 +65,8 @@ class ContainerUtils
             $actionurl      = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
             $destinationurl = $actionurl->value($_GET);
         }
-
+        $destinationurl = str_replace('views/?', "views/{$subject}?", $destinationurl);
+        //$this->prtrace('destinationurl for ' . $subject, $destinationurl);
         return $destinationurl;
     }
 
@@ -84,7 +86,7 @@ class ContainerUtils
      */
     public function prtrace()
     {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = ([
             /*'class0'    => $backtrace[3]['class'],

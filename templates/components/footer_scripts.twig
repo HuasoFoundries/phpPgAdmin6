@@ -64,6 +64,7 @@ if (!window.inPopUp) {
 			}
 			redirect_to = '{{subfolder}}/' + subject + location.search;
 			var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
+			console.log(redirection_msg);
 			location.replace(redirect_to);
 		}
 

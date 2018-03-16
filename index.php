@@ -52,8 +52,12 @@ $app->post('/redirect[/{subject}]', function (
         }
 
         $misc->setReloadBrowser(true);
-        $all_db_controller = new \PHPPgAdmin\Controller\AlldbController($this);
-        return $all_db_controller->render();
+        $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
+        return $response->withStatus(302)->withHeader('Location', $destinationurl);
+
+        //
+        //return $response->withStatus(302)->withHeader('Location', $destinationurl);
+
     } else {
         $_server_info = $this->misc->getServerInfo();
 

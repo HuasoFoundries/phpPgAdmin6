@@ -757,7 +757,8 @@ class Misc
             $href[] = 'schema=' . urlencode($_REQUEST['schema']);
         }
 
-        return htmlentities(implode('&', $href));
+        $this->href = htmlentities(implode('&', $href));
+        return $this->href;
     }
 
     public function getSubjectParams($subject)
@@ -1909,7 +1910,7 @@ class Misc
 
         $tabs = $this->getNavTabs($section);
 
-        if (isset($_SESSION['webdbLastTab'][$section], $tabs[$_SESSION['webdbLastTab'][$section]])) {
+        if (isset($_SESSION['webdbLastTab'][$section])) {
             $tab = $tabs[$_SESSION['webdbLastTab'][$section]];
         } else {
             $tab = reset($tabs);
