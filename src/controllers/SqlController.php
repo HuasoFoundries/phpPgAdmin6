@@ -132,7 +132,7 @@ class SqlController extends BaseController
             } else {
                 // Print query results
                 switch (pg_result_status($rs)) {
-                    case PGSQL_TUPLES_OK:
+                    case \PGSQL_TUPLES_OK:
                         // If rows returned, then display the results
                         $num_fields = pg_numfields($rs);
                         echo "<p><table>\n<tr>";
@@ -157,7 +157,7 @@ class SqlController extends BaseController
                         echo $i, " {$lang['strrows']}</p>\n";
 
                         break;
-                    case PGSQL_COMMAND_OK:
+                    case \PGSQL_COMMAND_OK:
                         // If we have the command completion tag
                         if (version_compare(phpversion(), '4.3', '>=')) {
                             echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), "<br/>\n";
@@ -168,7 +168,7 @@ class SqlController extends BaseController
                         }
                         // Otherwise output nothing...
                         break;
-                    case PGSQL_EMPTY_QUERY:
+                    case \PGSQL_EMPTY_QUERY:
                         break;
                     default:
                         break;
@@ -185,11 +185,12 @@ class SqlController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Set fetch mode to NUM so that duplicate field names are properly returned
-        $data->conn->setFetchMode(ADODB_FETCH_NUM);
+        $data->conn->setFetchMode(\ADODB_FETCH_NUM);
+        set_time_limit(25000);
 
         $rs = $data->conn->Execute($this->query);
 
-        echo '<form method="post" id="sqlform" action="'.$_SERVER['REQUEST_URI'].'">';
+        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($this->query);
@@ -275,7 +276,7 @@ class SqlController extends BaseController
         if (isset($_REQUEST['return'])) {
             $urlvars          = $this->misc->getSubjectParams($_REQUEST['return']);
             $navlinks['back'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => $urlvars['url'],
                         'urlvars' => $urlvars['params'],
@@ -287,7 +288,7 @@ class SqlController extends BaseController
 
         // Edit
         $navlinks['alter'] = [
-            'attr' => [
+            'attr'    => [
                 'href' => [
                     'url'     => 'database.php',
                     'urlvars' => array_merge($fields, [
@@ -303,7 +304,7 @@ class SqlController extends BaseController
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [
-                    'attr' => [
+                    'attr'    => [
                         'href' => [
                             'url'     => 'views.php',
                             'urlvars' => array_merge($fields, [
@@ -320,7 +321,7 @@ class SqlController extends BaseController
             }
 
             $navlinks['download'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'dataexport.php',
                         'urlvars' => $fields,
