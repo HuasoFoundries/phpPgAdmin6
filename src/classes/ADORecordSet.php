@@ -19,5 +19,4 @@ namespace PHPPgAdmin;
  */
 class ADORecordSet extends \ADORecordSet
 {
-
 }

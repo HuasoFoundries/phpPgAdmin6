@@ -423,7 +423,6 @@ class DisplayController extends BaseController
             echo '<p>', $resultset->recordCount(), " {$lang['strrows']}</p>" . "\n";
             // Show page navigation
             $this->misc->printPages($_REQUEST['page'], $max_pages, $_gets);
-
         } else {
             echo "<p>{$lang['strnodata']}</p>" . "\n";
         }
