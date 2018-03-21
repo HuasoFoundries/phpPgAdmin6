@@ -4723,7 +4723,7 @@ class Postgres extends ADOdbBase
      * including constraint name, definition, related col and referenced namespace,
      * table and col if needed.
      *
-     * @param $table the table where we are looking for fk
+     * @param string $table the table where we are looking for fk
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -8819,9 +8819,9 @@ class Postgres extends ADOdbBase
     /**
      * Analyze a database.
      *
-     * @param $table (optional) The table to analyze
+     * @param string $table (optional) The table to analyze
      *
-     * @return \PHPPgAdmin\Database\A
+     * @return bool  0 if successful
      */
     public function analyzeDB($table = '')
     {
@@ -8846,7 +8846,7 @@ class Postgres extends ADOdbBase
      * @param bool    $full    If true, selects "full" vacuum
      * @param bool    $freeze  If true, selects aggressive "freezing" of tuples
      *
-     * @return \PHPPgAdmin\Database\A
+     * @return bool  0 if successful
      */
     public function vacuumDB($table = '', $analyze = false, $full = false, $freeze = false)
     {
@@ -8876,7 +8876,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns all autovacuum global configuration.
      *
-     * @return associative array array( param => value, ...)
+     * @return array associative array array( param => value, ...)
      */
     public function getAutovacuum()
     {
@@ -8908,16 +8908,16 @@ class Postgres extends ADOdbBase
     /**
      * Returns all available autovacuum per table information.
      *
-     * @param $table
-     * @param $vacenabled
-     * @param $vacthreshold
-     * @param $vacscalefactor
-     * @param $anathresold
-     * @param $anascalefactor
-     * @param $vaccostdelay
-     * @param $vaccostlimit
+     * @param string $table
+     * @param bool $vacenabled
+     * @param int $vacthreshold
+     * @param int $vacscalefactor
+     * @param int $anathresold
+     * @param int $anascalefactor
+     * @param int $vaccostdelay
+     * @param int $vaccostlimit
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return bool 0 if successful
      */
     public function saveAutovacuum(
         $table,
@@ -8971,6 +8971,13 @@ class Postgres extends ADOdbBase
 
     // Type conversion routines
 
+    /**
+     * Drops autovacuum config for a table
+     *
+     * @param string  $table  The table
+     *
+     * @return bool 0 if successful
+     */
     public function dropAutovacuum($table)
     {
         $f_schema = $this->_schema;
@@ -9088,11 +9095,10 @@ class Postgres extends ADOdbBase
      * the PostgreSQL source code.
      * XXX: It does not handle multibyte languages properly.
      *
-     * @param $name     Entry in $_FILES to use
-     * @param $callback (optional) Callback function to call with each query,
-     *                  its result and line number
+     * @param string $name     Entry in $_FILES to use
+     * @param function|null $callback (optional) Callback function to call with each query, its result and line number
      *
-     * @return true for general success, false on any failure
+     * @return bool true for general success, false on any failure
      */
     public function executeScript($name, $callback = null)
     {
@@ -9347,9 +9353,9 @@ class Postgres extends ADOdbBase
      * multibyte languages, but we don't at the moment, so this function
      * is someone redundant, since it will always advance by 1.
      *
-     * @param &$i       The current character position in the line
-     * @param &$prevlen Length of previous character (ie. 1)
-     * @param &$thislen Length of current character (ie. 1)
+     * @param int &$i       The current character position in the line
+     * @param int &$prevlen Length of previous character (ie. 1)
+     * @param int &$thislen Length of current character (ie. 1)
      */
     private function advance_1(&$i, &$prevlen, &$thislen)
     {
@@ -9362,7 +9368,7 @@ class Postgres extends ADOdbBase
      * Private helper method to detect a valid $foo$ quote delimiter at
      * the start of the parameter dquote.
      *
-     * @param $dquote
+     * @param string $dquote
      *
      * @return true if valid, false otherwise
      */
@@ -9377,15 +9383,15 @@ class Postgres extends ADOdbBase
     /**
      * Returns a recordset of all columns in a query.  Supports paging.
      *
-     * @param $type       Either 'QUERY' if it is an SQL query, or 'TABLE' if it is a table identifier,
+     * @param string $type       Either 'QUERY' if it is an SQL query, or 'TABLE' if it is a table identifier,
      *                    or 'SELECT" if it's a select query
-     * @param $table      The base table of the query.  NULL for no table.
-     * @param $query      The query that is being executed.  NULL for no query.
-     * @param $sortkey    The column number to sort by, or '' or null for no sorting
-     * @param $sortdir    The direction in which to sort the specified column ('asc' or 'desc')
-     * @param $page       The page of the relation to retrieve
-     * @param $page_size  The number of rows per page
-     * @param &$max_pages (return-by-ref) The max number of pages in the relation
+     * @param string $table      The base table of the query.  NULL for no table.
+     * @param string $query      The query that is being executed.  NULL for no query.
+     * @param string $sortkey    The column number to sort by, or '' or null for no sorting
+     * @param string $sortdir    The direction in which to sort the specified column ('asc' or 'desc')
+     * @param int $page       The page of the relation to retrieve
+     * @param int $page_size  The number of rows per page
+     * @param int &$max_pages (return-by-ref) The max number of pages in the relation
      *
      * @return A  recordset on success
      * @return -1 transaction error
@@ -9608,6 +9614,11 @@ class Postgres extends ADOdbBase
         return $sql;
     }
 
+    /**
+     * Determines if it has read only queries.
+     *
+     * @return boolean  True if has read only queries, False otherwise.
+     */
     public function hasReadOnlyQueries()
     {
         return true;
@@ -9766,171 +9777,341 @@ class Postgres extends ADOdbBase
         return $this->selectSet($sql);
     }
 
+    /**
+     * Determines if it has aggregate sort operation.
+     *
+     * @return boolean  True if has aggregate sort operation, False otherwise.
+     */
     public function hasAggregateSortOp()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter aggregate.
+     *
+     * @return boolean  True if has alter aggregate, False otherwise.
+     */
     public function hasAlterAggregate()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter column type.
+     *
+     * @return boolean  True if has alter column type, False otherwise.
+     */
     public function hasAlterColumnType()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter database owner.
+     *
+     * @return boolean  True if has alter database owner, False otherwise.
+     */
     public function hasAlterDatabaseOwner()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter schema.
+     *
+     * @return boolean  True if has alter schema, False otherwise.
+     */
     public function hasAlterSchema()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter schema owner.
+     *
+     * @return boolean  True if has alter schema owner, False otherwise.
+     */
     public function hasAlterSchemaOwner()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter sequence schema.
+     *
+     * @return boolean  True if has alter sequence schema, False otherwise.
+     */
     public function hasAlterSequenceSchema()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter sequence start.
+     *
+     * @return boolean  True if has alter sequence start, False otherwise.
+     */
     public function hasAlterSequenceStart()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter table schema.
+     *
+     * @return boolean  True if has alter table schema, False otherwise.
+     */
     public function hasAlterTableSchema()
     {
         return true;
     }
 
+    /**
+     * Determines if it has autovacuum.
+     *
+     * @return boolean  True if has autovacuum, False otherwise.
+     */
     public function hasAutovacuum()
     {
         return true;
     }
 
+    /**
+     * Determines if it has create table like.
+     *
+     * @return boolean  True if has create table like, False otherwise.
+     */
     public function hasCreateTableLike()
     {
         return true;
     }
 
+    /**
+     * Determines if it has disable triggers.
+     *
+     * @return boolean  True if has disable triggers, False otherwise.
+     */
     public function hasDisableTriggers()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter domains.
+     *
+     * @return boolean  True if has alter domains, False otherwise.
+     */
     public function hasAlterDomains()
     {
         return true;
     }
 
+    /**
+     * Determines if it has enum types.
+     *
+     * @return boolean  True if has enum types, False otherwise.
+     */
     public function hasEnumTypes()
     {
         return true;
     }
 
+    /**
+     * Determines if it has fts.
+     *
+     * @return boolean  True if has fts, False otherwise.
+     */
     public function hasFTS()
     {
         return true;
     }
 
+    /**
+     * Determines if it has function costing.
+     *
+     * @return boolean  True if has function costing, False otherwise.
+     */
     public function hasFunctionCosting()
     {
         return true;
     }
 
+    /**
+     * Determines if it has function guc.
+     *
+     * @return boolean  True if has function guc, False otherwise.
+     */
     public function hasFunctionGUC()
     {
         return true;
     }
 
+    /**
+     * Determines if it has named parameters.
+     *
+     * @return boolean  True if has named parameters, False otherwise.
+     */
     public function hasNamedParams()
     {
         return true;
     }
 
+    /**
+     * Determines if it has prepare.
+     *
+     * @return boolean  True if has prepare, False otherwise.
+     */
     public function hasPrepare()
     {
         return true;
     }
 
+    /**
+     * Determines if it has prepared xacts.
+     *
+     * @return boolean  True if has prepared xacts, False otherwise.
+     */
     public function hasPreparedXacts()
     {
         return true;
     }
 
+    /**
+     * Determines if it has recluster.
+     *
+     * @return boolean  True if has recluster, False otherwise.
+     */
     public function hasRecluster()
     {
         return true;
     }
 
+    /**
+     * Determines if it has server admin funcs.
+     *
+     * @return boolean  True if has server admin funcs, False otherwise.
+     */
     public function hasServerAdminFuncs()
     {
         return true;
     }
 
+    /**
+     * Determines if it has query cancel.
+     *
+     * @return boolean  True if has query cancel, False otherwise.
+     */
     public function hasQueryCancel()
     {
         return true;
     }
 
+    /**
+     * Determines if it has user rename.
+     *
+     * @return boolean  True if has user rename, False otherwise.
+     */
     public function hasUserRename()
     {
         return true;
     }
 
+    /**
+     * Determines if it has user signals.
+     *
+     * @return boolean  True if has user signals, False otherwise.
+     */
     public function hasUserSignals()
     {
         return true;
     }
 
+    /**
+     * Determines if it has virtual transaction identifier.
+     *
+     * @return boolean  True if has virtual transaction identifier, False otherwise.
+     */
     public function hasVirtualTransactionId()
     {
         return true;
     }
 
+    /**
+     * Determines if it has alter database.
+     *
+     * @return boolean  True if has alter database, False otherwise.
+     */
     public function hasAlterDatabase()
     {
         return $this->hasAlterDatabaseRename();
     }
 
+    /**
+     * Determines if it has alter database rename.
+     *
+     * @return boolean  True if has alter database rename, False otherwise.
+     */
     public function hasAlterDatabaseRename()
     {
         return true;
     }
 
+    /**
+     * Determines if it has database collation.
+     *
+     * @return boolean  True if has database collation, False otherwise.
+     */
     public function hasDatabaseCollation()
     {
         return true;
     }
 
+    /**
+     * Determines if it has magic types.
+     *
+     * @return boolean  True if has magic types, False otherwise.
+     */
     public function hasMagicTypes()
     {
         return true;
     }
 
+    /**
+     * Determines if it has query kill.
+     *
+     * @return boolean  True if has query kill, False otherwise.
+     */
     public function hasQueryKill()
     {
         return true;
     }
 
+    /**
+     * Determines if it has concurrent index build.
+     *
+     * @return boolean  True if has concurrent index build, False otherwise.
+     */
     public function hasConcurrentIndexBuild()
     {
         return true;
     }
 
+    /**
+     * Determines if it has force reindex.
+     *
+     * @return boolean  True if has force reindex, False otherwise.
+     */
     public function hasForceReindex()
     {
         return false;
     }
 
+    /**
+     * Determines if it has bytea hexadecimal default.
+     *
+     * @return boolean  True if has bytea hexadecimal default, False otherwise.
+     */
     public function hasByteaHexDefault()
     {
         return true;
