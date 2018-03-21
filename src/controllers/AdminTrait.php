@@ -374,7 +374,6 @@ trait AdminTrait
      */
     public function doEditAutovacuum($type, $confirm, $msg = '')
     {
-
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
