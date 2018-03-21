@@ -287,8 +287,11 @@ class Postgres extends ADOdbBase
     }
 
     /**
+     * Gets the help pages.
      * get help page by instancing the corresponding help class
      * if $this->help_page and $this->help_base are set, this function is a noop.
+     *
+     * @return void
      */
     public function getHelpPages()
     {
@@ -385,9 +388,9 @@ class Postgres extends ADOdbBase
     /**
      * Escapes bytea data for display on the screen.
      *
-     * @param $data The bytea data
+     * @param string $data The bytea data
      *
-     * @return Data formatted for on-screen display
+     * @return string Data formatted for on-screen display
      */
     public function escapeBytea($data)
     {
@@ -399,7 +402,7 @@ class Postgres extends ADOdbBase
      *
      * @param $database The name of the database to retrieve
      *
-     * @return The database info
+     * @return \PHPPgAdmin\ADORecordSet The database info
      */
     public function getDatabase($database)
     {
@@ -412,9 +415,9 @@ class Postgres extends ADOdbBase
     /**
      * Cleans (escapes) a string.
      *
-     * @param $str The string to clean, by reference
+     * @param string $str The string to clean, by reference
      *
-     * @return The cleaned string
+     * @return string The cleaned string
      */
     public function clean(&$str)
     {
@@ -433,7 +436,7 @@ class Postgres extends ADOdbBase
      *
      * @param $currentdatabase database name that should be on top of the resultset
      *
-     * @return A list of databases, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -526,7 +529,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $database the name of the database to get the comment for
      *
-     * @return PHPPgAdmin\ADORecordSet recordset of the db comment info
+     * @return \PHPPgAdmin\ADORecordSet recordset of the db comment info
      */
     public function getDatabaseComment($database)
     {
@@ -542,7 +545,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $database the name of the database to get the owner for
      *
-     * @return PHPPgAdmin\ADORecordSet recordset of the db owner info
+     * @return \PHPPgAdmin\ADORecordSet recordset of the db owner info
      */
     public function getDatabaseOwner($database)
     {
@@ -559,7 +562,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns the current database encoding.
      *
-     * @return The encoding.  eg. SQL_ASCII, UTF-8, etc.
+     * @return string The encoding.  eg. SQL_ASCII, UTF-8, etc.
      */
     public function getDatabaseEncoding()
     {
@@ -569,7 +572,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns the current default_with_oids setting.
      *
-     * @return default_with_oids setting
+     * @return string default_with_oids setting
      */
     public function getDefaultWithOid()
     {
@@ -643,9 +646,9 @@ class Postgres extends ADOdbBase
     /**
      * Cleans (escapes) an object name (eg. table, field).
      *
-     * @param $str The string to clean, by reference
+     * @param string $str The string to clean, by reference
      *
-     * @return The cleaned string
+     * @return string The cleaned string
      */
     public function fieldClean(&$str)
     {
@@ -658,11 +661,21 @@ class Postgres extends ADOdbBase
         return $str;
     }
 
+    /**
+     * Determines if it has tablespaces.
+     *
+     * @return boolean  True if has tablespaces, False otherwise.
+     */
     public function hasTablespaces()
     {
         return true;
     }
 
+    /**
+     * Determines if it has shared comments.
+     *
+     * @return boolean  True if has shared comments, False otherwise.
+     */
     public function hasSharedComments()
     {
         return true;
@@ -853,7 +866,7 @@ class Postgres extends ADOdbBase
      *
      * @param $database (optional) Find only prepared transactions executed in a specific database
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getPreparedXacts($database = null)
     {
@@ -874,7 +887,7 @@ class Postgres extends ADOdbBase
      * @param $term   The search term
      * @param $filter The object type to restrict to ('' means no restriction)
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function findObject($term, $filter)
     {
@@ -1022,7 +1035,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns all available variable information.
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getVariables()
     {
@@ -1036,7 +1049,7 @@ class Postgres extends ADOdbBase
     /**
      * Return all schemas in the current database.
      *
-     * @return All schemas, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet All schemas, sorted alphabetically
      */
     public function getSchemas()
     {
@@ -1085,7 +1098,7 @@ class Postgres extends ADOdbBase
     /**
      * Return the current schema search path.
      *
-     * @return array of schema names
+     * @return \PHPPgAdmin\ADORecordSet array of schema names
      */
     public function getSearchPath()
     {
@@ -1301,7 +1314,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool|true $all True to fetch all tables, false for just in current schema
      *
-     * @return PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
      */
     public function getTables($all = false)
     {
@@ -1333,7 +1346,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to find the parents for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTableParents($table)
     {
@@ -1363,7 +1376,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to find the children for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTableChildren($table)
     {
@@ -1734,7 +1747,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The name of the table
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTable($table)
     {
@@ -1836,7 +1849,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to find rules for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getConstraints($table)
     {
@@ -2346,7 +2359,7 @@ class Postgres extends ADOdbBase
      * @param string $table  The name of a table whose indexes to retrieve
      * @param bool|\PHPPgAdmin\Database\Only  $unique Only get unique/pk indexes
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getIndexes($table = '', $unique = false)
     {
@@ -2373,7 +2386,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTriggers($table = '')
     {
@@ -2404,7 +2417,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to find rules for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getRules($table)
     {
@@ -3323,7 +3336,7 @@ class Postgres extends ADOdbBase
      * @param $relation The name of a relation
      * @param $oids
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset on success
+     * @return \PHPPgAdmin\ADORecordSet A recordset on success
      */
     public function dumpRelation($relation, $oids)
     {
@@ -3344,7 +3357,7 @@ class Postgres extends ADOdbBase
      *
      * @param \PHPPgAdmin\Database\if|string $table if given, return autovacuum info for the given table or return all informations for all table
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTableAutovacuum($table = '')
     {
@@ -3692,7 +3705,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getSequences($all = false)
     {
@@ -3812,7 +3825,7 @@ class Postgres extends ADOdbBase
      *
      * @param $sequence Sequence name
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getSequence($sequence)
     {
@@ -4180,7 +4193,7 @@ class Postgres extends ADOdbBase
      *
      * @return int 0 if operation was successful
      *
-     * @internal param \PHPPgAdmin\Database\The $name new schema for the sequence
+     * @internal param The $name new schema for the sequence
      */
     public function alterSequenceSchema($seqrs, $schema)
     {
@@ -4221,7 +4234,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns a list of all views in the database.
      *
-     * @return All views
+     * @return \PHPPgAdmin\ADORecordSet All views
      */
     public function getViews()
     {
@@ -4241,9 +4254,9 @@ class Postgres extends ADOdbBase
     // Constraint functions
 
     /**
-     * Returns a list of all views in the database.
+     * Returns a list of all materialized views in the database.
      *
-     * @return All views
+     * @return \PHPPgAdmin\ADORecordSet All materialized views
      */
     public function getMaterializedViews()
     {
@@ -4263,9 +4276,9 @@ class Postgres extends ADOdbBase
     /**
      * Updates a view.
      *
-     * @param $viewname   The name fo the view to update
-     * @param $definition The new definition for the view
-     * @param $comment
+     * @param string $viewname   The name fo the view to update
+     * @param string $definition The new definition for the view
+     * @param string $comment
      *
      * @return bool|int 0 success
      */
@@ -4277,10 +4290,10 @@ class Postgres extends ADOdbBase
     /**
      * Creates a new view.
      *
-     * @param $viewname   The name of the view to create
-     * @param $definition The definition for the new view
-     * @param $replace    True to replace the view, false otherwise
-     * @param $comment
+     * @param string $viewname   The name of the view to create
+     * @param string $definition The definition for the new view
+     * @param bool $replace    True to replace the view, false otherwise
+     * @param string $comment
      *
      * @return bool|int 0 success
      */
@@ -4326,11 +4339,11 @@ class Postgres extends ADOdbBase
     /**
      * Alter view properties.
      *
-     * @param $view    The name of the view
-     * @param $name    The new name for the view
-     * @param $owner   The new owner for the view
-     * @param $schema  The new schema for the view
-     * @param $comment The comment on the view
+     * @param string $view    The name of the view
+     * @param string $name    The new name for the view
+     * @param string $owner   The new owner for the view
+     * @param string $schema  The new schema for the view
+     * @param string $comment The comment on the view
      *
      * @return bool|int 0 success
      */
@@ -4362,9 +4375,9 @@ class Postgres extends ADOdbBase
     /**
      * Returns all details for a particular view.
      *
-     * @param $view The name of the view to retrieve
+     * @param string $view The name of the view to retrieve
      *
-     * @return View info
+     * @return \PHPPgAdmin\ADORecordSet View info
      */
     public function getView($view)
     {
@@ -4431,12 +4444,12 @@ class Postgres extends ADOdbBase
     /**
      * Alter a view's owner.
      *
-     * @param      $vwrs  The view recordSet returned by getView()
-     * @param null $owner
+     * @param \PHPPgAdmin\ADORecordSet     $vwrs  The view recordSet returned by getView()
+     * @param null|string $owner
      *
      * @return int 0 if operation was successful
      *
-     * @internal param \PHPPgAdmin\Database\The $name new view's owner
+     * @internal param  $name new view's owner
      */
     public function alterViewOwner($vwrs, $owner = null)
     {
@@ -4485,12 +4498,12 @@ class Postgres extends ADOdbBase
     /**
      * Alter a view's schema.
      *
-     * @param $vwrs The view recordSet returned by getView()
-     * @param $schema
+     * @param \PHPPgAdmin\ADORecordSet $vwrs The view recordSet returned by getView()
+     * @param string $schema
      *
      * @return int 0 if operation was successful
      *
-     * @internal param \PHPPgAdmin\Database\The $name new view's schema
+     * @internal param The $name new view's schema
      */
     public function alterViewSchema($vwrs, $schema)
     {
@@ -4511,8 +4524,8 @@ class Postgres extends ADOdbBase
     /**
      * Drops a view.
      *
-     * @param $viewname The name of the view to drop
-     * @param $cascade  True to cascade drop, false to restrict
+     * @param string $viewname The name of the view to drop
+     * @param string $cascade  True to cascade drop, false to restrict
      *
      * @return integer 0 if operation was successful
      */
@@ -4535,9 +4548,9 @@ class Postgres extends ADOdbBase
     /**
      * test if a table has been clustered on an index.
      *
-     * @param $table The table to test
+     * @param string $table The table to test
      *
-     * @return true if the table has been already clustered
+     * @return bool true if the table has been already clustered
      */
     public function alreadyClustered($table)
     {
@@ -4561,15 +4574,14 @@ class Postgres extends ADOdbBase
     /**
      * Creates an index.
      *
-     * @param $name       The index name
-     * @param $table      The table on which to add the index
-     * @param $columns    An array of columns that form the index
-     *                    or a string expression for a functional index
-     * @param $type       The index type
-     * @param $unique     True if unique, false otherwise
-     * @param $where      Index predicate ('' for none)
-     * @param $tablespace The tablespaces ('' means none/default)
-     * @param $concurrently
+     * @param string $name       The index name
+     * @param string $table      The table on which to add the index
+     * @param array $columns    An array of columns that form the index  or a string expression for a functional index
+     * @param string $type       The index type
+     * @param bool $unique     True if unique, false otherwise
+     * @param string $where      Index predicate ('' for none)
+     * @param string $tablespace The tablespaces ('' means none/default)
+     * @param bool $concurrently true to create index concurrently
      *
      * @return integer 0 if operation was successful
      */
@@ -4616,8 +4628,8 @@ class Postgres extends ADOdbBase
     /**
      * Removes an index from the database.
      *
-     * @param $index   The index to drop
-     * @param $cascade True to cascade drop, false to restrict
+     * @param string $index   The index to drop
+     * @param bool $cascade True to cascade drop, false to restrict
      *
      * @return integer 0 if operation was successful
      */
@@ -4639,12 +4651,12 @@ class Postgres extends ADOdbBase
     /**
      * Rebuild indexes.
      *
-     * @param                              $type  'DATABASE' or 'TABLE' or 'INDEX'
-     * @param                              $name  The name of the specific database, table, or index to be reindexed
+     * @param  string  $type  'DATABASE' or 'TABLE' or 'INDEX'
+     * @param  string  $name  The name of the specific database, table, or index to be reindexed
      * @param bool $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in
      *                                            7.2-7.3, ignored in >=7.4
      *
-     * @return int|\PHPPgAdmin\Database\A
+     * @return int 0 if operation was successful
      */
     public function reindex($type, $name, $force = false)
     {
@@ -4713,7 +4725,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table the table where we are looking for fk
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getConstraintsWithFields($table)
     {
@@ -5044,7 +5056,7 @@ class Postgres extends ADOdbBase
      *
      * @param array $tables multi dimensional assoc array that holds schema and table name
      *
-     * @return PHPPgAdmin\ADORecordSet|integer  recordset of linked tables and columns or -1 if $tables isn't an array
+     * @return \PHPPgAdmin\ADORecordSet|integer  recordset of linked tables and columns or -1 if $tables isn't an array
      */
     public function getLinkingKeys($tables)
     {
@@ -5134,7 +5146,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $table The table to find referrers for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getReferrers($table)
     {
@@ -5178,7 +5190,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $domain The name of the domain to fetch
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getDomain($domain)
     {
@@ -5208,7 +5220,7 @@ class Postgres extends ADOdbBase
     /**
      * Return all domains in current schema.  Excludes domain constraints.
      *
-     * @return PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
      */
     public function getDomains()
     {
@@ -5239,7 +5251,7 @@ class Postgres extends ADOdbBase
      *
      * @param $domain The name of the domain whose constraints to fetch
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getDomainConstraints($domain)
     {
@@ -5782,7 +5794,7 @@ class Postgres extends ADOdbBase
      *
      * @param int $function_oid
      *
-     * @return PHPPgAdmin\ADORecordSet Function info
+     * @return \PHPPgAdmin\ADORecordSet Function info
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -5821,7 +5833,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $typname The name of the view to retrieve
      *
-     * @return PHPPgAdmin\ADORecordSet info
+     * @return \PHPPgAdmin\ADORecordSet info
      */
     public function getType($typname)
     {
@@ -5840,7 +5852,7 @@ class Postgres extends ADOdbBase
      * @param bool $tabletypes If true, will include table types
      * @param bool $domains    If true, will include domains
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTypes($all = false, $tabletypes = false, $domains = false)
     {
@@ -6035,7 +6047,7 @@ class Postgres extends ADOdbBase
      *
      * @param $name
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getEnumValues($name)
     {
@@ -6177,7 +6189,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns a list of all casts in the database.
      *
-     * @return PHPPgAdmin\ADORecordSet All casts
+     * @return \PHPPgAdmin\ADORecordSet All casts
      */
     public function getCasts()
     {
@@ -6222,7 +6234,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns a list of all conversions in the database.
      *
-     * @return PHPPgAdmin\ADORecordSet  All conversions
+     * @return \PHPPgAdmin\ADORecordSet  All conversions
      */
     public function getConversions()
     {
@@ -6346,7 +6358,7 @@ class Postgres extends ADOdbBase
      * @param string $table   The name of a table whose triggers to retrieve
      * @param string $trigger The name of the trigger to retrieve
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTrigger($table, $trigger)
     {
@@ -6505,7 +6517,7 @@ class Postgres extends ADOdbBase
      * @param bool $all  If true, will find all available functions, if false just those in search path
      * @param                              $type If not null, will find all functions with return value = type
      *
-     * @return PHPPgAdmin\ADORecordSet All functions
+     * @return \PHPPgAdmin\ADORecordSet All functions
      */
     public function getFunctions($all = false, $type = null)
     {
@@ -6667,7 +6679,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns a list of all operators in the database.
      *
-     * @return PHPPgAdmin\ADORecordSet All operators
+     * @return \PHPPgAdmin\ADORecordSet All operators
      */
     public function getOperators()
     {
@@ -6765,7 +6777,7 @@ class Postgres extends ADOdbBase
     /**
      *  Gets all opclasses.
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getOpClasses()
     {
@@ -6860,7 +6872,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all if false, returns schema qualified FTS confs
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getFtsConfigurations($all = true)
     {
@@ -6894,7 +6906,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $ftscfg Name of the FTS configuration
      *
-     * @return PHPPgAdmin\ADORecordSet recordset
+     * @return \PHPPgAdmin\ADORecordSet recordset
      */
     public function getFtsConfigurationMap($ftscfg)
     {
@@ -6934,7 +6946,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all if false, return only Parsers from the current schema
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getFtsParsers($all = true)
     {
@@ -6963,7 +6975,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all if false, return only Dics from the current schema
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getFtsDictionaries($all = true)
     {
@@ -7245,7 +7257,7 @@ class Postgres extends ADOdbBase
      *
      * @param $ftsdict The name of the FTS dictionary
      *
-     * @return PHPPgAdmin\ADORecordSet recordset of FTS dictionary information
+     * @return \PHPPgAdmin\ADORecordSet recordset of FTS dictionary information
      */
     public function getFtsDictionaryByName($ftsdict)
     {
@@ -7413,7 +7425,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool|true $all True to get all languages, regardless of show_system
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getLanguages($all = false)
     {
@@ -7530,7 +7542,7 @@ class Postgres extends ADOdbBase
      * @param $name     The name of the aggregate
      * @param $basetype The input data type of the aggregate
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getAggregate($name, $basetype)
     {
@@ -7560,7 +7572,7 @@ class Postgres extends ADOdbBase
     /**
      * Gets all aggregates.
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getAggregates()
     {
@@ -8655,7 +8667,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTablespaces($all = false)
     {
@@ -8681,7 +8693,7 @@ class Postgres extends ADOdbBase
      *
      * @param $spcname
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTablespace($spcname)
     {
@@ -8905,7 +8917,7 @@ class Postgres extends ADOdbBase
      * @param $vaccostdelay
      * @param $vaccostlimit
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function saveAutovacuum(
         $table,
@@ -8979,7 +8991,7 @@ class Postgres extends ADOdbBase
      *
      * @param $database (optional) Find only connections to specified database
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getProcesses($database = null)
     {
@@ -9005,7 +9017,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns table locks information in the current database.
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getLocks()
     {
@@ -9622,7 +9634,7 @@ class Postgres extends ADOdbBase
      * @param $table The name of a table
      * @param $key   The associative array holding the key to retrieve
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function browseRow($table, $key)
     {
@@ -9666,7 +9678,7 @@ class Postgres extends ADOdbBase
      *
      * @param $database The database to fetch stats for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getStatsDatabase($database)
     {
@@ -9682,7 +9694,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to fetch stats for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getStatsTableTuples($table)
     {
@@ -9701,7 +9713,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to fetch stats for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getStatsTableIO($table)
     {
@@ -9720,7 +9732,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to fetch index stats for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getStatsIndexTuples($table)
     {
@@ -9739,7 +9751,7 @@ class Postgres extends ADOdbBase
      *
      * @param $table The table to fetch index stats for
      *
-     * @return PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getStatsIndexIO($table)
     {
