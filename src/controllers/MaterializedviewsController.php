@@ -143,7 +143,7 @@ class MaterializedviewsController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['matview' => 'relname'],
-                'url'     => 'materializedviews.php',
+                'url'     => 'materializedviews',
             ],
             'browse'       => [
                 'content' => $lang['strbrowse'],
@@ -163,7 +163,7 @@ class MaterializedviewsController extends BaseController
                 'content' => $lang['strselect'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'materializedviews.php',
+                        'url'     => 'materializedviews',
                         'urlvars' => [
                             'action'  => 'confselectrows',
                             'matview' => Decorator::field('relname'),
@@ -175,7 +175,7 @@ class MaterializedviewsController extends BaseController
             // Insert is possible if the relevant rule for the view has been created.
             //            'insert' => array(
             //                'title'    => $lang['strinsert'],
-            //                'url'    => "materializedviews.php?action=confinsertrow&amp;{$this->misc->href}&amp;",
+            //                'url'    => "materializedviews?action=confinsertrow&amp;{$this->misc->href}&amp;",
             //                'vars'    => array('view' => 'relname'),
             //            ),
 
@@ -183,7 +183,7 @@ class MaterializedviewsController extends BaseController
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'materializedviewproperties.php',
+                        'url'     => 'materializedviewproperties',
                         'urlvars' => [
                             'action'  => 'confirm_alter',
                             'matview' => Decorator::field('relname'),
@@ -196,7 +196,7 @@ class MaterializedviewsController extends BaseController
                 'content'     => $lang['strdrop'],
                 'attr'        => [
                     'href' => [
-                        'url'     => 'materializedviews.php',
+                        'url'     => 'materializedviews',
                         'urlvars' => [
                             'action'  => 'confirm_drop',
                             'matview' => Decorator::field('relname'),
@@ -212,7 +212,7 @@ class MaterializedviewsController extends BaseController
             'create'    => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'materializedviews.php',
+                        'url'     => 'materializedviews',
                         'urlvars' => [
                             'action'   => 'create',
                             'server'   => $_REQUEST['server'],
@@ -226,7 +226,7 @@ class MaterializedviewsController extends BaseController
             'createwiz' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'materializedviews.php',
+                        'url'     => 'materializedviews',
                         'urlvars' => [
                             'action'   => 'wiz_create',
                             'server'   => $_REQUEST['server'],
@@ -258,8 +258,8 @@ class MaterializedviewsController extends BaseController
             'icon'       => 'MView',
             'iconAction' => Decorator::url('display', $reqvars, ['matview' => Decorator::field('relname')]),
             'toolTip'    => Decorator::field('relcomment'),
-            'action'     => Decorator::redirecturl('redirect.php', $reqvars, ['matview' => Decorator::field('relname')]),
-            'branch'     => Decorator::url('materializedviews.php', $reqvars, ['action' => 'subtree', 'matview' => Decorator::field('relname')]),
+            'action'     => Decorator::redirecturl('redirect', $reqvars, ['matview' => Decorator::field('relname')]),
+            'branch'     => Decorator::url('materializedviews', $reqvars, ['action' => 'subtree', 'matview' => Decorator::field('relname')]),
         ];
 
         return $this->printTree($matviews, $attrs, 'matviews');
@@ -447,7 +447,7 @@ class MaterializedviewsController extends BaseController
             $this->printTrail('getTrail');
             $this->printTitle($lang['strdrop'], 'pg.matview.drop');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -568,7 +568,7 @@ class MaterializedviewsController extends BaseController
             }
             asort($arrFields);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strviewname']}</th></tr>";
             echo "<tr>\n<td class=\"data1\">\n";
@@ -673,7 +673,7 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($lang['strcreateviewwiz'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">\n";
@@ -726,7 +726,7 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($lang['strcreateview'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

@@ -90,7 +90,7 @@ class OperatorsController extends BaseController
             'icon'    => 'Operator',
             'toolTip' => Decorator::field('oprcomment'),
             'action'  => Decorator::actionurl(
-                'operators.php',
+                'operators',
                 $reqvars,
                 [
                     'action'       => 'properties',
@@ -123,7 +123,7 @@ class OperatorsController extends BaseController
             'operator' => [
                 'title' => $lang['stroperator'],
                 'field' => Decorator::field('oprname'),
-                'url'   => "operators.php?action=properties&amp;{$this->misc->href}&amp;",
+                'url'   => "operators?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['operator' => 'oprname', 'operator_oid' => 'oid'],
             ],
             'leftarg'  => [
@@ -150,12 +150,12 @@ class OperatorsController extends BaseController
         $actions = [
             'drop' => [
                 // 'title' => $lang['strdrop'],
-                // 'url'   => "operators.php?action=confirm_drop&amp;{$this->misc->href}&amp;",
+                // 'url'   => "operators?action=confirm_drop&amp;{$this->misc->href}&amp;",
                 // 'vars'  => array('operator' => 'oprname', 'operator_oid' => 'oid'),
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'operators.php',
+                        'url'     => 'operators',
                         'urlvars' => [
                             'action'       => 'confirm_drop',
                             'operator'     => Decorator::field('oprname'),
@@ -168,7 +168,7 @@ class OperatorsController extends BaseController
 
         echo $this->printTable($operators, $columns, $actions, 'operators-operators', $lang['strnooperators']);
 
-        //        TODO operators.php action=create $lang['strcreateoperator']
+        //        TODO operators action=create $lang['strcreateoperator']
     }
 
     /**
@@ -230,7 +230,7 @@ class OperatorsController extends BaseController
                     'showall' => [
                         'attr'    => [
                             'href' => [
-                                'url'     => 'operators.php',
+                                'url'     => 'operators',
                                 'urlvars' => [
                                     'server'   => $_REQUEST['server'],
                                     'database' => $_REQUEST['database'],
@@ -264,7 +264,7 @@ class OperatorsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/operators.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/operators\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="operator" value="', htmlspecialchars($_REQUEST['operator']), "\" />\n";

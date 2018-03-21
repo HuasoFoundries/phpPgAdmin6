@@ -123,13 +123,13 @@ class DomainsController extends BaseController
         $domains = $data->getDomains();
 
         $columns = [
-            'domain' => [
+            'domain'  => [
                 'title' => $lang['strdomain'],
                 'field' => Decorator::field('domname'),
-                'url'   => "domains.php?action=properties&amp;{$this->misc->href}&amp;",
+                'url'   => "domains?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['domain' => 'domname'],
             ],
-            'type' => [
+            'type'    => [
                 'title' => $lang['strtype'],
                 'field' => Decorator::field('domtype'),
             ],
@@ -143,7 +143,7 @@ class DomainsController extends BaseController
                 'title' => $lang['strdefault'],
                 'field' => Decorator::field('domdef'),
             ],
-            'owner' => [
+            'owner'   => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('domowner'),
             ],
@@ -161,7 +161,7 @@ class DomainsController extends BaseController
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'domains.php',
+                        'url'     => 'domains',
                         'urlvars' => [
                             'action' => 'alter',
                             'domain' => Decorator::field('domname'),
@@ -169,11 +169,11 @@ class DomainsController extends BaseController
                     ],
                 ],
             ],
-            'drop' => [
+            'drop'  => [
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'domains.php',
+                        'url'     => 'domains',
                         'urlvars' => [
                             'action' => 'confirm_drop',
                             'domain' => Decorator::field('domname'),
@@ -191,9 +191,9 @@ class DomainsController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url'     => 'domains.php',
+                        'url'     => 'domains',
                         'urlvars' => [
                             'action'   => 'create',
                             'server'   => $_REQUEST['server'],
@@ -225,7 +225,7 @@ class DomainsController extends BaseController
             'icon'    => 'Domain',
             'toolTip' => Decorator::field('domcomment'),
             'action'  => Decorator::actionurl(
-                'domains.php',
+                'domains',
                 $reqvars,
                 [
                     'action' => 'properties',
@@ -290,7 +290,7 @@ class DomainsController extends BaseController
             }
 
             // Display domain info
-            echo '<form action="'.\SUBFOLDER."/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
@@ -346,7 +346,7 @@ class DomainsController extends BaseController
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
@@ -403,7 +403,7 @@ class DomainsController extends BaseController
                 $this->misc->printVal($_REQUEST['constraint']),
                 $this->misc->printVal($_REQUEST['domain'])
             ), "</p>\n";
-            echo '<form action="'.\SUBFOLDER."/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_con\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";
@@ -465,7 +465,7 @@ class DomainsController extends BaseController
                 $domaincons = $data->getDomainConstraints($_REQUEST['domain']);
 
                 $columns = [
-                    'name' => [
+                    'name'       => [
                         'title' => $lang['strname'],
                         'field' => Decorator::field('conname'),
                     ],
@@ -473,7 +473,7 @@ class DomainsController extends BaseController
                         'title' => $lang['strdefinition'],
                         'field' => Decorator::field('consrc'),
                     ],
-                    'actions' => [
+                    'actions'    => [
                         'title' => $lang['stractions'],
                     ],
                 ];
@@ -483,7 +483,7 @@ class DomainsController extends BaseController
                         'content' => $lang['strdrop'],
                         'attr'    => [
                             'href' => [
-                                'url'     => 'domains.php',
+                                'url'     => 'domains',
                                 'urlvars' => [
                                     'action'     => 'confirm_drop_con',
                                     'domain'     => $_REQUEST['domain'],
@@ -503,9 +503,9 @@ class DomainsController extends BaseController
 
         $navlinks = [
             'drop' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url'     => 'domains.php',
+                        'url'     => 'domains',
                         'urlvars' => [
                             'action'   => 'confirm_drop',
                             'server'   => $_REQUEST['server'],
@@ -520,9 +520,9 @@ class DomainsController extends BaseController
         ];
         if ($data->hasAlterDomains()) {
             $navlinks['addcheck'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url'     => 'domains.php',
+                        'url'     => 'domains',
                         'urlvars' => [
                             'action'   => 'add_check',
                             'server'   => $_REQUEST['server'],
@@ -535,9 +535,9 @@ class DomainsController extends BaseController
                 'content' => $lang['straddcheck'],
             ];
             $navlinks['alter'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url'     => 'domains.php',
+                        'url'     => 'domains',
                         'urlvars' => [
                             'action'   => 'alter',
                             'server'   => $_REQUEST['server'],
@@ -569,7 +569,7 @@ class DomainsController extends BaseController
             $this->printTitle($lang['strdrop'], 'pg.domain.drop');
 
             echo '<p>', sprintf($lang['strconfdropdomain'], $this->misc->printVal($_REQUEST['domain'])), "</p>\n";
-            echo '<form action="'.\SUBFOLDER."/src/views/domains.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/domains\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
@@ -627,7 +627,7 @@ class DomainsController extends BaseController
         $this->printTitle($lang['strcreatedomain'], 'pg.domain.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/domains.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/domains\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"domname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

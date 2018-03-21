@@ -160,7 +160,7 @@ class ColpropertiesController extends BaseController
                     'alter'  => [
                         'attr'    => [
                             'href' => [
-                                'url'     => 'colproperties.php',
+                                'url'     => 'colproperties',
                                 'urlvars' => [
                                     'action'   => 'properties',
                                     'server'   => $_REQUEST['server'],
@@ -176,7 +176,7 @@ class ColpropertiesController extends BaseController
                     'drop'   => [
                         'attr'    => [
                             'href' => [
-                                'url'     => 'tblproperties.php',
+                                'url'     => 'tblproperties',
                                 'urlvars' => [
                                     'action'   => 'confirm_drop',
                                     'server'   => $_REQUEST['server'],
@@ -241,7 +241,7 @@ class ColpropertiesController extends BaseController
                 $this->printMsg($msg);
 
                 echo '<script src="' . \SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . \SUBFOLDER . "/src/views/colproperties.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/colproperties\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";

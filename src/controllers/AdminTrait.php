@@ -225,7 +225,7 @@ trait AdminTrait
                 echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    \Kint::dump($a);
+                    //\Kint::dump($a);
                     echo '<p>', sprintf($lang['strconfanalyzetable'], $this->misc->printVal($a['table'])), "</p>\n";
                     echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), "\" />\n";
                 }
@@ -546,7 +546,7 @@ trait AdminTrait
     /**
      * database/table administration and tuning tasks.
      *
-     * $Id: admin.php
+     * $Id: admin
      *
      * @param mixed $type
      * @param mixed $msg

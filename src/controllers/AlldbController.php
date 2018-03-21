@@ -146,14 +146,14 @@ class AlldbController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['database' => 'datname'],
-                'url'     => 'alldb.php',
+                'url'     => 'alldb',
                 'default' => null,
             ],
             'drop'         => [
                 'content'     => $lang['strdrop'],
                 'attr'        => [
                     'href' => [
-                        'url'     => 'alldb.php',
+                        'url'     => 'alldb',
                         'urlvars' => [
                             'subject'      => 'database',
                             'action'       => 'confirm_drop',
@@ -167,7 +167,7 @@ class AlldbController extends BaseController
                 'content' => $lang['strprivileges'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'privileges.php',
+                        'url'     => 'privileges',
                         'urlvars' => [
                             'subject'  => 'database',
                             'database' => Decorator::field('datname'),
@@ -181,7 +181,7 @@ class AlldbController extends BaseController
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'alldb.php',
+                        'url'     => 'alldb',
                         'urlvars' => [
                             'subject'       => 'database',
                             'action'        => 'confirm_alter',
@@ -214,7 +214,7 @@ class AlldbController extends BaseController
             'create' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'alldb.php',
+                        'url'     => 'alldb',
                         'urlvars' => [
                             'action' => 'create',
                             'server' => $_REQUEST['server'],
@@ -242,7 +242,7 @@ class AlldbController extends BaseController
             'text'    => Decorator::field('datname'),
             'icon'    => 'Database',
             'toolTip' => Decorator::field('datcomment'),
-            'action'  => Decorator::redirecturl('redirect.php', $reqvars, ['database' => Decorator::field('datname')]),
+            'action'  => Decorator::redirecturl('redirect', $reqvars, ['database' => Decorator::field('datname')]),
             'branch'  => Decorator::url('/src/views/database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
         ];
 
@@ -263,7 +263,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($lang['stralter'], 'pg.database.alter');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -339,7 +339,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($lang['strdrop'], 'pg.database.drop');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -430,7 +430,7 @@ class AlldbController extends BaseController
             $tablespaces = $data->getTablespaces();
         }
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/alldb.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -587,7 +587,7 @@ class AlldbController extends BaseController
         $this->printTabs('server', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/dbexport.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dbexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\">{$lang['stroptions']}</th></tr>\n";
         // Data only

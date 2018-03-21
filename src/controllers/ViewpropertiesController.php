@@ -126,7 +126,7 @@ class ViewpropertiesController extends BaseController
             'column'  => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties.php?subject=column&amp;{$this->misc->href}&amp;view=" . urlencode($_REQUEST['view']) . '&amp;',
+                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=" . urlencode($_REQUEST['view']) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
@@ -151,7 +151,7 @@ class ViewpropertiesController extends BaseController
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'viewproperties.php',
+                        'url'     => 'viewproperties',
                         'urlvars' => [
                             'action' => 'properties',
                             'view'   => $_REQUEST['view'],
@@ -186,7 +186,7 @@ class ViewpropertiesController extends BaseController
             'select' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'views.php',
+                        'url'     => 'views',
                         'urlvars' => [
                             'action'   => 'confselectrows',
                             'server'   => $_REQUEST['server'],
@@ -201,7 +201,7 @@ class ViewpropertiesController extends BaseController
             'drop'   => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'views.php',
+                        'url'     => 'views',
                         'urlvars' => [
                             'action'   => 'confirm_drop',
                             'server'   => $_REQUEST['server'],
@@ -216,7 +216,7 @@ class ViewpropertiesController extends BaseController
             'alter'  => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'viewproperties.php',
+                        'url'     => 'viewproperties',
                         'urlvars' => [
                             'action'   => 'confirm_alter',
                             'server'   => $_REQUEST['server'],
@@ -244,7 +244,7 @@ class ViewpropertiesController extends BaseController
         $attrs = [
             'text'       => Decorator::field('attname'),
             'action'     => Decorator::actionurl(
-                'colproperties.php',
+                'colproperties',
                 $reqvars,
                 [
                     'view'   => $_REQUEST['view'],
@@ -311,7 +311,7 @@ class ViewpropertiesController extends BaseController
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -348,7 +348,7 @@ class ViewpropertiesController extends BaseController
         $this->printTabs('view', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -428,7 +428,7 @@ class ViewpropertiesController extends BaseController
         $this->printNavLinks(['alter' => [
             'attr'    => [
                 'href' => [
-                    'url'     => 'viewproperties.php',
+                    'url'     => 'viewproperties',
                     'urlvars' => [
                         'action'   => 'edit',
                         'server'   => $_REQUEST['server'],
@@ -463,7 +463,7 @@ class ViewpropertiesController extends BaseController
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties\" method=\"post\">\n";
 
                 // Output view header
                 echo "<table>\n";
@@ -569,7 +569,7 @@ class ViewpropertiesController extends BaseController
                     $_POST['comment'] = $view->fields['relcomment'];
                 }
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo '<td class="data1">';

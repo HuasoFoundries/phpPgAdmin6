@@ -153,7 +153,7 @@ class FulltextController extends BaseController
             'configuration' => [
                 'title' => $lang['strftsconfig'],
                 'field' => Decorator::field('name'),
-                'url'   => "fulltext.php?action=viewconfig&amp;{$this->misc->href}&amp;",
+                'url'   => "fulltext?action=viewconfig&amp;{$this->misc->href}&amp;",
                 'vars'  => ['ftscfg' => 'name'],
             ],
             'schema'        => [
@@ -174,7 +174,7 @@ class FulltextController extends BaseController
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url'     => 'fulltext',
                         'urlvars' => [
                             'action' => 'dropconfig',
                             'ftscfg' => Decorator::field('name'),
@@ -186,7 +186,7 @@ class FulltextController extends BaseController
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url'     => 'fulltext',
                         'urlvars' => [
                             'action' => 'alterconfig',
                             'ftscfg' => Decorator::field('name'),
@@ -202,7 +202,7 @@ class FulltextController extends BaseController
             'createconf' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url'     => 'fulltext',
                         'urlvars' => [
                             'action'   => 'createconfig',
                             'server'   => $_REQUEST['server'],
@@ -234,12 +234,12 @@ class FulltextController extends BaseController
             'text'   => Decorator::field('title'),
             'icon'   => Decorator::field('icon'),
             'action' => Decorator::actionurl(
-                'fulltext.php',
+                'fulltext',
                 $reqvars,
                 Decorator::field('urlvars')
             ),
             'branch' => Decorator::url(
-                'fulltext.php',
+                'fulltext',
                 $reqvars,
                 [
                     'action' => 'subtree',
@@ -283,7 +283,7 @@ class FulltextController extends BaseController
             'icon'    => $what,
             'toolTip' => Decorator::field('comment'),
             'action'  => Decorator::actionurl(
-                'fulltext.php',
+                'fulltext',
                 $reqvars,
                 $urlvars
             ),
@@ -291,7 +291,7 @@ class FulltextController extends BaseController
                 Decorator::field('branch'),
                 '',
                 Decorator::url(
-                    'fulltext.php',
+                    'fulltext',
                     $reqvars,
                     [
                         'action' => 'subtree',
@@ -315,7 +315,7 @@ class FulltextController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropftsconfig'], $this->misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"dropconfig\" />\n";
             echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
@@ -346,7 +346,7 @@ class FulltextController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropftsdict'], $this->misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"dropdict\" />\n";
             echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
@@ -407,7 +407,7 @@ class FulltextController extends BaseController
         $this->printTitle($lang['strftscreateconfig'], 'pg.ftscfg.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
         echo "<table>\n";
         // conf name
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -552,7 +552,7 @@ class FulltextController extends BaseController
             // Fetch all FTS parsers from the database
             $ftsparsers = $data->getFtsParsers();
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -674,7 +674,7 @@ class FulltextController extends BaseController
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url'     => 'fulltext',
                         'urlvars' => [
                             'action'  => 'dropdict',
                             'ftsdict' => Decorator::field('name'),
@@ -686,7 +686,7 @@ class FulltextController extends BaseController
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url'     => 'fulltext',
                         'urlvars' => [
                             'action'  => 'alterdict',
                             'ftsdict' => Decorator::field('name'),
@@ -702,7 +702,7 @@ class FulltextController extends BaseController
             'createdict' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url'     => 'fulltext',
                         'urlvars' => [
                             'action'   => 'createdict',
                             'server'   => $_REQUEST['server'],
@@ -762,7 +762,7 @@ class FulltextController extends BaseController
                 'content'     => $lang['strdrop'],
                 'attr'        => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url'     => 'fulltext',
                         'urlvars' => [
                             'action'  => 'dropmapping',
                             'mapping' => Decorator::field('name'),
@@ -775,7 +775,7 @@ class FulltextController extends BaseController
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url'     => 'fulltext',
                         'urlvars' => [
                             'action'  => 'altermapping',
                             'mapping' => Decorator::field('name'),
@@ -786,7 +786,7 @@ class FulltextController extends BaseController
             ],
             'multiactions' => [
                 'keycols' => ['mapping' => 'name'],
-                'url'     => 'fulltext.php',
+                'url'     => 'fulltext',
                 'default' => null,
                 'vars'    => ['ftscfg' => $ftscfg],
             ],
@@ -798,7 +798,7 @@ class FulltextController extends BaseController
             'addmapping' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'fulltext.php',
+                        'url'     => 'fulltext',
                         'urlvars' => [
                             'action'   => 'addmapping',
                             'server'   => $_REQUEST['server'],
@@ -863,7 +863,7 @@ class FulltextController extends BaseController
         $this->printTitle($lang['strftscreatedict'], 'pg.ftsdict.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -1020,7 +1020,7 @@ class FulltextController extends BaseController
                 $_POST['formName'] = $_REQUEST['ftsdict'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -1091,7 +1091,7 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: proper breadcrumbs
             $this->printTitle($lang['strdrop'], 'pg.ftscfg.alter');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
 
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
@@ -1155,7 +1155,7 @@ class FulltextController extends BaseController
                 $_POST['ftscfg'] = $_REQUEST['ftscfg'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
 
             echo "<table>\n";
             echo "\t<tr>\n";
@@ -1258,7 +1258,7 @@ class FulltextController extends BaseController
 
             $mappings = $data->getFtsMappings($_POST['ftscfg']);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n";
             echo "\t\t<th class=\"data left required\">{$lang['strftsmapping']}</th>\n";

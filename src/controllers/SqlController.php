@@ -290,7 +290,7 @@ class SqlController extends BaseController
         $navlinks['alter'] = [
             'attr'    => [
                 'href' => [
-                    'url'     => 'database.php',
+                    'url'     => 'database',
                     'urlvars' => array_merge($fields, [
                         'action' => 'sql',
                     ]),
@@ -306,7 +306,7 @@ class SqlController extends BaseController
                 $navlinks['createview'] = [
                     'attr'    => [
                         'href' => [
-                            'url'     => 'views.php',
+                            'url'     => 'views',
                             'urlvars' => array_merge($fields, [
                                 'action' => 'create',
                             ]),
@@ -323,7 +323,7 @@ class SqlController extends BaseController
             $navlinks['download'] = [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'dataexport.php',
+                        'url'     => 'dataexport',
                         'urlvars' => $fields,
                     ],
                 ],

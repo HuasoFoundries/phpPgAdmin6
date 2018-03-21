@@ -30,7 +30,7 @@ class RulesController extends BaseController
         }
 
         // Different header if we're view rules or table rules
-        $this->printHeader($_REQUEST[$_REQUEST['subject']].' - '.$lang['strrules']);
+        $this->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $lang['strrules']);
         $this->printBody();
 
         switch ($action) {
@@ -84,7 +84,7 @@ class RulesController extends BaseController
         $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
 
         $columns = [
-            'rule' => [
+            'rule'       => [
                 'title' => $lang['strname'],
                 'field' => Decorator::field('rulename'),
             ],
@@ -92,7 +92,7 @@ class RulesController extends BaseController
                 'title' => $lang['strdefinition'],
                 'field' => Decorator::field('definition'),
             ],
-            'actions' => [
+            'actions'    => [
                 'title' => $lang['stractions'],
             ],
         ];
@@ -105,7 +105,7 @@ class RulesController extends BaseController
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'rules.php',
+                        'url'     => 'rules',
                         'urlvars' => [
                             'action'  => 'confirm_drop',
                             'reltype' => $subject,
@@ -121,9 +121,9 @@ class RulesController extends BaseController
         echo $this->printTable($rules, $columns, $actions, 'rules-rules', $lang['strnorules']);
 
         $this->printNavLinks(['create' => [
-            'attr' => [
+            'attr'    => [
                 'href' => [
-                    'url'     => 'rules.php',
+                    'url'     => 'rules',
                     'urlvars' => [
                         'action'   => 'create_rule',
                         'server'   => $_REQUEST['server'],
@@ -191,7 +191,7 @@ class RulesController extends BaseController
             $this->printTitle($lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/rules.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/rules\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -268,7 +268,7 @@ class RulesController extends BaseController
                 $this->misc->printVal($_REQUEST[$_REQUEST['reltype']])
             ), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/rules.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/rules\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['reltype']), "\" />\n";
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['reltype']),

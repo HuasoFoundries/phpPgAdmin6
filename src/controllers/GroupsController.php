@@ -104,10 +104,10 @@ class GroupsController extends BaseController
         $groups = $data->getGroups();
 
         $columns = [
-            'group' => [
+            'group'   => [
                 'title' => $lang['strgroup'],
                 'field' => Decorator::field('groname'),
-                'url'   => "groups.php?action=properties&amp;{$this->misc->href}&amp;",
+                'url'   => "groups?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['group' => 'groname'],
             ],
             'actions' => [
@@ -120,7 +120,7 @@ class GroupsController extends BaseController
                 'content' => $lang['strdrop'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'groups.php',
+                        'url'     => 'groups',
                         'urlvars' => [
                             'action' => 'confirm_drop',
                             'group'  => Decorator::field('groname'),
@@ -133,9 +133,9 @@ class GroupsController extends BaseController
         echo $this->printTable($groups, $columns, $actions, 'groups-properties', $lang['strnogroups']);
 
         $this->printNavLinks(['create' => [
-            'attr' => [
+            'attr'    => [
                 'href' => [
-                    'url'     => 'groups.php',
+                    'url'     => 'groups',
                     'urlvars' => [
                         'action' => 'create',
                         'server' => $_REQUEST['server'],
@@ -178,7 +178,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/groups\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -233,7 +233,7 @@ class GroupsController extends BaseController
                     'content' => $lang['strdrop'],
                     'attr'    => [
                         'href' => [
-                            'url'     => 'groups.php',
+                            'url'     => 'groups',
                             'urlvars' => [
                                 'action' => 'confirm_drop_member',
                                 'group'  => $_REQUEST['group'],
@@ -248,7 +248,7 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="'.\SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/groups\" method=\"post\">\n";
         echo '<select name="user">';
         while (!$users->EOF) {
             $uname = $this->misc->printVal($users->fields['usename']);
@@ -264,9 +264,9 @@ class GroupsController extends BaseController
         echo "</form>\n";
 
         $this->printNavLinks(['showall' => [
-            'attr' => [
+            'attr'    => [
                 'href' => [
-                    'url'     => 'groups.php',
+                    'url'     => 'groups',
                     'urlvars' => [
                         'server' => $_REQUEST['server'],
                     ],
@@ -292,7 +292,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/groups.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/groups\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";

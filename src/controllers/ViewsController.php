@@ -142,7 +142,7 @@ class ViewsController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['view' => 'relname'],
-                'url'     => 'views.php',
+                'url'     => 'views',
             ],
             'browse'       => [
                 'content' => $lang['strbrowse'],
@@ -162,7 +162,7 @@ class ViewsController extends BaseController
                 'content' => $lang['strselect'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'views.php',
+                        'url'     => 'views',
                         'urlvars' => [
                             'action' => 'confselectrows',
                             'view'   => Decorator::field('relname'),
@@ -174,7 +174,7 @@ class ViewsController extends BaseController
             // Insert is possible if the relevant rule for the view has been created.
             //            'insert' => array(
             //                'title'    => $lang['strinsert'],
-            //                'url'    => "views.php?action=confinsertrow&amp;{$this->misc->href}&amp;",
+            //                'url'    => "views?action=confinsertrow&amp;{$this->misc->href}&amp;",
             //                'vars'    => array('view' => 'relname'),
             //            ),
 
@@ -182,7 +182,7 @@ class ViewsController extends BaseController
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'viewproperties.php',
+                        'url'     => 'viewproperties',
                         'urlvars' => [
                             'action' => 'confirm_alter',
                             'view'   => Decorator::field('relname'),
@@ -195,7 +195,7 @@ class ViewsController extends BaseController
                 'content'     => $lang['strdrop'],
                 'attr'        => [
                     'href' => [
-                        'url'     => 'views.php',
+                        'url'     => 'views',
                         'urlvars' => [
                             'action' => 'confirm_drop',
                             'view'   => Decorator::field('relname'),
@@ -211,7 +211,7 @@ class ViewsController extends BaseController
             'create'    => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'views.php',
+                        'url'     => 'views',
                         'urlvars' => [
                             'action'   => 'create',
                             'server'   => $_REQUEST['server'],
@@ -225,7 +225,7 @@ class ViewsController extends BaseController
             'createwiz' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'views.php',
+                        'url'     => 'views',
                         'urlvars' => [
                             'action'   => 'wiz_create',
                             'server'   => $_REQUEST['server'],
@@ -257,8 +257,8 @@ class ViewsController extends BaseController
             'icon'       => 'View',
             'iconAction' => Decorator::url('display', $reqvars, ['view' => Decorator::field('relname')]),
             'toolTip'    => Decorator::field('relcomment'),
-            'action'     => Decorator::redirecturl('redirect.php', $reqvars, ['view' => Decorator::field('relname')]),
-            'branch'     => Decorator::url('views.php', $reqvars, ['action' => 'subtree', 'view' => Decorator::field('relname')]),
+            'action'     => Decorator::redirecturl('redirect', $reqvars, ['view' => Decorator::field('relname')]),
+            'branch'     => Decorator::url('views', $reqvars, ['action' => 'subtree', 'view' => Decorator::field('relname')]),
         ];
 
         return $this->printTree($views, $attrs, 'views');
@@ -446,7 +446,7 @@ class ViewsController extends BaseController
             $this->printTrail('view');
             $this->printTitle($lang['strdrop'], 'pg.view.drop');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/views\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -567,7 +567,7 @@ class ViewsController extends BaseController
             }
             asort($arrFields);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/views\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strviewname']}</th></tr>";
             echo "<tr>\n<td class=\"data1\">\n";
@@ -672,7 +672,7 @@ class ViewsController extends BaseController
         $this->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/views\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">\n";
@@ -725,7 +725,7 @@ class ViewsController extends BaseController
         $this->printTitle($lang['strcreateview'], 'pg.view.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/views.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/views\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

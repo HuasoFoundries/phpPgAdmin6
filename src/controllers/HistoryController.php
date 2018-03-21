@@ -69,14 +69,14 @@ class HistoryController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $onchange = "onchange=\"location.href='".\SUBFOLDER."/src/views/history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
+        $onchange = "onchange=\"location.href='" . \SUBFOLDER . "/src/views/history?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
         $this->printHeader($lang['strhistory'], $this->scripts, true, 'header.twig');
 
         // Bring to the front always
         echo "<body onload=\"window.focus();\">\n";
 
-        echo '<form action="'.\SUBFOLDER."/src/views/history.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/history\" method=\"post\">\n";
         $this->misc->printConnection($onchange);
         echo '</form><br />';
 
@@ -91,7 +91,7 @@ class HistoryController extends BaseController
 
             //Kint::dump($history);
             $columns = [
-                'query' => [
+                'query'    => [
                     'title' => $lang['strsql'],
                     'field' => Decorator::field('query'),
                 ],
@@ -100,17 +100,17 @@ class HistoryController extends BaseController
                     'field' => Decorator::field('paginate'),
                     'type'  => 'yesno',
                 ],
-                'actions' => [
+                'actions'  => [
                     'title' => $lang['stractions'],
                 ],
             ];
 
             $actions = [
-                'run' => [
+                'run'    => [
                     'content' => $lang['strexecute'],
                     'attr'    => [
-                        'href' => [
-                            'url'     => 'sql.php',
+                        'href'   => [
+                            'url'     => 'sql',
                             'urlvars' => [
                                 'subject'   => 'history',
                                 'nohistory' => 't',
@@ -125,7 +125,7 @@ class HistoryController extends BaseController
                     'content' => $lang['strdelete'],
                     'attr'    => [
                         'href' => [
-                            'url'     => 'history.php',
+                            'url'     => 'history',
                             'urlvars' => [
                                 'action'  => 'confdelhistory',
                                 'queryid' => Decorator::field('queryid'),
@@ -142,9 +142,9 @@ class HistoryController extends BaseController
 
         $navlinks = [
             'refresh' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url'     => 'history.php',
+                        'url'     => 'history',
                         'urlvars' => [
                             'action'   => 'history',
                             'server'   => $_REQUEST['server'],
@@ -159,9 +159,9 @@ class HistoryController extends BaseController
         if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])
             && count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
             $navlinks['download'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url'     => 'history.php',
+                        'url'     => 'history',
                         'urlvars' => [
                             'action'   => 'download',
                             'server'   => $_REQUEST['server'],
@@ -172,9 +172,9 @@ class HistoryController extends BaseController
                 'content' => $lang['strdownload'],
             ];
             $navlinks['clear'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
-                        'url'     => 'history.php',
+                        'url'     => 'history',
                         'urlvars' => [
                             'action'   => 'confclearhistory',
                             'server'   => $_REQUEST['server'],
@@ -204,7 +204,7 @@ class HistoryController extends BaseController
             echo "<p>{$lang['strconfdelhistory']}</p>\n";
 
             echo '<pre>', htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), '</pre>';
-            echo '<form action="'.\SUBFOLDER."/src/views/history.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/history\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
             echo "<input type=\"hidden\" name=\"queryid\" value=\"${qid}\" />\n";
             echo $this->misc->form;
@@ -230,7 +230,7 @@ class HistoryController extends BaseController
             echo "<h3>{$lang['strclearhistory']}</h3>\n";
             echo "<p>{$lang['strconfclearhistory']}</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/history.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/history\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"clearhistory\" />\n";
             echo $this->misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";

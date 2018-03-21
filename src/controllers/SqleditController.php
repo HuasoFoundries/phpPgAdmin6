@@ -73,7 +73,7 @@ class SqleditController extends BaseController
 
         $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'sql', false);
 
-        $default_html .= '<form action="'.\SUBFOLDER.'/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
+        $default_html .= '<form action="' . \SUBFOLDER . '/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
         $default_html .= "\n";
         $default_html .= $this->_printConnection('sql');
 
@@ -83,14 +83,14 @@ class SqleditController extends BaseController
         $default_html .= '<label>';
         $default_html .= $this->misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
 
-        $default_html .= ': <input type="text" name="search_path" size="45" value="'.$search_path.'" />';
+        $default_html .= ': <input type="text" name="search_path" size="45" value="' . $search_path . '" />';
         $default_html .= "</label>\n";
 
         $default_html .= "</div>\n";
 
         $default_html .= '<div id="queryedition" style="padding:1%;width:98%;float:left;">';
         $default_html .= "\n";
-        $default_html .= '<textarea style="width:98%;" rows="10" cols="50" name="query" id="query" resizable="true">'.$sqlquery.'</textarea>';
+        $default_html .= '<textarea style="width:98%;" rows="10" cols="50" name="query" id="query" resizable="true">' . $sqlquery . '</textarea>';
         $default_html .= "\n";
         $default_html .= "</div>\n";
 
@@ -101,9 +101,9 @@ class SqleditController extends BaseController
             $max_size = $this->misc->inisizeToBytes(ini_get('upload_max_filesize'));
             if (is_double($max_size) && $max_size > 0) {
                 $default_html .= '<p class="upload_sql_script">';
-                $default_html .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$max_size.'" />';
+                $default_html .= '<input type="hidden" name="MAX_FILE_SIZE" value="' . $max_size . '" />';
                 $default_html .= "\n";
-                $default_html .= '<label for="script">'.$lang['struploadscript'].'</label>';
+                $default_html .= '<label for="script">' . $lang['struploadscript'] . '</label>';
                 $default_html .= '&nbsp;&nbsp; <input class="btn btn-small"  id="script" name="script" type="file" /></p>';
                 $default_html .= "</p>\n";
             }
@@ -112,15 +112,15 @@ class SqleditController extends BaseController
         // Check that file uploads are enabled
         $checked = (isset($_REQUEST['paginate']) ? ' checked="checked"' : '');
 
-        $default_html .= '<p><input type="submit" class="btn btn-small" name="execute" accesskey="r" value="'.$lang['strexecute'].'" />';
+        $default_html .= '<p><input type="submit" class="btn btn-small" name="execute" accesskey="r" value="' . $lang['strexecute'] . '" />';
         $default_html .= "\n";
 
-        $default_html .= '<input type="reset" class="btn btn-small"  accesskey="q" value="'.$lang['strreset'].'" /></p>';
+        $default_html .= '<input type="reset" class="btn btn-small"  accesskey="q" value="' . $lang['strreset'] . '" /></p>';
         $default_html .= "\n";
 
         $default_html .= '<p>';
         $default_html .= '<label for="paginate">';
-        $default_html .= '<input type="checkbox" id="paginate" name="paginate"'.$checked.' />&nbsp;'.$lang['strpaginate'].'&nbsp;';
+        $default_html .= '<input type="checkbox" id="paginate" name="paginate"' . $checked . ' />&nbsp;' . $lang['strpaginate'] . '&nbsp;';
         $default_html .= "</label>\n";
         $default_html .= "</p>\n";
 
@@ -146,8 +146,8 @@ class SqleditController extends BaseController
         // The javascript action on the select box reloads the
         // popup whenever the server or database is changed.
         // This ensures that the correct page encoding is used.
-        $onchange = "onchange=\"location.href='".\SUBFOLDER.'/sqledit/'.
-        urlencode($action)."?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + ";
+        $onchange = "onchange=\"location.href='" . \SUBFOLDER . '/sqledit/' .
+        urlencode($action) . "?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + ";
 
         // The exact URL to reload to is different between SQL and Find mode, however.
         if ('find' == $action) {
@@ -177,31 +177,31 @@ class SqleditController extends BaseController
 
         $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'find', false);
 
-        $default_html .= "<form action=\"database.php\" method=\"post\" target=\"detail\">\n";
+        $default_html .= "<form action=\"database\" method=\"post\" target=\"detail\">\n";
         $default_html .= $this->_printConnection('find');
-        $default_html .= '<p><input class="focusme" name="term" value="'.htmlspecialchars($_REQUEST['term'])."\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
+        $default_html .= '<p><input class="focusme" name="term" value="' . htmlspecialchars($_REQUEST['term']) . "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
 
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
         $default_html .= "<select name=\"filter\">\n";
-        $default_html .= "\t<option value=\"\"".('' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strallobjects']}</option>\n";
-        $default_html .= "\t<option value=\"SCHEMA\"".('SCHEMA' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strschemas']}</option>\n";
-        $default_html .= "\t<option value=\"TABLE\"".('TABLE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strtables']}</option>\n";
-        $default_html .= "\t<option value=\"VIEW\"".('VIEW' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strviews']}</option>\n";
-        $default_html .= "\t<option value=\"SEQUENCE\"".('SEQUENCE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strsequences']}</option>\n";
-        $default_html .= "\t<option value=\"COLUMN\"".('COLUMN' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strcolumns']}</option>\n";
-        $default_html .= "\t<option value=\"RULE\"".('RULE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strrules']}</option>\n";
-        $default_html .= "\t<option value=\"INDEX\"".('INDEX' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strindexes']}</option>\n";
-        $default_html .= "\t<option value=\"TRIGGER\"".('TRIGGER' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strtriggers']}</option>\n";
-        $default_html .= "\t<option value=\"CONSTRAINT\"".('CONSTRAINT' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strconstraints']}</option>\n";
-        $default_html .= "\t<option value=\"FUNCTION\"".('FUNCTION' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strfunctions']}</option>\n";
-        $default_html .= "\t<option value=\"DOMAIN\"".('DOMAIN' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strdomains']}</option>\n";
+        $default_html .= "\t<option value=\"\"" . ('' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strallobjects']}</option>\n";
+        $default_html .= "\t<option value=\"SCHEMA\"" . ('SCHEMA' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strschemas']}</option>\n";
+        $default_html .= "\t<option value=\"TABLE\"" . ('TABLE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strtables']}</option>\n";
+        $default_html .= "\t<option value=\"VIEW\"" . ('VIEW' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strviews']}</option>\n";
+        $default_html .= "\t<option value=\"SEQUENCE\"" . ('SEQUENCE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strsequences']}</option>\n";
+        $default_html .= "\t<option value=\"COLUMN\"" . ('COLUMN' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strcolumns']}</option>\n";
+        $default_html .= "\t<option value=\"RULE\"" . ('RULE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strrules']}</option>\n";
+        $default_html .= "\t<option value=\"INDEX\"" . ('INDEX' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strindexes']}</option>\n";
+        $default_html .= "\t<option value=\"TRIGGER\"" . ('TRIGGER' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strtriggers']}</option>\n";
+        $default_html .= "\t<option value=\"CONSTRAINT\"" . ('CONSTRAINT' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strconstraints']}</option>\n";
+        $default_html .= "\t<option value=\"FUNCTION\"" . ('FUNCTION' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strfunctions']}</option>\n";
+        $default_html .= "\t<option value=\"DOMAIN\"" . ('DOMAIN' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strdomains']}</option>\n";
         if ($this->conf['show_advanced']) {
-            $default_html .= "\t<option value=\"AGGREGATE\"".('AGGREGATE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['straggregates']}</option>\n";
-            $default_html .= "\t<option value=\"TYPE\"".('TYPE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strtypes']}</option>\n";
-            $default_html .= "\t<option value=\"OPERATOR\"".('OPERATOR' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['stroperators']}</option>\n";
-            $default_html .= "\t<option value=\"OPCLASS\"".('OPCLASS' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['stropclasses']}</option>\n";
-            $default_html .= "\t<option value=\"CONVERSION\"".('CONVERSION' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strconversions']}</option>\n";
-            $default_html .= "\t<option value=\"LANGUAGE\"".('LANGUAGE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strlanguages']}</option>\n";
+            $default_html .= "\t<option value=\"AGGREGATE\"" . ('AGGREGATE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['straggregates']}</option>\n";
+            $default_html .= "\t<option value=\"TYPE\"" . ('TYPE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strtypes']}</option>\n";
+            $default_html .= "\t<option value=\"OPERATOR\"" . ('OPERATOR' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['stroperators']}</option>\n";
+            $default_html .= "\t<option value=\"OPCLASS\"" . ('OPCLASS' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['stropclasses']}</option>\n";
+            $default_html .= "\t<option value=\"CONVERSION\"" . ('CONVERSION' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strconversions']}</option>\n";
+            $default_html .= "\t<option value=\"LANGUAGE\"" . ('LANGUAGE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strlanguages']}</option>\n";
         }
         $default_html .= "</select>\n";
 

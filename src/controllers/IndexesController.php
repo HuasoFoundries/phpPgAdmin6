@@ -200,7 +200,7 @@ class IndexesController extends BaseController
             'create' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'indexes.php',
+                        'url'     => 'indexes',
                         'urlvars' => [
                             'action'   => 'create_index',
                             'server'   => $_REQUEST['server'],
@@ -279,7 +279,7 @@ class IndexesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfcluster'], $this->misc->printVal($_REQUEST['index'])), '</p>' . "\n";
 
-            echo '<form action="' . \SUBFOLDER . '/src/views/indexes.php" method="post">' . "\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/indexes" method="post">' . "\n";
             echo '<p><input type="checkbox" id="analyze" name="analyze"', (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), ' />';
             echo "<label for=\"analyze\">{$lang['stranalyze']}</label></p>" . "\n";
             echo '<input type="hidden" name="action" value="cluster_index" />' . "\n";
@@ -391,7 +391,7 @@ class IndexesController extends BaseController
         $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
         $buttonRemove->set_attribute('type', 'button');
 
-        echo '<form onsubmit="doSelectAll();" name="formIndex" action="indexes.php" method="post">' . "\n";
+        echo '<form onsubmit="doSelectAll();" name="formIndex" action="indexes" method="post">' . "\n";
 
         echo '<table>' . "\n";
         echo '<tr><th class="data required" colspan="3">' . $lang['strindexname'] . '</th></tr>';

@@ -159,7 +159,7 @@ class DisplayController extends BaseController
             }
         } else {
             $this->printTitle($lang['strqueryresults']);
-            // we comes from sql.php, $_SESSION['sqlquery'] has been set there
+            // we comes from sql, $_SESSION['sqlquery'] has been set there
             $type = 'QUERY';
         }
 
@@ -285,7 +285,7 @@ class DisplayController extends BaseController
         $this->prtrace($query);
         //die(htmlspecialchars($query));
 
-        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
+        echo '<form method="post" id="sqlform" action="' . str_replace('?', '?', $_SERVER['REQUEST_URI']) . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($query);
@@ -424,8 +424,6 @@ class DisplayController extends BaseController
             // Show page navigation
             $this->misc->printPages($_REQUEST['page'], $max_pages, $_gets);
 
-            \Kint::dump(class_exists('\ADORecordSet'));
-            \Kint::dump($resultset);
         } else {
             echo "<p>{$lang['strnodata']}</p>" . "\n";
         }
@@ -462,7 +460,7 @@ class DisplayController extends BaseController
             $navlinks['edit'] = [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'database.php',
+                        'url'     => 'database',
                         'urlvars' => array_merge($fields, [
                             'action'   => 'sql',
                             'paginate' => 'on',
@@ -515,7 +513,7 @@ class DisplayController extends BaseController
                 $navlinks['createview'] = [
                     'attr'    => [
                         'href' => [
-                            'url'     => 'views.php',
+                            'url'     => 'views',
                             'urlvars' => array_merge($fields, [
                                 'action'         => 'create',
                                 'formDefinition' => $_REQUEST['query'],
@@ -534,7 +532,7 @@ class DisplayController extends BaseController
             $navlinks['download'] = [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'dataexport.php',
+                        'url'     => 'dataexport',
                         'urlvars' => array_merge($fields, $urlvars),
                     ],
                 ],
@@ -547,7 +545,7 @@ class DisplayController extends BaseController
             $navlinks['insert'] = [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'tables.php',
+                        'url'     => 'tables',
                         'urlvars' => array_merge($fields, [
                             'action' => 'confinsertrow',
                             'table'  => $object,
