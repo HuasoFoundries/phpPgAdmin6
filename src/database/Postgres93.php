@@ -63,5 +63,4 @@ class Postgres93 extends Postgres92
 
         return $this->selectSet($sql);
     }
-
 }
