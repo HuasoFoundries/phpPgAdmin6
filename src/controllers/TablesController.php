@@ -16,7 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class TablesController extends BaseController
 {
     use AdminTrait;
-    public $script          = 'tables.php';
+    public $script          = 'tables';
     public $controller_name = 'TablesController';
     public $table_place     = 'tables-tables';
 
@@ -154,13 +154,13 @@ class TablesController extends BaseController
         $tables = $data->getTables();
 
         $columns = [
-            'table' => [
+            'table'      => [
                 'title' => $lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url'   => \SUBFOLDER."/redirect/table?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
                 'vars'  => ['table' => 'relname'],
             ],
-            'owner' => [
+            'owner'      => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('relowner'),
             ],
@@ -168,15 +168,15 @@ class TablesController extends BaseController
                 'title' => $lang['strtablespace'],
                 'field' => Decorator::field('tablespace'),
             ],
-            'tuples' => [
+            'tuples'     => [
                 'title' => $lang['strestimatedrowcount'],
                 'field' => Decorator::field('reltuples'),
                 'type'  => 'numeric',
             ],
-            'actions' => [
+            'actions'    => [
                 'title' => $lang['stractions'],
             ],
-            'comment' => [
+            'comment'    => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('relcomment'),
             ],
@@ -188,11 +188,11 @@ class TablesController extends BaseController
                 'url'     => 'tables.php',
                 'default' => 'analyze',
             ],
-            'browse' => [
+            'browse'       => [
                 'content' => $lang['strbrowse'],
                 'attr'    => [
                     'href' => [
-                        'url'     => 'display.php',
+                        'url'     => 'display',
                         'urlvars' => [
                             'subject' => 'table',
                             'return'  => 'table',
@@ -201,7 +201,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'select' => [
+            'select'       => [
                 'content' => $lang['strselect'],
                 'attr'    => [
                     'href' => [
@@ -213,7 +213,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'insert' => [
+            'insert'       => [
                 'content' => $lang['strinsert'],
                 'attr'    => [
                     'href' => [
@@ -225,7 +225,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'empty' => [
+            'empty'        => [
                 'multiaction' => 'confirm_empty',
                 'content'     => $lang['strempty'],
                 'attr'        => [
@@ -238,7 +238,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'alter' => [
+            'alter'        => [
                 'content' => $lang['stralter'],
                 'attr'    => [
                     'href' => [
@@ -250,7 +250,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'drop' => [
+            'drop'         => [
                 'multiaction' => 'confirm_drop',
                 'content'     => $lang['strdrop'],
                 'attr'        => [
@@ -263,7 +263,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'vacuum' => [
+            'vacuum'       => [
                 'multiaction' => 'confirm_vacuum',
                 'content'     => $lang['strvacuum'],
                 'attr'        => [
@@ -276,7 +276,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'analyze' => [
+            'analyze'      => [
                 'multiaction' => 'confirm_analyze',
                 'content'     => $lang['stranalyze'],
                 'attr'        => [
@@ -289,7 +289,7 @@ class TablesController extends BaseController
                     ],
                 ],
             ],
-            'reindex' => [
+            'reindex'      => [
                 'multiaction' => 'confirm_reindex',
                 'content'     => $lang['strreindex'],
                 'attr'        => [
@@ -315,7 +315,7 @@ class TablesController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -332,7 +332,7 @@ class TablesController extends BaseController
 
         if (($tables->recordCount() > 0) && $data->hasCreateTableLike()) {
             $navlinks['createlike'] = [
-                'attr' => [
+                'attr'    => [
                     'href' => [
                         'url'     => 'tables.php',
                         'urlvars' => [
@@ -366,7 +366,7 @@ class TablesController extends BaseController
         $attrs = [
             'text'       => Decorator::field('relname'),
             'icon'       => 'Table',
-            'iconAction' => Decorator::url('display.php', $reqvars, ['table' => Decorator::field('relname')]),
+            'iconAction' => Decorator::url('display', $reqvars, ['table' => Decorator::field('relname')]),
             'toolTip'    => Decorator::field('relcomment'),
             'action'     => Decorator::redirecturl('redirect.php', $reqvars, ['table' => Decorator::field('relname')]),
             'branch'     => Decorator::url('tables.php', $reqvars, ['action' => 'subtree', 'table' => Decorator::field('relname')]),
@@ -456,7 +456,7 @@ class TablesController extends BaseController
                 $this->printTitle($lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER.'/src/views/'.$this->script.'" method="post">';
+                echo '<form action="' . \SUBFOLDER . '/src/views/' . $this->script . '" method="post">';
                 echo "\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -522,8 +522,8 @@ class TablesController extends BaseController
                 $this->printTitle($lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<script src="'.\SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="'.\SUBFOLDER."/src/views/tables.php\" method=\"post\">\n";
+                echo '<script src="' . \SUBFOLDER . '/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -577,7 +577,7 @@ class TablesController extends BaseController
                         foreach ($predefined_size_types as $value) {
                             $escaped_predef_types[] = "'{$value}'";
                         }
-                        echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");</script>\n\t</td>";
+                        echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");</script>\n\t</td>";
                     }
 
                     // Output array type selector
@@ -590,10 +590,10 @@ class TablesController extends BaseController
                     htmlspecialchars($_REQUEST['length'][$i]), "\" /></td>\n";
                     echo "\t\t<td><input type=\"checkbox\" name=\"notnull[{$i}]\"", (isset($_REQUEST['notnull'][$i])) ? ' checked="checked"' : '', " /></td>\n";
                     echo "\t\t<td style=\"text-align: center\"><input type=\"checkbox\" name=\"uniquekey[{$i}]\""
-                        .(isset($_REQUEST['uniquekey'][$i]) ? ' checked="checked"' : '')." /></td>\n";
+                        . (isset($_REQUEST['uniquekey'][$i]) ? ' checked="checked"' : '') . " /></td>\n";
                     echo "\t\t<td style=\"text-align: center\"><input type=\"checkbox\" name=\"primarykey[{$i}]\" "
-                        .(isset($_REQUEST['primarykey'][$i]) ? ' checked="checked"' : '')
-                        ." /></td>\n";
+                        . (isset($_REQUEST['primarykey'][$i]) ? ' checked="checked"' : '')
+                        . " /></td>\n";
                     echo "\t\t<td><input name=\"default[{$i}]\" size=\"20\" value=\"",
                     htmlspecialchars($_REQUEST['default'][$i]), "\" /></td>\n";
                     echo "\t\t<td><input name=\"colcomment[{$i}]\" size=\"40\" value=\"",
@@ -741,7 +741,7 @@ class TablesController extends BaseController
 
             unset($tbltmp);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tables.php\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
             echo "<table>\n\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
             echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strcreatetablelikeparent']}</th>\n";
@@ -839,7 +839,7 @@ class TablesController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tables.php\" method=\"post\" id=\"selectform\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"selectform\">\n";
             if ($attrs->recordCount() > 0) {
                 // JavaScript for select all feature
                 echo "<script type=\"text/javascript\">\n";
@@ -983,7 +983,7 @@ class TablesController extends BaseController
                 $fksprops = false;
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tables.php\" method=\"post\" id=\"ac_form\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\" id=\"ac_form\">\n";
             if ($attrs->recordCount() > 0) {
                 echo "<table>\n";
 
@@ -1056,7 +1056,7 @@ class TablesController extends BaseController
 
                 echo "<input type=\"hidden\" name=\"action\" value=\"insertrow\" />\n";
                 echo '<input type="hidden" name="fields" value="', htmlentities(serialize($fields), ENT_QUOTES, 'UTF-8'), "\" />\n";
-                echo '<input type="hidden" name="protection_counter" value="'.$_SESSION['counter']."\" />\n";
+                echo '<input type="hidden" name="protection_counter" value="' . $_SESSION['counter'] . "\" />\n";
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
                 echo "<p><input type=\"submit\" name=\"insert\" value=\"{$lang['strinsert']}\" />\n";
                 echo "<input type=\"submit\" name=\"insertandrepeat\" accesskey=\"r\" value=\"{$lang['strinsertandrepeat']}\" />\n";
@@ -1124,10 +1124,10 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($lang['strempty'], 'pg.table.empty');
 
-                echo '<form action="'.\SUBFOLDER."/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>'.sprintf($lang['strconfemptytable'], $this->misc->printVal($a['table']));
+                    echo '<p>' . sprintf($lang['strconfemptytable'], $this->misc->printVal($a['table']));
 
                     echo "</p>\n";
                     printf('<input type="hidden" name="table[]" value="%s" />', htmlspecialchars($a['table']));
@@ -1139,7 +1139,7 @@ class TablesController extends BaseController
 
                 echo '<p>', sprintf($lang['strconfemptytable'], $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
-                echo '<form action="'.\SUBFOLDER."/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
 
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             } // END not mutli empty
@@ -1175,7 +1175,7 @@ class TablesController extends BaseController
                     return $this->doDefault($msg);
                 }
 
-                return $this->doDefault($lang['strtableemptiedbad']);
+                return $this->doDefault($sql . '<br>' . $lang['strtableemptiedbad']);
             } // END not mutli empty
         } // END do Empty
     }
@@ -1200,7 +1200,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($lang['strdrop'], 'pg.table.drop');
 
-                echo '<form action="'.\SUBFOLDER."/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($lang['strconfdroptable'], $this->misc->printVal($a['table'])), "</p>\n";
@@ -1212,7 +1212,7 @@ class TablesController extends BaseController
 
                 echo '<p>', sprintf($lang['strconfdroptable'], $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
-                echo '<form action="'.\SUBFOLDER."/src/views/tables.php\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables.php\" method=\"post\">\n";
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             } // END if multi drop
 

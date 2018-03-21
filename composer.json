@@ -1,43 +1,38 @@
 {
-    "name": "huasofoundries/phppgadmin6",
-    "version": "6.0.0-beta.33",
-    "description": "Like phpmyadmin but for postgres",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-    {
-        "name": "Amenadiel",
-        "email": "amenadiel@gmail.com"
-    }],
-    "minimum-stability": "beta",
-    "autoload":
-    {
-        "psr-4":
-        {
-            "PHPPgAdmin\\": "src/classes",
-            "PHPPgAdmin\\Controller\\": "src/controllers",
-            "PHPPgAdmin\\Middleware\\": "src/middleware",
-            "PHPPgAdmin\\Database\\": "src/database",
-            "PHPPgAdmin\\XHtml\\": "src/xhtml",
-            "PHPPgAdmin\\Decorators\\": "src/decorators",
-            "PHPPgAdmin\\Help\\": "src/help"
-        }
-    },
-    "require":
-    {
-        "php": ">=5.6.0",
-        "ext-pgsql": "*",
-        "slim/slim": "^3.6",
-        "slim/twig-view": "~2.1.1",
-        "php-console/php-console": "~3.1",
-
-        "twig/twig": "~1.28",
-        "kint-php/kint": "^2.1",
-        "adodb/adodb-php": "^5.20"
-    },
-    "require-dev":
-    {
-        "friendsofphp/php-cs-fixer": "^2.4",
-        "codeception/codeception": "*"
+  "name": "huasofoundries/phppgadmin6",
+  "version": "6.0.0-beta.33",
+  "description": "Like phpmyadmin but for postgres",
+  "type": "project",
+  "license": "MIT",
+  "authors": [{
+    "name": "Amenadiel",
+    "email": "amenadiel@gmail.com"
+  }],
+  "minimum-stability": "beta",
+  "autoload": {
+    "psr-4": {
+      "PHPPgAdmin\\": "src/classes",
+      "PHPPgAdmin\\Controller\\": "src/controllers",
+      "PHPPgAdmin\\Middleware\\": "src/middleware",
+      "PHPPgAdmin\\Database\\": "src/database",
+      "PHPPgAdmin\\XHtml\\": "src/xhtml",
+      "PHPPgAdmin\\Decorators\\": "src/decorators",
+      "PHPPgAdmin\\Help\\": "src/help"
     }
+  },
+  "require": {
+    "php": ">=5.6.0",
+    "ext-pgsql": "*",
+    "slim/slim": "^3.6",
+    "slim/twig-view": "~2.1.1",
+    "php-console/php-console": "~3.1",
+
+    "twig/twig": "~1.28",
+    "kint-php/kint": "^2.1",
+    "adodb/adodb-php": "^5.20"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.4",
+    "codeception/codeception": "*"
+  }
 }

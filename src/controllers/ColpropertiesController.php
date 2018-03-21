@@ -142,7 +142,7 @@ class ColpropertiesController extends BaseController
                     'browse' => [
                         'attr'    => [
                             'href' => [
-                                'url'     => 'display.php',
+                                'url'     => 'display',
                                 'urlvars' => [
                                     'subject'  => 'column',
                                     'server'   => $_REQUEST['server'],
@@ -196,7 +196,7 @@ class ColpropertiesController extends BaseController
                     'browse' => [
                         'attr'    => [
                             'href' => [
-                                'url'     => 'display.php',
+                                'url'     => 'display',
                                 'urlvars' => [
                                     'subject'  => 'column',
                                     'server'   => $_REQUEST['server'],

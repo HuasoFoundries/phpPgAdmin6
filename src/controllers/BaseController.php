@@ -334,6 +334,21 @@ class BaseController
         return $header_controller->printTitle($title, $help, $do_print);
     }
 
+    public function getRequestParam($key, $default = null)
+    {
+        return $this->container->requestobj->getParam($key, $default);
+    }
+
+    public function getPostParam($key, $default = null)
+    {
+        return $this->container->requestobj->getParsedBodyParam($key, $default);
+    }
+
+    public function getQueryParam($key, $default = null)
+    {
+        return $this->container->requestobj->getQueryParam($key, $default);
+    }
+
     /**
      * Print out a message.
      *
@@ -347,7 +362,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
+            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
         }
         if ($do_print) {
             echo $html;

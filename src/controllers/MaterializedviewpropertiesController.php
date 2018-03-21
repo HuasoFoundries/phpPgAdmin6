@@ -170,7 +170,7 @@ class MaterializedviewpropertiesController extends BaseController
             'browse' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => 'display.php',
+                        'url'     => 'display',
                         'urlvars' => [
                             'server'   => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
@@ -253,7 +253,7 @@ class MaterializedviewpropertiesController extends BaseController
             ),
             'icon'       => 'Column',
             'iconAction' => Decorator::url(
-                'display.php',
+                'display',
                 $reqvars,
                 [
                     'view'   => $_REQUEST['matview'],

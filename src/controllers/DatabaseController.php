@@ -16,7 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class DatabaseController extends BaseController
 {
     use AdminTrait;
-    public $script          = 'database.php';
+    public $script          = 'database';
     public $controller_name = 'DatabaseController';
     public $table_place     = 'database-variables';
 
@@ -47,20 +47,20 @@ class DatabaseController extends BaseController
         $scripts = '';
         // normal flow
         if ('locks' == $action || 'processes' == $action) {
-            $scripts .= '<script src="'.\SUBFOLDER.'/js/database.js" type="text/javascript"></script>';
+            $scripts .= '<script src="' . \SUBFOLDER . '/js/database.js" type="text/javascript"></script>';
 
             $refreshTime = $this->conf['ajax_refresh'] * 1500;
 
             $scripts .= "<script type=\"text/javascript\">\n";
             $scripts .= "var Database = {\n";
             $scripts .= "ajax_time_refresh: {$refreshTime},\n";
-            $scripts .= "str_start: {text:'{$lang['strstart']}',icon: '".$this->misc->icon('Execute')."'},\n";
-            $scripts .= "str_stop: {text:'{$lang['strstop']}',icon: '".$this->misc->icon('Stop')."'},\n";
-            $scripts .= "load_icon: '".$this->misc->icon('Loading')."',\n";
+            $scripts .= "str_start: {text:'{$lang['strstart']}',icon: '" . $this->misc->icon('Execute') . "'},\n";
+            $scripts .= "str_stop: {text:'{$lang['strstop']}',icon: '" . $this->misc->icon('Stop') . "'},\n";
+            $scripts .= "load_icon: '" . $this->misc->icon('Loading') . "',\n";
             $scripts .= "server:'{$_REQUEST['server']}',\n";
             $scripts .= "dbname:'{$_REQUEST['database']}',\n";
             $scripts .= "action:'refresh_{$action}',\n";
-            $scripts .= "errmsg: '".str_replace("'", "\\'", $lang['strconnectionfail'])."'\n";
+            $scripts .= "errmsg: '" . str_replace("'", "\\'", $lang['strconnectionfail']) . "'\n";
             $scripts .= "};\n";
             $scripts .= "</script>\n";
         }
@@ -178,7 +178,7 @@ class DatabaseController extends BaseController
         $this->printTabs('database', 'find');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/database.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/database.php\" method=\"post\">\n";
         echo '<p><input name="term" value="', htmlspecialchars($_REQUEST['term']),
             "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
@@ -316,20 +316,20 @@ class DatabaseController extends BaseController
 
                     switch ($curr) {
                         case 'SCHEMA':
-                            echo '<li><a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", $this->misc->printVal($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
+                            echo '<li><a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;schema=", $this->misc->printVal($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'TABLE':
                             echo '<li>';
                             echo "<a href=\"tables.php?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'VIEW':
                             echo '<li>';
                             echo "<a href=\"views.php?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/view?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/view?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
@@ -342,7 +342,7 @@ class DatabaseController extends BaseController
                             break;
                         case 'COLUMNTABLE':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                             echo "<a href=\"tblproperties.php?subject=table&amp;{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"colproperties.php?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['relname']), '&amp;column=', urlencode($rs->fields['name']), '">',
@@ -351,7 +351,7 @@ class DatabaseController extends BaseController
                             break;
                         case 'COLUMNVIEW':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                             echo "<a href=\"viewproperties.php?subject=view&amp;{$this->misc->href}&amp;view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"colproperties.php?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
                             urlencode($rs->fields['relname']), '&amp;column=', urlencode($rs->fields['name']), '">',
@@ -360,15 +360,15 @@ class DatabaseController extends BaseController
                             break;
                         case 'INDEX':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"indexes.php?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'CONSTRAINTTABLE':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"constraints.php?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
@@ -382,24 +382,24 @@ class DatabaseController extends BaseController
                             break;
                         case 'TRIGGER':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"triggers.php?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'RULETABLE':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"rules.php?subject=table&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=table&amp;table=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'RULEVIEW':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/view?{$this->misc->href}&amp;view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/view?{$this->misc->href}&amp;view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"rules.php?subject=view&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=view&amp;view=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
@@ -453,7 +453,7 @@ class DatabaseController extends BaseController
                             break;
                         case 'OPCLASS':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                             echo "<a href=\"opclasses.php?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
@@ -484,7 +484,7 @@ class DatabaseController extends BaseController
         $this->printTabs('database', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dbexport.php\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dbexport.php\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -544,7 +544,7 @@ class DatabaseController extends BaseController
                 'title' => $lang['strname'],
                 'field' => Decorator::field('name'),
             ],
-            'value' => [
+            'value'    => [
                 'title' => $lang['strsetting'],
                 'field' => Decorator::field('setting'),
             ],
@@ -571,7 +571,7 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         if (0 === strlen($msg)) {
-            echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
+            echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
         }
 
         echo '<div id="data_block">';
@@ -594,15 +594,15 @@ class DatabaseController extends BaseController
                     'title' => $lang['strxactid'],
                     'field' => Decorator::field('transaction'),
                 ],
-                'gid' => [
+                'gid'         => [
                     'title' => $lang['strgid'],
                     'field' => Decorator::field('gid'),
                 ],
-                'prepared' => [
+                'prepared'    => [
                     'title' => $lang['strstarttime'],
                     'field' => Decorator::field('prepared'),
                 ],
-                'owner' => [
+                'owner'       => [
                     'title' => $lang['strowner'],
                     'field' => Decorator::field('owner'),
                 ],
@@ -618,11 +618,11 @@ class DatabaseController extends BaseController
         $processes = $data->getProcesses($_REQUEST['database']);
 
         $columns = [
-            'user' => [
+            'user'             => [
                 'title' => $lang['strusername'],
                 'field' => Decorator::field('usename'),
             ],
-            'process' => [
+            'process'          => [
                 'title' => $lang['strprocess'],
                 'field' => Decorator::field('pid'),
             ],
@@ -630,19 +630,19 @@ class DatabaseController extends BaseController
                 'title' => 'application',
                 'field' => Decorator::field('application_name'),
             ],
-            'client_addr' => [
+            'client_addr'      => [
                 'title' => 'address',
                 'field' => Decorator::field('client_addr'),
             ],
-            'blocked' => [
+            'blocked'          => [
                 'title' => $lang['strblocked'],
                 'field' => Decorator::field('waiting'),
             ],
-            'query' => [
+            'query'            => [
                 'title' => $lang['strsql'],
                 'field' => Decorator::field('query'),
             ],
-            'start_time' => [
+            'start_time'       => [
                 'title' => $lang['strstarttime'],
                 'field' => Decorator::field('query_start'),
             ],
@@ -667,7 +667,7 @@ class DatabaseController extends BaseController
                         ],
                     ],
                 ],
-                'kill' => [
+                'kill'   => [
                     'content' => $lang['strkill'],
                     'attr'    => [
                         'href' => [
@@ -708,15 +708,15 @@ class DatabaseController extends BaseController
         $variables = $data->getLocks();
 
         $columns = [
-            'namespace' => [
+            'namespace'     => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('nspname'),
             ],
-            'tablename' => [
+            'tablename'     => [
                 'title' => $lang['strtablename'],
                 'field' => Decorator::field('tablename'),
             ],
-            'vxid' => [
+            'vxid'          => [
                 'title' => $lang['strvirtualtransaction'],
                 'field' => Decorator::field('virtualtransaction'),
             ],
@@ -724,15 +724,15 @@ class DatabaseController extends BaseController
                 'title' => $lang['strtransaction'],
                 'field' => Decorator::field('transaction'),
             ],
-            'processid' => [
+            'processid'     => [
                 'title' => $lang['strprocessid'],
                 'field' => Decorator::field('pid'),
             ],
-            'mode' => [
+            'mode'          => [
                 'title' => $lang['strmode'],
                 'field' => Decorator::field('mode'),
             ],
-            'granted' => [
+            'granted'       => [
                 'title' => $lang['strislockheld'],
                 'field' => Decorator::field('granted'),
                 'type'  => 'yesno',
@@ -758,7 +758,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'locks');
 
-        echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
+        echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
 
         echo '<div id="data_block">';
         $this->currentLocks();
@@ -781,7 +781,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'sql');
         echo "<p>{$lang['strentersql']}</p>\n";
-        echo '<form action="'.\SUBFOLDER.'/src/views/sql.php" method="post" enctype="multipart/form-data" id="sqlform">'."\n";
+        echo '<form action="' . \SUBFOLDER . '/src/views/sql.php" method="post" enctype="multipart/form-data" id="sqlform">' . "\n";
         echo "<p>{$lang['strsql']}<br />\n";
         echo '<textarea style="width:95%;" rows="15" cols="50" name="query" id="query">',
         htmlspecialchars($_SESSION['sqlquery']), "</textarea></p>\n";
