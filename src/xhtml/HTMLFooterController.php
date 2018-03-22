@@ -61,7 +61,7 @@ class HTMLFooterController extends HTMLController
             $footer_html .= $this->printReload(true, false);
         }
         if (!$this->_no_bottom_link) {
-            $footer_html .= '<a data-footertemplate="'.$template.'" href="#" class="bottom_link">'.$lang['strgotoppage'].'</a>';
+            $footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . '</a>';
         }
 
         $footer_html .= $this->view->fetch($template);
@@ -84,13 +84,17 @@ class HTMLFooterController extends HTMLController
         $reload = "<script type=\"text/javascript\">\n";
         //$reload .= " alert('will reload');";
         if ($database) {
-            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"".SUBFOLDER."/src/views/browser.php\";\n";
+            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"" . SUBFOLDER . "/src/views/browser.php\";\n";
         } else {
-            $reload .= "\tif(parent.frames && parent.frames.browser) { console.log('will reload frame browser'); parent.frames.browser.location.reload();} else { console.log('will do location replace'); location.replace(location.href);}\n";
-            //$reload .= "\tparent.frames.detail.location.href=\"".SUBFOLDER . "/src/views/intro\";\n";
-            //$reload .= "\tparent.frames.detail.location.reload();\n";
+            $reload .= "if(parent.frames && parent.frames.browser) { \n";
+            $reload .= "\t console.log('will reload frame browser'); \n";
+            $reload .= "\t parent.frames.browser.location.reload(); \n";
+            $reload .= '} else if(!parent.frames.length) {';
+            $reload .= "\t var destination=location.href.replace('src/views','');\n";
+            $reload .= "\n console.log('will do location replace',destination); \n";
+            $reload .= "\n  location.replace(destination); \n";
+            $reload .= "}\n";
         }
-
         $reload .= "</script>\n";
         if ($do_print) {
             echo $reload;
@@ -122,7 +126,7 @@ class HTMLFooterController extends HTMLController
     {
         echo "<script type=\"text/javascript\">\n";
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
         echo "//]]>\n";
         echo "</script>\n";
     }

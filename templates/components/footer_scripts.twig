@@ -1,13 +1,14 @@
 <!--</div>
 </div>-->
 <script>
-window.stateObj={
-{% for key,value in params %}
+/* beautify preserve:start */
+window.stateObj = {
+	{%	for key, value in params %}
 	'{{key}}': "{{value}}",
-{% endfor %}
-	method:'{{METHOD}}'
+	{% endfor %}
+	method: '{{METHOD}}'
 };
-
+/* beautify preserve:end */
 </script>
 
 <script>
@@ -31,7 +32,7 @@ if (!window.inPopUp) {
 
 			if (stateObj.method !== 'GET') {
 
-				console.log('Will not pushState with Method "'+stateObj.method+'"');
+				console.log('Will not pushState with Method "' + stateObj.method + '"');
 
 			} else if (stateObj.newurl !== stateObj.parenturl) {
 				console.log('will pushState', stateObj);
