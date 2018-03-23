@@ -132,7 +132,6 @@ class TreeController
                 $tree_xml .= $tooltip_xml;
 
                 $tree_xml .= '</tree>';
-
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
@@ -141,7 +140,6 @@ class TreeController
 
         $tree_xml .= '</tree>';
         if (true === $print) {
-
             if (null === $this->container->requestobj->getAttribute('route')) {
                 header('Content-Type: text/xml; charset=UTF-8');
                 header('Cache-Control: no-cache');
@@ -214,7 +212,6 @@ class TreeController
         }
 
         if (true === $print) {
-
             if (null === $this->container->requestobj->getAttribute('route')) {
                 header('Content-Type: text/xml; charset=UTF-8');
                 header('Cache-Control: no-cache');
