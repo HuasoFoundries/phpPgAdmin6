@@ -122,6 +122,7 @@ class PluginManager
      */
     public function do_hook($hook, &$function_args)
     {
+        //$this->prtrace('hooks', $this->hooks, $function_args);
         if (isset($this->hooks[$hook])) {
             foreach ($this->hooks[$hook] as $plugin_name => $functions) {
                 $plugin = $this->plugins_list[$plugin_name];

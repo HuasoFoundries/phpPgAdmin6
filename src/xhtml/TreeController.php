@@ -80,6 +80,10 @@ class TreeController
 
         $plugin_manager->do_hook('tree', $tree_params);
 
+        if (isset($_REQUEST['json'])) {
+            return $this->printTreeJSON($treedata, $attrs, $print);
+        }
+
         return $this->printTreeXML($treedata, $attrs, $print);
     }
 
@@ -101,7 +105,7 @@ class TreeController
     {
         $lang = $this->lang;
 
-        $tree_xml = "<tree>\n";
+        $tree_xml = '<?xml version="1.0" encoding="UTF-8"?><tree>';
 
         if (count($treedata) > 0) {
             foreach ($treedata as $rec) {
@@ -109,35 +113,35 @@ class TreeController
                 if (!empty($attrs['openicon'])) {
                     $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
                 }
+                $tree_xml .= '<tree>';
 
-                $tree_xml .= '<tree';
-                /*$tree_xml .= Decorator::value_xml_attr('text', $attrs['text'], $rec);
-                $tree_xml .= Decorator::value_xml_attr('action', $attrs['action'], $rec);
-                $tree_xml .= Decorator::value_xml_attr('src', $attrs['branch'], $rec);
-                $tree_xml .= Decorator::value_xml_attr('icon', $icon, $rec);
-                $tree_xml .= Decorator::value_xml_attr('iconaction', $attrs['iconAction'], $rec);
-                $tree_xml .= Decorator::value_xml_attr('openicon', $icon, $rec);
-                $tree_xml .= Decorator::value_xml_attr('tooltip', $attrs['toolTip'], $rec);*/
+                $text_xml       = Decorator::value_xml_attr_tag('text', $attrs['text'], $rec);
+                $action_xml     = Decorator::value_xml_attr_tag('action', $attrs['action'], $rec);
+                $src_xml        = Decorator::value_xml_attr_tag('src', $attrs['branch'], $rec);
+                $icon_xml       = Decorator::value_xml_attr_tag('icon', $icon, $rec);
+                $iconaction_xml = Decorator::value_xml_attr_tag('iconaction', $attrs['iconAction'], $rec);
+                $openicon_xml   = Decorator::value_xml_attr_tag('openicon', $icon, $rec);
+                $tooltip_xml    = Decorator::value_xml_attr_tag('tooltip', $attrs['toolTip'], $rec);
 
-                $tree_xml .= ' >';
+                $tree_xml .= $text_xml;
+                $tree_xml .= $action_xml;
+                $tree_xml .= $src_xml;
+                $tree_xml .= $icon_xml;
+                $tree_xml .= $iconaction_xml;
+                $tree_xml .= $openicon_xml;
+                $tree_xml .= $tooltip_xml;
 
-                $tree_xml .= Decorator::value_xml_attr_tag('text', $attrs['text'], $rec);
-                $tree_xml .= Decorator::value_xml_attr_tag('action', $attrs['action'], $rec);
-                $tree_xml .= Decorator::value_xml_attr_tag('src', $attrs['branch'], $rec);
-                $tree_xml .= Decorator::value_xml_attr_tag('icon', $icon, $rec);
-                $tree_xml .= Decorator::value_xml_attr_tag('iconaction', $attrs['iconAction'], $rec);
-                $tree_xml .= Decorator::value_xml_attr_tag('openicon', $icon, $rec);
-                $tree_xml .= Decorator::value_xml_attr_tag('tooltip', $attrs['toolTip'], $rec);
+                $tree_xml .= '</tree>';
 
-                $tree_xml .= "</tree>\n";
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
-            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"".$this->misc->icon('ObjectNotFound').'" />'."\n";
+            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"" . $this->misc->icon('ObjectNotFound') . '" />' . "\n";
         }
 
-        $tree_xml .= "</tree>\n";
+        $tree_xml .= '</tree>';
         if (true === $print) {
+
             if (null === $this->container->requestobj->getAttribute('route')) {
                 header('Content-Type: text/xml; charset=UTF-8');
                 header('Cache-Control: no-cache');
@@ -147,8 +151,84 @@ class TreeController
                     ->container
                     ->responseobj
                     ->withStatus(200)
-                    ->withHeader('Content-Type', 'text/xml;charset=utf-8')
+                    ->withHeader('Content-Type', 'text/xml; charset=UTF-8')
                     ->write($tree_xml);
+            }
+        } else {
+            return $tree_xml;
+        }
+    }
+
+    /** Produce XML data for the browser tree
+     * @param $treedata a set of records to populate the tree
+     * @param $attrs Attributes for tree items
+     *        'text' - the text for the tree node
+     *        'icon' - an icon for node
+     *        'openIcon' - an alternative icon when the node is expanded
+     *        'toolTip' - tool tip text for the node
+     *        'action' - URL to visit when single clicking the node
+     *        'iconAction' - URL to visit when single clicking the icon node
+     *        'branch' - URL for child nodes (tree XML)
+     *        'expand' - the action to return XML for the subtree
+     *        'nodata' - message to display when node has no children
+     * @param mixed $print
+     */
+    private function printTreeJSON(&$treedata, &$attrs, $print = true)
+    {
+        $lang = $this->lang;
+
+        $parent = [];
+
+        if (count($treedata) > 0) {
+            foreach ($treedata as $rec) {
+                $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
+                if (!empty($attrs['openicon'])) {
+                    $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
+                }
+
+                $tree = [
+                    'text'           => Decorator::get_sanitized_value($attrs['text'], $rec),
+                    'action_xml'     => Decorator::get_sanitized_value($attrs['action'], $rec),
+
+                    'icon'           => Decorator::get_sanitized_value($icon, $rec),
+                    'iconaction_xml' => Decorator::get_sanitized_value($attrs['iconAction'], $rec),
+                    'openicon_xml'   => Decorator::get_sanitized_value($icon, $rec),
+                    'tooltip_xml'    => Decorator::get_sanitized_value($attrs['toolTip'], $rec),
+                    'children'       => false,
+                ];
+                $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
+                if (strpos($url, '/src/views') === false) {
+                    $url = '/src/views/' . $url;
+                }
+                if ($url) {
+                    $tree['url']      = $url;
+                    $tree['children'] = true;
+                    $tree['id']       = $url; //str_replace(' ', '_', $tree['text']);
+                }
+                $tree['text'] = '<a href="' . $tree['action_xml'] . '" target="detail">' . $tree['text'] . '</a>';
+
+                $parent[] = $tree;
+            }
+        } else {
+            $parent = ['children' => false];
+        }
+
+        if (true === $print) {
+
+            if (null === $this->container->requestobj->getAttribute('route')) {
+                header('Content-Type: text/xml; charset=UTF-8');
+                header('Cache-Control: no-cache');
+                echo $tree_xml;
+            } else {
+                if (isset($_REQUEST['children'])) {
+                    $children = $parent;
+                    $parent   = ['children' => $children];
+                }
+                return $this
+                    ->container
+                    ->responseobj
+                    ->withStatus(200)
+                    ->withJson($parent);
             }
         } else {
             return $tree_xml;

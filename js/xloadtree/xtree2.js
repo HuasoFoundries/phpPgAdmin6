@@ -52,39 +52,37 @@
 
 //
 // WebFXTreePersisitance
-function WebFXTreePersistence() {}
-var _p = WebFXTreePersistence.prototype;
-_p.getExpanded = function (oNode) {
-	return false;
-};
-_p.setExpanded = function (oNode, bOpen) {};
+function WebFXTreePersistence() {
+	this.getExpanded = function (oNode) {
+		return false;
+	};
+	this.setExpanded = function (oNode, bOpen) {};
+}
 
 
 // Cookie handling
-function WebFXCookie() {}
+function WebFXCookie() {
+	this.setCookie = function (sName, sValue, nDays) {
+		var expires = "";
+		if (typeof nDays == "number") {
+			var d = new Date();
+			d.setTime(d.getTime() + nDays * 24 * 60 * 60 * 1000);
+			expires = "; expires=" + d.toGMTString();
+		}
 
-_p = WebFXCookie.prototype;
+		document.cookie = sName + "=" + escape(sValue) + expires + "; path=/";
+	};
 
-_p.setCookie = function (sName, sValue, nDays) {
-	var expires = "";
-	if (typeof nDays == "number") {
-		var d = new Date();
-		d.setTime(d.getTime() + nDays * 24 * 60 * 60 * 1000);
-		expires = "; expires=" + d.toGMTString();
-	}
+	this.getCookie = function (sName) {
+		var re = new RegExp("(\;|^)[^;]*(" + sName + ")\=([^;]*)(;|$)");
+		var res = re.exec(document.cookie);
+		return res != null ? unescape(res[3]) : null;
+	};
 
-	document.cookie = sName + "=" + escape(sValue) + expires + "; path=/";
-};
-
-_p.getCookie = function (sName) {
-	var re = new RegExp("(\;|^)[^;]*(" + sName + ")\=([^;]*)(;|$)");
-	var res = re.exec(document.cookie);
-	return res != null ? unescape(res[3]) : null;
-};
-
-_p.removeCookie = function (name) {
-	this.setCookie(name, "", -1);
-};
+	this.removeCookie = function (name) {
+		this.setCookie(name, "", -1);
+	};
+}
 
 
 //
@@ -101,32 +99,31 @@ function WebFXTreeCookiePersistence() {
 		for (var i = a.length - 1; i >= 0; i--)
 			this._openedMap[a[i]] = true;
 	}
+	this.cookieName = "webfx-tree-cookie-persistence"
+
+	this.getExpanded = function (oNode) {
+		return oNode.id in this._openedMap;
+	};
+
+	this.setExpanded = function (oNode, bOpen) {
+		var old = this.getExpanded(oNode);
+		if (old != bOpen) {
+			if (bOpen) {
+				this._openedMap[oNode.id] = true;
+			} else {
+				delete this._openedMap[oNode.id];
+			}
+
+			var res = [];
+			var i = 0;
+			for (var id in this._openedMap)
+				res[i++] = id;
+			this._cookies.setCookie(this.cookieName, res.join("+"));
+		}
+	};
 }
 
-_p = WebFXTreeCookiePersistence.prototype = new WebFXTreePersistence;
-
-_p.cookieName = "webfx-tree-cookie-persistence"
-
-_p.getExpanded = function (oNode) {
-	return oNode.id in this._openedMap;
-};
-
-_p.setExpanded = function (oNode, bOpen) {
-	var old = this.getExpanded(oNode);
-	if (old != bOpen) {
-		if (bOpen) {
-			this._openedMap[oNode.id] = true;
-		} else {
-			delete this._openedMap[oNode.id];
-		}
-
-		var res = [];
-		var i = 0;
-		for (var id in this._openedMap)
-			res[i++] = id;
-		this._cookies.setCookie(this.cookieName, res.join("+"));
-	}
-};
+WebFXTreeCookiePersistence.prototype = new WebFXTreePersistence;
 
 
 // this object provides a few useful methods when working with arrays
@@ -157,30 +154,6 @@ var arrayHelper = {
 	}
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// WebFX Tree Config object                                                  //
-///////////////////////////////////////////////////////////////////////////////
-var webFXTreeConfig = {
-	rootIcon: "images/folder.png",
-	openRootIcon: "images/openfolder.png",
-	folderIcon: "images/folder.png",
-	openFolderIcon: "images/openfolder.png",
-	fileIcon: "images/file.png",
-	iIcon: "images/I.png",
-	lIcon: "images/L.png",
-	lMinusIcon: "images/Lminus.png",
-	lPlusIcon: "images/Lplus.png",
-	tIcon: "images/T.png",
-	tMinusIcon: "images/Tminus.png",
-	tPlusIcon: "images/Tplus.png",
-	plusIcon: "images/plus.png",
-	minusIcon: "images/minus.png",
-	blankIcon: "images/blank.png",
-	defaultText: "Tree Item",
-	defaultAction: null,
-	defaultBehavior: "classic",
-	usePersistence: true
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 // WebFX Tree Handler object                                                 //
@@ -708,7 +681,9 @@ _p.openPath = function (sPath, bSelect, bFocus) {
 			this.select();
 		}
 		if (bFocus) {
-			window.setTimeout("WebFXTreeAbstractNode._onTimeoutFocus(\"" + this.id + "\")", 10);
+			window.setTimeout(function () {
+				WebFXTreeAbstractNode._onTimeoutFocus(this.id);
+			}, 10);
 		}
 		return;
 	}
@@ -1138,7 +1113,9 @@ _p._onmousedown = function (e) {
 	if (/webfx-tree-expand-icon/.test(el.className) && this.hasChildren()) {
 		this.toggle();
 		if (webFXTreeHandler.ie) {
-			window.setTimeout("WebFXTreeAbstractNode._onTimeoutFocus(\"" + this.id + "\")", 10);
+			window.setTimeout(function () {
+				WebFXTreeAbstractNode._onTimeoutFocus(this.id);
+			}, 10);
 		}
 		return false;
 	}
@@ -1148,7 +1125,9 @@ _p._onmousedown = function (e) {
 
 		// in case we are not clicking on the label
 		if (webFXTreeHandler.ie) {
-			window.setTimeout("WebFXTreeAbstractNode._onTimeoutFocus(\"" + this.id + "\")", 10);
+			window.setTimeout(function () {
+				WebFXTreeAbstractNode._onTimeoutFocus(this.id);
+			}, 10);
 		} else {
 			this.focus();
 		}

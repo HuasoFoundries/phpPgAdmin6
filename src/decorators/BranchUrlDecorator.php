@@ -30,22 +30,19 @@ class BranchUrlDecorator extends Decorator
             $queryVars = Decorator::get_sanitized_value($this->q, $fields);
 
             $sep = '?';
+            ksort($queryVars);
             foreach ($queryVars as $var => $value) {
                 $varname  = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
-                if ('action' == $varname) {
-                    if ('subtree' == $varvalue) {
-                        $url = '/tree/'.str_replace('.php', '/subtree', $url);
-                    } else {
-                        $url = '/tree/'.str_replace('.php', '', $url);
-                    }
-                }
-                $url .= $sep.$varname.'='.$varvalue;
+                $url .= $sep . $varname . '=' . $varvalue;
                 $sep = '&';
             }
         }
-        if (\SUBFOLDER !== '' && (0 === strpos($url, '/')) && (false === strpos($url, \SUBFOLDER))) {
-            $url = str_replace('//', '/', \SUBFOLDER.'/'.$url);
+        if (strpos($url, '/src/views') === false) {
+            $url = str_replace('//', '/', '/src/views/' . $url);
+        }
+        if (\SUBFOLDER !== '' && (0 === strpos($url, '/')) && (0 !== strpos($url, \SUBFOLDER))) {
+            $url = str_replace('//', '/', \SUBFOLDER . '/' . $url);
         }
 
         return str_replace('.php', '', $url);

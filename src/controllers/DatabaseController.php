@@ -132,8 +132,23 @@ class DatabaseController extends BaseController
         $attrs = [
             'text'   => Decorator::field('title'),
             'icon'   => Decorator::field('icon'),
-            'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars', [])),
-            'branch' => Decorator::url(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), ['action' => 'tree']),
+            'action' => Decorator::actionurl(
+                Decorator::field('url'),
+                $reqvars,
+                Decorator::field('urlvars'),
+                [
+                    'database' => $this->misc->getDatabase(),
+                ]
+            ),
+            'branch' => Decorator::branchurl(
+                Decorator::field('url'),
+                $reqvars,
+                Decorator::field('urlvars'),
+                [
+                    'action'   => 'tree',
+                    'database' => $this->misc->getDatabase(),
+                ]
+            ),
         ];
 
         return $this->printTree($items, $attrs, 'database', $print);

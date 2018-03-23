@@ -193,7 +193,6 @@ class SchemasController extends BaseController
      */
     public function doTree()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $schemas = $data->getSchemas();
@@ -224,12 +223,11 @@ class SchemasController extends BaseController
             ),
         ];
 
-        $this->printTree($schemas, $attrs, 'schemas');
+        return $this->printTree($schemas, $attrs, 'schemas');
     }
 
     public function doSubTree()
     {
-        $lang = $this->lang;
 
         $tabs = $this->misc->getNavTabs('schema');
 
@@ -255,7 +253,7 @@ class SchemasController extends BaseController
             ),
         ];
 
-        $this->printTree($items, $attrs, 'schema');
+        return $this->printTree($items, $attrs, 'schema');
     }
 
     /**

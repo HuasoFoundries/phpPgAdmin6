@@ -6,6 +6,29 @@
 
 namespace PHPPgAdmin\XHtml;
 
+/*$dato = [
+'name'   => 'id_establecimiento',
+'value'  => '$data->establecimiento->nombre',
+'filter' => CHtml::activeDropDownList(
+$model, 'id_establecimiento', CHtml::listData($establecimiento, 'id', 'nombre'),
+[
+'empty' => 'Todos',
+'ajax'  => [
+'type'   => 'POST',
+'url'    => CController::createUrl('equipo/ajaxListadoDepartamentos'),
+'data'   => ['id_establecimiento' => 'js:this.value'],
+'update' => '#Equipo_id_departamento',
+],
+],
+['ajax' => [
+'type'   => 'POST',
+'url'    => CController::createUrl('equipo/ajaxListadoEdificio'),
+'data'   => ['id_establecimiento' => 'js:this.value'],
+'update' => '#Equipo_id_edificio',
+],
+]),
+];
+ */
 /**
  * Class to render tables. Formerly part of Misc.php.
  */
@@ -84,7 +107,7 @@ class HTMLFooterController extends HTMLController
         $reload = "<script type=\"text/javascript\">\n";
         //$reload .= " alert('will reload');";
         if ($database) {
-            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"" . SUBFOLDER . "/src/views/browser.php\";\n";
+            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"" . SUBFOLDER . "/src/views/browser\";\n";
         } else {
             $reload .= "if(parent.frames && parent.frames.browser) { \n";
             $reload .= "\t console.log('will reload frame browser'); \n";

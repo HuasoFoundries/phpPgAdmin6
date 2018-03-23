@@ -750,9 +750,9 @@ class Misc
     {
         $href = [];
 
-        $server   = $this->container->server;
-        $database = $this->container->database;
-        $schema   = $this->container->schema;
+        $server   = $this->container->server || isset($_REQUEST['server']) ? $_REQUEST['server'] : null;
+        $database = $this->container->database || isset($_REQUEST['database']) ? $_REQUEST['database'] : null;
+        $schema   = $this->container->schema || isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null;
 
         if ($server && $exclude_from !== 'server') {
             $href[] = 'server=' . urlencode($server);

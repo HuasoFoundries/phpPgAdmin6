@@ -52,12 +52,6 @@
 |  than thier text label counterparts. Thanks to JGuillaume de Rorthais       |
 \----------------------------------------------------------------------------*/
 
-webFXTreeConfig.loadingText = "Loading...";
-webFXTreeConfig.loadingIcon = "images/loading.gif";
-webFXTreeConfig.errorLoadingText = "Error Loading";
-webFXTreeConfig.errorIcon = "images/exclamation.16.png";
-webFXTreeConfig.reloadText = "Click to reload";
-
 
 function WebFXLoadTree(sText, sXmlSrc, oAction, sBehavior, sIcon, oIconAction, sOpenIcon) {
 	WebFXTree.call(this, sText, oAction, sBehavior, sIcon, oIconAction, sOpenIcon);
@@ -231,17 +225,19 @@ _p.dispose = function () {
 WebFXLoadTree.prototype.openPath =
 	_p.openPath = function (sPath, bSelect, bFocus) {
 		// remove any old pending paths to open
-		delete this._pathToOpen;
-		//delete this._pathToOpenById;
+		this._pathToOpen = null;
+
 		this._selectPathOnLoad = bSelect;
 		this._focusPathOnLoad = bFocus;
-
+		var id = this.getId();
 		if (sPath == "") {
 			if (bSelect) {
 				this.select();
 			}
 			if (bFocus) {
-				window.setTimeout("WebFXTreeAbstractNode._onTimeoutFocus(\"" + this.getId() + "\")", 10);
+				window.setTimeout(function () {
+					return WebFXTreeAbstractNode._onTimeoutFocus(id);
+				}, 10);
 			}
 			return;
 		}
@@ -280,37 +276,15 @@ WebFXLoadTree.createItemFromElement = function (oNode) {
 		l;
 
 
-	var children = oNode.childNodes;
-	l = children.length;
-	if (l > 0) {
-		for (i = 0; i < l; i++) {
-			if (children[i].tagName !== "tree" && children[i].innerHTML.length) {
-				jsAttrs[children[i].tagName] = children[i].innerHTML.replace(/&#38;/g, "&").replace(/\&amp;/g, '&'); // replace for Safari fix for DOM Bug;
-			}
+	var children = oNode.childNodes || [];
+
+	children.forEach(function (child) {
+		if (child.tagName !== "tree" && child.innerHTML.length) {
+			// replace for Safari fix for DOM Bug;
+			jsAttrs[child.tagName] = child.innerHTML.replace(/&#38;/g, "&").replace(/\&amp;/g, '&');
 		}
-		//console.log('jsAttrs', jsAttrs);
-	}
+	});
 
-
-	/*l = oNode.attributes.length;
-	for (i = 0; i < l; i++) {
-		oNode.attributes[i].nodeValue = String(oNode.attributes[i].nodeValue).replace(/&#38;/g, "&"); // replace for Safari fix for DOM Bug
-		if (oNode.attributes[i] == null) {
-			continue;
-		}
-		jsAttrs2[oNode.attributes[i].nodeName] = oNode.attributes[i].nodeValue;
-	}
-
-	//console.log('jsAttrs2', jsAttrs2);
-
-	var name, val;
-	for (i = 0; i < WebFXLoadTree._attrs.length; i++) {
-		name = WebFXLoadTree._attrs[i];
-		value = oNode.getAttribute(name);
-		if (value) {
-			jsAttrs[name] = value;
-		}
-	}*/
 
 	var action;
 	if (jsAttrs.onaction) {
@@ -318,8 +292,15 @@ WebFXLoadTree.createItemFromElement = function (oNode) {
 	} else if (jsAttrs.action) {
 		action = jsAttrs.action;
 	}
-	var jsNode = new WebFXLoadTreeItem(jsAttrs.html || "", jsAttrs.src, action,
-		null, jsAttrs.icon, jsAttrs.iconaction, jsAttrs.openicon);
+	var jsNode = new WebFXLoadTreeItem(
+		jsAttrs.html || "",
+		jsAttrs.src,
+		action,
+		null,
+		jsAttrs.icon,
+		jsAttrs.iconaction,
+		jsAttrs.openicon
+	);
 	if (jsAttrs.text) {
 		jsNode.setText(jsAttrs.text);
 	}
@@ -346,13 +327,12 @@ WebFXLoadTree.createItemFromElement = function (oNode) {
 	jsNode.attributes = jsAttrs;
 
 	// go through childNodes
-	var cs = oNode.childNodes;
-	l = cs.length;
-	for (i = 0; i < l; i++) {
-		if (cs[i].tagName == "tree") {
-			jsNode.add(WebFXLoadTree.createItemFromElement(cs[i]));
+	children.forEach(function (child) {
+		if (child.tagName == "tree") {
+			jsNode.add(WebFXLoadTree.createItemFromElement(child));
 		}
-	}
+	});
+
 
 	return jsNode;
 };
@@ -362,29 +342,33 @@ WebFXLoadTree.loadXmlDocument = function (jsNode) {
 		return;
 	}
 	jsNode.loading = true;
-	var id = jsNode.getId();
-	jsNode._xmlHttp = window.XMLHttpRequest ? new XMLHttpRequest : new window.ActiveXObject("Microsoft.XmlHttp");
-	jsNode._xmlHttp.open("GET", jsNode.src, true); // async
-	jsNode._xmlHttp.onreadystatechange = new Function("WebFXLoadTree._onload(\"" + id + "\")");
 
-	// call in new thread to allow ui to update
-	window.setTimeout("WebFXLoadTree._ontimeout(\"" + id + "\")", 10);
-};
+	window.setTimeout(function () {
+		jQuery.ajax({
+			url: jsNode.src,
+			dataType: 'xml'
+		}).then(function (response) {
+			jsNode.response = {
+				responseXML: response
+			};
+			return WebFXLoadTree.documentLoaded(jsNode);
+		}).catch(function (err) {
 
-WebFXLoadTree._onload = function (sId) {
-	var jsNode = webFXTreeHandler.all[sId];
-	if (jsNode._xmlHttp.readyState == 4) {
-		WebFXLoadTree.documentLoaded(jsNode);
-		webFXLoadTreeQueue.remove(jsNode);
-		if (jsNode._xmlHttp.dispose)
-			jsNode._xmlHttp.dispose();
-		jsNode._xmlHttp = null;
-	}
-};
+			jsNode.response = {
+				responseXML: err.responseXML,
+				error: true,
+				statusText: err.statusText,
+				status: err.status
+			};
+			return WebFXLoadTree.documentLoaded(jsNode);
 
-WebFXLoadTree._ontimeout = function (sId) {
-	var jsNode = webFXTreeHandler.all[sId];
-	webFXLoadTreeQueue.add(jsNode);
+			console.warn('err ajax', err);
+			return;
+		});
+
+	}, 50);
+
+
 };
 
 
@@ -402,15 +386,12 @@ WebFXLoadTree.documentLoaded = function (jsNode) {
 	var oldSuspend = t.getSuspendRedraw();
 	t.setSuspendRedraw(true);
 
-	var doc = jsNode._xmlHttp.responseXML;
+	var doc = jsNode.response.responseXML;
 
 	// check that the load of the xml file went well
-	if (!doc || doc.parserError && doc.parseError.errorCode != 0 || !doc.documentElement) {
-		if (!doc || doc.parseError.errorCode == 0) {
-			jsNode.errorText = webFXTreeConfig.errorLoadingText + " " + jsNode.src + " (" + jsNode._xmlHttp.status + ": " + jsNode._xmlHttp.statusText + ")";
-		} else {
-			jsNode.errorText = webFXTreeConfig.errorLoadingText + " " + jsNode.src + " (" + doc.parseError.reason + ")";
-		}
+	if (!doc || jsNode.response.error || !doc.documentElement) {
+		jsNode.errorText = webFXTreeConfig.errorLoadingText + " " + jsNode.src + " (" + jsNode.response.status + ": " + jsNode.response.statusText + ")";
+
 	} else {
 		// there is one extra level of tree elements
 		var root = doc.documentElement;
@@ -471,46 +452,4 @@ WebFXLoadTree.documentLoaded = function (jsNode) {
 
 WebFXLoadTree._reloadParent = function () {
 	this.getParent().reload();
-};
-
-
-var webFXLoadTreeQueue = {
-	_nodes: [],
-	_ie: /msie/i.test(navigator.userAgent),
-	_opera: /opera/i.test(navigator.userAgent),
-
-	add: function (jsNode) {
-		if (this._ie || this._opera) {
-			this._nodes.push(jsNode);
-			if (this._nodes.length == 1) {
-				this._send();
-			}
-		} else {
-			jsNode._xmlHttp.send(null);
-		}
-	},
-
-	remove: function (jsNode) {
-		if (this._ie || this._opera) {
-			arrayHelper.remove(this._nodes, jsNode);
-			if (this._nodes.length > 0) {
-				this._send();
-			}
-		}
-	},
-
-	// IE only
-	_send: function () {
-		var id = this._nodes[0].getId();
-		var jsNode = webFXTreeHandler.all[id];
-		if (!jsNode) {
-			return;
-		}
-		// if no _xmlHttp then remove it
-		if (!jsNode._xmlHttp) {
-			this.remove(jsNode);
-		} else {
-			jsNode._xmlHttp.send(null);
-		}
-	}
 };
