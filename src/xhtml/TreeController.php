@@ -178,9 +178,8 @@ class TreeController
         $lang = $this->lang;
 
         $parent = [];
-        $this->prtrace($attrs);
 
-        if ($attrs['root'] === 'true') {
+        if (isset($attrs['is_root'])) {
             $parent = [
                 'id'       => 'root',
                 'children' => true,
@@ -197,14 +196,13 @@ class TreeController
                 }
 
                 $tree = [
-                    'text'           => Decorator::get_sanitized_value($attrs['text'], $rec),
-                    'id'             => Decorator::get_sanitized_value($attrs['action'], $rec),
-
-                    'icon'           => Decorator::get_sanitized_value($icon, $rec),
-                    'iconaction_xml' => Decorator::get_sanitized_value($attrs['iconAction'], $rec),
-                    'openicon_xml'   => Decorator::get_sanitized_value($icon, $rec),
-                    'tooltip_xml'    => Decorator::get_sanitized_value($attrs['toolTip'], $rec),
-                    'children'       => false,
+                    'text'       => Decorator::get_sanitized_value($attrs['text'], $rec),
+                    'id'         => Decorator::get_sanitized_value($attrs['action'], $rec),
+                    'icon'       => Decorator::get_sanitized_value($icon, $rec),
+                    'iconaction' => Decorator::get_sanitized_value($attrs['iconAction'], $rec),
+                    'openicon'   => Decorator::get_sanitized_value($icon, $rec),
+                    'tooltip'    => Decorator::get_sanitized_value($attrs['toolTip'], $rec),
+                    'children'   => false,
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
                 if ($url && strpos($url, '/src/views') === false) {

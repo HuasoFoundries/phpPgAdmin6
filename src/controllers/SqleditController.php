@@ -146,11 +146,11 @@ class SqleditController extends BaseController
         $reqvars  = [];
 
         $attrs = [
-            'text'   => 'Servers',
-            'icon'   => 'Servers',
-            'root'   => 'true',
-            'action' => Decorator::url('/src/views/servers'),
-            'branch' => Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']),
+            'text'    => 'Servers',
+            'icon'    => 'Servers',
+            'is_root' => 'true',
+            'action'  => Decorator::url('/src/views/servers'),
+            'branch'  => Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']),
         ];
 
         return $this->printTree($treedata, $attrs, 'server');
