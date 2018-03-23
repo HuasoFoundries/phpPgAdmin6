@@ -40,18 +40,19 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
         <script src="/js/jstree/jstree.min.js"></script>
         <script>
-        var level = 'servers';
         $('#lazy').jstree({
             "state": {
                 "key": "jstree"
             },
+
             "plugins": ["wholerow", "state"],
             'core': {
+
                 'data': {
                     "url": function (node) {
                         console.log('url node', node);
                         if (node.id === '#') {
-                            return 'https://phppga.civicbrain.io/src/views/servers?action=tree&json=true';
+                            return 'https://phppga.civicbrain.io/src/views/sqledit?action=tree&json=true';
                         } else {
                             return node.original.url + '&json=true';
                         }
@@ -60,10 +61,7 @@
                         if (node.id === '#') {
                             return;
                         }
-                        return function (node1) {
-                            console.log('node data', node1);
-                            return node.original;
-                        };
+                        return node.original;
                     }
                 }
             }

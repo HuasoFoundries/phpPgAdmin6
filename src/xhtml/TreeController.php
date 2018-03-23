@@ -178,8 +178,18 @@ class TreeController
         $lang = $this->lang;
 
         $parent = [];
+        $this->prtrace($attrs);
 
-        if (count($treedata) > 0) {
+        if ($attrs['root'] === 'true') {
+            $parent = [
+                'id'       => 'root',
+                'children' => true,
+                'icon'     => \SUBFOLDER . '/images/themes/default/Servers.png',
+                'state'    => ['opened' => true],
+                'url'      => str_replace('//', '/', \SUBFOLDER . '/src/views/servers?action=tree'),
+                'text'     => '<a href="' . str_replace('//', '/', \SUBFOLDER . '/src/views/servers') . '" target="detail">Servers</a>',
+            ];
+        } else if (count($treedata) > 0) {
             foreach ($treedata as $rec) {
                 $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
                 if (!empty($attrs['openicon'])) {
@@ -188,7 +198,7 @@ class TreeController
 
                 $tree = [
                     'text'           => Decorator::get_sanitized_value($attrs['text'], $rec),
-                    'action_xml'     => Decorator::get_sanitized_value($attrs['action'], $rec),
+                    'id'             => Decorator::get_sanitized_value($attrs['action'], $rec),
 
                     'icon'           => Decorator::get_sanitized_value($icon, $rec),
                     'iconaction_xml' => Decorator::get_sanitized_value($attrs['iconAction'], $rec),
@@ -197,15 +207,16 @@ class TreeController
                     'children'       => false,
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
-                if (strpos($url, '/src/views') === false) {
-                    $url = '/src/views/' . $url;
+                if ($url && strpos($url, '/src/views') === false) {
+                    $url = str_replace('//', '/', \SUBFOLDER . '/src/views/' . $url);
                 }
                 if ($url) {
                     $tree['url']      = $url;
                     $tree['children'] = true;
-                    $tree['id']       = $url; //str_replace(' ', '_', $tree['text']);
+
                 }
-                $tree['text'] = '<a href="' . $tree['action_xml'] . '" target="detail">' . $tree['text'] . '</a>';
+
+                $tree['text'] = '<a href="' . $tree['id'] . '" target="detail">' . $tree['text'] . '</a>';
 
                 $parent[] = $tree;
             }
