@@ -141,7 +141,6 @@ class SqleditController extends BaseController
 
     public function doTree()
     {
-
         $treedata = new \PHPPgAdmin\ArrayRecordSet([]);
         $reqvars  = [];
 

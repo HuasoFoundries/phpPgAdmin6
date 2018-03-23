@@ -228,7 +228,6 @@ class SchemasController extends BaseController
 
     public function doSubTree()
     {
-
         $tabs = $this->misc->getNavTabs('schema');
 
         $items = $this->adjustTabsForTree($tabs);

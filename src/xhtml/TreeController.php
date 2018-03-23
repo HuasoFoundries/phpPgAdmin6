@@ -132,7 +132,6 @@ class TreeController
                 $tree_xml .= $tooltip_xml;
 
                 $tree_xml .= '</tree>';
-
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
@@ -141,7 +140,6 @@ class TreeController
 
         $tree_xml .= '</tree>';
         if (true === $print) {
-
             if (null === $this->container->requestobj->getAttribute('route')) {
                 header('Content-Type: text/xml; charset=UTF-8');
                 header('Cache-Control: no-cache');
@@ -188,7 +186,7 @@ class TreeController
                 'url'      => str_replace('//', '/', \SUBFOLDER . '/src/views/servers?action=tree'),
                 'text'     => '<a href="' . str_replace('//', '/', \SUBFOLDER . '/src/views/servers') . '" target="detail">Servers</a>',
             ];
-        } else if (count($treedata) > 0) {
+        } elseif (count($treedata) > 0) {
             foreach ($treedata as $rec) {
                 $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
                 if (!empty($attrs['openicon'])) {
@@ -211,7 +209,6 @@ class TreeController
                 if ($url) {
                     $tree['url']      = $url;
                     $tree['children'] = true;
-
                 }
 
                 $tree['text'] = '<a href="' . $tree['id'] . '" target="detail">' . $tree['text'] . '</a>';
@@ -223,7 +220,6 @@ class TreeController
         }
 
         if (true === $print) {
-
             if (null === $this->container->requestobj->getAttribute('route')) {
                 header('Content-Type: text/xml; charset=UTF-8');
                 header('Cache-Control: no-cache');
