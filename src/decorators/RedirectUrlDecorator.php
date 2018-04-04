@@ -37,16 +37,16 @@ class RedirectUrlDecorator extends Decorator
                 $varname  = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
                 if ('subject' == $varname) {
-                    $url = '/'.str_replace('.php', '/'.$varvalue, $url);
+                    $url = '/' . str_replace('redirect?', 'redirect/' . $varvalue . '?', $url);
                 } else {
-                    $url .= $sep.$varname.'='.$varvalue;
+                    $url .= $sep . $varname . '=' . $varvalue;
                 }
 
                 $sep = '&';
             }
         }
         if (\SUBFOLDER !== '' && (0 === strpos($url, '/')) && (false === strpos($url, \SUBFOLDER))) {
-            $url = str_replace('//', '/', \SUBFOLDER.'/'.$url);
+            $url = str_replace('//', '/', \SUBFOLDER . '/' . $url);
         }
 
         return str_replace('.php', '', $url);
