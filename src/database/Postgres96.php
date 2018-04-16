@@ -10,7 +10,7 @@ namespace PHPPgAdmin\Database;
  * @file
  * PostgreSQL 9.6 support
  */
-class Postgres96 extends Postgres95
+class Postgres96 extends Postgres
 {
     public $major_version = 9.6;
 
@@ -46,5 +46,10 @@ class Postgres96 extends Postgres95
         }
 
         return $this->selectSet($sql);
+    }
+
+    public function hasUserSignals()
+    {
+        return true;
     }
 }

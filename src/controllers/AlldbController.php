@@ -30,9 +30,10 @@ class AlldbController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strdatabases']);
-        $this->printBody();
+        $header_template = 'header.twig';
+        $footer_template = 'footer.twig';
 
+        ob_start();
         switch ($action) {
             case 'export':
                 $this->doExport();
@@ -75,10 +76,16 @@ class AlldbController extends BaseController
 
                 break;
             default:
+                $header_template = 'header_datatables.twig';
                 $this->doDefault();
 
                 break;
         }
+        $output = ob_get_clean();
+
+        $this->printHeader($lang['strdatabases'], null, true, $header_template);
+        $this->printBody();
+        echo $output;
 
         return $this->printFooter();
     }
@@ -117,14 +124,7 @@ class AlldbController extends BaseController
                 'title' => $lang['strencoding'],
                 'field' => Decorator::field('datencoding'),
             ],
-            'lc_collate' => [
-                'title' => $lang['strcollation'],
-                'field' => Decorator::field('datcollate'),
-            ],
-            'lc_ctype'   => [
-                'title' => $lang['strctype'],
-                'field' => Decorator::field('datctype'),
-            ],
+
             'tablespace' => [
                 'title' => $lang['strtablespace'],
                 'field' => Decorator::field('tablespace'),
@@ -133,6 +133,14 @@ class AlldbController extends BaseController
                 'title' => $lang['strsize'],
                 'field' => Decorator::field('dbsize'),
                 'type'  => 'prettysize',
+            ],
+            'lc_collate' => [
+                'title' => $lang['strcollation'],
+                'field' => Decorator::field('datcollate'),
+            ],
+            'lc_ctype'   => [
+                'title' => $lang['strctype'],
+                'field' => Decorator::field('datctype'),
             ],
             'actions'    => [
                 'title' => $lang['stractions'],

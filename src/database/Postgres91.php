@@ -15,7 +15,7 @@ namespace PHPPgAdmin\Database;
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
  * @package PHPPgAdmin
  */
-class Postgres91 extends Postgres90
+class Postgres91 extends Postgres92
 {
     public $major_version = 9.1;
 

@@ -81,15 +81,17 @@ class Postgres81 extends Postgres82
             $where = ' AND pdb.datallowconn';
         }
 
-        $sql = "SELECT pdb.datname AS datname, pr.rolname AS datowner, pg_encoding_to_char(encoding) AS datencoding,
-                               (SELECT description FROM pg_catalog.pg_description pd WHERE pdb.oid=pd.objoid) AS datcomment,
-                               (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=pdb.dattablespace) AS tablespace,
-							   pg_catalog.pg_database_size(pdb.oid) as dbsize
-                        FROM pg_catalog.pg_database pdb LEFT JOIN pg_catalog.pg_roles pr ON (pdb.datdba = pr.oid)
-						WHERE true
-			{$where}
-			{$clause}
-			{$orderby}";
+        $sql = "SELECT
+                pdb.datname AS datname,
+                pr.rolname AS datowner, pg_encoding_to_char(encoding) AS datencoding,
+                (SELECT description FROM pg_catalog.pg_description pd WHERE pdb.oid=pd.objoid) AS datcomment,
+                (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=pdb.dattablespace) AS tablespace,
+				pg_catalog.pg_database_size(pdb.oid) as dbsize
+                FROM pg_catalog.pg_database pdb LEFT JOIN pg_catalog.pg_roles pr ON (pdb.datdba = pr.oid)
+				WHERE true
+    			{$where}
+    			{$clause}
+    			{$orderby}";
 
         return $this->selectSet($sql);
     }

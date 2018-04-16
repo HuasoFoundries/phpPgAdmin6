@@ -173,6 +173,10 @@ class TablesController extends BaseController
                 'field' => Decorator::field('reltuples'),
                 'type'  => 'numeric',
             ],
+            'table_size' => [
+                'title' => $lang['strsize'],
+                'field' => Decorator::field('table_size'),
+            ],
             'actions'    => [
                 'title' => $lang['stractions'],
             ],

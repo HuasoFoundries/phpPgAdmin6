@@ -217,12 +217,23 @@ class Misc
             'line'     => $backtrace[0]['line'],
         ];
 
-        $errmsg = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($errmsg));
-        $p1     = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($p1));
-        $p2     = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($p2));
+        $errmsg = htmlentities(\PHPPgAdmin\HelperTrait::br2ln($errmsg), ENT_NOQUOTES);
+        $p1     = htmlentities(\PHPPgAdmin\HelperTrait::br2ln($p1), ENT_NOQUOTES);
+        $p2     = htmlentities(\PHPPgAdmin\HelperTrait::br2ln($p2), ENT_NOQUOTES);
+
         switch ($fn) {
             case 'EXECUTE':
-                $sql         = $p1;
+                $sql = str_replace([
+                    'SELECT',
+                    'WHERE',
+                    'GROUP BY',
+                    'FROM',
+                    'HAVING',
+                    'LIMIT',
+                ],
+                    ["\nSELECT", "\nWHERE", "\nGROUP BY", "\nFROM", "\nHAVING", "\nLIMIT"],
+                    $p1);
+
                 $inputparams = $p2;
 
                 $error_msg = '<p><b>strsqlerror</b><br />' . nl2br($errmsg) . '</p> <p><b>SQL:</b><br />' . nl2br($sql) . '</p>	';

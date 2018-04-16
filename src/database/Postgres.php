@@ -17,241 +17,6 @@ class Postgres extends ADOdbBase
 {
     use \PHPPgAdmin\HelperTrait;
 
-    public $major_version = 9.6;
-    // Max object name length
-    public $_maxNameLen = 63;
-    // Store the current schema
-    public $_schema;
-    // Map of database encoding names to HTTP encoding names.  If a
-    // database encoding does not appear in this list, then its HTTP
-    // encoding name is the same as its database encoding name.
-    public $codemap = [
-        'BIG5'       => 'BIG5',
-        'EUC_CN'     => 'GB2312',
-        'EUC_JP'     => 'EUC-JP',
-        'EUC_KR'     => 'EUC-KR',
-        'EUC_TW'     => 'EUC-TW',
-        'GB18030'    => 'GB18030',
-        'GBK'        => 'GB2312',
-        'ISO_8859_5' => 'ISO-8859-5',
-        'ISO_8859_6' => 'ISO-8859-6',
-        'ISO_8859_7' => 'ISO-8859-7',
-        'ISO_8859_8' => 'ISO-8859-8',
-        'JOHAB'      => 'CP1361',
-        'KOI8'       => 'KOI8-R',
-        'LATIN1'     => 'ISO-8859-1',
-        'LATIN2'     => 'ISO-8859-2',
-        'LATIN3'     => 'ISO-8859-3',
-        'LATIN4'     => 'ISO-8859-4',
-        'LATIN5'     => 'ISO-8859-9',
-        'LATIN6'     => 'ISO-8859-10',
-        'LATIN7'     => 'ISO-8859-13',
-        'LATIN8'     => 'ISO-8859-14',
-        'LATIN9'     => 'ISO-8859-15',
-        'LATIN10'    => 'ISO-8859-16',
-        'SJIS'       => 'SHIFT_JIS',
-        'SQL_ASCII'  => 'US-ASCII',
-        'UHC'        => 'WIN949',
-        'UTF8'       => 'UTF-8',
-        'WIN866'     => 'CP866',
-        'WIN874'     => 'CP874',
-        'WIN1250'    => 'CP1250',
-        'WIN1251'    => 'CP1251',
-        'WIN1252'    => 'CP1252',
-        'WIN1256'    => 'CP1256',
-        'WIN1258'    => 'CP1258',
-    ];
-    public $defaultprops = ['', '', ''];
-    // Extra "magic" types.  BIGSERIAL was added in PostgreSQL 7.2.
-    public $extraTypes = ['SERIAL', 'BIGSERIAL'];
-    // Foreign key stuff.  First element MUST be the default.
-    public $fkactions    = ['NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT'];
-    public $fkdeferrable = ['NOT DEFERRABLE', 'DEFERRABLE'];
-    public $fkinitial    = ['INITIALLY IMMEDIATE', 'INITIALLY DEFERRED'];
-    public $fkmatches    = ['MATCH SIMPLE', 'MATCH FULL'];
-    // Function properties
-    public $funcprops = [
-        ['', 'VOLATILE', 'IMMUTABLE', 'STABLE'],
-        ['', 'CALLED ON NULL INPUT', 'RETURNS NULL ON NULL INPUT'],
-        ['', 'SECURITY INVOKER', 'SECURITY DEFINER'],
-    ];
-
-    // Default help URL
-    public $help_base;
-    // Help sub pages
-    public $help_page;
-    // Name of id column
-    public $id = 'oid';
-
-    // Supported join operations for use with view wizard
-    public $joinOps = ['INNER JOIN' => 'INNER JOIN', 'LEFT JOIN' => 'LEFT JOIN', 'RIGHT JOIN' => 'RIGHT JOIN', 'FULL JOIN' => 'FULL JOIN'];
-    // Map of internal language name to syntax highlighting name
-    public $langmap = [
-        'sql'       => 'SQL',
-        'plpgsql'   => 'SQL',
-        'php'       => 'PHP',
-        'phpu'      => 'PHP',
-        'plphp'     => 'PHP',
-        'plphpu'    => 'PHP',
-        'perl'      => 'Perl',
-        'perlu'     => 'Perl',
-        'plperl'    => 'Perl',
-        'plperlu'   => 'Perl',
-        'java'      => 'Java',
-        'javau'     => 'Java',
-        'pljava'    => 'Java',
-        'pljavau'   => 'Java',
-        'plj'       => 'Java',
-        'plju'      => 'Java',
-        'python'    => 'Python',
-        'pythonu'   => 'Python',
-        'plpython'  => 'Python',
-        'plpythonu' => 'Python',
-        'ruby'      => 'Ruby',
-        'rubyu'     => 'Ruby',
-        'plruby'    => 'Ruby',
-        'plrubyu'   => 'Ruby',
-    ];
-    // Predefined size types
-    public $predefined_size_types = [
-        'abstime',
-        'aclitem',
-        'bigserial',
-        'boolean',
-        'bytea',
-        'cid',
-        'cidr',
-        'circle',
-        'date',
-        'float4',
-        'float8',
-        'gtsvector',
-        'inet',
-        'int2',
-        'int4',
-        'int8',
-        'macaddr',
-        'money',
-        'oid',
-        'path',
-        'polygon',
-        'refcursor',
-        'regclass',
-        'regoper',
-        'regoperator',
-        'regproc',
-        'regprocedure',
-        'regtype',
-        'reltime',
-        'serial',
-        'smgr',
-        'text',
-        'tid',
-        'tinterval',
-        'tsquery',
-        'tsvector',
-        'varbit',
-        'void',
-        'xid',
-    ];
-    // List of all legal privileges that can be applied to different types
-    // of objects.
-    public $privlist = [
-        'table'      => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'view'       => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'sequence'   => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
-        'database'   => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
-        'function'   => ['EXECUTE', 'ALL PRIVILEGES'],
-        'language'   => ['USAGE', 'ALL PRIVILEGES'],
-        'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
-        'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
-        'column'     => ['SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'],
-    ];
-    // List of characters in acl lists and the privileges they
-    // refer to.
-    public $privmap = [
-        'r' => 'SELECT',
-        'w' => 'UPDATE',
-        'a' => 'INSERT',
-        'd' => 'DELETE',
-        'D' => 'TRUNCATE',
-        'R' => 'RULE',
-        'x' => 'REFERENCES',
-        't' => 'TRIGGER',
-        'X' => 'EXECUTE',
-        'U' => 'USAGE',
-        'C' => 'CREATE',
-        'T' => 'TEMPORARY',
-        'c' => 'CONNECT',
-    ];
-    // Rule action types
-    public $rule_events = ['SELECT', 'INSERT', 'UPDATE', 'DELETE'];
-    // Select operators
-    public $selectOps = [
-        '='                   => 'i',
-        '!='                  => 'i',
-        '<'                   => 'i',
-        '>'                   => 'i',
-        '<='                  => 'i',
-        '>='                  => 'i',
-        '<<'                  => 'i',
-        '>>'                  => 'i',
-        '<<='                 => 'i',
-        '>>='                 => 'i',
-        'LIKE'                => 'i',
-        'NOT LIKE'            => 'i',
-        'ILIKE'               => 'i',
-        'NOT ILIKE'           => 'i',
-        'SIMILAR TO'          => 'i',
-        'NOT SIMILAR TO'      => 'i',
-        '~'                   => 'i',
-        '!~'                  => 'i',
-        '~*'                  => 'i',
-        '!~*'                 => 'i',
-        'IS NULL'             => 'p',
-        'IS NOT NULL'         => 'p',
-        'IN'                  => 'x',
-        'NOT IN'              => 'x',
-        '@@'                  => 'i',
-        '@@@'                 => 'i',
-        '@>'                  => 'i',
-        '<@'                  => 'i',
-        '@@ to_tsquery'       => 't',
-        '@@@ to_tsquery'      => 't',
-        '@> to_tsquery'       => 't',
-        '<@ to_tsquery'       => 't',
-        '@@ plainto_tsquery'  => 't',
-        '@@@ plainto_tsquery' => 't',
-        '@> plainto_tsquery'  => 't',
-        '<@ plainto_tsquery'  => 't',
-    ];
-    // Array of allowed trigger events
-    public $triggerEvents = [
-        'INSERT',
-        'UPDATE',
-        'DELETE',
-        'INSERT OR UPDATE',
-        'INSERT OR DELETE',
-        'DELETE OR UPDATE',
-        'INSERT OR DELETE OR UPDATE',
-    ];
-    // When to execute the trigger
-    public $triggerExecTimes = ['BEFORE', 'AFTER'];
-    // How often to execute the trigger
-    public $triggerFrequency = ['ROW', 'STATEMENT'];
-    // Array of allowed type alignments
-    public $typAligns = ['char', 'int2', 'int4', 'double'];
-    // The default type alignment
-    public $typAlignDef = 'int4';
-    // Default index type
-    public $typIndexDef = 'BTREE';
-    // Array of allowed index types
-    public $typIndexes = ['BTREE', 'RTREE', 'GIST', 'GIN', 'HASH'];
-    // Array of allowed type storage attributes
-    public $typStorages = ['plain', 'external', 'extended', 'main'];
-    // The default type storage
-    public $typStorageDef = 'plain';
-
     public function __construct(&$conn, $conf)
     {
         //$this->prtrace('major_version :' . $this->major_version);
@@ -301,7 +66,6 @@ class Postgres extends ADOdbBase
             $help_class = new $help_classname($this->conf, $this->major_version);
 
             $this->help_base = $help_class->getHelpBase();
-            $this->help_page = $help_class->getHelpPage();
         }
     }
 
@@ -659,26 +423,6 @@ class Postgres extends ADOdbBase
         $str = str_replace('"', '""', $str);
 
         return $str;
-    }
-
-    /**
-     * Determines if it has tablespaces.
-     *
-     * @return boolean  True if has tablespaces, False otherwise.
-     */
-    public function hasTablespaces()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has shared comments.
-     *
-     * @return boolean  True if has shared comments, False otherwise.
-     */
-    public function hasSharedComments()
-    {
-        return true;
     }
 
     /**
@@ -1062,11 +806,15 @@ class Postgres extends ADOdbBase
         }
 
         $sql = "
-			SELECT pn.nspname, pu.rolname AS nspowner,
-				pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment
-			FROM pg_catalog.pg_namespace pn
-				LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
+			SELECT pn.nspname,
+                   pu.rolname AS nspowner,
+				   pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment,
+                   pg_size_pretty(SUM(pg_total_relation_size(pg_class.oid))) as schema_size
+			FROM pg_catalog.pg_class
+            JOIN pg_catalog.pg_namespace pn ON relnamespace = pn.oid
+			LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
 			{$where}
+            GROUP BY pn.nspname, pu.rolname, pg_catalog.obj_description(pn.oid, 'pg_namespace')
 			ORDER BY nspname";
 
         return $this->selectSet($sql);
@@ -1322,20 +1070,27 @@ class Postgres extends ADOdbBase
         $this->clean($c_schema);
         if ($all) {
             // Exclude pg_catalog and information_schema tables
-            $sql = "SELECT schemaname AS nspname, tablename AS relname, tableowner AS relowner
+            $sql = "SELECT
+                        schemaname AS nspname,
+                        tablename AS relname,
+                        tableowner AS relowner
 					FROM pg_catalog.pg_tables
 					WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
 					ORDER BY schemaname, tablename";
         } else {
-            $sql = "SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
-						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
-						reltuples::bigint,
-						(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
-					FROM pg_catalog.pg_class c
-					LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-					WHERE c.relkind = 'r'
-					AND nspname='{$c_schema}'
-					ORDER BY c.relname";
+            $sql = "
+                SELECT c.relname,
+                    pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+                    pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+                    reltuples::bigint,
+                    pt.spcname as tablespace,
+                    pg_size_pretty(pg_total_relation_size(c.oid)) as table_size
+                FROM pg_catalog.pg_class c
+                LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+                LEFT JOIN  pg_catalog.pg_tablespace pt ON  pt.oid=c.reltablespace
+                WHERE c.relkind = 'r'
+                AND nspname='{$c_schema}'
+                ORDER BY c.relname";
         }
 
         return $this->selectSet($sql);
@@ -2276,16 +2031,6 @@ class Postgres extends ADOdbBase
         return $temp;
     }
 
-    public function hasRoles()
-    {
-        return true;
-    }
-
-    public function hasGrantOption()
-    {
-        return true;
-    }
-
     /**
      * Returns extra table definition information that is most usefully
      * dumped after the table contents for speed and efficiency reasons.
@@ -2681,16 +2426,6 @@ class Postgres extends ADOdbBase
         return $this->endTransaction();
     }
 
-    public function hasCreateTableLikeWithConstraints()
-    {
-        return true;
-    }
-
-    public function hasCreateTableLikeWithIndexes()
-    {
-        return true;
-    }
-
     /**
      * Alter table properties.
      *
@@ -3027,13 +2762,6 @@ class Postgres extends ADOdbBase
         }
 
         return $this->endTransaction();
-    }
-
-    // Sequence functions
-
-    public function hasCreateFieldWithConstraints()
-    {
-        return true;
     }
 
     /**
@@ -5344,16 +5072,6 @@ class Postgres extends ADOdbBase
     }
 
     /**
-     * Determines if it has domain constraints.
-     *
-     * @return boolean  True if has domain constraints, False otherwise.
-     */
-    public function hasDomainConstraints()
-    {
-        return true;
-    }
-
-    /**
      * Alters a domain.
      *
      * @param string $domain     The domain to alter
@@ -5743,26 +5461,6 @@ class Postgres extends ADOdbBase
         }
 
         return $this->endTransaction();
-    }
-
-    /**
-     * Determines if it has function alter owner.
-     *
-     * @return boolean  True if has function alter owner, False otherwise.
-     */
-    public function hasFunctionAlterOwner()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has function alter schema.
-     *
-     * @return boolean  True if has function alter schema, False otherwise.
-     */
-    public function hasFunctionAlterSchema()
-    {
-        return true;
     }
 
     /**
@@ -9615,16 +9313,6 @@ class Postgres extends ADOdbBase
     }
 
     /**
-     * Determines if it has read only queries.
-     *
-     * @return boolean  True if has read only queries, False otherwise.
-     */
-    public function hasReadOnlyQueries()
-    {
-        return true;
-    }
-
-    /**
      * Finds the number of rows that would be returned by a
      * query.
      *
@@ -9777,343 +9465,4 @@ class Postgres extends ADOdbBase
         return $this->selectSet($sql);
     }
 
-    /**
-     * Determines if it has aggregate sort operation.
-     *
-     * @return boolean  True if has aggregate sort operation, False otherwise.
-     */
-    public function hasAggregateSortOp()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter aggregate.
-     *
-     * @return boolean  True if has alter aggregate, False otherwise.
-     */
-    public function hasAlterAggregate()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter column type.
-     *
-     * @return boolean  True if has alter column type, False otherwise.
-     */
-    public function hasAlterColumnType()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter database owner.
-     *
-     * @return boolean  True if has alter database owner, False otherwise.
-     */
-    public function hasAlterDatabaseOwner()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter schema.
-     *
-     * @return boolean  True if has alter schema, False otherwise.
-     */
-    public function hasAlterSchema()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter schema owner.
-     *
-     * @return boolean  True if has alter schema owner, False otherwise.
-     */
-    public function hasAlterSchemaOwner()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter sequence schema.
-     *
-     * @return boolean  True if has alter sequence schema, False otherwise.
-     */
-    public function hasAlterSequenceSchema()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter sequence start.
-     *
-     * @return boolean  True if has alter sequence start, False otherwise.
-     */
-    public function hasAlterSequenceStart()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter table schema.
-     *
-     * @return boolean  True if has alter table schema, False otherwise.
-     */
-    public function hasAlterTableSchema()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has autovacuum.
-     *
-     * @return boolean  True if has autovacuum, False otherwise.
-     */
-    public function hasAutovacuum()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has create table like.
-     *
-     * @return boolean  True if has create table like, False otherwise.
-     */
-    public function hasCreateTableLike()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has disable triggers.
-     *
-     * @return boolean  True if has disable triggers, False otherwise.
-     */
-    public function hasDisableTriggers()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter domains.
-     *
-     * @return boolean  True if has alter domains, False otherwise.
-     */
-    public function hasAlterDomains()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has enum types.
-     *
-     * @return boolean  True if has enum types, False otherwise.
-     */
-    public function hasEnumTypes()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has fts.
-     *
-     * @return boolean  True if has fts, False otherwise.
-     */
-    public function hasFTS()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has function costing.
-     *
-     * @return boolean  True if has function costing, False otherwise.
-     */
-    public function hasFunctionCosting()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has function guc.
-     *
-     * @return boolean  True if has function guc, False otherwise.
-     */
-    public function hasFunctionGUC()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has named parameters.
-     *
-     * @return boolean  True if has named parameters, False otherwise.
-     */
-    public function hasNamedParams()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has prepare.
-     *
-     * @return boolean  True if has prepare, False otherwise.
-     */
-    public function hasPrepare()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has prepared xacts.
-     *
-     * @return boolean  True if has prepared xacts, False otherwise.
-     */
-    public function hasPreparedXacts()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has recluster.
-     *
-     * @return boolean  True if has recluster, False otherwise.
-     */
-    public function hasRecluster()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has server admin funcs.
-     *
-     * @return boolean  True if has server admin funcs, False otherwise.
-     */
-    public function hasServerAdminFuncs()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has query cancel.
-     *
-     * @return boolean  True if has query cancel, False otherwise.
-     */
-    public function hasQueryCancel()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has user rename.
-     *
-     * @return boolean  True if has user rename, False otherwise.
-     */
-    public function hasUserRename()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has user signals.
-     *
-     * @return boolean  True if has user signals, False otherwise.
-     */
-    public function hasUserSignals()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has virtual transaction identifier.
-     *
-     * @return boolean  True if has virtual transaction identifier, False otherwise.
-     */
-    public function hasVirtualTransactionId()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has alter database.
-     *
-     * @return boolean  True if has alter database, False otherwise.
-     */
-    public function hasAlterDatabase()
-    {
-        return $this->hasAlterDatabaseRename();
-    }
-
-    /**
-     * Determines if it has alter database rename.
-     *
-     * @return boolean  True if has alter database rename, False otherwise.
-     */
-    public function hasAlterDatabaseRename()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has database collation.
-     *
-     * @return boolean  True if has database collation, False otherwise.
-     */
-    public function hasDatabaseCollation()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has magic types.
-     *
-     * @return boolean  True if has magic types, False otherwise.
-     */
-    public function hasMagicTypes()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has query kill.
-     *
-     * @return boolean  True if has query kill, False otherwise.
-     */
-    public function hasQueryKill()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has concurrent index build.
-     *
-     * @return boolean  True if has concurrent index build, False otherwise.
-     */
-    public function hasConcurrentIndexBuild()
-    {
-        return true;
-    }
-
-    /**
-     * Determines if it has force reindex.
-     *
-     * @return boolean  True if has force reindex, False otherwise.
-     */
-    public function hasForceReindex()
-    {
-        return false;
-    }
-
-    /**
-     * Determines if it has bytea hexadecimal default.
-     *
-     * @return boolean  True if has bytea hexadecimal default, False otherwise.
-     */
-    public function hasByteaHexDefault()
-    {
-        return true;
-    }
 }

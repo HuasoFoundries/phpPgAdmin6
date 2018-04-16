@@ -892,13 +892,16 @@ class ViewsController extends BaseController
             if (strlen($addConditions)) {
                 $viewQuery .= ' WHERE ' . $addConditions;
             }
-
-            $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment']);
-            if (0 == $status) {
-                $this->misc->setReloadBrowser(true);
-                $this->doDefault($lang['strviewcreated']);
-            } else {
-                $this->doSetParamsCreate($lang['strviewcreatedbad']);
+            try {
+                $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment']);
+                if (0 == $status) {
+                    $this->misc->setReloadBrowser(true);
+                    $this->doDefault($lang['strviewcreated']);
+                } else {
+                    $this->doSetParamsCreate($lang['strviewcreatedbad']);
+                }
+            } catch (\PHPPgAdmin\ADOdbException $e) {
+                echo $e->getMessage();
             }
         }
     }

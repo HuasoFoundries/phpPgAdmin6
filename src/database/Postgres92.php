@@ -10,7 +10,7 @@ namespace PHPPgAdmin\Database;
  * @file
  * PostgreSQL 9.2 support
  */
-class Postgres92 extends Postgres91
+class Postgres92 extends Postgres93
 {
     public $major_version = 9.2;
 
@@ -84,9 +84,4 @@ class Postgres92 extends Postgres91
         return $this->selectSet($sql);
     }
 
-    // Capabilities
-    public function hasUserSignals()
-    {
-        return false;
-    }
 }

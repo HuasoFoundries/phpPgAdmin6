@@ -104,20 +104,24 @@ class SchemasController extends BaseController
         $schemas = $data->getSchemas();
 
         $columns = [
-            'schema'  => [
+            'schema'      => [
                 'title' => $lang['strschema'],
                 'field' => Decorator::field('nspname'),
                 'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
-            'owner'   => [
+            'owner'       => [
                 'title' => $lang['strowner'],
                 'field' => Decorator::field('nspowner'),
             ],
-            'actions' => [
+            'schema_size' => [
+                'title' => $lang['strsize'],
+                'field' => Decorator::field('schema_size'),
+            ],
+            'actions'     => [
                 'title' => $lang['stractions'],
             ],
-            'comment' => [
+            'comment'     => [
                 'title' => $lang['strcomment'],
                 'field' => Decorator::field('nspcomment'),
             ],
