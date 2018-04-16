@@ -453,5 +453,4 @@ class Postgres80 extends Postgres81
 
         return $this->selectSet($sql);
     }
-
 }

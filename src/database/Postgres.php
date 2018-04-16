@@ -9464,5 +9464,4 @@ class Postgres extends ADOdbBase
 
         return $this->selectSet($sql);
     }
-
 }
