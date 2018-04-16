@@ -20,7 +20,7 @@ update_version:
 	@echo "Current version is " ${VERSION}
 	@echo "Next version is " $(v)
 	@sed -i s/"$(VERSION)"/"$(v)"/g composer.json
-	composer update nothing --lock --root-reqs
+	composer update nothing --lock --root-reqs --prefer-dist
 
 tag_and_push:
 		git add --all
