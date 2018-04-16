@@ -19,7 +19,7 @@ install:
 update_version:
 	@echo "Current version is " ${VERSION}
 	@echo "Next version is " $(v)
-	sed -i s/"$(VERSION)"/"$(v)"/g composer.json
+	@sed -i s/"$(VERSION)"/"$(v)"/g composer.json
 	composer update nothing --lock --root-reqs
 
 tag_and_push:
