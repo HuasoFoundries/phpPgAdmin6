@@ -123,6 +123,6 @@ build:
         override:
           - 'php-scrutinizer-run'
           - 'phpcs-run ./src/'
-          - 'php vendor/bin/codecept run unit'
+          - 'make test'
     nodes:
         tests: true

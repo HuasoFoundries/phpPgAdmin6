@@ -36,6 +36,9 @@ tag_and_push:
 tag: test update_version tag_and_push	
 
 test:
+ifeq ("$(wildcard config.inc.php)","")
+	cp config.inc.php-dist config.inc.php
+endif	
 	./vendor/bin/codecept run unit --debug
 
 csfixer:
