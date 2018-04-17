@@ -6,8 +6,6 @@
 
 namespace PHPPgAdmin\Controller;
 
-use PHPPgAdmin\Decorators\Decorator;
-
 /**
  * Base controller class.
  *
@@ -29,10 +27,6 @@ class SqleditController extends BaseController
         $lang = $this->lang;
 
         $action = $this->action;
-
-        if ('tree' == $action) {
-            return $this->doTree();
-        }
 
         switch ($action) {
             case 'find':
@@ -137,22 +131,6 @@ class SqleditController extends BaseController
         // Default focus
         //$this->setFocus('forms[0].query');
         return $default_html;
-    }
-
-    public function doTree()
-    {
-        $treedata = new \PHPPgAdmin\ArrayRecordSet([]);
-        $reqvars  = [];
-
-        $attrs = [
-            'text'    => 'Servers',
-            'icon'    => 'Servers',
-            'is_root' => 'true',
-            'action'  => Decorator::url('/src/views/servers'),
-            'branch'  => Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']),
-        ];
-
-        return $this->printTree($treedata, $attrs, 'server');
     }
 
     /**

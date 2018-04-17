@@ -1,0 +1,62 @@
+ {% include 'header_jstree.twig' %}
+
+<body class="browser">
+
+    <div dir="{{lang.applangdir}}">
+
+        <div class="logo">
+            <a href="{{subfolder}}/" target="_parent">{{appName}}</a>
+        </div>
+        <div class="refreshTree">
+            <a href="{{subfolder}}/src/views/jstree" target="browser">
+                    <img src="{{icon.Refresh}}" alt="{{lang.strrefresh}}" title="{{lang.strrefresh}}" />
+                </a>
+        </div>
+
+
+        <div id="lazy" class="demo"></div>
+
+    </div>
+
+    <script>
+        $('#lazy').jstree({
+            "state": {
+                "key": "jstree"
+            },
+            "plugins": ["state"],
+            'core': {
+                themmes:{
+                    dots:true
+                },
+                'data': {
+                    "url": function (node) {
+                        console.log('url node', node);
+                        if (node.id === '#') {
+                            return '{{subfolder}}/src/views/browser?action=tree&json=true';
+                        } else {
+                            return node.original.url + '&json=true';
+                        }
+                    },
+                    "data": function (node) {
+                        if (node.id === '#') {
+                            return;
+                        }
+                        return node.original;
+                    }
+                }
+            }
+        });
+        window.setTimeout(function() {
+            $('#lazy').data('jstree').show_dots(); 
+            $('#lazy').on('mouseover','.jstree-anchor',function() {
+                var childhref=$(this).find('a').attr('href');
+                $(this).attr('href',childhref);
+            });
+
+        },1000);
+        
+    </script>
+
+</body>
+
+</html>

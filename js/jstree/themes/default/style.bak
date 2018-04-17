@@ -474,7 +474,6 @@
   width: 24px;
   height: 24px;
   line-height: 24px;
-  margin-left: -5px;
 }
 
 .jstree-default.jstree-rtl .jstree-node {
@@ -491,10 +490,8 @@
 }
 
 .jstree-default .jstree-node {
-  background-position: -297px -4px;
+  background-position: -292px -4px;
   background-repeat: repeat-y;
-  position: relative;
-  left: -10px;
 }
 
 .jstree-default .jstree-last {
@@ -528,14 +525,6 @@
 
 .jstree-default>.jstree-no-dots .jstree-closed>.jstree-ocl {
   background-position: -4px -4px;
-}
-
-#root.jstree-node.jstree-last.jstree-open>.jstree-ocl {
-  background-position: -34px -4px;
-}
-
-#root.jstree-node.jstree-last.jstree-closed>.jstree-ocl {
-  background-position: -2px -4px;
 }
 
 .jstree-default .jstree-disabled {
@@ -644,7 +633,7 @@
 }
 
 .jstree-default>.jstree-container-ul>.jstree-node {
-  margin-left: 10px;
+  margin-left: 0;
   margin-right: 0;
 }
 

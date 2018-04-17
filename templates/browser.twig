@@ -1,40 +1,5 @@
- {% include 'header.twig' %}
-<script type="text/javascript">
-    webFXTreeConfig= {
-        blankIcon : "{{icon.blank}}",
-        defaultAction: null,
-        defaultBehavior: "classic",
-        defaultText: "Tree Item",
-        errorIcon : "{{icon.ObjectNotFound}}",
-        errorLoadingText : "{{lang.strerrorloading}}",
-        fileIcon : "",
-        folderIcon : "",
-        iIcon : "{{icon.I}}",
-        lIcon : "{{icon.L}}",
-        lMinusIcon : "{{icon.Lminus}}",
-        loadingIcon : "{{icon.Loading}}",
-        loadingText : "{{lang.strloading}}",
-        lPlusIcon : "{{icon.Lplus}}",
-        minusIcon: "{{icon.Lminus}}",
-        openFolderIcon : "",
-        openRootIcon : "{{icon.Servers}}",
-        plusIcon: "{{icon.Lplus}}",
-        reloadText : "{{lang.strclicktoreload}}",
-        rootIcon : "{{icon.Servers}}",
-        tIcon : "{{icon.T}}",
-        tMinusIcon : "{{icon.Tminus}}",
-        tPlusIcon : "{{icon.Tplus}}",
-        usePersistence: true
-    };
-    </script>
-<script src="{{subfolder}}/js/xloadtree/xtree2.js" type="text/javascript"></script>
-<script src="{{subfolder}}/js/xloadtree/xloadtree2.js" type="text/javascript"></script>
-<style type="text/css">
-.webfx-tree-children {
-    background-image: url("{{icons.I}}");
-}
-</style>
-</head>
+ {% include 'header_browser.twig' %}
+
 
 <body class="browser">
 
@@ -51,7 +16,7 @@
 
     </div>
 
-    <script type="text/javascript">
+    <script>
    
     // Set default target frame:
     //WebFXTreeAbstractNode.prototype.target = '_parent';
@@ -69,7 +34,6 @@
         return false;
     };
     */
-    //var tree = new WebFXLoadTree("{{strservers}}", "/tree/servers" /* src for sub branches */ , "/src/views/servers.php" /* action */ );
     var tree = new WebFXLoadTree("{{lang.strservers}}", "{{subfolder}}/src/views/servers?action=tree", "servers");
     tree.write();
     tree.setExpanded(true);

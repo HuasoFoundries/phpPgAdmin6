@@ -55,7 +55,7 @@ $app->post('/redirect[/{subject}]', function (
         $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
-    //
+        //
         //return $response->withStatus(302)->withHeader('Location', $destinationurl);
     } else {
         $_server_info = $this->misc->getServerInfo();
@@ -84,6 +84,15 @@ $app->get('/src/views/browser', function (
 ) {
     $controller = new \PHPPgAdmin\Controller\BrowserController($this, true);
     return $controller->render();
+});
+
+$app->get('/src/views/jstree', function (
+    /** @scrutinizer ignore-unused */$request,
+    /** @scrutinizer ignore-unused */$response,
+    /** @scrutinizer ignore-unused */$args
+) {
+    $controller = new \PHPPgAdmin\Controller\BrowserController($this, true);
+    return $controller->render('jstree');
 });
 
 $app->get('/src/views/login', function (
