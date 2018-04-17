@@ -83,7 +83,7 @@ class Misc
 
         if (count($this->conf['servers']) === 1) {
             $info             = $this->conf['servers'][0];
-            $this->_server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+            $this->_server_id = ($info['host'] . ':' . $info['port'] . ':' . $info['sslmode']);
         } elseif (isset($_REQUEST['server'])) {
             $this->_server_id = $_REQUEST['server'];
         } elseif (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
@@ -473,7 +473,10 @@ class Misc
         // Otherwise, look for it in the conf file
         foreach ($this->conf['servers'] as $idx => $info) {
             $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
-            if ($this->_server_id == $server_string) {
+            $server_sha    = sha1($server_string);
+
+            if ($this->_server_id == $server_string || $this->_server_id == $server_sha) {
+                $this->prtrace($server_sha);
                 if (isset($info['username'])) {
                     $this->setServerInfo(null, $info, $this->_server_id);
                 } elseif (isset($_SESSION['sharedUsername'])) {
@@ -553,80 +556,6 @@ class Misc
         }
 
         return $this->_database;
-    }
-
-    /**
-     * Get list of server groups.
-     *
-     * @param bool  $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array
-     * @param mixed $group_id  a group name to filter the returned servers using $this->conf[srv_groups]
-     *
-     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
-     */
-    public function getServersGroups($recordset = false, $group_id = false)
-    {
-        $lang = $this->lang;
-        $grps = [];
-
-        if (isset($this->conf['srv_groups'])) {
-            foreach ($this->conf['srv_groups'] as $i => $group) {
-                if (
-                    (($group_id === false) and (!isset($group['parents']))) /* root */
-                    or (
-                        ($group_id !== false)
-                        and isset($group['parents'])
-                        and in_array($group_id, explode(
-                            ',',
-                            preg_replace('/\s/', '', $group['parents'])
-                        ), true)
-                    ) /* nested group */
-                ) {
-                    $grps[$i] = [
-                        'id'     => $i,
-                        'desc'   => $group['desc'],
-                        'icon'   => 'Servers',
-                        'action' => Decorator::url(
-                            '/views/servers',
-                            [
-                                'group' => Decorator::field('id'),
-                            ]
-                        ),
-                        'branch' => Decorator::url(
-                            '/tree/servers',
-                            [
-                                'group' => $i,
-                            ]
-                        ),
-                    ];
-                }
-            }
-
-            if ($group_id === false) {
-                $grps['all'] = [
-                    'id'     => 'all',
-                    'desc'   => $lang['strallservers'],
-                    'icon'   => 'Servers',
-                    'action' => Decorator::url(
-                        '/views/servers',
-                        [
-                            'group' => Decorator::field('id'),
-                        ]
-                    ),
-                    'branch' => Decorator::url(
-                        '/tree/servers',
-                        [
-                            'group' => 'all',
-                        ]
-                    ),
-                ];
-            }
-        }
-
-        if ($recordset) {
-            return new ArrayRecordSet($grps);
-        }
-
-        return $grps;
     }
 
     /**

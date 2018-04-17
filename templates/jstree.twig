@@ -25,12 +25,8 @@
             },
             "plugins": ["state"],
             'core': {
-                themmes:{
-                    dots:true
-                },
-                'data': {
+               'data': {
                     "url": function (node) {
-                        console.log('url node', node);
                         if (node.id === '#') {
                             return '{{subfolder}}/src/views/browser?action=tree&json=true';
                         } else {
@@ -46,14 +42,17 @@
                 }
             }
         });
-        window.setTimeout(function() {
-            $('#lazy').data('jstree').show_dots(); 
-            $('#lazy').on('mouseover','.jstree-anchor',function() {
-                var childhref=$(this).find('a').attr('href');
-                $(this).attr('href',childhref);
-            });
 
-        },1000);
+        $('#lazy').on("activate_node.jstree", function (e, data) {
+            //console.log('activate_node',data);
+            if(window.parent.frames.detail) {
+                window.parent.frames.detail.location.replace(data.node.a_attr.href);
+            }
+        });
+        $('#lazy').on("loaded.jstree", function (e, data) {
+            $('#lazy').data('jstree').show_dots(); 
+        });
+
         
     </script>
 

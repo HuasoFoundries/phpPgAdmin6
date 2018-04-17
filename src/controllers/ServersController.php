@@ -76,7 +76,7 @@ class ServersController extends BaseController
         $this->printMsg($msg);
         $group = isset($_GET['group']) ? $_GET['group'] : false;
 
-        $groups  = $this->misc->getServersGroups(true, $group);
+        $groups  = $this->getServersGroups(true, $group);
         $columns = [
             'group' => [
                 'title' => $lang['strgroup'],
@@ -152,11 +152,11 @@ class ServersController extends BaseController
         // root with srv_groups
         if (isset($this->conf['srv_groups']) and count($this->conf['srv_groups']) > 0
             and false === $group_id) {
-            $nodes = $this->misc->getServersGroups(true);
+            $nodes = $this->getServersGroups(true);
         } elseif (isset($this->conf['srv_groups']) and false !== $group_id) {
             // group subtree
             if ('all' !== $group_id) {
-                $nodes = $this->misc->getServersGroups(false, $group_id);
+                $nodes = $this->getServersGroups(false, $group_id);
             }
 
             $nodes = array_merge($nodes, $this->misc->getServers(false, $group_id));
@@ -206,5 +206,81 @@ class ServersController extends BaseController
         $this->misc->setReloadBrowser(true);
 
         echo sprintf($lang['strlogoutmsg'], $server_info['desc']);
+    }
+
+    /**
+     * Get list of server groups.
+     *
+     * @param bool  $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array
+     * @param mixed $group_id  a group name to filter the returned servers using $this->conf[srv_groups]
+     *
+     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
+     */
+    private function getServersGroups($recordset = false, $group_id = false)
+    {
+        $lang = $this->lang;
+        $grps = [];
+
+        if (isset($this->conf['srv_groups'])) {
+            foreach ($this->conf['srv_groups'] as $i => $group) {
+                if (
+                    (($group_id === false) and (!isset($group['parents']))) /* root */
+                    or (
+                        ($group_id !== false)
+                        and isset($group['parents'])
+                        and in_array($group_id, explode(
+                            ',',
+                            preg_replace('/\s/', '', $group['parents'])
+                        ), true)
+                    ) /* nested group */
+                ) {
+                    $grps[$i] = [
+                        'id'     => $i,
+                        'desc'   => $group['desc'],
+                        'icon'   => 'Servers',
+                        'action' => Decorator::url(
+                            'servers',
+                            [
+                                'group' => Decorator::field('id'),
+                            ]
+                        ),
+                        'branch' => Decorator::url(
+                            'servers',
+                            [
+                                'action' => 'tree',
+                                'group'  => $i,
+                            ]
+                        ),
+                    ];
+                }
+            }
+
+            if ($group_id === false) {
+                $grps['all'] = [
+                    'id'     => 'all',
+                    'desc'   => $lang['strallservers'],
+                    'icon'   => 'Servers',
+                    'action' => Decorator::url(
+                        'servers',
+                        [
+                            'group' => Decorator::field('id'),
+                        ]
+                    ),
+                    'branch' => Decorator::url(
+                        'servers',
+                        [
+                            'action' => 'tree',
+                            'group'  => 'all',
+                        ]
+                    ),
+                ];
+            }
+        }
+
+        if ($recordset) {
+            return new \PHPPgAdmin\ArrayRecordSet($grps);
+        }
+
+        return $grps;
     }
 }

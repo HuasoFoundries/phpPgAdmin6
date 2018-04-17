@@ -27,14 +27,7 @@
   outline: 0;
 }
 
-.jstree-anchor,
-.jstree-anchor:link,
-.jstree-anchor:visited,
-.jstree-anchor:hover,
-.jstree-anchor:active {
-  text-decoration: none;
-  color: inherit;
-}
+
 
 .jstree-icon {
   display: inline-block;
@@ -502,11 +495,11 @@
 }
 
 .jstree-default .jstree-open>.jstree-ocl {
-  background-position: -132px -6px;
+  background-position: -100px -6px;
 }
 
 .jstree-default .jstree-closed>.jstree-ocl {
-  background-position: -100px -6px;
+  background-position: -132px -6px;
 }
 
 .jstree-default .jstree-leaf>.jstree-ocl {
@@ -649,8 +642,13 @@
 }
 
 .jstree-default>.jstree-container-ul>.jstree-node .jstree-anchor {
-  margin-left: -5px;
+  margin-left: -3px;
 }
+
+.jstree-default>.jstree-container-ul>.jstree-node>.jstree-anchor {
+  margin-left: -6px;
+}
+
 
 #jstree-dnd.jstree-default {
   line-height: 24px;

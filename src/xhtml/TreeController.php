@@ -183,8 +183,9 @@ class TreeController
                 'children' => true,
                 'icon'     => \SUBFOLDER . '/images/themes/default/Servers.png',
                 'state'    => ['opened' => true],
+                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER . '/src/views/servers')],
                 'url'      => str_replace('//', '/', \SUBFOLDER . '/src/views/servers?action=tree'),
-                'text'     => '<a href="' . str_replace('//', '/', \SUBFOLDER . '/src/views/servers') . '" target="detail">Servers</a>',
+                'text'     => 'Servers',
             ];
         } elseif (count($treedata) > 0) {
             foreach ($treedata as $rec) {
@@ -195,11 +196,12 @@ class TreeController
 
                 $tree = [
                     'text'       => Decorator::get_sanitized_value($attrs['text'], $rec),
-                    'id'         => Decorator::get_sanitized_value($attrs['action'], $rec),
+                    'id'         => sha1(Decorator::get_sanitized_value($attrs['action'], $rec)),
                     'icon'       => Decorator::get_sanitized_value($icon, $rec),
                     'iconaction' => Decorator::get_sanitized_value($attrs['iconAction'], $rec),
                     'openicon'   => Decorator::get_sanitized_value($icon, $rec),
                     'tooltip'    => Decorator::get_sanitized_value($attrs['toolTip'], $rec),
+                    'a_attr'     => ['href' => Decorator::get_sanitized_value($attrs['action'], $rec)],
                     'children'   => false,
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
@@ -211,7 +213,7 @@ class TreeController
                     $tree['children'] = true;
                 }
 
-                $tree['text'] = '<a href="' . $tree['id'] . '" target="detail">' . $tree['text'] . '</a>';
+                //$tree['text'] = '<a href="' . $tree['id'] . '" target="detail">' . $tree['text'] . '</a>';
 
                 $parent[] = $tree;
             }
