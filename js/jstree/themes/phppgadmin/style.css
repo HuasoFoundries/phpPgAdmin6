@@ -453,27 +453,28 @@
 }
 
 .jstree-default .jstree-node {
-  min-height: 24px;
-  line-height: 24px;
+  min-height: 20px;
+  line-height: 20px;
   margin-left: 24px;
   min-width: 24px;
 }
 
 .jstree-default .jstree-anchor {
-  line-height: 24px;
-  height: 24px;
+  line-height: 20px;
+  height: 20px;
 }
 
 .jstree-default .jstree-icon {
   width: 24px;
-  height: 24px;
-  line-height: 24px;
+  height: 22px;
+  line-height: 22px;
 }
 
 .jstree-default .jstree-icon:empty {
   width: 24px;
-  height: 24px;
-  line-height: 24px;
+  height: 22px;
+  line-height: 22px;
+  margin-left: -5px;
 }
 
 .jstree-default.jstree-rtl .jstree-node {
@@ -481,7 +482,7 @@
 }
 
 .jstree-default .jstree-wholerow {
-  height: 24px;
+  height: 20px;
 }
 
 .jstree-default .jstree-node,
@@ -490,8 +491,10 @@
 }
 
 .jstree-default .jstree-node {
-  background-position: -292px -4px;
+  background-position: -297px -4px;
   background-repeat: repeat-y;
+  position: relative;
+  left: -10px;
 }
 
 .jstree-default .jstree-last {
@@ -499,15 +502,15 @@
 }
 
 .jstree-default .jstree-open>.jstree-ocl {
-  background-position: -132px -4px;
+  background-position: -132px -6px;
 }
 
 .jstree-default .jstree-closed>.jstree-ocl {
-  background-position: -100px -4px;
+  background-position: -100px -6px;
 }
 
 .jstree-default .jstree-leaf>.jstree-ocl {
-  background-position: -68px -4px;
+  background-position: -68px -6px;
 }
 
 .jstree-default .jstree-themeicon {
@@ -525,6 +528,14 @@
 
 .jstree-default>.jstree-no-dots .jstree-closed>.jstree-ocl {
   background-position: -4px -4px;
+}
+
+#root.jstree-node.jstree-last.jstree-open>.jstree-ocl {
+  background: transparent;
+}
+
+#root.jstree-node.jstree-last.jstree-closed>.jstree-ocl {
+  background: transparent;
 }
 
 .jstree-default .jstree-disabled {
@@ -635,6 +646,10 @@
 .jstree-default>.jstree-container-ul>.jstree-node {
   margin-left: 0;
   margin-right: 0;
+}
+
+.jstree-default>.jstree-container-ul>.jstree-node .jstree-anchor {
+  margin-left: -5px;
 }
 
 #jstree-dnd.jstree-default {
