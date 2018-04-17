@@ -13,6 +13,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 trait AdminTrait
 {
+
     /**
      * Show confirmation of cluster and perform cluster.
      *

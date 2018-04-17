@@ -1,6 +1,9 @@
 var avoid_bogus_character = true;
 if (avoid_bogus_character) {
 	jQuery(document).ready(function () {
+		if (typeof CodeMirror === 'undefined') {
+			return;
+		}
 		jQuery('#query').focus();
 		CodeMirror.commands.sendQuery = function () {
 			console.log('SEND QUERY');
@@ -29,7 +32,7 @@ if (avoid_bogus_character) {
 
 		jQuery('.CodeMirror').focus().css('height', $('#query').attr('rows') * 26);
 
-		if (location.pathname.indexOf('sqledit.php') !== -1) {
+		if (location.pathname.indexOf('sqledit') !== -1) {
 			var windowsize = {
 				height: jQuery(window).innerHeight(),
 				width: jQuery(window).innerWidth(),

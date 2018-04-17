@@ -13,6 +13,8 @@ namespace PHPPgAdmin\Controller;
  */
 class SqleditController extends BaseController
 {
+    use ServersTrait;
+
     public $controller_name = 'SqleditController';
     public $query           = '';
     public $subject         = '';
@@ -75,7 +77,7 @@ class SqleditController extends BaseController
 
         $default_html .= '<form action="' . \SUBFOLDER . '/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
         $default_html .= "\n";
-        $default_html .= $this->_printConnection('sql');
+        $default_html .= $this->printConnection('sql', false);
 
         $default_html .= "\n";
 
@@ -83,7 +85,7 @@ class SqleditController extends BaseController
         $default_html .= '<label>';
         $default_html .= $this->misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
 
-        $default_html .= ': <input type="text" name="search_path" size="45" value="' . $search_path . '" />';
+        $default_html .= ': <input type="text" name="search_path" id="search_path" size="45" value="' . $search_path . '" />';
         $default_html .= "</label>\n";
 
         $default_html .= "</div>\n";
@@ -134,32 +136,6 @@ class SqleditController extends BaseController
     }
 
     /**
-     * Private function to display server and list of databases.
-     *
-     * @param mixed $action
-     */
-    public function _printConnection($action)
-    {
-        $lang = $this->lang;
-        $data = $this->misc->getDatabaseAccessor();
-
-        // The javascript action on the select box reloads the
-        // popup whenever the server or database is changed.
-        // This ensures that the correct page encoding is used.
-        $onchange = "onchange=\"location.href='" . \SUBFOLDER . '/sqledit/' .
-        urlencode($action) . "?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + ";
-
-        // The exact URL to reload to is different between SQL and Find mode, however.
-        if ('find' == $action) {
-            $onchange .= "'&amp;term=' + encodeURI(term.value) + '&amp;filter=' + encodeURI(filter.value) + '&amp;'\"";
-        } else {
-            $onchange .= "'&amp;query=' + encodeURI(query.value) + '&amp;search_path=' + encodeURI(search_path.value) + (paginate.checked ? '&amp;paginate=on' : '')  + '&amp;'\"";
-        }
-
-        return $this->misc->printConnection($onchange, false);
-    }
-
-    /**
      * Searches for a named database object.
      */
     public function doFind()
@@ -178,11 +154,11 @@ class SqleditController extends BaseController
         $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'find', false);
 
         $default_html .= "<form action=\"database\" method=\"post\" target=\"detail\">\n";
-        $default_html .= $this->_printConnection('find');
-        $default_html .= '<p><input class="focusme" name="term" value="' . htmlspecialchars($_REQUEST['term']) . "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
+        $default_html .= $this->printConnection('find', false);
+        $default_html .= '<p><input class="focusme" name="term" id="term" value="' . htmlspecialchars($_REQUEST['term']) . "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
 
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
-        $default_html .= "<select name=\"filter\">\n";
+        $default_html .= "<select id='filter' name=\"filter\">\n";
         $default_html .= "\t<option value=\"\"" . ('' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strallobjects']}</option>\n";
         $default_html .= "\t<option value=\"SCHEMA\"" . ('SCHEMA' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strschemas']}</option>\n";
         $default_html .= "\t<option value=\"TABLE\"" . ('TABLE' == $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$lang['strtables']}</option>\n";

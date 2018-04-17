@@ -121,6 +121,15 @@ $container['conf'] = function ($c) use ($conf) {
     // Plugins are removed
     $conf['plugins'] = [];
 
+    foreach ($conf['servers'] as &$server) {
+        if (!isset($server['port'])) {
+            $server['port'] = 5432;
+        }
+        if (!isset($server['sslmode'])) {
+            $server['sslmode'] = 'unspecified';
+        }
+
+    }
     return $conf;
 };
 

@@ -101,4 +101,15 @@ trait HelperTrait
     {
         return str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
     }
+
+    public function kint()
+    {
+        call_user_func_array('\Kint::dump', func_get_args());
+    }
+
+    public function kint_and_die()
+    {
+        call_user_func_array('\Kint::dump', func_get_args());
+        $this->halt('stopped by user');
+    }
 }

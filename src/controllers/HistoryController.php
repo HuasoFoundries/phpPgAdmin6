@@ -15,6 +15,8 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class HistoryController extends BaseController
 {
+    use ServersTrait;
+
     public $controller_name = 'HistoryController';
 
     /**
@@ -61,7 +63,7 @@ class HistoryController extends BaseController
         // Set the name of the window
         $this->setWindowName('history');
 
-        return $this->printFooter();
+        return $this->printFooter(true, 'footer_sqledit.twig');
     }
 
     public function doDefault()
@@ -69,15 +71,13 @@ class HistoryController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $onchange = "onchange=\"location.href='" . \SUBFOLDER . "/src/views/history?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
-
         $this->printHeader($lang['strhistory'], $this->scripts, true, 'header.twig');
 
         // Bring to the front always
         echo "<body onload=\"window.focus();\">\n";
 
         echo '<form action="' . \SUBFOLDER . "/src/views/history\" method=\"post\">\n";
-        $this->misc->printConnection($onchange);
+        $this->printConnection('history');
         echo '</form><br />';
 
         if (!isset($_REQUEST['database'])) {

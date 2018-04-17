@@ -15,6 +15,9 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class ServersController extends BaseController
 {
+
+    use ServersTrait;
+
     public $controller_name = 'ServersController';
     public $table_place     = 'servers-servers';
     public $section         = 'servers';
@@ -86,18 +89,23 @@ class ServersController extends BaseController
             ],
         ];
         $actions = [];
-        if ((false !== $group) && (isset($this->conf['srv_groups'][$group])) && ($groups->recordCount() > 0)) {
+        if (
+            (false !== $group) &&
+            (isset($this->conf['srv_groups'][$group])) &&
+            ($groups->recordCount() > 0)
+        ) {
             $this->printTitle(sprintf($lang['strgroupgroups'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
+            echo $this->printTable($groups, $columns, $actions, $this->table_place);
         }
-        $this->printTable($groups, $columns, $actions, $this->table_place);
-        $servers = $this->misc->getServers(true, $group);
+
+        $servers = $this->getServers(true, $group);
 
         $columns = [
             'server'   => [
                 'title' => $lang['strserver'],
                 'field' => Decorator::field('desc'),
                 'url'   => \SUBFOLDER . '/redirect/server?',
-                'vars'  => ['server' => 'id'],
+                'vars'  => ['server' => 'sha'],
             ],
             'host'     => [
                 'title' => $lang['strhost'],
@@ -137,7 +145,10 @@ class ServersController extends BaseController
             return $actions;
         };
 
-        if ((false !== $group) and isset($this->conf['srv_groups'][$group])) {
+        if (
+            (false !== $group) &&
+            isset($this->conf['srv_groups'][$group])
+        ) {
             $this->printTitle(sprintf($lang['strgroupservers'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
             $actions['logout']['attr']['href']['urlvars']['group'] = $group;
         }
@@ -159,11 +170,11 @@ class ServersController extends BaseController
                 $nodes = $this->getServersGroups(false, $group_id);
             }
 
-            $nodes = array_merge($nodes, $this->misc->getServers(false, $group_id));
+            $nodes = array_merge($nodes, $this->getServers(false, $group_id));
             $nodes = new \PHPPgAdmin\ArrayRecordSet($nodes);
         } else {
             // no srv_group
-            $nodes = $this->misc->getServers(true, false);
+            $nodes = $this->getServers(true, false);
         }
 
         $reqvars = $this->misc->getRequestVars('server');

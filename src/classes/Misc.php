@@ -55,6 +55,7 @@ class Misc
 
         $this->lang = $container->get('lang');
         $this->conf = $container->get('conf');
+
         //$this->view           = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
         $this->appLangFiles   = $container->get('appLangFiles');
@@ -81,14 +82,40 @@ class Misc
             $container->get('utils')->addError(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
         }
 
+        $this->getServerId();
+    }
+
+    public function serverToSha()
+    {
+        $request_server = $this->container->requestobj->getParam('server');
+        if ($request_server === null) {
+            return null;
+        }
+        $srv_array = explode(':', $request_server);
+        if (count($srv_array) === 3) {
+            return sha1($request_server);
+        }
+        return $request_server;
+    }
+
+    public function getServerId()
+    {
+        if ($this->_server_id) {
+            return $this->_server_id;
+        }
+
+        $request_server = $this->serverToSha();
+
         if (count($this->conf['servers']) === 1) {
             $info             = $this->conf['servers'][0];
-            $this->_server_id = ($info['host'] . ':' . $info['port'] . ':' . $info['sslmode']);
-        } elseif (isset($_REQUEST['server'])) {
-            $this->_server_id = $_REQUEST['server'];
+            $this->_server_id = sha1($info['host'] . ':' . $info['port'] . ':' . $info['sslmode']);
+        } elseif ($request_server !== null) {
+            $this->_server_id = $request_server;
         } elseif (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
             $this->_server_id = array_keys($_SESSION['webdbLogin'])[0];
         }
+        return $this->_server_id;
+
     }
 
     /**
@@ -133,11 +160,6 @@ class Misc
         }
 
         return null;
-    }
-
-    public function getServerId()
-    {
-        return $this->_server_id;
     }
 
     /**
@@ -313,6 +335,7 @@ class Misc
         if ($server_id !== null) {
             $this->_server_id = $server_id;
         }
+        $this->prtrace($this->_server_id);
 
         $server_info = $this->getServerInfo($this->_server_id);
 
@@ -475,8 +498,7 @@ class Misc
             $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
             $server_sha    = sha1($server_string);
 
-            if ($this->_server_id == $server_string || $this->_server_id == $server_sha) {
-                $this->prtrace($server_sha);
+            if ($this->_server_id === $server_string || $this->_server_id === $server_sha) {
                 if (isset($info['username'])) {
                     $this->setServerInfo(null, $info, $this->_server_id);
                 } elseif (isset($_SESSION['sharedUsername'])) {
@@ -514,8 +536,8 @@ class Misc
     public function setServerInfo($key, $value, $server_id = null)
     {
         //\PC::debug('setsetverinfo');
-        if ($server_id === null && isset($_REQUEST['server'])) {
-            $server_id = $_REQUEST['server'];
+        if ($server_id === null) {
+            $server_id = $this->container->requestobj->getParam('server');
         }
 
         if ($key === null) {
@@ -559,75 +581,6 @@ class Misc
     }
 
     /**
-     * Get list of servers.
-     *
-     * @param bool  $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array
-     * @param mixed $group     a group name to filter the returned servers using $this->conf[srv_groups]
-     *
-     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
-     */
-    public function getServers($recordset = false, $group = false)
-    {
-        $logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
-        $srvs   = [];
-
-        if (($group !== false) && ($group !== 'all')) {
-            if (isset($this->conf['srv_groups'][$group]['servers'])) {
-                $group = array_fill_keys(explode(',', preg_replace(
-                    '/\s/',
-                    '',
-                    $this->conf['srv_groups'][$group]['servers']
-                )), 1);
-            } else {
-                $group = '';
-            }
-        }
-
-        foreach ($this->conf['servers'] as $idx => $info) {
-            $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
-            if ($group === false || isset($group[$idx]) || ($group === 'all')) {
-                $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
-
-                if (isset($logins[$server_id])) {
-                    $srvs[$server_id] = $logins[$server_id];
-                } else {
-                    $srvs[$server_id] = $info;
-                }
-
-                $srvs[$server_id]['id']     = $server_id;
-                $srvs[$server_id]['action'] = Decorator::url(
-                    '/redirect/server',
-                    [
-                        'server' => Decorator::field('id'),
-                    ]
-                );
-                if (isset($srvs[$server_id]['username'])) {
-                    $srvs[$server_id]['icon']   = 'Server';
-                    $srvs[$server_id]['branch'] = Decorator::url(
-                        '/src/views/alldb',
-                        [
-                            'action'  => 'tree',
-                            'subject' => 'server',
-                            'server'  => Decorator::field('id'),
-                        ]
-                    );
-                } else {
-                    $srvs[$server_id]['icon']   = 'DisconnectedServer';
-                    $srvs[$server_id]['branch'] = false;
-                }
-            }
-        }
-
-        uasort($srvs, ['self', '_cmp_desc']);
-
-        if ($recordset) {
-            return new ArrayRecordSet($srvs);
-        }
-
-        return $srvs;
-    }
-
-    /**
      * Set the current schema.
      *
      * @param $schema The schema name
@@ -648,11 +601,6 @@ class Misc
         $this->setHREF();
 
         return 0;
-    }
-
-    public static function _cmp_desc($a, $b)
-    {
-        return strcmp($a['desc'], $b['desc']);
     }
 
     /**
@@ -2101,81 +2049,6 @@ class Misc
             'paginate' => !isset($_REQUEST['paginate']) ? 'f' : 't',
             'queryid'  => $time,
         ];
-    }
-
-    /*
-     * Output dropdown list to select server and
-     * databases form the popups windows.
-     * @param $onchange Javascript action to take when selections change.
-     */
-    public function printConnection($onchange, $do_print = true)
-    {
-        $lang = $this->lang;
-
-        $connection_html = "<table class=\"printconnection\" style=\"width: 100%\"><tr><td class=\"popup_select1\">\n";
-
-        $servers      = $this->getServers();
-        $forcedserver = null;
-        if (count($servers) === 1) {
-            $forcedserver = $this->_server_id;
-            $connection_html .= '<input type="hidden" readonly="readonly" value="' . $this->_server_id . '" name="server">';
-        } else {
-            $connection_html .= '<label>';
-            $connection_html .= $this->printHelp($lang['strserver'], 'pg.server', false);
-            $connection_html .= ': </label>';
-            $connection_html .= " <select name=\"server\" {$onchange}>\n";
-            foreach ($servers as $info) {
-                if (empty($info['username'])) {
-                    continue;
-                }
-                $selected = isset($_REQUEST['server']) && $info['id'] == $_REQUEST['server'] ? ' selected="selected"' : '';
-                // not logged on this server
-                $connection_html .= '<option value="' . htmlspecialchars($info['id']) . '" ' . $selected . '>';
-                $connection_html .= htmlspecialchars("{$info['desc']} ({$info['id']})");
-                $connection_html .= "</option>\n";
-            }
-            $connection_html .= "</select>\n";
-        }
-
-        $connection_html .= "</td><td class=\"popup_select2\" style=\"text-align: right\">\n";
-
-        if (count($servers) === 1 && isset($servers[$this->_server_id]['useonlydefaultdb']) && $servers[$this->_server_id]['useonlydefaultdb'] === true) {
-            $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($servers[$this->_server_id]['defaultdb']) . "\" />\n";
-        } else {
-            // Get the list of all databases
-            $data      = $this->getDatabaseAccessor();
-            $databases = $data->getDatabases();
-            if ($databases->recordCount() > 0) {
-                $connection_html .= '<label>';
-                $connection_html .= $this->printHelp($lang['strdatabase'], 'pg.database', false);
-                $connection_html .= ": <select name=\"database\" {$onchange}>\n";
-
-                //if no database was selected, user should select one
-                if (!isset($_REQUEST['database'])) {
-                    $connection_html .= "<option value=\"\">--</option>\n";
-                }
-
-                while (!$databases->EOF) {
-                    $dbname     = $databases->fields['datname'];
-                    $dbselected = isset($_REQUEST['database']) && $dbname == $_REQUEST['database'] ? ' selected="selected"' : '';
-                    $connection_html .= '<option value="' . htmlspecialchars($dbname) . '" ' . $dbselected . '>' . htmlspecialchars($dbname) . "</option>\n";
-
-                    $databases->moveNext();
-                }
-                $connection_html .= "</select></label>\n";
-            } else {
-                $server_info = $this->misc->getServerInfo();
-                $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($server_info['defaultdb']) . "\" />\n";
-            }
-        }
-
-        $connection_html .= "</td></tr></table>\n";
-
-        if ($do_print) {
-            echo $connection_html;
-        } else {
-            return $connection_html;
-        }
     }
 
     /**
