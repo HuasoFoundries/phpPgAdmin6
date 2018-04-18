@@ -110,5 +110,4 @@ class BrowserController extends BaseController
 
         return $this->printTree($treedata, $attrs, 'server');
     }
-
 }
