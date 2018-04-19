@@ -15,7 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class ServersController extends BaseController
 {
-
     use ServersTrait;
 
     public $controller_name = 'ServersController';
