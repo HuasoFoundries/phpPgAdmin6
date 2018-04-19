@@ -138,7 +138,6 @@ $container['conf'] = function ($c) use ($conf) {
         if (!isset($server['sslmode'])) {
             $server['sslmode'] = 'unspecified';
         }
-
     }
     return $conf;
 };
