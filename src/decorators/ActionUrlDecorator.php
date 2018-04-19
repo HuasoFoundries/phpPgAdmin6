@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.39
+ * PHPPgAdmin v6.0.0-beta.40
  */
 
 namespace PHPPgAdmin\Decorators;

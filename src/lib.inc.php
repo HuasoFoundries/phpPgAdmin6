@@ -55,7 +55,7 @@ if (DEBUGMODE) {
     error_reporting(E_ALL);
 }
 
-if (!isset($conf['php_console']) && $conf['php_console'] !== true) {
+if (!isset($conf['php_console']) || $conf['php_console'] !== true) {
     $handler->setHandleErrors(false); // disable errors handling
     $handler->setHandleExceptions(false); // disable exceptions handling
     $handler->setCallOldHandlers(true); // disable passing errors & exceptions to prviously defined handlers
