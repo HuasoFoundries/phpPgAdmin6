@@ -332,31 +332,15 @@ class IndexesController extends BaseController
         $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_REQUEST['subject'])) {
-            $_REQUEST['subject'] = 'table';
-        }
-        $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$subject]);
+        $subject = urlencode($this->getRequestParam('subject', 'table'));
+        $object  = urlencode($this->getRequestParam($subject));
 
-        if (!isset($_POST['formIndexName'])) {
-            $_POST['formIndexName'] = '';
-        }
-
-        if (!isset($_POST['formIndexType'])) {
-            $_POST['formIndexType'] = null;
-        }
-
-        if (!isset($_POST['formCols'])) {
-            $_POST['formCols'] = '';
-        }
-
-        if (!isset($_POST['formWhere'])) {
-            $_POST['formWhere'] = '';
-        }
-
-        if (!isset($_POST['formSpc'])) {
-            $_POST['formSpc'] = '';
-        }
+        $formIndexName = $this->getPostParam('formIndexName', '');
+        $formIndexType = $this->getPostParam('formIndexType');
+        $formUnique    = $this->getPostParam('formUnique');
+        $formConcur    = $this->getPostParam('formConcur');
+        $formWhere     = $this->getPostParam('formWhere', '');
+        $formSpc       = $this->getPostParam('formSpc', '');
 
         $attrs = $data->getTableAttributes($object);
         // Fetch all tablespaces from the database
@@ -400,7 +384,7 @@ class IndexesController extends BaseController
         echo 'Index name cannot exceed ' . $data->_maxNameLen . ' characters<br>';
         echo '<input type="text" name="formIndexName" size="32" placeholder="Index Name" maxlength="' .
         $data->_maxNameLen . '" value="' .
-        htmlspecialchars($_POST['formIndexName']) . '" />';
+        htmlspecialchars($formIndexName) . '" />';
         echo '</td>';
         echo '</tr>';
 
@@ -417,16 +401,16 @@ class IndexesController extends BaseController
         echo '<td colspan="2" class="data1"><select name="formIndexType">';
         foreach ($data->typIndexes as $v) {
             echo '<option value="', htmlspecialchars($v), '"',
-            ($v == $_POST['formIndexType']) ? ' selected="selected"' : '', '>', htmlspecialchars($v), '</option>' . "\n";
+            ($v == $formIndexType) ? ' selected="selected"' : '', '>', htmlspecialchars($v), '</option>' . "\n";
         }
         echo '</select></td></tr>' . "\n";
         echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\"><label for=\"formUnique\">{$lang['strunique']}</label></th>";
-        echo '<td  colspan="2" class="data1"><input type="checkbox" id="formUnique" name="formUnique"', (isset($_POST['formUnique']) ? 'checked="checked"' : ''), ' /></td>';
+        echo '<td  colspan="2" class="data1"><input type="checkbox" id="formUnique" name="formUnique"', ($formUnique ? 'checked="checked"' : ''), ' /></td>';
         echo '</tr>';
         echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\">{$lang['strwhere']}</th>";
-        echo '<td  colspan="2"  class="data1">(<input name="formWhere" size="32" maxlength="' . $data->_maxNameLen . '" value="' . htmlspecialchars($_POST['formWhere']) . '" />)</td>';
+        echo '<td  colspan="2"  class="data1">(<input name="formWhere" size="32" maxlength="' . $data->_maxNameLen . '" value="' . htmlspecialchars($formWhere) . '" />)</td>';
         echo '</tr>';
 
         // Tablespace (if there are any)
@@ -437,12 +421,12 @@ class IndexesController extends BaseController
             echo "\n\t\t\t<select name=\"formSpc\">" . "\n";
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
-            ('' == $_POST['formSpc']) ? ' selected="selected"' : '', '></option>' . "\n";
+            ('' == $formSpc) ? ' selected="selected"' : '', '></option>' . "\n";
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
                 $spcname = htmlspecialchars($tablespaces->fields['spcname']);
                 echo "\t\t\t\t<option value=\"{$spcname}\"",
-                ($spcname == $_POST['formSpc']) ? ' selected="selected"' : '', ">{$spcname}</option>" . "\n";
+                ($spcname == $formSpc) ? ' selected="selected"' : '', ">{$spcname}</option>" . "\n";
                 $tablespaces->moveNext();
             }
             echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . "\n";
@@ -451,7 +435,7 @@ class IndexesController extends BaseController
         if ($data->hasConcurrentIndexBuild()) {
             echo '<tr>';
             echo "<th class=\"data left\" scope=\"row\"><label for=\"formConcur\">{$lang['strconcurrently']}</label></th>";
-            echo '<td  colspan="2"  class="data1"><input type="checkbox" id="formConcur" name="formConcur"', (isset($_POST['formConcur']) ? 'checked="checked"' : ''), ' /></td>';
+            echo '<td  colspan="2"  class="data1"><input type="checkbox" id="formConcur" name="formConcur"', ($formConcur ? 'checked="checked"' : ''), ' /></td>';
             echo '</tr>';
         }
 
@@ -483,33 +467,30 @@ class IndexesController extends BaseController
         $object  = urlencode($_POST[$subject]);
 
         // Handle databases that don't have partial indexes
-        if (!isset($_POST['formWhere'])) {
-            $_POST['formWhere'] = '';
-        }
+        $formWhere = $this->getPostParam('formWhere', '');
 
         // Default tablespace to null if it isn't set
-        if (!isset($_POST['formSpc'])) {
-            $_POST['formSpc'] = null;
-        }
+        $formSpc = $this->getPostParam('formSpc');
+
+        $IndexColumnList = $this->getPostParam('IndexColumnList', '');
 
         // Check that they've given a name and at least one column
-        if ('' == $_POST['formIndexName']) {
-            $this->doCreateIndex($lang['strindexneedsname']);
-        } elseif (!isset($_POST['IndexColumnList']) || '' == $_POST['IndexColumnList']) {
+        if ('' == $IndexColumnList) {
             $this->doCreateIndex($lang['strindexneedscols']);
         } else {
-            $status = $data->createIndex(
-                $_POST['formIndexName'],
+            list($status, $sql) = $data->createIndex(
+                $this->getPostParam('formIndexName', ''),
                 $object,
-                $_POST['IndexColumnList'],
-                $_POST['formIndexType'],
-                isset($_POST['formUnique']),
-                $_POST['formWhere'],
-                $_POST['formSpc'],
-                isset($_POST['formConcur'])
+                $IndexColumnList,
+                $this->getPostParam('formIndexType'),
+                $this->getPostParam('formUnique'),
+                $formWhere,
+                $formSpc,
+                $this->getPostParam('formConcur')
             );
+
             if (0 == $status) {
-                $this->doDefault($lang['strindexcreated']);
+                $this->doDefault($sql . '<br>' . $lang['strindexcreated']);
             } else {
                 $this->doCreateIndex($lang['strindexcreatedbad']);
             }

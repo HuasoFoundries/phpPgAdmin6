@@ -4302,7 +4302,7 @@ class Postgres extends ADOdbBase
     /**
      * Creates an index.
      *
-     * @param string $name       The index name
+     * @param string $name       The index name (can be blank)
      * @param string $table      The table on which to add the index
      * @param array $columns    An array of columns that form the index  or a string expression for a functional index
      * @param string $type       The index type
@@ -4311,7 +4311,7 @@ class Postgres extends ADOdbBase
      * @param string $tablespace The tablespaces ('' means none/default)
      * @param bool $concurrently true to create index concurrently
      *
-     * @return integer 0 if operation was successful
+     * @return array status (0 if operation was successful) and sql sentence
      */
     public function createIndex($name, $table, $columns, $type, $unique, $where, $tablespace, $concurrently)
     {
@@ -4320,17 +4320,21 @@ class Postgres extends ADOdbBase
         $this->fieldClean($name);
         $this->fieldClean($table);
 
-        $sql = 'CREATE';
+        $sql = 'CREATE ';
         if ($unique) {
-            $sql .= ' UNIQUE';
+            $sql .= ' UNIQUE ';
         }
 
-        $sql .= ' INDEX';
+        $sql .= ' INDEX ';
         if ($concurrently) {
-            $sql .= ' CONCURRENTLY';
+            $sql .= ' CONCURRENTLY ';
         }
 
-        $sql .= " \"{$name}\" ON \"{$f_schema}\".\"{$table}\" USING {$type} ";
+        if ($name) {
+            $sql .= "  \"{$name}\" ";
+        }
+
+        $sql .= " ON \"{$f_schema}\".\"{$table}\" USING {$type} ";
 
         if (is_array($columns)) {
             $this->arrayClean($columns);
@@ -4350,7 +4354,8 @@ class Postgres extends ADOdbBase
             $sql .= " WHERE ({$where})";
         }
 
-        return $this->execute($sql);
+        $status = $this->execute($sql);
+        return [$status, $sql];
     }
 
     /**
