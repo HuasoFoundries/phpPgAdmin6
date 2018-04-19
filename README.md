@@ -69,7 +69,7 @@ server {
         listen 80; 
         # or whatever port you want
 
-        server_name yourservername.com
+        server_name yourservername.com;
 
         root /path/to/project;
 

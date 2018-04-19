@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3824420688bde1115878a33241bc76b5",
+    "content-hash": "7f74a0989403e0f93d7c266b7fba4cfe",
     "packages": [
         {
             "name": "adodb/adodb-php",
