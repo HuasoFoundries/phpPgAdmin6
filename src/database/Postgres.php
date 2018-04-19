@@ -810,8 +810,8 @@ class Postgres extends ADOdbBase
                    pu.rolname AS nspowner,
 				   pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment,
                    pg_size_pretty(SUM(pg_total_relation_size(pg_class.oid))) as schema_size
-			FROM pg_catalog.pg_class
-            JOIN pg_catalog.pg_namespace pn ON relnamespace = pn.oid
+			FROM pg_catalog.pg_namespace pn
+            LEFT JOIN pg_catalog.pg_class  ON relnamespace = pn.oid
 			LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
 			{$where}
             GROUP BY pn.nspname, pu.rolname, pg_catalog.obj_description(pn.oid, 'pg_namespace')
