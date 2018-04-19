@@ -12,6 +12,10 @@ define('THEME_PATH', BASE_PATH . '/src/themes');
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 
+if (!is_writable(BASE_PATH . '/temp')) {
+    die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
+}
+
 ini_set('error_log', BASE_PATH . '/temp/logs/phppga.php_error.log');
 
 // Check to see if the configuration file exists, if not, explain
@@ -21,6 +25,7 @@ if (file_exists(BASE_PATH . '/config.inc.php')) {
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 }
+
 $debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
 define('DEBUGMODE', $debugmode);
 

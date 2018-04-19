@@ -1,6 +1,6 @@
 {
     "name": "huasofoundries/phppgadmin6",
-    "version": "6.0.0-beta.36",
+    "version": "6.0.0-beta.37",
     "description": "Like phpmyadmin but for postgres",
     "type": "project",
     "license": "MIT",
@@ -38,5 +38,14 @@
     {
         "friendsofphp/php-cs-fixer": "^2.4",
         "codeception/codeception": "*"
+    },
+    "scripts":
+    {
+        "post-install-cmd": [
+            "php -r \"chmod( __DIR__ . '/temp', 0777);\""
+        ],
+        "post-create-project-cmd": [
+            "php -r \"chmod( __DIR__ . '/temp', 0777);\""
+        ]
     }
 }
