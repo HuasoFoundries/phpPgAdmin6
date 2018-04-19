@@ -16,14 +16,16 @@ if (!is_writable(BASE_PATH . '/temp')) {
     die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
 }
 
-ini_set('error_log', BASE_PATH . '/temp/logs/phppga.php_error.log');
-
 // Check to see if the configuration file exists, if not, explain
 if (file_exists(BASE_PATH . '/config.inc.php')) {
     $conf = [];
     include BASE_PATH . '/config.inc.php';
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
+}
+
+if (isset($conf['error_log'])) {
+    ini_set('error_log', BASE_PATH . '/' . $conf['error_log']);
 }
 
 $debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
@@ -51,7 +53,9 @@ ini_set('display_errors', intval(DEBUGMODE));
 ini_set('display_startup_errors', intval(DEBUGMODE));
 if (DEBUGMODE) {
     error_reporting(E_ALL);
-} else {
+}
+
+if (!isset($conf['php_console']) && $conf['php_console'] !== true) {
     $handler->setHandleErrors(false); // disable errors handling
     $handler->setHandleExceptions(false); // disable exceptions handling
     $handler->setCallOldHandlers(true); // disable passing errors & exceptions to prviously defined handlers
@@ -69,6 +73,7 @@ $config = [
         'bootstrap'  => 'Bootstrap3',
     ],
     'settings'  => [
+        'displayErrorDetails'               => DEBUGMODE,
         'determineRouteBeforeAppMiddleware' => true,
         'base_path'                         => BASE_PATH,
         'debug'                             => DEBUGMODE,
