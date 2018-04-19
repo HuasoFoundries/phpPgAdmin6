@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -34,15 +34,15 @@ class BranchUrlDecorator extends Decorator
             foreach ($queryVars as $var => $value) {
                 $varname  = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
-                $url .= $sep . $varname . '=' . $varvalue;
+                $url .= $sep.$varname.'='.$varvalue;
                 $sep = '&';
             }
         }
         if (strpos($url, '/src/views') === false) {
-            $url = str_replace('//', '/', '/src/views/' . $url);
+            $url = str_replace('//', '/', '/src/views/'.$url);
         }
         if (\SUBFOLDER !== '' && (0 === strpos($url, '/')) && (0 !== strpos($url, \SUBFOLDER))) {
-            $url = str_replace('//', '/', \SUBFOLDER . '/' . $url);
+            $url = str_replace('//', '/', \SUBFOLDER.'/'.$url);
         }
 
         return str_replace('.php', '', $url);

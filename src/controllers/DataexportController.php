@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -100,7 +100,7 @@ class DataexportController extends BaseController
                         $ext = 'txt';
                     }
 
-                    header('Content-Disposition: attachment; filename=dump.' . $ext);
+                    header('Content-Disposition: attachment; filename=dump.'.$ext);
                 }
             } else {
                 header('Content-Type: text/plain');
@@ -272,7 +272,7 @@ class DataexportController extends BaseController
                                 $values = (is_null($v) ? 'NULL' : "'{$v}'");
                                 $first  = false;
                             } else {
-                                $values .= ', ' . ((is_null($v) ? 'NULL' : "'{$v}'"));
+                                $values .= ', '.((is_null($v) ? 'NULL' : "'{$v}'"));
                             }
                         }
                         echo ") VALUES ({$values});\n";
@@ -360,7 +360,7 @@ class DataexportController extends BaseController
             $this->printMsg($msg);
         }
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}:</th><td><select name=\"d_format\">\n";
         // COPY and SQL require a table

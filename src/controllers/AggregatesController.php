@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -129,7 +129,7 @@ class AggregatesController extends BaseController
         $this->printTitle($lang['strcreateaggregate'], 'pg.aggregate.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/aggregates\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -213,7 +213,7 @@ class AggregatesController extends BaseController
         $this->printTitle($lang['stralter'], 'pg.aggregate.alter');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/aggregates\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
         $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
         if ($aggrdata->recordCount() > 0) {
             // Output table header
@@ -262,7 +262,7 @@ class AggregatesController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/aggregates\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="aggrname" value="', htmlspecialchars($_REQUEST['aggrname']), "\" />\n";

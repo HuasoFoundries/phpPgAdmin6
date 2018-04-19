@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -111,7 +111,6 @@ class DataimportController extends BaseController
                     // An unrecognised tag means failure
                     $data->rollbackTransaction();
                     $this->halt($lang['strimporterror']);
-
             }
         };
 
@@ -179,7 +178,6 @@ class DataimportController extends BaseController
                     // An unrecognised tag means failure
                     $data->rollbackTransaction();
                     $this->halt($lang['strimporterror']);
-
             }
         };
 
@@ -213,7 +211,6 @@ class DataimportController extends BaseController
                         default:
                             $data->rollbackTransaction();
                             $this->halt($lang['strimporterror-fileformat']);
-
                     }
                 }
 
@@ -287,7 +284,6 @@ class DataimportController extends BaseController
                         // Unknown type
                         $data->rollbackTransaction();
                         $this->halt($lang['strinvalidparam']);
-
                 }
 
                 $status = $data->endTransaction();

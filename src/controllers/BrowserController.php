@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -19,6 +19,8 @@ class BrowserController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @param null|mixed $action
      */
     public function render($action = null)
     {
@@ -29,12 +31,10 @@ class BrowserController extends BaseController
         switch ($action) {
             case 'tree':
                 return $this->doTree();
-
                 break;
             case 'jstree':
                 return $this->jsTree();
                 break;
-
             default:
                 return $this->doDefault();
                 break;
@@ -110,5 +110,4 @@ class BrowserController extends BaseController
 
         return $this->printTree($treedata, $attrs, 'server');
     }
-
 }

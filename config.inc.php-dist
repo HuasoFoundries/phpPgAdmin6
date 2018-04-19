@@ -10,7 +10,7 @@
 
 
 // Set this to true to enable debug features
-$conf['debugmode']=false;
+$conf['debugmode'] = false;
 
 // Enable this to debug on console using
 // https://github.com/barbushin/php-console

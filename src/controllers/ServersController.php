@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -15,7 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class ServersController extends BaseController
 {
-
     use ServersTrait;
 
     public $controller_name = 'ServersController';
@@ -104,7 +103,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => \SUBFOLDER . '/redirect/server?',
+                'url'   => \SUBFOLDER.'/redirect/server?',
                 'vars'  => ['server' => 'sha'],
             ],
             'host'     => [

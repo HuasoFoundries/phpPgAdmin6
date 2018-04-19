@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -113,7 +113,7 @@ class AlldbController extends BaseController
             'database'   => [
                 'title' => $lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url'   => \SUBFOLDER . "/redirect/database?{$href}&amp;",
+                'url'   => \SUBFOLDER."/redirect/database?{$href}&amp;",
                 'vars'  => ['database' => 'datname'],
             ],
             'owner'      => [
@@ -269,7 +269,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($lang['stralter'], 'pg.database.alter');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -345,7 +345,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($lang['strdrop'], 'pg.database.drop');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -436,7 +436,7 @@ class AlldbController extends BaseController
             $tablespaces = $data->getTablespaces();
         }
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -593,7 +593,7 @@ class AlldbController extends BaseController
         $this->printTabs('server', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/dbexport\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/dbexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\">{$lang['stroptions']}</th></tr>\n";
         // Data only

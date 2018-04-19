@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -29,7 +29,7 @@ class MaterializedviewpropertiesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strviews'] . ' - ' . $_REQUEST['matview']);
+        $this->printHeader($lang['strviews'].' - '.$_REQUEST['matview']);
         $this->printBody();
 
         switch ($action) {
@@ -126,7 +126,7 @@ class MaterializedviewpropertiesController extends BaseController
             'column'  => [
                 'title' => $lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=" . urlencode($_REQUEST['matview']) . '&amp;',
+                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST['matview']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
@@ -311,7 +311,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -348,7 +348,7 @@ class MaterializedviewpropertiesController extends BaseController
         $this->printTabs('matview', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
         // Data only
@@ -463,7 +463,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $this->printTitle($lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties\" method=\"post\">\n";
 
                 // Output view header
                 echo "<table>\n";
@@ -569,7 +569,7 @@ class MaterializedviewpropertiesController extends BaseController
                     $_POST['comment'] = $view->fields['relcomment'];
                 }
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
                 echo '<td class="data1">';

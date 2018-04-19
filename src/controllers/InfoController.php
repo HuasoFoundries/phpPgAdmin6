@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -26,7 +26,7 @@ class InfoController extends BaseController
 
         $action = $this->action;
 
-        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strinfo']);
+        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strinfo']);
         $this->printBody();
 
         switch ($action) {

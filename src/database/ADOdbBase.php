@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,6 +11,7 @@ namespace PHPPgAdmin\Database;
  * Parent class of all ADODB objects.
  *
  * Id: ADOdbBase.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
+ *
  * @package PHPPgAdmin
  */
 class ADOdbBase
@@ -256,6 +257,7 @@ class ADOdbBase
     public $typStorages = ['plain', 'external', 'extended', 'main'];
     // The default type storage
     public $typStorageDef = 'plain';
+
     /**
      * Base constructor.
      *
@@ -476,7 +478,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields . $values . ')';
+            $sql = $fields.$values.')';
         }
 
         // Check for failures
@@ -548,7 +550,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause . $whereClause)) {
+        if (!$this->conn->Execute($setClause.$whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
@@ -687,7 +689,7 @@ class ADOdbBase
     /**
      * Determines if it has tablespaces.
      *
-     * @return boolean  True if has tablespaces, False otherwise.
+     * @return bool true if has tablespaces, False otherwise
      */
     public function hasTablespaces()
     {
@@ -697,7 +699,7 @@ class ADOdbBase
     /**
      * Determines if it has shared comments.
      *
-     * @return boolean  True if has shared comments, False otherwise.
+     * @return bool true if has shared comments, False otherwise
      */
     public function hasSharedComments()
     {
@@ -707,7 +709,7 @@ class ADOdbBase
     /**
      * Determines if it has roles.
      *
-     * @return boolean  True if has roles, False otherwise.
+     * @return bool true if has roles, False otherwise
      */
     public function hasRoles()
     {
@@ -717,7 +719,7 @@ class ADOdbBase
     /**
      * Determines if it has grant option.
      *
-     * @return boolean  True if has grant option, False otherwise.
+     * @return bool true if has grant option, False otherwise
      */
     public function hasGrantOption()
     {
@@ -727,7 +729,7 @@ class ADOdbBase
     /**
      * Determines if it has create table like with constraints.
      *
-     * @return boolean  True if has create table like with constraints, False otherwise.
+     * @return bool true if has create table like with constraints, False otherwise
      */
     public function hasCreateTableLikeWithConstraints()
     {
@@ -737,7 +739,7 @@ class ADOdbBase
     /**
      * Determines if it has create table like with indexes.
      *
-     * @return boolean  True if has create table like with indexes, False otherwise.
+     * @return bool true if has create table like with indexes, False otherwise
      */
     public function hasCreateTableLikeWithIndexes()
     {
@@ -747,7 +749,7 @@ class ADOdbBase
     /**
      * Determines if it has create field with constraints.
      *
-     * @return boolean  True if has create field with constraints, False otherwise.
+     * @return bool true if has create field with constraints, False otherwise
      */
     public function hasCreateFieldWithConstraints()
     {
@@ -757,7 +759,7 @@ class ADOdbBase
     /**
      * Determines if it has domain constraints.
      *
-     * @return boolean  True if has domain constraints, False otherwise.
+     * @return bool true if has domain constraints, False otherwise
      */
     public function hasDomainConstraints()
     {
@@ -767,7 +769,7 @@ class ADOdbBase
     /**
      * Determines if it has function alter owner.
      *
-     * @return boolean  True if has function alter owner, False otherwise.
+     * @return bool true if has function alter owner, False otherwise
      */
     public function hasFunctionAlterOwner()
     {
@@ -777,7 +779,7 @@ class ADOdbBase
     /**
      * Determines if it has function alter schema.
      *
-     * @return boolean  True if has function alter schema, False otherwise.
+     * @return bool true if has function alter schema, False otherwise
      */
     public function hasFunctionAlterSchema()
     {
@@ -787,7 +789,7 @@ class ADOdbBase
     /**
      * Determines if it has read only queries.
      *
-     * @return boolean  True if has read only queries, False otherwise.
+     * @return bool true if has read only queries, False otherwise
      */
     public function hasReadOnlyQueries()
     {
@@ -797,7 +799,7 @@ class ADOdbBase
     /**
      * Determines if it has aggregate sort operation.
      *
-     * @return boolean  True if has aggregate sort operation, False otherwise.
+     * @return bool true if has aggregate sort operation, False otherwise
      */
     public function hasAggregateSortOp()
     {
@@ -807,7 +809,7 @@ class ADOdbBase
     /**
      * Determines if it has alter aggregate.
      *
-     * @return boolean  True if has alter aggregate, False otherwise.
+     * @return bool true if has alter aggregate, False otherwise
      */
     public function hasAlterAggregate()
     {
@@ -817,7 +819,7 @@ class ADOdbBase
     /**
      * Determines if it has alter column type.
      *
-     * @return boolean  True if has alter column type, False otherwise.
+     * @return bool true if has alter column type, False otherwise
      */
     public function hasAlterColumnType()
     {
@@ -827,7 +829,7 @@ class ADOdbBase
     /**
      * Determines if it has alter database owner.
      *
-     * @return boolean  True if has alter database owner, False otherwise.
+     * @return bool true if has alter database owner, False otherwise
      */
     public function hasAlterDatabaseOwner()
     {
@@ -837,7 +839,7 @@ class ADOdbBase
     /**
      * Determines if it has alter schema.
      *
-     * @return boolean  True if has alter schema, False otherwise.
+     * @return bool true if has alter schema, False otherwise
      */
     public function hasAlterSchema()
     {
@@ -847,7 +849,7 @@ class ADOdbBase
     /**
      * Determines if it has alter schema owner.
      *
-     * @return boolean  True if has alter schema owner, False otherwise.
+     * @return bool true if has alter schema owner, False otherwise
      */
     public function hasAlterSchemaOwner()
     {
@@ -857,7 +859,7 @@ class ADOdbBase
     /**
      * Determines if it has alter sequence schema.
      *
-     * @return boolean  True if has alter sequence schema, False otherwise.
+     * @return bool true if has alter sequence schema, False otherwise
      */
     public function hasAlterSequenceSchema()
     {
@@ -867,7 +869,7 @@ class ADOdbBase
     /**
      * Determines if it has alter sequence start.
      *
-     * @return boolean  True if has alter sequence start, False otherwise.
+     * @return bool true if has alter sequence start, False otherwise
      */
     public function hasAlterSequenceStart()
     {
@@ -877,7 +879,7 @@ class ADOdbBase
     /**
      * Determines if it has alter table schema.
      *
-     * @return boolean  True if has alter table schema, False otherwise.
+     * @return bool true if has alter table schema, False otherwise
      */
     public function hasAlterTableSchema()
     {
@@ -887,7 +889,7 @@ class ADOdbBase
     /**
      * Determines if it has autovacuum.
      *
-     * @return boolean  True if has autovacuum, False otherwise.
+     * @return bool true if has autovacuum, False otherwise
      */
     public function hasAutovacuum()
     {
@@ -897,7 +899,7 @@ class ADOdbBase
     /**
      * Determines if it has create table like.
      *
-     * @return boolean  True if has create table like, False otherwise.
+     * @return bool true if has create table like, False otherwise
      */
     public function hasCreateTableLike()
     {
@@ -907,7 +909,7 @@ class ADOdbBase
     /**
      * Determines if it has disable triggers.
      *
-     * @return boolean  True if has disable triggers, False otherwise.
+     * @return bool true if has disable triggers, False otherwise
      */
     public function hasDisableTriggers()
     {
@@ -917,7 +919,7 @@ class ADOdbBase
     /**
      * Determines if it has alter domains.
      *
-     * @return boolean  True if has alter domains, False otherwise.
+     * @return bool true if has alter domains, False otherwise
      */
     public function hasAlterDomains()
     {
@@ -927,7 +929,7 @@ class ADOdbBase
     /**
      * Determines if it has enum types.
      *
-     * @return boolean  True if has enum types, False otherwise.
+     * @return bool true if has enum types, False otherwise
      */
     public function hasEnumTypes()
     {
@@ -937,7 +939,7 @@ class ADOdbBase
     /**
      * Determines if it has fts.
      *
-     * @return boolean  True if has fts, False otherwise.
+     * @return bool true if has fts, False otherwise
      */
     public function hasFTS()
     {
@@ -947,7 +949,7 @@ class ADOdbBase
     /**
      * Determines if it has function costing.
      *
-     * @return boolean  True if has function costing, False otherwise.
+     * @return bool true if has function costing, False otherwise
      */
     public function hasFunctionCosting()
     {
@@ -957,7 +959,7 @@ class ADOdbBase
     /**
      * Determines if it has function guc.
      *
-     * @return boolean  True if has function guc, False otherwise.
+     * @return bool true if has function guc, False otherwise
      */
     public function hasFunctionGUC()
     {
@@ -967,7 +969,7 @@ class ADOdbBase
     /**
      * Determines if it has named parameters.
      *
-     * @return boolean  True if has named parameters, False otherwise.
+     * @return bool true if has named parameters, False otherwise
      */
     public function hasNamedParams()
     {
@@ -977,7 +979,7 @@ class ADOdbBase
     /**
      * Determines if it has prepare.
      *
-     * @return boolean  True if has prepare, False otherwise.
+     * @return bool true if has prepare, False otherwise
      */
     public function hasPrepare()
     {
@@ -987,7 +989,7 @@ class ADOdbBase
     /**
      * Determines if it has prepared xacts.
      *
-     * @return boolean  True if has prepared xacts, False otherwise.
+     * @return bool true if has prepared xacts, False otherwise
      */
     public function hasPreparedXacts()
     {
@@ -997,7 +999,7 @@ class ADOdbBase
     /**
      * Determines if it has recluster.
      *
-     * @return boolean  True if has recluster, False otherwise.
+     * @return bool true if has recluster, False otherwise
      */
     public function hasRecluster()
     {
@@ -1007,7 +1009,7 @@ class ADOdbBase
     /**
      * Determines if it has server admin funcs.
      *
-     * @return boolean  True if has server admin funcs, False otherwise.
+     * @return bool true if has server admin funcs, False otherwise
      */
     public function hasServerAdminFuncs()
     {
@@ -1017,7 +1019,7 @@ class ADOdbBase
     /**
      * Determines if it has query cancel.
      *
-     * @return boolean  True if has query cancel, False otherwise.
+     * @return bool true if has query cancel, False otherwise
      */
     public function hasQueryCancel()
     {
@@ -1027,7 +1029,7 @@ class ADOdbBase
     /**
      * Determines if it has user rename.
      *
-     * @return boolean  True if has user rename, False otherwise.
+     * @return bool true if has user rename, False otherwise
      */
     public function hasUserRename()
     {
@@ -1037,7 +1039,7 @@ class ADOdbBase
     /**
      * Determines if it has user signals.
      *
-     * @return boolean  True if has user signals, False otherwise.
+     * @return bool true if has user signals, False otherwise
      */
     public function hasUserSignals()
     {
@@ -1047,7 +1049,7 @@ class ADOdbBase
     /**
      * Determines if it has virtual transaction identifier.
      *
-     * @return boolean  True if has virtual transaction identifier, False otherwise.
+     * @return bool true if has virtual transaction identifier, False otherwise
      */
     public function hasVirtualTransactionId()
     {
@@ -1057,7 +1059,7 @@ class ADOdbBase
     /**
      * Determines if it has alter database.
      *
-     * @return boolean  True if has alter database, False otherwise.
+     * @return bool true if has alter database, False otherwise
      */
     public function hasAlterDatabase()
     {
@@ -1067,7 +1069,7 @@ class ADOdbBase
     /**
      * Determines if it has alter database rename.
      *
-     * @return boolean  True if has alter database rename, False otherwise.
+     * @return bool true if has alter database rename, False otherwise
      */
     public function hasAlterDatabaseRename()
     {
@@ -1077,7 +1079,7 @@ class ADOdbBase
     /**
      * Determines if it has database collation.
      *
-     * @return boolean  True if has database collation, False otherwise.
+     * @return bool true if has database collation, False otherwise
      */
     public function hasDatabaseCollation()
     {
@@ -1087,7 +1089,7 @@ class ADOdbBase
     /**
      * Determines if it has magic types.
      *
-     * @return boolean  True if has magic types, False otherwise.
+     * @return bool true if has magic types, False otherwise
      */
     public function hasMagicTypes()
     {
@@ -1097,7 +1099,7 @@ class ADOdbBase
     /**
      * Determines if it has query kill.
      *
-     * @return boolean  True if has query kill, False otherwise.
+     * @return bool true if has query kill, False otherwise
      */
     public function hasQueryKill()
     {
@@ -1107,7 +1109,7 @@ class ADOdbBase
     /**
      * Determines if it has concurrent index build.
      *
-     * @return boolean  True if has concurrent index build, False otherwise.
+     * @return bool true if has concurrent index build, False otherwise
      */
     public function hasConcurrentIndexBuild()
     {
@@ -1117,7 +1119,7 @@ class ADOdbBase
     /**
      * Determines if it has force reindex.
      *
-     * @return boolean  True if has force reindex, False otherwise.
+     * @return bool true if has force reindex, False otherwise
      */
     public function hasForceReindex()
     {
@@ -1127,7 +1129,7 @@ class ADOdbBase
     /**
      * Determines if it has bytea hexadecimal default.
      *
-     * @return boolean  True if has bytea hexadecimal default, False otherwise.
+     * @return bool true if has bytea hexadecimal default, False otherwise
      */
     public function hasByteaHexDefault()
     {

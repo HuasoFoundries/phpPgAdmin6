@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -239,7 +239,7 @@ class OperatorsController extends BaseController
                             ],
                         ],
                         'content' => $lang['strshowalloperators'],
-                    ]],
+                    ], ],
                 'operators-properties',
                 get_defined_vars()
             );
@@ -264,7 +264,7 @@ class OperatorsController extends BaseController
 
             echo '<p>', sprintf($lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/operators\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/operators\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="operator" value="', htmlspecialchars($_REQUEST['operator']), "\" />\n";

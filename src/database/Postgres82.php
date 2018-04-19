@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,6 +11,7 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.2 support
  *
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
+ *
  * @package PHPPgAdmin
  */
 class Postgres82 extends Postgres83
@@ -76,7 +77,7 @@ class Postgres82 extends Postgres83
      * Rename a sequence.
      *
      * @param \ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
-     * @param string $name  The new name for the sequence
+     * @param string        $name  The new name for the sequence
      *
      * @return int 0 if operation was successful
      */
@@ -104,7 +105,7 @@ class Postgres82 extends Postgres83
      * Rename a view.
      *
      * @param \ADORecordSet $vwrs The view recordSet returned by getView()
-     * @param string $name The new view's name
+     * @param string        $name The new view's name
      *
      * @return int -1 if Failed
      */
@@ -209,12 +210,12 @@ class Postgres82 extends Postgres83
      * @param string $returns    The return type
      * @param string $definition The definition for the new function
      * @param string $language   The language the function is written for
-     * @param array $flags      An array of optional flags
-     * @param bool $setof      True if it returns a set, false otherwise
-     * @param float $cost       cost the planner should use in the function execution step
-     * @param integer $rows       number of rows planner should estimate will be returned
+     * @param array  $flags      An array of optional flags
+     * @param bool   $setof      True if it returns a set, false otherwise
+     * @param float  $cost       cost the planner should use in the function execution step
+     * @param int    $rows       number of rows planner should estimate will be returned
      * @param string $comment    The comment on the function
-     * @param bool $replace    (optional) True if OR REPLACE, false for normal
+     * @param bool   $replace    (optional) True if OR REPLACE, false for normal
      *
      * @return bool|int 0 success
      */
@@ -256,13 +257,13 @@ class Postgres82 extends Postgres83
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'" . $definition[0] . "'";
+            $sql .= "'".$definition[0]."'";
             if ($definition[1]) {
-                $sql .= ",'" . $definition[1] . "'";
+                $sql .= ",'".$definition[1]."'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'" . $definition . "'";
+            $sql .= "'".$definition."'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
@@ -303,7 +304,7 @@ class Postgres82 extends Postgres83
      * @param string $table The table the index is on
      * @param string $index The name of the index
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function clusterIndex($table = '', $index = '')
     {

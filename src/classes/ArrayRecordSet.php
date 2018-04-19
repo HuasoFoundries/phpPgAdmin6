@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin;
@@ -11,6 +11,7 @@ namespace PHPPgAdmin;
  * Really simple RecordSet to allow printTable of arrays.
  *
  * Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
+ *
  * @package PHPPgAdmin
  */
 
@@ -18,6 +19,7 @@ namespace PHPPgAdmin;
  * Really simple RecordSet to allow printTable of arrays.
  *
  * Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
+ *
  * @package PHPPgAdmin
  */
 class ArrayRecordSet

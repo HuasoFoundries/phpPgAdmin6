@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -412,7 +412,7 @@ class SequencesController extends BaseController
             $this->printTitle($lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -506,7 +506,7 @@ class SequencesController extends BaseController
         $this->printTitle($lang['strcreatesequence'], 'pg.sequence.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
         echo "<table>\n";
 
         echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
@@ -656,7 +656,7 @@ class SequencesController extends BaseController
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
         if (is_object($sequence) && $sequence->recordCount() > 0) {
-            echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
             echo '<table border="0">';
             echo "<tr><th class=\"data left required\">{$lang['strlastvalue']}</th>\n";
             echo '<td class="data1">';
@@ -791,7 +791,7 @@ class SequencesController extends BaseController
                 $_POST['formCycledValue'] = 'on';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";

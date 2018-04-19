@@ -33,7 +33,7 @@ tag_and_push:
 		git push
 		git checkout develop
 
-tag: test update_version tag_and_push	
+tag: test update_version csfixer tag_and_push	
 
 test:
 ifeq ("$(wildcard config.inc.php)","")

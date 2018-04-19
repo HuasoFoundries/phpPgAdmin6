@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -30,8 +30,8 @@ class ConstraintsController extends BaseController
         }
 
         $this->printHeader(
-            $lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strconstraints'],
-            '<script src="' . \SUBFOLDER . '/js/indexes.js" type="text/javascript"></script>',
+            $lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strconstraints'],
+            '<script src="'.\SUBFOLDER.'/js/indexes.js" type="text/javascript"></script>',
             true,
             'header_select2.twig'
         );
@@ -137,7 +137,7 @@ class ConstraintsController extends BaseController
         $cnPre = function (&$rowdata) use ($data) {
             if (is_null($rowdata->fields['consrc'])) {
                 $atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
-                $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
+                $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
             } else {
                 $rowdata->fields['+definition'] = $rowdata->fields['consrc'];
             }
@@ -341,9 +341,9 @@ class ConstraintsController extends BaseController
                     echo "<table>\n";
                     echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strfktarget']}</th></tr>";
                     echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$lang['strfkcolumnlist']}</th></tr>\n";
-                    echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
-                    echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
-                    echo '<td class="data1">' . $selIndex->fetch() . "</td></tr>\n";
+                    echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
+                    echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
+                    echo '<td class="data1">'.$selIndex->fetch()."</td></tr>\n";
                     echo "<tr><th class=\"data\" colspan=\"3\">{$lang['stractions']}</th></tr>";
                     echo '<tr>';
                     echo "<td class=\"data1\" colspan=\"3\">\n";
@@ -472,9 +472,9 @@ class ConstraintsController extends BaseController
                 echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strname']}</th></tr>\n";
                 echo "<tr><td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>\n";
                 echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$lang['strfkcolumnlist']}</th></tr>\n";
-                echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
-                echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . "</td>\n";
-                echo '<td class=data1>' . $selIndex->fetch() . "</td></tr>\n";
+                echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
+                echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch()."</td>\n";
+                echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
                 echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strfktarget']}</th></tr>";
                 echo '<tr>';
                 echo '<td class="data1" colspan="3"><select class="select2" name="target">';
@@ -584,9 +584,9 @@ class ConstraintsController extends BaseController
             echo '<td class="data1" colspan="3"><input type="text" name="name" value="', htmlspecialchars($_POST['name']),
                 "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>";
             echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$lang['strindexcolumnlist']}</th></tr>\n";
-            echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
-            echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
-            echo '<td class=data1>' . $selIndex->fetch() . "</td></tr>\n";
+            echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
+            echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
+            echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
 
             // Tablespace (if there are any)
             if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
@@ -676,7 +676,7 @@ class ConstraintsController extends BaseController
             $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/constraints\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/constraints\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
@@ -732,7 +732,7 @@ class ConstraintsController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/constraints\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/constraints\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";

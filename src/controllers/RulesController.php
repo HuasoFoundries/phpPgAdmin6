@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -30,7 +30,7 @@ class RulesController extends BaseController
         }
 
         // Different header if we're view rules or table rules
-        $this->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $lang['strrules']);
+        $this->printHeader($_REQUEST[$_REQUEST['subject']].' - '.$lang['strrules']);
         $this->printBody();
 
         switch ($action) {
@@ -191,7 +191,7 @@ class RulesController extends BaseController
             $this->printTitle($lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/rules\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/rules\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
             echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -268,7 +268,7 @@ class RulesController extends BaseController
                 $this->misc->printVal($_REQUEST[$_REQUEST['reltype']])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/rules\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/rules\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['reltype']), "\" />\n";
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['reltype']),

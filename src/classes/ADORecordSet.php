@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin;
@@ -9,11 +9,12 @@ namespace PHPPgAdmin;
 /**
  * @file
  * Extends ADORecordSet to let correct inference on PHPDoc params
+ *
  * @package PHPPgAdmin
  */
 
 /**
- * Extends ADORecordSet to let correct inference on PHPDoc params
+ * Extends ADORecordSet to let correct inference on PHPDoc params.
  *
  * @package PHPPgAdmin
  */

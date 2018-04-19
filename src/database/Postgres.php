@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,6 +11,7 @@ namespace PHPPgAdmin\Database;
  * Note: This Class uses ADODB and returns RecordSets.
  *
  * Id: Postgres.php,v 1.320 2008/02/20 20:43:09 ioguix Exp $
+ *
  * @package PHPPgAdmin
  */
 class Postgres extends ADOdbBase
@@ -39,13 +40,13 @@ class Postgres extends ADOdbBase
             if (is_array($this->help_page[$help])) {
                 $urls = [];
                 foreach ($this->help_page[$help] as $link) {
-                    $urls[] = $this->help_base . $link;
+                    $urls[] = $this->help_base.$link;
                 }
 
                 return $urls;
             }
 
-            return $this->help_base . $this->help_page[$help];
+            return $this->help_base.$this->help_page[$help];
         }
 
         return null;
@@ -55,13 +56,11 @@ class Postgres extends ADOdbBase
      * Gets the help pages.
      * get help page by instancing the corresponding help class
      * if $this->help_page and $this->help_base are set, this function is a noop.
-     *
-     * @return void
      */
     public function getHelpPages()
     {
         if ($this->help_page === null || $this->help_base === null) {
-            $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . str_replace('.', '', $this->major_version);
+            $help_classname = '\PHPPgAdmin\Help\PostgresDoc'.str_replace('.', '', $this->major_version);
 
             $help_class = new $help_classname($this->conf, $this->major_version);
 
@@ -74,9 +73,9 @@ class Postgres extends ADOdbBase
     /**
      * Outputs the HTML code for a particular field.
      *
-     * @param                               $name   The name to give the field
-     * @param                               $value  The value of the field.  Note this could be 'numeric(7,2)' sort of thing...
-     * @param                               $type   The database type of the field
+     * @param       $name   The name to give the field
+     * @param       $value  The value of the field.  Note this could be 'numeric(7,2)' sort of thing...
+     * @param       $type   The database type of the field
      * @param array $extras An array of attributes name as key and attributes' values as value
      */
     public function printField($name, $value, $type, $extras = [])
@@ -86,7 +85,7 @@ class Postgres extends ADOdbBase
         // Determine actions string
         $extra_str = '';
         foreach ($extras as $k => $v) {
-            $extra_str .= " {$k}=\"" . htmlspecialchars($v) . '"';
+            $extra_str .= " {$k}=\"".htmlspecialchars($v).'"';
         }
 
         switch (substr($type, 0, 9)) {
@@ -221,7 +220,7 @@ class Postgres extends ADOdbBase
 
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
-            $not_in    = "('" . implode("','", $hiddendbs) . "')";
+            $not_in    = "('".implode("','", $hiddendbs)."')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 
@@ -503,7 +502,7 @@ class Postgres extends ADOdbBase
      *
      * @param $database The name of the database to drop
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropDatabase($database)
     {
@@ -517,10 +516,10 @@ class Postgres extends ADOdbBase
      * Alters a database
      * the multiple return vals are for postgres 8+ which support more functionality in alter database.
      *
-     * @param                                 $dbName   The name of the database
-     * @param                                 $newName  new name for the database
+     * @param        $dbName   The name of the database
+     * @param        $newName  new name for the database
      * @param string $newOwner The new owner for the database
-     * @param string                          $comment
+     * @param string $comment
      *
      * @return bool|int 0 success
      */
@@ -885,7 +884,7 @@ class Postgres extends ADOdbBase
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
+        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
 
         return $this->execute($sql);
     }
@@ -1043,7 +1042,7 @@ class Postgres extends ADOdbBase
      * @param $schemaname The name of the schema to drop
      * @param $cascade    True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropSchema($schemaname, $cascade)
     {
@@ -1193,7 +1192,7 @@ class Postgres extends ADOdbBase
         }
 
         // Output a reconnect command to create the table as the correct user
-        $sql = $this->getChangeUserSQL($t->fields['relowner']) . "\n\n";
+        $sql = $this->getChangeUserSQL($t->fields['relowner'])."\n\n";
 
         // Set schema search path
         $sql .= "SET search_path = \"{$t->fields['nspname']}\", pg_catalog;\n\n";
@@ -1226,7 +1225,7 @@ class Postgres extends ADOdbBase
                     $sql .= ' BIGSERIAL';
                 }
             } else {
-                $sql .= ' ' . $this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
+                $sql .= ' '.$this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
 
                 // Add NOT NULL if necessary
                 if ($this->phpBool($atts->fields['attnotnull'])) {
@@ -1266,12 +1265,12 @@ class Postgres extends ADOdbBase
                 switch ($cons->fields['contype']) {
                     case 'p':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'PRIMARY KEY (' . join(',', $keys) . ')';
+                        $sql .= 'PRIMARY KEY ('.join(',', $keys).')';
 
                         break;
                     case 'u':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'UNIQUE (' . join(',', $keys) . ')';
+                        $sql .= 'UNIQUE ('.join(',', $keys).')';
 
                         break;
                     default:
@@ -1420,7 +1419,7 @@ class Postgres extends ADOdbBase
                 }
 
                 // Output privileges with no GRANT OPTION
-                $sql .= 'GRANT ' . join(', ', $nongrant) . " ON TABLE \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT '.join(', ', $nongrant)." ON TABLE \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= "PUBLIC;\n";
@@ -1462,7 +1461,7 @@ class Postgres extends ADOdbBase
                     $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
                 }
 
-                $sql .= 'GRANT ' . join(', ', $v[4]) . " ON \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT '.join(', ', $v[4])." ON \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= 'PUBLIC';
@@ -1705,7 +1704,7 @@ class Postgres extends ADOdbBase
         } elseif ($typname == 'varchar') {
             $temp = 'character varying';
             if ($typmod != -1) {
-                $temp .= '(' . ($typmod - $varhdrsz) . ')';
+                $temp .= '('.($typmod - $varhdrsz).')';
             }
         } elseif ($typname == 'numeric') {
             $temp = 'numeric';
@@ -1756,7 +1755,7 @@ class Postgres extends ADOdbBase
         $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
 			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
 			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('" . join("','", $atts) . "')";
+			AND attnum IN ('".join("','", $atts)."')";
 
         $rs = $this->selectSet($sql);
         if ($rs->recordCount() != sizeof($atts)) {
@@ -2054,7 +2053,7 @@ class Postgres extends ADOdbBase
         if ($indexes->recordCount() > 0) {
             $sql .= "\n-- Indexes\n\n";
             while (!$indexes->EOF) {
-                $sql .= $indexes->fields['inddef'] . ";\n";
+                $sql .= $indexes->fields['inddef'].";\n";
 
                 $indexes->moveNext();
             }
@@ -2089,7 +2088,7 @@ class Postgres extends ADOdbBase
         if ($rules->recordCount() > 0) {
             $sql .= "\n-- Rules\n\n";
             while (!$rules->EOF) {
-                $sql .= $rules->fields['definition'] . "\n";
+                $sql .= $rules->fields['definition']."\n";
 
                 $rules->moveNext();
             }
@@ -2101,8 +2100,8 @@ class Postgres extends ADOdbBase
     /**
      * Grabs a list of indexes for a table.
      *
-     * @param string $table  The name of a table whose indexes to retrieve
-     * @param bool|\PHPPgAdmin\Database\Only  $unique Only get unique/pk indexes
+     * @param string                         $table  The name of a table whose indexes to retrieve
+     * @param bool|\PHPPgAdmin\Database\Only $unique Only get unique/pk indexes
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -2319,7 +2318,7 @@ class Postgres extends ADOdbBase
             }
         }
         if (count($primarykeycolumns) > 0) {
-            $sql .= ', PRIMARY KEY (' . implode(', ', $primarykeycolumns) . ')';
+            $sql .= ', PRIMARY KEY ('.implode(', ', $primarykeycolumns).')';
         }
 
         $sql .= ')';
@@ -2368,15 +2367,15 @@ class Postgres extends ADOdbBase
     /**
      * Creates a new table in the database copying attribs and other properties from another table.
      *
-     * @param                                 $name        The name of the table
-     * @param                                 $like        an array giving the schema ans the name of the table from which attribs are copying
-     *                                                     from: array(
-     *                                                     'table' => table name,
-     *                                                     'schema' => the schema name,
-     *                                                     )
-     * @param bool    $defaults    if true, copy the defaults values as well
-     * @param bool    $constraints if true, copy the constraints as well (CHECK on table & attr)
-     * @param bool                            $idx
+     * @param        $name        The name of the table
+     * @param        $like        an array giving the schema ans the name of the table from which attribs are copying
+     *                            from: array(
+     *                            'table' => table name,
+     *                            'schema' => the schema name,
+     *                            )
+     * @param bool   $defaults    if true, copy the defaults values as well
+     * @param bool   $constraints if true, copy the constraints as well (CHECK on table & attr)
+     * @param bool   $idx
      * @param string $tablespace  The tablespace name ('' means none/default)
      *
      * @return bool|int
@@ -2638,7 +2637,7 @@ class Postgres extends ADOdbBase
      * @param $table The table to be emptied
      * @param $cascade True to cascade truncate, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function emptyTable($table, $cascade)
     {
@@ -2648,7 +2647,7 @@ class Postgres extends ADOdbBase
 
         $sql = "TRUNCATE TABLE \"{$f_schema}\".\"{$table}\" ";
         if ($cascade) {
-            $sql = $sql . ' CASCADE';
+            $sql = $sql.' CASCADE';
         }
 
         $status = $this->execute($sql);
@@ -2662,7 +2661,7 @@ class Postgres extends ADOdbBase
      * @param $table   The table to drop
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropTable($table, $cascade)
     {
@@ -2738,7 +2737,7 @@ class Postgres extends ADOdbBase
 
             // DEFAULT clause
             if ($default != '') {
-                $sql .= ' DEFAULT ' . $default;
+                $sql .= ' DEFAULT '.$default;
             }
         }
 
@@ -2824,7 +2823,7 @@ class Postgres extends ADOdbBase
         $toAlter = [];
         // Create the command for changing nullability
         if ($notnull != $oldnotnull) {
-            $toAlter[] = "ALTER COLUMN \"{$name}\" " . ($notnull ? 'SET' : 'DROP') . ' NOT NULL';
+            $toAlter[] = "ALTER COLUMN \"{$name}\" ".($notnull ? 'SET' : 'DROP').' NOT NULL';
         }
 
         // Add default, if it has changed
@@ -2873,7 +2872,7 @@ class Postgres extends ADOdbBase
         if (!empty($toAlter)) {
             // Initialise an empty SQL string
             $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" "
-            . implode(',', $toAlter);
+            .implode(',', $toAlter);
 
             $status = $this->execute($sql);
             if ($status != 0) {
@@ -2901,7 +2900,7 @@ class Postgres extends ADOdbBase
      * @param $column  The column to be renamed
      * @param $newName The new name for the column
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function renameColumn($table, $column, $newName)
     {
@@ -2923,7 +2922,7 @@ class Postgres extends ADOdbBase
      * @param $column  The column name to set
      * @param $default The new default value
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function setColumnDefault($table, $column, $default)
     {
@@ -2944,7 +2943,7 @@ class Postgres extends ADOdbBase
      * @param $column The column to alter
      * @param $state  True to set null, false to set not null
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function setColumnNull($table, $column, $state)
     {
@@ -2953,7 +2952,7 @@ class Postgres extends ADOdbBase
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . ($state ? 'DROP' : 'SET') . ' NOT NULL';
+        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" ".($state ? 'DROP' : 'SET').' NOT NULL';
 
         return $this->execute($sql);
     }
@@ -2965,7 +2964,7 @@ class Postgres extends ADOdbBase
      * @param $column  The column to be dropped
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropColumn($table, $column, $cascade)
     {
@@ -2988,7 +2987,7 @@ class Postgres extends ADOdbBase
      * @param $table  The table from which to drop
      * @param $column The column name to drop default
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropColumnDefault($table, $column)
     {
@@ -3072,7 +3071,7 @@ class Postgres extends ADOdbBase
 
         // Actually retrieve the rows
         if ($oids) {
-            $oid_str = $this->id . ', ';
+            $oid_str = $this->id.', ';
         } else {
             $oid_str = '';
         }
@@ -3233,12 +3232,12 @@ class Postgres extends ADOdbBase
                 if (isset($nulls[$i])) {
                     $sql .= ',NULL';
                 } else {
-                    $sql .= ',' . $this->formatValue($types[$i], $format[$i], $value);
+                    $sql .= ','.$this->formatValue($types[$i], $format[$i], $value);
                 }
             }
 
-            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . implode('","', $fields) . '")
-                VALUES (' . substr($sql, 1) . ')';
+            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"".implode('","', $fields).'")
+                VALUES ('.substr($sql, 1).')';
 
             return $this->execute($sql);
         }
@@ -3463,7 +3462,7 @@ class Postgres extends ADOdbBase
      *
      * @param $sequence Sequence name
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function nextvalSequence($sequence)
     {
@@ -3485,7 +3484,7 @@ class Postgres extends ADOdbBase
      * @param $sequence  Sequence name
      * @param $nextvalue The next value
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function setvalSequence($sequence, $nextvalue)
     {
@@ -3507,7 +3506,7 @@ class Postgres extends ADOdbBase
      *
      * @param $sequence Sequence name
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function restartSequence($sequence)
     {
@@ -3586,7 +3585,7 @@ class Postgres extends ADOdbBase
      * @param $cachevalue  The cache value
      * @param $cycledvalue True if cycled, false otherwise
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function createSequence(
         $sequence,
@@ -3873,7 +3872,7 @@ class Postgres extends ADOdbBase
 
         // toggle cycle yes/no
         if (!is_null($cycledvalue)) {
-            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
+            $sql .= (!$cycledvalue ? ' NO ' : '').' CYCLE';
         }
 
         if ($sql != '') {
@@ -3943,7 +3942,7 @@ class Postgres extends ADOdbBase
      * @param $sequence Sequence name
      * @param $cascade  True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropSequence($sequence, $cascade)
     {
@@ -4020,7 +4019,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $viewname   The name of the view to create
      * @param string $definition The definition for the new view
-     * @param bool $replace    True to replace the view, false otherwise
+     * @param bool   $replace    True to replace the view, false otherwise
      * @param string $comment
      *
      * @return bool|int 0 success
@@ -4172,8 +4171,8 @@ class Postgres extends ADOdbBase
     /**
      * Alter a view's owner.
      *
-     * @param \PHPPgAdmin\ADORecordSet     $vwrs  The view recordSet returned by getView()
-     * @param null|string $owner
+     * @param \PHPPgAdmin\ADORecordSet $vwrs  The view recordSet returned by getView()
+     * @param null|string              $owner
      *
      * @return int 0 if operation was successful
      *
@@ -4226,8 +4225,8 @@ class Postgres extends ADOdbBase
     /**
      * Alter a view's schema.
      *
-     * @param \PHPPgAdmin\ADORecordSet $vwrs The view recordSet returned by getView()
-     * @param string $schema
+     * @param \PHPPgAdmin\ADORecordSet $vwrs   The view recordSet returned by getView()
+     * @param string                   $schema
      *
      * @return int 0 if operation was successful
      *
@@ -4255,7 +4254,7 @@ class Postgres extends ADOdbBase
      * @param string $viewname The name of the view to drop
      * @param string $cascade  True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropView($viewname, $cascade)
     {
@@ -4302,14 +4301,14 @@ class Postgres extends ADOdbBase
     /**
      * Creates an index.
      *
-     * @param string $name       The index name (can be blank)
-     * @param string $table      The table on which to add the index
-     * @param array $columns    An array of columns that form the index  or a string expression for a functional index
-     * @param string $type       The index type
-     * @param bool $unique     True if unique, false otherwise
-     * @param string $where      Index predicate ('' for none)
-     * @param string $tablespace The tablespaces ('' means none/default)
-     * @param bool $concurrently true to create index concurrently
+     * @param string $name         The index name (can be blank)
+     * @param string $table        The table on which to add the index
+     * @param array  $columns      An array of columns that form the index  or a string expression for a functional index
+     * @param string $type         The index type
+     * @param bool   $unique       True if unique, false otherwise
+     * @param string $where        Index predicate ('' for none)
+     * @param string $tablespace   The tablespaces ('' means none/default)
+     * @param bool   $concurrently true to create index concurrently
      *
      * @return array status (0 if operation was successful) and sql sentence
      */
@@ -4338,9 +4337,9 @@ class Postgres extends ADOdbBase
 
         if (is_array($columns)) {
             $this->arrayClean($columns);
-            $sql .= '("' . implode('","', $columns) . '")';
+            $sql .= '("'.implode('","', $columns).'")';
         } else {
-            $sql .= '(' . $columns . ')';
+            $sql .= '('.$columns.')';
         }
 
         // Tablespace
@@ -4355,6 +4354,7 @@ class Postgres extends ADOdbBase
         }
 
         $status = $this->execute($sql);
+
         return [$status, $sql];
     }
 
@@ -4362,9 +4362,9 @@ class Postgres extends ADOdbBase
      * Removes an index from the database.
      *
      * @param string $index   The index to drop
-     * @param bool $cascade True to cascade drop, false to restrict
+     * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropIndex($index, $cascade)
     {
@@ -4378,16 +4378,17 @@ class Postgres extends ADOdbBase
         }
 
         $status = $this->execute($sql);
+
         return [$status, $sql];
     }
 
     /**
      * Rebuild indexes.
      *
-     * @param  string  $type  'DATABASE' or 'TABLE' or 'INDEX'
-     * @param  string  $name  The name of the specific database, table, or index to be reindexed
-     * @param bool $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in
-     *                                            7.2-7.3, ignored in >=7.4
+     * @param string $type  'DATABASE' or 'TABLE' or 'INDEX'
+     * @param string $name  The name of the specific database, table, or index to be reindexed
+     * @param bool   $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in
+     *                      7.2-7.3, ignored in >=7.4
      *
      * @return int 0 if operation was successful
      */
@@ -4425,7 +4426,7 @@ class Postgres extends ADOdbBase
      * @param string $table The table the index is on
      * @param string $index The name of the index
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function clusterIndex($table = '', $index = '')
     {
@@ -4544,7 +4545,7 @@ class Postgres extends ADOdbBase
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'PRIMARY KEY ("' . join('","', $fields) . '")';
+        $sql .= 'PRIMARY KEY ("'.join('","', $fields).'")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -4581,7 +4582,7 @@ class Postgres extends ADOdbBase
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'UNIQUE ("' . join('","', $fields) . '")';
+        $sql .= 'UNIQUE ("'.join('","', $fields).'")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -4599,7 +4600,7 @@ class Postgres extends ADOdbBase
      * @param        $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function addCheckConstraint($table, $definition, $name = '')
     {
@@ -4684,19 +4685,19 @@ class Postgres extends ADOdbBase
     /**
      * Adds a foreign key constraint to a table.
      *
-     * @param string       $table The table on which to add an FK
-     * @param string       $targschema The schema that houses the target table to which to add the foreign key
-     * @param string       $targtable  The table to which to add the foreign key
-     * @param array       $sfields    (array) An array of source fields over which to add the foreign key
-     * @param array       $tfields    (array) An array of target fields over which to add the foreign key
-     * @param string       $upd_action The action for updates (eg. RESTRICT)
-     * @param string       $del_action The action for deletes (eg. RESTRICT)
-     * @param string       $match      The match type (eg. MATCH FULL)
-     * @param string       $deferrable The deferrability (eg. NOT DEFERRABLE)
-     * @param string       $initially The initially parameter for the FK (eg. INITIALLY IMMEDIATE)
-     * @param string $name [optional] The name to give the key, otherwise default name is assigned
+     * @param string $table      The table on which to add an FK
+     * @param string $targschema The schema that houses the target table to which to add the foreign key
+     * @param string $targtable  The table to which to add the foreign key
+     * @param array  $sfields    (array) An array of source fields over which to add the foreign key
+     * @param array  $tfields    (array) An array of target fields over which to add the foreign key
+     * @param string $upd_action The action for updates (eg. RESTRICT)
+     * @param string $del_action The action for deletes (eg. RESTRICT)
+     * @param string $match      The match type (eg. MATCH FULL)
+     * @param string $deferrable The deferrability (eg. NOT DEFERRABLE)
+     * @param string $initially  The initially parameter for the FK (eg. INITIALLY IMMEDIATE)
+     * @param string $name       [optional] The name to give the key, otherwise default name is assigned
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      *
      * @internal param \PHPPgAdmin\Database\The $target table that contains the target columns
      * @internal param \PHPPgAdmin\Database\The $intially initial deferrability (eg. INITIALLY IMMEDIATE)
@@ -4733,9 +4734,9 @@ class Postgres extends ADOdbBase
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'FOREIGN KEY ("' . join('","', $sfields) . '") ';
+        $sql .= 'FOREIGN KEY ("'.join('","', $sfields).'") ';
         // Target table needs to be fully qualified
-        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"" . join('","', $tfields) . '") ';
+        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"".join('","', $tfields).'") ';
         if ($match != $this->fkmatches[0]) {
             $sql .= " {$match}";
         }
@@ -4765,9 +4766,9 @@ class Postgres extends ADOdbBase
      * @param string $constraint The constraint to drop
      * @param string $relation   The relation from which to drop
      * @param string $type       The type of constraint (c, f, u or p)
-     * @param bool $cascade    True to cascade drop, false to restrict
+     * @param bool   $cascade    True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropConstraint($constraint, $relation, $type, $cascade)
     {
@@ -4789,7 +4790,7 @@ class Postgres extends ADOdbBase
      *
      * @param array $tables multi dimensional assoc array that holds schema and table name
      *
-     * @return \PHPPgAdmin\ADORecordSet|integer  recordset of linked tables and columns or -1 if $tables isn't an array
+     * @return int|\PHPPgAdmin\ADORecordSet recordset of linked tables and columns or -1 if $tables isn't an array
      */
     public function getLinkingKeys($tables)
     {
@@ -5018,12 +5019,12 @@ class Postgres extends ADOdbBase
      * @param string $domain  The name of the domain to create
      * @param string $type    The base type for the domain
      * @param string $length  Optional type length
-     * @param bool $array   True for array type, false otherwise
-     * @param bool $notnull True for NOT NULL, false otherwise
+     * @param bool   $array   True for array type, false otherwise
+     * @param bool   $notnull True for NOT NULL, false otherwise
      * @param string $default Default value for domain
      * @param string $check   A CHECK constraint if there is one
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function createDomain($domain, $type, $length, $array, $notnull, $default, $check)
     {
@@ -5080,9 +5081,9 @@ class Postgres extends ADOdbBase
      * Alters a domain.
      *
      * @param string $domain     The domain to alter
-     * @param string  $domdefault The domain default
-     * @param bool $domnotnull True for NOT NULL, false otherwise
-     * @param string  $domowner   The domain owner
+     * @param string $domdefault The domain default
+     * @param bool   $domnotnull True for NOT NULL, false otherwise
+     * @param string $domowner   The domain owner
      *
      * @return bool|int 0 success
      */
@@ -5147,7 +5148,7 @@ class Postgres extends ADOdbBase
      * @param string $domain  The name of the domain to drop
      * @param string $cascade True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropDomain($domain, $cascade)
     {
@@ -5170,7 +5171,7 @@ class Postgres extends ADOdbBase
      * @param string $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function addDomainCheckConstraint($domain, $definition, $name = '')
     {
@@ -5194,9 +5195,9 @@ class Postgres extends ADOdbBase
      *
      * @param string $domain     The domain from which to remove the constraint
      * @param string $constraint The constraint to remove
-     * @param bool $cascade    True to cascade, false otherwise
+     * @param bool   $cascade    True to cascade, false otherwise
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropDomainConstraint($domain, $constraint, $cascade)
     {
@@ -5259,21 +5260,21 @@ class Postgres extends ADOdbBase
     /**
      * Updates (replaces) a function.
      *
-     * @param int $function_oid The OID of the function
+     * @param int    $function_oid The OID of the function
      * @param string $funcname     The name of the function to create
      * @param string $newname      The new name for the function
-     * @param array $args         The array of argument types
+     * @param array  $args         The array of argument types
      * @param string $returns      The return type
      * @param string $definition   The definition for the new function
      * @param string $language     The language the function is written for
-     * @param array $flags        An array of optional flags
-     * @param bool $setof        True if returns a set, false otherwise
+     * @param array  $flags        An array of optional flags
+     * @param bool   $setof        True if returns a set, false otherwise
      * @param string $funcown
      * @param string $newown
      * @param string $funcschema
      * @param string $newschema
-     * @param float $cost
-     * @param integer $rows
+     * @param float  $cost
+     * @param int    $rows
      * @param string $comment      The comment on the function
      *
      * @return bool|int 0 success
@@ -5365,20 +5366,20 @@ class Postgres extends ADOdbBase
     /**
      * Creates a new function.
      *
-     * @param string   $funcname    The name of the function to create
-     * @param string   $args        A comma separated string of types
-     * @param string   $returns     The return type
-     * @param string   $definition  The definition for the new function
-     * @param string   $language    The language the function is written for
-     * @param array    $flags       An array of optional flags
-     * @param bool     $setof       True if it returns a set, false otherwise
-     * @param string   $cost        cost the planner should use in the function  execution step
-     * @param integer  $rows        number of rows planner should estimate will be returned
-     * @param string   $comment     Comment for the function
-     * @param bool     $replace     (optional) True if OR REPLACE, false for
-     *                              normal
+     * @param string $funcname   The name of the function to create
+     * @param string $args       A comma separated string of types
+     * @param string $returns    The return type
+     * @param string $definition The definition for the new function
+     * @param string $language   The language the function is written for
+     * @param array  $flags      An array of optional flags
+     * @param bool   $setof      True if it returns a set, false otherwise
+     * @param string $cost       cost the planner should use in the function  execution step
+     * @param int    $rows       number of rows planner should estimate will be returned
+     * @param string $comment    Comment for the function
+     * @param bool   $replace    (optional) True if OR REPLACE, false for
+     *                           normal
      *
-     * @return bool|int  0 success
+     * @return bool|int 0 success
      */
     public function createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, $replace = false)
     {
@@ -5420,13 +5421,13 @@ class Postgres extends ADOdbBase
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'" . $definition[0] . "'";
+            $sql .= "'".$definition[0]."'";
             if ($definition[1]) {
-                $sql .= ",'" . $definition[1] . "'";
+                $sql .= ",'".$definition[1]."'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'" . $definition . "'";
+            $sql .= "'".$definition."'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
@@ -5471,10 +5472,10 @@ class Postgres extends ADOdbBase
     /**
      * Drops a function.
      *
-     * @param int $function_oid The OID of the function to drop
+     * @param int  $function_oid The OID of the function to drop
      * @param bool $cascade      True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropFunction($function_oid, $cascade)
     {
@@ -5612,7 +5613,7 @@ class Postgres extends ADOdbBase
      * @param string $typalign
      * @param string $typstorage
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      *
      * @internal param $ ...
      */
@@ -5674,7 +5675,7 @@ class Postgres extends ADOdbBase
      * @param $typname The name of the type to drop
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropType($typname, $cascade)
     {
@@ -5937,7 +5938,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns a list of all conversions in the database.
      *
-     * @return \PHPPgAdmin\ADORecordSet  All conversions
+     * @return \PHPPgAdmin\ADORecordSet All conversions
      */
     public function getConversions()
     {
@@ -5972,7 +5973,7 @@ class Postgres extends ADOdbBase
      * @param $type    NOTHING for a do nothing rule, SOMETHING to use given action
      * @param $action  The action to take
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function setRule($name, $event, $table, $where, $instead, $type, $action)
     {
@@ -5984,17 +5985,17 @@ class Postgres extends ADOdbBase
     /**
      * Creates a rule.
      *
-     * @param string   $name     The name of the new rule
-     * @param string   $event    SELECT, INSERT, UPDATE or DELETE
-     * @param string   $table    Table on which to create the rule
-     * @param string   $where    When to execute the rule, '' indicates always
-     * @param boolean  $instead  True if an INSTEAD rule, false otherwise
-     * @param string   $type     NOTHING for a do nothing rule, SOMETHING to use given action
-     * @param string   $action   The action to take
-     * @param bool     $replace  (optional) True to replace existing rule, false
-     *                           otherwise
+     * @param string $name    The name of the new rule
+     * @param string $event   SELECT, INSERT, UPDATE or DELETE
+     * @param string $table   Table on which to create the rule
+     * @param string $where   When to execute the rule, '' indicates always
+     * @param bool   $instead True if an INSTEAD rule, false otherwise
+     * @param string $type    NOTHING for a do nothing rule, SOMETHING to use given action
+     * @param string $action  The action to take
+     * @param bool   $replace (optional) True to replace existing rule, false
+     *                        otherwise
      *
-     * @return integer  0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function createRule($name, $event, $table, $where, $instead, $type, $action, $replace = false)
     {
@@ -6038,7 +6039,7 @@ class Postgres extends ADOdbBase
      * @param string $relation The relation from which to drop
      * @param string $cascade  True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropRule($rule, $relation, $cascade)
     {
@@ -6193,7 +6194,7 @@ class Postgres extends ADOdbBase
         // Split on escaped null characters
         $params = explode('\\000', $v);
         for ($findx = 0; $findx < $trigger['tgnargs']; ++$findx) {
-            $param = "'" . str_replace('\'', '\\\'', $params[$findx]) . "'";
+            $param = "'".str_replace('\'', '\\\'', $params[$findx])."'";
             $tgdef .= $param;
             if ($findx < ($trigger['tgnargs'] - 1)) {
                 $tgdef .= ', ';
@@ -6218,7 +6219,7 @@ class Postgres extends ADOdbBase
      * Returns a list of all functions in the database.
      *
      * @param bool $all  If true, will find all available functions, if false just those in search path
-     * @param                              $type If not null, will find all functions with return value = type
+     * @param      $type If not null, will find all functions with return value = type
      *
      * @return \PHPPgAdmin\ADORecordSet All functions
      */
@@ -6275,7 +6276,7 @@ class Postgres extends ADOdbBase
      * @param $tgfrequency
      * @param $tgargs  The function arguments
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function createTrigger($tgname, $table, $tgproc, $tgtime, $tgevent, $tgfrequency, $tgargs)
     {
@@ -6300,7 +6301,7 @@ class Postgres extends ADOdbBase
      * @param $trigger The name of the trigger to alter
      * @param $name    The new name for the trigger
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function alterTrigger($table, $trigger, $name)
     {
@@ -6322,7 +6323,7 @@ class Postgres extends ADOdbBase
      * @param $table   The table from which to drop the trigger
      * @param $cascade True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropTrigger($tgname, $table, $cascade)
     {
@@ -6345,7 +6346,7 @@ class Postgres extends ADOdbBase
      * @param $tgname The name of the trigger to enable
      * @param $table  The table in which to enable the trigger
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function enableTrigger($tgname, $table)
     {
@@ -6365,7 +6366,7 @@ class Postgres extends ADOdbBase
      * @param $tgname The name of the trigger to disable
      * @param $table  The table in which to disable the trigger
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function disableTrigger($tgname, $table)
     {
@@ -6413,7 +6414,7 @@ class Postgres extends ADOdbBase
      * @param $operator_oid The OID of the operator to drop
      * @param $cascade      True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropOperator($operator_oid, $cascade)
     {
@@ -6426,13 +6427,13 @@ class Postgres extends ADOdbBase
         $sql = "DROP OPERATOR \"{$f_schema}\".{$opr->fields['oprname']} (";
         // Quoting or formatting here???
         if ($opr->fields['oprleftname'] !== null) {
-            $sql .= $opr->fields['oprleftname'] . ', ';
+            $sql .= $opr->fields['oprleftname'].', ';
         } else {
             $sql .= 'NONE, ';
         }
 
         if ($opr->fields['oprrightname'] !== null) {
-            $sql .= $opr->fields['oprrightname'] . ')';
+            $sql .= $opr->fields['oprrightname'].')';
         } else {
             $sql .= 'NONE)';
         }
@@ -6733,7 +6734,7 @@ class Postgres extends ADOdbBase
      * @param $ftscfg  The configuration's name
      * @param $cascade Cascade to dependenced objects
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropFtsConfiguration($ftscfg, $cascade)
     {
@@ -6755,7 +6756,7 @@ class Postgres extends ADOdbBase
      * @param $ftsdict The dico's name
      * @param $cascade Cascade to dependenced objects
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      *
      * @todo Support of dictionary templates dropping
      */
@@ -7081,7 +7082,7 @@ class Postgres extends ADOdbBase
      *
      * @param $ftscfg The config's name that use the parser
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function getFtsMappings($ftscfg)
     {
@@ -7222,7 +7223,7 @@ class Postgres extends ADOdbBase
      * @param $aggrtype The input data type of the aggregate
      * @param $cascade  True to cascade drop, false to restrict
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropAggregate($aggrname, $aggrtype, $cascade)
     {
@@ -7263,11 +7264,11 @@ class Postgres extends ADOdbBase
 			FROM pg_catalog.pg_proc p, pg_catalog.pg_namespace n, pg_catalog.pg_user u, pg_catalog.pg_aggregate a
 			WHERE n.oid = p.pronamespace AND p.proowner=u.usesysid AND p.oid=a.aggfnoid
 				AND p.proisagg AND n.nspname='{$c_schema}'
-				AND p.proname='" . $name . "'
+				AND p.proname='".$name."'
 				AND CASE p.proargtypes[0]
 					WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype THEN ''
 					ELSE pg_catalog.format_type(p.proargtypes[0], NULL)
-				END ='" . $basetype . "'";
+				END ='".$basetype."'";
 
         return $this->selectSet($sql);
     }
@@ -7378,7 +7379,7 @@ class Postgres extends ADOdbBase
      * @param $aggrtype     The input data type of the aggregate
      * @param $newaggrowner The new owner of the aggregate
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function changeAggregateOwner($aggrname, $aggrtype, $newaggrowner)
     {
@@ -7398,7 +7399,7 @@ class Postgres extends ADOdbBase
      * @param $aggrtype      The input data type of the aggregate
      * @param $newaggrschema The new schema for the aggregate
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function changeAggregateSchema($aggrname, $aggrtype, $newaggrschema)
     {
@@ -7419,12 +7420,12 @@ class Postgres extends ADOdbBase
      * @param $aggrtype    The actual input data type of the aggregate
      * @param $newaggrname The new name of the aggregate
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function renameAggregate($aggrschema, $aggrname, $aggrtype, $newaggrname)
     {
         /* this function is called from alterAggregate where params are cleaned */
-        $sql = "ALTER AGGREGATE \"{$aggrschema}\"" . '.' . "\"{$aggrname}\" (\"{$aggrtype}\") RENAME TO \"{$newaggrname}\"";
+        $sql = "ALTER AGGREGATE \"{$aggrschema}\"".'.'."\"{$aggrname}\" (\"{$aggrtype}\") RENAME TO \"{$newaggrname}\"";
 
         return $this->execute($sql);
     }
@@ -7518,7 +7519,7 @@ class Postgres extends ADOdbBase
      * @param $members      (array) Roles which are automatically added as members of the new role
      * @param $adminmembers (array) Roles which are automatically added as admin members of the new role
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function createRole(
         $rolename,
@@ -7566,15 +7567,15 @@ class Postgres extends ADOdbBase
         }
 
         if (is_array($memberof) && sizeof($memberof) > 0) {
-            $sql .= ' IN ROLE "' . join('", "', $memberof) . '"';
+            $sql .= ' IN ROLE "'.join('", "', $memberof).'"';
         }
 
         if (is_array($members) && sizeof($members) > 0) {
-            $sql .= ' ROLE "' . join('", "', $members) . '"';
+            $sql .= ' ROLE "'.join('", "', $members).'"';
         }
 
         if (is_array($adminmembers) && sizeof($adminmembers) > 0) {
-            $sql .= ' ADMIN "' . join('", "', $adminmembers) . '"';
+            $sql .= ' ADMIN "'.join('", "', $adminmembers).'"';
         }
 
         return $this->execute($sql);
@@ -7590,7 +7591,7 @@ class Postgres extends ADOdbBase
      */
     public function _encryptPassword($username, $password)
     {
-        return 'md5' . md5($password . $username);
+        return 'md5'.md5($password.$username);
     }
 
     /**
@@ -7681,7 +7682,7 @@ class Postgres extends ADOdbBase
      * @param $rolename    The name of the role to rename
      * @param $newrolename The new name of the role
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function renameRole($rolename, $newrolename)
     {
@@ -7841,7 +7842,7 @@ class Postgres extends ADOdbBase
      * @param     $rolename The name of the role that will belong to the target role
      * @param int $admin    (optional) Flag to grant the admin option
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function grantRole($role, $rolename, $admin = 0)
     {
@@ -7864,7 +7865,7 @@ class Postgres extends ADOdbBase
      * @param int    $admin    (optional) Flag to revoke only the admin option
      * @param string $type     (optional) Type of revoke: RESTRICT | CASCADE
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function revokeRole($role, $rolename, $admin = 0, $type = 'RESTRICT')
     {
@@ -7886,7 +7887,7 @@ class Postgres extends ADOdbBase
      *
      * @param $rolename The name of the role to drop
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropRole($rolename)
     {
@@ -7907,7 +7908,7 @@ class Postgres extends ADOdbBase
      * @param $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param $groups
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      *
      * @internal param $group (array) The groups to create the user in
      */
@@ -7927,7 +7928,7 @@ class Postgres extends ADOdbBase
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
         if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
+            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
         }
 
         if ($expiry != '') {
@@ -7984,7 +7985,7 @@ class Postgres extends ADOdbBase
      * @param $username The username of the user to rename
      * @param $newname  The new name of the user
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function renameUser($username, $newname)
     {
@@ -8007,7 +8008,7 @@ class Postgres extends ADOdbBase
      * @param $createuser boolean Whether or not the user can create other users
      * @param $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire.
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function setUser($username, $password, $createdb, $createuser, $expiry)
     {
@@ -8037,7 +8038,7 @@ class Postgres extends ADOdbBase
      *
      * @param $username The username of the user to drop
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropUser($username)
     {
@@ -8054,7 +8055,7 @@ class Postgres extends ADOdbBase
      * @param $rolename The role name
      * @param $password The new password
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function changePassword($rolename, $password)
     {
@@ -8073,7 +8074,7 @@ class Postgres extends ADOdbBase
      * @param $groname The name of the group
      * @param $user    The name of the user to add to the group
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function addGroupMember($groname, $user)
     {
@@ -8137,7 +8138,7 @@ class Postgres extends ADOdbBase
      * @param $groname The name of the group
      * @param $user    The name of the user to remove from the group
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropGroupMember($groname, $user)
     {
@@ -8186,7 +8187,7 @@ class Postgres extends ADOdbBase
      * @param $groname The name of the group
      * @param $users   An array of users to add to the group
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function createGroup($groname, $users)
     {
@@ -8196,7 +8197,7 @@ class Postgres extends ADOdbBase
 
         if (is_array($users) && sizeof($users) > 0) {
             $this->fieldArrayClean($users);
-            $sql .= ' WITH USER "' . join('", "', $users) . '"';
+            $sql .= ' WITH USER "'.join('", "', $users).'"';
         }
 
         return $this->execute($sql);
@@ -8207,7 +8208,7 @@ class Postgres extends ADOdbBase
      *
      * @param $groname The name of the group to drop
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropGroup($groname)
     {
@@ -8232,7 +8233,7 @@ class Postgres extends ADOdbBase
      * @param $cascade     True for cascade revoke, false otherwise
      * @param $table       the column's table if type=column
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function setPrivileges(
         $mode,
@@ -8277,9 +8278,9 @@ class Postgres extends ADOdbBase
         } else {
             if ($type == 'column') {
                 $this->fieldClean($object);
-                $sql .= ' ' . join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' ' . join(', ', $privileges);
+                $sql .= ' '.join(', ', $privileges);
             }
         }
 
@@ -8508,7 +8509,7 @@ class Postgres extends ADOdbBase
      *
      * @param $spcname The name of the domain to drop
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function dropTablespace($spcname)
     {
@@ -8524,7 +8525,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $table (optional) The table to analyze
      *
-     * @return bool  0 if successful
+     * @return bool 0 if successful
      */
     public function analyzeDB($table = '')
     {
@@ -8545,11 +8546,11 @@ class Postgres extends ADOdbBase
      * Vacuums a database.
      *
      * @param string $table   The table to vacuum
-     * @param bool    $analyze If true, also does analyze
-     * @param bool    $full    If true, selects "full" vacuum
-     * @param bool    $freeze  If true, selects aggressive "freezing" of tuples
+     * @param bool   $analyze If true, also does analyze
+     * @param bool   $full    If true, selects "full" vacuum
+     * @param bool   $freeze  If true, selects aggressive "freezing" of tuples
      *
-     * @return bool  0 if successful
+     * @return bool 0 if successful
      */
     public function vacuumDB($table = '', $analyze = false, $full = false, $freeze = false)
     {
@@ -8612,13 +8613,13 @@ class Postgres extends ADOdbBase
      * Returns all available autovacuum per table information.
      *
      * @param string $table
-     * @param bool $vacenabled
-     * @param int $vacthreshold
-     * @param int $vacscalefactor
-     * @param int $anathresold
-     * @param int $anascalefactor
-     * @param int $vaccostdelay
-     * @param int $vaccostlimit
+     * @param bool   $vacenabled
+     * @param int    $vacthreshold
+     * @param int    $vacscalefactor
+     * @param int    $anathresold
+     * @param int    $anascalefactor
+     * @param int    $vaccostdelay
+     * @param int    $vaccostlimit
      *
      * @return bool 0 if successful
      */
@@ -8667,7 +8668,7 @@ class Postgres extends ADOdbBase
             $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
         }
 
-        $sql = $sql . implode(',', $params) . ');';
+        $sql = $sql.implode(',', $params).');';
 
         return $this->execute($sql);
     }
@@ -8675,9 +8676,9 @@ class Postgres extends ADOdbBase
     // Type conversion routines
 
     /**
-     * Drops autovacuum config for a table
+     * Drops autovacuum config for a table.
      *
-     * @param string  $table  The table
+     * @param string $table The table
      *
      * @return bool 0 if successful
      */
@@ -8798,8 +8799,8 @@ class Postgres extends ADOdbBase
      * the PostgreSQL source code.
      * XXX: It does not handle multibyte languages properly.
      *
-     * @param string $name     Entry in $_FILES to use
-     * @param function|null $callback (optional) Callback function to call with each query, its result and line number
+     * @param string        $name     Entry in $_FILES to use
+     * @param null|function $callback (optional) Callback function to call with each query, its result and line number
      *
      * @return bool true for general success, false on any failure
      */
@@ -9087,14 +9088,14 @@ class Postgres extends ADOdbBase
      * Returns a recordset of all columns in a query.  Supports paging.
      *
      * @param string $type       Either 'QUERY' if it is an SQL query, or 'TABLE' if it is a table identifier,
-     *                    or 'SELECT" if it's a select query
+     *                           or 'SELECT" if it's a select query
      * @param string $table      The base table of the query.  NULL for no table.
      * @param string $query      The query that is being executed.  NULL for no query.
      * @param string $sortkey    The column number to sort by, or '' or null for no sorting
      * @param string $sortdir    The direction in which to sort the specified column ('asc' or 'desc')
-     * @param int $page       The page of the relation to retrieve
-     * @param int $page_size  The number of rows per page
-     * @param int &$max_pages (return-by-ref) The max number of pages in the relation
+     * @param int    $page       The page of the relation to retrieve
+     * @param int    $page_size  The number of rows per page
+     * @param int    &$max_pages (return-by-ref) The max number of pages in the relation
      *
      * @return A  recordset on success
      * @return -1 transaction error
@@ -9196,7 +9197,7 @@ class Postgres extends ADOdbBase
         }
 
         // Actually retrieve the rows, with offset and limit
-        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
+        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET ".($page - 1) * $page_size);
         $status = $this->endTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -9238,7 +9239,7 @@ class Postgres extends ADOdbBase
                 $sql = 'SELECT "';
             }
 
-            $sql .= join('","', $show) . '" FROM ';
+            $sql .= join('","', $show).'" FROM ';
         }
 
         $this->fieldClean($table);
@@ -9306,7 +9307,7 @@ class Postgres extends ADOdbBase
                     $sql .= $k;
                 } else {
                     $this->fieldClean($k);
-                    $sql .= '"' . $k . '"';
+                    $sql .= '"'.$k.'"';
                 }
                 if (strtoupper($v) == 'DESC') {
                     $sql .= ' DESC';

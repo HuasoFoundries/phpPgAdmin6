@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,6 +11,7 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.0 support
  *
  * Id: Postgres80.php,v 1.28 2007/12/12 04:11:10 xzilla Exp $
+ *
  * @package PHPPgAdmin
  */
 class Postgres80 extends Postgres81
@@ -154,7 +155,7 @@ class Postgres80 extends Postgres81
      * @param string $username The username
      * @param string $password The new password
      *
-     * @return integer 0 if operation was successful
+     * @return int 0 if operation was successful
      */
     public function changePassword($username, $password)
     {

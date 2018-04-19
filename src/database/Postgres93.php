@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Database;
@@ -18,7 +18,7 @@ class Postgres93 extends Postgres94
      * Returns a list of all functions in the database.
      *
      * @param bool $all  If true, will find all available functions, if false just those in search path
-     * @param                              $type If not null, will find all functions with return value = type
+     * @param      $type If not null, will find all functions with return value = type
      *
      * @return \ADORecordSet All functions
      */

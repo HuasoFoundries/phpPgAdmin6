@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.33
+ * PHPPgAdmin v6.0.0-beta.39
  */
 
 namespace PHPPgAdmin\Controller;
@@ -29,7 +29,7 @@ class TriggersController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $lang['strtriggers']);
+        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strtriggers']);
         $this->printBody();
 
         switch ($action) {
@@ -283,7 +283,7 @@ class TriggersController extends BaseController
                 $_POST['name'] = $triggerdata->fields['tgname'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/triggers\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -322,7 +322,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/triggers\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -361,7 +361,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/triggers\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"enable\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -399,7 +399,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/triggers\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"disable\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
@@ -458,7 +458,7 @@ class TriggersController extends BaseController
         $sel3 = new \PHPPgAdmin\XHtml\XHtmlSelect('formFrequency');
         $sel3->set_data($data->triggerFrequency);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/triggers\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr>\n";
         echo "		<th class=\"data\">{$lang['strname']}</th>\n";
