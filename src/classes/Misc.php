@@ -115,7 +115,6 @@ class Misc
             $this->_server_id = array_keys($_SESSION['webdbLogin'])[0];
         }
         return $this->_server_id;
-
     }
 
     /**

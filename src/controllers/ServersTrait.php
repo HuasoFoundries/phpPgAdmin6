@@ -47,7 +47,7 @@ trait ServersTrait
 
                 if (isset($logins[$server_sha])) {
                     $srvs[$server_sha] = $logins[$server_sha];
-                } else if (isset($logins[$server_id])) {
+                } elseif (isset($logins[$server_id])) {
                     $srvs[$server_sha] = $logins[$server_id];
                 } else {
                     $srvs[$server_sha] = $info;
@@ -123,7 +123,6 @@ trait ServersTrait
             $connection_html .= ': </label>';
             $connection_html .= " <select name=\"server\" id='selectserver' >\n";
             foreach ($servers as $id => $server) {
-
                 $connection_html .= '<option value="' . $id . '" ' . $server['selected'] . '>';
                 $connection_html .= htmlspecialchars("{$server['desc']} ({$server['id']})");
                 $connection_html .= "</option>\n";
