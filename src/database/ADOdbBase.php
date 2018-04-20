@@ -278,6 +278,79 @@ class ADOdbBase
     }
 
     /**
+     * Sets the comment for an object in the database.
+     *
+     * @pre All parameters must already be cleaned
+     *
+     * @param      $obj_type One of 'TABLE' | 'COLUMN' | 'VIEW' | 'SCHEMA' | 'SEQUENCE' | 'TYPE' | 'FUNCTION' | 'AGGREGATE'
+     * @param      $obj_name the name of the object for which to attach a comment
+     * @param      $table    Name of table that $obj_name belongs to.  Ignored unless $obj_type is 'TABLE' or 'COLUMN'.
+     * @param      $comment  the comment to add
+     * @param null $basetype
+     *
+     * @return int 0 if operation was successful
+     */
+    public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
+    {
+        $sql      = "COMMENT ON {$obj_type} ";
+        $f_schema = $this->_schema;
+        $this->fieldClean($f_schema);
+        $this->clean($comment); // Passing in an already cleaned comment will lead to double escaped data
+        // So, while counter-intuitive, it is important to not clean comments before
+        // calling setComment. We will clean it here instead.
+        /*
+        $this->fieldClean($table);
+        $this->fieldClean($obj_name);
+         */
+
+        switch ($obj_type) {
+            case 'TABLE':
+                $sql .= "\"{$f_schema}\".\"{$table}\" IS ";
+
+                break;
+            case 'COLUMN':
+                $sql .= "\"{$f_schema}\".\"{$table}\".\"{$obj_name}\" IS ";
+
+                break;
+            case 'SEQUENCE':
+            case 'VIEW':
+            case 'TEXT SEARCH CONFIGURATION':
+            case 'TEXT SEARCH DICTIONARY':
+            case 'TEXT SEARCH TEMPLATE':
+            case 'TEXT SEARCH PARSER':
+            case 'TYPE':
+                $sql .= "\"{$f_schema}\".";
+            // no break
+            case 'DATABASE':
+            case 'ROLE':
+            case 'SCHEMA':
+            case 'TABLESPACE':
+                $sql .= "\"{$obj_name}\" IS ";
+
+                break;
+            case 'FUNCTION':
+                $sql .= "\"{$f_schema}\".{$obj_name} IS ";
+
+                break;
+            case 'AGGREGATE':
+                $sql .= "\"{$f_schema}\".\"{$obj_name}\" (\"{$basetype}\") IS ";
+
+                break;
+            default:
+                // Unknown object type
+                return -1;
+        }
+
+        if ($comment != '') {
+            $sql .= "'{$comment}';";
+        } else {
+            $sql .= 'NULL;';
+        }
+
+        return $this->execute($sql);
+    }
+
+    /**
      * Turns on or off query debugging.
      *
      * @param $debug True to turn on debugging, false otherwise
@@ -452,6 +525,18 @@ class ADOdbBase
         $str = addslashes($str);
 
         return $str;
+    }
+
+    /**
+     * Escapes bytea data for display on the screen.
+     *
+     * @param string $data The bytea data
+     *
+     * @return string Data formatted for on-screen display
+     */
+    public function escapeBytea($data)
+    {
+        return htmlentities($data, ENT_QUOTES, 'UTF-8');
     }
 
     /**

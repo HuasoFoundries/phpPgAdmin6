@@ -947,4 +947,20 @@ trait RoleTrait
 
         return $this->execute($sql);
     }
+
+    abstract public function fieldClean(&$str);
+
+    abstract public function beginTransaction();
+
+    abstract public function rollbackTransaction();
+
+    abstract public function endTransaction();
+
+    abstract public function execute($sql);
+
+    abstract public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null);
+
+    abstract public function selectSet($sql);
+
+    abstract public function clean(&$str);
 }
