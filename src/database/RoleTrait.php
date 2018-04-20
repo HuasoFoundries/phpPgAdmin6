@@ -291,9 +291,9 @@ trait RoleTrait
      * @param array $memberof        (array) Roles to which the role will be immediately added as a new member
      * @param array $members         (array) Roles which are automatically added as members of the role
      * @param array $adminmembers    (array) Roles which are automatically added as admin members of the role
-     * @param array $memberofold     (array) Original roles whose the role belongs to
-     * @param array $membersold      (array) Original roles that are members of the role
-     * @param array $adminmembersold (array) Original roles that are admin members of the role
+     * @param string $memberofold     (array) Original roles whose the role belongs to
+     * @param string $membersold      (array) Original roles that are members of the role
+     * @param string $adminmembersold (array) Original roles that are admin members of the role
      *
      * @return int 0 if operation was successful
      */
@@ -767,7 +767,7 @@ trait RoleTrait
      * Creates a new group.
      *
      * @param string $groname The name of the group
-     * @param string $users   An array of users to add to the group
+     * @param array $users   An array of users to add to the group
      *
      * @return int 0 if operation was successful
      */
@@ -808,9 +808,9 @@ trait RoleTrait
      * @param mixed $type        The type of object
      * @param string $object      The name of the object
      * @param bool $public      True to grant to public, false otherwise
-     * @param array $usernames   the array of usernames to grant privs to
-     * @param array $groupnames  the array of group names to grant privs to
-     * @param array $privileges  The array of privileges to grant (eg. ('SELECT', 'ALL PRIVILEGES', etc.) )
+     * @param mixed $usernames   the array of usernames to grant privs to
+     * @param mixed $groupnames  the array of group names to grant privs to
+     * @param mixed $privileges  The array of privileges to grant (eg. ('SELECT', 'ALL PRIVILEGES', etc.) )
      * @param bool $grantoption True if has grant option, false otherwise
      * @param bool $cascade     True for cascade revoke, false otherwise
      * @param string $table       the column's table if type=column

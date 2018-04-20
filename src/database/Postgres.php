@@ -1758,9 +1758,9 @@ class Postgres extends ADOdbBase
     /**
      * Creates a new enum type in the database.
      *
-     * @param $name       The name of the type
-     * @param $values     An array of values
-     * @param $typcomment Type comment
+     * @param string $name       The name of the type
+     * @param array $values     An array of values
+     * @param string $typcomment Type comment
      *
      * @return bool|int 0 success
      */
@@ -1813,7 +1813,7 @@ class Postgres extends ADOdbBase
     /**
      * Get defined values for a given enum.
      *
-     * @param $name
+     * @param string $name
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -1833,14 +1833,14 @@ class Postgres extends ADOdbBase
     /**
      * Creates a new composite type in the database.
      *
-     * @param $name       The name of the type
-     * @param $fields     The number of fields
-     * @param $field      An array of field names
-     * @param $type       An array of field types
-     * @param $array      An array of '' or '[]' for each type if it's an array or not
-     * @param $length     An array of field lengths
-     * @param $colcomment An array of comments
-     * @param $typcomment Type comment
+     * @param string $name       The name of the type
+     * @param int $fields     The number of fields
+     * @param array $field      An array of field names
+     * @param array $type       An array of field types
+     * @param array $array      An array of '' or '[]' for each type if it's an array or not
+     * @param array $length     An array of field lengths
+     * @param array $colcomment An array of comments
+     * @param string $typcomment Type comment
      *
      * @return bool|int 0 success
      */
@@ -2029,7 +2029,7 @@ class Postgres extends ADOdbBase
     /**
      * Edits a rule on a table OR view.
      *
-     * @param $name    The name of the new rule
+     * @param string $name    The name of the new rule
      * @param $event   SELECT, INSERT, UPDATE or DELETE
      * @param $table   Table on which to create the rule
      * @param $where   When to execute the rule, '' indicates always

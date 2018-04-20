@@ -231,7 +231,7 @@ trait SequenceTrait
      * @param number $maxvalue     The max value
      * @param number $restartvalue The starting value
      * @param number $cachevalue   The cache value
-     * @param boolean $cycledvalue  True if cycled, false otherwise
+     * @param boolean|null $cycledvalue  True if cycled, false otherwise
      * @param number $startvalue   The sequence start value when issueing a restart
      *
      * @return bool|int 0 success
@@ -303,7 +303,7 @@ trait SequenceTrait
      * @param string $maxvalue     The max value
      * @param string $restartvalue The starting value
      * @param string $cachevalue   The cache value
-     * @param boolean $cycledvalue  True if cycled, false otherwise
+     * @param boolean|null $cycledvalue  True if cycled, false otherwise
      * @param string $startvalue   The sequence start value when issueing a restart
      *
      * @return int 0 success
@@ -414,7 +414,7 @@ trait SequenceTrait
      * @param number $maxvalue     The sequence maximum value
      * @param number $restartvalue The sequence current value
      * @param number  $cachevalue   The sequence cache value
-     * @param boolean $cycledvalue  Sequence can cycle ?
+     * @param boolean|null $cycledvalue  Sequence can cycle ?
      * @param number $startvalue   The sequence start value when issueing a restart
      *
      * @return int 0 if operation was successful
