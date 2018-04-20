@@ -542,5 +542,4 @@ trait SequenceTrait
 
         return $this->execute($sql);
     }
-
 }

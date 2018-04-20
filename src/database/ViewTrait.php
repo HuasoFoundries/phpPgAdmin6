@@ -320,5 +320,4 @@ trait ViewTrait
 
         return $this->execute($sql);
     }
-
 }
