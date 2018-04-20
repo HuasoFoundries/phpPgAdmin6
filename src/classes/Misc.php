@@ -82,6 +82,7 @@ class Misc
         if (version_compare(phpversion(), $this->phpMinVer, '<')) {
             $container->get('utils')->addError(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
         }
+        //$this->kint_and_die($this);
 
         $this->getServerId();
     }
@@ -136,7 +137,7 @@ class Misc
      * @param string $key   name of the key to set
      * @param mixed  $value value of the key to set
      *
-     * @return $this
+     * @return \PHPPgAdmin\Misc this class instance
      */
     public function setConf(string $key, $value)
     {
@@ -195,7 +196,7 @@ class Misc
      *
      * @param bool $flag sets internal $_reload_browser var which will be passed to the footer methods
      *
-     * @return $this
+     * @return \PHPPgAdmin\Misc this class instance
      */
     public function setReloadBrowser($flag)
     {
@@ -212,13 +213,13 @@ class Misc
     /**
      * Default Error Handler. This will be called with the following params.
      *
-     * @param $dbms         the RDBMS you are connecting to
-     * @param $fn           the name of the calling function (in uppercase)
-     * @param $errno        the native error number from the database
-     * @param $errmsg       the native error msg from the database
-     * @param $p1           $fn specific parameter - see below
-     * @param $p2           parameter 2
-     * @param $thisConnection connection
+     * @param string $dbms         the RDBMS you are connecting to
+     * @param string $fn           the name of the calling function (in uppercase)
+     * @param number $errno        the native error number from the database
+     * @param string $errmsg       the native error msg from the database
+     * @param string $p1           $fn specific parameter - see below
+     * @param string $p2           parameter 2
+     * @param mixed $thisConnection connection
      *
      * @throws \PHPPgAdmin\ADOdbException
      *
@@ -295,7 +296,7 @@ class Misc
      *
      * @param bool $flag true or false to allow unconnected clients to access the view
      *
-     * @return $this
+     * @return \PHPPgAdmin\Misc this class instance
      */
     public function setNoDBConnection($flag)
     {

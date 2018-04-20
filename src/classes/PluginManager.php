@@ -60,7 +60,7 @@ class PluginManager
         $plugins = $this->conf['plugins'];
 
         foreach ($plugins as $activated_plugin) {
-            $plugin_file = \BASE_PATH.'/src/plugins/'.$activated_plugin.'/plugin.php';
+            $plugin_file = \BASE_PATH . '/src/plugins/' . $activated_plugin . '/plugin.php';
 
             // Verify is the activated plugin exists
             if (file_exists($plugin_file)) {
@@ -73,7 +73,7 @@ class PluginManager
                     continue;
                 }
             } else {
-                $this->halt(sprintf($this->lang['strpluginnotfound']."\t\n", $activated_plugin));
+                $this->halt(sprintf($this->lang['strpluginnotfound'] . "\t\n", $activated_plugin));
             }
         }
     }
@@ -81,7 +81,7 @@ class PluginManager
     /**
      * Add a plugin in the list of plugins to manage.
      *
-     * @param $plugin - Instance from plugin
+     * @param mixed $plugin - Instance from plugin
      */
     public function add_plugin($plugin)
     {
@@ -95,7 +95,7 @@ class PluginManager
         $hooks = $plugin->get_hooks();
         foreach ($hooks as $hook => $functions) {
             if (!in_array($hook, $this->available_hooks, true)) {
-                $this->halt(sprintf($this->lang['strhooknotfound']."\t\n", $hook));
+                $this->halt(sprintf($this->lang['strhooknotfound'] . "\t\n", $hook));
             }
             $this->hooks[$hook][$plugin_name] = $functions;
         }
@@ -117,8 +117,8 @@ class PluginManager
     /**
      * Execute the plugins hook functions when needed.
      *
-     * @param $hook - The place where the function will be called
-     * @param $function_args - An array reference with arguments to give to called function
+     * @param string $hook - The place where the function will be called
+     * @param array $function_args - An array reference with arguments to give to called function
      */
     public function do_hook($hook, &$function_args)
     {
@@ -138,14 +138,14 @@ class PluginManager
     /**
      * Execute a plugin's action.
      *
-     * @param $plugin_name - The plugin name
-     * @param $action - action that will be executed
+     * @param string $plugin_name - The plugin name
+     * @param string $action - action that will be executed
      */
     public function do_action($plugin_name, $action)
     {
         if (!isset($this->plugins_list[$plugin_name])) {
             // Show an error and stop the application
-            $this->halt(sprintf($this->lang['strpluginnotfound']."\t\n", $plugin_name));
+            $this->halt(sprintf($this->lang['strpluginnotfound'] . "\t\n", $plugin_name));
         }
         $plugin = $this->plugins_list[$plugin_name];
 
@@ -154,7 +154,7 @@ class PluginManager
             call_user_func([$plugin, $action]);
         } else {
             // Show an error and stop the application
-            $this->halt(sprintf($this->lang['stractionnotfound']."\t\n", $action, $plugin_name));
+            $this->halt(sprintf($this->lang['stractionnotfound'] . "\t\n", $action, $plugin_name));
         }
     }
 }

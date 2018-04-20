@@ -317,7 +317,7 @@ $container['haltHandler'] = function ($c) {
             implode('<br>', $exits)
         );
 
-        $body = new \Slim\Http\Body(fopen('php://temp', 'r+'));
+        $body = $response->getBody(); //new \Slim\Http\Body(fopen('php://temp', 'r+'));
         $body->write($output);
 
         return $response
