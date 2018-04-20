@@ -947,4 +947,5 @@ trait RoleTrait
 
         return $this->execute($sql);
     }
+
 }

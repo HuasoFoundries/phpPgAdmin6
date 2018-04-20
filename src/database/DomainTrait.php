@@ -306,4 +306,5 @@ trait DomainTrait
 
         return $this->execute($sql);
     }
+
 }
