@@ -299,8 +299,8 @@ class ADOdbBase
         // So, while counter-intuitive, it is important to not clean comments before
         // calling setComment. We will clean it here instead.
         /**
-        $this->fieldClean($table);
-        $this->fieldClean($obj_name);
+         * $this->fieldClean($table);
+         * $this->fieldClean($obj_name);
          */
 
         switch ($obj_type) {
