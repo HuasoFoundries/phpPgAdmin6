@@ -630,5 +630,4 @@ trait FtsTrait
 
         return $this->selectSet($sql);
     }
-
 }
