@@ -66,7 +66,7 @@ trait AdminTrait
             echo "<input type=\"submit\" name=\"cluster\" value=\"{$this->lang['strcluster']}\" />\n"; //TODO
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
-            // END single cluster
+        // END single cluster
         } else {
             $msg = '';
             //If multi table cluster
@@ -164,7 +164,7 @@ trait AdminTrait
             echo "<input type=\"submit\" name=\"reindex\" value=\"{$this->lang['strreindex']}\" />\n"; //TODO
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
-            // END single reindex
+        // END single reindex
         } else {
             //If multi table reindex
             if (('table' == $type) && is_array($_REQUEST['table'])) {
@@ -247,7 +247,7 @@ trait AdminTrait
             echo "<input type=\"submit\" name=\"analyze\" value=\"{$this->lang['stranalyze']}\" />\n"; //TODO
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
-            // END single analyze
+        // END single analyze
         } else {
             //If multi table analyze
             if (('table' == $type) && is_array($_REQUEST['table'])) {
@@ -330,7 +330,7 @@ trait AdminTrait
             echo "<input type=\"submit\" name=\"vacuum\" value=\"{$this->lang['strvacuum']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
-            // END single vacuum
+        // END single vacuum
         } else {
             //If multi drop
             if (is_array($_REQUEST['table'])) {
