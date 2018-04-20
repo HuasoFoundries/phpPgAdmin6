@@ -22,10 +22,10 @@ class GroupsController extends BaseController
      */
     public function render()
     {
-        $this->printHeader($lang['strgroups']);
+        $this->printHeader($this->lang['strgroups']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             case 'add_member':
                 $this->doAddMember();
 
@@ -94,7 +94,6 @@ class GroupsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('server');
@@ -105,19 +104,19 @@ class GroupsController extends BaseController
 
         $columns = [
             'group'   => [
-                'title' => $lang['strgroup'],
+                'title' => $this->lang['strgroup'],
                 'field' => Decorator::field('groname'),
                 'url'   => "groups?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['group' => 'groname'],
             ],
             'actions' => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
         ];
 
         $actions = [
             'drop' => [
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'groups',
@@ -130,7 +129,7 @@ class GroupsController extends BaseController
             ],
         ];
 
-        echo $this->printTable($groups, $columns, $actions, 'groups-properties', $lang['strnogroups']);
+        echo $this->printTable($groups, $columns, $actions, 'groups-properties', $this->lang['strnogroups']);
 
         $this->printNavLinks(['create' => [
             'attr'    => [
@@ -142,7 +141,7 @@ class GroupsController extends BaseController
                     ],
                 ],
             ],
-            'content' => $lang['strcreategroup'],
+            'content' => $this->lang['strcreategroup'],
         ]], 'groups-groups', get_defined_vars());
     }
 
@@ -151,14 +150,13 @@ class GroupsController extends BaseController
      */
     public function doAddMember()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->addGroupMember($_REQUEST['group'], $_REQUEST['user']);
         if (0 == $status) {
-            $this->doProperties($lang['strmemberadded']);
+            $this->doProperties($this->lang['strmemberadded']);
         } else {
-            $this->doProperties($lang['strmemberaddedbad']);
+            $this->doProperties($this->lang['strmemberaddedbad']);
         }
     }
 
@@ -169,29 +167,28 @@ class GroupsController extends BaseController
      */
     public function doDropMember($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('group');
-            $this->printTitle($lang['strdropmember'], 'pg.group.alter');
+            $this->printTitle($this->lang['strdropmember'], 'pg.group.alter');
 
-            echo '<p>', sprintf($lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
             echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
             echo '<input type="hidden" name="user" value="', htmlspecialchars($_REQUEST['user']), "\" />\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
             $status = $data->dropGroupMember($_REQUEST['group'], $_REQUEST['user']);
             if (0 == $status) {
-                $this->doProperties($lang['strmemberdropped']);
+                $this->doProperties($this->lang['strmemberdropped']);
             } else {
-                $this->doDropMember(true, $lang['strmemberdroppedbad']);
+                $this->doDropMember(true, $this->lang['strmemberdroppedbad']);
             }
         }
     }
@@ -203,7 +200,6 @@ class GroupsController extends BaseController
      */
     public function doProperties($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['user'])) {
@@ -211,7 +207,7 @@ class GroupsController extends BaseController
         }
 
         $this->printTrail('group');
-        $this->printTitle($lang['strproperties'], 'pg.group');
+        $this->printTitle($this->lang['strproperties'], 'pg.group');
         $this->printMsg($msg);
 
         $groupdata = $data->getGroup($_REQUEST['group']);
@@ -220,17 +216,17 @@ class GroupsController extends BaseController
         if ($groupdata->recordCount() > 0) {
             $columns = [
                 'members' => [
-                    'title' => $lang['strmembers'],
+                    'title' => $this->lang['strmembers'],
                     'field' => Decorator::field('usename'),
                 ],
                 'actions' => [
-                    'title' => $lang['stractions'],
+                    'title' => $this->lang['stractions'],
                 ],
             ];
 
             $actions = [
                 'drop' => [
-                    'content' => $lang['strdrop'],
+                    'content' => $this->lang['strdrop'],
                     'attr'    => [
                         'href' => [
                             'url'     => 'groups',
@@ -244,7 +240,7 @@ class GroupsController extends BaseController
                 ],
             ];
 
-            echo $this->printTable($groupdata, $columns, $actions, 'groups-members', $lang['strnousers']);
+            echo $this->printTable($groupdata, $columns, $actions, 'groups-members', $this->lang['strnousers']);
         }
 
         // Display form for adding a user to the group
@@ -257,7 +253,7 @@ class GroupsController extends BaseController
             $users->moveNext();
         }
         echo "</select>\n";
-        echo "<input type=\"submit\" value=\"{$lang['straddmember']}\" />\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['straddmember']}\" />\n";
         echo $this->misc->form;
         echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
         echo "<input type=\"hidden\" name=\"action\" value=\"add_member\" />\n";
@@ -272,7 +268,7 @@ class GroupsController extends BaseController
                     ],
                 ],
             ],
-            'content' => $lang['strshowallgroups'],
+            'content' => $this->lang['strshowallgroups'],
         ]], 'groups-properties', get_defined_vars());
     }
 
@@ -283,28 +279,27 @@ class GroupsController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('group');
-            $this->printTitle($lang['strdrop'], 'pg.group.drop');
+            $this->printTitle($this->lang['strdrop'], 'pg.group.drop');
 
-            echo '<p>', sprintf($lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
             echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
             $status = $data->dropGroup($_REQUEST['group']);
             if (0 == $status) {
-                $this->doDefault($lang['strgroupdropped']);
+                $this->doDefault($this->lang['strgroupdropped']);
             } else {
-                $this->doDefault($lang['strgroupdroppedbad']);
+                $this->doDefault($this->lang['strgroupdroppedbad']);
             }
         }
     }
@@ -316,7 +311,6 @@ class GroupsController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         if (!isset($_POST['name'])) {
             $_POST['name'] = '';
@@ -330,16 +324,16 @@ class GroupsController extends BaseController
         $users = $data->getUsers();
 
         $this->printTrail('server');
-        $this->printTitle($lang['strcreategroup'], 'pg.group.create');
+        $this->printTitle($this->lang['strcreategroup'], 'pg.group.create');
         $this->printMsg($msg);
 
         echo "<form action=\"\" method=\"post\">\n";
         echo $this->misc->form;
         echo "<table>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data\"><input size=\"32\" maxlength=\"{$data->_maxNameLen}\" name=\"name\" value=\"", htmlspecialchars($_POST['name']), "\" /></td>\n\t</tr>\n";
         if ($users->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strmembers']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>\n";
 
             echo "\t\t<td class=\"data\">\n";
             echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(40, $users->recordCount()), "\">\n";
@@ -354,8 +348,8 @@ class GroupsController extends BaseController
         }
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
     }
 
@@ -364,7 +358,6 @@ class GroupsController extends BaseController
      */
     public function doSaveCreate()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['members'])) {
@@ -373,13 +366,13 @@ class GroupsController extends BaseController
 
         // Check form vars
         if ('' == trim($_POST['name'])) {
-            $this->doCreate($lang['strgroupneedsname']);
+            $this->doCreate($this->lang['strgroupneedsname']);
         } else {
             $status = $data->createGroup($_POST['name'], $_POST['members']);
             if (0 == $status) {
-                $this->doDefault($lang['strgroupcreated']);
+                $this->doDefault($this->lang['strgroupcreated']);
             } else {
-                $this->doCreate($lang['strgroupcreatedbad']);
+                $this->doCreate($this->lang['strgroupcreatedbad']);
             }
         }
     }

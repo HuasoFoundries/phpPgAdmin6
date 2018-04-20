@@ -22,17 +22,14 @@ class DomainsController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
-        $action = $this->action;
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strdomains']);
+        $this->printHeader($this->lang['strdomains']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             case 'add_check':
                 $this->addCheck(true);
 
@@ -113,7 +110,6 @@ class DomainsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
@@ -124,41 +120,41 @@ class DomainsController extends BaseController
 
         $columns = [
             'domain'  => [
-                'title' => $lang['strdomain'],
+                'title' => $this->lang['strdomain'],
                 'field' => Decorator::field('domname'),
                 'url'   => "domains?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['domain' => 'domname'],
             ],
             'type'    => [
-                'title' => $lang['strtype'],
+                'title' => $this->lang['strtype'],
                 'field' => Decorator::field('domtype'),
             ],
             'notnull' => [
-                'title'  => $lang['strnotnull'],
+                'title'  => $this->lang['strnotnull'],
                 'field'  => Decorator::field('domnotnull'),
                 'type'   => 'bool',
                 'params' => ['true' => 'NOT NULL', 'false' => ''],
             ],
             'default' => [
-                'title' => $lang['strdefault'],
+                'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('domdef'),
             ],
             'owner'   => [
-                'title' => $lang['strowner'],
+                'title' => $this->lang['strowner'],
                 'field' => Decorator::field('domowner'),
             ],
             'actions' => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
             'comment' => [
-                'title' => $lang['strcomment'],
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('domcomment'),
             ],
         ];
 
         $actions = [
             'alter' => [
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'domains',
@@ -170,7 +166,7 @@ class DomainsController extends BaseController
                 ],
             ],
             'drop'  => [
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'domains',
@@ -187,7 +183,7 @@ class DomainsController extends BaseController
             unset($actions['alter']);
         }
 
-        echo $this->printTable($domains, $columns, $actions, 'domains-domains', $lang['strnodomains']);
+        echo $this->printTable($domains, $columns, $actions, 'domains-domains', $this->lang['strnodomains']);
 
         $navlinks = [
             'create' => [
@@ -202,7 +198,7 @@ class DomainsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strcreatedomain'],
+                'content' => $this->lang['strcreatedomain'],
             ],
         ];
         $this->printNavLinks($navlinks, 'domains-domains', get_defined_vars());
@@ -213,7 +209,6 @@ class DomainsController extends BaseController
      */
     public function doTree()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $domains = $data->getDomains();
@@ -242,7 +237,6 @@ class DomainsController extends BaseController
      */
     public function doSaveAlter()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->alterDomain(
@@ -252,9 +246,9 @@ class DomainsController extends BaseController
             $_POST['domowner']
         );
         if (0 == $status) {
-            $this->doProperties($lang['strdomainaltered']);
+            $this->doProperties($this->lang['strdomainaltered']);
         } else {
-            $this->doAlter($lang['strdomainalteredbad']);
+            $this->doAlter($this->lang['strdomainalteredbad']);
         }
     }
 
@@ -265,11 +259,10 @@ class DomainsController extends BaseController
      */
     public function doAlter($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('domain');
-        $this->printTitle($lang['stralter'], 'pg.domain.alter');
+        $this->printTitle($this->lang['stralter'], 'pg.domain.alter');
         $this->printMsg($msg);
 
         // Fetch domain info
@@ -292,16 +285,16 @@ class DomainsController extends BaseController
             // Display domain info
             echo '<form action="'.\SUBFOLDER."/src/views/domains\" method=\"post\">\n";
             echo "<table>\n";
-            echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
+            echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$this->lang['strname']}</th>\n";
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
-            echo "<tr><th class=\"data left required\">{$lang['strtype']}</th>\n";
+            echo "<tr><th class=\"data left required\">{$this->lang['strtype']}</th>\n";
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
-            echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$lang['strnotnull']}</label></th>\n";
+            echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$this->lang['strnotnull']}</label></th>\n";
             echo '<td class="data1"><input type="checkbox" id="domnotnull" name="domnotnull"', (isset($_POST['domnotnull']) ? ' checked="checked"' : ''), " /></td></tr>\n";
-            echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
+            echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>\n";
             echo '<td class="data1"><input name="domdefault" size="32" value="',
             htmlspecialchars($_POST['domdefault']), "\" /></td></tr>\n";
-            echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
+            echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>\n";
             echo '<td class="data1"><select name="domowner">';
             while (!$users->EOF) {
                 $uname = $users->fields['usename'];
@@ -314,11 +307,11 @@ class DomainsController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_alter\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
     }
 
@@ -330,7 +323,6 @@ class DomainsController extends BaseController
      */
     public function addCheck($confirm, $msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
@@ -343,13 +335,13 @@ class DomainsController extends BaseController
 
         if ($confirm) {
             $this->printTrail('domain');
-            $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
+            $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
             echo '<form action="'.\SUBFOLDER."/src/views/domains\" method=\"post\">\n";
             echo "<table>\n";
-            echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
-            echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
+            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>\n";
+            echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>\n";
 
             echo "<tr><td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
             htmlspecialchars($_POST['name']), "\" /></td>\n";
@@ -361,12 +353,12 @@ class DomainsController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_add_check\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"add\" value=\"{$lang['stradd']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" name=\"add\" value=\"{$this->lang['stradd']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
             if ('' == trim($_POST['definition'])) {
-                $this->addCheck(true, $lang['strcheckneedsdefinition']);
+                $this->addCheck(true, $this->lang['strcheckneedsdefinition']);
             } else {
                 $status = $data->addDomainCheckConstraint(
                     $_POST['domain'],
@@ -374,9 +366,9 @@ class DomainsController extends BaseController
                     $_POST['name']
                 );
                 if (0 == $status) {
-                    $this->doProperties($lang['strcheckadded']);
+                    $this->doProperties($this->lang['strcheckadded']);
                 } else {
-                    $this->addCheck(true, $lang['strcheckaddedbad']);
+                    $this->addCheck(true, $this->lang['strcheckaddedbad']);
                 }
             }
         }
@@ -390,16 +382,15 @@ class DomainsController extends BaseController
      */
     public function doDropConstraint($confirm, $msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('domain');
-            $this->printTitle($lang['strdrop'], 'pg.constraint.drop');
+            $this->printTitle($this->lang['strdrop'], 'pg.constraint.drop');
             $this->printMsg($msg);
 
             echo '<p>', sprintf(
-                $lang['strconfdropconstraint'],
+                $this->lang['strconfdropconstraint'],
                 $this->misc->printVal($_REQUEST['constraint']),
                 $this->misc->printVal($_REQUEST['domain'])
             ), "</p>\n";
@@ -408,16 +399,16 @@ class DomainsController extends BaseController
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";
             echo $this->misc->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
             $status = $data->dropDomainConstraint($_POST['domain'], $_POST['constraint'], isset($_POST['cascade']));
             if (0 == $status) {
-                $this->doProperties($lang['strconstraintdropped']);
+                $this->doProperties($this->lang['strconstraintdropped']);
             } else {
-                $this->doDropConstraint(true, $lang['strconstraintdroppedbad']);
+                $this->doDropConstraint(true, $this->lang['strconstraintdroppedbad']);
             }
         }
     }
@@ -429,11 +420,10 @@ class DomainsController extends BaseController
      */
     public function doProperties($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('domain');
-        $this->printTitle($lang['strproperties'], 'pg.domain');
+        $this->printTitle($this->lang['strproperties'], 'pg.domain');
         $this->printMsg($msg);
 
         $domaindata = $data->getDomain($_REQUEST['domain']);
@@ -447,40 +437,40 @@ class DomainsController extends BaseController
             // Display domain info
             $domaindata->fields['domnotnull'] = $data->phpBool($domaindata->fields['domnotnull']);
             echo "<table>\n";
-            echo "<tr><th class=\"data left\" style=\"width: 70px\">{$lang['strname']}</th>\n";
+            echo "<tr><th class=\"data left\" style=\"width: 70px\">{$this->lang['strname']}</th>\n";
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), "</td></tr>\n";
-            echo "<tr><th class=\"data left\">{$lang['strtype']}</th>\n";
+            echo "<tr><th class=\"data left\">{$this->lang['strtype']}</th>\n";
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domtype']), "</td></tr>\n";
-            echo "<tr><th class=\"data left\">{$lang['strnotnull']}</th>\n";
+            echo "<tr><th class=\"data left\">{$this->lang['strnotnull']}</th>\n";
             echo '<td class="data1">', ($domaindata->fields['domnotnull'] ? 'NOT NULL' : ''), "</td></tr>\n";
-            echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
+            echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>\n";
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domdef']), "</td></tr>\n";
-            echo "<tr><th class=\"data left\">{$lang['strowner']}</th>\n";
+            echo "<tr><th class=\"data left\">{$this->lang['strowner']}</th>\n";
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domowner']), "</td></tr>\n";
             echo "</table>\n";
 
             // Display domain constraints
-            echo "<h3>{$lang['strconstraints']}</h3>\n";
+            echo "<h3>{$this->lang['strconstraints']}</h3>\n";
             if ($data->hasDomainConstraints()) {
                 $domaincons = $data->getDomainConstraints($_REQUEST['domain']);
 
                 $columns = [
                     'name'       => [
-                        'title' => $lang['strname'],
+                        'title' => $this->lang['strname'],
                         'field' => Decorator::field('conname'),
                     ],
                     'definition' => [
-                        'title' => $lang['strdefinition'],
+                        'title' => $this->lang['strdefinition'],
                         'field' => Decorator::field('consrc'),
                     ],
                     'actions'    => [
-                        'title' => $lang['stractions'],
+                        'title' => $this->lang['stractions'],
                     ],
                 ];
 
                 $actions = [
                     'drop' => [
-                        'content' => $lang['strdrop'],
+                        'content' => $this->lang['strdrop'],
                         'attr'    => [
                             'href' => [
                                 'url'     => 'domains',
@@ -495,10 +485,10 @@ class DomainsController extends BaseController
                     ],
                 ];
 
-                echo $this->printTable($domaincons, $columns, $actions, 'domains-properties', $lang['strnodata']);
+                echo $this->printTable($domaincons, $columns, $actions, 'domains-properties', $this->lang['strnodata']);
             }
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
 
         $navlinks = [
@@ -515,7 +505,7 @@ class DomainsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
             ],
         ];
         if ($data->hasAlterDomains()) {
@@ -532,7 +522,7 @@ class DomainsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['straddcheck'],
+                'content' => $this->lang['straddcheck'],
             ];
             $navlinks['alter'] = [
                 'attr'    => [
@@ -547,7 +537,7 @@ class DomainsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
             ];
         }
 
@@ -561,28 +551,27 @@ class DomainsController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('domain');
-            $this->printTitle($lang['strdrop'], 'pg.domain.drop');
+            $this->printTitle($this->lang['strdrop'], 'pg.domain.drop');
 
-            echo '<p>', sprintf($lang['strconfdropdomain'], $this->misc->printVal($_REQUEST['domain'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdropdomain'], $this->misc->printVal($_REQUEST['domain'])), "</p>\n";
             echo '<form action="'.\SUBFOLDER."/src/views/domains\" method=\"post\">\n";
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="domain" value="', htmlspecialchars($_REQUEST['domain']), "\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
             $status = $data->dropDomain($_POST['domain'], isset($_POST['cascade']));
             if (0 == $status) {
-                $this->doDefault($lang['strdomaindropped']);
+                $this->doDefault($this->lang['strdomaindropped']);
             } else {
-                $this->doDefault($lang['strdomaindroppedbad']);
+                $this->doDefault($this->lang['strdomaindroppedbad']);
             }
         }
     }
@@ -594,7 +583,6 @@ class DomainsController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['domname'])) {
@@ -624,15 +612,15 @@ class DomainsController extends BaseController
         $types = $data->getTypes(true);
 
         $this->printTrail('schema');
-        $this->printTitle($lang['strcreatedomain'], 'pg.domain.create');
+        $this->printTitle($this->lang['strcreatedomain'], 'pg.domain.create');
         $this->printMsg($msg);
 
         echo '<form action="'.\SUBFOLDER."/src/views/domains\" method=\"post\">\n";
         echo "<table>\n";
-        echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$lang['strname']}</th>\n";
+        echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$this->lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"domname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
         htmlspecialchars($_POST['domname']), "\" /></td></tr>\n";
-        echo "<tr><th class=\"data left required\">{$lang['strtype']}</th>\n";
+        echo "<tr><th class=\"data left required\">{$this->lang['strtype']}</th>\n";
         echo "<td class=\"data1\">\n";
         // Output return type list
         echo "<select name=\"domtype\">\n";
@@ -653,22 +641,22 @@ class DomainsController extends BaseController
         echo '<option value="[]"', ('[]' == $_POST['domarray']) ? ' selected="selected"' : '', ">[ ]</option>\n";
         echo "</select></td></tr>\n";
 
-        echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$lang['strnotnull']}</label></th>\n";
+        echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$this->lang['strnotnull']}</label></th>\n";
         echo '<td class="data1"><input type="checkbox" id="domnotnull" name="domnotnull"',
         (isset($_POST['domnotnull']) ? ' checked="checked"' : ''), " /></td></tr>\n";
-        echo "<tr><th class=\"data left\">{$lang['strdefault']}</th>\n";
+        echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>\n";
         echo '<td class="data1"><input name="domdefault" size="32" value="',
         htmlspecialchars($_POST['domdefault']), "\" /></td></tr>\n";
         if ($data->hasDomainConstraints()) {
-            echo "<tr><th class=\"data left\">{$lang['strconstraints']}</th>\n";
+            echo "<tr><th class=\"data left\">{$this->lang['strconstraints']}</th>\n";
             echo '<td class="data1">CHECK (<input name="domcheck" size="32" value="',
             htmlspecialchars($_POST['domcheck']), "\" />)</td></tr>\n";
         }
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
     }
 
@@ -677,7 +665,6 @@ class DomainsController extends BaseController
      */
     public function doSaveCreate()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['domcheck'])) {
@@ -686,7 +673,7 @@ class DomainsController extends BaseController
 
         // Check that they've given a name and a definition
         if ('' == $_POST['domname']) {
-            $this->doCreate($lang['strdomainneedsname']);
+            $this->doCreate($this->lang['strdomainneedsname']);
         } else {
             $status = $data->createDomain(
                 $_POST['domname'],
@@ -698,9 +685,9 @@ class DomainsController extends BaseController
                 $_POST['domcheck']
             );
             if (0 == $status) {
-                $this->doDefault($lang['strdomaincreated']);
+                $this->doDefault($this->lang['strdomaincreated']);
             } else {
-                $this->doCreate($lang['strdomaincreatedbad']);
+                $this->doCreate($this->lang['strdomaincreatedbad']);
             }
         }
     }

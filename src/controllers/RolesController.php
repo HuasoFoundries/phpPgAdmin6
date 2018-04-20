@@ -22,14 +22,12 @@ class RolesController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $data   = $this->misc->getDatabaseAccessor();
-        $action = $this->action;
+        $data = $this->misc->getDatabaseAccessor();
 
-        $this->printHeader($lang['strroles']);
+        $this->printHeader($this->lang['strroles']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             case 'create':
                 $this->doCreate();
 
@@ -100,15 +98,14 @@ class RolesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $renderRoleConnLimit = function ($val) use ($lang) {
-            return '-1' == $val ? $lang['strnolimit'] : htmlspecialchars($val);
+            return '-1' == $val ? $this->lang['strnolimit'] : htmlspecialchars($val);
         };
 
         $renderRoleExpires = function ($val) use ($lang) {
-            return 'infinity' == $val ? $lang['strnever'] : htmlspecialchars($val);
+            return 'infinity' == $val ? $this->lang['strnever'] : htmlspecialchars($val);
         };
 
         $this->printTrail('server');
@@ -119,56 +116,56 @@ class RolesController extends BaseController
 
         $columns = [
             'role'       => [
-                'title' => $lang['strrole'],
+                'title' => $this->lang['strrole'],
                 'field' => Decorator::field('rolname'),
                 'url'   => \SUBFOLDER."/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['rolename' => 'rolname'],
             ],
             'superuser'  => [
-                'title' => $lang['strsuper'],
+                'title' => $this->lang['strsuper'],
                 'field' => Decorator::field('rolsuper'),
                 'type'  => 'yesno',
             ],
             'createdb'   => [
-                'title' => $lang['strcreatedb'],
+                'title' => $this->lang['strcreatedb'],
                 'field' => Decorator::field('rolcreatedb'),
                 'type'  => 'yesno',
             ],
             'createrole' => [
-                'title' => $lang['strcancreaterole'],
+                'title' => $this->lang['strcancreaterole'],
                 'field' => Decorator::field('rolcreaterole'),
                 'type'  => 'yesno',
             ],
             'inherits'   => [
-                'title' => $lang['strinheritsprivs'],
+                'title' => $this->lang['strinheritsprivs'],
                 'field' => Decorator::field('rolinherit'),
                 'type'  => 'yesno',
             ],
             'canloging'  => [
-                'title' => $lang['strcanlogin'],
+                'title' => $this->lang['strcanlogin'],
                 'field' => Decorator::field('rolcanlogin'),
                 'type'  => 'yesno',
             ],
             'connlimit'  => [
-                'title'  => $lang['strconnlimit'],
+                'title'  => $this->lang['strconnlimit'],
                 'field'  => Decorator::field('rolconnlimit'),
                 'type'   => 'callback',
                 'params' => ['function' => $renderRoleConnLimit],
             ],
             'expires'    => [
-                'title'  => $lang['strexpires'],
+                'title'  => $this->lang['strexpires'],
                 'field'  => Decorator::field('rolvaliduntil'),
                 'type'   => 'callback',
-                'params' => ['function' => $renderRoleExpires, 'null' => $lang['strnever']],
+                'params' => ['function' => $renderRoleExpires, 'null' => $this->lang['strnever']],
             ],
             'actions'    => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
         ];
 
         $actions = [
             'alter' => [
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'roles',
@@ -180,7 +177,7 @@ class RolesController extends BaseController
                 ],
             ],
             'drop'  => [
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'roles',
@@ -193,7 +190,7 @@ class RolesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($roles, $columns, $actions, 'roles-roles', $lang['strnoroles']);
+        echo $this->printTable($roles, $columns, $actions, 'roles-roles', $this->lang['strnoroles']);
 
         $navlinks = [
             'create' => [
@@ -206,7 +203,7 @@ class RolesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strcreaterole'],
+                'content' => $this->lang['strcreaterole'],
             ],
         ];
         $this->printNavLinks($navlinks, 'roles-roles', get_defined_vars());
@@ -219,7 +216,6 @@ class RolesController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['formRolename'])) {
@@ -255,40 +251,40 @@ class RolesController extends BaseController
         }
 
         $this->printTrail('role');
-        $this->printTitle($lang['strcreaterole'], 'pg.role.create');
+        $this->printTitle($this->lang['strcreaterole'], 'pg.role.create');
         $this->printMsg($msg);
 
         echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
         echo "<table>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\" style=\"width: 130px\">{$lang['strname']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\" style=\"width: 130px\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formRolename\" value=\"", htmlspecialchars($_POST['formRolename']), "\" /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strpassword']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" type=\"password\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strconfirm']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconfirm']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" type=\"password\" name=\"formConfirm\" value=\"", htmlspecialchars($_POST['formConfirm']), "\" /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$lang['strsuper']}</label></th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>\n";
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
         (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$lang['strcreatedb']}</label></th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>\n";
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
         (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$lang['strcancreaterole']}</label></th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$this->lang['strcancreaterole']}</label></th>\n";
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
         (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$lang['strinheritsprivs']}</label></th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$this->lang['strinheritsprivs']}</label></th>\n";
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
         (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$lang['strcanlogin']}</label></th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$this->lang['strcanlogin']}</label></th>\n";
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
         (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strconnlimit']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconnlimit']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strexpires']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"23\" name=\"formExpires\" value=\"", htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>\n";
 
         $roles = $data->getRoles();
         if ($roles->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strmemberof']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmemberof']}</th>\n";
             echo "\t\t<td class=\"data\">\n";
             echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
             while (!$roles->EOF) {
@@ -301,7 +297,7 @@ class RolesController extends BaseController
             echo "\t\t</td>\n\t</tr>\n";
 
             $roles->moveFirst();
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strmembers']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>\n";
             echo "\t\t<td class=\"data\">\n";
             echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
             while (!$roles->EOF) {
@@ -314,7 +310,7 @@ class RolesController extends BaseController
             echo "\t\t</td>\n\t</tr>\n";
 
             $roles->moveFirst();
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['stradminmembers']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['stradminmembers']}</th>\n";
             echo "\t\t<td class=\"data\">\n";
             echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
             while (!$roles->EOF) {
@@ -330,8 +326,8 @@ class RolesController extends BaseController
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
     }
 
@@ -340,7 +336,6 @@ class RolesController extends BaseController
      */
     public function doSaveCreate()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['memberof'])) {
@@ -357,9 +352,9 @@ class RolesController extends BaseController
 
         // Check data
         if ('' == $_POST['formRolename']) {
-            $this->doCreate($lang['strroleneedsname']);
+            $this->doCreate($this->lang['strroleneedsname']);
         } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
-            $this->doCreate($lang['strpasswordconfirm']);
+            $this->doCreate($this->lang['strpasswordconfirm']);
         } else {
             $status = $data->createRole(
                 $_POST['formRolename'],
@@ -376,9 +371,9 @@ class RolesController extends BaseController
                 $_POST['adminmembers']
             );
             if (0 == $status) {
-                $this->doDefault($lang['strrolecreated']);
+                $this->doDefault($this->lang['strrolecreated']);
             } else {
-                $this->doCreate($lang['strrolecreatedbad']);
+                $this->doCreate($this->lang['strrolecreatedbad']);
             }
         }
     }
@@ -390,11 +385,10 @@ class RolesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('role');
-        $this->printTitle($lang['stralter'], 'pg.role.alter');
+        $this->printTitle($this->lang['stralter'], 'pg.role.alter');
         $this->printMsg($msg);
 
         $roledata = $data->getRole($_REQUEST['rolename']);
@@ -440,30 +434,30 @@ class RolesController extends BaseController
 
             echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
             echo "<table>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$lang['strname']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$this->lang['strname']}</th>\n";
             echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['formNewRoleName']).'" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strpassword']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strconfirm']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconfirm']}</th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formConfirm\" value=\"\" /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$lang['strsuper']}</label></th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
             (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$lang['strcreatedb']}</label></th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
             (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$lang['strcancreaterole']}</label></th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$this->lang['strcancreaterole']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
             (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$lang['strinheritsprivs']}</label></th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$this->lang['strinheritsprivs']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
             (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$lang['strcanlogin']}</label></th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$this->lang['strcanlogin']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
             (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strconnlimit']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconnlimit']}</th>\n";
             echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strexpires']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>\n";
             echo "\t\t<td class=\"data1\"><input size=\"23\" name=\"formExpires\" value=\"", htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>\n";
 
             if (!isset($_POST['memberof'])) {
@@ -511,7 +505,7 @@ class RolesController extends BaseController
 
             $roles = $data->getRoles($_REQUEST['rolename']);
             if ($roles->recordCount() > 0) {
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strmemberof']}</th>\n";
+                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmemberof']}</th>\n";
                 echo "\t\t<td class=\"data\">\n";
                 echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
                 while (!$roles->EOF) {
@@ -524,7 +518,7 @@ class RolesController extends BaseController
                 echo "\t\t</td>\n\t</tr>\n";
 
                 $roles->moveFirst();
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strmembers']}</th>\n";
+                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>\n";
                 echo "\t\t<td class=\"data\">\n";
                 echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
                 while (!$roles->EOF) {
@@ -537,7 +531,7 @@ class RolesController extends BaseController
                 echo "\t\t</td>\n\t</tr>\n";
 
                 $roles->moveFirst();
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['stradminmembers']}</th>\n";
+                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['stradminmembers']}</th>\n";
                 echo "\t\t<td class=\"data\">\n";
                 echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
                 while (!$roles->EOF) {
@@ -557,11 +551,11 @@ class RolesController extends BaseController
             echo '<input type="hidden" name="membersold" value="', isset($_POST['membersold']) ? $_POST['membersold'] : htmlspecialchars($membersold), "\" />\n";
             echo '<input type="hidden" name="adminmembersold" value="', isset($_POST['adminmembersold']) ? $_POST['adminmembersold'] : htmlspecialchars($adminmembersold), "\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
     }
 
@@ -570,7 +564,6 @@ class RolesController extends BaseController
      */
     public function doSaveAlter()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['memberof'])) {
@@ -587,9 +580,9 @@ class RolesController extends BaseController
 
         // Check name and password
         if (isset($_POST['formNewRoleName']) && '' == $_POST['formNewRoleName']) {
-            $this->doAlter($lang['strroleneedsname']);
+            $this->doAlter($this->lang['strroleneedsname']);
         } elseif ($_POST['formPassword'] != $_POST['formConfirm']) {
-            $this->doAlter($lang['strpasswordconfirm']);
+            $this->doAlter($this->lang['strpasswordconfirm']);
         } else {
             if (isset($_POST['formNewRoleName'])) {
                 $status = $data->setRenameRole($_POST['rolename'], $_POST['formPassword'], isset($_POST['formSuper']), isset($_POST['formCreateDB']), isset($_POST['formCreateRole']), isset($_POST['formInherits']), isset($_POST['formCanLogin']), $_POST['formConnLimit'], $_POST['formExpires'], $_POST['memberof'], $_POST['members'], $_POST['adminmembers'], $_POST['memberofold'], $_POST['membersold'], $_POST['adminmembersold'], $_POST['formNewRoleName']);
@@ -598,9 +591,9 @@ class RolesController extends BaseController
             }
 
             if (0 == $status) {
-                $this->doDefault($lang['strrolealtered']);
+                $this->doDefault($this->lang['strrolealtered']);
             } else {
-                $this->doAlter($lang['strrolealteredbad']);
+                $this->doAlter($this->lang['strrolealteredbad']);
             }
         }
     }
@@ -612,28 +605,27 @@ class RolesController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('role');
-            $this->printTitle($lang['strdroprole'], 'pg.role.drop');
+            $this->printTitle($this->lang['strdroprole'], 'pg.role.drop');
 
-            echo '<p>', sprintf($lang['strconfdroprole'], $this->misc->printVal($_REQUEST['rolename'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdroprole'], $this->misc->printVal($_REQUEST['rolename'])), "</p>\n";
 
             echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), "\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
             $status = $data->dropRole($_REQUEST['rolename']);
             if (0 == $status) {
-                $this->doDefault($lang['strroledropped']);
+                $this->doDefault($this->lang['strroledropped']);
             } else {
-                $this->doDefault($lang['strroledroppedbad']);
+                $this->doDefault($this->lang['strroledroppedbad']);
             }
         }
     }
@@ -645,11 +637,10 @@ class RolesController extends BaseController
      */
     public function doProperties($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('role');
-        $this->printTitle($lang['strproperties'], 'pg.role');
+        $this->printTitle($this->lang['strproperties'], 'pg.role');
         $this->printMsg($msg);
 
         $roledata = $data->getRole($_REQUEST['rolename']);
@@ -663,25 +654,25 @@ class RolesController extends BaseController
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data\" style=\"width: 130px\">Description</th>\n";
             echo "\t\t<th class=\"data\" style=\"width: 120\">Value</th>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strname']}</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strname']}</td>\n";
             echo "\t\t<td class=\"data1\">", htmlspecialchars($_REQUEST['rolename']), "</td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strsuper']}</td>\n";
-            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolsuper']) ? $lang['stryes'] : $lang['strno']), "</td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strcreatedb']}</td>\n";
-            echo "\t\t<td class=\"data1\">", (($roledata->fields['rolcreatedb']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strcancreaterole']}</td>\n";
-            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcreaterole']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strinheritsprivs']}</td>\n";
-            echo "\t\t<td class=\"data1\">", (($roledata->fields['rolinherit']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strcanlogin']}</td>\n";
-            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcanlogin']) ? $lang['stryes'] : $lang['strno']), "</td>\n";
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strconnlimit']}</td>\n";
-            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strexpires']}</td>\n";
-            echo "\t\t<td class=\"data2\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strsessiondefaults']}</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strsuper']}</td>\n";
+            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolsuper']) ? $this->lang['stryes'] : $this->lang['strno']), "</td>\n\t</tr>\n";
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strcreatedb']}</td>\n";
+            echo "\t\t<td class=\"data1\">", (($roledata->fields['rolcreatedb']) ? $this->lang['stryes'] : $this->lang['strno']), "</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strcancreaterole']}</td>\n";
+            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcreaterole']) ? $this->lang['stryes'] : $this->lang['strno']), "</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strinheritsprivs']}</td>\n";
+            echo "\t\t<td class=\"data1\">", (($roledata->fields['rolinherit']) ? $this->lang['stryes'] : $this->lang['strno']), "</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strcanlogin']}</td>\n";
+            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcanlogin']) ? $this->lang['stryes'] : $this->lang['strno']), "</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strconnlimit']}</td>\n";
+            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $this->lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strexpires']}</td>\n";
+            echo "\t\t<td class=\"data2\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $this->lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strsessiondefaults']}</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), "</td>\n";
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['strmemberof']}</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strmemberof']}</td>\n";
             echo "\t\t<td class=\"data2\">";
             $memberof = $data->getMemberOf($_REQUEST['rolename']);
             if ($memberof->recordCount() > 0) {
@@ -691,7 +682,7 @@ class RolesController extends BaseController
                 }
             }
             echo "</td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$lang['strmembers']}</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strmembers']}</td>\n";
             echo "\t\t<td class=\"data1\">";
             $members = $data->getMembers($_REQUEST['rolename']);
             if ($members->recordCount() > 0) {
@@ -701,7 +692,7 @@ class RolesController extends BaseController
                 }
             }
             echo "</td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$lang['stradminmembers']}</td>\n";
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['stradminmembers']}</td>\n";
             echo "\t\t<td class=\"data2\">";
             $adminmembers = $data->getMembers($_REQUEST['rolename'], 't');
             if ($adminmembers->recordCount() > 0) {
@@ -713,7 +704,7 @@ class RolesController extends BaseController
             echo "</td>\n\t</tr>\n";
             echo "</table>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
 
         $navlinks = [
@@ -726,7 +717,7 @@ class RolesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strshowallroles'],
+                'content' => $this->lang['strshowallroles'],
             ],
             'alter'   => [
                 'attr'    => [
@@ -739,7 +730,7 @@ class RolesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
             ],
             'drop'    => [
                 'attr'    => [
@@ -752,7 +743,7 @@ class RolesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
             ],
         ];
 
@@ -769,7 +760,6 @@ class RolesController extends BaseController
      */
     public function doAccount($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $server_info = $this->misc->getServerInfo();
@@ -787,26 +777,26 @@ class RolesController extends BaseController
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
             $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
             echo "<table>\n";
-            echo "\t<tr>\n\t\t<th class=\"data\">{$lang['strname']}</th>\n";
-            echo "\t\t<th class=\"data\">{$lang['strsuper']}</th>\n";
-            echo "\t\t<th class=\"data\">{$lang['strcreatedb']}</th>\n";
-            echo "\t\t<th class=\"data\">{$lang['strcancreaterole']}</th>\n";
-            echo "\t\t<th class=\"data\">{$lang['strinheritsprivs']}</th>\n";
-            echo "\t\t<th class=\"data\">{$lang['strconnlimit']}</th>\n";
-            echo "\t\t<th class=\"data\">{$lang['strexpires']}</th>\n";
-            echo "\t\t<th class=\"data\">{$lang['strsessiondefaults']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data\">{$this->lang['strname']}</th>\n";
+            echo "\t\t<th class=\"data\">{$this->lang['strsuper']}</th>\n";
+            echo "\t\t<th class=\"data\">{$this->lang['strcreatedb']}</th>\n";
+            echo "\t\t<th class=\"data\">{$this->lang['strcancreaterole']}</th>\n";
+            echo "\t\t<th class=\"data\">{$this->lang['strinheritsprivs']}</th>\n";
+            echo "\t\t<th class=\"data\">{$this->lang['strconnlimit']}</th>\n";
+            echo "\t\t<th class=\"data\">{$this->lang['strexpires']}</th>\n";
+            echo "\t\t<th class=\"data\">{$this->lang['strsessiondefaults']}</th>\n";
             echo "\t</tr>\n";
             echo "\t<tr>\n\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolname']), "</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolsuper'], 'yesno'), "</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreatedb'], 'yesno'), "</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreaterole'], 'yesno'), "</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolinherit'], 'yesno'), "</td>\n";
-            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
-            echo "\t\t<td class=\"data1\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
+            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $this->lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), "</td>\n";
+            echo "\t\t<td class=\"data1\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $this->lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), "</td>\n";
             echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), "</td>\n";
             echo "\t</tr>\n</table>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
 
         $this->printNavLinks(['changepassword' => [
@@ -819,7 +809,7 @@ class RolesController extends BaseController
                     ],
                 ],
             ],
-            'content' => $lang['strchangepassword'],
+            'content' => $this->lang['strchangepassword'],
         ]], 'roles-account', get_defined_vars());
     }
 
@@ -831,7 +821,6 @@ class RolesController extends BaseController
      */
     public function doChangePassword($confirm, $msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $server_info = $this->misc->getServerInfo();
@@ -839,7 +828,7 @@ class RolesController extends BaseController
         if ($confirm) {
             $_REQUEST['rolename'] = $server_info['username'];
             $this->printTrail('role');
-            $this->printTitle($lang['strchangepassword'], 'pg.role.alter');
+            $this->printTitle($this->lang['strchangepassword'], 'pg.role.alter');
             $this->printMsg($msg);
 
             if (!isset($_POST['password'])) {
@@ -852,32 +841,32 @@ class RolesController extends BaseController
 
             echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
             echo "<table>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strpassword']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
             htmlspecialchars($_POST['password']), "\" /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strconfirm']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strconfirm']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"confirm\" size=\"32\" value=\"\" /></td>\n\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"changepassword\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"ok\" value=\"{$lang['strok']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<input type=\"submit\" name=\"ok\" value=\"{$this->lang['strok']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</p></form>\n";
         } else {
             // Check that password is minimum length
             if (strlen($_POST['password']) < $this->conf['min_password_length']) {
-                $this->doChangePassword(true, $lang['strpasswordshort']);
+                $this->doChangePassword(true, $this->lang['strpasswordshort']);
             }
 
             // Check that password matches confirmation password
             elseif ($_POST['password'] != $_POST['confirm']) {
-                $this->doChangePassword(true, $lang['strpasswordconfirm']);
+                $this->doChangePassword(true, $this->lang['strpasswordconfirm']);
             } else {
                 $status = $data->changePassword($server_info['username'], $_POST['password']);
                 if (0 == $status) {
-                    $this->doAccount($lang['strpasswordchanged']);
+                    $this->doAccount($this->lang['strpasswordchanged']);
                 } else {
-                    $this->doAccount($lang['strpasswordchangedbad']);
+                    $this->doAccount($this->lang['strpasswordchangedbad']);
                 }
             }
         }

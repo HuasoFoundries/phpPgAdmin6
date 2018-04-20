@@ -22,17 +22,14 @@ class OpclassesController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
-        $action = $this->action;
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
-        $this->printHeader($lang['stropclasses']);
+        $this->printHeader($this->lang['stropclasses']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             default:
                 $this->doDefault();
 
@@ -51,7 +48,6 @@ class OpclassesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
@@ -62,31 +58,31 @@ class OpclassesController extends BaseController
 
         $columns = [
             'accessmethod' => [
-                'title' => $lang['straccessmethod'],
+                'title' => $this->lang['straccessmethod'],
                 'field' => Decorator::field('amname'),
             ],
-            'opclass' => [
-                'title' => $lang['strname'],
+            'opclass'      => [
+                'title' => $this->lang['strname'],
                 'field' => Decorator::field('opcname'),
             ],
-            'type' => [
-                'title' => $lang['strtype'],
+            'type'         => [
+                'title' => $this->lang['strtype'],
                 'field' => Decorator::field('opcintype'),
             ],
-            'default' => [
-                'title' => $lang['strdefault'],
+            'default'      => [
+                'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('opcdefault'),
                 'type'  => 'yesno',
             ],
-            'comment' => [
-                'title' => $lang['strcomment'],
+            'comment'      => [
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('opccomment'),
             ],
         ];
 
         $actions = [];
 
-        echo $this->printTable($opclasses, $columns, $actions, 'opclasses-opclasses', $lang['strnoopclasses']);
+        echo $this->printTable($opclasses, $columns, $actions, 'opclasses-opclasses', $this->lang['strnoopclasses']);
     }
 
     /**
@@ -94,7 +90,6 @@ class OpclassesController extends BaseController
      */
     public function doTree()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $opclasses = $data->getOpClasses();

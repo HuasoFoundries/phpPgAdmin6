@@ -22,17 +22,14 @@ class ViewpropertiesController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
-        $action = $this->action;
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strviews'].' - '.$_REQUEST['view']);
+        $this->printHeader($this->lang['strviews'].' - '.$_REQUEST['view']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             case 'save_edit':
                 if (isset($_POST['cancel'])) {
                     $this->doDefinition();
@@ -101,7 +98,6 @@ class ViewpropertiesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata) use ($data) {
@@ -124,31 +120,31 @@ class ViewpropertiesController extends BaseController
 
         $columns = [
             'column'  => [
-                'title' => $lang['strcolumn'],
+                'title' => $this->lang['strcolumn'],
                 'field' => Decorator::field('attname'),
                 'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST['view']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
-                'title' => $lang['strtype'],
+                'title' => $this->lang['strtype'],
                 'field' => Decorator::field('+type'),
             ],
             'default' => [
-                'title' => $lang['strdefault'],
+                'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('adsrc'),
             ],
             'actions' => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
             'comment' => [
-                'title' => $lang['strcomment'],
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('comment'),
             ],
         ];
 
         $actions = [
             'alter' => [
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'viewproperties',
@@ -181,7 +177,7 @@ class ViewpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strbrowse'],
+                'content' => $this->lang['strbrowse'],
             ],
             'select' => [
                 'attr'    => [
@@ -196,7 +192,7 @@ class ViewpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strselect'],
+                'content' => $this->lang['strselect'],
             ],
             'drop'   => [
                 'attr'    => [
@@ -211,7 +207,7 @@ class ViewpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
             ],
             'alter'  => [
                 'attr'    => [
@@ -226,7 +222,7 @@ class ViewpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
             ],
         ];
 
@@ -235,7 +231,6 @@ class ViewpropertiesController extends BaseController
 
     public function doTree()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $reqvars = $this->misc->getRequestVars('column');
@@ -278,14 +273,13 @@ class ViewpropertiesController extends BaseController
      */
     public function doSaveEdit()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->setView($_POST['view'], $_POST['formDefinition'], $_POST['formComment']);
         if (0 == $status) {
-            $this->doDefinition($lang['strviewupdated']);
+            $this->doDefinition($this->lang['strviewupdated']);
         } else {
-            $this->doEdit($lang['strviewupdatedbad']);
+            $this->doEdit($this->lang['strviewupdatedbad']);
         }
     }
 
@@ -296,11 +290,10 @@ class ViewpropertiesController extends BaseController
      */
     public function doEdit($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('view');
-        $this->printTitle($lang['stredit'], 'pg.view.alter');
+        $this->printTitle($this->lang['stredit'], 'pg.view.alter');
         $this->printMsg($msg);
 
         $viewdata = $data->getView($_REQUEST['view']);
@@ -313,21 +306,21 @@ class ViewpropertiesController extends BaseController
 
             echo '<form action="'.\SUBFOLDER."/src/views/viewproperties\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strdefinition']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
             htmlspecialchars($_POST['formDefinition']), "</textarea></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strcomment']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea rows=\"3\" cols=\"32\" name=\"formComment\">",
             htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
             echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
     }
 
@@ -342,55 +335,53 @@ class ViewpropertiesController extends BaseController
      */
     public function doExport($msg = '')
     {
-        $lang = $this->lang;
-
         $this->printTrail('view');
         $this->printTabs('view', 'export');
         $this->printMsg($msg);
 
         echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
         echo "<table>\n";
-        echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
+        echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";
         // Data only
         echo "<!--\n";
         echo '<tr><th class="data left">';
-        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" /><label for=\"what1\">{$lang['strdataonly']}</label></th>\n";
-        echo "<td>{$lang['strformat']}</td>\n";
+        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" /><label for=\"what1\">{$this->lang['strdataonly']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}</td>\n";
         echo "<td><select name=\"d_format\" >\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "<option value=\"csv\">CSV</option>\n";
-        echo "<option value=\"tab\">{$lang['strtabbed']}</option>\n";
+        echo "<option value=\"tab\">{$this->lang['strtabbed']}</option>\n";
         echo "<option value=\"html\">XHTML</option>\n";
         echo "<option value=\"xml\">XML</option>\n";
         echo "</select>\n</td>\n</tr>\n";
         echo "-->\n";
 
         // Structure only
-        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" checked=\"checked\" /><label for=\"what2\">{$lang['strstructureonly']}</label></th>\n";
-        echo "<td><label for=\"s_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
+        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" checked=\"checked\" /><label for=\"what2\">{$this->lang['strstructureonly']}</label></th>\n";
+        echo "<td><label for=\"s_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
         // Structure and data
         echo "<!--\n";
         echo '<tr><th class="data left" rowspan="2">';
-        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$lang['strstructureanddata']}</label></th>\n";
-        echo "<td>{$lang['strformat']}</td>\n";
+        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$this->lang['strstructureanddata']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}</td>\n";
         echo "<td><select name=\"sd_format\">\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "</select>\n</td>\n</tr>\n";
-        echo "<td><label for=\"sd_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
+        echo "<td><label for=\"sd_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
         echo "-->\n";
         echo "</table>\n";
 
-        echo "<h3>{$lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$lang['strdownload']}</label></p>\n";
+        echo "<h3>{$this->lang['stroptions']}</h3>\n";
+        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
+        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>\n";
 
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo $this->misc->form;
         echo "<input type=\"hidden\" name=\"subject\" value=\"view\" />\n";
         echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
-        echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }
 
@@ -401,7 +392,6 @@ class ViewpropertiesController extends BaseController
      */
     public function doDefinition($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Get view
@@ -418,11 +408,11 @@ class ViewpropertiesController extends BaseController
             }
 
             echo "<table style=\"width: 100%\">\n";
-            echo "<tr><th class=\"data\">{$lang['strdefinition']}</th></tr>\n";
+            echo "<tr><th class=\"data\">{$this->lang['strdefinition']}</th></tr>\n";
             echo '<tr><td class="data1">', $this->misc->printVal($vdata->fields['vwdefinition']), "</td></tr>\n";
             echo "</table>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
 
         $this->printNavLinks(['alter' => [
@@ -438,7 +428,7 @@ class ViewpropertiesController extends BaseController
                     ],
                 ],
             ],
-            'content' => $lang['stralter'],
+            'content' => $this->lang['stralter'],
         ]], 'viewproperties-definition', get_defined_vars());
     }
 
@@ -449,7 +439,6 @@ class ViewpropertiesController extends BaseController
      */
     public function doProperties($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['stage'])) {
@@ -460,15 +449,15 @@ class ViewpropertiesController extends BaseController
             case 1:
 
                 $this->printTrail('column');
-                $this->printTitle($lang['stralter'], 'pg.column.alter');
+                $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
                 echo '<form action="'.\SUBFOLDER."/src/views/viewproperties\" method=\"post\">\n";
 
                 // Output view header
                 echo "<table>\n";
-                echo "<tr><th class=\"data required\">{$lang['strname']}</th><th class=\"data required\">{$lang['strtype']}</th>";
-                echo "<th class=\"data\">{$lang['strdefault']}</th><th class=\"data\">{$lang['strcomment']}</th></tr>";
+                echo "<tr><th class=\"data required\">{$this->lang['strname']}</th><th class=\"data required\">{$this->lang['strtype']}</th>";
+                echo "<th class=\"data\">{$this->lang['strdefault']}</th><th class=\"data\">{$this->lang['strcomment']}</th></tr>";
 
                 $column = $data->getTableAttributes($_REQUEST['view'], $_REQUEST['column']);
 
@@ -494,8 +483,8 @@ class ViewpropertiesController extends BaseController
                 echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
                 echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), "\" />\n";
                 echo '<input type="hidden" name="olddefault" value="', htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
-                echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+                echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
 
                 break;
@@ -504,7 +493,7 @@ class ViewpropertiesController extends BaseController
                 // Check inputs
                 if ('' == trim($_REQUEST['field'])) {
                     $_REQUEST['stage'] = 1;
-                    $this->doProperties($lang['strcolneedsname']);
+                    $this->doProperties($this->lang['strcolneedsname']);
 
                     return;
                 }
@@ -525,28 +514,27 @@ class ViewpropertiesController extends BaseController
                     $_REQUEST['comment']
                 );
                 if (0 == $status) {
-                    $this->doDefault($lang['strcolumnaltered']);
+                    $this->doDefault($this->lang['strcolumnaltered']);
                 } else {
                     $_REQUEST['stage'] = 1;
-                    $this->doProperties($lang['strcolumnalteredbad']);
+                    $this->doProperties($this->lang['strcolumnalteredbad']);
 
                     return;
                 }
 
                 break;
             default:
-                echo "<p>{$lang['strinvalidparam']}</p>\n";
+                echo "<p>{$this->lang['strinvalidparam']}</p>\n";
         }
     }
 
     public function doAlter($confirm = false, $msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('view');
-            $this->printTitle($lang['stralter'], 'pg.view.alter');
+            $this->printTitle($this->lang['stralter'], 'pg.view.alter');
             $this->printMsg($msg);
 
             // Fetch view info
@@ -571,7 +559,7 @@ class ViewpropertiesController extends BaseController
 
                 echo '<form action="'.\SUBFOLDER."/src/views/viewproperties\" method=\"post\">\n";
                 echo "<table>\n";
-                echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
+                echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
                 echo '<td class="data1">';
                 echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
                 htmlspecialchars($_POST['name']), "\" /></td></tr>\n";
@@ -580,7 +568,7 @@ class ViewpropertiesController extends BaseController
                     // Fetch all users
                     $users = $data->getUsers();
 
-                    echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
+                    echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>\n";
                     echo '<td class="data1"><select name="owner">';
                     while (!$users->EOF) {
                         $uname = $users->fields['usename'];
@@ -593,7 +581,7 @@ class ViewpropertiesController extends BaseController
 
                 if ($data->hasAlterTableSchema()) {
                     $schemas = $data->getSchemas();
-                    echo "<tr><th class=\"data left required\">{$lang['strschema']}</th>\n";
+                    echo "<tr><th class=\"data left required\">{$this->lang['strschema']}</th>\n";
                     echo '<td class="data1"><select name="newschema">';
                     while (!$schemas->EOF) {
                         $schema = $schemas->fields['nspname'];
@@ -604,7 +592,7 @@ class ViewpropertiesController extends BaseController
                     echo "</select></td></tr>\n";
                 }
 
-                echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
+                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>\n";
                 echo '<td class="data1">';
                 echo '<textarea rows="3" cols="32" name="comment">',
                 htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
@@ -612,11 +600,11 @@ class ViewpropertiesController extends BaseController
                 echo "<input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
                 echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
                 echo $this->misc->form;
-                echo "<p><input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+                echo "<p><input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
             } else {
-                echo "<p>{$lang['strnodata']}</p>\n";
+                echo "<p>{$this->lang['strnodata']}</p>\n";
             }
         } else {
             // For databases that don't allow owner change
@@ -644,9 +632,9 @@ class ViewpropertiesController extends BaseController
                     $this->misc->setCurrentSchema($_POST['newschema']);
                     $this->misc->setReloadBrowser(true);
                 }
-                $this->doDefault($lang['strviewaltered']);
+                $this->doDefault($this->lang['strviewaltered']);
             } else {
-                $this->doAlter(true, $lang['strviewalteredbad']);
+                $this->doAlter(true, $this->lang['strviewalteredbad']);
             }
         }
     }

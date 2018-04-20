@@ -44,7 +44,8 @@ class IntroController extends BaseController
 
         $intro_html .= $this->printTabs('root', 'intro', false);
 
-        $intro_html .= '<h1>'.$this->appName.' '.$this->appVersion.' (PHP '.PHP_VERSION.')</h1>';
+        $intro_html .= '<h1>'.$this->appName.' '.$this->appVersion.'</h1>';
+        $intro_html .= '<h3>(PHP '.PHP_VERSION.')</h3>';
 
         $intro_html .= '<form method="get" action="intro">';
         $intro_html .= '<table>';
@@ -53,9 +54,9 @@ class IntroController extends BaseController
         $intro_html .= '<td>';
         $intro_html .= '<select name="language" onchange="this.form.submit()">';
 
-        $this->language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
+        $language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
         foreach ($this->appLangFiles as $k => $v) {
-            $selected = ($k == $this->language) ? ' selected="selected"' : '';
+            $selected = ($k == $language) ? ' selected="selected"' : '';
             $intro_html .= "\t<option value=\"{$k}\"".$selected.">{$v}</option>\n";
         }
 

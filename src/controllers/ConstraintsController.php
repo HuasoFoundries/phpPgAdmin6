@@ -22,29 +22,26 @@ class ConstraintsController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
-        $action = $this->action;
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->/* @scrutinizer ignore-call */doTree();
         }
 
         $this->printHeader(
-            $lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strconstraints'],
+            $this->lang['strtables'].' - '.$_REQUEST['table'].' - '.$this->lang['strconstraints'],
             '<script src="'.\SUBFOLDER.'/js/indexes.js" type="text/javascript"></script>',
             true,
             'header_select2.twig'
         );
 
         $onloadInit = false;
-        if ('add_unique_key' == $action || 'save_add_unique_key' == $action
-            || 'add_primary_key' == $action || 'save_add_primary_key' == $action
-            || 'add_foreign_key' == $action || 'save_add_foreign_key' == $action) {
+        if ('add_unique_key' == $this->action || 'save_add_unique_key' == $this->action
+            || 'add_primary_key' == $this->action || 'save_add_primary_key' == $this->action
+            || 'add_foreign_key' == $this->action || 'save_add_foreign_key' == $this->action) {
             $onloadInit = true;
         }
         $this->printBody(true, 'detailbody', $onloadInit);
 
-        switch ($action) {
+        switch ($this->action) {
             case 'add_foreign_key':
                 $this->addForeignKey(1);
 
@@ -131,7 +128,6 @@ class ConstraintsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $cnPre = function (&$rowdata) use ($data) {
@@ -151,26 +147,26 @@ class ConstraintsController extends BaseController
 
         $columns = [
             'constraint' => [
-                'title' => $lang['strname'],
+                'title' => $this->lang['strname'],
                 'field' => Decorator::field('conname'),
             ],
             'definition' => [
-                'title' => $lang['strdefinition'],
+                'title' => $this->lang['strdefinition'],
                 'field' => Decorator::field('+definition'),
                 'type'  => 'pre',
             ],
             'actions'    => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
             'comment'    => [
-                'title' => $lang['strcomment'],
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('constcomment'),
             ],
         ];
 
         $actions = [
             'drop' => [
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'constraints',
@@ -185,7 +181,7 @@ class ConstraintsController extends BaseController
             ],
         ];
 
-        echo $this->printTable($constraints, $columns, $actions, 'constraints-constraints', $lang['strnoconstraints'], $cnPre);
+        echo $this->printTable($constraints, $columns, $actions, 'constraints-constraints', $this->lang['strnoconstraints'], $cnPre);
 
         $navlinks = [
             'addcheck' => [
@@ -201,7 +197,7 @@ class ConstraintsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['straddcheck'],
+                'content' => $this->lang['straddcheck'],
             ],
             'adduniq'  => [
                 'attr'    => [
@@ -216,7 +212,7 @@ class ConstraintsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['stradduniq'],
+                'content' => $this->lang['stradduniq'],
             ],
             'addpk'    => [
                 'attr'    => [
@@ -231,7 +227,7 @@ class ConstraintsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['straddpk'],
+                'content' => $this->lang['straddpk'],
             ],
             'addfk'    => [
                 'attr'    => [
@@ -246,7 +242,7 @@ class ConstraintsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['straddfk'],
+                'content' => $this->lang['straddfk'],
             ],
         ];
         $this->printNavLinks($navlinks, 'constraints-constraints', get_defined_vars());
@@ -260,7 +256,6 @@ class ConstraintsController extends BaseController
      */
     public function addForeignKey($stage, $msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
@@ -275,7 +270,7 @@ class ConstraintsController extends BaseController
             case 2:
                 // Check that they've given at least one source column
                 if (!isset($_REQUEST['SourceColumnList']) && (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList']) || 0 == sizeof($_POST['IndexColumnList']))) {
-                    $this->addForeignKey(1, $lang['strfkneedscols']);
+                    $this->addForeignKey(1, $this->lang['strfkneedscols']);
                 } else {
                     // Copy the IndexColumnList variable from stage 1
                     if (isset($_REQUEST['IndexColumnList']) && !isset($_REQUEST['SourceColumnList'])) {
@@ -306,7 +301,7 @@ class ConstraintsController extends BaseController
                     $_REQUEST['target'] = unserialize($_REQUEST['target']);
 
                     $this->printTrail('table');
-                    $this->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
+                    $this->printTitle($this->lang['straddfk'], 'pg.constraint.foreign_key');
                     $this->printMsg($msg);
 
                     // Unserialize target and fetch appropriate table. This is a bit messy
@@ -339,16 +334,16 @@ class ConstraintsController extends BaseController
                     echo "<form onsubmit=\"doSelectAll();\" name=\"formIndex\" action=\"constraints\" method=\"post\">\n";
 
                     echo "<table>\n";
-                    echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strfktarget']}</th></tr>";
-                    echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$lang['strfkcolumnlist']}</th></tr>\n";
+                    echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strfktarget']}</th></tr>";
+                    echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$this->lang['strfkcolumnlist']}</th></tr>\n";
                     echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
                     echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
                     echo '<td class="data1">'.$selIndex->fetch()."</td></tr>\n";
-                    echo "<tr><th class=\"data\" colspan=\"3\">{$lang['stractions']}</th></tr>";
+                    echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['stractions']}</th></tr>";
                     echo '<tr>';
                     echo "<td class=\"data1\" colspan=\"3\">\n";
                     // ON SELECT actions
-                    echo "{$lang['stronupdate']} <select name=\"upd_action\">";
+                    echo "{$this->lang['stronupdate']} <select name=\"upd_action\">";
                     foreach ($data->fkactions as $v) {
                         echo "<option value=\"{$v}\"", ($_POST['upd_action'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
                     }
@@ -356,7 +351,7 @@ class ConstraintsController extends BaseController
                     echo "</select><br />\n";
 
                     // ON DELETE actions
-                    echo "{$lang['strondelete']} <select name=\"del_action\">";
+                    echo "{$this->lang['strondelete']} <select name=\"del_action\">";
                     foreach ($data->fkactions as $v) {
                         echo "<option value=\"{$v}\"", ($_POST['del_action'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
                     }
@@ -396,8 +391,8 @@ class ConstraintsController extends BaseController
                     echo '<input type="hidden" name="target" value="', htmlspecialchars(serialize($_REQUEST['target'])), "\" />\n";
                     echo '<input type="hidden" name="SourceColumnList" value="', htmlspecialchars($_REQUEST['SourceColumnList']), "\" />\n";
                     echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
-                    echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
-                    echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+                    echo "<input type=\"submit\" value=\"{$this->lang['stradd']}\" />\n";
+                    echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
                     echo "</form>\n";
                 }
 
@@ -414,7 +409,7 @@ class ConstraintsController extends BaseController
                 if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
                     || 0 == sizeof($_POST['IndexColumnList']) || !isset($temp)
                     || !is_array($temp) || 0 == sizeof($temp)) {
-                    $this->addForeignKey(2, $lang['strfkneedscols']);
+                    $this->addForeignKey(2, $this->lang['strfkneedscols']);
                 } else {
                     $status = $data->addForeignKey(
                         $_POST['table'],
@@ -430,16 +425,16 @@ class ConstraintsController extends BaseController
                         $_POST['name']
                     );
                     if (0 == $status) {
-                        $this->doDefault($lang['strfkadded']);
+                        $this->doDefault($this->lang['strfkadded']);
                     } else {
-                        $this->addForeignKey(2, $lang['strfkaddedbad']);
+                        $this->addForeignKey(2, $this->lang['strfkaddedbad']);
                     }
                 }
 
                 break;
             default:
                 $this->printTrail('table');
-                $this->printTitle($lang['straddfk'], 'pg.constraint.foreign_key');
+                $this->printTitle($this->lang['straddfk'], 'pg.constraint.foreign_key');
                 $this->printMsg($msg);
 
                 $attrs  = $data->getTableAttributes($_REQUEST['table']);
@@ -469,13 +464,13 @@ class ConstraintsController extends BaseController
                 echo "<form onsubmit=\"doSelectAll();\" name=\"formIndex\" action=\"constraints\" method=\"post\">\n";
 
                 echo "<table>\n";
-                echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strname']}</th></tr>\n";
+                echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strname']}</th></tr>\n";
                 echo "<tr><td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>\n";
-                echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$lang['strfkcolumnlist']}</th></tr>\n";
+                echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strfkcolumnlist']}</th></tr>\n";
                 echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
                 echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch()."</td>\n";
                 echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
-                echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strfktarget']}</th></tr>";
+                echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strfktarget']}</th></tr>";
                 echo '<tr>';
                 echo '<td class="data1" colspan="3"><select class="select2" name="target">';
                 while (!$tables->EOF) {
@@ -496,8 +491,8 @@ class ConstraintsController extends BaseController
                 echo $this->misc->form;
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
-                echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+                echo "<input type=\"submit\" value=\"{$this->lang['stradd']}\" />\n";
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
                 //echo "<script>jQuery('select[name=\"target\"]').select2()</script>";
                 break;
@@ -513,7 +508,6 @@ class ConstraintsController extends BaseController
      */
     public function addPrimaryOrUniqueKey($type, $confirm, $msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
@@ -533,15 +527,15 @@ class ConstraintsController extends BaseController
 
             switch ($type) {
                 case 'primary':
-                    $this->printTitle($lang['straddpk'], 'pg.constraint.primary_key');
+                    $this->printTitle($this->lang['straddpk'], 'pg.constraint.primary_key');
 
                     break;
                 case 'unique':
-                    $this->printTitle($lang['stradduniq'], 'pg.constraint.unique_key');
+                    $this->printTitle($this->lang['stradduniq'], 'pg.constraint.unique_key');
 
                     break;
                 default:
-                    $this->doDefault($lang['strinvalidparam']);
+                    $this->doDefault($this->lang['strinvalidparam']);
 
                     return;
             }
@@ -579,18 +573,18 @@ class ConstraintsController extends BaseController
             echo "<form onsubmit=\"doSelectAll();\" name=\"formIndex\" action=\"constraints\" method=\"post\">\n";
 
             echo "<table>\n";
-            echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strname']}</th></tr>";
+            echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strname']}</th></tr>";
             echo '<tr>';
             echo '<td class="data1" colspan="3"><input type="text" name="name" value="', htmlspecialchars($_POST['name']),
                 "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>";
-            echo "<tr><th class=\"data\">{$lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$lang['strindexcolumnlist']}</th></tr>\n";
+            echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strindexcolumnlist']}</th></tr>\n";
             echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
             echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
             echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
 
             // Tablespace (if there are any)
             if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
-                echo "<tr><th class=\"data\" colspan=\"3\">{$lang['strtablespace']}</th></tr>";
+                echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strtablespace']}</th></tr>";
                 echo "<tr><td class=\"data1\" colspan=\"3\"><select name=\"tablespace\">\n";
                 // Always offer the default (empty) option
                 echo "\t\t\t\t<option value=\"\"",
@@ -611,8 +605,8 @@ class ConstraintsController extends BaseController
             echo $this->misc->form;
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="type" value="', htmlspecialchars($type), "\" />\n";
-            echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" value=\"{$this->lang['stradd']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
             // Default tablespace to empty if it isn't set
@@ -624,30 +618,30 @@ class ConstraintsController extends BaseController
                 // Check that they've given at least one column
                 if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
                     || 0 == sizeof($_POST['IndexColumnList'])) {
-                    $this->addPrimaryOrUniqueKey($_POST['type'], true, $lang['strpkneedscols']);
+                    $this->addPrimaryOrUniqueKey($_POST['type'], true, $this->lang['strpkneedscols']);
                 } else {
                     $status = $data->addPrimaryKey($_POST['table'], $_POST['IndexColumnList'], $_POST['name'], $_POST['tablespace']);
                     if (0 == $status) {
-                        $this->doDefault($lang['strpkadded']);
+                        $this->doDefault($this->lang['strpkadded']);
                     } else {
-                        $this->addPrimaryOrUniqueKey($_POST['type'], true, $lang['strpkaddedbad']);
+                        $this->addPrimaryOrUniqueKey($_POST['type'], true, $this->lang['strpkaddedbad']);
                     }
                 }
             } elseif ('unique' == $_POST['type']) {
                 // Check that they've given at least one column
                 if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
                     || 0 == sizeof($_POST['IndexColumnList'])) {
-                    $this->addPrimaryOrUniqueKey($_POST['type'], true, $lang['struniqneedscols']);
+                    $this->addPrimaryOrUniqueKey($_POST['type'], true, $this->lang['struniqneedscols']);
                 } else {
                     $status = $data->addUniqueKey($_POST['table'], $_POST['IndexColumnList'], $_POST['name'], $_POST['tablespace']);
                     if (0 == $status) {
-                        $this->doDefault($lang['struniqadded']);
+                        $this->doDefault($this->lang['struniqadded']);
                     } else {
-                        $this->addPrimaryOrUniqueKey($_POST['type'], true, $lang['struniqaddedbad']);
+                        $this->addPrimaryOrUniqueKey($_POST['type'], true, $this->lang['struniqaddedbad']);
                     }
                 }
             } else {
-                $this->doDefault($lang['strinvalidparam']);
+                $this->doDefault($this->lang['strinvalidparam']);
             }
         }
     }
@@ -660,7 +654,6 @@ class ConstraintsController extends BaseController
      */
     public function addCheck($confirm, $msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_POST['name'])) {
@@ -673,13 +666,13 @@ class ConstraintsController extends BaseController
 
         if ($confirm) {
             $this->printTrail('table');
-            $this->printTitle($lang['straddcheck'], 'pg.constraint.check');
+            $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
             echo '<form action="'.\SUBFOLDER."/src/views/constraints\" method=\"post\">\n";
             echo "<table>\n";
-            echo "<tr><th class=\"data\">{$lang['strname']}</th>\n";
-            echo "<th class=\"data required\">{$lang['strdefinition']}</th></tr>\n";
+            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>\n";
+            echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>\n";
 
             echo "<tr><td class=\"data1\"><input name=\"name\" size=\"24\" maxlength=\"{$data->_maxNameLen}\" value=\"",
             htmlspecialchars($_POST['name']), "\" /></td>\n";
@@ -691,12 +684,12 @@ class ConstraintsController extends BaseController
             echo "<input type=\"hidden\" name=\"action\" value=\"save_add_check\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo $this->misc->form;
-            echo "<p><input type=\"submit\" name=\"ok\" value=\"{$lang['stradd']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<p><input type=\"submit\" name=\"ok\" value=\"{$this->lang['stradd']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
             if ('' == trim($_POST['definition'])) {
-                $this->addCheck(true, $lang['strcheckneedsdefinition']);
+                $this->addCheck(true, $this->lang['strcheckneedsdefinition']);
             } else {
                 $status = $data->addCheckConstraint(
                     $_POST['table'],
@@ -704,9 +697,9 @@ class ConstraintsController extends BaseController
                     $_POST['name']
                 );
                 if (0 == $status) {
-                    $this->doDefault($lang['strcheckadded']);
+                    $this->doDefault($this->lang['strcheckadded']);
                 } else {
-                    $this->addCheck(true, $lang['strcheckaddedbad']);
+                    $this->addCheck(true, $this->lang['strcheckaddedbad']);
                 }
             }
         }
@@ -719,15 +712,14 @@ class ConstraintsController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('constraint');
-            $this->printTitle($lang['strdrop'], 'pg.constraint.drop');
+            $this->printTitle($this->lang['strdrop'], 'pg.constraint.drop');
 
             echo '<p>', sprintf(
-                $lang['strconfdropconstraint'],
+                $this->lang['strconfdropconstraint'],
                 $this->misc->printVal($_REQUEST['constraint']),
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
@@ -738,16 +730,16 @@ class ConstraintsController extends BaseController
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";
             echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
             echo $this->misc->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
             $status = $data->dropConstraint($_POST['constraint'], $_POST['table'], $_POST['type'], isset($_POST['cascade']));
             if (0 == $status) {
-                $this->doDefault($lang['strconstraintdropped']);
+                $this->doDefault($this->lang['strconstraintdropped']);
             } else {
-                $this->doDefault($lang['strconstraintdroppedbad']);
+                $this->doDefault($this->lang['strconstraintdroppedbad']);
             }
         }
     }

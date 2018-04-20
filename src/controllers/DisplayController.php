@@ -22,11 +22,9 @@ class DisplayController extends BaseController
     {
         $conf           = $this->conf;
         $this->misc     = $this->misc;
-        $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $action         = $this->action;
 
-        if ('dobrowsefk' == $action) {
+        if ('dobrowsefk' == $this->action) {
             return $this->doBrowseFK();
         }
 
@@ -36,7 +34,7 @@ class DisplayController extends BaseController
 
         $scripts .= '<script type="text/javascript">'."\n";
         $scripts .= "var Display = {\n";
-        $scripts .= "errmsg: '".str_replace("'", "\\'", $lang['strconnectionfail'])."'\n";
+        $scripts .= "errmsg: '".str_replace("'", "\\'", $this->lang['strconnectionfail'])."'\n";
         $scripts .= "};\n";
         $scripts .= '</script>'."\n";
 
@@ -44,7 +42,7 @@ class DisplayController extends BaseController
         $header_template = 'header.twig';
 
         ob_start();
-        switch ($action) {
+        switch ($this->action) {
             case 'editrow':
                 $header_template = 'header_sqledit.twig';
                 $footer_template = 'footer_sqledit.twig';
@@ -85,16 +83,16 @@ class DisplayController extends BaseController
         // Set the title based on the subject of the request
         if (isset($_REQUEST['subject'], $_REQUEST[$_REQUEST['subject']])) {
             if ('table' == $_REQUEST['subject']) {
-                $this->printHeader($lang['strtables'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
+                $this->printHeader($this->lang['strtables'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             } elseif ('view' == $_REQUEST['subject']) {
-                $this->printHeader($lang['strviews'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
+                $this->printHeader($this->lang['strviews'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             } elseif ('matview' == $_REQUEST['subject']) {
-                $this->printHeader('M'.$lang['strviews'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
+                $this->printHeader('M'.$this->lang['strviews'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             } elseif ('column' == $_REQUEST['subject']) {
-                $this->printHeader($lang['strcolumn'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
+                $this->printHeader($this->lang['strcolumn'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
             }
         } else {
-            $this->printHeader($lang['strqueryresults'], $scripts, true, $header_template);
+            $this->printHeader($this->lang['strqueryresults'], $scripts, true, $header_template);
         }
 
         $this->printBody();
@@ -113,7 +111,6 @@ class DisplayController extends BaseController
     {
         $conf           = $this->conf;
         $this->misc     = $this->misc;
-        $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
         $data           = $this->misc->getDatabaseAccessor();
 
@@ -152,13 +149,13 @@ class DisplayController extends BaseController
         if (isset($object)) {
             if (isset($_REQUEST['query'])) {
                 $_SESSION['sqlquery'] = $_REQUEST['query'];
-                $this->printTitle($lang['strselect']);
+                $this->printTitle($this->lang['strselect']);
                 $type = 'SELECT';
             } else {
                 $type = 'TABLE';
             }
         } else {
-            $this->printTitle($lang['strqueryresults']);
+            $this->printTitle($this->lang['strqueryresults']);
             // we comes from sql, $_SESSION['sqlquery'] has been set there
             $type = 'QUERY';
         }
@@ -312,7 +309,7 @@ class DisplayController extends BaseController
 
             $buttons = [
                 'edit'   => [
-                    'content' => $lang['stredit'],
+                    'content' => $this->lang['stredit'],
                     'attr'    => [
                         'href' => [
                             'url'     => 'display',
@@ -325,7 +322,7 @@ class DisplayController extends BaseController
                     ],
                 ],
                 'delete' => [
-                    'content' => $lang['strdelete'],
+                    'content' => $this->lang['strdelete'],
                     'attr'    => [
                         'href' => [
                             'url'     => 'display',
@@ -344,9 +341,9 @@ class DisplayController extends BaseController
             ];
             $plugin_manager->do_hook('actionbuttons', $actions);
 
-            foreach (array_keys($actions['actionbuttons']) as $action) {
-                $actions['actionbuttons'][$action]['attr']['href']['urlvars'] = array_merge(
-                    $actions['actionbuttons'][$action]['attr']['href']['urlvars'],
+            foreach (array_keys($actions['actionbuttons']) as $this->action) {
+                $actions['actionbuttons'][$this->action]['attr']['href']['urlvars'] = array_merge(
+                    $actions['actionbuttons'][$this->action]['attr']['href']['urlvars'],
                     $_gets
                 );
             }
@@ -359,7 +356,7 @@ class DisplayController extends BaseController
             // Display edit and delete actions if we have a key
             $colspan = count($buttons);
             if ($colspan > 0 and count($key) > 0) {
-                echo "<th colspan=\"{$colspan}\" class=\"data\">{$lang['stractions']}</th>"."\n";
+                echo "<th colspan=\"{$colspan}\" class=\"data\">{$this->lang['stractions']}</th>"."\n";
             }
 
             // we show OIDs only if we are in TABLE or SELECT type browsing
@@ -403,9 +400,9 @@ class DisplayController extends BaseController
                             );
                         }
 
-                        foreach ($actions['actionbuttons'] as $action) {
+                        foreach ($actions['actionbuttons'] as $this->action) {
                             echo "<td class=\"opbutton{$id}\">";
-                            $this->printLink($action, true, __METHOD__);
+                            $this->printLink($this->action, true, __METHOD__);
                             echo '</td>'."\n";
                         }
                     }
@@ -419,11 +416,11 @@ class DisplayController extends BaseController
             }
             echo '</table>'."\n";
 
-            echo '<p>', $resultset->recordCount(), " {$lang['strrows']}</p>"."\n";
+            echo '<p>', $resultset->recordCount(), " {$this->lang['strrows']}</p>"."\n";
             // Show page navigation
             $this->misc->printPages($_REQUEST['page'], $max_pages, $_gets);
         } else {
-            echo "<p>{$lang['strnodata']}</p>"."\n";
+            echo "<p>{$this->lang['strnodata']}</p>"."\n";
         }
 
         // Navigation links
@@ -449,7 +446,7 @@ class DisplayController extends BaseController
                         'urlvars' => $urlvars['params'],
                     ],
                 ],
-                'content' => $lang['strback'],
+                'content' => $this->lang['strback'],
             ];
         }
 
@@ -465,7 +462,7 @@ class DisplayController extends BaseController
                         ]),
                     ],
                 ],
-                'content' => $lang['streditsql'],
+                'content' => $this->lang['streditsql'],
             ];
         }
 
@@ -484,7 +481,7 @@ class DisplayController extends BaseController
                         ),
                     ],
                 ],
-                'content' => $lang['strcollapse'],
+                'content' => $this->lang['strcollapse'],
             ];
         } else {
             $navlinks['collapse'] = [
@@ -500,7 +497,7 @@ class DisplayController extends BaseController
                         ),
                     ],
                 ],
-                'content' => $lang['strexpand'],
+                'content' => $this->lang['strexpand'],
             ];
         }
 
@@ -518,7 +515,7 @@ class DisplayController extends BaseController
                             ]),
                         ],
                     ],
-                    'content' => $lang['strcreateview'],
+                    'content' => $this->lang['strcreateview'],
                 ];
             }
 
@@ -534,7 +531,7 @@ class DisplayController extends BaseController
                         'urlvars' => array_merge($fields, $urlvars),
                     ],
                 ],
-                'content' => $lang['strdownload'],
+                'content' => $this->lang['strdownload'],
             ];
         }
 
@@ -550,7 +547,7 @@ class DisplayController extends BaseController
                         ]),
                     ],
                 ],
-                'content' => $lang['strinsert'],
+                'content' => $this->lang['strinsert'],
             ];
         }
 
@@ -568,7 +565,7 @@ class DisplayController extends BaseController
                     ),
                 ],
             ],
-            'content' => $lang['strrefresh'],
+            'content' => $this->lang['strrefresh'],
         ];
 
         $this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
@@ -582,7 +579,6 @@ class DisplayController extends BaseController
      */
     public function doEditRow($confirm, $msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (is_array($_REQUEST['key'])) {
@@ -593,7 +589,7 @@ class DisplayController extends BaseController
 
         if ($confirm) {
             $this->printTrail($_REQUEST['subject']);
-            $this->printTitle($lang['streditrow']);
+            $this->printTitle($this->lang['streditrow']);
             $this->printMsg($msg);
 
             $attrs     = $data->getTableAttributes($_REQUEST['table']);
@@ -612,10 +608,10 @@ class DisplayController extends BaseController
 
             /*echo '<p>';
             if (!$error) {
-            echo "<input type=\"submit\" name=\"save\" accesskey=\"r\" value=\"{$lang['strsave']}\" />" . "\n";
+            echo "<input type=\"submit\" name=\"save\" accesskey=\"r\" value=\"{$this->lang['strsave']}\" />" . "\n";
             }
 
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />" . "\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . "\n";
 
             echo '</p>' . "\n";*/
 
@@ -625,9 +621,9 @@ class DisplayController extends BaseController
                 echo '<table>'."\n";
 
                 // Output table header
-                echo "<tr><th class=\"data\">{$lang['strcolumn']}</th><th class=\"data\">{$lang['strtype']}</th>";
-                echo "<th class=\"data\">{$lang['strformat']}</th>"."\n";
-                echo "<th class=\"data\">{$lang['strnull']}</th><th class=\"data\">{$lang['strvalue']}</th></tr>";
+                echo "<tr><th class=\"data\">{$this->lang['strcolumn']}</th><th class=\"data\">{$this->lang['strtype']}</th>";
+                echo "<th class=\"data\">{$this->lang['strformat']}</th>"."\n";
+                echo "<th class=\"data\">{$this->lang['strnull']}</th><th class=\"data\">{$this->lang['strvalue']}</th></tr>";
 
                 $i = 0;
                 while (!$attrs->EOF) {
@@ -648,9 +644,9 @@ class DisplayController extends BaseController
                     ++$elements;
                     echo '<td style="white-space:nowrap;">'."\n";
                     echo '<select name="format['.htmlspecialchars($attrs->fields['attname']), ']">'."\n";
-                    echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attname']] == 'VALUE') ? ' selected="selected"' : '', ">{$lang['strvalue']}</option>"."\n";
+                    echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attname']] == 'VALUE') ? ' selected="selected"' : '', ">{$this->lang['strvalue']}</option>"."\n";
                     $selected = ($_REQUEST['format'][$attrs->fields['attname']] == 'EXPRESSION') ? ' selected="selected"' : '';
-                    echo '<option value="EXPRESSION"'.$selected.">{$lang['strexpression']}</option>"."\n";
+                    echo '<option value="EXPRESSION"'.$selected.">{$this->lang['strexpression']}</option>"."\n";
                     echo "</select>\n</td>"."\n";
                     ++$elements;
                     echo '<td style="white-space:nowrap;">';
@@ -696,9 +692,9 @@ class DisplayController extends BaseController
 
                 $error = false;
             } elseif (1 != $resultset->recordCount()) {
-                echo "<p>{$lang['strrownotunique']}</p>"."\n";
+                echo "<p>{$this->lang['strrownotunique']}</p>"."\n";
             } else {
-                echo "<p>{$lang['strinvalidparam']}</p>"."\n";
+                echo "<p>{$this->lang['strinvalidparam']}</p>"."\n";
             }
 
             echo '<input type="hidden" name="action" value="editrow" />'."\n";
@@ -730,16 +726,16 @@ class DisplayController extends BaseController
             echo '<input type="hidden" name="key" value="', htmlspecialchars(urlencode(serialize($key))), '" />'."\n";
             echo '<p>';
             if (!$error) {
-                echo "<input type=\"submit\" name=\"save\" accesskey=\"r\" value=\"{$lang['strsave']}\" />"."\n";
+                echo "<input type=\"submit\" name=\"save\" accesskey=\"r\" value=\"{$this->lang['strsave']}\" />"."\n";
             }
 
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />"."\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />"."\n";
 
             if (false !== $fksprops) {
                 if ('default off' != $this->conf['autocomplete']) {
-                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$lang['strac']}</label>"."\n";
+                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$this->lang['strac']}</label>"."\n";
                 } else {
-                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$lang['strac']}</label>"."\n";
+                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$this->lang['strac']}</label>"."\n";
                 }
             }
 
@@ -763,11 +759,11 @@ class DisplayController extends BaseController
                 $key
             );
             if (0 == $status) {
-                $this->doBrowse($lang['strrowupdated']);
+                $this->doBrowse($this->lang['strrowupdated']);
             } elseif ($status == -2) {
-                $this->doEditRow(true, $lang['strrownotunique']);
+                $this->doEditRow(true, $this->lang['strrownotunique']);
             } else {
-                $this->doEditRow(true, $lang['strrowupdatedbad']);
+                $this->doEditRow(true, $this->lang['strrowupdatedbad']);
             }
         }
     }
@@ -779,12 +775,11 @@ class DisplayController extends BaseController
      */
     public function doDelRow($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail($_REQUEST['subject']);
-            $this->printTitle($lang['strdeleterow']);
+            $this->printTitle($this->lang['strdeleterow']);
 
             $resultset = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
@@ -792,7 +787,7 @@ class DisplayController extends BaseController
             echo $this->misc->form;
 
             if (1 == $resultset->recordCount()) {
-                echo "<p>{$lang['strconfdeleterow']}</p>"."\n";
+                echo "<p>{$this->lang['strconfdeleterow']}</p>"."\n";
 
                 $fkinfo = [];
                 echo '<table><tr>';
@@ -805,14 +800,14 @@ class DisplayController extends BaseController
                 echo '<br />'."\n";
 
                 echo '<input type="hidden" name="action" value="delrow" />'."\n";
-                echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />"."\n";
-                echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />"."\n";
+                echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />"."\n";
+                echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />"."\n";
             } elseif (1 != $resultset->recordCount()) {
-                echo "<p>{$lang['strrownotunique']}</p>"."\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />"."\n";
+                echo "<p>{$this->lang['strrownotunique']}</p>"."\n";
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />"."\n";
             } else {
-                echo "<p>{$lang['strinvalidparam']}</p>"."\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />"."\n";
+                echo "<p>{$this->lang['strinvalidparam']}</p>"."\n";
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />"."\n";
             }
             if (isset($_REQUEST['table'])) {
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'."\n";
@@ -843,11 +838,11 @@ class DisplayController extends BaseController
         } else {
             $status = $data->deleteRow($_POST['table'], unserialize(urldecode($_POST['key'])));
             if (0 == $status) {
-                $this->doBrowse($lang['strrowdeleted']);
+                $this->doBrowse($this->lang['strrowdeleted']);
             } elseif ($status == -2) {
-                $this->doBrowse($lang['strrownotunique']);
+                $this->doBrowse($this->lang['strrownotunique']);
             } else {
-                $this->doBrowse($lang['strrowdeletedbad']);
+                $this->doBrowse($this->lang['strrowdeletedbad']);
             }
         }
     }
@@ -860,7 +855,6 @@ class DisplayController extends BaseController
      */
     public function &getFKInfo()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Get the foreign key(s) information from the current table
@@ -907,7 +901,6 @@ class DisplayController extends BaseController
      */
     public function printTableHeaderCells(&$resultset, $args, $withOid)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         $j    = 0;
 
@@ -952,7 +945,6 @@ class DisplayController extends BaseController
     // Print data-row cells
     public function printTableRowCells(&$resultset, &$fkey_information, $withOid)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
         $j    = 0;
 
@@ -1001,7 +993,6 @@ class DisplayController extends BaseController
     // Print the FK row, used in ajax requests
     public function doBrowseFK()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $ops = [];
@@ -1042,7 +1033,7 @@ class DisplayController extends BaseController
             echo '</tr>'."\n";
             echo '</table>'."\n";
         } else {
-            echo $lang['strnodata'];
+            echo $this->lang['strnodata'];
         }
         echo '</div>';
     }

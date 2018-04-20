@@ -22,16 +22,14 @@ class LanguagesController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strlanguages']);
+        $this->printHeader($this->lang['strlanguages']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             default:
                 $this->doDefault();
 
@@ -48,7 +46,6 @@ class LanguagesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('database');
@@ -59,23 +56,23 @@ class LanguagesController extends BaseController
 
         $columns = [
             'language' => [
-                'title' => $lang['strname'],
+                'title' => $this->lang['strname'],
                 'field' => Decorator::field('lanname'),
             ],
-            'trusted' => [
-                'title' => $lang['strtrusted'],
+            'trusted'  => [
+                'title' => $this->lang['strtrusted'],
                 'field' => Decorator::field('lanpltrusted'),
                 'type'  => 'yesno',
             ],
             'function' => [
-                'title' => $lang['strfunction'],
+                'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('lanplcallf'),
             ],
         ];
 
         $actions = [];
 
-        echo $this->printTable($languages, $columns, $actions, 'languages-languages', $lang['strnolanguages']);
+        echo $this->printTable($languages, $columns, $actions, 'languages-languages', $this->lang['strnolanguages']);
     }
 
     /**
@@ -83,7 +80,6 @@ class LanguagesController extends BaseController
      */
     public function doTree()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $languages = $data->getLanguages();

@@ -23,10 +23,8 @@ class TblpropertiesController extends BaseController
     public function render()
     {
         $misc = $this->misc;
-        $lang = $this->lang;
 
-        $action = $this->action;
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
         $data = $misc->getDatabaseAccessor();
@@ -35,7 +33,7 @@ class TblpropertiesController extends BaseController
         $header_template = 'header.twig';
 
         ob_start();
-        switch ($action) {
+        switch ($this->action) {
             case 'alter':
                 if (isset($_POST['alter'])) {
                     $this->doSaveAlter();
@@ -93,7 +91,7 @@ class TblpropertiesController extends BaseController
 
         $output = ob_get_clean();
 
-        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'], null, true, $header_template);
+        $this->printHeader($this->lang['strtables'].' - '.$_REQUEST['table'], null, true, $header_template);
         $this->printBody();
 
         echo $output;
@@ -109,7 +107,6 @@ class TblpropertiesController extends BaseController
     public function doDefault($msg = '')
     {
         $misc = $this->misc;
-        $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata, $actions) use ($data) {
@@ -178,27 +175,27 @@ class TblpropertiesController extends BaseController
 
         $columns = [
             'column'  => [
-                'title' => $lang['strcolumn'],
+                'title' => $this->lang['strcolumn'],
                 'field' => Decorator::field('attname'),
                 'url'   => "colproperties?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
-                'title' => $lang['strtype'],
+                'title' => $this->lang['strtype'],
                 'field' => Decorator::field('+type'),
             ],
             'notnull' => [
-                'title'  => $lang['strnotnull'],
+                'title'  => $this->lang['strnotnull'],
                 'field'  => Decorator::field('attnotnull'),
                 'type'   => 'bool',
                 'params' => ['true' => 'NOT NULL', 'false' => ''],
             ],
             'default' => [
-                'title' => $lang['strdefault'],
+                'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('adsrc'),
             ],
             'keyprop' => [
-                'title'  => $lang['strconstraints'],
+                'title'  => $this->lang['strconstraints'],
                 'class'  => 'constraint_cell',
                 'field'  => Decorator::field('attname'),
                 'type'   => 'callback',
@@ -208,32 +205,32 @@ class TblpropertiesController extends BaseController
                 ],
             ],
             'actions' => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
             'comment' => [
-                'title' => $lang['strcomment'],
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('comment'),
             ],
         ];
 
         $actions = [
             'browse'     => [
-                'title' => $lang['strbrowse'],
+                'title' => $this->lang['strbrowse'],
                 'url'   => "display?{$misc->href}&amp;subject=column&amp;return=table&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'alter'      => [
-                'title' => $lang['stralter'],
+                'title' => $this->lang['stralter'],
                 'url'   => "colproperties?action=properties&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'privileges' => [
-                'title' => $lang['strprivileges'],
+                'title' => $this->lang['strprivileges'],
                 'url'   => "privileges?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'drop'       => [
-                'title' => $lang['strdrop'],
+                'title' => $this->lang['strdrop'],
                 'url'   => "tblproperties?action=confirm_drop&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
@@ -241,7 +238,7 @@ class TblpropertiesController extends BaseController
 
         $actions = [
             'browse'     => [
-                'content' => $lang['strbrowse'],
+                'content' => $this->lang['strbrowse'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'display',
@@ -255,7 +252,7 @@ class TblpropertiesController extends BaseController
                 ],
             ],
             'alter'      => [
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'colproperties',
@@ -269,7 +266,7 @@ class TblpropertiesController extends BaseController
                 ],
             ],
             'privileges' => [
-                'content' => $lang['strprivileges'],
+                'content' => $this->lang['strprivileges'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'privileges',
@@ -282,7 +279,7 @@ class TblpropertiesController extends BaseController
                 ],
             ],
             'drop'       => [
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'tblproperties',
@@ -314,7 +311,7 @@ class TblpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strbrowse'],
+                'content' => $this->lang['strbrowse'],
             ],
             'select'    => [
                 'attr'    => [
@@ -329,7 +326,7 @@ class TblpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strselect'],
+                'content' => $this->lang['strselect'],
             ],
             'insert'    => [
                 'attr'    => [
@@ -344,7 +341,7 @@ class TblpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strinsert'],
+                'content' => $this->lang['strinsert'],
             ],
             'empty'     => [
                 'attr'    => [
@@ -359,7 +356,7 @@ class TblpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strempty'],
+                'content' => $this->lang['strempty'],
             ],
             'drop'      => [
                 'attr'    => [
@@ -374,7 +371,7 @@ class TblpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
             ],
             'addcolumn' => [
                 'attr'    => [
@@ -389,7 +386,7 @@ class TblpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['straddcolumn'],
+                'content' => $this->lang['straddcolumn'],
             ],
             'alter'     => [
                 'attr'    => [
@@ -404,7 +401,7 @@ class TblpropertiesController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
             ],
         ];
         $this->printNavLinks($navlinks, 'tblproperties-tblproperties', get_defined_vars());
@@ -413,7 +410,6 @@ class TblpropertiesController extends BaseController
     public function doTree()
     {
         $misc = $this->misc;
-        $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
         $columns = $data->getTableAttributes($_REQUEST['table']);
@@ -454,7 +450,6 @@ class TblpropertiesController extends BaseController
     public function doSaveAlter()
     {
         $misc = $this->misc;
-        $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
         // For databases that don't allow owner change
@@ -487,9 +482,9 @@ class TblpropertiesController extends BaseController
                 $misc->setCurrentSchema($_POST['newschema']);
                 $misc->setReloadBrowser(true);
             }
-            $this->doDefault($lang['strtablealtered']);
+            $this->doDefault($this->lang['strtablealtered']);
         } else {
-            $this->doAlter($lang['strtablealteredbad']);
+            $this->doAlter($this->lang['strtablealteredbad']);
         }
     }
 
@@ -501,11 +496,10 @@ class TblpropertiesController extends BaseController
     public function doAlter($msg = '')
     {
         $misc = $this->misc;
-        $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
         $this->printTrail('table');
-        $this->printTitle($lang['stralter'], 'pg.table.alter');
+        $this->printTitle($this->lang['stralter'], 'pg.table.alter');
         $this->printMsg($msg);
 
         // Fetch table info
@@ -540,13 +534,13 @@ class TblpropertiesController extends BaseController
 
             echo '<form action="'.\SUBFOLDER."/src/views/tblproperties\" method=\"post\">\n";
             echo "<table>\n";
-            echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
+            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
             echo '<td class="data1">';
             echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
             htmlspecialchars($_POST['name'], ENT_QUOTES), "\" /></td></tr>\n";
 
             if ($data->isSuperUser()) {
-                echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
+                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>\n";
                 echo '<td class="data1"><select name="owner">';
                 while (!$users->EOF) {
                     $uname = $users->fields['usename'];
@@ -559,7 +553,7 @@ class TblpropertiesController extends BaseController
 
             if ($data->hasAlterTableSchema()) {
                 $schemas = $data->getSchemas();
-                echo "<tr><th class=\"data left required\">{$lang['strschema']}</th>\n";
+                echo "<tr><th class=\"data left required\">{$this->lang['strschema']}</th>\n";
                 echo '<td class="data1"><select name="newschema">';
                 while (!$schemas->EOF) {
                     $schema = $schemas->fields['nspname'];
@@ -572,7 +566,7 @@ class TblpropertiesController extends BaseController
 
             // Tablespace (if there are any)
             if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strtablespace']}</th>\n";
+                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strtablespace']}</th>\n";
                 echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"tablespace\">\n";
                 // Always offer the default (empty) option
                 echo "\t\t\t\t<option value=\"\"",
@@ -587,7 +581,7 @@ class TblpropertiesController extends BaseController
                 echo "\t\t\t</select>\n\t\t</td>\n\t</tr>\n";
             }
 
-            echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
+            echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>\n";
             echo '<td class="data1">';
             echo '<textarea rows="3" cols="32" name="comment">',
             htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
@@ -595,18 +589,17 @@ class TblpropertiesController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo $misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
     }
 
     public function doExport($msg = '')
     {
         $misc = $this->misc;
-        $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
         // Determine whether or not the table has an object ID
@@ -618,55 +611,54 @@ class TblpropertiesController extends BaseController
 
         echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
         echo "<table>\n";
-        echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
+        echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";
         // Data only
         echo '<tr><th class="data left" rowspan="', ($hasID) ? 2 : 1, '">';
-        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$lang['strdataonly']}</label></th>\n";
-        echo "<td>{$lang['strformat']}</td>\n";
+        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$this->lang['strdataonly']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}</td>\n";
         echo "<td><select name=\"d_format\">\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "<option value=\"csv\">CSV</option>\n";
-        echo "<option value=\"tab\">{$lang['strtabbed']}</option>\n";
+        echo "<option value=\"tab\">{$this->lang['strtabbed']}</option>\n";
         echo "<option value=\"html\">XHTML</option>\n";
         echo "<option value=\"xml\">XML</option>\n";
         echo "</select>\n</td>\n</tr>\n";
         if ($hasID) {
-            echo "<tr><td><label for=\"d_oids\">{$lang['stroids']}</td><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /></td>\n</tr>\n";
+            echo "<tr><td><label for=\"d_oids\">{$this->lang['stroids']}</td><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /></td>\n</tr>\n";
         }
         // Structure only
-        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$lang['strstructureonly']}</label></th>\n";
-        echo "<td><label for=\"s_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
+        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$this->lang['strstructureonly']}</label></th>\n";
+        echo "<td><label for=\"s_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
         // Structure and data
         echo '<tr><th class="data left" rowspan="', ($hasID) ? 3 : 2, '">';
-        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$lang['strstructureanddata']}</label></th>\n";
-        echo "<td>{$lang['strformat']}</td>\n";
+        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$this->lang['strstructureanddata']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}</td>\n";
         echo "<td><select name=\"sd_format\">\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><label for=\"sd_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
+        echo "<tr><td><label for=\"sd_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
         if ($hasID) {
-            echo "<tr><td><label for=\"sd_oids\">{$lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /></td>\n</tr>\n";
+            echo "<tr><td><label for=\"sd_oids\">{$this->lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /></td>\n</tr>\n";
         }
         echo "</table>\n";
 
-        echo "<h3>{$lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$lang['strdownload']}</label></p>\n";
+        echo "<h3>{$this->lang['stroptions']}</h3>\n";
+        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
+        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>\n";
 
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo $misc->form;
         echo "<input type=\"hidden\" name=\"subject\" value=\"table\" />\n";
         echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-        echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }
 
     public function doImport($msg = '')
     {
         $misc = $this->misc;
-        $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
         $this->printTrail('table');
@@ -680,31 +672,31 @@ class TblpropertiesController extends BaseController
             if (is_double($max_size) && $max_size > 0) {
                 echo '<form action="'.\SUBFOLDER."/src/views/dataimport\" method=\"post\" enctype=\"multipart/form-data\">\n";
                 echo "<table>\n";
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strformat']}</th>\n";
+                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strformat']}</th>\n";
                 echo "\t\t<td><select name=\"format\">\n";
-                echo "\t\t\t<option value=\"auto\">{$lang['strauto']}</option>\n";
+                echo "\t\t\t<option value=\"auto\">{$this->lang['strauto']}</option>\n";
                 echo "\t\t\t<option value=\"csv\">CSV</option>\n";
-                echo "\t\t\t<option value=\"tab\">{$lang['strtabbed']}</option>\n";
+                echo "\t\t\t<option value=\"tab\">{$this->lang['strtabbed']}</option>\n";
                 if (function_exists('xml_parser_create')) {
                     echo "\t\t\t<option value=\"xml\">XML</option>\n";
                 }
                 echo "\t\t</select></td>\n\t</tr>\n";
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strallowednulls']}</th>\n";
-                echo "\t\t<td><label><input type=\"checkbox\" name=\"allowednulls[0]\" value=\"\\N\" checked=\"checked\" />{$lang['strbackslashn']}</label><br />\n";
+                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strallowednulls']}</th>\n";
+                echo "\t\t<td><label><input type=\"checkbox\" name=\"allowednulls[0]\" value=\"\\N\" checked=\"checked\" />{$this->lang['strbackslashn']}</label><br />\n";
                 echo "\t\t<label><input type=\"checkbox\" name=\"allowednulls[1]\" value=\"NULL\" />NULL</label><br />\n";
-                echo "\t\t<label><input type=\"checkbox\" name=\"allowednulls[2]\" value=\"\" />{$lang['stremptystring']}</label></td>\n\t</tr>\n";
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strfile']}</th>\n";
+                echo "\t\t<label><input type=\"checkbox\" name=\"allowednulls[2]\" value=\"\" />{$this->lang['stremptystring']}</label></td>\n\t</tr>\n";
+                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strfile']}</th>\n";
                 echo "\t\t<td><input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"{$max_size}\" />";
                 echo "<input type=\"file\" name=\"source\" /></td>\n\t</tr>\n";
                 echo "</table>\n";
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"import\" />\n";
                 echo $misc->form;
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-                echo "<input type=\"submit\" value=\"{$lang['strimport']}\" /></p>\n";
+                echo "<input type=\"submit\" value=\"{$this->lang['strimport']}\" /></p>\n";
                 echo "</form>\n";
             }
         } else {
-            echo "<p>{$lang['strnouploads']}</p>\n";
+            echo "<p>{$this->lang['strnouploads']}</p>\n";
         }
     }
 
@@ -716,7 +708,6 @@ class TblpropertiesController extends BaseController
     public function doAddColumn($msg = '')
     {
         $misc = $this->misc;
-        $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['stage'])) {
@@ -755,7 +746,7 @@ class TblpropertiesController extends BaseController
                 $types_for_js = [];
 
                 $this->printTrail('table');
-                $this->printTitle($lang['straddcolumn'], 'pg.column.add');
+                $this->printTitle($this->lang['straddcolumn'], 'pg.column.add');
                 $this->printMsg($msg);
 
                 echo '<script src="'.\SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
@@ -763,13 +754,13 @@ class TblpropertiesController extends BaseController
 
                 // Output table header
                 echo "<table>\n";
-                echo "<tr><th class=\"data required\">{$lang['strname']}</th>\n<th colspan=\"2\" class=\"data required\">{$lang['strtype']}</th>\n";
-                echo "<th class=\"data\">{$lang['strlength']}</th>\n";
+                echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>\n<th colspan=\"2\" class=\"data required\">{$this->lang['strtype']}</th>\n";
+                echo "<th class=\"data\">{$this->lang['strlength']}</th>\n";
                 if ($data->hasCreateFieldWithConstraints()) {
-                    echo "<th class=\"data\">{$lang['strnotnull']}</th>\n<th class=\"data\">{$lang['strdefault']}</th>\n";
+                    echo "<th class=\"data\">{$this->lang['strnotnull']}</th>\n<th class=\"data\">{$this->lang['strdefault']}</th>\n";
                 }
 
-                echo "<th class=\"data\">{$lang['strcomment']}</th></tr>\n";
+                echo "<th class=\"data\">{$this->lang['strcomment']}</th></tr>\n";
 
                 echo "<tr><td><input name=\"field\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
                 htmlspecialchars($_POST['field']), "\" /></td>\n";
@@ -822,8 +813,8 @@ class TblpropertiesController extends BaseController
                 if (!$data->hasCreateFieldWithConstraints()) {
                     echo "<input type=\"hidden\" name=\"default\" value=\"\" />\n";
                 }
-                echo "<input type=\"submit\" value=\"{$lang['stradd']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+                echo "<input type=\"submit\" value=\"{$this->lang['stradd']}\" />\n";
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
                 echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");checkLengths(document.getElementById('type').value,'');</script>\n";
 
@@ -832,7 +823,7 @@ class TblpropertiesController extends BaseController
                 // Check inputs
                 if ('' == trim($_POST['field'])) {
                     $_REQUEST['stage'] = 1;
-                    $this->doAddColumn($lang['strcolneedsname']);
+                    $this->doAddColumn($this->lang['strcolneedsname']);
 
                     return;
                 }
@@ -852,17 +843,17 @@ class TblpropertiesController extends BaseController
                 );
                 if (0 == $status) {
                     $misc->setReloadBrowser(true);
-                    $this->doDefault($lang['strcolumnadded']);
+                    $this->doDefault($this->lang['strcolumnadded']);
                 } else {
                     $_REQUEST['stage'] = 1;
-                    $this->doAddColumn($lang['strcolumnaddedbad']);
+                    $this->doAddColumn($this->lang['strcolumnaddedbad']);
 
                     return;
                 }
 
                 break;
             default:
-                echo "<p>{$lang['strinvalidparam']}</p>\n";
+                echo "<p>{$this->lang['strinvalidparam']}</p>\n";
         }
     }
 
@@ -874,15 +865,14 @@ class TblpropertiesController extends BaseController
     public function doDrop($confirm)
     {
         $misc = $this->misc;
-        $lang = $this->lang;
         $data = $misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('column');
-            $this->printTitle($lang['strdrop'], 'pg.column.drop');
+            $this->printTitle($this->lang['strdrop'], 'pg.column.drop');
 
             echo '<p>', sprintf(
-                $lang['strconfdropcolumn'],
+                $this->lang['strconfdropcolumn'],
                 $misc->printVal($_REQUEST['column']),
                 $misc->printVal($_REQUEST['table'])
             ), "</p>\n";
@@ -892,17 +882,17 @@ class TblpropertiesController extends BaseController
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), "\" />\n";
             echo $misc->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\"> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\"> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
             $status = $data->dropColumn($_POST['table'], $_POST['column'], isset($_POST['cascade']));
             if (0 == $status) {
                 $misc->setReloadBrowser(true);
-                $this->doDefault($lang['strcolumndropped']);
+                $this->doDefault($this->lang['strcolumndropped']);
             } else {
-                $this->doDefault($lang['strcolumndroppedbad']);
+                $this->doDefault($this->lang['strcolumndroppedbad']);
             }
         }
     }

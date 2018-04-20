@@ -26,11 +26,7 @@ class SqleditController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
-        $action = $this->action;
-
-        switch ($action) {
+        switch ($this->action) {
             case 'find':
                 $title     = $this->lang['strfind'];
                 $body_text = $this->doFind();
@@ -60,7 +56,6 @@ class SqleditController extends BaseController
      */
     public function doDefault()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_SESSION['sqlquery'])) {
@@ -83,7 +78,7 @@ class SqleditController extends BaseController
 
         $default_html .= ' <div class="searchpath">';
         $default_html .= '<label>';
-        $default_html .= $this->misc->printHelp($lang['strsearchpath'], 'pg.schema.search_path', false);
+        $default_html .= $this->misc->printHelp($this->lang['strsearchpath'], 'pg.schema.search_path', false);
 
         $default_html .= ': <input type="text" name="search_path" id="search_path" size="45" value="'.$search_path.'" />';
         $default_html .= "</label>\n";
@@ -105,7 +100,7 @@ class SqleditController extends BaseController
                 $default_html .= '<p class="upload_sql_script">';
                 $default_html .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$max_size.'" />';
                 $default_html .= "\n";
-                $default_html .= '<label for="script">'.$lang['struploadscript'].'</label>';
+                $default_html .= '<label for="script">'.$this->lang['struploadscript'].'</label>';
                 $default_html .= '&nbsp;&nbsp; <input class="btn btn-small"  id="script" name="script" type="file" /></p>';
                 $default_html .= "</p>\n";
             }
@@ -114,15 +109,15 @@ class SqleditController extends BaseController
         // Check that file uploads are enabled
         $checked = (isset($_REQUEST['paginate']) ? ' checked="checked"' : '');
 
-        $default_html .= '<p><input type="submit" class="btn btn-small" name="execute" accesskey="r" value="'.$lang['strexecute'].'" />';
+        $default_html .= '<p><input type="submit" class="btn btn-small" name="execute" accesskey="r" value="'.$this->lang['strexecute'].'" />';
         $default_html .= "\n";
 
-        $default_html .= '<input type="reset" class="btn btn-small"  accesskey="q" value="'.$lang['strreset'].'" /></p>';
+        $default_html .= '<input type="reset" class="btn btn-small"  accesskey="q" value="'.$this->lang['strreset'].'" /></p>';
         $default_html .= "\n";
 
         $default_html .= '<p>';
         $default_html .= '<label for="paginate">';
-        $default_html .= '<input type="checkbox" id="paginate" name="paginate"'.$checked.' />&nbsp;'.$lang['strpaginate'].'&nbsp;';
+        $default_html .= '<input type="checkbox" id="paginate" name="paginate"'.$checked.' />&nbsp;'.$this->lang['strpaginate'].'&nbsp;';
         $default_html .= "</label>\n";
         $default_html .= "</p>\n";
 
@@ -140,7 +135,6 @@ class SqleditController extends BaseController
      */
     public function doFind()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['term'])) {
@@ -159,29 +153,29 @@ class SqleditController extends BaseController
 
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
         $default_html .= "<select id='filter' name=\"filter\">\n";
-        $default_html .= "\t<option value=\"\"".('' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strallobjects']}</option>\n";
-        $default_html .= "\t<option value=\"SCHEMA\"".('SCHEMA' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strschemas']}</option>\n";
-        $default_html .= "\t<option value=\"TABLE\"".('TABLE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strtables']}</option>\n";
-        $default_html .= "\t<option value=\"VIEW\"".('VIEW' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strviews']}</option>\n";
-        $default_html .= "\t<option value=\"SEQUENCE\"".('SEQUENCE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strsequences']}</option>\n";
-        $default_html .= "\t<option value=\"COLUMN\"".('COLUMN' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strcolumns']}</option>\n";
-        $default_html .= "\t<option value=\"RULE\"".('RULE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strrules']}</option>\n";
-        $default_html .= "\t<option value=\"INDEX\"".('INDEX' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strindexes']}</option>\n";
-        $default_html .= "\t<option value=\"TRIGGER\"".('TRIGGER' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strtriggers']}</option>\n";
-        $default_html .= "\t<option value=\"CONSTRAINT\"".('CONSTRAINT' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strconstraints']}</option>\n";
-        $default_html .= "\t<option value=\"FUNCTION\"".('FUNCTION' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strfunctions']}</option>\n";
-        $default_html .= "\t<option value=\"DOMAIN\"".('DOMAIN' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strdomains']}</option>\n";
+        $default_html .= "\t<option value=\"\"".('' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strallobjects']}</option>\n";
+        $default_html .= "\t<option value=\"SCHEMA\"".('SCHEMA' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strschemas']}</option>\n";
+        $default_html .= "\t<option value=\"TABLE\"".('TABLE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strtables']}</option>\n";
+        $default_html .= "\t<option value=\"VIEW\"".('VIEW' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strviews']}</option>\n";
+        $default_html .= "\t<option value=\"SEQUENCE\"".('SEQUENCE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strsequences']}</option>\n";
+        $default_html .= "\t<option value=\"COLUMN\"".('COLUMN' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strcolumns']}</option>\n";
+        $default_html .= "\t<option value=\"RULE\"".('RULE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strrules']}</option>\n";
+        $default_html .= "\t<option value=\"INDEX\"".('INDEX' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strindexes']}</option>\n";
+        $default_html .= "\t<option value=\"TRIGGER\"".('TRIGGER' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strtriggers']}</option>\n";
+        $default_html .= "\t<option value=\"CONSTRAINT\"".('CONSTRAINT' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strconstraints']}</option>\n";
+        $default_html .= "\t<option value=\"FUNCTION\"".('FUNCTION' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strfunctions']}</option>\n";
+        $default_html .= "\t<option value=\"DOMAIN\"".('DOMAIN' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strdomains']}</option>\n";
         if ($this->conf['show_advanced']) {
-            $default_html .= "\t<option value=\"AGGREGATE\"".('AGGREGATE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['straggregates']}</option>\n";
-            $default_html .= "\t<option value=\"TYPE\"".('TYPE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strtypes']}</option>\n";
-            $default_html .= "\t<option value=\"OPERATOR\"".('OPERATOR' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['stroperators']}</option>\n";
-            $default_html .= "\t<option value=\"OPCLASS\"".('OPCLASS' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['stropclasses']}</option>\n";
-            $default_html .= "\t<option value=\"CONVERSION\"".('CONVERSION' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strconversions']}</option>\n";
-            $default_html .= "\t<option value=\"LANGUAGE\"".('LANGUAGE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$lang['strlanguages']}</option>\n";
+            $default_html .= "\t<option value=\"AGGREGATE\"".('AGGREGATE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['straggregates']}</option>\n";
+            $default_html .= "\t<option value=\"TYPE\"".('TYPE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strtypes']}</option>\n";
+            $default_html .= "\t<option value=\"OPERATOR\"".('OPERATOR' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['stroperators']}</option>\n";
+            $default_html .= "\t<option value=\"OPCLASS\"".('OPCLASS' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['stropclasses']}</option>\n";
+            $default_html .= "\t<option value=\"CONVERSION\"".('CONVERSION' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strconversions']}</option>\n";
+            $default_html .= "\t<option value=\"LANGUAGE\"".('LANGUAGE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strlanguages']}</option>\n";
         }
         $default_html .= "</select>\n";
 
-        $default_html .= "<input type=\"submit\" value=\"{$lang['strfind']}\" />\n";
+        $default_html .= "<input type=\"submit\" value=\"{$this->lang['strfind']}\" />\n";
         $default_html .= "<input type=\"hidden\" name=\"action\" value=\"find\" /></p>\n";
         $default_html .= "</form>\n";
 

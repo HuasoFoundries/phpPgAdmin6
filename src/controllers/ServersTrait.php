@@ -95,8 +95,6 @@ trait ServersTrait
      */
     public function printConnection($the_action, $do_print = true)
     {
-        $lang = $this->lang;
-
         $connection_html = "<table class=\"printconnection\" style=\"width: 100%\"><tr><td class=\"popup_select1\">\n";
 
         $conf_servers = $this->getServers();
@@ -118,7 +116,7 @@ trait ServersTrait
             $connection_html .= '<input type="hidden" readonly="readonly" value="'.$server_id.'" name="server">';
         } else {
             $connection_html .= '<label>';
-            $connection_html .= $this->misc->printHelp($lang['strserver'], 'pg.server', false);
+            $connection_html .= $this->misc->printHelp($this->lang['strserver'], 'pg.server', false);
             $connection_html .= ': </label>';
             $connection_html .= " <select name=\"server\" id='selectserver' >\n";
             foreach ($servers as $id => $server) {
@@ -142,7 +140,7 @@ trait ServersTrait
             $databases = $data->getDatabases();
             if ($databases->recordCount() > 0) {
                 $connection_html .= '<label>';
-                $connection_html .= $this->misc->printHelp($lang['strdatabase'], 'pg.database', false);
+                $connection_html .= $this->misc->printHelp($this->lang['strdatabase'], 'pg.database', false);
                 $connection_html .= ": <select  id='selectdb'  name=\"database\" >\n";
 
                 //if no database was selected, user should select one

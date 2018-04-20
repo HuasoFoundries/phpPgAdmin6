@@ -20,9 +20,7 @@ class DbexportController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $data   = $this->misc->getDatabaseAccessor();
-        $action = $this->action;
+        $data = $this->misc->getDatabaseAccessor();
 
         // Prevent timeouts on large exports
         set_time_limit(0);
@@ -52,9 +50,9 @@ class DbexportController extends BaseController
 
             if (empty($version)) {
                 if ($dumpall) {
-                    printf($lang['strbadpgdumpallpath'], $server_info['pg_dumpall_path']);
+                    printf($this->lang['strbadpgdumpallpath'], $server_info['pg_dumpall_path']);
                 } else {
-                    printf($lang['strbadpgdumppath'], $server_info['pg_dump_path']);
+                    printf($this->lang['strbadpgdumppath'], $server_info['pg_dump_path']);
                 }
 
                 return;

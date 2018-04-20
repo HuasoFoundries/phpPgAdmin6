@@ -20,13 +20,10 @@ class TablespacesController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-
-        $this->printHeader($lang['strtablespaces']);
+        $this->printHeader($this->lang['strtablespaces']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             case 'save_create':
                 if (isset($_REQUEST['cancel'])) {
                     $this->doDefault();
@@ -79,7 +76,6 @@ class TablespacesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('server');
@@ -90,32 +86,32 @@ class TablespacesController extends BaseController
 
         $columns = [
             'database' => [
-                'title' => $lang['strname'],
+                'title' => $this->lang['strname'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
             ],
             'owner'    => [
-                'title' => $lang['strowner'],
+                'title' => $this->lang['strowner'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spcowner'),
             ],
             'location' => [
-                'title' => $lang['strlocation'],
+                'title' => $this->lang['strlocation'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spclocation'),
             ],
             'actions'  => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
         ];
 
         if ($data->hasSharedComments()) {
             $columns['comment'] = [
-                'title' => $lang['strcomment'],
+                'title' => $this->lang['strcomment'],
                 'field' => \PHPPgAdmin\Decorators\Decorator::field('spccomment'),
             ];
         }
 
         $actions = [
             'alter'      => [
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'tablespaces',
@@ -127,7 +123,7 @@ class TablespacesController extends BaseController
                 ],
             ],
             'drop'       => [
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'tablespaces',
@@ -139,7 +135,7 @@ class TablespacesController extends BaseController
                 ],
             ],
             'privileges' => [
-                'content' => $lang['strprivileges'],
+                'content' => $this->lang['strprivileges'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'privileges',
@@ -152,7 +148,7 @@ class TablespacesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($tablespaces, $columns, $actions, 'tablespaces-tablespaces', $lang['strnotablespaces']);
+        echo $this->printTable($tablespaces, $columns, $actions, 'tablespaces-tablespaces', $this->lang['strnotablespaces']);
 
         $this->printNavLinks(['create' => [
             'attr'    => [
@@ -164,7 +160,7 @@ class TablespacesController extends BaseController
                     ],
                 ],
             ],
-            'content' => $lang['strcreatetablespace'],
+            'content' => $this->lang['strcreatetablespace'],
         ]], 'tablespaces-tablespaces', get_defined_vars());
     }
 
@@ -175,11 +171,10 @@ class TablespacesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('tablespace');
-        $this->printTitle($lang['stralter'], 'pg.tablespace.alter');
+        $this->printTitle($this->lang['stralter'], 'pg.tablespace.alter');
         $this->printMsg($msg);
 
         // Fetch tablespace info
@@ -203,11 +198,11 @@ class TablespacesController extends BaseController
             echo '<form action="'.\SUBFOLDER."/src/views/tablespaces\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<table>\n";
-            echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
+            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
             echo '<td class="data1">';
             echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
             htmlspecialchars($_POST['name']), "\" /></td></tr>\n";
-            echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
+            echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>\n";
             echo '<td class="data1"><select name="owner">';
             while (!$users->EOF) {
                 $uname = $users->fields['usename'];
@@ -217,7 +212,7 @@ class TablespacesController extends BaseController
             }
             echo "</select></td></tr>\n";
             if ($data->hasSharedComments()) {
-                echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
+                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>\n";
                 echo '<td class="data1">';
                 echo '<textarea rows="3" cols="32" name="comment">',
                 htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
@@ -225,11 +220,11 @@ class TablespacesController extends BaseController
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
             echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
     }
 
@@ -238,12 +233,11 @@ class TablespacesController extends BaseController
      */
     public function doSaveAlter()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Check data
         if ('' == trim($_POST['name'])) {
-            $this->doAlter($lang['strtablespaceneedsname']);
+            $this->doAlter($this->lang['strtablespaceneedsname']);
         } else {
             $status = $data->alterTablespace($_POST['tablespace'], $_POST['name'], $_POST['owner'], $_POST['comment']);
             if (0 == $status) {
@@ -252,9 +246,9 @@ class TablespacesController extends BaseController
                     // Jump them to the new table name
                     $_REQUEST['tablespace'] = $_POST['name'];
                 }
-                $this->doDefault($lang['strtablespacealtered']);
+                $this->doDefault($this->lang['strtablespacealtered']);
             } else {
-                $this->doAlter($lang['strtablespacealteredbad']);
+                $this->doAlter($this->lang['strtablespacealteredbad']);
             }
         }
     }
@@ -266,28 +260,27 @@ class TablespacesController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('tablespace');
-            $this->printTitle($lang['strdrop'], 'pg.tablespace.drop');
+            $this->printTitle($this->lang['strdrop'], 'pg.tablespace.drop');
 
-            echo '<p>', sprintf($lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
             echo '<form action="'.\SUBFOLDER."/src/views/tablespaces\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
             $status = $data->droptablespace($_REQUEST['tablespace']);
             if (0 == $status) {
-                $this->doDefault($lang['strtablespacedropped']);
+                $this->doDefault($this->lang['strtablespacedropped']);
             } else {
-                $this->doDefault($lang['strtablespacedroppedbad']);
+                $this->doDefault($this->lang['strtablespacedroppedbad']);
             }
         }
     }
@@ -299,7 +292,6 @@ class TablespacesController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $server_info = $this->misc->getServerInfo();
@@ -324,15 +316,15 @@ class TablespacesController extends BaseController
         $users = $data->getUsers();
 
         $this->printTrail('server');
-        $this->printTitle($lang['strcreatetablespace'], 'pg.tablespace.create');
+        $this->printTitle($this->lang['strcreatetablespace'], 'pg.tablespace.create');
         $this->printMsg($msg);
 
         echo '<form action="'.\SUBFOLDER."/src/views/tablespaces\" method=\"post\">\n";
         echo $this->misc->form;
         echo "<table>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formSpcname\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_POST['formSpcname']), "\" /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strowner']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strowner']}</th>\n";
         echo "\t\t<td class=\"data1\"><select name=\"formOwner\">\n";
         while (!$users->EOF) {
             $uname = $users->fields['usename'];
@@ -341,18 +333,18 @@ class TablespacesController extends BaseController
             $users->moveNext();
         }
         echo "\t\t</select></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strlocation']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strlocation']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formLoc\" value=\"", htmlspecialchars($_POST['formLoc']), "\" /></td>\n\t</tr>\n";
         // Comments (if available)
         if ($data->hasSharedComments()) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strcomment']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
             echo "\t\t<td><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
             htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
         }
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
     }
 
@@ -361,14 +353,13 @@ class TablespacesController extends BaseController
      */
     public function doSaveCreate()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Check data
         if ('' == trim($_POST['formSpcname'])) {
-            $this->doCreate($lang['strtablespaceneedsname']);
+            $this->doCreate($this->lang['strtablespaceneedsname']);
         } elseif ('' == trim($_POST['formLoc'])) {
-            $this->doCreate($lang['strtablespaceneedsloc']);
+            $this->doCreate($this->lang['strtablespaceneedsloc']);
         } else {
             // Default comment to blank if it isn't set
             if (!isset($_POST['formComment'])) {
@@ -377,9 +368,9 @@ class TablespacesController extends BaseController
 
             $status = $data->createTablespace($_POST['formSpcname'], $_POST['formOwner'], $_POST['formLoc'], $_POST['formComment']);
             if (0 == $status) {
-                $this->doDefault($lang['strtablespacecreated']);
+                $this->doDefault($this->lang['strtablespacecreated']);
             } else {
-                $this->doCreate($lang['strtablespacecreatedbad']);
+                $this->doCreate($this->lang['strtablespacecreatedbad']);
             }
         }
     }

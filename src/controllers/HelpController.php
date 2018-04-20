@@ -20,9 +20,7 @@ class HelpController extends BaseController
      */
     public function render()
     {
-        $action = $this->action;
-
-        switch ($action) {
+        switch ($this->action) {
             case 'browse':
                 $this->doBrowse();
 
@@ -36,7 +34,6 @@ class HelpController extends BaseController
 
     public function doDefault()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (isset($_REQUEST['help'])) {
@@ -56,18 +53,17 @@ class HelpController extends BaseController
             }
         }
 
-        $this->doBrowse($lang['strinvalidhelppage']);
+        $this->doBrowse($this->lang['strinvalidhelppage']);
     }
 
     public function doBrowse($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $this->printHeader($lang['strhelppagebrowser']);
+        $this->printHeader($this->lang['strhelppagebrowser']);
         $this->printBody();
 
-        $this->printTitle($lang['strselecthelppage']);
+        $this->printTitle($this->lang['strselecthelppage']);
 
         echo $this->printMsg($msg);
 
@@ -94,12 +90,10 @@ class HelpController extends BaseController
 
     public function doChoosePage($urls)
     {
-        $lang = $this->lang;
-
-        $this->printHeader($lang['strhelppagebrowser']);
+        $this->printHeader($this->lang['strhelppagebrowser']);
         $this->printBody();
 
-        $this->printTitle($lang['strselecthelppage']);
+        $this->printTitle($this->lang['strselecthelppage']);
 
         echo "<ul>\n";
         foreach ($urls as $url) {

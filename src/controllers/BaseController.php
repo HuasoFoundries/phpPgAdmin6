@@ -103,13 +103,11 @@ class BaseController
     public function render()
     {
         $this->misc = $this->misc;
-        $lang       = $this->lang;
-        $action     = $this->action;
 
-        $this->printHeader($lang[$this->controller_title]);
+        $this->printHeader($this->lang[$this->controller_title]);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             default:
                 $this->doDefault();
 

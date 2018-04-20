@@ -23,17 +23,14 @@ class FunctionsController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
-        $action = $this->action;
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strfunctions'], null, true, 'header_datatables.twig');
+        $this->printHeader($this->lang['strfunctions'], null, true, 'header_datatables.twig');
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             case 'save_create':
                 if (isset($_POST['cancel'])) {
                     $this->doDefault();
@@ -90,7 +87,6 @@ class FunctionsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
@@ -101,28 +97,28 @@ class FunctionsController extends BaseController
 
         $columns = [
             'function'     => [
-                'title' => $lang['strfunction'],
+                'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
                 'url'   => \SUBFOLDER."/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns'      => [
-                'title' => $lang['strreturns'],
+                'title' => $this->lang['strreturns'],
                 'field' => Decorator::field('proreturns'),
             ],
             'owner'        => [
-                'title' => $lang['strowner'],
+                'title' => $this->lang['strowner'],
                 'field' => Decorator::field('proowner'),
             ],
             'proglanguage' => [
-                'title' => $lang['strproglanguage'],
+                'title' => $this->lang['strproglanguage'],
                 'field' => Decorator::field('prolanguage'),
             ],
             'actions'      => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
             'comment'      => [
-                'title' => $lang['strcomment'],
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('procomment'),
             ],
         ];
@@ -133,7 +129,7 @@ class FunctionsController extends BaseController
                 'url'     => 'functions',
             ],
             'alter'        => [
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'functions',
@@ -147,7 +143,7 @@ class FunctionsController extends BaseController
             ],
             'drop'         => [
                 'multiaction' => 'confirm_drop',
-                'content'     => $lang['strdrop'],
+                'content'     => $this->lang['strdrop'],
                 'attr'        => [
                     'href' => [
                         'url'     => 'functions',
@@ -160,7 +156,7 @@ class FunctionsController extends BaseController
                 ],
             ],
             'privileges'   => [
-                'content' => $lang['strprivileges'],
+                'content' => $this->lang['strprivileges'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'privileges',
@@ -174,7 +170,7 @@ class FunctionsController extends BaseController
             ],
         ];
 
-        echo $this->printTable($funcs, $columns, $actions, $this->table_place, $lang['strnofunctions']);
+        echo $this->printTable($funcs, $columns, $actions, $this->table_place, $this->lang['strnofunctions']);
 
         $navlinks = [
             'createpl'       => [
@@ -189,7 +185,7 @@ class FunctionsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strcreateplfunction'],
+                'content' => $this->lang['strcreateplfunction'],
             ],
             'createinternal' => [
                 'attr'    => [
@@ -204,7 +200,7 @@ class FunctionsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strcreateinternalfunction'],
+                'content' => $this->lang['strcreateinternalfunction'],
             ],
             'createc'        => [
                 'attr'    => [
@@ -219,7 +215,7 @@ class FunctionsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strcreatecfunction'],
+                'content' => $this->lang['strcreatecfunction'],
             ],
         ];
 
@@ -231,7 +227,6 @@ class FunctionsController extends BaseController
      */
     public function doTree()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $funcs = $data->getFunctions();
@@ -263,7 +258,6 @@ class FunctionsController extends BaseController
      */
     public function doSaveEdit()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $fnlang = strtolower($_POST['original_lang']);
@@ -307,9 +301,9 @@ class FunctionsController extends BaseController
                 // Force a browser reload
                 $this->misc->setReloadBrowser(true);
             }
-            $this->doProperties($lang['strfunctionupdated']);
+            $this->doProperties($this->lang['strfunctionupdated']);
         } else {
-            $this->doEdit($lang['strfunctionupdatedbad']);
+            $this->doEdit($this->lang['strfunctionupdatedbad']);
         }
     }
 
@@ -320,11 +314,10 @@ class FunctionsController extends BaseController
      */
     public function doEdit($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('function');
-        $this->printTitle($lang['stralter'], 'pg.function.alter');
+        $this->printTitle($this->lang['stralter'], 'pg.function.alter');
         $this->printMsg($msg);
 
         $fndata = $data->getFunction($_REQUEST['function_oid']);
@@ -424,11 +417,11 @@ class FunctionsController extends BaseController
             echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
             echo "<table style=\"width: 90%\">\n";
             echo "<tr>\n";
-            echo "<th class=\"data required\">{$lang['strschema']}</th>\n";
-            echo "<th class=\"data required\">{$lang['strfunction']}</th>\n";
-            echo "<th class=\"data\">{$lang['strarguments']}</th>\n";
-            echo "<th class=\"data required\">{$lang['strreturns']}</th>\n";
-            echo "<th class=\"data required\">{$lang['strproglanguage']}</th>\n";
+            echo "<th class=\"data required\">{$this->lang['strschema']}</th>\n";
+            echo "<th class=\"data required\">{$this->lang['strfunction']}</th>\n";
+            echo "<th class=\"data\">{$this->lang['strarguments']}</th>\n";
+            echo "<th class=\"data required\">{$this->lang['strreturns']}</th>\n";
+            echo "<th class=\"data required\">{$this->lang['strproglanguage']}</th>\n";
             echo "</tr>\n";
 
             echo "<tr>\n";
@@ -478,39 +471,39 @@ class FunctionsController extends BaseController
 
             $fnlang = strtolower($fndata->fields['prolanguage']);
             if ('c' == $fnlang) {
-                echo "<tr><th class=\"data required\" colspan=\"2\">{$lang['strobjectfile']}</th>\n";
-                echo "<th class=\"data\" colspan=\"2\">{$lang['strlinksymbol']}</th></tr>\n";
+                echo "<tr><th class=\"data required\" colspan=\"2\">{$this->lang['strobjectfile']}</th>\n";
+                echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>\n";
                 echo '<tr><td class="data1" colspan="2"><input type="text" name="formObjectFile" style="width:100%" value="',
                 htmlspecialchars($_POST['formObjectFile']), "\" /></td>\n";
                 echo '<td class="data1" colspan="2"><input type="text" name="formLinkSymbol" style="width:100%" value="',
                 htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
             } elseif ('internal' == $fnlang) {
-                echo "<tr><th class=\"data\" colspan=\"5\">{$lang['strlinksymbol']}</th></tr>\n";
+                echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strlinksymbol']}</th></tr>\n";
                 echo '<tr><td class="data1" colspan="5"><input type="text" name="formLinkSymbol" style="width:100%" value="',
                 htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
             } else {
-                echo "<tr><th class=\"data required\" colspan=\"5\">{$lang['strdefinition']}</th></tr>\n";
+                echo "<tr><th class=\"data required\" colspan=\"5\">{$this->lang['strdefinition']}</th></tr>\n";
                 echo '<tr><td class="data1" colspan="5"><textarea style="width:100%;" rows="20" cols="50" name="formDefinition">',
                 htmlspecialchars($_POST['formDefinition']), "</textarea></td></tr>\n";
             }
 
             // Display function comment
-            echo "<tr><th class=\"data\" colspan=\"5\">{$lang['strcomment']}</th></tr>\n";
+            echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strcomment']}</th></tr>\n";
             echo '<tr><td class="data1" colspan="5"><textarea style="width:100%;" name="formComment" rows="3" cols="50">',
             htmlspecialchars($_POST['formComment']), "</textarea></td></tr>\n";
 
             // Display function cost options
             if ($data->hasFunctionCosting()) {
-                echo "<tr><th class=\"data required\" colspan=\"5\">{$lang['strfunctioncosting']}</th></tr>\n";
-                echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
+                echo "<tr><th class=\"data required\" colspan=\"5\">{$this->lang['strfunctioncosting']}</th></tr>\n";
+                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
                 htmlspecialchars($_POST['formCost']).'" /></td>';
-                echo "<td class=\"data1\" colspan=\"2\">{$lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"",
+                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"",
                 htmlspecialchars($_POST['formRows']), '"', (!$fndata->fields['proretset']) ? 'disabled' : '', '/></td>';
             }
 
             // Display function properties
             if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
-                echo "<tr><th class=\"data\" colspan=\"5\">{$lang['strproperties']}</th></tr>\n";
+                echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strproperties']}</th></tr>\n";
                 echo "<tr><td class=\"data1\" colspan=\"5\">\n";
                 $i = 0;
                 foreach ($data->funcprops as $k => $v) {
@@ -529,7 +522,7 @@ class FunctionsController extends BaseController
             // function owner
             if ($data->hasFunctionAlterOwner()) {
                 $users = $data->getUsers();
-                echo "<tr><td class=\"data1\" colspan=\"5\">{$lang['strowner']}: <select name=\"formFuncOwn\">";
+                echo "<tr><td class=\"data1\" colspan=\"5\">{$this->lang['strowner']}: <select name=\"formFuncOwn\">";
                 while (!$users->EOF) {
                     $uname = $users->fields['usename'];
                     echo '<option value="', htmlspecialchars($uname), '"',
@@ -545,11 +538,11 @@ class FunctionsController extends BaseController
             echo '<input type="hidden" name="function" value="', htmlspecialchars($_REQUEST['function']), "\" />\n";
             echo '<input type="hidden" name="function_oid" value="', htmlspecialchars($_REQUEST['function_oid']), "\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
     }
 
@@ -560,11 +553,10 @@ class FunctionsController extends BaseController
      */
     public function doProperties($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('function');
-        $this->printTitle($lang['strproperties'], 'pg.function');
+        $this->printTitle($this->lang['strproperties'], 'pg.function');
         $this->printMsg($msg);
 
         $funcdata = $data->getFunction($_REQUEST['function_oid']);
@@ -628,10 +620,10 @@ class FunctionsController extends BaseController
             $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
             $func_full                     = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
             echo "<table style=\"width: 90%\">\n";
-            echo "<tr><th class=\"data\">{$lang['strfunction']}</th>\n";
-            echo "<th class=\"data\">{$lang['strarguments']}</th>\n";
-            echo "<th class=\"data\">{$lang['strreturns']}</th>\n";
-            echo "<th class=\"data\">{$lang['strproglanguage']}</th></tr>\n";
+            echo "<tr><th class=\"data\">{$this->lang['strfunction']}</th>\n";
+            echo "<th class=\"data\">{$this->lang['strarguments']}</th>\n";
+            echo "<th class=\"data\">{$this->lang['strreturns']}</th>\n";
+            echo "<th class=\"data\">{$this->lang['strproglanguage']}</th></tr>\n";
             echo '<tr><td class="data1">', $this->misc->printVal($funcdata->fields['proname']), "</td>\n";
             echo '<td class="data1">', $this->misc->printVal($args), "</td>\n";
             echo '<td class="data1">';
@@ -644,17 +636,17 @@ class FunctionsController extends BaseController
 
             $fnlang = strtolower($funcdata->fields['prolanguage']);
             if ('c' == $fnlang) {
-                echo "<tr><th class=\"data\" colspan=\"2\">{$lang['strobjectfile']}</th>\n";
-                echo "<th class=\"data\" colspan=\"2\">{$lang['strlinksymbol']}</th></tr>\n";
+                echo "<tr><th class=\"data\" colspan=\"2\">{$this->lang['strobjectfile']}</th>\n";
+                echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>\n";
                 echo '<tr><td class="data1" colspan="2">', $this->misc->printVal($funcdata->fields['probin']), "</td>\n";
                 echo '<td class="data1" colspan="2">', $this->misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
             } elseif ('internal' == $fnlang) {
-                echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strlinksymbol']}</th></tr>\n";
+                echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strlinksymbol']}</th></tr>\n";
                 echo '<tr><td class="data1" colspan="4">', $this->misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
             } else {
                 $highlight = new \PHPPgAdmin\Highlight();
 
-                echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strdefinition']}</th></tr>\n";
+                echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strdefinition']}</th></tr>\n";
                 // Check to see if we have syntax highlighting for this language
                 if (array_key_exists($fnlang, $data->langmap)) {
                     $temp = $highlight->syntax_highlight(htmlspecialchars($funcdata->fields['prosrc']), $data->langmap[$fnlang]);
@@ -668,16 +660,16 @@ class FunctionsController extends BaseController
 
             // Display function cost options
             if ($data->hasFunctionCosting()) {
-                echo "<tr><th class=\"data required\" colspan=\"4\">{$lang['strfunctioncosting']}</th></tr>\n";
-                echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: ", $this->misc->printVal($funcdata->fields['procost']), ' </td>';
-                echo "<td class=\"data1\" colspan=\"2\">{$lang['strresultrows']}: ", $this->misc->printVal($funcdata->fields['prorows']), ' </td>';
+                echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strfunctioncosting']}</th></tr>\n";
+                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: ", $this->misc->printVal($funcdata->fields['procost']), ' </td>';
+                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: ", $this->misc->printVal($funcdata->fields['prorows']), ' </td>';
             }
 
             // Show flags
             if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
                 // Fetch an array of the function properties
                 $funcprops = $data->getFunctionProperties($funcdata->fields);
-                echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strproperties']}</th></tr>\n";
+                echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>\n";
                 echo "<tr><td class=\"data1\" colspan=\"4\">\n";
                 foreach ($funcprops as $v) {
                     echo $this->misc->printVal($v), "<br />\n";
@@ -685,11 +677,11 @@ class FunctionsController extends BaseController
                 echo "</td></tr>\n";
             }
 
-            echo "<tr><td class=\"data1\" colspan=\"5\">{$lang['strowner']}: ", htmlspecialchars($funcdata->fields['proowner']), "\n";
+            echo "<tr><td class=\"data1\" colspan=\"5\">{$this->lang['strowner']}: ", htmlspecialchars($funcdata->fields['proowner']), "\n";
             echo "</td></tr>\n";
             echo "</table>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
 
         $navlinks = [
@@ -704,7 +696,7 @@ class FunctionsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strshowallfunctions'],
+                'content' => $this->lang['strshowallfunctions'],
             ],
             'alter'   => [
                 'attr'    => [
@@ -720,7 +712,7 @@ class FunctionsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
             ],
             'drop'    => [
                 'attr'    => [
@@ -736,7 +728,7 @@ class FunctionsController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strdrop'],
+                'content' => $this->lang['strdrop'],
             ],
         ];
 
@@ -750,16 +742,15 @@ class FunctionsController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['function']) && empty($_REQUEST['ma'])) {
-            return $this->doDefault($lang['strspecifyfunctiontodrop']);
+            return $this->doDefault($this->lang['strspecifyfunctiontodrop']);
         }
 
         if ($confirm) {
             $this->printTrail('schema');
-            $this->printTitle($lang['strdrop'], 'pg.function.drop');
+            $this->printTitle($this->lang['strdrop'], 'pg.function.drop');
 
             echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
 
@@ -767,12 +758,12 @@ class FunctionsController extends BaseController
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfdropfunction'], $this->misc->printVal($a['function'])), "</p>\n";
+                    echo '<p>', sprintf($this->lang['strconfdropfunction'], $this->misc->printVal($a['function'])), "</p>\n";
                     echo '<input type="hidden" name="function[]" value="', htmlspecialchars($a['function']), "\" />\n";
                     echo '<input type="hidden" name="function_oid[]" value="', htmlspecialchars($a['function_oid']), "\" />\n";
                 }
             } else {
-                echo '<p>', sprintf($lang['strconfdropfunction'], $this->misc->printVal($_REQUEST['function'])), "</p>\n";
+                echo '<p>', sprintf($this->lang['strconfdropfunction'], $this->misc->printVal($_REQUEST['function'])), "</p>\n";
                 echo '<input type="hidden" name="function" value="', htmlspecialchars($_REQUEST['function']), "\" />\n";
                 echo '<input type="hidden" name="function_oid" value="', htmlspecialchars($_REQUEST['function_oid']), "\" />\n";
             }
@@ -780,9 +771,9 @@ class FunctionsController extends BaseController
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
 
             echo $this->misc->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
             if (is_array($_POST['function_oid'])) {
@@ -792,10 +783,10 @@ class FunctionsController extends BaseController
                     foreach ($_POST['function_oid'] as $k => $s) {
                         $status = $data->dropFunction($s, isset($_POST['cascade']));
                         if (0 == $status) {
-                            $msg .= sprintf('%s: %s<br />', htmlentities($_POST['function'][$k], ENT_QUOTES, 'UTF-8'), $lang['strfunctiondropped']);
+                            $msg .= sprintf('%s: %s<br />', htmlentities($_POST['function'][$k], ENT_QUOTES, 'UTF-8'), $this->lang['strfunctiondropped']);
                         } else {
                             $data->endTransaction();
-                            $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($_POST['function'][$k], ENT_QUOTES, 'UTF-8'), $lang['strfunctiondroppedbad']));
+                            $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($_POST['function'][$k], ENT_QUOTES, 'UTF-8'), $this->lang['strfunctiondroppedbad']));
 
                             return;
                         }
@@ -806,15 +797,15 @@ class FunctionsController extends BaseController
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($msg);
                 } else {
-                    $this->doDefault($lang['strfunctiondroppedbad']);
+                    $this->doDefault($this->lang['strfunctiondroppedbad']);
                 }
             } else {
                 $status = $data->dropFunction($_POST['function_oid'], isset($_POST['cascade']));
                 if (0 == $status) {
                     $this->misc->setReloadBrowser(true);
-                    $this->doDefault($lang['strfunctiondropped']);
+                    $this->doDefault($this->lang['strfunctiondropped']);
                 } else {
-                    $this->doDefault($lang['strfunctiondroppedbad']);
+                    $this->doDefault($this->lang['strfunctiondroppedbad']);
                 }
             }
         }
@@ -828,7 +819,6 @@ class FunctionsController extends BaseController
      */
     public function doCreate($msg = '', $szJS = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
@@ -890,15 +880,15 @@ class FunctionsController extends BaseController
 
         switch ($fnlang) {
             case 'c':
-                $this->printTitle($lang['strcreatecfunction'], 'pg.function.create.c');
+                $this->printTitle($this->lang['strcreatecfunction'], 'pg.function.create.c');
 
                 break;
             case 'internal':
-                $this->printTitle($lang['strcreateinternalfunction'], 'pg.function.create.internal');
+                $this->printTitle($this->lang['strcreateinternalfunction'], 'pg.function.create.internal');
 
                 break;
             default:
-                $this->printTitle($lang['strcreateplfunction'], 'pg.function.create.pl');
+                $this->printTitle($this->lang['strcreateplfunction'], 'pg.function.create.pl');
 
                 break;
         }
@@ -976,7 +966,7 @@ class FunctionsController extends BaseController
         }
 
         $szLanguage .= '</td>';
-        $szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$lang['strarguments']}</th></tr>";
+        $szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$this->lang['strarguments']}</th></tr>";
         $arrayModes    = ['IN', 'OUT', 'INOUT'];
         $szModes       = '<select name="formArgModes[]" style="width:100%;">';
         foreach ($arrayModes as $pV) {
@@ -997,7 +987,7 @@ class FunctionsController extends BaseController
         } else {
             $szJSTRArg = '';
         }
-        $szJSAddTR = "<tr id=\"parent_add_tr\" onclick=\"addArg();\" onmouseover=\"this.style.cursor='pointer'\">\n<td style=\"text-align: right\" colspan=\"6\" class=\"data3\"><table><tr><td class=\"data3\"><img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td><td class=\"data3\"><span style=\"font-size: 8pt\">{$lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
+        $szJSAddTR = "<tr id=\"parent_add_tr\" onclick=\"addArg();\" onmouseover=\"this.style.cursor='pointer'\">\n<td style=\"text-align: right\" colspan=\"6\" class=\"data3\"><table><tr><td class=\"data3\"><img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td><td class=\"data3\"><span style=\"font-size: 8pt\">{$this->lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
 
         echo '<script src="'.\SUBFOLDER."/js/functions.js\" type=\"text/javascript\"></script>
 		<script type=\"text/javascript\">
@@ -1005,22 +995,22 @@ class FunctionsController extends BaseController
 			var g_types_select = '<select name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
 			var g_modes_select = '{$szModes}';
 			var g_name = '';
-			var g_lang_strargremove = '", htmlspecialchars($lang['strargremove'], ENT_QUOTES), "';
-			var g_lang_strargnoargs = '", htmlspecialchars($lang['strargnoargs'], ENT_QUOTES), "';
-			var g_lang_strargenableargs = '", htmlspecialchars($lang['strargenableargs'], ENT_QUOTES), "';
-			var g_lang_strargnorowabove = '", htmlspecialchars($lang['strargnorowabove'], ENT_QUOTES), "';
-			var g_lang_strargnorowbelow = '", htmlspecialchars($lang['strargnorowbelow'], ENT_QUOTES), "';
-			var g_lang_strargremoveconfirm = '", htmlspecialchars($lang['strargremoveconfirm'], ENT_QUOTES), "';
-			var g_lang_strargraise = '", htmlspecialchars($lang['strargraise'], ENT_QUOTES), "';
-			var g_lang_strarglower = '", htmlspecialchars($lang['strarglower'], ENT_QUOTES), "';
+			var g_lang_strargremove = '", htmlspecialchars($this->lang['strargremove'], ENT_QUOTES), "';
+			var g_lang_strargnoargs = '", htmlspecialchars($this->lang['strargnoargs'], ENT_QUOTES), "';
+			var g_lang_strargenableargs = '", htmlspecialchars($this->lang['strargenableargs'], ENT_QUOTES), "';
+			var g_lang_strargnorowabove = '", htmlspecialchars($this->lang['strargnorowabove'], ENT_QUOTES), "';
+			var g_lang_strargnorowbelow = '", htmlspecialchars($this->lang['strargnorowbelow'], ENT_QUOTES), "';
+			var g_lang_strargremoveconfirm = '", htmlspecialchars($this->lang['strargremoveconfirm'], ENT_QUOTES), "';
+			var g_lang_strargraise = '", htmlspecialchars($this->lang['strargraise'], ENT_QUOTES), "';
+			var g_lang_strarglower = '", htmlspecialchars($this->lang['strarglower'], ENT_QUOTES), "';
 			//]]>
 		</script>
 		";
         echo '<form action="'.\SUBFOLDER."/src/views//views/functions\" method=\"post\">\n";
         echo "<table><tbody id=\"args_table\">\n";
-        echo "<tr><th class=\"data required\">{$lang['strname']}</th>\n";
-        echo "<th class=\"data required\" colspan=\"2\">{$lang['strreturns']}</th>\n";
-        echo "<th class=\"data required\">{$lang['strproglanguage']}</th></tr>\n";
+        echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>\n";
+        echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strreturns']}</th>\n";
+        echo "<th class=\"data required\">{$this->lang['strproglanguage']}</th></tr>\n";
         echo "<tr>\n";
         echo "{$szFunctionName}\n";
         echo "{$szReturns}\n";
@@ -1028,46 +1018,46 @@ class FunctionsController extends BaseController
         echo "</tr>\n";
         echo "{$szJSArguments}\n";
         echo "<tr>\n";
-        echo "<th class=\"data required\">{$lang['strargmode']}</th>\n";
-        echo "<th class=\"data required\">{$lang['strname']}</th>\n";
-        echo "<th class=\"data required\" colspan=\"2\">{$lang['strargtype']}</th>\n";
+        echo "<th class=\"data required\">{$this->lang['strargmode']}</th>\n";
+        echo "<th class=\"data required\">{$this->lang['strname']}</th>\n";
+        echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strargtype']}</th>\n";
         echo "</tr>\n";
         echo "{$szJSAddTR}\n";
 
         if ('c' == $fnlang) {
-            echo "<tr><th class=\"data required\" colspan=\"2\">{$lang['strobjectfile']}</th>\n";
-            echo "<th class=\"data\" colspan=\"2\">{$lang['strlinksymbol']}</th></tr>\n";
+            echo "<tr><th class=\"data required\" colspan=\"2\">{$this->lang['strobjectfile']}</th>\n";
+            echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>\n";
             echo '<tr><td class="data1" colspan="2"><input type="text" name="formObjectFile" style="width:100%" value="',
             htmlspecialchars($_POST['formObjectFile']), "\" /></td>\n";
             echo '<td class="data1" colspan="2"><input type="text" name="formLinkSymbol" style="width:100%" value="',
             htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
         } elseif ('internal' == $fnlang) {
-            echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strlinksymbol']}</th></tr>\n";
+            echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strlinksymbol']}</th></tr>\n";
             echo '<tr><td class="data1" colspan="4"><input type="text" name="formLinkSymbol" style="width:100%" value="',
             htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
         } else {
-            echo "<tr><th class=\"data required\" colspan=\"4\">{$lang['strdefinition']}</th></tr>\n";
+            echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strdefinition']}</th></tr>\n";
             echo '<tr><td class="data1" colspan="4"><textarea style="width:100%;" rows="20" cols="50" name="formDefinition">',
             htmlspecialchars($_POST['formDefinition']), "</textarea></td></tr>\n";
         }
 
         // Display function comment
-        echo "<tr><th class=\"data\" colspan=\"4\">{$lang['strcomment']}</th></tr>\n";
+        echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strcomment']}</th></tr>\n";
         echo '<tr><td class="data1" colspan="4"><textarea style="width:100%;" name="formComment" rows="3" cols="50">',
         htmlspecialchars($_POST['formComment']), "</textarea></td></tr>\n";
 
         // Display function cost options
         if ($data->hasFunctionCosting()) {
-            echo "<tr><th class=\"data required\" colspan=\"4\">{$lang['strfunctioncosting']}</th></tr>\n";
-            echo "<td class=\"data1\" colspan=\"2\">{$lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
+            echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strfunctioncosting']}</th></tr>\n";
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
             htmlspecialchars($_POST['formCost']).'" /></td>';
-            echo "<td class=\"data1\" colspan=\"2\">{$lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"".
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"".
             htmlspecialchars($_POST['formRows']).'" /></td>';
         }
 
         // Display function properties
         if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
-            echo "<tr><th class=\"data required\" colspan=\"4\">{$lang['strproperties']}</th></tr>\n";
+            echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>\n";
             echo "<tr><td class=\"data1\" colspan=\"4\">\n";
             $i = 0;
             foreach ($data->funcprops as $k => $v) {
@@ -1086,8 +1076,8 @@ class FunctionsController extends BaseController
         echo $szJSTRArg;
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
         echo $szJS;
     }
@@ -1097,7 +1087,6 @@ class FunctionsController extends BaseController
      */
     public function doSaveCreate()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $fnlang = strtolower($_POST['formLanguage']);
@@ -1132,9 +1121,9 @@ class FunctionsController extends BaseController
 
         // Check that they've given a name and a definition
         if ('' == $_POST['formFunction']) {
-            $this->doCreate($lang['strfunctionneedsname'], $szJS);
+            $this->doCreate($this->lang['strfunctionneedsname'], $szJS);
         } elseif ('internal' != $fnlang && !$def) {
-            $this->doCreate($lang['strfunctionneedsdef'], $szJS);
+            $this->doCreate($this->lang['strfunctionneedsdef'], $szJS);
         } else {
             // Append array symbol to type if chosen
             $status = $data->createFunction(
@@ -1151,9 +1140,9 @@ class FunctionsController extends BaseController
                 false
             );
             if (0 == $status) {
-                $this->doDefault($lang['strfunctioncreated']);
+                $this->doDefault($this->lang['strfunctioncreated']);
             } else {
-                $this->doCreate($lang['strfunctioncreatedbad'], $szJS);
+                $this->doCreate($this->lang['strfunctioncreatedbad'], $szJS);
             }
         }
     }
@@ -1213,7 +1202,6 @@ class FunctionsController extends BaseController
 
     private function buildJSData()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $arrayModes  = ['IN', 'OUT', 'INOUT'];

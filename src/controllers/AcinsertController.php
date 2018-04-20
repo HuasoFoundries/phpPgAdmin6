@@ -18,9 +18,7 @@ class AcinsertController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $data   = $this->misc->getDatabaseAccessor();
-        $action = $this->action;
+        $data = $this->misc->getDatabaseAccessor();
 
         if (isset($_POST['offset'])) {
             $offset = " OFFSET {$_POST['offset']}";
@@ -105,7 +103,7 @@ class AcinsertController extends BaseController
 
             echo $js.'</script>';
         } else {
-            printf("<p>{$lang['strnofkref']}</p>", "\"{$_POST['f_schema']}\".\"{$_POST['f_table']}\".\"{$fkeynames[$_POST['fattpos']]}\"");
+            printf("<p>{$this->lang['strnofkref']}</p>", "\"{$_POST['f_schema']}\".\"{$_POST['f_table']}\".\"{$fkeynames[$_POST['fattpos']]}\"");
 
             if ($_POST['offset']) {
                 echo '<a href="javascript:void(0)" class="fkprev">Prev &lt;&lt;</a>';

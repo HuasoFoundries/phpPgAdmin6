@@ -24,12 +24,9 @@ class HistoryController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-
         $this->scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
 
-        switch ($action) {
+        switch ($this->action) {
             case 'confdelhistory':
                 $this->doDelHistory($_REQUEST['queryid'], true);
 
@@ -68,10 +65,9 @@ class HistoryController extends BaseController
 
     public function doDefault()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
-        $this->printHeader($lang['strhistory'], $this->scripts, true, 'header.twig');
+        $this->printHeader($this->lang['strhistory'], $this->scripts, true, 'header.twig');
 
         // Bring to the front always
         echo "<body onload=\"window.focus();\">\n";
@@ -81,7 +77,7 @@ class HistoryController extends BaseController
         echo '</form><br />';
 
         if (!isset($_REQUEST['database'])) {
-            echo "<p>{$lang['strnodatabaseselected']}</p>\n";
+            echo "<p>{$this->lang['strnodatabaseselected']}</p>\n";
 
             return;
         }
@@ -92,22 +88,22 @@ class HistoryController extends BaseController
             //Kint::dump($history);
             $columns = [
                 'query'    => [
-                    'title' => $lang['strsql'],
+                    'title' => $this->lang['strsql'],
                     'field' => Decorator::field('query'),
                 ],
                 'paginate' => [
-                    'title' => $lang['strpaginate'],
+                    'title' => $this->lang['strpaginate'],
                     'field' => Decorator::field('paginate'),
                     'type'  => 'yesno',
                 ],
                 'actions'  => [
-                    'title' => $lang['stractions'],
+                    'title' => $this->lang['stractions'],
                 ],
             ];
 
             $actions = [
                 'run'    => [
-                    'content' => $lang['strexecute'],
+                    'content' => $this->lang['strexecute'],
                     'attr'    => [
                         'href'   => [
                             'url'     => 'sql',
@@ -122,7 +118,7 @@ class HistoryController extends BaseController
                     ],
                 ],
                 'remove' => [
-                    'content' => $lang['strdelete'],
+                    'content' => $this->lang['strdelete'],
                     'attr'    => [
                         'href' => [
                             'url'     => 'history',
@@ -135,9 +131,9 @@ class HistoryController extends BaseController
                 ],
             ];
 
-            echo $this->printTable($history, $columns, $actions, 'history-history', $lang['strnohistory']);
+            echo $this->printTable($history, $columns, $actions, 'history-history', $this->lang['strnohistory']);
         } else {
-            echo "<p>{$lang['strnohistory']}</p>\n";
+            echo "<p>{$this->lang['strnohistory']}</p>\n";
         }
 
         $navlinks = [
@@ -152,7 +148,7 @@ class HistoryController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strrefresh'],
+                'content' => $this->lang['strrefresh'],
             ],
         ];
 
@@ -169,7 +165,7 @@ class HistoryController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strdownload'],
+                'content' => $this->lang['strdownload'],
             ];
             $navlinks['clear'] = [
                 'attr'    => [
@@ -182,7 +178,7 @@ class HistoryController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strclearhistory'],
+                'content' => $this->lang['strclearhistory'],
             ];
         }
 
@@ -191,25 +187,24 @@ class HistoryController extends BaseController
 
     public function doDelHistory($qid, $confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
-            $this->printHeader($lang['strhistory'], $this->scripts);
+            $this->printHeader($this->lang['strhistory'], $this->scripts);
 
             // Bring to the front always
             echo "<body onload=\"window.focus();\">\n";
 
-            echo "<h3>{$lang['strdelhistory']}</h3>\n";
-            echo "<p>{$lang['strconfdelhistory']}</p>\n";
+            echo "<h3>{$this->lang['strdelhistory']}</h3>\n";
+            echo "<p>{$this->lang['strconfdelhistory']}</p>\n";
 
             echo '<pre>', htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), '</pre>';
             echo '<form action="'.\SUBFOLDER."/src/views/history\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
             echo "<input type=\"hidden\" name=\"queryid\" value=\"${qid}\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
-            echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
+            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />\n";
+            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />\n";
             echo "</form>\n";
         } else {
             unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]);
@@ -218,23 +213,22 @@ class HistoryController extends BaseController
 
     public function doClearHistory($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
-            $this->printHeader($lang['strhistory'], $this->scripts);
+            $this->printHeader($this->lang['strhistory'], $this->scripts);
 
             // Bring to the front always
             echo "<body onload=\"window.focus();\">\n";
 
-            echo "<h3>{$lang['strclearhistory']}</h3>\n";
-            echo "<p>{$lang['strconfclearhistory']}</p>\n";
+            echo "<h3>{$this->lang['strclearhistory']}</h3>\n";
+            echo "<p>{$this->lang['strconfclearhistory']}</p>\n";
 
             echo '<form action="'.\SUBFOLDER."/src/views/history\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"clearhistory\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
-            echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
+            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />\n";
+            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />\n";
             echo "</form>\n";
         } else {
             unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);

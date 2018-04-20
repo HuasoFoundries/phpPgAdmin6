@@ -19,13 +19,10 @@ class PrivilegesController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-
-        $this->printHeader($lang['strprivileges']);
+        $this->printHeader($this->lang['strprivileges']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             case 'save':
                 if (isset($_REQUEST['cancel'])) {
                     $this->doDefault();
@@ -54,9 +51,7 @@ class PrivilegesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-        $data   = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail($_REQUEST['subject']);
 
@@ -74,7 +69,7 @@ class PrivilegesController extends BaseController
 
                 break;
             default:
-                $this->printTitle($lang['strprivileges'], 'pg.privilege');
+                $this->printTitle($this->lang['strprivileges'], 'pg.privilege');
         }
         $this->printMsg($msg);
 
@@ -95,9 +90,9 @@ class PrivilegesController extends BaseController
         if (sizeof($privileges) > 0) {
             echo "<table>\n";
             if ($data->hasRoles()) {
-                echo "<tr><th class=\"data\">{$lang['strrole']}</th>";
+                echo "<tr><th class=\"data\">{$this->lang['strrole']}</th>";
             } else {
-                echo "<tr><th class=\"data\">{$lang['strtype']}</th><th class=\"data\">{$lang['struser']}/{$lang['strgroup']}</th>";
+                echo "<tr><th class=\"data\">{$this->lang['strtype']}</th><th class=\"data\">{$this->lang['struser']}/{$this->lang['strgroup']}</th>";
             }
 
             foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
@@ -109,7 +104,7 @@ class PrivilegesController extends BaseController
                 echo "<th class=\"data\">{$v2}</th>\n";
             }
             if ($data->hasGrantOption()) {
-                echo "<th class=\"data\">{$lang['strgrantor']}</th>";
+                echo "<th class=\"data\">{$this->lang['strgrantor']}</th>";
             }
             echo "</tr>\n";
 
@@ -131,14 +126,14 @@ class PrivilegesController extends BaseController
 
                     echo '<td>';
                     if (in_array($v2, $v[2], true)) {
-                        echo $lang['stryes'];
+                        echo $this->lang['stryes'];
                     } else {
-                        echo $lang['strno'];
+                        echo $this->lang['strno'];
                     }
 
                     // If we have grant option for this, end mark
                     if ($data->hasGrantOption() && in_array($v2, $v[4], true)) {
-                        echo $lang['strasterisk'];
+                        echo $this->lang['strasterisk'];
                     }
 
                     echo "</td>\n";
@@ -152,7 +147,7 @@ class PrivilegesController extends BaseController
 
             echo '</table>';
         } else {
-            echo "<p>{$lang['strnoprivileges']}</p>\n";
+            echo "<p>{$this->lang['strnoprivileges']}</p>\n";
         }
 
         // Links for granting to a user or group
@@ -164,19 +159,19 @@ class PrivilegesController extends BaseController
             case 'tablespace':
                 $alllabel = "showall{$_REQUEST['subject']}s";
                 $allurl   = "{$_REQUEST['subject']}s";
-                $alltxt   = $lang["strshowall{$_REQUEST['subject']}s"];
+                $alltxt   = $this->lang["strshowall{$_REQUEST['subject']}s"];
 
                 break;
             case 'schema':
                 $alllabel = 'showallschemas';
                 $allurl   = 'schemas';
-                $alltxt   = $lang['strshowallschemas'];
+                $alltxt   = $this->lang['strshowallschemas'];
 
                 break;
             case 'database':
                 $alllabel = 'showalldatabases';
                 $allurl   = 'alldb';
-                $alltxt   = $lang['strshowalldatabases'];
+                $alltxt   = $this->lang['strshowalldatabases'];
 
                 break;
         }
@@ -231,7 +226,7 @@ class PrivilegesController extends BaseController
                         'urlvars' => array_merge($urlvars, ['mode' => 'grant']),
                     ],
                 ],
-                'content' => $lang['strgrant'],
+                'content' => $this->lang['strgrant'],
             ],
             'revoke' => [
                 'attr'    => [
@@ -240,7 +235,7 @@ class PrivilegesController extends BaseController
                         'urlvars' => array_merge($urlvars, ['mode' => 'revoke']),
                     ],
                 ],
-                'content' => $lang['strrevoke'],
+                'content' => $this->lang['strrevoke'],
             ],
         ];
 
@@ -274,9 +269,7 @@ class PrivilegesController extends BaseController
      */
     public function doAlter($confirm, $mode, $msg = '')
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-        $data   = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['username'])) {
             $_REQUEST['username'] = [];
@@ -300,11 +293,11 @@ class PrivilegesController extends BaseController
 
             switch ($mode) {
                 case 'grant':
-                    $this->printTitle($lang['strgrant'], 'pg.privilege.grant');
+                    $this->printTitle($this->lang['strgrant'], 'pg.privilege.grant');
 
                     break;
                 case 'revoke':
-                    $this->printTitle($lang['strrevoke'], 'pg.privilege.revoke');
+                    $this->printTitle($this->lang['strrevoke'], 'pg.privilege.revoke');
 
                     break;
             }
@@ -312,7 +305,7 @@ class PrivilegesController extends BaseController
 
             echo '<form action="'.\SUBFOLDER."/src/views/privileges\" method=\"post\">\n";
             echo "<table>\n";
-            echo "<tr><th class=\"data left\">{$lang['strusers']}</th>\n";
+            echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>\n";
             echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";
             while (!$users->EOF) {
                 $uname = htmlspecialchars($users->fields['usename']);
@@ -321,7 +314,7 @@ class PrivilegesController extends BaseController
                 $users->moveNext();
             }
             echo "</select></td></tr>\n";
-            echo "<tr><th class=\"data left\">{$lang['strgroups']}</th>\n";
+            echo "<tr><th class=\"data left\">{$this->lang['strgroups']}</th>\n";
             echo "<td class=\"data1\">\n";
             echo '<input type="checkbox" id="public" name="public"', (isset($_REQUEST['public']) ? ' checked="checked"' : ''), " /><label for=\"public\">PUBLIC</label>\n";
             // Only show groups if there are groups!
@@ -336,7 +329,7 @@ class PrivilegesController extends BaseController
                 echo "</select>\n";
             }
             echo "</td></tr>\n";
-            echo "<tr><th class=\"data left required\">{$lang['strprivileges']}</th>\n";
+            echo "<tr><th class=\"data left required\">{$this->lang['strprivileges']}</th>\n";
             echo "<td class=\"data1\">\n";
             foreach ($data->privlist[$_REQUEST['subject']] as $v) {
                 $v = htmlspecialchars($v);
@@ -346,7 +339,7 @@ class PrivilegesController extends BaseController
             echo "</td></tr>\n";
             // Grant option
             if ($data->hasGrantOption()) {
-                echo "<tr><th class=\"data left\">{$lang['stroptions']}</th>\n";
+                echo "<tr><th class=\"data left\">{$this->lang['stroptions']}</th>\n";
                 echo "<td class=\"data1\">\n";
                 if ('grant' == $mode) {
                     echo '<input type="checkbox" id="grantoption" name="grantoption"',
@@ -378,12 +371,12 @@ class PrivilegesController extends BaseController
 
             echo $this->misc->form;
             if ('grant' == $mode) {
-                echo "<input type=\"submit\" name=\"grant\" value=\"{$lang['strgrant']}\" />\n";
+                echo "<input type=\"submit\" name=\"grant\" value=\"{$this->lang['strgrant']}\" />\n";
             } elseif ('revoke' == $mode) {
-                echo "<input type=\"submit\" name=\"revoke\" value=\"{$lang['strrevoke']}\" />\n";
+                echo "<input type=\"submit\" name=\"revoke\" value=\"{$this->lang['strrevoke']}\" />\n";
             }
 
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>";
             echo "</form>\n";
         } else {
             // Determine whether object should be ref'd by name or oid.
@@ -413,11 +406,11 @@ class PrivilegesController extends BaseController
             );
 
             if (0 == $status) {
-                $this->doDefault($lang['strgranted']);
+                $this->doDefault($this->lang['strgranted']);
             } elseif ($status == -3 || $status == -4) {
-                $this->doAlter(true, $_REQUEST['mode'], $lang['strgrantbad']);
+                $this->doAlter(true, $_REQUEST['mode'], $this->lang['strgrantbad']);
             } else {
-                $this->doAlter(true, $_REQUEST['mode'], $lang['strgrantfailed']);
+                $this->doAlter(true, $_REQUEST['mode'], $this->lang['strgrantfailed']);
             }
         }
     }

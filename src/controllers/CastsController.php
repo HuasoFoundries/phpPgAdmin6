@@ -22,16 +22,14 @@ class CastsController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strcasts']);
+        $this->printHeader($this->lang['strcasts']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             default:
                 $this->doDefault();
 
@@ -48,14 +46,13 @@ class CastsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $renderCastContext = function ($val) use ($lang) {
             switch ($val) {
-                case 'e':return $lang['strno'];
-                case 'a':return $lang['strinassignment'];
-                default:return $lang['stryes'];
+                case 'e':return $this->lang['strno'];
+                case 'a':return $this->lang['strinassignment'];
+                default:return $this->lang['stryes'];
             }
         };
 
@@ -67,33 +64,33 @@ class CastsController extends BaseController
 
         $columns = [
             'source_type' => [
-                'title' => $lang['strsourcetype'],
+                'title' => $this->lang['strsourcetype'],
                 'field' => Decorator::field('castsource'),
             ],
             'target_type' => [
-                'title' => $lang['strtargettype'],
+                'title' => $this->lang['strtargettype'],
                 'field' => Decorator::field('casttarget'),
             ],
-            'function' => [
-                'title'  => $lang['strfunction'],
+            'function'    => [
+                'title'  => $this->lang['strfunction'],
                 'field'  => Decorator::field('castfunc'),
-                'params' => ['null' => $lang['strbinarycompat']],
+                'params' => ['null' => $this->lang['strbinarycompat']],
             ],
-            'implicit' => [
-                'title'  => $lang['strimplicit'],
+            'implicit'    => [
+                'title'  => $this->lang['strimplicit'],
                 'field'  => Decorator::field('castcontext'),
                 'type'   => 'callback',
                 'params' => ['function' => $renderCastContext, 'align' => 'center'],
             ],
-            'comment' => [
-                'title' => $lang['strcomment'],
+            'comment'     => [
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('castcomment'),
             ],
         ];
 
         $actions = [];
 
-        echo $this->printTable($casts, $columns, $actions, 'casts-casts', $lang['strnocasts']);
+        echo $this->printTable($casts, $columns, $actions, 'casts-casts', $this->lang['strnocasts']);
     }
 
     /**
@@ -101,7 +98,6 @@ class CastsController extends BaseController
      */
     public function doTree()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $casts = $data->getCasts();

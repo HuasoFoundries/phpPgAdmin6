@@ -22,17 +22,14 @@ class ConversionsController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
-        $action = $this->action;
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
-        $this->printHeader($lang['strconversions']);
+        $this->printHeader($this->lang['strconversions']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             default:
                 $this->doDefault();
 
@@ -51,7 +48,6 @@ class ConversionsController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
@@ -61,37 +57,36 @@ class ConversionsController extends BaseController
         $conversions = $data->getconversions();
 
         $columns = [
-            'conversion' => [
-                'title' => $lang['strname'],
+            'conversion'      => [
+                'title' => $this->lang['strname'],
                 'field' => Decorator::field('conname'),
             ],
             'source_encoding' => [
-                'title' => $lang['strsourceencoding'],
+                'title' => $this->lang['strsourceencoding'],
                 'field' => Decorator::field('conforencoding'),
             ],
             'target_encoding' => [
-                'title' => $lang['strtargetencoding'],
+                'title' => $this->lang['strtargetencoding'],
                 'field' => Decorator::field('contoencoding'),
             ],
-            'default' => [
-                'title' => $lang['strdefault'],
+            'default'         => [
+                'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('condefault'),
                 'type'  => 'yesno',
             ],
-            'comment' => [
-                'title' => $lang['strcomment'],
+            'comment'         => [
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('concomment'),
             ],
         ];
 
         $actions = [];
 
-        echo $this->printTable($conversions, $columns, $actions, 'conversions-conversions', $lang['strnoconversions']);
+        echo $this->printTable($conversions, $columns, $actions, 'conversions-conversions', $this->lang['strnoconversions']);
     }
 
     public function doTree()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $constraints = $data->getConstraints($_REQUEST['table']);

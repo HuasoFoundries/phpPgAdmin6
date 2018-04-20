@@ -30,11 +30,7 @@ class ServersController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
-        $action = $this->action;
-
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
@@ -45,7 +41,7 @@ class ServersController extends BaseController
         $server_html .= $this->printTrail('root', false);
 
         ob_start();
-        switch ($action) {
+        switch ($this->action) {
             case 'logout':
                 $this->doLogout();
 
@@ -72,8 +68,6 @@ class ServersController extends BaseController
 
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
-
         $this->printTabs('root', 'servers');
         $this->printMsg($msg);
         $group = isset($_GET['group']) ? $_GET['group'] : false;
@@ -81,7 +75,7 @@ class ServersController extends BaseController
         $groups  = $this->getServersGroups(true, $group);
         $columns = [
             'group' => [
-                'title' => $lang['strgroup'],
+                'title' => $this->lang['strgroup'],
                 'field' => Decorator::field('desc'),
                 'url'   => 'servers?',
                 'vars'  => ['group' => 'id'],
@@ -93,7 +87,7 @@ class ServersController extends BaseController
             (isset($this->conf['srv_groups'][$group])) &&
             ($groups->recordCount() > 0)
         ) {
-            $this->printTitle(sprintf($lang['strgroupgroups'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
+            $this->printTitle(sprintf($this->lang['strgroupgroups'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
             echo $this->printTable($groups, $columns, $actions, $this->table_place);
         }
 
@@ -101,31 +95,31 @@ class ServersController extends BaseController
 
         $columns = [
             'server'   => [
-                'title' => $lang['strserver'],
+                'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
                 'url'   => \SUBFOLDER.'/redirect/server?',
                 'vars'  => ['server' => 'sha'],
             ],
             'host'     => [
-                'title' => $lang['strhost'],
+                'title' => $this->lang['strhost'],
                 'field' => Decorator::field('host'),
             ],
             'port'     => [
-                'title' => $lang['strport'],
+                'title' => $this->lang['strport'],
                 'field' => Decorator::field('port'),
             ],
             'username' => [
-                'title' => $lang['strusername'],
+                'title' => $this->lang['strusername'],
                 'field' => Decorator::field('username'),
             ],
             'actions'  => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
         ];
 
         $actions = [
             'logout' => [
-                'content' => $lang['strlogout'],
+                'content' => $this->lang['strlogout'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'servers',
@@ -148,10 +142,10 @@ class ServersController extends BaseController
             (false !== $group) &&
             isset($this->conf['srv_groups'][$group])
         ) {
-            $this->printTitle(sprintf($lang['strgroupservers'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
+            $this->printTitle(sprintf($this->lang['strgroupservers'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
             $actions['logout']['attr']['href']['urlvars']['group'] = $group;
         }
-        echo $this->printTable($servers, $columns, $actions, $this->table_place, $lang['strnoobjects'], $svPre);
+        echo $this->printTable($servers, $columns, $actions, $this->table_place, $this->lang['strnoobjects'], $svPre);
     }
 
     public function doTree()
@@ -201,7 +195,6 @@ class ServersController extends BaseController
     public function doLogout()
     {
         $plugin_manager = $this->plugin_manager;
-        $lang           = $this->lang;
         $this->misc     = $this->misc;
         $conf           = $this->conf;
         $data           = $this->misc->getDatabaseAccessor();
@@ -215,7 +208,7 @@ class ServersController extends BaseController
 
         $this->misc->setReloadBrowser(true);
 
-        echo sprintf($lang['strlogoutmsg'], $server_info['desc']);
+        echo sprintf($this->lang['strlogoutmsg'], $server_info['desc']);
     }
 
     /**
@@ -228,7 +221,6 @@ class ServersController extends BaseController
      */
     private function getServersGroups($recordset = false, $group_id = false)
     {
-        $lang = $this->lang;
         $grps = [];
 
         if (isset($this->conf['srv_groups'])) {
@@ -268,7 +260,7 @@ class ServersController extends BaseController
             if ($group_id === false) {
                 $grps['all'] = [
                     'id'     => 'all',
-                    'desc'   => $lang['strallservers'],
+                    'desc'   => $this->lang['strallservers'],
                     'icon'   => 'Servers',
                     'action' => Decorator::url(
                         'servers',

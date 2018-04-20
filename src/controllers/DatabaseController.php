@@ -30,23 +30,20 @@ class DatabaseController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
-        if ('refresh_locks' == $action) {
+        if ('refresh_locks' == $this->action) {
             return $this->currentLocks(true);
         }
 
-        if ('refresh_processes' == $action) {
+        if ('refresh_processes' == $this->action) {
             return $this->currentProcesses(true);
         }
         $scripts = '';
         // normal flow
-        if ('locks' == $action || 'processes' == $action) {
+        if ('locks' == $this->action || 'processes' == $this->action) {
             $scripts .= '<script src="'.\SUBFOLDER.'/js/database.js" type="text/javascript"></script>';
 
             $refreshTime = $this->conf['ajax_refresh'] * 1500;
@@ -54,13 +51,13 @@ class DatabaseController extends BaseController
             $scripts .= "<script type=\"text/javascript\">\n";
             $scripts .= "var Database = {\n";
             $scripts .= "ajax_time_refresh: {$refreshTime},\n";
-            $scripts .= "str_start: {text:'{$lang['strstart']}',icon: '".$this->misc->icon('Execute')."'},\n";
-            $scripts .= "str_stop: {text:'{$lang['strstop']}',icon: '".$this->misc->icon('Stop')."'},\n";
+            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '".$this->misc->icon('Execute')."'},\n";
+            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '".$this->misc->icon('Stop')."'},\n";
             $scripts .= "load_icon: '".$this->misc->icon('Loading')."',\n";
             $scripts .= "server:'{$_REQUEST['server']}',\n";
             $scripts .= "dbname:'{$_REQUEST['database']}',\n";
-            $scripts .= "action:'refresh_{$action}',\n";
-            $scripts .= "errmsg: '".str_replace("'", "\\'", $lang['strconnectionfail'])."'\n";
+            $scripts .= "action:'refresh_{$this->action}',\n";
+            $scripts .= "errmsg: '".str_replace("'", "\\'", $this->lang['strconnectionfail'])."'\n";
             $scripts .= "};\n";
             $scripts .= "</script>\n";
         }
@@ -69,7 +66,7 @@ class DatabaseController extends BaseController
         $footer_template = 'footer.twig';
         // @todo convert all these methods to return text instead of print text
         ob_start();
-        switch ($action) {
+        switch ($this->action) {
             case 'find':
                 if (isset($_REQUEST['term'])) {
                     $this->doFind(false);
@@ -105,7 +102,7 @@ class DatabaseController extends BaseController
 
                 break;
             default:
-                if (false === $this->adminActions($action, 'database')) {
+                if (false === $this->adminActions($this->action, 'database')) {
                     $header_template = 'header_sqledit.twig';
                     $footer_template = 'footer_sqledit.twig';
                     $this->doSQL();
@@ -115,7 +112,7 @@ class DatabaseController extends BaseController
         }
         $output = ob_get_clean();
 
-        $this->printHeader($lang['strdatabase'], $scripts, true, $header_template);
+        $this->printHeader($this->lang['strdatabase'], $scripts, true, $header_template);
         $this->printBody();
 
         echo $output;
@@ -159,14 +156,13 @@ class DatabaseController extends BaseController
      */
     public function doSignal()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->sendSignal($_REQUEST['pid'], $_REQUEST['signal']);
         if (0 == $status) {
-            $this->doProcesses($lang['strsignalsent']);
+            $this->doProcesses($this->lang['strsignalsent']);
         } else {
-            $this->doProcesses($lang['strsignalsentbad']);
+            $this->doProcesses($this->lang['strsignalsentbad']);
         }
     }
 
@@ -178,7 +174,6 @@ class DatabaseController extends BaseController
      */
     public function doFind($confirm = true, $msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['term'])) {
@@ -198,28 +193,28 @@ class DatabaseController extends BaseController
             "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
         echo "<select name=\"filter\">\n";
-        echo "\t<option value=\"\"", ('' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strallobjects']}</option>\n";
-        echo "\t<option value=\"SCHEMA\"", ('SCHEMA' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strschemas']}</option>\n";
-        echo "\t<option value=\"TABLE\"", ('TABLE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strtables']}</option>\n";
-        echo "\t<option value=\"VIEW\"", ('VIEW' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strviews']}</option>\n";
-        echo "\t<option value=\"SEQUENCE\"", ('SEQUENCE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strsequences']}</option>\n";
-        echo "\t<option value=\"COLUMN\"", ('COLUMN' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strcolumns']}</option>\n";
-        echo "\t<option value=\"RULE\"", ('RULE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strrules']}</option>\n";
-        echo "\t<option value=\"INDEX\"", ('INDEX' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strindexes']}</option>\n";
-        echo "\t<option value=\"TRIGGER\"", ('TRIGGER' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strtriggers']}</option>\n";
-        echo "\t<option value=\"CONSTRAINT\"", ('CONSTRAINT' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strconstraints']}</option>\n";
-        echo "\t<option value=\"FUNCTION\"", ('FUNCTION' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strfunctions']}</option>\n";
-        echo "\t<option value=\"DOMAIN\"", ('DOMAIN' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strdomains']}</option>\n";
+        echo "\t<option value=\"\"", ('' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strallobjects']}</option>\n";
+        echo "\t<option value=\"SCHEMA\"", ('SCHEMA' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strschemas']}</option>\n";
+        echo "\t<option value=\"TABLE\"", ('TABLE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strtables']}</option>\n";
+        echo "\t<option value=\"VIEW\"", ('VIEW' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strviews']}</option>\n";
+        echo "\t<option value=\"SEQUENCE\"", ('SEQUENCE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strsequences']}</option>\n";
+        echo "\t<option value=\"COLUMN\"", ('COLUMN' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strcolumns']}</option>\n";
+        echo "\t<option value=\"RULE\"", ('RULE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strrules']}</option>\n";
+        echo "\t<option value=\"INDEX\"", ('INDEX' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strindexes']}</option>\n";
+        echo "\t<option value=\"TRIGGER\"", ('TRIGGER' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strtriggers']}</option>\n";
+        echo "\t<option value=\"CONSTRAINT\"", ('CONSTRAINT' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strconstraints']}</option>\n";
+        echo "\t<option value=\"FUNCTION\"", ('FUNCTION' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strfunctions']}</option>\n";
+        echo "\t<option value=\"DOMAIN\"", ('DOMAIN' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strdomains']}</option>\n";
         if ($this->conf['show_advanced']) {
-            echo "\t<option value=\"AGGREGATE\"", ('AGGREGATE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['straggregates']}</option>\n";
-            echo "\t<option value=\"TYPE\"", ('TYPE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strtypes']}</option>\n";
-            echo "\t<option value=\"OPERATOR\"", ('OPERATOR' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['stroperators']}</option>\n";
-            echo "\t<option value=\"OPCLASS\"", ('OPCLASS' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['stropclasses']}</option>\n";
-            echo "\t<option value=\"CONVERSION\"", ('CONVERSION' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strconversions']}</option>\n";
-            echo "\t<option value=\"LANGUAGE\"", ('LANGUAGE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$lang['strlanguages']}</option>\n";
+            echo "\t<option value=\"AGGREGATE\"", ('AGGREGATE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['straggregates']}</option>\n";
+            echo "\t<option value=\"TYPE\"", ('TYPE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strtypes']}</option>\n";
+            echo "\t<option value=\"OPERATOR\"", ('OPERATOR' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['stroperators']}</option>\n";
+            echo "\t<option value=\"OPCLASS\"", ('OPCLASS' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['stropclasses']}</option>\n";
+            echo "\t<option value=\"CONVERSION\"", ('CONVERSION' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strconversions']}</option>\n";
+            echo "\t<option value=\"LANGUAGE\"", ('LANGUAGE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strlanguages']}</option>\n";
         }
         echo "</select>\n";
-        echo "<input type=\"submit\" value=\"{$lang['strfind']}\" />\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strfind']}\" />\n";
         echo $this->misc->form;
         echo "<input type=\"hidden\" name=\"action\" value=\"find\" /></p>\n";
         echo "</form>\n";
@@ -253,74 +248,74 @@ class DatabaseController extends BaseController
                             echo '<h3>';
                             switch ($curr) {
                                 case 'SCHEMA':
-                                    echo $lang['strschemas'];
+                                    echo $this->lang['strschemas'];
 
                                     break;
                                 case 'TABLE':
-                                    echo $lang['strtables'];
+                                    echo $this->lang['strtables'];
 
                                     break;
                                 case 'VIEW':
-                                    echo $lang['strviews'];
+                                    echo $this->lang['strviews'];
 
                                     break;
                                 case 'SEQUENCE':
-                                    echo $lang['strsequences'];
+                                    echo $this->lang['strsequences'];
 
                                     break;
                                 case 'COLUMNTABLE':
                                 case 'COLUMNVIEW':
-                                    echo $lang['strcolumns'];
+                                    echo $this->lang['strcolumns'];
 
                                     break;
                                 case 'INDEX':
-                                    echo $lang['strindexes'];
+                                    echo $this->lang['strindexes'];
 
                                     break;
                                 case 'CONSTRAINTTABLE':
                                 case 'CONSTRAINTDOMAIN':
-                                    echo $lang['strconstraints'];
+                                    echo $this->lang['strconstraints'];
 
                                     break;
                                 case 'TRIGGER':
-                                    echo $lang['strtriggers'];
+                                    echo $this->lang['strtriggers'];
 
                                     break;
                                 case 'RULETABLE':
                                 case 'RULEVIEW':
-                                    echo $lang['strrules'];
+                                    echo $this->lang['strrules'];
 
                                     break;
                                 case 'FUNCTION':
-                                    echo $lang['strfunctions'];
+                                    echo $this->lang['strfunctions'];
 
                                     break;
                                 case 'TYPE':
-                                    echo $lang['strtypes'];
+                                    echo $this->lang['strtypes'];
 
                                     break;
                                 case 'DOMAIN':
-                                    echo $lang['strdomains'];
+                                    echo $this->lang['strdomains'];
 
                                     break;
                                 case 'OPERATOR':
-                                    echo $lang['stroperators'];
+                                    echo $this->lang['stroperators'];
 
                                     break;
                                 case 'CONVERSION':
-                                    echo $lang['strconversions'];
+                                    echo $this->lang['strconversions'];
 
                                     break;
                                 case 'LANGUAGE':
-                                    echo $lang['strlanguages'];
+                                    echo $this->lang['strlanguages'];
 
                                     break;
                                 case 'AGGREGATE':
-                                    echo $lang['straggregates'];
+                                    echo $this->lang['straggregates'];
 
                                     break;
                                 case 'OPCLASS':
-                                    echo $lang['stropclasses'];
+                                    echo $this->lang['stropclasses'];
 
                                     break;
                             }
@@ -478,9 +473,9 @@ class DatabaseController extends BaseController
                 }
                 echo "</ul>\n";
 
-                echo '<p>', $rs->recordCount(), ' ', $lang['strobjects'], "</p>\n";
+                echo '<p>', $rs->recordCount(), ' ', $this->lang['strobjects'], "</p>\n";
             } else {
-                echo "<p>{$lang['strnoobjects']}</p>\n";
+                echo "<p>{$this->lang['strnoobjects']}</p>\n";
             }
         }
     }
@@ -492,7 +487,6 @@ class DatabaseController extends BaseController
      */
     public function doExport($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('database');
@@ -501,43 +495,43 @@ class DatabaseController extends BaseController
 
         echo '<form action="'.\SUBFOLDER."/src/views/dbexport\" method=\"post\">\n";
         echo "<table>\n";
-        echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
+        echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";
         // Data only
         echo '<tr><th class="data left" rowspan="2">';
-        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$lang['strdataonly']}</label></th>\n";
-        echo "<td>{$lang['strformat']}</td>\n";
+        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$this->lang['strdataonly']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}</td>\n";
         echo "<td><select name=\"d_format\">\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><label for=\"d_oids\">{$lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /></td>\n</tr>\n";
+        echo "<tr><td><label for=\"d_oids\">{$this->lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /></td>\n</tr>\n";
         // Structure only
-        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$lang['strstructureonly']}</label></th>\n";
-        echo "<td><label for=\"s_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
+        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$this->lang['strstructureonly']}</label></th>\n";
+        echo "<td><label for=\"s_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
         // Structure and data
         echo '<tr><th class="data left" rowspan="3">';
-        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$lang['strstructureanddata']}</label></th>\n";
-        echo "<td>{$lang['strformat']}</td>\n";
+        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$this->lang['strstructureanddata']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}</td>\n";
         echo "<td><select name=\"sd_format\">\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><label for=\"sd_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
-        echo "<tr><td><label for=\"sd_oids\">{$lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /></td>\n</tr>\n";
+        echo "<tr><td><label for=\"sd_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
+        echo "<tr><td><label for=\"sd_oids\">{$this->lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /></td>\n</tr>\n";
         echo "</table>\n";
 
-        echo "<h3>{$lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$lang['strdownload']}</label>\n";
+        echo "<h3>{$this->lang['stroptions']}</h3>\n";
+        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
+        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label>\n";
         // MSIE cannot download gzip in SSL mode - it's just broken
         if (!(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS']))) {
-            echo "<br /><input type=\"radio\" id=\"output3\" name=\"output\" value=\"gzipped\" /><label for=\"output3\">{$lang['strdownloadgzipped']}</label>\n";
+            echo "<br /><input type=\"radio\" id=\"output3\" name=\"output\" value=\"gzipped\" /><label for=\"output3\">{$this->lang['strdownloadgzipped']}</label>\n";
         }
         echo "</p>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo "<input type=\"hidden\" name=\"subject\" value=\"database\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }
 
@@ -546,7 +540,6 @@ class DatabaseController extends BaseController
      */
     public function doVariables()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Fetch the variables from the database
@@ -556,18 +549,18 @@ class DatabaseController extends BaseController
 
         $columns = [
             'variable' => [
-                'title' => $lang['strname'],
+                'title' => $this->lang['strname'],
                 'field' => Decorator::field('name'),
             ],
             'value'    => [
-                'title' => $lang['strsetting'],
+                'title' => $this->lang['strsetting'],
                 'field' => Decorator::field('setting'),
             ],
         ];
 
         $actions = [];
 
-        echo $this->printTable($variables, $columns, $actions, $this->table_place, $lang['strnodata']);
+        echo $this->printTable($variables, $columns, $actions, $this->table_place, $this->lang['strnodata']);
     }
 
     /**
@@ -578,7 +571,6 @@ class DatabaseController extends BaseController
      */
     public function doProcesses($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('database');
@@ -586,7 +578,7 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         if (0 === strlen($msg)) {
-            echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
+            echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
         }
 
         echo '<div id="data_block">';
@@ -596,49 +588,48 @@ class DatabaseController extends BaseController
 
     public function currentProcesses($isAjax = false)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Display prepared transactions
         if ($data->hasPreparedXacts()) {
-            echo "<h3>{$lang['strpreparedxacts']}</h3>\n";
+            echo "<h3>{$this->lang['strpreparedxacts']}</h3>\n";
             $prep_xacts = $data->getPreparedXacts($_REQUEST['database']);
 
             $columns = [
                 'transaction' => [
-                    'title' => $lang['strxactid'],
+                    'title' => $this->lang['strxactid'],
                     'field' => Decorator::field('transaction'),
                 ],
                 'gid'         => [
-                    'title' => $lang['strgid'],
+                    'title' => $this->lang['strgid'],
                     'field' => Decorator::field('gid'),
                 ],
                 'prepared'    => [
-                    'title' => $lang['strstarttime'],
+                    'title' => $this->lang['strstarttime'],
                     'field' => Decorator::field('prepared'),
                 ],
                 'owner'       => [
-                    'title' => $lang['strowner'],
+                    'title' => $this->lang['strowner'],
                     'field' => Decorator::field('owner'),
                 ],
             ];
 
             $actions = [];
 
-            echo $this->printTable($prep_xacts, $columns, $actions, 'database-processes-preparedxacts', $lang['strnodata']);
+            echo $this->printTable($prep_xacts, $columns, $actions, 'database-processes-preparedxacts', $this->lang['strnodata']);
         }
 
         // Fetch the processes from the database
-        echo "<h3>{$lang['strprocesses']}</h3>\n";
+        echo "<h3>{$this->lang['strprocesses']}</h3>\n";
         $processes = $data->getProcesses($_REQUEST['database']);
 
         $columns = [
             'user'             => [
-                'title' => $lang['strusername'],
+                'title' => $this->lang['strusername'],
                 'field' => Decorator::field('usename'),
             ],
             'process'          => [
-                'title' => $lang['strprocess'],
+                'title' => $this->lang['strprocess'],
                 'field' => Decorator::field('pid'),
             ],
             'application_name' => [
@@ -650,27 +641,27 @@ class DatabaseController extends BaseController
                 'field' => Decorator::field('client_addr'),
             ],
             'blocked'          => [
-                'title' => $lang['strblocked'],
+                'title' => $this->lang['strblocked'],
                 'field' => Decorator::field('waiting'),
             ],
             'query'            => [
-                'title' => $lang['strsql'],
+                'title' => $this->lang['strsql'],
                 'field' => Decorator::field('query'),
             ],
             'start_time'       => [
-                'title' => $lang['strstarttime'],
+                'title' => $this->lang['strstarttime'],
                 'field' => Decorator::field('query_start'),
             ],
         ];
 
         // Build possible actions for our process list
-        $columns['actions'] = ['title' => $lang['stractions']];
+        $columns['actions'] = ['title' => $this->lang['stractions']];
 
         $actions = [];
         if ($data->hasUserSignals() || $data->isSuperUser()) {
             $actions = [
                 'cancel' => [
-                    'content' => $lang['strcancel'],
+                    'content' => $this->lang['strcancel'],
                     'attr'    => [
                         'href' => [
                             'url'     => 'database',
@@ -683,7 +674,7 @@ class DatabaseController extends BaseController
                     ],
                 ],
                 'kill'   => [
-                    'content' => $lang['strkill'],
+                    'content' => $this->lang['strkill'],
                     'attr'    => [
                         'href' => [
                             'url'     => 'database',
@@ -711,12 +702,11 @@ class DatabaseController extends BaseController
             unset($columns['actions']);
         }
 
-        echo $this->printTable($processes, $columns, $actions, 'database-processes', $lang['strnodata']);
+        echo $this->printTable($processes, $columns, $actions, 'database-processes', $this->lang['strnodata']);
     }
 
     public function currentLocks($isAjax = false)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Get the info from the pg_locks view
@@ -724,31 +714,31 @@ class DatabaseController extends BaseController
 
         $columns = [
             'namespace'     => [
-                'title' => $lang['strschema'],
+                'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
             ],
             'tablename'     => [
-                'title' => $lang['strtablename'],
+                'title' => $this->lang['strtablename'],
                 'field' => Decorator::field('tablename'),
             ],
             'vxid'          => [
-                'title' => $lang['strvirtualtransaction'],
+                'title' => $this->lang['strvirtualtransaction'],
                 'field' => Decorator::field('virtualtransaction'),
             ],
             'transactionid' => [
-                'title' => $lang['strtransaction'],
+                'title' => $this->lang['strtransaction'],
                 'field' => Decorator::field('transaction'),
             ],
             'processid'     => [
-                'title' => $lang['strprocessid'],
+                'title' => $this->lang['strprocessid'],
                 'field' => Decorator::field('pid'),
             ],
             'mode'          => [
-                'title' => $lang['strmode'],
+                'title' => $this->lang['strmode'],
                 'field' => Decorator::field('mode'),
             ],
             'granted'       => [
-                'title' => $lang['strislockheld'],
+                'title' => $this->lang['strislockheld'],
                 'field' => Decorator::field('granted'),
                 'type'  => 'yesno',
             ],
@@ -759,7 +749,7 @@ class DatabaseController extends BaseController
         }
 
         $actions = [];
-        echo $this->printTable($variables, $columns, $actions, 'database-locks', $lang['strnodata']);
+        echo $this->printTable($variables, $columns, $actions, 'database-locks', $this->lang['strnodata']);
     }
 
     /**
@@ -767,13 +757,12 @@ class DatabaseController extends BaseController
      */
     public function doLocks()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('database');
         $this->printTabs('database', 'locks');
 
-        echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\"/>&nbsp;{$lang['strrefresh']}</a>";
+        echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
 
         echo '<div id="data_block">';
         $this->currentLocks();
@@ -785,7 +774,6 @@ class DatabaseController extends BaseController
      */
     public function doSQL()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ((!isset($_SESSION['sqlquery'])) || isset($_REQUEST['new'])) {
@@ -795,9 +783,9 @@ class DatabaseController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'sql');
-        echo "<p>{$lang['strentersql']}</p>\n";
+        echo "<p>{$this->lang['strentersql']}</p>\n";
         echo '<form action="'.\SUBFOLDER.'/src/views/sql" method="post" enctype="multipart/form-data" id="sqlform">'."\n";
-        echo "<p>{$lang['strsql']}<br />\n";
+        echo "<p>{$this->lang['strsql']}<br />\n";
         echo '<textarea style="width:95%;" rows="15" cols="50" name="query" id="query">',
         htmlspecialchars($_SESSION['sqlquery']), "</textarea></p>\n";
 
@@ -807,14 +795,14 @@ class DatabaseController extends BaseController
             $max_size = $this->misc->inisizeToBytes(ini_get('upload_max_filesize'));
             if (is_double($max_size) && $max_size > 0) {
                 echo "<p><input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"{$max_size}\" />\n";
-                echo "<label for=\"script\">{$lang['struploadscript']}</label> <input id=\"script\" name=\"script\" type=\"file\" /></p>\n";
+                echo "<label for=\"script\">{$this->lang['struploadscript']}</label> <input id=\"script\" name=\"script\" type=\"file\" /></p>\n";
             }
         }
 
-        echo '<p><input type="checkbox" id="paginate" name="paginate"', (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), " /><label for=\"paginate\">{$lang['strpaginate']}</label></p>\n";
-        echo "<p><input type=\"submit\" name=\"execute\" accesskey=\"r\" value=\"{$lang['strexecute']}\" />\n";
+        echo '<p><input type="checkbox" id="paginate" name="paginate"', (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), " /><label for=\"paginate\">{$this->lang['strpaginate']}</label></p>\n";
+        echo "<p><input type=\"submit\" name=\"execute\" accesskey=\"r\" value=\"{$this->lang['strexecute']}\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"reset\" accesskey=\"q\" value=\"{$lang['strreset']}\" /></p>\n";
+        echo "<input type=\"reset\" accesskey=\"q\" value=\"{$this->lang['strreset']}\" /></p>\n";
         echo "</form>\n";
 
         // Default focus

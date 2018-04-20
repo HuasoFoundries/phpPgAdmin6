@@ -23,10 +23,7 @@ class AlldbController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
 
@@ -34,7 +31,7 @@ class AlldbController extends BaseController
         $footer_template = 'footer.twig';
 
         ob_start();
-        switch ($action) {
+        switch ($this->action) {
             case 'export':
                 $this->doExport();
 
@@ -83,7 +80,7 @@ class AlldbController extends BaseController
         }
         $output = ob_get_clean();
 
-        $this->printHeader($lang['strdatabases'], null, true, $header_template);
+        $this->printHeader($this->lang['strdatabases'], null, true, $header_template);
         $this->printBody();
         echo $output;
 
@@ -97,8 +94,6 @@ class AlldbController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
-
         $this->printTrail('server');
         $this->printTabs('server', 'databases');
         $this->printMsg($msg);
@@ -111,42 +106,42 @@ class AlldbController extends BaseController
 
         $columns = [
             'database'   => [
-                'title' => $lang['strdatabase'],
+                'title' => $this->lang['strdatabase'],
                 'field' => Decorator::field('datname'),
                 'url'   => \SUBFOLDER."/redirect/database?{$href}&amp;",
                 'vars'  => ['database' => 'datname'],
             ],
             'owner'      => [
-                'title' => $lang['strowner'],
+                'title' => $this->lang['strowner'],
                 'field' => Decorator::field('datowner'),
             ],
             'encoding'   => [
-                'title' => $lang['strencoding'],
+                'title' => $this->lang['strencoding'],
                 'field' => Decorator::field('datencoding'),
             ],
 
             'tablespace' => [
-                'title' => $lang['strtablespace'],
+                'title' => $this->lang['strtablespace'],
                 'field' => Decorator::field('tablespace'),
             ],
             'dbsize'     => [
-                'title' => $lang['strsize'],
+                'title' => $this->lang['strsize'],
                 'field' => Decorator::field('dbsize'),
                 'type'  => 'prettysize',
             ],
             'lc_collate' => [
-                'title' => $lang['strcollation'],
+                'title' => $this->lang['strcollation'],
                 'field' => Decorator::field('datcollate'),
             ],
             'lc_ctype'   => [
-                'title' => $lang['strctype'],
+                'title' => $this->lang['strctype'],
                 'field' => Decorator::field('datctype'),
             ],
             'actions'    => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
             'comment'    => [
-                'title' => $lang['strcomment'],
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('datcomment'),
             ],
         ];
@@ -158,7 +153,7 @@ class AlldbController extends BaseController
                 'default' => null,
             ],
             'drop'         => [
-                'content'     => $lang['strdrop'],
+                'content'     => $this->lang['strdrop'],
                 'attr'        => [
                     'href' => [
                         'url'     => 'alldb',
@@ -172,7 +167,7 @@ class AlldbController extends BaseController
                 'multiaction' => 'confirm_drop',
             ],
             'privileges'   => [
-                'content' => $lang['strprivileges'],
+                'content' => $this->lang['strprivileges'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'privileges',
@@ -186,7 +181,7 @@ class AlldbController extends BaseController
         ];
         if ($data->hasAlterDatabase()) {
             $actions['alter'] = [
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'alldb',
@@ -216,7 +211,7 @@ class AlldbController extends BaseController
             unset($actions['privileges']);
         }
 
-        echo $this->printTable($databases, $columns, $actions, $this->table_place, $lang['strnodatabases']);
+        echo $this->printTable($databases, $columns, $actions, $this->table_place, $this->lang['strnodatabases']);
 
         $navlinks = [
             'create' => [
@@ -229,7 +224,7 @@ class AlldbController extends BaseController
                         ],
                     ],
                 ],
-                'content' => $lang['strcreatedatabase'],
+                'content' => $this->lang['strcreatedatabase'],
             ],
         ];
         $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
@@ -237,7 +232,6 @@ class AlldbController extends BaseController
 
     public function doTree()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $databases = $data->getDatabases();
@@ -262,16 +256,15 @@ class AlldbController extends BaseController
      */
     public function doAlter($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('database');
-            $this->printTitle($lang['stralter'], 'pg.database.alter');
+            $this->printTitle($this->lang['stralter'], 'pg.database.alter');
 
             echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
             echo "<table>\n";
-            echo "<tr><th class=\"data left required\">{$lang['strname']}</th>\n";
+            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
             echo '<td class="data1">';
             echo "<input name=\"newname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
             htmlspecialchars($_REQUEST['alterdatabase']), "\" /></td></tr>\n";
@@ -283,7 +276,7 @@ class AlldbController extends BaseController
                 $owner = isset($rs->fields['usename']) ? $rs->fields['usename'] : '';
                 $users = $data->getUsers();
 
-                echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
+                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>\n";
                 echo '<td class="data1"><select name="owner">';
                 while (!$users->EOF) {
                     $uname = $users->fields['usename'];
@@ -296,7 +289,7 @@ class AlldbController extends BaseController
             if ($data->hasSharedComments()) {
                 $rs      = $data->getDatabaseComment($_REQUEST['alterdatabase']);
                 $comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
-                echo "<tr><th class=\"data left\">{$lang['strcomment']}</th>\n";
+                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>\n";
                 echo '<td class="data1">';
                 echo '<textarea rows="3" cols="32" name="dbcomment">',
                 htmlspecialchars($comment), "</textarea></td></tr>\n";
@@ -306,8 +299,8 @@ class AlldbController extends BaseController
             echo $this->misc->form;
             echo '<input type="hidden" name="oldname" value="',
             htmlspecialchars($_REQUEST['alterdatabase']), "\" />\n";
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
             if (!isset($_POST['owner'])) {
@@ -320,9 +313,9 @@ class AlldbController extends BaseController
 
             if (0 == $data->alterDatabase($_POST['oldname'], $_POST['newname'], $_POST['owner'], $_POST['dbcomment'])) {
                 $this->misc->setReloadBrowser(true);
-                $this->doDefault($lang['strdatabasealtered']);
+                $this->doDefault($this->lang['strdatabasealtered']);
             } else {
-                $this->doDefault($lang['strdatabasealteredbad']);
+                $this->doDefault($this->lang['strdatabasealteredbad']);
             }
         }
     }
@@ -334,62 +327,64 @@ class AlldbController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['dropdatabase']) && empty($_REQUEST['ma'])) {
-            return $this->doDefault($lang['strspecifydatabasetodrop']);
+            return $this->doDefault($this->lang['strspecifydatabasetodrop']);
         }
 
         if ($confirm) {
             $this->printTrail('database');
-            $this->printTitle($lang['strdrop'], 'pg.database.drop');
+            $this->printTitle($this->lang['strdrop'], 'pg.database.drop');
 
             echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfdropdatabase'], $this->misc->printVal($a['database'])), "</p>\n";
+                    echo '<p>', sprintf($this->lang['strconfdropdatabase'], $this->misc->printVal($a['database'])), "</p>\n";
                     printf('<input type="hidden" name="dropdatabase[]" value="%s" />', htmlspecialchars($a['database']));
                 }
             } else {
-                echo '<p>', sprintf($lang['strconfdropdatabase'], $this->misc->printVal($_REQUEST['dropdatabase'])), "</p>\n";
+                echo '<p>', sprintf($this->lang['strconfdropdatabase'], $this->misc->printVal($_REQUEST['dropdatabase'])), "</p>\n";
                 echo '<input type="hidden" name="dropdatabase" value="', htmlspecialchars($_REQUEST['dropdatabase']), "\" />\n";
-            } // END if multi drop
+                // END if multi drop
+            }
 
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
-        } // END confirm
-        else {
+        // END confirm
+        } else {
             //If multi drop
             if (is_array($_REQUEST['dropdatabase'])) {
                 $msg = '';
                 foreach ($_REQUEST['dropdatabase'] as $d) {
                     $status = $data->dropDatabase($d);
                     if (0 == $status) {
-                        $msg .= sprintf('%s: %s<br />', htmlentities($d, ENT_QUOTES, 'UTF-8'), $lang['strdatabasedropped']);
+                        $msg .= sprintf('%s: %s<br />', htmlentities($d, ENT_QUOTES, 'UTF-8'), $this->lang['strdatabasedropped']);
                     } else {
-                        $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($d, ENT_QUOTES, 'UTF-8'), $lang['strdatabasedroppedbad']));
+                        $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($d, ENT_QUOTES, 'UTF-8'), $this->lang['strdatabasedroppedbad']));
 
                         return;
                     }
-                } // Everything went fine, back to Default page...
+                    // Everything went fine, back to Default page...
+                }
                 $this->setReloadDropDatabase(true);
                 $this->doDefault($msg);
             } else {
                 $status = $data->dropDatabase($_POST['dropdatabase']);
                 if (0 == $status) {
                     $this->setReloadDropDatabase(true);
-                    $this->doDefault($lang['strdatabasedropped']);
+                    $this->doDefault($this->lang['strdatabasedropped']);
                 } else {
-                    $this->doDefault($lang['strdatabasedroppedbad']);
+                    $this->doDefault($this->lang['strdatabasedroppedbad']);
                 }
             }
-        } //END DROP
+            //END DROP
+        }
     }
 
     // END FUNCTION
@@ -401,11 +396,10 @@ class AlldbController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('server');
-        $this->printTitle($lang['strcreatedatabase'], 'pg.database.create');
+        $this->printTitle($this->lang['strcreatedatabase'], 'pg.database.create');
         $this->printMsg($msg);
 
         if (!isset($_POST['formName'])) {
@@ -438,11 +432,11 @@ class AlldbController extends BaseController
 
         echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
         echo "<table>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
         htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>\n";
 
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strtemplatedb']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strtemplatedb']}</th>\n";
         echo "\t\t<td class=\"data1\">\n";
         echo "\t\t\t<select name=\"formTemplate\">\n";
         // Always offer template0 and template1
@@ -463,7 +457,7 @@ class AlldbController extends BaseController
         echo "\t\t</td>\n\t</tr>\n";
 
         // ENCODING
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strencoding']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strencoding']}</th>\n";
         echo "\t\t<td class=\"data1\">\n";
         echo "\t\t\t<select name=\"formEncoding\">\n";
         echo "\t\t\t\t<option value=\"\"></option>\n";
@@ -486,13 +480,13 @@ class AlldbController extends BaseController
             }
 
             // LC_COLLATE
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strcollation']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcollation']}</th>\n";
             echo "\t\t<td class=\"data1\">\n";
             echo "\t\t\t<input name=\"formCollate\" value=\"", htmlspecialchars($_POST['formCollate']), "\" />\n";
             echo "\t\t</td>\n\t</tr>\n";
 
             // LC_CTYPE
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strctype']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strctype']}</th>\n";
             echo "\t\t<td class=\"data1\">\n";
             echo "\t\t\t<input name=\"formCType\" value=\"", htmlspecialchars($_POST['formCType']), "\" />\n";
             echo "\t\t</td>\n\t</tr>\n";
@@ -500,7 +494,7 @@ class AlldbController extends BaseController
 
         // Tablespace (if there are any)
         if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strtablespace']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strtablespace']}</th>\n";
             echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formSpc\">\n";
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
@@ -517,7 +511,7 @@ class AlldbController extends BaseController
 
         // Comments (if available)
         if ($data->hasSharedComments()) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strcomment']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
             echo "\t\t<td><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
             htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
         }
@@ -525,8 +519,8 @@ class AlldbController extends BaseController
         echo "</table>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
     }
 
@@ -535,7 +529,6 @@ class AlldbController extends BaseController
      */
     public function doSaveCreate()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Default tablespace to null if it isn't set
@@ -560,7 +553,7 @@ class AlldbController extends BaseController
 
         // Check that they've given a name and a definition
         if ('' == $_POST['formName']) {
-            $this->doCreate($lang['strdatabaseneedsname']);
+            $this->doCreate($this->lang['strdatabaseneedsname']);
         } else {
             $status = $data->createDatabase(
                 $_POST['formName'],
@@ -573,9 +566,9 @@ class AlldbController extends BaseController
             );
             if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
-                $this->doDefault($lang['strdatabasecreated']);
+                $this->doDefault($this->lang['strdatabasecreated']);
             } else {
-                $this->doCreate($lang['strdatabasecreatedbad']);
+                $this->doCreate($this->lang['strdatabasecreatedbad']);
             }
         }
     }
@@ -587,47 +580,45 @@ class AlldbController extends BaseController
      */
     public function doExport($msg = '')
     {
-        $lang = $this->lang;
-
         $this->printTrail('server');
         $this->printTabs('server', 'export');
         $this->printMsg($msg);
 
         echo '<form action="'.\SUBFOLDER."/src/views/dbexport\" method=\"post\">\n";
         echo "<table>\n";
-        echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\">{$lang['stroptions']}</th></tr>\n";
+        echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\">{$this->lang['stroptions']}</th></tr>\n";
         // Data only
         echo '<tr><th class="data left" rowspan="2">';
-        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$lang['strdataonly']}</label></th>\n";
-        echo "<td>{$lang['strformat']}\n";
+        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$this->lang['strdataonly']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}\n";
         echo "<select name=\"d_format\">\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /><label for=\"d_oids\">{$lang['stroids']}</label></td>\n</tr>\n";
+        echo "<tr><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /><label for=\"d_oids\">{$this->lang['stroids']}</label></td>\n</tr>\n";
         // Structure only
-        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$lang['strstructureonly']}</label></th>\n";
-        echo "<td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /><label for=\"s_clean\">{$lang['strdrop']}</label></td>\n</tr>\n";
+        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$this->lang['strstructureonly']}</label></th>\n";
+        echo "<td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /><label for=\"s_clean\">{$this->lang['strdrop']}</label></td>\n</tr>\n";
         // Structure and data
         echo '<tr><th class="data left" rowspan="3">';
-        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$lang['strstructureanddata']}</label></th>\n";
-        echo "<td>{$lang['strformat']}\n";
+        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$this->lang['strstructureanddata']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}\n";
         echo "<select name=\"sd_format\">\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /><label for=\"sd_clean\">{$lang['strdrop']}</label></td>\n</tr>\n";
-        echo "<tr><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /><label for=\"sd_oids\">{$lang['stroids']}</label></td>\n</tr>\n";
+        echo "<tr><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /><label for=\"sd_clean\">{$this->lang['strdrop']}</label></td>\n</tr>\n";
+        echo "<tr><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /><label for=\"sd_oids\">{$this->lang['stroids']}</label></td>\n</tr>\n";
         echo "</table>\n";
 
-        echo "<h3>{$lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$lang['strdownload']}</label></p>\n";
+        echo "<h3>{$this->lang['stroptions']}</h3>\n";
+        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
+        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>\n";
 
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo "<input type=\"hidden\" name=\"subject\" value=\"server\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }
 }

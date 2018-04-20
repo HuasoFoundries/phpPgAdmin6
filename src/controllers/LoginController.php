@@ -24,7 +24,6 @@ class LoginController extends BaseController
     public $form             = '';
     public $href             = '';
     public $lang             = [];
-    public $action           = '';
     public $controller_name  = 'LoginController';
     public $controller_title = 'strlogin';
 
@@ -45,8 +44,6 @@ class LoginController extends BaseController
 
     public function doLoginForm($msg = '')
     {
-        $lang = $this->lang;
-
         $this->misc->setNoDBConnection(true);
 
         $server_id = $this->container->requestobj->getQueryParam('server');
@@ -57,7 +54,7 @@ class LoginController extends BaseController
             return $this->lang['strinvalidserverparam'];
         }
 
-        $login_html = $this->printHeader($lang[$this->controller_title], $this->scripts, false);
+        $login_html = $this->printHeader($this->lang[$this->controller_title], $this->scripts, false);
         $login_html .= $this->printBody(false);
         $login_html .= $this->printTrail('root', false);
 
@@ -74,7 +71,7 @@ class LoginController extends BaseController
         }
 
         $server_info = $this->misc->getServerInfo($server_id);
-        $title       = sprintf($lang['strlogintitle'], $server_info['desc']);
+        $title       = sprintf($this->lang['strlogintitle'], $server_info['desc']);
 
         $printTitle = $this->printTitle($title, null, false);
 
@@ -102,22 +99,22 @@ class LoginController extends BaseController
         $login_html .= '<input type="hidden" name="loginServer" value="'.htmlspecialchars($server_id).'" />';
         $login_html .= '<table class="navbar" border="0" cellpadding="5" cellspacing="3">';
         $login_html .= '<tr>';
-        $login_html .= '<td>'.$lang['strusername'].'</td>';
+        $login_html .= '<td>'.$this->lang['strusername'].'</td>';
         $loginusername = isset($_POST['loginUsername']) ? htmlspecialchars($_POST['loginUsername']) : '';
 
         $login_html .= '<td><input type="text" name="loginUsername" value="'.$loginusername.'" size="24" /></td>';
         $login_html .= '</tr>';
         $login_html .= '<tr>';
-        $login_html .= '<td>'.$lang['strpassword'].'</td>';
+        $login_html .= '<td>'.$this->lang['strpassword'].'</td>';
         $login_html .= '<td><input id="loginPassword" type="password" name="loginPassword_'.$md5_server.'" size="24" /></td>';
         $login_html .= '</tr>';
         $login_html .= '</table>';
         if (sizeof($this->conf['servers']) > 1) {
             $checked = isset($_POST['loginShared']) ? 'checked="checked"' : '';
             $login_html .= '<p><input type="checkbox" id="loginShared" name="loginShared" '.$checked.' />';
-            $login_html .= '<label for="loginShared">'.$lang['strtrycred'].'</label></p>';
+            $login_html .= '<label for="loginShared">'.$this->lang['strtrycred'].'</label></p>';
         }
-        $login_html .= '<p><input type="submit" name="loginSubmit" value="'.$lang['strlogin'].'" /></p>';
+        $login_html .= '<p><input type="submit" name="loginSubmit" value="'.$this->lang['strlogin'].'" /></p>';
         $login_html .= '</form>';
 
         $login_html .= '<script type="text/javascript">';

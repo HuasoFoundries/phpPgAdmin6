@@ -28,9 +28,7 @@ class DataexportController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $data   = $this->misc->getDatabaseAccessor();
-        $action = $this->action;
+        $data = $this->misc->getDatabaseAccessor();
 
         set_time_limit(0);
 
@@ -345,39 +343,36 @@ class DataexportController extends BaseController
 
     public function doDefault($msg = '')
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-
         if (!isset($_REQUEST['query']) or empty($_REQUEST['query'])) {
             $_REQUEST['query'] = $_SESSION['sqlquery'];
         }
 
-        $this->printHeader($lang['strexport']);
+        $this->printHeader($this->lang['strexport']);
         $this->printBody();
         $this->printTrail(isset($_REQUEST['subject']) ? $_REQUEST['subject'] : 'database');
-        $this->printTitle($lang['strexport']);
+        $this->printTitle($this->lang['strexport']);
         if (isset($msg)) {
             $this->printMsg($msg);
         }
 
         echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
         echo "<table>\n";
-        echo "<tr><th class=\"data\">{$lang['strformat']}:</th><td><select name=\"d_format\">\n";
+        echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">\n";
         // COPY and SQL require a table
         if (isset($_REQUEST['table'])) {
             echo "<option value=\"copy\">COPY</option>\n";
             echo "<option value=\"sql\">SQL</option>\n";
         }
         echo "<option value=\"csv\">CSV</option>\n";
-        echo "<option value=\"tab\">{$lang['strtabbed']}</option>\n";
+        echo "<option value=\"tab\">{$this->lang['strtabbed']}</option>\n";
         echo "<option value=\"html\">XHTML</option>\n";
         echo "<option value=\"xml\">XML</option>\n";
         echo '</select></td></tr>';
         echo "</table>\n";
 
-        echo "<h3>{$lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$lang['strdownload']}</label></p>\n";
+        echo "<h3>{$this->lang['stroptions']}</h3>\n";
+        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
+        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>\n";
 
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo "<input type=\"hidden\" name=\"what\" value=\"dataonly\" />\n";
@@ -389,7 +384,7 @@ class DataexportController extends BaseController
             echo '<input type="hidden" name="search_path" value="', htmlspecialchars($_REQUEST['search_path']), "\" />\n";
         }
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
         echo "</form>\n";
 
         $this->printFooter();

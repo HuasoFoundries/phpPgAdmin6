@@ -24,25 +24,21 @@ class ColpropertiesController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
         if (isset($_REQUEST['table'])) {
             $this->tableName = &$_REQUEST['table'];
         } elseif (isset($_REQUEST['view'])) {
             $this->tableName = &$_REQUEST['view'];
         } else {
-            $this->halt($lang['strnotableprovided']);
+            $this->halt($this->lang['strnotableprovided']);
         }
 
-        $action = $this->action;
-
-        $this->printHeader($lang['strtables'].' - '.$this->tableName, null, true, 'header_select2.twig');
+        $this->printHeader($this->lang['strtables'].' - '.$this->tableName, null, true, 'header_select2.twig');
         $this->printBody();
 
         if (isset($_REQUEST['view'])) {
             $this->doDefault(null, false);
         } else {
-            switch ($action) {
+            switch ($this->action) {
                 case 'properties':
                     if (isset($_POST['cancel'])) {
                         $this->doDefault();
@@ -69,7 +65,6 @@ class ColpropertiesController extends BaseController
      */
     public function doDefault($msg = '', $isTable = true)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata) use ($data) {
@@ -77,11 +72,11 @@ class ColpropertiesController extends BaseController
         };
 
         if (empty($_REQUEST['column'])) {
-            $msg .= "<br/>{$lang['strnoobjects']}";
+            $msg .= "<br/>{$this->lang['strnoobjects']}";
         }
 
         $this->printTrail('column');
-        //$this->printTitle($lang['strcolprop']);
+        //$this->printTitle($this->lang['strcolprop']);
         $this->printTabs('column', 'properties');
         $this->printMsg($msg);
 
@@ -98,24 +93,24 @@ class ColpropertiesController extends BaseController
 
             $column = [
                 'column' => [
-                    'title' => $lang['strcolumn'],
+                    'title' => $this->lang['strcolumn'],
                     'field' => Decorator::field('attname'),
                 ],
                 'type'   => [
-                    'title' => $lang['strtype'],
+                    'title' => $this->lang['strtype'],
                     'field' => Decorator::field('+type'),
                 ],
             ];
 
             if ($isTable) {
                 $column['notnull'] = [
-                    'title'  => $lang['strnotnull'],
+                    'title'  => $this->lang['strnotnull'],
                     'field'  => Decorator::field('attnotnull'),
                     'type'   => 'bool',
                     'params' => ['true' => 'NOT NULL', 'false' => ''],
                 ];
                 $column['default'] = [
-                    'title' => $lang['strdefault'],
+                    'title' => $this->lang['strdefault'],
                     'field' => Decorator::field('adsrc'),
                 ];
             }
@@ -155,7 +150,7 @@ class ColpropertiesController extends BaseController
                                 ],
                             ],
                         ],
-                        'content' => $lang['strbrowse'],
+                        'content' => $this->lang['strbrowse'],
                     ],
                     'alter'  => [
                         'attr'    => [
@@ -171,7 +166,7 @@ class ColpropertiesController extends BaseController
                                 ],
                             ],
                         ],
-                        'content' => $lang['stralter'],
+                        'content' => $this->lang['stralter'],
                     ],
                     'drop'   => [
                         'attr'    => [
@@ -187,7 +182,7 @@ class ColpropertiesController extends BaseController
                                 ],
                             ],
                         ],
-                        'content' => $lang['strdrop'],
+                        'content' => $this->lang['strdrop'],
                     ],
                 ];
             } else {
@@ -209,7 +204,7 @@ class ColpropertiesController extends BaseController
                                 ],
                             ],
                         ],
-                        'content' => $lang['strbrowse'],
+                        'content' => $this->lang['strbrowse'],
                     ],
                 ];
             }
@@ -225,7 +220,6 @@ class ColpropertiesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (!isset($_REQUEST['stage'])) {
@@ -237,7 +231,7 @@ class ColpropertiesController extends BaseController
         switch ($_REQUEST['stage']) {
             case 1:
                 $this->printTrail('column');
-                $this->printTitle($lang['stralter'], 'pg.column.alter');
+                $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
                 echo '<script src="'.\SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
@@ -245,14 +239,14 @@ class ColpropertiesController extends BaseController
 
                 // Output table header
                 echo "<table>\n";
-                echo "<tr><th class=\"data required\">{$lang['strname']}</th>\n";
+                echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>\n";
                 if ($data->hasAlterColumnType()) {
-                    echo "<th class=\"data required\" colspan=\"2\">{$lang['strtype']}</th>\n";
-                    echo "<th class=\"data\">{$lang['strlength']}</th>\n";
+                    echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strtype']}</th>\n";
+                    echo "<th class=\"data\">{$this->lang['strlength']}</th>\n";
                 } else {
-                    echo "<th class=\"data required\">{$lang['strtype']}</th>\n";
+                    echo "<th class=\"data required\">{$this->lang['strtype']}</th>\n";
                 }
-                echo "<th class=\"data\">{$lang['strnotnull']}</th>\n<th class=\"data\">{$lang['strdefault']}</th>\n<th class=\"data\">{$lang['strcomment']}</th></tr>\n";
+                echo "<th class=\"data\">{$this->lang['strnotnull']}</th>\n<th class=\"data\">{$this->lang['strdefault']}</th>\n<th class=\"data\">{$this->lang['strcomment']}</th></tr>\n";
 
                 $column                       = $data->getTableAttributes($_REQUEST['table'], $_REQUEST['column']);
                 $column->fields['attnotnull'] = $data->phpBool($column->fields['attnotnull']);
@@ -349,8 +343,8 @@ class ColpropertiesController extends BaseController
                     echo '<input type="hidden" name="length" value="', htmlspecialchars($_REQUEST['length']), "\" />\n";
                     echo '<input type="hidden" name="array" value="', htmlspecialchars($_REQUEST['array']), "\" />\n";
                 }
-                echo "<input type=\"submit\" value=\"{$lang['stralter']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+                echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
                 echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");checkLengths(document.getElementById('type').value,'');</script>\n";
 
@@ -359,7 +353,7 @@ class ColpropertiesController extends BaseController
                 // Check inputs
                 if ('' == trim($_REQUEST['field'])) {
                     $_REQUEST['stage'] = 1;
-                    $this->doAlter($lang['strcolneedsname']);
+                    $this->doAlter($this->lang['strcolneedsname']);
 
                     return;
                 }
@@ -388,17 +382,17 @@ class ColpropertiesController extends BaseController
                         $_REQUEST['column'] = $_REQUEST['field'];
                         $this->misc->setReloadBrowser(true);
                     }
-                    $this->doDefault($sql."<br/>{$lang['strcolumnaltered']}");
+                    $this->doDefault($sql."<br/>{$this->lang['strcolumnaltered']}");
                 } else {
                     $_REQUEST['stage'] = 1;
-                    $this->doAlter($sql."<br/>{$lang['strcolumnalteredbad']}");
+                    $this->doAlter($sql."<br/>{$this->lang['strcolumnalteredbad']}");
 
                     return;
                 }
 
                 break;
             default:
-                echo "<p>{$lang['strinvalidparam']}</p>\n";
+                echo "<p>{$this->lang['strinvalidparam']}</p>\n";
         }
     }
 }

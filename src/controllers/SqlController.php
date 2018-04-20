@@ -24,8 +24,6 @@ class SqlController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
         $data = $this->misc->getDatabaseAccessor();
 
         set_time_limit(0);
@@ -65,10 +63,10 @@ class SqlController extends BaseController
             return $display_controller->render();
         }
 
-        $this->printHeader($lang['strqueryresults'], null, true, 'header_sqledit.twig');
+        $this->printHeader($this->lang['strqueryresults'], null, true, 'header_sqledit.twig');
         $this->printBody();
         $this->printTrail('database');
-        $this->printTitle($lang['strqueryresults']);
+        $this->printTitle($this->lang['strqueryresults']);
 
         // Set the schema search path
         if (isset($_REQUEST['search_path'])) {
@@ -92,7 +90,6 @@ class SqlController extends BaseController
     {
         $conf        = $this->conf;
         $this->misc  = $this->misc;
-        $lang        = $this->lang;
         $_connection = $this->misc->getConnection();
 
         try {
@@ -116,7 +113,6 @@ class SqlController extends BaseController
     {
         $conf        = $this->conf;
         $misc        = $this->misc;
-        $lang        = $this->lang;
         $data        = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();
 
@@ -154,7 +150,7 @@ class SqlController extends BaseController
                         }
 
                         echo "</table><br/>\n";
-                        echo $i, " {$lang['strrows']}</p>\n";
+                        echo $i, " {$this->lang['strrows']}</p>\n";
 
                         break;
                     case \PGSQL_COMMAND_OK:
@@ -164,7 +160,7 @@ class SqlController extends BaseController
                         }
                         // Otherwise if any rows have been affected
                         elseif ($data->conn->Affected_Rows() > 0) {
-                            echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>\n";
+                            echo $data->conn->Affected_Rows(), " {$this->lang['strrowsaff']}<br/>\n";
                         }
                         // Otherwise output nothing...
                         break;
@@ -181,7 +177,6 @@ class SqlController extends BaseController
 
     private function execute_query()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Set fetch mode to NUM so that duplicate field names are properly returned
@@ -228,20 +223,19 @@ class SqlController extends BaseController
                     ++$i;
                 }
                 echo "</table>\n";
-                echo '<p>', $rs->recordCount(), " {$lang['strrows']}</p>\n";
+                echo '<p>', $rs->recordCount(), " {$this->lang['strrows']}</p>\n";
             } elseif ($data->conn->Affected_Rows() > 0) {
                 // Otherwise if any rows have been affected
-                echo '<p>', $data->conn->Affected_Rows(), " {$lang['strrowsaff']}</p>\n";
+                echo '<p>', $data->conn->Affected_Rows(), " {$this->lang['strrowsaff']}</p>\n";
             } else {
                 // Otherwise nodata to print
-                echo '<p>', $lang['strnodata'], "</p>\n";
+                echo '<p>', $this->lang['strnodata'], "</p>\n";
             }
         }
     }
 
     private function doFooter($doBody = true, $template = 'footer.twig')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // May as well try to time the query
@@ -257,10 +251,10 @@ class SqlController extends BaseController
 
         // Display duration if we know it
         if (null !== $this->duration) {
-            echo '<p>', sprintf($lang['strruntime'], $this->duration), "</p>\n";
+            echo '<p>', sprintf($this->lang['strruntime'], $this->duration), "</p>\n";
         }
 
-        echo "<p>{$lang['strsqlexecuted']}</p>\n";
+        echo "<p>{$this->lang['strsqlexecuted']}</p>\n";
 
         $navlinks = [];
         $fields   = [
@@ -282,7 +276,7 @@ class SqlController extends BaseController
                         'urlvars' => $urlvars['params'],
                     ],
                 ],
-                'content' => $lang['strback'],
+                'content' => $this->lang['strback'],
             ];
         }
 
@@ -296,7 +290,7 @@ class SqlController extends BaseController
                     ]),
                 ],
             ],
-            'content' => $lang['streditsql'],
+            'content' => $this->lang['streditsql'],
         ];
 
         // Create view and download
@@ -312,7 +306,7 @@ class SqlController extends BaseController
                             ]),
                         ],
                     ],
-                    'content' => $lang['strcreateview'],
+                    'content' => $this->lang['strcreateview'],
                 ];
             }
 
@@ -327,7 +321,7 @@ class SqlController extends BaseController
                         'urlvars' => $fields,
                     ],
                 ],
-                'content' => $lang['strdownload'],
+                'content' => $this->lang['strdownload'],
             ];
         }
 

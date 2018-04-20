@@ -22,14 +22,10 @@ class InfoController extends BaseController
      */
     public function render()
     {
-        $lang = $this->lang;
-
-        $action = $this->action;
-
-        $this->printHeader($lang['strtables'].' - '.$_REQUEST['table'].' - '.$lang['strinfo']);
+        $this->printHeader($this->lang['strtables'].' - '.$_REQUEST['table'].' - '.$this->lang['strinfo']);
         $this->printBody();
 
-        switch ($action) {
+        switch ($this->action) {
             default:
                 $this->doDefault();
 
@@ -48,7 +44,6 @@ class InfoController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('table');
@@ -72,37 +67,37 @@ class InfoController extends BaseController
             && 0 == $parents->recordCount() && 0 == $children->recordCount()
             && (0 == $tablestatstups->recordCount() && 0 == $tablestatsio->recordCount()
                 && 0 == $indexstatstups->recordCount() && 0 == $indexstatsio->recordCount())) {
-            $this->printMsg($lang['strnoinfo']);
+            $this->printMsg($this->lang['strnoinfo']);
         } else {
             // Referring foreign tables
             if ($referrers !== -99 && $referrers->recordCount() > 0) {
-                echo "<h3>{$lang['strreferringtables']}</h3>\n";
+                echo "<h3>{$this->lang['strreferringtables']}</h3>\n";
 
                 $columns = [
                     'schema'     => [
-                        'title' => $lang['strschema'],
+                        'title' => $this->lang['strschema'],
                         'field' => Decorator::field('nspname'),
                     ],
                     'table'      => [
-                        'title' => $lang['strtable'],
+                        'title' => $this->lang['strtable'],
                         'field' => Decorator::field('relname'),
                     ],
                     'name'       => [
-                        'title' => $lang['strname'],
+                        'title' => $this->lang['strname'],
                         'field' => Decorator::field('conname'),
                     ],
                     'definition' => [
-                        'title' => $lang['strdefinition'],
+                        'title' => $this->lang['strdefinition'],
                         'field' => Decorator::field('consrc'),
                     ],
                     'actions'    => [
-                        'title' => $lang['stractions'],
+                        'title' => $this->lang['stractions'],
                     ],
                 ];
 
                 $actions = [
                     'properties' => [
-                        'content' => $lang['strproperties'],
+                        'content' => $this->lang['strproperties'],
                         'attr'    => [
                             'href' => [
                                 'url'     => 'constraints',
@@ -115,30 +110,30 @@ class InfoController extends BaseController
                     ],
                 ];
 
-                echo $this->printTable($referrers, $columns, $actions, 'info-referrers', $lang['strnodata']);
+                echo $this->printTable($referrers, $columns, $actions, 'info-referrers', $this->lang['strnodata']);
             }
 
             // Parent tables
             if ($parents->recordCount() > 0) {
-                echo "<h3>{$lang['strparenttables']}</h3>\n";
+                echo "<h3>{$this->lang['strparenttables']}</h3>\n";
 
                 $columns = [
                     'schema'  => [
-                        'title' => $lang['strschema'],
+                        'title' => $this->lang['strschema'],
                         'field' => Decorator::field('nspname'),
                     ],
                     'table'   => [
-                        'title' => $lang['strtable'],
+                        'title' => $this->lang['strtable'],
                         'field' => Decorator::field('relname'),
                     ],
                     'actions' => [
-                        'title' => $lang['stractions'],
+                        'title' => $this->lang['stractions'],
                     ],
                 ];
 
                 $actions = [
                     'properties' => [
-                        'content' => $lang['strproperties'],
+                        'content' => $this->lang['strproperties'],
                         'attr'    => [
                             'href' => [
                                 'url'     => 'tblproperties',
@@ -151,30 +146,30 @@ class InfoController extends BaseController
                     ],
                 ];
 
-                echo $this->printTable($parents, $columns, $actions, 'info-parents', $lang['strnodata']);
+                echo $this->printTable($parents, $columns, $actions, 'info-parents', $this->lang['strnodata']);
             }
 
             // Child tables
             if ($children->recordCount() > 0) {
-                echo "<h3>{$lang['strchildtables']}</h3>\n";
+                echo "<h3>{$this->lang['strchildtables']}</h3>\n";
 
                 $columns = [
                     'schema'  => [
-                        'title' => $lang['strschema'],
+                        'title' => $this->lang['strschema'],
                         'field' => Decorator::field('nspname'),
                     ],
                     'table'   => [
-                        'title' => $lang['strtable'],
+                        'title' => $this->lang['strtable'],
                         'field' => Decorator::field('relname'),
                     ],
                     'actions' => [
-                        'title' => $lang['stractions'],
+                        'title' => $this->lang['stractions'],
                     ],
                 ];
 
                 $actions = [
                     'properties' => [
-                        'content' => $lang['strproperties'],
+                        'content' => $this->lang['strproperties'],
                         'attr'    => [
                             'href' => [
                                 'url'     => 'tblproperties',
@@ -187,27 +182,27 @@ class InfoController extends BaseController
                     ],
                 ];
 
-                echo $this->printTable($children, $columns, $actions, 'info-children', $lang['strnodata']);
+                echo $this->printTable($children, $columns, $actions, 'info-children', $this->lang['strnodata']);
             }
 
             // Row performance
             if ($tablestatstups->recordCount() > 0) {
-                echo "<h3>{$lang['strrowperf']}</h3>\n";
+                echo "<h3>{$this->lang['strrowperf']}</h3>\n";
 
                 echo "<table>\n";
                 echo "\t<tr>\n";
-                echo "\t\t<th class=\"data\" colspan=\"2\">{$lang['strsequential']}</th>\n";
-                echo "\t\t<th class=\"data\" colspan=\"2\">{$lang['strindex']}</th>\n";
-                echo "\t\t<th class=\"data\" colspan=\"3\">{$lang['strrows2']}</th>\n";
+                echo "\t\t<th class=\"data\" colspan=\"2\">{$this->lang['strsequential']}</th>\n";
+                echo "\t\t<th class=\"data\" colspan=\"2\">{$this->lang['strindex']}</th>\n";
+                echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strrows2']}</th>\n";
                 echo "\t</tr>\n";
                 echo "\t<tr>\n";
-                echo "\t\t<th class=\"data\">{$lang['strscan']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strread']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strscan']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strfetch']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strinsert']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strupdate']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strdelete']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strscan']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strread']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strscan']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strfetch']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strinsert']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strupdate']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strdelete']}</th>\n";
                 echo "\t</tr>\n";
                 $i = 0;
 
@@ -231,28 +226,28 @@ class InfoController extends BaseController
 
             // I/O performance
             if ($tablestatsio->recordCount() > 0) {
-                echo "<h3>{$lang['strioperf']}</h3>\n";
+                echo "<h3>{$this->lang['strioperf']}</h3>\n";
 
                 echo "<table>\n";
                 echo "\t<tr>\n";
-                echo "\t\t<th class=\"data\" colspan=\"3\">{$lang['strheap']}</th>\n";
-                echo "\t\t<th class=\"data\" colspan=\"3\">{$lang['strindex']}</th>\n";
-                echo "\t\t<th class=\"data\" colspan=\"3\">{$lang['strtoast']}</th>\n";
-                echo "\t\t<th class=\"data\" colspan=\"3\">{$lang['strtoastindex']}</th>\n";
+                echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strheap']}</th>\n";
+                echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strindex']}</th>\n";
+                echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strtoast']}</th>\n";
+                echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strtoastindex']}</th>\n";
                 echo "\t</tr>\n";
                 echo "\t<tr>\n";
-                echo "\t\t<th class=\"data\">{$lang['strdisk']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strcache']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strpercent']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strdisk']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strcache']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strpercent']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strdisk']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strcache']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strpercent']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strdisk']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strcache']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strpercent']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>\n";
                 echo "\t</tr>\n";
                 $i = 0;
 
@@ -269,7 +264,7 @@ class InfoController extends BaseController
 
                     echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['heap_blks_read'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['heap_blks_hit'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
+                    echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>\n";
 
                     $total = $tablestatsio->fields['idx_blks_hit'] + $tablestatsio->fields['idx_blks_read'];
                     if ($total > 0) {
@@ -280,7 +275,7 @@ class InfoController extends BaseController
 
                     echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['idx_blks_read'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['idx_blks_hit'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
+                    echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>\n";
 
                     $total = $tablestatsio->fields['toast_blks_hit'] + $tablestatsio->fields['toast_blks_read'];
                     if ($total > 0) {
@@ -291,7 +286,7 @@ class InfoController extends BaseController
 
                     echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['toast_blks_read'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['toast_blks_hit'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
+                    echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>\n";
 
                     $total = $tablestatsio->fields['tidx_blks_hit'] + $tablestatsio->fields['tidx_blks_read'];
                     if ($total > 0) {
@@ -302,7 +297,7 @@ class InfoController extends BaseController
 
                     echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['tidx_blks_read'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['tidx_blks_hit'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
+                    echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>\n";
                     echo "\t</tr>\n";
                     $tablestatsio->movenext();
                     ++$i;
@@ -313,14 +308,14 @@ class InfoController extends BaseController
 
             // Index row performance
             if ($indexstatstups->recordCount() > 0) {
-                echo "<h3>{$lang['stridxrowperf']}</h3>\n";
+                echo "<h3>{$this->lang['stridxrowperf']}</h3>\n";
 
                 echo "<table>\n";
                 echo "\t<tr>\n";
-                echo "\t\t<th class=\"data\">{$lang['strindex']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strscan']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strread']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strfetch']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strindex']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strscan']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strread']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strfetch']}</th>\n";
                 echo "\t</tr>\n";
                 $i = 0;
 
@@ -341,14 +336,14 @@ class InfoController extends BaseController
 
             // Index I/0 performance
             if ($indexstatsio->recordCount() > 0) {
-                echo "<h3>{$lang['stridxioperf']}</h3>\n";
+                echo "<h3>{$this->lang['stridxioperf']}</h3>\n";
 
                 echo "<table>\n";
                 echo "\t<tr>\n";
-                echo "\t\t<th class=\"data\">{$lang['strindex']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strdisk']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strcache']}</th>\n";
-                echo "\t\t<th class=\"data\">{$lang['strpercent']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strindex']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>\n";
+                echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>\n";
                 echo "\t</tr>\n";
                 $i = 0;
 
@@ -365,7 +360,7 @@ class InfoController extends BaseController
                     echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['indexrelname']), "</td>\n";
                     echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['idx_blks_read'], 'int4', $shownull), "</td>\n";
                     echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['idx_blks_hit'], 'int4', $shownull), "</td>\n";
-                    echo "\t\t<td>({$percentage}{$lang['strpercent']})</td>\n";
+                    echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>\n";
                     echo "\t</tr>\n";
                     $indexstatsio->movenext();
                     ++$i;

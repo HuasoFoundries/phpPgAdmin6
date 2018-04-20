@@ -22,25 +22,22 @@ class SchemasController extends BaseController
      */
     public function render()
     {
-        $lang   = $this->lang;
-        $action = $this->action;
-
-        if ('tree' == $action) {
+        if ('tree' == $this->action) {
             return $this->doTree();
         }
-        if ('subtree' == $action) {
+        if ('subtree' == $this->action) {
             return $this->doSubTree();
         }
 
         if (isset($_POST['cancel'])) {
-            $action = '';
+            $this->action = '';
         }
 
         $header_template = 'header.twig';
         $footer_template = 'footer.twig';
 
         ob_start();
-        switch ($action) {
+        switch ($this->action) {
             case 'create':
                 if (isset($_POST['create'])) {
                     $this->doSaveCreate();
@@ -78,7 +75,7 @@ class SchemasController extends BaseController
 
         $output = ob_get_clean();
 
-        $this->printHeader($lang['strschemas'], null, true, $header_template);
+        $this->printHeader($this->lang['strschemas'], null, true, $header_template);
         $this->printBody();
 
         echo $output;
@@ -93,7 +90,6 @@ class SchemasController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('database');
@@ -105,24 +101,24 @@ class SchemasController extends BaseController
 
         $columns = [
             'schema'      => [
-                'title' => $lang['strschema'],
+                'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
                 'url'   => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
             'owner'       => [
-                'title' => $lang['strowner'],
+                'title' => $this->lang['strowner'],
                 'field' => Decorator::field('nspowner'),
             ],
             'schema_size' => [
-                'title' => $lang['strsize'],
+                'title' => $this->lang['strsize'],
                 'field' => Decorator::field('schema_size'),
             ],
             'actions'     => [
-                'title' => $lang['stractions'],
+                'title' => $this->lang['stractions'],
             ],
             'comment'     => [
-                'title' => $lang['strcomment'],
+                'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('nspcomment'),
             ],
         ];
@@ -133,7 +129,7 @@ class SchemasController extends BaseController
                 'url'     => 'schemas',
             ],
             'drop'         => [
-                'content'     => $lang['strdrop'],
+                'content'     => $this->lang['strdrop'],
                 'attr'        => [
                     'href' => [
                         'url'     => 'schemas',
@@ -146,7 +142,7 @@ class SchemasController extends BaseController
                 'multiaction' => 'drop',
             ],
             'privileges'   => [
-                'content' => $lang['strprivileges'],
+                'content' => $this->lang['strprivileges'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'privileges',
@@ -158,7 +154,7 @@ class SchemasController extends BaseController
                 ],
             ],
             'alter'        => [
-                'content' => $lang['stralter'],
+                'content' => $this->lang['stralter'],
                 'attr'    => [
                     'href' => [
                         'url'     => 'schemas',
@@ -175,7 +171,7 @@ class SchemasController extends BaseController
             unset($actions['alter']);
         }
 
-        echo $this->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas']);
+        echo $this->printTable($schemas, $columns, $actions, 'schemas-schemas', $this->lang['strnoschemas']);
 
         $this->printNavLinks(['create' => [
             'attr'    => [
@@ -188,7 +184,7 @@ class SchemasController extends BaseController
                     ],
                 ],
             ],
-            'content' => $lang['strcreateschema'],
+            'content' => $this->lang['strcreateschema'],
         ]], 'schemas-schemas', get_defined_vars());
     }
 
@@ -266,7 +262,6 @@ class SchemasController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $server_info = $this->misc->getServerInfo();
@@ -291,16 +286,16 @@ class SchemasController extends BaseController
         $users = $data->getUsers();
 
         $this->printTrail('database');
-        $this->printTitle($lang['strcreateschema'], 'pg.schema.create');
+        $this->printTitle($this->lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
         echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
         echo "<table style=\"width: 100%\">\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
         htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>\n";
         // Owner
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$lang['strowner']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strowner']}</th>\n";
         echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formAuth\">\n";
         while (!$users->EOF) {
             $uname = htmlspecialchars($users->fields['usename']);
@@ -309,7 +304,7 @@ class SchemasController extends BaseController
             $users->moveNext();
         }
         echo "\t\t\t</select>\n\t\t</td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$lang['strcomment']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
         echo "\t\t<td class=\"data1\"><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
         htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
 
@@ -318,8 +313,8 @@ class SchemasController extends BaseController
         echo "<input type=\"hidden\" name=\"action\" value=\"create\" />\n";
         echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
         echo "</p>\n";
         echo "</form>\n";
     }
@@ -329,19 +324,18 @@ class SchemasController extends BaseController
      */
     public function doSaveCreate()
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name
         if ('' == $_POST['formName']) {
-            $this->doCreate($lang['strschemaneedsname']);
+            $this->doCreate($this->lang['strschemaneedsname']);
         } else {
             $status = $data->createSchema($_POST['formName'], $_POST['formAuth'], $_POST['formComment']);
             if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
-                $this->doDefault($lang['strschemacreated']);
+                $this->doDefault($this->lang['strschemacreated']);
             } else {
-                $this->doCreate($lang['strschemacreatedbad']);
+                $this->doCreate($this->lang['strschemacreatedbad']);
             }
         }
     }
@@ -354,11 +348,10 @@ class SchemasController extends BaseController
      */
     public function doAlter($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
-        $this->printTitle($lang['stralter'], 'pg.schema.alter');
+        $this->printTitle($this->lang['stralter'], 'pg.schema.alter');
         $this->printMsg($msg);
 
         $schema = $data->getSchemaByName($_REQUEST['schema']);
@@ -383,7 +376,7 @@ class SchemasController extends BaseController
             echo "<table>\n";
 
             echo "\t<tr>\n";
-            echo "\t\t<th class=\"data left required\">{$lang['strname']}</th>\n";
+            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
             echo "\t\t<td class=\"data1\">";
             echo "\t\t\t<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
             htmlspecialchars($_POST['name']), "\" />\n";
@@ -392,7 +385,7 @@ class SchemasController extends BaseController
 
             if ($data->hasAlterSchemaOwner()) {
                 $users = $data->getUsers();
-                echo "<tr><th class=\"data left required\">{$lang['strowner']}</th>\n";
+                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>\n";
                 echo '<td class="data2"><select name="owner">';
                 while (!$users->EOF) {
                     $uname = $users->fields['usename'];
@@ -406,18 +399,18 @@ class SchemasController extends BaseController
             }
 
             echo "\t<tr>\n";
-            echo "\t\t<th class=\"data\">{$lang['strcomment']}</th>\n";
+            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\" name=\"comment\">", htmlspecialchars($_POST['comment']), "</textarea></td>\n";
             echo "\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
             echo '<input type="hidden" name="schema" value="', htmlspecialchars($_POST['schema']), "\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            echo "<p>{$lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>\n";
         }
     }
 
@@ -428,15 +421,14 @@ class SchemasController extends BaseController
      */
     public function doSaveAlter($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->updateSchema($_POST['schema'], $_POST['comment'], $_POST['name'], $_POST['owner']);
         if (0 == $status) {
             $this->misc->setReloadBrowser(true);
-            $this->doDefault($lang['strschemaaltered']);
+            $this->doDefault($this->lang['strschemaaltered']);
         } else {
-            $this->doAlter($lang['strschemaalteredbad']);
+            $this->doAlter($this->lang['strschemaalteredbad']);
         }
     }
 
@@ -447,36 +439,35 @@ class SchemasController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['nsp']) && empty($_REQUEST['ma'])) {
-            return $this->doDefault($lang['strspecifyschematodrop']);
+            return $this->doDefault($this->lang['strspecifyschematodrop']);
         }
 
         if ($confirm) {
             $this->printTrail('schema');
-            $this->printTitle($lang['strdrop'], 'pg.schema.drop');
+            $this->printTitle($this->lang['strdrop'], 'pg.schema.drop');
 
             echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($lang['strconfdropschema'], $this->misc->printVal($a['nsp'])), "</p>\n";
+                    echo '<p>', sprintf($this->lang['strconfdropschema'], $this->misc->printVal($a['nsp'])), "</p>\n";
                     echo '<input type="hidden" name="nsp[]" value="', htmlspecialchars($a['nsp']), "\" />\n";
                 }
             } else {
-                echo '<p>', sprintf($lang['strconfdropschema'], $this->misc->printVal($_REQUEST['nsp'])), "</p>\n";
+                echo '<p>', sprintf($this->lang['strconfdropschema'], $this->misc->printVal($_REQUEST['nsp'])), "</p>\n";
                 echo '<input type="hidden" name="nsp" value="', htmlspecialchars($_REQUEST['nsp']), "\" />\n";
             }
 
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$lang['strcascade']}</label></p>\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
             if (is_array($_POST['nsp'])) {
@@ -486,10 +477,10 @@ class SchemasController extends BaseController
                     foreach ($_POST['nsp'] as $s) {
                         $status = $data->dropSchema($s, isset($_POST['cascade']));
                         if (0 == $status) {
-                            $msg .= sprintf('%s: %s<br />', htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadropped']);
+                            $msg .= sprintf('%s: %s<br />', htmlentities($s, ENT_QUOTES, 'UTF-8'), $this->lang['strschemadropped']);
                         } else {
                             $data->endTransaction();
-                            $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $lang['strschemadroppedbad']));
+                            $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $this->lang['strschemadroppedbad']));
 
                             return;
                         }
@@ -500,15 +491,15 @@ class SchemasController extends BaseController
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($msg);
                 } else {
-                    $this->doDefault($lang['strschemadroppedbad']);
+                    $this->doDefault($this->lang['strschemadroppedbad']);
                 }
             } else {
                 $status = $data->dropSchema($_POST['nsp'], isset($_POST['cascade']));
                 if (0 == $status) {
                     $this->misc->setReloadBrowser(true);
-                    $this->doDefault($lang['strschemadropped']);
+                    $this->doDefault($this->lang['strschemadropped']);
                 } else {
-                    $this->doDefault($lang['strschemadroppedbad']);
+                    $this->doDefault($this->lang['strschemadroppedbad']);
                 }
             }
         }
@@ -521,7 +512,6 @@ class SchemasController extends BaseController
      */
     public function doExport($msg = '')
     {
-        $lang = $this->lang;
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
@@ -531,37 +521,37 @@ class SchemasController extends BaseController
         echo '<form action="'.\SUBFOLDER.'/src/views/dbexport" method="post">'."\n";
 
         echo "<table>\n";
-        echo "<tr><th class=\"data\">{$lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$lang['stroptions']}</th></tr>\n";
+        echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";
         // Data only
         echo '<tr><th class="data left" rowspan="2">';
-        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$lang['strdataonly']}</label></th>\n";
-        echo "<td>{$lang['strformat']}</td>\n";
+        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$this->lang['strdataonly']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}</td>\n";
         echo "<td><select name=\"d_format\">\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><label for=\"d_oids\">{$lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /></td>\n</tr>\n";
+        echo "<tr><td><label for=\"d_oids\">{$this->lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /></td>\n</tr>\n";
         // Structure only
-        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$lang['strstructureonly']}</label></th>\n";
-        echo "<td><label for=\"s_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
+        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$this->lang['strstructureonly']}</label></th>\n";
+        echo "<td><label for=\"s_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
         // Structure and data
         echo '<tr><th class="data left" rowspan="3">';
-        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$lang['strstructureanddata']}</label></th>\n";
-        echo "<td>{$lang['strformat']}</td>\n";
+        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$this->lang['strstructureanddata']}</label></th>\n";
+        echo "<td>{$this->lang['strformat']}</td>\n";
         echo "<td><select name=\"sd_format\">\n";
         echo "<option value=\"copy\">COPY</option>\n";
         echo "<option value=\"sql\">SQL</option>\n";
         echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><label for=\"sd_clean\">{$lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
-        echo "<tr><td><label for=\"sd_oids\">{$lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /></td>\n</tr>\n";
+        echo "<tr><td><label for=\"sd_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
+        echo "<tr><td><label for=\"sd_oids\">{$this->lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /></td>\n</tr>\n";
         echo "</table>\n";
 
-        echo "<h3>{$lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$lang['strdownload']}</label>\n";
+        echo "<h3>{$this->lang['stroptions']}</h3>\n";
+        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
+        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label>\n";
         // MSIE cannot download gzip in SSL mode - it's just broken
         if (!(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS']))) {
-            echo "<br /><input type=\"radio\" id=\"output3\" name=\"output\" value=\"gzipped\" /><label for=\"output3\">{$lang['strdownloadgzipped']}</label>\n";
+            echo "<br /><input type=\"radio\" id=\"output3\" name=\"output\" value=\"gzipped\" /><label for=\"output3\">{$this->lang['strdownloadgzipped']}</label>\n";
         }
         echo "</p>\n";
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
@@ -569,7 +559,7 @@ class SchemasController extends BaseController
         echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
         echo '<input type="hidden" name="schema" value="', htmlspecialchars($_REQUEST['schema']), "\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$lang['strexport']}\" /></p>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
         echo "</form>\n";
     }
 }
