@@ -298,7 +298,7 @@ class ADOdbBase
         $this->clean($comment); // Passing in an already cleaned comment will lead to double escaped data
         // So, while counter-intuitive, it is important to not clean comments before
         // calling setComment. We will clean it here instead.
-        /*
+        /**
         $this->fieldClean($table);
         $this->fieldClean($obj_name);
          */
@@ -450,8 +450,7 @@ class ADOdbBase
      * @param $sql   The SQL statement to be executed
      * @param $field The field name to be returned
      *
-     * @return A  single field value
-     * @return -1 No rows were found
+     * @return string|int  single field value or -1 if no rows where found
      */
     public function selectField($sql, $field)
     {
@@ -473,8 +472,8 @@ class ADOdbBase
     /**
      * Delete from the database.
      *
-     * @param        $table      The name of the table
-     * @param        $conditions (array) A map of field names to conditions
+     * @param string $table      The name of the table
+     * @param array $conditions (array) A map of field names to conditions
      * @param string $schema     (optional) The table's schema
      *
      * @return int 0 success
@@ -522,9 +521,9 @@ class ADOdbBase
     /**
      * Cleans (escapes) an object name (eg. table, field).
      *
-     * @param $str The string to clean, by reference
+     * @param string $str The string to clean, by reference
      *
-     * @return The cleaned string
+     * @return string The cleaned string
      */
     public function fieldClean(&$str)
     {
@@ -562,8 +561,8 @@ class ADOdbBase
     /**
      * Insert a set of values into the database.
      *
-     * @param $table The table to insert into
-     * @param $vars  (array) A mapping of the field names to the values to be inserted
+     * @param string $table The table to insert into
+     * @param array $vars  (array) A mapping of the field names to the values to be inserted
      *
      * @return int 0 success
      */
@@ -612,9 +611,9 @@ class ADOdbBase
     /**
      * Update a row in the database.
      *
-     * @param       $table The table that is to be updated
-     * @param       $vars  (array) A mapping of the field names to the values to be updated
-     * @param       $where (array) A mapping of field names to values for the where clause
+     * @param string $table The table that is to be updated
+     * @param array $vars  (array) A mapping of the field names to the values to be updated
+     * @param array $where (array) A mapping of field names to values for the where clause
      * @param array $nulls (array, optional) An array of fields to be set null
      *
      * @return int 0 success
@@ -728,9 +727,9 @@ class ADOdbBase
     /**
      * Change the value of a parameter to database representation depending on whether it evaluates to true or false.
      *
-     * @param $parameter the parameter
+     * @param mixed $parameter the parameter
      *
-     * @return \PHPPgAdmin\Database\the
+     * @return boolean boolean  database representation
      */
     public function dbBool(&$parameter)
     {
@@ -740,9 +739,9 @@ class ADOdbBase
     /**
      * Change a parameter from database representation to a boolean, (others evaluate to false).
      *
-     * @param $parameter the parameter
+     * @param mixed $parameter the parameter
      *
-     * @return \PHPPgAdmin\Database\the
+     * @return boolean
      */
     public function phpBool($parameter)
     {
@@ -752,7 +751,7 @@ class ADOdbBase
     /**
      * Change a db array into a PHP array.
      *
-     * @param $dbarr
+     * @param string $dbarr
      *
      * @return array A PHP array
      *

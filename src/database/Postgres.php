@@ -664,8 +664,8 @@ class Postgres extends ADOdbBase
 					pg_catalog.pg_namespace pn WHERE po.opcnamespace=pn.oid
 					AND po.opcname ILIKE {$term} {$where}
 			";
-        } // Otherwise just add domains
-        else {
+        } else {
+            // Otherwise just add domains
             $sql .= "
 				UNION ALL
 				SELECT 'DOMAIN', pt.oid, pn.nspname, NULL,
@@ -3077,7 +3077,7 @@ class Postgres extends ADOdbBase
             $len         = strlen($line);
             $query_start = 0;
 
-            /*
+            /**
              * Parse line, looking for command separators.
              *
              * The current character is at line[i], the prior character at line[i
@@ -3094,7 +3094,7 @@ class Postgres extends ADOdbBase
                     $bslash_count = 0;
                 }
 
-                /*
+                /**
                  * It is important to place the in_* test routines before the
                  * in_* detection routines. i.e. we have to test if we are in
                  * a quote before testing for comments.
@@ -3102,7 +3102,7 @@ class Postgres extends ADOdbBase
 
                 /* in quote? */
                 if ($in_quote !== 0) {
-                    /*
+                    /**
                      * end of quote if matching non-backslashed character.
                      * backslashes don't count for double quotes, though.
                      */
@@ -3110,8 +3110,7 @@ class Postgres extends ADOdbBase
                         ($bslash_count % 2 == 0 || $in_quote == '"')) {
                         $in_quote = 0;
                     }
-                } /* in or end of $foo$ type quote? */
-                else {
+                } else {
                     if ($dol_quote) {
                         if (strncmp(substr($line, $i), $dol_quote, strlen($dol_quote)) == 0) {
                             $this->advance_1($i, $prevlen, $thislen);
@@ -3121,24 +3120,21 @@ class Postgres extends ADOdbBase
 
                             $dol_quote = null;
                         }
-                    } /* start of extended comment? */
-                    else {
+                    } else {
                         if (substr($line, $i, 2) == '/*') {
                             ++$in_xcomment;
                             if ($in_xcomment == 1) {
                                 $this->advance_1($i, $prevlen, $thislen);
                             }
-                        } /* in or end of extended comment? */
-                        else {
+                        } else {
                             if ($in_xcomment) {
                                 if (substr($line, $i, 2) == '*/' && !--$in_xcomment) {
                                     $this->advance_1($i, $prevlen, $thislen);
                                 }
-                            } /* start of quote? */
-                            else {
+                            } else {
                                 if (substr($line, $i, 1) == '\'' || substr($line, $i, 1) == '"') {
                                     $in_quote = substr($line, $i, 1);
-                                } /*
+                                }/**
                                  * start of $foo$ type quote?
                                  */
                                 else {
@@ -3149,8 +3145,7 @@ class Postgres extends ADOdbBase
                                         while (substr($line, $i, 1) != '$') {
                                             $this->advance_1($i, $prevlen, $thislen);
                                         }
-                                    } /* single-line comment? truncate line */
-                                    else {
+                                    } else {
                                         if (substr($line, $i, 2) == '--') {
                                             $line = substr($line, 0, $i); /* remove comment */
                                             break;
@@ -3161,11 +3156,10 @@ class Postgres extends ADOdbBase
                                         } else {
                                             if (substr($line, $i, 1) == ')' && $paren_level > 0) {
                                                 --$paren_level;
-                                            } /* semicolon? then send query */
-                                            else {
+                                            } else {
                                                 if (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
                                                     $subline = substr(substr($line, 0, $i), $query_start);
-                                                    /*
+                                                    /**
                                                      * insert a cosmetic newline, if this is not the first
                                                      * line in the buffer
                                                      */
@@ -3207,7 +3201,7 @@ class Postgres extends ADOdbBase
                                                     $query_start = $i + $thislen;
                                                 }
 
-                                                /*
+                                                /**
                                                  * keyword or identifier?
                                                  * We grab the whole string so that we don't
                                                  * mistakenly see $foo$ inside an identifier as the start
@@ -3250,7 +3244,7 @@ class Postgres extends ADOdbBase
             $line = null;
         } // end while
 
-        /*
+        /**
          * Process query at the end of file without a semicolon, so long as
          * it's non-empty.
          */

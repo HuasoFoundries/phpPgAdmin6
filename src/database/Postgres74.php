@@ -231,8 +231,8 @@ class Postgres74 extends Postgres80
 					pg_catalog.pg_namespace pn WHERE po.opcnamespace=pn.oid
 					AND po.opcname ILIKE '%{$term}%' {$where}
 			";
-        } // Otherwise just add domains
-        else {
+        } else {
+            // Otherwise just add domains
             $sql .= "
 				UNION ALL
 				SELECT 'DOMAIN', pt.oid, pn.nspname, NULL,

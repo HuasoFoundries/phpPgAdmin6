@@ -43,8 +43,7 @@ trait AdminTrait
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($this->lang['strconfclustertable'], $this->misc->printVal($a['table'])), "</p>\n";
                     echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), "\" />\n";
-                }
-                // END if multi cluster
+                } //  END if multi cluster
             } else {
                 $this->printTrail($type);
                 $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
@@ -65,8 +64,7 @@ trait AdminTrait
 
             echo "<input type=\"submit\" name=\"cluster\" value=\"{$this->lang['strcluster']}\" />\n"; //TODO
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            echo "</form>\n";
-        // END single cluster
+            echo "</form>\n"; //  END single cluster
         } else {
             $msg = '';
             //If multi table cluster
@@ -137,8 +135,7 @@ trait AdminTrait
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($this->lang['strconfreindextable'], $this->misc->printVal($a['table'])), "</p>\n";
                     echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), "\" />\n";
-                }
-                // END if multi reindex
+                } //  END if multi reindex
             } else {
                 $this->printTrail($type);
                 $this->printTitle($this->lang['strreindex'], 'pg.reindex');
@@ -163,8 +160,7 @@ trait AdminTrait
 
             echo "<input type=\"submit\" name=\"reindex\" value=\"{$this->lang['strreindex']}\" />\n"; //TODO
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            echo "</form>\n";
-        // END single reindex
+            echo "</form>\n"; //  END single reindex
         } else {
             //If multi table reindex
             if (('table' == $type) && is_array($_REQUEST['table'])) {
@@ -225,8 +221,7 @@ trait AdminTrait
                     //\Kint::dump($a);
                     echo '<p>', sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($a['table'])), "</p>\n";
                     echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), "\" />\n";
-                }
-                // END if multi analyze
+                } //  END if multi analyze
             } else {
                 $this->printTrail($type);
                 $this->printTitle($this->lang['stranalyze'], 'pg.analyze');
@@ -246,8 +241,7 @@ trait AdminTrait
 
             echo "<input type=\"submit\" name=\"analyze\" value=\"{$this->lang['stranalyze']}\" />\n"; //TODO
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            echo "</form>\n";
-        // END single analyze
+            echo "</form>\n"; //  END single analyze
         } else {
             //If multi table analyze
             if (('table' == $type) && is_array($_REQUEST['table'])) {
@@ -329,8 +323,7 @@ trait AdminTrait
             echo "<p><input type=\"checkbox\" id=\"vacuum_freeze\" name=\"vacuum_freeze\" /> <label for=\"vacuum_freeze\">{$this->lang['strfreeze']}</label></p>\n";
             echo "<input type=\"submit\" name=\"vacuum\" value=\"{$this->lang['strvacuum']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            echo "</form>\n";
-        // END single vacuum
+            echo "</form>\n"; //  END single vacuum
         } else {
             //If multi drop
             if (is_array($_REQUEST['table'])) {

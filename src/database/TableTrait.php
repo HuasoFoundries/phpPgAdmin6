@@ -253,7 +253,7 @@ trait TableTrait
         // @@@@ DUMP CLUSTERING INFORMATION
 
         // Inherits
-        /*
+        /**
          * XXX: This is currently commented out as handling inheritance isn't this simple.
          * You also need to make sure you don't dump inherited columns and defaults, as well
          * as inherited NOT NULL and CHECK constraints.  So for the time being, we just do
@@ -352,7 +352,7 @@ trait TableTrait
 
         if (sizeof($privs) > 0) {
             $sql .= "\n-- Privileges\n\n";
-            /*
+            /**
              * Always start with REVOKE ALL FROM PUBLIC, so that we don't have to
              * wire-in knowledge about the default public privileges for different
              * kinds of objects.
@@ -2057,5 +2057,5 @@ trait TableTrait
 
     abstract public function hasTablespaces();
 
-    abstract ublic function delete($table, $conditions, $schema = '');
+    abstract public function delete($table, $conditions, $schema = '');
 }
