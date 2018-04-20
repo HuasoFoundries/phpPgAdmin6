@@ -15,7 +15,6 @@
  *    “delete”.
  *    - Fixéronse certas escollas de vocabulario: “vacuum” → «purgación» (aconsellada por
  *    Leandro Regueiro), “cluster” → «contentrado».
- *
  */
 
 // Language and character set

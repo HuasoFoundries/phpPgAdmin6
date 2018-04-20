@@ -4,7 +4,6 @@
  * Portuguese language file for phpPgAdmin6.
  *
  * @maintainer Francisco Alves Cabrita (include@npf.pt.freebsd.org)
- *
  */
 
 // Language and character set

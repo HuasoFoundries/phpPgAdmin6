@@ -6,7 +6,6 @@
  * @maintainer 2003-2006 Martín Marqués (martin@bugs.unl.edu.ar)
  * @maintainer 2006-2010 xzilla
  * @maintainer 2010-2014 Miguel Useche (migueluseche@skatox.com)
- *
  */
 // Language and character set
 $lang['applang']    = 'Spanish';

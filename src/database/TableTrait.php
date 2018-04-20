@@ -111,8 +111,7 @@ trait TableTrait
 
     /**
      * Returns the SQL definition for the table.
-     *
-     * @pre MUST be run within a transaction
+     * MUST be run within a transaction
      *
      * @param string    $table The table to define
      * @param bool|true $clean True to issue drop command, false otherwise
@@ -796,7 +795,6 @@ trait TableTrait
      * @param array $primarykey  An Array indicating the field used for the primarykey (those indexes that are set)
      *
      * @return bool|int 0 success
-     *
      */
     public function createTable(
         $name,
@@ -1121,7 +1119,6 @@ trait TableTrait
      * @param string|null $owner
      *
      * @return int 0 if operation was successful
-     *
      */
     public function alterTableOwner($tblrs, $owner = null)
     {
@@ -1148,7 +1145,6 @@ trait TableTrait
      * @param string|null $tablespace
      *
      * @return int 0 if operation was successful
-     *
      */
     public function alterTableTablespace($tblrs, $tablespace = null)
     {
@@ -1206,7 +1202,6 @@ trait TableTrait
      * @param string|null $schema
      *
      * @return int 0 if operation was successful
-     *
      */
     public function alterTableSchema($tblrs, $schema = null)
     {

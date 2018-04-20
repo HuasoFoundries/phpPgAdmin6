@@ -4,7 +4,6 @@
  * Hungarian language file for phpPgAdmin6.
  * maintainer: Sulyok Peti <sulyokpeti@gmail.com>
  *
- *
  */
 
 // Language and character set
