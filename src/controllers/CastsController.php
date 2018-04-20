@@ -52,13 +52,13 @@ class CastsController extends BaseController
         $renderCastContext = function ($val) use ($lang) {
             switch ($val) {
                 case 'e':
-                    return $thislang['strno'];
+                    return $lang['strno'];
 
                 case 'a':
-                    return $thislang['strinassignment'];
+                    return $lang['strinassignment'];
 
                 default:
-                    return $thislang['stryes'];
+                    return $lang['stryes'];
 
             }
         };

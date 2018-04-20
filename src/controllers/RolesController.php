@@ -22,7 +22,6 @@ class RolesController extends BaseController
      */
     public function render()
     {
-        $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($this->lang['strroles']);
         $this->printBody();
