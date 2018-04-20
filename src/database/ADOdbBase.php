@@ -258,13 +258,21 @@ class ADOdbBase
     // The default type storage
     public $typStorageDef = 'plain';
 
+    public $lang;
+    public $conf;
+    protected $container;
     /**
      * Base constructor.
      *
      * @param \ADONewConnection &$conn The connection object
      */
-    public function __construct(&$conn)
+    public function __construct(&$conn, $container)
     {
+        $this->container = $container;
+
+        $this->lang = $container->get('lang');
+        $this->conf = $container->get('conf');
+
         $this->prtrace('instanced connection class');
         $this->conn = $conn;
     }
@@ -478,7 +486,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql = $fields . $values . ')';
         }
 
         // Check for failures
@@ -550,7 +558,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;

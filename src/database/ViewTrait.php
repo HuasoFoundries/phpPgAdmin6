@@ -1,0 +1,324 @@
+<?php
+
+/**
+ * PHPPgAdmin v6.0.0-beta.40
+ */
+
+namespace PHPPgAdmin\Database;
+
+/**
+ * Common trait for views manipulation.
+ */
+trait ViewTrait
+{
+    /**
+     * Returns a list of all views in the database.
+     *
+     * @return \PHPPgAdmin\ADORecordSet All views
+     */
+    public function getViews()
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $sql = "
+			SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+				pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment
+			FROM pg_catalog.pg_class c
+				LEFT JOIN pg_catalog.pg_namespace n ON (n.oid = c.relnamespace)
+			WHERE (n.nspname='{$c_schema}') AND (c.relkind = 'v'::\"char\")
+			ORDER BY relname";
+
+        return $this->selectSet($sql);
+    }
+
+    /**
+     * Returns a list of all materialized views in the database.
+     *
+     * @return \PHPPgAdmin\ADORecordSet All materialized views
+     */
+    public function getMaterializedViews()
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $sql = "
+			SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+				pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment
+			FROM pg_catalog.pg_class c
+				LEFT JOIN pg_catalog.pg_namespace n ON (n.oid = c.relnamespace)
+			WHERE (n.nspname='{$c_schema}') AND (c.relkind = 'm'::\"char\")
+			ORDER BY relname";
+
+        return $this->selectSet($sql);
+    }
+
+    /**
+     * Updates a view.
+     *
+     * @param string $viewname   The name fo the view to update
+     * @param string $definition The new definition for the view
+     * @param string $comment
+     *
+     * @return bool|int 0 success
+     */
+    public function setView($viewname, $definition, $comment)
+    {
+        return $this->createView($viewname, $definition, true, $comment);
+    }
+
+    /**
+     * Creates a new view.
+     *
+     * @param string $viewname   The name of the view to create
+     * @param string $definition The definition for the new view
+     * @param bool   $replace    True to replace the view, false otherwise
+     * @param string $comment
+     *
+     * @return bool|int 0 success
+     */
+    public function createView($viewname, $definition, $replace, $comment)
+    {
+        $status = $this->beginTransaction();
+        if ($status != 0) {
+            return -1;
+        }
+
+        $f_schema = $this->_schema;
+        $this->fieldClean($f_schema);
+        $this->fieldClean($viewname);
+
+        // Note: $definition not cleaned
+
+        $sql = 'CREATE ';
+        if ($replace) {
+            $sql .= 'OR REPLACE ';
+        }
+
+        $sql .= "VIEW \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
+
+        $status = $this->execute($sql);
+        if ($status) {
+            $this->rollbackTransaction();
+
+            return -1;
+        }
+
+        if ($comment != '') {
+            $status = $this->setComment('VIEW', $viewname, '', $comment);
+            if ($status) {
+                $this->rollbackTransaction();
+
+                return -1;
+            }
+        }
+
+        return $this->endTransaction();
+    }
+
+    /**
+     * Alter view properties.
+     *
+     * @param string $view    The name of the view
+     * @param string $name    The new name for the view
+     * @param string $owner   The new owner for the view
+     * @param string $schema  The new schema for the view
+     * @param string $comment The comment on the view
+     *
+     * @return bool|int 0 success
+     */
+    public function alterView($view, $name, $owner, $schema, $comment)
+    {
+        $data = $this->getView($view);
+        if ($data->recordCount() != 1) {
+            return -2;
+        }
+
+        $status = $this->beginTransaction();
+        if ($status != 0) {
+            $this->rollbackTransaction();
+
+            return -1;
+        }
+
+        $status = $this->_alterView($data, $name, $owner, $schema, $comment);
+
+        if ($status != 0) {
+            $this->rollbackTransaction();
+
+            return $status;
+        }
+
+        return $this->endTransaction();
+    }
+
+    /**
+     * Returns all details for a particular view.
+     *
+     * @param string $view The name of the view to retrieve
+     *
+     * @return \PHPPgAdmin\ADORecordSet View info
+     */
+    public function getView($view)
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $this->clean($view);
+
+        $sql = "
+			SELECT c.relname, n.nspname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+				pg_catalog.pg_get_viewdef(c.oid, true) AS vwdefinition,
+				pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment
+			FROM pg_catalog.pg_class c
+				LEFT JOIN pg_catalog.pg_namespace n ON (n.oid = c.relnamespace)
+			WHERE (c.relname = '{$view}') AND n.nspname='{$c_schema}'";
+
+        return $this->selectSet($sql);
+    }
+
+    /**
+     * Protected method which alter a view
+     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
+     *
+     * @param $vwrs    The view recordSet returned by getView()
+     * @param $name    The new name for the view
+     * @param $owner   The new owner for the view
+     * @param $schema
+     * @param $comment The comment on the view
+     *
+     * @return int 0 success
+     */
+    protected function _alterView($vwrs, $name, $owner, $schema, $comment)
+    {
+        $this->fieldArrayClean($vwrs->fields);
+
+        // Comment
+        if ($this->setComment('VIEW', $vwrs->fields['relname'], '', $comment) != 0) {
+            return -4;
+        }
+
+        // Owner
+        $this->fieldClean($owner);
+        $status = $this->alterViewOwner($vwrs, $owner);
+        if ($status != 0) {
+            return -5;
+        }
+
+        // Rename
+        $this->fieldClean($name);
+        $status = $this->alterViewName($vwrs, $name);
+        if ($status != 0) {
+            return -3;
+        }
+
+        // Schema
+        $this->fieldClean($schema);
+        $status = $this->alterViewSchema($vwrs, $schema);
+        if ($status != 0) {
+            return -6;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Alter a view's owner.
+     *
+     * @param \PHPPgAdmin\ADORecordSet $vwrs  The view recordSet returned by getView()
+     * @param null|string              $owner
+     *
+     * @return int 0 if operation was successful
+     *
+     * @internal param  $name new view's owner
+     */
+    public function alterViewOwner($vwrs, $owner = null)
+    {
+        /* $vwrs and $owner are cleaned in _alterView */
+        if ((!empty($owner)) && ($vwrs->fields['relowner'] != $owner)) {
+            $f_schema = $this->_schema;
+            $this->fieldClean($f_schema);
+            // If owner has been changed, then do the alteration.  We are
+            // careful to avoid this generally as changing owner is a
+            // superuser only function.
+            $sql = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" OWNER TO \"{$owner}\"";
+
+            return $this->execute($sql);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Rename a view.
+     *
+     * @param $vwrs The view recordSet returned by getView()
+     * @param $name The new view's name
+     *
+     * @return int 0 if operation was successful
+     */
+    public function alterViewName($vwrs, $name)
+    {
+        // Rename (only if name has changed)
+        /* $vwrs and $name are cleaned in _alterView */
+        if (!empty($name) && ($name != $vwrs->fields['relname'])) {
+            $f_schema = $this->_schema;
+            $this->fieldClean($f_schema);
+            $sql    = "ALTER VIEW \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $status = $this->execute($sql);
+            if ($status == 0) {
+                $vwrs->fields['relname'] = $name;
+            } else {
+                return $status;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * Alter a view's schema.
+     *
+     * @param \PHPPgAdmin\ADORecordSet $vwrs   The view recordSet returned by getView()
+     * @param string                   $schema
+     *
+     * @return int 0 if operation was successful
+     *
+     * @internal param The $name new view's schema
+     */
+    public function alterViewSchema($vwrs, $schema)
+    {
+        /* $vwrs and $schema are cleaned in _alterView */
+        if (!empty($schema) && ($vwrs->fields['nspname'] != $schema)) {
+            $f_schema = $this->_schema;
+            $this->fieldClean($f_schema);
+            // If tablespace has been changed, then do the alteration.  We
+            // don't want to do this unnecessarily.
+            $sql = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" SET SCHEMA \"{$schema}\"";
+
+            return $this->execute($sql);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Drops a view.
+     *
+     * @param string $viewname The name of the view to drop
+     * @param string $cascade  True to cascade drop, false to restrict
+     *
+     * @return int 0 if operation was successful
+     */
+    public function dropView($viewname, $cascade)
+    {
+        $f_schema = $this->_schema;
+        $this->fieldClean($f_schema);
+        $this->fieldClean($viewname);
+
+        $sql = "DROP VIEW \"{$f_schema}\".\"{$viewname}\"";
+        if ($cascade) {
+            $sql .= ' CASCADE';
+        }
+
+        return $this->execute($sql);
+    }
+
+}
