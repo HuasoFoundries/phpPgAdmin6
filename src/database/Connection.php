@@ -38,7 +38,6 @@ class Connection
      */
     public function __construct($server_info, $database, $container, $fetchMode = ADODB_FETCH_ASSOC)
     {
-
         $host     = $server_info['host'];
         $port     = $server_info['port'];
         $sslmode  = $server_info['sslmode'];
