@@ -286,5 +286,4 @@ trait AggregateTrait
 
         return $this->execute($sql);
     }
-
 }
