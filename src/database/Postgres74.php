@@ -279,7 +279,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns the current database encoding.
      *
-     * @return The encoding.  eg. SQL_ASCII, UTF-8, etc.
+     * @return int|string The encoding.  eg. SQL_ASCII, UTF-8, etc.
      */
     public function getDatabaseEncoding()
     {

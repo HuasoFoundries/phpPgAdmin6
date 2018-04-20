@@ -24,7 +24,7 @@ class Connection
     private $connection_result;
 
     protected $container;
-
+    protected $server_info;
     /**
      * Creates a new connection.  Will actually make a database connection.
      *
@@ -43,6 +43,8 @@ class Connection
         $sslmode  = $server_info['sslmode'];
         $user     = $server_info['username'];
         $password = $server_info['password'];
+
+        $this->server_info = $server_info;
 
         $this->container = $container;
 
@@ -103,7 +105,7 @@ class Connection
 
         // If we didn't manage to get the version without a query, query...
         if (!isset($version)) {
-            $adodb = new ADOdbBase($this->conn, $this->container);
+            $adodb = new ADOdbBase($this->conn, $this->container, $this->server_info);
 
             $sql   = 'SELECT VERSION() AS version';
             $field = $adodb->selectField($sql, 'version');

@@ -248,7 +248,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $username The username of the user
      *
-     * @return true if is a super user, false otherwise
+     * @return boolean true if is a super user, false otherwise
      */
     public function isSuperUser($username = '')
     {
@@ -1073,7 +1073,7 @@ class Postgres extends ADOdbBase
      * @param $type   The type of the object (eg. database, schema, relation, function or language)
      * @param $table  Optional, column's table if type = column
      *
-     * @return Privileges array
+     * @return arrray|integer Privileges array
      * @return -1         invalid type
      * @return -2         object not found
      * @return -3         unknown privilege type
@@ -1139,7 +1139,7 @@ class Postgres extends ADOdbBase
             return -2;
         }
 
-        if ($acl == '' || $acl == null) {
+        if ($acl == '' || $acl === null || !boolval($acl)) {
             return [];
         }
 
@@ -3552,8 +3552,7 @@ class Postgres extends ADOdbBase
      * @param $query The SQL query
      * @param $count The count query
      *
-     * @return The count of rows
-     * @return -1  error
+     * @return int The count of rows or -1 of no rows are found
      */
     public function browseQueryCount($query, $count)
     {

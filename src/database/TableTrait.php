@@ -486,7 +486,7 @@ trait TableTrait
      * @param string $table The name of the table
      * @param string $field (optional) The name of a field to return
      *
-     * @return All attributes in order
+     * @return \PHPPgAdmin\ADORecordSet All attributes in order
      */
     public function getTableAttributes($table, $field = '')
     {
@@ -696,8 +696,8 @@ trait TableTrait
     /**
      * Grabs a list of indexes for a table.
      *
-     * @param string                         $table  The name of a table whose indexes to retrieve
-     * @param bool|\PHPPgAdmin\Database\Only $unique Only get unique/pk indexes
+     * @param string $table  The name of a table whose indexes to retrieve
+     * @param bool $unique Only get unique/pk indexes
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -1672,7 +1672,7 @@ trait TableTrait
      *
      * @param string $table if given, return autovacuum info for the given table or return all informations for all table
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ArrayRecordSet A recordset
      */
     public function getTableAutovacuum($table = '')
     {
@@ -1839,7 +1839,7 @@ trait TableTrait
      * @param mixed $format VALUE or EXPRESSION
      * @param mixed $value  The actual value entered in the field.  Can be NULL
      *
-     * @return The suitably quoted and escaped value
+     * @return mixed The suitably quoted and escaped value
      */
     public function formatValue($type, $format, $value)
     {
@@ -1979,12 +1979,12 @@ trait TableTrait
      * Delete a row from a table.
      *
      * @param string $table  The table from which to delete
-     * @param string $key    An array mapping column => value to delete
-     * @param bool $schema
+     * @param array $key    An array mapping column => value to delete
+     * @param string $schema the schema of the table
      *
      * @return bool|int 0 success
      */
-    public function deleteRow($table, $key, $schema = false)
+    public function deleteRow($table, $key, $schema = '')
     {
         if (!is_array($key)) {
             return -1;
@@ -1999,7 +1999,7 @@ trait TableTrait
             return -1;
         }
 
-        if ($schema === false) {
+        if ($schema === '') {
             $schema = $this->_schema;
         }
 
@@ -2053,4 +2053,10 @@ trait TableTrait
     abstract public function hasTablespaces();
 
     abstract public function delete($table, $conditions, $schema = '');
+
+    abstract public function fieldArrayClean(&$arr);
+
+    abstract public function hasCreateFieldWithConstraints();
+
+    abstract public function getAttributeNames($table, $atts);
 }

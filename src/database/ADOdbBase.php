@@ -261,14 +261,16 @@ class ADOdbBase
     public $lang;
     public $conf;
     protected $container;
+    protected $server_info;
     /**
      * Base constructor.
      *
      * @param \ADONewConnection &$conn The connection object
      */
-    public function __construct(&$conn, $container)
+    public function __construct(&$conn, $container, $server_info)
     {
-        $this->container = $container;
+        $this->container   = $container;
+        $this->server_info = $server_info;
 
         $this->lang = $container->get('lang');
         $this->conf = $container->get('conf');
@@ -403,7 +405,7 @@ class ADOdbBase
      *
      * @param $sql The SQL query to execute
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function execute($sql)
     {
@@ -428,7 +430,7 @@ class ADOdbBase
      *
      * @param $sql The SQL statement to be executed
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int  A recordset or an error number
      */
     public function selectSet($sql)
     {
@@ -450,7 +452,7 @@ class ADOdbBase
      * @param $sql   The SQL statement to be executed
      * @param $field The field name to be returned
      *
-     * @return string|int  single field value or -1 if no rows where found
+     * @return string|int  single field value, error number on error or -1 if no rows where found
      */
     public function selectField($sql, $field)
     {

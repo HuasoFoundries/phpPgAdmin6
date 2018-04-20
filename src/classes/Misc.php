@@ -339,7 +339,7 @@ class Misc
         if ($server_id !== null) {
             $this->_server_id = $server_id;
         }
-        $this->prtrace($this->_server_id);
+        //$this->prtrace($this->_server_id);
 
         $server_info = $this->getServerInfo($this->_server_id);
 
