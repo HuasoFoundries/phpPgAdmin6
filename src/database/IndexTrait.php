@@ -103,7 +103,7 @@ trait IndexTrait
      * @param string $index   The index to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return int 0 if operation was successful
+     * @return array<integer,mixed|string> 0 if operation was successful
      */
     public function dropIndex($index, $cascade)
     {
@@ -165,7 +165,7 @@ trait IndexTrait
      * @param string $table The table the index is on
      * @param string $index The name of the index
      *
-     * @return int 0 if operation was successful
+     * @return array<integer,mixed|string> 0 if operation was successful
      */
     public function clusterIndex($table = '', $index = '')
     {
@@ -259,8 +259,8 @@ trait IndexTrait
     /**
      * Adds a primary key constraint to a table.
      *
-     * @param        $table      The table to which to add the primery key
-     * @param        $fields     (array) An array of fields over which to add the primary key
+     * @param string $table      The table to which to add the primery key
+     * @param array  $fields     (array) An array of fields over which to add the primary key
      * @param string $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string $tablespace (optional) The tablespace for the schema, '' indicates default
      *
@@ -335,8 +335,8 @@ trait IndexTrait
     /**
      * Adds a check constraint to a table.
      *
-     * @param        $table      The table to which to add the check
-     * @param        $definition The definition of the check
+     * @param string $table      The table to which to add the check
+     * @param string $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
      * @return int 0 if operation was successful
@@ -362,8 +362,8 @@ trait IndexTrait
     /**
      * Drops a check constraint from a table.
      *
-     * @param $table The table from which to drop the check
-     * @param $name  The name of the check to be dropped
+     * @param string $table The table from which to drop the check
+     * @param string $name  The name of the check to be dropped
      *
      * @return bool|int 0 success
      */
@@ -671,4 +671,8 @@ trait IndexTrait
     abstract public function selectSet($sql);
 
     abstract public function clean(&$str);
+
+    abstract public function hasTablespaces();
+
+    abstract public function fieldArrayClean(&$arr);
 }

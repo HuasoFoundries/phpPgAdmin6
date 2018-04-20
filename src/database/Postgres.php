@@ -164,18 +164,6 @@ class Postgres extends ADOdbBase
     }
 
     /**
-     * Escapes bytea data for display on the screen.
-     *
-     * @param string $data The bytea data
-     *
-     * @return string Data formatted for on-screen display
-     */
-    public function escapeBytea($data)
-    {
-        return htmlentities($data, ENT_QUOTES, 'UTF-8');
-    }
-
-    /**
      * Return all information about a particular database.
      *
      * @param $database The name of the database to retrieve
@@ -188,25 +176,6 @@ class Postgres extends ADOdbBase
         $sql = "SELECT * FROM pg_database WHERE datname='{$database}'";
 
         return $this->selectSet($sql);
-    }
-
-    /**
-     * Cleans (escapes) a string.
-     *
-     * @param string $str The string to clean, by reference
-     *
-     * @return string The cleaned string
-     */
-    public function clean(&$str)
-    {
-        if ($str === null) {
-            return null;
-        }
-
-        $str = str_replace("\r\n", "\n", $str);
-        $str = pg_escape_string($str);
-
-        return $str;
     }
 
     /**
@@ -437,79 +406,6 @@ class Postgres extends ADOdbBase
         $str = str_replace('"', '""', $str);
 
         return $str;
-    }
-
-    /**
-     * Sets the comment for an object in the database.
-     *
-     * @pre All parameters must already be cleaned
-     *
-     * @param      $obj_type One of 'TABLE' | 'COLUMN' | 'VIEW' | 'SCHEMA' | 'SEQUENCE' | 'TYPE' | 'FUNCTION' | 'AGGREGATE'
-     * @param      $obj_name the name of the object for which to attach a comment
-     * @param      $table    Name of table that $obj_name belongs to.  Ignored unless $obj_type is 'TABLE' or 'COLUMN'.
-     * @param      $comment  the comment to add
-     * @param null $basetype
-     *
-     * @return int 0 if operation was successful
-     */
-    public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
-    {
-        $sql      = "COMMENT ON {$obj_type} ";
-        $f_schema = $this->_schema;
-        $this->fieldClean($f_schema);
-        $this->clean($comment); // Passing in an already cleaned comment will lead to double escaped data
-        // So, while counter-intuitive, it is important to not clean comments before
-        // calling setComment. We will clean it here instead.
-        /*
-        $this->fieldClean($table);
-        $this->fieldClean($obj_name);
-         */
-
-        switch ($obj_type) {
-            case 'TABLE':
-                $sql .= "\"{$f_schema}\".\"{$table}\" IS ";
-
-                break;
-            case 'COLUMN':
-                $sql .= "\"{$f_schema}\".\"{$table}\".\"{$obj_name}\" IS ";
-
-                break;
-            case 'SEQUENCE':
-            case 'VIEW':
-            case 'TEXT SEARCH CONFIGURATION':
-            case 'TEXT SEARCH DICTIONARY':
-            case 'TEXT SEARCH TEMPLATE':
-            case 'TEXT SEARCH PARSER':
-            case 'TYPE':
-                $sql .= "\"{$f_schema}\".";
-            // no break
-            case 'DATABASE':
-            case 'ROLE':
-            case 'SCHEMA':
-            case 'TABLESPACE':
-                $sql .= "\"{$obj_name}\" IS ";
-
-                break;
-            case 'FUNCTION':
-                $sql .= "\"{$f_schema}\".{$obj_name} IS ";
-
-                break;
-            case 'AGGREGATE':
-                $sql .= "\"{$f_schema}\".\"{$obj_name}\" (\"{$basetype}\") IS ";
-
-                break;
-            default:
-                // Unknown object type
-                return -1;
-        }
-
-        if ($comment != '') {
-            $sql .= "'{$comment}';";
-        } else {
-            $sql .= 'NULL;';
-        }
-
-        return $this->execute($sql);
     }
 
     /**
@@ -905,26 +801,6 @@ class Postgres extends ADOdbBase
     }
 
     /**
-     * Cleans (escapes) an array of field names.
-     *
-     * @param $arr The array to clean, by reference
-     *
-     * @return The cleaned array
-     */
-    public function fieldArrayClean(&$arr)
-    {
-        foreach ($arr as $k => $v) {
-            if ($v === null) {
-                continue;
-            }
-
-            $arr[$k] = str_replace('"', '""', $v);
-        }
-
-        return $arr;
-    }
-
-    /**
      * Creates a new schema.
      *
      * @param        $schemaname    The name of the schema to create
@@ -1069,34 +945,6 @@ class Postgres extends ADOdbBase
         }
 
         return $this->execute($sql);
-    }
-
-    /**
-     * Returns the SQL for changing the current user.
-     *
-     * @param $user The user to change to
-     *
-     * @return The SQL
-     */
-    public function getChangeUserSQL($user)
-    {
-        $this->clean($user);
-
-        return "SET SESSION AUTHORIZATION '{$user}';";
-    }
-
-    /**
-     * Change a parameter from 't' or 'f' to a boolean, (others evaluate to false).
-     *
-     * @param $parameter the parameter
-     *
-     * @return bool|\PHPPgAdmin\Database\the
-     */
-    public function phpBool($parameter)
-    {
-        $parameter = ($parameter == 't');
-
-        return $parameter;
     }
 
     /**

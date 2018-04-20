@@ -54,7 +54,7 @@ trait TableTrait
     /**
      * Finds the names and schemas of parent tables (in order).
      *
-     * @param $table The table to find the parents for
+     * @param string $table The table to find the parents for
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -84,7 +84,7 @@ trait TableTrait
     /**
      * Finds the names and schemas of child tables.
      *
-     * @param $table The table to find the children for
+     * @param string $table The table to find the children for
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -114,7 +114,7 @@ trait TableTrait
      *
      * @pre MUST be run within a transaction
      *
-     * @param           $table The table to define
+     * @param string    $table The table to define
      * @param bool|true $clean True to issue drop command, false otherwise
      *
      * @return string A string containing the formatted SQL code
@@ -455,7 +455,7 @@ trait TableTrait
     /**
      * Returns table information.
      *
-     * @param $table The name of the table
+     * @param string $table The name of the table
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -484,8 +484,8 @@ trait TableTrait
     /**
      * Retrieve the attribute definition of a table.
      *
-     * @param $table The name of the table
-     * @param $field (optional) The name of a field to return
+     * @param string $table The name of the table
+     * @param string $field (optional) The name of a field to return
      *
      * @return All attributes in order
      */
@@ -557,7 +557,7 @@ trait TableTrait
     /**
      * Returns a list of all constraints on a table.
      *
-     * @param $table The table to find rules for
+     * @param string $table The table to find rules for
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -604,7 +604,7 @@ trait TableTrait
     /**
      * Checks to see whether or not a table has a unique id column.
      *
-     * @param $table The table name
+     * @param string $table The table name
      *
      * @return true if it has a unique id, false otherwise
      */
@@ -631,9 +631,9 @@ trait TableTrait
      * Returns extra table definition information that is most usefully
      * dumped after the table contents for speed and efficiency reasons.
      *
-     * @param $table The table to define
+     * @param string $table The table to define
      *
-     * @return A string containing the formatted SQL code
+     * @return string A string containing the formatted SQL code
      */
     public function getTableDefSuffix($table)
     {
@@ -756,7 +756,7 @@ trait TableTrait
     /**
      * Returns a list of all rules on a table OR view.
      *
-     * @param $table The table to find rules for
+     * @param string $table The table to find rules for
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -780,24 +780,23 @@ trait TableTrait
     /**
      * Creates a new table in the database.
      *
-     * @param $name        The name of the table
-     * @param $fields      The number of fields
-     * @param $field       An array of field names
-     * @param $type        An array of field types
-     * @param $array       An array of '' or '[]' for each type if it's an array or not
-     * @param $length      An array of field lengths
-     * @param $notnull     An array of not null
-     * @param $default     An array of default values
-     * @param $withoutoids True if WITHOUT OIDS, false otherwise
-     * @param $colcomment  An array of comments
-     * @param $tblcomment
-     * @param $tablespace  The tablespace name ('' means none/default)
-     * @param $uniquekey   An Array indicating the fields that are unique (those indexes that are set)
-     * @param $primarykey  An Array indicating the field used for the primarykey (those indexes that are set)
+     * @param string $name        The name of the table
+     * @param int $fields      The number of fields
+     * @param array $field       An array of field names
+     * @param array $type        An array of field types
+     * @param array $array       An array of '' or '[]' for each type if it's an array or not
+     * @param array $length      An array of field lengths
+     * @param array $notnull     An array of not null
+     * @param array $default     An array of default values
+     * @param bool $withoutoids True if WITHOUT OIDS, false otherwise
+     * @param array $colcomment  An array of comments
+     * @param string $tblcomment the comment for the table
+     * @param string $tablespace  The tablespace name ('' means none/default)
+     * @param array $uniquekey   An Array indicating the fields that are unique (those indexes that are set)
+     * @param array $primarykey  An Array indicating the field used for the primarykey (those indexes that are set)
      *
      * @return bool|int 0 success
      *
-     * @internal param \PHPPgAdmin\Database\Table $comment comment
      */
     public function createTable(
         $name,
@@ -964,8 +963,8 @@ trait TableTrait
     /**
      * Creates a new table in the database copying attribs and other properties from another table.
      *
-     * @param        $name        The name of the table
-     * @param        $like        an array giving the schema ans the name of the table from which attribs are copying
+     * @param string $name        The name of the table
+     * @param array $like        an array giving the schema ans the name of the table from which attribs are copying
      *                            from: array(
      *                            'table' => table name,
      *                            'schema' => the schema name,
@@ -1025,12 +1024,12 @@ trait TableTrait
     /**
      * Alter table properties.
      *
-     * @param $table      The name of the table
-     * @param $name       The new name for the table
-     * @param $owner      The new owner for the table
-     * @param $schema     The new schema for the table
-     * @param $comment    The comment on the table
-     * @param $tablespace The new tablespace for the table ('' means leave as is)
+     * @param string $table      The name of the table
+     * @param string $name       The new name for the table
+     * @param string $owner      The new owner for the table
+     * @param string $schema     The new schema for the table
+     * @param string $comment    The comment on the table
+     * @param string $tablespace The new tablespace for the table ('' means leave as is)
      *
      * @return bool|int 0 success
      */
@@ -1064,12 +1063,12 @@ trait TableTrait
      * Protected method which alter a table
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param $tblrs      The table recordSet returned by getTable()
-     * @param $name       The new name for the table
-     * @param $owner      The new owner for the table
-     * @param $schema     The new schema for the table
-     * @param $comment    The comment on the table
-     * @param $tablespace The new tablespace for the table ('' means leave as is)
+     * @param \PHPPgAdmin\ADORecordSet $tblrs      The table recordSet returned by getTable()
+     * @param string $name       The new name for the table
+     * @param string $owner      The new owner for the table
+     * @param string $schema     The new schema for the table
+     * @param string $comment    The comment on the table
+     * @param string $tablespace The new tablespace for the table ('' means leave as is)
      *
      * @return int 0 success
      */
@@ -1118,12 +1117,11 @@ trait TableTrait
      * Alter a table's owner
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param      $tblrs The table RecordSet returned by getTable()
-     * @param null $owner
+     * @param \PHPPgAdmin\ADORecordSet     $tblrs The table RecordSet returned by getTable()
+     * @param string|null $owner
      *
      * @return int 0 if operation was successful
      *
-     * @internal param \PHPPgAdmin\Database\The $name new table's owner
      */
     public function alterTableOwner($tblrs, $owner = null)
     {
@@ -1146,12 +1144,11 @@ trait TableTrait
      * Alter a table's tablespace
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param      $tblrs      The table RecordSet returned by getTable()
-     * @param null $tablespace
+     * @param \PHPPgAdmin\ADORecordSet     $tblrs      The table RecordSet returned by getTable()
+     * @param string|null $tablespace
      *
      * @return int 0 if operation was successful
      *
-     * @internal param \PHPPgAdmin\Database\The $name new table's tablespace
      */
     public function alterTableTablespace($tblrs, $tablespace = null)
     {
@@ -1174,8 +1171,8 @@ trait TableTrait
      * Alter a table's name
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param $tblrs The table RecordSet returned by getTable()
-     * @param $name  The new table's name
+     * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
+     * @param string $name  The new table's name
      *
      * @return int 0 if operation was successful
      */
@@ -1205,12 +1202,11 @@ trait TableTrait
      * Alter a table's schema
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param      $tblrs  The table RecordSet returned by getTable()
-     * @param null $schema
+     * @param \PHPPgAdmin\ADORecordSet $tblrs  The table RecordSet returned by getTable()
+     * @param string|null $schema
      *
      * @return int 0 if operation was successful
      *
-     * @internal param \PHPPgAdmin\Database\The $name new table's schema
      */
     public function alterTableSchema($tblrs, $schema = null)
     {
@@ -1231,10 +1227,10 @@ trait TableTrait
     /**
      * Empties a table in the database.
      *
-     * @param $table The table to be emptied
-     * @param $cascade True to cascade truncate, false to restrict
+     * @param string $table The table to be emptied
+     * @param boolean $cascade True to cascade truncate, false to restrict
      *
-     * @return int 0 if operation was successful
+     * @return array<integer,mixed|string> 0 if operation was successful
      */
     public function emptyTable($table, $cascade)
     {
@@ -1255,8 +1251,8 @@ trait TableTrait
     /**
      * Removes a table from the database.
      *
-     * @param $table   The table to drop
-     * @param $cascade True to cascade drop, false to restrict
+     * @param string $table   The table to drop
+     * @param boolean $cascade True to cascade drop, false to restrict
      *
      * @return int 0 if operation was successful
      */
@@ -1277,14 +1273,14 @@ trait TableTrait
     /**
      * Add a new column to a table.
      *
-     * @param $table   The table to add to
-     * @param $column  The name of the new column
-     * @param $type    The type of the column
-     * @param $array   True if array type, false otherwise
-     * @param $length  The optional size of the column (ie. 30 for varchar(30))
-     * @param $notnull True if NOT NULL, false otherwise
-     * @param $default The default for the column.  '' for none.
-     * @param $comment
+     * @param string $table   The table to add to
+     * @param string $column  The name of the new column
+     * @param string $type    The type of the column
+     * @param boolean $array   True if array type, false otherwise
+     * @param int $length  The optional size of the column (ie. 30 for varchar(30))
+     * @param bool $notnull True if NOT NULL, false otherwise
+     * @param mixed $default The default for the column.  '' for none.
+     * @param string $comment comment for the column
      *
      * @return bool|int 0 success
      */
@@ -1363,18 +1359,18 @@ trait TableTrait
     /**
      * Alters a column in a table.
      *
-     * @param $table      The table in which the column resides
-     * @param $column     The column to alter
-     * @param $name       The new name for the column
-     * @param $notnull    (boolean) True if not null, false otherwise
-     * @param $oldnotnull (boolean) True if column is already not null, false otherwise
-     * @param $default    The new default for the column
-     * @param $olddefault The old default for the column
-     * @param $type       The new type for the column
-     * @param $length     The optional size of the column (ie. 30 for varchar(30))
-     * @param $array      True if array type, false otherwise
-     * @param $oldtype    The old type for the column
-     * @param $comment    Comment for the column
+     * @param string $table      The table in which the column resides
+     * @param string $column     The column to alter
+     * @param string $name       The new name for the column
+     * @param boolean $notnull    (boolean) True if not null, false otherwise
+     * @param boolean $oldnotnull (boolean) True if column is already not null, false otherwise
+     * @param mixed $default    The new default for the column
+     * @param mixed $olddefault The old default for the column
+     * @param string $type       The new type for the column
+     * @param integer $length     The optional size of the column (ie. 30 for varchar(30))
+     * @param boolean $array      True if array type, false otherwise
+     * @param string $oldtype    The old type for the column
+     * @param string $comment    Comment for the column
      *
      * @return array 0 success
      */
@@ -1493,9 +1489,9 @@ trait TableTrait
     /**
      * Renames a column in a table.
      *
-     * @param $table   The table containing the column to be renamed
-     * @param $column  The column to be renamed
-     * @param $newName The new name for the column
+     * @param string $table   The table containing the column to be renamed
+     * @param string $column  The column to be renamed
+     * @param string $newName The new name for the column
      *
      * @return int 0 if operation was successful
      */
@@ -1515,9 +1511,9 @@ trait TableTrait
     /**
      * Sets default value of a column.
      *
-     * @param $table   The table from which to drop
-     * @param $column  The column name to set
-     * @param $default The new default value
+     * @param string $table   The table from which to drop
+     * @param string $column  The column name to set
+     * @param mixed $default The new default value
      *
      * @return int 0 if operation was successful
      */
@@ -1536,9 +1532,9 @@ trait TableTrait
     /**
      * Sets whether or not a column can contain NULLs.
      *
-     * @param $table  The table that contains the column
-     * @param $column The column to alter
-     * @param $state  True to set null, false to set not null
+     * @param string $table  The table that contains the column
+     * @param string $column The column to alter
+     * @param bool $state  True to set null, false to set not null
      *
      * @return int 0 if operation was successful
      */
@@ -1557,9 +1553,9 @@ trait TableTrait
     /**
      * Drops a column from a table.
      *
-     * @param $table   The table from which to drop a column
-     * @param $column  The column to be dropped
-     * @param $cascade True to cascade drop, false to restrict
+     * @param string $table   The table from which to drop a column
+     * @param string $column  The column to be dropped
+     * @param bool $cascade True to cascade drop, false to restrict
      *
      * @return int 0 if operation was successful
      */
@@ -1581,8 +1577,8 @@ trait TableTrait
     /**
      * Drops default value of a column.
      *
-     * @param $table  The table from which to drop
-     * @param $column The column name to drop default
+     * @param string $table  The table from which to drop
+     * @param string $column The column name to drop default
      *
      * @return int 0 if operation was successful
      */
@@ -1657,8 +1653,8 @@ trait TableTrait
      *
      * @@ Note: Really needs to use a cursor
      *
-     * @param $relation The name of a relation
-     * @param $oids
+     * @param string $relation The name of a relation
+     * @param bool $oids true to dump also the oids
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset on success
      */
@@ -1679,7 +1675,7 @@ trait TableTrait
     /**
      * Returns all available autovacuum per table information.
      *
-     * @param \PHPPgAdmin\Database\if|string $table if given, return autovacuum info for the given table or return all informations for all table
+     * @param string $table if given, return autovacuum info for the given table or return all informations for all table
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -1737,10 +1733,9 @@ trait TableTrait
     /**
      * Get the fields for uniquely identifying a row in a table.
      *
-     * @param $table The table for which to retrieve the identifier
+     * @param string $table The table for which to retrieve the identifier
      *
-     * @return An array mapping attribute number to attribute name, empty for no identifiers
-     * @return -1 error
+     * @return array<integer,string>|array|int An array mapping attribute number to attribute name, empty for no identifiers
      */
     public function getRowIdentifier($table)
     {
@@ -1797,12 +1792,12 @@ trait TableTrait
     /**
      * Adds a new row to a table.
      *
-     * @param $table  The table in which to insert
-     * @param $fields Array of given field in values
-     * @param $values Array of new values for the row
-     * @param $nulls  An array mapping column => something if it is to be null
-     * @param $format An array of the data type (VALUE or EXPRESSION)
-     * @param $types  An array of field types
+     * @param string $table  The table in which to insert
+     * @param array $fields Array of given field in values
+     * @param array $values Array of new values for the row
+     * @param array $nulls  An array mapping column => something if it is to be null
+     * @param array $format An array of the data type (VALUE or EXPRESSION)
+     * @param array $types  An array of field types
      *
      * @return int 0 if operation was successful
      */
@@ -1845,9 +1840,9 @@ trait TableTrait
     /**
      * Formats a value or expression for sql purposes.
      *
-     * @param $type   The type of the field
-     * @param $format VALUE or EXPRESSION
-     * @param $value  The actual value entered in the field.  Can be NULL
+     * @param string $type   The type of the field
+     * @param mixed $format VALUE or EXPRESSION
+     * @param mixed $value  The actual value entered in the field.  Can be NULL
      *
      * @return The suitably quoted and escaped value
      */
@@ -1907,12 +1902,12 @@ trait TableTrait
     /**
      * Updates a row in a table.
      *
-     * @param $table  The table in which to update
-     * @param $vars   An array mapping new values for the row
-     * @param $nulls  An array mapping column => something if it is to be null
-     * @param $format An array of the data type (VALUE or EXPRESSION)
-     * @param $types  An array of field types
-     * @param $keyarr An array mapping column => value to update
+     * @param string $table  The table in which to update
+     * @param array $vars   An array mapping new values for the row
+     * @param array $nulls  An array mapping column => something if it is to be null
+     * @param array $format An array of the data type (VALUE or EXPRESSION)
+     * @param array $types  An array of field types
+     * @param array $keyarr An array mapping column => value to update
      *
      * @return bool|int 0 success
      */
@@ -1988,8 +1983,8 @@ trait TableTrait
     /**
      * Delete a row from a table.
      *
-     * @param      $table  The table from which to delete
-     * @param      $key    An array mapping column => value to delete
+     * @param string $table  The table from which to delete
+     * @param string $key    An array mapping column => value to delete
      * @param bool $schema
      *
      * @return bool|int 0 success
@@ -2024,6 +2019,20 @@ trait TableTrait
         return $this->endTransaction();
     }
 
+    /**
+     * Returns the SQL for changing the current user.
+     *
+     * @param string $user The user to change to
+     *
+     * @return string The SQL
+     */
+    public function getChangeUserSQL($user)
+    {
+        $this->clean($user);
+
+        return "SET SESSION AUTHORIZATION '{$user}';";
+    }
+
     abstract public function fieldClean(&$str);
 
     abstract public function beginTransaction();
@@ -2039,4 +2048,14 @@ trait TableTrait
     abstract public function selectSet($sql);
 
     abstract public function clean(&$str);
+
+    abstract public function phpBool($parameter);
+
+    abstract public function hasCreateTableLikeWithConstraints();
+
+    abstract public function hasCreateTableLikeWithIndexes();
+
+    abstract public function hasTablespaces();
+
+    abstract ublic function delete($table, $conditions, $schema = '');
 }

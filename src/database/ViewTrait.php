@@ -178,11 +178,11 @@ trait ViewTrait
      * Protected method which alter a view
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param $vwrs    The view recordSet returned by getView()
-     * @param $name    The new name for the view
-     * @param $owner   The new owner for the view
-     * @param $schema
-     * @param $comment The comment on the view
+     * @param \PHPPgAdmin\ADORecordSet $vwrs    The view recordSet returned by getView()
+     * @param string $name    The new name for the view
+     * @param string $owner   The new owner for the view
+     * @param string $schema Schema name
+     * @param string $comment The comment on the view
      *
      * @return int 0 success
      */
@@ -249,8 +249,8 @@ trait ViewTrait
     /**
      * Rename a view.
      *
-     * @param $vwrs The view recordSet returned by getView()
-     * @param $name The new view's name
+     * @param \PHPPgAdmin\ADORecordSet $vwrs The view recordSet returned by getView()
+     * @param string $name The new view's name
      *
      * @return int 0 if operation was successful
      */

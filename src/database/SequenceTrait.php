@@ -15,7 +15,7 @@ trait SequenceTrait
     /**
      * Returns all sequences in the current database.
      *
-     * @param bool $all
+     * @param bool $all true to get all sequences of all schemas
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -45,7 +45,7 @@ trait SequenceTrait
     /**
      * Execute nextval on a given sequence.
      *
-     * @param $sequence Sequence name
+     * @param string $sequence Sequence name
      *
      * @return int 0 if operation was successful
      */
@@ -66,8 +66,8 @@ trait SequenceTrait
     /**
      * Execute setval on a given sequence.
      *
-     * @param $sequence  Sequence name
-     * @param $nextvalue The next value
+     * @param string $sequence  Sequence name
+     * @param number $nextvalue The next value
      *
      * @return int 0 if operation was successful
      */
@@ -89,7 +89,7 @@ trait SequenceTrait
     /**
      * Restart a given sequence to its start value.
      *
-     * @param $sequence Sequence name
+     * @param string $sequence Sequence name
      *
      * @return int 0 if operation was successful
      */
@@ -107,7 +107,7 @@ trait SequenceTrait
     /**
      * Resets a given sequence to min value of sequence.
      *
-     * @param $sequence Sequence name
+     * @param string $sequence Sequence name
      *
      * @return int 0 if operation was successful
      */
@@ -135,7 +135,7 @@ trait SequenceTrait
     /**
      * Returns properties of a single sequence.
      *
-     * @param $sequence Sequence name
+     * @param string $sequence Sequence name
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -162,13 +162,13 @@ trait SequenceTrait
     /**
      * Creates a new sequence.
      *
-     * @param $sequence    Sequence name
-     * @param $increment   The increment
-     * @param $minvalue    The min value
-     * @param $maxvalue    The max value
-     * @param $startvalue  The starting value
-     * @param $cachevalue  The cache value
-     * @param $cycledvalue True if cycled, false otherwise
+     * @param string $sequence    Sequence name
+     * @param number $increment   The increment
+     * @param number $minvalue    The min value
+     * @param number $maxvalue    The max value
+     * @param number $startvalue  The starting value
+     * @param number $cachevalue  The cache value
+     * @param boolean $cycledvalue True if cycled, false otherwise
      *
      * @return int 0 if operation was successful
      */
@@ -221,18 +221,18 @@ trait SequenceTrait
     /**
      * Alters a sequence.
      *
-     * @param $sequence     The name of the sequence
-     * @param $name         The new name for the sequence
-     * @param $comment      The comment on the sequence
-     * @param $owner        The new owner for the sequence
-     * @param $schema       The new schema for the sequence
-     * @param $increment    The increment
-     * @param $minvalue     The min value
-     * @param $maxvalue     The max value
-     * @param $restartvalue The starting value
-     * @param $cachevalue   The cache value
-     * @param $cycledvalue  True if cycled, false otherwise
-     * @param $startvalue   The sequence start value when issueing a restart
+     * @param string $sequence     The name of the sequence
+     * @param string $name         The new name for the sequence
+     * @param string $comment      The comment on the sequence
+     * @param string $owner        The new owner for the sequence
+     * @param string $schema       The new schema for the sequence
+     * @param string $increment    The increment
+     * @param number $minvalue     The min value
+     * @param number $maxvalue     The max value
+     * @param number $restartvalue The starting value
+     * @param number $cachevalue   The cache value
+     * @param boolean $cycledvalue  True if cycled, false otherwise
+     * @param number $startvalue   The sequence start value when issueing a restart
      *
      * @return bool|int 0 success
      */
@@ -293,18 +293,18 @@ trait SequenceTrait
      * Protected method which alter a sequence
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param $seqrs        The sequence recordSet returned by getSequence()
-     * @param $name         The new name for the sequence
-     * @param $comment      The comment on the sequence
-     * @param $owner        The new owner for the sequence
-     * @param $schema       The new schema for the sequence
-     * @param $increment    The increment
-     * @param $minvalue     The min value
-     * @param $maxvalue     The max value
-     * @param $restartvalue The starting value
-     * @param $cachevalue   The cache value
-     * @param $cycledvalue  True if cycled, false otherwise
-     * @param $startvalue   The sequence start value when issueing a restart
+     * @param \PHPPgAdmin\ADORecordSet $seqrs        The sequence recordSet returned by getSequence()
+     * @param string $name         The new name for the sequence
+     * @param string $comment      The comment on the sequence
+     * @param string $owner        The new owner for the sequence
+     * @param string $schema       The new schema for the sequence
+     * @param string $increment    The increment
+     * @param string $minvalue     The min value
+     * @param string $maxvalue     The max value
+     * @param string $restartvalue The starting value
+     * @param string $cachevalue   The cache value
+     * @param boolean $cycledvalue  True if cycled, false otherwise
+     * @param string $startvalue   The sequence start value when issueing a restart
      *
      * @return int 0 success
      */
@@ -381,12 +381,12 @@ trait SequenceTrait
     /**
      * Alter a sequence's owner.
      *
-     * @param $seqrs The sequence RecordSet returned by getSequence()
-     * @param $owner
+     * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
+     * @param string $owner the new owner of the sequence
      *
      * @return int 0 if operation was successful
      *
-     * @internal param \PHPPgAdmin\Database\The $name new owner for the sequence
+     * @internal string $name new owner for the sequence
      */
     public function alterSequenceOwner($seqrs, $owner)
     {
@@ -408,14 +408,14 @@ trait SequenceTrait
     /**
      * Alter a sequence's properties.
      *
-     * @param $seqrs        The sequence RecordSet returned by getSequence()
-     * @param $increment    The sequence incremental value
-     * @param $minvalue     The sequence minimum value
-     * @param $maxvalue     The sequence maximum value
-     * @param $restartvalue The sequence current value
-     * @param $cachevalue   The sequence cache value
-     * @param $cycledvalue  Sequence can cycle ?
-     * @param $startvalue   The sequence start value when issueing a restart
+     * @param \PHPPgAdmin\ADORecordSet $seqrs        The sequence RecordSet returned by getSequence()
+     * @param number $increment    The sequence incremental value
+     * @param number $minvalue     The sequence minimum value
+     * @param number $maxvalue     The sequence maximum value
+     * @param number $restartvalue The sequence current value
+     * @param number  $cachevalue   The sequence cache value
+     * @param boolean $cycledvalue  Sequence can cycle ?
+     * @param number $startvalue   The sequence start value when issueing a restart
      *
      * @return int 0 if operation was successful
      */
@@ -474,8 +474,8 @@ trait SequenceTrait
     /**
      * Rename a sequence.
      *
-     * @param $seqrs The sequence RecordSet returned by getSequence()
-     * @param $name  The new name for the sequence
+     * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
+     * @param string $name  The new name for the sequence
      *
      * @return int 0 if operation was successful
      */
@@ -500,8 +500,8 @@ trait SequenceTrait
     /**
      * Alter a sequence's schema.
      *
-     * @param $seqrs The sequence RecordSet returned by getSequence()
-     * @param $schema
+     * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
+     * @param string $schema
      *
      * @return int 0 if operation was successful
      *
@@ -558,4 +558,6 @@ trait SequenceTrait
     abstract public function selectSet($sql);
 
     abstract public function clean(&$str);
+
+    abstract public function fieldArrayClean(&$arr);
 }

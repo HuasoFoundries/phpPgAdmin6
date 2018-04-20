@@ -76,7 +76,7 @@ trait DomainTrait
     /**
      * Get domain constraints.
      *
-     * @param $domain The name of the domain whose constraints to fetch
+     * @param string $domain The name of the domain whose constraints to fetch
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -322,4 +322,6 @@ trait DomainTrait
     abstract public function selectSet($sql);
 
     abstract public function clean(&$str);
+
+    abstract public function hasDomainConstraints();
 }

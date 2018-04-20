@@ -211,6 +211,8 @@ trait FtsTrait
 
     /**
      * Returns all FTS dictionary templates available.
+     *
+     * @return \PHPPgAdmin\ADORecordSet all FTS dictionary templates available
      */
     public function getFtsDictionaryTemplates()
     {
@@ -238,8 +240,8 @@ trait FtsTrait
     /**
      * Drops FTS coniguration.
      *
-     * @param $ftscfg  The configuration's name
-     * @param $cascade Cascade to dependenced objects
+     * @param string $ftscfg  The configuration's name
+     * @param bool $cascade true to Cascade to dependenced objects
      *
      * @return int 0 if operation was successful
      */
@@ -260,8 +262,8 @@ trait FtsTrait
     /**
      * Drops FTS dictionary.
      *
-     * @param $ftsdict The dico's name
-     * @param $cascade Cascade to dependenced objects
+     * @param string $ftsdict The dico's name
+     * @param bool $cascade Cascade to dependenced objects
      *
      * @return int 0 if operation was successful
      *
@@ -285,9 +287,9 @@ trait FtsTrait
     /**
      * Alters FTS configuration.
      *
-     * @param $cfgname The conf's name
-     * @param $comment A comment on for the conf
-     * @param $name    The new conf name
+     * @param string $cfgname The conf's name
+     * @param string $comment A comment on for the conf
+     * @param string $name    The new conf name
      *
      * @return bool|int 0 on success
      */
@@ -422,9 +424,9 @@ trait FtsTrait
     /**
      * Alters FTS dictionary or dictionary template.
      *
-     * @param $dictname The dico's name
-     * @param $comment  The comment
-     * @param $name     The new dico's name
+     * @param string $dictname The dico's name
+     * @param string $comment  The comment
+     * @param string $name     The new dico's name
      *
      * @return bool|int 0 on success
      */
@@ -466,7 +468,7 @@ trait FtsTrait
     /**
      * Return all information relating to a FTS dictionary.
      *
-     * @param $ftsdict The name of the FTS dictionary
+     * @param string $ftsdict The name of the FTS dictionary
      *
      * @return \PHPPgAdmin\ADORecordSet recordset of FTS dictionary information
      */
@@ -498,7 +500,7 @@ trait FtsTrait
     /**
      * Creates/updates/deletes FTS mapping.
      *
-     * @param        $ftscfg
+     * @param string $ftscfg The name of the FTS dictionary
      * @param array  $mapping  Array of tokens' names
      * @param string $action   What to do with the mapping: add, alter or drop
      * @param string $dictname Dictionary that will process tokens given or null in case of drop action
@@ -546,10 +548,10 @@ trait FtsTrait
     /**
      * Return all information related to a given FTS configuration's mapping.
      *
-     * @param $ftscfg  The name of the FTS configuration
-     * @param $mapping The name of the mapping
+     * @param string $ftscfg  The name of the FTS configuration
+     * @param string $mapping The name of the mapping
      *
-     * @return FTS configuration information
+     * @return \PHPPgAdmin\ADORecordSet FTS configuration information
      */
     public function getFtsMappingByName($ftscfg, $mapping)
     {
@@ -587,7 +589,7 @@ trait FtsTrait
      * Return list of FTS mappings possible for given parser
      * (specified by given configuration since configuration can only have 1 parser).
      *
-     * @param $ftscfg The config's name that use the parser
+     * @param string $ftscfg The config's name that use the parser
      *
      * @return int 0 if operation was successful
      */
@@ -605,9 +607,9 @@ trait FtsTrait
     /**
      * Return all information related to a FTS configuration.
      *
-     * @param $ftscfg The name of the FTS configuration
+     * @param string $ftscfg The name of the FTS configuration
      *
-     * @return FTS configuration information
+     * @return \PHPPgAdmin\ADORecordSet FTS configuration information
      */
     public function getFtsConfigurationByName($ftscfg)
     {

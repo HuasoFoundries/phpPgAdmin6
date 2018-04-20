@@ -14,14 +14,14 @@ trait AggregateTrait
     /**
      * Creates a new aggregate in the database.
      *
-     * @param $name     The name of the aggregate
-     * @param $basetype The input data type of the aggregate
-     * @param $sfunc    The name of the state transition function for the aggregate
-     * @param $stype    The data type for the aggregate's state value
-     * @param $ffunc    The name of the final function for the aggregate
-     * @param $initcond The initial setting for the state value
-     * @param $sortop   The sort operator for the aggregate
-     * @param $comment  Aggregate comment
+     * @param string $name     The name of the aggregate
+     * @param string $basetype The input data type of the aggregate
+     * @param string $sfunc    The name of the state transition function for the aggregate
+     * @param string $stype    The data type for the aggregate's state value
+     * @param string $ffunc    The name of the final function for the aggregate
+     * @param string $initcond The initial setting for the state value
+     * @param string $sortop   The sort operator for the aggregate
+     * @param string $comment  Aggregate comment
      *
      * @return bool|int 0 success
      */
@@ -76,9 +76,9 @@ trait AggregateTrait
     /**
      * Removes an aggregate function from the database.
      *
-     * @param $aggrname The name of the aggregate
-     * @param $aggrtype The input data type of the aggregate
-     * @param $cascade  True to cascade drop, false to restrict
+     * @param string $aggrname The name of the aggregate
+     * @param string $aggrtype The input data type of the aggregate
+     * @param bool $cascade  True to cascade drop, false to restrict
      *
      * @return int 0 if operation was successful
      */
@@ -100,8 +100,8 @@ trait AggregateTrait
     /**
      * Gets all information for an aggregate.
      *
-     * @param $name     The name of the aggregate
-     * @param $basetype The input data type of the aggregate
+     * @param string $name     The name of the aggregate
+     * @param string $basetype The input data type of the aggregate
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -152,15 +152,15 @@ trait AggregateTrait
     /**
      * Alters an aggregate.
      *
-     * @param $aggrname       The actual name of the aggregate
-     * @param $aggrtype       The actual input data type of the aggregate
-     * @param $aggrowner      The actual owner of the aggregate
-     * @param $aggrschema     The actual schema the aggregate belongs to
-     * @param $aggrcomment    The actual comment for the aggregate
-     * @param $newaggrname    The new name of the aggregate
-     * @param $newaggrowner   The new owner of the aggregate
-     * @param $newaggrschema  The new schema where the aggregate will belong to
-     * @param $newaggrcomment The new comment for the aggregate
+     * @param string $aggrname       The actual name of the aggregate
+     * @param string $aggrtype       The actual input data type of the aggregate
+     * @param string $aggrowner      The actual owner of the aggregate
+     * @param string $aggrschema     The actual schema the aggregate belongs to
+     * @param string $aggrcomment    The actual comment for the aggregate
+     * @param string $newaggrname    The new name of the aggregate
+     * @param string $newaggrowner   The new owner of the aggregate
+     * @param string $newaggrschema  The new schema where the aggregate will belong to
+     * @param string $newaggrcomment The new comment for the aggregate
      *
      * @return bool|int 0 success
      */
@@ -232,9 +232,9 @@ trait AggregateTrait
     /**
      * Changes the owner of an aggregate function.
      *
-     * @param $aggrname     The name of the aggregate
-     * @param $aggrtype     The input data type of the aggregate
-     * @param $newaggrowner The new owner of the aggregate
+     * @param string $aggrname     The name of the aggregate
+     * @param string $aggrtype     The input data type of the aggregate
+     * @param string $newaggrowner The new owner of the aggregate
      *
      * @return int 0 if operation was successful
      */
@@ -252,9 +252,9 @@ trait AggregateTrait
     /**
      * Changes the schema of an aggregate function.
      *
-     * @param $aggrname      The name of the aggregate
-     * @param $aggrtype      The input data type of the aggregate
-     * @param $newaggrschema The new schema for the aggregate
+     * @param string $aggrname      The name of the aggregate
+     * @param string $aggrtype      The input data type of the aggregate
+     * @param string $newaggrschema The new schema for the aggregate
      *
      * @return int 0 if operation was successful
      */
@@ -272,10 +272,10 @@ trait AggregateTrait
     /**
      * Renames an aggregate function.
      *
-     * @param $aggrschema
-     * @param $aggrname    The actual name of the aggregate
-     * @param $aggrtype    The actual input data type of the aggregate
-     * @param $newaggrname The new name of the aggregate
+     * @param string $aggrschema  The schema of the aggregate
+     * @param string $aggrname    The actual name of the aggregate
+     * @param string $aggrtype    The actual input data type of the aggregate
+     * @param string $newaggrname The new name of the aggregate
      *
      * @return int 0 if operation was successful
      */

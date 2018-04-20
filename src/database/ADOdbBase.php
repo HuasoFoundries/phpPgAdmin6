@@ -361,6 +361,26 @@ class ADOdbBase
     }
 
     /**
+     * Cleans (escapes) an array of field names.
+     *
+     * @param $arr The array to clean, by reference
+     *
+     * @return The cleaned array
+     */
+    public function fieldArrayClean(&$arr)
+    {
+        foreach ($arr as $k => $v) {
+            if ($v === null) {
+                continue;
+            }
+
+            $arr[$k] = str_replace('"', '""', $v);
+        }
+
+        return $arr;
+    }
+
+    /**
      * Cleans (escapes) an array.
      *
      * @param $arr The array to clean, by reference
