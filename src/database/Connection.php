@@ -23,6 +23,8 @@ class Connection
     // The backend platform.  Set to UNKNOWN by default.
     private $connection_result;
 
+    protected $container;
+
     /**
      * Creates a new connection.  Will actually make a database connection.
      *
@@ -34,8 +36,17 @@ class Connection
      * @param     $database
      * @param int $fetchMode Defaults to associative.  Override for different behaviour
      */
-    public function __construct($host, $port, $sslmode, $user, $password, $database, $fetchMode = ADODB_FETCH_ASSOC)
+    public function __construct($server_info, $database, $container, $fetchMode = ADODB_FETCH_ASSOC)
     {
+
+        $host     = $server_info['host'];
+        $port     = $server_info['port'];
+        $sslmode  = $server_info['sslmode'];
+        $user     = $server_info['username'];
+        $password = $server_info['password'];
+
+        $this->container = $container;
+
         $this->conn = ADONewConnection('postgres9');
         //$this->conn->debug = true;
         $this->conn->setFetchMode($fetchMode);
@@ -43,7 +54,7 @@ class Connection
         // Ignore host if null
         if ($host === null || $host == '') {
             if ($port !== null && $port != '') {
-                $pghost = ':'.$port;
+                $pghost = ':' . $port;
             } else {
                 $pghost = '';
             }
@@ -53,7 +64,7 @@ class Connection
 
         // Add sslmode to $pghost as needed
         if (($sslmode == 'disable') || ($sslmode == 'allow') || ($sslmode == 'prefer') || ($sslmode == 'require')) {
-            $pghost .= ':'.$sslmode;
+            $pghost .= ':' . $sslmode;
         } elseif ($sslmode == 'legacy') {
             $pghost .= ' requiressl=1';
         }
@@ -93,7 +104,7 @@ class Connection
 
         // If we didn't manage to get the version without a query, query...
         if (!isset($version)) {
-            $adodb = new ADOdbBase($this->conn);
+            $adodb = new ADOdbBase($this->conn, $this->container);
 
             $sql   = 'SELECT VERSION() AS version';
             $field = $adodb->selectField($sql, 'version');

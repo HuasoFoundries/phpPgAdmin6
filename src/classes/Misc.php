@@ -456,12 +456,9 @@ class Misc
             try {
                 // Create the connection object and make the connection
                 $this->_connection = new \PHPPgAdmin\Database\Connection(
-                    $server_info['host'],
-                    $server_info['port'],
-                    $server_info['sslmode'],
-                    $server_info['username'],
-                    $server_info['password'],
-                    $database_to_use
+                    $server_info,
+                    $database_to_use,
+                    $this->container
                 );
             } catch (\PHPPgAdmin\ADOdbException $e) {
                 throw new \Exception($lang['strloginfailed']);
