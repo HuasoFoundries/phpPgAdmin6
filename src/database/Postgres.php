@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Database;
@@ -55,13 +55,13 @@ class Postgres extends ADOdbBase
             if (is_array($this->help_page[$help])) {
                 $urls = [];
                 foreach ($this->help_page[$help] as $link) {
-                    $urls[] = $this->help_base . $link;
+                    $urls[] = $this->help_base.$link;
                 }
 
                 return $urls;
             }
 
-            return $this->help_base . $this->help_page[$help];
+            return $this->help_base.$this->help_page[$help];
         }
 
         return null;
@@ -75,7 +75,7 @@ class Postgres extends ADOdbBase
     public function getHelpPages()
     {
         if ($this->help_page === null || $this->help_base === null) {
-            $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . str_replace('.', '', $this->major_version);
+            $help_classname = '\PHPPgAdmin\Help\PostgresDoc'.str_replace('.', '', $this->major_version);
 
             $help_class = new $help_classname($this->conf, $this->major_version);
 
@@ -100,7 +100,7 @@ class Postgres extends ADOdbBase
         // Determine actions string
         $extra_str = '';
         foreach ($extras as $k => $v) {
-            $extra_str .= " {$k}=\"" . htmlspecialchars($v) . '"';
+            $extra_str .= " {$k}=\"".htmlspecialchars($v).'"';
         }
 
         switch (substr($type, 0, 9)) {
@@ -204,7 +204,7 @@ class Postgres extends ADOdbBase
 
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
-            $not_in    = "('" . implode("','", $hiddendbs) . "')";
+            $not_in    = "('".implode("','", $hiddendbs)."')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 
@@ -248,7 +248,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $username The username of the user
      *
-     * @return boolean true if is a super user, false otherwise
+     * @return bool true if is a super user, false otherwise
      */
     public function isSuperUser($username = '')
     {
@@ -795,7 +795,7 @@ class Postgres extends ADOdbBase
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
+        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
 
         return $this->execute($sql);
     }
@@ -978,7 +978,7 @@ class Postgres extends ADOdbBase
         } elseif ($typname == 'varchar') {
             $temp = 'character varying';
             if ($typmod != -1) {
-                $temp .= '(' . ($typmod - $varhdrsz) . ')';
+                $temp .= '('.($typmod - $varhdrsz).')';
             }
         } elseif ($typname == 'numeric') {
             $temp = 'numeric';
@@ -1029,7 +1029,7 @@ class Postgres extends ADOdbBase
         $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
 			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
 			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('" . join("','", $atts) . "')";
+			AND attnum IN ('".join("','", $atts)."')";
 
         $rs = $this->selectSet($sql);
         if ($rs->recordCount() != sizeof($atts)) {
@@ -1073,7 +1073,7 @@ class Postgres extends ADOdbBase
      * @param $type   The type of the object (eg. database, schema, relation, function or language)
      * @param $table  Optional, column's table if type = column
      *
-     * @return arrray|integer Privileges array
+     * @return arrray|int Privileges array
      * @return -1         invalid type
      * @return -2         object not found
      * @return -3         unknown privilege type
@@ -1139,7 +1139,7 @@ class Postgres extends ADOdbBase
             return -2;
         }
 
-        if ($acl == '' || $acl === null || !boolval($acl)) {
+        if ($acl == '' || $acl === null || !(bool) $acl) {
             return [];
         }
 
@@ -1485,13 +1485,13 @@ class Postgres extends ADOdbBase
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'" . $definition[0] . "'";
+            $sql .= "'".$definition[0]."'";
             if ($definition[1]) {
-                $sql .= ",'" . $definition[1] . "'";
+                $sql .= ",'".$definition[1]."'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'" . $definition . "'";
+            $sql .= "'".$definition."'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
@@ -1759,7 +1759,7 @@ class Postgres extends ADOdbBase
      * Creates a new enum type in the database.
      *
      * @param string $name       The name of the type
-     * @param array $values     An array of values
+     * @param array  $values     An array of values
      * @param string $typcomment Type comment
      *
      * @return bool|int 0 success
@@ -1834,12 +1834,12 @@ class Postgres extends ADOdbBase
      * Creates a new composite type in the database.
      *
      * @param string $name       The name of the type
-     * @param int $fields     The number of fields
-     * @param array $field      An array of field names
-     * @param array $type       An array of field types
-     * @param array $array      An array of '' or '[]' for each type if it's an array or not
-     * @param array $length     An array of field lengths
-     * @param array $colcomment An array of comments
+     * @param int    $fields     The number of fields
+     * @param array  $field      An array of field names
+     * @param array  $type       An array of field types
+     * @param array  $array      An array of '' or '[]' for each type if it's an array or not
+     * @param array  $length     An array of field lengths
+     * @param array  $colcomment An array of comments
      * @param string $typcomment Type comment
      *
      * @return bool|int 0 success
@@ -2029,7 +2029,7 @@ class Postgres extends ADOdbBase
     /**
      * Edits a rule on a table OR view.
      *
-     * @param string $name    The name of the new rule
+     * @param string $name The name of the new rule
      * @param $event   SELECT, INSERT, UPDATE or DELETE
      * @param $table   Table on which to create the rule
      * @param $where   When to execute the rule, '' indicates always
@@ -2258,7 +2258,7 @@ class Postgres extends ADOdbBase
         // Split on escaped null characters
         $params = explode('\\000', $v);
         for ($findx = 0; $findx < $trigger['tgnargs']; ++$findx) {
-            $param = "'" . str_replace('\'', '\\\'', $params[$findx]) . "'";
+            $param = "'".str_replace('\'', '\\\'', $params[$findx])."'";
             $tgdef .= $param;
             if ($findx < ($trigger['tgnargs'] - 1)) {
                 $tgdef .= ', ';
@@ -2491,13 +2491,13 @@ class Postgres extends ADOdbBase
         $sql = "DROP OPERATOR \"{$f_schema}\".{$opr->fields['oprname']} (";
         // Quoting or formatting here???
         if ($opr->fields['oprleftname'] !== null) {
-            $sql .= $opr->fields['oprleftname'] . ', ';
+            $sql .= $opr->fields['oprleftname'].', ';
         } else {
             $sql .= 'NONE, ';
         }
 
         if ($opr->fields['oprrightname'] !== null) {
-            $sql .= $opr->fields['oprrightname'] . ')';
+            $sql .= $opr->fields['oprrightname'].')';
         } else {
             $sql .= 'NONE)';
         }
@@ -2901,7 +2901,7 @@ class Postgres extends ADOdbBase
             $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
         }
 
-        $sql = $sql . implode(',', $params) . ');';
+        $sql = $sql.implode(',', $params).');';
 
         return $this->execute($sql);
     }
@@ -3094,7 +3094,7 @@ class Postgres extends ADOdbBase
                     $bslash_count = 0;
                 }
 
-                /**
+                /*
                  * It is important to place the in_* test routines before the
                  * in_* detection routines. i.e. we have to test if we are in
                  * a quote before testing for comments.
@@ -3102,7 +3102,7 @@ class Postgres extends ADOdbBase
 
                 /* in quote? */
                 if ($in_quote !== 0) {
-                    /**
+                    /*
                      * end of quote if matching non-backslashed character.
                      * backslashes don't count for double quotes, though.
                      */
@@ -3134,7 +3134,7 @@ class Postgres extends ADOdbBase
                             } else {
                                 if (substr($line, $i, 1) == '\'' || substr($line, $i, 1) == '"') {
                                     $in_quote = substr($line, $i, 1);
-                                }/**
+                                }/*
                                  * start of $foo$ type quote?
                                  */
                                 else {
@@ -3159,7 +3159,7 @@ class Postgres extends ADOdbBase
                                             } else {
                                                 if (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
                                                     $subline = substr(substr($line, 0, $i), $query_start);
-                                                    /**
+                                                    /*
                                                      * insert a cosmetic newline, if this is not the first
                                                      * line in the buffer
                                                      */
@@ -3201,7 +3201,7 @@ class Postgres extends ADOdbBase
                                                     $query_start = $i + $thislen;
                                                 }
 
-                                                /**
+                                                /*
                                                  * keyword or identifier?
                                                  * We grab the whole string so that we don't
                                                  * mistakenly see $foo$ inside an identifier as the start
@@ -3244,7 +3244,7 @@ class Postgres extends ADOdbBase
             $line = null;
         } // end while
 
-        /**
+        /*
          * Process query at the end of file without a semicolon, so long as
          * it's non-empty.
          */
@@ -3424,7 +3424,7 @@ class Postgres extends ADOdbBase
         }
 
         // Actually retrieve the rows, with offset and limit
-        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
+        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET ".($page - 1) * $page_size);
         $status = $this->endTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -3466,7 +3466,7 @@ class Postgres extends ADOdbBase
                 $sql = 'SELECT "';
             }
 
-            $sql .= join('","', $show) . '" FROM ';
+            $sql .= join('","', $show).'" FROM ';
         }
 
         $this->fieldClean($table);
@@ -3534,7 +3534,7 @@ class Postgres extends ADOdbBase
                     $sql .= $k;
                 } else {
                     $this->fieldClean($k);
-                    $sql .= '"' . $k . '"';
+                    $sql .= '"'.$k.'"';
                 }
                 if (strtoupper($v) == 'DESC') {
                     $sql .= ' DESC';

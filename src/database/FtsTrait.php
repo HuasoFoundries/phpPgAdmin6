@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,7 +11,6 @@ namespace PHPPgAdmin\Database;
  */
 trait FtsTrait
 {
-
     /**
      * Creates a new FTS configuration.
      *
@@ -241,7 +240,7 @@ trait FtsTrait
      * Drops FTS coniguration.
      *
      * @param string $ftscfg  The configuration's name
-     * @param bool $cascade true to Cascade to dependenced objects
+     * @param bool   $cascade true to Cascade to dependenced objects
      *
      * @return int 0 if operation was successful
      */
@@ -263,7 +262,7 @@ trait FtsTrait
      * Drops FTS dictionary.
      *
      * @param string $ftsdict The dico's name
-     * @param bool $cascade Cascade to dependenced objects
+     * @param bool   $cascade Cascade to dependenced objects
      *
      * @return int 0 if operation was successful
      *
@@ -500,7 +499,7 @@ trait FtsTrait
     /**
      * Creates/updates/deletes FTS mapping.
      *
-     * @param string $ftscfg The name of the FTS dictionary
+     * @param string $ftscfg   The name of the FTS dictionary
      * @param array  $mapping  Array of tokens' names
      * @param string $action   What to do with the mapping: add, alter or drop
      * @param string $dictname Dictionary that will process tokens given or null in case of drop action

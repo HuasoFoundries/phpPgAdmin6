@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -89,6 +89,12 @@ class HTMLController
         $server   = $this->container->server;
         $database = $this->container->database;
         $schema   = $this->container->schema;
+
+        /*
+        $server   = $this->container->has('server') ? $this->container->server : $_REQUEST['server'];
+        $database = $this->container->has('database') ? $this->container->database : $_REQUEST['database'];
+        $schema   = $this->container->has('schema') ? $this->container->schema : $_REQUEST['schema'];
+         */
 
         //$this->prtrace('server', $server, 'database', $database, 'schema', $schema);
 

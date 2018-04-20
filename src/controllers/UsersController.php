@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Controller;
@@ -258,7 +258,7 @@ class UsersController extends BaseController
                 $_POST['confirm'] = '';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/users\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/users\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
@@ -332,10 +332,10 @@ class UsersController extends BaseController
                 $_POST['formPassword'] = '';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/users\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/users\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strusername']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . '" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['newname']).'" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
             (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
@@ -402,7 +402,7 @@ class UsersController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropuser'], $this->misc->printVal($_REQUEST['username'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/users\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/users\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="username" value="', htmlspecialchars($_REQUEST['username']), "\" />\n";
             echo $this->misc->form;
@@ -448,7 +448,7 @@ class UsersController extends BaseController
         $this->printTitle($this->lang['strcreateuser'], 'pg.user.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/users\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/users\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strusername']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formUsername\" value=\"", htmlspecialchars($_POST['formUsername']), "\" /></td>\n\t</tr>\n";

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,7 +11,6 @@ namespace PHPPgAdmin\Database;
  */
 trait DomainTrait
 {
-
     /**
      * Gets all information for a single domain.
      *

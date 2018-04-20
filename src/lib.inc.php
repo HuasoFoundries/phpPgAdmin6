@@ -120,6 +120,10 @@ $container['errors']      = [];
 $container['requestobj']  = $container['request'];
 $container['responseobj'] = $container['response'];
 
+$container->offsetSet('server', isset($_REQUEST['server']) ? $_REQUEST['server'] : null);
+$container->offsetSet('database', isset($_REQUEST['database']) ? $_REQUEST['database'] : null);
+$container->offsetSet('schema', isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null);
+
 $container['utils'] = function ($c) {
     $utils = new \PHPPgAdmin\ContainerUtils($c);
     return $utils;

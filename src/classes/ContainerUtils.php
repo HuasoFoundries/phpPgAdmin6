@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin;
@@ -33,9 +33,9 @@ class ContainerUtils
 
         // but if server_id isn't set, then you will be redirected to intro
         if ($this->container->requestobj->getQueryParam('server') === null) {
-            $destinationurl = \SUBFOLDER . '/src/views/intro';
+            $destinationurl = \SUBFOLDER.'/src/views/intro';
         } else {
-            $destinationurl = \SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = \SUBFOLDER.'/src/views/login'.($query_string ? '?'.$query_string : '');
         }
 
         return $destinationurl;
@@ -50,7 +50,7 @@ class ContainerUtils
             $destinationurl = $this->getRedirectUrl();
         } else {
             $url = $this->container->misc->getLastTabURL($subject);
-            $this->prtrace('getLastTabURL for ' . $subject, $url);
+            $this->prtrace('getLastTabURL for '.$subject, $url);
             // Load query vars into superglobal arrays
             if (isset($url['urlvars'])) {
                 $urlvars = [];
@@ -121,8 +121,6 @@ class ContainerUtils
 
     /**
      * Receives N parameters and sends them to the console adding where was it called from.
-     *
-     * @return null nothing
      */
     public static function statictrace()
     {
@@ -139,6 +137,7 @@ class ContainerUtils
         $tag = implode('', $btarray0);
 
         \PC::debug(func_get_args(), $tag);
+
         return null;
     }
 
@@ -155,9 +154,9 @@ class ContainerUtils
         $body->write('terminating script');
 
         return $this->container->responseobj
-                    ->withStatus(200)
-                    ->withHeader('Content-type', 'text/html')
-                    ->withBody($body);
+            ->withStatus(200)
+            ->withHeader('Content-type', 'text/html')
+            ->withBody($body);
     }
 
     /**

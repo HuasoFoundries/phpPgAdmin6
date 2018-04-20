@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Database;
@@ -25,16 +25,19 @@ class Connection
 
     protected $container;
     protected $server_info;
+
     /**
      * Creates a new connection.  Will actually make a database connection.
      *
-     * @param     $host
-     * @param     $port
-     * @param     $sslmode
-     * @param     $user
-     * @param     $password
-     * @param     $database
-     * @param int $fetchMode Defaults to associative.  Override for different behaviour
+     * @param       $host
+     * @param       $port
+     * @param       $sslmode
+     * @param       $user
+     * @param       $password
+     * @param       $database
+     * @param int   $fetchMode   Defaults to associative.  Override for different behaviour
+     * @param mixed $server_info
+     * @param mixed $container
      */
     public function __construct($server_info, $database, $container, $fetchMode = ADODB_FETCH_ASSOC)
     {
@@ -55,7 +58,7 @@ class Connection
         // Ignore host if null
         if ($host === null || $host == '') {
             if ($port !== null && $port != '') {
-                $pghost = ':' . $port;
+                $pghost = ':'.$port;
             } else {
                 $pghost = '';
             }
@@ -65,7 +68,7 @@ class Connection
 
         // Add sslmode to $pghost as needed
         if (($sslmode == 'disable') || ($sslmode == 'allow') || ($sslmode == 'prefer') || ($sslmode == 'require')) {
-            $pghost .= ':' . $sslmode;
+            $pghost .= ':'.$sslmode;
         } elseif ($sslmode == 'legacy') {
             $pghost .= ' requiressl=1';
         }

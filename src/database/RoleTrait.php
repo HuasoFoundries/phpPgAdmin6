@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,7 +11,6 @@ namespace PHPPgAdmin\Database;
  */
 trait RoleTrait
 {
-
     /**
      * Returns all roles in the database cluster.
      *
@@ -90,16 +89,16 @@ trait RoleTrait
      *
      * @param string $rolename     The name of the role to create
      * @param string $password     A password for the role
-     * @param boolean $superuser    Boolean whether or not the role is a superuser
-     * @param boolean $createdb     Boolean whether or not the role can create databases
-     * @param boolean $createrole   Boolean whether or not the role can create other roles
-     * @param boolean $inherits     Boolean whether or not the role inherits the privileges from parent roles
-     * @param boolean $login        Boolean whether or not the role will be allowed to login
+     * @param bool   $superuser    Boolean whether or not the role is a superuser
+     * @param bool   $createdb     Boolean whether or not the role can create databases
+     * @param bool   $createrole   Boolean whether or not the role can create other roles
+     * @param bool   $inherits     Boolean whether or not the role inherits the privileges from parent roles
+     * @param bool   $login        Boolean whether or not the role will be allowed to login
      * @param number $connlimit    Number of concurrent connections the role can make
      * @param string $expiry       String Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     * @param array $memberof     (array) Roles to which the new role will be immediately added as a new member
-     * @param array $members      (array) Roles which are automatically added as members of the new role
-     * @param array $adminmembers (array) Roles which are automatically added as admin members of the new role
+     * @param array  $memberof     (array) Roles to which the new role will be immediately added as a new member
+     * @param array  $members      (array) Roles which are automatically added as members of the new role
+     * @param array  $adminmembers (array) Roles which are automatically added as admin members of the new role
      *
      * @return int 0 if operation was successful
      */
@@ -149,15 +148,15 @@ trait RoleTrait
         }
 
         if (is_array($memberof) && sizeof($memberof) > 0) {
-            $sql .= ' IN ROLE "' . join('", "', $memberof) . '"';
+            $sql .= ' IN ROLE "'.join('", "', $memberof).'"';
         }
 
         if (is_array($members) && sizeof($members) > 0) {
-            $sql .= ' ROLE "' . join('", "', $members) . '"';
+            $sql .= ' ROLE "'.join('", "', $members).'"';
         }
 
         if (is_array($adminmembers) && sizeof($adminmembers) > 0) {
-            $sql .= ' ADMIN "' . join('", "', $adminmembers) . '"';
+            $sql .= ' ADMIN "'.join('", "', $adminmembers).'"';
         }
 
         return $this->execute($sql);
@@ -173,7 +172,7 @@ trait RoleTrait
      */
     public function _encryptPassword($username, $password)
     {
-        return 'md5' . md5($password . $username);
+        return 'md5'.md5($password.$username);
     }
 
     /**
@@ -181,19 +180,19 @@ trait RoleTrait
      *
      * @param string $rolename        The name of the role to adjust
      * @param string $password        A password for the role
-     * @param boolean $superuser       Boolean whether or not the role is a superuser
-     * @param boolean $createdb        Boolean whether or not the role can create databases
-     * @param boolean $createrole      Boolean whether or not the role can create other roles
-     * @param boolean $inherits        Boolean whether or not the role inherits the privileges from parent roles
-     * @param boolean $login           Boolean whether or not the role will be allowed to login
+     * @param bool   $superuser       Boolean whether or not the role is a superuser
+     * @param bool   $createdb        Boolean whether or not the role can create databases
+     * @param bool   $createrole      Boolean whether or not the role can create other roles
+     * @param bool   $inherits        Boolean whether or not the role inherits the privileges from parent roles
+     * @param bool   $login           Boolean whether or not the role will be allowed to login
      * @param number $connlimit       Number of concurrent connections the role can make
      * @param string $expiry          string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     * @param array $memberof        (array) Roles to which the role will be immediately added as a new member
-     * @param array $members         (array) Roles which are automatically added as members of the role
-     * @param array $adminmembers    (array) Roles which are automatically added as admin members of the role
-     * @param array $memberofold     (array) Original roles whose the role belongs to
-     * @param array $membersold      (array) Original roles that are members of the role
-     * @param array $adminmembersold (array) Original roles that are admin members of the role
+     * @param array  $memberof        (array) Roles to which the role will be immediately added as a new member
+     * @param array  $members         (array) Roles which are automatically added as members of the role
+     * @param array  $adminmembers    (array) Roles which are automatically added as admin members of the role
+     * @param array  $memberofold     (array) Original roles whose the role belongs to
+     * @param array  $membersold      (array) Original roles that are members of the role
+     * @param array  $adminmembersold (array) Original roles that are admin members of the role
      * @param string $newrolename     The new name of the role
      *
      * @return bool|int 0 success
@@ -281,16 +280,16 @@ trait RoleTrait
      *
      * @param string $rolename        The name of the role to adjust
      * @param string $password        A password for the role
-     * @param boolean $superuser       Boolean whether or not the role is a superuser
-     * @param boolean $createdb        Boolean whether or not the role can create databases
-     * @param boolean $createrole      Boolean whether or not the role can create other roles
-     * @param boolean $inherits        Boolean whether or not the role inherits the privileges from parent roles
-     * @param boolean $login           Boolean whether or not the role will be allowed to login
+     * @param bool   $superuser       Boolean whether or not the role is a superuser
+     * @param bool   $createdb        Boolean whether or not the role can create databases
+     * @param bool   $createrole      Boolean whether or not the role can create other roles
+     * @param bool   $inherits        Boolean whether or not the role inherits the privileges from parent roles
+     * @param bool   $login           Boolean whether or not the role will be allowed to login
      * @param number $connlimit       Number of concurrent connections the role can make
      * @param string $expiry          string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     * @param array $memberof        (array) Roles to which the role will be immediately added as a new member
-     * @param array $members         (array) Roles which are automatically added as members of the role
-     * @param array $adminmembers    (array) Roles which are automatically added as admin members of the role
+     * @param array  $memberof        (array) Roles to which the role will be immediately added as a new member
+     * @param array  $members         (array) Roles which are automatically added as members of the role
+     * @param array  $adminmembers    (array) Roles which are automatically added as admin members of the role
      * @param string $memberofold     (array) Original roles whose the role belongs to
      * @param string $membersold      (array) Original roles that are members of the role
      * @param string $adminmembersold (array) Original roles that are admin members of the role
@@ -422,7 +421,7 @@ trait RoleTrait
      *
      * @param string $role     The name of the target role
      * @param string $rolename The name of the role that will belong to the target role
-     * @param int $admin    (optional) Flag to grant the admin option
+     * @param int    $admin    (optional) Flag to grant the admin option
      *
      * @return int 0 if operation was successful
      */
@@ -485,10 +484,10 @@ trait RoleTrait
      *
      * @param string $username   The username of the user to create
      * @param string $password   A password for the user
-     * @param boolean $createdb   boolean Whether or not the user can create databases
-     * @param boolean $createuser boolean Whether or not the user can create other users
+     * @param bool   $createdb   boolean Whether or not the user can create databases
+     * @param bool   $createuser boolean Whether or not the user can create other users
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     * @param array $groups The groups to create the user in
+     * @param array  $groups     The groups to create the user in
      *
      * @return int 0 if operation was successful
      *
@@ -510,7 +509,7 @@ trait RoleTrait
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
         if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
+            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
         }
 
         if ($expiry != '') {
@@ -527,8 +526,8 @@ trait RoleTrait
      *
      * @param string $username   The username of the user to modify
      * @param string $password   A new password for the user
-     * @param bool $createdb   boolean Whether or not the user can create databases
-     * @param bool $createuser boolean Whether or not the user can create other users
+     * @param bool   $createdb   boolean Whether or not the user can create databases
+     * @param bool   $createuser boolean Whether or not the user can create other users
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire.
      * @param string $newname    The new name of the user
      *
@@ -586,8 +585,8 @@ trait RoleTrait
      *
      * @param string $username   The username of the user to modify
      * @param string $password   A new password for the user
-     * @param bool $createdb   boolean Whether or not the user can create databases
-     * @param bool $createuser boolean Whether or not the user can create other users
+     * @param bool   $createdb   boolean Whether or not the user can create databases
+     * @param bool   $createuser boolean Whether or not the user can create other users
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire.
      *
      * @return int 0 if operation was successful
@@ -767,7 +766,7 @@ trait RoleTrait
      * Creates a new group.
      *
      * @param string $groname The name of the group
-     * @param array $users   An array of users to add to the group
+     * @param array  $users   An array of users to add to the group
      *
      * @return int 0 if operation was successful
      */
@@ -779,7 +778,7 @@ trait RoleTrait
 
         if (is_array($users) && sizeof($users) > 0) {
             $this->fieldArrayClean($users);
-            $sql .= ' WITH USER "' . join('", "', $users) . '"';
+            $sql .= ' WITH USER "'.join('", "', $users).'"';
         }
 
         return $this->execute($sql);
@@ -805,14 +804,14 @@ trait RoleTrait
      * Grants a privilege to a user, group or public.
      *
      * @param string $mode        'GRANT' or 'REVOKE';
-     * @param mixed $type        The type of object
+     * @param mixed  $type        The type of object
      * @param string $object      The name of the object
-     * @param bool $public      True to grant to public, false otherwise
-     * @param mixed $usernames   the array of usernames to grant privs to
-     * @param mixed $groupnames  the array of group names to grant privs to
-     * @param mixed $privileges  The array of privileges to grant (eg. ('SELECT', 'ALL PRIVILEGES', etc.) )
-     * @param bool $grantoption True if has grant option, false otherwise
-     * @param bool $cascade     True for cascade revoke, false otherwise
+     * @param bool   $public      True to grant to public, false otherwise
+     * @param mixed  $usernames   the array of usernames to grant privs to
+     * @param mixed  $groupnames  the array of group names to grant privs to
+     * @param mixed  $privileges  The array of privileges to grant (eg. ('SELECT', 'ALL PRIVILEGES', etc.) )
+     * @param bool   $grantoption True if has grant option, false otherwise
+     * @param bool   $cascade     True for cascade revoke, false otherwise
      * @param string $table       the column's table if type=column
      *
      * @return int 0 if operation was successful
@@ -860,9 +859,9 @@ trait RoleTrait
         } else {
             if ($type == 'column') {
                 $this->fieldClean($object);
-                $sql .= ' ' . join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' ' . join(', ', $privileges);
+                $sql .= ' '.join(', ', $privileges);
             }
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Controller;
@@ -53,13 +53,10 @@ class CastsController extends BaseController
             switch ($val) {
                 case 'e':
                     return $lang['strno'];
-
                 case 'a':
                     return $lang['strinassignment'];
-
                 default:
                     return $lang['stryes'];
-
             }
         };
 

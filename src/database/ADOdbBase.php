@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Database;
@@ -262,10 +262,13 @@ class ADOdbBase
     public $conf;
     protected $container;
     protected $server_info;
+
     /**
      * Base constructor.
      *
-     * @param \ADONewConnection &$conn The connection object
+     * @param \ADONewConnection &$conn       The connection object
+     * @param mixed             $container
+     * @param mixed             $server_info
      */
     public function __construct(&$conn, $container, $server_info)
     {
@@ -300,7 +303,7 @@ class ADOdbBase
         $this->clean($comment); // Passing in an already cleaned comment will lead to double escaped data
         // So, while counter-intuitive, it is important to not clean comments before
         // calling setComment. We will clean it here instead.
-        /**
+        /*
          * $this->fieldClean($table);
          * $this->fieldClean($obj_name);
          */
@@ -430,7 +433,7 @@ class ADOdbBase
      *
      * @param $sql The SQL statement to be executed
      *
-     * @return \PHPPgAdmin\ADORecordSet|int  A recordset or an error number
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset or an error number
      */
     public function selectSet($sql)
     {
@@ -452,7 +455,7 @@ class ADOdbBase
      * @param $sql   The SQL statement to be executed
      * @param $field The field name to be returned
      *
-     * @return string|int  single field value, error number on error or -1 if no rows where found
+     * @return int|string single field value, error number on error or -1 if no rows where found
      */
     public function selectField($sql, $field)
     {
@@ -475,7 +478,7 @@ class ADOdbBase
      * Delete from the database.
      *
      * @param string $table      The name of the table
-     * @param array $conditions (array) A map of field names to conditions
+     * @param array  $conditions (array) A map of field names to conditions
      * @param string $schema     (optional) The table's schema
      *
      * @return int 0 success
@@ -564,7 +567,7 @@ class ADOdbBase
      * Insert a set of values into the database.
      *
      * @param string $table The table to insert into
-     * @param array $vars  (array) A mapping of the field names to the values to be inserted
+     * @param array  $vars  (array) A mapping of the field names to the values to be inserted
      *
      * @return int 0 success
      */
@@ -592,7 +595,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields . $values . ')';
+            $sql = $fields.$values.')';
         }
 
         // Check for failures
@@ -614,9 +617,9 @@ class ADOdbBase
      * Update a row in the database.
      *
      * @param string $table The table that is to be updated
-     * @param array $vars  (array) A mapping of the field names to the values to be updated
-     * @param array $where (array) A mapping of field names to values for the where clause
-     * @param array $nulls (array, optional) An array of fields to be set null
+     * @param array  $vars  (array) A mapping of the field names to the values to be updated
+     * @param array  $where (array) A mapping of field names to values for the where clause
+     * @param array  $nulls (array, optional) An array of fields to be set null
      *
      * @return int 0 success
      */
@@ -664,7 +667,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause . $whereClause)) {
+        if (!$this->conn->Execute($setClause.$whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
@@ -731,7 +734,7 @@ class ADOdbBase
      *
      * @param mixed $parameter the parameter
      *
-     * @return boolean boolean  database representation
+     * @return bool boolean  database representation
      */
     public function dbBool(&$parameter)
     {
@@ -743,7 +746,7 @@ class ADOdbBase
      *
      * @param mixed $parameter the parameter
      *
-     * @return boolean
+     * @return bool
      */
     public function phpBool($parameter)
     {

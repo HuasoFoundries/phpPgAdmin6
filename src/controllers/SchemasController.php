@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Controller;
@@ -103,7 +103,7 @@ class SchemasController extends BaseController
             'schema'      => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
             'owner'       => [
@@ -289,7 +289,7 @@ class SchemasController extends BaseController
         $this->printTitle($this->lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . '/src/views/schemas" method="post">' . "\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -372,7 +372,7 @@ class SchemasController extends BaseController
                 $_POST['owner'] = $schema->fields['ownername'];
             }
 
-            echo '<form action="' . \SUBFOLDER . '/src/views/schemas" method="post">' . "\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -449,7 +449,7 @@ class SchemasController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($this->lang['strdrop'], 'pg.schema.drop');
 
-            echo '<form action="' . \SUBFOLDER . '/src/views/schemas" method="post">' . "\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -518,7 +518,7 @@ class SchemasController extends BaseController
         $this->printTabs('schema', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . '/src/views/dbexport" method="post">' . "\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/dbexport" method="post">'."\n";
 
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.40
+ * PHPPgAdmin v6.0.0-beta.41
  */
 
 namespace PHPPgAdmin\Database;
@@ -179,10 +179,10 @@ trait ViewTrait
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
      * @param \PHPPgAdmin\ADORecordSet $vwrs    The view recordSet returned by getView()
-     * @param string $name    The new name for the view
-     * @param string $owner   The new owner for the view
-     * @param string $schema Schema name
-     * @param string $comment The comment on the view
+     * @param string                   $name    The new name for the view
+     * @param string                   $owner   The new owner for the view
+     * @param string                   $schema  Schema name
+     * @param string                   $comment The comment on the view
      *
      * @return int 0 success
      */
@@ -250,7 +250,7 @@ trait ViewTrait
      * Rename a view.
      *
      * @param \PHPPgAdmin\ADORecordSet $vwrs The view recordSet returned by getView()
-     * @param string $name The new view's name
+     * @param string                   $name The new view's name
      *
      * @return int 0 if operation was successful
      */
