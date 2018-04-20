@@ -258,23 +258,23 @@ trait TableTrait
          * You also need to make sure you don't dump inherited columns and defaults, as well
          * as inherited NOT NULL and CHECK constraints.  So for the time being, we just do
          * not claim to support inheritance.
-        $parents = $this->getTableParents($table);
-        if ($parents->recordCount() > 0) {
-        $sql .= " INHERITS (";
-        while (!$parents->EOF) {
-        $this->fieldClean($parents->fields['relname']);
-        // Qualify the parent table if it's in another schema
-        if ($parents->fields['schemaname'] != $this->_schema) {
-        $this->fieldClean($parents->fields['schemaname']);
-        $sql .= "\"{$parents->fields['schemaname']}\".";
-        }
-        $sql .= "\"{$parents->fields['relname']}\"";
-
-        $parents->moveNext();
-        if (!$parents->EOF) $sql .= ', ';
-        }
-        $sql .= ")";
-        }
+         * $parents = $this->getTableParents($table);
+         * if ($parents->recordCount() > 0) {
+         * $sql .= " INHERITS (";
+         * while (!$parents->EOF) {
+         * $this->fieldClean($parents->fields['relname']);
+         * // Qualify the parent table if it's in another schema
+         * if ($parents->fields['schemaname'] != $this->_schema) {
+         * $this->fieldClean($parents->fields['schemaname']);
+         * $sql .= "\"{$parents->fields['schemaname']}\".";
+         * }
+         * $sql .= "\"{$parents->fields['relname']}\"";
+         *
+         * $parents->moveNext();
+         * if (!$parents->EOF) $sql .= ', ';
+         * }
+         * $sql .= ")";
+         * }
          */
 
         // Handle WITHOUT OIDS
