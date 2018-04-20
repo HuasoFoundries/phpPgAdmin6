@@ -48,11 +48,18 @@ class CastsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
+        $lang              = $this->lang;
         $renderCastContext = function ($val) use ($lang) {
             switch ($val) {
-                case 'e':return $this->lang['strno'];
-                case 'a':return $this->lang['strinassignment'];
-                default:return $this->lang['stryes'];
+                case 'e':
+                    return $thislang['strno'];
+
+                case 'a':
+                    return $thislang['strinassignment'];
+
+                default:
+                    return $thislang['stryes'];
+
             }
         };
 

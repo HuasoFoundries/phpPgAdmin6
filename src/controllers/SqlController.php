@@ -115,7 +115,7 @@ class SqlController extends BaseController
         $misc        = $this->misc;
         $data        = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();
-
+        $lang        = $this->lang;
         /**
          * This is a callback function to display the result of each separate query.
          *
@@ -150,7 +150,7 @@ class SqlController extends BaseController
                         }
 
                         echo "</table><br/>\n";
-                        echo $i, " {$this->lang['strrows']}</p>\n";
+                        echo $i, " {$lang['strrows']}</p>\n";
 
                         break;
                     case \PGSQL_COMMAND_OK:
@@ -160,7 +160,7 @@ class SqlController extends BaseController
                         }
                         // Otherwise if any rows have been affected
                         elseif ($data->conn->Affected_Rows() > 0) {
-                            echo $data->conn->Affected_Rows(), " {$this->lang['strrowsaff']}<br/>\n";
+                            echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>\n";
                         }
                         // Otherwise output nothing...
                         break;
@@ -185,7 +185,7 @@ class SqlController extends BaseController
 
         $rs = $data->conn->Execute($this->query);
 
-        echo '<form method="post" id="sqlform" action="'.$_SERVER['REQUEST_URI'].'">';
+        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($this->query);
