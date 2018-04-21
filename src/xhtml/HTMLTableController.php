@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.41
+ * PHPPgAdmin v6.0.0-beta.42
  */
 
 namespace PHPPgAdmin\XHtml;

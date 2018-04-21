@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.41
+ * PHPPgAdmin v6.0.0-beta.42
  */
 
 namespace PHPPgAdmin;
@@ -387,11 +387,8 @@ class Misc
             // Create a database wrapper class for easy manipulation of the
             // connection.
 
-            $this->_data              = new $_type($_connection->conn, $this->container);
-            $this->_data->platform    = $_connection->platform;
-            $this->_data->server_info = $server_info;
-            $this->_data->conf        = $this->conf;
-            $this->_data->lang        = $this->lang;
+            $this->_data           = new $_type($_connection->conn, $this->container, $server_info);
+            $this->_data->platform = $_connection->platform;
 
             //$this->_data->getHelpPages();
 
