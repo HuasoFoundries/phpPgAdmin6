@@ -1,6 +1,6 @@
 {
     "name": "huasofoundries/phppgadmin6",
-    "version": "6.0.0-beta.42",
+    "version": "6.0.0-beta.43",
     "description": "Like phpmyadmin but for postgres",
     "type": "project",
     "license": "MIT",
@@ -42,10 +42,16 @@
     "scripts":
     {
         "post-install-cmd": [
-            "php -r \"chmod( __DIR__ . '/temp', 0777);\""
+            "php -r \"chmod( __DIR__ . '/temp', 0777);\"",
+            "php -r \"chmod( __DIR__ . '/temp/twigcache', 0777);\"",
+            "php -r \"chmod( __DIR__ . '/temp/jms', 0777);\"",
+            "php -r \"chmod( __DIR__ . '/temp/logs', 0777);\""
         ],
         "post-create-project-cmd": [
-            "php -r \"chmod( __DIR__ . '/temp', 0777);\""
+            "php -r \"chmod( __DIR__ . '/temp', 0777);\"",
+            "php -r \"chmod( __DIR__ . '/temp/twigcache', 0777);\"",
+            "php -r \"chmod( __DIR__ . '/temp/jms', 0777);\"",
+            "php -r \"chmod( __DIR__ . '/temp/logs', 0777);\""
         ]
     }
 }

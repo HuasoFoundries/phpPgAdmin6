@@ -20,9 +20,7 @@ class ViewTest extends \Codeception\Test\Unit
         //\Codeception\Util\Debug::debug('BASE_PATH is ' . \BASE_PATH);
     }
 
-    protected function _after()
-    {
-    }
+    protected function _after() {}
 
     // tests
 

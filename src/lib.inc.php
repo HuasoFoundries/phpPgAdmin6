@@ -55,9 +55,11 @@ if (DEBUGMODE) {
     error_reporting(E_ALL);
 }
 
-$useragent = $_SERVER['HTTP_USER_AGENT'];
-if (strpos($useragent, 'Chrome') === false) {
-    $conf['php_console'] = false;
+if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    $useragent = $_SERVER['HTTP_USER_AGENT'];
+    if (strpos($useragent, 'Chrome') === false) {
+        $conf['php_console'] = false;
+    }
 }
 
 if (!isset($conf['php_console']) || $conf['php_console'] !== true) {

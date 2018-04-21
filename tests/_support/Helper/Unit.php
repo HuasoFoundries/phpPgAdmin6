@@ -22,6 +22,8 @@ class Unit extends \Codeception\Module
             self::$container = $container;
         }
 
+        //\Codeception\Util\Debug::debug('BASE_PATH is ' . \BASE_PATH);
+
         return self::$container;
     }
 }
