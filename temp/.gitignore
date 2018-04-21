@@ -1,2 +1,5 @@
 *
 !.gitignore
+!twigcache/.gitignore
+!logs/.gitignore
+!jms/.gitignore
