@@ -223,10 +223,10 @@ $container['misc'] = function ($c) {
     // This happens when you use the selector in the intro screen
     if (isset($_REQUEST['theme']) && array_key_exists($_REQUEST['theme'], $themefolders)) {
         $_theme = $_REQUEST['theme'];
-    } else if (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
+    } elseif (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
         // 2. Check for theme session var
         $_theme = $_SESSION['ppaTheme'];
-    } else if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
+    } elseif (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
         // 3. Check for theme in cookie var
         $_theme = $_COOKIE['ppaTheme'];
     }
@@ -336,7 +336,6 @@ $container['haltHandler'] = function ($c) {
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route
 $app->add(function ($request, $response, $next) use ($handler) {
-
     $handler->start(); // initialize handlers*/
 
     $this['requestobj']  = $request;
