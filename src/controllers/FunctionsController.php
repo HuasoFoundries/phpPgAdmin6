@@ -986,22 +986,27 @@ class FunctionsController extends BaseController
         $szArgReturns .= '<option value=""></option>';
         $szArgReturns .= '<option value="[]">[]</option>';
         $szArgReturns .= '</select>';
+        $subfolder = \SUBFOLDER;
         if (!empty($this->conf['theme'])) {
             $szImgPath = \SUBFOLDER . "/images/themes/{$this->conf['theme']}";
         } else {
             $szImgPath = \SUBFOLDER . '/images/themes/default';
         }
         if (empty($msg)) {
-            $szJSTRArg = "<script type=\"text/javascript\" >addArg();</script>\n";
+            $this->prtrace($subfolder);
+            $szJSTRArg = "<script type=\"text/javascript\" >addArg('{$subfolder}');</script>\n";
         } else {
             $szJSTRArg = '';
         }
-        $szJSAddTR = "<tr id=\"parent_add_tr\" onclick=\"addArg();\" onmouseover=\"this.style.cursor='pointer'\">\n<td style=\"text-align: right\" colspan=\"6\" class=\"data3\"><table><tr><td class=\"data3\"><img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td><td class=\"data3\"><span style=\"font-size: 8pt\">{$this->lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
+        $szJSAddTR = "<tr id=\"parent_add_tr\" onclick=\"addArg('{$subfolder}');\" onmouseover=\"this.style.cursor='pointer'\">\n";
+        $szJSAddTR .= '<td style="text-align: right" colspan="6" class="data3"><table><tr><td class="data3">';
+        $szJSAddTR .= "<img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td>";
+        $szJSAddTR .= "<td class=\"data3\"><span style=\"font-size: 8pt\">{$this->lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
 
         echo '<script src="' . \SUBFOLDER . "/js/functions.js\" type=\"text/javascript\"></script>
 		<script type=\"text/javascript\">
 			//<![CDATA[
-			var g_types_select = '<select name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
+			var g_types_select = '<select class=\"select2\" name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
 			var g_modes_select = '{$szModes}';
 			var g_name = '';
 			var g_lang_strargremove = '", htmlspecialchars($this->lang['strargremove'], ENT_QUOTES), "';

@@ -205,7 +205,7 @@ function baseArgTR(subfolder) {
 		td.innerHTML = g_types_select;
 		tr.appendChild(td);
 		var td = document.createElement("td");
-		td = buildArgImages(td);
+		td = buildArgImages(td, subfolder);
 		td.className = "data3";
 		tr.appendChild(td);
 		if (g_args == 0) {
@@ -215,7 +215,7 @@ function baseArgTR(subfolder) {
 	} else {
 		var p_tr = document.getElementById("1st_arg_tr");
 		enableArgTR(p_tr.childNodes[4]);
-		document.getElementById("1st_arg_iag").src = 'images/themes/default/RemoveArgument.png';
+		document.getElementById("1st_arg_iag").src = subfolder + '/images/themes/default/RemoveArgument.png';
 		g_args++;
 		g_no_args = false;
 	}
