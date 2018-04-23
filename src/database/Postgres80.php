@@ -55,9 +55,9 @@ class Postgres80 extends Postgres81
     /**
      * Return all database available on the server.
      *
-     * @param null $currentdatabase
+     * @param string|null $currentdatabase
      *
-     * @return \ADORecordSet A list of databases, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -72,7 +72,7 @@ class Postgres80 extends Postgres81
             $clause = '';
         }
 
-        if ($currentdatabase != null) {
+        if ($currentdatabase) {
             $this->clean($currentdatabase);
             $orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
         } else {
@@ -104,7 +104,7 @@ class Postgres80 extends Postgres81
     /**
      * Return all schemas in the current database.
      *
-     * @return \ADORecordSet All schemas, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet All schemas, sorted alphabetically
      */
     public function getSchemas()
     {
@@ -132,7 +132,7 @@ class Postgres80 extends Postgres81
      *
      * @param string $schema The name of the schema
      *
-     * @return \ADORecordSet Schema information
+     * @return \PHPPgAdmin\ADORecordSet Schema information
      */
     public function getSchemaByName($schema)
     {
@@ -176,7 +176,7 @@ class Postgres80 extends Postgres81
      * @param string $name     The name of the aggregate
      * @param string $basetype The input data type of the aggregate
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getAggregate($name, $basetype)
     {
@@ -266,7 +266,7 @@ class Postgres80 extends Postgres81
      * @param $owner      The new owner for the table
      * @param $schema     The new schema for the table
      * @param $comment    The comment on the table
-     * @param $tablespace The new tablespace for the table ('' means leave as is)
+     * @param string $tablespace The new tablespace for the table ('' means leave as is)
      *
      * @return int 0 success
      */
@@ -429,7 +429,7 @@ class Postgres80 extends Postgres81
      *
      * @param bool|true $all True to fetch all tables, false for just in current schema
      *
-     * @return \ADORecordSet All tables, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
      */
     public function getTables($all = false)
     {

@@ -54,7 +54,7 @@ class Postgres81 extends Postgres82
      *
      * @param null|string $currentdatabase
      *
-     * @return \ADORecordSet A list of databases, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -249,7 +249,7 @@ class Postgres81 extends Postgres82
      *
      * @param $database (optional) Find only connections to specified database
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getProcesses($database = null)
     {
@@ -277,7 +277,7 @@ class Postgres81 extends Postgres82
      *
      * @param $spcname
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTablespace($spcname)
     {
@@ -294,7 +294,7 @@ class Postgres81 extends Postgres82
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTablespaces($all = false)
     {

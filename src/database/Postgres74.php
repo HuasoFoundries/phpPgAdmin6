@@ -63,7 +63,7 @@ class Postgres74 extends Postgres80
      *
      * @param null|string $currentdatabase
      *
-     * @return \ADORecordSet A list of databases, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -78,7 +78,7 @@ class Postgres74 extends Postgres80
             $clause = '';
         }
 
-        if ($currentdatabase != null) {
+        if ($currentdatabase) {
             $this->clean($currentdatabase);
             $orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
         } else {
@@ -107,16 +107,17 @@ class Postgres74 extends Postgres80
     /**
      * Searches all system catalogs to find objects that match a certain name.
      *
-     * @param $term   The search term
-     * @param $filter The object type to restrict to ('' means no restriction)
+     * @param string $term   The search term
+     * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function findObject($term, $filter)
     {
         $conf = $this->conf;
 
-        /*about escaping:
+        /**
+         * about escaping:
          * SET standard_conforming_string is not available before 8.2
          * So we must use PostgreSQL specific notation :/
          * E'' notation is not available before 8.1
@@ -256,7 +257,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns table locks information in the current database.
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getLocks()
     {
@@ -293,18 +294,18 @@ class Postgres74 extends Postgres80
     /**
      * Alters a column in a table OR view.
      *
-     * @param $table      The table in which the column resides
-     * @param $column     The column to alter
-     * @param $name       The new name for the column
-     * @param $notnull    (boolean) True if not null, false otherwise
-     * @param $oldnotnull (boolean) True if column is already not null, false otherwise
-     * @param $default    The new default for the column
-     * @param $olddefault The old default for the column
-     * @param $type       The new type for the column
-     * @param $length     The optional size of the column (ie. 30 for varchar(30))
-     * @param $array      True if array type, false otherwise
-     * @param $oldtype    The old type for the column
-     * @param $comment    Comment for the column
+     * @param string $table      The table in which the column resides
+     * @param string $column     The column to alter
+     * @param string $name       The new name for the column
+     * @param bool $notnull    (boolean) True if not null, false otherwise
+     * @param bool $oldnotnull (boolean) True if column is already not null, false otherwise
+     * @param string $default    The new default for the column
+     * @param string $olddefault The old default for the column
+     * @param string $type       The new type for the column
+     * @param int $length     The optional size of the column (ie. 30 for varchar(30))
+     * @param bool $array      True if array type, false otherwise
+     * @param string $oldtype    The old type for the column
+     * @param string $comment    Comment for the column
      *
      * @return array|bool|int 0 success
      */
@@ -379,9 +380,9 @@ class Postgres74 extends Postgres80
     /**
      * Returns table information.
      *
-     * @param $table The name of the table
+     * @param string $table The name of the table
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTable($table)
     {
@@ -406,7 +407,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns the current default_with_oids setting.
      *
-     * @return default_with_oids setting
+     * @return string default_with_oids setting
      */
     public function getDefaultWithOid()
     {
@@ -420,9 +421,9 @@ class Postgres74 extends Postgres80
      * including constraint name, definition, related col and referenced namespace,
      * table and col if needed.
      *
-     * @param $table the table where we are looking for fk
+     * @param string $table the table where we are looking for fk
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getConstraintsWithFields($table)
     {
@@ -487,7 +488,7 @@ class Postgres74 extends Postgres80
      *
      * @param bool $all
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getSequences($all = false)
     {
@@ -516,9 +517,9 @@ class Postgres74 extends Postgres80
     /**
      * Returns all details for a particular function.
      *
-     * @param $function_oid
+     * @param int $function_oid function identifier
      *
-     * @return \ADORecordSet Function info
+     * @return \PHPPgAdmin\ADORecordSet Function info
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -558,7 +559,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns a list of all casts in the database.
      *
-     * @return All casts
+     * @return \PHPPgAdmin\ADORecordSet All casts
      */
     public function getCasts()
     {
@@ -651,12 +652,12 @@ class Postgres74 extends Postgres80
      * Protected method which alter a table
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param $tblrs      The table recordSet returned by getTable()
-     * @param $name       The new name for the table
-     * @param $owner      The new owner for the table
-     * @param $schema     The new schema for the table
-     * @param $comment    The comment on the table
-     * @param $tablespace The new tablespace for the table ('' means leave as is)
+     * @param  \PHPPgAdmin\ADORecordSet $tblrs      The table recordSet returned by getTable()
+     * @param string $name       The new name for the table
+     * @param string $owner      The new owner for the table
+     * @param string $schema     The new schema for the table
+     * @param string $comment    The comment on the table
+     * @param string $tablespace The new tablespace for the table ('' means leave as is)
      *
      * @return int 0 success
      */

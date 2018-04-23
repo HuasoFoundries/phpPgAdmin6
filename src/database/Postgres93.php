@@ -20,7 +20,7 @@ class Postgres93 extends Postgres94
      * @param bool $all  If true, will find all available functions, if false just those in search path
      * @param      $type If not null, will find all functions with return value = type
      *
-     * @return \ADORecordSet All functions
+     * @return \PHPPgAdmin\ADORecordSet All functions
      */
     public function getFunctions($all = false, $type = null)
     {

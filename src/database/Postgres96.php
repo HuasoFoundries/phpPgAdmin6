@@ -21,7 +21,7 @@ class Postgres96 extends Postgres
      *
      * @param $database (optional) Find only connections to specified database
      *
-     * @return \ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet A recordset
      */
     public function getProcesses($database = null)
     {

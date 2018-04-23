@@ -287,11 +287,11 @@ class ADOdbBase
      *
      * @pre All parameters must already be cleaned
      *
-     * @param      $obj_type One of 'TABLE' | 'COLUMN' | 'VIEW' | 'SCHEMA' | 'SEQUENCE' | 'TYPE' | 'FUNCTION' | 'AGGREGATE'
-     * @param      $obj_name the name of the object for which to attach a comment
-     * @param      $table    Name of table that $obj_name belongs to.  Ignored unless $obj_type is 'TABLE' or 'COLUMN'.
-     * @param      $comment  the comment to add
-     * @param null $basetype
+     * @param string $obj_type One of 'TABLE' | 'COLUMN' | 'VIEW' | 'SCHEMA' | 'SEQUENCE' | 'TYPE' | 'FUNCTION' | 'AGGREGATE'
+     * @param string $obj_name the name of the object for which to attach a comment
+     * @param string $table    Name of table that $obj_name belongs to.  Ignored unless $obj_type is 'TABLE' or 'COLUMN'.
+     * @param string $comment  the comment to add
+     * @param string|null $basetype
      *
      * @return int 0 if operation was successful
      */
@@ -358,7 +358,7 @@ class ADOdbBase
     /**
      * Turns on or off query debugging.
      *
-     * @param $debug True to turn on debugging, false otherwise
+     * @param bool $debug True to turn on debugging, false otherwise
      */
     public function setDebug($debug)
     {
@@ -368,9 +368,9 @@ class ADOdbBase
     /**
      * Cleans (escapes) an array of field names.
      *
-     * @param $arr The array to clean, by reference
+     * @param array $arr The array to clean, by reference
      *
-     * @return The cleaned array
+     * @return array The cleaned array
      */
     public function fieldArrayClean(&$arr)
     {
@@ -390,7 +390,7 @@ class ADOdbBase
      *
      * @param $arr The array to clean, by reference
      *
-     * @return The cleaned array
+     * @return array The cleaned array
      */
     public function arrayClean(&$arr)
     {
@@ -452,8 +452,8 @@ class ADOdbBase
      *
      * @@ assumes that the query will return only one row - returns field value in the first row
      *
-     * @param $sql   The SQL statement to be executed
-     * @param $field The field name to be returned
+     * @param string $sql   The SQL statement to be executed
+     * @param string $field The field name to be returned
      *
      * @return int|string single field value, error number on error or -1 if no rows where found
      */
@@ -595,7 +595,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql = $fields . $values . ')';
         }
 
         // Check for failures
@@ -667,7 +667,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
@@ -719,12 +719,16 @@ class ADOdbBase
     /**
      * Get the backend platform.
      *
-     * @return The backend platform
+     * @return string The backend platform
      */
     public function getPlatform()
     {
-        //return $this->conn->platform;
-        return 'UNKNOWN';
+        try {
+            return $this->conn->platform;
+        } catch (\Exception $e) {
+            $this->prtrace($e->getMessage());
+            return 'UNKNOWN';
+        }
     }
 
     // Type conversion routines
