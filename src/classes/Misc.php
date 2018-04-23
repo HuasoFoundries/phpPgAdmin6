@@ -355,8 +355,7 @@ class Misc
             }
         }
 
-        if (
-            $this->_no_db_connection === false &&
+        if ($this->_no_db_connection === false &&
             $this->getDatabase() !== null &&
             isset($_REQUEST['schema'])
         ) {
@@ -395,8 +394,7 @@ class Misc
                     'administrator' => 'administrator',
                 ];
 
-                if (
-                    isset($server_info['username']) &&
+                if (isset($server_info['username']) &&
                     array_key_exists(strtolower($server_info['username']), $bad_usernames)
                 ) {
                     $msg = $lang['strlogindisallowed'];
@@ -404,8 +402,7 @@ class Misc
                     throw new \Exception($msg);
                 }
 
-                if (
-                    !isset($server_info['password']) ||
+                if (!isset($server_info['password']) ||
                     $server_info['password'] == ''
                 ) {
                     $msg = $lang['strlogindisallowed'];
@@ -460,8 +457,7 @@ class Misc
             $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
             $server_sha    = sha1($server_string);
 
-            if (
-                $this->_server_id === $server_string ||
+            if ($this->_server_id === $server_string ||
                 $this->_server_id === $server_sha
             ) {
                 if (isset($info['username'])) {
@@ -530,8 +526,7 @@ class Misc
 
         $server_info = $this->getServerInfo($this->_server_id);
 
-        if (
-            $this->_server_id !== null &&
+        if ($this->_server_id !== null &&
             isset($server_info['useonlydefaultdb']) &&
             $server_info['useonlydefaultdb'] === true
         ) {
