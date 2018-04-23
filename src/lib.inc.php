@@ -336,49 +336,51 @@ $container['haltHandler'] = function ($c) {
 
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route
-$app->add(function ($request, $response, $next) use ($handler) {
-    $handler->start(); // initialize handlers*/
+$app->add(
+    function ($request, $response, $next) use ($handler) {
+        $handler->start(); // initialize handlers*/
 
-    $this['requestobj']  = $request;
-    $this['responseobj'] = $response;
+        $this['requestobj']  = $request;
+        $this['responseobj'] = $response;
 
-    $this['server']   = $request->getParam('server');
-    $this['database'] = $request->getParam('database');
-    $this['schema']   = $request->getParam('schema');
-    $misc             = $this->get('misc');
+        $this['server']   = $request->getParam('server');
+        $this['database'] = $request->getParam('database');
+        $this['schema']   = $request->getParam('schema');
+        $misc             = $this->get('misc');
 
-    $misc->setHREF();
-    $misc->setForm();
+        $misc->setHREF();
+        $misc->setForm();
 
-    $this->view->offsetSet('METHOD', $request->getMethod());
-    if ($request->getAttribute('route')) {
-        $this->view->offsetSet('subject', $request->getAttribute('route')->getArgument('subject'));
+        $this->view->offsetSet('METHOD', $request->getMethod());
+        if ($request->getAttribute('route')) {
+            $this->view->offsetSet('subject', $request->getAttribute('route')->getArgument('subject'));
+        }
+
+        $query_string = $request->getUri()->getQuery();
+        $this->view->offsetSet('query_string', $query_string);
+        $path = (SUBFOLDER ? (SUBFOLDER . '/') : '') . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
+        $this->view->offsetSet('path', $path);
+
+        $params = $request->getParams();
+
+        // remove tabs and linebreaks from query
+        if (isset($params['query'])) {
+            $params['query'] = str_replace(["\r", "\n", "\t"], ' ', $params['query']);
+        }
+        $this->view->offsetSet('params', $params);
+
+        //return $this->utils->die('hola');
+
+        if (count($this['errors']) > 0) {
+            return ($this->haltHandler)($this->requestobj, $this->responseobj, $this['errors'], 412);
+        }
+        // First execute anything else
+        $response = $next($request, $response);
+
+        // Any other request, pass on current response
+        return $response;
     }
-
-    $query_string = $request->getUri()->getQuery();
-    $this->view->offsetSet('query_string', $query_string);
-    $path = (SUBFOLDER ? (SUBFOLDER . '/') : '') . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
-    $this->view->offsetSet('path', $path);
-
-    $params = $request->getParams();
-
-    // remove tabs and linebreaks from query
-    if (isset($params['query'])) {
-        $params['query'] = str_replace(["\r", "\n", "\t"], ' ', $params['query']);
-    }
-    $this->view->offsetSet('params', $params);
-
-    //return $this->utils->die('hola');
-
-    if (count($this['errors']) > 0) {
-        return ($this->haltHandler)($this->requestobj, $this->responseobj, $this['errors'], 412);
-    }
-    // First execute anything else
-    $response = $next($request, $response);
-
-    // Any other request, pass on current response
-    return $response;
-});
+);
 
 $container['action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
