@@ -1077,7 +1077,7 @@ class Misc
      * A function to recursively strip slashes.  Used to
      * enforce magic_quotes_gpc being off.
      *
-     * @param mixed &var The variable to strip
+     * @param mixed $var The variable to strip (passed by reference)
      */
     public function stripVar(&$var)
     {
@@ -2057,7 +2057,7 @@ class Misc
      *
      * @param tring $table The table to retrieve FK contraints from
      *
-     * @return array the array of FK definition:
+     * @return array|bool the array of FK definition:
      *   array(
      *     'byconstr' => array(
      *       constrain id => array(
@@ -2151,8 +2151,8 @@ class Misc
             $fksprops['code'] .= '<div id="fkbg"></div>';
             $fksprops['code'] .= '<div id="fklist"></div>';
             $fksprops['code'] .= '<script src="' . SUBFOLDER . '/js/ac_insert_row.js" type="text/javascript"></script>';
-        } else /* we have no foreign keys on this table */
-        {
+        } else {
+            /* we have no foreign keys on this table */
             return false;
         }
 
