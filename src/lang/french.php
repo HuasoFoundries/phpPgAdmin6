@@ -1,11 +1,7 @@
 <?php
 
 /**
- * French Language file for phpPgAdmin6.
- *
- * @maintainer Guillaume (ioguix) de Rorthais
- *
- * $Id: french.php,v 1.36 2008/03/27 10:46:32 ioguix Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

@@ -5,7 +5,7 @@
      * This script will generate a report on the status of a language
      * as compared to the master english translation.
      *
-     * $Id: langcheck,v 1.5 2005/07/19 18:21:58 soranzo Exp $
+     * @version $Id: langcheck,v 1.5 2005/07/19 18:21:58 soranzo Exp $
      */
     error_reporting(E_ALL);
     // Prevent timeouts (non-safe mode only)

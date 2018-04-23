@@ -1,20 +1,7 @@
 <?php
 
 /**
- * Galician language file for phpPgAdmin6.
- * Tradución ao galego do phpPgAdmin6.
- *
- * Maintainer:
- * Mantedor:
- *    Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
- *    Proxecto Trasno, <proxecto@trasno.net>.
- *
- *
- *    Comentarios sobre a tradución:
- *    - Escolleuse «eliminar» como tradución para “drop”, e «borrar» como tradución para
- *    “delete”.
- *    - Fixéronse certas escollas de vocabulario: “vacuum” → «purgación» (aconsellada por
- *    Leandro Regueiro), “cluster” → «contentrado».
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

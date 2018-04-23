@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Danish language file for phpPgAdmin6.
- * created by Arne Eckmann <bananstat@users.sourceforge.net>
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

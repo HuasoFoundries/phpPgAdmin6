@@ -1,11 +1,7 @@
 <?php
 
 /**
- * Polish language file for WebDB.
- *
- * @maintainer Rafal Slubowski [slubek@users.sourceforge.net]
- *
- * $Id: polish.php,v 1.55 2007/04/24 11:42:07 soranzo Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

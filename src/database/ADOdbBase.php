@@ -287,11 +287,11 @@ class ADOdbBase
      *
      * @pre All parameters must already be cleaned
      *
-     * @param string $obj_type One of 'TABLE' | 'COLUMN' | 'VIEW' | 'SCHEMA' | 'SEQUENCE' | 'TYPE' | 'FUNCTION' | 'AGGREGATE'
-     * @param string $obj_name the name of the object for which to attach a comment
-     * @param string $table    Name of table that $obj_name belongs to.  Ignored unless $obj_type is 'TABLE' or 'COLUMN'.
-     * @param string $comment  the comment to add
-     * @param string|null $basetype
+     * @param string      $obj_type One of 'TABLE' | 'COLUMN' | 'VIEW' | 'SCHEMA' | 'SEQUENCE' | 'TYPE' | 'FUNCTION' | 'AGGREGATE'
+     * @param string      $obj_name the name of the object for which to attach a comment
+     * @param string      $table    Name of table that $obj_name belongs to.  Ignored unless $obj_type is 'TABLE' or 'COLUMN'.
+     * @param string      $comment  the comment to add
+     * @param null|string $basetype
      *
      * @return int 0 if operation was successful
      */
@@ -595,7 +595,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields . $values . ')';
+            $sql = $fields.$values.')';
         }
 
         // Check for failures
@@ -667,7 +667,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause . $whereClause)) {
+        if (!$this->conn->Execute($setClause.$whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
@@ -727,6 +727,7 @@ class ADOdbBase
             return $this->conn->platform;
         } catch (\Exception $e) {
             $this->prtrace($e->getMessage());
+
             return 'UNKNOWN';
         }
     }

@@ -55,7 +55,7 @@ class Postgres80 extends Postgres81
     /**
      * Return all database available on the server.
      *
-     * @param string|null $currentdatabase
+     * @param null|string $currentdatabase
      *
      * @return \PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
      */

@@ -77,7 +77,7 @@ class Postgres82 extends Postgres83
      * Rename a sequence.
      *
      * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
-     * @param string        $name  The new name for the sequence
+     * @param string                   $name  The new name for the sequence
      *
      * @return int 0 if operation was successful
      */
@@ -105,7 +105,7 @@ class Postgres82 extends Postgres83
      * Rename a view.
      *
      * @param \PHPPgAdmin\ADORecordSet $vwrs The view recordSet returned by getView()
-     * @param string        $name The new view's name
+     * @param string                   $name The new view's name
      *
      * @return int -1 if Failed
      */
@@ -257,13 +257,13 @@ class Postgres82 extends Postgres83
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'" . $definition[0] . "'";
+            $sql .= "'".$definition[0]."'";
             if ($definition[1]) {
-                $sql .= ",'" . $definition[1] . "'";
+                $sql .= ",'".$definition[1]."'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'" . $definition . "'";
+            $sql .= "'".$definition."'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";

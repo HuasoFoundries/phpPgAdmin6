@@ -58,13 +58,13 @@ class Postgres extends ADOdbBase
             if (is_array($this->help_page[$help])) {
                 $urls = [];
                 foreach ($this->help_page[$help] as $link) {
-                    $urls[] = $this->help_base . $link;
+                    $urls[] = $this->help_base.$link;
                 }
 
                 return $urls;
             }
 
-            return $this->help_base . $this->help_page[$help];
+            return $this->help_base.$this->help_page[$help];
         }
 
         return null;
@@ -78,7 +78,7 @@ class Postgres extends ADOdbBase
     public function getHelpPages()
     {
         if ($this->help_page === null || $this->help_base === null) {
-            $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . str_replace('.', '', $this->major_version);
+            $help_classname = '\PHPPgAdmin\Help\PostgresDoc'.str_replace('.', '', $this->major_version);
 
             $help_class = new $help_classname($this->conf, $this->major_version);
 
@@ -94,7 +94,7 @@ class Postgres extends ADOdbBase
      * @param string $name   The name to give the field
      * @param mixed  $value  The value of the field.  Note this could be 'numeric(7,2)' sort of thing...
      * @param string $type   The database type of the field
-     * @param array $extras An array of attributes name as key and attributes' values as value
+     * @param array  $extras An array of attributes name as key and attributes' values as value
      */
     public function printField($name, $value, $type, $extras = [])
     {
@@ -103,7 +103,7 @@ class Postgres extends ADOdbBase
         // Determine actions string
         $extra_str = '';
         foreach ($extras as $k => $v) {
-            $extra_str .= " {$k}=\"" . htmlspecialchars($v) . '"';
+            $extra_str .= " {$k}=\"".htmlspecialchars($v).'"';
         }
 
         switch (substr($type, 0, 9)) {
@@ -210,7 +210,7 @@ class Postgres extends ADOdbBase
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
 
-            $not_in = "('" . implode("','", $hiddendbs) . "')";
+            $not_in = "('".implode("','", $hiddendbs)."')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 
@@ -524,7 +524,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns prepared transactions information.
      *
-     * @param string|null $database (optional) Find only prepared transactions executed in a specific database
+     * @param null|string $database (optional) Find only prepared transactions executed in a specific database
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -801,7 +801,7 @@ class Postgres extends ADOdbBase
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
+        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
 
         return $this->execute($sql);
     }
@@ -937,7 +937,7 @@ class Postgres extends ADOdbBase
      * Drops a schema.
      *
      * @param string $schemaname The name of the schema to drop
-     * @param bool $cascade    True to cascade drop, false to restrict
+     * @param bool   $cascade    True to cascade drop, false to restrict
      *
      * @return int 0 if operation was successful
      */
@@ -984,7 +984,7 @@ class Postgres extends ADOdbBase
         } elseif ($typname == 'varchar') {
             $temp = 'character varying';
             if ($typmod != -1) {
-                $temp .= '(' . ($typmod - $varhdrsz) . ')';
+                $temp .= '('.($typmod - $varhdrsz).')';
             }
         } elseif ($typname == 'numeric') {
             $temp = 'numeric';
@@ -1011,11 +1011,11 @@ class Postgres extends ADOdbBase
      * attribute number to attribute name.
      *
      * @param string $table The table to get attributes for
-     * @param array $atts  An array of attribute numbers
+     * @param array  $atts  An array of attribute numbers
      *
      * @return array An array mapping attnum to attname or error code
-     *              - -1 $atts must be an array
-     *              - -2 wrong number of attributes found
+     *               - -1 $atts must be an array
+     *               - -2 wrong number of attributes found
      */
     public function getAttributeNames($table, $atts)
     {
@@ -1035,7 +1035,7 @@ class Postgres extends ADOdbBase
         $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
 			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
 			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('" . join("','", $atts) . "')";
+			AND attnum IN ('".join("','", $atts)."')";
 
         $rs = $this->selectSet($sql);
         if ($rs->recordCount() != sizeof($atts)) {
@@ -1075,8 +1075,8 @@ class Postgres extends ADOdbBase
      * Grabs an array of users and their privileges for an object,
      * given its type.
      *
-     * @param string $object The name of the object whose privileges are to be retrieved
-     * @param string $type   The type of the object (eg. database, schema, relation, function or language)
+     * @param string      $object The name of the object whose privileges are to be retrieved
+     * @param string      $type   The type of the object (eg. database, schema, relation, function or language)
      * @param null|string $table  Optional, column's table if type = column
      *
      * @return array|int Privileges array or error code
@@ -1155,9 +1155,10 @@ class Postgres extends ADOdbBase
     /**
      * Internal function used for parsing ACLs.
      *
-     * @param string  $acl The ACL to parse (of type aclitem[])
+     * @param string $acl The ACL to parse (of type aclitem[])
      *
      * @return array Privileges array
+     *
      * @internal bool $in_quotes toggles acl in_quotes attribute
      */
     protected function _parseACL($acl)
@@ -1428,7 +1429,7 @@ class Postgres extends ADOdbBase
      * Drops a type.
      *
      * @param string $typname The name of the type to drop
-     * @param bool $cascade True to cascade drop, false to restrict
+     * @param bool   $cascade True to cascade drop, false to restrict
      *
      * @return int 0 if operation was successful
      */
@@ -1720,11 +1721,11 @@ class Postgres extends ADOdbBase
     /**
      * Edits a rule on a table OR view.
      *
-     * @param string $name The name of the new rule
+     * @param string $name    The name of the new rule
      * @param string $event   SELECT, INSERT, UPDATE or DELETE
      * @param string $table   Table on which to create the rule
      * @param string $where   Where to execute the rule, '' indicates always
-     * @param bool $instead True if an INSTEAD rule, false otherwise
+     * @param bool   $instead True if an INSTEAD rule, false otherwise
      * @param string $type    NOTHING for a do nothing rule, SOMETHING to use given action
      * @param string $action  The action to take
      *
@@ -1949,7 +1950,7 @@ class Postgres extends ADOdbBase
         // Split on escaped null characters
         $params = explode('\\000', $v);
         for ($findx = 0; $findx < $trigger['tgnargs']; ++$findx) {
-            $param = "'" . str_replace('\'', '\\\'', $params[$findx]) . "'";
+            $param = "'".str_replace('\'', '\\\'', $params[$findx])."'";
             $tgdef .= $param;
             if ($findx < ($trigger['tgnargs'] - 1)) {
                 $tgdef .= ', ';
@@ -1965,7 +1966,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns a list of all functions that can be used in triggers.
      *
-     * @return \PHPPgAdmin\ADORecordSet All functions that can be used in triggers.
+     * @return \PHPPgAdmin\ADORecordSet all functions that can be used in triggers
      */
     public function getTriggerFunctions()
     {
@@ -1975,8 +1976,8 @@ class Postgres extends ADOdbBase
     /**
      * Returns a list of all functions in the database.
      *
-     * @param bool $all  If true, will find all available functions, if false just those in search path
-     * @param string|null  $type If not null, will find all functions with return value = type
+     * @param bool        $all  If true, will find all available functions, if false just those in search path
+     * @param null|string $type If not null, will find all functions with return value = type
      *
      * @return \PHPPgAdmin\ADORecordSet All functions
      */
@@ -2025,13 +2026,13 @@ class Postgres extends ADOdbBase
     /**
      * Creates a trigger.
      *
-     * @param string $tgname  The name of the trigger to create
-     * @param string $table   The name of the table
-     * @param string $tgproc  The function to execute
-     * @param string $tgtime  BEFORE or AFTER
-     * @param string $tgevent Event
+     * @param string $tgname      The name of the trigger to create
+     * @param string $table       The name of the table
+     * @param string $tgproc      The function to execute
+     * @param string $tgtime      BEFORE or AFTER
+     * @param string $tgevent     Event
      * @param string $tgfrequency
-     * @param string $tgargs  The function arguments
+     * @param string $tgargs      The function arguments
      *
      * @return int 0 if operation was successful
      */
@@ -2078,7 +2079,7 @@ class Postgres extends ADOdbBase
      *
      * @param string $tgname  The name of the trigger to drop
      * @param string $table   The table from which to drop the trigger
-     * @param bool $cascade True to cascade drop, false to restrict
+     * @param bool   $cascade True to cascade drop, false to restrict
      *
      * @return int 0 if operation was successful
      */
@@ -2169,7 +2170,7 @@ class Postgres extends ADOdbBase
      * Drops an operator.
      *
      * @param mixed $operator_oid The OID of the operator to drop
-     * @param bool $cascade      True to cascade drop, false to restrict
+     * @param bool  $cascade      True to cascade drop, false to restrict
      *
      * @return int 0 if operation was successful
      */
@@ -2184,13 +2185,13 @@ class Postgres extends ADOdbBase
         $sql = "DROP OPERATOR \"{$f_schema}\".{$opr->fields['oprname']} (";
         // Quoting or formatting here???
         if ($opr->fields['oprleftname'] !== null) {
-            $sql .= $opr->fields['oprleftname'] . ', ';
+            $sql .= $opr->fields['oprleftname'].', ';
         } else {
             $sql .= 'NONE, ';
         }
 
         if ($opr->fields['oprrightname'] !== null) {
-            $sql .= $opr->fields['oprrightname'] . ')';
+            $sql .= $opr->fields['oprrightname'].')';
         } else {
             $sql .= 'NONE)';
         }
@@ -2538,16 +2539,16 @@ class Postgres extends ADOdbBase
     /**
      * Returns all available autovacuum per table information.
      *
-     * @param string  $table table name
-     * @param bool    $vacenabled true if vacuum is enabled
-     * @param int     $vacthreshold vacuum threshold
-     * @param int     $vacscalefactor vacuum scalefactor
-     * @param int     $anathresold analyze threshold
-     * @param int     $anascalefactor analyze scale factor
-     * @param int     $vaccostdelay vacuum cost delay
-     * @param int     $vaccostlimit vacuum cost limit
+     * @param string $table          table name
+     * @param bool   $vacenabled     true if vacuum is enabled
+     * @param int    $vacthreshold   vacuum threshold
+     * @param int    $vacscalefactor vacuum scalefactor
+     * @param int    $anathresold    analyze threshold
+     * @param int    $anascalefactor analyze scale factor
+     * @param int    $vaccostdelay   vacuum cost delay
+     * @param int    $vaccostlimit   vacuum cost limit
      *
-     * @return bool  0 if successful
+     * @return bool 0 if successful
      */
     public function saveAutovacuum(
         $table,
@@ -2594,7 +2595,7 @@ class Postgres extends ADOdbBase
             $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
         }
 
-        $sql = $sql . implode(',', $params) . ');';
+        $sql = $sql.implode(',', $params).');';
 
         return $this->execute($sql);
     }
@@ -2626,7 +2627,7 @@ class Postgres extends ADOdbBase
     /**
      * Returns all available process information.
      *
-     * @param string|null $database (optional) Find only connections to specified database
+     * @param null|string $database (optional) Find only connections to specified database
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -2686,7 +2687,7 @@ class Postgres extends ADOdbBase
     /**
      * Sends a cancel or kill command to a process.
      *
-     * @param int $pid    The ID of the backend process
+     * @param int    $pid    The ID of the backend process
      * @param string $signal 'CANCEL' or 'KILL'
      *
      * @return int 0 success
@@ -3017,12 +3018,12 @@ class Postgres extends ADOdbBase
      * @param int    $page_size  The number of rows per page
      * @param int    &$max_pages (return-by-ref) The max number of pages in the relation
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A  recordset on success or an int with error code
-     *          - -1 transaction error
-     *          - -2 counting error
-     *          - -3 page or page_size invalid
-     *          - -4 unknown type
-     *          - -5 failed setting transaction read only
+     * @return int|\PHPPgAdmin\ADORecordSet A  recordset on success or an int with error code
+     *                                      - -1 transaction error
+     *                                      - -2 counting error
+     *                                      - -3 page or page_size invalid
+     *                                      - -4 unknown type
+     *                                      - -5 failed setting transaction read only
      */
     public function browseQuery($type, $table, $query, $sortkey, $sortdir, $page, $page_size, &$max_pages)
     {
@@ -3117,7 +3118,7 @@ class Postgres extends ADOdbBase
         }
 
         // Actually retrieve the rows, with offset and limit
-        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
+        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET ".($page - 1) * $page_size);
         $status = $this->endTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -3131,7 +3132,7 @@ class Postgres extends ADOdbBase
     /**
      * Generates the SQL for the 'select' function.
      *
-     * @param string $table   The table from which to select
+     * @param string $table The table from which to select
      * @param $show    An array of columns to show.  Empty array means all columns.
      * @param $values  An array mapping columns to values
      * @param $ops     An array of the operators to use
@@ -3159,7 +3160,7 @@ class Postgres extends ADOdbBase
                 $sql = 'SELECT "';
             }
 
-            $sql .= join('","', $show) . '" FROM ';
+            $sql .= join('","', $show).'" FROM ';
         }
 
         $this->fieldClean($table);
@@ -3227,7 +3228,7 @@ class Postgres extends ADOdbBase
                     $sql .= $k;
                 } else {
                     $this->fieldClean($k);
-                    $sql .= '"' . $k . '"';
+                    $sql .= '"'.$k.'"';
                 }
                 if (strtoupper($v) == 'DESC') {
                     $sql .= ' DESC';

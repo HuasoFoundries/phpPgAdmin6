@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Portuguese language file for phpPgAdmin6.
- *
- * @maintainer Francisco Alves Cabrita (include@npf.pt.freebsd.org)
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

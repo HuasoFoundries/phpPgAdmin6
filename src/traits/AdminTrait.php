@@ -532,7 +532,7 @@ trait AdminTrait
     /**
      * database/table administration and tuning tasks.
      *
-     * $Id: admin
+     * @version $Id: admin
      *
      * @param mixed $type
      * @param mixed $msg

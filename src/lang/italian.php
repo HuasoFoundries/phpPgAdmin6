@@ -1,10 +1,7 @@
 <?php
 
 /**
- * Italian language file, based on the english language file for phpPgAdmin6.
- * Nicola Soranzo [nsoranzo@tiscali.it]
- *
- * $Id: italian.php,v 1.46 2007/07/19 03:11:52 xzilla Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set - Lingua e set di caratteri

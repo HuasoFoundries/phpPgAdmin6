@@ -104,7 +104,7 @@ class FunctionsController extends BaseController
             'function'     => [
                 'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url'   => \SUBFOLDER . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER."/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns'      => [
@@ -414,7 +414,7 @@ class FunctionsController extends BaseController
                     }
                     if (isset($names_arr[$i]) && '' != $names_arr[$i]) {
                         $data->fieldClean($names_arr[$i]);
-                        $args .= '"' . $names_arr[$i] . '" ';
+                        $args .= '"'.$names_arr[$i].'" ';
                     }
                     $args .= $args_arr[$i];
                 }
@@ -422,8 +422,8 @@ class FunctionsController extends BaseController
                 $args = $fndata->fields['proarguments'];
             }
 
-            $func_full = $fndata->fields['proname'] . '(' . $fndata->fields['proarguments'] . ')';
-            echo '<form action="' . \SUBFOLDER . "/src/views/functions\" method=\"post\">\n";
+            $func_full = $fndata->fields['proname'].'('.$fndata->fields['proarguments'].')';
+            echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
             echo "<table style=\"width: 90%\">\n";
             echo "<tr>\n";
             echo "<th class=\"data required\">{$this->lang['strschema']}</th>\n";
@@ -504,8 +504,8 @@ class FunctionsController extends BaseController
             // Display function cost options
             if ($data->hasFunctionCosting()) {
                 echo "<tr><th class=\"data required\" colspan=\"5\">{$this->lang['strfunctioncosting']}</th></tr>\n";
-                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
-                htmlspecialchars($_POST['formCost']) . '" /></td>';
+                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
+                htmlspecialchars($_POST['formCost']).'" /></td>';
                 echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"",
                 htmlspecialchars($_POST['formRows']), '"', (!$fndata->fields['proretset']) ? 'disabled' : '', '/></td>';
             }
@@ -613,7 +613,7 @@ class FunctionsController extends BaseController
                     }
                     if (isset($names_arr[$i]) && '' != $names_arr[$i]) {
                         $data->fieldClean($names_arr[$i]);
-                        $args .= '"' . $names_arr[$i] . '" ';
+                        $args .= '"'.$names_arr[$i].'" ';
                     }
                     $args .= $args_arr[$i];
                 }
@@ -627,7 +627,7 @@ class FunctionsController extends BaseController
             }
 
             $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-            $func_full                     = $funcdata->fields['proname'] . '(' . $funcdata->fields['proarguments'] . ')';
+            $func_full                     = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
             echo "<table style=\"width: 90%\">\n";
             echo "<tr><th class=\"data\">{$this->lang['strfunction']}</th>\n";
             echo "<th class=\"data\">{$this->lang['strarguments']}</th>\n";
@@ -761,7 +761,7 @@ class FunctionsController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($this->lang['strdrop'], 'pg.function.drop');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/functions\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -823,8 +823,8 @@ class FunctionsController extends BaseController
     /**
      * Displays a screen where they can enter a new function.
      *
-     * @param string $msg message to display
-     * @param mixed $szJS
+     * @param string $msg  message to display
+     * @param mixed  $szJS
      */
     public function doCreate($msg = '', $szJS = '')
     {
@@ -911,16 +911,16 @@ class FunctionsController extends BaseController
                 $szSelected = ' selected="selected"';
             }
             // this variable is include in the JS code bellow, so we need to ENT_QUOTES
-            $szTypes .= '<option value="' . htmlspecialchars($types->fields['typname'], ENT_QUOTES) . "\"{$szSelected}>";
-            $szTypes .= htmlspecialchars($types->fields['typname'], ENT_QUOTES) . '</option>';
+            $szTypes .= '<option value="'.htmlspecialchars($types->fields['typname'], ENT_QUOTES)."\"{$szSelected}>";
+            $szTypes .= htmlspecialchars($types->fields['typname'], ENT_QUOTES).'</option>';
             $types->moveNext();
         }
 
-        $szFunctionName = "<td class=\"data1\"><input name=\"formFunction\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"" .
-        htmlspecialchars($_POST['formFunction']) . '" /></td>';
+        $szFunctionName = "<td class=\"data1\"><input name=\"formFunction\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"".
+        htmlspecialchars($_POST['formFunction']).'" /></td>';
 
-        $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="' .
-        htmlspecialchars($_POST['formArguments']) . '" /></td>';
+        $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="'.
+        htmlspecialchars($_POST['formArguments']).'" /></td>';
 
         $szSetOfSelected    = '';
         $szNotSetOfSelected = '';
@@ -935,7 +935,7 @@ class FunctionsController extends BaseController
         $szReturns .= "<option value=\"SETOF\"{$szSetOfSelected}>SETOF</option>";
         $szReturns .= '</select>';
 
-        $szReturns .= '<select class="select2" name="formReturns">' . $szTypes . '</select>';
+        $szReturns .= '<select class="select2" name="formReturns">'.$szTypes.'</select>';
 
         // Create string array type selector
 
@@ -955,7 +955,7 @@ class FunctionsController extends BaseController
         // Create string for language
         $szLanguage = '<td class="data1">';
         if ('c' == $fnlang || 'internal' == $fnlang) {
-            $szLanguage .= $_POST['formLanguage'] . "\n";
+            $szLanguage .= $_POST['formLanguage']."\n";
             $szLanguage .= "<input type=\"hidden\" name=\"formLanguage\" value=\"{$_POST['formLanguage']}\" />\n";
         } else {
             $szLanguage .= "<select name=\"formLanguage\">\n";
@@ -965,8 +965,8 @@ class FunctionsController extends BaseController
                     $szSelected = ' selected="selected"';
                 }
                 if ('c' != strtolower($langs->fields['lanname']) && 'internal' != strtolower($langs->fields['lanname'])) {
-                    $szLanguage .= '<option value="' . htmlspecialchars($langs->fields['lanname']) . "\"{$szSelected}>\n" .
-                    $this->misc->printVal($langs->fields['lanname']) . '</option>';
+                    $szLanguage .= '<option value="'.htmlspecialchars($langs->fields['lanname'])."\"{$szSelected}>\n".
+                    $this->misc->printVal($langs->fields['lanname']).'</option>';
                 }
 
                 $langs->moveNext();
@@ -988,9 +988,9 @@ class FunctionsController extends BaseController
         $szArgReturns .= '</select>';
         $subfolder = \SUBFOLDER;
         if (!empty($this->conf['theme'])) {
-            $szImgPath = \SUBFOLDER . "/images/themes/{$this->conf['theme']}";
+            $szImgPath = \SUBFOLDER."/images/themes/{$this->conf['theme']}";
         } else {
-            $szImgPath = \SUBFOLDER . '/images/themes/default';
+            $szImgPath = \SUBFOLDER.'/images/themes/default';
         }
         if (empty($msg)) {
             // $this->prtrace($subfolder);
@@ -1003,7 +1003,7 @@ class FunctionsController extends BaseController
         $szJSAddTR .= "<img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td>";
         $szJSAddTR .= "<td class=\"data3\"><span style=\"font-size: 8pt\">{$this->lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
 
-        echo '<script src="' . \SUBFOLDER . "/js/functions.js\" type=\"text/javascript\"></script>
+        echo '<script src="'.\SUBFOLDER."/js/functions.js\" type=\"text/javascript\"></script>
 		<script type=\"text/javascript\">
 			//<![CDATA[
 			var g_types_select = '<select class=\"select2\" name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
@@ -1020,7 +1020,7 @@ class FunctionsController extends BaseController
 			//]]>
 		</script>
 		";
-        echo '<form action="' . \SUBFOLDER . "/src/views//views/functions\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views//views/functions\" method=\"post\">\n";
         echo "<table><tbody id=\"args_table\">\n";
         echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>\n";
         echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strreturns']}</th>\n";
@@ -1063,10 +1063,10 @@ class FunctionsController extends BaseController
         // Display function cost options
         if ($data->hasFunctionCosting()) {
             echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strfunctioncosting']}</th></tr>\n";
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
-            htmlspecialchars($_POST['formCost']) . '" /></td>';
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"" .
-            htmlspecialchars($_POST['formRows']) . '" /></td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
+            htmlspecialchars($_POST['formCost']).'" /></td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"".
+            htmlspecialchars($_POST['formRows']).'" /></td>';
         }
 
         // Display function properties
@@ -1115,14 +1115,14 @@ class FunctionsController extends BaseController
 
         $szJS = '';
 
-        echo '<script src="' . \SUBFOLDER . '/js/functions.js" type="text/javascript"></script>';
-        echo '<script type="text/javascript">' . $this->buildJSData() . '</script>';
+        echo '<script src="'.\SUBFOLDER.'/js/functions.js" type="text/javascript"></script>';
+        echo '<script type="text/javascript">'.$this->buildJSData().'</script>';
         if (!empty($_POST['formArgName'])) {
             $szJS = $this->buildJSRows($this->buildFunctionArguments($_POST));
         } else {
             $subfolder = \SUBFOLDER;
             // $this->prtrace($subfolder);
-            $szJS = '<script type="text/javascript" src="' . \SUBFOLDER . '/js/functions.js">noArgsRebuild(addArg("' . $subfolder . '"));</script>';
+            $szJS = '<script type="text/javascript" src="'.\SUBFOLDER.'/js/functions.js">noArgsRebuild(addArg("'.$subfolder.'"));</script>';
         }
 
         $cost = (isset($_POST['formCost'])) ? $_POST['formCost'] : null;
@@ -1145,7 +1145,7 @@ class FunctionsController extends BaseController
             $status = $data->createFunction(
                 $_POST['formFunction'],
                 empty($_POST['nojs']) ? $this->buildFunctionArguments($_POST) : $_POST['formArguments'],
-                $_POST['formReturns'] . $_POST['formArray'],
+                $_POST['formReturns'].$_POST['formArray'],
                 $def,
                 $_POST['formLanguage'],
                 $_POST['formProperties'],
@@ -1167,6 +1167,7 @@ class FunctionsController extends BaseController
      * Build out the function arguments string.
      *
      * @param array $arrayVars
+     *
      * @return string the imploded array vars
      */
     private function buildFunctionArguments($arrayVars)
@@ -1174,7 +1175,7 @@ class FunctionsController extends BaseController
         if (isset($_POST['formArgName'])) {
             $arrayArgs = [];
             foreach ($arrayVars['formArgName'] as $pK => $pV) {
-                $arrayArgs[] = $arrayVars['formArgModes'][$pK] . ' ' . trim($pV) . ' ' . trim($arrayVars['formArgType'][$pK]) . $arrayVars['formArgArray'][$pK];
+                $arrayArgs[] = $arrayVars['formArgModes'][$pK].' '.trim($pV).' '.trim($arrayVars['formArgType'][$pK]).$arrayVars['formArgArray'][$pK];
             }
 
             return implode(',', $arrayArgs);
@@ -1232,7 +1233,7 @@ class FunctionsController extends BaseController
         $szTypes     = '';
 
         while (!$arrayTypes->EOF) {
-            $arrayPTypes[] = "'" . $arrayTypes->fields['typname'] . "'";
+            $arrayPTypes[] = "'".$arrayTypes->fields['typname']."'";
             $arrayTypes->moveNext();
         }
 
@@ -1240,9 +1241,9 @@ class FunctionsController extends BaseController
             $arrayPModes[] = "'{$pV}'";
         }
 
-        $szTypes = 'g_main_types = new Array(' . implode(',', $arrayPTypes) . ');';
-        $szModes = 'g_main_modes = new Array(' . implode(',', $arrayPModes) . ');';
+        $szTypes = 'g_main_types = new Array('.implode(',', $arrayPTypes).');';
+        $szModes = 'g_main_modes = new Array('.implode(',', $arrayPModes).');';
 
-        return $szTypes . $szModes;
+        return $szTypes.$szModes;
     }
 }

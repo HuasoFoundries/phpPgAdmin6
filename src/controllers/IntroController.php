@@ -33,7 +33,7 @@ class IntroController extends BaseController
     /**
      * Intro screen.
      *
-     * $Id: intro,v 1.19 2007/07/12 19:26:22 xzilla Exp $
+     * @version $Id: intro,v 1.19 2007/07/12 19:26:22 xzilla Exp $
      */
     public function doDefault()
     {

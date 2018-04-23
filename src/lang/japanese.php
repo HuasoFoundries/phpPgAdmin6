@@ -1,12 +1,7 @@
 <?php
 
 /**
- * Japanese language file for phpPgAdmin6.
- *
- * @maintainer Tadashi Jokagi [elf2000@users.sourceforge.net]
- *
- * $Id: japanese.php,v 1.19 2007/12/27 04:08:35 xzilla Exp $
- * EN-Revision: 1.228
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

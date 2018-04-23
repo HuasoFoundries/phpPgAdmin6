@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Ukrainian KOI8-U language file for phpPgAdmin6.
- *
- * @maintainer Alex Rootoff [rootoff{AT}pisem.net]
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

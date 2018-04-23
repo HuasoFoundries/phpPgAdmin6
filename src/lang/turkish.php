@@ -1,10 +1,7 @@
 <?php
 
 /**
- * Turkish language file for phpPgAdmin6.  Use this as a basis
- * for new translations.
- *
- * $Id: turkish.php,v 1.15 2007/04/24 11:42:07 soranzo Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

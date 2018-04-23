@@ -1,11 +1,7 @@
 <?php
 
 /**
- * Brazilian Portuguese language file for phpPgAdmin6.
- *
- * @maintainer Fernando Alberto Reuter Wendt (fernandowendt@msn.com)
- *
- * $Id: portuguese-br.php,v 2.1 2011/01/25 09:25:10 fwendt Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

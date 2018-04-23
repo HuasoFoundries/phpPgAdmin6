@@ -20,7 +20,7 @@ use PHPPgAdmin\Decorators\Decorator;
 /**
  * Class to hold various commonly used functions.
  *
- * $Id: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
+ * @version $Id: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
  *
  * @package PHPPgAdmin
  */
@@ -113,7 +113,7 @@ class Misc
 
         if (count($this->conf['servers']) === 1) {
             $info             = $this->conf['servers'][0];
-            $this->_server_id = sha1($info['host'] . ':' . $info['port'] . ':' . $info['sslmode']);
+            $this->_server_id = sha1($info['host'].':'.$info['port'].':'.$info['sslmode']);
         } elseif ($request_server !== null) {
             $this->_server_id = $request_server;
         } elseif (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
@@ -128,11 +128,13 @@ class Misc
      * Sets the view instance property of this class.
      *
      * @param \Slim\Views\Twig $view view instance
+     *
      * @return \PHPPgAdmin\Misc this class instance
      */
     public function setView(\Slim\Views\Twig $view)
     {
         $this->view = $view;
+
         return $this;
     }
 
@@ -154,9 +156,9 @@ class Misc
     /**
      * gets the value of a config property, or the array of all config properties.
      *
-     * @param string|null $key value of the key to be retrieved. If null, the full array is returnes
+     * @param null|string $key value of the key to be retrieved. If null, the full array is returnes
      *
-     * @return array|string|null the whole $conf array, the value of $conf[key] or null if said key does not exist
+     * @return null|array|string the whole $conf array, the value of $conf[key] or null if said key does not exist
      */
     public function getConf($key = null)
     {
@@ -173,17 +175,17 @@ class Misc
     /**
      * Displays link to the context help.
      *
-     * @param string $str   the string that the context help is related to (already escaped)
-     * @param string $help  help section identifier
-     * @param bool $do_print true to echo, false to return
+     * @param string $str      the string that the context help is related to (already escaped)
+     * @param string $help     help section identifier
+     * @param bool   $do_print true to echo, false to return
      */
     public function printHelp($str, $help = null, $do_print = true)
     {
         //\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
         if ($help !== null) {
             $helplink = $this->getHelpLink($help);
-            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">';
-            $str .= $this->lang['strhelpicon'] . '</a>';
+            $str .= '<a class="help" href="'.$helplink.'" title="'.$this->lang['strhelp'].'" target="phppgadminhelp">';
+            $str .= $this->lang['strhelpicon'].'</a>';
         }
         if ($do_print) {
             echo $str;
@@ -195,13 +197,13 @@ class Misc
     /**
      * Gets the help link.
      *
-     * @param string  $help  The help subject
+     * @param string $help The help subject
      *
-     * @return string  The help link.
+     * @return string the help link
      */
     public function getHelpLink($help)
     {
-        return htmlspecialchars(SUBFOLDER . '/help?help=' . urlencode($help) . '&server=' . urlencode($this->getServerId()));
+        return htmlspecialchars(SUBFOLDER.'/help?help='.urlencode($help).'&server='.urlencode($this->getServerId()));
     }
 
     /**
@@ -245,7 +247,7 @@ class Misc
     /**
      * Gets member variable $_no_db_connection.
      *
-     * @return bool  value of member variable $_no_db_connection
+     * @return bool value of member variable $_no_db_connection
      */
     public function getNoDBConnection()
     {
@@ -267,9 +269,9 @@ class Misc
     }
 
     /**
-     * Returns the error messages stored in member variable $_error_msg
+     * Returns the error messages stored in member variable $_error_msg.
      *
-     * @return string  The error message.
+     * @return string the error message
      */
     public function getErrorMsg()
     {
@@ -328,7 +330,7 @@ class Misc
 
                 return null;
             }
-            $_type = '\PHPPgAdmin\Database\\' . $_type;
+            $_type = '\PHPPgAdmin\Database\\'.$_type;
 
             $this->setServerInfo('platform', $platform, $this->_server_id);
             $this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $this->_server_id);
@@ -441,12 +443,13 @@ class Misc
         // Check for the server in the logged-in list
         if (isset($_SESSION['webdbLogin'][$this->_server_id])) {
             $this->_server_info = $_SESSION['webdbLogin'][$this->_server_id];
+
             return $this->_server_info;
         }
 
         // Otherwise, look for it in the conf file
         foreach ($this->conf['servers'] as $idx => $info) {
-            $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+            $server_string = $info['host'].':'.$info['port'].':'.$info['sslmode'];
             $server_sha    = sha1($server_string);
 
             if ($this->_server_id === $server_string || $this->_server_id === $server_sha) {
@@ -479,10 +482,10 @@ class Misc
     /**
      * Set server information.
      *
-     * @param string $key parameter name to set, or null to replace all
-     *             params with the assoc-array in $value
-     * @param mixed $value the new value, or null to unset the parameter
-     * @param string|null $server_id the server identifier, or null for current server
+     * @param string      $key       parameter name to set, or null to replace all
+     *                               params with the assoc-array in $value
+     * @param mixed       $value     the new value, or null to unset the parameter
+     * @param null|string $server_id the server identifier, or null for current server
      */
     public function setServerInfo($key, $value, $server_id = null)
     {
@@ -594,13 +597,13 @@ class Misc
         $schema   = $this->container->schema || isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null;
 
         if ($server && $exclude_from !== 'server') {
-            $href[] = 'server=' . urlencode($server);
+            $href[] = 'server='.urlencode($server);
         }
         if ($database && $exclude_from !== 'database') {
-            $href[] = 'database=' . urlencode($database);
+            $href[] = 'database='.urlencode($database);
         }
         if ($schema && $exclude_from !== 'schema') {
-            $href[] = 'schema=' . urlencode($schema);
+            $href[] = 'schema='.urlencode($schema);
         }
 
         $this->href = htmlentities(implode('&', $href));
@@ -676,7 +679,7 @@ class Misc
                         'schema'   => $_REQUEST['schema'],
                         'table'    => $_REQUEST['table'],
                         'action'   => 'confselectrows',
-                    ]];
+                    ], ];
 
                 break;
             case 'view':
@@ -763,7 +766,7 @@ class Misc
                         'server'  => $_REQUEST['server'],
                         'subject' => 'plugin',
                         'plugin'  => $_REQUEST['plugin'],
-                    ]];
+                    ], ];
 
                 if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin']))) {
                     $vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
@@ -775,10 +778,10 @@ class Misc
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = SUBFOLDER . '/redirect';
+            $vars['url'] = SUBFOLDER.'/redirect';
         }
-        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER.'/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER.'/redirect/'.$vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -792,14 +795,14 @@ class Misc
     {
         $form = [];
         if ($this->container->server) {
-            $form[] = '<input type="hidden" name="server" value="' . htmlspecialchars($this->container->server) . '" />';
+            $form[] = '<input type="hidden" name="server" value="'.htmlspecialchars($this->container->server).'" />';
         }
         if ($this->container->database) {
-            $form[] = '<input type="hidden" name="database" value="' . htmlspecialchars($this->container->database) . '" />';
+            $form[] = '<input type="hidden" name="database" value="'.htmlspecialchars($this->container->database).'" />';
         }
 
         if ($this->container->schema) {
-            $form[] = '<input type="hidden" name="schema" value="' . htmlspecialchars($this->container->schema) . '" />';
+            $form[] = '<input type="hidden" name="schema" value="'.htmlspecialchars($this->container->schema).'" />';
         }
         $this->form = implode("\n", $form);
 
@@ -813,25 +816,25 @@ class Misc
      *
      * @param string $str    The string to change
      * @param string $type   Field type (optional), this may be an internal PostgreSQL type, or:
-     *                      yesno    - same as bool, but renders as 'Yes' or 'No'.
-     *                      pre      - render in a <pre> block.
-     *                      nbsp     - replace all spaces with &nbsp;'s
-     *                      verbatim - render exactly as supplied, no escaping what-so-ever.
-     *                      callback - render using a callback function supplied in the 'function' param.
-     * @param array $params Type parameters (optional), known parameters:
-     *                      null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
-     *                      otherwise nothing is rendered.
-     *                      clip     - if true, clip the value to a fixed length, and append an ellipsis...
-     *                      cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
-     *                      ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
-     *                      tag      - an HTML element name to surround the value.
-     *                      class    - a class attribute to apply to any surrounding HTML element.
-     *                      align    - an align attribute ('left','right','center' etc.)
-     *                      true     - (type='bool') the representation of true.
-     *                      false    - (type='bool') the representation of false.
-     *                      function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
-     *                      lineno   - prefix each line with a line number.
-     *                      map      - an associative array.
+     *                       yesno    - same as bool, but renders as 'Yes' or 'No'.
+     *                       pre      - render in a <pre> block.
+     *                       nbsp     - replace all spaces with &nbsp;'s
+     *                       verbatim - render exactly as supplied, no escaping what-so-ever.
+     *                       callback - render using a callback function supplied in the 'function' param.
+     * @param array  $params Type parameters (optional), known parameters:
+     *                       null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
+     *                       otherwise nothing is rendered.
+     *                       clip     - if true, clip the value to a fixed length, and append an ellipsis...
+     *                       cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
+     *                       ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
+     *                       tag      - an HTML element name to surround the value.
+     *                       class    - a class attribute to apply to any surrounding HTML element.
+     *                       align    - an align attribute ('left','right','center' etc.)
+     *                       true     - (type='bool') the representation of true.
+     *                       false    - (type='bool') the representation of false.
+     *                       function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
+     *                       lineno   - prefix each line with a line number.
+     *                       map      - an associative array.
      *
      * @return string The HTML rendered value
      */
@@ -856,7 +859,7 @@ class Misc
             $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
             $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
             if (strlen($str) > $maxlen) {
-                $str = substr($str, 0, $maxlen - 1) . $ellipsis;
+                $str = substr($str, 0, $maxlen - 1).$ellipsis;
             }
         }
 
@@ -951,23 +954,23 @@ class Misc
                     $limit = 10 * 1024;
                     $mult  = 1;
                     if ($str < $limit * $mult) {
-                        $out = $str . ' ' . $lang['strbytes'];
+                        $out = $str.' '.$lang['strbytes'];
                     } else {
                         $mult *= 1024;
                         if ($str < $limit * $mult) {
-                            $out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strkb'];
+                            $out = floor(($str + $mult / 2) / $mult).' '.$lang['strkb'];
                         } else {
                             $mult *= 1024;
                             if ($str < $limit * $mult) {
-                                $out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strmb'];
+                                $out = floor(($str + $mult / 2) / $mult).' '.$lang['strmb'];
                             } else {
                                 $mult *= 1024;
                                 if ($str < $limit * $mult) {
-                                    $out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strgb'];
+                                    $out = floor(($str + $mult / 2) / $mult).' '.$lang['strgb'];
                                 } else {
                                     $mult *= 1024;
                                     if ($str < $limit * $mult) {
-                                        $out = floor(($str + $mult / 2) / $mult) . ' ' . $lang['strtb'];
+                                        $out = floor(($str + $mult / 2) / $mult).' '.$lang['strtb'];
                                     }
                                 }
                             }
@@ -1014,7 +1017,7 @@ class Misc
             if ($num > 0) {
                 $temp = "<table>\n<tr><td class=\"{$class}\" style=\"vertical-align: top; padding-right: 10px;\"><pre class=\"{$class}\">";
                 for ($i = 1; $i <= $num; ++$i) {
-                    $temp .= $i . "\n";
+                    $temp .= $i."\n";
                 }
                 $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>\n";
                 $out = $temp;
@@ -1265,7 +1268,7 @@ class Misc
                         'icon'    => 'Views',
                     ],
                     'matviews'    => [
-                        'title'   => 'M ' . $lang['strviews'],
+                        'title'   => 'M '.$lang['strviews'],
                         'url'     => 'materializedviews',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.matview',
@@ -1769,10 +1772,10 @@ class Misc
     /**
      * Do multi-page navigation.  Displays the prev, next and page options.
      *
-     * @param int $page - the page currently viewed
-     * @param int $pages - the maximum number of pages
-     * @param string $gets -  the parameters to include in the link to the wanted page
-     * @param int $max_width - the number of pages to make available at any one time (default = 20)
+     * @param int    $page      - the page currently viewed
+     * @param int    $pages     - the maximum number of pages
+     * @param string $gets      -  the parameters to include in the link to the wanted page
+     * @param int    $max_width - the number of pages to make available at any one time (default = 20)
      */
     public function printPages($page, $pages, $gets, $max_width = 20)
     {
@@ -1897,43 +1900,43 @@ class Misc
     {
         if (is_string($icon)) {
             $path = "/images/themes/{$this->conf['theme']}/{$icon}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
+            if (file_exists(\BASE_PATH.$path.'.png')) {
+                return SUBFOLDER.$path.'.png';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
+            if (file_exists(\BASE_PATH.$path.'.gif')) {
+                return SUBFOLDER.$path.'.gif';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
+            if (file_exists(\BASE_PATH.$path.'.ico')) {
+                return SUBFOLDER.$path.'.ico';
             }
 
             $path = "/images/themes/default/{$icon}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
+            if (file_exists(\BASE_PATH.$path.'.png')) {
+                return SUBFOLDER.$path.'.png';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
+            if (file_exists(\BASE_PATH.$path.'.gif')) {
+                return SUBFOLDER.$path.'.gif';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
+            if (file_exists(\BASE_PATH.$path.'.ico')) {
+                return SUBFOLDER.$path.'.ico';
             }
         } else {
             // Icon from plugins
             $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
+            if (file_exists(\BASE_PATH.$path.'.png')) {
+                return SUBFOLDER.$path.'.png';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
+            if (file_exists(\BASE_PATH.$path.'.gif')) {
+                return SUBFOLDER.$path.'.gif';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
+            if (file_exists(\BASE_PATH.$path.'.ico')) {
+                return SUBFOLDER.$path.'.ico';
             }
         }
 
@@ -1980,7 +1983,7 @@ class Misc
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $data->fieldClean($str);
 
-            return '"' . $str . '"';
+            return '"'.$str.'"';
         }
 
         return escapeshellcmd($str);
@@ -2010,22 +2013,22 @@ class Misc
      * @param tring $table The table to retrieve FK contraints from
      *
      * @return array|bool the array of FK definition:
-     *   array(
-     *     'byconstr' => array(
-     *       constrain id => array(
-     *         confrelid => foreign relation oid
-     *         f_schema => foreign schema name
-     *         f_table => foreign table name
-     *         pattnums => array of parent's fields nums
-     *         pattnames => array of parent's fields names
-     *         fattnames => array of foreign attributes names
-     *       )
-     *     ),
-     *     'byfield' => array(
-     *       attribute num => array (constraint id, ...)
-     *     ),
-     *     'code' => HTML/js code to include in the page for auto-completion
-     *   )
+     *                    array(
+     *                    'byconstr' => array(
+     *                    constrain id => array(
+     *                    confrelid => foreign relation oid
+     *                    f_schema => foreign schema name
+     *                    f_table => foreign table name
+     *                    pattnums => array of parent's fields nums
+     *                    pattnames => array of parent's fields names
+     *                    fattnames => array of foreign attributes names
+     *                    )
+     *                    ),
+     *                    'byfield' => array(
+     *                    attribute num => array (constraint id, ...)
+     *                    ),
+     *                    'code' => HTML/js code to include in the page for auto-completion
+     *                    )
      */
     public function getAutocompleteFKProperties($table)
     {
@@ -2071,38 +2074,38 @@ class Misc
             $fksprops['code'] .= "var constrs = {};\n";
             foreach ($fksprops['byconstr'] as $conid => $props) {
                 $fksprops['code'] .= "constrs.constr_{$conid} = {\n";
-                $fksprops['code'] .= 'pattnums: [' . implode(',', $props['pattnums']) . "],\n";
-                $fksprops['code'] .= "f_table:'" . addslashes(htmlentities($props['f_table'], ENT_QUOTES, 'UTF-8')) . "',\n";
-                $fksprops['code'] .= "f_schema:'" . addslashes(htmlentities($props['f_schema'], ENT_QUOTES, 'UTF-8')) . "',\n";
+                $fksprops['code'] .= 'pattnums: ['.implode(',', $props['pattnums'])."],\n";
+                $fksprops['code'] .= "f_table:'".addslashes(htmlentities($props['f_table'], ENT_QUOTES, 'UTF-8'))."',\n";
+                $fksprops['code'] .= "f_schema:'".addslashes(htmlentities($props['f_schema'], ENT_QUOTES, 'UTF-8'))."',\n";
                 $_ = '';
                 foreach ($props['pattnames'] as $n) {
-                    $_ .= ",'" . htmlentities($n, ENT_QUOTES, 'UTF-8') . "'";
+                    $_ .= ",'".htmlentities($n, ENT_QUOTES, 'UTF-8')."'";
                 }
-                $fksprops['code'] .= 'pattnames: [' . substr($_, 1) . "],\n";
+                $fksprops['code'] .= 'pattnames: ['.substr($_, 1)."],\n";
 
                 $_ = '';
                 foreach ($props['fattnames'] as $n) {
-                    $_ .= ",'" . htmlentities($n, ENT_QUOTES, 'UTF-8') . "'";
+                    $_ .= ",'".htmlentities($n, ENT_QUOTES, 'UTF-8')."'";
                 }
 
-                $fksprops['code'] .= 'fattnames: [' . substr($_, 1) . "]\n";
+                $fksprops['code'] .= 'fattnames: ['.substr($_, 1)."]\n";
                 $fksprops['code'] .= "};\n";
             }
 
             $fksprops['code'] .= "var attrs = {};\n";
             foreach ($fksprops['byfield'] as $attnum => $cstrs) {
-                $fksprops['code'] .= "attrs.attr_{$attnum} = [" . implode(',', $fksprops['byfield'][$attnum]) . "];\n";
+                $fksprops['code'] .= "attrs.attr_{$attnum} = [".implode(',', $fksprops['byfield'][$attnum])."];\n";
             }
 
-            $fksprops['code'] .= "var table='" . addslashes(htmlentities($table, ENT_QUOTES, 'UTF-8')) . "';";
-            $fksprops['code'] .= "var server='" . htmlentities($_REQUEST['server'], ENT_QUOTES, 'UTF-8') . "';";
-            $fksprops['code'] .= "var database='" . addslashes(htmlentities($_REQUEST['database'], ENT_QUOTES, 'UTF-8')) . "';";
-            $fksprops['code'] .= "var subfolder='" . SUBFOLDER . "';";
+            $fksprops['code'] .= "var table='".addslashes(htmlentities($table, ENT_QUOTES, 'UTF-8'))."';";
+            $fksprops['code'] .= "var server='".htmlentities($_REQUEST['server'], ENT_QUOTES, 'UTF-8')."';";
+            $fksprops['code'] .= "var database='".addslashes(htmlentities($_REQUEST['database'], ENT_QUOTES, 'UTF-8'))."';";
+            $fksprops['code'] .= "var subfolder='".SUBFOLDER."';";
             $fksprops['code'] .= "</script>\n";
 
             $fksprops['code'] .= '<div id="fkbg"></div>';
             $fksprops['code'] .= '<div id="fklist"></div>';
-            $fksprops['code'] .= '<script src="' . SUBFOLDER . '/js/ac_insert_row.js" type="text/javascript"></script>';
+            $fksprops['code'] .= '<script src="'.SUBFOLDER.'/js/ac_insert_row.js" type="text/javascript"></script>';
         } else {
             /* we have no foreign keys on this table */
             return false;

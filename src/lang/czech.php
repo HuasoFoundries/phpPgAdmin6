@@ -1,10 +1,7 @@
 <?php
 
 /**
- * Czech language file for phpPgAdmin6. Based on Englis file.
- * Translators: marek@manet.cz
- *
- * $Id: czech.php,v 1.232 2010/08/27 16:34:33 ioguix Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

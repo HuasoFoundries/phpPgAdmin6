@@ -1,11 +1,7 @@
 <?php
 
 /**
- * Swedish language file for phpPgAdmin6.
- * maintainer S. Malmqvist <samoola@slak.nu>
- * Due to lack of SQL knowledge som translations may be wrong, mail me the correct one and ill fix it
- *
- * $Id: swedish.php,v 1.11 2007/04/24 11:42:07 soranzo Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

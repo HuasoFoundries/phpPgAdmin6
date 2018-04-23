@@ -1,8 +1,7 @@
 <?php
 
-/*
- *        Slovenska lokalizacia phpPgAdmin6-u.
- *                             ado (at) imladris.sk
+/**
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

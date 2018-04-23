@@ -1,9 +1,7 @@
 <?php
+
 /**
- * Romanian language file, based on the english language file for phpPgAdmin6.
- * Alin Vaida [alin.vaida@gmail.com]
- *
- * $Id: romanian.php,v 1.7 2007/04/24 11:42:07 soranzo Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

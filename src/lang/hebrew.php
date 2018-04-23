@@ -1,10 +1,7 @@
 <?php
 
 /**
- * Hebrew language file for phpPgAdmin6.
- * Jonatan Perry <Jonatan44@hotpop.com>
- *
- * $Id: hebrew.php,v 1.4 2007/04/24 11:42:07 soranzo Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

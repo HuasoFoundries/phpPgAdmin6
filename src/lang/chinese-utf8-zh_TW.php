@@ -1,13 +1,7 @@
 <?php
 
 /**
- * Chinese zh_TW translation file for phpPgAdmin6.  Use this as a basis
- * for new translations.
- *
- * @maintainer 郭朝益  [Kuo.ChaoYi@gmail.com]
- *
- * $Id: chinese-utf8-zh_TW.php,v 1.6 2008/01/03 03:11:57 xzilla Exp $
- * EN-Revision: 1.228
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

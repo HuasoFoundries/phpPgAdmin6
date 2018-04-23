@@ -1,10 +1,7 @@
 <?php
 
 /**
- * English language file for phpPgAdmin6.  Use this as a basis
- * for new translations.
- *
- * $Id: english.php,v 1.232 2008/02/23 16:34:33 ioguix Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

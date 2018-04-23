@@ -1,9 +1,7 @@
 <?php
 
-/*
- * Greek language file for phpPgAdmin6.
- *
- * $Id: greek.php,v 0.5 June 2009, Adamantios Diamantidis Exp $
+/**
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

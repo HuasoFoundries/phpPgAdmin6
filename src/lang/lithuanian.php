@@ -1,11 +1,7 @@
 <?php
 
 /**
- * Lithuanian language file for phpPgAdmin6.
- *
- * @maintainer artvras [artvras@users.sourceforge.net]
- *
- * $Id: lithuanian.php,v 1.0 2011/05/25 14:34:33 $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

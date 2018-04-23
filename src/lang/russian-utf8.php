@@ -1,12 +1,7 @@
 <?php
 
 /**
- * Russian UTF-8 language file for phpPgAdmin6.
- * based on translation of Alexander Khodorivsky [askh@ukr.net]
- *
- * @maintainer Alexey Baturin [alexey.baturin.nsk@gmail.com]
- *
- * $Id: russian.php,v 1.12 2007/04/24 11:42:07 soranzo Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

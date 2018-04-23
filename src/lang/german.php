@@ -1,11 +1,7 @@
 <?php
 
 /**
- * German language file for phpPgAdmin6.  Use this as a basis
- *
- * @maintainer Laurenz Albe <laurenz.albe@wien.gv.at>
- *
- * $Id: german.php,v 1.30 2008/02/18 23:06:51 ioguix Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

@@ -33,9 +33,9 @@ class ContainerUtils
 
         // but if server_id isn't set, then you will be redirected to intro
         if ($this->container->requestobj->getQueryParam('server') === null) {
-            $destinationurl = \SUBFOLDER . '/src/views/intro';
+            $destinationurl = \SUBFOLDER.'/src/views/intro';
         } else {
-            $destinationurl = \SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = \SUBFOLDER.'/src/views/login'.($query_string ? '?'.$query_string : '');
         }
 
         return $destinationurl;
@@ -78,5 +78,4 @@ class ContainerUtils
 
         return $this->container;
     }
-
 }

@@ -1,10 +1,7 @@
 <?php
 
 /**
- * Catalan language file for phpPgAdmin6.
- * mantainer: Bernat Pegueroles <bpf@pegueroles.com>
- *
- * $Id: catalan.php,v 1.4 2008/03/14 03:31:43 xzilla Exp $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set

@@ -122,7 +122,7 @@ class Postgres74 extends Postgres80
          * So we must use PostgreSQL specific notation :/
          * E'' notation is not available before 8.1
          * $$ is available since 8.0
-         * Nothing specific from 7.4
+         * Nothing specific from 7.4.
          */
 
         // Escape search term for ILIKE match
@@ -297,13 +297,13 @@ class Postgres74 extends Postgres80
      * @param string $table      The table in which the column resides
      * @param string $column     The column to alter
      * @param string $name       The new name for the column
-     * @param bool $notnull    (boolean) True if not null, false otherwise
-     * @param bool $oldnotnull (boolean) True if column is already not null, false otherwise
+     * @param bool   $notnull    (boolean) True if not null, false otherwise
+     * @param bool   $oldnotnull (boolean) True if column is already not null, false otherwise
      * @param string $default    The new default for the column
      * @param string $olddefault The old default for the column
      * @param string $type       The new type for the column
-     * @param int $length     The optional size of the column (ie. 30 for varchar(30))
-     * @param bool $array      True if array type, false otherwise
+     * @param int    $length     The optional size of the column (ie. 30 for varchar(30))
+     * @param bool   $array      True if array type, false otherwise
      * @param string $oldtype    The old type for the column
      * @param string $comment    Comment for the column
      *
@@ -652,12 +652,12 @@ class Postgres74 extends Postgres80
      * Protected method which alter a table
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param  \PHPPgAdmin\ADORecordSet $tblrs      The table recordSet returned by getTable()
-     * @param string $name       The new name for the table
-     * @param string $owner      The new owner for the table
-     * @param string $schema     The new schema for the table
-     * @param string $comment    The comment on the table
-     * @param string $tablespace The new tablespace for the table ('' means leave as is)
+     * @param \PHPPgAdmin\ADORecordSet $tblrs      The table recordSet returned by getTable()
+     * @param string                   $name       The new name for the table
+     * @param string                   $owner      The new owner for the table
+     * @param string                   $schema     The new schema for the table
+     * @param string                   $comment    The comment on the table
+     * @param string                   $tablespace The new tablespace for the table ('' means leave as is)
      *
      * @return int 0 success
      */

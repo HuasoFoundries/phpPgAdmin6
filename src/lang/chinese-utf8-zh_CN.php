@@ -1,8 +1,7 @@
 <?php
+
 /**
- * Chinese language file for phpPgAdmin6.
- *
- * $Id: chinese-utf8-zh_CN.php,v 1.6 2013/04/15 cozhan $
+ * PHPPgAdmin v6.0.0-beta.43
  */
 
 // Language and character set
