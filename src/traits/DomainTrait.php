@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.43
  */
 
-namespace PHPPgAdmin\Database;
+namespace PHPPgAdmin\Traits;
 
 /**
  * Common trait for domains manipulation.

@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.43
  */
 
-namespace PHPPgAdmin;
+namespace PHPPgAdmin\Traits;
 
 /**
  * @file

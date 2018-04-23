@@ -21,7 +21,7 @@ class XHtmlSimpleElement
     public $_htmlcode;
     public $_attributes = [];
 
-    use \PHPPgAdmin\HelperTrait;
+    use \PHPPgAdmin\Traits\HelperTrait;
 
     /**
      * Constructor.

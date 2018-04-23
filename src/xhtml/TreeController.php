@@ -13,7 +13,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class TreeController
 {
-    use \PHPPgAdmin\HelperTrait;
+    use \PHPPgAdmin\Traits\HelperTrait;
 
     protected $container;
     public $form             = '';
@@ -135,7 +135,7 @@ class TreeController
             }
         } else {
             $msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
-            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"".$this->misc->icon('ObjectNotFound').'" />'."\n";
+            $tree_xml .= "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"" . $this->misc->icon('ObjectNotFound') . '" />' . "\n";
         }
 
         $tree_xml .= '</tree>';
@@ -181,10 +181,10 @@ class TreeController
             $parent = [
                 'id'       => 'root',
                 'children' => true,
-                'icon'     => \SUBFOLDER.'/images/themes/default/Servers.png',
+                'icon'     => \SUBFOLDER . '/images/themes/default/Servers.png',
                 'state'    => ['opened' => true],
-                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER.'/src/views/servers')],
-                'url'      => str_replace('//', '/', \SUBFOLDER.'/src/views/servers?action=tree'),
+                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER . '/src/views/servers')],
+                'url'      => str_replace('//', '/', \SUBFOLDER . '/src/views/servers?action=tree'),
                 'text'     => 'Servers',
             ];
         } elseif (count($treedata) > 0) {
@@ -206,7 +206,7 @@ class TreeController
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
                 if ($url && strpos($url, '/src/views') === false) {
-                    $url = str_replace('//', '/', \SUBFOLDER.'/src/views/'.$url);
+                    $url = str_replace('//', '/', \SUBFOLDER . '/src/views/' . $url);
                 }
                 if ($url) {
                     $tree['url']      = $url;

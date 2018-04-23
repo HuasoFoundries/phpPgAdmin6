@@ -13,7 +13,7 @@ namespace PHPPgAdmin\Controller;
  */
 class BaseController
 {
-    use \PHPPgAdmin\HelperTrait;
+    use \PHPPgAdmin\Traits\HelperTrait;
 
     protected $container;
     protected $_connection;
@@ -358,9 +358,9 @@ class BaseController
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
-        $msg  = htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($msg));
+        $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
+            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
         }
         if ($do_print) {
             echo $html;

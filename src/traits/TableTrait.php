@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.43
  */
 
-namespace PHPPgAdmin\Database;
+namespace PHPPgAdmin\Traits;
 
 /**
  * Common trait for tables manipulation.
@@ -146,7 +146,7 @@ trait TableTrait
         }
 
         // Output a reconnect command to create the table as the correct user
-        $sql = $this->getChangeUserSQL($t->fields['relowner'])."\n\n";
+        $sql = $this->getChangeUserSQL($t->fields['relowner']) . "\n\n";
 
         // Set schema search path
         $sql .= "SET search_path = \"{$t->fields['nspname']}\", pg_catalog;\n\n";
@@ -179,7 +179,7 @@ trait TableTrait
                     $sql .= ' BIGSERIAL';
                 }
             } else {
-                $sql .= ' '.$this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
+                $sql .= ' ' . $this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
 
                 // Add NOT NULL if necessary
                 if ($this->phpBool($atts->fields['attnotnull'])) {
@@ -219,12 +219,12 @@ trait TableTrait
                 switch ($cons->fields['contype']) {
                     case 'p':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'PRIMARY KEY ('.join(',', $keys).')';
+                        $sql .= 'PRIMARY KEY (' . join(',', $keys) . ')';
 
                         break;
                     case 'u':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'UNIQUE ('.join(',', $keys).')';
+                        $sql .= 'UNIQUE (' . join(',', $keys) . ')';
 
                         break;
                     default:
@@ -373,7 +373,7 @@ trait TableTrait
                 }
 
                 // Output privileges with no GRANT OPTION
-                $sql .= 'GRANT '.join(', ', $nongrant)." ON TABLE \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT ' . join(', ', $nongrant) . " ON TABLE \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= "PUBLIC;\n";
@@ -415,7 +415,7 @@ trait TableTrait
                     $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
                 }
 
-                $sql .= 'GRANT '.join(', ', $v[4])." ON \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT ' . join(', ', $v[4]) . " ON \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= 'PUBLIC';
@@ -648,7 +648,7 @@ trait TableTrait
         if ($indexes->recordCount() > 0) {
             $sql .= "\n-- Indexes\n\n";
             while (!$indexes->EOF) {
-                $sql .= $indexes->fields['inddef'].";\n";
+                $sql .= $indexes->fields['inddef'] . ";\n";
 
                 $indexes->moveNext();
             }
@@ -683,7 +683,7 @@ trait TableTrait
         if ($rules->recordCount() > 0) {
             $sql .= "\n-- Rules\n\n";
             while (!$rules->EOF) {
-                $sql .= $rules->fields['definition']."\n";
+                $sql .= $rules->fields['definition'] . "\n";
 
                 $rules->moveNext();
             }
@@ -911,7 +911,7 @@ trait TableTrait
             }
         }
         if (count($primarykeycolumns) > 0) {
-            $sql .= ', PRIMARY KEY ('.implode(', ', $primarykeycolumns).')';
+            $sql .= ', PRIMARY KEY (' . implode(', ', $primarykeycolumns) . ')';
         }
 
         $sql .= ')';
@@ -1234,7 +1234,7 @@ trait TableTrait
 
         $sql = "TRUNCATE TABLE \"{$f_schema}\".\"{$table}\" ";
         if ($cascade) {
-            $sql = $sql.' CASCADE';
+            $sql = $sql . ' CASCADE';
         }
 
         $status = $this->execute($sql);
@@ -1324,7 +1324,7 @@ trait TableTrait
 
             // DEFAULT clause
             if ($default != '') {
-                $sql .= ' DEFAULT '.$default;
+                $sql .= ' DEFAULT ' . $default;
             }
         }
 
@@ -1410,7 +1410,7 @@ trait TableTrait
         $toAlter = [];
         // Create the command for changing nullability
         if ($notnull != $oldnotnull) {
-            $toAlter[] = "ALTER COLUMN \"{$name}\" ".($notnull ? 'SET' : 'DROP').' NOT NULL';
+            $toAlter[] = "ALTER COLUMN \"{$name}\" " . ($notnull ? 'SET' : 'DROP') . ' NOT NULL';
         }
 
         // Add default, if it has changed
@@ -1459,7 +1459,7 @@ trait TableTrait
         if (!empty($toAlter)) {
             // Initialise an empty SQL string
             $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" "
-            .implode(',', $toAlter);
+            . implode(',', $toAlter);
 
             $status = $this->execute($sql);
             if ($status != 0) {
@@ -1539,7 +1539,7 @@ trait TableTrait
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" ".($state ? 'DROP' : 'SET').' NOT NULL';
+        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . ($state ? 'DROP' : 'SET') . ' NOT NULL';
 
         return $this->execute($sql);
     }
@@ -1658,7 +1658,7 @@ trait TableTrait
 
         // Actually retrieve the rows
         if ($oids) {
-            $oid_str = $this->id.', ';
+            $oid_str = $this->id . ', ';
         } else {
             $oid_str = '';
         }
@@ -1818,12 +1818,12 @@ trait TableTrait
                 if (isset($nulls[$i])) {
                     $sql .= ',NULL';
                 } else {
-                    $sql .= ','.$this->formatValue($types[$i], $format[$i], $value);
+                    $sql .= ',' . $this->formatValue($types[$i], $format[$i], $value);
                 }
             }
 
-            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"".implode('","', $fields).'")
-                VALUES ('.substr($sql, 1).')';
+            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . implode('","', $fields) . '")
+                VALUES (' . substr($sql, 1) . ')';
 
             return $this->execute($sql);
         }

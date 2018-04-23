@@ -993,7 +993,7 @@ class FunctionsController extends BaseController
             $szImgPath = \SUBFOLDER . '/images/themes/default';
         }
         if (empty($msg)) {
-            $this->prtrace($subfolder);
+            // $this->prtrace($subfolder);
             $szJSTRArg = "<script type=\"text/javascript\" >addArg('{$subfolder}');</script>\n";
         } else {
             $szJSTRArg = '';
@@ -1121,7 +1121,7 @@ class FunctionsController extends BaseController
             $szJS = $this->buildJSRows($this->buildFunctionArguments($_POST));
         } else {
             $subfolder = \SUBFOLDER;
-            $this->prtrace($subfolder);
+            // $this->prtrace($subfolder);
             $szJS = '<script type="text/javascript" src="' . \SUBFOLDER . '/js/functions.js">noArgsRebuild(addArg("' . $subfolder . '"));</script>';
         }
 
@@ -1211,7 +1211,7 @@ class FunctionsController extends BaseController
             }
             $arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
             $subfolder         = \SUBFOLDER;
-            $this->prtrace($subfolder);
+            // $this->prtrace($subfolder);
             $szReturn .= '<script type="text/javascript">';
             $szReturn .= "RebuildArgTR('{$szMode}','{$szArgName}','{$szArgType}',new Boolean({$bArgIsArray},{$subfolder}));";
             $szReturn .= '</script>;';

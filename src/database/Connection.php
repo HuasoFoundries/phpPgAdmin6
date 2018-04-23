@@ -16,7 +16,7 @@ namespace PHPPgAdmin\Database;
  */
 class Connection
 {
-    use \PHPPgAdmin\HelperTrait;
+    use \PHPPgAdmin\Traits\HelperTrait;
 
     public $conn;
     public $platform = 'UNKNOWN';

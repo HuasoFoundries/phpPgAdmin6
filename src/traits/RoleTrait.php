@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.43
  */
 
-namespace PHPPgAdmin\Database;
+namespace PHPPgAdmin\Traits;
 
 /**
  * Common trait for roles and users manipulation.
@@ -148,15 +148,15 @@ trait RoleTrait
         }
 
         if (is_array($memberof) && sizeof($memberof) > 0) {
-            $sql .= ' IN ROLE "'.join('", "', $memberof).'"';
+            $sql .= ' IN ROLE "' . join('", "', $memberof) . '"';
         }
 
         if (is_array($members) && sizeof($members) > 0) {
-            $sql .= ' ROLE "'.join('", "', $members).'"';
+            $sql .= ' ROLE "' . join('", "', $members) . '"';
         }
 
         if (is_array($adminmembers) && sizeof($adminmembers) > 0) {
-            $sql .= ' ADMIN "'.join('", "', $adminmembers).'"';
+            $sql .= ' ADMIN "' . join('", "', $adminmembers) . '"';
         }
 
         return $this->execute($sql);
@@ -172,7 +172,7 @@ trait RoleTrait
      */
     public function _encryptPassword($username, $password)
     {
-        return 'md5'.md5($password.$username);
+        return 'md5' . md5($password . $username);
     }
 
     /**
@@ -509,7 +509,7 @@ trait RoleTrait
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
         if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
+            $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
         }
 
         if ($expiry != '') {
@@ -778,7 +778,7 @@ trait RoleTrait
 
         if (is_array($users) && sizeof($users) > 0) {
             $this->fieldArrayClean($users);
-            $sql .= ' WITH USER "'.join('", "', $users).'"';
+            $sql .= ' WITH USER "' . join('", "', $users) . '"';
         }
 
         return $this->execute($sql);
@@ -859,9 +859,9 @@ trait RoleTrait
         } else {
             if ($type == 'column') {
                 $this->fieldClean($object);
-                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' ' . join(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' '.join(', ', $privileges);
+                $sql .= ' ' . join(', ', $privileges);
             }
         }
 

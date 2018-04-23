@@ -8,7 +8,7 @@ namespace PHPPgAdmin\Decorators;
 
 class Decorator
 {
-    use \PHPPgAdmin\HelperTrait;
+    use \PHPPgAdmin\Traits\HelperTrait;
 
     public function __construct($value)
     {
@@ -79,7 +79,7 @@ class Decorator
         return self::get_sanitized_value($var, $fields, 'url');
     }
 
-    public static function concat(/* ... */)
+    public static function concat( /* ... */)
     {
         return new \PHPPgAdmin\Decorators\ConcatDecorator(func_get_args());
     }

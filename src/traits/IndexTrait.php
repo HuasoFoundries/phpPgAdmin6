@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.43
  */
 
-namespace PHPPgAdmin\Database;
+namespace PHPPgAdmin\Traits;
 
 /**
  * Common trait for indexes and constraints manipulation.
@@ -76,9 +76,9 @@ trait IndexTrait
 
         if (is_array($columns)) {
             $this->arrayClean($columns);
-            $sql .= '("'.implode('","', $columns).'")';
+            $sql .= '("' . implode('","', $columns) . '")';
         } else {
-            $sql .= '('.$columns.')';
+            $sql .= '(' . $columns . ')';
         }
 
         // Tablespace
@@ -284,7 +284,7 @@ trait IndexTrait
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'PRIMARY KEY ("'.join('","', $fields).'")';
+        $sql .= 'PRIMARY KEY ("' . join('","', $fields) . '")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -321,7 +321,7 @@ trait IndexTrait
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'UNIQUE ("'.join('","', $fields).'")';
+        $sql .= 'UNIQUE ("' . join('","', $fields) . '")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -473,9 +473,9 @@ trait IndexTrait
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'FOREIGN KEY ("'.join('","', $sfields).'") ';
+        $sql .= 'FOREIGN KEY ("' . join('","', $sfields) . '") ';
         // Target table needs to be fully qualified
-        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"".join('","', $tfields).'") ';
+        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"" . join('","', $tfields) . '") ';
         if ($match != $this->fkmatches[0]) {
             $sql .= " {$match}";
         }

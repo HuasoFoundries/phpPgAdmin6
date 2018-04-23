@@ -16,7 +16,7 @@ namespace PHPPgAdmin\Database;
  */
 class ADOdbBase
 {
-    use \PHPPgAdmin\HelperTrait;
+    use \PHPPgAdmin\Traits\HelperTrait;
 
     public $conn;
 

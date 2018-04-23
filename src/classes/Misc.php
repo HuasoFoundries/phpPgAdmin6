@@ -26,7 +26,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class Misc
 {
-    use \PHPPgAdmin\HelperTrait;
+    use \PHPPgAdmin\Traits\HelperTrait;
 
     private $_connection;
     private $_no_db_connection = false;
@@ -242,9 +242,9 @@ class Misc
             'line'     => $backtrace[0]['line'],
         ];
 
-        $errmsg = htmlentities(\PHPPgAdmin\HelperTrait::br2ln($errmsg), ENT_NOQUOTES);
-        $p1     = htmlentities(\PHPPgAdmin\HelperTrait::br2ln($p1), ENT_NOQUOTES);
-        $p2     = htmlentities(\PHPPgAdmin\HelperTrait::br2ln($p2), ENT_NOQUOTES);
+        $errmsg = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($errmsg), ENT_NOQUOTES);
+        $p1     = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p1), ENT_NOQUOTES);
+        $p2     = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p2), ENT_NOQUOTES);
 
         switch ($fn) {
             case 'EXECUTE':
@@ -923,7 +923,7 @@ class Misc
             case 'cid':
             case 'tid':
                 $align = 'right';
-                $out   = nl2br(htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($str)));
+                $out   = nl2br(htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
 
                 break;
             case 'yesno':
@@ -981,7 +981,7 @@ class Misc
 
                 break;
             case 'nbsp':
-                $out = nl2br(str_replace(' ', '&nbsp;', \PHPPgAdmin\HelperTrait::br2ln($str)));
+                $out = nl2br(str_replace(' ', '&nbsp;', \PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
 
                 break;
             case 'verbatim':
@@ -1033,7 +1033,7 @@ class Misc
                     $class = 'data';
                     $out   = htmlspecialchars($str);
                 } else {
-                    $out = nl2br(htmlspecialchars(\PHPPgAdmin\HelperTrait::br2ln($str)));
+                    $out = nl2br(htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
                 }
         }
 
