@@ -166,7 +166,7 @@ class Postgres extends ADOdbBase
     /**
      * Return all information about a particular database.
      *
-     * @param stromg $database The name of the database to retrieve
+     * @param string $database The name of the database to retrieve
      *
      * @return \PHPPgAdmin\ADORecordSet The database info
      */
@@ -756,7 +756,7 @@ class Postgres extends ADOdbBase
     /**
      * Return the current schema search path.
      *
-     * @return \PHPPgAdmin\ADORecordSet array of schema names
+     * @return array array of schema names
      */
     public function getSearchPath()
     {
@@ -1007,9 +1007,9 @@ class Postgres extends ADOdbBase
      * @param string $table The table to get attributes for
      * @param array $atts  An array of attribute numbers
      *
-     * @return array An array mapping attnum to attname
-     * @return -1 $atts must be an array
-     * @return -2 wrong number of attributes found
+     * @return array An array mapping attnum to attname or error code
+     *              - -1 $atts must be an array
+     *              - -2 wrong number of attributes found
      */
     public function getAttributeNames($table, $atts)
     {
@@ -1073,10 +1073,10 @@ class Postgres extends ADOdbBase
      * @param string $type   The type of the object (eg. database, schema, relation, function or language)
      * @param null|string $table  Optional, column's table if type = column
      *
-     * @return arrray|int Privileges array
-     * @return -1         invalid type
-     * @return -2         object not found
-     * @return -3         unknown privilege type
+     * @return array|int Privileges array or error code
+     *                   - -1         invalid type
+     *                   - -2         object not found
+     *                   - -3         unknown privilege type
      */
     public function getPrivileges($object, $type, $table = null)
     {
@@ -1152,8 +1152,9 @@ class Postgres extends ADOdbBase
      * @param string  $acl The ACL to parse (of type aclitem[])
      *
      * @return array Privileges array
+     * @internal bool $in_quotes toggles acl in_quotes attribute
      */
-    public function _parseACL($acl)
+    protected function _parseACL($acl)
     {
         // Take off the first and last characters (the braces)
         $acl = substr($acl, 1, strlen($acl) - 2);
@@ -1222,8 +1223,8 @@ class Postgres extends ADOdbBase
                 $next_char = substr($v, $i + 1, 1);
                 if ($char == '"' && ($i == 0 || $next_char != '"')) {
                     $in_quotes = !$in_quotes;
-                } // Skip over escaped double quotes
-                elseif ($char == '"' && $next_char == '"') {
+                } elseif ($char == '"' && $next_char == '"') {
+                    // Skip over escaped double quotes
                     ++$i;
                 } elseif ($char == '=' && !$in_quotes) {
                     // Split on current equals sign
@@ -1324,10 +1325,9 @@ class Postgres extends ADOdbBase
     /**
      * Updates (replaces) a function.
      *
-     * @param int    $function_oid The OID of the function
      * @param string $funcname     The name of the function to create
      * @param string $newname      The new name for the function
-     * @param array  $args         The array of argument types
+     * @param string  $args        imploded array of argument types
      * @param string $returns      The return type
      * @param string $definition   The definition for the new function
      * @param string $language     The language the function is written for
@@ -1344,7 +1344,6 @@ class Postgres extends ADOdbBase
      * @return bool|int 0 success
      */
     public function setFunction(
-        $function_oid,
         $funcname,
         $newname,
         $args,
@@ -2034,7 +2033,7 @@ class Postgres extends ADOdbBase
      * @param string $table   Table on which to create the rule
      * @param string $where   Where to execute the rule, '' indicates always
      * @param bool $instead True if an INSTEAD rule, false otherwise
-     * @param stromg $type    NOTHING for a do nothing rule, SOMETHING to use given action
+     * @param string $type    NOTHING for a do nothing rule, SOMETHING to use given action
      * @param string $action  The action to take
      *
      * @return int 0 if operation was successful
@@ -3326,12 +3325,12 @@ class Postgres extends ADOdbBase
      * @param int    $page_size  The number of rows per page
      * @param int    &$max_pages (return-by-ref) The max number of pages in the relation
      *
-     * @return \PHPPgAdmin\ADORecordSet A  recordset on success
-     * @return -1 transaction error
-     * @return -2 counting error
-     * @return -3 page or page_size invalid
-     * @return -4 unknown type
-     * @return -5 failed setting transaction read only
+     * @return \PHPPgAdmin\ADORecordSet|int A  recordset on success or an int with error code
+     *          - -1 transaction error
+     *          - -2 counting error
+     *          - -3 page or page_size invalid
+     *          - -4 unknown type
+     *          - -5 failed setting transaction read only
      */
     public function browseQuery($type, $table, $query, $sortkey, $sortdir, $page, $page_size, &$max_pages)
     {
