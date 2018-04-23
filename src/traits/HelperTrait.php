@@ -93,21 +93,21 @@ trait HelperTrait
     /**
      * Returns a string with html <br> variant replaced with a new line.
      *
-     * @param string $msg message to convert
+     * @param string $msg message to parse (<br> separated)
      *
-     * @return string converted message
+     * @return string parsed message (linebreak separated)
      */
-    public static function br2ln(string $msg)
+    public static function br2ln($msg)
     {
         return str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
     }
 
-    public function kint()
+    public function dump()
     {
         call_user_func_array('\Kint::dump', func_get_args());
     }
 
-    public function kint_and_die()
+    public function dumpAndDie()
     {
         call_user_func_array('\Kint::dump', func_get_args());
         $this->halt('stopped by user');

@@ -125,6 +125,7 @@ $container['errors']      = [];
 $container['requestobj']  = $container['request'];
 $container['responseobj'] = $container['response'];
 
+// This should be deprecated once we're sure no php scripts are required directly
 $container->offsetSet('server', isset($_REQUEST['server']) ? $_REQUEST['server'] : null);
 $container->offsetSet('database', isset($_REQUEST['database']) ? $_REQUEST['database'] : null);
 $container->offsetSet('schema', isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null);
@@ -347,7 +348,6 @@ $app->add(function ($request, $response, $next) use ($handler) {
     $this['schema']   = $request->getParam('schema');
     $misc             = $this->get('misc');
 
-    \PC::debug($request->getBasePath());
     $misc->setHREF();
     $misc->setForm();
 

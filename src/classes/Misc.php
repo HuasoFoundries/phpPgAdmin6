@@ -84,7 +84,7 @@ class Misc
         if (version_compare(phpversion(), $this->phpMinVer, '<')) {
             $container->get('utils')->addError(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
         }
-        //$this->kint_and_die($this);
+        //$this->dumpAndDie($this);
 
         $this->getServerId();
     }
