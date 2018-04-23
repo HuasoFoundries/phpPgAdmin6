@@ -58,13 +58,13 @@ class Postgres extends ADOdbBase
             if (is_array($this->help_page[$help])) {
                 $urls = [];
                 foreach ($this->help_page[$help] as $link) {
-                    $urls[] = $this->help_base.$link;
+                    $urls[] = $this->help_base . $link;
                 }
 
                 return $urls;
             }
 
-            return $this->help_base.$this->help_page[$help];
+            return $this->help_base . $this->help_page[$help];
         }
 
         return null;
@@ -78,7 +78,7 @@ class Postgres extends ADOdbBase
     public function getHelpPages()
     {
         if ($this->help_page === null || $this->help_base === null) {
-            $help_classname = '\PHPPgAdmin\Help\PostgresDoc'.str_replace('.', '', $this->major_version);
+            $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . str_replace('.', '', $this->major_version);
 
             $help_class = new $help_classname($this->conf, $this->major_version);
 
@@ -103,7 +103,7 @@ class Postgres extends ADOdbBase
         // Determine actions string
         $extra_str = '';
         foreach ($extras as $k => $v) {
-            $extra_str .= " {$k}=\"".htmlspecialchars($v).'"';
+            $extra_str .= " {$k}=\"" . htmlspecialchars($v) . '"';
         }
 
         switch (substr($type, 0, 9)) {
@@ -210,7 +210,7 @@ class Postgres extends ADOdbBase
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
 
-            $not_in = "('".implode("','", $hiddendbs)."')";
+            $not_in = "('" . implode("','", $hiddendbs) . "')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 
@@ -260,7 +260,7 @@ class Postgres extends ADOdbBase
     {
         $this->clean($username);
 
-        if (empty($usename)) {
+        if (empty($username)) {
             $val = pg_parameter_status($this->conn->_connectionID, 'is_superuser');
             if ($val !== false) {
                 return $val == 'on';
@@ -287,8 +287,11 @@ class Postgres extends ADOdbBase
     public function getDatabaseComment($database)
     {
         $this->clean($database);
-        $sql =
-            "SELECT description FROM pg_catalog.pg_database JOIN pg_catalog.pg_shdescription ON (oid=objoid AND classoid='pg_database'::regclass) WHERE pg_database.datname = '{$database}' ";
+        $sql = "SELECT description
+                FROM pg_catalog.pg_database
+                JOIN pg_catalog.pg_shdescription
+                ON (oid=objoid AND classoid='pg_database'::regclass)
+                WHERE pg_database.datname = '{$database}' ";
 
         return $this->selectSet($sql);
     }
@@ -774,7 +777,7 @@ class Postgres extends ADOdbBase
     /**
      * Sets the current schema search path.
      *
-     * @param array $paths An array of schemas in required search order
+     * @param mixed $paths An array of schemas in required search order
      *
      * @return int 0 if operation was successful
      */
@@ -801,7 +804,7 @@ class Postgres extends ADOdbBase
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
+        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
 
         return $this->execute($sql);
     }
@@ -984,7 +987,7 @@ class Postgres extends ADOdbBase
         } elseif ($typname == 'varchar') {
             $temp = 'character varying';
             if ($typmod != -1) {
-                $temp .= '('.($typmod - $varhdrsz).')';
+                $temp .= '(' . ($typmod - $varhdrsz) . ')';
             }
         } elseif ($typname == 'numeric') {
             $temp = 'numeric';
@@ -1013,7 +1016,7 @@ class Postgres extends ADOdbBase
      * @param string $table The table to get attributes for
      * @param array  $atts  An array of attribute numbers
      *
-     * @return array An array mapping attnum to attname or error code
+     * @return array|int An array mapping attnum to attname or error code
      *               - -1 $atts must be an array
      *               - -2 wrong number of attributes found
      */
@@ -1035,7 +1038,7 @@ class Postgres extends ADOdbBase
         $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
 			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
 			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('".join("','", $atts)."')";
+			AND attnum IN ('" . join("','", $atts) . "')";
 
         $rs = $this->selectSet($sql);
         if ($rs->recordCount() != sizeof($atts)) {
@@ -1149,7 +1152,7 @@ class Postgres extends ADOdbBase
             return [];
         }
 
-        return $this->_parseACL($acl);
+        return $this->parseACL($acl);
     }
 
     /**
@@ -1157,11 +1160,11 @@ class Postgres extends ADOdbBase
      *
      * @param string $acl The ACL to parse (of type aclitem[])
      *
-     * @return array Privileges array
+     * @return array|int Privileges array or integer with error code
      *
      * @internal bool $in_quotes toggles acl in_quotes attribute
      */
-    protected function _parseACL($acl)
+    protected function parseACL($acl)
     {
         // Take off the first and last characters (the braces)
         $acl = substr($acl, 1, strlen($acl) - 2);
@@ -1194,7 +1197,7 @@ class Postgres extends ADOdbBase
         foreach ($aces as $v) {
             // If the ACE begins with a double quote, strip them off both ends
             // and unescape backslashes and double quotes
-            $unquote = false;
+            // $unquote = false;
             if (strpos($v, '"') === 0) {
                 $v = substr($v, 1, strlen($v) - 2);
                 $v = str_replace('\\"', '"', $v);
@@ -1950,7 +1953,7 @@ class Postgres extends ADOdbBase
         // Split on escaped null characters
         $params = explode('\\000', $v);
         for ($findx = 0; $findx < $trigger['tgnargs']; ++$findx) {
-            $param = "'".str_replace('\'', '\\\'', $params[$findx])."'";
+            $param = "'" . str_replace('\'', '\\\'', $params[$findx]) . "'";
             $tgdef .= $param;
             if ($findx < ($trigger['tgnargs'] - 1)) {
                 $tgdef .= ', ';
@@ -2185,13 +2188,13 @@ class Postgres extends ADOdbBase
         $sql = "DROP OPERATOR \"{$f_schema}\".{$opr->fields['oprname']} (";
         // Quoting or formatting here???
         if ($opr->fields['oprleftname'] !== null) {
-            $sql .= $opr->fields['oprleftname'].', ';
+            $sql .= $opr->fields['oprleftname'] . ', ';
         } else {
             $sql .= 'NONE, ';
         }
 
         if ($opr->fields['oprrightname'] !== null) {
-            $sql .= $opr->fields['oprrightname'].')';
+            $sql .= $opr->fields['oprrightname'] . ')';
         } else {
             $sql .= 'NONE)';
         }
@@ -2564,6 +2567,8 @@ class Postgres extends ADOdbBase
         $this->fieldClean($f_schema);
         $this->fieldClean($table);
 
+        $params = [];
+
         $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" SET (";
 
         if (!empty($vacenabled)) {
@@ -2595,7 +2600,7 @@ class Postgres extends ADOdbBase
             $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
         }
 
-        $sql = $sql.implode(',', $params).');';
+        $sql = $sql . implode(',', $params) . ');';
 
         return $this->execute($sql);
     }
@@ -2727,7 +2732,7 @@ class Postgres extends ADOdbBase
      * XXX: It does not handle multibyte languages properly.
      *
      * @param string        $name     Entry in $_FILES to use
-     * @param null|function $callback (optional) Callback function to call with each query, its result and line number
+     * @param null|callable $callback (optional) Callback function to call with each query, its result and line number
      *
      * @return bool true for general success, false on any failure
      */
@@ -2740,7 +2745,7 @@ class Postgres extends ADOdbBase
         }
 
         $fd = fopen($_FILES[$name]['tmp_name'], 'rb');
-        if (!$fd) {
+        if ($fd === false) {
             return false;
         }
 
@@ -2783,6 +2788,7 @@ class Postgres extends ADOdbBase
             for ($i = 0; $i < $len; $this->advance_1($i, $prevlen, $thislen)) {
                 /* was the previous character a backslash? */
                 if ($i > 0 && substr($line, $i - $prevlen, 1) == '\\') {
+                    $this->prtrace('bslash_count', $bslash_count, $line);
                     ++$bslash_count;
                 } else {
                     $bslash_count = 0;
@@ -2796,137 +2802,147 @@ class Postgres extends ADOdbBase
 
                 /* in quote? */
                 if ($in_quote !== 0) {
+                    //$this->prtrace('in_quote', $in_quote, $line);
                     /*
                      * end of quote if matching non-backslashed character.
                      * backslashes don't count for double quotes, though.
                      */
                     if (substr($line, $i, 1) == $in_quote &&
-                        ($bslash_count % 2 == 0 || $in_quote == '"')) {
+                        ($bslash_count % 2 == 0 || $in_quote == '"')
+                    ) {
                         $in_quote = 0;
                     }
-                } else {
-                    if ($dol_quote) {
-                        if (strncmp(substr($line, $i), $dol_quote, strlen($dol_quote)) == 0) {
+                } else if ($dol_quote) {
+                    $this->prtrace('dol_quote', $dol_quote, $line);
+                    if (strncmp(substr($line, $i), $dol_quote, strlen($dol_quote)) == 0) {
+                        $this->advance_1($i, $prevlen, $thislen);
+                        while (substr($line, $i, 1) != '$') {
                             $this->advance_1($i, $prevlen, $thislen);
-                            while (substr($line, $i, 1) != '$') {
-                                $this->advance_1($i, $prevlen, $thislen);
-                            }
-
-                            $dol_quote = null;
                         }
-                    } else {
-                        if (substr($line, $i, 2) == '/*') {
-                            ++$in_xcomment;
-                            if ($in_xcomment == 1) {
-                                $this->advance_1($i, $prevlen, $thislen);
-                            }
+
+                        $dol_quote = null;
+                    }
+                } else if (substr($line, $i, 2) == '/*') {
+
+                    $this->prtrace('open_xcomment', $in_xcomment, $line, $i, $prevlen, $thislen);
+                    if ($in_xcomment == 0) {
+                        ++$in_xcomment;
+                        $finishpos = strpos(substr($line, $i, $len), '*/');
+                        if ($finishpos === false) {
+                            $line = substr($line, 0, $i); /* remove comment */
+                            break;
                         } else {
-                            if ($in_xcomment) {
-                                if (substr($line, $i, 2) == '*/' && !--$in_xcomment) {
-                                    $this->advance_1($i, $prevlen, $thislen);
-                                }
-                            } else {
-                                if (substr($line, $i, 1) == '\'' || substr($line, $i, 1) == '"') {
-                                    $in_quote = substr($line, $i, 1);
-                                } /*
-                                 * start of $foo$ type quote?
-                                 */
-                                else {
-                                    if (!$dol_quote && $this->valid_dolquote(substr($line, $i))) {
-                                        $dol_end   = strpos(substr($line, $i + 1), '$');
-                                        $dol_quote = substr($line, $i, $dol_end + 1);
-                                        $this->advance_1($i, $prevlen, $thislen);
-                                        while (substr($line, $i, 1) != '$') {
-                                            $this->advance_1($i, $prevlen, $thislen);
-                                        }
-                                    } else {
-                                        if (substr($line, $i, 2) == '--') {
-                                            $line = substr($line, 0, $i); /* remove comment */
-                                            break;
-                                        } /* count nested parentheses */
+                            $pre         = substr($line, 0, $i);
+                            $post        = substr($line, $i + 2 + $finishpos, $len);
+                            $line        = $pre . ' ' . $post;
+                            $in_xcomment = 0;
+                            $i           = 0;
+                        }
+                    }
+                } else if ($in_xcomment) {
+                    $position = strpos(substr($line, $i, $len), '*/');
+                    if ($position === false) {
+                        $line = '';
+                        break;
+                    }
 
-                                        if (substr($line, $i, 1) == '(') {
-                                            ++$paren_level;
-                                        } else {
-                                            if (substr($line, $i, 1) == ')' && $paren_level > 0) {
-                                                --$paren_level;
-                                            } else {
-                                                if (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
-                                                    $subline = substr(substr($line, 0, $i), $query_start);
-                                                    /*
-                                                     * insert a cosmetic newline, if this is not the first
-                                                     * line in the buffer
-                                                     */
-                                                    if (strlen($query_buf) > 0) {
-                                                        $query_buf .= "\n";
-                                                    }
+                    $substr = substr($line, $i, 2);
 
-                                                    /* append the line to the query buffer */
-                                                    $query_buf .= $subline;
-                                                    /* is there anything in the query_buf? */
-                                                    if (trim($query_buf)) {
-                                                        $query_buf .= ';';
+                    if ($substr == '*/' && !--$in_xcomment) {
+                        $line = substr($line, $i + 2, $len);
+                        $i += 2;
+                        $this->advance_1($i, $prevlen, $thislen);
+                    }
+                    // old logic
+                    //  } else if (substr($line, $i, 2) == '/*') {
+                    //      if ($in_xcomment == 0) {
+                    //          ++$in_xcomment;
+                    //          $this->advance_1($i, $prevlen, $thislen);
+                    //      }
+                    //  } else if ($in_xcomment) {
+                    //      $substr = substr($line, $i, 2);
+                    //      if ($substr == '*/' && !--$in_xcomment) {
+                    //          $this->advance_1($i, $prevlen, $thislen);
+                    //      }
+                } else if (substr($line, $i, 1) == '\'' || substr($line, $i, 1) == '"') {
+                    $in_quote = substr($line, $i, 1);
+                } else if (!$dol_quote && $this->valid_dolquote(substr($line, $i))) {
+                    $dol_end   = strpos(substr($line, $i + 1), '$');
+                    $dol_quote = substr($line, $i, $dol_end + 1);
+                    $this->advance_1($i, $prevlen, $thislen);
+                    while (substr($line, $i, 1) != '$') {
+                        $this->advance_1($i, $prevlen, $thislen);
+                    }
+                } else {
+                    if (substr($line, $i, 2) == '--') {
+                        $line = substr($line, 0, $i); /* remove comment */
+                        break;
+                    } /* count nested parentheses */
 
-                                                        // Execute the query. PHP cannot execute
-                                                        // empty queries, unlike libpq
-                                                        $res = @pg_query($conn, $query_buf);
+                    if (substr($line, $i, 1) == '(') {
+                        ++$paren_level;
+                    } else if (substr($line, $i, 1) == ')' && $paren_level > 0) {
+                        --$paren_level;
+                    } else if (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
+                        $subline = substr(substr($line, 0, $i), $query_start);
+                        /*
+                         * insert a cosmetic newline, if this is not the first
+                         * line in the buffer
+                         */
+                        if (strlen($query_buf) > 0) {
+                            $query_buf .= "\n";
+                        }
 
-                                                        // Call the callback function for display
-                                                        if ($callback !== null) {
-                                                            $callback($query_buf, $res, $lineno);
-                                                        }
+                        /* append the line to the query buffer */
+                        $query_buf .= $subline;
+                        /* is there anything in the query_buf? */
+                        if (trim($query_buf)) {
+                            $query_buf .= ';';
 
-                                                        // Check for COPY request
-                                                        if (pg_result_status($res) == 4) {
-                                                            // 4 == PGSQL_COPY_FROM
-                                                            while (!feof($fd)) {
-                                                                $copy = fgets($fd, 32768);
-                                                                ++$lineno;
-                                                                pg_put_line($conn, $copy);
-                                                                if ($copy == "\\.\n" || $copy == "\\.\r\n") {
-                                                                    pg_end_copy($conn);
+                            // Execute the query. PHP cannot execute
+                            // empty queries, unlike libpq
+                            $res = @pg_query($conn, $query_buf);
 
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    $query_buf   = null;
-                                                    $query_start = $i + $thislen;
-                                                }
+                            // Call the callback function for display
+                            if ($callback !== null) {
+                                $callback($query_buf, $res, $lineno);
+                            }
 
-                                                /*
-                                                 * keyword or identifier?
-                                                 * We grab the whole string so that we don't
-                                                 * mistakenly see $foo$ inside an identifier as the start
-                                                 * of a dollar quote.
-                                                 */
-                                                // XXX: multibyte here
-                                                else {
-                                                    if (preg_match('/^[_[:alpha:]]$/', substr($line, $i, 1))) {
-                                                        $sub = substr($line, $i, $thislen);
-                                                        while (preg_match('/^[\$_A-Za-z0-9]$/', $sub)) {
-                                                            /* keep going while we still have identifier chars */
-                                                            $this->advance_1($i, $prevlen, $thislen);
-                                                            $sub = substr($line, $i, $thislen);
-                                                        }
-                                                        // Since we're now over the next character to be examined, it is necessary
-                                                        // to move back one space.
-                                                        $i -= $prevlen;
-                                                    }
-                                                }
-                                            }
-                                        }
+                            // Check for COPY request
+                            if (pg_result_status($res) == 4) {
+                                // 4 == PGSQL_COPY_FROM
+                                while (!feof($fd)) {
+                                    $copy = fgets($fd, 32768);
+                                    ++$lineno;
+                                    pg_put_line($conn, $copy);
+                                    if ($copy == "\\.\n" || $copy == "\\.\r\n") {
+                                        pg_end_copy($conn);
+
+                                        break;
                                     }
                                 }
                             }
                         }
+                        $query_buf   = null;
+                        $query_start = $i + $thislen;
+                    } else if (preg_match('/^[_[:alpha:]]$/', substr($line, $i, 1))) {
+                        $sub = substr($line, $i, $thislen);
+                        while (preg_match('/^[\$_A-Za-z0-9]$/', $sub)) {
+                            /* keep going while we still have identifier chars */
+                            $this->advance_1($i, $prevlen, $thislen);
+                            $sub = substr($line, $i, $thislen);
+                        }
+                        // Since we're now over the next character to be examined, it is necessary
+                        // to move back one space.
+                        $i -= $prevlen;
                     }
                 }
+
             } // end for
 
             /* Put the rest of the line in the query buffer. */
             $subline = substr($line, $query_start);
+
             if ($in_quote || $dol_quote || strspn($subline, " \t\n\r") != strlen($subline)) {
                 if (strlen($query_buf) > 0) {
                     $query_buf .= "\n";
@@ -3118,7 +3134,7 @@ class Postgres extends ADOdbBase
         }
 
         // Actually retrieve the rows, with offset and limit
-        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET ".($page - 1) * $page_size);
+        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
         $status = $this->endTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -3160,7 +3176,7 @@ class Postgres extends ADOdbBase
                 $sql = 'SELECT "';
             }
 
-            $sql .= join('","', $show).'" FROM ';
+            $sql .= join('","', $show) . '" FROM ';
         }
 
         $this->fieldClean($table);
@@ -3228,7 +3244,7 @@ class Postgres extends ADOdbBase
                     $sql .= $k;
                 } else {
                     $this->fieldClean($k);
-                    $sql .= '"'.$k.'"';
+                    $sql .= '"' . $k . '"';
                 }
                 if (strtoupper($v) == 'DESC') {
                     $sql .= ' DESC';
