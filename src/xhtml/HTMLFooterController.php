@@ -84,7 +84,7 @@ class HTMLFooterController extends HTMLController
             $footer_html .= $this->printReload(true, false);
         }
         if (!$this->_no_bottom_link) {
-            $footer_html .= '<a data-footertemplate="'.$template.'" href="#" class="bottom_link">'.$lang['strgotoppage'].'</a>';
+            $footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . '</a>';
         }
 
         $footer_html .= $this->view->fetch($template);
@@ -100,14 +100,14 @@ class HTMLFooterController extends HTMLController
      * Outputs JavaScript code that will reload the browser.
      *
      * @param $database True if dropping a database, false otherwise
-     * @param $do_print true to echo, false to return;
+     * @param bool $do_print true to echo, false to return;
      */
     public function printReload($database, $do_print = true)
     {
         $reload = "<script type=\"text/javascript\">\n";
         //$reload .= " alert('will reload');";
         if ($database) {
-            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"".SUBFOLDER."/src/views/browser\";\n";
+            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"" . SUBFOLDER . "/src/views/browser\";\n";
         } else {
             $reload .= "if(parent.frames && parent.frames.browser) { \n";
             $reload .= "\t console.log('will reload frame browser'); \n";
@@ -149,7 +149,7 @@ class HTMLFooterController extends HTMLController
     {
         echo "<script type=\"text/javascript\">\n";
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
         echo "//]]>\n";
         echo "</script>\n";
     }

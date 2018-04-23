@@ -34,7 +34,7 @@ class HTMLHeaderController extends HTMLController
      *
      * @param $title The title of the page
      * @param $script script tag
-     * @param $do_print boolean if false, the function will return the header content
+     * @param bool $do_print boolean if false, the function will return the header content
      * @param mixed $template
      */
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
@@ -55,10 +55,10 @@ class HTMLHeaderController extends HTMLController
             $viewVars['applocale'] = $lang['applocale'];
         }
 
-        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
+        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
-        $viewVars['appName']        = htmlspecialchars($this->appName).(('' != $title) ? htmlspecialchars(" - {$title}") : '');
+        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
+        $viewVars['appName']        = htmlspecialchars($this->appName) . (('' != $title) ? htmlspecialchars(" - {$title}") : '');
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
@@ -92,9 +92,9 @@ class HTMLHeaderController extends HTMLController
     {
         $bodyClass = htmlspecialchars($bodyClass);
         $bodyHtml  = '<body ';
-        $bodyHtml .= ' data-controller="'.$this->controller_name.'" ';
-        $bodyHtml .= 'class="'.$this->lang['applangdir'].' '.$bodyClass.'" ';
-        $bodyHtml .= ($onloadInit ? 'onload="init();" ' : '').'>';
+        $bodyHtml .= ' data-controller="' . $this->controller_name . '" ';
+        $bodyHtml .= 'class="' . $this->lang['applangdir'] . ' ' . $bodyClass . '" ';
+        $bodyHtml .= ($onloadInit ? 'onload="init();" ' : '') . '>';
         $bodyHtml .= "\n";
         /*$bodyHtml .= '<div id="flexbox_wrapper">';
         $bodyHtml .= "\n";
