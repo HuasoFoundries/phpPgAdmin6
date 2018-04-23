@@ -44,18 +44,18 @@ class ContainerUtils
     public function getDestinationWithLastTab($subject)
     {
         $_server_info = $this->container->misc->getServerInfo();
-        $this->prtrace('$_server_info', $_server_info);
+        //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
         if (!isset($_server_info['username'])) {
             $destinationurl = $this->getRedirectUrl();
         } else {
             $url = $this->container->misc->getLastTabURL($subject);
-            $this->prtrace('getLastTabURL for ' . $subject, $url);
+            //$this->prtrace('getLastTabURL for ' . $subject, $url);
             // Load query vars into superglobal arrays
             if (isset($url['urlvars'])) {
                 $urlvars = [];
                 foreach ($url['urlvars'] as $key => $urlvar) {
-                    $this->prtrace($key, $urlvar);
+                    //$this->prtrace($key, $urlvar);
                     $urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
                 }
                 $_REQUEST = array_merge($_REQUEST, $urlvars);

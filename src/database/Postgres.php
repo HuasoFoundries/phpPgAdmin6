@@ -30,15 +30,17 @@ class Postgres extends ADOdbBase
     public $lang;
     public $conf;
     protected $container;
+    protected $server_info;
 
-    public function __construct(&$conn, $container)
+    public function __construct(&$conn, $container, $server_info)
     {
         //$this->prtrace('major_version :' . $this->major_version);
         $this->conn      = $conn;
         $this->container = $container;
 
-        $this->lang = $container->get('lang');
-        $this->conf = $container->get('conf');
+        $this->lang        = $container->get('lang');
+        $this->conf        = $container->get('conf');
+        $this->server_info = $server_info;
     }
 
     /**
@@ -191,6 +193,8 @@ class Postgres extends ADOdbBase
         $conf        = $this->conf;
         $server_info = $this->server_info;
 
+        //$this->prtrace('server_info', $server_info);
+
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
             $username = $server_info['username'];
             $this->clean($username);
@@ -205,7 +209,8 @@ class Postgres extends ADOdbBase
 
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
-            $not_in    = "('" . implode("','", $hiddendbs) . "')";
+
+            $not_in = "('" . implode("','", $hiddendbs) . "')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 

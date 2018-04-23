@@ -68,6 +68,8 @@ class Misc
 
         $base_version = $container->get('settings')['base_version'];
 
+        //$this->prtrace($base_version);
+
         // Check for config file version mismatch
         if (!isset($this->conf['version']) || $base_version > $this->conf['version']) {
             $container->get('utils')->addError($this->lang['strbadconfig']);
@@ -115,6 +117,7 @@ class Misc
         } elseif ($request_server !== null) {
             $this->_server_id = $request_server;
         } elseif (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
+            //$this->prtrace('webdbLogin', $_SESSION['webdbLogin']);
             $this->_server_id = array_keys($_SESSION['webdbLogin'])[0];
         }
 
@@ -125,10 +128,12 @@ class Misc
      * Sets the view instance property of this class.
      *
      * @param \Slim\Views\Twig $view view instance
+     * @return \PHPPgAdmin\Misc this class instance
      */
     public function setView(\Slim\Views\Twig $view)
     {
         $this->view = $view;
+        return $this;
     }
 
     /**
@@ -139,7 +144,7 @@ class Misc
      *
      * @return \PHPPgAdmin\Misc this class instance
      */
-    public function setConf(string $key, $value)
+    public function setConf($key, $value)
     {
         $this->conf[$key] = $value;
 
@@ -149,9 +154,9 @@ class Misc
     /**
      * gets the value of a config property, or the array of all config properties.
      *
-     * @param mixed $key value of the key to be retrieved. If null, the full array is returnes
+     * @param string|null $key value of the key to be retrieved. If null, the full array is returnes
      *
-     * @return mixed the whole $conf array, the value of $conf[key] or null if said key does not exist
+     * @return array|string|null the whole $conf array, the value of $conf[key] or null if said key does not exist
      */
     public function getConf($key = null)
     {
@@ -177,7 +182,8 @@ class Misc
         //\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
         if ($help !== null) {
             $helplink = $this->getHelpLink($help);
-            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">' . $this->lang['strhelpicon'] . '</a>';
+            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">';
+            $str .= $this->lang['strhelpicon'] . '</a>';
         }
         if ($do_print) {
             echo $str;
@@ -186,6 +192,13 @@ class Misc
         }
     }
 
+    /**
+     * Gets the help link.
+     *
+     * @param string  $help  The help subject
+     *
+     * @return string  The help link.
+     */
     public function getHelpLink($help)
     {
         return htmlspecialchars(SUBFOLDER . '/help?help=' . urlencode($help) . '&server=' . urlencode($this->getServerId()));
@@ -210,82 +223,6 @@ class Misc
         return $this->_reload_browser;
     }
 
-    /**
-     * Default Error Handler. This will be called with the following params.
-     *
-     * @param string $dbms           the RDBMS you are connecting to
-     * @param string $fn             the name of the calling function (in uppercase)
-     * @param number $errno          the native error number from the database
-     * @param string $errmsg         the native error msg from the database
-     * @param string $p1             $fn specific parameter - see below
-     * @param string $p2             parameter 2
-     * @param mixed  $thisConnection connection
-     *
-     * @throws \PHPPgAdmin\ADOdbException
-     *
-     * @internal param $P2 $fn specific parameter - see below
-     */
-    public static function adodb_throw($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection)
-    {
-        if (error_reporting() == 0) {
-            return;
-        }
-
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-
-        $btarray0 = [
-            'msg'      => 'ADOdbException at ',
-            'class'    => $backtrace[1]['class'],
-            'type'     => $backtrace[1]['type'],
-            'function' => $backtrace[1]['function'],
-            'spacer'   => ' ',
-            'line'     => $backtrace[0]['line'],
-        ];
-
-        $errmsg = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($errmsg), ENT_NOQUOTES);
-        $p1     = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p1), ENT_NOQUOTES);
-        $p2     = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p2), ENT_NOQUOTES);
-
-        switch ($fn) {
-            case 'EXECUTE':
-                $sql = str_replace(
-                    [
-                        'SELECT',
-                        'WHERE',
-                        'GROUP BY',
-                        'FROM',
-                        'HAVING',
-                        'LIMIT',
-                    ],
-                    ["\nSELECT", "\nWHERE", "\nGROUP BY", "\nFROM", "\nHAVING", "\nLIMIT"],
-                    $p1
-                );
-
-                $inputparams = $p2;
-
-                $error_msg = '<p><b>strsqlerror</b><br />' . nl2br($errmsg) . '</p> <p><b>SQL:</b><br />' . nl2br($sql) . '</p>	';
-
-                echo '<table class="error" cellpadding="5"><tr><td>' . nl2br($error_msg) . '</td></tr></table><br />' . "\n";
-
-                break;
-            case 'PCONNECT':
-            case 'CONNECT':
-                // do nothing;
-                break;
-            default:
-                $s = "${dbms} error: [${errno}: ${errmsg}] in ${fn}(${p1}, ${p2})\n";
-                echo "<table class=\"error\" cellpadding=\"5\"><tr><td>{$s}</td></tr></table><br />\n";
-
-                break;
-        }
-
-        $tag = implode('', $btarray0);
-
-        \PC::debug(['errno' => $errno, 'fn' => $fn, 'errmsg' => $errmsg], $tag);
-
-        throw new \PHPPgAdmin\ADOdbException($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
-    }
-
     public function getContainer()
     {
         return $this->container;
@@ -305,6 +242,11 @@ class Misc
         return $this;
     }
 
+    /**
+     * Gets member variable $_no_db_connection.
+     *
+     * @return bool  value of member variable $_no_db_connection
+     */
     public function getNoDBConnection()
     {
         return $this->_no_db_connection;
@@ -314,6 +256,8 @@ class Misc
      * Sets the last error message to display afterwards instead of just dying with the error msg.
      *
      * @param string $msg error message string
+     *
+     * @return \PHPPgAdmin\Misc this class instance
      */
     public function setErrorMsg($msg)
     {
@@ -322,6 +266,11 @@ class Misc
         return $this;
     }
 
+    /**
+     * Returns the error messages stored in member variable $_error_msg
+     *
+     * @return string  The error message.
+     */
     public function getErrorMsg()
     {
         return $this->_error_msg;
@@ -402,7 +351,11 @@ class Misc
             }
         }
 
-        if ($this->_no_db_connection === false && $this->getDatabase() !== null && isset($_REQUEST['schema'])) {
+        if (
+            $this->_no_db_connection === false &&
+            $this->getDatabase() !== null &&
+            isset($_REQUEST['schema'])
+        ) {
             $status = $this->_data->setSchema($_REQUEST['schema']);
 
             if ($status != 0) {
@@ -488,7 +441,6 @@ class Misc
         // Check for the server in the logged-in list
         if (isset($_SESSION['webdbLogin'][$this->_server_id])) {
             $this->_server_info = $_SESSION['webdbLogin'][$this->_server_id];
-
             return $this->_server_info;
         }
 

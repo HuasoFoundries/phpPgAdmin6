@@ -38,7 +38,7 @@ if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
 }
 
 if (!defined('ADODB_ERROR_HANDLER')) {
-    define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\Misc::adodb_throw');
+    define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 }
 
 // Start session (if not auto-started)
@@ -108,9 +108,7 @@ $app = new \Slim\App($config);
 $container = $app->getContainer();
 
 if ($container instanceof \Psr\Container\ContainerInterface) {
-    $handler->start(); // initialize handlers*/
     \PhpConsole\Helper::register(); // it will register global PC class
-
     if (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
         $subfolder = $conf['subfolder'];
     } else {
@@ -225,13 +223,11 @@ $container['misc'] = function ($c) {
     // This happens when you use the selector in the intro screen
     if (isset($_REQUEST['theme']) && array_key_exists($_REQUEST['theme'], $themefolders)) {
         $_theme = $_REQUEST['theme'];
-    }
-    // 2. Check for theme session var
-    elseif (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
+    } else if (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
+        // 2. Check for theme session var
         $_theme = $_SESSION['ppaTheme'];
-    }
-    // 3. Check for theme in cookie var
-    elseif (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
+    } else if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
+        // 3. Check for theme in cookie var
         $_theme = $_COOKIE['ppaTheme'];
     }
 
@@ -245,7 +241,6 @@ $container['misc'] = function ($c) {
         if (isset($_REQUEST['database'])
             && isset($server_theme['db'][$_REQUEST['database']])
             && array_key_exists($server_theme['db'][$_REQUEST['database']], $themefolders)
-
         ) {
             $_theme = $server_theme['db'][$_REQUEST['database']];
         }
@@ -282,11 +277,11 @@ $container['view'] = function ($c) {
         'auto_reload' => $c->get('settings')['debug'],
         'debug'       => $c->get('settings')['debug'],
     ]);
-    $environment               = $c->get('environment');
-    $base_script_trailing_shit = substr($environment['SCRIPT_NAME'], 1);
-    $request_basepath          = $c['request']->getUri()->getBasePath();
+    $environment              = $c->get('environment');
+    $base_script_trailing_str = substr($environment['SCRIPT_NAME'], 1);
+    $request_basepath         = $c['request']->getUri()->getBasePath();
     // Instantiate and add Slim specific extension
-    $basePath = rtrim(str_ireplace($base_script_trailing_shit, '', $request_basepath), '/');
+    $basePath = rtrim(str_ireplace($base_script_trailing_str, '', $request_basepath), '/');
 
     $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
 
@@ -340,7 +335,10 @@ $container['haltHandler'] = function ($c) {
 
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route
-$app->add(function ($request, $response, $next) {
+$app->add(function ($request, $response, $next) use ($handler) {
+
+    $handler->start(); // initialize handlers*/
+
     $this['requestobj']  = $request;
     $this['responseobj'] = $response;
 
@@ -349,6 +347,7 @@ $app->add(function ($request, $response, $next) {
     $this['schema']   = $request->getParam('schema');
     $misc             = $this->get('misc');
 
+    \PC::debug($request->getBasePath());
     $misc->setHREF();
     $misc->setForm();
 

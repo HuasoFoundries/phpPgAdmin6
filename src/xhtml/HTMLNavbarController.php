@@ -291,7 +291,7 @@ class HTMLNavbarController extends HTMLController
                             'url'     => SUBFOLDER . '/src/views/servers',
                             'urlvars' => [
                                 'action'       => 'logout',
-                                'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}",
+                                'logoutServer' => sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
                             ],
                         ],
                         'id'   => 'toplink_logout',

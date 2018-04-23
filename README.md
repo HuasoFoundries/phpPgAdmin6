@@ -22,6 +22,23 @@ Some of these are already in place, others are in progress.
 This project is made on top of [Slim Framework 3](https://www.slimframework.com/), although a big part of the code doesn't use its full features yet.
 
 
+## Credits & FAQ
+
+We're preserving due credits to all people that contributed in the past, as well as other release notes 
+contained in the old version of [phppgadmin](https://github.com/phppgadmin/phppgadmin)
+
+  - [Bugs](docs/BUGS.md)
+  - [Changelog](docs/CHANGELOG.md) (*outdated*)
+  - [Credits](docs/CREDITS.md)
+  - [Developers](docs/DEVELOPERS.md)
+  - [FAQ](docs/FAQ.md) (*outdated*)
+  - [History](docs/HISTORY.md) (*outdated*)
+  - [Translators](docs/TRANSLATORS.md)
+
+Kudos to all people that helped build the original project, upon which this one was built.
+
+
+
 ## Installation
 
 ### Using Composer (recommended)
@@ -44,7 +61,7 @@ composer install --no-dev
 
 ## Rewrite Rules
 
-As this project is built over Slim PHP v3, you'll need some rewrite rules for this software to work. 
+As this project is built over[Slim Framework 3](https://www.slimframework.com/), **you'll need some rewrite rules for this software to work**. 
 
 ### Apache
 
