@@ -155,7 +155,7 @@ class SqlController extends BaseController
                         break;
                     case \PGSQL_COMMAND_OK:
                         // If we have the command completion tag
-                        if (version_compare(phpversion(), '4.3', '>=')) {
+                        if (version_compare(PHP_VERSION, '4.3', '>=')) {
                             echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), "<br/>\n";
                         }
                         // Otherwise if any rows have been affected
