@@ -46,17 +46,17 @@ if (!window.inPopUp) {
 
 			if (stateObj.method !== 'GET') {
 
-				console.log('Will not pushState with Method "' + stateObj.method + '"');
+				//console.log('Will not pushState with Method "' + stateObj.method + '"');
 
 			} else if (stateObj.newurl !== stateObj.parenturl) {
-				console.log('will pushState', stateObj);
+				//console.log('will pushState', stateObj);
 				window.parent.history.pushState(stateObj, document.title, stateObj.newurl);
 			} else {
 
-				console.log('no changes in stateObj', {
+				/*console.log('no changes in stateObj', {
 					newurl: stateObj.newurl,
 					parenturl: stateObj.parenturl
-				});
+				});*/
 			}
 
 			if (jQuery.fn) {

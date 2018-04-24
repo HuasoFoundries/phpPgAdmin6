@@ -33,7 +33,8 @@
 
         "twig/twig": "~1.28",
         "kint-php/kint": "^2.1",
-        "adodb/adodb-php": "^5.20"
+        "adodb/adodb-php": "^5.20",
+        "slim/flash": "^0.4.0"
     },
     "require-dev":
     {

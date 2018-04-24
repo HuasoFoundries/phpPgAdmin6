@@ -96,7 +96,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => \SUBFOLDER . '/redirect/servers?',
+                'url'   => \SUBFOLDER . '/redirect/server?',
                 'vars'  => ['server' => 'sha'],
             ],
             'host'     => [
@@ -170,7 +170,7 @@ class ServersController extends BaseController
 
         $reqvars = $this->misc->getRequestVars('server');
 
-        //$this->prtrace($reqvars);
+        //$this->prtrace($nodes);
 
         $attrs = [
             'text'    => Decorator::field('desc'),
@@ -182,11 +182,7 @@ class ServersController extends BaseController
             // logged into the server.
             'branch'  => Decorator::field('branch'),
         ];
-        /*$this->prtrace([
-        'nodes'   => $nodes,
-        'attrs'   => $attrs,
-        'section' => $this->section,
-        ]);*/
+
         return $this->printTree($nodes, $attrs, $this->section);
     }
 
