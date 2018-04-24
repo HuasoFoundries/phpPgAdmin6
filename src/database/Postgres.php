@@ -2812,7 +2812,7 @@ class Postgres extends ADOdbBase
                     ) {
                         $in_quote = 0;
                     }
-                } else if ($dol_quote) {
+                } elseif ($dol_quote) {
                     $this->prtrace('dol_quote', $dol_quote, $line);
                     if (strncmp(substr($line, $i), $dol_quote, strlen($dol_quote)) == 0) {
                         $this->advance_1($i, $prevlen, $thislen);
@@ -2822,8 +2822,7 @@ class Postgres extends ADOdbBase
 
                         $dol_quote = null;
                     }
-                } else if (substr($line, $i, 2) == '/*') {
-
+                } elseif (substr($line, $i, 2) == '/*') {
                     $this->prtrace('open_xcomment', $in_xcomment, $line, $i, $prevlen, $thislen);
                     if ($in_xcomment == 0) {
                         ++$in_xcomment;
@@ -2839,7 +2838,7 @@ class Postgres extends ADOdbBase
                             $i           = 0;
                         }
                     }
-                } else if ($in_xcomment) {
+                } elseif ($in_xcomment) {
                     $position = strpos(substr($line, $i, $len), '*/');
                     if ($position === false) {
                         $line = '';
@@ -2864,9 +2863,9 @@ class Postgres extends ADOdbBase
                     //      if ($substr == '*/' && !--$in_xcomment) {
                     //          $this->advance_1($i, $prevlen, $thislen);
                     //      }
-                } else if (substr($line, $i, 1) == '\'' || substr($line, $i, 1) == '"') {
+                } elseif (substr($line, $i, 1) == '\'' || substr($line, $i, 1) == '"') {
                     $in_quote = substr($line, $i, 1);
-                } else if (!$dol_quote && $this->valid_dolquote(substr($line, $i))) {
+                } elseif (!$dol_quote && $this->valid_dolquote(substr($line, $i))) {
                     $dol_end   = strpos(substr($line, $i + 1), '$');
                     $dol_quote = substr($line, $i, $dol_end + 1);
                     $this->advance_1($i, $prevlen, $thislen);
@@ -2881,9 +2880,9 @@ class Postgres extends ADOdbBase
 
                     if (substr($line, $i, 1) == '(') {
                         ++$paren_level;
-                    } else if (substr($line, $i, 1) == ')' && $paren_level > 0) {
+                    } elseif (substr($line, $i, 1) == ')' && $paren_level > 0) {
                         --$paren_level;
-                    } else if (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
+                    } elseif (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
                         $subline = substr(substr($line, 0, $i), $query_start);
                         /*
                          * insert a cosmetic newline, if this is not the first
@@ -2925,7 +2924,7 @@ class Postgres extends ADOdbBase
                         }
                         $query_buf   = null;
                         $query_start = $i + $thislen;
-                    } else if (preg_match('/^[_[:alpha:]]$/', substr($line, $i, 1))) {
+                    } elseif (preg_match('/^[_[:alpha:]]$/', substr($line, $i, 1))) {
                         $sub = substr($line, $i, $thislen);
                         while (preg_match('/^[\$_A-Za-z0-9]$/', $sub)) {
                             /* keep going while we still have identifier chars */
@@ -2937,7 +2936,6 @@ class Postgres extends ADOdbBase
                         $i -= $prevlen;
                     }
                 }
-
             } // end for
 
             /* Put the rest of the line in the query buffer. */
