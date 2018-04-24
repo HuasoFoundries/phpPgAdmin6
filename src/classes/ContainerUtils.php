@@ -43,7 +43,6 @@ class ContainerUtils
 
     public function getDestinationWithLastTab($subject)
     {
-
         $_server_info = $this->container->misc->getServerInfo();
         $this->addFlash('getDestinationWithLastTab for ', $subject, $_server_info);
         //$this->prtrace('$_server_info', $_server_info);

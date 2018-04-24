@@ -21,7 +21,7 @@ if ($filePath && is_file($filePath)) {
             // php file; serve through interpreter
             include $filePath;
             return;
-        } else if ($will_redirect) {
+        } elseif ($will_redirect) {
             $new_location = 'Location: http://' . $_SERVER['HTTP_HOST'] . $req_uri;
 
             header($new_location, 301);

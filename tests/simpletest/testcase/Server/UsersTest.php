@@ -192,7 +192,7 @@ class UsersTest extends PreconditionSet
         // Turn to the old browser which we login with super user at very beginning.
         $this->assertTrue($this->get("${webUrl}/users", ['server' => $SERVER]));
         $this->assertTrue(
-            $this->get("${webUrl}/users", ['action' => 'confirm_drop',
+            $this->get("${webUrl}/users", ['action'     => 'confirm_drop',
                 'username'                              => $this->_powerUserName,
                 'server'                                => $SERVER])
         );
