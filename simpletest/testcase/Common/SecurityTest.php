@@ -3,13 +3,12 @@
  * Function area: Common manipulation
  * Sub function area: Security
  *
- * @author     Augmentum SpikeSource Team 
+ * @author     Augmentum SpikeSource Team
  * @copyright  2005 by Augmentum, Inc.
  */
  
 // Import the precondition class.
-if(is_dir('../Public')) 
-{
+if (is_dir('../Public')) {
     require_once('../Public/SetPrecondition.php');
 }
 
@@ -17,21 +16,21 @@ if(is_dir('../Public'))
  * This class is to test the security management.
  * It includes login/logout and modify password.
  */
-class SecurityTest extends PreconditionSet 
+class SecurityTest extends PreconditionSet
 {
     // Declare the member variables for the invalid username/password.
     private $_invalidUserName = 'invalidusername';
     private $_invalidPassword = 'invalidpassword';
     
-    function setUp()
-    {  
-        return TRUE;
+    public function setUp()
+    {
+        return true;
     }
     
     
-    function tearDown()
-    {        
-        return TRUE;
+    public function tearDown()
+    {
+        return true;
     }
    
    
@@ -39,7 +38,7 @@ class SecurityTest extends PreconditionSet
      * TestCaseID: CSM01
      * Test to login with special user name.
      */
-    function testSpecialLogin() 
+    public function testSpecialLogin()
     {
         global $webUrl;
         global $NORMAL_USER_NAME;
@@ -50,7 +49,7 @@ class SecurityTest extends PreconditionSet
         
         // Verify the error messages.
         $this->assertWantedText($lang['strlogindisallowed']);
-		$this->assertWantedText($lang['strviewfaq']);
+        $this->assertWantedText($lang['strviewfaq']);
         // Login with special user name "postgres".
         $this->login($NORMAL_USER_NAME, '', "$webUrl/login.php");
         
@@ -58,7 +57,7 @@ class SecurityTest extends PreconditionSet
         $this->assertWantedText($lang['strlogindisallowed']);
         $this->assertWantedText($lang['strviewfaq']);
         
-        return TRUE;
+        return true;
     }
     
     
@@ -66,7 +65,7 @@ class SecurityTest extends PreconditionSet
      * TestCaseID: CSM02
      * Test to login with invalid user name or password.
      */
-    function testInvalidLogin() 
+    public function testInvalidLogin()
     {
         global $webUrl;
         global $SUPER_USER_NAME;
@@ -84,7 +83,7 @@ class SecurityTest extends PreconditionSet
         // Verify the error messages.
         $this->assertWantedText($lang['strloginfailed']);
         
-        return TRUE;
+        return true;
     }
     
     
@@ -92,7 +91,7 @@ class SecurityTest extends PreconditionSet
      * TestCaseID: CSM03
      * Test to change the current user's password.
      */
-    function testAccount() 
+    public function testAccount()
     {
         global $webUrl;
         global $NORMAL_USER_NAME;
@@ -103,7 +102,7 @@ class SecurityTest extends PreconditionSet
         $this->login($NORMAL_USER_NAME, $NORMAL_USER_PASSWORD, "$webUrl/login.php");
         
         // Turn to the account page and change the password page.
-        $this->assertTrue($this->get("$webUrl/users.php", array('server' => $SERVER, 'action' => 'account')));
+        $this->assertTrue($this->get("$webUrl/users.php", ['server' => $SERVER, 'action' => 'account']));
         $this->assertTrue($this->clickLink($lang['strchangepassword']));
        
         // Enter the new password and different confirm password.
@@ -124,8 +123,6 @@ class SecurityTest extends PreconditionSet
         
         $this->logout();
         
-        return TRUE;
+        return true;
     }
-
 }
-?>

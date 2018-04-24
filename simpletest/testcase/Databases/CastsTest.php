@@ -2,14 +2,13 @@
 /**
  * Function area     : Database.
  * Sub Function area : Casts.
- * 
+ *
  * @author     Augmentum SpikeSource Team
  * @copyright  Copyright (c) 2005 by Augmentum, Inc.
  */
 
 // Import the precondition class.
-if (is_dir('../Public'))
-{
+if (is_dir('../Public')) {
     require_once('../Public/SetPrecondition.php');
 }
 
@@ -21,7 +20,7 @@ class CastsTest extends PreconditionSet
     /**
      * Set up the preconditon.
      */
-    function setUp()
+    public function setUp()
     {
         global $webUrl;
         global $SUPER_USER_NAME;
@@ -29,19 +28,19 @@ class CastsTest extends PreconditionSet
         $this->login($SUPER_USER_NAME, $SUPER_USER_PASSWORD,
                      "$webUrl/login.php");
 
-        return TRUE;
+        return true;
     }
 
 
     /**
      * Release the relational resource.
      */
-    function tearDown()
+    public function tearDown()
     {
         // Logout this system.
         $this->logout();
 
-        return TRUE;
+        return true;
     }
 
 
@@ -51,25 +50,23 @@ class CastsTest extends PreconditionSet
      *
      * Note: It's strange here, because it only display one sentecse.
      */
-    function testLanguage()
+    public function testLanguage()
     {
         global $webUrl;
         global $lang, $SERVER, $DATABASE;
 
         // Locate the list page of language.
-		$this->assertTrue($this->get("$webUrl/casts.php", array(
-			            'server' => $SERVER,
-						'database' => $DATABASE,
-						'subject' => 'database'))
-					);
+        $this->assertTrue($this->get("$webUrl/casts.php", [
+                        'server'   => $SERVER,
+                        'database' => $DATABASE,
+                        'subject'  => 'database'])
+                    );
 
         $this->assertWantedText($lang['strsourcetype']);
         $this->assertWantedText($lang['strtargettype']);
         $this->assertWantedText($lang['strimplicit']);
         
 
-        return TRUE;
+        return true;
     }
 }
-
-?>
