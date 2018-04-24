@@ -2,16 +2,15 @@
 /**
  * Function area     : Database.
  * Sub Function area : DatabaseManagement.
- * 
+ *
  * @author     Augmentum SpikeSource Team
  * @copyright  Copyright (c) 2005 by Augmentum, Inc.
  */
  
 // Import the precondition class.
-if (is_dir('../Public'))
-{
+if (is_dir('../Public')) {
     require_once('../Public/SetPrecondition.php');
-} 
+}
 
 /**
  * This class is to test the Database management.
@@ -21,7 +20,7 @@ class DatabaseTest extends PreconditionSet
     /**
      * Set up the preconditon.
      */
-    function setUp()
+    public function setUp()
     {
         global $webUrl;
         global $SUPER_USER_NAME;
@@ -30,19 +29,19 @@ class DatabaseTest extends PreconditionSet
         $this->login($SUPER_USER_NAME, $SUPER_USER_PASSWORD,
                      "$webUrl/login.php");
                      
-        return TRUE;                     
-    } 
+        return true;
+    }
 
 
     /**
      * Release the relational resource.
      */
-    function tearDown()
+    public function tearDown()
     {
         // Logout this system.
         $this->logout();
 
-        return TRUE;
+        return true;
     }
 
 
@@ -50,12 +49,12 @@ class DatabaseTest extends PreconditionSet
      * TestCaseId: DCD001
      * This test is used to create a default database with
      * "LATIN1" character set.
-     * 
+     *
      * Note:  The open database cannot delete by phpPgAdmin,  so this case
-     * can be run only one time.  It needs to change name of database for 
+     * can be run only one time.  It needs to change name of database for
      * next time.
      */
-    function testCreateLATIN1DBInSPT()
+    public function testCreateLATIN1DBInSPT()
     {
         global $webUrl;
         global $lang, $SERVER;
@@ -64,14 +63,14 @@ class DatabaseTest extends PreconditionSet
         $this->assertTrue($this->get("$webUrl/all_db.php"));
 
         // Click the hyperlink of "Create Database".
-		$this->assertTrue($this->get("$webUrl/all_db.php", array(
-			            'server' => $SERVER,
-						'action' => 'create'))
-					);
+        $this->assertTrue($this->get("$webUrl/all_db.php", [
+                        'server' => $SERVER,
+                        'action' => 'create'])
+                    );
 
         // Fill the form about creating database.
         $this->assertTrue($this->setfield('formName', 'spikesource1'));
-        $this->assertTrue($this->setfield('formEncoding', 'LATIN1'));        
+        $this->assertTrue($this->setfield('formEncoding', 'LATIN1'));
         $this->assertTrue($this->setfield('formSpc', 'pg_default'));
         
         // Click the submit button.
@@ -79,16 +78,16 @@ class DatabaseTest extends PreconditionSet
 
         // Verify weather the database has been created.
         // Because the phpPgAdmin cannot drop the currently open database.
-        // this test case may be failed 
+        // this test case may be failed
         // when runing the testcase second time without removing the databases.
         $this->assertWantedText($lang['strdatabasecreated']);
 
-        // Release the resource. 
-		// XXX In fact, this line doesnot work because of phpPgAdmin's bug.
-		// "cannot delete opened database"
+        // Release the resource.
+        // XXX In fact, this line doesnot work because of phpPgAdmin's bug.
+        // "cannot delete opened database"
         $this->dropDatabase('spikesource1');
 
-        return TRUE;
+        return true;
     }
 
 
@@ -96,12 +95,12 @@ class DatabaseTest extends PreconditionSet
      * TestCaseId: DCD002
      * This test is used to create a defined database with other
      * character set "UNICODE".
-     * 
+     *
      * Note:  The open database cannot delete by phpPgAdmin,  so this case
-     * can be run only one time.  It needs to change name of database for 
+     * can be run only one time.  It needs to change name of database for
      * next time.
      */
-    function testCreateUNICODEDBInTester()
+    public function testCreateUNICODEDBInTester()
     {
         global $webUrl;
         global $lang, $SERVER;
@@ -112,10 +111,10 @@ class DatabaseTest extends PreconditionSet
         $this->assertTrue($this->get("$webUrl/all_db.php"));
 
         // Click the hyperlink of "Create Database".
-		$this->assertTrue($this->get("$webUrl/all_db.php", array(
-			            'server' => $SERVER,
-						'action' => 'create'))
-					);
+        $this->assertTrue($this->get("$webUrl/all_db.php", [
+                        'server' => $SERVER,
+                        'action' => 'create'])
+                    );
 
         // Fill the form about creating database.
         $this->assertTrue($this->setfield('formName', 'spikesource2'));
@@ -123,20 +122,20 @@ class DatabaseTest extends PreconditionSet
         $this->assertTrue($this->setfield('formSpc', 'pg_default'));
         
         // Click the submit button.
-        $this->assertTrue($this->clickSubmit($lang['strcreate']));        
+        $this->assertTrue($this->clickSubmit($lang['strcreate']));
 
         // Verify weather the database has been created.
         // Because the phpPgAdmin cannot drop the currently open database,
-        // this test case may be failed 
+        // this test case may be failed
         // when runing the testcase second time without removing the databases.
         $this->assertWantedText($lang['strdatabasecreated']);
 
         // Release the resource.
-		// XXX In fact, this line doesnot work because of phpPgAdmin's bug (?)
-		// "cannot delete opened database"
+        // XXX In fact, this line doesnot work because of phpPgAdmin's bug (?)
+        // "cannot delete opened database"
         $this->dropDatabase('spikesource2');
 
-        return TRUE;
+        return true;
     }
 
 
@@ -147,19 +146,19 @@ class DatabaseTest extends PreconditionSet
      * This test is faild, because the PostgreSQL cannot support deleteing
      * an open database currently.
      */
-    function testDropDatabase()
+    public function testDropDatabase()
     {
         global $webUrl;
         global $lang, $SERVER, $DATABASE;
 
         // Click the hyperlink of "Create Database".
-		$this->assertTrue($this->get("$webUrl/all_db.php", array(
-			            'server' => $SERVER,
-						'action' => 'confirm_drop',
-						'subject' => 'database',
-						'database' => $DATABASE,
-						'dropdatabase' => $DATABASE ))
-					);
+        $this->assertTrue($this->get("$webUrl/all_db.php", [
+                        'server'       => $SERVER,
+                        'action'       => 'confirm_drop',
+                        'subject'      => 'database',
+                        'database'     => $DATABASE,
+                        'dropdatabase' => $DATABASE ])
+                    );
 
         // Click the submit button "Drop" next page.
         $this->assertTrue($this->clickSubmit($lang['strdrop']));
@@ -172,8 +171,6 @@ class DatabaseTest extends PreconditionSet
         $this->dropDatabase('SpikeSource1');
         $this->dropDatabase('SpikeSource2');
 
-        return TRUE;
+        return true;
     }
 }
-
-?>

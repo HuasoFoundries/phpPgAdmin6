@@ -2,7 +2,7 @@
 /**
  * This file just declare global variables.
  *
- * @author     Allen Xiao 
+ * @author     Allen Xiao
  * @copyright  2005 by Augmentum, Inc.
  */
  
@@ -32,4 +32,3 @@ $POWER_USER_PASSWORD = 'tester';
 
 global $NORMAL_USER_PASSWORD;
 $NORMAL_USER_PASSWORD = 'guest';
-?>

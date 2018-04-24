@@ -3,13 +3,12 @@
  * Function area: Server
  * Sub function area: Groups
  *
- * @author     Augmentum SpikeSource Team 
+ * @author     Augmentum SpikeSource Team
  * @copyright  2005 by Augmentum, Inc.
  */
 
 // Import the precondition class.
-if(is_dir('../Public')) 
-{
+if (is_dir('../Public')) {
     require_once('../Public/SetPrecondition.php');
 }
 
@@ -17,12 +16,12 @@ if(is_dir('../Public'))
  * This class is to test the group management.
  * It includes create/drop/alter/list groups.
  */
-class GroupsTest extends PreconditionSet 
+class GroupsTest extends PreconditionSet
 {
     // Declare the member variable for group name.
-    private $_groupName = "testgroup";
+    private $_groupName = 'testgroup';
         
-    function setUp()
+    public function setUp()
     {
         global $webUrl;
         global $SUPER_USER_NAME;
@@ -30,21 +29,21 @@ class GroupsTest extends PreconditionSet
         
         $this->login($SUPER_USER_NAME, $SUPER_USER_PASSWORD, "$webUrl/login.php");
         
-        return TRUE;
+        return true;
     }
 
-    function tearDown()
+    public function tearDown()
     {
         $this->logout();
 
-        return TRUE;
+        return true;
     }
 
     /*
      * TestCaseID: SCG01
-     * Test to create group. 
+     * Test to create group.
      */
-    function testCreate() 
+    public function testCreate()
     {
         global $webUrl;
         global $POWER_USER_NAME;
@@ -52,19 +51,19 @@ class GroupsTest extends PreconditionSet
         global $lang, $SERVER;
 
         // Turn to create group page.
-		$this->assertTrue($this->get("$webUrl/groups.php", array('server' => $SERVER)));
+        $this->assertTrue($this->get("$webUrl/groups.php", ['server' => $SERVER]));
         $this->assertTrue($this->clickLink($lang['strcreategroup']));
 
         // Enter the information for creating group.
         $this->assertTrue($this->setField('name', $this->_groupName));
-        $this->assertTrue($this->setField('members[]', array($POWER_USER_NAME, $NORMAL_USER_NAME)));
+        $this->assertTrue($this->setField('members[]', [$POWER_USER_NAME, $NORMAL_USER_NAME]));
 
         // Then submit and verify it.
         $this->assertTrue($this->clickSubmit($lang['strcreate']));
         $this->assertWantedText($lang['strgroupcreated']);
         $this->assertWantedText($this->_groupName);
 
-        return TRUE;
+        return true;
     }
 
 
@@ -72,7 +71,7 @@ class GroupsTest extends PreconditionSet
      * TestCaseID: SAG01
      * Test to add users to the gruop.
      */
-    function testAddUser() 
+    public function testAddUser()
     {
         global $webUrl;
         global $SUPER_USER_NAME;
@@ -81,12 +80,12 @@ class GroupsTest extends PreconditionSet
         global $lang, $SERVER;
         
         // Turn to the gruop's properties page.
-        $this->assertTrue($this->get("$webUrl/groups.php", array('server' => $SERVER)));
-		$this->assertTrue($this->get("$webUrl/groups.php",
-			array('action' => 'properties',
-				'group' => $this->_groupName,
-				'server' => $SERVER))
-		);
+        $this->assertTrue($this->get("$webUrl/groups.php", ['server' => $SERVER]));
+        $this->assertTrue($this->get("$webUrl/groups.php",
+            ['action'    => 'properties',
+                'group'  => $this->_groupName,
+                'server' => $SERVER])
+        );
        
         // Select user and add it to the group.
         $this->assertTrue($this->setField('user', $SUPER_USER_NAME));
@@ -99,7 +98,7 @@ class GroupsTest extends PreconditionSet
         $this->assertWantedText($POWER_USER_NAME);
         $this->assertWantedText($NORMAL_USER_NAME);
         
-        return TRUE;
+        return true;
     }
     
     
@@ -107,7 +106,7 @@ class GroupsTest extends PreconditionSet
      * TestCaseID: SRG01
      * Test to Remove users from the group.
      */
-    function testRemoveUser() 
+    public function testRemoveUser()
     {
         global $webUrl;
         global $SUPER_USER_NAME;
@@ -116,45 +115,44 @@ class GroupsTest extends PreconditionSet
         global $lang, $SERVER;
         
         // Turn to the gruop properties page.
-        $this->assertTrue($this->get("$webUrl/groups.php", array('server' => $SERVER)));
-		$this->assertTrue($this->get("$webUrl/groups.php",
-			array('action' => 'properties',
-				'group' => $this->_groupName,
-				'server' => $SERVER))
-		);
+        $this->assertTrue($this->get("$webUrl/groups.php", ['server' => $SERVER]));
+        $this->assertTrue($this->get("$webUrl/groups.php",
+            ['action'    => 'properties',
+                'group'  => $this->_groupName,
+                'server' => $SERVER])
+        );
        
         // Drop users from the group and verify it.
         $this->assertTrue($this->clickLink($lang['strdrop']));
         $this->assertTrue($this->clickSubmit($lang['strdrop']));
         $this->assertWantedText($lang['strmemberdropped']);
         
-        return TRUE;
+        return true;
     }
     
     
     /*
      * TestCaseID: SDG01
-     * Test to drop the group. 
+     * Test to drop the group.
      */
-    function testDrop() 
+    public function testDrop()
     {
         global $webUrl;
         global $lang, $SERVER;
         
         // Turn to the drop group page..
-        $this->assertTrue($this->get("$webUrl/groups.php", array('server' => $SERVER)));
-		$this->assertTrue($this->get("$webUrl/groups.php",
-			array('server' => $SERVER,
-				'action' => 'confirm_drop',
-			   	'group' => $this->_groupName))
-		);
+        $this->assertTrue($this->get("$webUrl/groups.php", ['server' => $SERVER]));
+        $this->assertTrue($this->get("$webUrl/groups.php",
+            ['server'    => $SERVER,
+                'action' => 'confirm_drop',
+                'group'  => $this->_groupName])
+        );
        
         // Confirm to drop the group and verify it.
         $this->assertTrue($this->clickSubmit($lang['strdrop']));
         $this->assertWantedText($lang['strgroupdropped']);
         $this->assertNoUnWantedText($this->_groupName);
         
-        return TRUE;
+        return true;
     }
 }
-?>
