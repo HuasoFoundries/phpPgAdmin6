@@ -33,6 +33,24 @@ trait HelperTrait
         throw new \Slim\Exception\SlimException($this->container->requestobj, $this->container->responseobj);
     }
 
+    public function addFlash($key, $content)
+    {
+
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+        $btarray0 = ([
+            'class2'    => $backtrace[1]['class'],
+            'type2'     => $backtrace[1]['type'],
+            'function2' => $backtrace[1]['function'],
+            'spacer4'   => ' ',
+            'line2'     => $backtrace[0]['line'],
+        ]);
+
+        $tag = implode('', $btarray0);
+
+        $this->container->flash->addMessage($tag . ' ' . $key, $content);
+    }
+
     /**
      * Receives N parameters and sends them to the console adding where was it called from.
      */

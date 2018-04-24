@@ -132,6 +132,10 @@ $container->offsetSet('server', isset($_REQUEST['server']) ? $_REQUEST['server']
 $container->offsetSet('database', isset($_REQUEST['database']) ? $_REQUEST['database'] : null);
 $container->offsetSet('schema', isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null);
 
+$container['flash'] = function () {
+    return new \Slim\Flash\Messages();
+};
+
 $container['utils'] = function ($c) {
     $utils = new \PHPPgAdmin\ContainerUtils($c);
     return $utils;
@@ -388,6 +392,11 @@ $app->add(
 
         if (count($this['errors']) > 0) {
             return ($this->haltHandler)($this->requestobj, $this->responseobj, $this['errors'], 412);
+        }
+
+        $messages = $this->flash->getMessages();
+        if (!empty($messages)) {
+            \PC::debug($messages, ' flash messages from previous request');
         }
         // First execute anything else
         $response = $next($request, $response);

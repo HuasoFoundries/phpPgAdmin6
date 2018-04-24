@@ -1104,6 +1104,7 @@ class Misc
                 break;
             case 'server':
                 $hide_users = true;
+                $hide_roles = false;
                 if ($data) {
                     $hide_users = !$data->isSuperUser();
                 }
@@ -1119,11 +1120,19 @@ class Misc
                 ];
                 if ($data && $data->hasRoles()) {
                     $tabs = array_merge($tabs, [
+                        'users' => [
+                            'title'   => $lang['strusers'],
+                            'url'     => 'users',
+                            'urlvars' => ['subject' => 'server'],
+                            'hide'    => $hide_roles,
+                            'help'    => 'pg.user',
+                            'icon'    => 'Users',
+                        ],
                         'roles' => [
                             'title'   => $lang['strroles'],
                             'url'     => 'roles',
                             'urlvars' => ['subject' => 'server'],
-                            'hide'    => $hide_users,
+                            'hide'    => $hide_roles,
                             'help'    => 'pg.role',
                             'icon'    => 'Roles',
                         ],

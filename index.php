@@ -76,8 +76,7 @@ $app->get('/redirect[/{subject}]', function (
     /** @scrutinizer ignore-unused */$response,
     /** @scrutinizer ignore-unused */$args
 ) {
-    $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
-    $this->utils->prtrace('redirect', $subject);
+    $subject        = (isset($args['subject'])) ? $args['subject'] : 'root';
     $destinationurl = $this->utils->getDestinationWithLastTab($subject);
     return $response->withStatus(302)->withHeader('Location', $destinationurl);
 });
@@ -145,6 +144,9 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     }
 
     $subject = $args['subject'];
+    if ($subject === 'server') {
+        $subject = 'servers';
+    }
 
     $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
     $controller = new $className($this);

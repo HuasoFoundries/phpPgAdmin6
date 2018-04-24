@@ -43,16 +43,16 @@ class ContainerUtils
 
     public function getDestinationWithLastTab($subject)
     {
-        $this->prtrace('getDestinationWithLastTab for ', $subject);
+
         $_server_info = $this->container->misc->getServerInfo();
+        $this->addFlash('getDestinationWithLastTab for ', $subject, $_server_info);
         //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
         if (!isset($_server_info['username'])) {
-            $this->prtrace('no $_server_info[username] for ', $_server_info);
             $destinationurl = $this->getRedirectUrl();
         } else {
             $url = $this->container->misc->getLastTabURL($subject);
-            $this->prtrace('getLastTabURL for ' . $subject, $url);
+            $this->addFlash('getLastTabURL for ' . $subject, $url);
             // Load query vars into superglobal arrays
             if (isset($url['urlvars'])) {
                 $urlvars = [];
