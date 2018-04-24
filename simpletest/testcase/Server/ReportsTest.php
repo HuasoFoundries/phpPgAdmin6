@@ -91,7 +91,7 @@ class ReportsTest extends PreconditionSet
                 $this->assertTrue($this->clickLink($lang['strexpand']));
                 $this->assertWantedText($lang['strnodata']);
                 $this->assertWantedText($lang['strcollapse']);
-        
+
                 $this->assertTrue($this->clickLink($lang['strcollapse']));
                 $this->assertWantedText($lang['strnodata']);
                 $this->assertWantedText($lang['strexpand']);
