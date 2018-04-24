@@ -10,6 +10,7 @@ $header = "PHPPgAdmin v$version";
 $config = PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
+        'no_php4_constructor'=>true,
         '@PHP56Migration' => true,
         '@PHPUnit60Migration:risky' => true,
         '@Symfony' => true,
@@ -65,8 +66,6 @@ $config = PhpCsFixer\Config::create()
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->exclude('tests/Fixtures')
-            ->exclude('.tests/*')
             ->in(__DIR__.'/src/classes')
             ->in(__DIR__.'/src/controllers')
             ->in(__DIR__.'/src/database')
@@ -74,6 +73,7 @@ $config = PhpCsFixer\Config::create()
             ->in(__DIR__.'/src/help')
             ->in(__DIR__.'/src/lang')
             ->in(__DIR__.'/src/xhtml')
+            ->in(__DIR__.'/tests')
     )
 ;
 

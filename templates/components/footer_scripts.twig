@@ -13,8 +13,22 @@ window.stateObj = {
 
 <script>
 var dir = '{{lang.applangdir}}';
+var in_test='{{in_test}}';
+var reload='{{reload}}';
 if (!window.inPopUp) {
 
+
+
+        
+    if (reload!=='none') {
+        parent.frames && parent.frames.browser && parent.frames.browser.location.replace('{{subfolder}}/src/views/browser');
+    } 
+
+    if (reload==='other' && !parent.frames.length && in_test==='0') {
+        var destination=location.href.replace('/src/views','');
+        console.log('will do location replace',destination); 
+        location.replace(destination); 
+    }
 
 	$(document).ready(function () {
 
@@ -27,7 +41,7 @@ if (!window.inPopUp) {
 			stateObj.query_string= '{{query_string}}';
 
 			/* beautify preserve:end */
-			stateObj.newurl = stateObj.realurl.replace('src/views/', '').replace('.php', '');
+			stateObj.newurl = '{{subfolder}}'+stateObj.realurl.replace('{{subfolder}}','').replace('src/views/', '').replace('.php', '');
 			stateObj.parenturl = window.parent.location.href.replace(window.parent.location.origin, '');
 
 			if (stateObj.method !== 'GET') {
@@ -56,17 +70,17 @@ if (!window.inPopUp) {
 				}
 			}
 
-		} else {
+		} else if (in_test==='0') {
 			var redirect_to,
-				subject = location.pathname.replace('{{subfolder}}/src/views/', '').replace('.php', '');
+				subject = location.pathname.replace('{{subfolder}}','').replace('/src/views/', '').replace('.php', '');
 
-			if (subject === '{{subfolder}}/redirect/server') {
+			if (subject === '/redirect/server') {
 				subject = '/servers';
 			}
 			redirect_to = '{{subfolder}}/' + subject + location.search;
 			var redirection_msg = 'location subject ' + subject + ' will redirect_to ' + redirect_to;
 			console.log(redirection_msg);
-			location.replace(redirect_to);
+			//location.replace(redirect_to);
 		}
 
 

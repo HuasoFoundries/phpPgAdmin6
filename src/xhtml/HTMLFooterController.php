@@ -6,29 +6,6 @@
 
 namespace PHPPgAdmin\XHtml;
 
-/*$dato = [
-'name'   => 'id_establecimiento',
-'value'  => '$data->establecimiento->nombre',
-'filter' => CHtml::activeDropDownList(
-$model, 'id_establecimiento', CHtml::listData($establecimiento, 'id', 'nombre'),
-[
-'empty' => 'Todos',
-'ajax'  => [
-'type'   => 'POST',
-'url'    => CController::createUrl('equipo/ajaxListadoDepartamentos'),
-'data'   => ['id_establecimiento' => 'js:this.value'],
-'update' => '#Equipo_id_departamento',
-],
-],
-['ajax' => [
-'type'   => 'POST',
-'url'    => CController::createUrl('equipo/ajaxListadoEdificio'),
-'data'   => ['id_establecimiento' => 'js:this.value'],
-'update' => '#Equipo_id_edificio',
-],
-]),
-];
- */
 /**
  * Class to render tables. Formerly part of Misc.php.
  */
@@ -76,53 +53,24 @@ class HTMLFooterController extends HTMLController
     {
         $lang = $this->lang;
 
-        $footer_html = '';
-        //$this->prtrace(['$_reload_browser' => $this->_reload_browser, 'template' => $template]);
+        $footer_html  = '';
+        $reload_param = 'none';
         if ($this->misc->getReloadBrowser()) {
-            $footer_html .= $this->printReload(false, false);
+            $reload_param = 'other';
         } elseif ($this->_reload_drop_database) {
-            $footer_html .= $this->printReload(true, false);
+            $reload_param = 'database';
         }
         if (!$this->_no_bottom_link) {
-            $footer_html .= '<a data-footertemplate="'.$template.'" href="#" class="bottom_link">'.$lang['strgotoppage'].'</a>';
+            $footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . '</a>';
         }
 
+        $this->view->offsetSet('reload', $reload_param);
         $footer_html .= $this->view->fetch($template);
 
         if ($doBody) {
             echo $footer_html;
         } else {
             return $footer_html;
-        }
-    }
-
-    /**
-     * Outputs JavaScript code that will reload the browser.
-     *
-     * @param $database True if dropping a database, false otherwise
-     * @param bool $do_print true to echo, false to return;
-     */
-    public function printReload($database, $do_print = true)
-    {
-        $reload = "<script type=\"text/javascript\">\n";
-        //$reload .= " alert('will reload');";
-        if ($database) {
-            $reload .= "\tparent.frames && parent.frames.browser && parent.frames.browser.location.replace=\"".SUBFOLDER."/src/views/browser\";\n";
-        } else {
-            $reload .= "if(parent.frames && parent.frames.browser) { \n";
-            $reload .= "\t console.log('will reload frame browser'); \n";
-            $reload .= "\t parent.frames.browser.location.reload(); \n";
-            $reload .= '} else if(!parent.frames.length) {';
-            $reload .= "\t var destination=location.href.replace('src/views','');\n";
-            $reload .= "\n console.log('will do location replace',destination); \n";
-            $reload .= "\n  location.replace(destination); \n";
-            $reload .= "}\n";
-        }
-        $reload .= "</script>\n";
-        if ($do_print) {
-            echo $reload;
-        } else {
-            return $reload;
         }
     }
 
@@ -149,7 +97,7 @@ class HTMLFooterController extends HTMLController
     {
         echo "<script type=\"text/javascript\">\n";
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
         echo "//]]>\n";
         echo "</script>\n";
     }

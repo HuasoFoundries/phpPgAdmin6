@@ -77,13 +77,13 @@ trait HelperTrait
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-        $btarray0 = ([
+        $btarray0 = [
             'class'    => $backtrace[1]['class'],
             'type'     => $backtrace[1]['type'],
             'function' => $backtrace[1]['function'],
             'spacer'   => ' ',
             'line'     => $backtrace[0]['line'],
-        ]);
+        ];
 
         $tag = implode('', $btarray0);
 
@@ -109,7 +109,14 @@ trait HelperTrait
 
     public function dumpAndDie()
     {
+
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+
+        $folder = dirname(dirname(__DIR__));
+        $file   = str_replace($folder, '', $backtrace[0]['file']);
+        $line   = $backtrace[0]['line'];
+
         call_user_func_array('\Kint::dump', func_get_args());
-        $this->halt('stopped by user');
+        $this->halt('stopped by user at ' . $file . ' line ' . $line);
     }
 }

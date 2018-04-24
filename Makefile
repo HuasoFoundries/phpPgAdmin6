@@ -3,7 +3,7 @@ VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)",/\1/p')
 SHELL = /usr/bin/env bash
 
 default: install
-.PHONY: tag install test csfixer
+.PHONY: tag install test csfixer create_testdb destroy_testdb run_local
 
 version:
 	@echo $(VERSION)
@@ -43,3 +43,12 @@ endif
 
 csfixer:
 	./vendor/bin/php-cs-fixer --verbose fix	
+
+create_testdb:
+	PGPASSWORD=scrutinizer psql -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql
+
+destroy_testdb:
+	PGPASSWORD=scrutinizer psql -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_remove.sql	
+
+run_local:
+	php -S localhost:8000 index.php	

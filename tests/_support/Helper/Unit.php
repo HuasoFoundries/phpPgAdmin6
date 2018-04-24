@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * PHPPgAdmin v6.0.0-beta.44
+ */
+
 namespace Helper;
 
 // here you can define custom actions
@@ -18,7 +23,7 @@ class Unit extends \Codeception\Module
     public static function getContainer()
     {
         if (!static::$container) {
-            require_once self::DIRNAME . '/../../../src/lib.inc.php';
+            require_once self::DIRNAME.'/../../../src/lib.inc.php';
             self::$container = $container;
         }
 

@@ -109,7 +109,9 @@ $container = $app->getContainer();
 
 if ($container instanceof \Psr\Container\ContainerInterface) {
     \PhpConsole\Helper::register(); // it will register global PC class
-    if (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
+    if (PHP_SAPI == 'cli-server') {
+        $subfolder = '/index.php';
+    } else if (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
         $subfolder = $conf['subfolder'];
     } else {
         $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
@@ -363,13 +365,26 @@ $app->add(
 
         $params = $request->getParams();
 
+        $viewparams = [];
+
+        foreach ($params as $key => $value) {
+            if (is_scalar($value)) {
+                $viewparams[$key] = $value;
+            }
+        }
+
+        if (isset($_COOKIE['IN_TEST'])) {
+            $in_test = (string) $_COOKIE['IN_TEST'];
+        } else {
+            $in_test = '0';
+        }
+
         // remove tabs and linebreaks from query
         if (isset($params['query'])) {
-            $params['query'] = str_replace(["\r", "\n", "\t"], ' ', $params['query']);
+            $viewparams['query'] = str_replace(["\r", "\n", "\t"], ' ', $params['query']);
         }
-        $this->view->offsetSet('params', $params);
-
-        //return $this->utils->die('hola');
+        $this->view->offsetSet('params', $viewparams);
+        $this->view->offsetSet('in_test', $in_test);
 
         if (count($this['errors']) > 0) {
             return ($this->haltHandler)($this->requestobj, $this->responseobj, $this['errors'], 412);
