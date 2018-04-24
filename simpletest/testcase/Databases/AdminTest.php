@@ -2,16 +2,15 @@
 /**
  * Function area     : Database.
  * Sub Function area : Admin.
- * 
+ *
  * @author     Augmentum SpikeSource Team
  * @copyright  Copyright (c) 2005 by Augmentum, Inc.
  */
 
 // Import the precondition class.
-if (is_dir('../Public'))
-{
+if (is_dir('../Public')) {
     require_once('../Public/SetPrecondition.php');
-} 
+}
 
 /**
  * This class is to test the Admin about PostgreSql implementation.
@@ -22,7 +21,7 @@ class AdminTest extends PreconditionSet
     /**
      * Set up the preconditon.
      */
-    function setUp()
+    public function setUp()
     {
         global $webUrl;
         global $SUPER_USER_NAME;
@@ -30,19 +29,19 @@ class AdminTest extends PreconditionSet
         $this->login($SUPER_USER_NAME, $SUPER_USER_PASSWORD,
                      "$webUrl/login.php");
 
-        return TRUE;
+        return true;
     }
 
 
     /**
      * Release the relational resource.
      */
-    function tearDown()
+    public function tearDown()
     {
         // Logout this system.
         $this->logout();
 
-        return TRUE;
+        return true;
     }
 
 
@@ -50,23 +49,23 @@ class AdminTest extends PreconditionSet
      * TestCaseId: DAV001
      * This test is used to test the admin about Vacuum and full.
      */
-    function testAdminVacuumAna()
+    public function testAdminVacuumAna()
     {
         global $webUrl, $lang, $SERVER, $DATABASE;
         
         // Locate the list page of admin.
-		$this->assertTrue($this->get("$webUrl/database.php",
-			array('database' => $DATABASE,
-				'subject' => 'database',
-				'action' => 'admin',
-				'server' => $SERVER))
-		);
-        $this->assertTrue($this->setField('vacuum_analyze', TRUE));
-        $this->assertTrue($this->setField('vacuum_full', TRUE));
+        $this->assertTrue($this->get("$webUrl/database.php",
+            ['database'   => $DATABASE,
+                'subject' => 'database',
+                'action'  => 'admin',
+                'server'  => $SERVER])
+        );
+        $this->assertTrue($this->setField('vacuum_analyze', true));
+        $this->assertTrue($this->setField('vacuum_full', true));
         $this->assertTrue($this->clickSubmit($lang['strvacuum']));
         $this->assertWantedText($lang['strvacuumgood']);
 
-        return TRUE;
+        return true;
     }
 
 
@@ -74,22 +73,22 @@ class AdminTest extends PreconditionSet
      * TestCaseId: DCS002
      * This test is used to test the admin about freeze.
      */
-    function testAdminFreeze()
+    public function testAdminFreeze()
     {
         global $webUrl, $lang, $SERVER, $DATABASE;
         
         // Locate the list page of admin.
-		$this->assertTrue($this->get("$webUrl/database.php",
-			array('database' => $DATABASE,
-				'subject' => 'database',
-				'action' => 'admin',
-				'server' => $SERVER))
-		);
-        $this->assertTrue($this->setField('vacuum_freeze', TRUE));
+        $this->assertTrue($this->get("$webUrl/database.php",
+            ['database'   => $DATABASE,
+                'subject' => 'database',
+                'action'  => 'admin',
+                'server'  => $SERVER])
+        );
+        $this->assertTrue($this->setField('vacuum_freeze', true));
         $this->assertTrue($this->clickSubmit($lang['strvacuum']));
         $this->assertWantedText($lang['strvacuumgood']);
 
-        return TRUE;
+        return true;
     }
 
 
@@ -97,21 +96,21 @@ class AdminTest extends PreconditionSet
      * TestCaseId: DCS003
      * This test is used to test the admin about Analyze.
      */
-    function testAdminAnalyze()
+    public function testAdminAnalyze()
     {
         global $webUrl, $lang, $SERVER, $DATABASE;
         
         // Locate the list page of admin.
-		$this->assertTrue($this->get("$webUrl/database.php",
-			array('database' => $DATABASE,
-				'subject' => 'database',
-				'action' => 'admin',
-				'server' => $SERVER))
-		);
+        $this->assertTrue($this->get("$webUrl/database.php",
+            ['database'   => $DATABASE,
+                'subject' => 'database',
+                'action'  => 'admin',
+                'server'  => $SERVER])
+        );
         $this->assertTrue($this->clickSubmit($lang['stranalyze']));
         $this->assertWantedText($lang['stranalyzegood']);
 
-        return TRUE;
+        return true;
     }
 
 
@@ -119,21 +118,21 @@ class AdminTest extends PreconditionSet
      * TestCaseId: DCS004
      * This test is used to test the admin about Cluster.
      */
-    function testAdminCluster()
+    public function testAdminCluster()
     {
         global $webUrl, $lang, $SERVER, $DATABASE;
         
         // Locate the list page of admin.
-		$this->assertTrue($this->get("$webUrl/database.php", array(
-				'server' => $SERVER,
-				'database' => $DATABASE,
-				'subject' => 'database',
-				'action' => 'admin'))
-		);
+        $this->assertTrue($this->get("$webUrl/database.php", [
+                'server'   => $SERVER,
+                'database' => $DATABASE,
+                'subject'  => 'database',
+                'action'   => 'admin'])
+        );
         $this->assertTrue($this->clickSubmit($lang['strcluster']));
         $this->assertWantedText($lang['strclusteredgood']);
 
-        return TRUE;
+        return true;
     }
 
 
@@ -141,23 +140,21 @@ class AdminTest extends PreconditionSet
      * TestCaseId: DCS005
      * This test is used to test the admin about Reindex.
      */
-    function testAdminReindex()
+    public function testAdminReindex()
     {
         global $webUrl, $lang, $SERVER, $DATABASE;
 
         // Locate the list page of admin.
-		$this->assertTrue($this->get("$webUrl/database.php", array(
-				'database' => $DATABASE,
-				'subject' => 'database',
-				'action' => 'admin',
-				'server' => $SERVER))
-		);
-        $this->assertTrue($this->setField('reindex_force', TRUE));
+        $this->assertTrue($this->get("$webUrl/database.php", [
+                'database' => $DATABASE,
+                'subject'  => 'database',
+                'action'   => 'admin',
+                'server'   => $SERVER])
+        );
+        $this->assertTrue($this->setField('reindex_force', true));
         $this->assertTrue($this->clickSubmit($lang['strreindex']));
         $this->assertWantedText($lang['strreindexgood']);
 
-        return TRUE;
+        return true;
     }
 }
-
-?>
