@@ -48,7 +48,6 @@ if (in_array('-m', $argv)) {
     foreach ($patterns as $from => $to) {
         $php = preg_replace($from, $to, $php);
     }
-
 }
 
 // ----------------------------
