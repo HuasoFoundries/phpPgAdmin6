@@ -59,7 +59,7 @@ class ColumnTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/tblproperties",
-                ['action'  => 'add_column',
+                ['action'      => 'add_column',
                     'database' => $DATABASE,
                     'schema'   => 'public',
                     'table'    => 'student',
