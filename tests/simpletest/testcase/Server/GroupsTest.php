@@ -82,7 +82,7 @@ class GroupsTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/groups",
-                ['action' => 'properties',
+                ['action'     => 'properties',
                     'group'   => $this->_groupName,
                     'server'  => $SERVER]
             )
@@ -119,7 +119,7 @@ class GroupsTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/groups",
-                ['action' => 'properties',
+                ['action'     => 'properties',
                     'group'   => $this->_groupName,
                     'server'  => $SERVER]
             )
@@ -147,7 +147,7 @@ class GroupsTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/groups",
-                ['server' => $SERVER,
+                ['server'     => $SERVER,
                     'action'  => 'confirm_drop',
                     'group'   => $this->_groupName]
             )

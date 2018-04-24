@@ -94,5 +94,4 @@ class Postgres96 extends Postgres
 
         return $this->execute($sql);
     }
-
 }
