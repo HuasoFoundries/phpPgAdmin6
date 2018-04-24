@@ -2,14 +2,13 @@
 /**
  * Function area     : Database.
  * Sub Function area : Processes.
- * 
+ *
  * @author     Augmentum SpikeSource Team
  * @copyright  Copyright (c) 2005 by Augmentum, Inc.
  */
 
 // Import the precondition class.
-if (is_dir('../Public'))
-{
+if (is_dir('../Public')) {
     require_once('../Public/SetPrecondition.php');
 }
 
@@ -21,7 +20,7 @@ class ProcessesTest extends PreconditionSet
     /**
      * Set up the preconditon.
      */
-    function setUp()
+    public function setUp()
     {
         global $webUrl;
         global $SUPER_USER_NAME;
@@ -30,19 +29,19 @@ class ProcessesTest extends PreconditionSet
         $this->login($SUPER_USER_NAME, $SUPER_USER_PASSWORD,
             "$webUrl/login.php");
 
-        return TRUE;
+        return true;
     }
 
 
     /**
      * Release the relational resource.
      */
-    function tearDown()
+    public function tearDown()
     {
         // Logout this system.
         $this->logout();
 
-        return TRUE;
+        return true;
     }
 
 
@@ -52,22 +51,20 @@ class ProcessesTest extends PreconditionSet
      *
      * Note: This sub function is dynamic during the run time.
      */
-    function testProcesses()
+    public function testProcesses()
     {
         global $webUrl;
         global $lang, $SERVER, $DATABASE;
 
-		$this->assertTrue($this->get("$webUrl/database.php", array(
-		               'server' => $SERVER,
-					   'database' => $DATABASE,
-					   'subject' => 'database',
-					   'action' => 'processes'))
-				   );
+        $this->assertTrue($this->get("$webUrl/database.php", [
+                       'server'   => $SERVER,
+                       'database' => $DATABASE,
+                       'subject'  => 'database',
+                       'action'   => 'processes'])
+                   );
 
         $this->assertWantedText($lang['strnodata']);
 
-        return TRUE;
+        return true;
     }
 }
-
-?>
