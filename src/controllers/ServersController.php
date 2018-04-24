@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.44
  */
 
 namespace PHPPgAdmin\Controller;
@@ -96,7 +96,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => \SUBFOLDER . '/redirect/server?',
+                'url'   => \SUBFOLDER.'/redirect/server?',
                 'vars'  => ['server' => 'sha'],
             ],
             'host'     => [

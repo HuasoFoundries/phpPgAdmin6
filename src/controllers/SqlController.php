@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.44
  */
 
 namespace PHPPgAdmin\Controller;
@@ -185,7 +185,7 @@ class SqlController extends BaseController
 
         $rs = $data->conn->Execute($this->query);
 
-        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
+        echo '<form method="post" id="sqlform" action="'.$_SERVER['REQUEST_URI'].'">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($this->query);

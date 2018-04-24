@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.44
  */
 
 namespace PHPPgAdmin\Database;
@@ -58,13 +58,13 @@ class Postgres extends ADOdbBase
             if (is_array($this->help_page[$help])) {
                 $urls = [];
                 foreach ($this->help_page[$help] as $link) {
-                    $urls[] = $this->help_base . $link;
+                    $urls[] = $this->help_base.$link;
                 }
 
                 return $urls;
             }
 
-            return $this->help_base . $this->help_page[$help];
+            return $this->help_base.$this->help_page[$help];
         }
 
         return null;
@@ -78,7 +78,7 @@ class Postgres extends ADOdbBase
     public function getHelpPages()
     {
         if ($this->help_page === null || $this->help_base === null) {
-            $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . str_replace('.', '', $this->major_version);
+            $help_classname = '\PHPPgAdmin\Help\PostgresDoc'.str_replace('.', '', $this->major_version);
 
             $help_class = new $help_classname($this->conf, $this->major_version);
 
@@ -103,7 +103,7 @@ class Postgres extends ADOdbBase
         // Determine actions string
         $extra_str = '';
         foreach ($extras as $k => $v) {
-            $extra_str .= " {$k}=\"" . htmlspecialchars($v) . '"';
+            $extra_str .= " {$k}=\"".htmlspecialchars($v).'"';
         }
 
         switch (substr($type, 0, 9)) {
@@ -210,7 +210,7 @@ class Postgres extends ADOdbBase
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
 
-            $not_in = "('" . implode("','", $hiddendbs) . "')";
+            $not_in = "('".implode("','", $hiddendbs)."')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 
@@ -804,7 +804,7 @@ class Postgres extends ADOdbBase
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
+        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
 
         return $this->execute($sql);
     }
@@ -987,7 +987,7 @@ class Postgres extends ADOdbBase
         } elseif ($typname == 'varchar') {
             $temp = 'character varying';
             if ($typmod != -1) {
-                $temp .= '(' . ($typmod - $varhdrsz) . ')';
+                $temp .= '('.($typmod - $varhdrsz).')';
             }
         } elseif ($typname == 'numeric') {
             $temp = 'numeric';
@@ -1017,8 +1017,8 @@ class Postgres extends ADOdbBase
      * @param array  $atts  An array of attribute numbers
      *
      * @return array|int An array mapping attnum to attname or error code
-     *               - -1 $atts must be an array
-     *               - -2 wrong number of attributes found
+     *                   - -1 $atts must be an array
+     *                   - -2 wrong number of attributes found
      */
     public function getAttributeNames($table, $atts)
     {
@@ -1038,7 +1038,7 @@ class Postgres extends ADOdbBase
         $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
 			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
 			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('" . join("','", $atts) . "')";
+			AND attnum IN ('".join("','", $atts)."')";
 
         $rs = $this->selectSet($sql);
         if ($rs->recordCount() != sizeof($atts)) {
@@ -1953,7 +1953,7 @@ class Postgres extends ADOdbBase
         // Split on escaped null characters
         $params = explode('\\000', $v);
         for ($findx = 0; $findx < $trigger['tgnargs']; ++$findx) {
-            $param = "'" . str_replace('\'', '\\\'', $params[$findx]) . "'";
+            $param = "'".str_replace('\'', '\\\'', $params[$findx])."'";
             $tgdef .= $param;
             if ($findx < ($trigger['tgnargs'] - 1)) {
                 $tgdef .= ', ';
@@ -2188,13 +2188,13 @@ class Postgres extends ADOdbBase
         $sql = "DROP OPERATOR \"{$f_schema}\".{$opr->fields['oprname']} (";
         // Quoting or formatting here???
         if ($opr->fields['oprleftname'] !== null) {
-            $sql .= $opr->fields['oprleftname'] . ', ';
+            $sql .= $opr->fields['oprleftname'].', ';
         } else {
             $sql .= 'NONE, ';
         }
 
         if ($opr->fields['oprrightname'] !== null) {
-            $sql .= $opr->fields['oprrightname'] . ')';
+            $sql .= $opr->fields['oprrightname'].')';
         } else {
             $sql .= 'NONE)';
         }
@@ -2600,7 +2600,7 @@ class Postgres extends ADOdbBase
             $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
         }
 
-        $sql = $sql . implode(',', $params) . ');';
+        $sql = $sql.implode(',', $params).');';
 
         return $this->execute($sql);
     }
@@ -2812,7 +2812,7 @@ class Postgres extends ADOdbBase
                     ) {
                         $in_quote = 0;
                     }
-                } else if ($dol_quote) {
+                } elseif ($dol_quote) {
                     $this->prtrace('dol_quote', $dol_quote, $line);
                     if (strncmp(substr($line, $i), $dol_quote, strlen($dol_quote)) == 0) {
                         $this->advance_1($i, $prevlen, $thislen);
@@ -2822,8 +2822,7 @@ class Postgres extends ADOdbBase
 
                         $dol_quote = null;
                     }
-                } else if (substr($line, $i, 2) == '/*') {
-
+                } elseif (substr($line, $i, 2) == '/*') {
                     $this->prtrace('open_xcomment', $in_xcomment, $line, $i, $prevlen, $thislen);
                     if ($in_xcomment == 0) {
                         ++$in_xcomment;
@@ -2831,18 +2830,18 @@ class Postgres extends ADOdbBase
                         if ($finishpos === false) {
                             $line = substr($line, 0, $i); /* remove comment */
                             break;
-                        } else {
-                            $pre         = substr($line, 0, $i);
-                            $post        = substr($line, $i + 2 + $finishpos, $len);
-                            $line        = $pre . ' ' . $post;
-                            $in_xcomment = 0;
-                            $i           = 0;
                         }
+                        $pre         = substr($line, 0, $i);
+                        $post        = substr($line, $i + 2 + $finishpos, $len);
+                        $line        = $pre.' '.$post;
+                        $in_xcomment = 0;
+                        $i           = 0;
                     }
-                } else if ($in_xcomment) {
+                } elseif ($in_xcomment) {
                     $position = strpos(substr($line, $i, $len), '*/');
                     if ($position === false) {
                         $line = '';
+
                         break;
                     }
 
@@ -2864,9 +2863,9 @@ class Postgres extends ADOdbBase
                     //      if ($substr == '*/' && !--$in_xcomment) {
                     //          $this->advance_1($i, $prevlen, $thislen);
                     //      }
-                } else if (substr($line, $i, 1) == '\'' || substr($line, $i, 1) == '"') {
+                } elseif (substr($line, $i, 1) == '\'' || substr($line, $i, 1) == '"') {
                     $in_quote = substr($line, $i, 1);
-                } else if (!$dol_quote && $this->valid_dolquote(substr($line, $i))) {
+                } elseif (!$dol_quote && $this->valid_dolquote(substr($line, $i))) {
                     $dol_end   = strpos(substr($line, $i + 1), '$');
                     $dol_quote = substr($line, $i, $dol_end + 1);
                     $this->advance_1($i, $prevlen, $thislen);
@@ -2881,9 +2880,9 @@ class Postgres extends ADOdbBase
 
                     if (substr($line, $i, 1) == '(') {
                         ++$paren_level;
-                    } else if (substr($line, $i, 1) == ')' && $paren_level > 0) {
+                    } elseif (substr($line, $i, 1) == ')' && $paren_level > 0) {
                         --$paren_level;
-                    } else if (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
+                    } elseif (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
                         $subline = substr(substr($line, 0, $i), $query_start);
                         /*
                          * insert a cosmetic newline, if this is not the first
@@ -2925,7 +2924,7 @@ class Postgres extends ADOdbBase
                         }
                         $query_buf   = null;
                         $query_start = $i + $thislen;
-                    } else if (preg_match('/^[_[:alpha:]]$/', substr($line, $i, 1))) {
+                    } elseif (preg_match('/^[_[:alpha:]]$/', substr($line, $i, 1))) {
                         $sub = substr($line, $i, $thislen);
                         while (preg_match('/^[\$_A-Za-z0-9]$/', $sub)) {
                             /* keep going while we still have identifier chars */
@@ -2937,7 +2936,6 @@ class Postgres extends ADOdbBase
                         $i -= $prevlen;
                     }
                 }
-
             } // end for
 
             /* Put the rest of the line in the query buffer. */
@@ -3134,7 +3132,7 @@ class Postgres extends ADOdbBase
         }
 
         // Actually retrieve the rows, with offset and limit
-        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
+        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET ".($page - 1) * $page_size);
         $status = $this->endTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -3176,7 +3174,7 @@ class Postgres extends ADOdbBase
                 $sql = 'SELECT "';
             }
 
-            $sql .= join('","', $show) . '" FROM ';
+            $sql .= join('","', $show).'" FROM ';
         }
 
         $this->fieldClean($table);
@@ -3244,7 +3242,7 @@ class Postgres extends ADOdbBase
                     $sql .= $k;
                 } else {
                     $this->fieldClean($k);
-                    $sql .= '"' . $k . '"';
+                    $sql .= '"'.$k.'"';
                 }
                 if (strtoupper($v) == 'DESC') {
                     $sql .= ' DESC';

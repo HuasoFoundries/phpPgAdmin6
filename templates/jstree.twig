@@ -32,19 +32,12 @@
                         } else {
                             return node.original.url + '&json=true';
                         }
-                    }/*,
-                    "data": function (node) {
-                        if (node.id === '#') {
-                            return;
-                        }
-                        return node.original;
-                    }*/
+                    }
                 }
             }
         });
 
         $('#lazy').on("activate_node.jstree", function (e, data) {
-            //console.log('activate_node',data);
             if(window.parent.frames.detail) {
                 window.parent.frames.detail.location.replace(data.node.a_attr.href);
             }

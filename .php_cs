@@ -73,7 +73,6 @@ $config = PhpCsFixer\Config::create()
             ->in(__DIR__.'/src/decorators')
             ->in(__DIR__.'/src/help')
             ->in(__DIR__.'/src/lang')
-            ->in(__DIR__.'/src/views')
             ->in(__DIR__.'/src/xhtml')
     )
 ;

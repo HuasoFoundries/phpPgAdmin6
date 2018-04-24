@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.44
  */
 $lang['applang']    = 'Nederlands';
 $lang['applocale']  = 'nl-NL';
