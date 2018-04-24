@@ -3,7 +3,7 @@
 /**
  * Function library read in upon startup
  *
- * @version $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
+ * Release: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
 
 defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));

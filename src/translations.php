@@ -2,7 +2,7 @@
 /**
  * Supported Translations for phpPgAdmin
  *
- * @version $Id: translations.php,v 1.4 2007/02/10 03:48:34 xzilla Exp $
+ * Release: translations.php,v 1.4 2007/02/10 03:48:34 xzilla Exp $
  */
 
 // List of language files, and encoded language name.
