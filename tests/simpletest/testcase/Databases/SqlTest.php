@@ -58,7 +58,7 @@ class SqlTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/database",
-                ['database' => $DATABASE,
+                ['database'     => $DATABASE,
                     'subject'   => 'database',
                     'action'    => 'sql',
                     'server'    => $SERVER]

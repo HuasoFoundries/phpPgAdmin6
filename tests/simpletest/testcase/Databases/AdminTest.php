@@ -56,7 +56,7 @@ class AdminTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/database",
-                ['database' => $DATABASE,
+                ['database'     => $DATABASE,
                     'subject'   => 'database',
                     'action'    => 'admin',
                     'server'    => $SERVER]
@@ -82,7 +82,7 @@ class AdminTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/database",
-                ['database' => $DATABASE,
+                ['database'     => $DATABASE,
                     'subject'   => 'database',
                     'action'    => 'admin',
                     'server'    => $SERVER]
@@ -107,7 +107,7 @@ class AdminTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/database",
-                ['database' => $DATABASE,
+                ['database'     => $DATABASE,
                     'subject'   => 'database',
                     'action'    => 'admin',
                     'server'    => $SERVER]

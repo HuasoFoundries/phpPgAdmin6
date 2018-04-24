@@ -109,7 +109,6 @@ trait HelperTrait
 
     public function dumpAndDie()
     {
-
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
         $folder = dirname(dirname(__DIR__));
