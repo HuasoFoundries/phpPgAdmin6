@@ -1,7 +1,7 @@
 <?php
  /**
   * Function area:        Table
-  * @author     Augmentum SpikeSource Team 
+  * @author     Augmentum SpikeSource Team
   * @copyright  2005 by Augmentum, Inc.
   */
 
@@ -15,18 +15,19 @@ require_once('DeadlockTest.php');
 
 
 /**
- *  Group test class to run all test cases in the table function area automatically. 
+ *  Group test class to run all test cases in the table function area automatically.
  */
-class TableGroupTest extends GroupTest {
-    function TableGroupTest() {
+class TableGroupTest extends GroupTest
+{
+    public function TableGroupTest()
+    {
         $this->GroupTest('Table management group test.');
-        $this->addTestClass(new ColumnTest());        
+        $this->addTestClass(new ColumnTest());
         $this->addTestClass(new TriggersTest());
         $this->addTestClass(new RulesTest());
         $this->addTestClass(new IndexesTest());
-        $this->addTestClass(new InfoTest());        
+        $this->addTestClass(new InfoTest());
         $this->addTestClass(new ConstraintsTest());
         $this->addTestClass(new DeadlockTest());
     }
 }
-?>
