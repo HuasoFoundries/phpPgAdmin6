@@ -64,7 +64,7 @@ composer install --no-dev
 
 ## Rewrite Rules
 
-As this project is built over[Slim Framework 3](https://www.slimframework.com/), **you'll need some rewrite rules for this software to work**. 
+As this project is built over [Slim Framework 3](https://www.slimframework.com/), **you'll need some rewrite rules for this software to work**. 
 
 ### Apache
 
