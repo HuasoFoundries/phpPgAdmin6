@@ -13,8 +13,6 @@ namespace PHPPgAdmin\Controller;
  */
 class DataimportController extends BaseController
 {
-    public $controller_name = 'DataimportController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

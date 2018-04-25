@@ -62,7 +62,7 @@ class InfoTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'subject'  => 'table'])
+                'subject'  => 'table', ])
         );
 
         return true;
@@ -84,7 +84,7 @@ class InfoTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'college_student',
-                'subject'  => 'table'])
+                'subject'  => 'table', ])
         );
 
         return true;
@@ -106,7 +106,7 @@ class InfoTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'department',
-                'subject'  => 'table'])
+                'subject'  => 'table', ])
         );
 
         return true;
@@ -128,11 +128,11 @@ class InfoTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'department',
-                'subject'  => 'table'])
+                'subject'  => 'table', ])
         );
 
         $this->assertTrue($this->clickLink($lang['strproperties']));
-        $this->assertText('FOREIGN KEY (dep_id) REFERENCES department(id) ' .
+        $this->assertText('FOREIGN KEY (dep_id) REFERENCES department(id) '.
             'ON UPDATE RESTRICT ON DELETE RESTRICT');
 
         return true;

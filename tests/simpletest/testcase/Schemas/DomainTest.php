@@ -62,7 +62,7 @@ class DomainTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter the detail information of the new domain.
@@ -96,7 +96,7 @@ class DomainTest extends PreconditionSet
                 'action'   => 'properties',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'domain'   => 'spikedomain'])
+                'domain'   => 'spikedomain', ])
         );
 
         $this->assertTrue($this->clickLink($lang['stralter']));
@@ -126,7 +126,7 @@ class DomainTest extends PreconditionSet
                 'action'   => 'properties',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'domain'   => 'spikedomain'])
+                'domain'   => 'spikedomain', ])
         );
 
         $this->assertTrue($this->clickLink($lang['straddcheck']));
@@ -161,7 +161,7 @@ class DomainTest extends PreconditionSet
             $this->get("${webUrl}/domains", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'schema'   => 'public&'])
+                'schema'   => 'public&', ])
         );
 
         // Display the specfied damain.
@@ -176,7 +176,7 @@ class DomainTest extends PreconditionSet
                 'schema'     => 'public',
                 'constraint' => 'newcheck',
                 'domain'     => 'spikedomain',
-                'type'       => 'c'])
+                'type'       => 'c', ])
         );
 
         $this->assertTrue($this->setField('cascade', true));
@@ -204,7 +204,7 @@ class DomainTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
 
         $this->assertTrue(
@@ -213,7 +213,7 @@ class DomainTest extends PreconditionSet
                 'action'   => 'confirm_drop',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'domain'   => 'spikedomain'])
+                'domain'   => 'spikedomain', ])
         );
         $this->assertTrue($this->setField('cascade', true));
 

@@ -62,12 +62,12 @@ class OperatorTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'sql'])
+                'action'   => 'sql', ])
         );
         // Enter the definition of the new operator.
-        $this->assertTrue($this->setField('query', 'CREATE OPERATOR === (' .
-            'LEFTARG = box, RIGHTARG = box, PROCEDURE = box_above, ' .
-            'COMMUTATOR = ==, NEGATOR = !==, RESTRICT = areasel, JOIN ' .
+        $this->assertTrue($this->setField('query', 'CREATE OPERATOR === ('.
+            'LEFTARG = box, RIGHTARG = box, PROCEDURE = box_above, '.
+            'COMMUTATOR = ==, NEGATOR = !==, RESTRICT = areasel, JOIN '.
             '= areajoinsel);'));
 
         // Click the button "Go" to create a new operator.
@@ -93,7 +93,7 @@ class OperatorTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
         // Show the properties of the operator "===".
         $this->assertTrue($this->clickLink('==='));
@@ -118,7 +118,7 @@ class OperatorTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
 
         // Drop the first operator.

@@ -15,8 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class FunctionsController extends BaseController
 {
-    public $controller_name = 'FunctionsController';
-    public $table_place     = 'functions-functions';
+    public $table_place = 'functions-functions';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -988,9 +987,9 @@ class FunctionsController extends BaseController
         $szArgReturns .= '</select>';
         $subfolder = \SUBFOLDER;
         if (!empty($this->conf['theme'])) {
-            $szImgPath = \SUBFOLDER."/images/themes/{$this->conf['theme']}";
+            $szImgPath = \SUBFOLDER."/assets/images/themes/{$this->conf['theme']}";
         } else {
-            $szImgPath = \SUBFOLDER.'/images/themes/default';
+            $szImgPath = \SUBFOLDER.'/assets/images/themes/default';
         }
         if (empty($msg)) {
             // $this->prtrace($subfolder);
@@ -1003,7 +1002,7 @@ class FunctionsController extends BaseController
         $szJSAddTR .= "<img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td>";
         $szJSAddTR .= "<td class=\"data3\"><span style=\"font-size: 8pt\">{$this->lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
 
-        echo '<script src="'.\SUBFOLDER."/js/functions.js\" type=\"text/javascript\"></script>
+        echo '<script src="'.\SUBFOLDER."/assets/js/functions.js\" type=\"text/javascript\"></script>
 		<script type=\"text/javascript\">
 			//<![CDATA[
 			var g_types_select = '<select class=\"select2\" name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
@@ -1020,7 +1019,7 @@ class FunctionsController extends BaseController
 			//]]>
 		</script>
 		";
-        echo '<form action="'.\SUBFOLDER."/src/views//views/functions\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
         echo "<table><tbody id=\"args_table\">\n";
         echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>\n";
         echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strreturns']}</th>\n";
@@ -1115,14 +1114,14 @@ class FunctionsController extends BaseController
 
         $szJS = '';
 
-        echo '<script src="'.\SUBFOLDER.'/js/functions.js" type="text/javascript"></script>';
+        echo '<script src="'.\SUBFOLDER.'/assets/js/functions.js" type="text/javascript"></script>';
         echo '<script type="text/javascript">'.$this->buildJSData().'</script>';
         if (!empty($_POST['formArgName'])) {
             $szJS = $this->buildJSRows($this->buildFunctionArguments($_POST));
         } else {
             $subfolder = \SUBFOLDER;
             // $this->prtrace($subfolder);
-            $szJS = '<script type="text/javascript" src="'.\SUBFOLDER.'/js/functions.js">noArgsRebuild(addArg("'.$subfolder.'"));</script>';
+            $szJS = '<script type="text/javascript" src="'.\SUBFOLDER.'/assets/js/functions.js">noArgsRebuild(addArg("'.$subfolder.'"));</script>';
         }
 
         $cost = (isset($_POST['formCost'])) ? $_POST['formCost'] : null;

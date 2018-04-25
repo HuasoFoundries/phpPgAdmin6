@@ -59,7 +59,7 @@ class XHtmlElement extends XHtmlSimpleElement
         $this->_htmlcode = "<{$this->_element}";
         foreach ($this->_attributes as $attribute => $value) {
             if (!empty($value)) {
-                $this->_htmlcode .= " {$attribute} =\"{$value}\"";
+                $this->_htmlcode .= sprintf(' %s="%s" ', $attribute, $value);
             }
         }
         $this->_htmlcode .= '>';

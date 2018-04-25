@@ -72,7 +72,7 @@ class DeadlockTest extends PreconditionSet
                 'action'   => 'add_check',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new constraint
@@ -93,7 +93,7 @@ class DeadlockTest extends PreconditionSet
             $newBrowser->get("${webUrl}/users", [
                 'server'   => $SERVER,
                 'action'   => 'edit',
-                'username' => $POWER_USER_NAME])
+                'username' => $POWER_USER_NAME, ])
         );
         // Enter the information for altering the user's properties.
         $this->assertTrue($newBrowser->setField('newname', $POWER_USER_NAME));
@@ -114,7 +114,7 @@ class DeadlockTest extends PreconditionSet
             $newBrowser->get("${webUrl}/users", [
                 'server'   => $SERVER,
                 'action'   => 'edit',
-                'username' => $POWER_USER_NAME])
+                'username' => $POWER_USER_NAME, ])
         );
 
         // Change back the user's password
@@ -163,7 +163,7 @@ class DeadlockTest extends PreconditionSet
         $this->assertTrue(
             $this->get("${webUrl}/alldb", [
                 'server' => $SERVER,
-                'action' => 'create'])
+                'action' => 'create', ])
         );
         $this->assertTrue($this->setfield('formName', 'newdb'));
         $this->assertTrue($this->setfield('formEncoding', 'UNICODE'));
@@ -182,7 +182,7 @@ class DeadlockTest extends PreconditionSet
             $newBrowser->get("${webUrl}/users", [
                 'server'   => $SERVER,
                 'action'   => 'edit',
-                'username' => $POWER_USER_NAME])
+                'username' => $POWER_USER_NAME, ])
         );
         $this->assertTrue($newBrowser->setField('newname', $POWER_USER_NAME));
         $this->assertTrue($newBrowser->setField('formPassword', 'tester'));
@@ -202,7 +202,7 @@ class DeadlockTest extends PreconditionSet
             $newBrowser->get("${webUrl}/users", [
                 'server'   => $SERVER,
                 'action'   => 'edit',
-                'username' => $POWER_USER_NAME])
+                'username' => $POWER_USER_NAME, ])
         );
 
         $this->assertTrue($newBrowser->setField('newname', $POWER_USER_NAME));
@@ -249,7 +249,7 @@ class DeadlockTest extends PreconditionSet
                 'action'   => 'add_column',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
         // Set properties for the new column
         $this->assertTrue($this->setField('field', 'sid'));
@@ -266,7 +266,7 @@ class DeadlockTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'column'   => 'sid'])
+                'column'   => 'sid', ])
         );
         // Set properties for the new column
         $this->assertTrue($this->setField('field', 'ssid'));
@@ -289,7 +289,7 @@ class DeadlockTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'column'   => 'sid'])
+                'column'   => 'sid', ])
         );
         $this->assertTrue($newBrowser->clickSubmit($lang['strdrop']));
 
@@ -332,7 +332,7 @@ class DeadlockTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter the table name and field number.
@@ -369,7 +369,7 @@ class DeadlockTest extends PreconditionSet
                 'action'   => 'confselectrows',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'newtable'])
+                'table'    => 'newtable', ])
         );
 
         // Select all the rows.
@@ -392,7 +392,7 @@ class DeadlockTest extends PreconditionSet
                 'action'   => 'confirm_drop',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'newtable']
+                'table'    => 'newtable', ]
         );
         $this->assertTrue($newBrowser->clickSubmit($lang['strdrop']));
 

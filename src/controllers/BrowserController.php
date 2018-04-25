@@ -15,7 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class BrowserController extends BaseController
 {
-    public $controller_name = 'BrowserController';
+    protected $no_db_connection = true;
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -32,9 +32,6 @@ class BrowserController extends BaseController
             case 'tree':
                 return $this->doTree();
                 break;
-            case 'jstree':
-                return $this->jsTree();
-                break;
             default:
                 return $this->doDefault();
                 break;
@@ -42,7 +39,9 @@ class BrowserController extends BaseController
     }
 
     /**
-     * Default method to render the controller according to the action parameter.
+     * Default method to render the browser iframe using jstree.
+     *
+     * @return string rendered html of the jstree template
      */
     public function doDefault()
     {
@@ -51,50 +50,18 @@ class BrowserController extends BaseController
         $this->setNoBottomLink(true);
 
         $viewVars = ['icon' => [
-            'blank'          => $this->misc->icon('blank'),
-            'I'              => $this->misc->icon('I'),
-            'L'              => $this->misc->icon('L'),
-            'Lminus'         => $this->misc->icon('Lminus'),
-            'Loading'        => $this->misc->icon('Loading'),
-            'Lplus'          => $this->misc->icon('Lplus'),
-            'ObjectNotFound' => $this->misc->icon('ObjectNotFound'),
-            'Refresh'        => $this->misc->icon('Refresh'),
-            'Servers'        => $this->misc->icon('Servers'),
-            'T'              => $this->misc->icon('T'),
-            'Tminus'         => $this->misc->icon('Tminus'),
-            'Tplus'          => $this->misc->icon('Tplus'),
+            'Refresh' => $this->misc->icon('Refresh'),
+            'Servers' => $this->misc->icon('Servers'),
         ]];
 
         return $this->view->fetch('browser.twig', $viewVars);
     }
 
     /**
-     * Default method to render the controller according to the action parameter.
+     * Renders the root element of the jstree.
+     *
+     * @return string json representation of the root element of the jstree
      */
-    public function jsTree()
-    {
-        $this->misc->setNoDBConnection(true);
-
-        $this->setNoBottomLink(true);
-
-        $viewVars = ['icon' => [
-            'blank'          => $this->misc->icon('blank'),
-            'I'              => $this->misc->icon('I'),
-            'L'              => $this->misc->icon('L'),
-            'Lminus'         => $this->misc->icon('Lminus'),
-            'Loading'        => $this->misc->icon('Loading'),
-            'Lplus'          => $this->misc->icon('Lplus'),
-            'ObjectNotFound' => $this->misc->icon('ObjectNotFound'),
-            'Refresh'        => $this->misc->icon('Refresh'),
-            'Servers'        => $this->misc->icon('Servers'),
-            'T'              => $this->misc->icon('T'),
-            'Tminus'         => $this->misc->icon('Tminus'),
-            'Tplus'          => $this->misc->icon('Tplus'),
-        ]];
-
-        return $this->view->fetch('jstree.twig', $viewVars);
-    }
-
     public function doTree()
     {
         $treedata = new \PHPPgAdmin\ArrayRecordSet([]);

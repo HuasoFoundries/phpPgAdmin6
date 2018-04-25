@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class TypesController extends BaseController
 {
-    public $controller_name = 'TypesController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

@@ -62,7 +62,7 @@ class ConversionTest extends PreconditionSet
                 'server'   => $SERVER,
                 'section'  => 'schema',
                 'database' => 'template1',
-                'schema'   => 'pg_catalog'])
+                'schema'   => 'pg_catalog', ])
         );
         // Click the "Conversions" hyper link.
         $this->assertTrue($this->clickLink($lang['strconversions']));

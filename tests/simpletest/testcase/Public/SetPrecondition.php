@@ -104,7 +104,7 @@ class PreconditionSet extends WebTestCase
                 'action'       => 'confirm_drop',
                 'subject'      => 'database',
                 'database'     => $databaseName,
-                'dropdatabase' => $databaseName]
+                'dropdatabase' => $databaseName, ]
         );
         $this->clickSubmit($lang['strdrop']);
 
@@ -146,7 +146,7 @@ class PreconditionSet extends WebTestCase
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $databaseName,
-                'schema'   => $schema]
+                'schema'   => $schema, ]
         );
 
         $this->setField('name', $tableName);
@@ -160,10 +160,10 @@ class PreconditionSet extends WebTestCase
         $this->assertTrue($this->ClickSubmit('Next >'));
 
         for ($ii = 0; $ii < $fieldNumber; ++$ii) {
-            $field     = 'field[' . $ii . ']';
-            $type      = 'type[' . $ii . ']';
-            $array     = 'array[' . $ii . ']';
-            $fieldName = 'field' . $ii;
+            $field     = 'field['.$ii.']';
+            $type      = 'type['.$ii.']';
+            $array     = 'array['.$ii.']';
+            $fieldName = 'field'.$ii;
 
             // Enter the detail information of the table.
             $this->setField($field, $fieldName);
@@ -209,7 +209,7 @@ class PreconditionSet extends WebTestCase
                 'action'   => 'confirm_drop',
                 'database' => $databaseName,
                 'schema'   => $schema,
-                'table'    => $tableName]
+                'table'    => $tableName, ]
         );
 
         // Click the button "Drop" for dropping the table from the database.

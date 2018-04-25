@@ -11,8 +11,7 @@ namespace PHPPgAdmin\Controller;
  */
 class PrivilegesController extends BaseController
 {
-    public $controller_name = 'PrivilegesController';
-    public $table_place     = 'privileges-privileges';
+    public $table_place = 'privileges-privileges';
 
     /**
      * Default method to render the controller according to the action parameter.

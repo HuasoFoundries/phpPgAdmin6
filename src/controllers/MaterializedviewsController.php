@@ -15,9 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class MaterializedviewsController extends BaseController
 {
-    public $script          = 'materializedviews';
-    public $controller_name = 'MaterializedviewsController';
-    public $table_place     = 'matviews-matviews';
+    public $table_place = 'matviews-matviews';
 
     /**
      * Default method to render the controller according to the action parameter.

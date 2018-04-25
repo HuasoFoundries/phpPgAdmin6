@@ -60,7 +60,7 @@ class CastsTest extends PreconditionSet
             $this->get("${webUrl}/casts", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'subject'  => 'database'])
+                'subject'  => 'database', ])
         );
 
         $this->assertText($lang['strsourcetype']);

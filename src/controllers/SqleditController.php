@@ -15,9 +15,8 @@ class SqleditController extends BaseController
 {
     use \PHPPgAdmin\Traits\ServersTrait;
 
-    public $controller_name = 'SqleditController';
-    public $query           = '';
-    public $subject         = '';
+    public $query   = '';
+    public $subject = '';
     public $start_time;
     public $duration;
 

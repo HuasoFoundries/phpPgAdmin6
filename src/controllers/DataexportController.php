@@ -13,8 +13,7 @@ namespace PHPPgAdmin\Controller;
  */
 class DataexportController extends BaseController
 {
-    public $controller_name = 'DataexportController';
-    public $extensions      = [
+    public $extensions = [
         'sql'  => 'sql',
         'copy' => 'sql',
         'csv'  => 'csv',

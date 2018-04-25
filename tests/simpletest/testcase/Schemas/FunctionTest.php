@@ -62,7 +62,7 @@ class FunctionTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter the detail information of a SQL/PL function.
@@ -102,7 +102,7 @@ class FunctionTest extends PreconditionSet
                 'action'   => 'create',
                 'language' => 'internal',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter the detail information of a SQL/PL function.
@@ -138,7 +138,7 @@ class FunctionTest extends PreconditionSet
             $this->get("${webUrl}/functions", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
         // Turn to the C-function create page.
         $this->assertTrue($this->clickLink($lang['strcreatecfunction']));
@@ -147,7 +147,7 @@ class FunctionTest extends PreconditionSet
         $this->assertTrue($this->setField('formFunction', 'cfunction'));
         $this->assertTrue($this->setField('formArguments', 'text'));
         $this->assertTrue($this->setField('formReturns', 'boolean'));
-        $cFunLocation = getcwd() . '/../data/CFunction/euc_jp_and_sjis';
+        $cFunLocation = getcwd().'/../data/CFunction/euc_jp_and_sjis';
         $this->assertTrue($this->setField('formObjectFile', $cFunLocation));
         $this->assertTrue($this->setField('formLinkSymbol', 'mic_to_sjis'));
         $this->assertTrue($this->setField('formProperties[0]', 'VOLATILE'));
@@ -177,7 +177,7 @@ class FunctionTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
 
         // Alter the definiton of "cfunction".
@@ -212,7 +212,7 @@ class FunctionTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
 
         // Drop the fucntion "sqlplfunction".

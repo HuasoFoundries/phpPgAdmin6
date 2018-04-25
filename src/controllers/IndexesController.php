@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class IndexesController extends BaseController
 {
-    public $controller_name = 'IndexesController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -26,7 +24,7 @@ class IndexesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($this->lang['strindexes'], '<script src="'.\SUBFOLDER.'/js/indexes.js" type="text/javascript"></script>');
+        $this->printHeader($this->lang['strindexes'], '<script src="'.\SUBFOLDER.'/assets/js/indexes.js" type="text/javascript"></script>');
 
         $onloadInit = false;
         if ('create_index' == $this->action || 'save_create_index' == $this->action) {

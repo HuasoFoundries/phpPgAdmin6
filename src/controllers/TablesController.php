@@ -16,9 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class TablesController extends BaseController
 {
     use \PHPPgAdmin\Traits\AdminTrait;
-    public $script          = 'tables';
-    public $controller_name = 'TablesController';
-    public $table_place     = 'tables-tables';
+    public $table_place = 'tables-tables';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -519,7 +517,7 @@ class TablesController extends BaseController
                 $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<script src="'.\SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
+                echo '<script src="'.\SUBFOLDER.'/assets/js/tables.js" type="text/javascript"></script>';
                 echo '<form action="'.\SUBFOLDER."/src/views/tables\" method=\"post\">\n";
 
                 // Output table header

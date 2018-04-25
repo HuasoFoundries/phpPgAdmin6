@@ -48,10 +48,10 @@ class PluginManager
      */
     public function __construct(\Slim\Container $container)
     {
-        $this->language = $container->has('language') ? $container->get('language') : 'english';
-        $this->lang     = $container->get('lang');
-        $this->conf     = $container->get('conf');
-
+        $this->language  = $container->has('language') ? $container->get('language') : 'english';
+        $this->lang      = $container->get('lang');
+        $this->conf      = $container->get('conf');
+        $this->container = $container;
         if (!isset($this->conf['plugins'])) {
             return;
         }

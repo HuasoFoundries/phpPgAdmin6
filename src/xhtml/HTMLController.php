@@ -116,13 +116,6 @@ class HTMLController
             $sep = '&';
         }
 
-        /*if (strpos($url, SUBFOLDER) === false) {
-        $url = str_replace('//', '/', SUBFOLDER . '/' . $url);
-        }*/
-        /*if ($from === 'PHPPgAdmin\Controller\BaseController::printTabs') {
-        $this->prtrace(['action' => $action, 'getActionUrl' => $url, 'from' => $from, 'fields' => $fields]);
-        }*/
-
         return $url;
     }
 
@@ -148,11 +141,8 @@ class HTMLController
         if (!isset($link['fields'])) {
             $link['fields'] = $_REQUEST;
         }
-        $has_from = false;
         if (null === $from || false === $from) {
             $from = __METHOD__;
-        } else {
-            $has_from = true;
         }
         $tag = '<a ';
         foreach ($link['attr'] as $attr => $value) {

@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class InfoController extends BaseController
 {
-    public $controller_name = 'InfoController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

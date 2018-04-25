@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class TblpropertiesController extends BaseController
 {
-    public $controller_name = 'TblpropertiesController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -749,7 +747,7 @@ class TblpropertiesController extends BaseController
                 $this->printTitle($this->lang['straddcolumn'], 'pg.column.add');
                 $this->printMsg($msg);
 
-                echo '<script src="'.\SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
+                echo '<script src="'.\SUBFOLDER.'/assets/js/tables.js" type="text/javascript"></script>';
                 echo '<form action="'.\SUBFOLDER."/src/views/tblproperties\" method=\"post\">\n";
 
                 // Output table header

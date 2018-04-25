@@ -17,13 +17,13 @@ class ServersController extends BaseController
 {
     use \PHPPgAdmin\Traits\ServersTrait;
 
-    public $controller_name = 'ServersController';
-    public $table_place     = 'servers-servers';
-    public $section         = 'servers';
-    public $query           = '';
-    public $subject         = '';
+    public $table_place = 'servers-servers';
+    public $section     = 'servers';
+    public $query       = '';
+    public $subject     = '';
     public $start_time;
     public $duration;
+    protected $no_db_connection = true;
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -96,7 +96,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => \SUBFOLDER . '/redirect/server?',
+                'url'   => \SUBFOLDER.'/redirect/server?',
                 'vars'  => ['server' => 'sha'],
             ],
             'host'     => [

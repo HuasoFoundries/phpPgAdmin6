@@ -59,13 +59,13 @@ class SchemaBasicTest extends PreconditionSet
             $this->get("${webUrl}/database", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'subject'  => 'database'])
+                'subject'  => 'database', ])
         );
         $this->assertTrue(
             $this->get("${webUrl}/schemas", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'action'   => 'create'])
+                'action'   => 'create', ])
         );
 
         $this->assertTrue($this->setField('formName', 'testSchemaName'));
@@ -95,26 +95,26 @@ class SchemaBasicTest extends PreconditionSet
             $this->get("${webUrl}/database", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'subject'  => 'database'])
+                'subject'  => 'database', ])
         );
         $this->assertTrue(
             $this->get("${webUrl}/redirect", [
                 'server'   => $SERVER,
                 'section'  => 'database',
-                'database' => $DATABASE])
+                'database' => $DATABASE, ])
         );
         $this->assertTrue(
             $this->get("${webUrl}/database", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'subject'  => 'database'])
+                'subject'  => 'database', ])
         );
         $this->assertTrue(
             $this->get("${webUrl}/schemas", [
                 'server'   => $SERVER,
                 'action'   => 'alter',
                 'database' => $DATABASE,
-                'schema'   => 'testSchemaName'])
+                'schema'   => 'testSchemaName', ])
         );
 
         $this->assertTrue($this->setField(
@@ -141,20 +141,20 @@ class SchemaBasicTest extends PreconditionSet
             $this->get("${webUrl}/database", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'subject'  => 'database'])
+                'subject'  => 'database', ])
         );
         $this->assertTrue(
             $this->get("${webUrl}/redirect", [
                 'server'   => $SERVER,
                 'section'  => 'database',
-                'database' => $DATABASE])
+                'database' => $DATABASE, ])
         );
         $this->assertTrue(
             $this->get("${webUrl}/schemas", [
                 'server'   => $SERVER,
                 'action'   => 'drop',
                 'database' => $DATABASE,
-                'schema'   => 'testSchemaName'])
+                'schema'   => 'testSchemaName', ])
         );
 
         $this->assertTrue($this->setField('cascade', true));

@@ -58,10 +58,10 @@ class SqlTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/database",
-                ['database' => $DATABASE,
+                ['database'     => $DATABASE,
                     'subject'   => 'database',
                     'action'    => 'sql',
-                    'server'    => $SERVER]
+                    'server'    => $SERVER, ]
             )
         );
         $this->assertTrue($this->setFieldById(0, 'select id from student;'));
@@ -86,7 +86,7 @@ class SqlTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'sql'])
+                'action'   => 'sql', ])
         );
         $this->assertTrue($this->setField('query', 'delete from "student";'));
 
@@ -109,12 +109,12 @@ class SqlTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'sql'])
+                'action'   => 'sql', ])
         );
         $this->assertTrue($this->setField(
             'query',
-            'insert into studen t values ' .
-            "(nextval('public.student_id_seq'::text)" .
+            'insert into studen t values '.
+            "(nextval('public.student_id_seq'::text)".
             ", 'test2', now(), 'test2 is a student.');"
         ));
 
@@ -138,11 +138,11 @@ class SqlTest extends PreconditionSet
                 'database' => $DATABASE,
                 'server'   => $SERVER,
                 'subject'  => 'database',
-                'action'   => 'sql'])
+                'action'   => 'sql', ])
         );
         $this->assertTrue($this->setField(
             'query',
-            'update public."student" ' .
+            'update public."student" '.
             'set "birthday" = now();'
         ));
 
@@ -166,7 +166,7 @@ class SqlTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'sql'])
+                'action'   => 'sql', ])
         );
 
         $this->assertTrue($this->setField(
@@ -200,7 +200,7 @@ class SqlTest extends PreconditionSet
                 'database' => $DATABASE,
                 'server'   => $SERVER,
                 'subject'  => 'database',
-                'action'   => 'sql'])
+                'action'   => 'sql', ])
         );
         $this->assertTrue($this->setField(
             'query',
@@ -236,11 +236,11 @@ class SqlTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'sql'])
+                'action'   => 'sql', ])
         );
 
         $webServerUrl = getcwd();
-        $sqlScriptUrl = getcwd() . '/data/select.sql';
+        $sqlScriptUrl = getcwd().'/data/select.sql';
 
         $this->assertTrue($this->setField('script', $sqlScriptUrl));
 
@@ -317,7 +317,7 @@ class SqlTest extends PreconditionSet
                 'action'     => 'create',
                 'server'     => $SERVER,
                 'db_name'    => $DATABASE,
-                'report_sql' => 'select id from student;']
+                'report_sql' => 'select id from student;', ]
         ));
 
         $this->assertTrue($this->setField('report_name', 'ppasimpletestreport'));
@@ -342,7 +342,7 @@ class SqlTest extends PreconditionSet
             $this->get("${webUrl}/dataexport", [
                 'server'   => $SERVER,
                 'query'    => 'select+id+from+student%3B',
-                'database' => $DATABASE])
+                'database' => $DATABASE, ])
         );
 
         $this->assertTrue($this->setField('d_format', 'XML'));

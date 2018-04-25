@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class ConversionsController extends BaseController
 {
-    public $controller_name = 'ConversionsController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

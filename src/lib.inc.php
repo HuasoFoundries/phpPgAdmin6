@@ -8,7 +8,7 @@
 
 defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
 
-define('THEME_PATH', BASE_PATH . '/src/themes');
+define('THEME_PATH', BASE_PATH . '/assets/themes');
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 
@@ -126,6 +126,7 @@ $container['version']     = 'v' . $appVersion;
 $container['errors']      = [];
 $container['requestobj']  = $container['request'];
 $container['responseobj'] = $container['response'];
+$container['php_console'] = $handler;
 
 // This should be deprecated once we're sure no php scripts are required directly
 $container->offsetSet('server', isset($_REQUEST['server']) ? $_REQUEST['server'] : null);
@@ -159,13 +160,10 @@ $container['conf'] = function ($c) use ($conf) {
 };
 
 $container['lang'] = function ($c) {
-    include_once BASE_PATH . '/src/translations.php';
 
-    $c['appLangFiles'] = $appLangFiles;
-    $c['language']     = $_language;
-    $c['isolang']      = $_isolang;
+    $translations = new \PHPPgAdmin\Translations($c);
 
-    return $lang;
+    return $translations->lang;
 };
 
 $container['plugin_manager'] = function ($c) {
@@ -279,7 +277,7 @@ $container['view'] = function ($c) {
     $conf = $c->get('conf');
     $misc = $c->misc;
 
-    $view = new \Slim\Views\Twig(BASE_PATH . '/templates', [
+    $view = new \Slim\Views\Twig(BASE_PATH . '/assets/templates', [
         'cache'       => BASE_PATH . '/temp/twigcache',
         'auto_reload' => $c->get('settings')['debug'],
         'debug'       => $c->get('settings')['debug'],

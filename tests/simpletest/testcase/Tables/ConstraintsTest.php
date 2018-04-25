@@ -62,7 +62,7 @@ class ConstraintsTest extends PreconditionSet
                 'action'   => 'add_check',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new constraint
@@ -94,7 +94,7 @@ class ConstraintsTest extends PreconditionSet
                 'schema'     => 'public',
                 'table'      => 'student',
                 'constraint' => 'id_check',
-                'type'       => 'c'])
+                'type'       => 'c', ])
         );
         $this->assertTrue($this->clickSubmit($lang['strdrop']));
         // Verify if the constraint is dropped correctly.
@@ -119,7 +119,7 @@ class ConstraintsTest extends PreconditionSet
                 'action'   => 'add_unique_key',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new constraint
@@ -148,7 +148,7 @@ class ConstraintsTest extends PreconditionSet
             $this->get("${webUrl}/constraints", [
                 'server'   => $SERVER, 'action'       => 'confirm_drop',
                 'database' => $DATABASE, 'schema'     => 'public',
-                'table'    => 'student', 'constraint' => 'unique_name'])
+                'table'    => 'student', 'constraint' => 'unique_name', ])
         );
 
         $this->assertTrue($this->clickSubmit($lang['strdrop']));
@@ -172,7 +172,7 @@ class ConstraintsTest extends PreconditionSet
             $this->get("${webUrl}/constraints", [
                 'server'   => $SERVER, 'action'   => 'add_primary_key',
                 'database' => $DATABASE, 'schema' => 'public',
-                'table'    => 'college_student'])
+                'table'    => 'college_student', ])
         );
 
         // Set properties for the new constraint
@@ -203,7 +203,7 @@ class ConstraintsTest extends PreconditionSet
             $this->get("${webUrl}/constraints", [
                 'server' => $SERVER, 'action' => 'confirm_drop', 'database'      => $DATABASE,
                 'schema' => 'public', 'table' => 'college_student', 'constraint' => 'primary_id',
-                'type'   => 'p'])
+                'type'   => 'p', ])
         );
         $this->assertTrue($this->clickSubmit($lang['strdrop']));
         $this->assertTrue($this->assertText($lang['strconstraintdropped']));
@@ -224,7 +224,7 @@ class ConstraintsTest extends PreconditionSet
         $this->assertTrue(
             $this->get("${webUrl}/constraints", [
                 'server' => $SERVER, 'action' => 'add_foreign_key', 'database' => $DATABASE,
-                'schema' => 'public', 'table' => 'student'])
+                'schema' => 'public', 'table' => 'student', ])
         );
 
         // Set properties for the new constraint
@@ -262,7 +262,7 @@ class ConstraintsTest extends PreconditionSet
             $this->get("${webUrl}/constraints", [
                 'server' => $SERVER, 'action' => 'confirm_drop', 'database' => $DATABASE,
                 'schema' => 'public', 'table' => 'student', 'constraint'    => 'foreign_id',
-                'type'   => 'f'])
+                'type'   => 'f', ])
         );
         $this->assertTrue($this->clickSubmit($lang['strdrop']));
         $this->assertTrue($this->assertText($lang['strconstraintdropped']));

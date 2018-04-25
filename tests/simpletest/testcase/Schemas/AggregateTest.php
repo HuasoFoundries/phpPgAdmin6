@@ -62,11 +62,11 @@ class AggregateTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'sql'])
+                'action'   => 'sql', ])
         );
         // Enter the definition of the new aggregate.
-        $this->assertTrue($this->setField('query', 'CREATE AGGREGATE ' .
-            'complex_sum(sfunc1 = box_intersect, basetype = box,' .
+        $this->assertTrue($this->setField('query', 'CREATE AGGREGATE '.
+            'complex_sum(sfunc1 = box_intersect, basetype = box,'.
             ' stype1 = box, initcond1 = \'(0,0)\');'));
 
         // Click the button "Go" to create a new aggregate.
@@ -93,7 +93,7 @@ class AggregateTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema']
+                'subject'  => 'schema', ]
         ));
 
         // Verify whether the aggregates is displayed correctly.
@@ -115,10 +115,10 @@ class AggregateTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'sql'])
+                'action'   => 'sql', ])
         );
 
-        $this->assertTrue($this->setField('query', 'DROP AGGREGATE' .
+        $this->assertTrue($this->setField('query', 'DROP AGGREGATE'.
             ' complex_sum(box);'));
 
         // Click the button "Go" to drop the aggregate.

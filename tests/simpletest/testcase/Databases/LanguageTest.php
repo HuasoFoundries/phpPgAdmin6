@@ -58,7 +58,7 @@ class LanguageTest extends PreconditionSet
             $this->get("${webUrl}/languages", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'subject'  => 'database'])
+                'subject'  => 'database', ])
         );
 
         $this->assertWantedPattern('/sql/');

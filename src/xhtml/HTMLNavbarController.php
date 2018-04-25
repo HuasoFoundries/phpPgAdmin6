@@ -16,7 +16,7 @@ class HTMLNavbarController extends HTMLController
     /**
      * Display a bread crumb trail.
      *
-     * @param string|array $trail an array of breadcrumb items, or a string to identify one of them
+     * @param array|string $trail an array of breadcrumb items, or a string to identify one of them
      * @param  $do_print true to echo, false to return html
      * @param null|string $from
      */
@@ -36,7 +36,7 @@ class HTMLNavbarController extends HTMLController
 
         //$this->prtrace($trail);
 
-        $trail_html .= '<div class="trail" data-controller="' . $this->controller_name . '"><table><tr>';
+        $trail_html .= '<div class="trail" data-controller="'.$this->controller_name.'"><table><tr>';
 
         foreach ($trail as $crumb) {
             $trail_html .= '<td class="crumb">';
@@ -63,7 +63,7 @@ class HTMLNavbarController extends HTMLController
                 $crumblink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$iconalt}\" /></span>";
             }
 
-            $crumblink .= '<span class="label">' . htmlspecialchars($crumb['text']) . '</span></a>';
+            $crumblink .= '<span class="label">'.htmlspecialchars($crumb['text']).'</span></a>';
 
             if (isset($crumb['help'])) {
                 $trail_html .= $this->misc->printHelp($crumblink, $crumb['help'], false);
@@ -87,7 +87,8 @@ class HTMLNavbarController extends HTMLController
      * Display the navlinks.
      *
      * @param array  $navlinks - An array with the the attributes and values that will be shown. See printLinksList for array format.
-     * @param string $place    - Place where the $navlinks are displayed. Like 'display-browse', where 'display' is the file (display.php)
+     * @param string $place    - Place where the $navlinks are displayed. Like 'display-browse',
+     *                         where 'display' is the file (display) and 'browse' is the action
      * @param array  $env      - Associative array of defined variables in the scope of the caller.
      *                         Allows to give some environnement details to plugins.
      *                         and 'browse' is the place inside that code (doBrowse).
@@ -166,7 +167,7 @@ class HTMLNavbarController extends HTMLController
         //$this->prtrace($tabs);
 
         if (count($tabs) > 0) {
-            $width = (int) (100 / count($tabs)) . '%';
+            $width = (int) (100 / count($tabs)).'%';
 
             $viewVars = [
                 'width'           => $width,
@@ -230,16 +231,16 @@ class HTMLNavbarController extends HTMLController
         $server_id   = $this->misc->getServerId();
         $reqvars     = $this->misc->getRequestVars('table');
 
-        $topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><table style="width: 100%"><tr><td>';
+        $topbar_html = '<div class="topbar" data-controller="'.$this->controller_name.'"><table style="width: 100%"><tr><td>';
 
         if ($server_info && isset($server_info['platform'], $server_info['username'])) {
             // top left informations when connected
             $topbar_html .= sprintf(
                 $lang['strtopbar'],
-                '<span class="platform">' . htmlspecialchars($server_info['platform']) . '</span>',
-                '<span class="host">' . htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']) . '</span>',
-                '<span class="port">' . htmlspecialchars($server_info['port']) . '</span>',
-                '<span class="username">' . htmlspecialchars($server_info['username']) . '</span>'
+                '<span class="platform">'.htmlspecialchars($server_info['platform']).'</span>',
+                '<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']).'</span>',
+                '<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
+                '<span class="username">'.htmlspecialchars($server_info['username']).'</span>'
             );
 
             $topbar_html .= '</td>';
@@ -250,7 +251,7 @@ class HTMLNavbarController extends HTMLController
                 'sql'     => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER . '/src/views/sqledit',
+                            'url'     => SUBFOLDER.'/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'sql',
                             ]),
@@ -263,7 +264,7 @@ class HTMLNavbarController extends HTMLController
                 'history' => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER . '/src/views/history',
+                            'url'     => SUBFOLDER.'/src/views/history',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
@@ -275,7 +276,7 @@ class HTMLNavbarController extends HTMLController
                 'find'    => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER . '/src/views/sqledit',
+                            'url'     => SUBFOLDER.'/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'find',
                             ]),
@@ -288,7 +289,7 @@ class HTMLNavbarController extends HTMLController
                 'logout'  => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER . '/src/views/servers',
+                            'url'     => SUBFOLDER.'/src/views/servers',
                             'urlvars' => [
                                 'action'       => 'logout',
                                 'logoutServer' => sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
@@ -313,8 +314,8 @@ class HTMLNavbarController extends HTMLController
 
             $topbar_html .= '</td>';
 
-            $sql_window_id     = htmlentities('sqledit:' . $server_id);
-            $history_window_id = htmlentities('history:' . $server_id);
+            $sql_window_id     = htmlentities('sqledit:'.$server_id);
+            $history_window_id = htmlentities('history:'.$server_id);
 
             $topbar_html .= "<script type=\"text/javascript\">
 						$('#toplink_sql').click(function() {
@@ -379,7 +380,7 @@ class HTMLNavbarController extends HTMLController
         $vars = $this->misc->getSubjectParams($subject);
         ksort($vars['params']);
 
-        return "{$vars['url']}?" . http_build_query($vars['params'], '', '&amp;');
+        return "{$vars['url']}?".http_build_query($vars['params'], '', '&amp;');
     }
 
     /**
@@ -402,7 +403,7 @@ class HTMLNavbarController extends HTMLController
 
         $trail['root'] = [
             'text' => $appName,
-            'url'  => SUBFOLDER . '/src/views/servers',
+            'url'  => SUBFOLDER.'/src/views/servers',
             'icon' => 'Introduction',
         ];
 
@@ -476,7 +477,7 @@ class HTMLNavbarController extends HTMLController
             ];
         } elseif (isset($_REQUEST['matview']) && !$done) {
             $trail['matview'] = [
-                'title' => 'M' . $lang['strview'],
+                'title' => 'M'.$lang['strview'],
                 'text'  => $_REQUEST['matview'],
                 'url'   => $this->getHREFSubject('matview'),
                 'help'  => 'pg.matview',
@@ -499,7 +500,7 @@ class HTMLNavbarController extends HTMLController
             switch ($subject) {
                 case 'function':
                     $trail[$subject] = [
-                        'title' => $lang['str' . $subject],
+                        'title' => $lang['str'.$subject],
                         'text'  => $_REQUEST[$subject],
                         'url'   => $this->getHREFSubject('function'),
                         'help'  => 'pg.function',
@@ -555,9 +556,9 @@ class HTMLNavbarController extends HTMLController
                                 break;
                         }
                         $trail[$subject] = [
-                            'title' => array_key_exists('str' . $subject, $lang) ? $lang['str' . $subject] : $subject,
+                            'title' => array_key_exists('str'.$subject, $lang) ? $lang['str'.$subject] : $subject,
                             'text'  => $_REQUEST[$subject],
-                            'help'  => 'pg.' . $subject,
+                            'help'  => 'pg.'.$subject,
                             'icon'  => $icon,
                         ];
                     }

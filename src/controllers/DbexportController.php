@@ -13,8 +13,6 @@ namespace PHPPgAdmin\Controller;
  */
 class DbexportController extends BaseController
 {
-    public $controller_name = 'DbexportController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

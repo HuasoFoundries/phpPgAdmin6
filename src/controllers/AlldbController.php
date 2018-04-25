@@ -15,8 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class AlldbController extends BaseController
 {
-    public $controller_name = 'AlldbController';
-    public $table_place     = 'alldb-databases';
+    public $table_place = 'alldb-databases';
 
     /**
      * Default method to render the controller according to the action parameter.

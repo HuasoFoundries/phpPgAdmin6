@@ -15,9 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class ViewsController extends BaseController
 {
-    public $script          = 'views';
-    public $controller_name = 'ViewsController';
-    public $table_place     = 'views-views';
+    public $table_place = 'views-views';
 
     /**
      * Default method to render the controller according to the action parameter.

@@ -50,7 +50,7 @@ class TableSpacesTest extends PreconditionSet
         global $webUrl;
         global $POWER_USER_NAME;
         global $lang, $SERVER;
-        $this->_location = getcwd() . '/data/TableSpace';
+        $this->_location = getcwd().'/data/TableSpace';
 
         // Turn to the create tablespace page.
         $this->assertTrue($this->get("${webUrl}/tablespaces", ['server' => $SERVER]));
@@ -84,7 +84,7 @@ class TableSpacesTest extends PreconditionSet
             $this->get("${webUrl}/tablespaces", [
                 'server'     => $SERVER,
                 'action'     => 'edit',
-                'tablespace' => $this->_tableSpaceName])
+                'tablespace' => $this->_tableSpaceName, ])
         );
 
         // Enter information for altering the tableSpace's properties.
@@ -114,7 +114,7 @@ class TableSpacesTest extends PreconditionSet
             $this->get("${webUrl}/privileges", [
                 'server'     => $SERVER,
                 'subject'    => 'tablespace',
-                'tablespace' => $this->_tableSpaceName])
+                'tablespace' => $this->_tableSpaceName, ])
         );
 
         // Grant with no privileges selected.
@@ -148,7 +148,7 @@ class TableSpacesTest extends PreconditionSet
             $this->get("${webUrl}/privileges", [
                 'server'     => $SERVER,
                 'subject'    => 'tablespace',
-                'tablespace' => $this->_tableSpaceName])
+                'tablespace' => $this->_tableSpaceName, ])
         );
 
         // Revoke with no users selected.
@@ -180,7 +180,7 @@ class TableSpacesTest extends PreconditionSet
             $this->get("${webUrl}/privileges", [
                 'server'     => $SERVER,
                 'subject'    => 'tablespace',
-                'tablespace' => $this->_tableSpaceName])
+                'tablespace' => $this->_tableSpaceName, ])
         );
 
         // Grant whit no privilege selected.
@@ -210,7 +210,7 @@ class TableSpacesTest extends PreconditionSet
             $this->get("${webUrl}/privileges", [
                 'server'     => $SERVER,
                 'subject'    => 'tablespace',
-                'tablespace' => $this->_tableSpaceName])
+                'tablespace' => $this->_tableSpaceName, ])
         );
 
         // Revoke whit no users selected.
@@ -238,7 +238,7 @@ class TableSpacesTest extends PreconditionSet
             $this->get("${webUrl}/tablespaces", [
                 'server'     => $SERVER,
                 'action'     => 'confirm_drop',
-                'tablespace' => $this->_tableSpaceName])
+                'tablespace' => $this->_tableSpaceName, ])
         );
 
         // Confirm to drop the user and verify it.

@@ -17,8 +17,6 @@ class HistoryController extends BaseController
 {
     use \PHPPgAdmin\Traits\ServersTrait;
 
-    public $controller_name = 'HistoryController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

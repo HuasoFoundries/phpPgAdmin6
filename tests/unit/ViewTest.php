@@ -17,6 +17,7 @@ class ViewTest extends \Codeception\Test\Unit
     {
         $Helper          = $this->getModule('\Helper\Unit');
         $this->container = $Helper->getContainer();
+        $this->container->misc->setNoDBConnection(true);
         //\Codeception\Util\Debug::debug('BASE_PATH is ' . \BASE_PATH);
     }
 
@@ -29,352 +30,308 @@ class ViewTest extends \Codeception\Test\Unit
     public function testAcinsertView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/acinsert.php';
-        $this->assertTrue($controller->controller_name == 'AcinsertController');
+        $this->assertSame($controller->controller_name, 'AcinsertController', 'controller name should be AcinsertController');
     }
 
     public function testAggregatesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/aggregates.php';
-        $this->assertTrue($controller->controller_name == 'AggregatesController');
+        $this->assertSame($controller->controller_name, 'AggregatesController', 'controller name should be AggregatesController');
     }
 
     public function testAlldbView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/alldb.php';
-        $this->assertTrue($controller->controller_name == 'AlldbController');
+        $this->assertSame($controller->controller_name, 'AlldbController', 'controller name should be AlldbController');
     }
 
     public function testBrowserView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/browser.php';
-        $this->assertTrue($controller->controller_name == 'BrowserController');
+        $this->assertSame($controller->controller_name, 'BrowserController', 'controller name should be BrowserController');
     }
 
     public function testCastsView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/casts.php';
-        $this->assertTrue($controller->controller_name == 'CastsController');
+        $this->assertSame($controller->controller_name, 'CastsController', 'controller name should be CastsController');
     }
 
     public function testColpropertiesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/colproperties.php';
-        $this->assertTrue($controller->controller_name == 'ColpropertiesController');
+        $this->assertSame($controller->controller_name, 'ColpropertiesController', 'controller name should be ColpropertiesController');
     }
 
     public function testConstraintsView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/constraints.php';
-        $this->assertTrue($controller->controller_name == 'ConstraintsController');
+        $this->assertSame($controller->controller_name, 'ConstraintsController', 'controller name should be ConstraintsController');
     }
 
     public function testConversionsView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/conversions.php';
-        $this->assertTrue($controller->controller_name == 'ConversionsController');
+        $this->assertSame($controller->controller_name, 'ConversionsController', 'controller name should be ConversionsController');
     }
 
     public function testDatabaseView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/database.php';
-        $this->assertTrue($controller->controller_name == 'DatabaseController');
+        $this->assertSame($controller->controller_name, 'DatabaseController', 'controller name should be DatabaseController');
     }
 
     public function testDataexportView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/dataexport.php';
-        $this->assertTrue($controller->controller_name == 'DataexportController');
+        $this->assertSame($controller->controller_name, 'DataexportController', 'controller name should be DataexportController');
     }
 
     public function testDataimportView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/dataimport.php';
-        $this->assertTrue($controller->controller_name == 'DataimportController');
+        $this->assertSame($controller->controller_name, 'DataimportController', 'controller name should be DataimportController');
     }
 
     public function testDbexportView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/dbexport.php';
-        $this->assertTrue($controller->controller_name == 'DbexportController');
+        $this->assertSame($controller->controller_name, 'DbexportController', 'controller name should be DbexportController');
     }
 
     public function testDisplayView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/display.php';
-        $this->assertTrue($controller->controller_name == 'DisplayController');
+        $this->assertSame($controller->controller_name, 'DisplayController', 'controller name should be DisplayController');
     }
 
     public function testDomainsView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/domains.php';
-        $this->assertTrue($controller->controller_name == 'DomainsController');
+        $this->assertSame($controller->controller_name, 'DomainsController', 'controller name should be DomainsController');
     }
 
     public function testFulltextView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/fulltext.php';
-        $this->assertTrue($controller->controller_name == 'FulltextController');
+        $this->assertSame($controller->controller_name, 'FulltextController', 'controller name should be FulltextController');
     }
 
     public function testFunctionsView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/functions.php';
-        $this->assertTrue($controller->controller_name == 'FunctionsController');
+        $this->assertSame($controller->controller_name, 'FunctionsController', 'controller name should be FunctionsController');
     }
 
     public function testGroupsView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/groups.php';
-        $this->assertTrue($controller->controller_name == 'GroupsController');
+        $this->assertSame($controller->controller_name, 'GroupsController', 'controller name should be GroupsController');
     }
 
     public function testHelpView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/help.php';
-        $this->assertTrue($controller->controller_name == 'HelpController');
+        $this->assertSame($controller->controller_name, 'HelpController', 'controller name should be HelpController');
     }
 
     public function testHistoryView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/history.php';
-        $this->assertTrue($controller->controller_name == 'HistoryController');
+        $this->assertSame($controller->controller_name, 'HistoryController', 'controller name should be HistoryController');
     }
 
     public function testIndexesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/indexes.php';
-        $this->assertTrue($controller->controller_name == 'IndexesController');
+        $this->assertSame($controller->controller_name, 'IndexesController', 'controller name should be IndexesController');
     }
 
     public function testInfoView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/info.php';
-        $this->assertTrue($controller->controller_name == 'InfoController');
+        $this->assertSame($controller->controller_name, 'InfoController', 'controller name should be InfoController');
     }
 
     public function testIntroView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/intro.php';
-        $this->assertTrue($controller->controller_name == 'IntroController');
+        $this->assertSame($controller->controller_name, 'IntroController', 'controller name should be IntroController');
     }
 
     public function testLanguagesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/languages.php';
-        $this->assertTrue($controller->controller_name == 'LanguagesController');
+        $this->assertSame($controller->controller_name, 'LanguagesController', 'controller name should be LanguagesController');
     }
 
     public function testLoginView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/login.php';
-        $this->assertTrue($controller->controller_name == 'LoginController');
+        $this->assertSame($controller->controller_name, 'LoginController', 'controller name should be LoginController');
     }
 
     public function testMaterializedviewpropertiesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/materializedviewproperties.php';
-        $this->assertTrue($controller->controller_name == 'MaterializedviewpropertiesController');
+        $this->assertSame($controller->controller_name, 'MaterializedviewpropertiesController', 'controller name should be MaterializedviewpropertiesController');
     }
 
     public function testMaterializedviewsView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/materializedviews.php';
-        $this->assertTrue($controller->controller_name == 'MaterializedviewsController');
+        $this->assertSame($controller->controller_name, 'MaterializedviewsController', 'controller name should be MaterializedviewsController');
     }
 
     public function testOpclassesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/opclasses.php';
-        $this->assertTrue($controller->controller_name == 'OpclassesController');
+        $this->assertSame($controller->controller_name, 'OpclassesController', 'controller name should be OpclassesController');
     }
 
     public function testOperatorsView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/operators.php';
-        $this->assertTrue($controller->controller_name == 'OperatorsController');
+        $this->assertSame($controller->controller_name, 'OperatorsController', 'controller name should be OperatorsController');
     }
 
     public function testPrivilegesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/privileges.php';
-        $this->assertTrue($controller->controller_name == 'PrivilegesController');
+        $this->assertSame($controller->controller_name, 'PrivilegesController', 'controller name should be PrivilegesController');
     }
 
     public function testRolesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/roles.php';
-        $this->assertTrue($controller->controller_name == 'RolesController');
+        $this->assertSame($controller->controller_name, 'RolesController', 'controller name should be RolesController');
     }
 
     public function testRulesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/rules.php';
-        $this->assertTrue($controller->controller_name == 'RulesController');
+        $this->assertSame($controller->controller_name, 'RulesController', 'controller name should be RulesController');
     }
 
     public function testSchemasView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/schemas.php';
-        $this->assertTrue($controller->controller_name == 'SchemasController');
+        $this->assertSame($controller->controller_name, 'SchemasController', 'controller name should be SchemasController');
     }
 
     public function testSequencesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/sequences.php';
-        $this->assertTrue($controller->controller_name == 'SequencesController');
+        $this->assertSame($controller->controller_name, 'SequencesController', 'controller name should be SequencesController');
     }
 
     public function testServersView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/servers.php';
-        $this->assertTrue($controller->controller_name == 'ServersController');
+        $this->assertSame($controller->controller_name, 'ServersController', 'controller name should be ServersController');
     }
 
     public function testSqleditView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/sqledit.php';
-        $this->assertTrue($controller->controller_name == 'SqleditController');
+        $this->assertSame($controller->controller_name, 'SqleditController', 'controller name should be SqleditController');
     }
 
     public function testSqlView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/sql.php';
-        $this->assertTrue($controller->controller_name == 'SqlController');
+        $this->assertSame($controller->controller_name, 'SqlController', 'controller name should be SqlController');
     }
 
     public function testTablespacesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/tablespaces.php';
-        $this->assertTrue($controller->controller_name == 'TablespacesController');
+        $this->assertSame($controller->controller_name, 'TablespacesController', 'controller name should be TablespacesController');
     }
 
     public function testTablesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/tables.php';
-        $this->assertTrue($controller->controller_name == 'TablesController');
+        $this->assertSame($controller->controller_name, 'TablesController', 'controller name should be TablesController');
     }
 
     public function testTblpropertiesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/tblproperties.php';
-        $this->assertTrue($controller->controller_name == 'TblpropertiesController');
+        $this->assertSame($controller->controller_name, 'TblpropertiesController', 'controller name should be TblpropertiesController');
     }
 
     public function testTriggersView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/triggers.php';
-        $this->assertTrue($controller->controller_name == 'TriggersController');
+        $this->assertSame($controller->controller_name, 'TriggersController', 'controller name should be TriggersController');
     }
 
     public function testTypesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/types.php';
-        $this->assertTrue($controller->controller_name == 'TypesController');
+        $this->assertSame($controller->controller_name, 'TypesController', 'controller name should be TypesController');
     }
 
     public function testUsersView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/users.php';
-        $this->assertTrue($controller->controller_name == 'UsersController');
+        $this->assertSame($controller->controller_name, 'UsersController', 'controller name should be UsersController');
     }
 
     public function testViewpropertiesView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/viewproperties.php';
-        $this->assertTrue($controller->controller_name == 'ViewpropertiesController');
+        $this->assertSame($controller->controller_name, 'ViewpropertiesController', 'controller name should be ViewpropertiesController');
     }
 
     public function testViewsView()
     {
         $container = $this->container;
-        $container->misc->setNoDBConnection(true);
         require BASE_PATH.'/tests/views/views.php';
-        $this->assertTrue($controller->controller_name == 'ViewsController');
+        $this->assertSame($controller->controller_name, 'ViewsController', 'controller name should be ViewsController');
     }
 }

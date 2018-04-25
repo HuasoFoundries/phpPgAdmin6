@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+ini_set('display_errors', 1);
 /**
  * Base controller class.
  *
@@ -21,15 +22,27 @@ class BaseController
     protected $data;
     protected $database;
     protected $server_id;
-    public $appLangFiles     = [];
-    public $appThemes        = [];
-    public $appName          = '';
-    public $appVersion       = '';
-    public $form             = '';
-    public $href             = '';
-    public $lang             = [];
-    public $action           = '';
-    public $controller_name  = 'BaseController';
+    public $appLangFiles = [];
+    public $appThemes    = [];
+    public $appName      = '';
+    public $appVersion   = '';
+    public $form         = '';
+    public $href         = '';
+    public $lang         = [];
+    public $action       = '';
+    public $controller_name;
+
+    /**
+     * Used.
+     *
+     * @var string
+     */
+    public $view_name;
+    /**
+     * Used to print the title passing its value to $lang.
+     *
+     * @var string
+     */
     public $controller_title = 'base';
     protected $table_controller;
     protected $trail_controller;
@@ -43,6 +56,7 @@ class BaseController
     public $misc;
     public $conf;
     public $phpMinVer;
+    protected $no_db_connection = false;
 
     /**
      * Constructs the base controller (common for almost all controllers).
@@ -50,10 +64,14 @@ class BaseController
      * @param \Slim\Container $container        the $app container
      * @param bool            $no_db_connection [optional] if true, sets  $this->misc->setNoDBConnection(true);
      */
-    public function __construct(\Slim\Container $container, $no_db_connection = false)
+    public function __construct(\Slim\Container $container)
     {
         $this->container = $container;
         $this->lang      = $container->get('lang');
+
+        $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
+        $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
+        $this->script          = $this->view_name;
 
         $this->view           = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
@@ -73,7 +91,7 @@ class BaseController
 
         $msg = $container->get('msg');
 
-        if (true === $no_db_connection) {
+        if (true === $this->no_db_connection) {
             $this->misc->setNoDBConnection(true);
         }
 
@@ -360,7 +378,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
+            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
         }
         if ($do_print) {
             echo $html;

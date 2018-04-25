@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class ConstraintsController extends BaseController
 {
-    public $controller_name = 'ConstraintsController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -28,7 +26,7 @@ class ConstraintsController extends BaseController
 
         $this->printHeader(
             $this->lang['strtables'].' - '.$_REQUEST['table'].' - '.$this->lang['strconstraints'],
-            '<script src="'.\SUBFOLDER.'/js/indexes.js" type="text/javascript"></script>',
+            '<script src="'.\SUBFOLDER.'/assets/js/indexes.js" type="text/javascript"></script>',
             true,
             'header_select2.twig'
         );

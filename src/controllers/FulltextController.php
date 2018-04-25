@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class FulltextController extends BaseController
 {
-    public $controller_name = 'FulltextController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

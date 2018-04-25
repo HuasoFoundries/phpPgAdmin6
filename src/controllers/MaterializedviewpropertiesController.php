@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class MaterializedviewpropertiesController extends BaseController
 {
-    public $controller_name = 'MaterializedviewpropertiesController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

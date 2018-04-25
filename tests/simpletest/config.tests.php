@@ -17,7 +17,7 @@ global $PHP_SIMPLETEST_HOME;
 $webUrl              = 'http://phppga.local';
 $SERVER              = sha1("{$conf['servers'][0]['host']}:{$conf['servers'][0]['port']}:{$conf['servers'][0]['sslmode']}");
 $DATABASE            = 'ppatests';
-$PHP_SIMPLETEST_HOME = dirname(dirname(__DIR__)) . '/vendor/simpletest/simpletest';
+$PHP_SIMPLETEST_HOME = dirname(dirname(__DIR__)).'/vendor/simpletest/simpletest';
 
 $SUPER_USER_NAME     = 'ppatests_super';
 $SUPER_USER_PASSWORD = 'super';

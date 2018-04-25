@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class OperatorsController extends BaseController
 {
-    public $controller_name = 'OperatorsController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

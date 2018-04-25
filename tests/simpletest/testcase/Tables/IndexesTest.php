@@ -62,7 +62,7 @@ class IndexesTest extends PreconditionSet
                 'action'   => 'create_index',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new index
@@ -97,7 +97,7 @@ class IndexesTest extends PreconditionSet
                 'action'   => 'create_index',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new index
@@ -130,7 +130,7 @@ class IndexesTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'index'    => 'stu_name_idx'])
+                'index'    => 'stu_name_idx', ])
         );
 
         // Verify if the index is reindexed correctly.
@@ -155,7 +155,7 @@ class IndexesTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'index'    => 'student_pkey'])
+                'index'    => 'student_pkey', ])
         );
         $this->assertTrue($this->setField('analyze', true));
         $this->assertTrue($this->clickSubmit($lang['strcluster']));
@@ -182,7 +182,7 @@ class IndexesTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'index'    => 'student_pkey'])
+                'index'    => 'student_pkey', ])
         );
         $this->assertTrue($this->setField('analyze', false));
         $this->assertTrue($this->clickSubmit($lang['strcluster']));
@@ -208,7 +208,7 @@ class IndexesTest extends PreconditionSet
                 'database'   => $DATABASE,
                 'schema'     => 'public',
                 'table'      => 'student',
-                'constraint' => 'student_pkey'])
+                'constraint' => 'student_pkey', ])
         );
         $this->assertTrue($this->setField('analyze', true));
         $this->assertTrue($this->clickSubmit($lang['strcancel']));
@@ -232,7 +232,7 @@ class IndexesTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'index'    => 'stu_name_idx'])
+                'index'    => 'stu_name_idx', ])
         );
         $this->assertField($this->setField('cascade', false));
         $this->assertTrue($this->clickSubmit($lang['strcancel']));
@@ -256,7 +256,7 @@ class IndexesTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'index'    => 'stu_name_idx'])
+                'index'    => 'stu_name_idx', ])
         );
         $this->assertField($this->setField('cascade', true));
         $this->assertTrue($this->clickSubmit($lang['strdrop']));

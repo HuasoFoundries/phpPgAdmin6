@@ -62,7 +62,7 @@ class SequenceTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter the detail information of a sequence.
@@ -98,7 +98,7 @@ class SequenceTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
         // Browse the specified sequence.
         $this->assertTrue($this->clickLink('createsequence'));
@@ -128,7 +128,7 @@ class SequenceTest extends PreconditionSet
                 'action'   => 'confirm_drop',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'sequence' => 'createsequence'])
+                'sequence' => 'createsequence', ])
         );
 
         $this->assertTrue($this->setField('cascade', true));

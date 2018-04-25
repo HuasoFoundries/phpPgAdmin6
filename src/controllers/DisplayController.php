@@ -13,8 +13,6 @@ namespace PHPPgAdmin\Controller;
  */
 class DisplayController extends BaseController
 {
-    public $controller_name = 'DisplayController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -30,7 +28,7 @@ class DisplayController extends BaseController
 
         set_time_limit(0);
 
-        $scripts = '<script src="'.\SUBFOLDER.'/js/display.js" type="text/javascript"></script>';
+        $scripts = '<script src="'.\SUBFOLDER.'/assets/js/display.js" type="text/javascript"></script>';
 
         $scripts .= '<script type="text/javascript">'."\n";
         $scripts .= "var Display = {\n";

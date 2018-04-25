@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class RulesController extends BaseController
 {
-    public $controller_name = 'RulesController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

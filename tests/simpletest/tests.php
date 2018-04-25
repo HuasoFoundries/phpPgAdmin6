@@ -3,12 +3,12 @@
 /**
  * PHPPgAdmin v6.0.0-beta.44
  */
-require_once __DIR__ . '/../../src/lib.inc.php';
-require_once __DIR__ . '/../../src/lang/english.php';
+require_once __DIR__.'/../../src/lib.inc.php';
+require_once __DIR__.'/../../src/lang/english.php';
 
 require_once 'config.tests.php';
 
-set_include_path($PHP_SIMPLETEST_HOME . ':' . './testcase' . ':' . get_include_path());
+set_include_path($PHP_SIMPLETEST_HOME.':'.'./testcase'.':'.get_include_path());
 
 $run = true;
 
@@ -30,5 +30,4 @@ if ($run) {
         'include path'         => get_include_path(),
     ]);
     echo '</pre>';
-
 }

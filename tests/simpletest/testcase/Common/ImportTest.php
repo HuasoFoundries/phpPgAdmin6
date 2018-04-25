@@ -54,7 +54,7 @@ class ImportTest extends PreconditionSet
         global $webUrl;
         global $lang, $SERVER, $DATABASE;
 
-        $this->_dataFilePath = getcwd() . '/./data/';
+        $this->_dataFilePath = getcwd().'/./data/';
 
         // Turn to the import data page.
         $this->assertTrue(
@@ -64,12 +64,12 @@ class ImportTest extends PreconditionSet
                 'schema'   => 'public',
                 'table'    => $this->_tableName,
                 'subject'  => 'table',
-                'action'   => 'import'])
+                'action'   => 'import', ])
         );
 
         // Enter information for importing the data.
         $this->assertTrue($this->setField('format', 'XML'));
-        $this->assertTrue($this->setField('source', $this->_dataFilePath . $this->_tableName . '.xml'));
+        $this->assertTrue($this->setField('source', $this->_dataFilePath.$this->_tableName.'.xml'));
 
         // Then submit and verify it.
         $this->assertTrue($this->clickSubmit($lang['strimport']));
@@ -90,7 +90,7 @@ class ImportTest extends PreconditionSet
         global $webUrl;
         global $lang, $SERVER, $DATABASE;
 
-        $this->_dataFilePath = getcwd() . '/./data/';
+        $this->_dataFilePath = getcwd().'/./data/';
         // Turn to the import data page.
         $this->assertTrue(
             $this->get("${webUrl}/tblproperties", [
@@ -99,12 +99,12 @@ class ImportTest extends PreconditionSet
                 'schema'   => 'public',
                 'table'    => $this->_tableName,
                 'subject'  => 'table',
-                'action'   => 'import'])
+                'action'   => 'import', ])
         );
 
         // Enter information for importing the data.
         $this->assertTrue($this->setField('format', $lang['strauto']));
-        $this->assertTrue($this->setField('source', $this->_dataFilePath . $this->_tableName . '.txt'));
+        $this->assertTrue($this->setField('source', $this->_dataFilePath.$this->_tableName.'.txt'));
 
         // Then submit and verify it.
         $this->assertTrue($this->clickSubmit($lang['strimport']));
@@ -128,7 +128,7 @@ class ImportTest extends PreconditionSet
                 'action'   => 'confirm_empty',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => $this->_tableName])
+                'table'    => $this->_tableName, ])
         );
         $this->assertTrue($this->clickSubmit($lang['strempty']));
 

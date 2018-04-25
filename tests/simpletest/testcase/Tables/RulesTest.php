@@ -62,7 +62,7 @@ class RulesTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'subject'  => 'table'])
+                'subject'  => 'table', ])
         );
 
         // Set properties for the new rule
@@ -95,7 +95,7 @@ class RulesTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'subject'  => 'table'])
+                'subject'  => 'table', ])
         );
 
         // Set properties for the new rule
@@ -127,7 +127,7 @@ class RulesTest extends PreconditionSet
                 'reltype'  => 'table',
                 'table'    => 'student',
                 'subject'  => 'rule',
-                'rule'     => 'insert_stu_rule'])
+                'rule'     => 'insert_stu_rule', ])
         );
         $this->assertTrue($this->clickSubmit($lang['strno']));
 
@@ -153,7 +153,7 @@ class RulesTest extends PreconditionSet
                 'reltype'  => 'table',
                 'table'    => 'student',
                 'subject'  => 'rule',
-                'rule'     => 'insert_stu_rule'])
+                'rule'     => 'insert_stu_rule', ])
         );
         $this->assertTrue($this->clickSubmit($lang['stryes']));
         // Verify if the rule is dropped correctly.
@@ -181,7 +181,7 @@ class RulesTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'subject'  => 'table'])
+                'subject'  => 'table', ])
         );
 
         // Set properties for the new rule
@@ -211,7 +211,7 @@ class RulesTest extends PreconditionSet
                 'reltype'  => 'table',
                 'table'    => 'student',
                 'subject'  => 'rule',
-                'rule'     => 'insert_stu_rule'])
+                'rule'     => 'insert_stu_rule', ])
         );
         $this->assertTrue($this->setField('cascade', true));
         $this->assertTrue($this->clickSubmit($lang['stryes']));

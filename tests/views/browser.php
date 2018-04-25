@@ -8,7 +8,7 @@ if (!defined('BASE_PATH')) {
     require_once '../../src/lib.inc.php';
     $do_render = true;
 }
-$controller = new \PHPPgAdmin\Controller\BrowserController($container, true);
+$controller = new \PHPPgAdmin\Controller\BrowserController($container);
 if ($do_render) {
     $controller->render();
 }

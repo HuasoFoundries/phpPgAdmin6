@@ -129,7 +129,7 @@ class UsersTest extends PreconditionSet
             $this->get("${webUrl}/users", [
                 'action'   => 'edit',
                 'username' => $this->_superUserName,
-                'server'   => $SERVER])
+                'server'   => $SERVER, ])
         );
 
         // Enter the information for altering the user's properties.
@@ -161,7 +161,7 @@ class UsersTest extends PreconditionSet
             $this->get("${webUrl}/users", [
                 'action'   => 'confirm_drop',
                 'username' => $this->_superUserName,
-                'server'   => $SERVER])
+                'server'   => $SERVER, ])
         );
 
         // Confirm to drop the user and verify it.
@@ -192,9 +192,9 @@ class UsersTest extends PreconditionSet
         // Turn to the old browser which we login with super user at very beginning.
         $this->assertTrue($this->get("${webUrl}/users", ['server' => $SERVER]));
         $this->assertTrue(
-            $this->get("${webUrl}/users", ['action' => 'confirm_drop',
+            $this->get("${webUrl}/users", ['action'     => 'confirm_drop',
                 'username'                              => $this->_powerUserName,
-                'server'                                => $SERVER])
+                'server'                                => $SERVER, ])
         );
 
         // Confirm to drop the user and verify it.
@@ -228,7 +228,7 @@ class UsersTest extends PreconditionSet
             $this->get("${webUrl}/users", [
                 'action'   => 'confirm_drop',
                 'username' => $SUPER_USER_NAME,
-                'server'   => $SERVER])
+                'server'   => $SERVER, ])
         );
 
         // Confirm to drop the user and verify it.

@@ -56,10 +56,10 @@ class AdminTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/database",
-                ['database' => $DATABASE,
+                ['database'     => $DATABASE,
                     'subject'   => 'database',
                     'action'    => 'admin',
-                    'server'    => $SERVER]
+                    'server'    => $SERVER, ]
             )
         );
         $this->assertTrue($this->setField('vacuum_analyze', true));
@@ -82,10 +82,10 @@ class AdminTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/database",
-                ['database' => $DATABASE,
+                ['database'     => $DATABASE,
                     'subject'   => 'database',
                     'action'    => 'admin',
-                    'server'    => $SERVER]
+                    'server'    => $SERVER, ]
             )
         );
         $this->assertTrue($this->setField('vacuum_freeze', true));
@@ -107,10 +107,10 @@ class AdminTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/database",
-                ['database' => $DATABASE,
+                ['database'     => $DATABASE,
                     'subject'   => 'database',
                     'action'    => 'admin',
-                    'server'    => $SERVER]
+                    'server'    => $SERVER, ]
             )
         );
         $this->assertTrue($this->clickSubmit($lang['stranalyze']));
@@ -133,7 +133,7 @@ class AdminTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'admin'])
+                'action'   => 'admin', ])
         );
         $this->assertTrue($this->clickSubmit($lang['strcluster']));
         $this->assertText($lang['strclusteredgood']);
@@ -155,7 +155,7 @@ class AdminTest extends PreconditionSet
                 'database' => $DATABASE,
                 'subject'  => 'database',
                 'action'   => 'admin',
-                'server'   => $SERVER])
+                'server'   => $SERVER, ])
         );
         $this->assertTrue($this->setField('reindex_force', true));
         $this->assertTrue($this->clickSubmit($lang['strreindex']));

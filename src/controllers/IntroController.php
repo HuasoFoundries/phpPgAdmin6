@@ -13,7 +13,7 @@ namespace PHPPgAdmin\Controller;
  */
 class IntroController extends BaseController
 {
-    public $controller_name = 'IntroController';
+    protected $no_db_connection = true;
 
     /**
      * Default method to render the controller according to the action parameter.

@@ -59,11 +59,11 @@ class ColumnTest extends PreconditionSet
         $this->assertTrue(
             $this->get(
                 "${webUrl}/tblproperties",
-                ['action'  => 'add_column',
+                ['action'      => 'add_column',
                     'database' => $DATABASE,
                     'schema'   => 'public',
                     'table'    => 'student',
-                    'server'   => $SERVER]
+                    'server'   => $SERVER, ]
             )
         );
 
@@ -94,7 +94,7 @@ class ColumnTest extends PreconditionSet
                 'action'   => 'add_column',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new column
@@ -124,7 +124,7 @@ class ColumnTest extends PreconditionSet
                 'action'   => 'add_column',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new column
@@ -152,7 +152,7 @@ class ColumnTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'column'   => 'sid'])
+                'column'   => 'sid', ])
         );
 
         // Set properties for the new column
@@ -184,7 +184,7 @@ class ColumnTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'column'   => 'sid'])
+                'column'   => 'sid', ])
         );
 
         // Set properties for the new column
@@ -216,7 +216,7 @@ class ColumnTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'column'   => 'sid'])
+                'column'   => 'sid', ])
         );
 
         // Set properties for the new column
@@ -245,7 +245,7 @@ class ColumnTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'column'   => 'sid'])
+                'column'   => 'sid', ])
         );
         $this->assertTrue($this->clickSubmit($lang['strcancel']));
 
@@ -269,7 +269,7 @@ class ColumnTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'column'   => 'sid'])
+                'column'   => 'sid', ])
         );
         $this->assertTrue($this->clickSubmit($lang['strdrop']));
         // Verify if the column is dropped correctly.
@@ -296,7 +296,7 @@ class ColumnTest extends PreconditionSet
                 'action'   => 'add_column',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new column
@@ -323,7 +323,7 @@ class ColumnTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'column'   => 'sid'])
+                'column'   => 'sid', ])
         );
         $this->assertTrue($this->setField('cascade', true));
         $this->assertTrue($this->clickSubmit($lang['strdrop']));

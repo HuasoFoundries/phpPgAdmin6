@@ -19,14 +19,13 @@ $app->get('/status', function (
         ->withJson(['version' => $this->version]);
 });
 
-$app->post('/redirect[/{subject}]', function (
+$app->post('/redirect/server', function (
     /** @scrutinizer ignore-unused */$request,
     /** @scrutinizer ignore-unused */$response,
     /** @scrutinizer ignore-unused */$args
 ) {
-    $body    = $response->getBody();
-    $misc    = $this->misc;
-    $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
+    $body = $response->getBody();
+    $misc = $this->misc;
 
     $loginShared   = $request->getParsedBodyParam('loginShared');
     $loginServer   = $request->getParsedBodyParam('loginServer');
@@ -65,7 +64,7 @@ $app->post('/redirect[/{subject}]', function (
         $_server_info = $this->misc->getServerInfo();
 
         if (!isset($_server_info['username'])) {
-            $destinationurl = $this->utils->getDestinationWithLastTab($subject);
+            $destinationurl = $this->utils->getDestinationWithLastTab('server');
             return $response->withStatus(302)->withHeader('Location', $destinationurl);
         }
     }
@@ -81,71 +80,26 @@ $app->get('/redirect[/{subject}]', function (
     return $response->withStatus(302)->withHeader('Location', $destinationurl);
 });
 
-$app->get('/src/views/browser', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
-) {
-    $controller = new \PHPPgAdmin\Controller\BrowserController($this, true);
-    return $controller->render();
-});
-
-$app->get('/src/views/jstree', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
-) {
-
-    $controller = new \PHPPgAdmin\Controller\BrowserController($this, true);
-    return $controller->render('jstree');
-});
-
-$app->get('/src/views/login', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
-) {
-    $controller = new \PHPPgAdmin\Controller\LoginController($this, true);
-    return $controller->render();
-});
-
-$app->get('/src/views/servers', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
-) {
-    $controller = new \PHPPgAdmin\Controller\ServersController($this, true);
-    return $controller->render();
-});
-
-$app->get('/src/views/intro', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
-) {
-    $this->utils->prtrace('intro');
-    $controller = new \PHPPgAdmin\Controller\IntroController($this, true);
-    return $controller->render();
-});
-
 $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     /** @scrutinizer ignore-unused */$request,
     /** @scrutinizer ignore-unused */$response,
     /** @scrutinizer ignore-unused */$args
 ) {
-    if ($this->misc->getServerId() === null) {
+    $subject = $args['subject'];
+    if ($subject === 'server') {
+        $subject = 'servers';
+    }
+
+    $safe_subjects = ($subject === 'servers' || $subject === 'intro' || $subject === 'browser');
+
+    if ($this->misc->getServerId() === null && !$safe_subjects) {
         return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/servers');
     }
     $_server_info = $this->misc->getServerInfo();
 
-    if (!isset($_server_info['username'])) {
+    if (!isset($_server_info['username']) && $subject !== 'login' && !$safe_subjects) {
         $destinationurl = SUBFOLDER . '/src/views/login?server=' . $this->misc->getServerId();
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
-    }
-
-    $subject = $args['subject'];
-    if ($subject === 'server') {
-        $subject = 'servers';
     }
 
     $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';

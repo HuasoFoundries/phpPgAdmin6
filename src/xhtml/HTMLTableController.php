@@ -50,7 +50,7 @@ class HTMLTableController extends HTMLController
      *                ), ...
      *            );
      * @param $place     Place where the $actions are displayed. Like 'display-browse',  where 'display'
-     * is the entrypoint (/src/views/display.php) and 'browse' is the action used inside its controller (in this case, doBrowse).
+     * is the entrypoint (/src/views/display) and 'browse' is the action used inside its controller (in this case, doBrowse).
      * @param $nodata    (optional) Message to display if data set is empty
      * @param $pre_fn    (optional) callback closure for each row. It will be passed two params: $rowdata and $actions,
      *  it may be used to derive new fields or modify actions.
@@ -91,7 +91,7 @@ class HTMLTableController extends HTMLController
             }
 
             if ($this->has_ma) {
-                $tablehtml .= '<script src="'.SUBFOLDER."/js/multiactionform.js\" type=\"text/javascript\"></script>\n";
+                $tablehtml .= '<script src="'.SUBFOLDER."/assets/js/multiactionform.js\" type=\"text/javascript\"></script>\n";
                 $tablehtml .= "<form id=\"multi_form\" action=\"{$this->ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
                 if (isset($this->ma['vars'])) {
                     foreach ($this->ma['vars'] as $k => $v) {

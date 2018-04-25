@@ -62,7 +62,7 @@ class HelpTest extends PreconditionSet
             $this->get("${webUrl}/database", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'subject'  => 'database'])
+                'subject'  => 'database', ])
         );
 
         // Click the link about help.
@@ -91,14 +91,14 @@ class HelpTest extends PreconditionSet
             $this->get("${webUrl}/database", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'subject'  => 'database'])
+                'subject'  => 'database', ])
         );
 
         $this->assertTrue($this->get("${webUrl}/help", ['server' => $SERVER]));
 
         // XXX fail because of the version number in the URL
         $this->assertTrue($this->clickLink( /*'http://www.postgresql.org/docs/8.0/' .*/
-            'interactive/sql-expressions.html' .
+            'interactive/sql-expressions.html'.
             '#SQL-SYNTAX-TYPE-CASTS'));
 
         return true;

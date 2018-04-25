@@ -62,7 +62,7 @@ class TriggersTest extends PreconditionSet
                 'action'   => 'create',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new trigger
@@ -101,7 +101,7 @@ class TriggersTest extends PreconditionSet
                 'action'   => 'create',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
 
         // Set properties for the new trigger
@@ -138,7 +138,7 @@ class TriggersTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'trigger'  => 'insert_stu_trigger'])
+                'trigger'  => 'insert_stu_trigger', ])
         );
         $this->assertTrue($this->setField('name', 'changed_trigger'));
         $this->assertTrue($this->clickSubmit($lang['strok']));
@@ -165,7 +165,7 @@ class TriggersTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'trigger'  => 'changed_trigger'])
+                'trigger'  => 'changed_trigger', ])
         );
         $this->assertTrue($this->setField('name', 'changed_trigger_changed'));
         $this->assertTrue($this->clickSubmit($lang['strcancel']));
@@ -190,7 +190,7 @@ class TriggersTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'trigger'  => 'changed_trigger'])
+                'trigger'  => 'changed_trigger', ])
         );
         $this->assertTrue($this->clickSubmit($lang['strno']));
 
@@ -214,7 +214,7 @@ class TriggersTest extends PreconditionSet
                 'database' => $DATABASE,
                 'schema'   => 'public',
                 'table'    => 'student',
-                'trigger'  => 'changed_trigger'])
+                'trigger'  => 'changed_trigger', ])
         );
         $this->assertTrue($this->setField('cascade', true));
         $this->assertTrue($this->clickSubmit($lang['stryes']));

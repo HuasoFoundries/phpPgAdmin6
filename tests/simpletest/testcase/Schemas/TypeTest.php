@@ -62,7 +62,7 @@ class TypeTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
         $this->assertTrue($this->clickLink($lang['strcreatetype']));
 
@@ -93,7 +93,7 @@ class TypeTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
         $this->assertTrue($this->clickLink($lang['strcreatecomptype']));
 
@@ -151,7 +151,7 @@ class TypeTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'pg_catalog',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
 
         // Show the properties of general type.
@@ -165,7 +165,7 @@ class TypeTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
 
         // Show the properties of a composite type "compositetype".
@@ -192,7 +192,7 @@ class TypeTest extends PreconditionSet
                 'action'   => 'confirm_drop',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'type'     => 'compositetype'])
+                'type'     => 'compositetype', ])
         );
 
         $this->assertTrue($this->setField('cascade', true));

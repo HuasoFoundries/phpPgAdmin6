@@ -13,9 +13,8 @@ namespace PHPPgAdmin\Controller;
  */
 class SqlController extends BaseController
 {
-    public $controller_name = 'SqlController';
-    public $query           = '';
-    public $subject         = '';
+    public $query   = '';
+    public $subject = '';
     public $start_time;
     public $duration;
 

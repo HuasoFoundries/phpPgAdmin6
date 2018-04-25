@@ -54,8 +54,10 @@ class Postgres96 extends Postgres
     }
 
     /**
-     * Creates a new user. As of PG 9.6, CREATEUSER privilege has been deprecated
+     * Creates a new user. As of PG 9.6, CREATEUSER privilege has been deprecated.
+     *
      * @see {@link https://www.postgresql.org/docs/9.6/static/sql-createrole.html}
+     *
      * @param string $username   The username of the user to create
      * @param string $password   A password for the user
      * @param bool   $createdb   boolean Whether or not the user can create databases
@@ -83,7 +85,7 @@ class Postgres96 extends Postgres
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
         if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
+            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
         }
 
         if ($expiry != '') {
@@ -94,5 +96,4 @@ class Postgres96 extends Postgres
 
         return $this->execute($sql);
     }
-
 }

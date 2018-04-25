@@ -53,19 +53,18 @@ class HTMLFooterController extends HTMLController
     {
         $lang = $this->lang;
 
-        $footer_html  = '';
         $reload_param = 'none';
         if ($this->misc->getReloadBrowser()) {
             $reload_param = 'other';
         } elseif ($this->_reload_drop_database) {
             $reload_param = 'database';
         }
-        if (!$this->_no_bottom_link) {
-            $footer_html .= '<a data-footertemplate="' . $template . '" href="#" class="bottom_link">' . $lang['strgotoppage'] . '</a>';
-        }
 
         $this->view->offsetSet('reload', $reload_param);
-        $footer_html .= $this->view->fetch($template);
+        $this->view->offsetSet('footer_template', $template);
+        $this->view->offsetSet('print_bottom_link', !$this->_no_bottom_link);
+
+        $footer_html = $this->view->fetch($template);
 
         if ($doBody) {
             echo $footer_html;
@@ -97,7 +96,7 @@ class HTMLFooterController extends HTMLController
     {
         echo "<script type=\"text/javascript\">\n";
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
         echo "//]]>\n";
         echo "</script>\n";
     }

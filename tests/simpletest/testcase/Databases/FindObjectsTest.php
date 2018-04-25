@@ -59,7 +59,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -84,7 +84,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -97,7 +97,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -110,7 +110,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -123,7 +123,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -136,7 +136,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -149,7 +149,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -162,7 +162,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -175,7 +175,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -188,7 +188,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -201,7 +201,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -214,7 +214,7 @@ class FindObjectsTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'find'])
+                'action'   => 'find', ])
         );
 
         $this->assertTrue($this->setField('term', 'student'));
@@ -237,7 +237,7 @@ class FindObjectsTest extends PreconditionSet
         $this->assertTrue(
             $this->get("${webUrl}/sqledit", [
                 'server' => $SERVER,
-                'action' => 'find'])
+                'action' => 'find', ])
         );
 
         $this->assertTrue($this->setField('database', $DATABASE));

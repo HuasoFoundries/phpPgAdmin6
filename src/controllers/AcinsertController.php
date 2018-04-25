@@ -11,8 +11,6 @@ namespace PHPPgAdmin\Controller;
  */
 class AcinsertController extends BaseController
 {
-    public $controller_name = 'AcinsertController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

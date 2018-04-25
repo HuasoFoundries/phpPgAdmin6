@@ -59,7 +59,7 @@ class VariablesTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'variables'])
+                'action'   => 'variables', ])
         );
 
         $this->assertText($lang['strname']);

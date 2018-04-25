@@ -62,7 +62,7 @@ class TableTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter the table name and field number.
@@ -112,7 +112,7 @@ class TableTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter no name.
@@ -160,7 +160,7 @@ class TableTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter the table name and field number.
@@ -213,7 +213,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confinsertrow',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'viewtest'])
+                'table'    => 'viewtest', ])
         );
 
         // Set the value of the fields.
@@ -245,7 +245,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confinsertrow',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'viewtest'])
+                'table'    => 'viewtest', ])
         );
 
         // Set the value of the fields.
@@ -289,7 +289,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confinsertrow',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'viewtest'])
+                'table'    => 'viewtest', ])
         );
 
         // Set the value of the fields.
@@ -325,7 +325,7 @@ class TableTest extends PreconditionSet
             $this->get("${webUrl}/tables", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
         // Select the table "viewtest".
         $this->assertTrue($this->clickLink('viewtest'));
@@ -362,7 +362,7 @@ class TableTest extends PreconditionSet
             $this->get("${webUrl}/tables", [
                 'server'   => $SERVER,
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
         // Select the table "viewtest".
         $this->assertTrue($this->clickLink('viewtest'));
@@ -395,7 +395,7 @@ class TableTest extends PreconditionSet
                 'subject'     => 'table',
                 'return_url'  => 'tables.php%3Fdatabase%3Dtest%26amp%3Bschema%3Dpublic',
                 'return_desc' => 'Back',
-                'table'       => 'viewtest'])
+                'table'       => 'viewtest', ])
         );
 
         // Verify whether the rows are displayed.
@@ -427,7 +427,7 @@ class TableTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
         $this->assertTrue($this->clickLink('viewtest'));
 
@@ -461,7 +461,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confselectrows',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'viewtest'])
+                'table'    => 'viewtest', ])
         );
 
         // Display all columns.
@@ -497,7 +497,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confselectrows',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'viewtest'])
+                'table'    => 'viewtest', ])
         );
 
         // Enter the query conditions.
@@ -529,7 +529,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confirm_vacuum',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'viewtest'])
+                'table'    => 'viewtest', ])
         );
 
         // Click the "Vacuum" button.
@@ -556,7 +556,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confirm_vacuum',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'viewtest'])
+                'table'    => 'viewtest', ])
         );
 
         // Make sure the check box "Full" and "Analyze" are checked
@@ -586,7 +586,7 @@ class TableTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
 
         // Empty a table.
@@ -596,7 +596,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confirm_empty',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'viewtest'])
+                'table'    => 'viewtest', ])
         );
         // Click the "Empty" button to clean the content of the table.
         $this->assertTrue($this->clickSubmit($lang['strempty']));
@@ -622,7 +622,7 @@ class TableTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
         // Select the table.
         $this->assertTrue(
@@ -631,7 +631,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confirm_alter',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'viewtest'])
+                'table'    => 'viewtest', ])
         );
 
         $this->assertTrue($this->setField('name', 'testview'));
@@ -660,7 +660,7 @@ class TableTest extends PreconditionSet
                 'action'   => 'confirm_drop',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'testview'])
+                'table'    => 'testview', ])
         );
 
         $this->assertTrue($this->setField('cascade', true));

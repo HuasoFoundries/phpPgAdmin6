@@ -64,7 +64,7 @@ class ViewTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter the definition of the view.
@@ -99,7 +99,7 @@ class ViewTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'wiz_create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Select the table.
@@ -137,7 +137,7 @@ class ViewTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Enter the definition of the view.
@@ -176,7 +176,7 @@ class ViewTest extends PreconditionSet
                 'server'   => $SERVER,
                 'action'   => 'wiz_create',
                 'database' => $DATABASE,
-                'schema'   => 'public'])
+                'schema'   => 'public', ])
         );
 
         // Select the table.
@@ -216,7 +216,7 @@ class ViewTest extends PreconditionSet
                 'subject'     => 'view',
                 'return_url'  => 'views.php%3Fdatabase%3Dtest%26amp%3Bschema%3Dpublic',
                 'return_desc' => 'Back',
-                'view'        => 'createviewdirectly'])
+                'view'        => 'createviewdirectly', ])
         );
 
         // Click the links in the view-display page.
@@ -243,7 +243,7 @@ class ViewTest extends PreconditionSet
                 'action'   => 'confselectrows',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'view'     => 'createviewdirectly'])
+                'view'     => 'createviewdirectly', ])
         );
 
         // Enter the query conditions.
@@ -273,7 +273,7 @@ class ViewTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
         // Select a view.
         $this->assertTrue($this->clickLink('createviewdirectly'));
@@ -306,7 +306,7 @@ class ViewTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'subject'  => 'schema'])
+                'subject'  => 'schema', ])
         );
         // Select a view.
         $this->assertTrue($this->clickLink('createviewdirectly'));
@@ -317,7 +317,7 @@ class ViewTest extends PreconditionSet
         // Alter the definition here.
         $this->assertTrue($this->setField(
             'formDefinition',
-            'SELECT viewtest.field0 AS newfield, ' .
+            'SELECT viewtest.field0 AS newfield, '.
             'viewtest.field2 AS field1 FROM viewtest;'
         ));
         $this->assertTrue($this->setField('formComment', 'The definition be altered.'));
@@ -346,7 +346,7 @@ class ViewTest extends PreconditionSet
                 'action'   => 'confirm_drop',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'view'     => 'createviewdirectly'])
+                'view'     => 'createviewdirectly', ])
         );
 
         $this->assertTrue($this->setField('cascade', true));

@@ -47,7 +47,7 @@ class ExportTest extends PreconditionSet
         $this->assertTrue(
             $this->get("${webUrl}/alldb", [
                 'action' => 'export',
-                'server' => $SERVER])
+                'server' => $SERVER, ])
         );
 
         // Enter information for exporting the data.
@@ -74,7 +74,7 @@ class ExportTest extends PreconditionSet
         $this->assertTrue(
             $this->get("${webUrl}/alldb", [
                 'action' => 'export',
-                'server' => $SERVER])
+                'server' => $SERVER, ])
         );
 
         // Enter information for exporting the data.
@@ -103,7 +103,7 @@ class ExportTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'export'])
+                'action'   => 'export', ])
         );
 
         // Enter information for exporting the data.
@@ -132,7 +132,7 @@ class ExportTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'export'])
+                'action'   => 'export', ])
         );
 
         // Enter information for exporting the data.
@@ -165,7 +165,7 @@ class ExportTest extends PreconditionSet
                 'action'   => 'confinsertrow',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
         // Set the value of the fields.
         $this->assertTrue($this->setField('values[name]', 'testname'));
@@ -186,7 +186,7 @@ class ExportTest extends PreconditionSet
                 'schema'   => 'public',
                 'table'    => 'student',
                 'subject'  => 'table',
-                'action'   => 'export'])
+                'action'   => 'export', ])
         );
         // Enter information for export the data.
         $this->assertTrue($this->setField('what', 'dataonly'));
@@ -205,7 +205,7 @@ class ExportTest extends PreconditionSet
                 'schema'   => 'public',
                 'table'    => 'student',
                 'subject'  => 'table',
-                'action'   => 'export'])
+                'action'   => 'export', ])
         );
 
         // Enter information for exporting the data.
@@ -224,7 +224,7 @@ class ExportTest extends PreconditionSet
                 'action'   => 'confirm_empty',
                 'database' => $DATABASE,
                 'schema'   => 'public',
-                'table'    => 'student'])
+                'table'    => 'student', ])
         );
         $this->assertTrue($this->clickSubmit($lang['strempty']));
 
@@ -247,7 +247,7 @@ class ExportTest extends PreconditionSet
                 'schema'   => 'public',
                 'table'    => 'student',
                 'subject'  => 'table',
-                'action'   => 'export'])
+                'action'   => 'export', ])
         );
 
         // Enter information for exporting the data.
@@ -278,7 +278,7 @@ class ExportTest extends PreconditionSet
                 'schema'   => 'pg_catalog',
                 'view'     => 'pg_user',
                 'subject'  => 'view',
-                'action'   => 'export'])
+                'action'   => 'export', ])
         );
 
         // Enter information for exporting the data.

@@ -13,8 +13,6 @@ namespace PHPPgAdmin\Controller;
  */
 class HelpController extends BaseController
 {
-    public $controller_name = 'HelpController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

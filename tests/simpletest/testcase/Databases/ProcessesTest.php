@@ -61,7 +61,7 @@ class ProcessesTest extends PreconditionSet
                 'server'   => $SERVER,
                 'database' => $DATABASE,
                 'subject'  => 'database',
-                'action'   => 'processes'])
+                'action'   => 'processes', ])
         );
 
         $this->assertText($lang['strnodata']);

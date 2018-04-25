@@ -17,15 +17,15 @@ class LoginController extends BaseController
     protected $data;
     protected $database;
     protected $server_id;
-    public $appLangFiles     = [];
-    public $appThemes        = [];
-    public $appName          = '';
-    public $appVersion       = '';
-    public $form             = '';
-    public $href             = '';
-    public $lang             = [];
-    public $controller_name  = 'LoginController';
-    public $controller_title = 'strlogin';
+    public $appLangFiles        = [];
+    public $appThemes           = [];
+    public $appName             = '';
+    public $appVersion          = '';
+    public $form                = '';
+    public $href                = '';
+    public $lang                = [];
+    public $controller_title    = 'strlogin';
+    protected $no_db_connection = true;
 
     /**
      * Default method to render the controller according to the action parameter.

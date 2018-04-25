@@ -67,7 +67,7 @@ class DatabaseTest extends PreconditionSet
         $this->assertTrue(
             $this->get("${webUrl}/alldb", [
                 'server' => $SERVER,
-                'action' => 'create'])
+                'action' => 'create', ])
         );
 
         // Fill the form about creating database.
@@ -115,7 +115,7 @@ class DatabaseTest extends PreconditionSet
         $this->assertTrue(
             $this->get("${webUrl}/alldb", [
                 'server' => $SERVER,
-                'action' => 'create'])
+                'action' => 'create', ])
         );
 
         // Fill the form about creating database.
@@ -159,7 +159,7 @@ class DatabaseTest extends PreconditionSet
                 'action'       => 'confirm_drop',
                 'subject'      => 'database',
                 'database'     => $DATABASE,
-                'dropdatabase' => $DATABASE])
+                'dropdatabase' => $DATABASE, ])
         );
 
         // Click the submit button "Drop" next page.

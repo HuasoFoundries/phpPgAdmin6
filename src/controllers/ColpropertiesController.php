@@ -15,9 +15,8 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class ColpropertiesController extends BaseController
 {
-    public $controller_name = 'ColpropertiesController';
-    public $tableName       = '';
-    public $table_place     = 'colproperties-colproperties';
+    public $tableName   = '';
+    public $table_place = 'colproperties-colproperties';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -234,7 +233,7 @@ class ColpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<script src="'.\SUBFOLDER.'/js/tables.js" type="text/javascript"></script>';
+                echo '<script src="'.\SUBFOLDER.'/assets/js/tables.js" type="text/javascript"></script>';
                 echo '<form action="'.\SUBFOLDER."/src/views/colproperties\" method=\"post\">\n";
 
                 // Output table header

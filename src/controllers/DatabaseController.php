@@ -16,9 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class DatabaseController extends BaseController
 {
     use \PHPPgAdmin\Traits\AdminTrait;
-    public $script          = 'database';
-    public $controller_name = 'DatabaseController';
-    public $table_place     = 'database-variables';
+    public $table_place = 'database-variables';
 
     public function _highlight($string, $term)
     {
@@ -44,7 +42,7 @@ class DatabaseController extends BaseController
         $scripts = '';
         // normal flow
         if ('locks' == $this->action || 'processes' == $this->action) {
-            $scripts .= '<script src="'.\SUBFOLDER.'/js/database.js" type="text/javascript"></script>';
+            $scripts .= '<script src="'.\SUBFOLDER.'/assets/js/database.js" type="text/javascript"></script>';
 
             $refreshTime = $this->conf['ajax_refresh'] * 1500;
 

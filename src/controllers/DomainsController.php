@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class DomainsController extends BaseController
 {
-    public $controller_name = 'DomainsController';
-
     /**
      * Default method to render the controller according to the action parameter.
      */

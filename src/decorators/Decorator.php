@@ -49,26 +49,6 @@ class Decorator
         return $val;
     }
 
-    public static function value_xml_attr($attr, &$var, &$fields)
-    {
-        $val = self::get_sanitized_value($var, $fields, 'xml');
-        if (!empty($val)) {
-            return " {$attr}=\"{$val}\"";
-        }
-
-        return '';
-    }
-
-    public static function value_xml_attr_tag($attr, &$var, &$fields)
-    {
-        $val = self::get_sanitized_value($var, $fields, 'xml');
-        if (!empty($val)) {
-            return "<{$attr}>{$val}</{$attr}>";
-        }
-
-        return '';
-    }
-
     public static function callback($callback, $params = null)
     {
         return new \PHPPgAdmin\Decorators\CallbackDecorator($callback, $params);

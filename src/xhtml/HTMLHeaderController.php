@@ -46,14 +46,7 @@ class HTMLHeaderController extends HTMLController
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
 
-        //$this->prtrace('appName', $appName);
-
         $viewVars = [];
-        //$viewVars = $this->lang;
-        if (isset($_SESSION['isolang'])) {
-            $viewVars['isolang']   = $_SESSION['isolang'];
-            $viewVars['applocale'] = $lang['applocale'];
-        }
 
         $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
         $viewVars['headertemplate'] = $template;
@@ -84,22 +77,17 @@ class HTMLHeaderController extends HTMLController
     /**
      * Prints the page body.
      *
-     * @param $doBody True to output body tag, false to return
-     * @param $bodyClass - name of body class
-     * @param $onloadInit - if true, call init() on body load event
+     * @param bool   $doBody     True to output body tag, false to return
+     * @param string $bodyClass  - name of body class
+     * @param bool   $onloadInit - if true, call init() on body load event
      */
     public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
-        $bodyClass = htmlspecialchars($bodyClass);
-        $bodyHtml  = '<body ';
-        $bodyHtml .= ' data-controller="'.$this->controller_name.'" ';
-        $bodyHtml .= 'class="'.$this->lang['applangdir'].' '.$bodyClass.'" ';
-        $bodyHtml .= ($onloadInit ? 'onload="init();" ' : '').'>';
+        $bodyClass = $this->lang['applangdir'].' '.htmlspecialchars($bodyClass);
+        $onload    = ($onloadInit ? 'onload="init();" ' : '');
+
+        $bodyHtml = sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
         $bodyHtml .= "\n";
-        /*$bodyHtml .= '<div id="flexbox_wrapper">';
-        $bodyHtml .= "\n";
-        $bodyHtml .= '<div id="detail_container">';
-        $bodyHtml .= "\n";*/
 
         if (!$this->_no_output && $doBody) {
             echo $bodyHtml;
