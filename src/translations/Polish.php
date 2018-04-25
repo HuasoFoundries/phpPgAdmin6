@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Polish language.
+ *
+ * @package PHPPgAdmin
+ */
 class Polish extends English
 {
     public function getLang()

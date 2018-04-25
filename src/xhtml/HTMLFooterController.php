@@ -16,11 +16,11 @@ class HTMLFooterController extends HTMLController
     private $_no_bottom_link       = false;
 
     /**
-     * [setReloadBrowser description].
+     * Sets the value of $_reload_drop_database which in turn will trigger a reload in the browser frame.
      *
      * @param bool $flag sets internal $_reload_drop_database var which will be passed to the footer methods
      *
-     * @return $this
+     * @return HTMLFooterController $this the instance of this class
      */
     public function setReloadDropDatabase($flag)
     {
@@ -30,11 +30,11 @@ class HTMLFooterController extends HTMLController
     }
 
     /**
-     * sets $_no_bottom_link boolean value.
+     * Sets $_no_bottom_link boolean value.
      *
      * @param bool $flag [description]
      *
-     * @return $this
+     * @return HTMLFooterController $this the instance of this class
      */
     public function setNoBottomLink($flag)
     {
@@ -46,7 +46,7 @@ class HTMLFooterController extends HTMLController
     /**
      * Prints the page footer.
      *
-     * @param $doBody True to output body tag, false to return the html
+     * @param bool  $doBody   True to output body tag, false to return the html
      * @param mixed $template
      */
     public function printFooter($doBody = true, $template = 'footer.twig')
@@ -76,7 +76,7 @@ class HTMLFooterController extends HTMLController
     /**
      * Outputs JavaScript to set default focus.
      *
-     * @param $object eg. forms[0].username
+     * @param string $object eg. forms[0].username
      */
     public function setFocus($object)
     {
@@ -88,9 +88,9 @@ class HTMLFooterController extends HTMLController
     /**
      * Outputs JavaScript to set the name of the browser window.
      *
-     * @param $name the window name
-     * @param $addServer if true (default) then the server id is
-     *        attached to the name
+     * @param string $name      the window name
+     * @param bool   $addServer if true (default) then the server id is
+     *                          attached to the name
      */
     public function setWindowName($name, $addServer = true)
     {

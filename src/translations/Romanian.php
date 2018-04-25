@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Romanian language.
+ *
+ * @package PHPPgAdmin
+ */
 class Romanian extends English
 {
     public function getLang()

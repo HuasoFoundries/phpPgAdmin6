@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Ukrainian language.
+ *
+ * @package PHPPgAdmin
+ */
 class English
 {
     protected $lang = [];

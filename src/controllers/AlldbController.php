@@ -27,7 +27,6 @@ class AlldbController extends BaseController
         }
 
         $header_template = 'header.twig';
-        $footer_template = 'footer.twig';
 
         ob_start();
         switch ($this->action) {
@@ -424,6 +423,7 @@ class AlldbController extends BaseController
         // Fetch a list of databases in the cluster
         $templatedbs = $data->getDatabases(false);
 
+        $tablespaces = null;
         // Fetch all tablespaces from the database
         if ($data->hasTablespaces()) {
             $tablespaces = $data->getTablespaces();

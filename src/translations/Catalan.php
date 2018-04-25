@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Catalan language.
+ *
+ * @package PHPPgAdmin
+ */
 class Catalan extends English
 {
     public function getLang()

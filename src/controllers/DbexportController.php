@@ -173,13 +173,15 @@ class DbexportController extends BaseController
                 putenv('PGDATABASE='.$_REQUEST['database']);
             }
 
-            $this->prtrace('ENV VARS', [
-                'PGUSER'     => getenv('PGUSER'),
-                'PGPASSWORD' => getenv('PGPASSWORD'),
-                'PGHOST'     => getenv('PGHOST'),
-                'PGPORT'     => getenv('PGPORT'),
-                'PGDATABASE' => getenv('PGDATABASE'),
-            ]);
+            /*$this->prtrace(
+            'ENV VARS', [
+            'PGUSER'     => getenv('PGUSER'),
+            'PGPASSWORD' => getenv('PGPASSWORD'),
+            'PGHOST'     => getenv('PGHOST'),
+            'PGPORT'     => getenv('PGPORT'),
+            'PGDATABASE' => getenv('PGDATABASE'),
+            ]
+            );*/
             $this->prtrace('cmd', $cmd);
 
             // Execute command and return the output to the screen

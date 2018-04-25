@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Greek language.
+ *
+ * @package PHPPgAdmin
+ */
 class Greek extends English
 {
     public function getLang()

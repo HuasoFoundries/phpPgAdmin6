@@ -6,6 +6,9 @@
 
 namespace PHPPgAdmin;
 
+/**
+ * Class for translations.
+ */
 class Translations
 {
     // List of language files, and encoded language name.

@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for ChineseTr language.
+ *
+ * @package PHPPgAdmin
+ */
 class ChineseTr extends English
 {
     public function getLang()

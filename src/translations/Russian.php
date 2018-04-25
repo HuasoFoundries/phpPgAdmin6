@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Russian language.
+ *
+ * @package PHPPgAdmin
+ */
 class Russian extends English
 {
     public function getLang()

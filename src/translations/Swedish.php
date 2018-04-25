@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Swedish language.
+ *
+ * @package PHPPgAdmin
+ */
 class Swedish extends English
 {
     public function getLang()

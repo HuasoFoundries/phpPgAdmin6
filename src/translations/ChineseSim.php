@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for ChineseSim language.
+ *
+ * @package PHPPgAdmin
+ */
 class ChineseSim extends English
 {
     public function getLang()

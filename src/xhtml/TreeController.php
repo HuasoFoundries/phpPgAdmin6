@@ -80,7 +80,7 @@ class TreeController
             'section'  => $section,
         ];
 
-        $plugin_manager->do_hook('tree', $tree_params);
+        $plugin_manager->doHook('tree', $tree_params);
 
         return $this->printTreeJSON($treedata, $attrs, $print);
     }

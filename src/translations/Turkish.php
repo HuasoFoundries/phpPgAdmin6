@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Turkish language.
+ *
+ * @package PHPPgAdmin
+ */
 class Turkish extends English
 {
     public function getLang()

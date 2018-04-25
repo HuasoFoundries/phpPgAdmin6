@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Spanish language.
+ *
+ * @package PHPPgAdmin
+ */
 class Spanish extends English
 {
     public function getLang()

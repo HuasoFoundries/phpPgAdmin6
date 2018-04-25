@@ -193,7 +193,7 @@ class ServersController extends BaseController
         $conf           = $this->conf;
         $data           = $this->misc->getDatabaseAccessor();
 
-        $plugin_manager->do_hook('logout', $_REQUEST['logoutServer']);
+        $plugin_manager->doHook('logout', $_REQUEST['logoutServer']);
 
         $server_info = $this->misc->getServerInfo($_REQUEST['logoutServer']);
         $this->misc->setServerInfo(null, null, $_REQUEST['logoutServer']);

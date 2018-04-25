@@ -311,11 +311,14 @@ class DisplayController extends BaseController
                     'attr'    => [
                         'href' => [
                             'url'     => 'display',
-                            'urlvars' => array_merge([
-                                'action'  => 'confeditrow',
-                                'strings' => $_REQUEST['strings'],
-                                'page'    => $_REQUEST['page'],
-                            ], $_gets),
+                            'urlvars' => array_merge(
+                                [
+                                    'action'  => 'confeditrow',
+                                    'strings' => $_REQUEST['strings'],
+                                    'page'    => $_REQUEST['page'],
+                                ],
+                                $_gets
+                            ),
                         ],
                     ],
                 ],
@@ -324,11 +327,14 @@ class DisplayController extends BaseController
                     'attr'    => [
                         'href' => [
                             'url'     => 'display',
-                            'urlvars' => array_merge([
-                                'action'  => 'confdelrow',
-                                'strings' => $_REQUEST['strings'],
-                                'page'    => $_REQUEST['page'],
-                            ], $_gets),
+                            'urlvars' => array_merge(
+                                [
+                                    'action'  => 'confdelrow',
+                                    'strings' => $_REQUEST['strings'],
+                                    'page'    => $_REQUEST['page'],
+                                ],
+                                $_gets
+                            ),
                         ],
                     ],
                 ],
@@ -454,10 +460,13 @@ class DisplayController extends BaseController
                 'attr'    => [
                     'href' => [
                         'url'     => 'database',
-                        'urlvars' => array_merge($fields, [
-                            'action'   => 'sql',
-                            'paginate' => 'on',
-                        ]),
+                        'urlvars' => array_merge(
+                            $fields,
+                            [
+                                'action'   => 'sql',
+                                'paginate' => 'on',
+                            ]
+                        ),
                     ],
                 ],
                 'content' => $this->lang['streditsql'],
@@ -507,10 +516,13 @@ class DisplayController extends BaseController
                     'attr'    => [
                         'href' => [
                             'url'     => 'views',
-                            'urlvars' => array_merge($fields, [
-                                'action'         => 'create',
-                                'formDefinition' => $_REQUEST['query'],
-                            ]),
+                            'urlvars' => array_merge(
+                                $fields,
+                                [
+                                    'action'         => 'create',
+                                    'formDefinition' => $_REQUEST['query'],
+                                ]
+                            ),
                         ],
                     ],
                     'content' => $this->lang['strcreateview'],
@@ -539,10 +551,13 @@ class DisplayController extends BaseController
                 'attr'    => [
                     'href' => [
                         'url'     => 'tables',
-                        'urlvars' => array_merge($fields, [
-                            'action' => 'confinsertrow',
-                            'table'  => $object,
-                        ]),
+                        'urlvars' => array_merge(
+                            $fields,
+                            [
+                                'action' => 'confinsertrow',
+                                'table'  => $object,
+                            ]
+                        ),
                     ],
                 ],
                 'content' => $this->lang['strinsert'],
@@ -846,7 +861,7 @@ class DisplayController extends BaseController
     }
 
     /**
-     * build & return the FK information data structure
+     * Build & return the FK information data structure
      * used when deciding if a field should have a FK link or not.
      *
      * @return [type] [description]

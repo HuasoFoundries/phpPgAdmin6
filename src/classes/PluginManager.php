@@ -22,8 +22,8 @@ class PluginManager
     /**
      * Attributes.
      */
-    private $plugins_list    = [];
-    private $available_hooks = [
+    private $_plugins_list    = [];
+    private $_available_hooks = [
         'head',
         'toplinks',
         'tabs',
@@ -33,8 +33,8 @@ class PluginManager
         'tree',
         'logout',
     ];
-    private $actions = [];
-    private $hooks   = [];
+    private $_actions = [];
+    private $_hooks   = [];
 
     /**
      * Register the plugins.
@@ -68,7 +68,7 @@ class PluginManager
 
                 try {
                     $plugin = new $activated_plugin($this->language);
-                    $this->add_plugin($plugin);
+                    $this->addPlugin($plugin);
                 } catch (\Exception $e) {
                     continue;
                 }
@@ -83,32 +83,32 @@ class PluginManager
      *
      * @param mixed $plugin - Instance from plugin
      */
-    public function add_plugin($plugin)
+    public function addPlugin($plugin)
     {
         //The $plugin_name is the identification of the plugin.
         //Example: PluginExample is the identification for PluginExample
-        //It will be used to get a specific plugin from the plugins_list.
-        $plugin_name                      = $plugin->get_name();
-        $this->plugins_list[$plugin_name] = $plugin;
+        //It will be used to get a specific plugin from the _plugins_list.
+        $plugin_name                       = $plugin->get_name();
+        $this->_plugins_list[$plugin_name] = $plugin;
 
         //Register the plugin's functions
-        $hooks = $plugin->get_hooks();
-        foreach ($hooks as $hook => $functions) {
-            if (!in_array($hook, $this->available_hooks, true)) {
+        $_hooks = $plugin->get__hooks();
+        foreach ($_hooks as $hook => $functions) {
+            if (!in_array($hook, $this->_available_hooks, true)) {
                 $this->halt(sprintf($this->lang['strhooknotfound']."\t\n", $hook));
             }
-            $this->hooks[$hook][$plugin_name] = $functions;
+            $this->_hooks[$hook][$plugin_name] = $functions;
         }
 
-        //Register the plugin's actions
-        $actions                     = $plugin->get_actions();
-        $this->actions[$plugin_name] = $actions;
+        //Register the plugin's _actions
+        $_actions                     = $plugin->get__actions();
+        $this->_actions[$plugin_name] = $_actions;
     }
 
     public function getPlugin($plugin)
     {
-        if (isset($this->plugins_list[$plugin])) {
-            return $this->plugins_list[$plugin];
+        if (isset($this->_plugins_list[$plugin])) {
+            return $this->_plugins_list[$plugin];
         }
 
         return null;
@@ -120,12 +120,12 @@ class PluginManager
      * @param string $hook          - The place where the function will be called
      * @param array  $function_args - An array reference with arguments to give to called function
      */
-    public function do_hook($hook, &$function_args)
+    public function doHook($hook, &$function_args)
     {
-        //$this->prtrace('hooks', $this->hooks, $function_args);
-        if (isset($this->hooks[$hook])) {
-            foreach ($this->hooks[$hook] as $plugin_name => $functions) {
-                $plugin = $this->plugins_list[$plugin_name];
+        //$this->prtrace('_hooks', $this->_hooks, $function_args);
+        if (isset($this->_hooks[$hook])) {
+            foreach ($this->_hooks[$hook] as $plugin_name => $functions) {
+                $plugin = $this->_plugins_list[$plugin_name];
                 foreach ($functions as $function) {
                     if (method_exists($plugin, $function)) {
                         call_user_func([$plugin, $function], $function_args);
@@ -143,14 +143,14 @@ class PluginManager
      */
     public function do_action($plugin_name, $action)
     {
-        if (!isset($this->plugins_list[$plugin_name])) {
+        if (!isset($this->_plugins_list[$plugin_name])) {
             // Show an error and stop the application
             $this->halt(sprintf($this->lang['strpluginnotfound']."\t\n", $plugin_name));
         }
-        $plugin = $this->plugins_list[$plugin_name];
+        $plugin = $this->_plugins_list[$plugin_name];
 
         // Check if the plugin's method exists and if this method is an declared action.
-        if (method_exists($plugin, $action) and in_array($action, $this->actions[$plugin_name], true)) {
+        if (method_exists($plugin, $action) and in_array($action, $this->_actions[$plugin_name], true)) {
             call_user_func([$plugin, $action]);
         } else {
             // Show an error and stop the application

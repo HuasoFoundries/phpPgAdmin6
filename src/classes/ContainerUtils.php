@@ -20,19 +20,19 @@ class ContainerUtils
 {
     use \PHPPgAdmin\Traits\HelperTrait;
 
-    private $container;
+    private $_container;
 
     public function __construct($container)
     {
-        $this->container = $container;
+        $this->_container = $container;
     }
 
     public function getRedirectUrl($subject = '')
     {
-        $query_string = $this->container->requestobj->getUri()->getQuery();
+        $query_string = $this->_container->requestobj->getUri()->getQuery();
 
         // but if server_id isn't set, then you will be redirected to intro
-        if ($this->container->requestobj->getQueryParam('server') === null) {
+        if ($this->_container->requestobj->getQueryParam('server') === null) {
             $destinationurl = \SUBFOLDER.'/src/views/intro';
         } else {
             $destinationurl = \SUBFOLDER.'/src/views/login'.($query_string ? '?'.$query_string : '');
@@ -43,14 +43,14 @@ class ContainerUtils
 
     public function getDestinationWithLastTab($subject)
     {
-        $_server_info = $this->container->misc->getServerInfo();
+        $_server_info = $this->_container->misc->getServerInfo();
         $this->addFlash('getDestinationWithLastTab for ', $subject);
         //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
         if (!isset($_server_info['username'])) {
             $destinationurl = $this->getRedirectUrl();
         } else {
-            $url = $this->container->misc->getLastTabURL($subject);
+            $url = $this->_container->misc->getLastTabURL($subject);
             $this->addFlash('getLastTabURL for '.$subject, $url);
             // Load query vars into superglobal arrays
             if (isset($url['urlvars'])) {
@@ -73,10 +73,10 @@ class ContainerUtils
 
     public function addError($errormsg)
     {
-        $errors   = $this->container->get('errors');
+        $errors   = $this->_container->get('errors');
         $errors[] = $errormsg;
-        $this->container->offsetSet('errors', $errors);
+        $this->_container->offsetSet('errors', $errors);
 
-        return $this->container;
+        return $this->_container;
     }
 }

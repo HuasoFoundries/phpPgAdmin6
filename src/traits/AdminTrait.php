@@ -479,7 +479,7 @@ trait AdminTrait
     }
 
     /**
-     * confirm drop autovacuum params for a table and drop it.
+     * Confirm drop autovacuum params for a table and drop it.
      *
      * @param mixed $type
      * @param mixed $confirm
@@ -530,7 +530,7 @@ trait AdminTrait
     }
 
     /**
-     * database/table administration and tuning tasks.
+     * Database/table administration and tuning tasks.
      *
      * Release: admin
      *

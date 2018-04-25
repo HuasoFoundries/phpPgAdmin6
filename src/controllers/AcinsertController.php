@@ -25,7 +25,7 @@ class AcinsertController extends BaseController
             $offset          = ' OFFSET 0';
         }
 
-        $keynames = [];
+        $fkeynames = [];
         foreach ($_POST['fkeynames'] as $k => $v) {
             $fkeynames[$k] = html_entity_decode($v, ENT_QUOTES);
         }
@@ -80,8 +80,6 @@ class AcinsertController extends BaseController
                 $res->moveNext();
             }
             echo "</table>\n";
-
-            $page_tests = '';
 
             $js = "<script type=\"text/javascript\">\n";
 

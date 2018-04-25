@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Italian language.
+ *
+ * @package PHPPgAdmin
+ */
 class Italian extends English
 {
     public function getLang()

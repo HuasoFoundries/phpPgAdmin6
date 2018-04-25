@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Slovak language.
+ *
+ * @package PHPPgAdmin
+ */
 class Slovak extends English
 {
     public function getLang()

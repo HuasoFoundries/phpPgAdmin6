@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Japanese language.
+ *
+ * @package PHPPgAdmin
+ */
 class Japanese extends English
 {
     public function getLang()

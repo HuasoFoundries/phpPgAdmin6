@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Mongol language.
+ *
+ * @package PHPPgAdmin
+ */
 class Mongol extends English
 {
     public function getLang()

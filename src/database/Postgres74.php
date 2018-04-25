@@ -117,7 +117,7 @@ class Postgres74 extends Postgres80
         $conf = $this->conf;
 
         /**
-         * about escaping:
+         * About escaping:
          * SET standard_conforming_string is not available before 8.2
          * So we must use PostgreSQL specific notation :/
          * E'' notation is not available before 8.1

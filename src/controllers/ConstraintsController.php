@@ -34,7 +34,8 @@ class ConstraintsController extends BaseController
         $onloadInit = false;
         if ('add_unique_key' == $this->action || 'save_add_unique_key' == $this->action
             || 'add_primary_key' == $this->action || 'save_add_primary_key' == $this->action
-            || 'add_foreign_key' == $this->action || 'save_add_foreign_key' == $this->action) {
+            || 'add_foreign_key' == $this->action || 'save_add_foreign_key' == $this->action
+        ) {
             $onloadInit = true;
         }
         $this->printBody(true, 'detailbody', $onloadInit);
@@ -407,7 +408,10 @@ class ConstraintsController extends BaseController
                 if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
                     || 0 == sizeof($_POST['IndexColumnList']) || !isset($temp)
                     || !is_array($temp) || 0 == sizeof($temp)) {
-                    $this->addForeignKey(2, $this->lang['strfkneedscols']);
+                    $this->addForeignKey(
+                        2,
+                        $this->lang['strfkneedscols']
+                    );
                 } else {
                     $status = $data->addForeignKey(
                         $_POST['table'],
@@ -540,7 +544,8 @@ class ConstraintsController extends BaseController
 
             $this->printMsg($msg);
 
-            $attrs = $data->getTableAttributes($_REQUEST['table']);
+            $attrs       = $data->getTableAttributes($_REQUEST['table']);
+            $tablespaces = null;
             // Fetch all tablespaces from the database
             if ($data->hasTablespaces()) {
                 $tablespaces = $data->getTablespaces();
@@ -615,7 +620,8 @@ class ConstraintsController extends BaseController
             if ('primary' == $_POST['type']) {
                 // Check that they've given at least one column
                 if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
-                    || 0 == sizeof($_POST['IndexColumnList'])) {
+                    || 0 == sizeof($_POST['IndexColumnList'])
+                ) {
                     $this->addPrimaryOrUniqueKey($_POST['type'], true, $this->lang['strpkneedscols']);
                 } else {
                     $status = $data->addPrimaryKey($_POST['table'], $_POST['IndexColumnList'], $_POST['name'], $_POST['tablespace']);
@@ -628,7 +634,8 @@ class ConstraintsController extends BaseController
             } elseif ('unique' == $_POST['type']) {
                 // Check that they've given at least one column
                 if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
-                    || 0 == sizeof($_POST['IndexColumnList'])) {
+                    || 0 == sizeof($_POST['IndexColumnList'])
+                ) {
                     $this->addPrimaryOrUniqueKey($_POST['type'], true, $this->lang['struniqneedscols']);
                 } else {
                     $status = $data->addUniqueKey($_POST['table'], $_POST['IndexColumnList'], $_POST['name'], $_POST['tablespace']);

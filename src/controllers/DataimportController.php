@@ -18,8 +18,7 @@ class DataimportController extends BaseController
      */
     public function render()
     {
-        $misc = $this->misc;
-        $data = $misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // Prevent timeouts on large exports
         set_time_limit(0);
@@ -51,11 +50,11 @@ class DataimportController extends BaseController
         /**
          * Open tag handler for XML import feature.
          *
-         * @param $parser
-         * @param $name
-         * @param $attrs
+         * @param resource $parser
+         * @param string   $name
+         * @param array    $attrs
          */
-        $_startElement = function ($parser, $name, $attrs) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null, $lang) {
+        $_startElement = function ($parser, $name, $attrs) use ($curr_row, $data, &$state, &$curr_col_name, &$curr_col_null, $lang) {
             switch ($name) {
                 case 'DATA':
                     if ('XML' != $state) {
@@ -96,9 +95,8 @@ class DataimportController extends BaseController
                         $state         = 'COLUMN';
                         $curr_col_name = $attrs['NAME'];
                         $curr_col_null = isset($attrs['NULL']);
-                    }
-                    // And we ignore columns in headers and fail in any other context
-                    elseif ('HEADER' != $state) {
+                    } elseif ('HEADER' != $state) {
+                        // And we ignore columns in headers and fail in any other context
                         $data->rollbackTransaction();
                         $this->halt($lang['strimporterror']);
                     }
@@ -114,10 +112,10 @@ class DataimportController extends BaseController
         /**
          * Close tag handler for XML import feature.
          *
-         * @param $parser
-         * @param $name
+         * @param resource $parser
+         * @param string   $name
          */
-        $_endElement = function ($parser, $name) use ($data, $misc, &$state, &$curr_col_name, &$curr_col_null, &$curr_col_val, $lang) {
+        $_endElement = function ($parser, $name) use ($curr_row, $data, &$state, &$curr_col_name, &$curr_col_null, &$curr_col_val, $lang) {
             switch ($name) {
                 case 'DATA':
                     $state = 'READ_DATA';

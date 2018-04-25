@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Arabic language.
+ *
+ * @package PHPPgAdmin
+ */
 class Arabic extends English
 {
     public function getLang()

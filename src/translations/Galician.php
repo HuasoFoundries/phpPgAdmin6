@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Galician language.
+ *
+ * @package PHPPgAdmin
+ */
 class Galician extends English
 {
     public function getLang()

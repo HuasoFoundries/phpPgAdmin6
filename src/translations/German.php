@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for German language.
+ *
+ * @package PHPPgAdmin
+ */
 class German extends English
 {
     public function getLang()

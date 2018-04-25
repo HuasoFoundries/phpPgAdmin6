@@ -12,7 +12,7 @@ namespace PHPPgAdmin\Traits;
 trait IndexTrait
 {
     /**
-     * test if a table has been clustered on an index.
+     * Test if a table has been clustered on an index.
      *
      * @param string $table The table to test
      *

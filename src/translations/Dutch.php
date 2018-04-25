@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Dutch language.
+ *
+ * @package PHPPgAdmin
+ */
 class Dutch extends English
 {
     public function getLang()

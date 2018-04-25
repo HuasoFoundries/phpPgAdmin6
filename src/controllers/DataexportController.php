@@ -40,7 +40,7 @@ class DataexportController extends BaseController
 
             // Include application functions
             $this->setNoOutput(true);
-
+            $clean = false;
             switch ($_REQUEST['what']) {
                 case 'dataonly':
                     // Check to see if they have pg_dump set up and if they do, use that
@@ -91,8 +91,8 @@ class DataexportController extends BaseController
                 } else {
                     header('Content-Type: application/download');
 
-                    if (isset($extensions[$format])) {
-                        $ext = $extensions[$format];
+                    if (isset($this->extensions[$format])) {
+                        $ext = $this->extensions[$format];
                     } else {
                         $ext = 'txt';
                     }

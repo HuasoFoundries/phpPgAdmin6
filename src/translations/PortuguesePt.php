@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for PortuguesePt language.
+ *
+ * @package PHPPgAdmin
+ */
 class PortuguesePt extends English
 {
     public function getLang()

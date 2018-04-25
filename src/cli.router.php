@@ -24,7 +24,7 @@ if ($filePath && is_file($filePath)) {
         } elseif ($will_redirect) {
             $new_location = 'Location: http://' . $_SERVER['HTTP_HOST'] . $req_uri;
 
-            header($new_location, 301);
+            header($new_location, true, 301);
             return;
         } else {
             // asset file; serve from filesystem

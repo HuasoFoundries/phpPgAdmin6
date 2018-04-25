@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for French language.
+ *
+ * @package PHPPgAdmin
+ */
 class French extends English
 {
     public function getLang()

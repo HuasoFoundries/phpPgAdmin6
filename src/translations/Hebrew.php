@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Hebrew language.
+ *
+ * @package PHPPgAdmin
+ */
 class Hebrew extends English
 {
     public function getLang()

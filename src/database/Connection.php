@@ -21,7 +21,7 @@ class Connection
     public $conn;
     public $platform = 'UNKNOWN';
     // The backend platform.  Set to UNKNOWN by default.
-    private $connection_result;
+    private $_connection_result;
 
     protected $container;
     protected $server_info;
@@ -69,8 +69,8 @@ class Connection
         }
 
         /*try {
-        $this->connection_result = $this->conn->connect($pghost, $user, $password, $database);
-        $this->prtrace(['connection_result' => $this->connection_result, 'conn' => $this->conn]);
+        $this->_connection_result = $this->conn->connect($pghost, $user, $password, $database);
+        $this->prtrace(['_connection_result' => $this->_connection_result, 'conn' => $this->conn]);
         } catch (\PHPPgAdmin\ADOdbException $e) {
         $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
          */
@@ -80,7 +80,7 @@ class Connection
 
     public function getConnectionResult()
     {
-        return $this->connection_result;
+        return $this->_connection_result;
     }
 
     /**

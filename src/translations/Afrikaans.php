@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Afrikaans language.
+ *
+ * @package PHPPgAdmin
+ */
 class Afrikaans extends English
 {
     public function getLang()

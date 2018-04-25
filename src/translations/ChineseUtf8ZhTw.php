@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for ChineseUtf8ZhTw language.
+ *
+ * @package PHPPgAdmin
+ */
 class ChineseUtf8ZhTw extends English
 {
     public function getLang()

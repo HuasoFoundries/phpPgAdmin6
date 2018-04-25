@@ -16,6 +16,8 @@ use PHPPgAdmin\Decorators\Decorator;
 class HistoryController extends BaseController
 {
     use \PHPPgAdmin\Traits\ServersTrait;
+    public $EOF;
+    public $fields;
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -185,8 +187,6 @@ class HistoryController extends BaseController
 
     public function doDelHistory($qid, $confirm)
     {
-        $data = $this->misc->getDatabaseAccessor();
-
         if ($confirm) {
             $this->printHeader($this->lang['strhistory'], $this->scripts);
 
@@ -211,8 +211,6 @@ class HistoryController extends BaseController
 
     public function doClearHistory($confirm)
     {
-        $data = $this->misc->getDatabaseAccessor();
-
         if ($confirm) {
             $this->printHeader($this->lang['strhistory'], $this->scripts);
 

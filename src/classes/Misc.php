@@ -154,7 +154,7 @@ class Misc
     }
 
     /**
-     * gets the value of a config property, or the array of all config properties.
+     * Gets the value of a config property, or the array of all config properties.
      *
      * @param null|string $key value of the key to be retrieved. If null, the full array is returnes
      *
@@ -231,7 +231,7 @@ class Misc
     }
 
     /**
-     * sets $_no_db_connection boolean value, allows to render scripts that do not need an active session.
+     * Sets $_no_db_connection boolean value, allows to render scripts that do not need an active session.
      *
      * @param bool $flag true or false to allow unconnected clients to access the view
      *
@@ -489,7 +489,7 @@ class Misc
     /**
      * Set server information.
      *
-     * @param string      $key       parameter name to set, or null to replace all
+     * @param null|string $key       parameter name to set, or null to replace all
      *                               params with the assoc-array in $value
      * @param mixed       $value     the new value, or null to unset the parameter
      * @param null|string $server_id the server identifier, or null for current server
@@ -529,7 +529,7 @@ class Misc
         if ($this->_server_id !== null &&
             isset($server_info['useonlydefaultdb']) &&
             $server_info['useonlydefaultdb'] === true &&
-            isset($_server_info['defaultdb'])
+            isset($server_info['defaultdb'])
         ) {
             $this->_database = $server_info['defaultdb'];
         } elseif ($database !== '') {
@@ -537,7 +537,7 @@ class Misc
         } elseif (isset($_REQUEST['database'])) {
             // Connect to the current database
             $this->_database = $_REQUEST['database'];
-        } elseif (isset($_server_info['defaultdb'])) {
+        } elseif (isset($server_info['defaultdb'])) {
             // or if one is not specified then connect to the default database.
             $this->_database = $server_info['defaultdb'];
         } else {
@@ -1848,7 +1848,7 @@ class Misc
             $max_page = min($max_page, $pages);
 
             for ($i = $min_page; $i <= $max_page; ++$i) {
-                #if ($i != $page) echo "<a class=\"pagenav\" href=\"?{$url}&amp;page={$i}\">$i</a>\n";
+                //if ($i != $page) echo "<a class=\"pagenav\" href=\"?{$url}&amp;page={$i}\">$i</a>\n";
                 if ($i != $page) {
                     echo "<a class=\"pagenav\" href=\"display?{$url}&amp;page={$i}\">${i}</a>\n";
                 } else {
@@ -1870,7 +1870,7 @@ class Misc
      *
      * @param mixed $strIniSize The PHP.INI variable
      *
-     * @return float|float|int size in bytes, false on failure
+     * @return bool|float|int size in bytes, false on failure
      */
     public function inisizeToBytes($strIniSize)
     {
@@ -2032,7 +2032,7 @@ class Misc
     }
 
     /**
-     * returns an array representing FKs definition for a table, sorted by fields
+     * Returns an array representing FKs definition for a table, sorted by fields
      * or by constraint.
      *
      * @param string $table The table to retrieve FK contraints from

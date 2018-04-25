@@ -806,8 +806,6 @@ class FulltextController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $server_info = $this->misc->getServerInfo();
-
         if (!isset($_POST['formName'])) {
             $_POST['formName'] = '';
         }
@@ -1138,9 +1136,9 @@ class FulltextController extends BaseController
             echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>\n";
             echo "\t\t<td class=\"data1\">";
 
+            $ma_mappings = [];
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
-                $ma_mappings       = [];
                 $ma_mappings_names = [];
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
@@ -1166,7 +1164,11 @@ class FulltextController extends BaseController
             while (!$ftsdicts->EOF) {
                 $ftsdict = htmlspecialchars($ftsdicts->fields['name']);
                 echo "\t\t\t\t<option value=\"{$ftsdict}\"",
-                ($ftsdict == $_POST['formDictionary'] || $ftsdict == @$mapping->fields['dictionaries'] || $ftsdict == @$ma_mappings[0]->fields['dictionaries']) ? ' selected="selected"' : '', ">{$ftsdict}</option>\n";
+                (
+                    $ftsdict == $_POST['formDictionary']
+                    || $ftsdict == @$mapping->fields['dictionaries']
+                    || $ftsdict == @$ma_mappings[0]->fields['dictionaries']
+                ) ? ' selected="selected"' : '', ">{$ftsdict}</option>\n";
                 $ftsdicts->moveNext();
             }
 

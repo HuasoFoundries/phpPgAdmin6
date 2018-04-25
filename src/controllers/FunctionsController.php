@@ -378,11 +378,11 @@ class FunctionsController extends BaseController
                 } else {
                     $args_arr = explode(', ', $fndata->fields['proarguments']);
                 }
-                $names_arr = $data->phpArray($fndata->fields['proargnames']);
-                $modes_arr = $data->phpArray($fndata->fields['proargmodes']);
-                $args      = '';
-                $i         = 0;
-                for ($i = 0; $i < sizeof($args_arr); ++$i) {
+                $names_arr     = $data->phpArray($fndata->fields['proargnames']);
+                $modes_arr     = $data->phpArray($fndata->fields['proargmodes']);
+                $args          = '';
+                $args_arr_size = sizeof($args_arr);
+                for ($i = 0; $i < $args_arr_size; ++$i) {
                     if (0 != $i) {
                         $args .= ', ';
                     }
@@ -421,7 +421,6 @@ class FunctionsController extends BaseController
                 $args = $fndata->fields['proarguments'];
             }
 
-            $func_full = $fndata->fields['proname'].'('.$fndata->fields['proarguments'].')';
             echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
             echo "<table style=\"width: 90%\">\n";
             echo "<tr>\n";
@@ -567,8 +566,8 @@ class FunctionsController extends BaseController
         $this->printTitle($this->lang['strproperties'], 'pg.function');
         $this->printMsg($msg);
 
-        $funcdata = $data->getFunction($_REQUEST['function_oid']);
-
+        $funcdata  = $data->getFunction($_REQUEST['function_oid']);
+        $func_full = '';
         if ($funcdata->recordCount() > 0) {
             // Deal with named parameters
             if ($data->hasNamedParams()) {
@@ -577,11 +576,11 @@ class FunctionsController extends BaseController
                 } else {
                     $args_arr = explode(', ', $funcdata->fields['proarguments']);
                 }
-                $names_arr = $data->phpArray($funcdata->fields['proargnames']);
-                $modes_arr = $data->phpArray($funcdata->fields['proargmodes']);
-                $args      = '';
-                $i         = 0;
-                for ($i = 0; $i < sizeof($args_arr); ++$i) {
+                $names_arr     = $data->phpArray($funcdata->fields['proargnames']);
+                $modes_arr     = $data->phpArray($funcdata->fields['proargmodes']);
+                $args          = '';
+                $args_arr_size = sizeof($args_arr);
+                for ($i = 0; $i < $args_arr_size; ++$i) {
                     if (0 != $i) {
                         $args .= ', ';
                     }
@@ -1117,7 +1116,7 @@ class FunctionsController extends BaseController
         echo '<script src="'.\SUBFOLDER.'/assets/js/functions.js" type="text/javascript"></script>';
         echo '<script type="text/javascript">'.$this->buildJSData().'</script>';
         if (!empty($_POST['formArgName'])) {
-            $szJS = $this->buildJSRows($this->buildFunctionArguments($_POST));
+            $szJS = $this->_buildJSRows($this->_buildFunctionArguments($_POST));
         } else {
             $subfolder = \SUBFOLDER;
             // $this->prtrace($subfolder);
@@ -1143,7 +1142,7 @@ class FunctionsController extends BaseController
             // Append array symbol to type if chosen
             $status = $data->createFunction(
                 $_POST['formFunction'],
-                empty($_POST['nojs']) ? $this->buildFunctionArguments($_POST) : $_POST['formArguments'],
+                empty($_POST['nojs']) ? $this->_buildFunctionArguments($_POST) : $_POST['formArguments'],
                 $_POST['formReturns'].$_POST['formArray'],
                 $def,
                 $_POST['formLanguage'],
@@ -1169,7 +1168,7 @@ class FunctionsController extends BaseController
      *
      * @return string the imploded array vars
      */
-    private function buildFunctionArguments($arrayVars)
+    private function _buildFunctionArguments($arrayVars)
     {
         if (isset($_POST['formArgName'])) {
             $arrayArgs = [];
@@ -1186,15 +1185,16 @@ class FunctionsController extends BaseController
     /**
      * Build out JS to re-create table rows for arguments.
      *
-     * @param sring $szArgs args to parse
+     * @param string $szArgs args to parse
      */
-    private function buildJSRows($szArgs)
+    private function _buildJSRows($szArgs)
     {
         $arrayModes      = ['IN', 'OUT', 'INOUT'];
         $arrayArgs       = explode(',', $szArgs);
         $arrayProperArgs = [];
         $nC              = 0;
         $szReturn        = '';
+        $szMode          = [];
         foreach ($arrayArgs as $pV) {
             $arrayWords = explode(' ', $pV);
             if (true === in_array($arrayWords[0], $arrayModes, true)) {
@@ -1229,7 +1229,6 @@ class FunctionsController extends BaseController
         $arrayTypes  = $data->getTypes(true, true, true);
         $arrayPTypes = [];
         $arrayPModes = [];
-        $szTypes     = '';
 
         while (!$arrayTypes->EOF) {
             $arrayPTypes[] = "'".$arrayTypes->fields['typname']."'";

@@ -15,7 +15,7 @@ class HTMLHeaderController extends HTMLController
     private $_no_output     = false;
 
     /**
-     * sets the value of private member variable $_no_output.
+     * Sets the value of private member variable $_no_output.
      *
      * @param bool $flag [description]
      *
@@ -60,7 +60,7 @@ class HTMLHeaderController extends HTMLController
         /*$plugins_head = [];
         $_params      = ['heads' => &$plugins_head];
 
-        $plugin_manager->do_hook('head', $_params);
+        $plugin_manager->doHook('head', $_params);
 
         foreach ($plugins_head as $tag) {
         $header_html .= $tag;

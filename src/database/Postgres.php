@@ -402,13 +402,13 @@ class Postgres extends ADOdbBase
     /**
      * Cleans (escapes) an object name (eg. table, field).
      *
-     * @param string $str The string to clean, by reference
+     * @param null|string $str The string to clean, by reference
      *
-     * @return string The cleaned string
+     * @return null|string The cleaned string
      */
     public function fieldClean(&$str)
     {
-        if ($str === null) {
+        if (!$str) {
             return null;
         }
 
@@ -2755,7 +2755,7 @@ class Postgres extends ADOdbBase
         $in_quote     = 0;
         $in_xcomment  = 0;
         $bslash_count = 0;
-        $dol_quote    = null;
+        $dol_quote    = '';
         $paren_level  = 0;
         $len          = 0;
         $i            = 0;
@@ -2820,7 +2820,7 @@ class Postgres extends ADOdbBase
                             $this->advance_1($i, $prevlen, $thislen);
                         }
 
-                        $dol_quote = null;
+                        $dol_quote = '';
                     }
                 } elseif (substr($line, $i, 2) == '/*') {
                     $this->prtrace('open_xcomment', $in_xcomment, $line, $i, $prevlen, $thislen);
@@ -2992,11 +2992,11 @@ class Postgres extends ADOdbBase
      * multibyte languages, but we don't at the moment, so this function
      * is someone redundant, since it will always advance by 1.
      *
-     * @param int &$i       The current character position in the line
-     * @param int &$prevlen Length of previous character (ie. 1)
-     * @param int &$thislen Length of current character (ie. 1)
+     * @param int $i       The current character position in the line
+     * @param int $prevlen Length of previous character (ie. 1)
+     * @param int $thislen Length of current character (ie. 1)
      */
-    private function advance_1(&$i, &$prevlen, &$thislen)
+    protected function advance_1(&$i, &$prevlen, &$thislen)
     {
         $prevlen = $thislen;
         $i += $thislen;
@@ -3009,9 +3009,9 @@ class Postgres extends ADOdbBase
      *
      * @param string $dquote
      *
-     * @return true if valid, false otherwise
+     * @return bool true if valid, false otherwise
      */
-    private function valid_dolquote($dquote)
+    protected function valid_dolquote($dquote)
     {
         // XXX: support multibyte
         return preg_match('/^[$][$]/', $dquote) || preg_match('/^[$][_[:alpha:]][_[:alnum:]]*[$]/', $dquote);
@@ -3022,15 +3022,15 @@ class Postgres extends ADOdbBase
     /**
      * Returns a recordset of all columns in a query.  Supports paging.
      *
-     * @param string $type       Either 'QUERY' if it is an SQL query, or 'TABLE' if it is a table identifier,
-     *                           or 'SELECT" if it's a select query
-     * @param string $table      The base table of the query.  NULL for no table.
-     * @param string $query      The query that is being executed.  NULL for no query.
-     * @param string $sortkey    The column number to sort by, or '' or null for no sorting
-     * @param string $sortdir    The direction in which to sort the specified column ('asc' or 'desc')
-     * @param int    $page       The page of the relation to retrieve
-     * @param int    $page_size  The number of rows per page
-     * @param int    &$max_pages (return-by-ref) The max number of pages in the relation
+     * @param string   $type      Either 'QUERY' if it is an SQL query, or 'TABLE' if it is a table identifier,
+     *                            or 'SELECT" if it's a select query
+     * @param string   $table     The base table of the query.  NULL for no table.
+     * @param string   $query     The query that is being executed.  NULL for no query.
+     * @param string   $sortkey   The column number to sort by, or '' or null for no sorting
+     * @param string   $sortdir   The direction in which to sort the specified column ('asc' or 'desc')
+     * @param null|int $page      The page of the relation to retrieve
+     * @param null|int $page_size The number of rows per page
+     * @param int      $max_pages (return-by-ref) The max number of pages in the relation
      *
      * @return int|\PHPPgAdmin\ADORecordSet A  recordset on success or an int with error code
      *                                      - -1 transaction error
@@ -3093,7 +3093,7 @@ class Postgres extends ADOdbBase
         }
 
         // Count the number of rows
-        $total = $this->browseQueryCount($query, $count);
+        $total = $this->browseQueryCount($count);
         if ($total < 0) {
             $this->rollbackTransaction();
 
@@ -3146,14 +3146,14 @@ class Postgres extends ADOdbBase
     /**
      * Generates the SQL for the 'select' function.
      *
-     * @param string $table The table from which to select
-     * @param $show    An array of columns to show.  Empty array means all columns.
-     * @param $values  An array mapping columns to values
-     * @param $ops     An array of the operators to use
-     * @param $orderby (optional) An array of column numbers or names (one based)
-     *                 mapped to sort direction (asc or desc or '' or null) to order by
+     * @param string $table   The table from which to select
+     * @param array  $show    An array of columns to show.  Empty array means all columns.
+     * @param array  $values  An array mapping columns to values
+     * @param array  $ops     An array of the operators to use
+     * @param array  $orderby (optional) An array of column numbers or names (one based)
+     *                        mapped to sort direction (asc or desc or '' or null) to order by
      *
-     * @return The SQL query
+     * @return string The SQL query
      */
     public function getSelectSQL($table, $show, $values, $ops, $orderby = [])
     {
@@ -3257,12 +3257,11 @@ class Postgres extends ADOdbBase
      * Finds the number of rows that would be returned by a
      * query.
      *
-     * @param $query The SQL query
-     * @param $count The count query
+     * @param string $count The count query
      *
      * @return int The count of rows or -1 of no rows are found
      */
-    public function browseQueryCount($query, $count)
+    public function browseQueryCount($count)
     {
         return $this->selectField($count, 'total');
     }
@@ -3271,7 +3270,7 @@ class Postgres extends ADOdbBase
      * Returns a recordset of all columns in a table.
      *
      * @param string $table The name of a table
-     * @param $key   The associative array holding the key to retrieve
+     * @param array  $key   The associative array holding the key to retrieve
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -3297,9 +3296,9 @@ class Postgres extends ADOdbBase
     /**
      * Change the value of a parameter to 't' or 'f' depending on whether it evaluates to true or false.
      *
-     * @param $parameter the parameter
+     * @param null|bool|int|string $parameter the parameter
      *
-     * @return string
+     * @return string the parameter transformed to 't' of 'f'
      */
     public function dbBool(&$parameter)
     {

@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Danish language.
+ *
+ * @package PHPPgAdmin
+ */
 class Danish extends English
 {
     public function getLang()

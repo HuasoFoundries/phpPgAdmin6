@@ -17,8 +17,9 @@ class DatabaseController extends BaseController
 {
     use \PHPPgAdmin\Traits\AdminTrait;
     public $table_place = 'database-variables';
+    public $fields;
 
-    public function _highlight($string, $term)
+    private function _highlight($string, $term)
     {
         return str_replace($term, "<b>{$term}</b>", $string);
     }
@@ -569,8 +570,6 @@ class DatabaseController extends BaseController
      */
     public function doProcesses($msg = '')
     {
-        $data = $this->misc->getDatabaseAccessor();
-
         $this->printTrail('database');
         $this->printTabs('database', 'processes');
         $this->printMsg($msg);
@@ -755,8 +754,6 @@ class DatabaseController extends BaseController
      */
     public function doLocks()
     {
-        $data = $this->misc->getDatabaseAccessor();
-
         $this->printTrail('database');
         $this->printTabs('database', 'locks');
 
@@ -772,8 +769,6 @@ class DatabaseController extends BaseController
      */
     public function doSQL()
     {
-        $data = $this->misc->getDatabaseAccessor();
-
         if ((!isset($_SESSION['sqlquery'])) || isset($_REQUEST['new'])) {
             $_SESSION['sqlquery'] = '';
             $_REQUEST['paginate'] = 'on';

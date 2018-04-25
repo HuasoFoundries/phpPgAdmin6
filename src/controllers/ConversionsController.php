@@ -89,8 +89,6 @@ class ConversionsController extends BaseController
 
         $constraints = $data->getConstraints($_REQUEST['table']);
 
-        $reqvars = $this->misc->getRequestVars('schema');
-
         $getIcon = function ($f) {
             switch ($f['contype']) {
                 case 'u':

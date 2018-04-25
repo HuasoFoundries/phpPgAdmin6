@@ -109,7 +109,7 @@ class HTMLNavbarController extends HTMLController
             'place'    => $place,
             'env'      => $env,
         ];
-        $plugin_manager->do_hook('navlinks', $plugin_functions_parameters);
+        $plugin_manager->doHook('navlinks', $plugin_functions_parameters);
 
         if (count($navlinks) > 0) {
             if ($do_print) {
@@ -306,7 +306,7 @@ class HTMLNavbarController extends HTMLController
                 'toplinks' => &$toplinks,
             ];
 
-            $plugin_manager->do_hook('toplinks', $plugin_functions_parameters);
+            $plugin_manager->doHook('toplinks', $plugin_functions_parameters);
 
             $topbar_html .= '<td style="text-align: right">';
 
@@ -571,7 +571,7 @@ class HTMLNavbarController extends HTMLController
             'section' => $subject,
         ];
 
-        $plugin_manager->do_hook('trail', $plugin_functions_parameters);
+        $plugin_manager->doHook('trail', $plugin_functions_parameters);
 
         //$this->prtrace($trail);
 

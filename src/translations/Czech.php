@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Czech language.
+ *
+ * @package PHPPgAdmin
+ */
 class Czech extends English
 {
     public function getLang()

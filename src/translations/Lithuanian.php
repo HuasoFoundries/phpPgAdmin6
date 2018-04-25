@@ -6,6 +6,11 @@
 
 namespace PHPPgAdmin\Translations;
 
+/**
+ * Class providing translation for Lithuanian language.
+ *
+ * @package PHPPgAdmin
+ */
 class Lithuanian extends English
 {
     public function getLang()
