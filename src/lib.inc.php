@@ -111,7 +111,7 @@ if ($container instanceof \Psr\Container\ContainerInterface) {
     \PhpConsole\Helper::register(); // it will register global PC class
     if (PHP_SAPI == 'cli-server') {
         $subfolder = '/index.php';
-    } else if (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
+    } elseif (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
         $subfolder = $conf['subfolder'];
     } else {
         $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
@@ -160,7 +160,6 @@ $container['conf'] = function ($c) use ($conf) {
 };
 
 $container['lang'] = function ($c) {
-
     $translations = new \PHPPgAdmin\Translations($c);
 
     return $translations->lang;

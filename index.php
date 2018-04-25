@@ -58,7 +58,7 @@ $app->post('/redirect/server', function (
         $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
-        //
+    //
         //return $response->withStatus(302)->withHeader('Location', $destinationurl);
     } else {
         $_server_info = $this->misc->getServerInfo();
@@ -146,7 +146,6 @@ $app->get('/{subject:\w+}', function (
     }
 
     return maybeRenderIframes($this, $response, $subject, $query_string);
-
 });
 
 $app->get('/', function (
