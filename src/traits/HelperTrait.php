@@ -109,7 +109,7 @@ trait HelperTrait
     }
 
     /**
-     * checks if a variable is defined, in which case assign its value to $var1
+     * Checks if a variable is defined, in which case assign its value to $var1
      * If it isn't and $set is true, assign the default value. Otherwise don't
      * assign anything to $var1
      *
@@ -125,7 +125,7 @@ trait HelperTrait
         if (isset($var2)) {
             $var1 = $var2;
             return $var1;
-        } else if ($set = true) {
+        } else if ($set === true) {
             $var1 = $default;
             return $var1;
         }
@@ -133,7 +133,7 @@ trait HelperTrait
     }
 
     /**
-     * checks if the $key of an $array is set. If it isn't, optionally set it to
+     * Checks if the $key of an $array is set. If it isn't, optionally set it to
      * the default parameter
      *
      * @param array       $array    The array to check
