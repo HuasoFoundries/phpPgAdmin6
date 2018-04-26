@@ -233,7 +233,7 @@ class BaseController
      *                                                                      (see TblpropertiesController and ConstraintsController for examples)
      *                                                                      The function must not must not store urls because     they are relative and won't work out of context.
      *
-     *  @return string the html of the table
+     * @return string the html of the table
      */
     public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null)
     {
