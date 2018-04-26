@@ -112,71 +112,58 @@ class DisplayController extends BaseController
         $plugin_manager = $this->plugin_manager;
         $data           = $this->misc->getDatabaseAccessor();
 
-        $save_history = false;
         // If current page is not set, default to first page
-        if (!isset($_REQUEST['page'])) {
-            $_REQUEST['page'] = 1;
-        }
+        $page = $this->coalesceArr($_REQUEST, 'page', 1)['page'];
 
-        if (!isset($_REQUEST['nohistory'])) {
-            $save_history = true;
-        }
+        $save_history = !isset($_REQUEST['nohistory']);
 
-        if (isset($_REQUEST['subject'])) {
-            $subject = $_REQUEST['subject'];
-            if (isset($_REQUEST[$subject])) {
-                $object = $_REQUEST[$subject];
-            }
-        } else {
-            $subject = '';
-        }
+        $subject = $this->coalesceArr($_REQUEST, 'subject', 'table')['subject'];
 
-        $this->printTrail(isset($subject) ? $subject : 'database');
-        $this->printTabs($subject, 'browse');
+        $object = null;
+        $object = $this->setIfIsset($object, $_REQUEST[$subject]);
 
+        $this->printTrail($subject);
+
+        $this->printTabs($subject, $subject === 'database' ? 'sql' : 'browse');
+
+        $fkey = $this->coalesceArr($_REQUEST, 'fkey')['fkey'];
+
+        $query = $this->coalesceArr($_REQUEST, 'query')['query'];
         // This code is used when browsing FK in pure-xHTML (without js)
-        if (isset($_REQUEST['fkey'])) {
+        if ($fkey) {
             $ops = [];
-            foreach ($_REQUEST['fkey'] as $x => $y) {
+            foreach ($fkey as $x => $y) {
                 $ops[$x] = '=';
             }
-            $query             = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+            $query             = $data->getSelectSQL($_REQUEST['table'], [], $fkey, $ops);
             $_REQUEST['query'] = $query;
         }
 
-        if (isset($object)) {
-            if (isset($_REQUEST['query'])) {
-                $_SESSION['sqlquery'] = $_REQUEST['query'];
-                $this->printTitle($this->lang['strselect']);
-                $type = 'SELECT';
-            } else {
-                $type = 'TABLE';
-            }
+        if ($object && $query) {
+            $_SESSION['sqlquery'] = $query;
+            $this->printTitle($this->lang['strselect']);
+            $type = 'SELECT';
+        } elseif ($object) {
+            $type = 'TABLE';
         } else {
             $this->printTitle($this->lang['strqueryresults']);
-            // we comes from sql, $_SESSION['sqlquery'] has been set there
+            // we come from sql, $_SESSION['sqlquery'] has been set there
             $type = 'QUERY';
         }
 
         $this->printMsg($msg);
 
         // If 'sortkey' is not set, default to ''
-        if (!isset($_REQUEST['sortkey'])) {
-            $_REQUEST['sortkey'] = '';
-        }
+        $sortkey = $this->coalesceArr($_REQUEST, 'sortkey', '')['sortkey'];
 
         // If 'sortdir' is not set, default to ''
-        if (!isset($_REQUEST['sortdir'])) {
-            $_REQUEST['sortdir'] = '';
-        }
+        $sortdir = $this->coalesceArr($_REQUEST, 'sortdir', '')['sortdir'];
 
         // If 'strings' is not set, default to collapsed
-        if (!isset($_REQUEST['strings'])) {
-            $_REQUEST['strings'] = 'collapsed';
-        }
+        $strings = $this->coalesceArr($_REQUEST, 'strings', 'collapsed')['strings'];
 
         // Fetch unique row identifier, if this is a table browse request.
-        if (isset($object)) {
+        if ($object) {
             $key = $data->getRowIdentifier($object);
         } else {
             $key = [];
@@ -193,11 +180,11 @@ class DisplayController extends BaseController
             // Retrieve page from query.  $max_pages is returned by reference.
             $resultset = $data->browseQuery(
                 $type,
-                isset($object) ? $object : null,
-                isset($_SESSION['sqlquery']) ? $_SESSION['sqlquery'] : null,
-                $_REQUEST['sortkey'],
-                $_REQUEST['sortdir'],
-                $_REQUEST['page'],
+                $object,
+                $query,
+                $sortkey,
+                $sortdir,
+                $page,
                 $this->conf['max_rows'],
                 $max_pages
             );
@@ -213,60 +200,33 @@ class DisplayController extends BaseController
             'database' => $_REQUEST['database'],
         ];
 
-        if (isset($_REQUEST['schema'])) {
-            $_gets['schema'] = $_REQUEST['schema'];
-        }
+        $this->coalesceArr($_REQUEST, 'schema');
+        $this->coalesceArr($_REQUEST, 'query');
+        $this->coalesceArr($_REQUEST, 'count');
+        $this->coalesceArr($_REQUEST, 'return');
+        $this->coalesceArr($_REQUEST, 'search_path');
+        $this->coalesceArr($_REQUEST, 'table');
+        $this->coalesceArr($_REQUEST, 'nohistory');
 
-        if (isset($object)) {
-            $_gets[$subject] = $object;
-        }
-
-        if (isset($subject)) {
-            $_gets['subject'] = $subject;
-        }
-
-        if (isset($_REQUEST['query'])) {
-            $_gets['query'] = $_REQUEST['query'];
-        }
-
-        if (isset($_REQUEST['count'])) {
-            $_gets['count'] = $_REQUEST['count'];
-        }
-
-        if (isset($_REQUEST['return'])) {
-            $_gets['return'] = $_REQUEST['return'];
-        }
-
-        if (isset($_REQUEST['search_path'])) {
-            $_gets['search_path'] = $_REQUEST['search_path'];
-        }
-
-        if (isset($_REQUEST['table'])) {
-            $_gets['table'] = $_REQUEST['table'];
-        }
-
-        if (isset($_REQUEST['sortkey'])) {
-            $_gets['sortkey'] = $_REQUEST['sortkey'];
-        }
-
-        if (isset($_REQUEST['sortdir'])) {
-            $_gets['sortdir'] = $_REQUEST['sortdir'];
-        }
-
-        if (isset($_REQUEST['nohistory'])) {
-            $_gets['nohistory'] = $_REQUEST['nohistory'];
-        }
-
-        $_gets['strings'] = $_REQUEST['strings'];
+        $this->setIfIsset($_gets['schema'], $_REQUEST['schema'], null, false);
+        $this->setIfIsset($_gets[$subject], $object, null, false);
+        $this->setIfIsset($_gets['subject'], $subject, null, false);
+        $this->setIfIsset($_gets['query'], $_REQUEST['query'], null, false);
+        $this->setIfIsset($_gets['count'], $_REQUEST['count'], null, false);
+        $this->setIfIsset($_gets['return'], $_REQUEST['return'], null, false);
+        $this->setIfIsset($_gets['search_path'], $_REQUEST['search_path'], null, false);
+        $this->setIfIsset($_gets['table'], $_REQUEST['table'], null, false);
+        $this->setIfIsset($_gets['nohistory'], $_REQUEST['nohistory'], null, false);
+        $_gets['sortkey'] = $sortkey;
+        $_gets['sortdir'] = $sortdir;
+        $_gets['strings'] = $strings;
 
         if ($save_history && is_object($resultset) && ('QUERY' == $type)) {
             //{
             $this->misc->saveScriptHistory($_REQUEST['query']);
         }
 
-        if (isset($_REQUEST['query'])) {
-            $query = $_REQUEST['query'];
-        } else {
+        if (!$query) {
             $query = "SELECT * FROM {$_REQUEST['schema']}";
             if ('matview' == $_REQUEST['subject']) {
                 $query = "{$query}.{$_REQUEST['matview']};";
@@ -288,7 +248,7 @@ class DisplayController extends BaseController
 
         if (is_object($resultset) && $resultset->recordCount() > 0) {
             // Show page navigation
-            $this->misc->printPages($_REQUEST['page'], $max_pages, $_gets);
+            $this->misc->printPages($page, $max_pages, $_gets);
 
             echo "<table id=\"data\">\n<tr>";
 
@@ -314,8 +274,8 @@ class DisplayController extends BaseController
                             'urlvars' => array_merge(
                                 [
                                     'action'  => 'confeditrow',
-                                    'strings' => $_REQUEST['strings'],
-                                    'page'    => $_REQUEST['page'],
+                                    'strings' => $strings,
+                                    'page'    => $page,
                                 ],
                                 $_gets
                             ),
@@ -330,8 +290,8 @@ class DisplayController extends BaseController
                             'urlvars' => array_merge(
                                 [
                                     'action'  => 'confdelrow',
-                                    'strings' => $_REQUEST['strings'],
-                                    'page'    => $_REQUEST['page'],
+                                    'strings' => $strings,
+                                    'page'    => $page,
                                 ],
                                 $_gets
                             ),
@@ -343,7 +303,7 @@ class DisplayController extends BaseController
                 'actionbuttons' => &$buttons,
                 'place'         => 'display-browse',
             ];
-            $plugin_manager->do_hook('actionbuttons', $actions);
+            $plugin_manager->doHook('actionbuttons', $actions);
 
             foreach (array_keys($actions['actionbuttons']) as $this->action) {
                 $actions['actionbuttons'][$this->action]['attr']['href']['urlvars'] = array_merge(
@@ -422,7 +382,7 @@ class DisplayController extends BaseController
 
             echo '<p>', $resultset->recordCount(), " {$this->lang['strrows']}</p>"."\n";
             // Show page navigation
-            $this->misc->printPages($_REQUEST['page'], $max_pages, $_gets);
+            $this->misc->printPages($page, $max_pages, $_gets);
         } else {
             echo "<p>{$this->lang['strnodata']}</p>"."\n";
         }
@@ -435,9 +395,7 @@ class DisplayController extends BaseController
             'database' => $_REQUEST['database'],
         ];
 
-        if (isset($_REQUEST['schema'])) {
-            $fields['schema'] = $_REQUEST['schema'];
-        }
+        $this->setIfIsset($fields['schema'], $_REQUEST['schema'], null, false);
 
         // Return
         if (isset($_REQUEST['return'])) {
@@ -474,7 +432,7 @@ class DisplayController extends BaseController
         }
 
         // Expand/Collapse
-        if ('expanded' == $_REQUEST['strings']) {
+        if ('expanded' == $strings) {
             $navlinks['collapse'] = [
                 'attr'    => [
                     'href' => [
@@ -483,7 +441,7 @@ class DisplayController extends BaseController
                             $_gets,
                             [
                                 'strings' => 'collapsed',
-                                'page'    => $_REQUEST['page'],
+                                'page'    => $page,
                             ]
                         ),
                     ],
@@ -499,7 +457,7 @@ class DisplayController extends BaseController
                             $_gets,
                             [
                                 'strings' => 'expanded',
-                                'page'    => $_REQUEST['page'],
+                                'page'    => $page,
                             ]
                         ),
                     ],
@@ -530,9 +488,8 @@ class DisplayController extends BaseController
             }
 
             $urlvars = [];
-            if (isset($_REQUEST['search_path'])) {
-                $urlvars['search_path'] = $_REQUEST['search_path'];
-            }
+
+            $this->setIfIsset($urlvars['search_path'], $_REQUEST['search_path'], null, false);
 
             $navlinks['download'] = [
                 'attr'    => [
@@ -572,8 +529,8 @@ class DisplayController extends BaseController
                     'urlvars' => array_merge(
                         $_gets,
                         [
-                            'strings' => $_REQUEST['strings'],
-                            'page'    => $_REQUEST['page'],
+                            'strings' => $strings,
+                            'page'    => $page,
                         ]
                     ),
                 ],

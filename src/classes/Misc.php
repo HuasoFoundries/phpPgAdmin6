@@ -1767,7 +1767,7 @@ class Misc
             'tabs'    => &$tabs,
             'section' => $section,
         ];
-        $plugin_manager->do_hook('tabs', $plugin_functions_parameters);
+        $plugin_manager->doHook('tabs', $plugin_functions_parameters);
 
         return $tabs;
     }

@@ -99,6 +99,8 @@ class Highlight
      */
     public function __construct()
     {
+        $search          = [];
+        $replace         = [];
         $keyword_replace = function ($keywords, $text, $ncs = false) {
             $cm = $ncs ? 'i' : '';
             foreach ($keywords as $keyword) {

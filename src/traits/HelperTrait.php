@@ -87,6 +87,72 @@ trait HelperTrait
     }
 
     /**
+     * Converts an ADORecordSet to an array
+     *
+     * @param \PHPPgAdmin\ADORecordSet  $set  The set
+     * @param string $field optionally the field to query for
+     *
+     * @return array the parsed array
+     */
+    public static function recordSetToArray($set, $field = '')
+    {
+        $result = [];
+
+        if ($set->recordCount() <= 0) {
+            return $result;
+        }
+        while (!$set->EOF) {
+            $result[] = $field ? $set->fields[$field] : $set;
+            $set->moveNext();
+        }
+        return $result;
+    }
+
+    /**
+     * checks if a variable is defined, in which case assign its value to $var1
+     * If it isn't and $set is true, assign the default value. Otherwise don't
+     * assign anything to $var1
+     *
+     * @param mixed       $var1    The variable to manipulate if $set if true
+     * @param mixed       $var2    The value to assign to $var1 if it's defined
+     * @param mixed       $default  The default value to set, it $set is true
+     * @param bool        $set      True to set the default value if $var2 isn't defined
+     *
+     * @return mixed  the value of $var2 is $var2 is set, or $default otherwise
+     */
+    public function setIfIsset(&$var1, $var2, $default = null, $set = true)
+    {
+        if (isset($var2)) {
+            $var1 = $var2;
+            return $var1;
+        } else if ($set = true) {
+            $var1 = $default;
+            return $var1;
+        }
+        return $default;
+    }
+
+    /**
+     * checks if the $key of an $array is set. If it isn't, optionally set it to
+     * the default parameter
+     *
+     * @param array       $array    The array to check
+     * @param string|int  $key      The key to check
+     * @param mixed       $default  The default value to set, it $set is true
+     * @param bool        $set      True to set the default value if $key isn't
+     *                              set
+     *
+     * @return array  the original array
+     */
+    public function coalesceArr(&$array, $key, $default = null, $set = true)
+    {
+        if (!isset($array[$key]) && $set === true) {
+            $array[$key] = $default;
+        }
+        return $array;
+    }
+
+    /**
      * Receives N parameters and sends them to the console adding where was it
      * called from.
      */
