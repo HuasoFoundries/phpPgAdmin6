@@ -68,7 +68,7 @@ class BaseController
         $this->container = $container;
         $this->lang      = $container->get('lang');
 
-        $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
+        $this->controller_name = str_replace(__NAMESPACE__ . '\\', '', get_class($this));
         $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
         $this->script          = $this->view_name;
 
@@ -195,7 +195,7 @@ class BaseController
     /**
      * Display a table of data.
      *
-     * @param \PHPPgAdmin\ADORecordSet|\PHPPgAdmin\ArrayecordSet $tabledata a set of data to be formatted, as returned by $data->getDatabases() etc
+     * @param \PHPPgAdmin\ADORecordSet|\PHPPgAdmin\ArrayRecordSet $tabledata a set of data to be formatted, as returned by $data->getDatabases() etc
      * @param array                                              $columns   An associative array of columns to be displayed:
      *                                                                      $columns = array(
      *                                                                      column_id => array(
@@ -408,7 +408,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
+            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
         }
         if ($do_print) {
             echo $html;
