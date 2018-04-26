@@ -125,7 +125,7 @@ trait HelperTrait
         if (isset($var2)) {
             $var1 = $var2;
             return $var1;
-        } else if ($set === true) {
+        } elseif ($set === true) {
             $var1 = $default;
             return $var1;
         }
