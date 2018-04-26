@@ -42,7 +42,7 @@ trait IndexTrait
      *
      * @param string $name         The index name (can be blank)
      * @param string $table        The table on which to add the index
-     * @param array  $columns      An array of columns that form the index  or a string expression for a functional index
+     * @param array|string  $columns      An array of columns that form the index  or a string expression for a functional index
      * @param string $type         The index type
      * @param bool   $unique       True if unique, false otherwise
      * @param string $where        Index predicate ('' for none)
@@ -59,18 +59,14 @@ trait IndexTrait
         $this->fieldClean($table);
 
         $sql = 'CREATE ';
-        if ($unique) {
-            $sql .= ' UNIQUE ';
-        }
+
+        $sql .= $unique ? ' UNIQUE ' : '';
 
         $sql .= ' INDEX ';
-        if ($concurrently) {
-            $sql .= ' CONCURRENTLY ';
-        }
 
-        if ($name) {
-            $sql .= "  \"{$name}\" ";
-        }
+        $sql .= $concurrently ? ' CONCURRENTLY ' : '';
+
+        $sql .= $name ? "  \"{$name}\" " : '';
 
         $sql .= " ON \"{$f_schema}\".\"{$table}\" USING {$type} ";
 
@@ -673,6 +669,8 @@ trait IndexTrait
     abstract public function clean(&$str);
 
     abstract public function hasTablespaces();
+
+    abstract public function arrayClean($flags);
 
     abstract public function fieldArrayClean(&$arr);
 }
