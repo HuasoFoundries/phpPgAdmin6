@@ -37,7 +37,6 @@ class HTMLNavbarController extends HTMLController
 
         $crumbs = [];
         foreach ($trail as $crumb_id => $crumb) {
-
             if (isset($crumb['url'])) {
                 $crumbs[$crumb_id]['url'] = str_replace('&amp;', '&', $crumb['url']);
             }
@@ -58,7 +57,6 @@ class HTMLNavbarController extends HTMLController
             if (isset($crumb['help'])) {
                 $crumbs[$crumb_id]['helpurl'] = str_replace('&amp;', '&', $this->misc->getHelpLink($crumb['help']));
             }
-
         }
 
         $viewVars = [
@@ -71,7 +69,6 @@ class HTMLNavbarController extends HTMLController
             $dburl              = $crumbs['database']['url'];
             $search_paths       = $data->getSearchPath();
             foreach ($search_paths as $schema) {
-
                 $search_path_crumbs[$schema] = [
                     'title'   => $lang['strschema'],
                     'text'    => $schema,
@@ -93,7 +90,6 @@ class HTMLNavbarController extends HTMLController
         } else {
             return $trail_html;
         }
-
     }
 
     /**
