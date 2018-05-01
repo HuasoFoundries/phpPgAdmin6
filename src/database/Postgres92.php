@@ -12,6 +12,7 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres92 extends Postgres93
 {
+    public $typIndexes    = ['BTREE', 'RTREE', 'GIST', 'GIN', 'HASH'];
     public $major_version = 9.2;
 
     /**
