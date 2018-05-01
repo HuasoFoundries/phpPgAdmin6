@@ -27,6 +27,7 @@ class HTMLNavbarController extends HTMLController
         }
         $lang       = $this->lang;
         $this->misc = $this->misc;
+        $data       = $this->misc->getDatabaseAccessor();
 
         $trail_html = $this->printTopbar(false, $from);
 
@@ -34,60 +35,73 @@ class HTMLNavbarController extends HTMLController
             $trail = $this->getTrail($trail);
         }
 
-        //$this->prtrace($trail);
-
-        $trail_html .= '<div class="trail" data-controller="'.$this->controller_name.'"><table><tr>';
-
-        foreach ($trail as $crumb) {
-            $trail_html .= '<td class="crumb">';
-            $crumblink = '<a';
+        $crumbs = [];
+        foreach ($trail as $crumb_id => $crumb) {
 
             if (isset($crumb['url'])) {
-                $crumblink .= " href=\"{$crumb['url']}\"";
-                //$this->prtrace('crumb_url', $crumb['url']);
+                $crumbs[$crumb_id]['url'] = str_replace('&amp;', '&', $crumb['url']);
             }
 
             if (isset($crumb['title'])) {
-                $crumblink .= " title=\"{$crumb['title']}\"";
-            }
-
-            $crumblink .= '>';
-
-            if (isset($crumb['title'])) {
-                $iconalt = $crumb['title'];
+                $crumbs[$crumb_id]['title']   = $crumb['title'];
+                $crumbs[$crumb_id]['iconalt'] = $crumb['title'];
             } else {
-                $iconalt = 'Database Root';
+                $crumbs[$crumb_id]['iconalt'] = 'Database Root';
             }
 
             if (isset($crumb['icon']) && $icon = $this->misc->icon($crumb['icon'])) {
-                $crumblink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$iconalt}\" /></span>";
+                $crumbs[$crumb_id]['icon'] = $icon;
             }
 
-            $crumblink .= '<span class="label">'.htmlspecialchars($crumb['text']).'</span></a>';
+            $crumbs[$crumb_id]['text'] = $crumb['text'];
 
             if (isset($crumb['help'])) {
-                $trail_html .= $this->misc->printHelp($crumblink, $crumb['help'], false);
-            } else {
-                $trail_html .= $crumblink;
+                $crumbs[$crumb_id]['helpurl'] = str_replace('&amp;', '&', $this->misc->getHelpLink($crumb['help']));
             }
 
-            $trail_html .= "{$lang['strseparator']}";
-            $trail_html .= '</td>';
         }
 
-        $trail_html .= "</tr></table></div>\n";
+        $viewVars = [
+            'crumbs'          => $crumbs,
+
+            'controller_name' => $this->controller_name,
+        ];
+        if (isset($crumbs['database'])) {
+            $search_path_crumbs = [];
+            $dburl              = $crumbs['database']['url'];
+            $search_paths       = $data->getSearchPath();
+            foreach ($search_paths as $schema) {
+
+                $search_path_crumbs[$schema] = [
+                    'title'   => $lang['strschema'],
+                    'text'    => $schema,
+                    'icon'    => $this->misc->icon('Schema'),
+                    'iconalt' => $lang['strschema'],
+                    'url'     => str_replace('&amp;', '&', str_replace('redirect/database', 'redirect/schema', $dburl . '&schema=' . $schema)),
+
+                ];
+            }
+            $viewVars['search_paths'] = $search_path_crumbs;
+        }
+
+        $this->prtrace($viewVars);
+
+        $trail_html .= $this->getContainer()->view->fetch('components/trail.twig', $viewVars);
+
         if ($do_print) {
             echo $trail_html;
         } else {
             return $trail_html;
         }
+
     }
 
     /**
      * Display the navlinks.
      *
-     * @param array  $navlinks - An array with the the attributes and values that will be shown. See printLinksList for array format.
-     * @param string $place    - Place where the $navlinks are displayed. Like 'display-browse',
+     * @param array  $navlinks An array with the the attributes and values that will be shown.
+     *                         See printLinksList for array format.
+     * @param string $place    Place where the $navlinks are displayed. Like 'display-browse',
      *                         where 'display' is the file (display) and 'browse' is the action
      * @param array  $env      - Associative array of defined variables in the scope of the caller.
      *                         Allows to give some environnement details to plugins.
@@ -123,7 +137,8 @@ class HTMLNavbarController extends HTMLController
     /**
      * Display navigation tabs.
      *
-     * @param string      $alltabs   The name of current section (Ex: intro, server, ...), or an array with tabs (Ex: sqledit.php doFind function)
+     * @param string      $alltabs   The name of current section (Ex: intro, server, ...),
+     *                               or an array with tabs (Ex: sqledit::doFind function)
      * @param string      $activetab the name of the tab to be highlighted
      * @param bool        $print     if false, return html
      * @param bool        $do_print  true to print html, false to return html
@@ -167,7 +182,7 @@ class HTMLNavbarController extends HTMLController
         //$this->prtrace($tabs);
 
         if (count($tabs) > 0) {
-            $width = (int) (100 / count($tabs)).'%';
+            $width = (int) (100 / count($tabs)) . '%';
 
             $viewVars = [
                 'width'           => $width,
@@ -231,16 +246,16 @@ class HTMLNavbarController extends HTMLController
         $server_id   = $this->misc->getServerId();
         $reqvars     = $this->misc->getRequestVars('table');
 
-        $topbar_html = '<div class="topbar" data-controller="'.$this->controller_name.'"><table style="width: 100%"><tr><td>';
+        $topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><table style="width: 100%"><tr><td>';
 
         if ($server_info && isset($server_info['platform'], $server_info['username'])) {
             // top left informations when connected
             $topbar_html .= sprintf(
                 $lang['strtopbar'],
-                '<span class="platform">'.htmlspecialchars($server_info['platform']).'</span>',
-                '<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']).'</span>',
-                '<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
-                '<span class="username">'.htmlspecialchars($server_info['username']).'</span>'
+                '<span class="platform">' . htmlspecialchars($server_info['platform']) . '</span>',
+                '<span class="host">' . htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']) . '</span>',
+                '<span class="port">' . htmlspecialchars($server_info['port']) . '</span>',
+                '<span class="username">' . htmlspecialchars($server_info['username']) . '</span>'
             );
 
             $topbar_html .= '</td>';
@@ -251,7 +266,7 @@ class HTMLNavbarController extends HTMLController
                 'sql'     => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER.'/src/views/sqledit',
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'sql',
                             ]),
@@ -264,7 +279,7 @@ class HTMLNavbarController extends HTMLController
                 'history' => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER.'/src/views/history',
+                            'url'     => SUBFOLDER . '/src/views/history',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
@@ -276,7 +291,7 @@ class HTMLNavbarController extends HTMLController
                 'find'    => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER.'/src/views/sqledit',
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'find',
                             ]),
@@ -289,7 +304,7 @@ class HTMLNavbarController extends HTMLController
                 'logout'  => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER.'/src/views/servers',
+                            'url'     => SUBFOLDER . '/src/views/servers',
                             'urlvars' => [
                                 'action'       => 'logout',
                                 'logoutServer' => sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
@@ -314,8 +329,8 @@ class HTMLNavbarController extends HTMLController
 
             $topbar_html .= '</td>';
 
-            $sql_window_id     = htmlentities('sqledit:'.$server_id);
-            $history_window_id = htmlentities('history:'.$server_id);
+            $sql_window_id     = htmlentities('sqledit:' . $server_id);
+            $history_window_id = htmlentities('history:' . $server_id);
 
             $topbar_html .= "<script type=\"text/javascript\">
 						$('#toplink_sql').click(function() {
@@ -346,26 +361,7 @@ class HTMLNavbarController extends HTMLController
         } else {
             $topbar_html .= "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
         }
-        /*
-        echo "<td style=\"text-align: right; width: 1%\">";
 
-        echo "<form method=\"get\"><select name=\"language\" onchange=\"this.form.submit()\">\n";
-        $language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
-        foreach ($appLangFiles as $k => $v) {
-        echo "<option value=\"{$k}\"",
-        ($k == $language) ? ' selected="selected"' : '',
-        ">{$v}</option>\n";
-        }
-        echo "</select>\n";
-        echo "<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
-        foreach ($_GET as $key => $val) {
-        if ($key == 'language') continue;
-        echo "<input type=\"hidden\" name=\"$key\" value=\"", htmlspecialchars($val), "\" />\n";
-        }
-        echo "</form>\n";
-
-        echo "</td>";
-         */
         $topbar_html .= "</tr></table></div>\n";
 
         if ($do_print) {
@@ -380,7 +376,7 @@ class HTMLNavbarController extends HTMLController
         $vars = $this->misc->getSubjectParams($subject);
         ksort($vars['params']);
 
-        return "{$vars['url']}?".http_build_query($vars['params'], '', '&amp;');
+        return "{$vars['url']}?" . http_build_query($vars['params'], '', '&amp;');
     }
 
     /**
@@ -403,7 +399,7 @@ class HTMLNavbarController extends HTMLController
 
         $trail['root'] = [
             'text' => $appName,
-            'url'  => SUBFOLDER.'/src/views/servers',
+            'url'  => SUBFOLDER . '/src/views/servers',
             'icon' => 'Introduction',
         ];
 
@@ -477,7 +473,7 @@ class HTMLNavbarController extends HTMLController
             ];
         } elseif (isset($_REQUEST['matview']) && !$done) {
             $trail['matview'] = [
-                'title' => 'M'.$lang['strview'],
+                'title' => 'M' . $lang['strview'],
                 'text'  => $_REQUEST['matview'],
                 'url'   => $this->getHREFSubject('matview'),
                 'help'  => 'pg.matview',
@@ -500,7 +496,7 @@ class HTMLNavbarController extends HTMLController
             switch ($subject) {
                 case 'function':
                     $trail[$subject] = [
-                        'title' => $lang['str'.$subject],
+                        'title' => $lang['str' . $subject],
                         'text'  => $_REQUEST[$subject],
                         'url'   => $this->getHREFSubject('function'),
                         'help'  => 'pg.function',
@@ -556,9 +552,9 @@ class HTMLNavbarController extends HTMLController
                                 break;
                         }
                         $trail[$subject] = [
-                            'title' => array_key_exists('str'.$subject, $lang) ? $lang['str'.$subject] : $subject,
+                            'title' => array_key_exists('str' . $subject, $lang) ? $lang['str' . $subject] : $subject,
                             'text'  => $_REQUEST[$subject],
-                            'help'  => 'pg.'.$subject,
+                            'help'  => 'pg.' . $subject,
                             'icon'  => $icon,
                         ];
                     }

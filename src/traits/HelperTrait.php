@@ -33,21 +33,30 @@ trait HelperTrait
         throw new \Slim\Exception\SlimException($this->container->requestobj, $this->container->responseobj);
     }
 
-    public function addFlash($key, $content)
+    /**
+     * Adds a flash message to the session that will be displayed on the next request
+     *
+     * @param mixed  $content  msg content (can be object, array, etc)
+     * @param string $key      The key to associate with the message. Defaults to the stack
+     *                         trace of the closure or method that called addFlassh
+     */
+    public function addFlash($content, $key = '')
     {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        if ($key === '') {
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-        $btarray0 = ([
-            'class2'    => $backtrace[1]['class'],
-            'type2'     => $backtrace[1]['type'],
-            'function2' => $backtrace[1]['function'],
-            'spacer4'   => ' ',
-            'line2'     => $backtrace[0]['line'],
-        ]);
+            $btarray0 = ([
+                'class2'    => $backtrace[1]['class'],
+                'type2'     => $backtrace[1]['type'],
+                'function2' => $backtrace[1]['function'],
+                'spacer4'   => ' ',
+                'line2'     => $backtrace[0]['line'],
+            ]);
 
-        $tag = implode('', $btarray0);
+            $key = implode('', $btarray0);
+        }
 
-        $this->container->flash->addMessage($tag . ' ' . $key, $content);
+        $this->container->flash->addMessage($key, $content);
     }
 
     /**

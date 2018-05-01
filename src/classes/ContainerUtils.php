@@ -33,9 +33,9 @@ class ContainerUtils
 
         // but if server_id isn't set, then you will be redirected to intro
         if ($this->container->requestobj->getQueryParam('server') === null) {
-            $destinationurl = \SUBFOLDER.'/src/views/intro';
+            $destinationurl = \SUBFOLDER . '/src/views/intro';
         } else {
-            $destinationurl = \SUBFOLDER.'/src/views/login'.($query_string ? '?'.$query_string : '');
+            $destinationurl = \SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
         }
 
         return $destinationurl;
@@ -44,14 +44,14 @@ class ContainerUtils
     public function getDestinationWithLastTab($subject)
     {
         $_server_info = $this->container->misc->getServerInfo();
-        $this->addFlash('getDestinationWithLastTab for ', $subject);
+        $this->addFlash($subject, 'getDestinationWithLastTab');
         //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
         if (!isset($_server_info['username'])) {
             $destinationurl = $this->getRedirectUrl();
         } else {
             $url = $this->container->misc->getLastTabURL($subject);
-            $this->addFlash('getLastTabURL for '.$subject, $url);
+            $this->addFlash($url, 'getLastTabURL for ' . $subject);
             // Load query vars into superglobal arrays
             if (isset($url['urlvars'])) {
                 $urlvars = [];
