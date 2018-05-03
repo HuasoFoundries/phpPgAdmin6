@@ -182,40 +182,16 @@ class Translations
             setcookie('webdbLanguage', $_REQUEST['language'], time() + 31536000);
             $_language = $_REQUEST['language'];
         } elseif (!isset($_language) && isset($_SESSION['webdbLanguage'], $appLangFiles[$_SESSION['webdbLanguage']])) {
-            // 2. Check for language session var
+            // 2. Check for language in $_SESSION superglobal
             $_language = $_SESSION['webdbLanguage'];
         } elseif (!isset($_language) && isset($_COOKIE['webdbLanguage'], $appLangFiles[$_COOKIE['webdbLanguage']])) {
-            // 3. Check for language in cookie var
+            // 3. Check for language in $_COOKIE superglobal
             $_language = $_COOKIE['webdbLanguage'];
         } elseif (!isset($_language) && $conf['default_lang'] == 'auto' && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            // 4. Check for acceptable languages in HTTP_ACCEPT_LANGUAGE var
+            // 4. Check for acceptable languages in$_SERVER['HTTP_ACCEPT_LANGUAGE']
             // extract acceptable language tags
             // (http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4)
-            preg_match_all(
-                '/\s*([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;q=([01](?:.[0-9]{0,3})?))?\s*(?:,|$)/',
-                strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']),
-                $_m,
-                PREG_SET_ORDER
-            );
-            foreach ($_m as $_l) {
-                // $_l[1] = language tag, [2] = quality
-                if (!isset($_l[2])) {
-                    $_l[2] = 1;
-                }
-                // Default quality to 1
-                if ($_l[2] > 0 && $_l[2] <= 1 && isset($availableLanguages[$_l[1]])) {
-                    // Build up array of (quality => language_file)
-                    $_acceptLang[$_l[2]] = $availableLanguages[$_l[1]];
-                }
-            }
-            unset($_m, $_l);
-
-            if (isset($_acceptLang)) {
-                // Sort acceptable languages by quality
-                krsort($_acceptLang, SORT_NUMERIC);
-                $_language = reset($_acceptLang);
-                unset($_acceptLang);
-            }
+            $_language = $this->_pregMatchAcceptLanguage();
         } elseif (!isset($_language) && $conf['default_lang'] != 'auto' && isset($appLangFiles[$conf['default_lang']])) {
             // 5. Otherwise resort to the default set in the config file
             $_language = $conf['default_lang'];
@@ -243,5 +219,44 @@ class Translations
 
         $this->lang            = $langClass->getLang();
         $this->lang['isolang'] = $_isolang;
+    }
+
+    /**
+     * Check for acceptable languages in$_SERVER['HTTP_ACCEPT_LANGUAGE']
+     * extract acceptable language tags
+     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4 Accept Language
+     *
+     * @return string|null  candidate language or null if there's nonne
+     */
+    private function _pregMatchAcceptLanguage()
+    {
+        $_language   = null;
+        $_acceptLang = [];
+        preg_match_all(
+            '/\s*([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;q=([01](?:.[0-9]{0,3})?))?\s*(?:,|$)/',
+            strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']),
+            $_m,
+            PREG_SET_ORDER
+        );
+        foreach ($_m as $_l) {
+            // $_l[1] = language tag, [2] = quality
+            if (!isset($_l[2])) {
+                $_l[2] = 1;
+            }
+            // Default quality to 1
+            if ($_l[2] > 0 && $_l[2] <= 1 && isset($this->availableLanguages[$_l[1]])) {
+                // Build up array of (quality => language_file)
+                $_acceptLang[$_l[2]] = $this->availableLanguages[$_l[1]];
+            }
+        }
+        unset($_m, $_l);
+
+        if (!empty($_acceptLang)) {
+            // Sort acceptable languages by quality
+            krsort($_acceptLang, SORT_NUMERIC);
+            $_language = reset($_acceptLang);
+            unset($_acceptLang);
+        }
+        return $_language;
     }
 }
