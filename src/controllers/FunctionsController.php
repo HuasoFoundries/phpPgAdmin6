@@ -184,7 +184,6 @@ class FunctionsController extends BaseController
 
     private function _printNavLinks($place, $func_full = '')
     {
-
         if ($place === 'functions-properties') {
             $navlinks = [
                 'showall' => [
@@ -233,7 +232,7 @@ class FunctionsController extends BaseController
                     'content' => $this->lang['strdrop'],
                 ],
             ];
-        } else if ($place === 'functions-functions') {
+        } elseif ($place === 'functions-functions') {
             $navlinks = [
                 'createpl'       => [
                     'attr'    => [
