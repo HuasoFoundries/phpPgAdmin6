@@ -323,7 +323,6 @@ class HTMLNavbarController extends HTMLController
             $topbar_html .= $this->printLinksList($toplinks, 'toplink', [], false, $from);
 
             $topbar_html .= '</td>';
-
         } else {
             $topbar_html .= "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
         }
