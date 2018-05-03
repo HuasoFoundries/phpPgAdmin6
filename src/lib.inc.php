@@ -85,6 +85,8 @@ $config = [
         'base_path'                         => BASE_PATH,
         'debug'                             => DEBUGMODE,
 
+        'routerCacheFile'                   => BASE_PATH . '/temp/route.cache.php',
+
         // Configuration file version.  If this is greater than that in config.inc.php, then
         // the app will refuse to run.  This and $conf['version'] should be incremented whenever
         // backwards incompatible changes are made to config.inc.php-dist.
