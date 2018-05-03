@@ -47,8 +47,8 @@ class TreeController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param $treedata a set of records to populate the tree
-     * @param $attrs Attributes for tree items
+     * @param array $treedata a set of records to populate the tree
+     * @param array $attrs Attributes for tree items
      *        'text' - the text for the tree node
      *        'icon' - an icon for node
      *        'openIcon' - an alternative icon when the node is expanded
@@ -58,8 +58,10 @@ class TreeController
      *        'branch' - URL for child nodes (tree XML)
      *        'expand' - the action to return XML for the subtree
      *        'nodata' - message to display when node has no children
-     * @param $section The section where the branch is linked in the tree
-     * @param mixed $print
+     * @param string $section The section where the branch is linked in the tree
+     * @param bool $print either to return or echo the result
+     *
+     * @return string|\Slim\Http\Response the json rendered tree
      */
     public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
@@ -88,8 +90,8 @@ class TreeController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param $treedata a set of records to populate the tree
-     * @param $attrs Attributes for tree items
+     * @param array $treedata a set of records to populate the tree
+     * @param array $attrs Attributes for tree items
      *        'text' - the text for the tree node
      *        'icon' - an icon for node
      *        'openIcon' - an alternative icon when the node is expanded
@@ -99,7 +101,9 @@ class TreeController
      *        'branch' - URL for child nodes (tree JSON)
      *        'expand' - the action to return JSON for the subtree
      *        'nodata' - message to display when node has no children
-     * @param mixed $print
+     * @param bool $print either to return or echo the result
+     *
+     * @return string|\Slim\Http\Response the json rendered tree
      */
     private function printTreeJSON(&$treedata, &$attrs, $print = true)
     {
@@ -111,10 +115,10 @@ class TreeController
             $parent = [
                 'id'       => 'root',
                 'children' => true,
-                'icon'     => \SUBFOLDER.'/assets/images/themes/default/Servers.png',
+                'icon'     => \SUBFOLDER . '/assets/images/themes/default/Servers.png',
                 'state'    => ['opened' => true],
-                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER.'/src/views/servers')],
-                'url'      => str_replace('//', '/', \SUBFOLDER.'/src/views/servers?action=tree'),
+                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER . '/src/views/servers')],
+                'url'      => str_replace('//', '/', \SUBFOLDER . '/src/views/servers?action=tree'),
                 'text'     => 'Servers',
             ];
         } elseif (count($treedata) > 0) {
@@ -136,7 +140,7 @@ class TreeController
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
                 if ($url && strpos($url, '/src/views') === false) {
-                    $url = str_replace('//', '/', \SUBFOLDER.'/src/views/'.$url);
+                    $url = str_replace('//', '/', \SUBFOLDER . '/src/views/' . $url);
                 }
                 if ($url) {
                     $tree['url']      = $url;

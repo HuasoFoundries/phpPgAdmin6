@@ -19,7 +19,7 @@ function buildArgImages(orig_td, subfolder) {
 	var tr = document.createElement("tr");
 	var td = document.createElement("td");
 	var img = document.createElement("img");
-	img.src = subfolder + "/images/themes/default/RaiseArgument.png";
+	img.src = subfolder + "/assets/images/themes/default/RaiseArgument.png";
 	td.onmouseover = function () {
 		this.style.cursor = 'pointer';
 		this.title = g_lang_strargraise;
@@ -33,7 +33,7 @@ function buildArgImages(orig_td, subfolder) {
 	tr.appendChild(td);
 	var img = document.createElement("img");
 	var td = document.createElement("td");
-	img.src = subfolder + "/images/themes/default/LowerArgument.png";
+	img.src = subfolder + "/assets/images/themes/default/LowerArgument.png";
 	img.className = 'arg_icon';
 	td.appendChild(img);
 	td.className = "data1";
@@ -47,7 +47,7 @@ function buildArgImages(orig_td, subfolder) {
 	tr.appendChild(td);
 	var img = document.createElement("img");
 	var td = document.createElement("td");
-	img.src = subfolder + "/images/themes/default/RemoveArgument.png";
+	img.src = subfolder + "/assets/images/themes/default/RemoveArgument.png";
 	img.title = g_lang_strargremove;
 	img.className = 'arg_icon';
 	td.appendChild(img);

@@ -179,54 +179,110 @@ class FunctionsController extends BaseController
 
         echo $this->printTable($funcs, $columns, $actions, $this->table_place, $this->lang['strnofunctions']);
 
-        $navlinks = [
-            'createpl'       => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['strcreateplfunction'],
-            ],
-            'createinternal' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'language' => 'internal',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['strcreateinternalfunction'],
-            ],
-            'createc'        => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions',
-                        'urlvars' => [
-                            'action'   => 'create',
-                            'language' => 'C',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['strcreatecfunction'],
-            ],
-        ];
+        $this->_printNavLinks('functions-functions');
+    }
 
-        $this->printNavLinks($navlinks, 'functions-functions', get_defined_vars());
+    private function _printNavLinks($place, $func_full = '')
+    {
+
+        if ($place === 'functions-properties') {
+            $navlinks = [
+                'showall' => [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'functions',
+                            'urlvars' => [
+                                'server'   => $_REQUEST['server'],
+                                'database' => $_REQUEST['database'],
+                                'schema'   => $_REQUEST['schema'],
+                            ],
+                        ],
+                    ],
+                    'content' => $this->lang['strshowallfunctions'],
+                ],
+                'alter'   => [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'functions',
+                            'urlvars' => [
+                                'action'       => 'edit',
+                                'server'       => $_REQUEST['server'],
+                                'database'     => $_REQUEST['database'],
+                                'schema'       => $_REQUEST['schema'],
+                                'function'     => $_REQUEST['function'],
+                                'function_oid' => $_REQUEST['function_oid'],
+                            ],
+                        ],
+                    ],
+                    'content' => $this->lang['stralter'],
+                ],
+                'drop'    => [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'functions',
+                            'urlvars' => [
+                                'action'       => 'confirm_drop',
+                                'server'       => $_REQUEST['server'],
+                                'database'     => $_REQUEST['database'],
+                                'schema'       => $_REQUEST['schema'],
+                                'function'     => $func_full,
+                                'function_oid' => $_REQUEST['function_oid'],
+                            ],
+                        ],
+                    ],
+                    'content' => $this->lang['strdrop'],
+                ],
+            ];
+        } else if ($place === 'functions-functions') {
+            $navlinks = [
+                'createpl'       => [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'functions',
+                            'urlvars' => [
+                                'action'   => 'create',
+                                'server'   => $_REQUEST['server'],
+                                'database' => $_REQUEST['database'],
+                                'schema'   => $_REQUEST['schema'],
+                            ],
+                        ],
+                    ],
+                    'content' => $this->lang['strcreateplfunction'],
+                ],
+                'createinternal' => [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'functions',
+                            'urlvars' => [
+                                'action'   => 'create',
+                                'language' => 'internal',
+                                'server'   => $_REQUEST['server'],
+                                'database' => $_REQUEST['database'],
+                                'schema'   => $_REQUEST['schema'],
+                            ],
+                        ],
+                    ],
+                    'content' => $this->lang['strcreateinternalfunction'],
+                ],
+                'createc'        => [
+                    'attr'    => [
+                        'href' => [
+                            'url'     => 'functions',
+                            'urlvars' => [
+                                'action'   => 'create',
+                                'language' => 'C',
+                                'server'   => $_REQUEST['server'],
+                                'database' => $_REQUEST['database'],
+                                'schema'   => $_REQUEST['schema'],
+                            ],
+                        ],
+                    ],
+                    'content' => $this->lang['strcreatecfunction'],
+                ],
+            ];
+        }
+
+        $this->printNavLinks($navlinks, $place, get_defined_vars());
     }
 
     /**
@@ -332,46 +388,26 @@ class FunctionsController extends BaseController
             $fndata->fields['proretset'] = $data->phpBool($fndata->fields['proretset']);
 
             // Initialise variables
-            if (!isset($_POST['formDefinition'])) {
-                $_POST['formDefinition'] = $fndata->fields['prosrc'];
-            }
+            $_POST['formDefinition'] = $this->getPostParam('formDefinition', $fndata->fields['prosrc']);
 
-            if (!isset($_POST['formProperties'])) {
-                $_POST['formProperties'] = $data->getFunctionProperties($fndata->fields);
-            }
+            $_POST['formProperties'] = $this->getPostParam('formProperties', $data->getFunctionProperties($fndata->fields));
 
-            if (!isset($_POST['formFunction'])) {
-                $_POST['formFunction'] = $fndata->fields['proname'];
-            }
+            $_POST['formFunction'] = $this->getPostParam('formFunction', $fndata->fields['proname']);
 
-            if (!isset($_POST['formComment'])) {
-                $_POST['formComment'] = $fndata->fields['procomment'];
-            }
+            $_POST['formComment'] = $this->getPostParam('formComment', $fndata->fields['procomment']);
 
-            if (!isset($_POST['formObjectFile'])) {
-                $_POST['formObjectFile'] = $fndata->fields['probin'];
-            }
+            $_POST['formObjectFile'] = $this->getPostParam('formObjectFile', $fndata->fields['probin']);
 
-            if (!isset($_POST['formLinkSymbol'])) {
-                $_POST['formLinkSymbol'] = $fndata->fields['prosrc'];
-            }
+            $_POST['formLinkSymbol'] = $this->getPostParam('formLinkSymbol', $fndata->fields['prosrc']);
 
-            if (!isset($_POST['formFuncOwn'])) {
-                $_POST['formFuncOwn'] = $fndata->fields['proowner'];
-            }
+            $_POST['formFuncOwn'] = $this->getPostParam('formFuncOwn', $fndata->fields['proowner']);
 
-            if (!isset($_POST['formFuncSchema'])) {
-                $_POST['formFuncSchema'] = $fndata->fields['proschema'];
-            }
+            $_POST['formFuncSchema'] = $this->getPostParam('formFuncSchema', $fndata->fields['proschema']);
 
             if ($data->hasFunctionCosting()) {
-                if (!isset($_POST['formCost'])) {
-                    $_POST['formCost'] = $fndata->fields['procost'];
-                }
+                $_POST['formCost'] = $this->getPostParam('formCost', $fndata->fields['procost']);
 
-                if (!isset($_POST['formRows'])) {
-                    $_POST['formRows'] = $fndata->fields['prorows'];
-                }
+                $_POST['formRows'] = $this->getPostParam('formRows', $fndata->fields['prorows']);
             }
 
             // Deal with named parameters
@@ -578,54 +614,7 @@ class FunctionsController extends BaseController
         $func_full = '';
         if ($funcdata->recordCount() > 0) {
             // Deal with named parameters
-            if ($data->hasNamedParams()) {
-                if (isset($funcdata->fields['proallarguments'])) {
-                    $args_arr = $data->phpArray($funcdata->fields['proallarguments']);
-                } else {
-                    $args_arr = explode(', ', $funcdata->fields['proarguments']);
-                }
-                $names_arr     = $data->phpArray($funcdata->fields['proargnames']);
-                $modes_arr     = $data->phpArray($funcdata->fields['proargmodes']);
-                $args          = '';
-                $args_arr_size = sizeof($args_arr);
-                for ($i = 0; $i < $args_arr_size; ++$i) {
-                    if (0 != $i) {
-                        $args .= ', ';
-                    }
-
-                    if (isset($modes_arr[$i])) {
-                        switch ($modes_arr[$i]) {
-                            case 'i':
-                                $args .= ' IN ';
-
-                                break;
-                            case 'o':
-                                $args .= ' OUT ';
-
-                                break;
-                            case 'b':
-                                $args .= ' INOUT ';
-
-                                break;
-                            case 'v':
-                                $args .= ' VARIADIC ';
-
-                                break;
-                            case 't':
-                                $args .= ' TABLE ';
-
-                                break;
-                        }
-                    }
-                    if (isset($names_arr[$i]) && '' != $names_arr[$i]) {
-                        $data->fieldClean($names_arr[$i]);
-                        $args .= '"' . $names_arr[$i] . '" ';
-                    }
-                    $args .= $args_arr[$i];
-                }
-            } else {
-                $args = $funcdata->fields['proarguments'];
-            }
+            $args = $this->_getPropertiesArgs($funcdata);
 
             // Show comment if any
             if (null !== $funcdata->fields['procomment']) {
@@ -635,10 +624,10 @@ class FunctionsController extends BaseController
             $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
             $func_full                     = $funcdata->fields['proname'] . '(' . $funcdata->fields['proarguments'] . ')';
             echo "<table style=\"width: 90%\">\n";
-            echo "<tr><th class=\"data\">{$this->lang['strfunction']}</th>\n";
-            echo "<th class=\"data\">{$this->lang['strarguments']}</th>\n";
-            echo "<th class=\"data\">{$this->lang['strreturns']}</th>\n";
-            echo "<th class=\"data\">{$this->lang['strproglanguage']}</th></tr>\n";
+            echo sprintf('<tr><th class="data">%s</th>%s', $this->lang['strfunction'], "\n");
+            echo sprintf('<th class="data">%s</th>%s', $this->lang['strarguments'], "\n");
+            echo sprintf('<th class="data">%s</th>%s', $this->lang['strreturns'], "\n");
+            echo sprintf('<th class="data">%s</th></tr>%s', $this->lang['strproglanguage'], "\n");
             echo '<tr><td class="data1">', $this->misc->printVal($funcdata->fields['proname']), "</td>\n";
             echo '<td class="data1">', $this->misc->printVal($args), "</td>\n";
             echo '<td class="data1">';
@@ -690,55 +679,7 @@ class FunctionsController extends BaseController
             echo "<p>{$this->lang['strnodata']}</p>\n";
         }
 
-        $navlinks = [
-            'showall' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions',
-                        'urlvars' => [
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['strshowallfunctions'],
-            ],
-            'alter'   => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions',
-                        'urlvars' => [
-                            'action'       => 'edit',
-                            'server'       => $_REQUEST['server'],
-                            'database'     => $_REQUEST['database'],
-                            'schema'       => $_REQUEST['schema'],
-                            'function'     => $_REQUEST['function'],
-                            'function_oid' => $_REQUEST['function_oid'],
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['stralter'],
-            ],
-            'drop'    => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'functions',
-                        'urlvars' => [
-                            'action'       => 'confirm_drop',
-                            'server'       => $_REQUEST['server'],
-                            'database'     => $_REQUEST['database'],
-                            'schema'       => $_REQUEST['schema'],
-                            'function'     => $func_full,
-                            'function_oid' => $_REQUEST['function_oid'],
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['strdrop'],
-            ],
-        ];
-
-        $this->printNavLinks($navlinks, 'functions-properties', get_defined_vars());
+        $this->_printNavLinks('functions-properties', $func_full);
     }
 
     /**
@@ -828,57 +769,33 @@ class FunctionsController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
-        if (!isset($_POST['formFunction'])) {
-            $_POST['formFunction'] = '';
-        }
+        $_POST['formFunction'] = $this->getPostParam('formFunction', '');
 
-        if (!isset($_POST['formArguments'])) {
-            $_POST['formArguments'] = '';
-        }
+        $_POST['formArguments'] = $this->getPostParam('formArguments', '');
 
-        if (!isset($_POST['formReturns'])) {
-            $_POST['formReturns'] = '';
-        }
+        $_POST['formReturns'] = $this->getPostParam('formReturns', '');
 
         if (!isset($_POST['formLanguage'])) {
             $_POST['formLanguage'] = isset($_REQUEST['language']) ? $_REQUEST['language'] : 'sql';
         }
 
-        if (!isset($_POST['formDefinition'])) {
-            $_POST['formDefinition'] = '';
-        }
+        $_POST['formDefinition'] = $this->getPostParam('formDefinition', '');
 
-        if (!isset($_POST['formObjectFile'])) {
-            $_POST['formObjectFile'] = '';
-        }
+        $_POST['formObjectFile'] = $this->getPostParam('formObjectFile', '');
 
-        if (!isset($_POST['formLinkSymbol'])) {
-            $_POST['formLinkSymbol'] = '';
-        }
+        $_POST['formLinkSymbol'] = $this->getPostParam('formLinkSymbol', '');
 
-        if (!isset($_POST['formProperties'])) {
-            $_POST['formProperties'] = $data->defaultprops;
-        }
+        $_POST['formProperties'] = $this->getPostParam('formProperties', $data->defaultprops);
 
-        if (!isset($_POST['formSetOf'])) {
-            $_POST['formSetOf'] = '';
-        }
+        $_POST['formSetOf'] = $this->getPostParam('formSetOf', '');
 
-        if (!isset($_POST['formArray'])) {
-            $_POST['formArray'] = '';
-        }
+        $_POST['formArray'] = $this->getPostParam('formArray', '');
 
-        if (!isset($_POST['formCost'])) {
-            $_POST['formCost'] = '';
-        }
+        $_POST['formCost'] = $this->getPostParam('formCost', '');
 
-        if (!isset($_POST['formRows'])) {
-            $_POST['formRows'] = '';
-        }
+        $_POST['formRows'] = $this->getPostParam('formRows', '');
 
-        if (!isset($_POST['formComment'])) {
-            $_POST['formComment'] = '';
-        }
+        $_POST['formComment'] = $this->getPostParam('formComment', '');
 
         $types  = $data->getTypes(true, true, true);
         $langs  = $data->getLanguages(true);
@@ -1115,7 +1032,7 @@ class FunctionsController extends BaseController
         $szJS = '';
 
         echo '<script src="' . \SUBFOLDER . '/assets/js/functions.js" type="text/javascript"></script>';
-        echo '<script type="text/javascript">' . $this->buildJSData() . '</script>';
+        echo '<script type="text/javascript">' . $this->_buildJSData() . '</script>';
         if (!empty($_POST['formArgName'])) {
             $szJS = $this->_buildJSRows($this->_buildFunctionArguments($_POST));
         } else {
@@ -1222,7 +1139,7 @@ class FunctionsController extends BaseController
         return $szReturn;
     }
 
-    private function buildJSData()
+    private function _buildJSData()
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1244,5 +1161,67 @@ class FunctionsController extends BaseController
         $szModes = 'g_main_modes = new Array(' . implode(',', $arrayPModes) . ');';
 
         return $szTypes . $szModes;
+    }
+
+    /**
+     * Get the concatenated arguments for a function
+     *
+     * @param \PHPPgAdmin\ADORecordSet  $funcdata  The funcdata record
+     *
+     * @return string  The arguments of the function
+     */
+    private function _getPropertiesArgs($funcdata)
+    {
+        $data = $this->misc->getDatabaseAccessor();
+
+        if ($data->hasNamedParams()) {
+            if (isset($funcdata->fields['proallarguments'])) {
+                $args_arr = $data->phpArray($funcdata->fields['proallarguments']);
+            } else {
+                $args_arr = explode(', ', $funcdata->fields['proarguments']);
+            }
+            $names_arr     = $data->phpArray($funcdata->fields['proargnames']);
+            $modes_arr     = $data->phpArray($funcdata->fields['proargmodes']);
+            $args          = '';
+            $args_arr_size = sizeof($args_arr);
+            for ($i = 0; $i < $args_arr_size; ++$i) {
+                if (0 != $i) {
+                    $args .= ', ';
+                }
+
+                if (isset($modes_arr[$i])) {
+                    switch ($modes_arr[$i]) {
+                        case 'i':
+                            $args .= ' IN ';
+
+                            break;
+                        case 'o':
+                            $args .= ' OUT ';
+
+                            break;
+                        case 'b':
+                            $args .= ' INOUT ';
+
+                            break;
+                        case 'v':
+                            $args .= ' VARIADIC ';
+
+                            break;
+                        case 't':
+                            $args .= ' TABLE ';
+
+                            break;
+                    }
+                }
+                if (isset($names_arr[$i]) && '' != $names_arr[$i]) {
+                    $data->fieldClean($names_arr[$i]);
+                    $args .= '"' . $names_arr[$i] . '" ';
+                }
+                $args .= $args_arr[$i];
+            }
+        } else {
+            $args = $funcdata->fields['proarguments'];
+        }
+        return $args;
     }
 }
