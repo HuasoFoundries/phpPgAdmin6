@@ -127,6 +127,41 @@ class Translations
         'uk'         => 'ukrainian',
     ];
 
+    public $languages_iso_code = [
+        'afrikaans'          => 'af',
+        'arabic'             => 'ar',
+        'catalan'            => 'ca',
+        'chinese-tr'         => 'zh-CN',
+        'chinese-sim'        => 'zh-CN',
+        'chinese-utf8-zh_TW' => 'zh-TW',
+        'chinese-utf8-zh_CN' => 'zh-CN',
+        'czech'              => 'cs',
+        'danish'             => 'da',
+        'dutch'              => 'nl',
+        'english'            => 'en',
+        'french'             => 'fr',
+        'galician'           => 'gl',
+        'german'             => 'de',
+        'greek'              => 'el',
+        'hebrew'             => 'he',
+        'hungarian'          => 'hu',
+        'italian'            => 'it',
+        'japanese'           => 'ja',
+        'lithuanian'         => 'lt',
+        'mongol'             => 'mn',
+        'polish'             => 'pl',
+        'portuguese-br'      => 'pt-BR',
+        'portuguese-pt'      => 'pt',
+        'romanian'           => 'ro',
+        'russian'            => 'ru',
+        'russian'            => 'ru',
+        'slovak'             => 'sk',
+        'spanish'            => 'es',
+        'swedish'            => 'sv',
+        'turkish'            => 'tr',
+        'ukrainian'          => 'uk',
+    ];
+
     public function __construct($container)
     {
         $availableLanguages = $this->availableLanguages;
@@ -135,7 +170,7 @@ class Translations
         $_language          = $this->_language;
         $conf               = $container->conf;
 
-        $languages_iso_code = array_flip($availableLanguages);
+        $languages_iso_code = $this->languages_iso_code;
 
         if (!isset($conf['default_lang'])) {
             $conf['default_lang'] = 'english';
@@ -189,7 +224,7 @@ class Translations
             $_language = 'english';
         }
 
-        $_type = '\PHPPgAdmin\Translations\\'.$appClasses[$_language];
+        $_type = '\PHPPgAdmin\Translations\\' . $appClasses[$_language];
 
         $langClass = new $_type();
 
@@ -198,7 +233,7 @@ class Translations
         if (array_key_exists($_language, $languages_iso_code)) {
             $_isolang = $languages_iso_code[$_language];
         } else {
-            $_isolang = '';
+            $_isolang = 'en';
         }
         $_SESSION['isolang'] = $_isolang;
 
@@ -206,6 +241,7 @@ class Translations
         $container->offsetSet('language', $_language);
         $container->offsetSet('isolang', $_isolang);
 
-        $this->lang = $langClass->getLang();
+        $this->lang            = $langClass->getLang();
+        $this->lang['isolang'] = $_isolang;
     }
 }

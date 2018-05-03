@@ -73,6 +73,11 @@ if (!window.inPopUp) {
 					});
 				}
 			}
+			if(typeof hljs!=='undefined') {
+				$('pre code.hljs').each(function(i, block) {
+				    hljs.highlightBlock(block);
+				});
+			}
 
 		} else if (in_test==='0') {
 			var redirect_to,

@@ -182,6 +182,23 @@ trait HelperTrait
         \PC::debug(func_get_args(), $tag);
     }
 
+    public static function formatSizeUnits($bytes, $lang)
+    {
+        if ($bytes >= 1099511627776) {
+            $bytes = sprintf('%s %s', number_format($bytes / 1099511627776, 0), $lang['strtb']);
+        } elseif ($bytes >= 1073741824) {
+            $bytes = sprintf('%s %s', number_format($bytes / 1073741824, 0), $lang['strgb']);
+        } elseif ($bytes >= 1048576) {
+            $bytes = sprintf('%s %s', number_format($bytes / 1048576, 0), $lang['strmb']);
+        } elseif ($bytes >= 1024) {
+            $bytes = sprintf('%s %s', number_format($bytes / 1024, 0), $lang['strkb']);
+        } else {
+            $bytes = sprintf('%s %s', $bytes, $lang['strbytes']);
+        }
+
+        return $bytes;
+    }
+
     /**
      * Returns a string with html <br> variant replaced with a new line.
      *
