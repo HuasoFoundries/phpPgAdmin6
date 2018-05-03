@@ -20,7 +20,6 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 trait MiscTrait
 {
-
     public function getSubjectParams($subject)
     {
         $plugin_manager = $this->plugin_manager;
