@@ -68,7 +68,7 @@ class BaseController
         $this->container = $container;
         $this->lang      = $container->get('lang');
 
-        $this->controller_name = str_replace(__NAMESPACE__ . '\\', '', get_class($this));
+        $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
         $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
         $this->script          = $this->view_name;
 
@@ -196,11 +196,11 @@ class BaseController
      * Display a table of data.
      *
      * @param \PHPPgAdmin\ADORecordSet|\PHPPgAdmin\ArrayRecordSet $tabledata a set of data to be formatted
-     * @param array   $columns   An associative array of columns to be displayed:
-     * @param array   $actions   Actions that can be performed on each object:
-     * @param string               $place     Place where the $actions are displayed. Like 'display-browse',
-     * @param string    $nodata    (optional) Message to display if data set is empty
-     * @param callable  $pre_fn    (optional) callback closure for each row.
+     * @param array                                               $columns   An associative array of columns to be displayed:
+     * @param array                                               $actions   Actions that can be performed on each object:
+     * @param string                                              $place     Place where the $actions are displayed. Like 'display-browse',
+     * @param string                                              $nodata    (optional) Message to display if data set is empty
+     * @param callable                                            $pre_fn    (optional) callback closure for each row
      *
      * @return string the html of the table
      */
@@ -221,12 +221,12 @@ class BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param array $treedata a set of records to populate the tree
-     * @param array $attrs Attributes for tree items
-     * @param string $section The section where the branch is linked in the tree
-     * @param bool $print either to return or echo the result
+     * @param array  $_treedata a set of records to populate the tree
+     * @param array  $attrs     Attributes for tree items
+     * @param string $section   The section where the branch is linked in the tree
+     * @param bool   $print     either to return or echo the result
      *
-     * @return string|\Slim\Http\Response the json rendered tree
+     * @return \Slim\Http\Response|string the json rendered tree
      */
     public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
@@ -387,7 +387,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
+            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
         }
         if ($do_print) {
             echo $html;

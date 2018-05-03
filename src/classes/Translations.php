@@ -200,7 +200,7 @@ class Translations
             $_language = 'english';
         }
 
-        $_type = '\PHPPgAdmin\Translations\\' . $appClasses[$_language];
+        $_type = '\PHPPgAdmin\Translations\\'.$appClasses[$_language];
 
         $langClass = new $_type();
 
@@ -223,10 +223,11 @@ class Translations
 
     /**
      * Check for acceptable languages in$_SERVER['HTTP_ACCEPT_LANGUAGE']
-     * extract acceptable language tags
-     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4 Accept Language
+     * extract acceptable language tags.
      *
-     * @return string|null  candidate language or null if there's nonne
+     * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4 Accept Language
+     *
+     * @return null|string candidate language or null if there's nonne
      */
     private function _pregMatchAcceptLanguage()
     {
@@ -257,6 +258,7 @@ class Translations
             $_language = reset($_acceptLang);
             unset($_acceptLang);
         }
+
         return $_language;
     }
 }

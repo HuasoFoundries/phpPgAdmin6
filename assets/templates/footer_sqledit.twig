@@ -3,66 +3,66 @@
 <script>
 $(document).ready(function () {
 
-	var server='{{params.server}}',
-		database='{{params.database}}',
-		schema='{{params.schema}}';
+	var server = '{{params.server}}',
+		database = '{{params.database}}',
+		schema = '{{params.schema}}';
 
-        var the_action = $('#the_action').val();
+	var the_action = $('#the_action').val();
 
-        function get_action_params(from) {
-        	var action_params=[];
-        	if(the_action==='sql') {
-        		action_params=[
-	        		'query='+encodeURI(window.editor.getValue()),
-		        	'search_path='+(from==='server'? 'public':encodeURI($('#search_path').val()))
-	        	];
-        	
+	function get_action_params(from) {
+		var action_params = [];
+		if (the_action === 'sql') {
+			action_params = [
+				'query=' + encodeURI(window.editor.getValue()),
+				'search_path=' + (from === 'server' ? 'public' : encodeURI($('#search_path').val()))
+			];
 
-	        	if(jQuery('#paginate').is(':checked')) {
-	        		action_params.push('paginate=on');
-	        	}
-        	} else if (the_action==='find') {
-        		action_params=[
-        			'term='+encodeURI($('#term').val()),
-	        		'filter='+encodeURI($('#filter').val())
-	        	];
-        	} 
-        	return action_params;
-        }
 
-        $('#selectserver').on('change',function() {
-        	console.log('server changed to ',$(this).val());
+			if (jQuery('#paginate').is(':checked')) {
+				action_params.push('paginate=on');
+			}
+		} else if (the_action === 'find') {
+			action_params = [
+				'term=' + encodeURI($('#term').val()),
+				'filter=' + encodeURI($('#filter').val())
+			];
+		}
+		return action_params;
+	}
 
-        	var base_location=location.href.split('&')[0],
-        	next_location =[
-	        	base_location,
-	        	'server='+$(this).val()
-	        	];
+	$('#selectserver').on('change', function () {
+		console.log('server changed to ', $(this).val());
 
-	        next_location=next_location.concat(get_action_params('server'));
-	        
+		var base_location = location.href.split('&')[0],
+			next_location = [
+				base_location,
+				'server=' + $(this).val()
+			];
 
-        	location.href=next_location.join('&')
-        	//console.log('next_location would be',next_location.join('&'));
+		next_location = next_location.concat(get_action_params('server'));
 
-        });
 
-        $('#selectdb').on('change',function() {
-        	console.log('database changed to ',$(this).val());
+		location.href = next_location.join('&')
+		//console.log('next_location would be',next_location.join('&'));
 
-        	var base_location=location.href.split('&')[0],
-        	next_location =[
-	        	base_location,
-	        	'server='+$('#selectserver').val(),
-	        	'database='+$(this).val()
-	        	];
+	});
 
-	        next_location=next_location.concat(get_action_params('database'));
-	        
+	$('#selectdb').on('change', function () {
+		console.log('database changed to ', $(this).val());
 
-        	location.href=next_location.join('&')
-        	//console.log('next_location would be',next_location.join('&'));
-        });
+		var base_location = location.href.split('&')[0],
+			next_location = [
+				base_location,
+				'server=' + $('#selectserver').val(),
+				'database=' + $(this).val()
+			];
+
+		next_location = next_location.concat(get_action_params('database'));
+
+
+		location.href = next_location.join('&')
+		//console.log('next_location would be',next_location.join('&'));
+	});
 
 });
 </script>

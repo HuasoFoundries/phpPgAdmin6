@@ -78,19 +78,22 @@ class DisplayController extends BaseController
         }
         $output = ob_get_clean();
 
+        $subject = $this->coalesceArr($_REQUEST, 'subject', 'table')['subject'];
+
+        $object = null;
+        $object = $this->setIfIsset($object, $_REQUEST[$subject]);
+
         // Set the title based on the subject of the request
-        if (isset($_REQUEST['subject'], $_REQUEST[$_REQUEST['subject']])) {
-            if ('table' == $_REQUEST['subject']) {
-                $this->printHeader($this->lang['strtables'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
-            } elseif ('view' == $_REQUEST['subject']) {
-                $this->printHeader($this->lang['strviews'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
-            } elseif ('matview' == $_REQUEST['subject']) {
-                $this->printHeader('M'.$this->lang['strviews'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
-            } elseif ('column' == $_REQUEST['subject']) {
-                $this->printHeader($this->lang['strcolumn'].': '.$_REQUEST[$_REQUEST['subject']], $scripts, true, $header_template);
-            }
-        } else {
+        if (!isset($subject) || !isset($object)) {
             $this->printHeader($this->lang['strqueryresults'], $scripts, true, $header_template);
+        } elseif ('table' == $subject) {
+            $this->printHeader($this->lang['strtables'].': '.$object, $scripts, true, $header_template);
+        } elseif ('view' == $subject) {
+            $this->printHeader($this->lang['strviews'].': '.$object, $scripts, true, $header_template);
+        } elseif ('matview' == $subject) {
+            $this->printHeader('M'.$this->lang['strviews'].': '.$object, $scripts, true, $header_template);
+        } elseif ('column' == $subject) {
+            $this->printHeader($this->lang['strcolumn'].': '.$object, $scripts, true, $header_template);
         }
 
         $this->printBody();
@@ -121,6 +124,8 @@ class DisplayController extends BaseController
 
         $object = null;
         $object = $this->setIfIsset($object, $_REQUEST[$subject]);
+
+        //$this->prtrace($subject, $object);
 
         $this->printTrail($subject);
 
@@ -162,6 +167,9 @@ class DisplayController extends BaseController
         // If 'strings' is not set, default to collapsed
         $strings = $this->coalesceArr($_REQUEST, 'strings', 'collapsed')['strings'];
 
+        $schema      = $this->coalesceArr($_REQUEST, 'schema')['schema'];
+        $search_path = $this->coalesceArr($_REQUEST, 'search_path')['search_path'];
+
         // Fetch unique row identifier, if this is a table browse request.
         if ($object) {
             $key = $data->getRowIdentifier($object);
@@ -170,10 +178,8 @@ class DisplayController extends BaseController
         }
 
         // Set the schema search path
-        if (isset($_REQUEST['search_path'])) {
-            if (0 != $data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path'])))) {
-                return;
-            }
+        if (isset($search_path) && (0 != $data->setSearchPath(array_map('trim', explode(',', $search_path))))) {
+            return;
         }
 
         try {
@@ -200,11 +206,9 @@ class DisplayController extends BaseController
             'database' => $_REQUEST['database'],
         ];
 
-        $this->coalesceArr($_REQUEST, 'schema');
         $this->coalesceArr($_REQUEST, 'query');
         $this->coalesceArr($_REQUEST, 'count');
         $this->coalesceArr($_REQUEST, 'return');
-        $this->coalesceArr($_REQUEST, 'search_path');
         $this->coalesceArr($_REQUEST, 'table');
         $this->coalesceArr($_REQUEST, 'nohistory');
 
@@ -226,16 +230,8 @@ class DisplayController extends BaseController
             $this->misc->saveScriptHistory($_REQUEST['query']);
         }
 
-        if (!$query) {
-            $query = "SELECT * FROM {$_REQUEST['schema']}";
-            if ('matview' == $_REQUEST['subject']) {
-                $query = "{$query}.{$_REQUEST['matview']};";
-            } elseif ('view' == $_REQUEST['subject']) {
-                $query = "{$query}.{$_REQUEST['view']};";
-            } else {
-                $query = "{$query}.{$_REQUEST['table']};";
-            }
-        }
+        $query = $query ? $query : sprintf('SELECT * FROM %s.%s', $_REQUEST['schema'], $subject);
+
         //$query = isset($_REQUEST['query'])? $_REQUEST['query'] : "select * from {$_REQUEST['schema']}.{$_REQUEST['table']};";
         $this->prtrace($query);
         //die(htmlspecialchars($query));
@@ -248,8 +244,9 @@ class DisplayController extends BaseController
 
         if (is_object($resultset) && $resultset->recordCount() > 0) {
             // Show page navigation
-            $this->misc->printPages($page, $max_pages, $_gets);
+            $paginator = $this->_printPages($page, $max_pages, $_gets);
 
+            echo $paginator;
             echo "<table id=\"data\">\n<tr>";
 
             // Check that the key is actually in the result set.  This can occur for select
@@ -258,7 +255,7 @@ class DisplayController extends BaseController
             foreach ($key as $v) {
                 // If a key column is not found in the record set, then we
                 // can't use the key.
-                if (!in_array($v, array_keys($resultset->fields), true)) {
+                if (!array_key_exists($v, $resultset->fields)) {
                     $key = [];
 
                     break;
@@ -382,7 +379,7 @@ class DisplayController extends BaseController
 
             echo '<p>', $resultset->recordCount(), " {$this->lang['strrows']}</p>"."\n";
             // Show page navigation
-            $this->misc->printPages($page, $max_pages, $_gets);
+            echo $paginator;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>"."\n";
         }
@@ -1006,5 +1003,70 @@ class DisplayController extends BaseController
             echo $this->lang['strnodata'];
         }
         echo '</div>';
+    }
+
+    private function _getMinMaxPages($page, $pages)
+    {
+        $window = 10;
+        if ($page <= $window) {
+            $min_page = 1;
+            $max_page = min(2 * $window, $pages);
+        } elseif ($page > $window && $pages >= $page + $window) {
+            $min_page = ($page - $window) + 1;
+            $max_page = $page + $window;
+        } else {
+            $min_page = ($page - (2 * $window - ($pages - $page))) + 1;
+            $max_page = $pages;
+        }
+
+        // Make sure min_page is always at least 1
+        // and max_page is never greater than $pages
+        $min_page = max($min_page, 1);
+        $max_page = min($max_page, $pages);
+
+        return [$min_page, $max_page];
+    }
+
+    /**
+     * Do multi-page navigation.  Displays the prev, next and page options.
+     *
+     * @param int    $page      - the page currently viewed
+     * @param int    $pages     - the maximum number of pages
+     * @param string $gets      -  the parameters to include in the link to the wanted page
+     * @param int    $max_width - the number of pages to make available at any one time (default = 20)
+     *
+     * @return string the pagination links
+     */
+    private function _printPages($page, $pages, $gets, $max_width = 20)
+    {
+        $lang = $this->lang;
+        $page = (int) $page;
+
+        if ($page < 0 || $page > $pages || $pages <= 1 || $max_width <= 0) {
+            return;
+        }
+
+        unset($gets['page']);
+        $url = http_build_query($gets);
+
+        $result = '<p style="text-align: center">'."\n";
+        if ($page != 1) {
+            $result .= sprintf('<a class="pagenav" href="?%s&page=1">%s</a>%s&nbsp;', $url, $lang['strfirst'], "\n");
+            $result .= sprintf('<a class="pagenav" href="?%s&page=%s">%s</a>%s', $url, $page - 1, $lang['strprev'], "\n");
+        }
+
+        list($min_page, $max_page) = $this->_getMinMaxPages($page, $pages);
+
+        for ($i = $min_page; $i <= $max_page; ++$i) {
+            $result .= (($i === $page) ? $i : sprintf('<a class="pagenav" href="display?%s&page=%s">%s</a>', $url, $i, $i))."\n";
+        }
+
+        if ($page != $pages) {
+            $result .= sprintf('<a class="pagenav" href="?%s&page=%s">%s</a>%s', $url, $page + 1, $lang['strnext'], "\n");
+            $result .= sprintf('&nbsp;<a class="pagenav" href="?%s&page=%s">%s</a>%s', $url, $pages, $lang['strlast'], "\n");
+        }
+        $result .= "</p>\n";
+
+        return $result;
     }
 }

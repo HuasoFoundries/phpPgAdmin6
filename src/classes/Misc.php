@@ -113,7 +113,7 @@ class Misc
 
         if (count($this->conf['servers']) === 1) {
             $info             = $this->conf['servers'][0];
-            $this->_server_id = sha1($info['host'] . ':' . $info['port'] . ':' . $info['sslmode']);
+            $this->_server_id = sha1($info['host'].':'.$info['port'].':'.$info['sslmode']);
         } elseif ($request_server !== null) {
             $this->_server_id = $request_server;
         } elseif (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
@@ -184,8 +184,8 @@ class Misc
         //\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
         if ($help !== null) {
             $helplink = $this->getHelpLink($help);
-            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">';
-            $str .= $this->lang['strhelpicon'] . '</a>';
+            $str .= '<a class="help" href="'.$helplink.'" title="'.$this->lang['strhelp'].'" target="phppgadminhelp">';
+            $str .= $this->lang['strhelpicon'].'</a>';
         }
         if ($do_print) {
             echo $str;
@@ -203,7 +203,7 @@ class Misc
      */
     public function getHelpLink($help)
     {
-        return htmlspecialchars(SUBFOLDER . '/help?help=' . urlencode($help) . '&server=' . urlencode($this->getServerId()));
+        return htmlspecialchars(SUBFOLDER.'/help?help='.urlencode($help).'&server='.urlencode($this->getServerId()));
     }
 
     /**
@@ -332,7 +332,7 @@ class Misc
 
                 return null;
             }
-            $_type = '\PHPPgAdmin\Database\\' . $_type;
+            $_type = '\PHPPgAdmin\Database\\'.$_type;
 
             $this->setServerInfo('platform', $platform, $this->_server_id);
             $this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $this->_server_id);
@@ -454,7 +454,7 @@ class Misc
 
         // Otherwise, look for it in the conf file
         foreach ($this->conf['servers'] as $idx => $info) {
-            $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+            $server_string = $info['host'].':'.$info['port'].':'.$info['sslmode'];
             $server_sha    = sha1($server_string);
 
             if ($this->_server_id === $server_string ||
@@ -612,13 +612,13 @@ class Misc
         $schema   = $this->container->schema || isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null;
 
         if ($server && $exclude_from !== 'server') {
-            $href[] = 'server=' . urlencode($server);
+            $href[] = 'server='.urlencode($server);
         }
         if ($database && $exclude_from !== 'database') {
-            $href[] = 'database=' . urlencode($database);
+            $href[] = 'database='.urlencode($database);
         }
         if ($schema && $exclude_from !== 'schema') {
-            $href[] = 'schema=' . urlencode($schema);
+            $href[] = 'schema='.urlencode($schema);
         }
 
         $this->href = htmlentities(implode('&', $href));
@@ -694,7 +694,7 @@ class Misc
                         'schema'   => $_REQUEST['schema'],
                         'table'    => $_REQUEST['table'],
                         'action'   => 'confselectrows',
-                    ]];
+                    ], ];
 
                 break;
             case 'view':
@@ -781,7 +781,7 @@ class Misc
                         'server'  => $_REQUEST['server'],
                         'subject' => 'plugin',
                         'plugin'  => $_REQUEST['plugin'],
-                    ]];
+                    ], ];
 
                 if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin']))) {
                     $vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
@@ -793,10 +793,10 @@ class Misc
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = SUBFOLDER . '/redirect';
+            $vars['url'] = SUBFOLDER.'/redirect';
         }
-        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER.'/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER.'/redirect/'.$vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -810,14 +810,14 @@ class Misc
     {
         $form = [];
         if ($this->container->server) {
-            $form[] = '<input type="hidden" name="server" value="' . htmlspecialchars($this->container->server) . '" />';
+            $form[] = '<input type="hidden" name="server" value="'.htmlspecialchars($this->container->server).'" />';
         }
         if ($this->container->database) {
-            $form[] = '<input type="hidden" name="database" value="' . htmlspecialchars($this->container->database) . '" />';
+            $form[] = '<input type="hidden" name="database" value="'.htmlspecialchars($this->container->database).'" />';
         }
 
         if ($this->container->schema) {
-            $form[] = '<input type="hidden" name="schema" value="' . htmlspecialchars($this->container->schema) . '" />';
+            $form[] = '<input type="hidden" name="schema" value="'.htmlspecialchars($this->container->schema).'" />';
         }
         $this->form = implode("\n", $form);
 
@@ -874,7 +874,7 @@ class Misc
             $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
             $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
             if (strlen($str) > $maxlen) {
-                $str = substr($str, 0, $maxlen - 1) . $ellipsis;
+                $str = substr($str, 0, $maxlen - 1).$ellipsis;
             }
         }
 
@@ -1010,7 +1010,7 @@ class Misc
             if ($num > 0) {
                 $temp = "<table>\n<tr><td class=\"{$class}\" style=\"vertical-align: top; padding-right: 10px;\"><pre class=\"{$class}\">";
                 for ($i = 1; $i <= $num; ++$i) {
-                    $temp .= $i . "\n";
+                    $temp .= $i."\n";
                 }
                 $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>\n";
                 $out = $temp;
@@ -1270,7 +1270,7 @@ class Misc
                         'icon'    => 'Views',
                     ],
                     'matviews'    => [
-                        'title'   => 'M ' . $lang['strviews'],
+                        'title'   => 'M '.$lang['strviews'],
                         'url'     => 'materializedviews',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.matview',
@@ -1761,7 +1761,6 @@ class Misc
         //$data = $this->getDatabaseAccessor();
 
         $tabs = $this->getNavTabs($section);
-        $this->prtrace('webdbLastTab', $_SESSION['webdbLastTab']);
         if (isset($_SESSION['webdbLastTab'][$section])) {
             $tab = $tabs[$_SESSION['webdbLastTab'][$section]];
         } else {
@@ -1769,76 +1768,6 @@ class Misc
         }
         //$this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
         return isset($tab['url']) ? $tab : null;
-    }
-
-    /**
-     * Do multi-page navigation.  Displays the prev, next and page options.
-     *
-     * @param int    $page      - the page currently viewed
-     * @param int    $pages     - the maximum number of pages
-     * @param string $gets      -  the parameters to include in the link to the wanted page
-     * @param int    $max_width - the number of pages to make available at any one time (default = 20)
-     */
-    public function printPages($page, $pages, $gets, $max_width = 20)
-    {
-        $lang = $this->lang;
-
-        $window = 10;
-
-        if ($page < 0 || $page > $pages) {
-            return;
-        }
-
-        if ($pages < 0) {
-            return;
-        }
-
-        if ($max_width <= 0) {
-            return;
-        }
-
-        unset($gets['page']);
-        $url = http_build_query($gets);
-
-        if ($pages > 1) {
-            echo "<p style=\"text-align: center\">\n";
-            if ($page != 1) {
-                echo "<a class=\"pagenav\" href=\"?{$url}&amp;page=1\">{$lang['strfirst']}</a>\n";
-                $temp = $page - 1;
-                echo "<a class=\"pagenav\" href=\"?{$url}&amp;page={$temp}\">{$lang['strprev']}</a>\n";
-            }
-
-            if ($page <= $window) {
-                $min_page = 1;
-                $max_page = min(2 * $window, $pages);
-            } elseif ($page > $window && $pages >= $page + $window) {
-                $min_page = ($page - $window) + 1;
-                $max_page = $page + $window;
-            } else {
-                $min_page = ($page - (2 * $window - ($pages - $page))) + 1;
-                $max_page = $pages;
-            }
-
-            // Make sure min_page is always at least 1
-            // and max_page is never greater than $pages
-            $min_page = max($min_page, 1);
-            $max_page = min($max_page, $pages);
-
-            for ($i = $min_page; $i <= $max_page; ++$i) {
-                //if ($i != $page) echo "<a class=\"pagenav\" href=\"?{$url}&amp;page={$i}\">$i</a>\n";
-                if ($i != $page) {
-                    echo "<a class=\"pagenav\" href=\"display?{$url}&amp;page={$i}\">${i}</a>\n";
-                } else {
-                    echo "${i}\n";
-                }
-            }
-            if ($page != $pages) {
-                $temp = $page + 1;
-                echo "<a class=\"pagenav\" href=\"display?{$url}&amp;page={$temp}\">{$lang['strnext']}</a>\n";
-                echo "<a class=\"pagenav\" href=\"display?{$url}&amp;page={$pages}\">{$lang['strlast']}</a>\n";
-            }
-            echo "</p>\n";
-        }
     }
 
     /**
@@ -1902,43 +1831,43 @@ class Misc
     {
         if (is_string($icon)) {
             $path = "/assets/images/themes/{$this->conf['theme']}/{$icon}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
+            if (file_exists(\BASE_PATH.$path.'.png')) {
+                return SUBFOLDER.$path.'.png';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
+            if (file_exists(\BASE_PATH.$path.'.gif')) {
+                return SUBFOLDER.$path.'.gif';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
+            if (file_exists(\BASE_PATH.$path.'.ico')) {
+                return SUBFOLDER.$path.'.ico';
             }
 
             $path = "/assets/images/themes/default/{$icon}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
+            if (file_exists(\BASE_PATH.$path.'.png')) {
+                return SUBFOLDER.$path.'.png';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
+            if (file_exists(\BASE_PATH.$path.'.gif')) {
+                return SUBFOLDER.$path.'.gif';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
+            if (file_exists(\BASE_PATH.$path.'.ico')) {
+                return SUBFOLDER.$path.'.ico';
             }
         } else {
             // Icon from plugins
             $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
+            if (file_exists(\BASE_PATH.$path.'.png')) {
+                return SUBFOLDER.$path.'.png';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
+            if (file_exists(\BASE_PATH.$path.'.gif')) {
+                return SUBFOLDER.$path.'.gif';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
+            if (file_exists(\BASE_PATH.$path.'.ico')) {
+                return SUBFOLDER.$path.'.ico';
             }
         }
 
@@ -1985,7 +1914,7 @@ class Misc
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $data->fieldClean($str);
 
-            return '"' . $str . '"';
+            return '"'.$str.'"';
         }
 
         return escapeshellcmd($str);
@@ -2076,38 +2005,38 @@ class Misc
             $fksprops['code'] .= "var constrs = {};\n";
             foreach ($fksprops['byconstr'] as $conid => $props) {
                 $fksprops['code'] .= "constrs.constr_{$conid} = {\n";
-                $fksprops['code'] .= 'pattnums: [' . implode(',', $props['pattnums']) . "],\n";
-                $fksprops['code'] .= "f_table:'" . addslashes(htmlentities($props['f_table'], ENT_QUOTES, 'UTF-8')) . "',\n";
-                $fksprops['code'] .= "f_schema:'" . addslashes(htmlentities($props['f_schema'], ENT_QUOTES, 'UTF-8')) . "',\n";
+                $fksprops['code'] .= 'pattnums: ['.implode(',', $props['pattnums'])."],\n";
+                $fksprops['code'] .= "f_table:'".addslashes(htmlentities($props['f_table'], ENT_QUOTES, 'UTF-8'))."',\n";
+                $fksprops['code'] .= "f_schema:'".addslashes(htmlentities($props['f_schema'], ENT_QUOTES, 'UTF-8'))."',\n";
                 $_ = '';
                 foreach ($props['pattnames'] as $n) {
-                    $_ .= ",'" . htmlentities($n, ENT_QUOTES, 'UTF-8') . "'";
+                    $_ .= ",'".htmlentities($n, ENT_QUOTES, 'UTF-8')."'";
                 }
-                $fksprops['code'] .= 'pattnames: [' . substr($_, 1) . "],\n";
+                $fksprops['code'] .= 'pattnames: ['.substr($_, 1)."],\n";
 
                 $_ = '';
                 foreach ($props['fattnames'] as $n) {
-                    $_ .= ",'" . htmlentities($n, ENT_QUOTES, 'UTF-8') . "'";
+                    $_ .= ",'".htmlentities($n, ENT_QUOTES, 'UTF-8')."'";
                 }
 
-                $fksprops['code'] .= 'fattnames: [' . substr($_, 1) . "]\n";
+                $fksprops['code'] .= 'fattnames: ['.substr($_, 1)."]\n";
                 $fksprops['code'] .= "};\n";
             }
 
             $fksprops['code'] .= "var attrs = {};\n";
             foreach ($fksprops['byfield'] as $attnum => $cstrs) {
-                $fksprops['code'] .= "attrs.attr_{$attnum} = [" . implode(',', $fksprops['byfield'][$attnum]) . "];\n";
+                $fksprops['code'] .= "attrs.attr_{$attnum} = [".implode(',', $fksprops['byfield'][$attnum])."];\n";
             }
 
-            $fksprops['code'] .= "var table='" . addslashes(htmlentities($table, ENT_QUOTES, 'UTF-8')) . "';";
-            $fksprops['code'] .= "var server='" . htmlentities($_REQUEST['server'], ENT_QUOTES, 'UTF-8') . "';";
-            $fksprops['code'] .= "var database='" . addslashes(htmlentities($_REQUEST['database'], ENT_QUOTES, 'UTF-8')) . "';";
-            $fksprops['code'] .= "var subfolder='" . SUBFOLDER . "';";
+            $fksprops['code'] .= "var table='".addslashes(htmlentities($table, ENT_QUOTES, 'UTF-8'))."';";
+            $fksprops['code'] .= "var server='".htmlentities($_REQUEST['server'], ENT_QUOTES, 'UTF-8')."';";
+            $fksprops['code'] .= "var database='".addslashes(htmlentities($_REQUEST['database'], ENT_QUOTES, 'UTF-8'))."';";
+            $fksprops['code'] .= "var subfolder='".SUBFOLDER."';";
             $fksprops['code'] .= "</script>\n";
 
             $fksprops['code'] .= '<div id="fkbg"></div>';
             $fksprops['code'] .= '<div id="fklist"></div>';
-            $fksprops['code'] .= '<script src="' . SUBFOLDER . '/assets/js/ac_insert_row.js" type="text/javascript"></script>';
+            $fksprops['code'] .= '<script src="'.SUBFOLDER.'/assets/js/ac_insert_row.js" type="text/javascript"></script>';
         } else {
             /* we have no foreign keys on this table */
             return false;

@@ -51,7 +51,7 @@ class HTMLHeaderController extends HTMLController
         $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
         $viewVars['headertemplate'] = $template;
         $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
-        $viewVars['appName']        = htmlspecialchars($this->appName).(('' != $title) ? htmlspecialchars(" - {$title}") : '');
+        $viewVars['appName']        = htmlspecialchars($this->appName);
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
