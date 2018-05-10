@@ -19,7 +19,6 @@ class TablespacesController extends BaseController
      */
     public function render()
     {
-
         $this->printHeader();
         $this->printBody();
 

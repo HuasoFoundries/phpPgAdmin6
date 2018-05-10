@@ -21,7 +21,6 @@ class InfoController extends BaseController
      */
     public function render()
     {
-
         $this->printHeader($this->headerTitle('', '', $_REQUEST['table'] . ' - ' . $this->lang['strinfo']));
         $this->printBody();
 

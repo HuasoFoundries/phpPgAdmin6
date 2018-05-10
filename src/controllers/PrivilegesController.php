@@ -18,7 +18,6 @@ class PrivilegesController extends BaseController
      */
     public function render()
     {
-
         $this->printHeader();
         $this->printBody();
 
