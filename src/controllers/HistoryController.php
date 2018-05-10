@@ -25,7 +25,6 @@ class HistoryController extends BaseController
      */
     public function render()
     {
-
         switch ($this->action) {
             case 'confdelhistory':
                 $this->doDelHistory($_REQUEST['queryid'], true);
@@ -212,7 +211,6 @@ class HistoryController extends BaseController
     public function doClearHistory($confirm)
     {
         if ($confirm) {
-
             $this->printHeader($this->headerTitle(), $this->scripts);
 
             // Bring to the front always

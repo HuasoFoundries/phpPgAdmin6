@@ -21,7 +21,6 @@ class RolesController extends BaseController
      */
     public function render()
     {
-
         $this->printHeader();
         $this->printBody();
 
