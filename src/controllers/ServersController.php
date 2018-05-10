@@ -23,6 +23,8 @@ class ServersController extends BaseController
     public $subject     = '';
     public $start_time;
     public $duration;
+    public $controller_title = 'strservers';
+
     protected $no_db_connection = true;
 
     /**
@@ -36,7 +38,7 @@ class ServersController extends BaseController
 
         $msg = $this->msg;
 
-        $server_html = $this->printHeader($this->lang['strservers'], null, false);
+        $server_html = $this->printHeader($this->headerTitle(), null, false);
         $server_html .= $this->printBody(false);
         $server_html .= $this->printTrail('root', false);
 
@@ -96,7 +98,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => \SUBFOLDER.'/redirect/server?',
+                'url'   => \SUBFOLDER . '/redirect/server?',
                 'vars'  => ['server' => 'sha'],
             ],
             'host'     => [

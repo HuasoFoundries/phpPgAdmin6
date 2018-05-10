@@ -21,6 +21,7 @@ class DataexportController extends BaseController
         'html' => 'html',
         'xml'  => 'xml',
     ];
+    public $controller_title = 'strexport';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -98,7 +99,7 @@ class DataexportController extends BaseController
                         $ext = 'txt';
                     }
 
-                    header('Content-Disposition: attachment; filename=dump.'.$ext);
+                    header('Content-Disposition: attachment; filename=dump.' . $ext);
                 }
             } else {
                 header('Content-Type: text/plain');
@@ -270,7 +271,7 @@ class DataexportController extends BaseController
                                 $values = (is_null($v) ? 'NULL' : "'{$v}'");
                                 $first  = false;
                             } else {
-                                $values .= ', '.((is_null($v) ? 'NULL' : "'{$v}'"));
+                                $values .= ', ' . ((is_null($v) ? 'NULL' : "'{$v}'"));
                             }
                         }
                         echo ") VALUES ({$values});\n";
@@ -347,7 +348,7 @@ class DataexportController extends BaseController
             $_REQUEST['query'] = $_SESSION['sqlquery'];
         }
 
-        $this->printHeader($this->lang['strexport']);
+        $this->printHeader();
         $this->printBody();
         $this->printTrail(isset($_REQUEST['subject']) ? $_REQUEST['subject'] : 'database');
         $this->printTitle($this->lang['strexport']);
@@ -355,7 +356,7 @@ class DataexportController extends BaseController
             $this->printMsg($msg);
         }
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">\n";
         // COPY and SQL require a table

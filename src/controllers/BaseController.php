@@ -68,7 +68,7 @@ class BaseController
         $this->container = $container;
         $this->lang      = $container->get('lang');
 
-        $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
+        $this->controller_name = str_replace(__NAMESPACE__ . '\\', '', get_class($this));
         $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
         $this->script          = $this->view_name;
 
@@ -121,7 +121,7 @@ class BaseController
     {
         $this->misc = $this->misc;
 
-        $this->printHeader($this->lang[$this->controller_title]);
+        $this->printHeader();
         $this->printBody();
 
         switch ($this->action) {
@@ -140,6 +140,21 @@ class BaseController
         echo $html;
 
         return $html;
+    }
+
+    /**
+     * Returns the page title for each controller
+     *
+     * @param string  $title   The title
+     * @param string  $prefix  The prefix
+     * @param string  $suffix  The suffix
+     *
+     * @return string the page title
+     */
+    public function headerTitle($title = '', $prefix = '', $suffix = '')
+    {
+        $title = $title ? $title : $this->controller_title;
+        return $prefix . $this->lang[$title] . ($suffix ? ': ' . $suffix : '');
     }
 
     public function getContainer()
@@ -340,6 +355,7 @@ class BaseController
 
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
+        $title             = $title ? $title : $this->headerTitle();
         $header_controller = $this->_getHeaderController();
 
         return $header_controller->printHeader($title, $script, $do_print, $template);
@@ -387,7 +403,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
+            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
         }
         if ($do_print) {
             echo $html;

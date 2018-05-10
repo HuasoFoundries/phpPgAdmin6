@@ -15,6 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class SequencesController extends BaseController
 {
+    public $controller_title = 'strsequences';
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -25,7 +26,8 @@ class SequencesController extends BaseController
         }
 
         // Print header
-        $this->printHeader($this->lang['strsequences']);
+
+        $this->printHeader();
         $this->printBody();
 
         switch ($this->action) {
@@ -403,7 +405,7 @@ class SequencesController extends BaseController
             $this->printTitle($this->lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -496,7 +498,7 @@ class SequencesController extends BaseController
         $this->printTitle($this->lang['strcreatesequence'], 'pg.sequence.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
         echo "<table>\n";
 
         echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
@@ -640,7 +642,7 @@ class SequencesController extends BaseController
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
         if (is_object($sequence) && $sequence->recordCount() > 0) {
-            echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
             echo '<table border="0">';
             echo "<tr><th class=\"data left required\">{$this->lang['strlastvalue']}</th>\n";
             echo '<td class="data1">';
@@ -773,7 +775,7 @@ class SequencesController extends BaseController
                 $_POST['formCycledValue'] = 'on';
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";

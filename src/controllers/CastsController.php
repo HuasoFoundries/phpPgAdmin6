@@ -15,6 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class CastsController extends BaseController
 {
+    public $controller_title = 'strcasts';
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -24,7 +25,7 @@ class CastsController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($this->lang['strcasts']);
+        $this->printHeader();
         $this->printBody();
 
         switch ($this->action) {

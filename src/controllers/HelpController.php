@@ -13,6 +13,7 @@ namespace PHPPgAdmin\Controller;
  */
 class HelpController extends BaseController
 {
+    public $controller_title = 'strhelppagebrowser';
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -58,7 +59,7 @@ class HelpController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $this->printHeader($this->lang['strhelppagebrowser']);
+        $this->printHeader();
         $this->printBody();
 
         $this->printTitle($this->lang['strselecthelppage']);
@@ -88,7 +89,7 @@ class HelpController extends BaseController
 
     public function doChoosePage($urls)
     {
-        $this->printHeader($this->lang['strhelppagebrowser']);
+        $this->printHeader();
         $this->printBody();
 
         $this->printTitle($this->lang['strselecthelppage']);

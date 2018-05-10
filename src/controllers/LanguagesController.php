@@ -15,6 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class LanguagesController extends BaseController
 {
+    public $controller_title = 'strlanguages';
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -24,7 +25,7 @@ class LanguagesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($this->lang['strlanguages']);
+        $this->printHeader();
         $this->printBody();
 
         switch ($this->action) {

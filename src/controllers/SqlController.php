@@ -17,6 +17,7 @@ class SqlController extends BaseController
     public $subject = '';
     public $start_time;
     public $duration;
+    public $controller_title = 'strqueryresults';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -62,7 +63,7 @@ class SqlController extends BaseController
             return $display_controller->render();
         }
 
-        $this->printHeader($this->lang['strqueryresults'], null, true, 'header_sqledit.twig');
+        $this->printHeader($this->headerTitle(), null, true, 'header_sqledit.twig');
         $this->printBody();
         $this->printTrail('database');
         $this->printTitle($this->lang['strqueryresults']);
@@ -184,7 +185,7 @@ class SqlController extends BaseController
 
         $rs = $data->conn->Execute($this->query);
 
-        echo '<form method="post" id="sqlform" action="'.$_SERVER['REQUEST_URI'].'">';
+        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($this->query);

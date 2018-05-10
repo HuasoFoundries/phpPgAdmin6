@@ -60,6 +60,7 @@ class HTMLFooterController extends HTMLController
             $reload_param = 'database';
         }
 
+        $this->view->offsetSet('script_footer', '');
         $this->view->offsetSet('reload', $reload_param);
         $this->view->offsetSet('footer_template', $template);
         $this->view->offsetSet('print_bottom_link', !$this->_no_bottom_link);
@@ -96,7 +97,7 @@ class HTMLFooterController extends HTMLController
     {
         echo "<script type=\"text/javascript\">\n";
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
         echo "//]]>\n";
         echo "</script>\n";
     }

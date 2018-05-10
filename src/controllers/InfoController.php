@@ -15,12 +15,14 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class InfoController extends BaseController
 {
+    public $controller_title = 'strtables';
     /**
      * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
-        $this->printHeader($this->lang['strtables'].' - '.$_REQUEST['table'].' - '.$this->lang['strinfo']);
+
+        $this->printHeader($this->headerTitle('', '', $_REQUEST['table'] . ' - ' . $this->lang['strinfo']));
         $this->printBody();
 
         switch ($this->action) {

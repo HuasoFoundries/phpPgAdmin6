@@ -15,6 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class OpclassesController extends BaseController
 {
+    public $controller_title = 'stropclasses';
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -24,7 +25,7 @@ class OpclassesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($this->lang['stropclasses']);
+        $this->printHeader();
         $this->printBody();
 
         switch ($this->action) {

@@ -13,6 +13,7 @@ namespace PHPPgAdmin\Controller;
  */
 class DataimportController extends BaseController
 {
+    public $controller_title = 'strimport';
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -23,7 +24,7 @@ class DataimportController extends BaseController
         // Prevent timeouts on large exports
         set_time_limit(0);
 
-        $this->printHeader($this->lang['strimport']);
+        $this->printHeader();
         $this->printTrail('table');
         $this->printTabs('table', 'import');
 
