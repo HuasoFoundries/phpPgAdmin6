@@ -29,7 +29,6 @@ if (PHP_SAPI === 'cli-server') {
             $filePath != BASE_PATH . DIRECTORY_SEPARATOR . 'index.php' &&
             substr(basename($filePath), 0, 1) != '.'
         ) {
-
             if (strtolower(substr($filePath, -4)) == '.php') {
                 // php file; serve through interpreter
                 include $filePath;
@@ -43,7 +42,6 @@ if (PHP_SAPI === 'cli-server') {
             }
         }
     }
-
 }
 
 $app->get('/status', function (
@@ -95,7 +93,7 @@ $app->post('/redirect/server', function (
         $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
-        //
+    //
         //return $response->withStatus(302)->withHeader('Location', $destinationurl);
     } else {
         $_server_info = $this->misc->getServerInfo();
