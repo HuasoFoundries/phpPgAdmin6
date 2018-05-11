@@ -394,12 +394,12 @@ class ADOdbBase
      */
     public function arrayClean(&$arr)
     {
-        reset($arr);
-        //while (list($k, $v) = each($arr)) {
         foreach ($arr as $k => $v) {
-            $arr[$k] = addslashes($v);
+            if ($v === null) {
+                continue;
+            }
+            $arr[$k] = pg_escape_string($v);
         }
-
         return $arr;
     }
 
@@ -526,28 +526,33 @@ class ADOdbBase
     /**
      * Cleans (escapes) an object name (eg. table, field).
      *
-     * @param string $str The string to clean, by reference
+     * @param string|null $str The string to clean, by reference
      *
-     * @return string The cleaned string
+     * @return string|null The cleaned string
      */
     public function fieldClean(&$str)
     {
+        if ($str === null) {
+            return null;
+        }
         $str = str_replace('"', '""', $str);
-
         return $str;
     }
 
     /**
      * Cleans (escapes) a string.
      *
-     * @param string $str The string to clean, by reference
+     * @param string|null $str The string to clean, by reference
      *
-     * @return string The cleaned string
+     * @return string|null The cleaned string
      */
     public function clean(&$str)
     {
-        $str = addslashes($str);
-
+        if ($str === null) {
+            return null;
+        }
+        $str = str_replace("\r\n", "\n", $str);
+        $str = pg_escape_string($str);
         return $str;
     }
 
@@ -595,7 +600,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql = $fields . $values . ')';
         }
 
         // Check for failures
@@ -667,7 +672,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
@@ -743,6 +748,11 @@ class ADOdbBase
      */
     public function dbBool(&$parameter)
     {
+        if ($parameter) {
+            $parameter = 't';
+        } else {
+            $parameter = 'f';
+        }
         return $parameter;
     }
 
@@ -755,7 +765,7 @@ class ADOdbBase
      */
     public function phpBool($parameter)
     {
-        return $parameter === 't';
+        return $parameter == 't';
     }
 
     /**

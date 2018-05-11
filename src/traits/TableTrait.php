@@ -1954,7 +1954,6 @@ trait TableTrait
 
             return -1;
         }
-
         $status = $this->execute($sql);
         if ($status != 0) {
             // update failed
