@@ -41,12 +41,12 @@ test:
 ifeq ("$(wildcard config.inc.php)","")
 	cp config.inc.php-dist config.inc.php
 endif
-	xd_swi on ;\
 	./vendor/bin/codecept run unit --debug
 
 csfixer:
 	xd_swi off ;\
-	./vendor/bin/php-cs-fixer --verbose fix	
+	./vendor/bin/php-cs-fixer --verbose fix ;\
+	xd_swi on	
 
 create_testdb:
 	PGPASSWORD=scrutinizer psql -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql
