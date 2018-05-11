@@ -15,11 +15,13 @@ install:
 	composer install --no-dev
 	chmod 777 temp -R
 
+fix_permissions:
+	sudo chmod 777 temp -R	
 
 update_version:
-	@echo "Current version is " ${VERSION}
-	@echo "Next version is " $(v)
-	@sed -i s/"$(VERSION)"/"$(v)"/g composer.json
+	@echo "Current version is " ${VERSION} ;\
+	echo "Next version is " $(v) ;\
+	sed -i s/"$(VERSION)"/"$(v)"/g composer.json
 	composer update nothing --lock --root-reqs --prefer-dist
 
 tag_and_push:
@@ -38,10 +40,12 @@ tag: test update_version csfixer tag_and_push
 test:
 ifeq ("$(wildcard config.inc.php)","")
 	cp config.inc.php-dist config.inc.php
-endif	
+endif
+	xd_swi on ;\
 	./vendor/bin/codecept run unit --debug
 
 csfixer:
+	xd_swi off ;\
 	./vendor/bin/php-cs-fixer --verbose fix	
 
 create_testdb:
@@ -51,4 +55,5 @@ destroy_testdb:
 	PGPASSWORD=scrutinizer psql -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_remove.sql	
 
 run_local:
+	${MAKE} fix_permissions
 	php -S localhost:8000 index.php	

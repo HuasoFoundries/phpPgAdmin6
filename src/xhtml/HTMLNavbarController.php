@@ -74,13 +74,11 @@ class HTMLNavbarController extends HTMLController
                     'text'    => $schema,
                     'icon'    => $this->misc->icon('Schema'),
                     'iconalt' => $lang['strschema'],
-                    'url'     => str_replace('&amp;', '&', str_replace('redirect/database', 'redirect/schema', $dburl.'&schema='.$schema)),
+                    'url'     => str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl.'&schema='.$schema),
                 ];
             }
             $viewVars['search_paths'] = $search_path_crumbs;
         }
-
-        $this->prtrace($viewVars);
 
         $trail_html .= $this->getContainer()->view->fetch('components/trail.twig', $viewVars);
 

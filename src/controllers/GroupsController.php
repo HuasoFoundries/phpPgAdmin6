@@ -16,6 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class GroupsController extends BaseController
 {
     public $controller_title = 'strgroups';
+
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -179,7 +180,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/groups\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -248,7 +249,7 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="' . \SUBFOLDER . "/src/views/groups\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
         echo '<select name="user">';
         while (!$users->EOF) {
             $uname = $this->misc->printVal($users->fields['usename']);
@@ -291,7 +292,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/groups\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";

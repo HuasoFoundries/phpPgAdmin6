@@ -16,6 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class ViewpropertiesController extends BaseController
 {
     public $controller_title = 'strviews';
+
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -121,7 +122,7 @@ class ViewpropertiesController extends BaseController
             'column'  => [
                 'title' => $this->lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=" . urlencode($_REQUEST['view']) . '&amp;',
+                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST['view']).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
@@ -303,7 +304,7 @@ class ViewpropertiesController extends BaseController
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/viewproperties\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -338,7 +339,7 @@ class ViewpropertiesController extends BaseController
         $this->printTabs('view', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";
         // Data only
@@ -451,7 +452,7 @@ class ViewpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/viewproperties\" method=\"post\">\n";
 
                 // Output view header
                 echo "<table>\n";
@@ -556,7 +557,7 @@ class ViewpropertiesController extends BaseController
                     $_POST['comment'] = $view->fields['relcomment'];
                 }
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/viewproperties\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
                 echo '<td class="data1">';

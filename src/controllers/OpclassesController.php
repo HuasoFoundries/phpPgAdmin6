@@ -16,6 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class OpclassesController extends BaseController
 {
     public $controller_title = 'stropclasses';
+
     /**
      * Default method to render the controller according to the action parameter.
      */

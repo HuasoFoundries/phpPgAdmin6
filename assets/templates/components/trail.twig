@@ -1,49 +1,47 @@
 <div class="trail" data-controller="{{controller_name}}">
-	<table style="float:left">
-		<tbody>
-	    <tr>
-	        {% for crumb in crumbs %}
+    <table style="float:left">
+        <tbody>
+            <tr>
+                {% for crumb in crumbs %}
 
-			<td class="crumb">
-				<a href="{{crumb.url}}">
+                <td class="crumb">
+                    <a href="{{crumb.url}}">
 					<span class="icon">
 						<img src="{{crumb.icon}}" alt="{{crumb.iconalt}}">
 					</span>
 					<span class="label">{{crumb.text}}</span>
-				</a>
-				{% if crumb.helpurl %}
-	            <a class="help" href="{{crumb.helpurl}}" title="{{lang.strhelp}}" target="phppgadminhelp">{{lang.strhelpicon}}</a> 
-	    		{% endif %}
-				{{lang.strseparator}}
-			</td>
-	        {% endfor %}
-	    </tr>
-		</tbody>
-	</table>
-	{% if search_paths %}
-	<table style="float:right">
-		<tbody>
-		    <tr>
-		    	<td class="crumb" style="    vertical-align: inherit;">
-		    		{{lang.strsearchpath}}
-		    	</td>
-		    {% for crumb in search_paths %}
-		    	
-				<td class="crumb">
-					<a href="{{crumb.url}}">
+				</a> {% if crumb.helpurl %}
+                    <a class="help" href="{{crumb.helpurl}}" title="{{lang.strhelp}}" target="phppgadminhelp">{{lang.strhelpicon}}</a> {% endif %} {{lang.strseparator}}
+                </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    {% if search_paths %}
+    <table style="float:right">
+        <tbody>
+            <tr>
+                <td class="crumb" style="    vertical-align: inherit;">
+                    {{lang.strsearchpath}}
+                </td>
+                {% for crumb in search_paths %}
+
+                <td class="crumb">
+                    |
+                    <a href="{{crumb.url}}">
 							<span class="icon">
 								<img src="{{crumb.icon}}" alt="{{crumb.iconalt}}">
 							</span>
 							<span class="label">{{crumb.text}}</span>
 						</a>
-						|
-					</td>
-					 {% endfor %}
-					 <td>
-					 	&nbsp;&nbsp;
-					 </td>
-			</tr>
-		</tbody>
-	</table>
-	{% endif %}
+
+                </td>
+                {% endfor %}
+                <td>
+                    &nbsp;&nbsp;
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
 </div>

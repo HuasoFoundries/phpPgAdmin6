@@ -213,7 +213,7 @@ trait HelperTrait
 
     public function dump()
     {
-        call_user_func_array('\Kint::dump', func_get_args());
+        call_user_func_array(['Kint', 'dump'], func_get_args());
     }
 
     public function dumpAndDie()

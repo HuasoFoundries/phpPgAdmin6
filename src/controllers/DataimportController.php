@@ -14,6 +14,7 @@ namespace PHPPgAdmin\Controller;
 class DataimportController extends BaseController
 {
     public $controller_title = 'strimport';
+
     /**
      * Default method to render the controller according to the action parameter.
      */

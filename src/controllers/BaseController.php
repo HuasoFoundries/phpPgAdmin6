@@ -68,7 +68,7 @@ class BaseController
         $this->container = $container;
         $this->lang      = $container->get('lang');
 
-        $this->controller_name = str_replace(__NAMESPACE__ . '\\', '', get_class($this));
+        $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
         $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
         $this->script          = $this->view_name;
 
@@ -143,18 +143,19 @@ class BaseController
     }
 
     /**
-     * Returns the page title for each controller
+     * Returns the page title for each controller.
      *
-     * @param string  $title   The title
-     * @param string  $prefix  The prefix
-     * @param string  $suffix  The suffix
+     * @param string $title  The title
+     * @param string $prefix The prefix
+     * @param string $suffix The suffix
      *
      * @return string the page title
      */
     public function headerTitle($title = '', $prefix = '', $suffix = '')
     {
         $title = $title ? $title : $this->controller_title;
-        return $prefix . $this->lang[$title] . ($suffix ? ': ' . $suffix : '');
+
+        return $prefix.$this->lang[$title].($suffix ? ': '.$suffix : '');
     }
 
     public function getContainer()
@@ -403,7 +404,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
+            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
         }
         if ($do_print) {
             echo $html;

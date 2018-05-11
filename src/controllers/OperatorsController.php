@@ -16,6 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class OperatorsController extends BaseController
 {
     public $controller_title = 'stroperators';
+
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -232,7 +233,7 @@ class OperatorsController extends BaseController
                             ],
                         ],
                         'content' => $this->lang['strshowalloperators'],
-                    ]],
+                    ], ],
                 'operators-properties',
                 get_defined_vars()
             );
@@ -256,7 +257,7 @@ class OperatorsController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/operators\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/operators\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="operator" value="', htmlspecialchars($_REQUEST['operator']), "\" />\n";

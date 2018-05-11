@@ -16,6 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class LanguagesController extends BaseController
 {
     public $controller_title = 'strlanguages';
+
     /**
      * Default method to render the controller according to the action parameter.
      */

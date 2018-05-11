@@ -97,7 +97,7 @@ class HTMLFooterController extends HTMLController
     {
         echo "<script type=\"text/javascript\">\n";
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
         echo "//]]>\n";
         echo "</script>\n";
     }

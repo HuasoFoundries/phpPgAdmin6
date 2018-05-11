@@ -20,6 +20,7 @@ class HistoryController extends BaseController
     public $fields;
     public $scripts          = '<script type="text/javascript">window.inPopUp=true;</script>';
     public $controller_title = 'strhistory';
+
     /**
      * Default method to render the controller according to the action parameter.
      */
@@ -71,7 +72,7 @@ class HistoryController extends BaseController
         // Bring to the front always
         echo "<body onload=\"window.focus();\">\n";
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/history\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/history\" method=\"post\">\n";
         $this->printConnection('history');
         echo '</form><br />';
 
@@ -196,7 +197,7 @@ class HistoryController extends BaseController
             echo "<p>{$this->lang['strconfdelhistory']}</p>\n";
 
             echo '<pre>', htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), '</pre>';
-            echo '<form action="' . \SUBFOLDER . "/src/views/history\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/history\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"delhistory\" />\n";
             echo "<input type=\"hidden\" name=\"queryid\" value=\"${qid}\" />\n";
             echo $this->misc->form;
@@ -219,7 +220,7 @@ class HistoryController extends BaseController
             echo "<h3>{$this->lang['strclearhistory']}</h3>\n";
             echo "<p>{$this->lang['strconfclearhistory']}</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/history\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/history\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"clearhistory\" />\n";
             echo $this->misc->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />\n";

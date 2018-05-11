@@ -14,6 +14,7 @@ namespace PHPPgAdmin\Controller;
 class HelpController extends BaseController
 {
     public $controller_title = 'strhelppagebrowser';
+
     /**
      * Default method to render the controller according to the action parameter.
      */

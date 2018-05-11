@@ -47,6 +47,24 @@ if (!ini_get('session.auto_start')) {
     session_start();
 }
 
+function maybeRenderIframes($c, $response, $subject, $query_string)
+{
+    $in_test = $c->view->offsetGet('in_test');
+
+    if ($in_test === '1') {
+        $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
+        $controller = new $className($c);
+        return $controller->render();
+    }
+
+    $viewVars = [
+        'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
+        'headertemplate' => 'header.twig',
+    ];
+
+    return $c->view->render($response, 'iframe_view.twig', $viewVars);
+};
+
 $handler             = PhpConsole\Handler::getInstance();
 \Kint::$enabled_mode = DEBUGMODE;
 ini_set('display_errors', intval(DEBUGMODE));

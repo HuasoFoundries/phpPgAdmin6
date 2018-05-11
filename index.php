@@ -7,8 +7,45 @@ require_once __DIR__ . '/src/lib.inc.php';
 
 // This section is made to be able to parse requests coming from PHP Builtin webserver
 if (PHP_SAPI === 'cli-server') {
-    require_once __DIR__ . '/src/cli.router.php';
+
+    //include_once __DIR__ . '/src/cli.router.php';
+    $will_redirect = false;
+    $req_uri       = $_SERVER['REQUEST_URI'];
+    $first10chars  = substr($_SERVER['REQUEST_URI'], 0, 10);
+    if ($first10chars === '/index.php') {
+        $will_redirect = true;
+        $req_uri       = substr($req_uri, 10);
+    }
+    $filePath     = realpath(ltrim($req_uri, '/'));
+    $new_location = 'Location: http://' . $_SERVER['HTTP_HOST'] . $req_uri;
+
+    if ($filePath && is_readable($filePath)) {
+
+        // 1. check that file is not outside of this directory for security
+        // 2. check for circular reference to router.php
+        // 3. don't serve dotfiles
+
+        if (strpos($filePath, BASE_PATH . DIRECTORY_SEPARATOR) === 0 &&
+            $filePath != BASE_PATH . DIRECTORY_SEPARATOR . 'index.php' &&
+            substr(basename($filePath), 0, 1) != '.'
+        ) {
+
+            if (strtolower(substr($filePath, -4)) == '.php') {
+                // php file; serve through interpreter
+                include $filePath;
+                return;
+            } elseif ($will_redirect) {
+                header($new_location, true, 301);
+                return;
+            } else {
+                // asset file; serve from filesystem
+                return false;
+            }
+        }
+    }
+
 }
+
 $app->get('/status', function (
     /** @scrutinizer ignore-unused */$request,
     /** @scrutinizer ignore-unused */$response,
@@ -58,7 +95,7 @@ $app->post('/redirect/server', function (
         $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
-    //
+        //
         //return $response->withStatus(302)->withHeader('Location', $destinationurl);
     } else {
         $_server_info = $this->misc->getServerInfo();
@@ -107,24 +144,6 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     return $controller->render();
 });
 
-function maybeRenderIframes($c, $response, $subject, $query_string)
-{
-    $in_test = $c->view->offsetGet('in_test');
-
-    if ($in_test === '1') {
-        $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
-        $controller = new $className($c);
-        return $controller->render();
-    }
-
-    $viewVars = [
-        'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
-        'headertemplate' => 'header.twig',
-    ];
-
-    return $c->view->render($response, 'iframe_view.twig', $viewVars);
-};
-
 $app->get('/{subject:\w+}', function (
     /** @scrutinizer ignore-unused */$request,
     /** @scrutinizer ignore-unused */$response,
@@ -164,8 +183,7 @@ $app->get('[/{path:.*}]', function ($request, $response, $args) {
     $filepath     = \BASE_PATH . '/' . $args['path'];
     $query_string = $request->getUri()->getQuery();
 
-    $this->utils->dump($query_string);
-    $this->utils->dump($filepath);
+    $this->utils->dump($query_string, $filepath);
 
     //$this->utils->prtrace($request->getAttribute('route'));
     return $response->write($args['path'] ? $args['path'] : 'index');
