@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.44
+ * PHPPgAdmin v6.0.0-beta.45
  */
 require_once 'simpletest.inc.php';
 require_once 'simpletest/web_tester.php';

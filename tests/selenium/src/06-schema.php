@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.44
+ * PHPPgAdmin v6.0.0-beta.45
  */
     $test_title = 'Schema tests';
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.44
+ * PHPPgAdmin v6.0.0-beta.45
  */
 
 namespace PHPPgAdmin\Database;
@@ -400,6 +400,7 @@ class ADOdbBase
             }
             $arr[$k] = pg_escape_string($v);
         }
+
         return $arr;
     }
 
@@ -526,9 +527,9 @@ class ADOdbBase
     /**
      * Cleans (escapes) an object name (eg. table, field).
      *
-     * @param string|null $str The string to clean, by reference
+     * @param null|string $str The string to clean, by reference
      *
-     * @return string|null The cleaned string
+     * @return null|string The cleaned string
      */
     public function fieldClean(&$str)
     {
@@ -536,15 +537,16 @@ class ADOdbBase
             return null;
         }
         $str = str_replace('"', '""', $str);
+
         return $str;
     }
 
     /**
      * Cleans (escapes) a string.
      *
-     * @param string|null $str The string to clean, by reference
+     * @param null|string $str The string to clean, by reference
      *
-     * @return string|null The cleaned string
+     * @return null|string The cleaned string
      */
     public function clean(&$str)
     {
@@ -553,6 +555,7 @@ class ADOdbBase
         }
         $str = str_replace("\r\n", "\n", $str);
         $str = pg_escape_string($str);
+
         return $str;
     }
 
@@ -600,7 +603,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields . $values . ')';
+            $sql = $fields.$values.')';
         }
 
         // Check for failures
@@ -672,7 +675,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause . $whereClause)) {
+        if (!$this->conn->Execute($setClause.$whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
@@ -753,6 +756,7 @@ class ADOdbBase
         } else {
             $parameter = 'f';
         }
+
         return $parameter;
     }
 
