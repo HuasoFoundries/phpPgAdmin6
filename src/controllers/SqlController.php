@@ -55,7 +55,9 @@ class SqlController extends BaseController
         // Check to see if pagination has been specified. In that case, send to display
         // script for pagination
         // if a file is given or the request is an explain, do not paginate
-        if (isset($_REQUEST['paginate']) && !(isset($_FILES['script']) && $_FILES['script']['size'] > 0) && (0 == preg_match('/^\s*explain/i', $this->query))) {
+        if (isset($_REQUEST['paginate']) &&
+            !(isset($_FILES['script']) && $_FILES['script']['size'] > 0) &&
+            (0 == preg_match('/^\s*explain/i', $this->query))) {
             //if (!(isset($_FILES['script']) && $_FILES['script']['size'] > 0)) {
 
             $display_controller = new DisplayController($this->getContainer());
@@ -185,7 +187,7 @@ class SqlController extends BaseController
 
         $rs = $data->conn->Execute($this->query);
 
-        echo '<form method="post" id="sqlform" action="'.$_SERVER['REQUEST_URI'].'">';
+        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($this->query);

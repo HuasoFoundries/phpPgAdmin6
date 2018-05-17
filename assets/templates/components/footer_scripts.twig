@@ -80,6 +80,9 @@ if (!window.inPopUp) {
 				//console.log('will pushState', stateObj);
 				window.parent.history.pushState(stateObj, document.title, stateObj.newurl);
 			}
+			/* else if (stateObj.method === 'POST') {
+							console.log('POST', stateObj.newurl);
+						}*/
 
 			if (jQuery.fn) {
 				if (jQuery.fn.select2) {
