@@ -306,14 +306,9 @@ class HTMLNavbarController extends HTMLController
     {
         $lang = $this->lang;
 
-        $this->misc = $this->misc;
-        $appName    = $this->misc->appName;
-
-        $data = $this->misc->getDatabaseAccessor();
+        $appName = $this->misc->appName;
 
         $trail = [];
-        $vars  = '';
-        $done  = false;
 
         $trail['root'] = [
             'text' => $appName,
