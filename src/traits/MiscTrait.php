@@ -1042,6 +1042,7 @@ trait MiscTrait
                         'urlvars' => [
                             'subject' => 'column',
                             'table'   => Decorator::field('table'),
+                            'view'    => Decorator::field('view'),
                             'column'  => Decorator::field('column'),
                         ],
                         'icon'    => 'Column',
@@ -1052,12 +1053,19 @@ trait MiscTrait
                         'urlvars' => [
                             'subject' => 'column',
                             'table'   => Decorator::field('table'),
+                            'view'    => Decorator::field('view'),
                             'column'  => Decorator::field('column'),
                         ],
                         'help'    => 'pg.privilege',
                         'icon'    => 'Privileges',
                     ],
                 ];
+                if (empty($tabs['properties']['urlvars']['table'])) {
+                    unset($tabs['properties']['urlvars']['table']);
+                }
+                if (empty($tabs['privileges']['urlvars']['table'])) {
+                    unset($tabs['privileges']['urlvars']['table']);
+                }
 
                 break;
             case 'fulltext':
@@ -1116,12 +1124,12 @@ trait MiscTrait
         //$data = $this->getDatabaseAccessor();
 
         $tabs = $this->getNavTabs($section);
-        if (isset($_SESSION['webdbLastTab'][$section])) {
+        if (isset($_SESSION['webdbLastTab'][$section], $tabs[$_SESSION['webdbLastTab'][$section]])) {
             $tab = $tabs[$_SESSION['webdbLastTab'][$section]];
         } else {
             $tab = reset($tabs);
         }
-        //$this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
+        $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
         return isset($tab['url']) ? $tab : null;
     }
 }

@@ -162,6 +162,39 @@ class HTMLController
     }
 
     /**
+     * Display a list of links.
+     *
+     * @param array       $links    An associative array of links to print. See printLink function for
+     *                              the links array format.
+     * @param string      $class    an optional HTML class or list of classes seprated by a space
+     *                              WARNING: This field is NOT escaped! No user should be able to inject something here, use with care
+     * @param bool        $do_print true to echo, false to return
+     * @param null|string $from     which method is calling this one
+     */
+    protected function printLinksList($links, $class = '', $do_print = true, $from = null)
+    {
+        if (null === $from || false === $from) {
+            $from = __METHOD__;
+        }
+        $list_html = "<ul class=\"{$class}\">\n";
+        foreach ($links as $link) {
+            if ($from === 'PHPPgAdmin\Controller\BaseController::printNavLinks') {
+                $this->prtrace($link);
+            }
+
+            $list_html .= "\t<li>";
+            $list_html .= str_replace('.php', '', $this->printLink($link, false, $from));
+            $list_html .= "</li>\n";
+        }
+        $list_html .= "</ul>\n";
+        if ($do_print) {
+            echo $list_html;
+        } else {
+            return $list_html;
+        }
+    }
+
+    /**
      * Prints a combox box.
      *
      * @param        $arrOptions  associative array storing options and values of combo should be Option => Value

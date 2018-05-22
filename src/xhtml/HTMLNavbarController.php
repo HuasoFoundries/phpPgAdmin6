@@ -79,6 +79,7 @@ class HTMLNavbarController extends HTMLController
             }
             $viewVars['search_paths'] = $search_path_crumbs;
         }
+        //\Kint::dump($viewVars);
 
         $trail_html .= $this->getContainer()->view->fetch('components/trail.twig', $viewVars);
 
@@ -86,44 +87,6 @@ class HTMLNavbarController extends HTMLController
             echo $trail_html;
         } else {
             return $trail_html;
-        }
-    }
-
-    /**
-     * Display the navlinks.
-     *
-     * @param array  $navlinks An array with the the attributes and values that will be shown.
-     *                         See printLinksList for array format.
-     * @param string $place    Place where the $navlinks are displayed. Like 'display-browse',
-     *                         where 'display' is the file (display) and 'browse' is the action
-     * @param array  $env      - Associative array of defined variables in the scope of the caller.
-     *                         Allows to give some environnement details to plugins.
-     *                         and 'browse' is the place inside that code (doBrowse).
-     * @param bool   $do_print if true, print html, if false, return html
-     * @param mixed  $from     can either be null, false or the method calling this one
-     */
-    public function printNavLinks($navlinks, $place, $env, $do_print, $from)
-    {
-        if (null === $from || false === $from) {
-            $from = __METHOD__;
-        }
-        //$this->prtrace($navlinks);
-        $plugin_manager = $this->plugin_manager;
-
-        // Navlinks hook's place
-        $plugin_functions_parameters = [
-            'navlinks' => &$navlinks,
-            'place'    => $place,
-            'env'      => $env,
-        ];
-        $plugin_manager->doHook('navlinks', $plugin_functions_parameters);
-
-        if (count($navlinks) > 0) {
-            if ($do_print) {
-                $this->printLinksList($navlinks, 'navlink', true, $from);
-            } else {
-                return $this->printLinksList($navlinks, 'navlink', false, $from);
-            }
         }
     }
 
@@ -191,28 +154,6 @@ class HTMLNavbarController extends HTMLController
         } else {
             return $tabs_html;
         }
-    }
-
-    /**
-     * Get the URL for the last active tab of a particular tab bar.
-     *
-     * @param string $section
-     */
-    public function getLastTabURL($section)
-    {
-        $lang       = $this->lang;
-        $this->misc = $this->misc;
-
-        $tabs = $this->misc->getNavTabs($section);
-
-        if (isset($_SESSION['webdbLastTab'][$section], $tabs[$_SESSION['webdbLastTab'][$section]])) {
-            $tab = $tabs[$_SESSION['webdbLastTab'][$section]];
-        } else {
-            $tab = reset($tabs);
-        }
-        $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab], 'getLastTabURL');
-
-        return isset($tab['url']) ? $tab : null;
     }
 
     /**
@@ -535,34 +476,5 @@ class HTMLNavbarController extends HTMLController
         //$this->prtrace($trail);
 
         return $trail;
-    }
-
-    /**
-     * Display a list of links.
-     *
-     * @param array       $links    An associative array of links to print. See printLink function for
-     *                              the links array format.
-     * @param string      $class    an optional HTML class or list of classes seprated by a space
-     *                              WARNING: This field is NOT escaped! No user should be able to inject something here, use with care
-     * @param bool        $do_print true to echo, false to return
-     * @param null|string $from     which method is calling this one
-     */
-    private function printLinksList($links, $class = '', $do_print = true, $from = null)
-    {
-        if (null === $from || false === $from) {
-            $from = __METHOD__;
-        }
-        $list_html = "<ul class=\"{$class}\">\n";
-        foreach ($links as $link) {
-            $list_html .= "\t<li>";
-            $list_html .= str_replace('.php', '', $this->printLink($link, false, $from));
-            $list_html .= "</li>\n";
-        }
-        $list_html .= "</ul>\n";
-        if ($do_print) {
-            echo $list_html;
-        } else {
-            return $list_html;
-        }
     }
 }

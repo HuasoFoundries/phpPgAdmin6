@@ -93,7 +93,7 @@ $app->post('/redirect/server', function (
         $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
-    //
+        //
         //return $response->withStatus(302)->withHeader('Location', $destinationurl);
     } else {
         $_server_info = $this->misc->getServerInfo();
@@ -124,6 +124,8 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     if ($subject === 'server') {
         $subject = 'servers';
     }
+
+    //$this->utils->dump($request->getParams());
 
     $safe_subjects = ($subject === 'servers' || $subject === 'intro' || $subject === 'browser');
 
@@ -171,7 +173,7 @@ $app->get('/', function (
     /** @scrutinizer ignore-unused */$args
 ) {
     $subject = 'intro';
-    //$this->utils->dumpAndDie(\SUBFOLDER);
+
     $query_string = $request->getUri()->getQuery();
 
     return maybeRenderIframes($this, $response, $subject, $query_string);

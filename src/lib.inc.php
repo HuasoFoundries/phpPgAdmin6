@@ -413,7 +413,9 @@ $app->add(
 
         $messages = $this->flash->getMessages();
         if (!empty($messages)) {
-            \PC::debug($messages, ' flash messages from previous request');
+            foreach ($messages as $key => $message) {
+                \PC::debug($message, 'Flash: ' . $key);
+            }
         }
         // First execute anything else
         $response = $next($request, $response);

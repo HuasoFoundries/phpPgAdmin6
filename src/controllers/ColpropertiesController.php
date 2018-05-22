@@ -24,7 +24,7 @@ class ColpropertiesController extends BaseController
      */
     public function render()
     {
-        if (isset($_REQUEST['table'])) {
+        if (isset($_REQUEST['table']) && !empty($_REQUEST['table'])) {
             $this->tableName = &$_REQUEST['table'];
         } elseif (isset($_REQUEST['view'])) {
             $this->tableName = &$_REQUEST['view'];
@@ -62,11 +62,14 @@ class ColpropertiesController extends BaseController
     /**
      * Show default list of columns in the table.
      *
-     * @param mixed $msg
-     * @param mixed $isTable
+     * @param string $msg     message to display
+     * @param bool   $isTable tells if we're showing table properties
      */
     public function doDefault($msg = '', $isTable = true)
     {
+        if (!isset($_REQUEST['table']) || empty($_REQUEST['table'])) {
+            $isTable = false;
+        }
         $data = $this->misc->getDatabaseAccessor();
 
         $attPre = function (&$rowdata) use ($data) {
@@ -85,6 +88,7 @@ class ColpropertiesController extends BaseController
         if (!empty($_REQUEST['column'])) {
             // Get table
             $tdata = $data->getTable($this->tableName);
+            //\Kint::dump($tdata);
             // Get columns
             $attrs = $data->getTableAttributes($this->tableName, $_REQUEST['column']);
 
@@ -92,6 +96,7 @@ class ColpropertiesController extends BaseController
             if (null !== $attrs->fields['comment']) {
                 echo '<p class="comment">', $this->misc->printVal($attrs->fields['comment']), "</p>\n";
             }
+            $this->prtrace('$isTable', $isTable);
 
             $column = [
                 'column' => [
@@ -128,27 +133,25 @@ class ColpropertiesController extends BaseController
             $data->fieldClean($f_attname);
             $data->fieldClean($f_table);
             $data->fieldClean($f_schema);
-            $query = "SELECT \"{$f_attname}\", count(*) AS \"count\" FROM \"{$f_schema}\".\"{$f_table}\" GROUP BY \"{$f_attname}\" ORDER BY \"{$f_attname}\"";
 
             if ($isTable) {
-                // Browse link
-                /* FIXME browsing a col should somehow be a action so we don't
-                 * send an ugly SQL in the URL */
-
                 $navlinks = [
                     'browse' => [
                         'attr'    => [
                             'href' => [
                                 'url'     => 'display',
+                                'method'  => 'post',
                                 'urlvars' => [
-                                    'subject'  => 'column',
-                                    'server'   => $_REQUEST['server'],
-                                    'database' => $_REQUEST['database'],
-                                    'schema'   => $_REQUEST['schema'],
-                                    'table'    => $this->tableName,
-                                    'column'   => $_REQUEST['column'],
-                                    'return'   => 'column',
-                                    'query'    => $query,
+                                    'subject'   => 'column',
+                                    'server'    => $_REQUEST['server'],
+                                    'database'  => $_REQUEST['database'],
+                                    'schema'    => $_REQUEST['schema'],
+                                    'table'     => $this->tableName,
+                                    'column'    => $_REQUEST['column'],
+                                    'return'    => 'column',
+                                    'f_attname' => $f_attname,
+                                    'f_table'   => $f_table,
+                                    'f_schema'  => $f_schema,
                                 ],
                             ],
                         ],
@@ -194,15 +197,18 @@ class ColpropertiesController extends BaseController
                         'attr'    => [
                             'href' => [
                                 'url'     => 'display',
+                                'method'  => 'post',
                                 'urlvars' => [
-                                    'subject'  => 'column',
-                                    'server'   => $_REQUEST['server'],
-                                    'database' => $_REQUEST['database'],
-                                    'schema'   => $_REQUEST['schema'],
-                                    'view'     => $this->tableName,
-                                    'column'   => $_REQUEST['column'],
-                                    'return'   => 'column',
-                                    'query'    => $query,
+                                    'subject'   => 'column',
+                                    'server'    => $_REQUEST['server'],
+                                    'database'  => $_REQUEST['database'],
+                                    'schema'    => $_REQUEST['schema'],
+                                    'view'      => $this->tableName,
+                                    'column'    => $_REQUEST['column'],
+                                    'return'    => 'column',
+                                    'f_attname' => $f_attname,
+                                    'f_table'   => $f_table,
+                                    'f_schema'  => $f_schema,
                                 ],
                             ],
                         ],
@@ -236,8 +242,8 @@ class ColpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<script src="' . \SUBFOLDER . '/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . \SUBFOLDER . "/src/views/colproperties\" method=\"post\">\n";
+                echo '<script src="'.\SUBFOLDER.'/assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="'.\SUBFOLDER."/src/views/colproperties\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -294,7 +300,7 @@ class ColpropertiesController extends BaseController
                     $types        = $data->getTypes(true, false, true);
                     $types_for_js = [];
 
-                    echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">" . "\n";
+                    echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">"."\n";
                     while (!$types->EOF) {
                         $typname        = $types->fields['typname'];
                         $types_for_js[] = $typname;
@@ -348,7 +354,7 @@ class ColpropertiesController extends BaseController
                 echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
-                echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>\n";
+                echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");checkLengths(document.getElementById('type').value,'');</script>\n";
 
                 break;
             case 2:
@@ -384,10 +390,10 @@ class ColpropertiesController extends BaseController
                         $_REQUEST['column'] = $_REQUEST['field'];
                         $this->misc->setReloadBrowser(true);
                     }
-                    $this->doDefault($sql . "<br/>{$this->lang['strcolumnaltered']}");
+                    $this->doDefault($sql."<br/>{$this->lang['strcolumnaltered']}");
                 } else {
                     $_REQUEST['stage'] = 1;
-                    $this->doAlter($sql . "<br/>{$this->lang['strcolumnalteredbad']}");
+                    $this->doAlter($sql."<br/>{$this->lang['strcolumnalteredbad']}");
 
                     return;
                 }

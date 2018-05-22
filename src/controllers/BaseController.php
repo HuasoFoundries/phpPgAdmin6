@@ -261,10 +261,10 @@ class BaseController
 
     public function printNavLinks($navlinks, $place, $env = [], $do_print = true)
     {
-        $from       = __METHOD__;
-        $html_trail = $this->_getNavbarController();
+        $from              = __METHOD__;
+        $footer_controller = $this->_getFooterController();
 
-        return $html_trail->printNavLinks($navlinks, $place, $env, $do_print, $from);
+        return $footer_controller->printNavLinks($navlinks, $place, $env, $do_print, $from);
     }
 
     public function printTabs($tabs, $activetab, $do_print = true)
@@ -273,13 +273,6 @@ class BaseController
         $html_trail = $this->_getNavbarController();
 
         return $html_trail->printTabs($tabs, $activetab, $do_print, $from);
-    }
-
-    public function getLastTabURL($section)
-    {
-        $html_trail = $this->_getNavbarController();
-
-        return $html_trail->getLastTabURL($section);
     }
 
     public function printLink($link, $do_print = true, $from = null)

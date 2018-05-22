@@ -13,26 +13,100 @@ html {
       margin-left: 10px !important;
       padding-bottom: 20px;
 
-      table.tabs {
-        position: fixed;
-        top: 58px;
-        z-index: 50;
-        margin-left: -10px;
-        z-index: 50;
-        tbody {
-          tr {
-            td {
-              white-space: nowrap;
+      table {
+        &.tabs {
+          position: fixed;
+          top: 58px;
+          z-index: 50;
+          margin-left: -10px;
+          z-index: 50;
+          tbody {
+            tr {
+              td {
+                white-space: nowrap;
+              }
             }
           }
         }
-      }
-      .will_be_datatable {
-        td {
-          white-space: nowrap;
-          &.comment {
-            white-space: normal;
+        &.will_be_datatable {
+          td {
+            white-space: nowrap;
+            &.opbutton1,
+            &.opbutton2,
+            &.opbutton3 {
+              border: 0 none;
+            }
+
+            &.comment {
+              white-space: normal;
+            }
           }
+        }
+        tr.data1 td.opbutton1 a,
+        tr.data2 td.opbutton2 a,
+        tr.data3 td.opbutton3 a {
+          -webkit-background-clip: border-box;
+          -webkit-background-origin: padding-box;
+          -webkit-background-size: auto;
+          -webkit-user-select: none;
+          background-attachment: scroll;
+          background-clip: border-box;
+          background-color: rgb(66, 139, 202);
+          background-image: none;
+          background-origin: padding-box;
+          background-size: auto;
+          border: 1px solid #999;
+          border-radius: 1.5px;
+          cursor: pointer;
+          display: inline-block;
+          font-size: 11px;
+          font-weight: normal;
+          height: 15px;
+          line-height: 15px;
+          margin-bottom: 0px;
+          padding-bottom: 1px;
+          padding-left: 5px;
+          padding-right: 5px;
+          padding-top: 1px;
+          text-align: center;
+          text-decoration: none;
+          vertical-align: middle;
+          white-space: nowrap;
+          color: #fff !important;
+        }
+      }
+    }
+    .navlink {
+      li {
+        a {
+          -webkit-background-clip: border-box;
+          -webkit-background-origin: padding-box;
+          -webkit-background-size: auto;
+          -webkit-user-select: none;
+          background-attachment: scroll;
+          background-clip: border-box;
+          background-color: rgb(66, 139, 202);
+          background-image: none;
+          background-origin: padding-box;
+          background-size: auto;
+          border: 1px solid #999;
+          border-radius: 1.5px;
+          cursor: pointer;
+          display: inline-block;
+          font-size: 12px;
+          font-weight: normal;
+          height: 15px;
+          line-height: 15px;
+          margin-bottom: 0px;
+          padding-bottom: 1px;
+          padding-left: 5px;
+          padding-right: 5px;
+          padding-top: 1px;
+          text-align: center;
+          text-decoration: none;
+          vertical-align: middle;
+          white-space: nowrap;
+          color: #fff !important;
         }
       }
     }
