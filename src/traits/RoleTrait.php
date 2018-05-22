@@ -353,7 +353,7 @@ trait RoleTrait
         return 0;
     }
 
-    private function _alterRole($rolename, $password, $connlimit, $expiry)
+    private function _alterRole($rolename, $password, $connlimit, $expiry, $superuser, $createdb, $createrole, $inherits, $login)
     {
         $enc = $this->_encryptPassword($rolename, $password);
         $this->clean($enc);
@@ -430,7 +430,7 @@ trait RoleTrait
         $this->fieldArrayClean($new_members_of_role);
         $this->fieldArrayClean($new_admins_of_role);
 
-        $status = $this->_alterRole($rolename, $password, $connlimit, $expiry);
+        $status = $this->_alterRole($rolename, $password, $connlimit, $expiry, $superuser, $createdb, $createrole, $inherits, $login);
         if ($status !== 0) {
             return -1;
         }
