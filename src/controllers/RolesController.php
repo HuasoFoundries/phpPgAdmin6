@@ -117,7 +117,7 @@ class RolesController extends BaseController
             'role'       => [
                 'title' => $this->lang['strrole'],
                 'field' => Decorator::field('rolname'),
-                'url'   => \SUBFOLDER . "/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER."/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['rolename' => 'rolname'],
             ],
             'superuser'  => [
@@ -237,7 +237,7 @@ class RolesController extends BaseController
         $this->printTitle($this->lang['strcreaterole'], 'pg.role.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/roles\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\" style=\"width: 130px\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formRolename\" value=\"", htmlspecialchars($_POST['formRolename']), "\" /></td>\n\t</tr>\n";
@@ -409,10 +409,10 @@ class RolesController extends BaseController
                 $_POST['formPassword']  = '';
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/roles\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$this->lang['strname']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['formNewRoleName']) . '" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['formNewRoleName']).'" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconfirm']}</th>\n";
@@ -584,7 +584,7 @@ class RolesController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdroprole'], $this->misc->printVal($_REQUEST['rolename'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/roles\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), "\" />\n";
             echo $this->misc->form;
@@ -806,7 +806,7 @@ class RolesController extends BaseController
 
             $this->coalesceArr($_POST, 'confirm', '');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/roles\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",

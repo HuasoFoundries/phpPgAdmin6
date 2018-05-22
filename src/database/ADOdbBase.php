@@ -293,7 +293,7 @@ class ADOdbBase
      * @param string      $comment  the comment to add
      * @param null|string $basetype
      *
-     * @return PHPPgAdmin\ADORecordSet recordset of results
+     * @return \PHPPgAdmin\ADORecordSet recordset of results
      */
     public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
     {

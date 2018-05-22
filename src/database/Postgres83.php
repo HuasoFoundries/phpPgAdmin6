@@ -348,8 +348,8 @@ class Postgres83 extends Postgres84
     /**
      * Alter a sequence's owner.
      *
-     * @param $seqrs The sequence RecordSet returned by getSequence()
-     * @param $owner
+     * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
+     * @param string                   $owner sequence owner
      *
      * @return int 0 if operation was successful
      *

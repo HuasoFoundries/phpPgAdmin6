@@ -35,7 +35,7 @@ class HTMLHeaderController extends HTMLController
      * @param string $title    The title of the page
      * @param string $script   script tag
      * @param bool   $do_print boolean if false, the function will return the header content
-     * @param tring  $template the template to render
+     * @param string $template the template to render
      *
      * @return string the parsed template
      */
