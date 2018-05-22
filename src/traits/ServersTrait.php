@@ -138,7 +138,7 @@ trait ServersTrait
             // Get the list of all databases
             $data      = $this->misc->getDatabaseAccessor();
             $databases = $data->getDatabases();
-            if ($databases->recordCount() > 0) {
+            if ($databases->RecordCount() > 0) {
                 $connection_html .= '<label>';
                 $connection_html .= $this->misc->printHelp($this->lang['strdatabase'], 'pg.database', false);
                 $connection_html .= ": <select  id='selectdb'  name=\"database\" >\n";

@@ -107,7 +107,7 @@ trait HelperTrait
     {
         $result = [];
 
-        if ($set->recordCount() <= 0) {
+        if ($set->RecordCount() <= 0) {
             return $result;
         }
         while (!$set->EOF) {

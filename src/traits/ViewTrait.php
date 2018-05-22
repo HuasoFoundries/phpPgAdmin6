@@ -129,7 +129,7 @@ trait ViewTrait
     {
         $data = $this->getView($view);
 
-        if ($data->recordCount() != 1) {
+        if ($data->RecordCount() != 1) {
             return -2;
         }
 

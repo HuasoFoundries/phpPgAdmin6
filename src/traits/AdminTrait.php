@@ -753,7 +753,7 @@ trait AdminTrait
 
             echo $this->printTable($autovac, $columns, $actions, 'admin-admin', $this->lang['strnovacuumconf']);
 
-            if (('table' == $type) and (0 == $autovac->recordCount())) {
+            if (('table' == $type) and (0 == $autovac->RecordCount())) {
                 echo '<br />';
 
                 echo '<a href="' . \SUBFOLDER . "/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";

@@ -114,7 +114,7 @@ trait SequenceTrait
     {
         // Get the minimum value of the sequence
         $seq = $this->getSequence($sequence);
-        if ($seq->recordCount() != 1) {
+        if ($seq->RecordCount() != 1) {
             return -1;
         }
 
@@ -253,7 +253,7 @@ trait SequenceTrait
 
         $data = $this->getSequence($sequence);
 
-        if ($data->recordCount() != 1) {
+        if ($data->RecordCount() != 1) {
             return -2;
         }
 

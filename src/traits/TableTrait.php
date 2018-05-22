@@ -121,7 +121,7 @@ trait TableTrait
     {
         // Fetch table
         $t = $this->getTable($table);
-        if (!is_object($t) || $t->recordCount() != 1) {
+        if (!is_object($t) || $t->RecordCount() != 1) {
             $this->rollbackTransaction();
 
             return null;
@@ -165,7 +165,7 @@ trait TableTrait
 
         // Output all table columns
         $col_comments_sql = ''; // Accumulate comments on columns
-        $num              = $atts->recordCount() + $cons->recordCount();
+        $num              = $atts->RecordCount() + $cons->RecordCount();
         $i                = 1;
         while (!$atts->EOF) {
             $this->fieldClean($atts->fields['attname']);
@@ -257,7 +257,7 @@ trait TableTrait
          * as inherited NOT NULL and CHECK constraints.  So for the time being, we just do
          * not claim to support inheritance.
          * $parents = $this->getTableParents($table);
-         * if ($parents->recordCount() > 0) {
+         * if ($parents->RecordCount() > 0) {
          * $sql .= " INHERITS (";
          * while (!$parents->EOF) {
          * $this->fieldClean($parents->fields['relname']);
@@ -616,7 +616,7 @@ trait TableTrait
             AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}')";
 
         $rs = $this->selectSet($sql);
-        if ($rs->recordCount() != 1) {
+        if ($rs->RecordCount() != 1) {
             return null;
         }
 
@@ -645,7 +645,7 @@ trait TableTrait
             return null;
         }
 
-        if ($indexes->recordCount() > 0) {
+        if ($indexes->RecordCount() > 0) {
             $sql .= "\n-- Indexes\n\n";
             while (!$indexes->EOF) {
                 $sql .= $indexes->fields['inddef'] . ";\n";
@@ -662,7 +662,7 @@ trait TableTrait
             return null;
         }
 
-        if ($triggers->recordCount() > 0) {
+        if ($triggers->RecordCount() > 0) {
             $sql .= "\n-- Triggers\n\n";
             while (!$triggers->EOF) {
                 $sql .= $triggers->fields['tgdef'];
@@ -680,7 +680,7 @@ trait TableTrait
             return null;
         }
 
-        if ($rules->recordCount() > 0) {
+        if ($rules->RecordCount() > 0) {
             $sql .= "\n-- Rules\n\n";
             while (!$rules->EOF) {
                 $sql .= $rules->fields['definition'] . "\n";
@@ -1034,7 +1034,7 @@ trait TableTrait
     {
         $data = $this->getTable($table);
 
-        if ($data->recordCount() != 1) {
+        if ($data->RecordCount() != 1) {
             return -2;
         }
 
@@ -1760,7 +1760,7 @@ trait TableTrait
 
         // If none, check for an OID column.  Even though OIDs can be duplicated, the edit and delete row
         // functions check that they're only modiying a single row.  Otherwise, return empty array.
-        if ($rs->recordCount() == 0) {
+        if ($rs->RecordCount() == 0) {
             // Check for OID column
             $temp = [];
             if ($this->hasObjectID($table)) {

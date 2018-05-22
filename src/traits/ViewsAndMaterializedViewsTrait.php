@@ -263,7 +263,7 @@ trait ViewsAndMaterializedViewsTrait
         $this->printTabs($this->subject, 'definition');
         $this->printMsg($msg);
 
-        if ($vdata->recordCount() > 0) {
+        if ($vdata->RecordCount() > 0) {
             // Show comment if any
             if (null !== $vdata->fields['relcomment']) {
                 echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), "</p>\n";
