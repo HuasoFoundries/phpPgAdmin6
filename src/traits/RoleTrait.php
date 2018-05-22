@@ -96,9 +96,9 @@ trait RoleTrait
      * @param bool   $login        Boolean whether or not the role will be allowed to login
      * @param number $connlimit    Number of concurrent connections the role can make
      * @param string $expiry       String Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     * @param array  $memberof     (array) Roles to which the new role will be immediately added as a new member
-     * @param array  $members      (array) Roles which are automatically added as members of the new role
-     * @param array  $adminmembers (array) Roles which are automatically added as admin members of the new role
+     * @param array  $new_roles_to_add     (array) Roles to which the new role will be immediately added as a new member
+     * @param array  $new_members_of_role      (array) Roles which are automatically added as members of the new role
+     * @param array  $new_admins_of_role (array) Roles which are automatically added as admin members of the new role
      *
      * @return int 0 if operation was successful
      */
@@ -112,18 +112,18 @@ trait RoleTrait
         $login,
         $connlimit,
         $expiry,
-        $memberof,
-        $members,
-        $adminmembers
+        $new_roles_to_add,
+        $new_members_of_role,
+        $new_admins_of_role
     ) {
         $enc = $this->_encryptPassword($rolename, $password);
         $this->fieldClean($rolename);
         $this->clean($enc);
         $this->clean($connlimit);
         $this->clean($expiry);
-        $this->fieldArrayClean($memberof);
-        $this->fieldArrayClean($members);
-        $this->fieldArrayClean($adminmembers);
+        $this->fieldArrayClean($new_roles_to_add);
+        $this->fieldArrayClean($new_members_of_role);
+        $this->fieldArrayClean($new_admins_of_role);
 
         $sql = "CREATE ROLE \"{$rolename}\"";
         if ($password != '') {
@@ -147,16 +147,16 @@ trait RoleTrait
             $sql .= " VALID UNTIL 'infinity'";
         }
 
-        if (is_array($memberof) && sizeof($memberof) > 0) {
-            $sql .= ' IN ROLE "' . join('", "', $memberof) . '"';
+        if (is_array($new_roles_to_add) && sizeof($new_roles_to_add) > 0) {
+            $sql .= ' IN ROLE "' . join('", "', $new_roles_to_add) . '"';
         }
 
-        if (is_array($members) && sizeof($members) > 0) {
-            $sql .= ' ROLE "' . join('", "', $members) . '"';
+        if (is_array($new_members_of_role) && sizeof($new_members_of_role) > 0) {
+            $sql .= ' ROLE "' . join('", "', $new_members_of_role) . '"';
         }
 
-        if (is_array($adminmembers) && sizeof($adminmembers) > 0) {
-            $sql .= ' ADMIN "' . join('", "', $adminmembers) . '"';
+        if (is_array($new_admins_of_role) && sizeof($new_admins_of_role) > 0) {
+            $sql .= ' ADMIN "' . join('", "', $new_admins_of_role) . '"';
         }
 
         return $this->execute($sql);
@@ -187,12 +187,14 @@ trait RoleTrait
      * @param bool   $login           Boolean whether or not the role will be allowed to login
      * @param number $connlimit       Number of concurrent connections the role can make
      * @param string $expiry          string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     * @param array  $memberof        (array) Roles to which the role will be immediately added as a new member
-     * @param array  $members         (array) Roles which are automatically added as members of the role
-     * @param array  $adminmembers    (array) Roles which are automatically added as admin members of the role
-     * @param string  $memberofold     Original roles whose the role belongs to, comma separated
-     * @param string  $membersold      Original roles that are members of the role, comma separated
-     * @param string  $adminmembersold Original roles that are admin members of the role, comma separated
+     *
+     * @param array  $new_roles_to_add        (array) Roles to which the role will be immediately added as a new member
+     * @param array  $new_members_of_role         (array) Roles which are automatically added as members of the role
+     * @param array  $new_admins_of_role    (array) Roles which are automatically added as admin members of the role
+     *
+     * @param string  $original_parent_roles     Original roles whose the role belongs to, comma separated
+     * @param string  $original_members      Original roles that are members of the role, comma separated
+     * @param string  $original_admins Original roles that are admin members of the role, comma separated
      * @param string $newrolename     The new name of the role
      *
      * @return bool|int 0 success
@@ -207,12 +209,12 @@ trait RoleTrait
         $login,
         $connlimit,
         $expiry,
-        $memberof,
-        $members,
-        $adminmembers,
-        $memberofold,
-        $membersold,
-        $adminmembersold,
+        $new_roles_to_add,
+        $new_members_of_role,
+        $new_admins_of_role,
+        $original_parent_roles,
+        $original_members,
+        $original_admins,
         $newrolename
     ) {
         $status = $this->beginTransaction();
@@ -241,12 +243,12 @@ trait RoleTrait
             $login,
             $connlimit,
             $expiry,
-            $memberof,
-            $members,
-            $adminmembers,
-            $memberofold,
-            $membersold,
-            $adminmembersold
+            $new_roles_to_add,
+            $new_members_of_role,
+            $new_admins_of_role,
+            $original_parent_roles,
+            $original_members,
+            $original_admins
         );
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -275,6 +277,79 @@ trait RoleTrait
         return $this->execute($sql);
     }
 
+    private function _dealWithOldParentRoles($original_parent_roles, $new_roles_to_add, $rolename)
+    {
+        $old = explode(',', $original_parent_roles);
+
+        // Grant the roles of the old role owners to the new owner
+        foreach ($new_roles_to_add as $m) {
+            if (!in_array($m, $old, true)) {
+                $status = $this->grantRole($m, $rolename);
+                if ($status != 0) {
+                    return -1;
+                }
+            }
+        }
+
+        // Revoke the new role to the old members if they don't have the requested role name
+
+        foreach ($old as $o) {
+            if (!in_array($o, $new_roles_to_add, true)) {
+                $status = $this->revokeRole($o, $rolename, 0, 'CASCADE');
+                if ($status != 0) {
+                    return -1;
+                }
+            }
+        }
+
+    }
+
+    private function _dealWithOriginalMembers($original_members, $new_members_of_role, $rolename)
+    {
+        //members
+        $old = explode(',', $original_members);
+        foreach ($new_members_of_role as $m) {
+            if (!in_array($m, $old, true)) {
+                $status = $this->grantRole($rolename, $m);
+                if ($status != 0) {
+                    return -1;
+                }
+            }
+        }
+        if ($original_members) {
+            foreach ($old as $o) {
+                if (!in_array($o, $new_members_of_role, true)) {
+                    $status = $this->revokeRole($rolename, $o, 0, 'CASCADE');
+                    if ($status != 0) {
+                        return -1;
+                    }
+                }
+            }
+        }
+    }
+
+    private function _dealWithOriginalAdmins($original_admins, $new_admins_of_role, $rolename)
+    {
+        $old = explode(',', $original_admins);
+        foreach ($new_admins_of_role as $m) {
+            if (!in_array($m, $old, true)) {
+                $status = $this->grantRole($rolename, $m, 1);
+                if ($status != 0) {
+                    return -1;
+                }
+            }
+        }
+
+        foreach ($old as $o) {
+            if (!in_array($o, $new_admins_of_role, true)) {
+                $status = $this->revokeRole($rolename, $o, 1, 'CASCADE');
+                if ($status != 0) {
+                    return -1;
+                }
+            }
+        }
+    }
+
     /**
      * Adjusts a role's info.
      *
@@ -287,12 +362,14 @@ trait RoleTrait
      * @param bool   $login           Boolean whether or not the role will be allowed to login
      * @param number $connlimit       Number of concurrent connections the role can make
      * @param string $expiry          string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     * @param array  $memberof        (array) Roles to which the role will be immediately added as a new member
-     * @param array  $members         (array) Roles which are automatically added as members of the role
-     * @param array  $adminmembers    (array) Roles which are automatically added as admin members of the role
-     * @param string $memberofold     Original roles whose the role belongs to, comma separated
-     * @param string $membersold      Original roles that are members of the role, comma separated
-     * @param string $adminmembersold Original roles that are admin members of the role, comma separated
+     *
+     * @param array  $new_roles_to_add        (array) Roles to which the role will be immediately added as a new member
+     * @param array  $new_members_of_role         (array) Roles which are automatically added as members of the role
+     * @param array  $new_admins_of_role    (array) Roles which are automatically added as admin members of the role
+     *
+     * @param string $original_parent_roles     Original roles whose the role belongs to, comma separated
+     * @param string $original_members      Original roles that are members of the role, comma separated
+     * @param string $original_admins Original roles that are admin members of the role, comma separated
      *
      * @return int 0 if operation was successful
      */
@@ -306,21 +383,23 @@ trait RoleTrait
         $login,
         $connlimit,
         $expiry,
-        $memberof,
-        $members,
-        $adminmembers,
-        $memberofold,
-        $membersold,
-        $adminmembersold
+
+        $new_roles_to_add,
+        $new_members_of_role,
+        $new_admins_of_role,
+
+        $original_parent_roles,
+        $original_members,
+        $original_admins
     ) {
         $enc = $this->_encryptPassword($rolename, $password);
         $this->fieldClean($rolename);
         $this->clean($enc);
         $this->clean($connlimit);
         $this->clean($expiry);
-        $this->fieldArrayClean($memberof);
-        $this->fieldArrayClean($members);
-        $this->fieldArrayClean($adminmembers);
+        $this->fieldArrayClean($new_roles_to_add);
+        $this->fieldArrayClean($new_members_of_role);
+        $this->fieldArrayClean($new_admins_of_role);
 
         $sql = "ALTER ROLE \"{$rolename}\"";
         if ($password != '') {
@@ -351,66 +430,30 @@ trait RoleTrait
         }
 
         //memberof
-        $old = explode(',', $memberofold);
-        foreach ($memberof as $m) {
-            if (!in_array($m, $old, true)) {
-                $status = $this->grantRole($m, $rolename);
-                if ($status != 0) {
-                    return -1;
-                }
-            }
-        }
-        if ($memberofold) {
-            foreach ($old as $o) {
-                if (!in_array($o, $memberof, true)) {
-                    $status = $this->revokeRole($o, $rolename, 0, 'CASCADE');
-                    if ($status != 0) {
-                        return -1;
-                    }
-                }
+
+        // If there were existing users with the requested role,
+        // assign their roles to the new user, and remove said
+        // role from them if they are not among the new authorized members
+        if ($original_parent_roles) {
+            $status = $this->_dealWithOldParentRoles($original_parent_roles, $new_roles_to_add, $rolename);
+            if ($status !== 0) {
+                return -1;
             }
         }
 
-        //members
-        $old = explode(',', $membersold);
-        foreach ($members as $m) {
-            if (!in_array($m, $old, true)) {
-                $status = $this->grantRole($rolename, $m);
-                if ($status != 0) {
-                    return -1;
-                }
-            }
-        }
-        if ($membersold) {
-            foreach ($old as $o) {
-                if (!in_array($o, $members, true)) {
-                    $status = $this->revokeRole($rolename, $o, 0, 'CASCADE');
-                    if ($status != 0) {
-                        return -1;
-                    }
-                }
+        if ($original_members) {
+            $status = $this->_dealWithOriginalMembers($original_members, $new_members_of_role, $rolename);
+            if ($status !== 0) {
+                return -1;
             }
         }
 
-        //adminmembers
-        $old = explode(',', $adminmembersold);
-        foreach ($adminmembers as $m) {
-            if (!in_array($m, $old, true)) {
-                $status = $this->grantRole($rolename, $m, 1);
-                if ($status != 0) {
-                    return -1;
-                }
+        if ($original_admins) {
+            $status = $this->_dealWithOriginalAdmins($original_admins, $new_admins_of_role, $rolename);
+            if ($status !== 0) {
+                return -1;
             }
-        }
-        if ($adminmembersold) {
-            foreach ($old as $o) {
-                if (!in_array($o, $adminmembers, true)) {
-                    $status = $this->revokeRole($rolename, $o, 1, 'CASCADE');
-                    if ($status != 0) {
-                        return -1;
-                    }
-                }
-            }
+
         }
 
         return $status;
