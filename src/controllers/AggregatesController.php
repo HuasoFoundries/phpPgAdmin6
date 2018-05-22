@@ -16,16 +16,22 @@ class AggregatesController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render() {}
+    public function render()
+    {
+    }
 
     /**
      * Show default list of aggregate functions in the database.
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '') {}
+    public function doDefault($msg = '')
+    {
+    }
 
-    public function doTree() {}
+    public function doTree()
+    {
+    }
 
     /**
      * Actually creates the new aggregate in the database.
