@@ -301,6 +301,7 @@ trait RoleTrait
                 }
             }
         }
+        return 0;
 
     }
 
@@ -326,6 +327,7 @@ trait RoleTrait
                 }
             }
         }
+        return 0;
     }
 
     private function _dealWithOriginalAdmins($original_admins, $new_admins_of_role, $rolename)
@@ -348,58 +350,15 @@ trait RoleTrait
                 }
             }
         }
+        return 0;
     }
 
-    /**
-     * Adjusts a role's info.
-     *
-     * @param string $rolename        The name of the role to adjust
-     * @param string $password        A password for the role
-     * @param bool   $superuser       Boolean whether or not the role is a superuser
-     * @param bool   $createdb        Boolean whether or not the role can create databases
-     * @param bool   $createrole      Boolean whether or not the role can create other roles
-     * @param bool   $inherits        Boolean whether or not the role inherits the privileges from parent roles
-     * @param bool   $login           Boolean whether or not the role will be allowed to login
-     * @param number $connlimit       Number of concurrent connections the role can make
-     * @param string $expiry          string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     *
-     * @param array  $new_roles_to_add        (array) Roles to which the role will be immediately added as a new member
-     * @param array  $new_members_of_role         (array) Roles which are automatically added as members of the role
-     * @param array  $new_admins_of_role    (array) Roles which are automatically added as admin members of the role
-     *
-     * @param string $original_parent_roles     Original roles whose the role belongs to, comma separated
-     * @param string $original_members      Original roles that are members of the role, comma separated
-     * @param string $original_admins Original roles that are admin members of the role, comma separated
-     *
-     * @return int 0 if operation was successful
-     */
-    public function setRole(
-        $rolename,
-        $password,
-        $superuser,
-        $createdb,
-        $createrole,
-        $inherits,
-        $login,
-        $connlimit,
-        $expiry,
-
-        $new_roles_to_add,
-        $new_members_of_role,
-        $new_admins_of_role,
-
-        $original_parent_roles,
-        $original_members,
-        $original_admins
-    ) {
+    private function _alterRole($rolename, $password, $connlimit, $expiry)
+    {
         $enc = $this->_encryptPassword($rolename, $password);
-        $this->fieldClean($rolename);
         $this->clean($enc);
         $this->clean($connlimit);
         $this->clean($expiry);
-        $this->fieldArrayClean($new_roles_to_add);
-        $this->fieldArrayClean($new_members_of_role);
-        $this->fieldArrayClean($new_admins_of_role);
 
         $sql = "ALTER ROLE \"{$rolename}\"";
         if ($password != '') {
@@ -423,13 +382,58 @@ trait RoleTrait
             $sql .= " VALID UNTIL 'infinity'";
         }
 
-        $status = $this->execute($sql);
+        return $this->execute($sql);
 
-        if ($status != 0) {
+    }
+
+    /**
+     * Adjusts a role's info.
+     *
+     * @param string $rolename        The name of the role to adjust
+     * @param string $password        A password for the role
+     * @param bool   $superuser       Boolean whether or not the role is a superuser
+     * @param bool   $createdb        Boolean whether or not the role can create databases
+     * @param bool   $createrole      Boolean whether or not the role can create other roles
+     * @param bool   $inherits        Boolean whether or not the role inherits the privileges from parent roles
+     * @param bool   $login           Boolean whether or not the role will be allowed to login
+     * @param number $connlimit       Number of concurrent connections the role can make
+     * @param string $expiry          string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
+     * @param array  $new_roles_to_add        (array) Roles to which the role will be immediately added as a new member
+     * @param array  $new_members_of_role         (array) Roles which are automatically added as members of the role
+     * @param array  $new_admins_of_role    (array) Roles which are automatically added as admin members of the role
+     * @param string $original_parent_roles     Original roles whose the role belongs to, comma separated
+     * @param string $original_members      Original roles that are members of the role, comma separated
+     * @param string $original_admins Original roles that are admin members of the role, comma separated
+     *
+     * @return int 0 if operation was successful
+     */
+    public function setRole(
+        $rolename,
+        $password,
+        $superuser,
+        $createdb,
+        $createrole,
+        $inherits,
+        $login,
+        $connlimit,
+        $expiry,
+        $new_roles_to_add,
+        $new_members_of_role,
+        $new_admins_of_role,
+        $original_parent_roles,
+        $original_members,
+        $original_admins
+    ) {
+        $this->fieldClean($rolename);
+
+        $this->fieldArrayClean($new_roles_to_add);
+        $this->fieldArrayClean($new_members_of_role);
+        $this->fieldArrayClean($new_admins_of_role);
+
+        $status = $this->_alterRole($rolename, $password, $connlimit, $expiry);
+        if ($status !== 0) {
             return -1;
         }
-
-        //memberof
 
         // If there were existing users with the requested role,
         // assign their roles to the new user, and remove said

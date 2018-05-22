@@ -293,7 +293,7 @@ class ADOdbBase
      * @param string      $comment  the comment to add
      * @param null|string $basetype
      *
-     * @return \PHPPgAdmin\ADORecordSet recordset of results
+     * @return int|\PHPPgAdmin\ADORecordSet recordset of results or error code
      */
     public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
     {
@@ -605,7 +605,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql = $fields . $values . ')';
         }
 
         // Check for failures
@@ -677,7 +677,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;

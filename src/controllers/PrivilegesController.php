@@ -51,40 +51,46 @@ class PrivilegesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $data = $this->misc->getDatabaseAccessor();
+        $data    = $this->misc->getDatabaseAccessor();
+        $subject = $_REQUEST['subject'];
 
-        $this->printTrail($_REQUEST['subject']);
+        $this->printTrail($subject);
 
         // @@@FIXME: This switch is just a temporary solution,
         // need a better way, maybe every type of object should
         // have a tab bar???
-        switch ($_REQUEST['subject']) {
-            case 'server':
-            case 'database':
-            case 'schema':
-            case 'table':
-            case 'column':
-            case 'view':
-                $this->printTabs($_REQUEST['subject'], 'privileges');
 
-                break;
-            default:
-                $this->printTitle($this->lang['strprivileges'], 'pg.privilege');
+        if (in_array($subject, [
+            'server',
+            'database',
+            'schema',
+            'table',
+            'column',
+            'view',
+        ])) {
+            $this->printTabs($subject, 'privileges');
+        } else {
+            $this->printTitle($this->lang['strprivileges'], 'pg.privilege');
         }
+
         $this->printMsg($msg);
+        if (!isset($data->privlist[$subject])) {
+            $this->container->utils->halt('No privileges defined for subject ' . $subject);
+            return;
+        }
 
         // Determine whether object should be ref'd by name or oid.
-        if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-            $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
+        if (isset($_REQUEST[$subject . '_oid'])) {
+            $object = $_REQUEST[$subject . '_oid'];
         } else {
-            $object = $_REQUEST[$_REQUEST['subject']];
+            $object = $_REQUEST[$subject];
         }
 
         // Get the privileges on the object, given its type
-        if ('column' == $_REQUEST['subject']) {
+        if ('column' == $subject) {
             $privileges = $data->getPrivileges($object, 'column', $_REQUEST['table']);
         } else {
-            $privileges = $data->getPrivileges($object, $_REQUEST['subject']);
+            $privileges = $data->getPrivileges($object, $subject);
         }
 
         if (sizeof($privileges) > 0) {
@@ -95,7 +101,7 @@ class PrivilegesController extends BaseController
                 echo "<tr><th class=\"data\">{$this->lang['strtype']}</th><th class=\"data\">{$this->lang['struser']}/{$this->lang['strgroup']}</th>";
             }
 
-            foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
+            foreach ($data->privlist[$subject] as $v2) {
                 // Skip over ALL PRIVILEGES
                 if ('ALL PRIVILEGES' == $v2) {
                     continue;
@@ -118,7 +124,7 @@ class PrivilegesController extends BaseController
                 }
 
                 echo '<td>', $this->misc->printVal($v[1]), "</td>\n";
-                foreach ($data->privlist[$_REQUEST['subject']] as $v2) {
+                foreach ($data->privlist[$subject] as $v2) {
                     // Skip over ALL PRIVILEGES
                     if ('ALL PRIVILEGES' == $v2) {
                         continue;
@@ -149,17 +155,24 @@ class PrivilegesController extends BaseController
         } else {
             echo "<p>{$this->lang['strnoprivileges']}</p>\n";
         }
+        $this->printGrantLinks();
 
+    }
+
+    public function printGrantLinks()
+    {
+        $data    = $this->misc->getDatabaseAccessor();
+        $subject = $_REQUEST['subject'];
         // Links for granting to a user or group
-        switch ($_REQUEST['subject']) {
+        switch ($subject) {
             case 'table':
             case 'view':
             case 'sequence':
             case 'function':
             case 'tablespace':
-                $alllabel = "showall{$_REQUEST['subject']}s";
-                $allurl   = "{$_REQUEST['subject']}s";
-                $alltxt   = $this->lang["strshowall{$_REQUEST['subject']}s"];
+                $alllabel = "showall{$subject}s";
+                $allurl   = "{$subject}s";
+                $alltxt   = $this->lang["strshowall{$subject}s"];
 
                 break;
             case 'schema':
@@ -176,11 +189,10 @@ class PrivilegesController extends BaseController
                 break;
         }
 
-        $subject = $_REQUEST['subject'];
-        $object  = $_REQUEST[$_REQUEST['subject']];
+        $object = $_REQUEST[$subject];
 
-        if ('function' == $_REQUEST['subject']) {
-            $objectoid = $_REQUEST[$_REQUEST['subject'].'_oid'];
+        if ('function' == $subject) {
+            $objectoid = $_REQUEST[$subject . '_oid'];
             $urlvars   = [
                 'action'         => 'alter',
                 'server'         => $_REQUEST['server'],
@@ -190,7 +202,7 @@ class PrivilegesController extends BaseController
                 "{$subject}_oid" => $objectoid,
                 'subject'        => $subject,
             ];
-        } elseif ('column' == $_REQUEST['subject']) {
+        } elseif ('column' == $subject) {
             $urlvars = [
                 'action'   => 'alter',
                 'server'   => $_REQUEST['server'],
@@ -202,8 +214,10 @@ class PrivilegesController extends BaseController
 
             if (isset($_REQUEST['table'])) {
                 $urlvars['table'] = $_REQUEST['table'];
-            } else {
+            } else if (isset($_REQUEST['view'])) {
                 $urlvars['view'] = $_REQUEST['view'];
+            } else {
+                $urlvars['matview'] = $_REQUEST['matview'];
             }
         } else {
             $urlvars = [
@@ -297,7 +311,7 @@ class PrivilegesController extends BaseController
             }
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/privileges\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/privileges\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>\n";
             echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";
@@ -351,9 +365,9 @@ class PrivilegesController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
             echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), "\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
-            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'].'_oid'),
-                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'].'_oid']), "\" />\n";
+            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'] . '_oid'),
+                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), "\" />\n";
             }
 
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
@@ -374,8 +388,8 @@ class PrivilegesController extends BaseController
             echo "</form>\n";
         } else {
             // Determine whether object should be ref'd by name or oid.
-            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-                $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
+            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+                $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
             } else {
                 $object = $_REQUEST[$_REQUEST['subject']];
             }
