@@ -68,7 +68,7 @@ class BaseController
         $this->container = $container;
         $this->lang      = $container->get('lang');
 
-        $this->controller_name = str_replace(__NAMESPACE__ . '\\', '', get_class($this));
+        $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
         $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
         $this->script          = $this->view_name;
 
@@ -155,7 +155,7 @@ class BaseController
     {
         $title = $title ? $title : $this->controller_title;
 
-        return $prefix . $this->lang[$title] . ($suffix ? ': ' . $suffix : '');
+        return $prefix.$this->lang[$title].($suffix ? ': '.$suffix : '');
     }
 
     public function getContainer()
@@ -237,10 +237,10 @@ class BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param \PHPPgAdmin\ArrayRecordSet  $_treedata a set of records to populate the tree
-     * @param array  $attrs     Attributes for tree items
-     * @param string $section   The section where the branch is linked in the tree
-     * @param bool   $print     either to return or echo the result
+     * @param \PHPPgAdmin\ArrayRecordSet $_treedata a set of records to populate the tree
+     * @param array                      $attrs     Attributes for tree items
+     * @param string                     $section   The section where the branch is linked in the tree
+     * @param bool                       $print     either to return or echo the result
      *
      * @return \Slim\Http\Response|string the json rendered tree
      */
@@ -397,7 +397,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">' . nl2br($msg) . '</p>' . "\n";
+            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
         }
         if ($do_print) {
             echo $html;

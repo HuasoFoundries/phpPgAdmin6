@@ -18,7 +18,7 @@ class Postgres92 extends Postgres93
     /**
      * Returns all available process information.
      *
-     * @param string|null $database (optional) Find only connections to specified database
+     * @param null|string $database (optional) Find only connections to specified database
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */

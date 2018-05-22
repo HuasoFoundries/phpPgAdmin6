@@ -26,8 +26,8 @@ class XHtmlSimpleElement
     /**
      * Constructor.
      *
-     * @param    null|mixed  $element  The element's name. Defaults to name of the
-     * derived class
+     * @param null|mixed $element The element's name. Defaults to name of the
+     *                            derived class
      */
     public function __construct($element = null)
     {

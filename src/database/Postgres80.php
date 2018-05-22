@@ -262,11 +262,11 @@ class Postgres80 extends Postgres81
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
      * @param \PHPPgAdmin\ADORecordSet $tblrs      The table recordSet returned by getTable()
-     * @param string $name       The new name for the table
-     * @param string $owner      The new owner for the table
-     * @param string $schema     The new schema for the table
-     * @param string $comment    The comment on the table
-     * @param string $tablespace The new tablespace for the table ('' means leave as is)
+     * @param string                   $name       The new name for the table
+     * @param string                   $owner      The new owner for the table
+     * @param string                   $schema     The new schema for the table
+     * @param string                   $comment    The comment on the table
+     * @param string                   $tablespace The new tablespace for the table ('' means leave as is)
      *
      * @return int 0 success
      */

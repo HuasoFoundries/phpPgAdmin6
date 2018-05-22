@@ -342,7 +342,7 @@ class TypesController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdroptype'], $this->misc->printVal($_REQUEST['type'])), "</p>\n";
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
@@ -383,7 +383,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -428,7 +428,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -556,7 +556,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -599,7 +599,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -700,7 +700,7 @@ class TypesController extends BaseController
         $this->printTitle($this->lang['strcreatetype'], 'pg.type.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -724,7 +724,7 @@ class TypesController extends BaseController
             $funcs->moveNext();
         }
         echo "</select></td></tr>\n";
-        echo '<tr><th class="data left' . (version_compare($data->major_version, '7.4', '<') ? ' required' : '') . "\">{$this->lang['strlength']}</th>\n";
+        echo '<tr><th class="data left'.(version_compare($data->major_version, '7.4', '<') ? ' required' : '')."\">{$this->lang['strlength']}</th>\n";
         echo '<td class="data1"><input name="typlen" size="8" value="',
         htmlspecialchars($_POST['typlen']), '" /></td></tr>';
         echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>\n";

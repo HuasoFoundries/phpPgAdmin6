@@ -17,8 +17,8 @@ class Postgres93 extends Postgres94
     /**
      * Returns a list of all functions in the database.
      *
-     * @param bool $all  If true, will find all available functions, if false just those in search path
-     * @param mixed  $type If not null, will find all trigger functions
+     * @param bool  $all  If true, will find all available functions, if false just those in search path
+     * @param mixed $type If not null, will find all trigger functions
      *
      * @return \PHPPgAdmin\ADORecordSet All functions
      */

@@ -117,7 +117,7 @@ class MaterializedviewpropertiesController extends BaseController
     public function doRefresh()
     {
         $data = $this->misc->getDatabaseAccessor();
-        $sql  = 'REFRESH MATERIALIZED VIEW ' . $_REQUEST[$this->subject];
+        $sql  = 'REFRESH MATERIALIZED VIEW '.$_REQUEST[$this->subject];
         $this->prtrace($sql);
         $status = $data->execute($sql);
 
@@ -149,7 +149,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -187,7 +187,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties\" method=\"post\">\n";
 
                 // Output matview header
                 echo "<table>\n";
@@ -284,7 +284,7 @@ class MaterializedviewpropertiesController extends BaseController
 
                 $this->coalesceArr($_POST, 'comment', $matview->fields['relcomment']);
 
-                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
                 echo '<td class="data1">';
