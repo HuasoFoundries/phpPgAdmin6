@@ -257,13 +257,13 @@ class Postgres82 extends Postgres83
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'".$definition[0]."'";
+            $sql .= "'" . $definition[0] . "'";
             if ($definition[1]) {
-                $sql .= ",'".$definition[1]."'";
+                $sql .= ",'" . $definition[1] . "'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'".$definition."'";
+            $sql .= "'" . $definition . "'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
@@ -304,7 +304,7 @@ class Postgres82 extends Postgres83
      * @param string $table The table the index is on
      * @param string $index The name of the index
      *
-     * @return int 0 if operation was successful
+     * @return array 0 if operation was successful
      */
     public function clusterIndex($table = '', $index = '')
     {

@@ -647,4 +647,6 @@ trait FtsTrait
     abstract public function selectSet($sql);
 
     abstract public function clean(&$str);
+
+    abstract public function arrayClean($flags);
 }

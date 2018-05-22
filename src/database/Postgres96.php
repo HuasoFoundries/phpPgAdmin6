@@ -20,7 +20,7 @@ class Postgres96 extends Postgres
     /**
      * Returns all available process information.
      *
-     * @param $database (optional) Find only connections to specified database
+     * @param string|null $database (optional) Find only connections to specified database
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -86,7 +86,7 @@ class Postgres96 extends Postgres
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
         if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
+            $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
         }
 
         if ($expiry != '') {

@@ -1132,4 +1132,10 @@ trait MiscTrait
         $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
         return isset($tab['url']) ? $tab : null;
     }
+
+    abstract public function getDatabaseAccessor($database = '', $server_id = null);
+
+    abstract public function isDumpEnabled($all = false);
+
+    abstract public function prtrace();
 }

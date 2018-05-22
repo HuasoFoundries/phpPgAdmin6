@@ -54,18 +54,16 @@ class HTMLController
      * Returns URL given an action associative array.
      * NOTE: this function does not html-escape, only url-escape.
      *
-     * @param $action An associative array of the follow properties:
+     * @param array $action An associative array of the follow properties:
      *            'url'  => The first part of the URL (before the ?)
      *            'urlvars' => Associative array of (URL variable => field name)
      *                        these are appended to the URL
-     * @param $fields field data from which 'urlfield' and 'vars' are obtained
+     * @param array $fields field data from which 'urlfield' and 'vars' are obtained
      * @param null|mixed $from
      */
     protected function getActionUrl(&$action, &$fields, $from = null)
     {
-        if (null === $from) {
-            $from = __METHOD__;
-        }
+        $from = $from ? $from : __METHOD__;
 
         $url = Decorator::get_sanitized_value($action['url'], $fields);
 
@@ -112,7 +110,7 @@ class HTMLController
 
         ksort($urlvars);
         foreach ($urlvars as $var => $varfield) {
-            $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($varfield, $fields);
+            $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($varfield, $fields);
             $sep = '&';
         }
 
@@ -122,7 +120,7 @@ class HTMLController
     /**
      * Display a link.
      *
-     * @param $link An associative array of link parameters to print
+     * @param array $link An associative array of link parameters to print
      *     link = array(
      *       'attr' => array( // list of A tag attribute
      *          'attrname' => attribute value
@@ -141,18 +139,16 @@ class HTMLController
         if (!isset($link['fields'])) {
             $link['fields'] = $_REQUEST;
         }
-        if (null === $from || false === $from) {
-            $from = __METHOD__;
-        }
-        $tag = '<a ';
+        $from = $from ? $from : __METHOD__;
+        $tag  = '<a ';
         foreach ($link['attr'] as $attr => $value) {
             if ('href' == $attr and is_array($value)) {
-                $tag .= 'href="'.htmlentities($this->getActionUrl($value, $link['fields'], $from)).'" ';
+                $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'], $from)) . '" ';
             } else {
-                $tag .= htmlentities($attr).'="'.Decorator::get_sanitized_value($value, $link['fields'], 'html').'" ';
+                $tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
             }
         }
-        $tag .= '>'.Decorator::get_sanitized_value($link['content'], $link['fields'], 'html')."</a>\n";
+        $tag .= '>' . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . "</a>\n";
 
         if ($do_print) {
             echo $tag;
@@ -197,12 +193,12 @@ class HTMLController
     /**
      * Prints a combox box.
      *
-     * @param        $arrOptions  associative array storing options and values of combo should be Option => Value
-     * @param        $szName      string to specify the name of the form element
-     * @param bool   $bBlankEntry
-     * @param string $szDefault
-     * @param bool   $bMultiple
-     * @param int    $iSize
+     * @param array  $arrOptions  associative array storing options and values of combo should be Option => Value
+     * @param string $szName      string to specify the name of the form element
+     * @param bool   $bBlankEntry either to insert a blank option at the beggining of the combo
+     * @param string $szDefault the current selected value
+     * @param bool   $bMultiple enable multible selection
+     * @param int    $iSize combobox size
      *
      * @return string with the generated HTML select box
      *
@@ -216,9 +212,9 @@ class HTMLController
         $htmlOut = '';
         if ($bMultiple) {
             // If multiple select combo
-            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">"."\n";
+            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">" . "\n";
         } else {
-            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"${szName}\" id=\"${szName}\">"."\n";
+            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"${szName}\" id=\"${szName}\">" . "\n";
         }
 
         if ($bBlankEntry) {

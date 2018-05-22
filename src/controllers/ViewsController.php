@@ -617,7 +617,7 @@ class ViewsController extends BaseController
             for ($i = 0; $i < $linkCount; ++$i) {
                 echo "<tr>\n<td class=\"${rowClass}\">\n";
                 echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formCondition[${i}][field]");
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrOperators, "formCondition[${i}][operator]", false, false);
+                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrOperators, "formCondition[${i}][operator]", false, '', false);
                 echo "<input type=\"text\" name=\"formCondition[${i}][txt]\" />\n";
                 echo "</td>\n</tr>\n";
                 $rowClass = 'data1' == $rowClass ? 'data2' : 'data1';

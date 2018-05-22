@@ -26,9 +26,8 @@ class XHtmlSimpleElement
     /**
      * Constructor.
      *
-     * @param    string    The element's name. Defaults to name of the
+     * @param    null|mixed  $element  The element's name. Defaults to name of the
      * derived class
-     * @param null|mixed $element
      */
     public function __construct($element = null)
     {
@@ -59,7 +58,7 @@ class XHtmlSimpleElement
     public function _html()
     {
         $this->_htmlcode = '<';
-        foreach ($this->_attributeCollection as $attribute => $value) {
+        foreach ($this->_attributes as $attribute => $value) {
             if (!empty($value)) {
                 $this->_htmlcode .= sprintf(' %s="%s" ', $attribute, $value);
             }

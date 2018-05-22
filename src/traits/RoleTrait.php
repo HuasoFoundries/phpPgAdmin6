@@ -190,9 +190,9 @@ trait RoleTrait
      * @param array  $memberof        (array) Roles to which the role will be immediately added as a new member
      * @param array  $members         (array) Roles which are automatically added as members of the role
      * @param array  $adminmembers    (array) Roles which are automatically added as admin members of the role
-     * @param array  $memberofold     (array) Original roles whose the role belongs to
-     * @param array  $membersold      (array) Original roles that are members of the role
-     * @param array  $adminmembersold (array) Original roles that are admin members of the role
+     * @param string  $memberofold     Original roles whose the role belongs to, comma separated
+     * @param string  $membersold      Original roles that are members of the role, comma separated
+     * @param string  $adminmembersold Original roles that are admin members of the role, comma separated
      * @param string $newrolename     The new name of the role
      *
      * @return bool|int 0 success
@@ -290,9 +290,9 @@ trait RoleTrait
      * @param array  $memberof        (array) Roles to which the role will be immediately added as a new member
      * @param array  $members         (array) Roles which are automatically added as members of the role
      * @param array  $adminmembers    (array) Roles which are automatically added as admin members of the role
-     * @param string $memberofold     (array) Original roles whose the role belongs to
-     * @param string $membersold      (array) Original roles that are members of the role
-     * @param string $adminmembersold (array) Original roles that are admin members of the role
+     * @param string $memberofold     Original roles whose the role belongs to, comma separated
+     * @param string $membersold      Original roles that are members of the role, comma separated
+     * @param string $adminmembersold Original roles that are admin members of the role, comma separated
      *
      * @return int 0 if operation was successful
      */
@@ -966,4 +966,6 @@ trait RoleTrait
     abstract public function hasGrantOption();
 
     abstract public function getFunction($function_oid);
+
+    abstract public function fieldArrayClean(&$arr);
 }

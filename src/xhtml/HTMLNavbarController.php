@@ -273,7 +273,7 @@ class HTMLNavbarController extends HTMLController
 
             $topbar_html .= '<td style="text-align: right">';
 
-            $topbar_html .= $this->printLinksList($toplinks, 'toplink', [], false, $from);
+            $topbar_html .= $this->printLinksList($toplinks, 'toplink', false, $from);
 
             $topbar_html .= '</td>';
         } else {
@@ -301,6 +301,8 @@ class HTMLNavbarController extends HTMLController
      * Create a bread crumb trail of the object hierarchy.
      *
      * @param null|string $subject sunkect of the trail
+     *
+     * @return array the trail array
      */
     private function _getTrail($subject = null)
     {
@@ -497,6 +499,6 @@ class HTMLNavbarController extends HTMLController
                     ];
                 }
         }
-        return trail;
+        return $trail;
     }
 }

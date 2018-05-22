@@ -66,14 +66,14 @@ class GroupsController extends BaseController
                 $this->doDrop(true);
 
                 break;
-            case 'save_edit':
-                $this->doSaveEdit();
+            /*case 'save_edit':
+            $this->doSaveEdit();
 
-                break;
+            break;
             case 'edit':
-                $this->doEdit();
+            $this->doEdit();
 
-                break;
+            break;*/
             case 'properties':
                 $this->doProperties();
 

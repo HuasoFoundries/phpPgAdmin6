@@ -840,7 +840,7 @@ class DisplayController extends BaseController
      * Build & return the FK information data structure
      * used when deciding if a field should have a FK link or not.
      *
-     * @return [type] [description]
+     * @return array associative array describing the FK
      */
     public function &getFKInfo()
     {
@@ -885,8 +885,9 @@ class DisplayController extends BaseController
     /**
      * Print table header cells.
      *
-     * @param $args - associative array for sort link parameters
-     * @param mixed $withOid
+     * @param \PHPPgAdmin\ADORecordSet $resultset set of results from getRow operation
+     * @param array $args - associative array for sort link parameters
+     * @param bool $withOid either to display OIDs or not
      */
     public function printTableHeaderCells(&$resultset, $args, $withOid)
     {
@@ -931,7 +932,13 @@ class DisplayController extends BaseController
         reset($resultset->fields);
     }
 
-    // Print data-row cells
+    /**
+     * Print table rows
+     *
+     * @param \PHPPgAdmin\ADORecordSet  $resultset         The resultset
+     * @param array  $fkey_information  The fkey information
+     * @param bool  $withOid           either to display OIDs or not
+     */
     public function printTableRowCells(&$resultset, &$fkey_information, $withOid)
     {
         $data = $this->misc->getDatabaseAccessor();
@@ -1052,7 +1059,7 @@ class DisplayController extends BaseController
      *
      * @param int    $page      - the page currently viewed
      * @param int    $pages     - the maximum number of pages
-     * @param string $gets      -  the parameters to include in the link to the wanted page
+     * @param array $gets      -  the parameters to include in the link to the wanted page
      * @param int    $max_width - the number of pages to make available at any one time (default = 20)
      *
      * @return string the pagination links

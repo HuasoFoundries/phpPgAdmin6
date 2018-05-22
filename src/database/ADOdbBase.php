@@ -266,7 +266,7 @@ class ADOdbBase
     /**
      * Base constructor.
      *
-     * @param \ADONewConnection &$conn       The connection object
+     * @param \PHPPgAdmin\ADONewConnection $conn       The connection object
      * @param mixed             $container
      * @param mixed             $server_info
      */
@@ -293,7 +293,7 @@ class ADOdbBase
      * @param string      $comment  the comment to add
      * @param null|string $basetype
      *
-     * @return int 0 if operation was successful
+     * @return PHPPgAdmin\ADORecordSet recordset of results
      */
     public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
     {
@@ -390,7 +390,7 @@ class ADOdbBase
     /**
      * Cleans (escapes) an array.
      *
-     * @param $arr The array to clean, by reference
+     * @param array $arr The array to clean, by reference
      *
      * @return array The cleaned array
      */
@@ -605,7 +605,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql = $fields . $values . ')';
         }
 
         // Check for failures
@@ -677,7 +677,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
@@ -749,7 +749,7 @@ class ADOdbBase
      *
      * @param mixed $parameter the parameter
      *
-     * @return bool boolean  database representation
+     * @return string boolean  database representation
      */
     public function dbBool(&$parameter)
     {
@@ -765,13 +765,13 @@ class ADOdbBase
     /**
      * Change a parameter from database representation to a boolean, (others evaluate to false).
      *
-     * @param mixed $parameter the parameter
+     * @param string $parameter the parameter
      *
      * @return bool
      */
     public function phpBool($parameter)
     {
-        return $parameter == 't';
+        return $parameter === 't';
     }
 
     /**

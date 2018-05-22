@@ -72,18 +72,18 @@ class ViewpropertiesController extends BaseController
                 $this->doAlter(true);
 
                 break;
-            case 'drop':
-                if (isset($_POST['drop'])) {
-                    $this->doDrop(false);
-                } else {
-                    $this->doDefault();
-                }
+            /*case 'drop':
+            if (isset($_POST['drop'])) {
+            $this->doDrop(false);
+            } else {
+            $this->doDefault();
+            }
 
-                break;
+            break;
             case 'confirm_drop':
-                $this->doDrop(true);
+            $this->doDrop(true);
 
-                break;
+            break;*/
             default:
                 $this->doDefault();
 

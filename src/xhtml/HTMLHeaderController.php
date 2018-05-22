@@ -32,10 +32,12 @@ class HTMLHeaderController extends HTMLController
      * Prints the page header.  If member variable $this->_no_output is
      * set then no header is drawn.
      *
-     * @param $title The title of the page
-     * @param $script script tag
+     * @param string $title The title of the page
+     * @param string $script script tag
      * @param bool  $do_print boolean if false, the function will return the header content
-     * @param mixed $template
+     * @param tring $template the template to render
+     *
+     * @return string the parsed template
      */
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
@@ -48,9 +50,9 @@ class HTMLHeaderController extends HTMLController
 
         $viewVars = [];
 
-        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
+        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
+        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
         $viewVars['appName']        = htmlspecialchars($this->appName);
 
         $viewVars['script'] = $script;
@@ -83,7 +85,7 @@ class HTMLHeaderController extends HTMLController
      */
     public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
-        $bodyClass = $this->lang['applangdir'].' '.htmlspecialchars($bodyClass);
+        $bodyClass = $this->lang['applangdir'] . ' ' . htmlspecialchars($bodyClass);
         $onload    = ($onloadInit ? 'onload="init();" ' : '');
 
         $bodyHtml = sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
@@ -99,9 +101,9 @@ class HTMLHeaderController extends HTMLController
     /**
      * Print out the page heading and help link.
      *
-     * @param $title Title, already escaped
-     * @param $help (optional) The identifier for the help link
-     * @param mixed $do_print
+     * @param string $title Title, already escaped
+     * @param string $help (optional) The identifier for the help link
+     * @param boolean $do_print
      */
     public function printTitle($title, $help = null, $do_print = true)
     {

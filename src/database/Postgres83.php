@@ -52,9 +52,9 @@ class Postgres83 extends Postgres84
     /**
      * Return all database available on the server.
      *
-     * @param $currentdatabase database name that should be on top of the resultset
+     * @param string $currentdatabase database name that should be on top of the resultset
      *
-     * @return A list of databases, sorted alphabetically
+     * @return  int|\PHPPgAdmin\ADORecordSet A recordset or an error number A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -286,14 +286,14 @@ class Postgres83 extends Postgres84
     /**
      * Alter a sequence's properties.
      *
-     * @param $seqrs        The sequence RecordSet returned by getSequence()
-     * @param $increment    The sequence incremental value
-     * @param $minvalue     The sequence minimum value
-     * @param $maxvalue     The sequence maximum value
-     * @param $restartvalue The sequence current value
-     * @param $cachevalue   The sequence cache value
-     * @param $cycledvalue  Sequence can cycle ?
-     * @param $startvalue   The sequence start value when issueing a restart (ignored)
+     * @param \PHPPgAdmin\ADORecordSet $seqrs        The sequence RecordSet returned by getSequence()
+     * @param int $increment    The sequence incremental value
+     * @param int $minvalue     The sequence minimum value
+     * @param int $maxvalue     The sequence maximum value
+     * @param int $restartvalue The sequence current value
+     * @param int $cachevalue   The sequence cache value
+     * @param boolean $cycledvalue  Sequence can cycle ?
+     * @param int $startvalue   The sequence start value when issueing a restart (ignored)
      *
      * @return int 0 if operation was successful
      */
@@ -331,7 +331,7 @@ class Postgres83 extends Postgres84
 
         // toggle cycle yes/no
         if (!is_null($cycledvalue)) {
-            $sql .= (!$cycledvalue ? ' NO ' : '').' CYCLE';
+            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
         }
 
         if ($sql != '') {

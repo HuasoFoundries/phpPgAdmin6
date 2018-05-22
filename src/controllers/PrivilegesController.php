@@ -263,9 +263,9 @@ class PrivilegesController extends BaseController
     /**
      * Grant permissions on an object to a user.
      *
-     * @param $confirm To show entry screen
-     * @param $mode 'grant' or 'revoke'
-     * @param $msg (optional) A message to show
+     * @param boolean $confirm To show entry screen
+     * @param string $mode 'grant' or 'revoke'
+     * @param string $msg (optional) A message to show
      */
     public function doAlter($confirm, $mode, $msg = '')
     {

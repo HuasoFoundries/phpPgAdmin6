@@ -47,7 +47,7 @@ class TreeController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param array  $_treedata a set of records to populate the tree
+     * @param \PHPPgAdmin\ArrayRecordSet  $_treedata a set of records to populate the tree
      * @param array  $attrs     Attributes for tree items
      *                          'text' - the text for the tree node
      *                          'icon' - an icon for node
@@ -115,10 +115,10 @@ class TreeController
             $parent = [
                 'id'       => 'root',
                 'children' => true,
-                'icon'     => \SUBFOLDER.'/assets/images/themes/default/Servers.png',
+                'icon'     => \SUBFOLDER . '/assets/images/themes/default/Servers.png',
                 'state'    => ['opened' => true],
-                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER.'/src/views/servers')],
-                'url'      => str_replace('//', '/', \SUBFOLDER.'/src/views/servers?action=tree'),
+                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER . '/src/views/servers')],
+                'url'      => str_replace('//', '/', \SUBFOLDER . '/src/views/servers?action=tree'),
                 'text'     => 'Servers',
             ];
         } elseif (count($treedata) > 0) {
@@ -140,7 +140,7 @@ class TreeController
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
                 if ($url && strpos($url, '/src/views') === false) {
-                    $url = str_replace('//', '/', \SUBFOLDER.'/src/views/'.$url);
+                    $url = str_replace('//', '/', \SUBFOLDER . '/src/views/' . $url);
                 }
                 if ($url) {
                     $tree['url']      = $url;

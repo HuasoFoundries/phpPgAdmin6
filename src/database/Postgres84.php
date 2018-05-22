@@ -68,8 +68,8 @@ class Postgres84 extends Postgres90
     /**
      * Searches all system catalogs to find objects that match a certain name.
      *
-     * @param $term   The search term
-     * @param $filter The object type to restrict to ('' means no restriction)
+     * @param string $term   The search term
+     * @param string $filter The object type to restrict to ('' means no restriction)
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */

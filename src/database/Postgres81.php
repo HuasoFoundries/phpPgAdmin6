@@ -69,7 +69,7 @@ class Postgres81 extends Postgres82
             $clause = '';
         }
 
-        if ($currentdatabase != null) {
+        if ($currentdatabase !== null) {
             $this->clean($currentdatabase);
             $orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
         } else {
@@ -247,7 +247,7 @@ class Postgres81 extends Postgres82
     /**
      * Returns all available process information.
      *
-     * @param $database (optional) Find only connections to specified database
+     * @param string|null $database (optional) Find only connections to specified database
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -275,7 +275,7 @@ class Postgres81 extends Postgres82
     /**
      * Retrieves a tablespace's information.
      *
-     * @param $spcname
+     * @param string $spcname namespace
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */

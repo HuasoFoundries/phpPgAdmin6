@@ -292,8 +292,8 @@ trait IndexTrait
     /**
      * Adds a unique constraint to a table.
      *
-     * @param        $table      The table to which to add the unique key
-     * @param        $fields     (array) An array of fields over which to add the unique key
+     * @param string       $table      The table to which to add the unique key
+     * @param mixed|array  $fields     (array) An array of fields over which to add the unique key
      * @param string $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string $tablespace (optional) The tablespace for the schema, '' indicates default
      *
@@ -615,7 +615,7 @@ trait IndexTrait
      *
      * @param string $table The table to find referrers for
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset or -1 in case of error
      */
     public function getReferrers($table)
     {

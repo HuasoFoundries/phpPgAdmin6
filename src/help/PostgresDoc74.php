@@ -11,7 +11,7 @@ namespace PHPPgAdmin\Help;
  */
 class PostgresDoc74
 {
-    use \PHPPgAdmin\HelperTrait;
+    use \PHPPgAdmin\Traits\HelperTrait;
 
     protected $major_version;
     protected $help_page;
