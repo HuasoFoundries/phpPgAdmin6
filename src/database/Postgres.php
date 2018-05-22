@@ -26,7 +26,6 @@ class Postgres extends ADOdbBase
     use \PHPPgAdmin\Traits\DomainTrait;
     use \PHPPgAdmin\Traits\FtsTrait;
     use \PHPPgAdmin\Traits\FunctionTrait;
-    use \PHPPgAdmin\Traits\TriggerTrait;
 
     public $lang;
     public $conf;
@@ -1814,6 +1813,31 @@ class Postgres extends ADOdbBase
         }
 
         return $this->execute($sql);
+    }
+
+    /**
+     * Grabs a single trigger.
+     *
+     * @param string $table   The name of a table whose triggers to retrieve
+     * @param string $trigger The name of the trigger to retrieve
+     *
+     * @return \PHPPgAdmin\ADORecordSet A recordset
+     */
+    public function getTrigger($table, $trigger)
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $this->clean($table);
+        $this->clean($trigger);
+
+        $sql = "
+            SELECT * FROM pg_catalog.pg_trigger t, pg_catalog.pg_class c
+            WHERE t.tgrelid=c.oid AND c.relname='{$table}' AND t.tgname='{$trigger}'
+                AND c.relnamespace=(
+                    SELECT oid FROM pg_catalog.pg_namespace
+                    WHERE nspname='{$c_schema}')";
+
+        return $this->selectSet($sql);
     }
 
     /**
