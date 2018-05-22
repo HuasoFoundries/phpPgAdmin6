@@ -28,6 +28,8 @@ class ColpropertiesController extends BaseController
             $this->tableName = &$_REQUEST['table'];
         } elseif (isset($_REQUEST['view'])) {
             $this->tableName = &$_REQUEST['view'];
+        } elseif (isset($_REQUEST['matview'])) {
+            $this->tableName = &$_REQUEST['matview'];
         } else {
             $this->halt($this->lang['strnotableprovided']);
         }
@@ -35,7 +37,7 @@ class ColpropertiesController extends BaseController
         $this->printHeader($this->headerTitle('', '', $this->tableName), null, true, 'header_select2.twig');
         $this->printBody();
 
-        if (isset($_REQUEST['view'])) {
+        if (isset($_REQUEST['view']) || isset($_REQUEST['matview'])) {
             $this->doDefault(null, false);
         } else {
             switch ($this->action) {
@@ -234,8 +236,8 @@ class ColpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<script src="'.\SUBFOLDER.'/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="'.\SUBFOLDER."/src/views/colproperties\" method=\"post\">\n";
+                echo '<script src="' . \SUBFOLDER . '/assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \SUBFOLDER . "/src/views/colproperties\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -292,7 +294,7 @@ class ColpropertiesController extends BaseController
                     $types        = $data->getTypes(true, false, true);
                     $types_for_js = [];
 
-                    echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">"."\n";
+                    echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">" . "\n";
                     while (!$types->EOF) {
                         $typname        = $types->fields['typname'];
                         $types_for_js[] = $typname;
@@ -346,7 +348,7 @@ class ColpropertiesController extends BaseController
                 echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
                 echo "</form>\n";
-                echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");checkLengths(document.getElementById('type').value,'');</script>\n";
+                echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>\n";
 
                 break;
             case 2:
@@ -382,10 +384,10 @@ class ColpropertiesController extends BaseController
                         $_REQUEST['column'] = $_REQUEST['field'];
                         $this->misc->setReloadBrowser(true);
                     }
-                    $this->doDefault($sql."<br/>{$this->lang['strcolumnaltered']}");
+                    $this->doDefault($sql . "<br/>{$this->lang['strcolumnaltered']}");
                 } else {
                     $_REQUEST['stage'] = 1;
-                    $this->doAlter($sql."<br/>{$this->lang['strcolumnalteredbad']}");
+                    $this->doAlter($sql . "<br/>{$this->lang['strcolumnalteredbad']}");
 
                     return;
                 }

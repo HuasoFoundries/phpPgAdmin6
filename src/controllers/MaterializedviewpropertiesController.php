@@ -6,8 +6,6 @@
 
 namespace PHPPgAdmin\Controller;
 
-use PHPPgAdmin\Decorators\Decorator;
-
 /**
  * Base controller class.
  *
@@ -15,7 +13,10 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class MaterializedviewpropertiesController extends BaseController
 {
+    use \PHPPgAdmin\Traits\ExportTrait;
+    use \PHPPgAdmin\Traits\ViewsAndMaterializedViewsTrait;
     public $controller_title = 'strviews';
+    public $subject          = 'matview';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -26,7 +27,7 @@ class MaterializedviewpropertiesController extends BaseController
             return $this->doTree();
         }
 
-        $this->printHeader($this->headerTitle('', '', $_REQUEST['matview']));
+        $this->printHeader($this->headerTitle('', '', $_REQUEST[$this->subject]));
         $this->printBody();
 
         switch ($this->action) {
@@ -46,6 +47,12 @@ class MaterializedviewpropertiesController extends BaseController
                 $this->doExport();
 
                 break;
+
+            case 'refresh':
+                $this->doRefresh();
+
+                break;
+
             case 'definition':
                 $this->doDefinition();
 
@@ -92,190 +99,13 @@ class MaterializedviewpropertiesController extends BaseController
     }
 
     /**
-     * Show view definition and virtual columns.
-     *
-     * @param mixed $msg
-     */
-    public function doDefault($msg = '')
-    {
-        $data = $this->misc->getDatabaseAccessor();
-
-        $attPre = function (&$rowdata) use ($data) {
-            $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-        };
-
-        $this->printTrail('matview');
-        $this->printTabs('matview', 'columns');
-        $this->printMsg($msg);
-
-        // Get view
-        $vdata = $data->getView($_REQUEST['matview']);
-        // Get columns (using same method for getting a view)
-        $attrs = $data->getTableAttributes($_REQUEST['matview']);
-
-        // Show comment if any
-        if (null !== $vdata->fields['relcomment']) {
-            echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), "</p>\n";
-        }
-
-        $columns = [
-            'column'  => [
-                'title' => $this->lang['strcolumn'],
-                'field' => Decorator::field('attname'),
-                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST['matview']).'&amp;',
-                'vars'  => ['column' => 'attname'],
-            ],
-            'type'    => [
-                'title' => $this->lang['strtype'],
-                'field' => Decorator::field('+type'),
-            ],
-            'default' => [
-                'title' => $this->lang['strdefault'],
-                'field' => Decorator::field('adsrc'),
-            ],
-            'actions' => [
-                'title' => $this->lang['stractions'],
-            ],
-            'comment' => [
-                'title' => $this->lang['strcomment'],
-                'field' => Decorator::field('comment'),
-            ],
-        ];
-
-        $actions = [
-            'alter' => [
-                'content' => $this->lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'materializedviewproperties',
-                        'urlvars' => [
-                            'action' => 'properties',
-                            'view'   => $_REQUEST['matview'],
-                            'column' => Decorator::field('attname'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($attrs, $columns, $actions, 'materializedviewproperties-materializedviewproperties', null, $attPre);
-
-        echo "<br />\n";
-
-        $navlinks = [
-            'browse' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'display',
-                        'urlvars' => [
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'matview'  => $_REQUEST['matview'],
-                            'subject'  => 'matview',
-                            'return'   => 'matview',
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['strbrowse'],
-            ],
-            'select' => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'materializedviews',
-                        'urlvars' => [
-                            'action'   => 'confselectrows',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'matview'  => $_REQUEST['matview'],
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['strselect'],
-            ],
-            'drop'   => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'materializedviews',
-                        'urlvars' => [
-                            'action'   => 'confirm_drop',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'matview'  => $_REQUEST['matview'],
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['strdrop'],
-            ],
-            'alter'  => [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'materializedviewproperties',
-                        'urlvars' => [
-                            'action'   => 'confirm_alter',
-                            'server'   => $_REQUEST['server'],
-                            'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'matview'  => $_REQUEST['matview'],
-                        ],
-                    ],
-                ],
-                'content' => $this->lang['stralter'],
-            ],
-        ];
-
-        $this->printNavLinks($navlinks, 'materializedviewproperties-materializedviewproperties', get_defined_vars());
-    }
-
-    public function doTree()
-    {
-        $data = $this->misc->getDatabaseAccessor();
-
-        $reqvars = $this->misc->getRequestVars('column');
-        $columns = $data->getTableAttributes($_REQUEST['matview']);
-
-        $attrs = [
-            'text'       => Decorator::field('attname'),
-            'action'     => Decorator::actionurl(
-                'colproperties',
-                $reqvars,
-                [
-                    'view'   => $_REQUEST['matview'],
-                    'column' => Decorator::field('attname'),
-                ]
-            ),
-            'icon'       => 'Column',
-            'iconAction' => Decorator::url(
-                'display',
-                $reqvars,
-                [
-                    'view'   => $_REQUEST['matview'],
-                    'column' => Decorator::field('attname'),
-                    'query'  => Decorator::replace(
-                        'SELECT "%column%", count(*) AS "count" FROM %view% GROUP BY "%column%" ORDER BY "%column%"',
-                        [
-                            '%column%' => Decorator::field('attname'),
-                            '%view%'   => $_REQUEST['matview'],
-                        ]
-                    ),
-                ]
-            ),
-            'toolTip'    => Decorator::field('comment'),
-        ];
-
-        return $this->printTree($columns, $attrs, 'viewcolumns');
-    }
-
-    /**
-     * Function to save after editing a view.
+     * Function to save after editing a matview.
      */
     public function doSaveEdit()
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $status = $data->setView($_POST['view'], $_POST['formDefinition'], $_POST['formComment']);
+        $status = $data->setView($_POST[$this->subject], $_POST['formDefinition'], $_POST['formComment']);
         if (0 == $status) {
             $this->doDefinition($this->lang['strviewupdated']);
         } else {
@@ -284,7 +114,24 @@ class MaterializedviewpropertiesController extends BaseController
     }
 
     /**
-     * Function to allow editing of a view.
+     * Function to refresh a matview.
+     */
+    public function doRefresh()
+    {
+        $data = $this->misc->getDatabaseAccessor();
+        $sql  = 'REFRESH MATERIALIZED VIEW ' . $_REQUEST[$this->subject];
+        $this->prtrace($sql);
+        $status = $data->execute($sql);
+
+        if (0 == $status) {
+            $this->doDefault($this->lang['strviewupdated']);
+        } else {
+            $this->doDefault($this->lang['strviewupdatedbad']);
+        }
+    }
+
+    /**
+     * Function to allow editing of a matview.
      *
      * @param mixed $msg
      */
@@ -292,11 +139,11 @@ class MaterializedviewpropertiesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $this->printTrail('matview');
+        $this->printTrail($this->subject);
         $this->printTitle($this->lang['stredit'], 'pg.matview.alter');
         $this->printMsg($msg);
 
-        $viewdata = $data->getView($_REQUEST['matview']);
+        $viewdata = $data->getView($_REQUEST[$this->subject]);
 
         if ($viewdata->recordCount() > 0) {
             if (!isset($_POST['formDefinition'])) {
@@ -304,7 +151,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -314,7 +161,7 @@ class MaterializedviewpropertiesController extends BaseController
             htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
             echo "</table>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
-            echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
+            echo '<input type="hidden" name="matview" value="', htmlspecialchars($_REQUEST[$this->subject]), "\" />\n";
             echo $this->misc->form;
             echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
@@ -325,115 +172,7 @@ class MaterializedviewpropertiesController extends BaseController
     }
 
     /**
-     * Allow the dumping of the data "in" a view
-     * NOTE:: PostgreSQL doesn't currently support dumping the data in a view
-     *        so I have disabled the data related parts for now. In the future
-     *        we should allow it conditionally if it becomes supported.  This is
-     *        a SMOP since it is based on pg_dump version not backend version.
-     *
-     * @param mixed $msg
-     */
-    public function doExport($msg = '')
-    {
-        $this->printTrail('matview');
-        $this->printTabs('matview', 'export');
-        $this->printMsg($msg);
-
-        echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
-        echo "<table>\n";
-        echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";
-        // Data only
-        echo "<!--\n";
-        echo '<tr><th class="data left">';
-        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" /><label for=\"what1\">{$this->lang['strdataonly']}</label></th>\n";
-        echo "<td>{$this->lang['strformat']}</td>\n";
-        echo "<td><select name=\"d_format\" >\n";
-        echo "<option value=\"copy\">COPY</option>\n";
-        echo "<option value=\"sql\">SQL</option>\n";
-        echo "<option value=\"csv\">CSV</option>\n";
-        echo "<option value=\"tab\">{$this->lang['strtabbed']}</option>\n";
-        echo "<option value=\"html\">XHTML</option>\n";
-        echo "<option value=\"xml\">XML</option>\n";
-        echo "</select>\n</td>\n</tr>\n";
-        echo "-->\n";
-
-        // Structure only
-        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" checked=\"checked\" /><label for=\"what2\">{$this->lang['strstructureonly']}</label></th>\n";
-        echo "<td><label for=\"s_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
-        // Structure and data
-        echo "<!--\n";
-        echo '<tr><th class="data left" rowspan="2">';
-        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$this->lang['strstructureanddata']}</label></th>\n";
-        echo "<td>{$this->lang['strformat']}</td>\n";
-        echo "<td><select name=\"sd_format\">\n";
-        echo "<option value=\"copy\">COPY</option>\n";
-        echo "<option value=\"sql\">SQL</option>\n";
-        echo "</select>\n</td>\n</tr>\n";
-        echo "<td><label for=\"sd_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
-        echo "-->\n";
-        echo "</table>\n";
-
-        echo "<h3>{$this->lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>\n";
-
-        echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
-        echo $this->misc->form;
-        echo "<input type=\"hidden\" name=\"subject\" value=\"view\" />\n";
-        echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
-        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
-        echo "</form>\n";
-    }
-
-    /**
-     * Show definition for a view.
-     *
-     * @param mixed $msg
-     */
-    public function doDefinition($msg = '')
-    {
-        $data = $this->misc->getDatabaseAccessor();
-
-        // Get view
-        $vdata = $data->getView($_REQUEST['matview']);
-
-        $this->printTrail('matview');
-        $this->printTabs('matview', 'definition');
-        $this->printMsg($msg);
-
-        if ($vdata->recordCount() > 0) {
-            // Show comment if any
-            if (null !== $vdata->fields['relcomment']) {
-                echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), "</p>\n";
-            }
-
-            echo "<table style=\"width: 100%\">\n";
-            echo "<tr><th class=\"data\">{$this->lang['strdefinition']}</th></tr>\n";
-            echo '<tr><td class="data1">', $this->misc->printVal($vdata->fields['vwdefinition']), "</td></tr>\n";
-            echo "</table>\n";
-        } else {
-            echo "<p>{$this->lang['strnodata']}</p>\n";
-        }
-
-        $this->printNavLinks(['alter' => [
-            'attr'    => [
-                'href' => [
-                    'url'     => 'materializedviewproperties',
-                    'urlvars' => [
-                        'action'   => 'edit',
-                        'server'   => $_REQUEST['server'],
-                        'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        'view'     => $_REQUEST['matview'],
-                    ],
-                ],
-            ],
-            'content' => $this->lang['stralter'],
-        ]], 'materializedviewproperties-definition', get_defined_vars());
-    }
-
-    /**
-     * Displays a screen where they can alter a column in a view.
+     * Displays a screen where they can alter a column in a matview.
      *
      * @param mixed $msg
      */
@@ -452,14 +191,14 @@ class MaterializedviewpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties\" method=\"post\">\n";
 
-                // Output view header
+                // Output matview header
                 echo "<table>\n";
                 echo "<tr><th class=\"data required\">{$this->lang['strname']}</th><th class=\"data required\">{$this->lang['strtype']}</th>";
                 echo "<th class=\"data\">{$this->lang['strdefault']}</th><th class=\"data\">{$this->lang['strcomment']}</th></tr>";
 
-                $column = $data->getTableAttributes($_REQUEST['matview'], $_REQUEST['column']);
+                $column = $data->getTableAttributes($_REQUEST[$this->subject], $_REQUEST['column']);
 
                 if (!isset($_REQUEST['default'])) {
                     $_REQUEST['field']   = $column->fields['attname'];
@@ -480,7 +219,7 @@ class MaterializedviewpropertiesController extends BaseController
                 echo "<p><input type=\"hidden\" name=\"action\" value=\"properties\" />\n";
                 echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
                 echo $this->misc->form;
-                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
+                echo '<input type="hidden" name="matview" value="', htmlspecialchars($_REQUEST[$this->subject]), "\" />\n";
                 echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), "\" />\n";
                 echo '<input type="hidden" name="olddefault" value="', htmlspecialchars($_REQUEST['olddefault']), "\" />\n";
                 echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
@@ -498,9 +237,9 @@ class MaterializedviewpropertiesController extends BaseController
                     return;
                 }
 
-                // Alter the view column
+                // Alter the matview column
                 list($status, $sql) = $data->alterColumn(
-                    $_REQUEST['matview'],
+                    $_REQUEST[$this->subject],
                     $_REQUEST['column'],
                     $_REQUEST['field'],
                     false,
@@ -533,31 +272,31 @@ class MaterializedviewpropertiesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
-            $this->printTrail('matview');
+            $this->printTrail($this->subject);
             $this->printTitle($this->lang['stralter'], 'pg.matview.alter');
             $this->printMsg($msg);
 
-            // Fetch view info
-            $view = $data->getView($_REQUEST['matview']);
+            // Fetch matview info
+            $matview = $data->getView($_REQUEST[$this->subject]);
 
-            if ($view->recordCount() > 0) {
+            if ($matview->recordCount() > 0) {
                 if (!isset($_POST['name'])) {
-                    $_POST['name'] = $view->fields['relname'];
+                    $_POST['name'] = $matview->fields['relname'];
                 }
 
                 if (!isset($_POST['owner'])) {
-                    $_POST['owner'] = $view->fields['relowner'];
+                    $_POST['owner'] = $matview->fields['relowner'];
                 }
 
                 if (!isset($_POST['newschema'])) {
-                    $_POST['newschema'] = $view->fields['nspname'];
+                    $_POST['newschema'] = $matview->fields['nspname'];
                 }
 
                 if (!isset($_POST['comment'])) {
-                    $_POST['comment'] = $view->fields['relcomment'];
+                    $_POST['comment'] = $matview->fields['relcomment'];
                 }
 
-                echo '<form action="'.\SUBFOLDER."/src/views/materializedviewproperties\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/materializedviewproperties\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
                 echo '<td class="data1">';
@@ -594,11 +333,11 @@ class MaterializedviewpropertiesController extends BaseController
 
                 echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>\n";
                 echo '<td class="data1">';
-                echo '<textarea rows="3" cols="32" name="comment">',
-                htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
+                echo '<textarea rows="3" cols="32" name="comment">';
+                echo htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
                 echo "</table>\n";
                 echo "<input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
-                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['matview']), "\" />\n";
+                echo '<input type="hidden" name="matview" value="', htmlspecialchars($_REQUEST[$this->subject]), "\" />\n";
                 echo $this->misc->form;
                 echo "<p><input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
@@ -616,13 +355,13 @@ class MaterializedviewpropertiesController extends BaseController
                 $_POST['newschema'] = null;
             }
 
-            $status = $data->alterView($_POST['view'], $_POST['name'], $_POST['owner'], $_POST['newschema'], $_POST['comment']);
+            $status = $data->alterView($_POST[$this->subject], $_POST['name'], $_POST['owner'], $_POST['newschema'], $_POST['comment']);
             if (0 == $status) {
-                // If view has been renamed, need to change to the new name and
+                // If matview has been renamed, need to change to the new name and
                 // reload the browser frame.
-                if ($_POST['view'] != $_POST['name']) {
-                    // Jump them to the new view name
-                    $_REQUEST['matview'] = $_POST['name'];
+                if ($_POST[$this->subject] != $_POST['name']) {
+                    // Jump them to the new matview name
+                    $_REQUEST[$this->subject] = $_POST['name'];
                     // Force a browser reload
                     $this->misc->setReloadBrowser(true);
                 }

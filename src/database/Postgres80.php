@@ -318,11 +318,15 @@ class Postgres80 extends Postgres81
      */
     protected function _alterView($vwrs, $name, $owner, $schema, $comment)
     {
+        $type = 'VIEW';
+        if ($vwrs->fields['relkind'] === 'm') {
+            $type = 'MATERIALIZED VIEW';
+        }
         /* $schema not supported in pg80- */
         $this->fieldArrayClean($vwrs->fields);
 
         // Comment
-        if ($this->setComment('VIEW', $vwrs->fields['relname'], '', $comment) != 0) {
+        if ($this->setComment($type, $vwrs->fields['relname'], '', $comment) != 0) {
             return -4;
         }
 

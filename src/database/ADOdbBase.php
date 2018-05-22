@@ -297,7 +297,8 @@ class ADOdbBase
      */
     public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
     {
-        $sql      = "COMMENT ON {$obj_type} ";
+        $sql = "COMMENT ON {$obj_type} ";
+
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->clean($comment); // Passing in an already cleaned comment will lead to double escaped data
@@ -319,6 +320,7 @@ class ADOdbBase
                 break;
             case 'SEQUENCE':
             case 'VIEW':
+            case 'MATERIALIZED VIEW':
             case 'TEXT SEARCH CONFIGURATION':
             case 'TEXT SEARCH DICTIONARY':
             case 'TEXT SEARCH TEMPLATE':
@@ -603,7 +605,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql = $fields . $values . ')';
         }
 
         // Check for failures
@@ -675,7 +677,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;

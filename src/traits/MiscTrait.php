@@ -156,13 +156,22 @@ trait MiscTrait
                         'table'    => $_REQUEST['table'],
                         'column'   => $_REQUEST['column'],
                     ]];
-                } else {
+                } else if (isset($_REQUEST['view'])) {
                     $vars = ['params' => [
                         'server'   => $_REQUEST['server'],
                         'subject'  => 'column',
                         'database' => $_REQUEST['database'],
                         'schema'   => $_REQUEST['schema'],
                         'view'     => $_REQUEST['view'],
+                        'column'   => $_REQUEST['column'],
+                    ]];
+                } else if (isset($_REQUEST['matview'])) {
+                    $vars = ['params' => [
+                        'server'   => $_REQUEST['server'],
+                        'subject'  => 'column',
+                        'database' => $_REQUEST['database'],
+                        'schema'   => $_REQUEST['schema'],
+                        'matview'  => $_REQUEST['matview'],
                         'column'   => $_REQUEST['column'],
                     ]];
                 }

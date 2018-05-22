@@ -23,6 +23,10 @@ class DbexportController extends BaseController
         // Prevent timeouts on large exports
         set_time_limit(0);
 
+        $response = $this
+            ->container
+            ->responseobj;
+
         // Include application functions
         $f_schema = $f_object = '';
         $this->setNoOutput(true);
@@ -42,7 +46,7 @@ class DbexportController extends BaseController
 
             // Obtain the pg_dump version number and check if the path is good
             $version = [];
-            preg_match('/(\\d+(?:\\.\\d+)?)(?:\\.\\d+)?.*$/', exec($exe.' --version'), $version);
+            preg_match('/(\\d+(?:\\.\\d+)?)(?:\\.\\d+)?.*$/', exec($exe . ' --version'), $version);
 
             $this->prtrace('$exe', $exe, 'version', $version[1]);
 
@@ -61,42 +65,48 @@ class DbexportController extends BaseController
             switch ($_REQUEST['output']) {
                 case 'show':
                     header('Content-Type: text/plain');
-
+                    $response = $response
+                        ->withHeader('Content-type', 'text/plain');
                     break;
                 case 'download':
                     // Set headers.  MSIE is totally broken for SSL downloading, so
                     // we need to have it download in-place as plain text
                     if (strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])) {
                         header('Content-Type: text/plain');
+                        $response = $response
+                            ->withHeader('Content-type', 'text/plain');
                     } else {
-                        header('Content-Type: application/download');
-                        header('Content-Disposition: attachment; filename=dump.sql');
+                        $response = $response
+                            ->withHeader('Content-type', 'application/download')
+                            ->withHeader('Content-Disposition', 'attachment; filename=dump.sql');
+
                     }
 
                     break;
                 case 'gzipped':
                     // MSIE in SSL mode cannot do this - it should never get to this point
-                    header('Content-Type: application/download');
-                    header('Content-Disposition: attachment; filename=dump.sql.gz');
+                    $response = $response
+                        ->withHeader('Content-type', 'application/download')
+                        ->withHeader('Content-Disposition', 'attachment; filename=dump.sql.gz');
 
                     break;
             }
 
             // Set environmental variables that pg_dump uses
-            putenv('PGPASSWORD='.$server_info['password']);
-            putenv('PGUSER='.$server_info['username']);
+            putenv('PGPASSWORD=' . $server_info['password']);
+            putenv('PGUSER=' . $server_info['username']);
             $hostname = $server_info['host'];
             if (null !== $hostname && '' != $hostname) {
-                putenv('PGHOST='.$hostname);
+                putenv('PGHOST=' . $hostname);
             }
             $port = $server_info['port'];
             if (null !== $port && '' != $port) {
-                putenv('PGPORT='.$port);
+                putenv('PGPORT=' . $port);
             }
 
             // Build command for executing pg_dump.  '-i' means ignore version differences.
             if (((float) $version[1]) < 9.5) {
-                $cmd = $exe.' -i';
+                $cmd = $exe . ' -i';
             } else {
                 $cmd = $exe;
             }
@@ -111,11 +121,12 @@ class DbexportController extends BaseController
             switch ($_REQUEST['subject']) {
                 case 'schema':
                     // This currently works for 8.2+ (due to the orthoganl -t -n issue introduced then)
-                    $cmd .= ' -n '.$this->misc->escapeShellArg("\"{$f_schema}\"");
+                    $cmd .= ' -n ' . $this->misc->escapeShellArg("\"{$f_schema}\"");
 
                     break;
                 case 'table':
                 case 'view':
+                case 'matview':
                     $f_object = $_REQUEST[$_REQUEST['subject']];
                     $this->prtrace('f_object', $f_object);
                     $data->fieldClean($f_object);
@@ -123,13 +134,13 @@ class DbexportController extends BaseController
                     // Starting in 8.2, -n and -t are orthagonal, so we now schema qualify
                     // the table name in the -t argument and quote both identifiers
                     if (((float) $version[1]) >= 8.2) {
-                        $cmd .= ' -t '.$this->misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
+                        $cmd .= ' -t ' . $this->misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
                     } else {
                         // If we are 7.4 or higher, assume they are using 7.4 pg_dump and
                         // set dump schema as well.  Also, mixed case dumping has been fixed
                         // then..
-                        $cmd .= ' -t '.$this->misc->escapeShellArg($f_object)
-                        .' -n '.$this->misc->escapeShellArg($f_schema);
+                        $cmd .= ' -t ' . $this->misc->escapeShellArg($f_object)
+                        . ' -n ' . $this->misc->escapeShellArg($f_schema);
                     }
             }
 
@@ -170,7 +181,7 @@ class DbexportController extends BaseController
             }
 
             if (!$dumpall) {
-                putenv('PGDATABASE='.$_REQUEST['database']);
+                putenv('PGDATABASE=' . $_REQUEST['database']);
             }
 
             /*$this->prtrace(
@@ -186,6 +197,7 @@ class DbexportController extends BaseController
 
             // Execute command and return the output to the screen
             passthru($cmd);
+            return $response;
         }
     }
 }

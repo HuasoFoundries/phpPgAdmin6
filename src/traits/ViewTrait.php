@@ -128,6 +128,7 @@ trait ViewTrait
     public function alterView($view, $name, $owner, $schema, $comment)
     {
         $data = $this->getView($view);
+
         if ($data->recordCount() != 1) {
             return -2;
         }
@@ -151,11 +152,11 @@ trait ViewTrait
     }
 
     /**
-     * Returns all details for a particular view.
+     * Returns all details for a particular view or materialized view.
      *
-     * @param string $view The name of the view to retrieve
+     * @param string $view The name of the view or materialized to retrieve
      *
-     * @return \PHPPgAdmin\ADORecordSet View info
+     * @return \PHPPgAdmin\ADORecordSet [Materialized] View info
      */
     public function getView($view)
     {
@@ -166,7 +167,8 @@ trait ViewTrait
         $sql = "
 			SELECT c.relname, n.nspname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 				pg_catalog.pg_get_viewdef(c.oid, true) AS vwdefinition,
-				pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment
+				pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+                c.relkind
 			FROM pg_catalog.pg_class c
 				LEFT JOIN pg_catalog.pg_namespace n ON (n.oid = c.relnamespace)
 			WHERE (c.relname = '{$view}') AND n.nspname='{$c_schema}'";
@@ -190,8 +192,13 @@ trait ViewTrait
     {
         $this->fieldArrayClean($vwrs->fields);
 
+        $type = 'VIEW';
+        if ($vwrs->fields['relkind'] === 'm') {
+            $type = 'MATERIALIZED VIEW';
+        }
         // Comment
-        if ($this->setComment('VIEW', $vwrs->fields['relname'], '', $comment) != 0) {
+
+        if ($this->setComment($type, $vwrs->fields['relname'], '', $comment) != 0) {
             return -4;
         }
 
@@ -231,6 +238,10 @@ trait ViewTrait
      */
     public function alterViewOwner($vwrs, $owner = null)
     {
+        $type = 'VIEW';
+        if ($vwrs->fields['relkind'] === 'm') {
+            $type = 'MATERIALIZED VIEW';
+        }
         /* $vwrs and $owner are cleaned in _alterView */
         if ((!empty($owner)) && ($vwrs->fields['relowner'] != $owner)) {
             $f_schema = $this->_schema;
@@ -238,7 +249,7 @@ trait ViewTrait
             // If owner has been changed, then do the alteration.  We are
             // careful to avoid this generally as changing owner is a
             // superuser only function.
-            $sql = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" OWNER TO \"{$owner}\"";
+            $sql = "ALTER ${type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" OWNER TO \"{$owner}\"";
 
             return $this->execute($sql);
         }
@@ -256,12 +267,16 @@ trait ViewTrait
      */
     public function alterViewName($vwrs, $name)
     {
+        $type = 'VIEW';
+        if ($vwrs->fields['relkind'] === 'm') {
+            $type = 'MATERIALIZED VIEW';
+        }
         // Rename (only if name has changed)
         /* $vwrs and $name are cleaned in _alterView */
         if (!empty($name) && ($name != $vwrs->fields['relname'])) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER VIEW \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql    = "ALTER $type \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
             if ($status == 0) {
                 $vwrs->fields['relname'] = $name;
@@ -285,13 +300,17 @@ trait ViewTrait
      */
     public function alterViewSchema($vwrs, $schema)
     {
+        $type = 'VIEW';
+        if ($vwrs->fields['relkind'] === 'm') {
+            $type = 'MATERIALIZED VIEW';
+        }
         /* $vwrs and $schema are cleaned in _alterView */
         if (!empty($schema) && ($vwrs->fields['nspname'] != $schema)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             // If tablespace has been changed, then do the alteration.  We
             // don't want to do this unnecessarily.
-            $sql = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" SET SCHEMA \"{$schema}\"";
+            $sql = "ALTER $type \"{$f_schema}\".\"{$vwrs->fields['relname']}\" SET SCHEMA \"{$schema}\"";
 
             return $this->execute($sql);
         }
@@ -309,11 +328,15 @@ trait ViewTrait
      */
     public function dropView($viewname, $cascade)
     {
+        $type = 'VIEW';
+        if ($vwrs->fields['relkind'] === 'm') {
+            $type = 'MATERIALIZED VIEW';
+        }
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($viewname);
 
-        $sql = "DROP VIEW \"{$f_schema}\".\"{$viewname}\"";
+        $sql = "DROP $type \"{$f_schema}\".\"{$viewname}\"";
         if ($cascade) {
             $sql .= ' CASCADE';
         }
