@@ -92,7 +92,6 @@ class DataexportController extends BaseController
 
     protected function mimicDumpFeature($format, $clean, $oids)
     {
-
         $data = $this->misc->getDatabaseAccessor();
 
         set_time_limit(0);
@@ -133,7 +132,6 @@ class DataexportController extends BaseController
                 }
                 $response = $response
                     ->withHeader('Content-Disposition', 'attachment; filename=dump.' . $ext);
-
             }
         } else {
             $response = $response
@@ -209,7 +207,6 @@ class DataexportController extends BaseController
                     $rs->moveNext();
                 }
                 echo "\\.\n";
-
             } elseif ('html' == $format) {
                 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n";
                 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n";
@@ -385,7 +382,6 @@ class DataexportController extends BaseController
         // Finish the dump transaction
         $status = $data->endDump();
         return $response;
-
     }
 
     public function doDefault($msg = '')

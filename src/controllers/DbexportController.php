@@ -79,7 +79,6 @@ class DbexportController extends BaseController
                         $response = $response
                             ->withHeader('Content-type', 'application/download')
                             ->withHeader('Content-Disposition', 'attachment; filename=dump.sql');
-
                     }
 
                     break;

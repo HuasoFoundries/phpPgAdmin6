@@ -108,7 +108,6 @@ trait ExportTrait
      */
     public function formFooter($subject, $object)
     {
-
         $content = '<p><input type="hidden" name="action" value="export" />' . "\n";
         $content .= $this->misc->form;
         $content .= sprintf('<input type="hidden" name="subject" value="%s" />%s', $subject, "\n");
