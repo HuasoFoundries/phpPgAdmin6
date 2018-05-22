@@ -406,7 +406,7 @@ class SequencesController extends BaseController
             $this->printTitle($this->lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -471,35 +471,23 @@ class SequencesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['formSequenceName'])) {
-            $_POST['formSequenceName'] = '';
-        }
+        $this->coalesceArr($_POST, 'formSequenceName', '');
 
-        if (!isset($_POST['formIncrement'])) {
-            $_POST['formIncrement'] = '';
-        }
+        $this->coalesceArr($_POST, 'formIncrement', '');
 
-        if (!isset($_POST['formMinValue'])) {
-            $_POST['formMinValue'] = '';
-        }
+        $this->coalesceArr($_POST, 'formMinValue', '');
 
-        if (!isset($_POST['formMaxValue'])) {
-            $_POST['formMaxValue'] = '';
-        }
+        $this->coalesceArr($_POST, 'formMaxValue', '');
 
-        if (!isset($_POST['formStartValue'])) {
-            $_POST['formStartValue'] = '';
-        }
+        $this->coalesceArr($_POST, 'formStartValue', '');
 
-        if (!isset($_POST['formCacheValue'])) {
-            $_POST['formCacheValue'] = '';
-        }
+        $this->coalesceArr($_POST, 'formCacheValue', '');
 
         $this->printTrail('schema');
         $this->printTitle($this->lang['strcreatesequence'], 'pg.sequence.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
         echo "<table>\n";
 
         echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
@@ -643,7 +631,7 @@ class SequencesController extends BaseController
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
         if (is_object($sequence) && $sequence->recordCount() > 0) {
-            echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
             echo '<table border="0">';
             echo "<tr><th class=\"data left required\">{$this->lang['strlastvalue']}</th>\n";
             echo '<td class="data1">';
@@ -668,41 +656,23 @@ class SequencesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['owner'])) {
-            $_POST['owner'] = null;
-        }
+        $this->coalesceArr($_POST, 'owner', null);
 
-        if (!isset($_POST['newschema'])) {
-            $_POST['newschema'] = null;
-        }
+        $this->coalesceArr($_POST, 'newschema', null);
 
-        if (!isset($_POST['formIncrement'])) {
-            $_POST['formIncrement'] = null;
-        }
+        $this->coalesceArr($_POST, 'formIncrement', null);
 
-        if (!isset($_POST['formMinValue'])) {
-            $_POST['formMinValue'] = null;
-        }
+        $this->coalesceArr($_POST, 'formMinValue', null);
 
-        if (!isset($_POST['formMaxValue'])) {
-            $_POST['formMaxValue'] = null;
-        }
+        $this->coalesceArr($_POST, 'formMaxValue', null);
 
-        if (!isset($_POST['formStartValue'])) {
-            $_POST['formStartValue'] = null;
-        }
+        $this->coalesceArr($_POST, 'formStartValue', null);
 
-        if (!isset($_POST['formRestartValue'])) {
-            $_POST['formRestartValue'] = null;
-        }
+        $this->coalesceArr($_POST, 'formRestartValue', null);
 
-        if (!isset($_POST['formCacheValue'])) {
-            $_POST['formCacheValue'] = null;
-        }
+        $this->coalesceArr($_POST, 'formCacheValue', null);
 
-        if (!isset($_POST['formCycledValue'])) {
-            $_POST['formCycledValue'] = null;
-        }
+        $this->coalesceArr($_POST, 'formCycledValue', null);
 
         $status = $data->alterSequence(
             $_POST['sequence'],
@@ -754,21 +724,13 @@ class SequencesController extends BaseController
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
         if (is_object($sequence) && $sequence->recordCount() > 0) {
-            if (!isset($_POST['name'])) {
-                $_POST['name'] = $_REQUEST['sequence'];
-            }
+            $this->coalesceArr($_POST, 'name', $_REQUEST['sequence']);
 
-            if (!isset($_POST['comment'])) {
-                $_POST['comment'] = $sequence->fields['seqcomment'];
-            }
+            $this->coalesceArr($_POST, 'comment', $sequence->fields['seqcomment']);
 
-            if (!isset($_POST['owner'])) {
-                $_POST['owner'] = $sequence->fields['seqowner'];
-            }
+            $this->coalesceArr($_POST, 'owner', $sequence->fields['seqowner']);
 
-            if (!isset($_POST['newschema'])) {
-                $_POST['newschema'] = $sequence->fields['nspname'];
-            }
+            $this->coalesceArr($_POST, 'newschema', $sequence->fields['nspname']);
 
             // Handle Checkbox Value
             $sequence->fields['is_cycled'] = $data->phpBool($sequence->fields['is_cycled']);
@@ -776,7 +738,7 @@ class SequencesController extends BaseController
                 $_POST['formCycledValue'] = 'on';
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/sequences\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/sequences\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";

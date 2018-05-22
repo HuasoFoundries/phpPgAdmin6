@@ -342,7 +342,7 @@ class TypesController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdroptype'], $this->misc->printVal($_REQUEST['type'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
@@ -369,21 +369,13 @@ class TypesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_REQUEST['stage'])) {
-            $_REQUEST['stage'] = 1;
-        }
+        $this->coalesceArr($_REQUEST, 'stage', 1);
 
-        if (!isset($_REQUEST['name'])) {
-            $_REQUEST['name'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'name', '');
 
-        if (!isset($_REQUEST['fields'])) {
-            $_REQUEST['fields'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'fields', '');
 
-        if (!isset($_REQUEST['typcomment'])) {
-            $_REQUEST['typcomment'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'typcomment', '');
 
         switch ($_REQUEST['stage']) {
             case 1:
@@ -391,7 +383,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -436,7 +428,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -550,21 +542,13 @@ class TypesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_REQUEST['stage'])) {
-            $_REQUEST['stage'] = 1;
-        }
+        $this->coalesceArr($_REQUEST, 'stage', 1);
 
-        if (!isset($_REQUEST['name'])) {
-            $_REQUEST['name'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'name', '');
 
-        if (!isset($_REQUEST['values'])) {
-            $_REQUEST['values'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'values', '');
 
-        if (!isset($_REQUEST['typcomment'])) {
-            $_REQUEST['typcomment'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'typcomment', '');
 
         switch ($_REQUEST['stage']) {
             case 1:
@@ -572,7 +556,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -615,7 +599,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -690,41 +674,23 @@ class TypesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['typname'])) {
-            $_POST['typname'] = '';
-        }
+        $this->coalesceArr($_POST, 'typname', '');
 
-        if (!isset($_POST['typin'])) {
-            $_POST['typin'] = '';
-        }
+        $this->coalesceArr($_POST, 'typin', '');
 
-        if (!isset($_POST['typout'])) {
-            $_POST['typout'] = '';
-        }
+        $this->coalesceArr($_POST, 'typout', '');
 
-        if (!isset($_POST['typlen'])) {
-            $_POST['typlen'] = '';
-        }
+        $this->coalesceArr($_POST, 'typlen', '');
 
-        if (!isset($_POST['typdef'])) {
-            $_POST['typdef'] = '';
-        }
+        $this->coalesceArr($_POST, 'typdef', '');
 
-        if (!isset($_POST['typelem'])) {
-            $_POST['typelem'] = '';
-        }
+        $this->coalesceArr($_POST, 'typelem', '');
 
-        if (!isset($_POST['typdelim'])) {
-            $_POST['typdelim'] = '';
-        }
+        $this->coalesceArr($_POST, 'typdelim', '');
 
-        if (!isset($_POST['typalign'])) {
-            $_POST['typalign'] = $data->typAlignDef;
-        }
+        $this->coalesceArr($_POST, 'typalign', $data->typAlignDef);
 
-        if (!isset($_POST['typstorage'])) {
-            $_POST['typstorage'] = $data->typStorageDef;
-        }
+        $this->coalesceArr($_POST, 'typstorage', $data->typStorageDef);
 
         // Retrieve all functions and types in the database
         $funcs = $data->getFunctions(true);
@@ -734,7 +700,7 @@ class TypesController extends BaseController
         $this->printTitle($this->lang['strcreatetype'], 'pg.type.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/types\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -758,7 +724,7 @@ class TypesController extends BaseController
             $funcs->moveNext();
         }
         echo "</select></td></tr>\n";
-        echo '<tr><th class="data left'.(version_compare($data->major_version, '7.4', '<') ? ' required' : '')."\">{$this->lang['strlength']}</th>\n";
+        echo '<tr><th class="data left' . (version_compare($data->major_version, '7.4', '<') ? ' required' : '') . "\">{$this->lang['strlength']}</th>\n";
         echo '<td class="data1"><input name="typlen" size="8" value="',
         htmlspecialchars($_POST['typlen']), '" /></td></tr>';
         echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>\n";

@@ -303,13 +303,9 @@ class AlldbController extends BaseController
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
             echo "</form>\n";
         } else {
-            if (!isset($_POST['owner'])) {
-                $_POST['owner'] = '';
-            }
+            $this->coalesceArr($_POST, 'owner', '');
 
-            if (!isset($_POST['dbcomment'])) {
-                $_POST['dbcomment'] = '';
-            }
+            $this->coalesceArr($_POST, 'dbcomment', '');
 
             if (0 == $data->alterDatabase($_POST['oldname'], $_POST['newname'], $_POST['owner'], $_POST['dbcomment'])) {
                 $this->misc->setReloadBrowser(true);

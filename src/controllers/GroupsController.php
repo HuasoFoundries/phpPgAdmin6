@@ -180,7 +180,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/groups\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -207,9 +207,7 @@ class GroupsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['user'])) {
-            $_POST['user'] = '';
-        }
+        $this->coalesceArr($_POST, 'user', '');
 
         $this->printTrail('group');
         $this->printTitle($this->lang['strproperties'], 'pg.group');
@@ -249,7 +247,7 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/groups\" method=\"post\">\n";
         echo '<select name="user">';
         while (!$users->EOF) {
             $uname = $this->misc->printVal($users->fields['usename']);
@@ -292,7 +290,7 @@ class GroupsController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/groups\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -317,13 +315,9 @@ class GroupsController extends BaseController
     public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
-        if (!isset($_POST['name'])) {
-            $_POST['name'] = '';
-        }
+        $this->coalesceArr($_POST, 'name', '');
 
-        if (!isset($_POST['members'])) {
-            $_POST['members'] = [];
-        }
+        $this->coalesceArr($_POST, 'members', []);
 
         // Fetch a list of all users in the cluster
         $users = $data->getUsers();
@@ -365,9 +359,7 @@ class GroupsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['members'])) {
-            $_POST['members'] = [];
-        }
+        $this->coalesceArr($_POST, 'members', []);
 
         // Check form vars
         if ('' == trim($_POST['name'])) {

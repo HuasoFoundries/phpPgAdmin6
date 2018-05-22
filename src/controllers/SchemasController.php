@@ -103,7 +103,7 @@ class SchemasController extends BaseController
             'schema'      => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
             'owner'       => [
@@ -266,21 +266,13 @@ class SchemasController extends BaseController
 
         $server_info = $this->misc->getServerInfo();
 
-        if (!isset($_POST['formName'])) {
-            $_POST['formName'] = '';
-        }
+        $this->coalesceArr($_POST, 'formName', '');
 
-        if (!isset($_POST['formAuth'])) {
-            $_POST['formAuth'] = $server_info['username'];
-        }
+        $this->coalesceArr($_POST, 'formAuth', $server_info['username']);
 
-        if (!isset($_POST['formSpc'])) {
-            $_POST['formSpc'] = '';
-        }
+        $this->coalesceArr($_POST, 'formSpc', '');
 
-        if (!isset($_POST['formComment'])) {
-            $_POST['formComment'] = '';
-        }
+        $this->coalesceArr($_POST, 'formComment', '');
 
         // Fetch all users from the database
         $users = $data->getUsers();
@@ -289,7 +281,7 @@ class SchemasController extends BaseController
         $this->printTitle($this->lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
+        echo '<form action="' . \SUBFOLDER . '/src/views/schemas" method="post">' . "\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -356,23 +348,15 @@ class SchemasController extends BaseController
 
         $schema = $data->getSchemaByName($_REQUEST['schema']);
         if ($schema->recordCount() > 0) {
-            if (!isset($_POST['comment'])) {
-                $_POST['comment'] = $schema->fields['nspcomment'];
-            }
+            $this->coalesceArr($_POST, 'comment', $schema->fields['nspcomment']);
 
-            if (!isset($_POST['schema'])) {
-                $_POST['schema'] = $_REQUEST['schema'];
-            }
+            $this->coalesceArr($_POST, 'schema', $_REQUEST['schema']);
 
-            if (!isset($_POST['name'])) {
-                $_POST['name'] = $_REQUEST['schema'];
-            }
+            $this->coalesceArr($_POST, 'name', $_REQUEST['schema']);
 
-            if (!isset($_POST['owner'])) {
-                $_POST['owner'] = $schema->fields['ownername'];
-            }
+            $this->coalesceArr($_POST, 'owner', $schema->fields['ownername']);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/schemas" method="post">' . "\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -449,7 +433,7 @@ class SchemasController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($this->lang['strdrop'], 'pg.schema.drop');
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/schemas" method="post">' . "\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -518,7 +502,7 @@ class SchemasController extends BaseController
         $this->printTabs('schema', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/dbexport" method="post">'."\n";
+        echo '<form action="' . \SUBFOLDER . '/src/views/dbexport" method="post">' . "\n";
 
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";

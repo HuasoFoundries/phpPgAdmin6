@@ -250,15 +250,11 @@ class UsersController extends BaseController
             $this->printTitle($this->lang['strchangepassword'], 'pg.user.alter');
             $this->printMsg($msg);
 
-            if (!isset($_POST['password'])) {
-                $_POST['password'] = '';
-            }
+            $this->coalesceArr($_POST, 'password', '');
 
-            if (!isset($_POST['confirm'])) {
-                $_POST['confirm'] = '';
-            }
+            $this->coalesceArr($_POST, 'confirm', '');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/users\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/users\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
@@ -332,10 +328,10 @@ class UsersController extends BaseController
                 $_POST['formPassword'] = '';
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/users\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/users\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strusername']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['newname']).'" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
+            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['newname']) . '" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>\n";
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
             (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
@@ -402,7 +398,7 @@ class UsersController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropuser'], $this->misc->printVal($_REQUEST['username'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/users\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/users\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="username" value="', htmlspecialchars($_REQUEST['username']), "\" />\n";
             echo $this->misc->form;
@@ -428,27 +424,19 @@ class UsersController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['formUsername'])) {
-            $_POST['formUsername'] = '';
-        }
+        $this->coalesceArr($_POST, 'formUsername', '');
 
-        if (!isset($_POST['formPassword'])) {
-            $_POST['formPassword'] = '';
-        }
+        $this->coalesceArr($_POST, 'formPassword', '');
 
-        if (!isset($_POST['formConfirm'])) {
-            $_POST['formConfirm'] = '';
-        }
+        $this->coalesceArr($_POST, 'formConfirm', '');
 
-        if (!isset($_POST['formExpires'])) {
-            $_POST['formExpires'] = '';
-        }
+        $this->coalesceArr($_POST, 'formExpires', '');
 
         $this->printTrail('server');
         $this->printTitle($this->lang['strcreateuser'], 'pg.user.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/users\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/users\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strusername']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formUsername\" value=\"", htmlspecialchars($_POST['formUsername']), "\" /></td>\n\t</tr>\n";

@@ -129,7 +129,7 @@ class ViewpropertiesController extends BaseController
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="'.\SUBFOLDER."/src/views/viewproperties\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties\" method=\"post\">\n";
             echo "<table style=\"width: 100%\">\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>\n";
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -158,9 +158,7 @@ class ViewpropertiesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_REQUEST['stage'])) {
-            $_REQUEST['stage'] = 1;
-        }
+        $this->coalesceArr($_REQUEST, 'stage', 1);
 
         switch ($_REQUEST['stage']) {
             case 1:
@@ -169,7 +167,7 @@ class ViewpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/viewproperties\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties\" method=\"post\">\n";
 
                 // Output view header
                 echo "<table>\n";
@@ -258,23 +256,15 @@ class ViewpropertiesController extends BaseController
             $view = $data->getView($_REQUEST[$this->subject]);
 
             if ($view->recordCount() > 0) {
-                if (!isset($_POST['name'])) {
-                    $_POST['name'] = $view->fields['relname'];
-                }
+                $this->coalesceArr($_POST, 'name', $view->fields['relname']);
 
-                if (!isset($_POST['owner'])) {
-                    $_POST['owner'] = $view->fields['relowner'];
-                }
+                $this->coalesceArr($_POST, 'owner', $view->fields['relowner']);
 
-                if (!isset($_POST['newschema'])) {
-                    $_POST['newschema'] = $view->fields['nspname'];
-                }
+                $this->coalesceArr($_POST, 'newschema', $view->fields['nspname']);
 
-                if (!isset($_POST['comment'])) {
-                    $_POST['comment'] = $view->fields['relcomment'];
-                }
+                $this->coalesceArr($_POST, 'comment', $view->fields['relcomment']);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/viewproperties\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/viewproperties\" method=\"post\">\n";
                 echo "<table>\n";
                 echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
                 echo '<td class="data1">';
@@ -325,13 +315,9 @@ class ViewpropertiesController extends BaseController
             }
         } else {
             // For databases that don't allow owner change
-            if (!isset($_POST['owner'])) {
-                $_POST['owner'] = '';
-            }
+            $this->coalesceArr($_POST, 'owner', '');
 
-            if (!isset($_POST['newschema'])) {
-                $_POST['newschema'] = null;
-            }
+            $this->coalesceArr($_POST, 'newschema', null);
 
             $status = $data->alterView($_POST[$this->subject], $_POST['name'], $_POST['owner'], $_POST['newschema'], $_POST['comment']);
             if (0 == $status) {

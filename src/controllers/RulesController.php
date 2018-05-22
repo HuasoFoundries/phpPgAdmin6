@@ -25,7 +25,7 @@ class RulesController extends BaseController
         }
 
         // Different header if we're view rules or table rules
-        $this->printHeader($_REQUEST[$_REQUEST['subject']].' - '.$this->lang['strrules']);
+        $this->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $this->lang['strrules']);
         $this->printBody();
 
         switch ($this->action) {
@@ -158,32 +158,22 @@ class RulesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['name'])) {
-            $_POST['name'] = '';
-        }
+        $this->coalesceArr($_POST, 'name', '');
 
-        if (!isset($_POST['event'])) {
-            $_POST['event'] = '';
-        }
+        $this->coalesceArr($_POST, 'event', '');
 
-        if (!isset($_POST['where'])) {
-            $_POST['where'] = '';
-        }
+        $this->coalesceArr($_POST, 'where', '');
 
-        if (!isset($_POST['type'])) {
-            $_POST['type'] = 'SOMETHING';
-        }
+        $this->coalesceArr($_POST, 'type', 'SOMETHING');
 
-        if (!isset($_POST['raction'])) {
-            $_POST['raction'] = '';
-        }
+        $this->coalesceArr($_POST, 'raction', '');
 
         if ($confirm) {
             $this->printTrail($_REQUEST['subject']);
             $this->printTitle($this->lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/rules\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/rules\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
             echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -259,7 +249,7 @@ class RulesController extends BaseController
                 $this->misc->printVal($_REQUEST[$_REQUEST['reltype']])
             ), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/rules\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/rules\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['reltype']), "\" />\n";
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['reltype']),

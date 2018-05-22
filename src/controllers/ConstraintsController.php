@@ -25,8 +25,8 @@ class ConstraintsController extends BaseController
         }
 
         $this->printHeader(
-            $this->lang['strtables'].' - '.$_REQUEST['table'].' - '.$this->lang['strconstraints'],
-            '<script src="'.\SUBFOLDER.'/assets/js/indexes.js" type="text/javascript"></script>',
+            $this->lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $this->lang['strconstraints'],
+            '<script src="' . \SUBFOLDER . '/assets/js/indexes.js" type="text/javascript"></script>',
             true,
             'header_select2.twig'
         );
@@ -132,7 +132,7 @@ class ConstraintsController extends BaseController
         $cnPre = function (&$rowdata) use ($data) {
             if (is_null($rowdata->fields['consrc'])) {
                 $atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
-                $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
+                $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (') . join(',', $atts) . ')';
             } else {
                 $rowdata->fields['+definition'] = $rowdata->fields['consrc'];
             }
@@ -257,13 +257,9 @@ class ConstraintsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['name'])) {
-            $_POST['name'] = '';
-        }
+        $this->coalesceArr($_POST, 'name', '');
 
-        if (!isset($_POST['target'])) {
-            $_POST['target'] = '';
-        }
+        $this->coalesceArr($_POST, 'target', '');
 
         switch ($stage) {
             case 2:
@@ -277,25 +273,15 @@ class ConstraintsController extends BaseController
                     }
 
                     // Initialise variables
-                    if (!isset($_POST['upd_action'])) {
-                        $_POST['upd_action'] = null;
-                    }
+                    $this->coalesceArr($_POST, 'upd_action', null);
 
-                    if (!isset($_POST['del_action'])) {
-                        $_POST['del_action'] = null;
-                    }
+                    $this->coalesceArr($_POST, 'del_action', null);
 
-                    if (!isset($_POST['match'])) {
-                        $_POST['match'] = null;
-                    }
+                    $this->coalesceArr($_POST, 'match', null);
 
-                    if (!isset($_POST['deferrable'])) {
-                        $_POST['deferrable'] = null;
-                    }
+                    $this->coalesceArr($_POST, 'deferrable', null);
 
-                    if (!isset($_POST['initially'])) {
-                        $_POST['initially'] = null;
-                    }
+                    $this->coalesceArr($_POST, 'initially', null);
 
                     $_REQUEST['target'] = unserialize($_REQUEST['target']);
 
@@ -335,9 +321,9 @@ class ConstraintsController extends BaseController
                     echo "<table>\n";
                     echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strfktarget']}</th></tr>";
                     echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$this->lang['strfkcolumnlist']}</th></tr>\n";
-                    echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
-                    echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
-                    echo '<td class="data1">'.$selIndex->fetch()."</td></tr>\n";
+                    echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
+                    echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
+                    echo '<td class="data1">' . $selIndex->fetch() . "</td></tr>\n";
                     echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['stractions']}</th></tr>";
                     echo '<tr>';
                     echo "<td class=\"data1\" colspan=\"3\">\n";
@@ -469,9 +455,9 @@ class ConstraintsController extends BaseController
                 echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strname']}</th></tr>\n";
                 echo "<tr><td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>\n";
                 echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strfkcolumnlist']}</th></tr>\n";
-                echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
-                echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch()."</td>\n";
-                echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
+                echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
+                echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . "</td>\n";
+                echo '<td class=data1>' . $selIndex->fetch() . "</td></tr>\n";
                 echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strfktarget']}</th></tr>";
                 echo '<tr>';
                 echo '<td class="data1" colspan="3"><select class="select2" name="target">';
@@ -512,18 +498,12 @@ class ConstraintsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['name'])) {
-            $_POST['name'] = '';
-        }
+        $this->coalesceArr($_POST, 'name', '');
 
         if ($confirm) {
-            if (!isset($_POST['name'])) {
-                $_POST['name'] = '';
-            }
+            $this->coalesceArr($_POST, 'name', '');
 
-            if (!isset($_POST['tablespace'])) {
-                $_POST['tablespace'] = '';
-            }
+            $this->coalesceArr($_POST, 'tablespace', '');
 
             $this->printTrail('table');
 
@@ -581,9 +561,9 @@ class ConstraintsController extends BaseController
             echo '<td class="data1" colspan="3"><input type="text" name="name" value="', htmlspecialchars($_POST['name']),
                 "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>";
             echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strindexcolumnlist']}</th></tr>\n";
-            echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
-            echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
-            echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
+            echo '<tr><td class="data1">' . $selColumns->fetch() . "</td>\n";
+            echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
+            echo '<td class=data1>' . $selIndex->fetch() . "</td></tr>\n";
 
             // Tablespace (if there are any)
             if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
@@ -613,9 +593,7 @@ class ConstraintsController extends BaseController
             echo "</form>\n";
         } else {
             // Default tablespace to empty if it isn't set
-            if (!isset($_POST['tablespace'])) {
-                $_POST['tablespace'] = '';
-            }
+            $this->coalesceArr($_POST, 'tablespace', '');
 
             if ('primary' == $_POST['type']) {
                 // Check that they've given at least one column
@@ -661,20 +639,16 @@ class ConstraintsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['name'])) {
-            $_POST['name'] = '';
-        }
+        $this->coalesceArr($_POST, 'name', '');
 
-        if (!isset($_POST['definition'])) {
-            $_POST['definition'] = '';
-        }
+        $this->coalesceArr($_POST, 'definition', '');
 
         if ($confirm) {
             $this->printTrail('table');
             $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/constraints\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/constraints\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$this->lang['strname']}</th>\n";
             echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>\n";
@@ -729,7 +703,7 @@ class ConstraintsController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/constraints\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/constraints\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
             echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";

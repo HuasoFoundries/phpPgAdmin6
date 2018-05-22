@@ -183,19 +183,13 @@ class TablespacesController extends BaseController
         $users = $data->getUsers();
 
         if ($tablespace->recordCount() > 0) {
-            if (!isset($_POST['name'])) {
-                $_POST['name'] = $tablespace->fields['spcname'];
-            }
+            $this->coalesceArr($_POST, 'name', $tablespace->fields['spcname']);
 
-            if (!isset($_POST['owner'])) {
-                $_POST['owner'] = $tablespace->fields['spcowner'];
-            }
+            $this->coalesceArr($_POST, 'owner', $tablespace->fields['spcowner']);
 
-            if (!isset($_POST['comment'])) {
-                $_POST['comment'] = ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '';
-            }
+            $this->coalesceArr($_POST, 'comment', ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tablespaces\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
@@ -268,7 +262,7 @@ class TablespacesController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tablespaces\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces\" method=\"post\">\n";
             echo $this->misc->form;
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
@@ -296,21 +290,13 @@ class TablespacesController extends BaseController
 
         $server_info = $this->misc->getServerInfo();
 
-        if (!isset($_POST['formSpcname'])) {
-            $_POST['formSpcname'] = '';
-        }
+        $this->coalesceArr($_POST, 'formSpcname', '');
 
-        if (!isset($_POST['formOwner'])) {
-            $_POST['formOwner'] = $server_info['username'];
-        }
+        $this->coalesceArr($_POST, 'formOwner', $server_info['username']);
 
-        if (!isset($_POST['formLoc'])) {
-            $_POST['formLoc'] = '';
-        }
+        $this->coalesceArr($_POST, 'formLoc', '');
 
-        if (!isset($_POST['formComment'])) {
-            $_POST['formComment'] = '';
-        }
+        $this->coalesceArr($_POST, 'formComment', '');
 
         // Fetch all users
         $users = $data->getUsers();
@@ -319,7 +305,7 @@ class TablespacesController extends BaseController
         $this->printTitle($this->lang['strcreatetablespace'], 'pg.tablespace.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/tablespaces\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/tablespaces\" method=\"post\">\n";
         echo $this->misc->form;
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
@@ -362,9 +348,7 @@ class TablespacesController extends BaseController
             $this->doCreate($this->lang['strtablespaceneedsloc']);
         } else {
             // Default comment to blank if it isn't set
-            if (!isset($_POST['formComment'])) {
-                $_POST['formComment'] = null;
-            }
+            $this->coalesceArr($_POST, 'formComment', null);
 
             $status = $data->createTablespace($_POST['formSpcname'], $_POST['formOwner'], $_POST['formLoc'], $_POST['formComment']);
             if (0 == $status) {

@@ -16,22 +16,16 @@ class AggregatesController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render()
-    {
-    }
+    public function render() {}
 
     /**
      * Show default list of aggregate functions in the database.
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '')
-    {
-    }
+    public function doDefault($msg = '') {}
 
-    public function doTree()
-    {
-    }
+    public function doTree() {}
 
     /**
      * Actually creates the new aggregate in the database.
@@ -89,43 +83,27 @@ class AggregatesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_REQUEST['name'])) {
-            $_REQUEST['name'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'name', '');
 
-        if (!isset($_REQUEST['basetype'])) {
-            $_REQUEST['basetype'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'basetype', '');
 
-        if (!isset($_REQUEST['sfunc'])) {
-            $_REQUEST['sfunc'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'sfunc', '');
 
-        if (!isset($_REQUEST['stype'])) {
-            $_REQUEST['stype'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'stype', '');
 
-        if (!isset($_REQUEST['ffunc'])) {
-            $_REQUEST['ffunc'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'ffunc', '');
 
-        if (!isset($_REQUEST['initcond'])) {
-            $_REQUEST['initcond'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'initcond', '');
 
-        if (!isset($_REQUEST['sortop'])) {
-            $_REQUEST['sortop'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'sortop', '');
 
-        if (!isset($_REQUEST['aggrcomment'])) {
-            $_REQUEST['aggrcomment'] = '';
-        }
+        $this->coalesceArr($_REQUEST, 'aggrcomment', '');
 
         $this->printTrail('schema');
         $this->printTitle($this->lang['strcreateaggregate'], 'pg.aggregate.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/aggregates\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -207,7 +185,7 @@ class AggregatesController extends BaseController
         $this->printTitle($this->lang['stralter'], 'pg.aggregate.alter');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/aggregates\" method=\"post\">\n";
         $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
         if ($aggrdata->recordCount() > 0) {
             // Output table header
@@ -255,7 +233,7 @@ class AggregatesController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/aggregates\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="aggrname" value="', htmlspecialchars($_REQUEST['aggrname']), "\" />\n";

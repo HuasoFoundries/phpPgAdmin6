@@ -307,7 +307,7 @@ class FulltextController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropftsconfig'], $this->misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"dropconfig\" />\n";
             echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
@@ -337,7 +337,7 @@ class FulltextController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropftsdict'], $this->misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"dropdict\" />\n";
             echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
@@ -368,25 +368,15 @@ class FulltextController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['formName'])) {
-            $_POST['formName'] = '';
-        }
+        $this->coalesceArr($_POST, 'formName', '');
 
-        if (!isset($_POST['formParser'])) {
-            $_POST['formParser'] = '';
-        }
+        $this->coalesceArr($_POST, 'formParser', '');
 
-        if (!isset($_POST['formTemplate'])) {
-            $_POST['formTemplate'] = '';
-        }
+        $this->coalesceArr($_POST, 'formTemplate', '');
 
-        if (!isset($_POST['formWithMap'])) {
-            $_POST['formWithMap'] = '';
-        }
+        $this->coalesceArr($_POST, 'formWithMap', '');
 
-        if (!isset($_POST['formComment'])) {
-            $_POST['formComment'] = '';
-        }
+        $this->coalesceArr($_POST, 'formComment', '');
 
         // Fetch all FTS configurations from the database
         $ftscfgs = $data->getFtsConfigurations();
@@ -397,7 +387,7 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreateconfig'], 'pg.ftscfg.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
         echo "<table>\n";
         // conf name
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
@@ -413,7 +403,7 @@ class FulltextController extends BaseController
         while (!$ftscfgs->EOF) {
             $data->fieldClean($ftscfgs->fields['schema']);
             $data->fieldClean($ftscfgs->fields['name']);
-            $tplname        = $ftscfgs->fields['schema'].'.'.$ftscfgs->fields['name'];
+            $tplname        = $ftscfgs->fields['schema'] . '.' . $ftscfgs->fields['name'];
             $tpls[$tplname] = serialize([
                 'name'   => $ftscfgs->fields['name'],
                 'schema' => $ftscfgs->fields['schema'],
@@ -434,7 +424,7 @@ class FulltextController extends BaseController
         while (!$ftsparsers->EOF) {
             $data->fieldClean($ftsparsers->fields['schema']);
             $data->fieldClean($ftsparsers->fields['name']);
-            $parsername = $ftsparsers->fields['schema'].'.'.$ftsparsers->fields['name'];
+            $parsername = $ftsparsers->fields['schema'] . '.' . $ftsparsers->fields['name'];
 
             $ftsparsers_[$parsername] = serialize([
                 'parser' => $ftsparsers->fields['name'],
@@ -521,26 +511,18 @@ class FulltextController extends BaseController
 
         $ftscfg = $data->getFtsConfigurationByName($_REQUEST['ftscfg']);
         if ($ftscfg->recordCount() > 0) {
-            if (!isset($_POST['formComment'])) {
-                $_POST['formComment'] = $ftscfg->fields['comment'];
-            }
+            $this->coalesceArr($_POST, 'formComment', $ftscfg->fields['comment']);
 
-            if (!isset($_POST['ftscfg'])) {
-                $_POST['ftscfg'] = $_REQUEST['ftscfg'];
-            }
+            $this->coalesceArr($_POST, 'ftscfg', $_REQUEST['ftscfg']);
 
-            if (!isset($_POST['formName'])) {
-                $_POST['formName'] = $_REQUEST['ftscfg'];
-            }
+            $this->coalesceArr($_POST, 'formName', $_REQUEST['ftscfg']);
 
-            if (!isset($_POST['formParser'])) {
-                $_POST['formParser'] = '';
-            }
+            $this->coalesceArr($_POST, 'formParser', '');
 
             // Fetch all FTS parsers from the database
             $ftsparsers = $data->getFtsParsers();
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -808,33 +790,19 @@ class FulltextController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!isset($_POST['formName'])) {
-            $_POST['formName'] = '';
-        }
+        $this->coalesceArr($_POST, 'formName', '');
 
-        if (!isset($_POST['formIsTemplate'])) {
-            $_POST['formIsTemplate'] = false;
-        }
+        $this->coalesceArr($_POST, 'formIsTemplate', false);
 
-        if (!isset($_POST['formTemplate'])) {
-            $_POST['formTemplate'] = '';
-        }
+        $this->coalesceArr($_POST, 'formTemplate', '');
 
-        if (!isset($_POST['formLexize'])) {
-            $_POST['formLexize'] = '';
-        }
+        $this->coalesceArr($_POST, 'formLexize', '');
 
-        if (!isset($_POST['formInit'])) {
-            $_POST['formInit'] = '';
-        }
+        $this->coalesceArr($_POST, 'formInit', '');
 
-        if (!isset($_POST['formOption'])) {
-            $_POST['formOption'] = '';
-        }
+        $this->coalesceArr($_POST, 'formOption', '');
 
-        if (!isset($_POST['formComment'])) {
-            $_POST['formComment'] = '';
-        }
+        $this->coalesceArr($_POST, 'formComment', '');
 
         // Fetch all FTS dictionaries from the database
         $ftstpls = $data->getFtsDictionaryTemplates();
@@ -844,7 +812,7 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreatedict'], 'pg.ftsdict.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -860,7 +828,7 @@ class FulltextController extends BaseController
         while (!$ftstpls->EOF) {
             $data->fieldClean($ftstpls->fields['schema']);
             $data->fieldClean($ftstpls->fields['name']);
-            $tplname        = $ftstpls->fields['schema'].'.'.$ftstpls->fields['name'];
+            $tplname        = $ftstpls->fields['schema'] . '.' . $ftstpls->fields['name'];
             $tpls[$tplname] = serialize([
                 'name'   => $ftstpls->fields['name'],
                 'schema' => $ftstpls->fields['schema'],
@@ -931,9 +899,7 @@ class FulltextController extends BaseController
         if ('' == $_POST['formName']) {
             $this->doCreateDict($this->lang['strftsdictneedsname']);
         } else {
-            if (!isset($_POST['formIsTemplate'])) {
-                $_POST['formIsTemplate'] = false;
-            }
+            $this->coalesceArr($_POST, 'formIsTemplate', false);
 
             if (isset($_POST['formTemplate'])) {
                 $formTemplate = unserialize($_POST['formTemplate']);
@@ -941,17 +907,11 @@ class FulltextController extends BaseController
                 $formTemplate = '';
             }
 
-            if (!isset($_POST['formLexize'])) {
-                $_POST['formLexize'] = '';
-            }
+            $this->coalesceArr($_POST, 'formLexize', '');
 
-            if (!isset($_POST['formInit'])) {
-                $_POST['formInit'] = '';
-            }
+            $this->coalesceArr($_POST, 'formInit', '');
 
-            if (!isset($_POST['formOption'])) {
-                $_POST['formOption'] = '';
-            }
+            $this->coalesceArr($_POST, 'formOption', '');
 
             $status = $data->createFtsDictionary(
                 $_POST['formName'],
@@ -987,19 +947,13 @@ class FulltextController extends BaseController
 
         $ftsdict = $data->getFtsDictionaryByName($_REQUEST['ftsdict']);
         if ($ftsdict->recordCount() > 0) {
-            if (!isset($_POST['formComment'])) {
-                $_POST['formComment'] = $ftsdict->fields['comment'];
-            }
+            $this->coalesceArr($_POST, 'formComment', $ftsdict->fields['comment']);
 
-            if (!isset($_POST['ftsdict'])) {
-                $_POST['ftsdict'] = $_REQUEST['ftsdict'];
-            }
+            $this->coalesceArr($_POST, 'ftsdict', $_REQUEST['ftsdict']);
 
-            if (!isset($_POST['formName'])) {
-                $_POST['formName'] = $_REQUEST['ftsdict'];
-            }
+            $this->coalesceArr($_POST, 'formName', $_REQUEST['ftsdict']);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -1068,7 +1022,7 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: proper breadcrumbs
             $this->printTitle($this->lang['strdrop'], 'pg.ftscfg.alter');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
 
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
@@ -1119,19 +1073,13 @@ class FulltextController extends BaseController
 
         $ftsdicts = $data->getFtsDictionaries();
         if ($ftsdicts->recordCount() > 0) {
-            if (!isset($_POST['formMapping'])) {
-                $_POST['formMapping'] = @$_REQUEST['mapping'];
-            }
+            $this->coalesceArr($_POST, 'formMapping', @$_REQUEST['mapping']);
 
-            if (!isset($_POST['formDictionary'])) {
-                $_POST['formDictionary'] = '';
-            }
+            $this->coalesceArr($_POST, 'formDictionary', '');
 
-            if (!isset($_POST['ftscfg'])) {
-                $_POST['ftscfg'] = $_REQUEST['ftscfg'];
-            }
+            $this->coalesceArr($_POST, 'ftscfg', $_REQUEST['ftscfg']);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
 
             echo "<table>\n";
             echo "\t<tr>\n";
@@ -1222,21 +1170,15 @@ class FulltextController extends BaseController
 
         $ftsdicts = $data->getFtsDictionaries();
         if ($ftsdicts->recordCount() > 0) {
-            if (!isset($_POST['formMapping'])) {
-                $_POST['formMapping'] = '';
-            }
+            $this->coalesceArr($_POST, 'formMapping', '');
 
-            if (!isset($_POST['formDictionary'])) {
-                $_POST['formDictionary'] = '';
-            }
+            $this->coalesceArr($_POST, 'formDictionary', '');
 
-            if (!isset($_POST['ftscfg'])) {
-                $_POST['ftscfg'] = $_REQUEST['ftscfg'];
-            }
+            $this->coalesceArr($_POST, 'ftscfg', $_REQUEST['ftscfg']);
 
             $mappings = $data->getFtsMappings($_POST['ftscfg']);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/fulltext\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n";
             echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>\n";
