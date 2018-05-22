@@ -156,7 +156,6 @@ class PrivilegesController extends BaseController
             echo "<p>{$this->lang['strnoprivileges']}</p>\n";
         }
         $this->printGrantLinks();
-
     }
 
     public function printGrantLinks()
@@ -214,7 +213,7 @@ class PrivilegesController extends BaseController
 
             if (isset($_REQUEST['table'])) {
                 $urlvars['table'] = $_REQUEST['table'];
-            } else if (isset($_REQUEST['view'])) {
+            } elseif (isset($_REQUEST['view'])) {
                 $urlvars['view'] = $_REQUEST['view'];
             } else {
                 $urlvars['matview'] = $_REQUEST['matview'];
