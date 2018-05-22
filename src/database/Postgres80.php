@@ -312,9 +312,9 @@ class Postgres80 extends Postgres81
      * @param string                   $name   The new name for the view
      * @param string                   $owner  The new owner for the view
      * @param string                   $schema The view schema
-     * @param $comment The comment on the view
+     * @param string $comment The comment on the view
      *
-     * @return int 0 success
+     * @return int 0 success, otherwise, an error code
      */
     protected function _alterView($vwrs, $name, $owner, $schema, $comment)
     {

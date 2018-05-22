@@ -1009,11 +1009,12 @@ class TablesController extends BaseController
                     echo '<td style="white-space:nowrap;">';
                     // Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
                     if (!$attrs->fields['attnotnull']) {
-                        echo "<label><span><input type=\"checkbox\" name=\"nulls[{$attrs->fields['attnum']}]\"",
-                        isset($_REQUEST['nulls'][$attrs->fields['attnum']]) ? ' checked="checked"' : '', ' /></span></label></td>';
-                    } else {
-                        echo '&nbsp;</td>';
+                        echo "<label><span><input type=\"checkbox\" name=\"nulls[{$attrs->fields['attnum']}]\"";
+                        echo isset($_REQUEST['nulls'][$attrs->fields['attnum']]) ? ' checked="checked"' : '';
+                        echo ' /></span></label>';
                     }
+                    echo '</td>';
+
                     echo "<td id=\"row_att_{$attrs->fields['attnum']}\" style=\"white-space:nowrap;\">";
                     if ((false !== $fksprops) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
                         echo $data->printField(
