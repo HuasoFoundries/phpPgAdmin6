@@ -28,8 +28,6 @@ class DataexportController extends BaseController
      */
     public function render()
     {
-        $data = $this->misc->getDatabaseAccessor();
-
         set_time_limit(0);
 
         // if (!isset($_REQUEST['table']) && !isset($_REQUEST['query']))
@@ -132,7 +130,7 @@ class DataexportController extends BaseController
                     $ext = 'txt';
                 }
                 $response = $response
-                    ->withHeader('Content-Disposition', 'attachment; filename=dump.'.$ext);
+                    ->withHeader('Content-Disposition', 'attachment; filename=dump.' . $ext);
             }
         } else {
             $response = $response
@@ -314,7 +312,7 @@ class DataexportController extends BaseController
                             $values = (is_null($v) ? 'NULL' : "'{$v}'");
                             $first  = false;
                         } else {
-                            $values .= ', '.((is_null($v) ? 'NULL' : "'{$v}'"));
+                            $values .= ', ' . ((is_null($v) ? 'NULL' : "'{$v}'"));
                         }
                     }
                     echo ") VALUES ({$values});\n";
@@ -400,7 +398,7 @@ class DataexportController extends BaseController
             $this->printMsg($msg);
         }
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dataexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">\n";
         // COPY and SQL require a table
@@ -422,10 +420,10 @@ class DataexportController extends BaseController
         echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
         echo "<input type=\"hidden\" name=\"what\" value=\"dataonly\" />\n";
         if (isset($_REQUEST['table'])) {
-            echo '<input type="hidden" name="subject" value="table" />'."\n";
+            echo '<input type="hidden" name="subject" value="table" />' . "\n";
             echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
         } else {
-            echo '<input type="hidden" name="subject" value="table" />'."\n";
+            echo '<input type="hidden" name="subject" value="table" />' . "\n";
         }
         $this->prtrace('$_REQUEST[query]', $_REQUEST['query'], htmlspecialchars(urlencode($_REQUEST['query'])));
         $this->prtrace('$_SESSION[sqlquery]', $_SESSION['sqlquery'], htmlspecialchars(urlencode($_SESSION['sqlquery'])));

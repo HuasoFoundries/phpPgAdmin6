@@ -267,6 +267,7 @@ trait ViewTrait
      */
     public function alterViewName($vwrs, $name)
     {
+
         $type = 'VIEW';
         if ($vwrs->fields['relkind'] === 'm') {
             $type = 'MATERIALIZED VIEW';
@@ -328,6 +329,7 @@ trait ViewTrait
      */
     public function dropView($viewname, $cascade)
     {
+        $vwrs = $this->getView($viewname);
         $type = 'VIEW';
         if ($vwrs->fields['relkind'] === 'm') {
             $type = 'MATERIALIZED VIEW';
