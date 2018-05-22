@@ -267,7 +267,6 @@ trait ViewTrait
      */
     public function alterViewName($vwrs, $name)
     {
-
         $type = 'VIEW';
         if ($vwrs->fields['relkind'] === 'm') {
             $type = 'MATERIALIZED VIEW';
