@@ -301,7 +301,6 @@ trait RoleTrait
                 }
             }
         }
-
     }
 
     private function _dealWithOriginalMembers($original_members, $new_members_of_role, $rolename)
@@ -453,7 +452,6 @@ trait RoleTrait
             if ($status !== 0) {
                 return -1;
             }
-
         }
 
         return $status;
