@@ -108,7 +108,7 @@ class AlldbController extends BaseController
             'database'   => [
                 'title' => $this->lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url'   => \SUBFOLDER."/redirect/database?{$href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/database?{$href}&amp;",
                 'vars'  => ['database' => 'datname'],
             ],
             'owner'      => [
@@ -262,7 +262,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['stralter'], 'pg.database.alter');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -337,7 +337,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['strdrop'], 'pg.database.drop');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -401,25 +401,15 @@ class AlldbController extends BaseController
         $this->printTitle($this->lang['strcreatedatabase'], 'pg.database.create');
         $this->printMsg($msg);
 
-        if (!isset($_POST['formName'])) {
-            $_POST['formName'] = '';
-        }
+        $this->coalesceArr($_POST, 'formName', '');
 
         // Default encoding is that in language file
-        if (!isset($_POST['formEncoding'])) {
-            $_POST['formEncoding'] = '';
-        }
-        if (!isset($_POST['formTemplate'])) {
-            $_POST['formTemplate'] = 'template1';
-        }
+        $this->coalesceArr($_POST, 'formEncoding', '');
+        $this->coalesceArr($_POST, 'formTemplate', 'template1');
 
-        if (!isset($_POST['formSpc'])) {
-            $_POST['formSpc'] = '';
-        }
+        $this->coalesceArr($_POST, 'formSpc', '');
 
-        if (!isset($_POST['formComment'])) {
-            $_POST['formComment'] = '';
-        }
+        $this->coalesceArr($_POST, 'formComment', '');
 
         // Fetch a list of databases in the cluster
         $templatedbs = $data->getDatabases(false);
@@ -430,7 +420,7 @@ class AlldbController extends BaseController
             $tablespaces = $data->getTablespaces();
         }
 
-        echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -471,13 +461,9 @@ class AlldbController extends BaseController
         echo "\t\t</td>\n\t</tr>\n";
 
         if ($data->hasDatabaseCollation()) {
-            if (!isset($_POST['formCollate'])) {
-                $_POST['formCollate'] = '';
-            }
+            $this->coalesceArr($_POST, 'formCollate', '');
 
-            if (!isset($_POST['formCType'])) {
-                $_POST['formCType'] = '';
-            }
+            $this->coalesceArr($_POST, 'formCType', '');
 
             // LC_COLLATE
             echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcollation']}</th>\n";
@@ -532,24 +518,16 @@ class AlldbController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Default tablespace to null if it isn't set
-        if (!isset($_POST['formSpc'])) {
-            $_POST['formSpc'] = null;
-        }
+        $this->coalesceArr($_POST, 'formSpc', null);
 
         // Default comment to blank if it isn't set
-        if (!isset($_POST['formComment'])) {
-            $_POST['formComment'] = null;
-        }
+        $this->coalesceArr($_POST, 'formComment', null);
 
         // Default collate to blank if it isn't set
-        if (!isset($_POST['formCollate'])) {
-            $_POST['formCollate'] = null;
-        }
+        $this->coalesceArr($_POST, 'formCollate', null);
 
         // Default ctype to blank if it isn't set
-        if (!isset($_POST['formCType'])) {
-            $_POST['formCType'] = null;
-        }
+        $this->coalesceArr($_POST, 'formCType', null);
 
         // Check that they've given a name and a definition
         if ('' == $_POST['formName']) {
@@ -584,7 +562,7 @@ class AlldbController extends BaseController
         $this->printTabs('server', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dbexport\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dbexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\">{$this->lang['stroptions']}</th></tr>\n";
         // Data only

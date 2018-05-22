@@ -13,28 +13,8 @@ class HTMLNavbarController extends HTMLController
 {
     public $controller_name = 'HTMLNavbarController';
 
-    /**
-     * Display a bread crumb trail.
-     *
-     * @param array|string $trail an array of breadcrumb items, or a string to identify one of them
-     * @param  $do_print true to echo, false to return html
-     * @param null|string $from
-     */
-    public function printTrail($trail = [], $do_print = true, $from = null)
+    private function _getCrumbs($trail)
     {
-        if (null === $from) {
-            $from = __METHOD__;
-        }
-        $lang       = $this->lang;
-        $this->misc = $this->misc;
-        $data       = $this->misc->getDatabaseAccessor();
-
-        $trail_html = $this->printTopbar(false, $from);
-
-        if (is_string($trail)) {
-            $trail = $this->getTrail($trail);
-        }
-
         $crumbs = [];
         foreach ($trail as $crumb_id => $crumb) {
             if (isset($crumb['url'])) {
@@ -58,12 +38,13 @@ class HTMLNavbarController extends HTMLController
                 $crumbs[$crumb_id]['helpurl'] = str_replace('&amp;', '&', $this->misc->getHelpLink($crumb['help']));
             }
         }
+        return $crumbs;
+    }
 
-        $viewVars = [
-            'crumbs'          => $crumbs,
-
-            'controller_name' => $this->controller_name,
-        ];
+    private function _getSearchPathsCrumbs($crumbs, $viewVars)
+    {
+        $data = $this->misc->getDatabaseAccessor();
+        $lang = $this->lang;
         if (isset($crumbs['database'])) {
             $search_path_crumbs = [];
             $dburl              = $crumbs['database']['url'];
@@ -74,11 +55,48 @@ class HTMLNavbarController extends HTMLController
                     'text'    => $schema,
                     'icon'    => $this->misc->icon('Schema'),
                     'iconalt' => $lang['strschema'],
-                    'url'     => str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl.'&schema='.$schema),
+                    'url'     => str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl . '&schema=' . $schema),
                 ];
             }
             $viewVars['search_paths'] = $search_path_crumbs;
         }
+        return $viewVars;
+    }
+
+    /**
+     * Display a bread crumb trail.
+     *
+     * @param array|string $trail an array of breadcrumb items, or a string to identify one of them
+     * @param  $do_print true to echo, false to return html
+     * @param null|string $from
+     */
+    public function printTrail($trail = [], $do_print = true, $from = null)
+    {
+        $plugin_manager = $this->plugin_manager;
+        $from           = $from ? $from : __METHOD__;
+
+        $trail_html = $this->printTopbar(false, $from);
+
+        if (is_string($trail)) {
+            $subject = $trail;
+            $trail   = $this->_getTrail($subject);
+            // Trail hook's place
+            $plugin_functions_parameters = [
+                'trail'   => &$trail,
+                'section' => $subject,
+            ];
+
+            $plugin_manager->doHook('trail', $plugin_functions_parameters);
+        }
+
+        $crumbs = $this->_getCrumbs($trail);
+
+        $viewVars = [
+            'crumbs'          => $crumbs,
+            'controller_name' => $this->controller_name,
+        ];
+        $viewVars = $this->_getSearchPathsCrumbs($crumbs, $viewVars);
+
         //\Kint::dump($viewVars);
 
         $trail_html .= $this->getContainer()->view->fetch('components/trail.twig', $viewVars);
@@ -102,9 +120,7 @@ class HTMLNavbarController extends HTMLController
      */
     public function printTabs($alltabs, $activetab, $do_print = true, $from = null)
     {
-        if (null === $from || false === $from) {
-            $from = __METHOD__;
-        }
+        $from = $from ? $from : __METHOD__;
 
         $lang       = $this->lang;
         $this->misc = $this->misc;
@@ -138,7 +154,7 @@ class HTMLNavbarController extends HTMLController
         //$this->prtrace($tabs);
 
         if (count($tabs) > 0) {
-            $width = (int) (100 / count($tabs)).'%';
+            $width = (int) (100 / count($tabs)) . '%';
 
             $viewVars = [
                 'width'           => $width,
@@ -166,9 +182,7 @@ class HTMLNavbarController extends HTMLController
      */
     private function printTopbar($do_print = true, $from = null)
     {
-        if (null === $from || false === $from) {
-            $from = __METHOD__;
-        }
+        $from = $from ? $from : __METHOD__;
 
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
@@ -180,16 +194,16 @@ class HTMLNavbarController extends HTMLController
         $server_id   = $this->misc->getServerId();
         $reqvars     = $this->misc->getRequestVars('table');
 
-        $topbar_html = '<div class="topbar" data-controller="'.$this->controller_name.'"><table style="width: 100%"><tr><td>';
+        $topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><table style="width: 100%"><tr><td>';
 
         if ($server_info && isset($server_info['platform'], $server_info['username'])) {
             // top left informations when connected
             $topbar_html .= sprintf(
                 $lang['strtopbar'],
-                '<span class="platform">'.htmlspecialchars($server_info['platform']).'</span>',
-                '<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']).'</span>',
-                '<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
-                '<span class="username">'.htmlspecialchars($server_info['username']).'</span>'
+                '<span class="platform">' . htmlspecialchars($server_info['platform']) . '</span>',
+                '<span class="host">' . htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']) . '</span>',
+                '<span class="port">' . htmlspecialchars($server_info['port']) . '</span>',
+                '<span class="username">' . htmlspecialchars($server_info['username']) . '</span>'
             );
 
             $topbar_html .= '</td>';
@@ -200,7 +214,7 @@ class HTMLNavbarController extends HTMLController
                 'sql'     => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER.'/src/views/sqledit',
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'sql',
                             ]),
@@ -213,7 +227,7 @@ class HTMLNavbarController extends HTMLController
                 'history' => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER.'/src/views/history',
+                            'url'     => SUBFOLDER . '/src/views/history',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
@@ -225,7 +239,7 @@ class HTMLNavbarController extends HTMLController
                 'find'    => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER.'/src/views/sqledit',
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'find',
                             ]),
@@ -238,7 +252,7 @@ class HTMLNavbarController extends HTMLController
                 'logout'  => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER.'/src/views/servers',
+                            'url'     => SUBFOLDER . '/src/views/servers',
                             'urlvars' => [
                                 'action'       => 'logout',
                                 'logoutServer' => sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
@@ -280,7 +294,7 @@ class HTMLNavbarController extends HTMLController
         $vars = $this->misc->getSubjectParams($subject);
         ksort($vars['params']);
 
-        return "{$vars['url']}?".http_build_query($vars['params'], '', '&amp;');
+        return "{$vars['url']}?" . http_build_query($vars['params'], '', '&amp;');
     }
 
     /**
@@ -288,12 +302,12 @@ class HTMLNavbarController extends HTMLController
      *
      * @param null|string $subject sunkect of the trail
      */
-    private function getTrail($subject = null)
+    private function _getTrail($subject = null)
     {
-        $lang           = $this->lang;
-        $plugin_manager = $this->plugin_manager;
-        $this->misc     = $this->misc;
-        $appName        = $this->misc->appName;
+        $lang = $this->lang;
+
+        $this->misc = $this->misc;
+        $appName    = $this->misc->appName;
 
         $data = $this->misc->getDatabaseAccessor();
 
@@ -303,178 +317,191 @@ class HTMLNavbarController extends HTMLController
 
         $trail['root'] = [
             'text' => $appName,
-            'url'  => SUBFOLDER.'/src/views/servers',
+            'url'  => SUBFOLDER . '/src/views/servers',
             'icon' => 'Introduction',
         ];
 
         if ('root' == $subject) {
-            $done = true;
+            return $trail;
         }
 
-        if (!$done) {
-            $server_info     = $this->misc->getServerInfo();
-            $trail['server'] = [
-                'title' => $lang['strserver'],
-                'text'  => $server_info['desc'],
-                'url'   => $this->getHREFSubject('server'),
-                'help'  => 'pg.server',
-                'icon'  => 'Server',
-            ];
-        }
-        if ('server' == $subject) {
-            $done = true;
-        }
-
-        if (isset($_REQUEST['database']) && !$done) {
-            $trail['database'] = [
-                'title' => $lang['strdatabase'],
-                'text'  => $_REQUEST['database'],
-                'url'   => $this->getHREFSubject('database'),
-                'help'  => 'pg.database',
-                'icon'  => 'Database',
-            ];
-        } elseif (isset($_REQUEST['rolename']) && !$done) {
-            $trail['role'] = [
-                'title' => $lang['strrole'],
-                'text'  => $_REQUEST['rolename'],
-                'url'   => $this->getHREFSubject('role'),
-                'help'  => 'pg.role',
-                'icon'  => 'Roles',
-            ];
-        }
-        if ('database' == $subject || 'role' == $subject) {
-            $done = true;
-        }
-
-        if (isset($_REQUEST['schema']) && !$done) {
-            $trail['schema'] = [
-                'title' => $lang['strschema'],
-                'text'  => $_REQUEST['schema'],
-                'url'   => $this->getHREFSubject('schema'),
-                'help'  => 'pg.schema',
-                'icon'  => 'Schema',
-            ];
-        }
-        if ('schema' == $subject) {
-            $done = true;
-        }
-
-        if (isset($_REQUEST['table']) && !$done) {
-            $trail['table'] = [
-                'title' => $lang['strtable'],
-                'text'  => $_REQUEST['table'],
-                'url'   => $this->getHREFSubject('table'),
-                'help'  => 'pg.table',
-                'icon'  => 'Table',
-            ];
-        } elseif (isset($_REQUEST['view']) && !$done) {
-            $trail['view'] = [
-                'title' => $lang['strview'],
-                'text'  => $_REQUEST['view'],
-                'url'   => $this->getHREFSubject('view'),
-                'help'  => 'pg.view',
-                'icon'  => 'View',
-            ];
-        } elseif (isset($_REQUEST['matview']) && !$done) {
-            $trail['matview'] = [
-                'title' => 'M'.$lang['strview'],
-                'text'  => $_REQUEST['matview'],
-                'url'   => $this->getHREFSubject('matview'),
-                'help'  => 'pg.matview',
-                'icon'  => 'MViews',
-            ];
-        } elseif (isset($_REQUEST['ftscfg']) && !$done) {
-            $trail['ftscfg'] = [
-                'title' => $lang['strftsconfig'],
-                'text'  => $_REQUEST['ftscfg'],
-                'url'   => $this->getHREFSubject('ftscfg'),
-                'help'  => 'pg.ftscfg.example',
-                'icon'  => 'Fts',
-            ];
-        }
-        if ('table' == $subject || 'view' == $subject || 'matview' == $subject || 'ftscfg' == $subject) {
-            $done = true;
-        }
-
-        if (!$done && !is_null($subject)) {
-            switch ($subject) {
-                case 'function':
-                    $trail[$subject] = [
-                        'title' => $lang['str'.$subject],
-                        'text'  => $_REQUEST[$subject],
-                        'url'   => $this->getHREFSubject('function'),
-                        'help'  => 'pg.function',
-                        'icon'  => 'Function',
-                    ];
-
-                    break;
-                case 'aggregate':
-                    $trail[$subject] = [
-                        'title' => $lang['straggregate'],
-                        'text'  => $_REQUEST['aggrname'],
-                        'url'   => $this->getHREFSubject('aggregate'),
-                        'help'  => 'pg.aggregate',
-                        'icon'  => 'Aggregate',
-                    ];
-
-                    break;
-                case 'column':
-                    $trail['column'] = [
-                        'title' => $lang['strcolumn'],
-                        'text'  => $_REQUEST['column'],
-                        'icon'  => 'Column',
-                        'url'   => $this->getHREFSubject('column'),
-                    ];
-
-                    break;
-                default:
-                    if (isset($_REQUEST[$subject])) {
-                        switch ($subject) {
-                            case 'domain':
-                                $icon = 'Domain';
-
-                                break;
-                            case 'sequence':
-                                $icon = 'Sequence';
-
-                                break;
-                            case 'type':
-                                $icon = 'Type';
-
-                                break;
-                            case 'operator':
-                                $icon = 'Operator';
-
-                                break;
-                            case 'index':
-                                $icon = 'Index';
-
-                                break;
-                            default:
-                                $icon = null;
-
-                                break;
-                        }
-                        $trail[$subject] = [
-                            'title' => array_key_exists('str'.$subject, $lang) ? $lang['str'.$subject] : $subject,
-                            'text'  => $_REQUEST[$subject],
-                            'help'  => 'pg.'.$subject,
-                            'icon'  => $icon,
-                        ];
-                    }
-            }
-        }
-
-        // Trail hook's place
-        $plugin_functions_parameters = [
-            'trail'   => &$trail,
-            'section' => $subject,
+        $server_info     = $this->misc->getServerInfo();
+        $trail['server'] = [
+            'title' => $lang['strserver'],
+            'text'  => $server_info['desc'],
+            'url'   => $this->getHREFSubject('server'),
+            'help'  => 'pg.server',
+            'icon'  => 'Server',
         ];
 
-        $plugin_manager->doHook('trail', $plugin_functions_parameters);
+        if ('server' == $subject) {
+            return $trail;
+        }
+
+        $database_rolename = [
+            'database' => [
+                'title'   => $lang['strdatabase'],
+                'subject' => 'database',
+                'help'    => 'pg.database',
+                'icon'    => 'Database',
+            ],
+            'rolename' => [
+                'title'   => $lang['strrole'],
+                'subject' => 'role',
+                'help'    => 'pg.role',
+                'icon'    => 'Roles',
+            ],
+        ];
+
+        $trail = $this->_getTrailsFromArray($trail, $database_rolename);
+
+        if (in_array($subject, ['database', 'role'])) {
+            return $trail;
+        }
+
+        $schema = [
+            'schema' => [
+                'title'   => $lang['strschema'],
+                'subject' => 'schema',
+                'help'    => 'pg.schema',
+                'icon'    => 'Schema',
+            ],
+        ];
+
+        $trail = $this->_getTrailsFromArray($trail, $schema);
+        if ('schema' == $subject) {
+            return $trail;
+        }
+
+        $table_view_matview_fts = [
+            'table'   => [
+                'title'   => $lang['strtable'],
+                'subject' => 'table',
+                'help'    => 'pg.table',
+                'icon'    => 'Table',
+            ],
+            'view'    => [
+                'title'   => $lang['strview'],
+                'subject' => 'view',
+                'help'    => 'pg.view',
+                'icon'    => 'View',
+            ],
+            'matview' => [
+                'title'   => 'M' . $lang['strview'],
+                'subject' => 'matview',
+                'help'    => 'pg.matview',
+                'icon'    => 'MViews',
+            ],
+            'ftscfg'  => [
+                'title'   => $lang['strftsconfig'],
+                'subject' => 'ftscfg',
+                'help'    => 'pg.ftscfg.example',
+                'icon'    => 'Fts',
+            ],
+        ];
+
+        $trail = $this->_getTrailsFromArray($trail, $table_view_matview_fts);
+
+        if (in_array($subject, ['table', 'view', 'matview', 'ftscfg'])) {
+            return $trail;
+        }
+
+        if (!is_null($subject)) {
+            $trail = $this->_getLastTrailPart($subject, $trail);
+        }
 
         //$this->prtrace($trail);
 
         return $trail;
+    }
+
+    private function _getTrailsFromArray($trail, $the_array)
+    {
+        foreach ($the_array as $key => $value) {
+            if (isset($_REQUEST[$key])) {
+                $trail[$key] = [
+                    'title' => $value['title'],
+                    'text'  => $_REQUEST[$key],
+                    'url'   => $this->getHREFSubject($value['subject']),
+                    'help'  => $value['help'],
+                    'icon'  => $value['icon'],
+                ];
+                break;
+            }
+        }
+        return $trail;
+    }
+
+    private function _getLastTrailPart($subject, $trail)
+    {
+        $lang = $this->lang;
+
+        switch ($subject) {
+            case 'function':
+                $trail[$subject] = [
+                    'title' => $lang['str' . $subject],
+                    'text'  => $_REQUEST[$subject],
+                    'url'   => $this->getHREFSubject('function'),
+                    'help'  => 'pg.function',
+                    'icon'  => 'Function',
+                ];
+
+                break;
+            case 'aggregate':
+                $trail[$subject] = [
+                    'title' => $lang['straggregate'],
+                    'text'  => $_REQUEST['aggrname'],
+                    'url'   => $this->getHREFSubject('aggregate'),
+                    'help'  => 'pg.aggregate',
+                    'icon'  => 'Aggregate',
+                ];
+
+                break;
+            case 'column':
+                $trail['column'] = [
+                    'title' => $lang['strcolumn'],
+                    'text'  => $_REQUEST['column'],
+                    'icon'  => 'Column',
+                    'url'   => $this->getHREFSubject('column'),
+                ];
+
+                break;
+            default:
+                if (isset($_REQUEST[$subject])) {
+                    switch ($subject) {
+                        case 'domain':
+                            $icon = 'Domain';
+
+                            break;
+                        case 'sequence':
+                            $icon = 'Sequence';
+
+                            break;
+                        case 'type':
+                            $icon = 'Type';
+
+                            break;
+                        case 'operator':
+                            $icon = 'Operator';
+
+                            break;
+                        case 'index':
+                            $icon = 'Index';
+
+                            break;
+                        default:
+                            $icon = null;
+
+                            break;
+                    }
+                    $trail[$subject] = [
+                        'title' => array_key_exists('str' . $subject, $lang) ? $lang['str' . $subject] : $subject,
+                        'text'  => $_REQUEST[$subject],
+                        'help'  => 'pg.' . $subject,
+                        'icon'  => $icon,
+                    ];
+                }
+        }
+        return trail;
     }
 }
