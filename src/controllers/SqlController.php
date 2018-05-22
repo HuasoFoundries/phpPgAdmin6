@@ -159,9 +159,8 @@ class SqlController extends BaseController
                         // If we have the command completion tag
                         if (version_compare(PHP_VERSION, '4.3', '>=')) {
                             echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), "<br/>\n";
-                        }
-                        // Otherwise if any rows have been affected
-                        elseif ($data->conn->Affected_Rows() > 0) {
+                        } elseif ($data->conn->Affected_Rows() > 0) {
+                            // Otherwise if any rows have been affected
                             echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>\n";
                         }
                         // Otherwise output nothing...
@@ -187,7 +186,7 @@ class SqlController extends BaseController
 
         $rs = $data->conn->Execute($this->query);
 
-        echo '<form method="post" id="sqlform" action="'.$_SERVER['REQUEST_URI'].'">';
+        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
         echo htmlspecialchars($this->query);

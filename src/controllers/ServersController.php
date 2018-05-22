@@ -98,7 +98,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => \SUBFOLDER.'/redirect/server?',
+                'url'   => \SUBFOLDER . '/redirect/server?',
                 'vars'  => ['server' => 'sha'],
             ],
             'host'     => [
@@ -221,15 +221,16 @@ class ServersController extends BaseController
 
         if (isset($this->conf['srv_groups'])) {
             foreach ($this->conf['srv_groups'] as $i => $group) {
-                if ((($group_id === false) and (!isset($group['parents']))) /* root */
-                    or (
-                        ($group_id !== false)
-                        and isset($group['parents'])
-                        and in_array($group_id, explode(
+                if ((($group_id === false) && (!isset($group['parents']))) ||
+
+                    ($group_id !== false) &&
+                    isset($group['parents']) &&
+                    in_array(
+                        $group_id,
+                        explode(
                             ',',
                             preg_replace('/\s/', '', $group['parents'])
                         ), true)
-                    ) /* nested group */
                 ) {
                     $grps[$i] = [
                         'id'     => $i,

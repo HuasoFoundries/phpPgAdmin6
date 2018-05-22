@@ -792,10 +792,8 @@ trait AdminTrait
             case 'cluster':
                 if (isset($_POST['cluster'])) {
                     $this->doCluster($type);
-                }
-
-                // if multi-action from table canceled: back to the schema default page
-                elseif (('table' == $type) && is_array($_REQUEST['object'])) {
+                } elseif (('table' == $type) && is_array($_REQUEST['object'])) {
+                    // if multi-action from table canceled: back to the schema default page
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -805,10 +803,8 @@ trait AdminTrait
             case 'reindex':
                 if (isset($_POST['reindex'])) {
                     $this->doReindex($type);
-                }
-
-                // if multi-action from table canceled: back to the schema default page
-                elseif (('table' == $type) && is_array($_REQUEST['object'])) {
+                } elseif (('table' == $type) && is_array($_REQUEST['object'])) {
+                    // if multi-action from table canceled: back to the schema default page
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -818,10 +814,8 @@ trait AdminTrait
             case 'analyze':
                 if (isset($_POST['analyze'])) {
                     $this->doAnalyze($type);
-                }
-
-                // if multi-action from table canceled: back to the schema default page
-                elseif (('table' == $type) && is_array($_REQUEST['object'])) {
+                } elseif (('table' == $type) && is_array($_REQUEST['object'])) {
+                    // if multi-action from table canceled: back to the schema default page
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
@@ -831,10 +825,8 @@ trait AdminTrait
             case 'vacuum':
                 if (isset($_POST['vacuum'])) {
                     $this->doVacuum($type);
-                }
-
-                // if multi-action from table canceled: back to the schema default page
-                elseif (('table' == $type) && is_array($_REQUEST['object'])) {
+                } elseif (('table' == $type) && is_array($_REQUEST['object'])) {
+                    // if multi-action from table canceled: back to the schema default page
                     $this->doDefault();
                 } else {
                     $this->doAdmin($type);
