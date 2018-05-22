@@ -577,7 +577,6 @@ class TblpropertiesController extends BaseController
 
     public function doExport($msg = '')
     {
-
         $data    = $this->misc->getDatabaseAccessor();
         $subject = 'table';
         $object  = $_REQUEST['table'];
@@ -603,7 +602,6 @@ class TblpropertiesController extends BaseController
         echo $this->displayOrDownload();
 
         echo $this->formFooter($subject, $object);
-
     }
 
     public function doImport($msg = '')

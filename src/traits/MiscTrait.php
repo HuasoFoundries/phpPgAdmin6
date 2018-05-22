@@ -156,7 +156,7 @@ trait MiscTrait
                         'table'    => $_REQUEST['table'],
                         'column'   => $_REQUEST['column'],
                     ]];
-                } else if (isset($_REQUEST['view'])) {
+                } elseif (isset($_REQUEST['view'])) {
                     $vars = ['params' => [
                         'server'   => $_REQUEST['server'],
                         'subject'  => 'column',
@@ -165,7 +165,7 @@ trait MiscTrait
                         'view'     => $_REQUEST['view'],
                         'column'   => $_REQUEST['column'],
                     ]];
-                } else if (isset($_REQUEST['matview'])) {
+                } elseif (isset($_REQUEST['matview'])) {
                     $vars = ['params' => [
                         'server'   => $_REQUEST['server'],
                         'subject'  => 'column',
