@@ -210,7 +210,7 @@ trait MiscTrait
      * Render a value into HTML using formatting rules specified
      * by a type name and parameters.
      *
-     * @param string $str    The string to change
+     * @param string|null $str    The string to change
      * @param string $type   Field type (optional), this may be an internal PostgreSQL type, or:
      *                       yesno    - same as bool, but renders as 'Yes' or 'No'.
      *                       pre      - render in a <pre> block.

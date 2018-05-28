@@ -634,6 +634,7 @@ class DisplayController extends BaseController
             if (($k === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
             }
+            $printvalOpts = ['null' => true, 'clip' => ('collapsed' == $_REQUEST['strings'])];
             if (null !== $v && '' == $v) {
                 echo '<td>&nbsp;</td>';
             } else {
@@ -657,10 +658,10 @@ class DisplayController extends BaseController
                         echo '</a>';
                         echo '</div>';
                     }
-                    $val = $this->misc->printVal($v, $finfo->type, ['null' => true, 'clip' => ('collapsed' == $_REQUEST['strings']), 'class' => 'fk_value']);
-                } else {
-                    $val = $this->misc->printVal($v, $finfo->type, ['null' => true, 'clip' => ('collapsed' == $_REQUEST['strings'])]);
+                    $printvalOpts['class'] = 'fk_value';
+
                 }
+                $val = $this->misc->printVal($v, $finfo->type, $printvalOpts);
 
                 echo $val;
                 echo '</td>';
