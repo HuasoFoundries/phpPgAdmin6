@@ -253,7 +253,7 @@ class DisplayController extends BaseController
         $query = $query ? $query : sprintf('SELECT * FROM %s.%s', $_REQUEST['schema'], $object);
 
         //$query = isset($_REQUEST['query'])? $_REQUEST['query'] : "select * from {$_REQUEST['schema']}.{$_REQUEST['table']};";
-        $this->prtrace($query);
+        //$this->prtrace($query);
 
         //die(htmlspecialchars($query));
 
