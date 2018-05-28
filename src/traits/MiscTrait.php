@@ -240,7 +240,7 @@ trait MiscTrait
         $data = $this->getDatabaseAccessor();
 
         // Shortcircuit for a NULL value
-        if (!$str) {
+        if (is_null($str)) {
             return isset($params['null'])
             ? ($params['null'] === true ? '<i>NULL</i>' : $params['null'])
             : '';
