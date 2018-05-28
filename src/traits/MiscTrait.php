@@ -361,7 +361,7 @@ trait MiscTrait
                     $class = 'data';
                     $out   = htmlspecialchars($str);
                 } else {
-                    $tag = 'span';
+                    //$tag = 'span';
                     $out = nl2br(htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
                 }
         }

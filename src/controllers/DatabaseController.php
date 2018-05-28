@@ -44,20 +44,20 @@ class DatabaseController extends BaseController
         $scripts = '';
         // normal flow
         if ('locks' == $this->action || 'processes' == $this->action) {
-            $scripts .= '<script src="'.\SUBFOLDER.'/assets/js/database.js" type="text/javascript"></script>';
+            $scripts .= '<script src="' . \SUBFOLDER . '/assets/js/database.js" type="text/javascript"></script>';
 
             $refreshTime = $this->conf['ajax_refresh'] * 1500;
 
             $scripts .= "<script type=\"text/javascript\">\n";
             $scripts .= "var Database = {\n";
             $scripts .= "ajax_time_refresh: {$refreshTime},\n";
-            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '".$this->misc->icon('Execute')."'},\n";
-            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '".$this->misc->icon('Stop')."'},\n";
-            $scripts .= "load_icon: '".$this->misc->icon('Loading')."',\n";
+            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '" . $this->misc->icon('Execute') . "'},\n";
+            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '" . $this->misc->icon('Stop') . "'},\n";
+            $scripts .= "load_icon: '" . $this->misc->icon('Loading') . "',\n";
             $scripts .= "server:'{$_REQUEST['server']}',\n";
             $scripts .= "dbname:'{$_REQUEST['database']}',\n";
             $scripts .= "action:'refresh_{$this->action}',\n";
-            $scripts .= "errmsg: '".str_replace("'", "\\'", $this->lang['strconnectionfail'])."'\n";
+            $scripts .= "errmsg: '" . str_replace("'", "\\'", $this->lang['strconnectionfail']) . "'\n";
             $scripts .= "};\n";
             $scripts .= "</script>\n";
         }
@@ -184,7 +184,7 @@ class DatabaseController extends BaseController
         $this->printTabs('database', 'find');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/database\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/database\" method=\"post\">\n";
         echo '<p><input name="term" value="', htmlspecialchars($_REQUEST['term']),
             "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
@@ -201,6 +201,7 @@ class DatabaseController extends BaseController
         echo "\t<option value=\"CONSTRAINT\"", ('CONSTRAINT' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strconstraints']}</option>\n";
         echo "\t<option value=\"FUNCTION\"", ('FUNCTION' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strfunctions']}</option>\n";
         echo "\t<option value=\"DOMAIN\"", ('DOMAIN' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strdomains']}</option>\n";
+
         if ($this->conf['show_advanced']) {
             echo "\t<option value=\"AGGREGATE\"", ('AGGREGATE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['straggregates']}</option>\n";
             echo "\t<option value=\"TYPE\"", ('TYPE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strtypes']}</option>\n";
@@ -212,7 +213,8 @@ class DatabaseController extends BaseController
         echo "</select>\n";
         echo "<input type=\"submit\" value=\"{$this->lang['strfind']}\" />\n";
         echo $this->misc->form;
-        echo "<input type=\"hidden\" name=\"action\" value=\"find\" /></p>\n";
+        echo '<input type="hidden" name="action" value="find" /></p>' . "\n";
+        echo '<input type="hidden" name="confirm" value="true" /></p>' . "\n";
         echo "</form>\n";
 
         // Default focus
@@ -220,9 +222,9 @@ class DatabaseController extends BaseController
 
         // If a search term has been specified, then perform the search
         // and display the results, grouped by object type
-        if ($confirm && '' != $_REQUEST['term']) {
+        if (!$confirm && '' != $_REQUEST['term']) {
             $rs = $data->findObject($_REQUEST['term'], $_REQUEST['filter']);
-            if ($rs->recordCount() > 0) {
+            if ($rs->RecordCount() > 0) {
                 $curr = '';
                 while (!$rs->EOF) {
                     // Output a new header if the current type has changed, but not if it's just changed the rule type
@@ -322,127 +324,130 @@ class DatabaseController extends BaseController
 
                     switch ($curr) {
                         case 'SCHEMA':
-                            echo '<li><a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", $this->misc->printVal($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
+                            echo '<li><a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=";
+                            echo $this->misc->printVal($rs->fields['name']), '">';
+                            echo $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']);
+                            echo "</a></li>\n";
 
                             break;
                         case 'TABLE':
                             echo '<li>';
-                            echo "<a href=\"tables?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
+                            echo "<a href=\"tables?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'VIEW':
                             echo '<li>';
-                            echo "<a href=\"views?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/view?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
+                            echo "<a href=\"views?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/view?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'SEQUENCE':
                             echo '<li>';
-                            echo "<a href=\"sequences?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"sequences?subject=sequence&amp;action=properties&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']),
+                            echo "<a href=\"sequences?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"sequences?subject=sequence&amp;action=properties&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']),
                             '&amp;sequence=', urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'COLUMNTABLE':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"tblproperties?subject=table&amp;{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                            echo "<a href=\"colproperties?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"tblproperties?subject=table&{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo "<a href=\"colproperties?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['relname']), '&amp;column=', urlencode($rs->fields['name']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'COLUMNVIEW':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"viewproperties?subject=view&amp;{$this->misc->href}&amp;view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                            echo "<a href=\"colproperties?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"viewproperties?subject=view&{$this->misc->href}&view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo "<a href=\"colproperties?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
                             urlencode($rs->fields['relname']), '&amp;column=', urlencode($rs->fields['name']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'INDEX':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                            echo "<a href=\"indexes?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo "<a href=\"indexes?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'CONSTRAINTTABLE':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                            echo "<a href=\"constraints?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo "<a href=\"constraints?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'CONSTRAINTDOMAIN':
                             echo '<li>';
-                            echo "<a href=\"domains?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"domains?action=properties&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;domain=', urlencode($rs->fields['relname']), '">',
+                            echo "<a href=\"domains?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"domains?action=properties&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;domain=', urlencode($rs->fields['relname']), '">',
                             $this->misc->printVal($rs->fields['relname']), '.', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'TRIGGER':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                            echo "<a href=\"triggers?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo "<a href=\"triggers?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'RULETABLE':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&amp;table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                            echo "<a href=\"rules?subject=table&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=table&amp;table=',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo "<a href=\"rules?subject=table&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=table&amp;table=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'RULEVIEW':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/view?{$this->misc->href}&amp;view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                            echo "<a href=\"rules?subject=view&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=view&amp;view=',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/view?{$this->misc->href}&view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo "<a href=\"rules?subject=view&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=view&amp;view=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'FUNCTION':
                             echo '<li>';
-                            echo "<a href=\"functions?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"functions?action=properties&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;function=',
+                            echo "<a href=\"functions?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"functions?action=properties&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;function=',
                             urlencode($rs->fields['name']), '&amp;function_oid=', urlencode($rs->fields['oid']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'TYPE':
                             echo '<li>';
-                            echo "<a href=\"types?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"types?action=properties&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;type=',
+                            echo "<a href=\"types?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"types?action=properties&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;type=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'DOMAIN':
                             echo '<li>';
-                            echo "<a href=\"domains?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"domains?action=properties&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;domain=',
+                            echo "<a href=\"domains?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"domains?action=properties&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;domain=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'OPERATOR':
                             echo '<li>';
-                            echo "<a href=\"operators?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"operators?action=properties&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '&amp;operator=',
+                            echo "<a href=\"operators?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"operators?action=properties&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;operator=',
                             urlencode($rs->fields['name']), '&amp;operator_oid=', urlencode($rs->fields['oid']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'CONVERSION':
                             echo '<li>';
-                            echo "<a href=\"conversions?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"conversions?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']),
+                            echo "<a href=\"conversions?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"conversions?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']),
                             '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
@@ -452,15 +457,15 @@ class DatabaseController extends BaseController
                             break;
                         case 'AGGREGATE':
                             echo '<li>';
-                            echo "<a href=\"aggregates?subject=schema&amp;{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"aggregates?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">',
+                            echo "<a href=\"aggregates?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"aggregates?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'OPCLASS':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo "<a href=\"opclasses?{$this->misc->href}&amp;schema=", urlencode($rs->fields['schemaname']), '">',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo "<a href=\"opclasses?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
@@ -489,7 +494,7 @@ class DatabaseController extends BaseController
         $this->printTabs('database', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dbexport\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/dbexport\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";
         // Data only
@@ -572,7 +577,7 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         if (0 === strlen($msg)) {
-            echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+            echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
         }
 
         echo '<div id="data_block">';
@@ -754,7 +759,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'locks');
 
-        echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+        echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
 
         echo '<div id="data_block">';
         $this->currentLocks();
@@ -774,7 +779,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'sql');
         echo "<p>{$this->lang['strentersql']}</p>\n";
-        echo '<form action="'.\SUBFOLDER.'/src/views/sql" method="post" enctype="multipart/form-data" id="sqlform">'."\n";
+        echo '<form action="' . \SUBFOLDER . '/src/views/sql" method="post" enctype="multipart/form-data" id="sqlform">' . "\n";
         echo "<p>{$this->lang['strsql']}<br />\n";
         echo '<textarea style="width:95%;" rows="15" cols="50" name="query" id="query">',
         htmlspecialchars($_SESSION['sqlquery']), "</textarea></p>\n";

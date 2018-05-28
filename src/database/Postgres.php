@@ -646,6 +646,8 @@ class Postgres extends ADOdbBase
 				WHERE c.relkind='v' AND r.rulename != '_RETURN' AND r.rulename ILIKE {$term} {$where}
 		";
 
+        \Kint::dump($sql);
+
         // Add advanced objects if show_advanced is set
         if ($conf['show_advanced']) {
             $sql .= "
