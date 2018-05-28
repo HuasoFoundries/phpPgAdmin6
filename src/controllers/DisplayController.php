@@ -659,7 +659,6 @@ class DisplayController extends BaseController
                         echo '</div>';
                     }
                     $printvalOpts['class'] = 'fk_value';
-
                 }
                 $val = $this->misc->printVal($v, $finfo->type, $printvalOpts);
 
