@@ -107,7 +107,7 @@ class FunctionsController extends BaseController
             'function'     => [
                 'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url'   => \SUBFOLDER."/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns'      => [
@@ -371,6 +371,55 @@ class FunctionsController extends BaseController
         }
     }
 
+    private function _getNamedParamsArgs($data, $fndata)
+    {
+        if (isset($fndata->fields['proallarguments'])) {
+            $args_arr = $data->phpArray($fndata->fields['proallarguments']);
+        } else {
+            $args_arr = explode(', ', $fndata->fields['proarguments']);
+        }
+        $names_arr     = $data->phpArray($fndata->fields['proargnames']);
+        $modes_arr     = $data->phpArray($fndata->fields['proargmodes']);
+        $args          = '';
+        $args_arr_size = sizeof($args_arr);
+        for ($i = 0; $i < $args_arr_size; ++$i) {
+            if (0 != $i) {
+                $args .= ', ';
+            }
+
+            if (isset($modes_arr[$i])) {
+                switch ($modes_arr[$i]) {
+                    case 'i':
+                        $args .= ' IN ';
+
+                        break;
+                    case 'o':
+                        $args .= ' OUT ';
+
+                        break;
+                    case 'b':
+                        $args .= ' INOUT ';
+
+                        break;
+                    case 'v':
+                        $args .= ' VARIADIC ';
+
+                        break;
+                    case 't':
+                        $args .= ' TABLE ';
+
+                        break;
+                }
+            }
+            if (isset($names_arr[$i]) && '' != $names_arr[$i]) {
+                $data->fieldClean($names_arr[$i]);
+                $args .= '"' . $names_arr[$i] . '" ';
+            }
+            $args .= $args_arr[$i];
+        }
+        return $args;
+    }
+
     /**
      * Function to allow editing of a Function.
      *
@@ -386,217 +435,175 @@ class FunctionsController extends BaseController
 
         $fndata = $data->getFunction($_REQUEST['function_oid']);
 
-        if ($fndata->recordCount() > 0) {
-            $fndata->fields['proretset'] = $data->phpBool($fndata->fields['proretset']);
-
-            // Initialise variables
-            $_POST['formDefinition'] = $this->getPostParam('formDefinition', $fndata->fields['prosrc']);
-
-            $_POST['formProperties'] = $this->getPostParam('formProperties', $data->getFunctionProperties($fndata->fields));
-
-            $_POST['formFunction'] = $this->getPostParam('formFunction', $fndata->fields['proname']);
-
-            $_POST['formComment'] = $this->getPostParam('formComment', $fndata->fields['procomment']);
-
-            $_POST['formObjectFile'] = $this->getPostParam('formObjectFile', $fndata->fields['probin']);
-
-            $_POST['formLinkSymbol'] = $this->getPostParam('formLinkSymbol', $fndata->fields['prosrc']);
-
-            $_POST['formFuncOwn'] = $this->getPostParam('formFuncOwn', $fndata->fields['proowner']);
-
-            $_POST['formFuncSchema'] = $this->getPostParam('formFuncSchema', $fndata->fields['proschema']);
-
-            if ($data->hasFunctionCosting()) {
-                $_POST['formCost'] = $this->getPostParam('formCost', $fndata->fields['procost']);
-
-                $_POST['formRows'] = $this->getPostParam('formRows', $fndata->fields['prorows']);
-            }
-
-            // Deal with named parameters
-            if ($data->hasNamedParams()) {
-                if (isset($fndata->fields['proallarguments'])) {
-                    $args_arr = $data->phpArray($fndata->fields['proallarguments']);
-                } else {
-                    $args_arr = explode(', ', $fndata->fields['proarguments']);
-                }
-                $names_arr     = $data->phpArray($fndata->fields['proargnames']);
-                $modes_arr     = $data->phpArray($fndata->fields['proargmodes']);
-                $args          = '';
-                $args_arr_size = sizeof($args_arr);
-                for ($i = 0; $i < $args_arr_size; ++$i) {
-                    if (0 != $i) {
-                        $args .= ', ';
-                    }
-
-                    if (isset($modes_arr[$i])) {
-                        switch ($modes_arr[$i]) {
-                            case 'i':
-                                $args .= ' IN ';
-
-                                break;
-                            case 'o':
-                                $args .= ' OUT ';
-
-                                break;
-                            case 'b':
-                                $args .= ' INOUT ';
-
-                                break;
-                            case 'v':
-                                $args .= ' VARIADIC ';
-
-                                break;
-                            case 't':
-                                $args .= ' TABLE ';
-
-                                break;
-                        }
-                    }
-                    if (isset($names_arr[$i]) && '' != $names_arr[$i]) {
-                        $data->fieldClean($names_arr[$i]);
-                        $args .= '"'.$names_arr[$i].'" ';
-                    }
-                    $args .= $args_arr[$i];
-                }
-            } else {
-                $args = $fndata->fields['proarguments'];
-            }
-
-            echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
-            echo "<table style=\"width: 90%\">\n";
-            echo "<tr>\n";
-            echo "<th class=\"data required\">{$this->lang['strschema']}</th>\n";
-            echo "<th class=\"data required\">{$this->lang['strfunction']}</th>\n";
-            echo "<th class=\"data\">{$this->lang['strarguments']}</th>\n";
-            echo "<th class=\"data required\">{$this->lang['strreturns']}</th>\n";
-            echo "<th class=\"data required\">{$this->lang['strproglanguage']}</th>\n";
-            echo "</tr>\n";
-
-            echo "<tr>\n";
-            echo '<td class="data1">';
-            echo '<input type="hidden" name="original_schema" value="', htmlspecialchars($fndata->fields['proschema']), "\" />\n";
-            if ($data->hasFunctionAlterSchema()) {
-                $schemas = $data->getSchemas();
-                echo '<select name="formFuncSchema">';
-                while (!$schemas->EOF) {
-                    $schema = $schemas->fields['nspname'];
-                    echo '<option value="', htmlspecialchars($schema), '"',
-                    ($schema == $_POST['formFuncSchema']) ? ' selected="selected"' : '', '>', htmlspecialchars($schema), "</option>\n";
-                    $schemas->moveNext();
-                }
-                echo "</select>\n";
-            } else {
-                echo $fndata->fields['proschema'];
-            }
-
-            echo "</td>\n";
-            echo '<td class="data1">';
-            echo '<input type="hidden" name="original_function" value="', htmlspecialchars($fndata->fields['proname']), "\" />\n";
-            echo "<input name=\"formFunction\" style=\"width: 100%\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_POST['formFunction']), '" />';
-            echo "</td>\n";
-
-            echo '<td class="data1">', $this->misc->printVal($args), "\n";
-            echo '<input type="hidden" name="original_arguments" value="', htmlspecialchars($args), "\" />\n";
-            echo "</td>\n";
-
-            echo '<td class="data1">';
-            if ($fndata->fields['proretset']) {
-                echo 'setof ';
-            }
-
-            echo $this->misc->printVal($fndata->fields['proresult']), "\n";
-            echo '<input type="hidden" name="original_returns" value="', htmlspecialchars($fndata->fields['proresult']), "\" />\n";
-            if ($fndata->fields['proretset']) {
-                echo "<input type=\"hidden\" name=\"original_setof\" value=\"yes\" />\n";
-            }
-
-            echo "</td>\n";
-
-            echo '<td class="data1">', $this->misc->printVal($fndata->fields['prolanguage']), "\n";
-            echo '<input type="hidden" name="original_lang" value="', htmlspecialchars($fndata->fields['prolanguage']), "\" />\n";
-            echo "</td>\n";
-            echo "</tr>\n";
-
-            $fnlang = strtolower($fndata->fields['prolanguage']);
-            if ('c' == $fnlang) {
-                echo "<tr><th class=\"data required\" colspan=\"2\">{$this->lang['strobjectfile']}</th>\n";
-                echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>\n";
-                echo '<tr><td class="data1" colspan="2"><input type="text" name="formObjectFile" style="width:100%" value="',
-                htmlspecialchars($_POST['formObjectFile']), "\" /></td>\n";
-                echo '<td class="data1" colspan="2"><input type="text" name="formLinkSymbol" style="width:100%" value="',
-                htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
-            } elseif ('internal' == $fnlang) {
-                echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strlinksymbol']}</th></tr>\n";
-                echo '<tr><td class="data1" colspan="5"><input type="text" name="formLinkSymbol" style="width:100%" value="',
-                htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
-            } else {
-                echo "<tr><th class=\"data required\" colspan=\"5\">{$this->lang['strdefinition']}</th></tr>\n";
-                echo '<tr><td class="data1" colspan="5">';
-                $textarea_id = ($fnlang === 'sql' || $fnlang === 'plpgsql') ? 'query' : 'formDefinition';
-                echo '<textarea style="width:100%;" rows="20" cols="50" id="'.$textarea_id.'" name="formDefinition">';
-                echo htmlspecialchars($_POST['formDefinition']);
-                echo "</textarea></td></tr>\n";
-            }
-
-            // Display function comment
-            echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strcomment']}</th></tr>\n";
-            echo '<tr><td class="data1" colspan="5">';
-            echo '<textarea style="width:100%;" name="formComment" rows="3" cols="50">';
-            echo htmlspecialchars($_POST['formComment']);
-            echo "</textarea></td></tr>\n";
-
-            // Display function cost options
-            if ($data->hasFunctionCosting()) {
-                echo "<tr><th class=\"data required\" colspan=\"5\">{$this->lang['strfunctioncosting']}</th></tr>\n";
-                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
-                htmlspecialchars($_POST['formCost']).'" /></td>';
-                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"",
-                htmlspecialchars($_POST['formRows']), '"', (!$fndata->fields['proretset']) ? 'disabled' : '', '/></td>';
-            }
-
-            // Display function properties
-            if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
-                echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strproperties']}</th></tr>\n";
-                echo "<tr><td class=\"data1\" colspan=\"5\">\n";
-                $i = 0;
-                foreach ($data->funcprops as $k => $v) {
-                    echo "<select name=\"formProperties[{$i}]\">\n";
-                    foreach ($v as $p) {
-                        echo '<option value="', htmlspecialchars($p), '"',
-                        ($_POST['formProperties'][$i] == $p) ? ' selected="selected"' : '',
-                        '>', $this->misc->printVal($p), "</option>\n";
-                    }
-                    echo "</select><br />\n";
-                    ++$i;
-                }
-                echo "</td></tr>\n";
-            }
-
-            // function owner
-            if ($data->hasFunctionAlterOwner()) {
-                $users = $data->getUsers();
-                echo "<tr><td class=\"data1\" colspan=\"5\">{$this->lang['strowner']}: <select name=\"formFuncOwn\">";
-                while (!$users->EOF) {
-                    $uname = $users->fields['usename'];
-                    echo '<option value="', htmlspecialchars($uname), '"',
-                    ($uname == $_POST['formFuncOwn']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
-                    $users->moveNext();
-                }
-                echo "</select>\n";
-                echo '<input type="hidden" name="original_owner" value="', htmlspecialchars($fndata->fields['proowner']), "\" />\n";
-                echo "</td></tr>\n";
-            }
-            echo "</table>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
-            echo '<input type="hidden" name="function" value="', htmlspecialchars($_REQUEST['function']), "\" />\n";
-            echo '<input type="hidden" name="function_oid" value="', htmlspecialchars($_REQUEST['function_oid']), "\" />\n";
-            echo $this->misc->form;
-            echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
-        } else {
+        if ($fndata->recordCount() <= 0) {
             echo "<p>{$this->lang['strnodata']}</p>\n";
+            return;
         }
+        $fndata->fields['proretset'] = $data->phpBool($fndata->fields['proretset']);
+
+        // Initialise variables
+        $_POST['formDefinition'] = $this->getPostParam('formDefinition', $fndata->fields['prosrc']);
+
+        $_POST['formProperties'] = $this->getPostParam('formProperties', $data->getFunctionProperties($fndata->fields));
+
+        $_POST['formFunction'] = $this->getPostParam('formFunction', $fndata->fields['proname']);
+
+        $_POST['formComment'] = $this->getPostParam('formComment', $fndata->fields['procomment']);
+
+        $_POST['formObjectFile'] = $this->getPostParam('formObjectFile', $fndata->fields['probin']);
+
+        $_POST['formLinkSymbol'] = $this->getPostParam('formLinkSymbol', $fndata->fields['prosrc']);
+
+        $_POST['formFuncOwn'] = $this->getPostParam('formFuncOwn', $fndata->fields['proowner']);
+
+        $_POST['formFuncSchema'] = $this->getPostParam('formFuncSchema', $fndata->fields['proschema']);
+
+        if ($data->hasFunctionCosting()) {
+            $_POST['formCost'] = $this->getPostParam('formCost', $fndata->fields['procost']);
+
+            $_POST['formRows'] = $this->getPostParam('formRows', $fndata->fields['prorows']);
+        }
+
+        // Deal with named parameters
+        if ($data->hasNamedParams()) {
+            $args = $this->_getNamedParamsArgs($data, $fndata);
+        } else {
+            $args = $fndata->fields['proarguments'];
+        }
+
+        echo '<form action="' . \SUBFOLDER . "/src/views/functions\" method=\"post\">\n";
+        echo "<table style=\"width: 90%\">\n";
+        echo "<tr>\n";
+        echo "<th class=\"data required\">{$this->lang['strschema']}</th>\n";
+        echo "<th class=\"data required\">{$this->lang['strfunction']}</th>\n";
+        echo "<th class=\"data\">{$this->lang['strarguments']}</th>\n";
+        echo "<th class=\"data required\">{$this->lang['strreturns']}</th>\n";
+        echo "<th class=\"data required\">{$this->lang['strproglanguage']}</th>\n";
+        echo "</tr>\n";
+
+        echo "<tr>\n";
+        echo '<td class="data1">';
+        echo '<input type="hidden" name="original_schema" value="', htmlspecialchars($fndata->fields['proschema']), "\" />\n";
+        if ($data->hasFunctionAlterSchema()) {
+            $schemas = $data->getSchemas();
+            echo '<select name="formFuncSchema">';
+            while (!$schemas->EOF) {
+                $schema = $schemas->fields['nspname'];
+                echo '<option value="', htmlspecialchars($schema), '"',
+                ($schema == $_POST['formFuncSchema']) ? ' selected="selected"' : '', '>', htmlspecialchars($schema), "</option>\n";
+                $schemas->moveNext();
+            }
+            echo "</select>\n";
+        } else {
+            echo $fndata->fields['proschema'];
+        }
+
+        echo "</td>\n";
+        echo '<td class="data1">';
+        echo '<input type="hidden" name="original_function" value="', htmlspecialchars($fndata->fields['proname']), "\" />\n";
+        echo "<input name=\"formFunction\" style=\"width: 100%\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_POST['formFunction']), '" />';
+        echo "</td>\n";
+
+        echo '<td class="data1">', $this->misc->printVal($args), "\n";
+        echo '<input type="hidden" name="original_arguments" value="', htmlspecialchars($args), "\" />\n";
+        echo "</td>\n";
+
+        echo '<td class="data1">';
+        if ($fndata->fields['proretset']) {
+            echo 'setof ';
+        }
+
+        echo $this->misc->printVal($fndata->fields['proresult']), "\n";
+        echo '<input type="hidden" name="original_returns" value="', htmlspecialchars($fndata->fields['proresult']), "\" />\n";
+        if ($fndata->fields['proretset']) {
+            echo "<input type=\"hidden\" name=\"original_setof\" value=\"yes\" />\n";
+        }
+
+        echo "</td>\n";
+
+        echo '<td class="data1">', $this->misc->printVal($fndata->fields['prolanguage']), "\n";
+        echo '<input type="hidden" name="original_lang" value="', htmlspecialchars($fndata->fields['prolanguage']), "\" />\n";
+        echo "</td>\n";
+        echo "</tr>\n";
+
+        $fnlang = strtolower($fndata->fields['prolanguage']);
+        if ('c' == $fnlang) {
+            echo "<tr><th class=\"data required\" colspan=\"2\">{$this->lang['strobjectfile']}</th>\n";
+            echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>\n";
+            echo '<tr><td class="data1" colspan="2"><input type="text" name="formObjectFile" style="width:100%" value="',
+            htmlspecialchars($_POST['formObjectFile']), "\" /></td>\n";
+            echo '<td class="data1" colspan="2"><input type="text" name="formLinkSymbol" style="width:100%" value="',
+            htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
+        } elseif ('internal' == $fnlang) {
+            echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strlinksymbol']}</th></tr>\n";
+            echo '<tr><td class="data1" colspan="5"><input type="text" name="formLinkSymbol" style="width:100%" value="',
+            htmlspecialchars($_POST['formLinkSymbol']), "\" /></td></tr>\n";
+        } else {
+            echo "<tr><th class=\"data required\" colspan=\"5\">{$this->lang['strdefinition']}</th></tr>\n";
+            echo '<tr><td class="data1" colspan="5">';
+            $textarea_id = ($fnlang === 'sql' || $fnlang === 'plpgsql') ? 'query' : 'formDefinition';
+            echo '<textarea style="width:100%;" rows="20" cols="50" id="' . $textarea_id . '" name="formDefinition">';
+            echo htmlspecialchars($_POST['formDefinition']);
+            echo "</textarea></td></tr>\n";
+        }
+
+        // Display function comment
+        echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strcomment']}</th></tr>\n";
+        echo '<tr><td class="data1" colspan="5">';
+        echo '<textarea style="width:100%;" name="formComment" rows="3" cols="50">';
+        echo htmlspecialchars($_POST['formComment']);
+        echo "</textarea></td></tr>\n";
+
+        // Display function cost options
+        if ($data->hasFunctionCosting()) {
+            echo "<tr><th class=\"data required\" colspan=\"5\">{$this->lang['strfunctioncosting']}</th></tr>\n";
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
+            htmlspecialchars($_POST['formCost']) . '" /></td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"",
+            htmlspecialchars($_POST['formRows']), '"', (!$fndata->fields['proretset']) ? 'disabled' : '', '/></td>';
+        }
+
+        // Display function properties
+        if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+            echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strproperties']}</th></tr>\n";
+            echo "<tr><td class=\"data1\" colspan=\"5\">\n";
+            $i = 0;
+            foreach ($data->funcprops as $k => $v) {
+                echo "<select name=\"formProperties[{$i}]\">\n";
+                foreach ($v as $p) {
+                    echo '<option value="', htmlspecialchars($p), '"',
+                    ($_POST['formProperties'][$i] == $p) ? ' selected="selected"' : '',
+                    '>', $this->misc->printVal($p), "</option>\n";
+                }
+                echo "</select><br />\n";
+                ++$i;
+            }
+            echo "</td></tr>\n";
+        }
+
+        // function owner
+        if ($data->hasFunctionAlterOwner()) {
+            $users = $data->getUsers();
+            echo "<tr><td class=\"data1\" colspan=\"5\">{$this->lang['strowner']}: <select name=\"formFuncOwn\">";
+            while (!$users->EOF) {
+                $uname = $users->fields['usename'];
+                echo '<option value="', htmlspecialchars($uname), '"',
+                ($uname == $_POST['formFuncOwn']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
+                $users->moveNext();
+            }
+            echo "</select>\n";
+            echo '<input type="hidden" name="original_owner" value="', htmlspecialchars($fndata->fields['proowner']), "\" />\n";
+            echo "</td></tr>\n";
+        }
+        echo "</table>\n";
+        echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
+        echo '<input type="hidden" name="function" value="', htmlspecialchars($_REQUEST['function']), "\" />\n";
+        echo '<input type="hidden" name="function_oid" value="', htmlspecialchars($_REQUEST['function_oid']), "\" />\n";
+        echo $this->misc->form;
+        echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
+        echo "</form>\n";
+
     }
 
     /**
@@ -624,7 +631,7 @@ class FunctionsController extends BaseController
             }
 
             $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-            $func_full                     = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
+            $func_full                     = $funcdata->fields['proname'] . '(' . $funcdata->fields['proarguments'] . ')';
             echo "<table style=\"width: 90%\">\n";
             echo sprintf('<tr><th class="data">%s</th>%s', $this->lang['strfunction'], "\n");
             echo sprintf('<th class="data">%s</th>%s', $this->lang['strarguments'], "\n");
@@ -701,7 +708,7 @@ class FunctionsController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($this->lang['strdrop'], 'pg.function.drop');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/functions\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -825,16 +832,16 @@ class FunctionsController extends BaseController
                 $szSelected = ' selected="selected"';
             }
             // this variable is include in the JS code bellow, so we need to ENT_QUOTES
-            $szTypes .= '<option value="'.htmlspecialchars($types->fields['typname'], ENT_QUOTES)."\"{$szSelected}>";
-            $szTypes .= htmlspecialchars($types->fields['typname'], ENT_QUOTES).'</option>';
+            $szTypes .= '<option value="' . htmlspecialchars($types->fields['typname'], ENT_QUOTES) . "\"{$szSelected}>";
+            $szTypes .= htmlspecialchars($types->fields['typname'], ENT_QUOTES) . '</option>';
             $types->moveNext();
         }
 
-        $szFunctionName = "<td class=\"data1\"><input name=\"formFunction\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"".
-        htmlspecialchars($_POST['formFunction']).'" /></td>';
+        $szFunctionName = "<td class=\"data1\"><input name=\"formFunction\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"" .
+        htmlspecialchars($_POST['formFunction']) . '" /></td>';
 
-        $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="'.
-        htmlspecialchars($_POST['formArguments']).'" /></td>';
+        $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="' .
+        htmlspecialchars($_POST['formArguments']) . '" /></td>';
 
         $szSetOfSelected    = '';
         $szNotSetOfSelected = '';
@@ -849,7 +856,7 @@ class FunctionsController extends BaseController
         $szReturns .= "<option value=\"SETOF\"{$szSetOfSelected}>SETOF</option>";
         $szReturns .= '</select>';
 
-        $szReturns .= '<select class="select2" name="formReturns">'.$szTypes.'</select>';
+        $szReturns .= '<select class="select2" name="formReturns">' . $szTypes . '</select>';
 
         // Create string array type selector
 
@@ -869,7 +876,7 @@ class FunctionsController extends BaseController
         // Create string for language
         $szLanguage = '<td class="data1">';
         if ('c' == $fnlang || 'internal' == $fnlang) {
-            $szLanguage .= $_POST['formLanguage']."\n";
+            $szLanguage .= $_POST['formLanguage'] . "\n";
             $szLanguage .= "<input type=\"hidden\" name=\"formLanguage\" value=\"{$_POST['formLanguage']}\" />\n";
         } else {
             $szLanguage .= "<select name=\"formLanguage\">\n";
@@ -879,8 +886,8 @@ class FunctionsController extends BaseController
                     $szSelected = ' selected="selected"';
                 }
                 if ('c' != strtolower($langs->fields['lanname']) && 'internal' != strtolower($langs->fields['lanname'])) {
-                    $szLanguage .= '<option value="'.htmlspecialchars($langs->fields['lanname'])."\"{$szSelected}>\n".
-                    $this->misc->printVal($langs->fields['lanname']).'</option>';
+                    $szLanguage .= '<option value="' . htmlspecialchars($langs->fields['lanname']) . "\"{$szSelected}>\n" .
+                    $this->misc->printVal($langs->fields['lanname']) . '</option>';
                 }
 
                 $langs->moveNext();
@@ -902,9 +909,9 @@ class FunctionsController extends BaseController
         $szArgReturns .= '</select>';
         $subfolder = \SUBFOLDER;
         if (!empty($this->conf['theme'])) {
-            $szImgPath = \SUBFOLDER."/assets/images/themes/{$this->conf['theme']}";
+            $szImgPath = \SUBFOLDER . "/assets/images/themes/{$this->conf['theme']}";
         } else {
-            $szImgPath = \SUBFOLDER.'/assets/images/themes/default';
+            $szImgPath = \SUBFOLDER . '/assets/images/themes/default';
         }
         if (empty($msg)) {
             // $this->prtrace($subfolder);
@@ -917,7 +924,7 @@ class FunctionsController extends BaseController
         $szJSAddTR .= "<img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td>";
         $szJSAddTR .= "<td class=\"data3\"><span style=\"font-size: 8pt\">{$this->lang['strargadd']}</span></td></tr></table></td>\n</tr>\n";
 
-        echo '<script src="'.\SUBFOLDER."/assets/js/functions.js\" type=\"text/javascript\"></script>
+        echo '<script src="' . \SUBFOLDER . "/assets/js/functions.js\" type=\"text/javascript\"></script>
 		<script type=\"text/javascript\">
 			//<![CDATA[
 			var g_types_select = '<select class=\"select2\" name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
@@ -934,7 +941,7 @@ class FunctionsController extends BaseController
 			//]]>
 		</script>
 		";
-        echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/functions\" method=\"post\">\n";
         echo "<table><tbody id=\"args_table\">\n";
         echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>\n";
         echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strreturns']}</th>\n";
@@ -979,10 +986,10 @@ class FunctionsController extends BaseController
         // Display function cost options
         if ($data->hasFunctionCosting()) {
             echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strfunctioncosting']}</th></tr>\n";
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"".
-            htmlspecialchars($_POST['formCost']).'" /></td>';
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"".
-            htmlspecialchars($_POST['formRows']).'" /></td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
+            htmlspecialchars($_POST['formCost']) . '" /></td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"" .
+            htmlspecialchars($_POST['formRows']) . '" /></td>';
         }
 
         // Display function properties
@@ -1031,14 +1038,14 @@ class FunctionsController extends BaseController
 
         $szJS = '';
 
-        echo '<script src="'.\SUBFOLDER.'/assets/js/functions.js" type="text/javascript"></script>';
-        echo '<script type="text/javascript">'.$this->_buildJSData().'</script>';
+        echo '<script src="' . \SUBFOLDER . '/assets/js/functions.js" type="text/javascript"></script>';
+        echo '<script type="text/javascript">' . $this->_buildJSData() . '</script>';
         if (!empty($_POST['formArgName'])) {
             $szJS = $this->_buildJSRows($this->_buildFunctionArguments($_POST));
         } else {
             $subfolder = \SUBFOLDER;
             // $this->prtrace($subfolder);
-            $szJS = '<script type="text/javascript" src="'.\SUBFOLDER.'/assets/js/functions.js">noArgsRebuild(addArg("'.$subfolder.'"));</script>';
+            $szJS = '<script type="text/javascript" src="' . \SUBFOLDER . '/assets/js/functions.js">noArgsRebuild(addArg("' . $subfolder . '"));</script>';
         }
 
         $cost = (isset($_POST['formCost'])) ? $_POST['formCost'] : null;
@@ -1061,7 +1068,7 @@ class FunctionsController extends BaseController
             $status = $data->createFunction(
                 $_POST['formFunction'],
                 empty($_POST['nojs']) ? $this->_buildFunctionArguments($_POST) : $_POST['formArguments'],
-                $_POST['formReturns'].$_POST['formArray'],
+                $_POST['formReturns'] . $_POST['formArray'],
                 $def,
                 $_POST['formLanguage'],
                 $_POST['formProperties'],
@@ -1091,7 +1098,7 @@ class FunctionsController extends BaseController
         if (isset($_POST['formArgName'])) {
             $arrayArgs = [];
             foreach ($arrayVars['formArgName'] as $pK => $pV) {
-                $arrayArgs[] = $arrayVars['formArgModes'][$pK].' '.trim($pV).' '.trim($arrayVars['formArgType'][$pK]).$arrayVars['formArgArray'][$pK];
+                $arrayArgs[] = $arrayVars['formArgModes'][$pK] . ' ' . trim($pV) . ' ' . trim($arrayVars['formArgType'][$pK]) . $arrayVars['formArgArray'][$pK];
             }
 
             return implode(',', $arrayArgs);
@@ -1149,7 +1156,7 @@ class FunctionsController extends BaseController
         $arrayPModes = [];
 
         while (!$arrayTypes->EOF) {
-            $arrayPTypes[] = "'".$arrayTypes->fields['typname']."'";
+            $arrayPTypes[] = "'" . $arrayTypes->fields['typname'] . "'";
             $arrayTypes->moveNext();
         }
 
@@ -1157,10 +1164,10 @@ class FunctionsController extends BaseController
             $arrayPModes[] = "'{$pV}'";
         }
 
-        $szTypes = 'g_main_types = new Array('.implode(',', $arrayPTypes).');';
-        $szModes = 'g_main_modes = new Array('.implode(',', $arrayPModes).');';
+        $szTypes = 'g_main_types = new Array(' . implode(',', $arrayPTypes) . ');';
+        $szModes = 'g_main_modes = new Array(' . implode(',', $arrayPModes) . ');';
 
-        return $szTypes.$szModes;
+        return $szTypes . $szModes;
     }
 
     /**
@@ -1215,7 +1222,7 @@ class FunctionsController extends BaseController
                 }
                 if (isset($names_arr[$i]) && '' != $names_arr[$i]) {
                     $data->fieldClean($names_arr[$i]);
-                    $args .= '"'.$names_arr[$i].'" ';
+                    $args .= '"' . $names_arr[$i] . '" ';
                 }
                 $args .= $args_arr[$i];
             }
