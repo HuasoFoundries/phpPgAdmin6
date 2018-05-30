@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.45
+ * PHPPgAdmin v6.0.0-beta.46
  */
 
 namespace PHPPgAdmin\Database;
@@ -308,11 +308,11 @@ class Postgres80 extends Postgres81
      * Protected method which alter a view
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \PHPPgAdmin\ADORecordSet $vwrs   The view recordSet returned by getView()
-     * @param string                   $name   The new name for the view
-     * @param string                   $owner  The new owner for the view
-     * @param string                   $schema The view schema
-     * @param string $comment The comment on the view
+     * @param \PHPPgAdmin\ADORecordSet $vwrs    The view recordSet returned by getView()
+     * @param string                   $name    The new name for the view
+     * @param string                   $owner   The new owner for the view
+     * @param string                   $schema  The view schema
+     * @param string                   $comment The comment on the view
      *
      * @return int 0 success, otherwise, an error code
      */

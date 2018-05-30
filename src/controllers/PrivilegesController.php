@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.45
+ * PHPPgAdmin v6.0.0-beta.46
  */
 
 namespace PHPPgAdmin\Controller;
@@ -67,7 +67,7 @@ class PrivilegesController extends BaseController
             'table',
             'column',
             'view',
-        ])) {
+        ], true)) {
             $this->printTabs($subject, 'privileges');
         } else {
             $this->printTitle($this->lang['strprivileges'], 'pg.privilege');
@@ -75,13 +75,14 @@ class PrivilegesController extends BaseController
 
         $this->printMsg($msg);
         if (!isset($data->privlist[$subject])) {
-            $this->container->utils->halt('No privileges defined for subject ' . $subject);
+            $this->container->utils->halt('No privileges defined for subject '.$subject);
+
             return;
         }
 
         // Determine whether object should be ref'd by name or oid.
-        if (isset($_REQUEST[$subject . '_oid'])) {
-            $object = $_REQUEST[$subject . '_oid'];
+        if (isset($_REQUEST[$subject.'_oid'])) {
+            $object = $_REQUEST[$subject.'_oid'];
         } else {
             $object = $_REQUEST[$subject];
         }
@@ -191,7 +192,7 @@ class PrivilegesController extends BaseController
         $object = $_REQUEST[$subject];
 
         if ('function' == $subject) {
-            $objectoid = $_REQUEST[$subject . '_oid'];
+            $objectoid = $_REQUEST[$subject.'_oid'];
             $urlvars   = [
                 'action'         => 'alter',
                 'server'         => $_REQUEST['server'],
@@ -310,7 +311,7 @@ class PrivilegesController extends BaseController
             }
             $this->printMsg($msg);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/privileges\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/privileges\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>\n";
             echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";
@@ -364,9 +365,9 @@ class PrivilegesController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
             echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), "\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
-            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'] . '_oid'),
-                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), "\" />\n";
+            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'].'_oid'),
+                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'].'_oid']), "\" />\n";
             }
 
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
@@ -387,8 +388,8 @@ class PrivilegesController extends BaseController
             echo "</form>\n";
         } else {
             // Determine whether object should be ref'd by name or oid.
-            if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
-                $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
+            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+                $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
             } else {
                 $object = $_REQUEST[$_REQUEST['subject']];
             }

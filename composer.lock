@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f58f91bc3a13740927c0e10fc350fa40",
+    "content-hash": "07f412fd6782da8dacff0ffeb0ae9710",
     "packages": [
         {
             "name": "adodb/adodb-php",

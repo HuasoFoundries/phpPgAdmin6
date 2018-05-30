@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.45
+ * PHPPgAdmin v6.0.0-beta.46
  */
 
 // Import the test cases.

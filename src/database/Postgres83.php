@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.45
+ * PHPPgAdmin v6.0.0-beta.46
  */
 
 namespace PHPPgAdmin\Database;
@@ -331,7 +331,7 @@ class Postgres83 extends Postgres84
 
         // toggle cycle yes/no
         if (!is_null($cycledvalue)) {
-            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
+            $sql .= (!$cycledvalue ? ' NO ' : '').' CYCLE';
         }
 
         if ($sql != '') {
