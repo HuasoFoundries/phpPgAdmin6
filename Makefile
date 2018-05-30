@@ -2,6 +2,8 @@ VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)",/\1/p')
 
 SHELL = /usr/bin/env bash
 
+XDSWI := $(shell command -v xd_swi 2> /dev/null)
+
 default: install
 .PHONY: tag install test csfixer create_testdb destroy_testdb run_local
 
@@ -35,6 +37,8 @@ tag_and_push:
 		git push
 		git checkout develop
 
+
+
 tag: test update_version csfixer tag_and_push	
 
 test:
@@ -44,9 +48,14 @@ endif
 	./vendor/bin/codecept run unit --debug
 
 csfixer:
-	xd_swi off ;\
-	./vendor/bin/php-cs-fixer --verbose fix ;\
-	xd_swi on	
+	@if [[ "$(XDSWI)" == "" ]]; then \
+	    ./vendor/bin/php-cs-fixer --verbose fix ;\
+    else \
+        xd_swi off ;\
+		./vendor/bin/php-cs-fixer --verbose fix ;\
+		xd_swi on	;\
+    fi
+	
 
 create_testdb:
 	PGPASSWORD=scrutinizer psql -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql
