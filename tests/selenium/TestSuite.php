@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.46
+ * PHPPgAdmin v6.0.0-beta.47
  */
     chdir('../..'); /* go back to root so we can include scripts */
 

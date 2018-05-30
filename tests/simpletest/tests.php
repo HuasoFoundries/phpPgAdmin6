@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.46
+ * PHPPgAdmin v6.0.0-beta.47
  */
 require_once __DIR__.'/../../src/lib.inc.php';
 require_once __DIR__.'/../../src/lang/english.php';
