@@ -40,7 +40,7 @@ class XHtmlElement extends XHtmlSimpleElement
     /*
      * The CDATA section of Element
      *
-     * @param    string    Text
+     * @param    string   $text Text content of the element
      */
     public function set_text($text)
     {

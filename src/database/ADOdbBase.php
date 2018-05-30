@@ -409,7 +409,7 @@ class ADOdbBase
     /**
      * Executes a query on the underlying connection.
      *
-     * @param $sql The SQL query to execute
+     * @param string $sql The SQL query to execute
      *
      * @return \PHPPgAdmin\ADORecordSet A recordset
      */
@@ -434,7 +434,7 @@ class ADOdbBase
     /**
      * Retrieves a ResultSet from a query.
      *
-     * @param $sql The SQL statement to be executed
+     * @param string $sql The SQL statement to be executed
      *
      * @return int|\PHPPgAdmin\ADORecordSet A recordset or an error number
      */
@@ -605,7 +605,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql = $fields . $values . ')';
         }
 
         // Check for failures
@@ -677,7 +677,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;

@@ -351,18 +351,18 @@ class Postgres80 extends Postgres81
      * Protected method which alter a sequence
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param $seqrs        The sequence recordSet returned by getSequence()
-     * @param $name         The new name for the sequence
-     * @param $comment      The comment on the sequence
-     * @param $owner        The new owner for the sequence
-     * @param $schema       The new schema for the sequence
-     * @param $increment    The increment
-     * @param $minvalue     The min value
-     * @param $maxvalue     The max value
-     * @param $restartvalue The starting value
-     * @param $cachevalue   The cache value
-     * @param $cycledvalue  True if cycled, false otherwise
-     * @param $startvalue   The sequence start value when issueing a restart
+     * @param \PHPPgAdmin\ADORecordSet $seqrs        The sequence recordSet returned by getSequence()
+     * @param string $name         The new name for the sequence
+     * @param string $comment      The comment on the sequence
+     * @param string $owner        The new owner for the sequence
+     * @param string $schema       The new schema for the sequence
+     * @param int $increment    The increment
+     * @param int $minvalue     The min value
+     * @param int $maxvalue     The max value
+     * @param int $restartvalue The starting value
+     * @param int $cachevalue   The cache value
+     * @param bool $cycledvalue  True if cycled, false otherwise
+     * @param int $startvalue   The sequence start value when issueing a restart
      *
      * @return int 0 success
      */
