@@ -409,7 +409,6 @@ class RolesController extends BaseController
             } else {
                 $_POST['memberof'] = [];
             }
-
         }
     }
 
@@ -426,7 +425,6 @@ class RolesController extends BaseController
             } else {
                 $_POST['members'] = [];
             }
-
         }
     }
 
@@ -443,7 +441,6 @@ class RolesController extends BaseController
             } else {
                 $_POST['adminmembers'] = [];
             }
-
         }
     }
 
