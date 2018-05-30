@@ -11,7 +11,6 @@ namespace PHPPgAdmin\Traits;
  */
 trait HasTrait
 {
-
     public $conn;
 
     // The backend platform.  Set to UNKNOWN by default.
