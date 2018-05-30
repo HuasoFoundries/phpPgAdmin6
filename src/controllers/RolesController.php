@@ -117,7 +117,7 @@ class RolesController extends BaseController
             'role'       => [
                 'title' => $this->lang['strrole'],
                 'field' => Decorator::field('rolname'),
-                'url'   => \SUBFOLDER."/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['rolename' => 'rolname'],
             ],
             'superuser'  => [
@@ -237,7 +237,7 @@ class RolesController extends BaseController
         $this->printTitle($this->lang['strcreaterole'], 'pg.role.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/roles\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\" style=\"width: 130px\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formRolename\" value=\"", htmlspecialchars($_POST['formRolename']), "\" /></td>\n\t</tr>\n";
@@ -356,6 +356,98 @@ class RolesController extends BaseController
     }
 
     /**
+     * Adjusts the content of the $_POST superglobal according to role data
+     *
+     * @param \PHPPgAdmin\ADORecordSet   $roledata   The roledata
+     * @param boolean  $canRename  Indicates if role can be renamed
+     */
+    private function _adjustPostVars($roledata, $canRename)
+    {
+        if (isset($_POST['formExpires'])) {
+            return;
+        }
+
+        if ($canRename) {
+            $_POST['formNewRoleName'] = $roledata->fields['rolname'];
+        }
+
+        if ($roledata->fields['rolsuper']) {
+            $_POST['formSuper'] = '';
+        }
+
+        if ($roledata->fields['rolcreatedb']) {
+            $_POST['formCreateDB'] = '';
+        }
+
+        if ($roledata->fields['rolcreaterole']) {
+            $_POST['formCreateRole'] = '';
+        }
+
+        if ($roledata->fields['rolinherit']) {
+            $_POST['formInherits'] = '';
+        }
+
+        if ($roledata->fields['rolcanlogin']) {
+            $_POST['formCanLogin'] = '';
+        }
+
+        $_POST['formConnLimit'] = '-1' == $roledata->fields['rolconnlimit'] ? '' : $roledata->fields['rolconnlimit'];
+        $_POST['formExpires']   = 'infinity' == $roledata->fields['rolvaliduntil'] ? '' : $roledata->fields['rolvaliduntil'];
+        $_POST['formPassword']  = '';
+    }
+
+    private function _populateMemberof($data)
+    {
+        if (!isset($_POST['memberof'])) {
+            $memberof = $data->getMemberOf($_REQUEST['rolename']);
+            if ($memberof->recordCount() > 0) {
+                $i = 0;
+                while (!$memberof->EOF) {
+                    $_POST['memberof'][$i++] = $memberof->fields['rolname'];
+                    $memberof->moveNext();
+                }
+            } else {
+                $_POST['memberof'] = [];
+            }
+
+        }
+    }
+
+    private function _populateMembers($data)
+    {
+        if (!isset($_POST['members'])) {
+            $members = $data->getMembers($_REQUEST['rolename']);
+            if ($members->recordCount() > 0) {
+                $i = 0;
+                while (!$members->EOF) {
+                    $_POST['members'][$i++] = $members->fields['rolname'];
+                    $members->moveNext();
+                }
+            } else {
+                $_POST['members'] = [];
+            }
+
+        }
+    }
+
+    private function _populateAdminmembers($data)
+    {
+        if (!isset($_POST['adminmembers'])) {
+            $adminmembers = $data->getMembers($_REQUEST['rolename'], 't');
+            if ($adminmembers->recordCount() > 0) {
+                $i = 0;
+                while (!$adminmembers->EOF) {
+                    $_POST['adminmembers'][$i++] = $adminmembers->fields['rolname'];
+                    $adminmembers->moveNext();
+                }
+            } else {
+                $_POST['adminmembers'] = [];
+            }
+
+        }
+    }
+
+    /**
      * Function to allow alter a role.
      *
      * @param mixed $msg
@@ -370,170 +462,109 @@ class RolesController extends BaseController
 
         $roledata = $data->getRole($_REQUEST['rolename']);
 
-        if ($roledata->recordCount() > 0) {
-            $server_info                       = $this->misc->getServerInfo();
-            $canRename                         = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
-            $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-            $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
-            $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-            $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-            $roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
-
-            if (!isset($_POST['formExpires'])) {
-                if ($canRename) {
-                    $_POST['formNewRoleName'] = $roledata->fields['rolname'];
-                }
-
-                if ($roledata->fields['rolsuper']) {
-                    $_POST['formSuper'] = '';
-                }
-
-                if ($roledata->fields['rolcreatedb']) {
-                    $_POST['formCreateDB'] = '';
-                }
-
-                if ($roledata->fields['rolcreaterole']) {
-                    $_POST['formCreateRole'] = '';
-                }
-
-                if ($roledata->fields['rolinherit']) {
-                    $_POST['formInherits'] = '';
-                }
-
-                if ($roledata->fields['rolcanlogin']) {
-                    $_POST['formCanLogin'] = '';
-                }
-
-                $_POST['formConnLimit'] = '-1' == $roledata->fields['rolconnlimit'] ? '' : $roledata->fields['rolconnlimit'];
-                $_POST['formExpires']   = 'infinity' == $roledata->fields['rolvaliduntil'] ? '' : $roledata->fields['rolvaliduntil'];
-                $_POST['formPassword']  = '';
-            }
-
-            echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
-            echo "<table>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$this->lang['strname']}</th>\n";
-            echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['formNewRoleName']).'" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>\n";
-            echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconfirm']}</th>\n";
-            echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formConfirm\" value=\"\" /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>\n";
-            echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
-            (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>\n";
-            echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
-            (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$this->lang['strcancreaterole']}</label></th>\n";
-            echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
-            (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$this->lang['strinheritsprivs']}</label></th>\n";
-            echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
-            (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$this->lang['strcanlogin']}</label></th>\n";
-            echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
-            (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconnlimit']}</th>\n";
-            echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>\n";
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>\n";
-            echo "\t\t<td class=\"data1\"><input size=\"23\" name=\"formExpires\" value=\"", htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>\n";
-
-            if (!isset($_POST['memberof'])) {
-                $memberof = $data->getMemberOf($_REQUEST['rolename']);
-                if ($memberof->recordCount() > 0) {
-                    $i = 0;
-                    while (!$memberof->EOF) {
-                        $_POST['memberof'][$i++] = $memberof->fields['rolname'];
-                        $memberof->moveNext();
-                    }
-                } else {
-                    $_POST['memberof'] = [];
-                }
-
-                $memberofold = implode(',', $_POST['memberof']);
-            }
-            if (!isset($_POST['members'])) {
-                $members = $data->getMembers($_REQUEST['rolename']);
-                if ($members->recordCount() > 0) {
-                    $i = 0;
-                    while (!$members->EOF) {
-                        $_POST['members'][$i++] = $members->fields['rolname'];
-                        $members->moveNext();
-                    }
-                } else {
-                    $_POST['members'] = [];
-                }
-
-                $membersold = implode(',', $_POST['members']);
-            }
-            if (!isset($_POST['adminmembers'])) {
-                $adminmembers = $data->getMembers($_REQUEST['rolename'], 't');
-                if ($adminmembers->recordCount() > 0) {
-                    $i = 0;
-                    while (!$adminmembers->EOF) {
-                        $_POST['adminmembers'][$i++] = $adminmembers->fields['rolname'];
-                        $adminmembers->moveNext();
-                    }
-                } else {
-                    $_POST['adminmembers'] = [];
-                }
-
-                $adminmembersold = implode(',', $_POST['adminmembers']);
-            }
-
-            $roles = $data->getRoles($_REQUEST['rolename']);
-            if ($roles->recordCount() > 0) {
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmemberof']}</th>\n";
-                echo "\t\t<td class=\"data\">\n";
-                echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
-                while (!$roles->EOF) {
-                    $rolename = $roles->fields['rolname'];
-                    echo "\t\t\t\t<option value=\"{$rolename}\"",
-                    (in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
-                    $roles->moveNext();
-                }
-                echo "\t\t\t</select>\n";
-                echo "\t\t</td>\n\t</tr>\n";
-
-                $roles->moveFirst();
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>\n";
-                echo "\t\t<td class=\"data\">\n";
-                echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
-                while (!$roles->EOF) {
-                    $rolename = $roles->fields['rolname'];
-                    echo "\t\t\t\t<option value=\"{$rolename}\"",
-                    (in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
-                    $roles->moveNext();
-                }
-                echo "\t\t\t</select>\n";
-                echo "\t\t</td>\n\t</tr>\n";
-
-                $roles->moveFirst();
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['stradminmembers']}</th>\n";
-                echo "\t\t<td class=\"data\">\n";
-                echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
-                while (!$roles->EOF) {
-                    $rolename = $roles->fields['rolname'];
-                    echo "\t\t\t\t<option value=\"{$rolename}\"",
-                    (in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
-                    $roles->moveNext();
-                }
-                echo "\t\t\t</select>\n";
-                echo "\t\t</td>\n\t</tr>\n";
-            }
-            echo "</table>\n";
-
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"save_alter\" />\n";
-            echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), "\" />\n";
-            echo '<input type="hidden" name="memberofold" value="', isset($_POST['memberofold']) ? $_POST['memberofold'] : htmlspecialchars($memberofold), "\" />\n";
-            echo '<input type="hidden" name="membersold" value="', isset($_POST['membersold']) ? $_POST['membersold'] : htmlspecialchars($membersold), "\" />\n";
-            echo '<input type="hidden" name="adminmembersold" value="', isset($_POST['adminmembersold']) ? $_POST['adminmembersold'] : htmlspecialchars($adminmembersold), "\" />\n";
-            echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
-        } else {
+        if ($roledata->recordCount() <= 0) {
             echo "<p>{$this->lang['strnodata']}</p>\n";
+            return;
         }
+        $server_info                       = $this->misc->getServerInfo();
+        $canRename                         = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
+        $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
+        $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+        $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
+        $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
+        $roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
+
+        $this->_adjustPostVars($roledata, $canRename);
+
+        echo '<form action="' . \SUBFOLDER . "/src/views/roles\" method=\"post\">\n";
+        echo "<table>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$this->lang['strname']}</th>\n";
+        echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['formNewRoleName']) . '" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>\n";
+        echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconfirm']}</th>\n";
+        echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formConfirm\" value=\"\" /></td>\n\t</tr>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>\n";
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
+        (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>\n";
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
+        (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$this->lang['strcancreaterole']}</label></th>\n";
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
+        (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$this->lang['strinheritsprivs']}</label></th>\n";
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
+        (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$this->lang['strcanlogin']}</label></th>\n";
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
+        (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconnlimit']}</th>\n";
+        echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>\n";
+        echo "\t\t<td class=\"data1\"><input size=\"23\" name=\"formExpires\" value=\"", htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>\n";
+
+        $this->_populateMemberof($data);
+        $memberofold = implode(',', $_POST['memberof']);
+
+        $this->_populateMembers($data);
+        $membersold = implode(',', $_POST['members']);
+
+        $this->_populateAdminmembers($data);
+        $adminmembersold = implode(',', $_POST['adminmembers']);
+
+        $roles = $data->getRoles($_REQUEST['rolename']);
+        if ($roles->recordCount() > 0) {
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmemberof']}</th>\n";
+            echo "\t\t<td class=\"data\">\n";
+            echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
+            while (!$roles->EOF) {
+                $rolename = $roles->fields['rolname'];
+                echo "\t\t\t\t<option value=\"{$rolename}\"",
+                (in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
+                $roles->moveNext();
+            }
+            echo "\t\t\t</select>\n";
+            echo "\t\t</td>\n\t</tr>\n";
+
+            $roles->moveFirst();
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>\n";
+            echo "\t\t<td class=\"data\">\n";
+            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
+            while (!$roles->EOF) {
+                $rolename = $roles->fields['rolname'];
+                echo "\t\t\t\t<option value=\"{$rolename}\"",
+                (in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
+                $roles->moveNext();
+            }
+            echo "\t\t\t</select>\n";
+            echo "\t\t</td>\n\t</tr>\n";
+
+            $roles->moveFirst();
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['stradminmembers']}</th>\n";
+            echo "\t\t<td class=\"data\">\n";
+            echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), "\">\n";
+            while (!$roles->EOF) {
+                $rolename = $roles->fields['rolname'];
+                echo "\t\t\t\t<option value=\"{$rolename}\"",
+                (in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), "</option>\n";
+                $roles->moveNext();
+            }
+            echo "\t\t\t</select>\n";
+            echo "\t\t</td>\n\t</tr>\n";
+        }
+        echo "</table>\n";
+
+        echo "<p><input type=\"hidden\" name=\"action\" value=\"save_alter\" />\n";
+        echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), "\" />\n";
+        echo '<input type="hidden" name="memberofold" value="', isset($_POST['memberofold']) ? $_POST['memberofold'] : htmlspecialchars($memberofold), "\" />\n";
+        echo '<input type="hidden" name="membersold" value="', isset($_POST['membersold']) ? $_POST['membersold'] : htmlspecialchars($membersold), "\" />\n";
+        echo '<input type="hidden" name="adminmembersold" value="', isset($_POST['adminmembersold']) ? $_POST['adminmembersold'] : htmlspecialchars($adminmembersold), "\" />\n";
+        echo $this->misc->form;
+        echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
+        echo "</form>\n";
+        return;
     }
 
     /**
@@ -584,7 +615,7 @@ class RolesController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdroprole'], $this->misc->printVal($_REQUEST['rolename'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/roles\" method=\"post\">\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), "\" />\n";
             echo $this->misc->form;
@@ -806,7 +837,7 @@ class RolesController extends BaseController
 
             $this->coalesceArr($_POST, 'confirm', '');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/roles\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/roles\" method=\"post\">\n";
             echo "<table>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>\n";
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
