@@ -80,7 +80,7 @@ class TablesController extends BaseController
                 break;
             case 'insertrow':
                 if (!isset($_POST['cancel'])) {
-                    $this->doInsertRow(false);
+                    $this->doInsertRow();
                 } else {
                     $header_template = 'header_datatables.twig';
                     $this->doDefault();
@@ -88,7 +88,7 @@ class TablesController extends BaseController
 
                 break;
             case 'confinsertrow':
-                $this->doInsertRow(true);
+                $this->formInsertRow();
 
                 break;
             case 'empty':
@@ -155,7 +155,7 @@ class TablesController extends BaseController
             'table'      => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url'   => \SUBFOLDER."/redirect/table?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
                 'vars'  => ['table' => 'relname'],
             ],
             'owner'      => [
@@ -462,7 +462,7 @@ class TablesController extends BaseController
                 $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER.'/src/views/'.$this->script.'" method="post">';
+                echo '<form action="' . \SUBFOLDER . '/src/views/' . $this->script . '" method="post">';
                 echo "\n";
                 echo "<table>\n";
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
@@ -528,8 +528,8 @@ class TablesController extends BaseController
                 $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<script src="'.\SUBFOLDER.'/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="'.\SUBFOLDER."/src/views/tables\" method=\"post\">\n";
+                echo '<script src="' . \SUBFOLDER . '/assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables\" method=\"post\">\n";
 
                 // Output table header
                 echo "<table>\n";
@@ -583,7 +583,7 @@ class TablesController extends BaseController
                         foreach ($predefined_size_types as $value) {
                             $escaped_predef_types[] = "'{$value}'";
                         }
-                        echo '<script type="text/javascript">predefined_lengths = new Array('.implode(',', $escaped_predef_types).");</script>\n\t</td>";
+                        echo '<script type="text/javascript">predefined_lengths = new Array(' . implode(',', $escaped_predef_types) . ");</script>\n\t</td>";
                     }
 
                     // Output array type selector
@@ -596,10 +596,10 @@ class TablesController extends BaseController
                     htmlspecialchars($_REQUEST['length'][$i]), "\" /></td>\n";
                     echo "\t\t<td><input type=\"checkbox\" name=\"notnull[{$i}]\"", (isset($_REQUEST['notnull'][$i])) ? ' checked="checked"' : '', " /></td>\n";
                     echo "\t\t<td style=\"text-align: center\"><input type=\"checkbox\" name=\"uniquekey[{$i}]\""
-                        .(isset($_REQUEST['uniquekey'][$i]) ? ' checked="checked"' : '')." /></td>\n";
+                        . (isset($_REQUEST['uniquekey'][$i]) ? ' checked="checked"' : '') . " /></td>\n";
                     echo "\t\t<td style=\"text-align: center\"><input type=\"checkbox\" name=\"primarykey[{$i}]\" "
-                        .(isset($_REQUEST['primarykey'][$i]) ? ' checked="checked"' : '')
-                        ." /></td>\n";
+                        . (isset($_REQUEST['primarykey'][$i]) ? ' checked="checked"' : '')
+                        . " /></td>\n";
                     echo "\t\t<td><input name=\"default[{$i}]\" size=\"20\" value=\"",
                     htmlspecialchars($_REQUEST['default'][$i]), "\" /></td>\n";
                     echo "\t\t<td><input name=\"colcomment[{$i}]\" size=\"40\" value=\"",
@@ -730,7 +730,7 @@ class TablesController extends BaseController
 
             unset($tbltmp);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tables\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tables\" method=\"post\">\n";
             echo "<table>\n\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
             echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strcreatetablelikeparent']}</th>\n";
@@ -825,7 +825,7 @@ class TablesController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tables\" method=\"post\" id=\"selectform\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/tables\" method=\"post\" id=\"selectform\">\n";
             if ($attrs->recordCount() > 0) {
                 // JavaScript for select all feature
                 echo "<script type=\"text/javascript\">\n";
@@ -938,153 +938,162 @@ class TablesController extends BaseController
     /**
      * Ask for insert parameters and then actually insert row.
      *
-     * @param mixed $confirm
      * @param mixed $msg
      */
-    public function doInsertRow($confirm, $msg = '')
+    public function formInsertRow($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if ($confirm) {
-            $this->printTrail('table');
-            $this->printTabs('table', 'insert');
+        $this->printTrail('table');
+        $this->printTabs('table', 'insert');
 
-            $this->printMsg($msg);
+        $this->printMsg($msg);
 
-            $attrs = $data->getTableAttributes($_REQUEST['table']);
+        $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            if (('disable' != $this->conf['autocomplete'])) {
-                $fksprops = $this->misc->getAutocompleteFKProperties($_REQUEST['table']);
-                if (false !== $fksprops) {
-                    echo $fksprops['code'];
-                }
-            } else {
-                $fksprops = false;
+        if (('disable' != $this->conf['autocomplete'])) {
+            $fksprops = $this->misc->getAutocompleteFKProperties($_REQUEST['table']);
+            if (false !== $fksprops) {
+                echo $fksprops['code'];
             }
-            $this->coalesceArr($_REQUEST, 'values', []);
-            $this->coalesceArr($_REQUEST, 'nulls', []);
-            $this->coalesceArr($_REQUEST, 'format', []);
-
-            echo '<form action="'.\SUBFOLDER."/src/views/tables\" method=\"post\" id=\"ac_form\">\n";
-            if ($attrs->recordCount() > 0) {
-                echo "<table>\n";
-
-                // Output table header
-                echo "<tr><th class=\"data\">{$this->lang['strcolumn']}</th><th class=\"data\">{$this->lang['strtype']}</th>";
-                echo "<th class=\"data\">{$this->lang['strformat']}</th>";
-                echo "<th class=\"data\">{$this->lang['strnull']}</th><th class=\"data\">{$this->lang['strvalue']}</th></tr>";
-
-                $i      = 0;
-                $fields = [];
-                while (!$attrs->EOF) {
-                    $fields[$attrs->fields['attnum']] = $attrs->fields['attname'];
-                    $attrs->fields['attnotnull']      = $data->phpBool($attrs->fields['attnotnull']);
-                    // Set up default value if there isn't one already
-                    if (!isset($_REQUEST['values'][$attrs->fields['attnum']])) {
-                        $_REQUEST['values'][$attrs->fields['attnum']] = $attrs->fields['adsrc'];
-                        if ($attrs->fields['adsrc'] === null && !$attrs->fields['attnotnull']) {
-                            $_REQUEST['nulls'][$attrs->fields['attnum']] = true;
-                        }
-                    }
-
-                    // Default format to 'VALUE' if there is no default,
-                    // otherwise default to 'EXPRESSION'
-                    if (!isset($_REQUEST['format'][$attrs->fields['attnum']])) {
-                        $_REQUEST['format'][$attrs->fields['attnum']] = (null === $attrs->fields['adsrc']) ? 'VALUE' : 'EXPRESSION';
-                    }
-
-                    // Continue drawing row
-                    $id = (0 == ($i % 2) ? '1' : '2');
-                    echo "<tr class=\"data{$id}\">\n";
-                    echo '<td style="white-space:nowrap;">', $this->misc->printVal($attrs->fields['attname']), '</td>';
-                    echo "<td style=\"white-space:nowrap;\">\n";
-                    echo $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
-                    echo "<input type=\"hidden\" name=\"types[{$attrs->fields['attnum']}]\" value=\"",
-                    htmlspecialchars($attrs->fields['type']), '" /></td>';
-                    echo "<td style=\"white-space:nowrap;\">\n";
-                    echo "<select name=\"format[{$attrs->fields['attnum']}]\">\n";
-                    echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attnum']] == 'VALUE') ? ' selected="selected"' : '', ">{$this->lang['strvalue']}</option>\n";
-                    echo '<option value="EXPRESSION"', ($_REQUEST['format'][$attrs->fields['attnum']] == 'EXPRESSION') ? ' selected="selected"' : '', ">{$this->lang['strexpression']}</option>\n";
-                    echo "</select>\n</td>\n";
-                    echo '<td style="white-space:nowrap;">';
-                    // Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
-                    if (!$attrs->fields['attnotnull']) {
-                        echo "<label><span><input type=\"checkbox\" name=\"nulls[{$attrs->fields['attnum']}]\"";
-                        echo isset($_REQUEST['nulls'][$attrs->fields['attnum']]) ? ' checked="checked"' : '';
-                        echo ' /></span></label>';
-                    }
-                    echo '</td>';
-
-                    echo "<td id=\"row_att_{$attrs->fields['attnum']}\" style=\"white-space:nowrap;\">";
-                    if ((false !== $fksprops) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
-                        echo $data->printField(
-                            "values[{$attrs->fields['attnum']}]",
-                            $_REQUEST['values'][$attrs->fields['attnum']],
-                            'fktype' /*force FK*/,
-                            [
-                                'id'           => "attr_{$attrs->fields['attnum']}",
-                                'autocomplete' => 'off',
-                            ]
-                        );
-                    } else {
-                        echo $data->printField("values[{$attrs->fields['attnum']}]", $_REQUEST['values'][$attrs->fields['attnum']], $attrs->fields['type']);
-                    }
-                    echo "</td>\n";
-                    echo "</tr>\n";
-                    ++$i;
-                    $attrs->moveNext();
-                }
-                echo "</table>\n";
-
-                if (!isset($_SESSION['counter'])) {
-                    $_SESSION['counter'] = 0;
-                }
-
-                echo "<input type=\"hidden\" name=\"action\" value=\"insertrow\" />\n";
-                echo '<input type="hidden" name="fields" value="', htmlentities(serialize($fields), ENT_QUOTES, 'UTF-8'), "\" />\n";
-                echo '<input type="hidden" name="protection_counter" value="'.$_SESSION['counter']."\" />\n";
-                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-                echo "<p><input type=\"submit\" name=\"insert\" value=\"{$this->lang['strinsert']}\" />\n";
-                echo "<input type=\"submit\" name=\"insertandrepeat\" accesskey=\"r\" value=\"{$this->lang['strinsertandrepeat']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-
-                if (false !== $fksprops) {
-                    if ('default off' != $this->conf['autocomplete']) {
-                        echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$this->lang['strac']}</label>\n";
-                    } else {
-                        echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$this->lang['strac']}</label>\n";
-                    }
-                }
-                echo "</p>\n";
-            } else {
-                echo "<p>{$this->lang['strnofieldsforinsert']}</p>\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            }
-            echo $this->misc->form;
-            echo "</form>\n";
-            \Kint::dump($_REQUEST);
         } else {
-            $this->coalesceArr($_POST, 'values', []);
+            $fksprops = false;
+        }
+        $this->coalesceArr($_REQUEST, 'values', []);
+        $this->coalesceArr($_REQUEST, 'nulls', []);
+        $this->coalesceArr($_REQUEST, 'format', []);
 
-            $this->coalesceArr($_POST, 'nulls', []);
+        echo '<form action="' . \SUBFOLDER . "/src/views/tables\" method=\"post\" id=\"ac_form\">\n";
+        if ($attrs->recordCount() > 0) {
+            echo "<table>\n";
 
-            $_POST['fields'] = unserialize(htmlspecialchars_decode($_POST['fields'], ENT_QUOTES));
+            // Output table header
+            echo "<tr><th class=\"data\">{$this->lang['strcolumn']}</th><th class=\"data\">{$this->lang['strtype']}</th>";
+            echo "<th class=\"data\">{$this->lang['strformat']}</th>";
+            echo "<th class=\"data\">{$this->lang['strnull']}</th><th class=\"data\">{$this->lang['strvalue']}</th></tr>";
 
-            if ($_SESSION['counter']++ == $_POST['protection_counter']) {
-                $status = $data->insertRow($_POST['table'], $_POST['fields'], $_POST['values'], $_POST['nulls'], $_POST['format'], $_POST['types']);
-                if (0 == $status) {
-                    if (isset($_POST['insert'])) {
-                        return $this->doDefault($this->lang['strrowinserted']);
+            $i      = 0;
+            $fields = [];
+            while (!$attrs->EOF) {
+                $fields[$attrs->fields['attnum']] = $attrs->fields['attname'];
+                $attrs->fields['attnotnull']      = $data->phpBool($attrs->fields['attnotnull']);
+                // Set up default value if there isn't one already
+                if (!isset($_REQUEST['values'][$attrs->fields['attnum']])) {
+                    $_REQUEST['values'][$attrs->fields['attnum']] = $attrs->fields['adsrc'];
+                    if ($attrs->fields['adsrc'] === null && !$attrs->fields['attnotnull']) {
+                        $_REQUEST['nulls'][$attrs->fields['attnum']] = true;
                     }
-                    $_REQUEST['values'] = [];
-                    $_REQUEST['nulls']  = [];
-                    $this->doInsertRow(true, $this->lang['strrowinserted']);
-                } else {
-                    $this->doInsertRow(true, $this->lang['strrowinsertedbad']);
                 }
-            } else {
-                $this->doInsertRow(true, $this->lang['strrowduplicate']);
+
+                // Default format to 'VALUE' if there is no default,
+                // otherwise default to 'EXPRESSION'
+                if (!isset($_REQUEST['format'][$attrs->fields['attnum']])) {
+                    $_REQUEST['format'][$attrs->fields['attnum']] = (null === $attrs->fields['adsrc']) ? 'VALUE' : 'EXPRESSION';
+                }
+
+                // Continue drawing row
+                $id = (0 == ($i % 2) ? '1' : '2');
+                echo "<tr class=\"data{$id}\">\n";
+                echo '<td style="white-space:nowrap;">', $this->misc->printVal($attrs->fields['attname']), '</td>';
+                echo "<td style=\"white-space:nowrap;\">\n";
+                echo $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
+                echo "<input type=\"hidden\" name=\"types[{$attrs->fields['attnum']}]\" value=\"",
+                htmlspecialchars($attrs->fields['type']), '" /></td>';
+                echo "<td style=\"white-space:nowrap;\">\n";
+                echo "<select name=\"format[{$attrs->fields['attnum']}]\">\n";
+                echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attnum']] == 'VALUE') ? ' selected="selected"' : '', ">{$this->lang['strvalue']}</option>\n";
+                echo '<option value="EXPRESSION"', ($_REQUEST['format'][$attrs->fields['attnum']] == 'EXPRESSION') ? ' selected="selected"' : '', ">{$this->lang['strexpression']}</option>\n";
+                echo "</select>\n</td>\n";
+                echo '<td style="white-space:nowrap;">';
+                // Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
+                if (!$attrs->fields['attnotnull']) {
+                    echo "<label><span><input type=\"checkbox\" class=\"nullcheckbox\" name=\"nulls[{$attrs->fields['attnum']}]\"";
+                    echo isset($_REQUEST['nulls'][$attrs->fields['attnum']]) ? ' checked="checked"' : '';
+                    echo ' /></span></label>';
+                }
+                echo '</td>';
+
+                echo "<td id=\"row_att_{$attrs->fields['attnum']}\" style=\"white-space:nowrap;\">";
+
+                if ((false !== $fksprops) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
+                    echo $data->printField(
+                        "values[{$attrs->fields['attnum']}]",
+                        $_REQUEST['values'][$attrs->fields['attnum']],
+                        'fktype' /*force FK*/,
+                        [
+                            'id'           => "attr_{$attrs->fields['attnum']}",
+                            'autocomplete' => 'off',
+                            'class'        => 'insert_row_input',
+                        ]
+                    );
+                } else {
+                    echo $data->printField("values[{$attrs->fields['attnum']}]", $_REQUEST['values'][$attrs->fields['attnum']], $attrs->fields['type'], ['class' => 'insert_row_input']);
+                }
+                echo "</td>\n";
+                echo "</tr>\n";
+                ++$i;
+                $attrs->moveNext();
             }
+            echo "</table>\n";
+
+            if (!isset($_SESSION['counter'])) {
+                $_SESSION['counter'] = 0;
+            }
+
+            echo "<input type=\"hidden\" name=\"action\" value=\"insertrow\" />\n";
+            echo '<input type="hidden" name="fields" value="', htmlentities(serialize($fields), ENT_QUOTES, 'UTF-8'), "\" />\n";
+            echo '<input type="hidden" name="protection_counter" value="' . $_SESSION['counter'] . "\" />\n";
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+            echo "<p><input type=\"submit\" name=\"insert\" value=\"{$this->lang['strinsert']}\" />\n";
+            echo "<input type=\"submit\" name=\"insertandrepeat\" accesskey=\"r\" value=\"{$this->lang['strinsertandrepeat']}\" />\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
+
+            if (false !== $fksprops) {
+                if ('default off' != $this->conf['autocomplete']) {
+                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$this->lang['strac']}</label>\n";
+                } else {
+                    echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$this->lang['strac']}</label>\n";
+                }
+            }
+            echo "</p>\n";
+        } else {
+            echo "<p>{$this->lang['strnofieldsforinsert']}</p>\n";
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
+        }
+        echo $this->misc->form;
+        echo "</form>\n";
+        echo '<script src="' . \SUBFOLDER . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
+
+    }
+
+    /**
+     * Performs insertion of row according to request parameters
+     */
+    public function doInsertRow()
+    {
+
+        $data = $this->misc->getDatabaseAccessor();
+
+        $this->coalesceArr($_POST, 'values', []);
+
+        $this->coalesceArr($_POST, 'nulls', []);
+
+        $_POST['fields'] = unserialize(htmlspecialchars_decode($_POST['fields'], ENT_QUOTES));
+
+        if ($_SESSION['counter']++ == $_POST['protection_counter']) {
+            $status = $data->insertRow($_POST['table'], $_POST['fields'], $_POST['values'], $_POST['nulls'], $_POST['format'], $_POST['types']);
+            if (0 == $status) {
+                if (isset($_POST['insert'])) {
+                    return $this->doDefault($this->lang['strrowinserted']);
+                }
+                $_REQUEST['values'] = [];
+                $_REQUEST['nulls']  = [];
+                return $this->formInsertRow($this->lang['strrowinserted']);
+            } else {
+                return $this->formInsertRow($this->lang['strrowinsertedbad']);
+            }
+        } else {
+            return $this->formInsertRow($this->lang['strrowduplicate']);
         }
     }
 
@@ -1106,10 +1115,10 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($this->lang['strempty'], 'pg.table.empty');
 
-                echo '<form action="'.\SUBFOLDER."/src/views/tables\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>'.sprintf($this->lang['strconfemptytable'], $this->misc->printVal($a['table']));
+                    echo '<p>' . sprintf($this->lang['strconfemptytable'], $this->misc->printVal($a['table']));
 
                     echo "</p>\n";
                     printf('<input type="hidden" name="table[]" value="%s" />', htmlspecialchars($a['table']));
@@ -1120,7 +1129,7 @@ class TablesController extends BaseController
 
                 echo '<p>', sprintf($this->lang['strconfemptytable'], $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
-                echo '<form action="'.\SUBFOLDER."/src/views/tables\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables\" method=\"post\">\n";
 
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
                 // END not mutli empty
@@ -1155,7 +1164,7 @@ class TablesController extends BaseController
                     return $this->doDefault($msg);
                 }
 
-                return $this->doDefault($sql.'<br>'.$this->lang['strtableemptiedbad']);
+                return $this->doDefault($sql . '<br>' . $this->lang['strtableemptiedbad']);
                 // END not mutli empty
             }
             // END do Empty
@@ -1181,7 +1190,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($this->lang['strdrop'], 'pg.table.drop');
 
-                echo '<form action="'.\SUBFOLDER."/src/views/tables\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables\" method=\"post\">\n";
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     echo '<p>', sprintf($this->lang['strconfdroptable'], $this->misc->printVal($a['table'])), "</p>\n";
@@ -1193,7 +1202,7 @@ class TablesController extends BaseController
 
                 echo '<p>', sprintf($this->lang['strconfdroptable'], $this->misc->printVal($_REQUEST['table'])), "</p>\n";
 
-                echo '<form action="'.\SUBFOLDER."/src/views/tables\" method=\"post\">\n";
+                echo '<form action="' . \SUBFOLDER . "/src/views/tables\" method=\"post\">\n";
                 echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
                 // END if multi drop
             }
