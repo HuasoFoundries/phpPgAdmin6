@@ -57,12 +57,13 @@ trait ViewTrait
      * @param string $viewname   The name fo the view to update
      * @param string $definition The new definition for the view
      * @param string $comment
+     * @param bool  $materialized tells if it's a materialized view or not
      *
      * @return bool|int 0 success
      */
-    public function setView($viewname, $definition, $comment)
+    public function setView($viewname, $definition, $comment, $materialized = false)
     {
-        return $this->createView($viewname, $definition, true, $comment);
+        return $this->createView($viewname, $definition, true, $comment, $materialized);
     }
 
     /**
@@ -72,10 +73,11 @@ trait ViewTrait
      * @param string $definition The definition for the new view
      * @param bool   $replace    True to replace the view, false otherwise
      * @param string $comment
+     * @param bool $materialized tells if it's a materialized view
      *
      * @return bool|int 0 success
      */
-    public function createView($viewname, $definition, $replace, $comment)
+    public function createView($viewname, $definition, $replace, $comment, $materialized = false)
     {
         $status = $this->beginTransaction();
         if ($status != 0) {
@@ -89,11 +91,12 @@ trait ViewTrait
         // Note: $definition not cleaned
 
         $sql = 'CREATE ';
-        if ($replace) {
-            $sql .= 'OR REPLACE ';
-        }
 
-        $sql .= "VIEW \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
+        $sql .= $replace ? ' OR REPLACE ' : ' ';
+
+        $obj_type = $materialized ? ' MATERIALIZED VIEW ' : ' VIEW ';
+
+        $sql .= $obj_type . " \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
 
         $status = $this->execute($sql);
         if ($status) {
@@ -103,7 +106,7 @@ trait ViewTrait
         }
 
         if ($comment != '') {
-            $status = $this->setComment('VIEW', $viewname, '', $comment);
+            $status = $this->setComment($obj_type, $viewname, '', $comment);
             if ($status) {
                 $this->rollbackTransaction();
 
@@ -192,10 +195,7 @@ trait ViewTrait
     {
         $this->fieldArrayClean($vwrs->fields);
 
-        $type = 'VIEW';
-        if ($vwrs->fields['relkind'] === 'm') {
-            $type = 'MATERIALIZED VIEW';
-        }
+        $type = ($vwrs->fields['relkind'] === 'm') ? 'MATERIALIZED VIEW' : 'VIEW';
         // Comment
 
         if ($this->setComment($type, $vwrs->fields['relname'], '', $comment) != 0) {
@@ -238,10 +238,7 @@ trait ViewTrait
      */
     public function alterViewOwner($vwrs, $owner = null)
     {
-        $type = 'VIEW';
-        if ($vwrs->fields['relkind'] === 'm') {
-            $type = 'MATERIALIZED VIEW';
-        }
+        $type = ($vwrs->fields['relkind'] === 'm') ? 'MATERIALIZED VIEW' : 'VIEW';
         /* $vwrs and $owner are cleaned in _alterView */
         if ((!empty($owner)) && ($vwrs->fields['relowner'] != $owner)) {
             $f_schema = $this->_schema;
@@ -267,10 +264,7 @@ trait ViewTrait
      */
     public function alterViewName($vwrs, $name)
     {
-        $type = 'VIEW';
-        if ($vwrs->fields['relkind'] === 'm') {
-            $type = 'MATERIALIZED VIEW';
-        }
+        $type = ($vwrs->fields['relkind'] === 'm') ? 'MATERIALIZED VIEW' : 'VIEW';
         // Rename (only if name has changed)
         /* $vwrs and $name are cleaned in _alterView */
         if (!empty($name) && ($name != $vwrs->fields['relname'])) {
@@ -300,10 +294,8 @@ trait ViewTrait
      */
     public function alterViewSchema($vwrs, $schema)
     {
-        $type = 'VIEW';
-        if ($vwrs->fields['relkind'] === 'm') {
-            $type = 'MATERIALIZED VIEW';
-        }
+        $type = ($vwrs->fields['relkind'] === 'm') ? 'MATERIALIZED VIEW' : 'VIEW';
+
         /* $vwrs and $schema are cleaned in _alterView */
         if (!empty($schema) && ($vwrs->fields['nspname'] != $schema)) {
             $f_schema = $this->_schema;
@@ -329,10 +321,8 @@ trait ViewTrait
     public function dropView($viewname, $cascade)
     {
         $vwrs = $this->getView($viewname);
-        $type = 'VIEW';
-        if ($vwrs->fields['relkind'] === 'm') {
-            $type = 'MATERIALIZED VIEW';
-        }
+        $type = ($vwrs->fields['relkind'] === 'm') ? 'MATERIALIZED VIEW' : 'VIEW';
+
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($viewname);

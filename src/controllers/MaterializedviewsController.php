@@ -731,7 +731,7 @@ class MaterializedviewsController extends BaseController
         } elseif ('' == $_POST['formDefinition']) {
             $this->doCreate($this->lang['strviewneedsdef']);
         } else {
-            $status = $data->createView($_POST['formView'], $_POST['formDefinition'], false, $_POST['formComment']);
+            $status = $data->createView($_POST['formView'], $_POST['formDefinition'], false, $_POST['formComment'], true);
             if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($this->lang['strviewcreated']);
@@ -864,7 +864,7 @@ class MaterializedviewsController extends BaseController
                 $viewQuery .= ' WHERE '.$addConditions;
             }
 
-            $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment']);
+            $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment'], true);
             if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($this->lang['strviewcreated']);

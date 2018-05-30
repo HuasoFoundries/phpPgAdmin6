@@ -103,7 +103,7 @@ class MaterializedviewpropertiesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $status = $data->setView($_POST[$this->subject], $_POST['formDefinition'], $_POST['formComment']);
+        $status = $data->setView($_POST[$this->subject], $_POST['formDefinition'], $_POST['formComment'], true);
         if (0 == $status) {
             $this->doDefinition($this->lang['strviewupdated']);
         } else {
@@ -339,7 +339,7 @@ class MaterializedviewpropertiesController extends BaseController
 
             $this->coalesceArr($_POST, 'newschema', null);
 
-            $status = $data->alterView($_POST[$this->subject], $_POST['name'], $_POST['owner'], $_POST['newschema'], $_POST['comment']);
+            $status = $data->alterMatView($_POST[$this->subject], $_POST['name'], $_POST['owner'], $_POST['newschema'], $_POST['comment']);
             if (0 == $status) {
                 // If matview has been renamed, need to change to the new name and
                 // reload the browser frame.
