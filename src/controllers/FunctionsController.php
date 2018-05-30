@@ -603,7 +603,6 @@ class FunctionsController extends BaseController
         echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />\n";
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
         echo "</form>\n";
-
     }
 
     /**

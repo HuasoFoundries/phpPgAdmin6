@@ -584,5 +584,4 @@ class ADOdbBase
 
         return $elements;
     }
-
 }
