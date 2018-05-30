@@ -8,7 +8,7 @@
 
 PHP Based administration tool for PostgreSQL. 
 
-This is a hard fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) which aims to add the following enhancements:
+This is a hard fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) which adds the following enhancements:
 
 - Composer Installation and dependency management
 - Autoloading (thanks to the above)
@@ -16,11 +16,13 @@ This is a hard fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) wh
 - Removal of global variables
 - Full PHP 7+ support
 - Support for PG 9.3+ features (Materialized Views, BRIN Indexes, etc)
+
+Other enhancements are in progress and would be a nice to have:
+
 - Nice urls
 - Replace usage of superglobals with [PSR-7 Message interfaces](http://www.php-fig.org/psr/psr-7/) to carry information around.
 - Usage of Dependency Injection compliant with [PSR-11 Container interface](http://www.php-fig.org/psr/psr-11/)
 
-Some of these are already in place, others are in progress.
 
 This project is made on top of [Slim Framework 3](https://www.slimframework.com/), although a big part of the code doesn't use its full features yet.
 
