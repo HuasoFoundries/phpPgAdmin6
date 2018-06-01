@@ -190,27 +190,6 @@ class DatabaseController extends BaseController
             "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
         echo "<select name=\"filter\">\n";
-        /*echo "\t<option value=\"\"", ('' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strallobjects']}</option>\n";
-        echo "\t<option value=\"COLUMN\"", ('COLUMN' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strcolumns']}</option>\n";
-        echo "\t<option value=\"CONSTRAINT\"", ('CONSTRAINT' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strconstraints']}</option>\n";
-        echo "\t<option value=\"DOMAIN\"", ('DOMAIN' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strdomains']}</option>\n";
-        echo "\t<option value=\"FUNCTION\"", ('FUNCTION' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strfunctions']}</option>\n";
-        echo "\t<option value=\"INDEX\"", ('INDEX' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strindexes']}</option>\n";
-        echo "\t<option value=\"RULE\"", ('RULE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strrules']}</option>\n";
-        echo "\t<option value=\"SCHEMA\"", ('SCHEMA' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strschemas']}</option>\n";
-        echo "\t<option value=\"SEQUENCE\"", ('SEQUENCE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strsequences']}</option>\n";
-        echo "\t<option value=\"TABLE\"", ('TABLE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strtables']}</option>\n";
-        echo "\t<option value=\"TRIGGER\"", ('TRIGGER' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strtriggers']}</option>\n";
-        echo "\t<option value=\"VIEW\"", ('VIEW' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strviews']}</option>\n";
-
-        if ($this->conf['show_advanced']) {
-        echo "\t<option value=\"AGGREGATE\"", ('AGGREGATE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['straggregates']}</option>\n";
-        echo "\t<option value=\"TYPE\"", ('TYPE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strtypes']}</option>\n";
-        echo "\t<option value=\"OPERATOR\"", ('OPERATOR' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['stroperators']}</option>\n";
-        echo "\t<option value=\"OPCLASS\"", ('OPCLASS' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['stropclasses']}</option>\n";
-        echo "\t<option value=\"CONVERSION\"", ('CONVERSION' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strconversions']}</option>\n";
-        echo "\t<option value=\"LANGUAGE\"", ('LANGUAGE' == $_REQUEST['filter']) ? ' selected="selected"' : '', ">{$this->lang['strlanguages']}</option>\n";
-        }*/
 
         echo $this->_printTypeOption('');
         echo $this->_printTypeOption('COLUMN');
