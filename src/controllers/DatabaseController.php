@@ -16,6 +16,7 @@ use PHPPgAdmin\Decorators\Decorator;
 class DatabaseController extends BaseController
 {
     use \PHPPgAdmin\Traits\AdminTrait;
+    use \PHPPgAdmin\Traits\ExportTrait;
     public $table_place = 'database-variables';
     public $fields;
     public $controller_title = 'strdatabase';
@@ -44,20 +45,20 @@ class DatabaseController extends BaseController
         $scripts = '';
         // normal flow
         if ('locks' == $this->action || 'processes' == $this->action) {
-            $scripts .= '<script src="'.\SUBFOLDER.'/assets/js/database.js" type="text/javascript"></script>';
+            $scripts .= '<script src="' . \SUBFOLDER . '/assets/js/database.js" type="text/javascript"></script>';
 
             $refreshTime = $this->conf['ajax_refresh'] * 1500;
 
             $scripts .= "<script type=\"text/javascript\">\n";
             $scripts .= "var Database = {\n";
             $scripts .= "ajax_time_refresh: {$refreshTime},\n";
-            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '".$this->misc->icon('Execute')."'},\n";
-            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '".$this->misc->icon('Stop')."'},\n";
-            $scripts .= "load_icon: '".$this->misc->icon('Loading')."',\n";
+            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '" . $this->misc->icon('Execute') . "'},\n";
+            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '" . $this->misc->icon('Stop') . "'},\n";
+            $scripts .= "load_icon: '" . $this->misc->icon('Loading') . "',\n";
             $scripts .= "server:'{$_REQUEST['server']}',\n";
             $scripts .= "dbname:'{$_REQUEST['database']}',\n";
             $scripts .= "action:'refresh_{$this->action}',\n";
-            $scripts .= "errmsg: '".str_replace("'", "\\'", $this->lang['strconnectionfail'])."'\n";
+            $scripts .= "errmsg: '" . str_replace("'", "\\'", $this->lang['strconnectionfail']) . "'\n";
             $scripts .= "};\n";
             $scripts .= "</script>\n";
         }
@@ -184,7 +185,7 @@ class DatabaseController extends BaseController
         $this->printTabs('database', 'find');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/database\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/database\" method=\"post\">\n";
         echo '<p><input name="term" value="', htmlspecialchars($_REQUEST['term']),
             "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
@@ -213,8 +214,8 @@ class DatabaseController extends BaseController
         echo "</select>\n";
         echo "<input type=\"submit\" value=\"{$this->lang['strfind']}\" />\n";
         echo $this->misc->form;
-        echo '<input type="hidden" name="action" value="find" /></p>'."\n";
-        echo '<input type="hidden" name="confirm" value="true" /></p>'."\n";
+        echo '<input type="hidden" name="action" value="find" /></p>' . "\n";
+        echo '<input type="hidden" name="confirm" value="true" /></p>' . "\n";
         echo "</form>\n";
 
         // Default focus
@@ -324,7 +325,7 @@ class DatabaseController extends BaseController
 
                     switch ($curr) {
                         case 'SCHEMA':
-                            echo '<li><a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&schema=";
+                            echo '<li><a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=";
                             echo $this->misc->printVal($rs->fields['name']), '">';
                             echo $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']);
                             echo "</a></li>\n";
@@ -333,14 +334,14 @@ class DatabaseController extends BaseController
                         case 'TABLE':
                             echo '<li>';
                             echo "<a href=\"tables?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'VIEW':
                             echo '<li>';
                             echo "<a href=\"views?subject=schema&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/view?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
+                            echo '<a href="' . \SUBFOLDER . "/redirect/view?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
                             urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
@@ -353,7 +354,7 @@ class DatabaseController extends BaseController
                             break;
                         case 'COLUMNTABLE':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                             echo "<a href=\"tblproperties?subject=table&{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"colproperties?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['relname']), '&amp;column=', urlencode($rs->fields['name']), '">',
@@ -362,7 +363,7 @@ class DatabaseController extends BaseController
                             break;
                         case 'COLUMNVIEW':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                             echo "<a href=\"viewproperties?subject=view&{$this->misc->href}&view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"colproperties?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;view=',
                             urlencode($rs->fields['relname']), '&amp;column=', urlencode($rs->fields['name']), '">',
@@ -371,15 +372,15 @@ class DatabaseController extends BaseController
                             break;
                         case 'INDEX':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"indexes?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'CONSTRAINTTABLE':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"constraints?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
@@ -393,24 +394,24 @@ class DatabaseController extends BaseController
                             break;
                         case 'TRIGGER':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"triggers?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;table=', urlencode($rs->fields['relname']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'RULETABLE':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/table?{$this->misc->href}&table=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"rules?subject=table&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=table&amp;table=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
                             break;
                         case 'RULEVIEW':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                            echo '<a href="'.\SUBFOLDER."/redirect/view?{$this->misc->href}&view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/view?{$this->misc->href}&view=", urlencode($rs->fields['relname']), '&amp;schema=', urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                             echo "<a href=\"rules?subject=view&{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '&amp;reltype=view&amp;view=',
                             urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
@@ -464,7 +465,7 @@ class DatabaseController extends BaseController
                             break;
                         case 'OPCLASS':
                             echo '<li>';
-                            echo '<a href="'.\SUBFOLDER."/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                            echo '<a href="' . \SUBFOLDER . "/redirect/schema?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                             echo "<a href=\"opclasses?{$this->misc->href}&schema=", urlencode($rs->fields['schemaname']), '">',
                             $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), "</a></li>\n";
 
@@ -488,52 +489,25 @@ class DatabaseController extends BaseController
      */
     public function doExport($msg = '')
     {
-        $data = $this->misc->getDatabaseAccessor();
-
         $this->printTrail('database');
         $this->printTabs('database', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dbexport\" method=\"post\">\n";
-        echo "<table>\n";
-        echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";
-        // Data only
-        echo '<tr><th class="data left" rowspan="2">';
-        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$this->lang['strdataonly']}</label></th>\n";
-        echo "<td>{$this->lang['strformat']}</td>\n";
-        echo "<td><select name=\"d_format\">\n";
-        echo "<option value=\"copy\">COPY</option>\n";
-        echo "<option value=\"sql\">SQL</option>\n";
-        echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><label for=\"d_oids\">{$this->lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /></td>\n</tr>\n";
-        // Structure only
-        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$this->lang['strstructureonly']}</label></th>\n";
-        echo "<td><label for=\"s_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
-        // Structure and data
-        echo '<tr><th class="data left" rowspan="3">';
-        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$this->lang['strstructureanddata']}</label></th>\n";
-        echo "<td>{$this->lang['strformat']}</td>\n";
-        echo "<td><select name=\"sd_format\">\n";
-        echo "<option value=\"copy\">COPY</option>\n";
-        echo "<option value=\"sql\">SQL</option>\n";
-        echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><label for=\"sd_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
-        echo "<tr><td><label for=\"sd_oids\">{$this->lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /></td>\n</tr>\n";
-        echo "</table>\n";
+        $subject = 'database';
+        $object  = $_REQUEST['database'];
 
-        echo "<h3>{$this->lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label>\n";
-        // MSIE cannot download gzip in SSL mode - it's just broken
-        if (!(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS']))) {
-            echo "<br /><input type=\"radio\" id=\"output3\" name=\"output\" value=\"gzipped\" /><label for=\"output3\">{$this->lang['strdownloadgzipped']}</label>\n";
-        }
-        echo "</p>\n";
-        echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
-        echo "<input type=\"hidden\" name=\"subject\" value=\"database\" />\n";
-        echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
-        echo "</form>\n";
+        echo $this->formHeader('dbexport');
+
+        echo $this->dataOnly(true, true);
+
+        echo $this->structureOnly();
+
+        echo $this->structureAndData(true);
+
+        echo $this->displayOrDownload(!(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])));
+
+        echo $this->formFooter($subject, $object);
+
     }
 
     /**
@@ -577,7 +551,7 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         if (0 === strlen($msg)) {
-            echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+            echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
         }
 
         echo '<div id="data_block">';
@@ -759,7 +733,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'locks');
 
-        echo '<br /><a id="control" href=""><img src="'.$this->misc->icon('Refresh')."\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+        echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
 
         echo '<div id="data_block">';
         $this->currentLocks();
@@ -779,7 +753,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'sql');
         echo "<p>{$this->lang['strentersql']}</p>\n";
-        echo '<form action="'.\SUBFOLDER.'/src/views/sql" method="post" enctype="multipart/form-data" id="sqlform">'."\n";
+        echo '<form action="' . \SUBFOLDER . '/src/views/sql" method="post" enctype="multipart/form-data" id="sqlform">' . "\n";
         echo "<p>{$this->lang['strsql']}<br />\n";
         echo '<textarea style="width:95%;" rows="15" cols="50" name="query" id="query">',
         htmlspecialchars($_SESSION['sqlquery']), "</textarea></p>\n";

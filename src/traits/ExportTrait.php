@@ -17,10 +17,11 @@ trait ExportTrait
      * prints the dataOnly option when exporting a table, view or materialized view
      *
      * @param boolean  $hasID  Indicates if the object has has an object ID
+     * @param boolean $onlyCopyAndSQL  when exporting schema or DB, only copy or SQL formats are offered
      *
      * @return string  html table row
      */
-    public function dataOnly($hasID)
+    public function dataOnly($hasID, $onlyCopyAndSQL = false)
     {
         $content = '<tr>';
         $content .= '<th class="data left" rowspan="' . ($hasID ? 2 : 1) . '">';
@@ -30,10 +31,14 @@ trait ExportTrait
         $content .= '<td><select name="d_format">' . "\n";
         $content .= '<option value="copy">COPY</option>' . "\n";
         $content .= '<option value="sql">SQL</option>' . "\n";
-        $content .= '<option value="csv">CSV</option>' . "\n";
-        $content .= "<option value=\"tab\">{$this->lang['strtabbed']}</option>" . "\n";
-        $content .= '<option value="html">XHTML</option>' . "\n";
-        $content .= '<option value="xml">XML</option>' . "\n";
+
+        if (!$onlyCopyAndSQL) {
+            $content .= '<option value="csv">CSV</option>' . "\n";
+            $content .= "<option value=\"tab\">{$this->lang['strtabbed']}</option>" . "\n";
+            $content .= '<option value="html">XHTML</option>' . "\n";
+            $content .= '<option value="xml">XML</option>' . "\n";
+        }
+
         $content .= sprintf('</select>%s</td>%s</tr>%s', "\n", "\n", "\n");
 
         if ($hasID) {
@@ -89,9 +94,16 @@ trait ExportTrait
         return $content;
     }
 
-    public function formHeader()
+    /**
+     * Returns the export form header
+     *
+     * @param string  $endpoint  The endpoint to send the request to (dataexport or dbexport)
+     *
+     * @return string  the html for the form header
+     */
+    public function formHeader($endpoint = 'dataexport')
     {
-        $content = sprintf('<form action="%s" method=\"post\">%s', \SUBFOLDER . '/src/views/dataexport', "\n");
+        $content = sprintf('<form action="%s/%s" method=\"post\">%s', \SUBFOLDER . '/src/views', $endpoint, "\n");
         $content .= "<table>\n";
         $content .= sprintf('<tr><th class="data">%s</th>', $this->lang['strformat']);
         $content .= sprintf('<th class="data" colspan="2">%s</th></tr>%s', $this->lang['stroptions'], "\n");
@@ -118,13 +130,27 @@ trait ExportTrait
         return $content;
     }
 
-    public function displayOrDownload()
+    /**
+     * Offers the option of display, download and conditionally download gzipped
+     *
+     * @param bool  $offerGzip  Offer to download gzipped
+     *
+     * @return string the html of the display or download section
+     */
+    public function displayOrDownload($offerGzip = false)
     {
-        $content = sprintf('<h3>%s</h3>%s', $this->lang['stroptions'], "\n");
+        $content = sprintf('</table>%s', "\n");
+        $content .= sprintf('<h3>%s</h3>%s', $this->lang['stroptions'], "\n");
         $content .= '<p><input type="radio" id="output1" name="output" value="show" checked="checked" />';
         $content .= sprintf('<label for="output1">%s</label>', $this->lang['strshow'], "\n");
         $content .= '<br/><input type="radio" id="output2" name="output" value="download" />';
-        $content .= sprintf('<label for="output2">%s</label></p>%s', $this->lang['strdownload'], "\n");
+        $content .= sprintf('<label for="output2">%s</label>', $this->lang['strdownload']);
+
+        if ($offerGzip) {
+            $content .= '<br /><input type="radio" id="output3" name="output" value="gzipped" />';
+            $content .= sprintf('<label for="output3">%s</label>%s', $this->lang['strdownloadgzipped'], "\n");
+        }
+        $content .= sprintf('</p>%s', "\n");
 
         return $content;
     }

@@ -164,11 +164,10 @@ class Translations
 
     public function __construct($container)
     {
-        $availableLanguages = $this->availableLanguages;
-        $appLangFiles       = $this->appLangFiles;
-        $appClasses         = $this->appClasses;
-        $_language          = $this->_language;
-        $conf               = $container->conf;
+        $appLangFiles = $this->appLangFiles;
+        $appClasses   = $this->appClasses;
+        $_language    = $this->_language;
+        $conf         = $container->conf;
 
         $languages_iso_code = $this->languages_iso_code;
 
@@ -200,7 +199,7 @@ class Translations
             $_language = 'english';
         }
 
-        $_type = '\PHPPgAdmin\Translations\\'.$appClasses[$_language];
+        $_type = '\PHPPgAdmin\Translations\\' . $appClasses[$_language];
 
         $langClass = new $_type();
 

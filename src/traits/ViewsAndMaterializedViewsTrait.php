@@ -240,8 +240,6 @@ trait ViewsAndMaterializedViewsTrait
         // Structure and data
         // echo $this->structureAndData();
 
-        echo "</table>\n";
-
         echo $this->displayOrDownload();
 
         echo $this->formFooter($subject, $object);

@@ -25,7 +25,7 @@ class RulesController extends BaseController
         }
 
         // Different header if we're view rules or table rules
-        $this->printHeader($_REQUEST[$_REQUEST['subject']].' - '.$this->lang['strrules']);
+        $this->printHeader($_REQUEST[$_REQUEST['subject']] . ' - ' . $this->lang['strrules']);
         $this->printBody();
 
         switch ($this->action) {
@@ -138,8 +138,6 @@ class RulesController extends BaseController
 
         $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
 
-        $reqvars = $this->misc->getRequestVars($_REQUEST['subject']);
-
         $attrs = [
             'text' => Decorator::field('rulename'),
             'icon' => 'Rule',
@@ -173,7 +171,7 @@ class RulesController extends BaseController
             $this->printTitle($this->lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/rules\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/rules\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
             echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -249,7 +247,7 @@ class RulesController extends BaseController
                 $this->misc->printVal($_REQUEST[$_REQUEST['reltype']])
             ), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/rules\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/rules\" method=\"post\">\n";
             echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['reltype']), "\" />\n";
             echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['reltype']),

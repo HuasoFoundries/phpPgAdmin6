@@ -15,6 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class SchemasController extends BaseController
 {
+    use \PHPPgAdmin\Traits\ExportTrait;
     public $controller_title = 'strschemas';
 
     /**
@@ -34,7 +35,6 @@ class SchemasController extends BaseController
         }
 
         $header_template = 'header.twig';
-        $footer_template = 'footer.twig';
 
         ob_start();
         switch ($this->action) {
@@ -103,7 +103,7 @@ class SchemasController extends BaseController
             'schema'      => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
             'owner'       => [
@@ -281,7 +281,7 @@ class SchemasController extends BaseController
         $this->printTitle($this->lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
+        echo '<form action="' . \SUBFOLDER . '/src/views/schemas" method="post">' . "\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -356,7 +356,7 @@ class SchemasController extends BaseController
 
             $this->coalesceArr($_POST, 'owner', $schema->fields['ownername']);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/schemas" method="post">' . "\n";
             echo "<table>\n";
 
             echo "\t<tr>\n";
@@ -433,7 +433,7 @@ class SchemasController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($this->lang['strdrop'], 'pg.schema.drop');
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
+            echo '<form action="' . \SUBFOLDER . '/src/views/schemas" method="post">' . "\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -496,54 +496,25 @@ class SchemasController extends BaseController
      */
     public function doExport($msg = '')
     {
-        $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('schema');
         $this->printTabs('schema', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/dbexport" method="post">'."\n";
+        $subject = 'schema';
+        $object  = $_REQUEST['schema'];
 
-        echo "<table>\n";
-        echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\" colspan=\"2\">{$this->lang['stroptions']}</th></tr>\n";
-        // Data only
-        echo '<tr><th class="data left" rowspan="2">';
-        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$this->lang['strdataonly']}</label></th>\n";
-        echo "<td>{$this->lang['strformat']}</td>\n";
-        echo "<td><select name=\"d_format\">\n";
-        echo "<option value=\"copy\">COPY</option>\n";
-        echo "<option value=\"sql\">SQL</option>\n";
-        echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><label for=\"d_oids\">{$this->lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /></td>\n</tr>\n";
-        // Structure only
-        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$this->lang['strstructureonly']}</label></th>\n";
-        echo "<td><label for=\"s_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /></td>\n</tr>\n";
-        // Structure and data
-        echo '<tr><th class="data left" rowspan="3">';
-        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$this->lang['strstructureanddata']}</label></th>\n";
-        echo "<td>{$this->lang['strformat']}</td>\n";
-        echo "<td><select name=\"sd_format\">\n";
-        echo "<option value=\"copy\">COPY</option>\n";
-        echo "<option value=\"sql\">SQL</option>\n";
-        echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><label for=\"sd_clean\">{$this->lang['strdrop']}</label></td><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /></td>\n</tr>\n";
-        echo "<tr><td><label for=\"sd_oids\">{$this->lang['stroids']}</label></td><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /></td>\n</tr>\n";
-        echo "</table>\n";
+        echo $this->formHeader('dbexport');
 
-        echo "<h3>{$this->lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label>\n";
-        // MSIE cannot download gzip in SSL mode - it's just broken
-        if (!(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS']))) {
-            echo "<br /><input type=\"radio\" id=\"output3\" name=\"output\" value=\"gzipped\" /><label for=\"output3\">{$this->lang['strdownloadgzipped']}</label>\n";
-        }
-        echo "</p>\n";
-        echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
-        echo "<input type=\"hidden\" name=\"subject\" value=\"schema\" />\n";
-        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
-        echo '<input type="hidden" name="schema" value="', htmlspecialchars($_REQUEST['schema']), "\" />\n";
-        echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
-        echo "</form>\n";
+        echo $this->dataOnly(true, true);
+
+        echo $this->structureOnly();
+
+        echo $this->structureAndData(true);
+
+        echo $this->displayOrDownload(!(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])));
+
+        echo $this->formFooter($subject, $object);
+
     }
 }

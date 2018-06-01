@@ -15,6 +15,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class AlldbController extends BaseController
 {
+    use \PHPPgAdmin\Traits\ExportTrait;
     public $table_place      = 'alldb-databases';
     public $controller_title = 'strdatabases';
 
@@ -108,7 +109,7 @@ class AlldbController extends BaseController
             'database'   => [
                 'title' => $this->lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url'   => \SUBFOLDER."/redirect/database?{$href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/database?{$href}&amp;",
                 'vars'  => ['database' => 'datname'],
             ],
             'owner'      => [
@@ -262,7 +263,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['stralter'], 'pg.database.alter');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
             echo '<td class="data1">';
@@ -333,7 +334,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['strdrop'], 'pg.database.drop');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -416,7 +417,7 @@ class AlldbController extends BaseController
             $tablespaces = $data->getTablespaces();
         }
 
-        echo '<form action="'.\SUBFOLDER."/src/views/alldb\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/alldb\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -558,41 +559,23 @@ class AlldbController extends BaseController
         $this->printTabs('server', 'export');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dbexport\" method=\"post\">\n";
-        echo "<table>\n";
-        echo "<tr><th class=\"data\">{$this->lang['strformat']}</th><th class=\"data\">{$this->lang['stroptions']}</th></tr>\n";
-        // Data only
-        echo '<tr><th class="data left" rowspan="2">';
-        echo "<input type=\"radio\" id=\"what1\" name=\"what\" value=\"dataonly\" checked=\"checked\" /><label for=\"what1\">{$this->lang['strdataonly']}</label></th>\n";
-        echo "<td>{$this->lang['strformat']}\n";
-        echo "<select name=\"d_format\">\n";
-        echo "<option value=\"copy\">COPY</option>\n";
-        echo "<option value=\"sql\">SQL</option>\n";
-        echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><input type=\"checkbox\" id=\"d_oids\" name=\"d_oids\" /><label for=\"d_oids\">{$this->lang['stroids']}</label></td>\n</tr>\n";
-        // Structure only
-        echo "<tr><th class=\"data left\"><input type=\"radio\" id=\"what2\" name=\"what\" value=\"structureonly\" /><label for=\"what2\">{$this->lang['strstructureonly']}</label></th>\n";
-        echo "<td><input type=\"checkbox\" id=\"s_clean\" name=\"s_clean\" /><label for=\"s_clean\">{$this->lang['strdrop']}</label></td>\n</tr>\n";
-        // Structure and data
-        echo '<tr><th class="data left" rowspan="3">';
-        echo "<input type=\"radio\" id=\"what3\" name=\"what\" value=\"structureanddata\" /><label for=\"what3\">{$this->lang['strstructureanddata']}</label></th>\n";
-        echo "<td>{$this->lang['strformat']}\n";
-        echo "<select name=\"sd_format\">\n";
-        echo "<option value=\"copy\">COPY</option>\n";
-        echo "<option value=\"sql\">SQL</option>\n";
-        echo "</select>\n</td>\n</tr>\n";
-        echo "<tr><td><input type=\"checkbox\" id=\"sd_clean\" name=\"sd_clean\" /><label for=\"sd_clean\">{$this->lang['strdrop']}</label></td>\n</tr>\n";
-        echo "<tr><td><input type=\"checkbox\" id=\"sd_oids\" name=\"sd_oids\" /><label for=\"sd_oids\">{$this->lang['stroids']}</label></td>\n</tr>\n";
-        echo "</table>\n";
+        $subject = 'server';
+        $object  = $_REQUEST['server'];
 
-        echo "<h3>{$this->lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>\n";
+        $this->prtrace($this->misc->getServerInfo());
 
-        echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
-        echo "<input type=\"hidden\" name=\"subject\" value=\"server\" />\n";
-        echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
-        echo "</form>\n";
+        echo $this->formHeader('dbexport');
+
+        echo $this->dataOnly(true, true);
+
+        echo $this->structureOnly();
+
+        echo $this->structureAndData(true);
+
+        // dumpall doesn't support gzip
+        echo $this->displayOrDownload(false);
+
+        echo $this->formFooter($subject, $object);
+
     }
 }
