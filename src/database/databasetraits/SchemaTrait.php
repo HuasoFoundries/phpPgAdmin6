@@ -108,7 +108,7 @@ trait SchemaTrait
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
+        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
 
         return $this->execute($sql);
     }
@@ -293,4 +293,6 @@ trait SchemaTrait
     abstract public function getAttributeNames($table, $atts);
 
     abstract public function selectField($sql, $field);
+
+    abstract public function phpArray($dbarr);
 }
