@@ -576,6 +576,5 @@ class AlldbController extends BaseController
         echo $this->displayOrDownload(false);
 
         echo $this->formFooter($subject, $object);
-
     }
 }

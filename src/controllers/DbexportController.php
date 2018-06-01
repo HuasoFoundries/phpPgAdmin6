@@ -184,7 +184,6 @@ class DbexportController extends BaseController
             }
 
             if (!$dumpall) {
-
                 putenv('PGDATABASE=' . $_REQUEST['database']);
             } else {
                 $cmd .= ' --no-role-password';

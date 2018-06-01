@@ -496,7 +496,6 @@ class SchemasController extends BaseController
      */
     public function doExport($msg = '')
     {
-
         $this->printTrail('schema');
         $this->printTabs('schema', 'export');
         $this->printMsg($msg);
@@ -515,6 +514,5 @@ class SchemasController extends BaseController
         echo $this->displayOrDownload(!(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])));
 
         echo $this->formFooter($subject, $object);
-
     }
 }

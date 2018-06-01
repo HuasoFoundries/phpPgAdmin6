@@ -507,7 +507,6 @@ class DatabaseController extends BaseController
         echo $this->displayOrDownload(!(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])));
 
         echo $this->formFooter($subject, $object);
-
     }
 
     /**
