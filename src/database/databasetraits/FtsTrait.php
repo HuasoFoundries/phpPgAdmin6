@@ -648,5 +648,5 @@ trait FtsTrait
 
     abstract public function clean(&$str);
 
-    abstract public function arrayClean($flags);
+    abstract public function arrayClean(&$arr);
 }

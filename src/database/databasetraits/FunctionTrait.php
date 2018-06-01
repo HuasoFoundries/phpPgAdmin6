@@ -397,5 +397,5 @@ trait FunctionTrait
 
     abstract public function hasFunctionAlterSchema();
 
-    abstract public function arrayClean($flags);
+    abstract public function arrayClean(&$arr);
 }

@@ -670,7 +670,7 @@ trait IndexTrait
 
     abstract public function hasTablespaces();
 
-    abstract public function arrayClean($flags);
+    abstract public function arrayClean(&$arr);
 
     abstract public function fieldArrayClean(&$arr);
 }
