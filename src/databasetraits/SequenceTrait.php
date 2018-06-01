@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.47
  */
 
-namespace PHPPgAdmin\Traits;
+namespace PHPPgAdmin\DatabaseTraits;
 
 /**
  * Common trait for sequence manipulation.
@@ -456,7 +456,7 @@ trait SequenceTrait
 
         // toggle cycle yes/no
         if (!is_null($cycledvalue)) {
-            $sql .= (!$cycledvalue ? ' NO ' : '').' CYCLE';
+            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
         }
 
         if ($sql != '') {

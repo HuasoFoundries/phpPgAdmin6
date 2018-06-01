@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.47
  */
 
-namespace PHPPgAdmin\Traits;
+namespace PHPPgAdmin\DatabaseTraits;
 
 /**
  * Common trait for aggregates manipulation.
@@ -121,11 +121,11 @@ trait AggregateTrait
             FROM pg_catalog.pg_proc p, pg_catalog.pg_namespace n, pg_catalog.pg_user u, pg_catalog.pg_aggregate a
             WHERE n.oid = p.pronamespace AND p.proowner=u.usesysid AND p.oid=a.aggfnoid
                 AND p.proisagg AND n.nspname='{$c_schema}'
-                AND p.proname='".$name."'
+                AND p.proname='" . $name . "'
                 AND CASE p.proargtypes[0]
                     WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype THEN ''
                     ELSE pg_catalog.format_type(p.proargtypes[0], NULL)
-                END ='".$basetype."'";
+                END ='" . $basetype . "'";
 
         return $this->selectSet($sql);
     }
@@ -282,7 +282,7 @@ trait AggregateTrait
     public function renameAggregate($aggrschema, $aggrname, $aggrtype, $newaggrname)
     {
         /* this function is called from alterAggregate where params are cleaned */
-        $sql = "ALTER AGGREGATE \"{$aggrschema}\"".'.'."\"{$aggrname}\" (\"{$aggrtype}\") RENAME TO \"{$newaggrname}\"";
+        $sql = "ALTER AGGREGATE \"{$aggrschema}\"" . '.' . "\"{$aggrname}\" (\"{$aggrtype}\") RENAME TO \"{$newaggrname}\"";
 
         return $this->execute($sql);
     }

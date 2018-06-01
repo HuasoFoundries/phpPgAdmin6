@@ -20,6 +20,7 @@
             "PHPPgAdmin\\XHtml\\": "src/xhtml",
             "PHPPgAdmin\\Decorators\\": "src/decorators",
             "PHPPgAdmin\\Traits\\": "src/traits",
+            "PHPPgAdmin\\DatabaseTraits\\": "src/databasetraits",
             "PHPPgAdmin\\Help\\": "src/help",
             "PHPPgAdmin\\Translations\\": "src/translations"
 

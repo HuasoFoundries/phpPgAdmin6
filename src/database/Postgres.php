@@ -17,20 +17,21 @@ namespace PHPPgAdmin\Database;
 class Postgres extends ADOdbBase
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-    use \PHPPgAdmin\Traits\SequenceTrait;
-    use \PHPPgAdmin\Traits\ViewTrait;
-    use \PHPPgAdmin\Traits\IndexTrait;
-    use \PHPPgAdmin\Traits\RoleTrait;
-    use \PHPPgAdmin\Traits\AggregateTrait;
-    use \PHPPgAdmin\Traits\TableTrait;
-    use \PHPPgAdmin\Traits\DomainTrait;
-    use \PHPPgAdmin\Traits\FtsTrait;
-    use \PHPPgAdmin\Traits\FunctionTrait;
-    use \PHPPgAdmin\Traits\DatabaseTrait;
-    use \PHPPgAdmin\Traits\SchemaTrait;
-    use \PHPPgAdmin\Traits\TypeTrait;
-    use \PHPPgAdmin\Traits\TablespaceTrait;
-    use \PHPPgAdmin\Traits\OperatorTrait;
+
+    use \PHPPgAdmin\DatabaseTraits\AggregateTrait;
+    use \PHPPgAdmin\DatabaseTraits\DatabaseTrait;
+    use \PHPPgAdmin\DatabaseTraits\DomainTrait;
+    use \PHPPgAdmin\DatabaseTraits\FtsTrait;
+    use \PHPPgAdmin\DatabaseTraits\FunctionTrait;
+    use \PHPPgAdmin\DatabaseTraits\IndexTrait;
+    use \PHPPgAdmin\DatabaseTraits\OperatorTrait;
+    use \PHPPgAdmin\DatabaseTraits\RoleTrait;
+    use \PHPPgAdmin\DatabaseTraits\SchemaTrait;
+    use \PHPPgAdmin\DatabaseTraits\SequenceTrait;
+    use \PHPPgAdmin\DatabaseTraits\TablespaceTrait;
+    use \PHPPgAdmin\DatabaseTraits\TableTrait;
+    use \PHPPgAdmin\DatabaseTraits\TypeTrait;
+    use \PHPPgAdmin\DatabaseTraits\ViewTrait;
 
     public $lang;
     public $conf;

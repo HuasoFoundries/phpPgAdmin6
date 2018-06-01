@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.47
  */
 
-namespace PHPPgAdmin\Traits;
+namespace PHPPgAdmin\DatabaseTraits;
 
 /**
  * Common trait for full text search manipulation.
@@ -264,13 +264,13 @@ trait FunctionTrait
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'".$definition[0]."'";
+            $sql .= "'" . $definition[0] . "'";
             if ($definition[1]) {
-                $sql .= ",'".$definition[1]."'";
+                $sql .= ",'" . $definition[1] . "'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'".$definition."'";
+            $sql .= "'" . $definition . "'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
