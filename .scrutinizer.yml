@@ -1,94 +1,96 @@
 checks:
     php:
-        code_rating: true
-        duplication: true
-        variable_existence: true
-        useless_calls: true
-        use_statement_alias_conflict: true
-        unused_variables: true
-        unused_properties: true
-        unused_parameters: true
-        unused_methods: true
-        unreachable_code: true
-        sql_injection_vulnerabilities: true
-        security_vulnerabilities: true
-        precedence_mistakes: true
-        precedence_in_conditions: true
-        parameter_non_unique: true
-        no_property_on_interface: true
-        no_non_implemented_abstract_methods: true
-        deprecated_code_usage: true
-        closure_use_not_conflicting: true
-        closure_use_modifiable: true
-        avoid_useless_overridden_methods: true
-        avoid_conflicting_incrementers: true
         assignment_of_null_return: true
-        verify_property_names: true
-        verify_argument_usable_as_reference: true
-        verify_access_scope_valid: true
-        use_self_instead_of_fqcn: true
-        symfony_request_injection: true
-        switch_fallthrough_commented: true
-        spacing_of_function_arguments: true
-        spacing_around_non_conditional_operators: true
-        spacing_around_conditional_operators: true
-        space_after_cast: true
-        single_namespace_per_use: true
+        avoid_conflicting_incrementers: true
+        avoid_superglobals: false
+        avoid_useless_overridden_methods: true
+        closure_use_modifiable: true
+        closure_use_not_conflicting: true
+        code_rating: true
+        deprecated_code_usage: true
+        duplication: true
+        fix_php_opening_tag: true
+        newline_at_end_of_file: true
+        no_commented_out_code: true
+        no_debug_code: true
+        no_duplicate_arguments: true
+        no_else_if_statements: true
+        no_empty_statements: true
+        no_exit: true
+        no_global_keyword: true
+        no_goto: true
+        no_mixed_inline_html: false
+        no_non_implemented_abstract_methods: true
+        no_property_on_interface: true
+        no_space_around_object_operator: true
+        no_space_before_semicolon: true
+        no_space_inside_cast_operator: true
+        no_trailing_whitespace: true
+        no_underscore_prefix_in_methods: true
+        no_underscore_prefix_in_properties: true
+        no_unnecessary_final_modifier: true
+        no_unnecessary_function_call_in_for_loop: true
+        no_unnecessary_if: true
+        non_commented_empty_catch_block: true
+        one_class_per_file: true
+        optional_parameters_at_the_end: true
+        overriding_private_members: true
+        param_doc_comment_if_not_inferrable: true
+        parameter_doc_comments: true
+        parameter_non_unique: true
+        parameters_in_camelcaps: true
+        php5_style_constructor: true
+        phpunit_assertions: true
+        precedence_in_conditions: true
+        precedence_mistakes: true
+        prefer_while_loop_over_for_loop: true
+        properties_in_camelcaps: true
+        property_assignments: true
+        psr2_class_declaration: true
+        psr2_control_structure_declaration: true
+        psr2_switch_declaration: true
+        remove_extra_empty_lines: true
+        remove_php_closing_tag: true
+        remove_trailing_whitespace: true
+        require_braces_around_control_structures: true
+        require_php_tag_first: true
+        require_scope_for_methods: true
+        require_scope_for_properties: true
+        return_doc_comment_if_not_inferrable: true
+        return_doc_comments: true
+        security_vulnerabilities: true
         simplify_boolean_return: true
+        single_namespace_per_use: true
+        space_after_cast: true
+        spacing_around_conditional_operators: true
+        spacing_around_non_conditional_operators: true
+        spacing_of_function_arguments: true
+        sql_injection_vulnerabilities: true
+        switch_fallthrough_commented: true
+        symfony_request_injection: true
+        too_many_arguments: false
+        unreachable_code: true
+        unused_methods: true
+        unused_parameters: true
+        unused_properties: true
+        unused_variables: true
+        use_self_instead_of_fqcn: true
+        use_statement_alias_conflict: true
+        useless_calls: true
+        variable_existence: true
+        verify_access_scope_valid: true
+        verify_argument_usable_as_reference: true
+        verify_property_names: true
         scope_indentation:
             spaces_per_level: '4'
-        return_doc_comments: true
-        require_scope_for_properties: true
-        require_scope_for_methods: true
-        require_php_tag_first: true
-        require_braces_around_control_structures: true
-        remove_trailing_whitespace: true
-        remove_php_closing_tag: true
-        remove_extra_empty_lines: true
-        psr2_switch_declaration: true
-        psr2_control_structure_declaration: true
-        psr2_class_declaration: true
-        property_assignments: true
-        properties_in_camelcaps: true
-        prefer_while_loop_over_for_loop: true
-        phpunit_assertions: true
-        php5_style_constructor: true
-        parameters_in_camelcaps: true
-        parameter_doc_comments: true
-        return_doc_comment_if_not_inferrable: true
-        param_doc_comment_if_not_inferrable: true
-        overriding_private_members: true
-        optional_parameters_at_the_end: true
-        one_class_per_file: true
-        non_commented_empty_catch_block: true
-        no_unnecessary_if: true
-        no_unnecessary_function_call_in_for_loop: true
-        no_unnecessary_final_modifier: true
-        no_underscore_prefix_in_properties: true
-        no_underscore_prefix_in_methods: true
-        no_trailing_whitespace: true
-        no_space_inside_cast_operator: true
-        no_space_before_semicolon: true
-        no_space_around_object_operator: true
-        no_goto: true
-        no_global_keyword: true
-        no_exit: true
-        no_empty_statements: true
-        no_else_if_statements: true
-        no_duplicate_arguments: true
-        no_debug_code: true
-        no_commented_out_code: true
-        newline_at_end_of_file: true
-        fix_php_opening_tag: true
-        no_mixed_inline_html: false
-        avoid_superglobals: false
+
         check_method_contracts:
             verify_interface_like_constraints: true
             verify_documented_constraints: true
             verify_parent_constraints: true
         no_short_method_names:
             minimum: '3'
-        too_many_arguments: false
+        
     javascript: true
 filter:
     paths: [src/*]

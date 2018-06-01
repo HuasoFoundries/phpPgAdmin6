@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.47
  */
 
-namespace PHPPgAdmin\DatabaseTraits;
+namespace PHPPgAdmin\Database\Traits;
 
 /**
  * Common trait for tablespaces manipulation.

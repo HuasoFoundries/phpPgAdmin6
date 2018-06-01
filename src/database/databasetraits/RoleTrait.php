@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.47
  */
 
-namespace PHPPgAdmin\DatabaseTraits;
+namespace PHPPgAdmin\Database\Traits;
 
 /**
  * Common trait for roles and users manipulation.
@@ -148,15 +148,15 @@ trait RoleTrait
         }
 
         if (is_array($new_roles_to_add) && sizeof($new_roles_to_add) > 0) {
-            $sql .= ' IN ROLE "'.join('", "', $new_roles_to_add).'"';
+            $sql .= ' IN ROLE "' . join('", "', $new_roles_to_add) . '"';
         }
 
         if (is_array($new_members_of_role) && sizeof($new_members_of_role) > 0) {
-            $sql .= ' ROLE "'.join('", "', $new_members_of_role).'"';
+            $sql .= ' ROLE "' . join('", "', $new_members_of_role) . '"';
         }
 
         if (is_array($new_admins_of_role) && sizeof($new_admins_of_role) > 0) {
-            $sql .= ' ADMIN "'.join('", "', $new_admins_of_role).'"';
+            $sql .= ' ADMIN "' . join('", "', $new_admins_of_role) . '"';
         }
 
         return $this->execute($sql);
@@ -172,7 +172,7 @@ trait RoleTrait
      */
     public function _encryptPassword($username, $password)
     {
-        return 'md5'.md5($password.$username);
+        return 'md5' . md5($password . $username);
     }
 
     /**
@@ -554,7 +554,7 @@ trait RoleTrait
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
         if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
+            $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
         }
 
         if ($expiry != '') {
@@ -823,7 +823,7 @@ trait RoleTrait
 
         if (is_array($users) && sizeof($users) > 0) {
             $this->fieldArrayClean($users);
-            $sql .= ' WITH USER "'.join('", "', $users).'"';
+            $sql .= ' WITH USER "' . join('", "', $users) . '"';
         }
 
         return $this->execute($sql);
@@ -841,153 +841,6 @@ trait RoleTrait
         $this->fieldClean($groname);
 
         $sql = "DROP GROUP \"{$groname}\"";
-
-        return $this->execute($sql);
-    }
-
-    /**
-     * Grants a privilege to a user, group or public.
-     *
-     * @param string $mode        'GRANT' or 'REVOKE';
-     * @param mixed  $type        The type of object
-     * @param string $object      The name of the object
-     * @param bool   $public      True to grant to public, false otherwise
-     * @param mixed  $usernames   the array of usernames to grant privs to
-     * @param mixed  $groupnames  the array of group names to grant privs to
-     * @param mixed  $privileges  The array of privileges to grant (eg. ('SELECT', 'ALL PRIVILEGES', etc.) )
-     * @param bool   $grantoption True if has grant option, false otherwise
-     * @param bool   $cascade     True for cascade revoke, false otherwise
-     * @param string $table       the column's table if type=column
-     *
-     * @return int 0 if operation was successful
-     */
-    public function setPrivileges(
-        $mode,
-        $type,
-        $object,
-        $public,
-        $usernames,
-        $groupnames,
-        $privileges,
-        $grantoption,
-        $cascade,
-        $table
-    ) {
-        $f_schema = $this->_schema;
-        $this->fieldClean($f_schema);
-        $this->fieldArrayClean($usernames);
-        $this->fieldArrayClean($groupnames);
-
-        // Input checking
-        if (!is_array($privileges) || sizeof($privileges) == 0) {
-            return -3;
-        }
-
-        if (!is_array($usernames) || !is_array($groupnames) ||
-            (!$public && sizeof($usernames) == 0 && sizeof($groupnames) == 0)) {
-            return -4;
-        }
-
-        if ($mode != 'GRANT' && $mode != 'REVOKE') {
-            return -5;
-        }
-
-        $sql = $mode;
-
-        // Grant option
-        if ($this->hasGrantOption() && $mode == 'REVOKE' && $grantoption) {
-            $sql .= ' GRANT OPTION FOR';
-        }
-
-        if (in_array('ALL PRIVILEGES', $privileges, true)) {
-            $sql .= ' ALL PRIVILEGES';
-        } else {
-            if ($type == 'column') {
-                $this->fieldClean($object);
-                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
-            } else {
-                $sql .= ' '.join(', ', $privileges);
-            }
-        }
-
-        switch ($type) {
-            case 'column':
-                $sql .= " (\"{$object}\")";
-                $object = $table;
-            // no break
-            case 'table':
-            case 'view':
-            case 'sequence':
-                $this->fieldClean($object);
-                $sql .= " ON \"{$f_schema}\".\"{$object}\"";
-
-                break;
-            case 'database':
-                $this->fieldClean($object);
-                $sql .= " ON DATABASE \"{$object}\"";
-
-                break;
-            case 'function':
-                // Function comes in with $object as function OID
-                $fn = $this->getFunction($object);
-                $this->fieldClean($fn->fields['proname']);
-                $sql .= " ON FUNCTION \"{$f_schema}\".\"{$fn->fields['proname']}\"({$fn->fields['proarguments']})";
-
-                break;
-            case 'language':
-                $this->fieldClean($object);
-                $sql .= " ON LANGUAGE \"{$object}\"";
-
-                break;
-            case 'schema':
-                $this->fieldClean($object);
-                $sql .= " ON SCHEMA \"{$object}\"";
-
-                break;
-            case 'tablespace':
-                $this->fieldClean($object);
-                $sql .= " ON TABLESPACE \"{$object}\"";
-
-                break;
-            default:
-                return -1;
-        }
-
-        // Dump PUBLIC
-        $first = true;
-        $sql .= ($mode == 'GRANT') ? ' TO ' : ' FROM ';
-        if ($public) {
-            $sql .= 'PUBLIC';
-            $first = false;
-        }
-        // Dump users
-        foreach ($usernames as $v) {
-            if ($first) {
-                $sql .= "\"{$v}\"";
-                $first = false;
-            } else {
-                $sql .= ", \"{$v}\"";
-            }
-        }
-        // Dump groups
-        foreach ($groupnames as $v) {
-            if ($first) {
-                $sql .= "GROUP \"{$v}\"";
-                $first = false;
-            } else {
-                $sql .= ", GROUP \"{$v}\"";
-            }
-        }
-
-        // Grant option
-        if ($this->hasGrantOption() && $mode == 'GRANT' && $grantoption) {
-            $sql .= ' WITH GRANT OPTION';
-        }
-
-        // Cascade revoke
-        if ($this->hasGrantOption() && $mode == 'REVOKE' && $cascade) {
-            $sql .= ' CASCADE';
-        }
 
         return $this->execute($sql);
     }

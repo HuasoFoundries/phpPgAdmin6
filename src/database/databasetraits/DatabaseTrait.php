@@ -4,13 +4,26 @@
  * PHPPgAdmin v6.0.0-beta.47
  */
 
-namespace PHPPgAdmin\DatabaseTraits;
+namespace PHPPgAdmin\Database\Traits;
 
 /**
  * Common trait for tables manipulation.
  */
 trait DatabaseTrait
 {
+
+    /**
+     * Returns the current default_with_oids setting.
+     *
+     * @return string default_with_oids setting
+     */
+    public function getDefaultWithOid()
+    {
+        $sql = 'SHOW default_with_oids';
+
+        return $this->selectField($sql, 'default_with_oids');
+    }
+
     /**
      * Determines whether or not a user is a super user.
      *
@@ -105,7 +118,7 @@ trait DatabaseTrait
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
 
-            $not_in = "('".implode("','", $hiddendbs)."')";
+            $not_in = "('" . implode("','", $hiddendbs) . "')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 

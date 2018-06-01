@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.47
  */
 
-namespace PHPPgAdmin\DatabaseTraits;
+namespace PHPPgAdmin\Database\Traits;
 
 /**
  * Common trait for types manipulation.
@@ -42,7 +42,7 @@ trait TypeTrait
         } elseif ($typname == 'varchar') {
             $temp = 'character varying';
             if ($typmod != -1) {
-                $temp .= '('.($typmod - $varhdrsz).')';
+                $temp .= '(' . ($typmod - $varhdrsz) . ')';
             }
         } elseif ($typname == 'numeric') {
             $temp = 'numeric';

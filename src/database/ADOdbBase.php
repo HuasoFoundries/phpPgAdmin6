@@ -17,7 +17,7 @@ namespace PHPPgAdmin\Database;
 class ADOdbBase
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-    use \PHPPgAdmin\DatabaseTraits\HasTrait;
+    use \PHPPgAdmin\Database\Traits\HasTrait;
 
     public $lang;
     public $conf;
@@ -366,7 +366,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql = $fields . $values . ')';
         }
 
         // Check for failures
@@ -438,7 +438,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;

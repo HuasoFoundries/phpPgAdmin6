@@ -4,7 +4,7 @@
  * PHPPgAdmin v6.0.0-beta.47
  */
 
-namespace PHPPgAdmin\DatabaseTraits;
+namespace PHPPgAdmin\Database\Traits;
 
 /**
  * Common trait for views manipulation.
@@ -96,7 +96,7 @@ trait ViewTrait
 
         $obj_type = $materialized ? ' MATERIALIZED VIEW ' : ' VIEW ';
 
-        $sql .= $obj_type." \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
+        $sql .= $obj_type . " \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
 
         $status = $this->execute($sql);
         if ($status) {
