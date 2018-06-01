@@ -11,6 +11,35 @@ namespace PHPPgAdmin\DatabaseTraits;
  */
 trait DatabaseTrait
 {
+
+    /**
+     * Determines whether or not a user is a super user.
+     *
+     * @param string $username The username of the user
+     *
+     * @return bool true if is a super user, false otherwise
+     */
+    public function isSuperUser($username = '')
+    {
+        $this->clean($username);
+
+        if (empty($username)) {
+            $val = pg_parameter_status($this->conn->_connectionID, 'is_superuser');
+            if ($val !== false) {
+                return $val == 'on';
+            }
+        }
+
+        $sql = "SELECT usesuper FROM pg_user WHERE usename='{$username}'";
+
+        $usesuper = $this->selectField($sql, 'usesuper');
+        if ($usesuper == -1) {
+            return false;
+        }
+
+        return $usesuper == 't';
+    }
+
     /**
      * Analyze a database.
      *
@@ -77,7 +106,7 @@ trait DatabaseTrait
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
 
-            $not_in = "('".implode("','", $hiddendbs)."')";
+            $not_in = "('" . implode("','", $hiddendbs) . "')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 

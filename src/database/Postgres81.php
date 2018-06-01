@@ -113,6 +113,7 @@ class Postgres81 extends Postgres82
         $this->clean($dbName);
         $this->clean($newName);
         $this->clean($newOwner);
+        $this->clean($comment);
         //ignore $comment, not supported pre 8.2
 
         $status = $this->beginTransaction();
