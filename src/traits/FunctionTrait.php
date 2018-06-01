@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -11,11 +11,10 @@ namespace PHPPgAdmin\Traits;
  */
 trait FunctionTrait
 {
-
     /**
      * Returns a list of all functions in the database.
      *
-     * @param bool        $all  If true, will find all available functions, if false just those in search path
+     * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If truthy, will return functions of type trigger
      *
      * @return \PHPPgAdmin\ADORecordSet All functions
@@ -67,7 +66,7 @@ trait FunctionTrait
      *
      * @param array $f The array of data for the function
      *
-     * @return int|array An array containing the properties, or -1 in case of error
+     * @return array|int An array containing the properties, or -1 in case of error
      */
     public function getFunctionProperties($f)
     {
@@ -106,21 +105,21 @@ trait FunctionTrait
     /**
      * Updates (replaces) a function.
      *
-     * @param string $funcname     The name of the function to create
-     * @param string $newname      The new name for the function
-     * @param string  $args        imploded array of argument types
-     * @param string $returns      The return type
-     * @param string $definition   The definition for the new function
-     * @param string $language     The language the function is written for
-     * @param array  $flags        An array of optional flags
-     * @param bool   $setof        True if returns a set, false otherwise
+     * @param string $funcname   The name of the function to create
+     * @param string $newname    The new name for the function
+     * @param string $args       imploded array of argument types
+     * @param string $returns    The return type
+     * @param string $definition The definition for the new function
+     * @param string $language   The language the function is written for
+     * @param array  $flags      An array of optional flags
+     * @param bool   $setof      True if returns a set, false otherwise
      * @param string $funcown
      * @param string $newown
      * @param string $funcschema
      * @param string $newschema
      * @param float  $cost
      * @param int    $rows
-     * @param string $comment      The comment on the function
+     * @param string $comment    The comment on the function
      *
      * @return bool|int 0 success
      */
@@ -265,13 +264,13 @@ trait FunctionTrait
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'" . $definition[0] . "'";
+            $sql .= "'".$definition[0]."'";
             if ($definition[1]) {
-                $sql .= ",'" . $definition[1] . "'";
+                $sql .= ",'".$definition[1]."'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'" . $definition . "'";
+            $sql .= "'".$definition."'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -87,18 +87,18 @@ trait RoleTrait
     /**
      * Creates a new role.
      *
-     * @param string $rolename     The name of the role to create
-     * @param string $password     A password for the role
-     * @param bool   $superuser    Boolean whether or not the role is a superuser
-     * @param bool   $createdb     Boolean whether or not the role can create databases
-     * @param bool   $createrole   Boolean whether or not the role can create other roles
-     * @param bool   $inherits     Boolean whether or not the role inherits the privileges from parent roles
-     * @param bool   $login        Boolean whether or not the role will be allowed to login
-     * @param number $connlimit    Number of concurrent connections the role can make
-     * @param string $expiry       String Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     * @param array  $new_roles_to_add     (array) Roles to which the new role will be immediately added as a new member
-     * @param array  $new_members_of_role      (array) Roles which are automatically added as members of the new role
-     * @param array  $new_admins_of_role (array) Roles which are automatically added as admin members of the new role
+     * @param string $rolename            The name of the role to create
+     * @param string $password            A password for the role
+     * @param bool   $superuser           Boolean whether or not the role is a superuser
+     * @param bool   $createdb            Boolean whether or not the role can create databases
+     * @param bool   $createrole          Boolean whether or not the role can create other roles
+     * @param bool   $inherits            Boolean whether or not the role inherits the privileges from parent roles
+     * @param bool   $login               Boolean whether or not the role will be allowed to login
+     * @param number $connlimit           Number of concurrent connections the role can make
+     * @param string $expiry              String Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
+     * @param array  $new_roles_to_add    (array) Roles to which the new role will be immediately added as a new member
+     * @param array  $new_members_of_role (array) Roles which are automatically added as members of the new role
+     * @param array  $new_admins_of_role  (array) Roles which are automatically added as admin members of the new role
      *
      * @return int 0 if operation was successful
      */
@@ -148,15 +148,15 @@ trait RoleTrait
         }
 
         if (is_array($new_roles_to_add) && sizeof($new_roles_to_add) > 0) {
-            $sql .= ' IN ROLE "' . join('", "', $new_roles_to_add) . '"';
+            $sql .= ' IN ROLE "'.join('", "', $new_roles_to_add).'"';
         }
 
         if (is_array($new_members_of_role) && sizeof($new_members_of_role) > 0) {
-            $sql .= ' ROLE "' . join('", "', $new_members_of_role) . '"';
+            $sql .= ' ROLE "'.join('", "', $new_members_of_role).'"';
         }
 
         if (is_array($new_admins_of_role) && sizeof($new_admins_of_role) > 0) {
-            $sql .= ' ADMIN "' . join('", "', $new_admins_of_role) . '"';
+            $sql .= ' ADMIN "'.join('", "', $new_admins_of_role).'"';
         }
 
         return $this->execute($sql);
@@ -172,30 +172,28 @@ trait RoleTrait
      */
     public function _encryptPassword($username, $password)
     {
-        return 'md5' . md5($password . $username);
+        return 'md5'.md5($password.$username);
     }
 
     /**
      * Adjusts a role's info and renames it.
      *
-     * @param string $rolename        The name of the role to adjust
-     * @param string $password        A password for the role
-     * @param bool   $superuser       Boolean whether or not the role is a superuser
-     * @param bool   $createdb        Boolean whether or not the role can create databases
-     * @param bool   $createrole      Boolean whether or not the role can create other roles
-     * @param bool   $inherits        Boolean whether or not the role inherits the privileges from parent roles
-     * @param bool   $login           Boolean whether or not the role will be allowed to login
-     * @param number $connlimit       Number of concurrent connections the role can make
-     * @param string $expiry          string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     *
-     * @param array  $new_roles_to_add        (array) Roles to which the role will be immediately added as a new member
-     * @param array  $new_members_of_role         (array) Roles which are automatically added as members of the role
+     * @param string $rolename              The name of the role to adjust
+     * @param string $password              A password for the role
+     * @param bool   $superuser             Boolean whether or not the role is a superuser
+     * @param bool   $createdb              Boolean whether or not the role can create databases
+     * @param bool   $createrole            Boolean whether or not the role can create other roles
+     * @param bool   $inherits              Boolean whether or not the role inherits the privileges from parent roles
+     * @param bool   $login                 Boolean whether or not the role will be allowed to login
+     * @param number $connlimit             Number of concurrent connections the role can make
+     * @param string $expiry                string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
+     * @param array  $new_roles_to_add      (array) Roles to which the role will be immediately added as a new member
+     * @param array  $new_members_of_role   (array) Roles which are automatically added as members of the role
      * @param array  $new_admins_of_role    (array) Roles which are automatically added as admin members of the role
-     *
-     * @param string  $original_parent_roles     Original roles whose the role belongs to, comma separated
-     * @param string  $original_members      Original roles that are members of the role, comma separated
-     * @param string  $original_admins Original roles that are admin members of the role, comma separated
-     * @param string $newrolename     The new name of the role
+     * @param string $original_parent_roles Original roles whose the role belongs to, comma separated
+     * @param string $original_members      Original roles that are members of the role, comma separated
+     * @param string $original_admins       Original roles that are admin members of the role, comma separated
+     * @param string $newrolename           The new name of the role
      *
      * @return bool|int 0 success
      */
@@ -301,6 +299,7 @@ trait RoleTrait
                 }
             }
         }
+
         return 0;
     }
 
@@ -326,6 +325,7 @@ trait RoleTrait
                 }
             }
         }
+
         return 0;
     }
 
@@ -349,6 +349,7 @@ trait RoleTrait
                 }
             }
         }
+
         return 0;
     }
 
@@ -387,21 +388,21 @@ trait RoleTrait
     /**
      * Adjusts a role's info.
      *
-     * @param string $rolename        The name of the role to adjust
-     * @param string $password        A password for the role
-     * @param bool   $superuser       Boolean whether or not the role is a superuser
-     * @param bool   $createdb        Boolean whether or not the role can create databases
-     * @param bool   $createrole      Boolean whether or not the role can create other roles
-     * @param bool   $inherits        Boolean whether or not the role inherits the privileges from parent roles
-     * @param bool   $login           Boolean whether or not the role will be allowed to login
-     * @param number $connlimit       Number of concurrent connections the role can make
-     * @param string $expiry          string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
-     * @param array  $new_roles_to_add        (array) Roles to which the role will be immediately added as a new member
-     * @param array  $new_members_of_role         (array) Roles which are automatically added as members of the role
+     * @param string $rolename              The name of the role to adjust
+     * @param string $password              A password for the role
+     * @param bool   $superuser             Boolean whether or not the role is a superuser
+     * @param bool   $createdb              Boolean whether or not the role can create databases
+     * @param bool   $createrole            Boolean whether or not the role can create other roles
+     * @param bool   $inherits              Boolean whether or not the role inherits the privileges from parent roles
+     * @param bool   $login                 Boolean whether or not the role will be allowed to login
+     * @param number $connlimit             Number of concurrent connections the role can make
+     * @param string $expiry                string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
+     * @param array  $new_roles_to_add      (array) Roles to which the role will be immediately added as a new member
+     * @param array  $new_members_of_role   (array) Roles which are automatically added as members of the role
      * @param array  $new_admins_of_role    (array) Roles which are automatically added as admin members of the role
-     * @param string $original_parent_roles     Original roles whose the role belongs to, comma separated
+     * @param string $original_parent_roles Original roles whose the role belongs to, comma separated
      * @param string $original_members      Original roles that are members of the role, comma separated
-     * @param string $original_admins Original roles that are admin members of the role, comma separated
+     * @param string $original_admins       Original roles that are admin members of the role, comma separated
      *
      * @return int 0 if operation was successful
      */
@@ -553,7 +554,7 @@ trait RoleTrait
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
         if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
+            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
         }
 
         if ($expiry != '') {
@@ -822,7 +823,7 @@ trait RoleTrait
 
         if (is_array($users) && sizeof($users) > 0) {
             $this->fieldArrayClean($users);
-            $sql .= ' WITH USER "' . join('", "', $users) . '"';
+            $sql .= ' WITH USER "'.join('", "', $users).'"';
         }
 
         return $this->execute($sql);
@@ -903,9 +904,9 @@ trait RoleTrait
         } else {
             if ($type == 'column') {
                 $this->fieldClean($object);
-                $sql .= ' ' . join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' ' . join(', ', $privileges);
+                $sql .= ' '.join(', ', $privileges);
             }
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -39,9 +39,9 @@ trait ServersTrait
         }
 
         foreach ($this->conf['servers'] as $idx => $info) {
-            $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+            $server_id = $info['host'].':'.$info['port'].':'.$info['sslmode'];
             if ($group === false || isset($group[$idx]) || ($group === 'all')) {
-                $server_id  = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+                $server_id  = $info['host'].':'.$info['port'].':'.$info['sslmode'];
                 $server_sha = sha1($server_id);
 
                 if (isset($logins[$server_sha])) {
@@ -110,17 +110,17 @@ trait ServersTrait
             }
             $servers[$key] = $info;
         }
-        $connection_html .= '<input type="hidden" readonly="readonly" value="' . $the_action . '" id="the_action">';
+        $connection_html .= '<input type="hidden" readonly="readonly" value="'.$the_action.'" id="the_action">';
 
         if (count($servers) === 1) {
-            $connection_html .= '<input type="hidden" readonly="readonly" value="' . $server_id . '" name="server">';
+            $connection_html .= '<input type="hidden" readonly="readonly" value="'.$server_id.'" name="server">';
         } else {
             $connection_html .= '<label>';
             $connection_html .= $this->misc->printHelp($this->lang['strserver'], 'pg.server', false);
             $connection_html .= ': </label>';
             $connection_html .= " <select name=\"server\" id='selectserver' >\n";
             foreach ($servers as $id => $server) {
-                $connection_html .= '<option value="' . $id . '" ' . $server['selected'] . '>';
+                $connection_html .= '<option value="'.$id.'" '.$server['selected'].'>';
                 $connection_html .= htmlspecialchars("{$server['desc']} ({$server['id']})");
                 $connection_html .= "</option>\n";
             }
@@ -133,7 +133,7 @@ trait ServersTrait
             isset($servers[$server_id]['useonlydefaultdb']) &&
             $servers[$server_id]['useonlydefaultdb'] === true
         ) {
-            $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($servers[$server_id]['defaultdb']) . "\" />\n";
+            $connection_html .= '<input type="hidden" name="database" value="'.htmlspecialchars($servers[$server_id]['defaultdb'])."\" />\n";
         } else {
             // Get the list of all databases
             $data      = $this->misc->getDatabaseAccessor();
@@ -151,14 +151,14 @@ trait ServersTrait
                 while (!$databases->EOF) {
                     $dbname     = $databases->fields['datname'];
                     $dbselected = isset($_REQUEST['database']) && $dbname == $_REQUEST['database'] ? ' selected="selected"' : '';
-                    $connection_html .= '<option value="' . htmlspecialchars($dbname) . '" ' . $dbselected . '>' . htmlspecialchars($dbname) . "</option>\n";
+                    $connection_html .= '<option value="'.htmlspecialchars($dbname).'" '.$dbselected.'>'.htmlspecialchars($dbname)."</option>\n";
 
                     $databases->moveNext();
                 }
                 $connection_html .= "</select></label>\n";
             } else {
                 $server_info = $this->misc->getServerInfo();
-                $connection_html .= '<input type="hidden" name="database" value="' . htmlspecialchars($server_info['defaultdb']) . "\" />\n";
+                $connection_html .= '<input type="hidden" name="database" value="'.htmlspecialchars($server_info['defaultdb'])."\" />\n";
             }
         }
 

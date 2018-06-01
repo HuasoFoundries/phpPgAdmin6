@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -11,6 +11,33 @@ namespace PHPPgAdmin\Traits;
  */
 trait RowTrait
 {
+    /**
+     * Returns a recordset of all columns in a table.
+     *
+     * @param string $table The name of a table
+     * @param array  $key   The associative array holding the key to retrieve
+     *
+     * @return \PHPPgAdmin\ADORecordSet A recordset
+     */
+    public function browseRow($table, $key)
+    {
+        $f_schema = $this->_schema;
+        $this->fieldClean($f_schema);
+        $this->fieldClean($table);
+
+        $sql = "SELECT * FROM \"{$f_schema}\".\"{$table}\"";
+        if (is_array($key) && sizeof($key) > 0) {
+            $sql .= ' WHERE true';
+            foreach ($key as $k => $v) {
+                $this->fieldClean($k);
+                $this->clean($v);
+                $sql .= " AND \"{$k}\"='{$v}'";
+            }
+        }
+
+        return $this->selectSet($sql);
+    }
+
     /**
      * Get the fields for uniquely identifying a row in a table.
      *
@@ -105,12 +132,12 @@ trait RowTrait
                 if (isset($nulls[$i])) {
                     $sql .= ',NULL';
                 } else {
-                    $sql .= ',' . $this->formatValue($types[$i], $format[$i], $value);
+                    $sql .= ','.$this->formatValue($types[$i], $format[$i], $value);
                 }
             }
 
-            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . implode('","', $fields) . '")
-                VALUES (' . substr($sql, 1) . ')';
+            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"".implode('","', $fields).'")
+                VALUES ('.substr($sql, 1).')';
 
             return $this->execute($sql);
         }
@@ -297,20 +324,6 @@ trait RowTrait
 
         // End transaction
         return $this->endTransaction();
-    }
-
-    /**
-     * Returns the SQL for changing the current user.
-     *
-     * @param string $user The user to change to
-     *
-     * @return string The SQL
-     */
-    public function getChangeUserSQL($user)
-    {
-        $this->clean($user);
-
-        return "SET SESSION AUTHORIZATION '{$user}';";
     }
 
     abstract public function fieldClean(&$str);

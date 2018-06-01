@@ -199,7 +199,7 @@ class Translations
             $_language = 'english';
         }
 
-        $_type = '\PHPPgAdmin\Translations\\' . $appClasses[$_language];
+        $_type = '\PHPPgAdmin\Translations\\'.$appClasses[$_language];
 
         $langClass = new $_type();
 

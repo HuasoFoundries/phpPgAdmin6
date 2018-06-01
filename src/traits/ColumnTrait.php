@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -71,7 +71,7 @@ trait ColumnTrait
 
             // DEFAULT clause
             if ($default != '') {
-                $sql .= ' DEFAULT ' . $default;
+                $sql .= ' DEFAULT '.$default;
             }
         }
 
@@ -157,7 +157,7 @@ trait ColumnTrait
         $toAlter = [];
         // Create the command for changing nullability
         if ($notnull != $oldnotnull) {
-            $toAlter[] = "ALTER COLUMN \"{$name}\" " . ($notnull ? 'SET' : 'DROP') . ' NOT NULL';
+            $toAlter[] = "ALTER COLUMN \"{$name}\" ".($notnull ? 'SET' : 'DROP').' NOT NULL';
         }
 
         // Add default, if it has changed
@@ -206,7 +206,7 @@ trait ColumnTrait
         if (!empty($toAlter)) {
             // Initialise an empty SQL string
             $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" "
-            . implode(',', $toAlter);
+            .implode(',', $toAlter);
 
             $status = $this->execute($sql);
             if ($status != 0) {
@@ -286,7 +286,7 @@ trait ColumnTrait
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . ($state ? 'DROP' : 'SET') . ' NOT NULL';
+        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" ".($state ? 'DROP' : 'SET').' NOT NULL';
 
         return $this->execute($sql);
     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -40,14 +40,14 @@ trait IndexTrait
     /**
      * Creates an index.
      *
-     * @param string $name         The index name (can be blank)
-     * @param string $table        The table on which to add the index
-     * @param array|string  $columns      An array of columns that form the index  or a string expression for a functional index
-     * @param string $type         The index type
-     * @param bool   $unique       True if unique, false otherwise
-     * @param string $where        Index predicate ('' for none)
-     * @param string $tablespace   The tablespaces ('' means none/default)
-     * @param bool   $concurrently true to create index concurrently
+     * @param string       $name         The index name (can be blank)
+     * @param string       $table        The table on which to add the index
+     * @param array|string $columns      An array of columns that form the index  or a string expression for a functional index
+     * @param string       $type         The index type
+     * @param bool         $unique       True if unique, false otherwise
+     * @param string       $where        Index predicate ('' for none)
+     * @param string       $tablespace   The tablespaces ('' means none/default)
+     * @param bool         $concurrently true to create index concurrently
      *
      * @return array status (0 if operation was successful) and sql sentence
      */
@@ -72,9 +72,9 @@ trait IndexTrait
 
         if (is_array($columns)) {
             $this->arrayClean($columns);
-            $sql .= '("' . implode('","', $columns) . '")';
+            $sql .= '("'.implode('","', $columns).'")';
         } else {
-            $sql .= '(' . $columns . ')';
+            $sql .= '('.$columns.')';
         }
 
         // Tablespace
@@ -280,7 +280,7 @@ trait IndexTrait
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'PRIMARY KEY ("' . join('","', $fields) . '")';
+        $sql .= 'PRIMARY KEY ("'.join('","', $fields).'")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -292,10 +292,10 @@ trait IndexTrait
     /**
      * Adds a unique constraint to a table.
      *
-     * @param string       $table      The table to which to add the unique key
-     * @param mixed|array  $fields     (array) An array of fields over which to add the unique key
-     * @param string $name       (optional) The name to give the key, otherwise default name is assigned
-     * @param string $tablespace (optional) The tablespace for the schema, '' indicates default
+     * @param string      $table      The table to which to add the unique key
+     * @param array|mixed $fields     (array) An array of fields over which to add the unique key
+     * @param string      $name       (optional) The name to give the key, otherwise default name is assigned
+     * @param string      $tablespace (optional) The tablespace for the schema, '' indicates default
      *
      * @return int 0 if operation was successful
      */
@@ -317,7 +317,7 @@ trait IndexTrait
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'UNIQUE ("' . join('","', $fields) . '")';
+        $sql .= 'UNIQUE ("'.join('","', $fields).'")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -469,9 +469,9 @@ trait IndexTrait
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'FOREIGN KEY ("' . join('","', $sfields) . '") ';
+        $sql .= 'FOREIGN KEY ("'.join('","', $sfields).'") ';
         // Target table needs to be fully qualified
-        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"" . join('","', $tfields) . '") ';
+        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"".join('","', $tfields).'") ';
         if ($match != $this->fkmatches[0]) {
             $sql .= " {$match}";
         }

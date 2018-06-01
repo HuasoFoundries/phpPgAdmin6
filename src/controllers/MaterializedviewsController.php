@@ -29,7 +29,7 @@ class MaterializedviewsController extends BaseController
             return $this->doSubTree();
         }
 
-        $this->printHeader('M ' . $this->lang['strviews']);
+        $this->printHeader('M '.$this->lang['strviews']);
         $this->printBody();
 
         switch ($this->action) {
@@ -116,9 +116,9 @@ class MaterializedviewsController extends BaseController
 
         $columns = [
             'matview' => [
-                'title' => 'M ' . $this->lang['strview'],
+                'title' => 'M '.$this->lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url'   => \SUBFOLDER . "/redirect/matview?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER."/redirect/matview?{$this->misc->href}&amp;",
                 'vars'  => ['matview' => 'relname'],
             ],
             'owner'   => [
@@ -303,7 +303,7 @@ class MaterializedviewsController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['matview']);
 
-            echo '<form action="' . \SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
+            echo '<form action="'.\SUBFOLDER.'/src/views/'.$this->script.'" method="post" id="selectform">';
             echo "\n";
 
             if ($attrs->recordCount() > 0) {
@@ -429,7 +429,7 @@ class MaterializedviewsController extends BaseController
             $this->printTrail('getTrail');
             $this->printTitle($this->lang['strdrop'], 'pg.matview.drop');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/materializedviews\" method=\"post\">\n";
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -534,7 +534,7 @@ class MaterializedviewsController extends BaseController
                         [
                             'schemaname' => $arrSelTables[$i]['schemaname'],
                             'tablename'  => $arrSelTables[$i]['tablename'],
-                            'fieldname'  => $attrs->fields['attname']]
+                            'fieldname'  => $attrs->fields['attname'], ]
                     );
                     $attrs->moveNext();
                 }
@@ -543,7 +543,7 @@ class MaterializedviewsController extends BaseController
             }
             asort($arrFields);
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER."/src/views/materializedviews\" method=\"post\">\n";
             echo "<table>\n";
             echo "<tr><th class=\"data\">{$this->lang['strviewname']}</th></tr>";
             echo "<tr>\n<td class=\"data1\">\n";
@@ -622,7 +622,7 @@ class MaterializedviewsController extends BaseController
             echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create_wiz\" />\n";
 
             foreach ($arrSelTables as $curTable) {
-                echo '<input type="hidden" name="formTables[]" value="' . htmlspecialchars(serialize($curTable)) . "\" />\n";
+                echo '<input type="hidden" name="formTables[]" value="'.htmlspecialchars(serialize($curTable))."\" />\n";
             }
 
             echo $this->misc->form;
@@ -647,7 +647,7 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($this->lang['strcreateviewwiz'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/materializedviews\" method=\"post\">\n";
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$this->lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">\n";
@@ -657,7 +657,7 @@ class MaterializedviewsController extends BaseController
             $arrTmp                                                                   = [];
             $arrTmp['schemaname']                                                     = $tables->fields['nspname'];
             $arrTmp['tablename']                                                      = $tables->fields['relname'];
-            $arrTables[$tables->fields['nspname'] . '.' . $tables->fields['relname']] = serialize($arrTmp);
+            $arrTables[$tables->fields['nspname'].'.'.$tables->fields['relname']]     = serialize($arrTmp);
             $tables->moveNext();
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrTables, 'formTables[]', false, '', true);
@@ -695,7 +695,7 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($this->lang['strcreateview'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/materializedviews\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/materializedviews\" method=\"post\">\n";
         echo "<table style=\"width: 100%\">\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -811,7 +811,7 @@ class MaterializedviewsController extends BaseController
                             if ((!in_array($curLink, $arrJoined, true) && in_array($tbl1, $arrUsedTbls, true)) || !count($arrJoined)) {
                                 // Make sure for multi-column foreign keys that we use a table alias tables joined to more than once
                                 // This can (and should be) more optimized for multi-column foreign keys
-                                $adj_tbl2 = in_array($tbl2, $arrUsedTbls, true) ? "${tbl2} AS alias_ppa_" . mktime() : $tbl2;
+                                $adj_tbl2 = in_array($tbl2, $arrUsedTbls, true) ? "${tbl2} AS alias_ppa_".mktime() : $tbl2;
 
                                 $linkFields .= strlen($linkFields) ? "{$curLink['operator']} ${adj_tbl2} ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") "
                                 : "${tbl1} {$curLink['operator']} ${adj_tbl2} ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") ";
@@ -857,7 +857,7 @@ class MaterializedviewsController extends BaseController
 
             //add where from additional conditions
             if (strlen($addConditions)) {
-                $viewQuery .= ' WHERE ' . $addConditions;
+                $viewQuery .= ' WHERE '.$addConditions;
             }
 
             $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment'], true);

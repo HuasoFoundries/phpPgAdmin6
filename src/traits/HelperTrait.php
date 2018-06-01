@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -34,11 +34,11 @@ trait HelperTrait
     }
 
     /**
-     * Adds a flash message to the session that will be displayed on the next request
+     * Adds a flash message to the session that will be displayed on the next request.
      *
-     * @param mixed  $content  msg content (can be object, array, etc)
-     * @param string $key      The key to associate with the message. Defaults to the stack
-     *                         trace of the closure or method that called addFlassh
+     * @param mixed  $content msg content (can be object, array, etc)
+     * @param string $key     The key to associate with the message. Defaults to the stack
+     *                        trace of the closure or method that called addFlassh
      */
     public function addFlash($content, $key = '')
     {
@@ -96,10 +96,10 @@ trait HelperTrait
     }
 
     /**
-     * Converts an ADORecordSet to an array
+     * Converts an ADORecordSet to an array.
      *
-     * @param \PHPPgAdmin\ADORecordSet  $set  The set
-     * @param string $field optionally the field to query for
+     * @param \PHPPgAdmin\ADORecordSet $set   The set
+     * @param string                   $field optionally the field to query for
      *
      * @return array the parsed array
      */
@@ -114,50 +114,56 @@ trait HelperTrait
             $result[] = $field ? $set->fields[$field] : $set;
             $set->moveNext();
         }
+
         return $result;
     }
 
     /**
      * Checks if a variable is defined, in which case assign its value to $var1
      * If it isn't and $set is true, assign the default value. Otherwise don't
-     * assign anything to $var1
+     * assign anything to $var1.
      *
-     * @param mixed       $var1    The variable to manipulate if $set if true
-     * @param mixed       $var2    The value to assign to $var1 if it's defined
-     * @param mixed       $default  The default value to set, it $set is true
-     * @param bool        $set      True to set the default value if $var2 isn't defined
+     * @param mixed $var1    The variable to manipulate if $set if true
+     * @param mixed $var2    The value to assign to $var1 if it's defined
+     * @param mixed $default The default value to set, it $set is true
+     * @param bool  $set     True to set the default value if $var2 isn't defined
      *
-     * @return mixed  the value of $var2 is $var2 is set, or $default otherwise
+     * @return mixed the value of $var2 is $var2 is set, or $default otherwise
      */
     public function setIfIsset(&$var1, $var2, $default = null, $set = true)
     {
         if (isset($var2)) {
             $var1 = $var2;
-            return $var1;
-        } elseif ($set === true) {
-            $var1 = $default;
+
             return $var1;
         }
+        if ($set === true) {
+            $var1 = $default;
+
+            return $var1;
+        }
+
         return $default;
     }
 
     /**
      * Checks if the $key of an $array is set. If it isn't, optionally set it to
-     * the default parameter
+     * the default parameter.
      *
-     * @param array       $array    The array to check
-     * @param string|int  $key      The key to check
-     * @param mixed       $default  The default value to set, it $set is true
-     * @param bool        $set      True to set the default value if $key isn't
-     *                              set
+     * @param array      $array   The array to check
+     * @param int|string $key     The key to check
+     * @param mixed      $default The default value to set, it $set is true
+     * @param bool       $set     True to set the default value if $key isn't
+     *                            set
      *
-     * @return array  the original array
+     * @return array the original array
      */
     public function coalesceArr(&$array, $key, $default = null, $set = true)
     {
         if (!isset($array[$key]) && $set === true) {
             $array[$key] = $default;
         }
+
         return $array;
     }
 
@@ -225,6 +231,6 @@ trait HelperTrait
         $line   = $backtrace[0]['line'];
 
         call_user_func_array('\Kint::dump', func_get_args());
-        $this->halt('stopped by user at ' . $file . ' line ' . $line);
+        $this->halt('stopped by user at '.$file.' line '.$line);
     }
 }

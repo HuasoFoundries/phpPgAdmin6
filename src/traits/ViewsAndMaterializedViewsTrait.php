@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -9,7 +9,7 @@ namespace PHPPgAdmin\Traits;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
- * Common trait for dealing with views or materialized views
+ * Common trait for dealing with views or materialized views.
  */
 trait ViewsAndMaterializedViewsTrait
 {
@@ -48,7 +48,7 @@ trait ViewsAndMaterializedViewsTrait
             'column'  => [
                 'title' => $this->lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=" . urlencode($_REQUEST[$this->subject]) . '&amp;',
+                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST[$this->subject]).'&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
@@ -246,7 +246,7 @@ trait ViewsAndMaterializedViewsTrait
     }
 
     /**
-     * Show definition for a view or matview
+     * Show definition for a view or matview.
      *
      * @param mixed $msg
      */

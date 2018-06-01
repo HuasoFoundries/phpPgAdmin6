@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -13,6 +13,8 @@ trait TableTrait
 {
     use \PHPPgAdmin\Traits\ColumnTrait;
     use \PHPPgAdmin\Traits\RowTrait;
+    use \PHPPgAdmin\Traits\TriggerTrait;
+
     /**
      * Return all tables in current database (and schema).
      *
@@ -148,7 +150,7 @@ trait TableTrait
         }
 
         // Output a reconnect command to create the table as the correct user
-        $sql = $this->getChangeUserSQL($t->fields['relowner']) . "\n\n";
+        $sql = $this->getChangeUserSQL($t->fields['relowner'])."\n\n";
 
         // Set schema search path
         $sql .= "SET search_path = \"{$t->fields['nspname']}\", pg_catalog;\n\n";
@@ -181,7 +183,7 @@ trait TableTrait
                     $sql .= ' BIGSERIAL';
                 }
             } else {
-                $sql .= ' ' . $this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
+                $sql .= ' '.$this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
 
                 // Add NOT NULL if necessary
                 if ($this->phpBool($atts->fields['attnotnull'])) {
@@ -221,12 +223,12 @@ trait TableTrait
                 switch ($cons->fields['contype']) {
                     case 'p':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'PRIMARY KEY (' . join(',', $keys) . ')';
+                        $sql .= 'PRIMARY KEY ('.join(',', $keys).')';
 
                         break;
                     case 'u':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'UNIQUE (' . join(',', $keys) . ')';
+                        $sql .= 'UNIQUE ('.join(',', $keys).')';
 
                         break;
                     default:
@@ -375,7 +377,7 @@ trait TableTrait
                 }
 
                 // Output privileges with no GRANT OPTION
-                $sql .= 'GRANT ' . join(', ', $nongrant) . " ON TABLE \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT '.join(', ', $nongrant)." ON TABLE \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= "PUBLIC;\n";
@@ -417,7 +419,7 @@ trait TableTrait
                     $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
                 }
 
-                $sql .= 'GRANT ' . join(', ', $v[4]) . " ON \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT '.join(', ', $v[4])." ON \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= 'PUBLIC';
@@ -650,7 +652,7 @@ trait TableTrait
         if ($indexes->RecordCount() > 0) {
             $sql .= "\n-- Indexes\n\n";
             while (!$indexes->EOF) {
-                $sql .= $indexes->fields['inddef'] . ";\n";
+                $sql .= $indexes->fields['inddef'].";\n";
 
                 $indexes->moveNext();
             }
@@ -685,7 +687,7 @@ trait TableTrait
         if ($rules->RecordCount() > 0) {
             $sql .= "\n-- Rules\n\n";
             while (!$rules->EOF) {
-                $sql .= $rules->fields['definition'] . "\n";
+                $sql .= $rules->fields['definition']."\n";
 
                 $rules->moveNext();
             }
@@ -913,7 +915,7 @@ trait TableTrait
             }
         }
         if (count($primarykeycolumns) > 0) {
-            $sql .= ', PRIMARY KEY (' . implode(', ', $primarykeycolumns) . ')';
+            $sql .= ', PRIMARY KEY ('.implode(', ', $primarykeycolumns).')';
         }
 
         $sql .= ')';
@@ -1236,7 +1238,7 @@ trait TableTrait
 
         $sql = "TRUNCATE TABLE \"{$f_schema}\".\"{$table}\" ";
         if ($cascade) {
-            $sql = $sql . ' CASCADE';
+            $sql = $sql.' CASCADE';
         }
 
         $status = $this->execute($sql);
@@ -1336,7 +1338,7 @@ trait TableTrait
 
         // Actually retrieve the rows
         if ($oids) {
-            $oid_str = $this->id . ', ';
+            $oid_str = $this->id.', ';
         } else {
             $oid_str = '';
         }
@@ -1414,6 +1416,96 @@ trait TableTrait
         $this->clean($user);
 
         return "SET SESSION AUTHORIZATION '{$user}';";
+    }
+
+    /**
+     * Returns all available autovacuum per table information.
+     *
+     * @param string $table          table name
+     * @param bool   $vacenabled     true if vacuum is enabled
+     * @param int    $vacthreshold   vacuum threshold
+     * @param int    $vacscalefactor vacuum scalefactor
+     * @param int    $anathresold    analyze threshold
+     * @param int    $anascalefactor analyze scale factor
+     * @param int    $vaccostdelay   vacuum cost delay
+     * @param int    $vaccostlimit   vacuum cost limit
+     *
+     * @return bool 0 if successful
+     */
+    public function saveAutovacuum(
+        $table,
+        $vacenabled,
+        $vacthreshold,
+        $vacscalefactor,
+        $anathresold,
+        $anascalefactor,
+        $vaccostdelay,
+        $vaccostlimit
+    ) {
+        $f_schema = $this->_schema;
+        $this->fieldClean($f_schema);
+        $this->fieldClean($table);
+
+        $params = [];
+
+        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" SET (";
+
+        if (!empty($vacenabled)) {
+            $this->clean($vacenabled);
+            $params[] = "autovacuum_enabled='{$vacenabled}'";
+        }
+        if (!empty($vacthreshold)) {
+            $this->clean($vacthreshold);
+            $params[] = "autovacuum_vacuum_threshold='{$vacthreshold}'";
+        }
+        if (!empty($vacscalefactor)) {
+            $this->clean($vacscalefactor);
+            $params[] = "autovacuum_vacuum_scale_factor='{$vacscalefactor}'";
+        }
+        if (!empty($anathresold)) {
+            $this->clean($anathresold);
+            $params[] = "autovacuum_analyze_threshold='{$anathresold}'";
+        }
+        if (!empty($anascalefactor)) {
+            $this->clean($anascalefactor);
+            $params[] = "autovacuum_analyze_scale_factor='{$anascalefactor}'";
+        }
+        if (!empty($vaccostdelay)) {
+            $this->clean($vaccostdelay);
+            $params[] = "autovacuum_vacuum_cost_delay='{$vaccostdelay}'";
+        }
+        if (!empty($vaccostlimit)) {
+            $this->clean($vaccostlimit);
+            $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
+        }
+
+        $sql = $sql.implode(',', $params).');';
+
+        return $this->execute($sql);
+    }
+
+    // Type conversion routines
+
+    /**
+     * Drops autovacuum config for a table.
+     *
+     * @param string $table The table
+     *
+     * @return bool 0 if successful
+     */
+    public function dropAutovacuum($table)
+    {
+        $f_schema = $this->_schema;
+        $this->fieldClean($f_schema);
+        $this->fieldClean($table);
+
+        return $this->execute(
+            "
+            ALTER TABLE \"{$f_schema}\".\"{$table}\" RESET (autovacuum_enabled, autovacuum_vacuum_threshold,
+                autovacuum_vacuum_scale_factor, autovacuum_analyze_threshold, autovacuum_analyze_scale_factor,
+                autovacuum_vacuum_cost_delay, autovacuum_vacuum_cost_limit
+            );"
+        );
     }
 
     abstract public function fieldClean(&$str);

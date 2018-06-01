@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -54,10 +54,10 @@ trait ViewTrait
     /**
      * Updates a view.
      *
-     * @param string $viewname   The name fo the view to update
-     * @param string $definition The new definition for the view
+     * @param string $viewname     The name fo the view to update
+     * @param string $definition   The new definition for the view
      * @param string $comment
-     * @param bool  $materialized tells if it's a materialized view or not
+     * @param bool   $materialized tells if it's a materialized view or not
      *
      * @return bool|int 0 success
      */
@@ -69,11 +69,11 @@ trait ViewTrait
     /**
      * Creates a new view.
      *
-     * @param string $viewname   The name of the view to create
-     * @param string $definition The definition for the new view
-     * @param bool   $replace    True to replace the view, false otherwise
+     * @param string $viewname     The name of the view to create
+     * @param string $definition   The definition for the new view
+     * @param bool   $replace      True to replace the view, false otherwise
      * @param string $comment
-     * @param bool $materialized tells if it's a materialized view
+     * @param bool   $materialized tells if it's a materialized view
      *
      * @return bool|int 0 success
      */
@@ -96,7 +96,7 @@ trait ViewTrait
 
         $obj_type = $materialized ? ' MATERIALIZED VIEW ' : ' VIEW ';
 
-        $sql .= $obj_type . " \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
+        $sql .= $obj_type." \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
 
         $status = $this->execute($sql);
         if ($status) {
@@ -270,7 +270,7 @@ trait ViewTrait
         if (!empty($name) && ($name != $vwrs->fields['relname'])) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER $type \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql    = "ALTER ${type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
             if ($status == 0) {
                 $vwrs->fields['relname'] = $name;
@@ -302,7 +302,7 @@ trait ViewTrait
             $this->fieldClean($f_schema);
             // If tablespace has been changed, then do the alteration.  We
             // don't want to do this unnecessarily.
-            $sql = "ALTER $type \"{$f_schema}\".\"{$vwrs->fields['relname']}\" SET SCHEMA \"{$schema}\"";
+            $sql = "ALTER ${type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" SET SCHEMA \"{$schema}\"";
 
             return $this->execute($sql);
         }
@@ -327,7 +327,7 @@ trait ViewTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($viewname);
 
-        $sql = "DROP $type \"{$f_schema}\".\"{$viewname}\"";
+        $sql = "DROP ${type} \"{$f_schema}\".\"{$viewname}\"";
         if ($cascade) {
             $sql .= ' CASCADE';
         }

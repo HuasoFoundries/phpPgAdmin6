@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.43
+ * PHPPgAdmin v6.0.0-beta.47
  */
 
 namespace PHPPgAdmin\Traits;
@@ -14,7 +14,7 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 
 /**
- * A trait to deal with nav tabs
+ * A trait to deal with nav tabs.
  *
  * @package PHPPgAdmin
  */
@@ -88,7 +88,7 @@ trait MiscTrait
                         'schema'   => $_REQUEST['schema'],
                         'table'    => $_REQUEST['table'],
                         'action'   => 'confselectrows',
-                    ]];
+                    ], ];
 
                 break;
             case 'view':
@@ -184,7 +184,7 @@ trait MiscTrait
                         'server'  => $_REQUEST['server'],
                         'subject' => 'plugin',
                         'plugin'  => $_REQUEST['plugin'],
-                    ]];
+                    ], ];
 
                 if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin']))) {
                     $vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
@@ -196,10 +196,10 @@ trait MiscTrait
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = SUBFOLDER . '/redirect';
+            $vars['url'] = SUBFOLDER.'/redirect';
         }
-        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER.'/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER.'/redirect/'.$vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -210,27 +210,27 @@ trait MiscTrait
      * Render a value into HTML using formatting rules specified
      * by a type name and parameters.
      *
-     * @param string|null $str    The string to change
-     * @param string $type   Field type (optional), this may be an internal PostgreSQL type, or:
-     *                       yesno    - same as bool, but renders as 'Yes' or 'No'.
-     *                       pre      - render in a <pre> block.
-     *                       nbsp     - replace all spaces with &nbsp;'s
-     *                       verbatim - render exactly as supplied, no escaping what-so-ever.
-     *                       callback - render using a callback function supplied in the 'function' param.
-     * @param array  $params Type parameters (optional), known parameters:
-     *                       null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
-     *                       otherwise nothing is rendered.
-     *                       clip     - if true, clip the value to a fixed length, and append an ellipsis...
-     *                       cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
-     *                       ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
-     *                       tag      - an HTML element name to surround the value.
-     *                       class    - a class attribute to apply to any surrounding HTML element.
-     *                       align    - an align attribute ('left','right','center' etc.)
-     *                       true     - (type='bool') the representation of true.
-     *                       false    - (type='bool') the representation of false.
-     *                       function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
-     *                       lineno   - prefix each line with a line number.
-     *                       map      - an associative array.
+     * @param null|string $str    The string to change
+     * @param string      $type   Field type (optional), this may be an internal PostgreSQL type, or:
+     *                            yesno    - same as bool, but renders as 'Yes' or 'No'.
+     *                            pre      - render in a <pre> block.
+     *                            nbsp     - replace all spaces with &nbsp;'s
+     *                            verbatim - render exactly as supplied, no escaping what-so-ever.
+     *                            callback - render using a callback function supplied in the 'function' param.
+     * @param array       $params Type parameters (optional), known parameters:
+     *                            null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
+     *                            otherwise nothing is rendered.
+     *                            clip     - if true, clip the value to a fixed length, and append an ellipsis...
+     *                            cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
+     *                            ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
+     *                            tag      - an HTML element name to surround the value.
+     *                            class    - a class attribute to apply to any surrounding HTML element.
+     *                            align    - an align attribute ('left','right','center' etc.)
+     *                            true     - (type='bool') the representation of true.
+     *                            false    - (type='bool') the representation of false.
+     *                            function - (type='callback') a function name, accepts args ($str, $params) and returns a rendering.
+     *                            lineno   - prefix each line with a line number.
+     *                            map      - an associative array.
      *
      * @return string The HTML rendered value
      */
@@ -255,7 +255,7 @@ trait MiscTrait
             $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
             $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
             if (strlen($str) > $maxlen) {
-                $str = substr($str, 0, $maxlen - 1) . $ellipsis;
+                $str = substr($str, 0, $maxlen - 1).$ellipsis;
             }
         }
 
@@ -391,7 +391,7 @@ trait MiscTrait
             if ($num > 0) {
                 $temp = "<table>\n<tr><td class=\"{$class}\" style=\"vertical-align: top; padding-right: 10px;\"><pre class=\"{$class}\">";
                 for ($i = 1; $i <= $num; ++$i) {
-                    $temp .= $i . "\n";
+                    $temp .= $i."\n";
                 }
                 $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>\n";
                 $out = $temp;
@@ -625,7 +625,7 @@ trait MiscTrait
                         'icon'    => 'Views',
                     ],
                     'matviews'    => [
-                        'title'   => 'M ' . $lang['strviews'],
+                        'title'   => 'M '.$lang['strviews'],
                         'url'     => 'materializedviews',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.matview',
@@ -1020,14 +1020,14 @@ trait MiscTrait
                 $tabs = [
                     'sql'  => [
                         'title'   => $lang['strsql'],
-                        'url'     => \SUBFOLDER . '/src/views/sqledit',
+                        'url'     => \SUBFOLDER.'/src/views/sqledit',
                         'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
                         'help'    => 'pg.sql',
                         'icon'    => 'SqlEditor',
                     ],
                     'find' => [
                         'title'   => $lang['strfind'],
-                        'url'     => \SUBFOLDER . '/src/views/sqledit',
+                        'url'     => \SUBFOLDER.'/src/views/sqledit',
                         'urlvars' => ['action' => 'find', 'subject' => 'schema'],
                         'icon'    => 'Search',
                     ],
@@ -1130,6 +1130,7 @@ trait MiscTrait
             $tab = reset($tabs);
         }
         $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
+
         return isset($tab['url']) ? $tab : null;
     }
 
