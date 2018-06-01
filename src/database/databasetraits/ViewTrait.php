@@ -96,7 +96,7 @@ trait ViewTrait
 
         $obj_type = $materialized ? ' MATERIALIZED VIEW ' : ' VIEW ';
 
-        $sql .= $obj_type . " \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
+        $sql .= $obj_type." \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
 
         $status = $this->execute($sql);
         if ($status) {

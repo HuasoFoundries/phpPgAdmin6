@@ -7,11 +7,10 @@
 namespace PHPPgAdmin\Database\Traits;
 
 /**
- * Common trait to retrieve stats on database objects
+ * Common trait to retrieve stats on database objects.
  */
 trait StatsTrait
 {
-
     /**
      * Fetches statistics for a database.
      *

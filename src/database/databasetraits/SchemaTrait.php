@@ -108,7 +108,7 @@ trait SchemaTrait
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
+        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
 
         return $this->execute($sql);
     }

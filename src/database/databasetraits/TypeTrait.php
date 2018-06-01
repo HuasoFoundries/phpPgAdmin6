@@ -42,7 +42,7 @@ trait TypeTrait
         } elseif ($typname == 'varchar') {
             $temp = 'character varying';
             if ($typmod != -1) {
-                $temp .= '(' . ($typmod - $varhdrsz) . ')';
+                $temp .= '('.($typmod - $varhdrsz).')';
             }
         } elseif ($typname == 'numeric') {
             $temp = 'numeric';

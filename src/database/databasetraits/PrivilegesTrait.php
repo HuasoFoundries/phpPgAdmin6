@@ -285,9 +285,9 @@ trait PrivilegesTrait
         } else {
             if ($type == 'column') {
                 $this->fieldClean($object);
-                $sql .= ' ' . join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' ' . join(', ', $privileges);
+                $sql .= ' '.join(', ', $privileges);
             }
         }
 

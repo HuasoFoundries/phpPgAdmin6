@@ -66,13 +66,13 @@ class Postgres extends ADOdbBase
             if (is_array($this->help_page[$help])) {
                 $urls = [];
                 foreach ($this->help_page[$help] as $link) {
-                    $urls[] = $this->help_base . $link;
+                    $urls[] = $this->help_base.$link;
                 }
 
                 return $urls;
             }
 
-            return $this->help_base . $this->help_page[$help];
+            return $this->help_base.$this->help_page[$help];
         }
 
         return null;
@@ -86,7 +86,7 @@ class Postgres extends ADOdbBase
     public function getHelpPages()
     {
         if ($this->help_page === null || $this->help_base === null) {
-            $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . str_replace('.', '', $this->major_version);
+            $help_classname = '\PHPPgAdmin\Help\PostgresDoc'.str_replace('.', '', $this->major_version);
 
             $help_class = new $help_classname($this->conf, $this->major_version);
 
@@ -111,7 +111,7 @@ class Postgres extends ADOdbBase
         // Determine actions string
         $extra_str = '';
         foreach ($extras as $k => $v) {
-            $extra_str .= " {$k}=\"" . htmlspecialchars($v) . '"';
+            $extra_str .= " {$k}=\"".htmlspecialchars($v).'"';
         }
 
         switch (substr($type, 0, 9)) {
@@ -356,7 +356,7 @@ class Postgres extends ADOdbBase
         $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
 			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
 			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('" . join("','", $atts) . "')";
+			AND attnum IN ('".join("','", $atts)."')";
 
         $rs = $this->selectSet($sql);
         if ($rs->RecordCount() != sizeof($atts)) {
@@ -511,7 +511,7 @@ class Postgres extends ADOdbBase
                         }
                         $pre         = substr($line, 0, $i);
                         $post        = substr($line, $i + 2 + $finishpos, $len);
-                        $line        = $pre . ' ' . $post;
+                        $line        = $pre.' '.$post;
                         $in_xcomment = 0;
                         $i           = 0;
                     }
@@ -810,7 +810,7 @@ class Postgres extends ADOdbBase
         }
 
         // Actually retrieve the rows, with offset and limit
-        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
+        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET ".($page - 1) * $page_size);
         $status = $this->endTransaction();
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -852,7 +852,7 @@ class Postgres extends ADOdbBase
                 $sql = 'SELECT "';
             }
 
-            $sql .= join('","', $show) . '" FROM ';
+            $sql .= join('","', $show).'" FROM ';
         }
 
         $this->fieldClean($table);
@@ -920,7 +920,7 @@ class Postgres extends ADOdbBase
                     $sql .= $k;
                 } else {
                     $this->fieldClean($k);
-                    $sql .= '"' . $k . '"';
+                    $sql .= '"'.$k.'"';
                 }
                 if (strtoupper($v) == 'DESC') {
                     $sql .= ' DESC';
@@ -943,5 +943,4 @@ class Postgres extends ADOdbBase
     {
         return $this->selectField($count, 'total');
     }
-
 }
