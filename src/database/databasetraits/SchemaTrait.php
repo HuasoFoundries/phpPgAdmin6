@@ -291,4 +291,6 @@ trait SchemaTrait
     abstract public function hasCreateFieldWithConstraints();
 
     abstract public function getAttributeNames($table, $atts);
+
+    abstract public function selectField($sql, $field);
 }

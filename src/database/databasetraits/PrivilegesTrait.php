@@ -394,4 +394,6 @@ trait PrivilegesTrait
     abstract public function getFunction($function_oid);
 
     abstract public function fieldArrayClean(&$arr);
+
+    abstract public function selectField($sql, $field);
 }

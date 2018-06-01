@@ -600,4 +600,6 @@ trait DatabaseTrait
     abstract public function getAttributeNames($table, $atts);
 
     abstract public function hasSharedComments();
+
+    abstract public function selectField($sql, $field);
 }
