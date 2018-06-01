@@ -93,10 +93,9 @@ checks:
 filter:
     paths: [src/*]
     excluded_paths:
-        - '.tests/*'
         - 'tests/*'
         - '*.min.js'
-        - 'js/'
+        - 'assets/js/'
 
 tools:
     php_analyzer: true
@@ -114,7 +113,6 @@ tools:
         excluded_dirs:
             - vendor
             - tests
-            - .tests
       
 build:
     environment:
