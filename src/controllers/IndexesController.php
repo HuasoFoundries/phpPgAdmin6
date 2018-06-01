@@ -218,7 +218,7 @@ class IndexesController extends BaseController
         $this->coalesceArr($_REQUEST, 'subject', 'table');
 
         $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object  = urlencode($_REQUEST[$subject]);
 
         $indexes = $data->getIndexes($object);
 

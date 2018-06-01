@@ -168,7 +168,7 @@ class DataexportController extends BaseController
             //$dbEncoding = $data->getDatabaseEncoding();
 
             // Set fetch mode to NUM so that duplicate field names are properly returned
-            $data->conn->setFetchMode(ADODB_FETCH_NUM);
+            $data->conn->setFetchMode(\ADODB_FETCH_NUM);
 
             // Execute the query, if set, otherwise grab all rows from the table
             if ($object) {
@@ -372,7 +372,7 @@ class DataexportController extends BaseController
         // If the dump is not dataonly then dump the structure suffix
         if ('dataonly' != $_REQUEST['what']) {
             // Set fetch mode back to ASSOC for the table suffix to work
-            $data->conn->setFetchMode(ADODB_FETCH_ASSOC);
+            $data->conn->setFetchMode(\ADODB_FETCH_ASSOC);
             $tabledefsuffix = $data->getTableDefSuffix($object);
             $this->prtrace('tabledefsuffix', $tabledefsuffix);
             echo $tabledefsuffix;
