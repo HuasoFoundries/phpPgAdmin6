@@ -843,5 +843,4 @@ class Misc
             'queryid'  => $time,
         ];
     }
-
 }
