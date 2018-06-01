@@ -81,6 +81,7 @@ $config = PhpCsFixer\Config::create()
             ->in(__DIR__.'/src/translations')
             ->in(__DIR__.'/src/xhtml')
             ->in(__DIR__.'/src/traits')
+            ->in(__DIR__.'/src/databasetraits')
             ->in(__DIR__.'/tests')
     )
 ;
