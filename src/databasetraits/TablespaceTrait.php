@@ -195,5 +195,7 @@ trait TablespaceTrait
 
     abstract public function hasCreateFieldWithConstraints();
 
+    abstract public function hasSharedComments();
+
     abstract public function getAttributeNames($table, $atts);
 }

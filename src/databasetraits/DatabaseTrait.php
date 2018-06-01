@@ -11,7 +11,6 @@ namespace PHPPgAdmin\DatabaseTraits;
  */
 trait DatabaseTrait
 {
-
     /**
      * Determines whether or not a user is a super user.
      *
@@ -106,7 +105,7 @@ trait DatabaseTrait
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
 
-            $not_in = "('" . implode("','", $hiddendbs) . "')";
+            $not_in = "('".implode("','", $hiddendbs)."')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 
@@ -587,4 +586,6 @@ trait DatabaseTrait
     abstract public function hasCreateFieldWithConstraints();
 
     abstract public function getAttributeNames($table, $atts);
+
+    abstract public function hasSharedComments();
 }

@@ -17,7 +17,7 @@ namespace PHPPgAdmin\Database;
 class ADOdbBase
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-    use \PHPPgAdmin\Traits\HasTrait;
+    use \PHPPgAdmin\DatabaseTraits\HasTrait;
 
     public $lang;
     public $conf;

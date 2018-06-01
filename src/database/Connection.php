@@ -26,6 +26,25 @@ class Connection
     protected $container;
     protected $server_info;
 
+    protected $version_dictionary = [
+        '10'  => 'Postgres10',
+        '9.7' => 'Postgres96',
+        '9.6' => 'Postgres96',
+        '9.5' => 'Postgres95',
+        '9.4' => 'Postgres94',
+        '9.3' => 'Postgres93',
+        '9.2' => 'Postgres92',
+        '9.1' => 'Postgres91',
+        '9.0' => 'Postgres90',
+        '8.4' => 'Postgres84',
+        '8.3' => 'Postgres83',
+        '8.2' => 'Postgres82',
+        '8.1' => 'Postgres81',
+        '8.0' => 'Postgres80',
+        '7.5' => 'Postgres80',
+        '7.4' => 'Postgres74',
+    ];
+
     /**
      * Creates a new connection.  Will actually make a database connection.
      *
@@ -133,51 +152,8 @@ class Connection
 
         //$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), 'version' => $version, 'major_version' => $major_version]);
         // Detect version and choose appropriate database driver
-        switch ($major_version) {
-            case '10':
-                return 'Postgres10';
-                break;
-            case '9.7':
-            case '9.6':
-                return 'Postgres96';
-                break;
-            case '9.5':
-                return 'Postgres95';
-                break;
-            case '9.4':
-                return 'Postgres94';
-                break;
-            case '9.3':
-                return 'Postgres93';
-                break;
-            case '9.2':
-                return 'Postgres92';
-                break;
-            case '9.1':
-                return 'Postgres91';
-                break;
-            case '9.0':
-                return 'Postgres90';
-                break;
-            case '8.4':
-                return 'Postgres84';
-                break;
-            case '8.3':
-                return 'Postgres83';
-                break;
-            case '8.2':
-                return 'Postgres82';
-                break;
-            case '8.1':
-                return 'Postgres81';
-                break;
-            case '8.0':
-            case '7.5':
-                return 'Postgres80';
-                break;
-            case '7.4':
-                return 'Postgres74';
-                break;
+        if (array_key_exists($major_version, $this->version_dictionary)) {
+            return $this->version_dictionary[$major_version];
         }
 
         /* All <7.4 versions are not supported */
