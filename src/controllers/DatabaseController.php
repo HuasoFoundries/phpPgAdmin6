@@ -262,7 +262,6 @@ class DatabaseController extends BaseController
 
     private function _translatedType($curr)
     {
-
         $types = [
             'COLUMN'           => $this->lang['strcolumns'],
             'CONSTRAINT'       => $this->lang['strconstraints'],
@@ -294,7 +293,6 @@ class DatabaseController extends BaseController
             return $types[$curr];
         }
         return $this->lang['strallobjects'];
-
     }
 
     private function _printHtmlForType($curr, $rs)
