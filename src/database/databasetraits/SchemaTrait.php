@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.47
+ * PHPPgAdmin v6.0.0-beta.48
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -108,7 +108,7 @@ trait SchemaTrait
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
+        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
 
         return $this->execute($sql);
     }

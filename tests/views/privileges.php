@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.47
+ * PHPPgAdmin v6.0.0-beta.48
  */
 $do_render = false;
 if (!defined('BASE_PATH')) {
