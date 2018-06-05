@@ -14,7 +14,7 @@ namespace PHPPgAdmin\Controller;
 class ViewpropertiesController extends BaseController
 {
     use \PHPPgAdmin\Traits\ExportTrait;
-    use \PHPPgAdmin\Traits\ViewsAndMaterializedViewsTrait;
+    use \PHPPgAdmin\Traits\ViewsMatViewsPropertiesTrait;
 
     public $controller_title = 'strviews';
     public $subject          = 'view';
