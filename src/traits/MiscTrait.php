@@ -237,7 +237,11 @@ trait MiscTrait
     public function printVal($str, $type = null, $params = [])
     {
         $lang = $this->lang;
-        $data = $this->getDatabaseAccessor();
+        if ($this->_data === null) {
+            $data = $this->getDatabaseAccessor();
+        } else {
+            $data = $this->_data;
+        }
 
         // Shortcircuit for a NULL value
         if (is_null($str)) {

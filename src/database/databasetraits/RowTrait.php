@@ -132,12 +132,12 @@ trait RowTrait
                 if (isset($nulls[$i])) {
                     $sql .= ',NULL';
                 } else {
-                    $sql .= ',' . $this->formatValue($types[$i], $format[$i], $value);
+                    $sql .= ','.$this->formatValue($types[$i], $format[$i], $value);
                 }
             }
 
-            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . implode('","', $fields) . '")
-                VALUES (' . substr($sql, 1) . ')';
+            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"".implode('","', $fields).'")
+                VALUES ('.substr($sql, 1).')';
 
             return $this->execute($sql);
         }

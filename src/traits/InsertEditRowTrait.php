@@ -25,6 +25,7 @@ trait InsertEditRowTrait
         } else {
             $fksprops = false;
         }
+
         return $fksprops;
     }
 
@@ -96,38 +97,38 @@ trait InsertEditRowTrait
             $fksprops['code'] .= "var constrs = {};\n";
             foreach ($fksprops['byconstr'] as $conid => $props) {
                 $fksprops['code'] .= "constrs.constr_{$conid} = {\n";
-                $fksprops['code'] .= 'pattnums: [' . implode(',', $props['pattnums']) . "],\n";
-                $fksprops['code'] .= "f_table:'" . addslashes(htmlentities($props['f_table'], ENT_QUOTES, 'UTF-8')) . "',\n";
-                $fksprops['code'] .= "f_schema:'" . addslashes(htmlentities($props['f_schema'], ENT_QUOTES, 'UTF-8')) . "',\n";
+                $fksprops['code'] .= 'pattnums: ['.implode(',', $props['pattnums'])."],\n";
+                $fksprops['code'] .= "f_table:'".addslashes(htmlentities($props['f_table'], ENT_QUOTES, 'UTF-8'))."',\n";
+                $fksprops['code'] .= "f_schema:'".addslashes(htmlentities($props['f_schema'], ENT_QUOTES, 'UTF-8'))."',\n";
                 $_ = '';
                 foreach ($props['pattnames'] as $n) {
-                    $_ .= ",'" . htmlentities($n, ENT_QUOTES, 'UTF-8') . "'";
+                    $_ .= ",'".htmlentities($n, ENT_QUOTES, 'UTF-8')."'";
                 }
-                $fksprops['code'] .= 'pattnames: [' . substr($_, 1) . "],\n";
+                $fksprops['code'] .= 'pattnames: ['.substr($_, 1)."],\n";
 
                 $_ = '';
                 foreach ($props['fattnames'] as $n) {
-                    $_ .= ",'" . htmlentities($n, ENT_QUOTES, 'UTF-8') . "'";
+                    $_ .= ",'".htmlentities($n, ENT_QUOTES, 'UTF-8')."'";
                 }
 
-                $fksprops['code'] .= 'fattnames: [' . substr($_, 1) . "]\n";
+                $fksprops['code'] .= 'fattnames: ['.substr($_, 1)."]\n";
                 $fksprops['code'] .= "};\n";
             }
 
             $fksprops['code'] .= "var attrs = {};\n";
             foreach ($fksprops['byfield'] as $attnum => $cstrs) {
-                $fksprops['code'] .= "attrs.attr_{$attnum} = [" . implode(',', $fksprops['byfield'][$attnum]) . "];\n";
+                $fksprops['code'] .= "attrs.attr_{$attnum} = [".implode(',', $fksprops['byfield'][$attnum])."];\n";
             }
 
-            $fksprops['code'] .= "var table='" . addslashes(htmlentities($table, ENT_QUOTES, 'UTF-8')) . "';";
-            $fksprops['code'] .= "var server='" . htmlentities($_REQUEST['server'], ENT_QUOTES, 'UTF-8') . "';";
-            $fksprops['code'] .= "var database='" . addslashes(htmlentities($_REQUEST['database'], ENT_QUOTES, 'UTF-8')) . "';";
-            $fksprops['code'] .= "var subfolder='" . SUBFOLDER . "';";
+            $fksprops['code'] .= "var table='".addslashes(htmlentities($table, ENT_QUOTES, 'UTF-8'))."';";
+            $fksprops['code'] .= "var server='".htmlentities($_REQUEST['server'], ENT_QUOTES, 'UTF-8')."';";
+            $fksprops['code'] .= "var database='".addslashes(htmlentities($_REQUEST['database'], ENT_QUOTES, 'UTF-8'))."';";
+            $fksprops['code'] .= "var subfolder='".SUBFOLDER."';";
             $fksprops['code'] .= "</script>\n";
 
             $fksprops['code'] .= '<div id="fkbg"></div>';
             $fksprops['code'] .= '<div id="fklist"></div>';
-            $fksprops['code'] .= '<script src="' . SUBFOLDER . '/assets/js/ac_insert_row.js" type="text/javascript"></script>';
+            $fksprops['code'] .= '<script src="'.SUBFOLDER.'/assets/js/ac_insert_row.js" type="text/javascript"></script>';
         } else {
             /* we have no foreign keys on this table */
             return false;
