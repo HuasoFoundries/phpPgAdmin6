@@ -348,141 +348,18 @@ class ViewsController extends BaseController
 
         // Check that they've chosen tables for the view definition
         if (!isset($_POST['formTables'])) {
-            $this->doWizardCreate($this->lang['strviewneedsdef']);
-        } else {
-            // Initialise variables
-            $this->coalesceArr($_REQUEST, 'formView', '');
-
-            $this->coalesceArr($_REQUEST, 'formComment', '');
-
-            $this->printTrail('schema');
-            $this->printTitle($this->lang['strcreateviewwiz'], 'pg.view.create');
-            $this->printMsg($msg);
-
-            $tblCount = sizeof($_POST['formTables']);
-            //unserialize our schema/table information and store in arrSelTables
-            for ($i = 0; $i < $tblCount; ++$i) {
-                $arrSelTables[] = unserialize($_POST['formTables'][$i]);
-            }
-
-            $linkCount = $tblCount;
-
-            //get linking keys
-            $rsLinkKeys = $data->getLinkingKeys($arrSelTables);
-            $linkCount  = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
-
-            $arrFields = []; //array that will hold all our table/field names
-
-            //if we have schemas we need to specify the correct schema for each table we're retrieiving
-            //with getTableAttributes
-            $curSchema = $data->_schema;
-            for ($i = 0; $i < $tblCount; ++$i) {
-                if ($arrSelTables[$i]['schemaname'] != $data->_schema) {
-                    $data->setSchema($arrSelTables[$i]['schemaname']);
-                }
-
-                $attrs = $data->getTableAttributes($arrSelTables[$i]['tablename']);
-                while (!$attrs->EOF) {
-                    $arrFields["{$arrSelTables[$i]['schemaname']}.{$arrSelTables[$i]['tablename']}.{$attrs->fields['attname']}"] = serialize(
-                        [
-                            'schemaname' => $arrSelTables[$i]['schemaname'],
-                            'tablename'  => $arrSelTables[$i]['tablename'],
-                            'fieldname'  => $attrs->fields['attname'], ]
-                    );
-                    $attrs->moveNext();
-                }
-
-                $data->setSchema($curSchema);
-            }
-            asort($arrFields);
-
-            echo '<form action="'.\SUBFOLDER."/src/views/views\" method=\"post\">\n";
-            echo "<table>\n";
-            echo "<tr><th class=\"data\">{$this->lang['strviewname']}</th></tr>";
-            echo "<tr>\n<td class=\"data1\">\n";
-            // View name
-            echo '<input name="formView" value="', htmlspecialchars($_REQUEST['formView']), "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />\n";
-            echo "</td>\n</tr>\n";
-            echo "<tr><th class=\"data\">{$this->lang['strcomment']}</th></tr>";
-            echo "<tr>\n<td class=\"data1\">\n";
-            // View comments
-            echo '<textarea name="formComment" rows="3" cols="32">',
-            htmlspecialchars($_REQUEST['formComment']), "</textarea>\n";
-            echo "</td>\n</tr>\n";
-            echo "</table>\n";
-
-            // Output selector for fields to be retrieved from view
-            echo "<table>\n";
-            echo "<tr><th class=\"data\">{$this->lang['strcolumns']}</th></tr>";
-            echo "<tr>\n<td class=\"data1\">\n";
-            echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, 'formFields[]', false, '', true);
-            echo "</td>\n</tr>";
-            echo "<tr><td><input type=\"radio\" name=\"dblFldMeth\" id=\"dblFldMeth1\" value=\"rename\" /><label for=\"dblFldMeth1\">{$this->lang['strrenamedupfields']}</label>";
-            echo "<br /><input type=\"radio\" name=\"dblFldMeth\" id=\"dblFldMeth2\" value=\"drop\" /><label for=\"dblFldMeth2\">{$this->lang['strdropdupfields']}</label>";
-            echo "<br /><input type=\"radio\" name=\"dblFldMeth\" id=\"dblFldMeth3\" value=\"\" checked=\"checked\" /><label for=\"dblFldMeth3\">{$this->lang['strerrordupfields']}</label></td></tr></table><br />";
-
-            // Output the Linking keys combo boxes
-            echo "<table>\n";
-            echo "<tr><th class=\"data\">{$this->lang['strviewlink']}</th></tr>";
-            $rowClass = 'data1';
-            for ($i = 0; $i < $linkCount; ++$i) {
-                // Initialise variables
-                if (!isset($formLink[$i]['operator'])) {
-                    $formLink[$i]['operator'] = 'INNER JOIN';
-                }
-
-                echo "<tr>\n<td class=\"${rowClass}\">\n";
-
-                if (!$rsLinkKeys->EOF) {
-                    $curLeftLink  = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
-                    $curRightLink = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['f_schema'], 'tablename' => $rsLinkKeys->fields['f_table'], 'fieldname' => $rsLinkKeys->fields['f_field']]));
-                    $rsLinkKeys->moveNext();
-                } else {
-                    $curLeftLink  = '';
-                    $curRightLink = '';
-                }
-
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[${i}][leftlink]", true, $curLeftLink, false);
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($data->joinOps, "formLink[${i}][operator]", true, $formLink[$i]['operator']);
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[${i}][rightlink]", true, $curRightLink, false);
-                echo "</td>\n</tr>\n";
-                $rowClass = 'data1' == $rowClass ? 'data2' : 'data1';
-            }
-            echo "</table>\n<br />\n";
-
-            // Build list of available operators (infix only)
-            $arrOperators = [];
-            foreach ($data->selectOps as $k => $v) {
-                if ('i' == $v) {
-                    $arrOperators[$k] = $k;
-                }
-            }
-
-            // Output additional conditions, note that this portion of the wizard treats the right hand side as literal values
-            //(not as database objects) so field names will be treated as strings, use the above linking keys section to perform joins
-            echo "<table>\n";
-            echo "<tr><th class=\"data\">{$this->lang['strviewconditions']}</th></tr>";
-            $rowClass = 'data1';
-            for ($i = 0; $i < $linkCount; ++$i) {
-                echo "<tr>\n<td class=\"${rowClass}\">\n";
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formCondition[${i}][field]");
-                echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrOperators, "formCondition[${i}][operator]", false, '', false);
-                echo "<input type=\"text\" name=\"formCondition[${i}][txt]\" />\n";
-                echo "</td>\n</tr>\n";
-                $rowClass = 'data1' == $rowClass ? 'data2' : 'data1';
-            }
-            echo "</table>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create_wiz\" />\n";
-
-            foreach ($arrSelTables as $curTable) {
-                echo '<input type="hidden" name="formTables[]" value="'.htmlspecialchars(serialize($curTable))."\" />\n";
-            }
-
-            echo $this->misc->form;
-            echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            return $this->doWizardCreate($this->lang['strviewneedsdef']);
         }
+        // Initialise variables
+        $this->coalesceArr($_REQUEST, 'formView', '');
+
+        $this->coalesceArr($_REQUEST, 'formComment', '');
+
+        $this->printTrail('schema');
+        $this->printTitle($this->lang['strcreateviewwiz'], 'pg.view.create');
+        $this->printMsg($msg);
+
+        $this->printParamsCreateForm();
     }
 
     /**
