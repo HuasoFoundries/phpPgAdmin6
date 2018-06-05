@@ -166,7 +166,7 @@ trait ViewsMatviewsTrait
 
         $this->setNoOutput(true);
 
-        $display_controller = new DisplayController($this->getContainer());
+        $display_controller = new \PHPPgAdmin\Controller\DisplayController($this->getContainer());
 
         return $display_controller->render();
     }
@@ -371,4 +371,6 @@ trait ViewsMatviewsTrait
             return $this->halt($e->getMessage());
         }
     }
+
+    abstract public function doSetParamsCreate($msg = '');
 }
