@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\Decorators\Decorator;
+
 /**
  * Base controller class.
  *
@@ -13,11 +15,73 @@ namespace PHPPgAdmin\Controller;
  */
 class AggregatesController extends BaseController
 {
+    public $table_place      = 'aggregates-aggregates';
+    public $controller_title = 'straggregates';
+
     /**
      * Default method to render the controller according to the action parameter.
      */
     public function render()
     {
+        if ('tree' == $this->action) {
+            return $this->doTree();
+        }
+
+        ob_start();
+        switch ($this->action) {
+            case 'create':
+                $this->doCreate();
+
+                break;
+            case 'save_create':
+                if (isset($_POST['cancel'])) {
+                    $this->doDefault();
+                } else {
+                    $this->doSaveCreate();
+                }
+
+                break;
+            case 'alter':
+                $this->doAlter();
+
+                break;
+            case 'save_alter':
+                if (isset($_POST['alter'])) {
+                    $this->doSaveAlter();
+                } else {
+                    $this->doProperties();
+                }
+
+                break;
+            case 'drop':
+                if (isset($_POST['drop'])) {
+                    $this->doDrop(false);
+                } else {
+                    $this->doDefault();
+                }
+
+                break;
+            case 'confirm_drop':
+                $this->doDrop(true);
+
+                break;
+            default:
+                $this->doDefault();
+
+                break;
+            case 'properties':
+                $this->doProperties();
+
+                break;
+        }
+
+        $output = ob_get_clean();
+
+        $this->printHeader($this->headerTitle(), null, true, $header_template);
+        $this->printBody();
+        echo $output;
+
+        return $this->printFooter();
     }
 
     /**
@@ -27,10 +91,116 @@ class AggregatesController extends BaseController
      */
     public function doDefault($msg = '')
     {
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'aggregates');
+        $this->printMsg($msg);
+
+        $aggregates = $this->data->getAggregates();
+        $columns    = [
+            'aggrname'    => [
+                'title' => $this->lang['strname'],
+                'field' => Decorator::field('proname'),
+                'url'   => "redirect.php?subject=aggregate&amp;action=properties&amp;{$misc->href}&amp;",
+                'vars'  => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
+            ],
+            'aggrtype'    => [
+                'title' => $this->lang['strtype'],
+                'field' => Decorator::field('proargtypes'),
+            ],
+            'aggrtransfn' => [
+                'title' => $this->lang['straggrsfunc'],
+                'field' => Decorator::field('aggtransfn'),
+            ],
+            'owner'       => [
+                'title' => $this->lang['strowner'],
+                'field' => Decorator::field('usename'),
+            ],
+            'actions'     => [
+                'title' => $this->lang['stractions'],
+            ],
+            'comment'     => [
+                'title' => $this->lang['strcomment'],
+                'field' => Decorator::field('aggrcomment'),
+            ],
+        ];
+
+        $actions = [
+            'alter' => [
+                'content' => $this->lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'aggregates.php',
+                        'urlvars' => [
+                            'action'   => 'alter',
+                            'aggrname' => Decorator::field('proname'),
+                            'aggrtype' => Decorator::field('proargtypes'),
+                        ],
+                    ],
+                ],
+            ],
+            'drop'  => [
+                'content' => $this->lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'aggregates.php',
+                        'urlvars' => [
+                            'action'   => 'confirm_drop',
+                            'aggrname' => Decorator::field('proname'),
+                            'aggrtype' => Decorator::field('proargtypes'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        if (!$this->data->hasAlterAggregate()) {
+            unset($actions['alter']);
+        }
+
+        $echo->printTable($aggregates, $columns, $actions, $this->table_place, $this->lang['strnoaggregates']);
+
+        $navlinks = [
+            'create' => [
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'aggregates.php',
+                        'urlvars' => [
+                            'action'   => 'create',
+                            'server'   => $_REQUEST['server'],
+                            'database' => $_REQUEST['database'],
+                            'schema'   => $_REQUEST['schema'],
+                        ],
+                    ],
+                ],
+                'content' => $this->lang['strcreateaggregate'],
+            ],
+        ];
+        $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
     }
 
     public function doTree()
     {
+        $this->data = $this->misc->getDatabaseAccessor();
+
+        $aggregates = $this->data->getAggregates();
+        $proto      = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
+        $reqvars    = $this->misc->getRequestVars('aggregate');
+
+        $attrs = [
+            'text'    => $proto,
+            'icon'    => 'Aggregate',
+            'toolTip' => Decorator::field('aggcomment'),
+            'action'  => Decorator::redirecturl(
+                'redirect',
+                $reqvars,
+                [
+                    'action'   => 'properties',
+                    'aggrname' => Decorator::field('proname'),
+                    'aggrtype' => Decorator::field('proargtypes'),
+                ]
+            ),
+        ];
+
+        return $this->printTree($aggregates, $attrs, 'aggregates');
     }
 
     /**
@@ -38,30 +208,22 @@ class AggregatesController extends BaseController
      */
     public function doSaveCreate()
     {
-        $data = $this->misc->getDatabaseAccessor();
+        $this->data = $this->misc->getDatabaseAccessor();
         // Check inputs
         if ('' == trim($_REQUEST['name'])) {
-            $this->doCreate($this->lang['straggrneedsname']);
-
-            return;
+            return $this->doCreate($this->lang['straggrneedsname']);
         }
         if ('' == trim($_REQUEST['basetype'])) {
-            $this->doCreate($this->lang['straggrneedsbasetype']);
-
-            return;
+            return $this->doCreate($this->lang['straggrneedsbasetype']);
         }
         if ('' == trim($_REQUEST['sfunc'])) {
-            $this->doCreate($this->lang['straggrneedssfunc']);
-
-            return;
+            return $this->doCreate($this->lang['straggrneedssfunc']);
         }
         if ('' == trim($_REQUEST['stype'])) {
-            $this->doCreate($this->lang['straggrneedsstype']);
-
-            return;
+            return $this->doCreate($this->lang['straggrneedsstype']);
         }
 
-        $status = $data->createAggregate(
+        $status = $this->data->createAggregate(
             $_REQUEST['name'],
             $_REQUEST['basetype'],
             $_REQUEST['sfunc'],
@@ -87,7 +249,7 @@ class AggregatesController extends BaseController
      */
     public function doCreate($msg = '')
     {
-        $data = $this->misc->getDatabaseAccessor();
+        $this->data = $this->misc->getDatabaseAccessor();
 
         $this->coalesceArr($_REQUEST, 'name', '');
 
@@ -112,25 +274,25 @@ class AggregatesController extends BaseController
         echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
-        echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
         htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['straggrbasetype']}</th>\n";
-        echo "\t\t<td class=\"data\"><input name=\"basetype\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo "\t\t<td class=\"data\"><input name=\"basetype\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
         htmlspecialchars($_REQUEST['basetype']), "\" /></td>\n\t</tr>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['straggrsfunc']}</th>\n";
-        echo "\t\t<td class=\"data\"><input name=\"sfunc\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo "\t\t<td class=\"data\"><input name=\"sfunc\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
         htmlspecialchars($_REQUEST['sfunc']), "\" /></td>\n\t</tr>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['straggrstype']}</th>\n";
-        echo "\t\t<td class=\"data\"><input name=\"stype\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo "\t\t<td class=\"data\"><input name=\"stype\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
         htmlspecialchars($_REQUEST['stype']), "\" /></td>\n\t</tr>\n";
         echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['straggrffunc']}</th>\n";
-        echo "\t\t<td class=\"data\"><input name=\"ffunc\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo "\t\t<td class=\"data\"><input name=\"ffunc\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
         htmlspecialchars($_REQUEST['ffunc']), "\" /></td>\n\t</tr>\n";
         echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['straggrinitcond']}</th>\n";
-        echo "\t\t<td class=\"data\"><input name=\"initcond\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo "\t\t<td class=\"data\"><input name=\"initcond\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
         htmlspecialchars($_REQUEST['initcond']), "\" /></td>\n\t</tr>\n";
         echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['straggrsortop']}</th>\n";
-        echo "\t\t<td class=\"data\"><input name=\"sortop\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo "\t\t<td class=\"data\"><input name=\"sortop\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
         htmlspecialchars($_REQUEST['sortop']), "\" /></td>\n\t</tr>\n";
         echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
         echo "\t\t<td><textarea name=\"aggrcomment\" rows=\"3\" cols=\"32\">",
@@ -149,7 +311,7 @@ class AggregatesController extends BaseController
      */
     public function doSaveAlter()
     {
-        $data = $this->misc->getDatabaseAccessor();
+        $this->data = $this->misc->getDatabaseAccessor();
 
         // Check inputs
         if ('' == trim($_REQUEST['aggrname'])) {
@@ -158,7 +320,7 @@ class AggregatesController extends BaseController
             return;
         }
 
-        $status = $data->alterAggregate(
+        $status = $this->data->alterAggregate(
             $_REQUEST['aggrname'],
             $_REQUEST['aggrtype'],
             $_REQUEST['aggrowner'],
@@ -185,14 +347,14 @@ class AggregatesController extends BaseController
      */
     public function doAlter($msg = '')
     {
-        $data = $this->misc->getDatabaseAccessor();
+        $this->data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('aggregate');
         $this->printTitle($this->lang['stralter'], 'pg.aggregate.alter');
         $this->printMsg($msg);
 
         echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
-        $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
+        $aggrdata = $this->data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
         if ($aggrdata->recordCount() > 0) {
             // Output table header
             echo "<table>\n";
@@ -231,7 +393,7 @@ class AggregatesController extends BaseController
      */
     public function doDrop($confirm)
     {
-        $data = $this->misc->getDatabaseAccessor();
+        $this->data = $this->misc->getDatabaseAccessor();
 
         if ($confirm) {
             $this->printTrail('aggregate');
@@ -249,7 +411,7 @@ class AggregatesController extends BaseController
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
             echo "</form>\n";
         } else {
-            $status = $data->dropAggregate($_POST['aggrname'], $_POST['aggrtype'], isset($_POST['cascade']));
+            $status = $this->data->dropAggregate($_POST['aggrname'], $_POST['aggrtype'], isset($_POST['cascade']));
             if (0 == $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($this->lang['straggregatedropped']);
@@ -266,13 +428,13 @@ class AggregatesController extends BaseController
      */
     public function doProperties($msg = '')
     {
-        $data = $this->misc->getDatabaseAccessor();
+        $this->data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('aggregate');
         $this->printTitle($this->lang['strproperties'], 'pg.aggregate');
         $this->printMsg($msg);
 
-        $aggrdata = $data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
+        $aggrdata = $this->data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
 
         if ($aggrdata->recordCount() > 0) {
             // Display aggregate's info
@@ -289,7 +451,7 @@ class AggregatesController extends BaseController
             echo "\t<td class=\"data1\">", htmlspecialchars($aggrdata->fields['aggfinalfn']), "</td>\n</tr>\n";
             echo "<tr>\n\t<th class=\"data left\">{$this->lang['straggrinitcond']}</th>\n";
             echo "\t<td class=\"data1\">", htmlspecialchars($aggrdata->fields['agginitval']), "</td>\n</tr>\n";
-            if ($data->hasAggregateSortOp()) {
+            if ($this->data->hasAggregateSortOp()) {
                 echo "<tr>\n\t<th class=\"data left\">{$this->lang['straggrsortop']}</th>\n";
                 echo "\t<td class=\"data1\">", htmlspecialchars($aggrdata->fields['aggsortop']), "</td>\n</tr>\n";
             }
@@ -318,7 +480,7 @@ class AggregatesController extends BaseController
             ],
         ];
 
-        if ($data->hasAlterAggregate()) {
+        if ($this->data->hasAlterAggregate()) {
             $navlinks['alter'] = [
                 'attr'    => [
                     'href' => [
