@@ -27,12 +27,12 @@ class PrivilegesController extends BaseController
                 if (isset($_REQUEST['cancel'])) {
                     $this->doDefault();
                 } else {
-                    $this->doAlter(false, $_REQUEST['mode']);
+                    $this->doAlter($_REQUEST['mode']);
                 }
 
                 break;
             case 'alter':
-                $this->doAlter(true, $_REQUEST['mode']);
+                $this->formAlter($_REQUEST['mode']);
 
                 break;
             default:
@@ -275,13 +275,12 @@ class PrivilegesController extends BaseController
     }
 
     /**
-     * Grant permissions on an object to a user.
+     * Prints the form to grants permision on an object to a user.
      *
-     * @param bool   $confirm To show entry screen
-     * @param string $mode    'grant' or 'revoke'
-     * @param string $msg     (optional) A message to show
+     * @param string $mode either grant or revoke
+     * @param string $msg  The message
      */
-    public function doAlter($confirm, $mode, $msg = '')
+    public function formAlter($mode, $msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -291,135 +290,149 @@ class PrivilegesController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'privilege', []);
 
-        if ($confirm) {
-            // Get users from the database
-            $users = $data->getUsers();
-            // Get groups from the database
-            $groups = $data->getGroups();
+        // Get users from the database
+        $users = $data->getUsers();
+        // Get groups from the database
+        $groups = $data->getGroups();
 
-            $this->printTrail($_REQUEST['subject']);
+        $this->printTrail($_REQUEST['subject']);
 
-            switch ($mode) {
-                case 'grant':
-                    $this->printTitle($this->lang['strgrant'], 'pg.privilege.grant');
+        switch ($mode) {
+            case 'grant':
+                $this->printTitle($this->lang['strgrant'], 'pg.privilege.grant');
 
-                    break;
-                case 'revoke':
-                    $this->printTitle($this->lang['strrevoke'], 'pg.privilege.revoke');
+                break;
+            case 'revoke':
+                $this->printTitle($this->lang['strrevoke'], 'pg.privilege.revoke');
 
-                    break;
+                break;
+        }
+        $this->printMsg($msg);
+
+        echo '<form action="'.\SUBFOLDER."/src/views/privileges\" method=\"post\">\n";
+        echo "<table>\n";
+        echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>\n";
+        echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";
+        while (!$users->EOF) {
+            $uname = htmlspecialchars($users->fields['usename']);
+            echo "<option value=\"{$uname}\"",
+            in_array($users->fields['usename'], $_REQUEST['username'], true) ? ' selected="selected"' : '', ">{$uname}</option>\n";
+            $users->moveNext();
+        }
+        echo "</select></td></tr>\n";
+        echo "<tr><th class=\"data left\">{$this->lang['strgroups']}</th>\n";
+        echo "<td class=\"data1\">\n";
+        echo '<input type="checkbox" id="public" name="public"', (isset($_REQUEST['public']) ? ' checked="checked"' : ''), " /><label for=\"public\">PUBLIC</label>\n";
+        // Only show groups if there are groups!
+        if ($groups->recordCount() > 0) {
+            echo '<br /><select name="groupname[]" multiple="multiple" size="', min(6, $groups->recordCount()), "\">\n";
+            while (!$groups->EOF) {
+                $gname = htmlspecialchars($groups->fields['groname']);
+                echo "<option value=\"{$gname}\"",
+                in_array($groups->fields['groname'], $_REQUEST['groupname'], true) ? ' selected="selected"' : '', ">{$gname}</option>\n";
+                $groups->moveNext();
             }
-            $this->printMsg($msg);
-
-            echo '<form action="'.\SUBFOLDER."/src/views/privileges\" method=\"post\">\n";
-            echo "<table>\n";
-            echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>\n";
-            echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), "\">\n";
-            while (!$users->EOF) {
-                $uname = htmlspecialchars($users->fields['usename']);
-                echo "<option value=\"{$uname}\"",
-                in_array($users->fields['usename'], $_REQUEST['username'], true) ? ' selected="selected"' : '', ">{$uname}</option>\n";
-                $users->moveNext();
-            }
-            echo "</select></td></tr>\n";
-            echo "<tr><th class=\"data left\">{$this->lang['strgroups']}</th>\n";
+            echo "</select>\n";
+        }
+        echo "</td></tr>\n";
+        echo "<tr><th class=\"data left required\">{$this->lang['strprivileges']}</th>\n";
+        echo "<td class=\"data1\">\n";
+        foreach ($data->privlist[$_REQUEST['subject']] as $v) {
+            $v = htmlspecialchars($v);
+            echo "<input type=\"checkbox\" id=\"privilege[${v}]\" name=\"privilege[${v}]\"",
+            isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', " /><label for=\"privilege[${v}]\">{$v}</label><br />\n";
+        }
+        echo "</td></tr>\n";
+        // Grant option
+        if ($data->hasGrantOption()) {
+            echo "<tr><th class=\"data left\">{$this->lang['stroptions']}</th>\n";
             echo "<td class=\"data1\">\n";
-            echo '<input type="checkbox" id="public" name="public"', (isset($_REQUEST['public']) ? ' checked="checked"' : ''), " /><label for=\"public\">PUBLIC</label>\n";
-            // Only show groups if there are groups!
-            if ($groups->recordCount() > 0) {
-                echo '<br /><select name="groupname[]" multiple="multiple" size="', min(6, $groups->recordCount()), "\">\n";
-                while (!$groups->EOF) {
-                    $gname = htmlspecialchars($groups->fields['groname']);
-                    echo "<option value=\"{$gname}\"",
-                    in_array($groups->fields['groname'], $_REQUEST['groupname'], true) ? ' selected="selected"' : '', ">{$gname}</option>\n";
-                    $groups->moveNext();
-                }
-                echo "</select>\n";
-            }
-            echo "</td></tr>\n";
-            echo "<tr><th class=\"data left required\">{$this->lang['strprivileges']}</th>\n";
-            echo "<td class=\"data1\">\n";
-            foreach ($data->privlist[$_REQUEST['subject']] as $v) {
-                $v = htmlspecialchars($v);
-                echo "<input type=\"checkbox\" id=\"privilege[${v}]\" name=\"privilege[${v}]\"",
-                isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', " /><label for=\"privilege[${v}]\">{$v}</label><br />\n";
-            }
-            echo "</td></tr>\n";
-            // Grant option
-            if ($data->hasGrantOption()) {
-                echo "<tr><th class=\"data left\">{$this->lang['stroptions']}</th>\n";
-                echo "<td class=\"data1\">\n";
-                if ('grant' == $mode) {
-                    echo '<input type="checkbox" id="grantoption" name="grantoption"',
-                    isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION</label>\n";
-                } elseif ('revoke' == $mode) {
-                    echo '<input type="checkbox" id="grantoption" name="grantoption"',
-                    isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION FOR</label><br />\n";
-                    echo '<input type="checkbox" id="cascade" name="cascade"',
-                    isset($_REQUEST['cascade']) ? ' checked="checked"' : '', " /><label for=\"cascade\">CASCADE</label><br />\n";
-                }
-                echo "</td></tr>\n";
-            }
-            echo "</table>\n";
-
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
-            echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), "\" />\n";
-            echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
-            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-                echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'].'_oid'),
-                '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'].'_oid']), "\" />\n";
-            }
-
-            echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
-            '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
-            if ('column' == $_REQUEST['subject']) {
-                echo '<input type="hidden" name="table" value="',
-                htmlspecialchars($_REQUEST['table']), "\" />\n";
-            }
-
-            echo $this->misc->form;
             if ('grant' == $mode) {
-                echo "<input type=\"submit\" name=\"grant\" value=\"{$this->lang['strgrant']}\" />\n";
+                echo '<input type="checkbox" id="grantoption" name="grantoption"',
+                isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION</label>\n";
             } elseif ('revoke' == $mode) {
-                echo "<input type=\"submit\" name=\"revoke\" value=\"{$this->lang['strrevoke']}\" />\n";
+                echo '<input type="checkbox" id="grantoption" name="grantoption"',
+                isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', " /><label for=\"grantoption\">GRANT OPTION FOR</label><br />\n";
+                echo '<input type="checkbox" id="cascade" name="cascade"',
+                isset($_REQUEST['cascade']) ? ' checked="checked"' : '', " /><label for=\"cascade\">CASCADE</label><br />\n";
             }
+            echo "</td></tr>\n";
+        }
+        echo "</table>\n";
 
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>";
-            echo "</form>\n";
+        echo "<p><input type=\"hidden\" name=\"action\" value=\"save\" />\n";
+        echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), "\" />\n";
+        echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), "\" />\n";
+        if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+            echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'].'_oid'),
+            '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'].'_oid']), "\" />\n";
+        }
+
+        echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
+        '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject']]), "\" />\n";
+        if ('column' == $_REQUEST['subject']) {
+            echo '<input type="hidden" name="table" value="',
+            htmlspecialchars($_REQUEST['table']), "\" />\n";
+        }
+
+        echo $this->misc->form;
+        if ('grant' == $mode) {
+            echo "<input type=\"submit\" name=\"grant\" value=\"{$this->lang['strgrant']}\" />\n";
+        } elseif ('revoke' == $mode) {
+            echo "<input type=\"submit\" name=\"revoke\" value=\"{$this->lang['strrevoke']}\" />\n";
+        }
+
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>";
+        echo "</form>\n";
+    }
+
+    /**
+     * Grant permissions on an object to a user.
+     *
+     * @param string $mode 'grant' or 'revoke'
+     */
+    public function doAlter($mode)
+    {
+        $data = $this->misc->getDatabaseAccessor();
+
+        $this->coalesceArr($_REQUEST, 'username', []);
+
+        $this->coalesceArr($_REQUEST, 'groupname', []);
+
+        $this->coalesceArr($_REQUEST, 'privilege', []);
+
+        // Determine whether object should be ref'd by name or oid.
+        if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
+            $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
         } else {
-            // Determine whether object should be ref'd by name or oid.
-            if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-                $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
-            } else {
-                $object = $_REQUEST[$_REQUEST['subject']];
-            }
+            $object = $_REQUEST[$_REQUEST['subject']];
+        }
 
-            if (isset($_REQUEST['table'])) {
-                $table = $_REQUEST['table'];
-            } else {
-                $table = null;
-            }
+        if (isset($_REQUEST['table'])) {
+            $table = $_REQUEST['table'];
+        } else {
+            $table = null;
+        }
 
-            $status = $data->setPrivileges(
-                ('grant' == $mode) ? 'GRANT' : 'REVOKE',
-                $_REQUEST['subject'],
-                $object,
-                isset($_REQUEST['public']),
-                $_REQUEST['username'],
-                $_REQUEST['groupname'],
-                array_keys($_REQUEST['privilege']),
-                isset($_REQUEST['grantoption']),
-                isset($_REQUEST['cascade']),
-                $table
-            );
+        $status = $data->setPrivileges(
+            ('grant' == $mode) ? 'GRANT' : 'REVOKE',
+            $_REQUEST['subject'],
+            $object,
+            isset($_REQUEST['public']),
+            $_REQUEST['username'],
+            $_REQUEST['groupname'],
+            array_keys($_REQUEST['privilege']),
+            isset($_REQUEST['grantoption']),
+            isset($_REQUEST['cascade']),
+            $table
+        );
 
-            if (0 == $status) {
-                $this->doDefault($this->lang['strgranted']);
-            } elseif ($status == -3 || $status == -4) {
-                $this->doAlter(true, $_REQUEST['mode'], $this->lang['strgrantbad']);
-            } else {
-                $this->doAlter(true, $_REQUEST['mode'], $this->lang['strgrantfailed']);
-            }
+        if (0 == $status) {
+            $this->doDefault($this->lang['strgranted']);
+        } elseif ($status == -3 || $status == -4) {
+            $this->formAlter($_REQUEST['mode'], $this->lang['strgrantbad']);
+        } else {
+            $this->formAlter($_REQUEST['mode'], $this->lang['strgrantfailed']);
         }
     }
 }

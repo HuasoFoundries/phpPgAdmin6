@@ -381,6 +381,7 @@ class DataexportController extends BaseController
     private function _mimicSQL($data, $object, $oids, $rs)
     {
         $data->fieldClean($object);
+        $values = '';
         while (!$rs->EOF) {
             echo "INSERT INTO \"{$object}\" (";
             $first = true;
