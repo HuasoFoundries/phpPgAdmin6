@@ -566,7 +566,8 @@ trait IndexTrait
         $rs = $this->selectSet($sql);
         while (!$rs->EOF) {
             $arrData      = explode(':', $rs->fields['arr_dim']);
-            $tmpDimension = (int) (substr($arrData[1], 0, strlen($arrData[1] - 1)));
+            $strdimension = trim(substr($arrData[1], 0, strlen($arrData[1]) - 1));
+            $tmpDimension = (int) $strdimension;
             $maxDimension = $tmpDimension > $maxDimension ? $tmpDimension : $maxDimension;
             $rs->MoveNext();
         }

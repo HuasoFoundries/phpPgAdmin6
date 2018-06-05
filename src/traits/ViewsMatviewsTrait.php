@@ -206,6 +206,54 @@ trait ViewsMatviewsTrait
     }
 
     /**
+     * Appends to selected fields.
+     *
+     * @param array  $arrTmp    The arr temporary
+     * @param string $selFields The selected fields
+     * @param array  $tmpHsh    The temporary hsh
+     */
+    private function _appendToSelFields($arrTmp, &$selFields, &$tmpHsh)
+    {
+        $field_arr = [$arrTmp['schemaname'], $arrTmp['tablename'], $arrTmp['fieldname']];
+
+        $field_element = '"'.implode('"."', $field_arr).'"';
+        if (empty($_POST['dblFldMeth'])) {
+            // no doublon control
+            $selFields .= $field_element.', ';
+        // doublon control
+        } elseif (empty($tmpHsh[$arrTmp['fieldname']])) {
+            // field does not exist
+            $selFields .= $field_element.', ';
+            $tmpHsh[$arrTmp['fieldname']] = 1;
+        } elseif ('rename' == $_POST['dblFldMeth']) {
+            // field exist and must be renamed
+            ++$tmpHsh[$arrTmp['fieldname']];
+            $selFields .= $field_element.'  AS  "'.implode('_', $field_arr).'_'.$tmpHsh[$arrTmp['fieldname']].'", ';
+        }
+        //  if field already exist, just ignore this one
+    }
+
+    private function _getArrLinks()
+    {
+        $arrLinks = [];
+        $count    = 0;
+        // If we have links, out put the JOIN ... ON statements
+        if (is_array($_POST['formLink'])) {
+            // Filter out invalid/blank entries for our links
+
+            foreach ($_POST['formLink'] as $curLink) {
+                if (strlen($curLink['leftlink']) && strlen($curLink['rightlink']) && strlen($curLink['operator'])) {
+                    $arrLinks[] = $curLink;
+                }
+            }
+            // We must perform some magic to make sure that we have a valid join order
+            $count = sizeof($arrLinks);
+        }
+
+        return [$arrLinks, $count];
+    }
+
+    /**
      * Actually creates the new wizard view in the database.
      *
      * @param bool $is_materialized true if it's a materialized view, false by default
@@ -226,54 +274,27 @@ trait ViewsMatviewsTrait
         }
         $selFields = '';
 
-        if (!empty($_POST['dblFldMeth'])) {
-            $tmpHsh = [];
-        }
+        $tmpHsh = [];
 
         foreach ($_POST['formFields'] as $curField) {
             $arrTmp = unserialize($curField);
             $data->fieldArrayClean($arrTmp);
-            $field_arr = [$arrTmp['schemaname'], $arrTmp['tablename'], $arrTmp['fieldname']];
 
-            $field_element = '"'.implode('"."', $field_arr).'"';
-            if (empty($_POST['dblFldMeth'])) {
-                // no doublon control
-                $selFields .= $field_element.', ';
-            // doublon control
-            } elseif (empty($tmpHsh[$arrTmp['fieldname']])) {
-                // field does not exist
-                $selFields .= $field_element.', ';
-                $tmpHsh[$arrTmp['fieldname']] = 1;
-            } elseif ('rename' == $_POST['dblFldMeth']) {
-                // field exist and must be renamed
-                ++$tmpHsh[$arrTmp['fieldname']];
-                $selFields .= $field_element.'  AS  "'.implode('_', $field_arr).'_'.$tmpHsh[$arrTmp['fieldname']].'", ';
-            } //  field already exist, just ignore this one
+            $this->_appendToSelFields($arrTmp, $selFields, $tmpHsh);
         }
 
         $selFields = substr($selFields, 0, -2);
         unset($arrTmp, $tmpHsh);
-        $linkFields = '';
-        $count      = 0;
+        $linkFields  = '';
+        $arrJoined   = [];
+        $arrUsedTbls = [];
 
-        // If we have links, out put the JOIN ... ON statements
-        if (is_array($_POST['formLink'])) {
-            // Filter out invalid/blank entries for our links
-            $arrLinks = [];
-            foreach ($_POST['formLink'] as $curLink) {
-                if (strlen($curLink['leftlink']) && strlen($curLink['rightlink']) && strlen($curLink['operator'])) {
-                    $arrLinks[] = $curLink;
-                }
-            }
-            // We must perform some magic to make sure that we have a valid join order
-            $count       = sizeof($arrLinks);
-            $arrJoined   = [];
-            $arrUsedTbls = [];
-        }
+        list($arrLinks, $count) = $this->_getArrLinks();
+
         // If we have at least one join condition, output it
 
         $j = 0;
-        $this->prtrace('arrLinks ', $arrLinks);
+
         while ($j < $count) {
             foreach ($arrLinks as $curLink) {
                 $arrLeftLink  = unserialize($curLink['leftlink']);
