@@ -751,130 +751,135 @@ class ViewsController extends BaseController
         // Check that they've given a name and fields they want to select
 
         if (!strlen($_POST['formView'])) {
-            $this->doSetParamsCreate($this->lang['strviewneedsname']);
-        } elseif (!isset($_POST['formFields']) || !count($_POST['formFields'])) {
-            $this->doSetParamsCreate($this->lang['strviewneedsfields']);
-        } else {
-            $selFields = '';
+            return $this->doSetParamsCreate($this->lang['strviewneedsname']);
+        }
+        if (!isset($_POST['formFields']) || !count($_POST['formFields'])) {
+            return $this->doSetParamsCreate($this->lang['strviewneedsfields']);
+        }
+        $selFields = '';
 
-            if (!empty($_POST['dblFldMeth'])) {
-                $tmpHsh = [];
+        if (!empty($_POST['dblFldMeth'])) {
+            $tmpHsh = [];
+        }
+
+        foreach ($_POST['formFields'] as $curField) {
+            $arrTmp = unserialize($curField);
+            $data->fieldArrayClean($arrTmp);
+            $field_arr = [$arrTmp['schemaname'], $arrTmp['tablename'], $arrTmp['fieldname']];
+
+            $field_element = '"'.implode('"."', $field_arr).'"';
+            if (empty($_POST['dblFldMeth'])) {
+                // no doublon control
+                $selFields .= $field_element.', ';
+            // doublon control
+            } elseif (empty($tmpHsh[$arrTmp['fieldname']])) {
+                // field does not exist
+                $selFields .= $field_element.', ';
+                $tmpHsh[$arrTmp['fieldname']] = 1;
+            } elseif ('rename' == $_POST['dblFldMeth']) {
+                // field exist and must be renamed
+                ++$tmpHsh[$arrTmp['fieldname']];
+                $selFields .= $field_element.'  AS  "'.implode('_', $field_arr).'_'.$tmpHsh[$arrTmp['fieldname']].'", ';
+            } //  field already exist, just ignore this one
+        }
+
+        $selFields = substr($selFields, 0, -2);
+        unset($arrTmp, $tmpHsh);
+        $linkFields = '';
+        $count      = 0;
+
+        // If we have links, out put the JOIN ... ON statements
+        if (is_array($_POST['formLink'])) {
+            // Filter out invalid/blank entries for our links
+            $arrLinks = [];
+            foreach ($_POST['formLink'] as $curLink) {
+                if (strlen($curLink['leftlink']) && strlen($curLink['rightlink']) && strlen($curLink['operator'])) {
+                    $arrLinks[] = $curLink;
+                }
             }
+            // We must perform some magic to make sure that we have a valid join order
+            $count       = sizeof($arrLinks);
+            $arrJoined   = [];
+            $arrUsedTbls = [];
+        }
+        // If we have at least one join condition, output it
 
-            foreach ($_POST['formFields'] as $curField) {
-                $arrTmp = unserialize($curField);
+        $j = 0;
+        $this->prtrace('arrLinks ', $arrLinks);
+        while ($j < $count) {
+            foreach ($arrLinks as $curLink) {
+                $arrLeftLink  = unserialize($curLink['leftlink']);
+                $arrRightLink = unserialize($curLink['rightlink']);
+                $data->fieldArrayClean($arrLeftLink);
+                $data->fieldArrayClean($arrRightLink);
+
+                $tbl1 = "\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\"";
+                $tbl2 = "\"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\"";
+
+                if (!((!in_array($curLink, $arrJoined, true) && in_array($tbl1, $arrUsedTbls, true)) || !count($arrJoined))) {
+                    continue;
+                }
+                // Make sure for multi-column foreign keys that we use a table alias tables joined to more than once
+                // This can (and should be) more optimized for multi-column foreign keys
+                $adj_tbl2 = in_array($tbl2, $arrUsedTbls, true) ? "${tbl2} AS alias_ppa_".time() : $tbl2;
+
+                $clause1 = "{$curLink['operator']} ${adj_tbl2} ON ({$tbl1}.\"{$arrLeftLink['fieldname']}\" = {$tbl2}.\"{$arrRightLink['fieldname']}\") ";
+                $clause2 = "${tbl1} {$curLink['operator']} ${adj_tbl2} ON ({$tbl1}.\"{$arrLeftLink['fieldname']}\" = {$tbl2}.\"{$arrRightLink['fieldname']}\") ";
+
+                $linkFields .= strlen($linkFields) ? $clause1 : $clause2;
+
+                $arrJoined[] = $curLink;
+                if (!in_array($tbl1, $arrUsedTbls, true)) {
+                    $arrUsedTbls[] = $tbl1;
+                }
+
+                if (!in_array($tbl2, $arrUsedTbls, true)) {
+                    $arrUsedTbls[] = $tbl2;
+                }
+            }
+            ++$j;
+        }
+
+        //if linkFields has no length then either _POST['formLink'] was not set, or there were no join conditions
+        //just select from all seleted tables - a cartesian join do a
+        if (!strlen($linkFields)) {
+            foreach ($_POST['formTables'] as $curTable) {
+                $arrTmp = unserialize($curTable);
                 $data->fieldArrayClean($arrTmp);
-                if (!empty($_POST['dblFldMeth'])) {
-                    // doublon control
-                    if (empty($tmpHsh[$arrTmp['fieldname']])) {
-                        // field does not exist
-                        $selFields .= "\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\", ";
-                        $tmpHsh[$arrTmp['fieldname']] = 1;
-                    } elseif ('rename' == $_POST['dblFldMeth']) {
-                        // field exist and must be renamed
-                        ++$tmpHsh[$arrTmp['fieldname']];
-                        $selFields .= "\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\" AS \"{$arrTmp['schemaname']}_{$arrTmp['tablename']}_{$arrTmp['fieldname']}{$tmpHsh[$arrTmp['fieldname']]}\", ";
-                    } //  field already exist, just ignore this one
-                } else {
-                    // no doublon control
-                    $selFields .= "\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\", ";
-                }
+                $linkFields .= (strlen($linkFields) ? ', ' : ' ')."\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\"";
             }
+        }
 
-            $selFields = substr($selFields, 0, -2);
-            unset($arrTmp, $tmpHsh);
-            $linkFields = '';
-
-            // If we have links, out put the JOIN ... ON statements
-            if (is_array($_POST['formLink'])) {
-                // Filter out invalid/blank entries for our links
-                $arrLinks = [];
-                foreach ($_POST['formLink'] as $curLink) {
-                    if (strlen($curLink['leftlink']) && strlen($curLink['rightlink']) && strlen($curLink['operator'])) {
-                        $arrLinks[] = $curLink;
-                    }
-                }
-                // We must perform some magic to make sure that we have a valid join order
-                $count       = sizeof($arrLinks);
-                $arrJoined   = [];
-                $arrUsedTbls = [];
-
-                // If we have at least one join condition, output it
-                if ($count > 0) {
-                    $j = 0;
-                    while ($j < $count) {
-                        foreach ($arrLinks as $curLink) {
-                            $arrLeftLink  = unserialize($curLink['leftlink']);
-                            $arrRightLink = unserialize($curLink['rightlink']);
-                            $data->fieldArrayClean($arrLeftLink);
-                            $data->fieldArrayClean($arrRightLink);
-
-                            $tbl1 = "\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\"";
-                            $tbl2 = "\"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\"";
-
-                            if ((!in_array($curLink, $arrJoined, true) && in_array($tbl1, $arrUsedTbls, true)) || !count($arrJoined)) {
-                                // Make sure for multi-column foreign keys that we use a table alias tables joined to more than once
-                                // This can (and should be) more optimized for multi-column foreign keys
-                                $adj_tbl2 = in_array($tbl2, $arrUsedTbls, true) ? "${tbl2} AS alias_ppa_".mktime() : $tbl2;
-
-                                $linkFields .= strlen($linkFields) ? "{$curLink['operator']} ${adj_tbl2} ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") "
-                                : "${tbl1} {$curLink['operator']} ${adj_tbl2} ON (\"{$arrLeftLink['schemaname']}\".\"{$arrLeftLink['tablename']}\".\"{$arrLeftLink['fieldname']}\" = \"{$arrRightLink['schemaname']}\".\"{$arrRightLink['tablename']}\".\"{$arrRightLink['fieldname']}\") ";
-
-                                $arrJoined[] = $curLink;
-                                if (!in_array($tbl1, $arrUsedTbls, true)) {
-                                    $arrUsedTbls[] = $tbl1;
-                                }
-
-                                if (!in_array($tbl2, $arrUsedTbls, true)) {
-                                    $arrUsedTbls[] = $tbl2;
-                                }
-                            }
-                        }
-                        ++$j;
-                    }
-                }
-            }
-
-            //if linkfields has no length then either _POST['formLink'] was not set, or there were no join conditions
-            //just select from all seleted tables - a cartesian join do a
-            if (!strlen($linkFields)) {
-                foreach ($_POST['formTables'] as $curTable) {
-                    $arrTmp = unserialize($curTable);
+        $addConditions = '';
+        if (is_array($_POST['formCondition'])) {
+            foreach ($_POST['formCondition'] as $curCondition) {
+                if (strlen($curCondition['field']) && strlen($curCondition['txt'])) {
+                    $arrTmp = unserialize($curCondition['field']);
                     $data->fieldArrayClean($arrTmp);
-                    $linkFields .= strlen($linkFields) ? ", \"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\"" : "\"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\"";
+                    $condition = " \"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\" {$curCondition['operator']} '{$curCondition['txt']}' ";
+                    $addConditions .= (strlen($addConditions) ? ' AND ' : ' ').$condition;
                 }
             }
+        }
 
-            $addConditions = '';
-            if (is_array($_POST['formCondition'])) {
-                foreach ($_POST['formCondition'] as $curCondition) {
-                    if (strlen($curCondition['field']) && strlen($curCondition['txt'])) {
-                        $arrTmp = unserialize($curCondition['field']);
-                        $data->fieldArrayClean($arrTmp);
-                        $addConditions .= strlen($addConditions) ? " AND \"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\" {$curCondition['operator']} '{$curCondition['txt']}' "
-                        : " \"{$arrTmp['schemaname']}\".\"{$arrTmp['tablename']}\".\"{$arrTmp['fieldname']}\" {$curCondition['operator']} '{$curCondition['txt']}' ";
-                    }
-                }
+        $viewQuery = "SELECT ${selFields} FROM ${linkFields} ";
+
+        //add where from additional conditions
+        if (strlen($addConditions)) {
+            $viewQuery .= ' WHERE '.$addConditions;
+        }
+
+        try {
+            $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment']);
+            if (0 == $status) {
+                $this->misc->setReloadBrowser(true);
+
+                return $this->doDefault($this->lang['strviewcreated']);
             }
 
-            $viewQuery = "SELECT ${selFields} FROM ${linkFields} ";
-
-            //add where from additional conditions
-            if (strlen($addConditions)) {
-                $viewQuery .= ' WHERE '.$addConditions;
-            }
-
-            try {
-                $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment']);
-                if (0 == $status) {
-                    $this->misc->setReloadBrowser(true);
-                    $this->doDefault($this->lang['strviewcreated']);
-                } else {
-                    $this->doSetParamsCreate($this->lang['strviewcreatedbad']);
-                }
-            } catch (\PHPPgAdmin\ADOdbException $e) {
-                echo $e->getMessage();
-            }
+            return $this->doSetParamsCreate($this->lang['strviewcreatedbad']);
+        } catch (\PHPPgAdmin\ADOdbException $e) {
+            return $this->halt($e->getMessage());
         }
     }
 }
