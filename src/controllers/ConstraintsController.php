@@ -720,7 +720,6 @@ class ConstraintsController extends BaseController
      */
     public function formDrop()
     {
-
         $this->printTrail('constraint');
         $this->printTitle($this->lang['strdrop'], 'pg.constraint.drop');
 
