@@ -77,7 +77,7 @@ class AggregatesController extends BaseController
 
         $output = ob_get_clean();
 
-        $this->printHeader($this->headerTitle(), null, true, $header_template);
+        $this->printHeader($this->headerTitle());
         $this->printBody();
         echo $output;
 
@@ -100,7 +100,7 @@ class AggregatesController extends BaseController
             'aggrname'    => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('proname'),
-                'url'   => "redirect.php?subject=aggregate&amp;action=properties&amp;{$misc->href}&amp;",
+                'url'   => "redirect.php?subject=aggregate&amp;action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
             ],
             'aggrtype'    => [
@@ -156,7 +156,7 @@ class AggregatesController extends BaseController
             unset($actions['alter']);
         }
 
-        $echo->printTable($aggregates, $columns, $actions, $this->table_place, $this->lang['strnoaggregates']);
+        echo $this->printTable($aggregates, $columns, $actions, $this->table_place, $this->lang['strnoaggregates']);
 
         $navlinks = [
             'create' => [
@@ -271,7 +271,7 @@ class AggregatesController extends BaseController
         $this->printTitle($this->lang['strcreateaggregate'], 'pg.aggregate.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/aggregates\" method=\"post\">\n";
         echo "<table>\n";
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
         echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
@@ -353,7 +353,7 @@ class AggregatesController extends BaseController
         $this->printTitle($this->lang['stralter'], 'pg.aggregate.alter');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
+        echo '<form action="' . \SUBFOLDER . "/src/views/aggregates\" method=\"post\">\n";
         $aggrdata = $this->data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
         if ($aggrdata->recordCount() > 0) {
             // Output table header
@@ -401,7 +401,7 @@ class AggregatesController extends BaseController
 
             echo '<p>', sprintf($this->lang['strconfdropaggregate'], htmlspecialchars($_REQUEST['aggrname'])), "</p>\n";
 
-            echo '<form action="'.\SUBFOLDER."/src/views/aggregates\" method=\"post\">\n";
+            echo '<form action="' . \SUBFOLDER . "/src/views/aggregates\" method=\"post\">\n";
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
             echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
             echo '<input type="hidden" name="aggrname" value="', htmlspecialchars($_REQUEST['aggrname']), "\" />\n";
