@@ -39,7 +39,7 @@ class ConstraintsController extends BaseController
             'add_primary_key',
             'save_add_primary_key',
             'add_foreign_key',
-            'select_referencing_columns',
+            'select_referenced_columns',
             'save_add_foreign_key',
         ];
 
@@ -55,10 +55,10 @@ class ConstraintsController extends BaseController
 
         switch ($this->action) {
             case 'add_foreign_key':
-                $this->printFKForm();
+                $this->formAddForeignKey();
 
                 break;
-            case 'select_referencing_columns':
+            case 'select_referenced_columns':
                 $this->_selectFKColumns();
 
                 break;
@@ -239,7 +239,7 @@ class ConstraintsController extends BaseController
      *
      * @param string $msg The message
      */
-    public function printFKForm($msg = '')
+    public function formAddForeignKey($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -298,16 +298,18 @@ class ConstraintsController extends BaseController
         echo '</td></tr>';
         echo "</table>\n";
 
-        echo "<p>\n";
-
-        echo $this->getActionTableAndButtons(
-            'select_referencing_columns',
-            htmlspecialchars($_REQUEST['table']),
-            $this->lang['stradd'],
-            $this->lang['strcancel']
+        echo $this->getFormInputsAndButtons(
+            [
+                ['name' => 'action', 'type' => 'hidden', 'value' => 'select_referenced_columns'],
+                ['name' => 'table', 'type' => 'hidden', 'value' => htmlspecialchars($_REQUEST['table'])],
+            ],
+            [
+                ['type' => 'submit', 'name' => '', 'value' => $this->lang['stradd']],
+                ['type' => 'submit', 'name' => 'cancel', 'value' => $this->lang['strcancel']],
+            ]
         );
 
-        echo sprintf('</p>%s</form>%s', "\n", "\n");
+        echo sprintf('</form>%s', "\n");
     }
 
     /**
@@ -328,7 +330,7 @@ class ConstraintsController extends BaseController
         if (!isset($_REQUEST['SourceColumnList']) && (!isset($_POST['IndexColumnList']) ||
             !is_array($_POST['IndexColumnList']) ||
             0 == sizeof($_POST['IndexColumnList']))) {
-            return $this->printFKForm($this->lang['strfkneedscols']);
+            return $this->formAddForeignKey($this->lang['strfkneedscols']);
         }
         // Copy the IndexColumnList variable from stage 1
         if (isset($_REQUEST['IndexColumnList']) && !isset($_REQUEST['SourceColumnList'])) {
@@ -591,16 +593,18 @@ class ConstraintsController extends BaseController
 
         echo "</table>\n";
 
-        echo '<p>';
-
-        echo $this->getActionTableAndButtons(
-            ($type === 'primary' ? 'save_add_primary_key' : 'save_add_unique_key'),
-            htmlspecialchars($_REQUEST['table']),
-            $this->lang['stradd'],
-            $this->lang['strcancel']
+        echo $this->getFormInputsAndButtons(
+            [
+                ['name' => 'action', 'type' => 'hidden', 'value' => ($type === 'primary' ? 'save_add_primary_key' : 'save_add_unique_key')],
+                ['name' => 'table', 'type' => 'hidden', 'value' => htmlspecialchars($_REQUEST['table'])],
+            ],
+            [
+                ['type' => 'submit', 'name' => '', 'value' => $this->lang['stradd']],
+                ['type' => 'submit', 'name' => 'cancel', 'value' => $this->lang['strcancel']],
+            ]
         );
 
-        echo sprintf('</p>%s</form>%s', "\n", "\n");
+        echo sprintf('</form>%s', "\n");
     }
 
     /**
@@ -626,10 +630,10 @@ class ConstraintsController extends BaseController
             } else {
                 $status = $data->addPrimaryKey($_POST['table'], $_POST['IndexColumnList'], $_POST['name'], $_POST['tablespace']);
                 if (0 == $status) {
-                    $this->doDefault($this->lang['strpkadded']);
-                } else {
-                    $this->formPrimaryOrUniqueKey($type, $this->lang['strpkaddedbad']);
+                    return $this->doDefault($this->lang['strpkadded']);
                 }
+
+                return $this->formPrimaryOrUniqueKey($type, $this->lang['strpkaddedbad']);
             }
         } elseif ('unique' == $type) {
             // Check that they've given at least one column
@@ -640,13 +644,13 @@ class ConstraintsController extends BaseController
             } else {
                 $status = $data->addUniqueKey($_POST['table'], $_POST['IndexColumnList'], $_POST['name'], $_POST['tablespace']);
                 if (0 == $status) {
-                    $this->doDefault($this->lang['struniqadded']);
-                } else {
-                    $this->formPrimaryOrUniqueKey($type, $this->lang['struniqaddedbad']);
+                    return $this->doDefault($this->lang['struniqadded']);
                 }
+
+                return $this->formPrimaryOrUniqueKey($type, $this->lang['struniqaddedbad']);
             }
         } else {
-            $this->doDefault($this->lang['strinvalidparam']);
+            return $this->doDefault($this->lang['strinvalidparam']);
         }
     }
 
@@ -681,12 +685,18 @@ class ConstraintsController extends BaseController
             htmlspecialchars($_POST['definition']), "\" />)</td></tr>\n";
             echo "</table>\n";
 
-            echo "<input type=\"hidden\" name=\"action\" value=\"save_add_check\" />\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-            echo $this->misc->form;
-            echo "<p><input type=\"submit\" name=\"ok\" value=\"{$this->lang['stradd']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo $this->getFormInputsAndButtons(
+                [
+                    ['name' => 'action', 'type' => 'hidden', 'value' => 'save_add_check'],
+                    ['name' => 'table', 'type' => 'hidden', 'value' => htmlspecialchars($_REQUEST['table'])],
+                ],
+                [
+                    ['type' => 'submit', 'name' => '', 'value' => $this->lang['stradd']],
+                    ['type' => 'submit', 'name' => 'cancel', 'value' => $this->lang['strcancel']],
+                ]
+            );
+
+            echo sprintf('</form>%s', "\n");
         } else {
             if ('' == trim($_POST['definition'])) {
                 $this->addCheck(true, $this->lang['strcheckneedsdefinition']);
@@ -697,10 +707,10 @@ class ConstraintsController extends BaseController
                     $_POST['name']
                 );
                 if (0 == $status) {
-                    $this->doDefault($this->lang['strcheckadded']);
-                } else {
-                    $this->addCheck(true, $this->lang['strcheckaddedbad']);
+                    return $this->doDefault($this->lang['strcheckadded']);
                 }
+
+                return $this->addCheck(true, $this->lang['strcheckaddedbad']);
             }
         }
     }
@@ -720,16 +730,25 @@ class ConstraintsController extends BaseController
             $this->misc->printVal($_REQUEST['table'])
         ), "</p>\n";
 
-        echo '<form action="'.\SUBFOLDER."/src/views/constraints\" method=\"post\">\n";
-        echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-        echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-        echo '<input type="hidden" name="constraint" value="', htmlspecialchars($_REQUEST['constraint']), "\" />\n";
-        echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
-        echo $this->misc->form;
-        echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
-        echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-        echo "</form>\n";
+        echo sprintf('<form action="constraints" method="post">%s', "\n");
+
+        echo $this->getFormInputsAndButtons(
+            [
+                ['name' => 'action', 'value' => 'drop', 'type' => 'hidden'],
+                ['name' => 'table', 'value' => htmlspecialchars($_REQUEST['table']), 'type' => 'hidden'],
+                ['name' => 'constraint', 'value' => htmlspecialchars($_REQUEST['constraint']), 'type' => 'hidden'],
+                ['name' => 'type', 'value' => htmlspecialchars($_REQUEST['type']), 'type' => 'hidden'],
+            ],
+            [
+                ['type' => 'submit', 'name' => 'drop', 'value' => $this->lang['strdrop']],
+                ['type' => 'submit', 'name' => 'cancel', 'value' => $this->lang['strcancel']],
+            ],
+            [
+                ['type' => 'checkbox', 'name' => 'cascade', 'id' => 'cascade', 'checked' => false, 'labeltext' => $this->lang['strcascade']],
+            ]
+        );
+
+        echo sprintf('</form>%s', "\n");
     }
 
     /**
@@ -741,8 +760,9 @@ class ConstraintsController extends BaseController
 
         $status = $data->dropConstraint($_POST['constraint'], $_POST['table'], $_POST['type'], isset($_POST['cascade']));
         if (0 == $status) {
-            $this->doDefault($this->lang['strconstraintdropped']);
+            return $this->doDefault($this->lang['strconstraintdropped']);
         }
-        $this->doDefault($this->lang['strconstraintdroppedbad']);
+
+        return $this->doDefault($this->lang['strconstraintdroppedbad']);
     }
 }

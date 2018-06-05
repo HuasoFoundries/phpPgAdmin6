@@ -31,4 +31,36 @@ trait FormTrait
 
         return $content;
     }
+
+    /**
+     * Prints inputs for action, table and submit/cancel buttons.
+     *
+     * @param array $inputs   array of inputs with their name, type and value
+     * @param array $buttons  array of buttons with their name, type and value
+     * @param array $cheboxes array of cheboxes with their name, id, checked state, type and text for label
+     */
+    public function getFormInputsAndButtons($inputs, $buttons, $cheboxes = [])
+    {
+        $content = $this->misc->form;
+
+        foreach ($cheboxes as $checkbox) {
+            $content .= sprintf('<p>%s', "\n");
+            $content .= sprintf('<input type="%s" name="%s" id="%s" %s />', $checkbox['type'], $checkbox['name'], $checkbox['id'], $checkbox['checked'] ? 'checked="checked"' : '');
+            $content .= sprintf('<label for="%s">%s</label>', $checkbox['id'], $checkbox['labeltext']);
+            $content .= sprintf('</p>%s', "\n");
+        }
+
+        foreach ($inputs as $input) {
+            $content .= sprintf('<input type="%s" name="%s" value="%s" />%s', $input['type'], $input['name'], $input['value'], "\n");
+        }
+
+        $content .= sprintf('<p>%s', "\n");
+        foreach ($buttons as $button) {
+            $content .= sprintf('<input type="%s" name="%s" value="%s" />%s', $button['type'], $button['name'], $button['value'], "\n");
+        }
+
+        $content .= sprintf('</p>%s', "\n");
+
+        return $content;
+    }
 }
