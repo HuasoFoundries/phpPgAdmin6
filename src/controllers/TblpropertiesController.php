@@ -23,13 +23,11 @@ class TblpropertiesController extends BaseController
      */
     public function render()
     {
-        $misc = $this->misc;
-
         if ('tree' == $this->action) {
             return $this->doTree();
         }
 
-        $footer_template = 'footer.twig';
+        $header_template = 'header.twig';
 
         ob_start();
         switch ($this->action) {
