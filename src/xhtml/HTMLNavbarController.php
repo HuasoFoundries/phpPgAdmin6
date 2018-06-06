@@ -116,7 +116,6 @@ class HTMLNavbarController extends HTMLController
      * @param string      $alltabs   The name of current section (Ex: intro, server, ...),
      *                               or an array with tabs (Ex: sqledit::doFind function)
      * @param string      $activetab the name of the tab to be highlighted
-     * @param bool        $print     if false, return html
      * @param bool        $do_print  true to print html, false to return html
      * @param null|string $from      whichi method is calling this one
      */

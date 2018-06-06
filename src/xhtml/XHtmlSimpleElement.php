@@ -7,12 +7,12 @@
 namespace PHPPgAdmin\XHtml;
 
 /**
- *  XHtmlSimpleElement.
+ * XHtmlSimpleElement.
  *
- *  Used to generate Xhtml-Code for simple xhtml elements
- *  (i.e. elements, that can't contain child elements)
+ * Used to generate Xhtml-Code for simple xhtml elements
+ * (i.e. elements, that can't contain child elements)
  *
- *  @author    Felix Meinhold
+ * @author    Felix Meinhold
  */
 class XHtmlSimpleElement
 {

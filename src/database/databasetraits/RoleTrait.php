@@ -230,8 +230,7 @@ trait RoleTrait
             $rolename = $newrolename;
         }
 
-        $status =
-        $this->setRole(
+        $status = $this->setRole(
             $rolename,
             $password,
             $superuser,

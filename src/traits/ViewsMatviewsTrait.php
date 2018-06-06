@@ -220,7 +220,6 @@ trait ViewsMatviewsTrait
         if (empty($_POST['dblFldMeth'])) {
             // no doublon control
             $selFields .= $field_element.', ';
-        // doublon control
         } elseif (empty($tmpHsh[$arrTmp['fieldname']])) {
             // field does not exist
             $selFields .= $field_element.', ';
