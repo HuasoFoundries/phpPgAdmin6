@@ -177,7 +177,7 @@ class DisplayController extends BaseController
 
         $this->printTitle($this->lang['strqueryresults']);
 
-        $this->prtrace($subject, $object, $query, $_SESSION['sqlquery']);
+        //$this->prtrace($subject, $object, $query, $_SESSION['sqlquery']);
 
         $this->printMsg($msg);
 
