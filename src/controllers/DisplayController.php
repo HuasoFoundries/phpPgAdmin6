@@ -148,34 +148,8 @@ class DisplayController extends BaseController
 
         $this->printTabs($subject, $tabsPosition);
 
-        $fkey = $this->coalesceArr($_REQUEST, 'fkey')['fkey'];
-
-        $query = $this->coalesceArr($_REQUEST, 'query')['query'];
-        // This code is used when browsing FK in pure-xHTML (without js)
-        if ($fkey) {
-            $ops = [];
-            foreach (array_keys($fkey) as $x) {
-                $ops[$x] = '=';
-            }
-            $query             = $data->getSelectSQL($_REQUEST['table'], [], $fkey, $ops);
-            $_REQUEST['query'] = $query;
-        }
-
-        $title = 'strqueryresults';
-        $type  = 'QUERY';
-
-        if ($object && $query) {
-            $_SESSION['sqlquery'] = $query;
-            $title                = 'strselect';
-            $type                 = 'SELECT';
-        } elseif ($object) {
-            $title = 'strselect';
-            $type  = 'TABLE';
-        } elseif (isset($_SESSION['sqlquery'])) {
-            $query = $_SESSION['sqlquery'];
-        }
-
-        $this->printTitle($this->lang['strqueryresults']);
+        list($query, $title, $type) = $this->getQueryTitleAndType($data);
+        $this->printTitle($title);
 
         //$this->prtrace($subject, $object, $query, $_SESSION['sqlquery']);
 
@@ -267,6 +241,38 @@ class DisplayController extends BaseController
 
         $navlinks = $this->getBrowseNavLinks($type, $_gets, $page, $subject, $object, $resultset);
         $this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
+    }
+
+    public function getQueryTitleAndType($data)
+    {
+        $fkey = $this->coalesceArr($_REQUEST, 'fkey')['fkey'];
+
+        $query = $this->coalesceArr($_REQUEST, 'query')['query'];
+        // This code is used when browsing FK in pure-xHTML (without js)
+        if ($fkey) {
+            $ops = [];
+            foreach (array_keys($fkey) as $x) {
+                $ops[$x] = '=';
+            }
+            $query             = $data->getSelectSQL($_REQUEST['table'], [], $fkey, $ops);
+            $_REQUEST['query'] = $query;
+        }
+
+        $title = 'strqueryresults';
+        $type  = 'QUERY';
+
+        if ($object && $query) {
+            $_SESSION['sqlquery'] = $query;
+            $title                = 'strselect';
+            $type                 = 'SELECT';
+        } elseif ($object) {
+            $title = 'strselect';
+            $type  = 'TABLE';
+        } elseif (isset($_SESSION['sqlquery'])) {
+            $query = $_SESSION['sqlquery'];
+        }
+
+        return [$query, $title, $type];
     }
 
     public function getBrowseNavLinks($type, $_gets, $page, $subject, $object, $resultset)
@@ -598,6 +604,10 @@ class DisplayController extends BaseController
     public function printTableHeaderCells(&$resultset, $args, $withOid)
     {
         $data = $this->misc->getDatabaseAccessor();
+
+        if (!is_array($resultset->fields)) {
+            return;
+        }
 
         foreach (array_keys($resultset->fields) as $index => $key) {
             if (($key === $data->id) && (!($withOid && $this->conf['show_oids']))) {
