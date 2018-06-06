@@ -161,8 +161,10 @@ class PrivilegesController extends BaseController
 
     public function printGrantLinks()
     {
-        $data    = $this->misc->getDatabaseAccessor();
-        $subject = $_REQUEST['subject'];
+        $data     = $this->misc->getDatabaseAccessor();
+        $subject  = $_REQUEST['subject'];
+        $alllabel = '';
+        $alltxt   = '';
         // Links for granting to a user or group
         switch ($subject) {
             case 'table':

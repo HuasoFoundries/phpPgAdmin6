@@ -448,6 +448,7 @@ class TablesController extends BaseController
         $this->coalesceArr($_REQUEST, 'tblcomment', '');
 
         $this->coalesceArr($_REQUEST, 'spcname', '');
+        $tablespaces = null;
 
         switch ($_REQUEST['stage']) {
             case 1:

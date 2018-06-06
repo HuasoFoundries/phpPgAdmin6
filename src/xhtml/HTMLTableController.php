@@ -262,19 +262,19 @@ class HTMLTableController extends HTMLController
     {
         $thead_html = "<thead><tr>\n";
 
-        // Handle cases where no class has been passed
-        if (isset($column['class'])) {
-            $this->class = '' !== $column['class'] ? " class=\"{$column['class']}\"" : '';
-        } else {
-            $this->class = '';
-        }
-
         // Display column headings
         if ($this->has_ma) {
             $thead_html .= '<th></th>';
         }
 
         foreach ($columns as $column_id => $column) {
+            // Handle cases where no class has been passed
+            if (isset($column['class'])) {
+                $this->class = '' !== $column['class'] ? " class=\"{$column['class']}\"" : '';
+            } else {
+                $this->class = '';
+            }
+
             switch ($column_id) {
                 case 'actions':
                     if (sizeof($actions) > 0) {

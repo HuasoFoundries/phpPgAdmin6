@@ -345,7 +345,7 @@ class ADOdbBase
     public function insert($table, $vars)
     {
         $this->fieldClean($table);
-
+        $sql = '';
         // Build clause
         if (sizeof($vars) > 0) {
             $fields = '';
@@ -366,7 +366,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql = $fields.$values.')';
+            $sql .= $fields.$values.')';
         }
 
         // Check for failures

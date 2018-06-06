@@ -83,9 +83,9 @@ class SqlController extends BaseController
             $this->start_time = ((float) $usec + (float) $sec);
         }
 
-        $this->doDefault();
+        $rs = $this->doDefault();
 
-        $this->doFooter(true, 'footer_sqledit.twig');
+        $this->doFooter(true, 'footer_sqledit.twig', $rs);
     }
 
     public function doDefault()
@@ -229,10 +229,12 @@ class SqlController extends BaseController
                 // Otherwise nodata to print
                 echo '<p>', $this->lang['strnodata'], "</p>\n";
             }
+
+            return $rs;
         }
     }
 
-    private function doFooter($doBody = true, $template = 'footer.twig')
+    private function doFooter($doBody = true, $template = 'footer.twig', $rs = null)
     {
         $data = $this->misc->getDatabaseAccessor();
 

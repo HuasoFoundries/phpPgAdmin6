@@ -412,7 +412,7 @@ class Postgres extends ADOdbBase
      * @param string        $name     Entry in $_FILES to use
      * @param null|callable $callback (optional) Callback function to call with each query, its result and line number
      *
-     * @return bool true for general success, false on any failure
+     * @return bool|mixed true for general success, false on any failure, or resultset
      */
     public function executeScript($name, $callback = null)
     {
@@ -630,6 +630,7 @@ class Postgres extends ADOdbBase
             $line = null;
         } // end while
 
+        $res = true;
         /*
          * Process query at the end of file without a semicolon, so long as
          * it's non-empty.
@@ -661,7 +662,7 @@ class Postgres extends ADOdbBase
 
         fclose($fd);
 
-        return true;
+        return $res;
     }
 
     /**

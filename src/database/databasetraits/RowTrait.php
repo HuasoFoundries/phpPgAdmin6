@@ -228,7 +228,7 @@ trait RowTrait
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($table);
-
+        $sql = '';
         // Build clause
         if (sizeof($vars) > 0) {
             foreach ($vars as $key => $value) {
@@ -241,7 +241,7 @@ trait RowTrait
                     $tmp = $this->formatValue($types[$key], $format[$key], $value);
                 }
 
-                if (isset($sql)) {
+                if (strlen($sql) > 0) {
                     $sql .= ", \"{$key}\"={$tmp}";
                 } else {
                     $sql = "UPDATE \"{$f_schema}\".\"{$table}\" SET \"{$key}\"={$tmp}";

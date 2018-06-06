@@ -473,7 +473,8 @@ class TblpropertiesController extends BaseController
         // Fetch table info
         $table = $data->getTable($_REQUEST['table']);
         // Fetch all users
-        $users = $data->getUsers();
+        $users       = $data->getUsers();
+        $tablespaces = null;
         // Fetch all tablespaces from the database
         if ($data->hasTablespaces()) {
             $tablespaces = $data->getTablespaces(true);

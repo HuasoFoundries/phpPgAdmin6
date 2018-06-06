@@ -375,7 +375,8 @@ trait ViewsMatviewsTrait
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $tblCount = sizeof($_POST['formTables']);
+        $tblCount     = sizeof($_POST['formTables']);
+        $arrSelTables = [];
         //unserialize our schema/table information and store in arrSelTables
         for ($i = 0; $i < $tblCount; ++$i) {
             $arrSelTables[] = unserialize($_POST['formTables'][$i]);
@@ -439,6 +440,7 @@ trait ViewsMatviewsTrait
         echo "<table>\n";
         echo "<tr><th class=\"data\">{$this->lang['strviewlink']}</th></tr>";
         $rowClass = 'data1';
+        $formLink = [];
         for ($i = 0; $i < $linkCount; ++$i) {
             // Initialise variables
             if (!isset($formLink[$i]['operator'])) {

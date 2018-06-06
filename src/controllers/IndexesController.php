@@ -327,13 +327,14 @@ class IndexesController extends BaseController
         $formConcur    = $this->getPostParam('formConcur');
         $formWhere     = $this->getPostParam('formWhere', '');
         $formSpc       = $this->getPostParam('formSpc', '');
+        $tablespaces   = null;
 
         $attrs = $data->getTableAttributes($object);
         // Fetch all tablespaces from the database
         if ($data->hasTablespaces()) {
             $tablespaces = $data->getTablespaces();
         }
-        $this->prtrace('tablespaces', $tablespaces->recordCount());
+
         $this->printTrail($subject);
         $this->printTabs($subject, 'indexes');
         $this->printTitle($this->lang['strcreateindex'], 'pg.index.create');

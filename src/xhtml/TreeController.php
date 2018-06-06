@@ -154,25 +154,19 @@ class TreeController
         }
 
         if (true === $print) {
-            if (null === $this->container->requestobj->getAttribute('route')) {
-                header('Content-Type: text/xml; charset=UTF-8');
-                header('Cache-Control: no-cache');
-                echo $tree_xml;
-            } else {
-                if (isset($_REQUEST['children'])) {
-                    $children = $parent;
-                    $parent   = ['children' => $children];
-                }
-
-                return $this
-                    ->container
-                    ->responseobj
-                    ->withStatus(200)
-                    ->withJson($parent);
+            if (isset($_REQUEST['children'])) {
+                $children = $parent;
+                $parent   = ['children' => $children];
             }
-        } else {
-            return $tree_xml;
+
+            return $this
+                ->container
+                ->responseobj
+                ->withStatus(200)
+                ->withJson($parent);
         }
+
+        return $parent;
     }
 
     /**
