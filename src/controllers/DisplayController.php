@@ -693,6 +693,18 @@ class DisplayController extends BaseController
         }
     }
 
+    private function _unserializeIfNotArray($the_array, $key)
+    {
+        if (!isset($the_array[$key])) {
+            return [];
+        }
+        if (is_array($the_array[$key])) {
+            return $the_array[$key];
+        }
+
+        return unserialize(urldecode($the_array[$key]));
+    }
+
     /**
      * Show form to edit row.
      *
@@ -702,11 +714,7 @@ class DisplayController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (is_array($_REQUEST['key'])) {
-            $key = $_REQUEST['key'];
-        } else {
-            $key = unserialize(urldecode($_REQUEST['key']));
-        }
+        $key = $this->_unserializeIfNotArray($_REQUEST, 'key');
 
         $this->printTrail($_REQUEST['subject']);
         $this->printTitle($this->lang['streditrow']);
@@ -811,9 +819,7 @@ class DisplayController extends BaseController
 
         echo isset($_REQUEST['count']) ? sprintf('<input type="hidden" name="count" value="%s" />%s', htmlspecialchars($_REQUEST['count']), "\n") : '';
 
-        if (isset($_REQUEST['return'])) {
-            echo '<input type="hidden" name="return" value="', htmlspecialchars($_REQUEST['return']), '" />'."\n";
-        }
+        echo isset($_REQUEST['return']) ? sprintf('<input type="hidden" name="return" value="%s" />%s', htmlspecialchars($_REQUEST['return']), "\n") : '';
 
         echo '<input type="hidden" name="page" value="', htmlspecialchars($_REQUEST['page']), '" />'."\n";
         echo '<input type="hidden" name="sortkey" value="', htmlspecialchars($_REQUEST['sortkey']), '" />'."\n";
@@ -828,11 +834,11 @@ class DisplayController extends BaseController
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />"."\n";
 
         if (false !== $fksprops) {
+            $autocomplete_string = "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$this->lang['strac']}</label>";
             if ('default off' != $this->conf['autocomplete']) {
-                echo "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$this->lang['strac']}</label>"."\n";
-            } else {
-                echo "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$this->lang['strac']}</label>"."\n";
+                $autocomplete_string = "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$this->lang['strac']}</label>";
             }
+            echo $autocomplete_string."\n";
         }
 
         echo '</p>'."\n";
@@ -847,11 +853,7 @@ class DisplayController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (is_array($_REQUEST['key'])) {
-            $key = $_REQUEST['key'];
-        } else {
-            $key = unserialize(urldecode($_REQUEST['key']));
-        }
+        $key = $this->_unserializeIfNotArray($_REQUEST, 'key');
 
         $this->coalesceArr($_POST, 'values', []);
 
