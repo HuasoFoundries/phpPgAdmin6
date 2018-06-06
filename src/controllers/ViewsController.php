@@ -344,8 +344,6 @@ class ViewsController extends BaseController
      */
     public function doSetParamsCreate($msg = '')
     {
-        $data = $this->misc->getDatabaseAccessor();
-
         // Check that they've chosen tables for the view definition
         if (!isset($_POST['formTables'])) {
             return $this->doWizardCreate($this->lang['strviewneedsdef']);

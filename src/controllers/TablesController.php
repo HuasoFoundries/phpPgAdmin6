@@ -37,7 +37,6 @@ class TablesController extends BaseController
         }
 
         $header_template = 'header.twig';
-        $footer_template = 'footer.twig';
 
         ob_start();
 
@@ -395,8 +394,6 @@ class TablesController extends BaseController
 
     public function doSubTree()
     {
-        $data = $this->misc->getDatabaseAccessor();
-
         $tabs    = $this->misc->getNavTabs('table');
         $items   = $this->adjustTabsForTree($tabs);
         $reqvars = $this->misc->getRequestVars('table');

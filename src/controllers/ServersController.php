@@ -170,7 +170,7 @@ class ServersController extends BaseController
             $nodes = $this->getServers(true, false);
         }
 
-        $reqvars = $this->misc->getRequestVars('server');
+        //$reqvars = $this->misc->getRequestVars('server');
 
         //$this->prtrace($nodes);
 
@@ -191,9 +191,6 @@ class ServersController extends BaseController
     public function doLogout()
     {
         $plugin_manager = $this->plugin_manager;
-        $this->misc     = $this->misc;
-        $conf           = $this->conf;
-        $data           = $this->misc->getDatabaseAccessor();
 
         $plugin_manager->doHook('logout', $_REQUEST['logoutServer']);
 

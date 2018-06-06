@@ -28,10 +28,8 @@ class TblpropertiesController extends BaseController
         if ('tree' == $this->action) {
             return $this->doTree();
         }
-        $data = $misc->getDatabaseAccessor();
 
         $footer_template = 'footer.twig';
-        $header_template = 'header.twig';
 
         ob_start();
         switch ($this->action) {
@@ -591,7 +589,6 @@ class TblpropertiesController extends BaseController
     public function doImport($msg = '')
     {
         $misc = $this->misc;
-        $data = $misc->getDatabaseAccessor();
 
         $this->printTrail('table');
         $this->printTabs('table', 'import');

@@ -51,8 +51,6 @@ class HTMLFooterController extends HTMLController
      */
     public function printFooter($doBody = true, $template = 'footer.twig')
     {
-        $lang = $this->lang;
-
         $reload_param = 'none';
         if ($this->misc->getReloadBrowser()) {
             $reload_param = 'other';

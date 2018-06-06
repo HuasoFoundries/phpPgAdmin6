@@ -90,8 +90,6 @@ class SqlController extends BaseController
 
     public function doDefault()
     {
-        $conf        = $this->conf;
-        $this->misc  = $this->misc;
         $_connection = $this->misc->getConnection();
 
         try {
@@ -113,7 +111,6 @@ class SqlController extends BaseController
 
     private function execute_script()
     {
-        $conf        = $this->conf;
         $misc        = $this->misc;
         $data        = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();

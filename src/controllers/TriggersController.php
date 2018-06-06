@@ -231,8 +231,6 @@ class TriggersController extends BaseController
 
         $triggers = $data->getTriggers($_REQUEST['table']);
 
-        $reqvars = $this->misc->getRequestVars('table');
-
         $attrs = [
             'text' => Decorator::field('tgname'),
             'icon' => 'Trigger',

@@ -44,7 +44,7 @@ class HTMLHeaderController extends HTMLController
         if (function_exists('newrelic_disable_autorum')) {
             newrelic_disable_autorum();
         }
-        $appName        = $this->appName;
+
         $lang           = $this->lang;
         $plugin_manager = $this->plugin_manager;
 
@@ -107,8 +107,6 @@ class HTMLHeaderController extends HTMLController
      */
     public function printTitle($title, $help = null, $do_print = true)
     {
-        $lang = $this->lang;
-
         $title_html = '<h2>';
         $title_html .= $this->misc->printHelp($title, $help, false);
         $title_html .= "</h2>\n";

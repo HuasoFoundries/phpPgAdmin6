@@ -107,8 +107,6 @@ class TreeController
      */
     private function printTreeJSON(&$treedata, &$attrs, $print = true)
     {
-        $lang = $this->lang;
-
         $parent = [];
 
         if (isset($attrs['is_root'])) {

@@ -570,9 +570,10 @@ class ADOdbBase
         // Add final text to the array
         $elements[] = substr($arr, $j);
 
+        $elementcount = sizeof($elements);
         // Do one further loop over the elements array to remote double quoting
         // and escaping of double quotes and backslashes
-        for ($i = 0; $i < sizeof($elements); ++$i) {
+        for ($i = 0; $i < $elementcount; ++$i) {
             $v = $elements[$i];
             if (strpos($v, '"') === 0) {
                 $v            = substr($v, 1, strlen($v) - 2);

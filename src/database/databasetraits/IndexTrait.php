@@ -538,8 +538,9 @@ trait IndexTrait
         $tables_list        = "'{$tables[0]['tablename']}'";
         $schema_list        = "'{$tables[0]['schemaname']}'";
         $schema_tables_list = "'{$tables[0]['schemaname']}.{$tables[0]['tablename']}'";
+        $tablescount        = sizeof($tables);
 
-        for ($i = 1; $i < sizeof($tables); ++$i) {
+        for ($i = 1; $i < $tablescount; ++$i) {
             $this->clean($tables[$i]['tablename']);
             $this->clean($tables[$i]['schemaname']);
             $tables_list .= ", '{$tables[$i]['tablename']}'";

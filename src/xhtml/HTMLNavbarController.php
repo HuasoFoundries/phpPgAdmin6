@@ -124,7 +124,6 @@ class HTMLNavbarController extends HTMLController
     {
         $from = $from ? $from : __METHOD__;
 
-        $lang       = $this->lang;
         $this->misc = $this->misc;
 
         if (is_string($alltabs)) {
@@ -140,7 +139,7 @@ class HTMLNavbarController extends HTMLController
             foreach ($alltabs as $tab_id => $tab) {
                 if (!isset($tab['hide']) || true !== $tab['hide']) {
                     $tabs[$tab_id]            = $tab;
-                    $tabs[$tab_id]['active']  = $active  = ($tab_id == $activetab) ? ' active' : '';
+                    $tabs[$tab_id]['active']  = ($tab_id == $activetab) ? ' active' : '';
                     $tabs[$tab_id]['tablink'] = str_replace(['&amp;', '.php'], ['&', ''], htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
                     //$this->prtrace('link for ' . $tab_id, $tabs[$tab_id]['tablink']);
                     if (isset($tab['icon']) && $icon = $this->misc->icon($tab['icon'])) {
