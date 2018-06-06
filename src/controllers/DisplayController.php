@@ -113,10 +113,8 @@ class DisplayController extends BaseController
      */
     public function doBrowse($msg = '')
     {
-        $conf           = $this->conf;
-        $this->misc     = $this->misc;
-        $plugin_manager = $this->plugin_manager;
-        $data           = $this->misc->getDatabaseAccessor();
+        $this->misc = $this->misc;
+        $data       = $this->misc->getDatabaseAccessor();
 
         // If current page is not set, default to first page
         $page = $this->coalesceArr($_REQUEST, 'page', 1)['page'];
@@ -139,8 +137,6 @@ class DisplayController extends BaseController
 
         //$object = $this->setIfIsset($object, $_REQUEST[$subject]);
 
-        //$this->prtrace($subject, $object);
-
         $this->printTrail($subject);
 
         $tabsPosition = 'browse';
@@ -158,24 +154,30 @@ class DisplayController extends BaseController
         // This code is used when browsing FK in pure-xHTML (without js)
         if ($fkey) {
             $ops = [];
-            foreach ($fkey as $x => $y) {
+            foreach (array_keys($fkey) as $x) {
                 $ops[$x] = '=';
             }
             $query             = $data->getSelectSQL($_REQUEST['table'], [], $fkey, $ops);
             $_REQUEST['query'] = $query;
         }
 
+        $title = 'strqueryresults';
+        $type  = 'QUERY';
+
         if ($object && $query) {
             $_SESSION['sqlquery'] = $query;
-            $this->printTitle($this->lang['strselect']);
-            $type = 'SELECT';
+            $title                = 'strselect';
+            $type                 = 'SELECT';
         } elseif ($object) {
-            $type = 'TABLE';
-        } else {
-            $this->printTitle($this->lang['strqueryresults']);
-            // we come from sql, $_SESSION['sqlquery'] has been set there
-            $type = 'QUERY';
+            $title = 'strselect';
+            $type  = 'TABLE';
+        } elseif (isset($_SESSION['sqlquery'])) {
+            $query = $_SESSION['sqlquery'];
         }
+
+        $this->printTitle($this->lang['strqueryresults']);
+
+        $this->prtrace($subject, $object, $query, $_SESSION['sqlquery']);
 
         $this->printMsg($msg);
 
@@ -188,15 +190,8 @@ class DisplayController extends BaseController
         // If 'strings' is not set, default to collapsed
         $strings = $this->coalesceArr($_REQUEST, 'strings', 'collapsed')['strings'];
 
-        $schema      = $this->coalesceArr($_REQUEST, 'schema')['schema'];
+        $this->coalesceArr($_REQUEST, 'schema')['schema'];
         $search_path = $this->coalesceArr($_REQUEST, 'search_path')['search_path'];
-
-        // Fetch unique row identifier, if this is a table browse request.
-        if ($object) {
-            $key = $data->getRowIdentifier($object);
-        } else {
-            $key = [];
-        }
 
         // Set the schema search path
         if (isset($search_path) && (0 != $data->setSearchPath(array_map('trim', explode(',', $search_path))))) {
@@ -216,10 +211,8 @@ class DisplayController extends BaseController
                 $max_pages
             );
         } catch (\PHPPgAdmin\ADOdbException $e) {
-            return;
+            return $this->halt($e->getMessage());
         }
-
-        $fkey_information = $this->getFKInfo();
 
         // Build strings for GETs in array
         $_gets = [
@@ -269,151 +262,15 @@ class DisplayController extends BaseController
 
         echo '</form>';
 
-        if (is_object($resultset) && $resultset->recordCount() > 0) {
-            // Show page navigation
-            $paginator = $this->_printPages($page, $max_pages, $_gets);
-
-            echo $paginator;
-            echo "<table id=\"data\">\n<tr>";
-
-            // Check that the key is actually in the result set.  This can occur for select
-            // operations where the key fields aren't part of the select.  XXX:  We should
-            // be able to support this, somehow.
-            foreach ($key as $v) {
-                // If a key column is not found in the record set, then we
-                // can't use the key.
-                if (!array_key_exists($v, $resultset->fields)) {
-                    $key = [];
-
-                    break;
-                }
-            }
-
-            $buttons = [
-                'edit'   => [
-                    'content' => $this->lang['stredit'],
-                    'attr'    => [
-                        'href' => [
-                            'url'     => 'display',
-                            'urlvars' => array_merge(
-                                [
-                                    'action'  => 'confeditrow',
-                                    'strings' => $strings,
-                                    'page'    => $page,
-                                ],
-                                $_gets
-                            ),
-                        ],
-                    ],
-                ],
-                'delete' => [
-                    'content' => $this->lang['strdelete'],
-                    'attr'    => [
-                        'href' => [
-                            'url'     => 'display',
-                            'urlvars' => array_merge(
-                                [
-                                    'action'  => 'confdelrow',
-                                    'strings' => $strings,
-                                    'page'    => $page,
-                                ],
-                                $_gets
-                            ),
-                        ],
-                    ],
-                ],
-            ];
-            $actions = [
-                'actionbuttons' => &$buttons,
-                'place'         => 'display-browse',
-            ];
-            $plugin_manager->doHook('actionbuttons', $actions);
-
-            foreach (array_keys($actions['actionbuttons']) as $this->action) {
-                $actions['actionbuttons'][$this->action]['attr']['href']['urlvars'] = array_merge(
-                    $actions['actionbuttons'][$this->action]['attr']['href']['urlvars'],
-                    $_gets
-                );
-            }
-
-            $edit_params = isset($actions['actionbuttons']['edit']) ?
-            $actions['actionbuttons']['edit'] : [];
-            $delete_params = isset($actions['actionbuttons']['delete']) ?
-            $actions['actionbuttons']['delete'] : [];
-
-            // Display edit and delete actions if we have a key
-            $colspan = count($buttons);
-            if ($colspan > 0 and count($key) > 0) {
-                echo "<th colspan=\"{$colspan}\" class=\"data\">{$this->lang['stractions']}</th>"."\n";
-            }
-
-            // we show OIDs only if we are in TABLE or SELECT type browsing
-            $this->printTableHeaderCells($resultset, $_gets, isset($object));
-
-            echo '</tr>'."\n";
-
-            $i = 0;
-            reset($resultset->fields);
-            while (!$resultset->EOF) {
-                $id = (0 == ($i % 2) ? '1' : '2');
-                echo "<tr class=\"data{$id}\">"."\n";
-                // Display edit and delete links if we have a key
-                if ($colspan > 0 and count($key) > 0) {
-                    $keys_array = [];
-                    $has_nulls  = false;
-                    foreach ($key as $v) {
-                        if (null === $resultset->fields[$v]) {
-                            $has_nulls = true;
-
-                            break;
-                        }
-                        $keys_array["key[{$v}]"] = $resultset->fields[$v];
-                    }
-                    if ($has_nulls) {
-                        echo "<td colspan=\"{$colspan}\">&nbsp;</td>"."\n";
-                    } else {
-                        if (isset($actions['actionbuttons']['edit'])) {
-                            $actions['actionbuttons']['edit']                            = $edit_params;
-                            $actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
-                                $actions['actionbuttons']['edit']['attr']['href']['urlvars'],
-                                $keys_array
-                            );
-                        }
-
-                        if (isset($actions['actionbuttons']['delete'])) {
-                            $actions['actionbuttons']['delete']                            = $delete_params;
-                            $actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
-                                $actions['actionbuttons']['delete']['attr']['href']['urlvars'],
-                                $keys_array
-                            );
-                        }
-
-                        foreach ($actions['actionbuttons'] as $this->action) {
-                            echo "<td class=\"opbutton{$id}\">";
-                            $this->printLink($this->action, true, __METHOD__);
-                            echo '</td>'."\n";
-                        }
-                    }
-                }
-
-                $this->printTableRowCells($resultset, $fkey_information, isset($object));
-
-                echo '</tr>'."\n";
-                $resultset->moveNext();
-                ++$i;
-            }
-            echo '</table>'."\n";
-
-            echo '<p>', $resultset->recordCount(), " {$this->lang['strrows']}</p>"."\n";
-            // Show page navigation
-            echo $paginator;
-        } else {
-            echo "<p>{$this->lang['strnodata']}</p>"."\n";
-        }
-
+        $this->printResultsTable($resultset, $page, $max_pages, $_gets, $object);
         // Navigation links
-        $navlinks = [];
 
+        $navlinks = $this->getBrowseNavLinks($type, $_gets, $page, $subject, $object, $resultset);
+        $this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
+    }
+
+    public function getBrowseNavLinks($type, $_gets, $page, $subject, $object, $resultset)
+    {
         $fields = [
             'server'   => $_REQUEST['server'],
             'database' => $_REQUEST['database'],
@@ -421,6 +278,8 @@ class DisplayController extends BaseController
 
         $this->setIfIsset($fields['schema'], $_REQUEST['schema'], null, false);
 
+        $navlinks = [];
+        $strings  = $_gets['strings'];
         // Return
         if (isset($_REQUEST['return'])) {
             $urlvars = $this->misc->getSubjectParams($_REQUEST['return']);
@@ -455,6 +314,21 @@ class DisplayController extends BaseController
             ];
         }
 
+        $navlinks['collapse'] = [
+            'attr'    => [
+                'href' => [
+                    'url'     => 'display',
+                    'urlvars' => array_merge(
+                        $_gets,
+                        [
+                            'strings' => 'expanded',
+                            'page'    => $page,
+                        ]
+                    ),
+                ],
+            ],
+            'content' => $this->lang['strexpand'],
+        ];
         // Expand/Collapse
         if ('expanded' == $strings) {
             $navlinks['collapse'] = [
@@ -471,22 +345,6 @@ class DisplayController extends BaseController
                     ],
                 ],
                 'content' => $this->lang['strcollapse'],
-            ];
-        } else {
-            $navlinks['collapse'] = [
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'display',
-                        'urlvars' => array_merge(
-                            $_gets,
-                            [
-                                'strings' => 'expanded',
-                                'page'    => $page,
-                            ]
-                        ),
-                    ],
-                ],
-                'content' => $this->lang['strexpand'],
             ];
         }
 
@@ -562,7 +420,172 @@ class DisplayController extends BaseController
             'content' => $this->lang['strrefresh'],
         ];
 
-        $this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
+        return $navlinks;
+    }
+
+    public function printResultsTable($resultset, $page, $max_pages, $_gets, $object)
+    {
+        if (!is_object($resultset) || $resultset->recordCount() <= 0) {
+            echo "<p>{$this->lang['strnodata']}</p>"."\n";
+
+            return;
+        }
+
+        $data           = $this->misc->getDatabaseAccessor();
+        $plugin_manager = $this->plugin_manager;
+        $strings        = $_gets['strings'];
+        $key            = [];
+
+        // Fetch unique row identifier, if this is a table browse request.
+        if ($object) {
+            $key = $data->getRowIdentifier($object);
+        }
+
+        $fkey_information = $this->getFKInfo();
+        // Show page navigation
+        $paginator = $this->_printPages($page, $max_pages, $_gets);
+
+        echo $paginator;
+        echo "<table id=\"data\">\n<tr>";
+
+        // Check that the key is actually in the result set.  This can occur for select
+        // operations where the key fields aren't part of the select.  XXX:  We should
+        // be able to support this, somehow.
+        foreach ($key as $v) {
+            // If a key column is not found in the record set, then we
+            // can't use the key.
+            if (!array_key_exists($v, $resultset->fields)) {
+                $key = [];
+
+                break;
+            }
+        }
+
+        $buttons = [
+            'edit'   => [
+                'content' => $this->lang['stredit'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'display',
+                        'urlvars' => array_merge(
+                            [
+                                'action'  => 'confeditrow',
+                                'strings' => $strings,
+                                'page'    => $page,
+                            ],
+                            $_gets
+                        ),
+                    ],
+                ],
+            ],
+            'delete' => [
+                'content' => $this->lang['strdelete'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'display',
+                        'urlvars' => array_merge(
+                            [
+                                'action'  => 'confdelrow',
+                                'strings' => $strings,
+                                'page'    => $page,
+                            ],
+                            $_gets
+                        ),
+                    ],
+                ],
+            ],
+        ];
+        $actions = [
+            'actionbuttons' => &$buttons,
+            'place'         => 'display-browse',
+        ];
+        $plugin_manager->doHook('actionbuttons', $actions);
+
+        foreach (array_keys($actions['actionbuttons']) as $this->action) {
+            $actions['actionbuttons'][$this->action]['attr']['href']['urlvars'] = array_merge(
+                $actions['actionbuttons'][$this->action]['attr']['href']['urlvars'],
+                $_gets
+            );
+        }
+
+        $edit_params = isset($actions['actionbuttons']['edit']) ?
+        $actions['actionbuttons']['edit'] : [];
+        $delete_params = isset($actions['actionbuttons']['delete']) ?
+        $actions['actionbuttons']['delete'] : [];
+
+        // Display edit and delete actions if we have a key
+        $colspan = count($buttons);
+        if ($colspan > 0 and count($key) > 0) {
+            echo "<th colspan=\"{$colspan}\" class=\"data\">{$this->lang['stractions']}</th>"."\n";
+        }
+
+        // we show OIDs only if we are in TABLE or SELECT type browsing
+        $this->printTableHeaderCells($resultset, $_gets, isset($object));
+
+        echo '</tr>'."\n";
+
+        $i = 0;
+        reset($resultset->fields);
+        while (!$resultset->EOF) {
+            $id = (0 == ($i % 2) ? '1' : '2');
+            echo "<tr class=\"data{$id}\">"."\n";
+            // Display edit and delete links if we have a key
+            if ($colspan <= 0 || count($key) <= 0) {
+                continue;
+            }
+            $keys_array = [];
+            $has_nulls  = false;
+            foreach ($key as $v) {
+                if (null === $resultset->fields[$v]) {
+                    $has_nulls = true;
+
+                    break;
+                }
+                $keys_array["key[{$v}]"] = $resultset->fields[$v];
+            }
+            if ($has_nulls) {
+                echo "<td colspan=\"{$colspan}\">&nbsp;</td>"."\n";
+                $this->printTableRowCells($resultset, $fkey_information, isset($object));
+
+                echo '</tr>'."\n";
+                $resultset->moveNext();
+                ++$i;
+
+                continue;
+            }
+            if (isset($actions['actionbuttons']['edit'])) {
+                $actions['actionbuttons']['edit']                            = $edit_params;
+                $actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
+                    $actions['actionbuttons']['edit']['attr']['href']['urlvars'],
+                    $keys_array
+                );
+            }
+
+            if (isset($actions['actionbuttons']['delete'])) {
+                $actions['actionbuttons']['delete']                            = $delete_params;
+                $actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
+                    $actions['actionbuttons']['delete']['attr']['href']['urlvars'],
+                    $keys_array
+                );
+            }
+
+            foreach ($actions['actionbuttons'] as $this->action) {
+                echo "<td class=\"opbutton{$id}\">";
+                $this->printLink($this->action, true, __METHOD__);
+                echo '</td>'."\n";
+            }
+
+            $this->printTableRowCells($resultset, $fkey_information, isset($object));
+
+            echo '</tr>'."\n";
+            $resultset->moveNext();
+            ++$i;
+        }
+        echo '</table>'."\n";
+
+        echo '<p>', $resultset->recordCount(), " {$this->lang['strrows']}</p>"."\n";
+        // Show page navigation
+        echo $paginator;
     }
 
     /**
@@ -575,41 +598,32 @@ class DisplayController extends BaseController
     public function printTableHeaderCells(&$resultset, $args, $withOid)
     {
         $data = $this->misc->getDatabaseAccessor();
-        $j    = 0;
 
-        foreach ($resultset->fields as $k => $v) {
-            if (($k === $data->id) && (!($withOid && $this->conf['show_oids']))) {
-                ++$j;
-
+        foreach (array_keys($resultset->fields) as $index => $key) {
+            if (($key === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
             }
-            $finfo = $resultset->fetchField($j);
+            $finfo = $resultset->fetchField($index);
 
             if (false === $args) {
                 echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>'."\n";
-            } else {
-                $args['page']    = $_REQUEST['page'];
-                $args['sortkey'] = $j + 1;
-                // Sort direction opposite to current direction, unless it's currently ''
-                $args['sortdir'] = (
-                    'asc' == $_REQUEST['sortdir']
-                    and $_REQUEST['sortkey'] == ($j + 1)
-                ) ? 'desc' : 'asc';
 
-                $sortLink = http_build_query($args);
-
-                echo "<th class=\"data\"><a href=\"?{$sortLink}\">"
-                , $this->misc->printVal($finfo->name);
-                if ($_REQUEST['sortkey'] == ($j + 1)) {
-                    if ('asc' == $_REQUEST['sortdir']) {
-                        echo '<img src="'.$this->misc->icon('RaiseArgument').'" alt="asc">';
-                    } else {
-                        echo '<img src="'.$this->misc->icon('LowerArgument').'" alt="desc">';
-                    }
-                }
-                echo '</a></th>'."\n";
+                continue;
             }
-            ++$j;
+            $args['page']    = $_REQUEST['page'];
+            $args['sortkey'] = $index + 1;
+            // Sort direction opposite to current direction, unless it's currently ''
+            $args['sortdir'] = ('asc' == $_REQUEST['sortdir'] && $_REQUEST['sortkey'] == ($index + 1)) ? 'desc' : 'asc';
+
+            $sortLink = http_build_query($args);
+
+            echo "<th class=\"data\"><a href=\"?{$sortLink}\">";
+            echo $this->misc->printVal($finfo->name);
+            if ($_REQUEST['sortkey'] == ($index + 1)) {
+                $icon = ('asc' == $_REQUEST['sortdir']) ? $this->misc->icon('RaiseArgument') : $this->misc->icon('LowerArgument');
+                echo sprintf('<img src="%s" alt="%s">', $icon, $_REQUEST['sortdir']);
+            }
+            echo '</a></th>'."\n";
         }
 
         reset($resultset->fields);

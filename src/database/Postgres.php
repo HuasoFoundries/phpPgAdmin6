@@ -721,6 +721,7 @@ class Postgres extends ADOdbBase
     public function browseQuery($type, $table, $query, $sortkey, $sortdir, $page, $page_size, &$max_pages)
     {
         // Check that we're not going to divide by zero
+        $this->prtrace($type, $table, $query, $sortkey, $sortdir, $page, $page_size);
         if (!is_numeric($page_size) || $page_size != (int) $page_size || $page_size <= 0) {
             return -3;
         }
@@ -834,7 +835,7 @@ class Postgres extends ADOdbBase
      *
      * @return string The SQL query
      */
-    public function getSelectSQL($table, $show, $values, $ops, $orderby = [])
+    public function getSelectSQL($table, $show, $values = [], $ops = [], $orderby = [])
     {
         $this->fieldArrayClean($show);
 

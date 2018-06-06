@@ -57,6 +57,7 @@ trait SchemaTrait
         // Prepend $schema to search path
         array_unshift($search_path, $schema);
         $status = $this->setSearchPath($search_path);
+
         if ($status == 0) {
             $this->_schema = $schema;
 
@@ -75,7 +76,12 @@ trait SchemaTrait
     {
         $sql = 'SELECT current_schemas(false) AS search_path';
 
-        return $this->phpArray($this->selectField($sql, 'search_path'));
+        $fetchMode = $this->conn->fetchMode;
+        $this->conn->setFetchMode(\ADODB_FETCH_ASSOC);
+        $search_path = $this->selectField($sql, 'search_path');
+        $this->conn->setFetchMode($fetchMode);
+
+        return $this->phpArray($search_path);
     }
 
     /**
