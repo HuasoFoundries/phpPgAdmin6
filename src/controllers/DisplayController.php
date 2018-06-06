@@ -803,21 +803,13 @@ class DisplayController extends BaseController
 
         echo '<input type="hidden" name="action" value="editrow" />'."\n";
         echo $this->misc->form;
-        if (isset($_REQUEST['table'])) {
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'."\n";
-        }
+        echo isset($_REQUEST['table']) ? sprintf('<input type="hidden" name="table" value="%s" />%s', htmlspecialchars($_REQUEST['table']), "\n") : '';
 
-        if (isset($_REQUEST['subject'])) {
-            echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), '" />'."\n";
-        }
+        echo isset($_REQUEST['subject']) ? sprintf('<input type="hidden" name="subject" value="%s" />%s', htmlspecialchars($_REQUEST['subject']), "\n") : '';
 
-        if (isset($_REQUEST['query'])) {
-            echo '<input type="hidden" name="query" value="', htmlspecialchars($_REQUEST['query']), '" />'."\n";
-        }
+        echo isset($_REQUEST['query']) ? sprintf('<input type="hidden" name="query" value="%s" />%s', htmlspecialchars($_REQUEST['query']), "\n") : '';
 
-        if (isset($_REQUEST['count'])) {
-            echo '<input type="hidden" name="count" value="', htmlspecialchars($_REQUEST['count']), '" />'."\n";
-        }
+        echo isset($_REQUEST['count']) ? sprintf('<input type="hidden" name="count" value="%s" />%s', htmlspecialchars($_REQUEST['count']), "\n") : '';
 
         if (isset($_REQUEST['return'])) {
             echo '<input type="hidden" name="return" value="', htmlspecialchars($_REQUEST['return']), '" />'."\n";
