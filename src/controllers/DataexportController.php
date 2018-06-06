@@ -140,9 +140,9 @@ class DataexportController extends BaseController
                 ->withHeader('Content-type', 'text/plain');
         }
 
-        if (isset($_REQUEST['query'])) {
-            $_REQUEST['query'] = trim(urldecode($_REQUEST['query']));
-        }
+        $this->coalesceArr($_REQUEST, 'query', '');
+
+        $_REQUEST['query'] = trim(urldecode($_REQUEST['query']));
 
         // Set the schema search path
         if (isset($_REQUEST['search_path'])) {
@@ -185,21 +185,7 @@ class DataexportController extends BaseController
                 $this->prtrace('$_REQUEST[query]', $_REQUEST['query']);
             }
 
-            if ('copy' == $format) {
-                $this->_mimicCopy($data, $object, $oids, $rs);
-            } elseif ('html' == $format) {
-                $response = $response
-                    ->withHeader('Content-type', 'text/html');
-                $this->_mimicHtml($data, $object, $oids, $rs);
-            } elseif ('xml' == $format) {
-                $response = $response
-                    ->withHeader('Content-type', 'application/xml');
-                $this->_mimicXml($data, $object, $oids, $rs);
-            } elseif ('sql' == $format) {
-                $this->_mimicSQL($data, $object, $oids, $rs);
-            } else {
-                $this->_csvOrTab($data, $object, $oids, $rs, $format);
-            }
+            $response = $this->pickFormat($data, $object, $oids, $rs, $format, $response);
         }
         if ('dataonly' != $_REQUEST['what']) {
             $data->conn->setFetchMode(\ADODB_FETCH_ASSOC);
@@ -210,6 +196,27 @@ class DataexportController extends BaseController
 
         // Finish the dump transaction
         $status = $data->endDump();
+
+        return $response;
+    }
+
+    public function pickFormat($data, $object, $oids, $rs, $format, $response)
+    {
+        if ('copy' == $format) {
+            $this->_mimicCopy($data, $object, $oids, $rs);
+        } elseif ('html' == $format) {
+            $response = $response
+                ->withHeader('Content-type', 'text/html');
+            $this->_mimicHtml($data, $object, $oids, $rs);
+        } elseif ('xml' == $format) {
+            $response = $response
+                ->withHeader('Content-type', 'application/xml');
+            $this->_mimicXml($data, $object, $oids, $rs);
+        } elseif ('sql' == $format) {
+            $this->_mimicSQL($data, $object, $oids, $rs);
+        } else {
+            $this->_csvOrTab($data, $object, $oids, $rs, $format);
+        }
 
         return $response;
     }
