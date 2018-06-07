@@ -108,7 +108,7 @@ trait ExportTrait
     public function formHeader($endpoint = 'dataexport')
     {
         $content = sprintf('<form action="%s/%s" method=\"post\">%s', \SUBFOLDER.'/src/views', $endpoint, "\n");
-        $content .= "<table>\n";
+        $content .= '<table>'."\n";
         $content .= sprintf('<tr><th class="data">%s</th>', $this->lang['strformat']);
         $content .= sprintf('<th class="data" colspan="2">%s</th></tr>%s', $this->lang['stroptions'], "\n");
 

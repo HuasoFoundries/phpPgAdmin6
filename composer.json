@@ -43,7 +43,8 @@
     {
         "friendsofphp/php-cs-fixer": "^2.4",
         "codeception/codeception": "*",
-        "simpletest/simpletest": "^1.1"
+        "simpletest/simpletest": "^1.1",
+        "phpmd/phpmd": "^2.6"
     },
     "scripts":
     {

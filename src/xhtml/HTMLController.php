@@ -214,7 +214,7 @@ class HTMLController
             // If multiple select combo
             $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">"."\n";
         } else {
-            $htmlOut .= "<select rel=\"printCombo\" class=\"select2\" name=\"${szName}\" id=\"${szName}\">"."\n";
+            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" class=\"select2\" >"."\n";
         }
 
         if ($bBlankEntry) {
@@ -224,11 +224,7 @@ class HTMLController
         foreach ($arrOptions as $curKey => $curVal) {
             $curVal = htmlspecialchars($curVal);
             $curKey = htmlspecialchars($curKey);
-            if ($curVal == $szDefault) {
-                $htmlOut .= "<option value=\"${curVal}\" selected=\"selected\">${curKey}</option>\n";
-            } else {
-                $htmlOut .= "<option value=\"${curVal}\">${curKey}</option>\n";
-            }
+            $htmlOut .= sprintf('<option value="%s" %s >%s</option>%s', $curVal, ($curVal == $szDefault) ? 'selected="selected"' : '', $curKey, "\n");
         }
         $htmlOut .= "</select>\n";
 

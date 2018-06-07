@@ -15,7 +15,6 @@ class HTMLTableController extends HTMLController
 {
     public $controller_name                = 'HTMLTableController';
     protected $ma                          = [];
-    protected $class                       = '';
     protected $plugin_functions_parameters = [];
     protected $has_ma                      = false;
 
@@ -205,11 +204,8 @@ class HTMLTableController extends HTMLController
 
         foreach ($columns as $column_id => $column) {
             // Handle cases where no class has been passed
-            if (isset($column['class'])) {
-                $this->class = '' !== $column['class'] ? " class=\"{$column['class']}\"" : '';
-            } else {
-                $this->class = '';
-            }
+
+            $class = (isset($column['class']) && '' !== $column['class']) ? $column['class'] : '';
 
             switch ($column_id) {
                 case 'actions':
@@ -219,7 +215,7 @@ class HTMLTableController extends HTMLController
 
                     break;
                 default:
-                    $thead_html .= '<th class="data'.$this->class.'">';
+                    $thead_html .= '<th class="data'.$class.'">';
                     if (isset($column['help'])) {
                         $thead_html .= $this->misc->printHelp($column['title'], $column['help'], false);
                     } else {
@@ -276,10 +272,11 @@ class HTMLTableController extends HTMLController
                 if (isset($column['url']) && !isset($column['vars'])) {
                     $column['vars'] = [];
                 }
+                $class = (isset($column['class']) && '' !== $column['class']) ? $column['class'] : '';
 
                 switch ($column_id) {
                     case 'actions':
-                        $tbody_html .= "<td class=\"opbutton{$id} {$this->class}\">";
+                        $tbody_html .= "<td class=\"opbutton{$id} {$class}\">";
                         foreach ($alt_actions as $action) {
                             if (isset($action['disable']) && true === $action['disable']) {
                                 continue;
@@ -292,15 +289,12 @@ class HTMLTableController extends HTMLController
                         break;
                     case 'comment':
                         $tbody_html .= "<td class='comment_cell'>";
-                        $val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);
-                        if (!is_null($val)) {
-                            $tbody_html .= htmlentities($val);
-                        }
+                        $val = htmlentities(Decorator::get_sanitized_value($column['field'], $tabledata->fields));
                         $tbody_html .= '</td>';
 
                         break;
                     default:
-                        $tbody_html .= "<td{$this->class}>";
+                        $tbody_html .= '<td class="'.$class.'"">';
                         $val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);
                         if (!is_null($val)) {
                             if (isset($column['url'])) {
@@ -339,30 +333,18 @@ class HTMLTableController extends HTMLController
 
         $tfoot_html = "<tfoot><tr>\n";
 
-        // Handle cases where no class has been passed
-        if (isset($column['class'])) {
-            $this->class = '' !== $column['class'] ? " class=\"{$column['class']}\"" : '';
-        } else {
-            $this->class = '';
-        }
-
         // Display column headings
         if ($this->has_ma) {
             $tfoot_html .= '<td></td>';
         }
 
         foreach ($columns as $column_id => $column) {
-            switch ($column_id) {
-                case 'actions':
-                    if (sizeof($actions) > 0) {
-                        $tfoot_html .= '<td class="data"></td>'."\n";
-                    }
+            // Handle cases where no class has been passed
 
-                    break;
-                default:
-                    $tfoot_html .= "<td class=\"data{$this->class}\"></td>\n";
+            $class = (isset($column['class']) && '' !== $column['class']) ? $column['class'] : '';
 
-                    break;
+            if ($column_id !== 'actions' || sizeof($actions) > 0) {
+                $tfoot_html .= "<td class=\"data{$class}\"></td>\n";
             }
         }
         $tfoot_html .= "</tr></tfoot>\n";

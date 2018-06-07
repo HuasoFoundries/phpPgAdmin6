@@ -388,7 +388,7 @@ trait MiscTrait
         for ($i = 1; $i <= $num; ++$i) {
         $temp .= $i . "\n";
         }
-        $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>\n";
+        $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>"."\n";
         $out = $temp;
         }
         unset($lines);
