@@ -88,7 +88,7 @@ trait MiscTrait
                         'schema'   => $_REQUEST['schema'],
                         'table'    => $_REQUEST['table'],
                         'action'   => 'confselectrows',
-                    ], ];
+                    ]];
 
                 break;
             case 'view':
@@ -184,7 +184,7 @@ trait MiscTrait
                         'server'  => $_REQUEST['server'],
                         'subject' => 'plugin',
                         'plugin'  => $_REQUEST['plugin'],
-                    ], ];
+                    ]];
 
                 if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin']))) {
                     $vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
@@ -196,14 +196,64 @@ trait MiscTrait
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = SUBFOLDER.'/redirect';
+            $vars['url'] = SUBFOLDER . '/redirect';
         }
-        if ($vars['url'] == SUBFOLDER.'/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = SUBFOLDER.'/redirect/'.$vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
         return $vars;
+    }
+
+    public function maybeClipStr($str, $params)
+    {
+
+        if (isset($params['map'], $params['map'][$str])) {
+            $str = $params['map'][$str];
+        }
+        // Clip the value if the 'clip' parameter is true.
+        if (!isset($params['clip']) || $params['clip'] !== true) {
+            return $str;
+        }
+        $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
+        $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $this->lang['strellipsis'];
+        if (strlen($str) > $maxlen) {
+            $str = substr($str, 0, $maxlen - 1) . $ellipsis;
+        }
+
+        return $str;
+    }
+
+    public function printBoolean($type, &$str, $params, $lang)
+    {
+        if ($type === 'yesno') {
+            $this->coalesceArr($params, 'true', $lang['stryes']);
+            $this->coalesceArr($params, 'false', $lang['strno']);
+        }
+
+        if (is_bool($str)) {
+            $str = $str ? 't' : 'f';
+        }
+
+        switch ($str) {
+            case 't':
+                $out   = (isset($params['true']) ? $params['true'] : $lang['strtrue']);
+                $align = 'center';
+
+                break;
+            case 'f':
+                $out   = (isset($params['false']) ? $params['false'] : $lang['strfalse']);
+                $align = 'center';
+
+                break;
+            default:
+                $align = null;
+                $out   = htmlspecialchars($str);
+        }
+
+        return [$str, $align, $out];
+
     }
 
     /**
@@ -250,18 +300,7 @@ trait MiscTrait
             : '';
         }
 
-        if (isset($params['map'], $params['map'][$str])) {
-            $str = $params['map'][$str];
-        }
-
-        // Clip the value if the 'clip' parameter is true.
-        if (isset($params['clip']) && $params['clip'] === true) {
-            $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
-            $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
-            if (strlen($str) > $maxlen) {
-                $str = substr($str, 0, $maxlen - 1).$ellipsis;
-            }
-        }
+        $str = $this->maybeClipStr($str, $params);
 
         $out   = '';
         $class = '';
@@ -283,35 +322,9 @@ trait MiscTrait
 
                 break;
             case 'yesno':
-                if (!isset($params['true'])) {
-                    $params['true'] = $lang['stryes'];
-                }
-
-                if (!isset($params['false'])) {
-                    $params['false'] = $lang['strno'];
-                }
-
-            // no break - fall through to boolean case.
             case 'bool':
             case 'boolean':
-                if (is_bool($str)) {
-                    $str = $str ? 't' : 'f';
-                }
-
-                switch ($str) {
-                    case 't':
-                        $out   = (isset($params['true']) ? $params['true'] : $lang['strtrue']);
-                        $align = 'center';
-
-                        break;
-                    case 'f':
-                        $out   = (isset($params['false']) ? $params['false'] : $lang['strfalse']);
-                        $align = 'center';
-
-                        break;
-                    default:
-                        $out = htmlspecialchars($str);
-                }
+                list($str, $align, $out) = $this->printBoolean($type, $str, $params, $lang);
 
                 break;
             case 'bytea':
@@ -349,11 +362,7 @@ trait MiscTrait
 
                 break;
             case 'prettysize':
-                if ($str == -1) {
-                    $out = $lang['strnoaccess'];
-                } else {
-                    $out = \PHPPgAdmin\Traits\HelperTrait::formatSizeUnits($str, $lang);
-                }
+                $out = \PHPPgAdmin\Traits\HelperTrait::formatSizeUnits($str, $lang);
 
                 break;
             default:
@@ -370,6 +379,28 @@ trait MiscTrait
                 }
         }
 
+        $this->adjustClassAlignTag($class, $align, $tag, $out, $params);
+
+        // Add line numbers if 'lineno' param is true
+        if (isset($params['lineno']) && $params['lineno'] === true) {
+            $lines = explode("\n", $str);
+            $num   = count($lines);
+            if ($num > 0) {
+                $temp = "<table>\n<tr><td class=\"{$class}\" style=\"vertical-align: top; padding-right: 10px;\"><pre class=\"{$class}\">";
+                for ($i = 1; $i <= $num; ++$i) {
+                    $temp .= $i . "\n";
+                }
+                $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>\n";
+                $out = $temp;
+            }
+            unset($lines);
+        }
+
+        return $out;
+    }
+
+    public function adjustClassAlignTag(&$class, &$align, &$tag, &$out, $params)
+    {
         if (isset($params['class'])) {
             $class = $params['class'];
         }
@@ -387,23 +418,6 @@ trait MiscTrait
             $classattr = !empty($class) ? " class=\"{$class}\"" : '';
             $out       = "<{$tag}{$alignattr}{$classattr}>{$out}</{$tag}>";
         }
-
-        // Add line numbers if 'lineno' param is true
-        if (isset($params['lineno']) && $params['lineno'] === true) {
-            $lines = explode("\n", $str);
-            $num   = count($lines);
-            if ($num > 0) {
-                $temp = "<table>\n<tr><td class=\"{$class}\" style=\"vertical-align: top; padding-right: 10px;\"><pre class=\"{$class}\">";
-                for ($i = 1; $i <= $num; ++$i) {
-                    $temp .= $i."\n";
-                }
-                $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>\n";
-                $out = $temp;
-            }
-            unset($lines);
-        }
-
-        return $out;
     }
 
     /**
@@ -629,7 +643,7 @@ trait MiscTrait
                         'icon'    => 'Views',
                     ],
                     'matviews'    => [
-                        'title'   => 'M '.$lang['strviews'],
+                        'title'   => 'M ' . $lang['strviews'],
                         'url'     => 'materializedviews',
                         'urlvars' => ['subject' => 'schema'],
                         'help'    => 'pg.matview',
@@ -1024,14 +1038,14 @@ trait MiscTrait
                 $tabs = [
                     'sql'  => [
                         'title'   => $lang['strsql'],
-                        'url'     => \SUBFOLDER.'/src/views/sqledit',
+                        'url'     => \SUBFOLDER . '/src/views/sqledit',
                         'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
                         'help'    => 'pg.sql',
                         'icon'    => 'SqlEditor',
                     ],
                     'find' => [
                         'title'   => $lang['strfind'],
-                        'url'     => \SUBFOLDER.'/src/views/sqledit',
+                        'url'     => \SUBFOLDER . '/src/views/sqledit',
                         'urlvars' => ['action' => 'find', 'subject' => 'schema'],
                         'icon'    => 'Search',
                     ],

@@ -190,7 +190,9 @@ trait HelperTrait
 
     public static function formatSizeUnits($bytes, $lang)
     {
-        if ($bytes >= 1099511627776) {
+        if ($bytes == -1) {
+            $bytes = $lang['strnoaccess'];
+        } else if ($bytes >= 1099511627776) {
             $bytes = sprintf('%s %s', number_format($bytes / 1099511627776, 0), $lang['strtb']);
         } elseif ($bytes >= 1073741824) {
             $bytes = sprintf('%s %s', number_format($bytes / 1073741824, 0), $lang['strgb']);
@@ -231,6 +233,6 @@ trait HelperTrait
         $line   = $backtrace[0]['line'];
 
         call_user_func_array('\Kint::dump', func_get_args());
-        $this->halt('stopped by user at '.$file.' line '.$line);
+        $this->halt('stopped by user at ' . $file . ' line ' . $line);
     }
 }
