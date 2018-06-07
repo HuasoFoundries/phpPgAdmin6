@@ -280,7 +280,7 @@ class HTMLNavbarController extends HTMLController
             $topbar_html .= "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
         }
 
-        $topbar_html .= "</tr></table></div>\n";
+        $topbar_html .= '</tr></table></div>'.PHP_EOL;
 
         if ($do_print) {
             echo $topbar_html;

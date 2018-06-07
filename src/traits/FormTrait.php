@@ -24,9 +24,9 @@ trait FormTrait
     public function getActionTableAndButtons($action, $table, $add, $cancel)
     {
         $content = $this->misc->form;
-        $content .= sprintf('<input type="hidden" name="action" value="%s" />%s', $action, "\n");
-        $content .= sprintf('<input type="hidden" name="table" value="%s" />%s', $table, "\n");
-        $content .= sprintf('<input type="submit" value="%s" />%s', $add, "\n");
+        $content .= sprintf('<input type="hidden" name="action" value="%s" />%s', $action, PHP_EOL);
+        $content .= sprintf('<input type="hidden" name="table" value="%s" />%s', $table, PHP_EOL);
+        $content .= sprintf('<input type="submit" value="%s" />%s', $add, PHP_EOL);
         $content .= sprintf('<input type="submit" name="cancel" value="%s" />', $cancel);
 
         return $content;
@@ -44,22 +44,22 @@ trait FormTrait
         $content = $this->misc->form;
 
         foreach ($cheboxes as $checkbox) {
-            $content .= sprintf('<p>%s', "\n");
+            $content .= sprintf('<p>%s', PHP_EOL);
             $content .= sprintf('<input type="%s" name="%s" id="%s" %s />', $checkbox['type'], $checkbox['name'], $checkbox['id'], $checkbox['checked'] ? 'checked="checked"' : '');
             $content .= sprintf('<label for="%s">%s</label>', $checkbox['id'], $checkbox['labeltext']);
-            $content .= sprintf('</p>%s', "\n");
+            $content .= sprintf('</p>%s', PHP_EOL);
         }
 
         foreach ($inputs as $input) {
-            $content .= sprintf('<input type="%s" name="%s" value="%s" />%s', $input['type'], $input['name'], $input['value'], "\n");
+            $content .= sprintf('<input type="%s" name="%s" value="%s" />%s', $input['type'], $input['name'], $input['value'], PHP_EOL);
         }
 
-        $content .= sprintf('<p>%s', "\n");
+        $content .= sprintf('<p>%s', PHP_EOL);
         foreach ($buttons as $button) {
-            $content .= sprintf('<input type="%s" name="%s" value="%s" />%s', $button['type'], $button['name'], $button['value'], "\n");
+            $content .= sprintf('<input type="%s" name="%s" value="%s" />%s', $button['type'], $button['name'], $button['value'], PHP_EOL);
         }
 
-        $content .= sprintf('</p>%s', "\n");
+        $content .= sprintf('</p>%s', PHP_EOL);
 
         return $content;
     }

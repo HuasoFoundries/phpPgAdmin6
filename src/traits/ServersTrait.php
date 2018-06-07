@@ -95,7 +95,7 @@ trait ServersTrait
      */
     public function printConnection($the_action, $do_print = true)
     {
-        $connection_html = '<table class="printconnection" style="width: 100%"><tr><td class="popup_select1">'."\n";
+        $connection_html = '<table class="printconnection" style="width: 100%"><tr><td class="popup_select1">'.PHP_EOL;
 
         $conf_servers = $this->getServers();
         $server_id    = $this->misc->getServerId();
@@ -118,22 +118,22 @@ trait ServersTrait
             $connection_html .= '<label>';
             $connection_html .= $this->misc->printHelp($this->lang['strserver'], 'pg.server', false);
             $connection_html .= ': </label>';
-            $connection_html .= " <select name=\"server\" id='selectserver' >"."\n";
+            $connection_html .= " <select name=\"server\" id='selectserver' >".PHP_EOL;
             foreach ($servers as $id => $server) {
                 $connection_html .= '<option value="'.$id.'" '.$server['selected'].'>';
                 $connection_html .= htmlspecialchars("{$server['desc']} ({$server['id']})");
-                $connection_html .= '</option>'."\n";
+                $connection_html .= '</option>'.PHP_EOL;
             }
-            $connection_html .= '</select>'."\n";
+            $connection_html .= '</select>'.PHP_EOL;
         }
 
-        $connection_html .= '</td><td class="popup_select2" style="text-align: right">'."\n";
+        $connection_html .= '</td><td class="popup_select2" style="text-align: right">'.PHP_EOL;
 
         if (count($servers) === 1 &&
             isset($servers[$server_id]['useonlydefaultdb']) &&
             $servers[$server_id]['useonlydefaultdb'] === true
         ) {
-            $connection_html .= '<input type="hidden" name="database" value="'.htmlspecialchars($servers[$server_id]['defaultdb']).'" />'."\n";
+            $connection_html .= '<input type="hidden" name="database" value="'.htmlspecialchars($servers[$server_id]['defaultdb']).'" />'.PHP_EOL;
         } else {
             // Get the list of all databases
             $data      = $this->misc->getDatabaseAccessor();
@@ -141,28 +141,28 @@ trait ServersTrait
             if ($databases->RecordCount() > 0) {
                 $connection_html .= '<label>';
                 $connection_html .= $this->misc->printHelp($this->lang['strdatabase'], 'pg.database', false);
-                $connection_html .= ": <select  id='selectdb'  name=\"database\" >"."\n";
+                $connection_html .= ": <select  id='selectdb'  name=\"database\" >".PHP_EOL;
 
                 //if no database was selected, user should select one
                 if (!isset($_REQUEST['database'])) {
-                    $connection_html .= '<option value="">--</option>'."\n";
+                    $connection_html .= '<option value="">--</option>'.PHP_EOL;
                 }
 
                 while (!$databases->EOF) {
                     $dbname     = $databases->fields['datname'];
                     $dbselected = isset($_REQUEST['database']) && $dbname == $_REQUEST['database'] ? ' selected="selected"' : '';
-                    $connection_html .= '<option value="'.htmlspecialchars($dbname).'" '.$dbselected.'>'.htmlspecialchars($dbname).'</option>'."\n";
+                    $connection_html .= '<option value="'.htmlspecialchars($dbname).'" '.$dbselected.'>'.htmlspecialchars($dbname).'</option>'.PHP_EOL;
 
                     $databases->moveNext();
                 }
-                $connection_html .= '</select></label>'."\n";
+                $connection_html .= '</select></label>'.PHP_EOL;
             } else {
                 $server_info = $this->misc->getServerInfo();
-                $connection_html .= '<input type="hidden" name="database" value="'.htmlspecialchars($server_info['defaultdb']).'" />'."\n";
+                $connection_html .= '<input type="hidden" name="database" value="'.htmlspecialchars($server_info['defaultdb']).'" />'.PHP_EOL;
             }
         }
 
-        $connection_html .= '</td></tr></table>'."\n";
+        $connection_html .= '</td></tr></table>'.PHP_EOL;
 
         if ($do_print) {
             echo $connection_html;

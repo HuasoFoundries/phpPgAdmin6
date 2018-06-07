@@ -57,7 +57,7 @@ class IntroController extends BaseController
         $language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
         foreach ($this->appLangFiles as $k => $v) {
             $selected = ($k == $language) ? ' selected="selected"' : '';
-            $intro_html .= "\t<option value=\"{$k}\"".$selected.">{$v}</option>\n";
+            $intro_html .= "\t<option value=\"{$k}\"".$selected.">{$v}</option>".PHP_EOL;
         }
 
         $intro_html .= '</select>';
@@ -70,7 +70,7 @@ class IntroController extends BaseController
 
         foreach ($this->appThemes as $k => $v) {
             $selected = ($k == $this->conf['theme']) ? ' selected="selected"' : '';
-            $intro_html .= "\t<option value=\"{$k}\"".$selected.">{$v}</option>\n";
+            $intro_html .= "\t<option value=\"{$k}\"".$selected.">{$v}</option>".PHP_EOL;
         }
 
         $intro_html .= '</select>';

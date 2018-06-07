@@ -73,7 +73,7 @@ trait HelperTrait
             'spacer0'   => ' ',
             'line0'     => $backtrace[2]['line'],
 
-            'spacer1'   => "\n",
+            'spacer1'   => PHP_EOL,
 
             'class1'    => $backtrace[2]['class'],
             'type1'     => $backtrace[2]['type'],
@@ -81,7 +81,7 @@ trait HelperTrait
             'spacer2'   => ' ',
             'line1'     => $backtrace[1]['line'],
 
-            'spacer3'   => "\n",*/
+            'spacer3'   => PHP_EOL,*/
 
             'class2'    => $backtrace[1]['class'],
             'type2'     => $backtrace[1]['type'],
@@ -216,7 +216,7 @@ trait HelperTrait
      */
     public static function br2ln($msg)
     {
-        return str_replace(['<br>', '<br/>', '<br />'], "\n", $msg);
+        return str_replace(['<br>', '<br/>', '<br />'], PHP_EOL, $msg);
     }
 
     public function dump()

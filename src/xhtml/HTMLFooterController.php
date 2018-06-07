@@ -79,9 +79,9 @@ class HTMLFooterController extends HTMLController
      */
     public function setFocus($object)
     {
-        echo "<script type=\"text/javascript\">\n";
+        echo '<script type="text/javascript">'.PHP_EOL;
         echo "   document.{$object}.focus();\n";
-        echo "</script>\n";
+        echo '</script>'.PHP_EOL;
     }
 
     /**
@@ -93,11 +93,11 @@ class HTMLFooterController extends HTMLController
      */
     public function setWindowName($name, $addServer = true)
     {
-        echo "<script type=\"text/javascript\">\n";
+        echo '<script type="text/javascript">'.PHP_EOL;
         echo "//<![CDATA[\n";
         echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
-        echo "//]]>\n";
-        echo "</script>\n";
+        echo '//]]>'.PHP_EOL;
+        echo '</script>'.PHP_EOL;
     }
 
     /**

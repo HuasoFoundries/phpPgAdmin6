@@ -272,15 +272,15 @@ class ConstraintsController extends BaseController
         $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
         $buttonRemove->set_attribute('type', 'button');
 
-        echo "<form onsubmit=\"doSelectAll();\" name=\"formIndex\" action=\"constraints\" method=\"post\">\n";
+        echo '<form onsubmit="doSelectAll();" name="formIndex" action="constraints" method="post">'.PHP_EOL;
 
-        echo "<table>\n";
-        echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strname']}</th></tr>\n";
-        echo "<tr><td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>\n";
-        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strfkcolumnlist']}</th></tr>\n";
-        echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
-        echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch()."</td>\n";
-        echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
+        echo '<table>'.PHP_EOL;
+        echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strname']}</th></tr>".PHP_EOL;
+        echo "<tr><td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>".PHP_EOL;
+        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strfkcolumnlist']}</th></tr>".PHP_EOL;
+        echo '<tr><td class="data1">'.$selColumns->fetch().'</td>'.PHP_EOL;
+        echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>'.PHP_EOL;
+        echo '<td class=data1>'.$selIndex->fetch().'</td></tr>'.PHP_EOL;
         echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strfktarget']}</th></tr>";
         echo '<tr>';
         echo '<td class="data1" colspan="3"><select class="select2" name="target">';
@@ -291,12 +291,12 @@ class ConstraintsController extends BaseController
             if ($tables->fields['nspname'] != $_REQUEST['schema']) {
                 echo htmlspecialchars($tables->fields['nspname']), '.';
             }
-            echo htmlspecialchars($tables->fields['relname']), "</option>\n";
+            echo htmlspecialchars($tables->fields['relname']), '</option>'.PHP_EOL;
             $tables->moveNext();
         }
-        echo "</select>\n";
+        echo '</select>'.PHP_EOL;
         echo '</td></tr>';
-        echo "</table>\n";
+        echo '</table>'.PHP_EOL;
 
         echo $this->getFormInputsAndButtons(
             [
@@ -309,7 +309,7 @@ class ConstraintsController extends BaseController
             ]
         );
 
-        echo sprintf('</form>%s', "\n");
+        echo sprintf('</form>%s', PHP_EOL);
     }
 
     /**
@@ -382,64 +382,64 @@ class ConstraintsController extends BaseController
         $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
         $buttonRemove->set_attribute('type', 'button');
 
-        echo "<form onsubmit=\"doSelectAll();\" name=\"formIndex\" action=\"constraints\" method=\"post\">\n";
+        echo '<form onsubmit="doSelectAll();" name="formIndex" action="constraints" method="post">'.PHP_EOL;
 
-        echo "<table>\n";
+        echo '<table>'.PHP_EOL;
         echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strfktarget']}</th></tr>";
-        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$this->lang['strfkcolumnlist']}</th></tr>\n";
-        echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
+        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$this->lang['strfkcolumnlist']}</th></tr>".PHP_EOL;
+        echo '<tr><td class="data1">'.$selColumns->fetch().'</td>'.PHP_EOL;
         echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
-        echo '<td class="data1">'.$selIndex->fetch()."</td></tr>\n";
+        echo '<td class="data1">'.$selIndex->fetch().'</td></tr>'.PHP_EOL;
         echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['stractions']}</th></tr>";
         echo '<tr>';
-        echo "<td class=\"data1\" colspan=\"3\">\n";
+        echo '<td class="data1" colspan="3">'.PHP_EOL;
         // ON SELECT actions
         echo "{$this->lang['stronupdate']} <select name=\"upd_action\">";
         foreach ($data->fkactions as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['upd_action'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
+            echo "<option value=\"{$v}\"", ($_POST['upd_action'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
         }
 
-        echo "</select><br />\n";
+        echo '</select><br />'.PHP_EOL;
 
         // ON DELETE actions
         echo "{$this->lang['strondelete']} <select name=\"del_action\">";
         foreach ($data->fkactions as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['del_action'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
+            echo "<option value=\"{$v}\"", ($_POST['del_action'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
         }
 
-        echo "</select><br />\n";
+        echo '</select><br />'.PHP_EOL;
 
         // MATCH options
         echo '<select name="match">';
         foreach ($data->fkmatches as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['match'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
+            echo "<option value=\"{$v}\"", ($_POST['match'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
         }
 
-        echo "</select><br />\n";
+        echo '</select><br />'.PHP_EOL;
 
         // DEFERRABLE options
         echo '<select name="deferrable">';
         foreach ($data->fkdeferrable as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['deferrable'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
+            echo "<option value=\"{$v}\"", ($_POST['deferrable'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
         }
 
-        echo "</select><br />\n";
+        echo '</select><br />'.PHP_EOL;
 
         // INITIALLY options
         echo '<select name="initially">';
         foreach ($data->fkinitial as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['initially'] == $v) ? ' selected="selected"' : '', ">{$v}</option>\n";
+            echo "<option value=\"{$v}\"", ($_POST['initially'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
         }
 
-        echo "</select>\n";
-        echo "</td></tr>\n";
-        echo "</table>\n";
+        echo '</select>'.PHP_EOL;
+        echo '</td></tr>'.PHP_EOL;
+        echo '</table>'.PHP_EOL;
 
         echo '<p>';
 
-        echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
-        echo '<input type="hidden" name="target" value="', htmlspecialchars(serialize($_REQUEST['target'])), "\" />\n";
-        echo '<input type="hidden" name="SourceColumnList" value="', htmlspecialchars($_REQUEST['SourceColumnList']), "\" />\n";
+        echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), '" />'.PHP_EOL;
+        echo '<input type="hidden" name="target" value="', htmlspecialchars(serialize($_REQUEST['target'])), '" />'.PHP_EOL;
+        echo '<input type="hidden" name="SourceColumnList" value="', htmlspecialchars($_REQUEST['SourceColumnList']), '" />'.PHP_EOL;
 
         echo $this->getActionTableAndButtons(
             'save_add_foreign_key',
@@ -448,7 +448,7 @@ class ConstraintsController extends BaseController
             $this->lang['strcancel']
         );
 
-        echo sprintf('</p>%s</form>%s', "\n", "\n");
+        echo sprintf('</p>%s</form>%s', PHP_EOL, PHP_EOL);
     }
 
     /**
@@ -562,36 +562,36 @@ class ConstraintsController extends BaseController
         $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
         $buttonRemove->set_attribute('type', 'button');
 
-        echo "<form onsubmit=\"doSelectAll();\" name=\"formIndex\" action=\"constraints\" method=\"post\">\n";
+        echo '<form onsubmit="doSelectAll();" name="formIndex" action="constraints" method="post">'.PHP_EOL;
 
-        echo "<table>\n";
+        echo '<table>'.PHP_EOL;
         echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strname']}</th></tr>";
         echo '<tr>';
         echo '<td class="data1" colspan="3"><input type="text" name="name" value="', htmlspecialchars($_POST['name']),
             "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>";
-        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strindexcolumnlist']}</th></tr>\n";
-        echo '<tr><td class="data1">'.$selColumns->fetch()."</td>\n";
+        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strindexcolumnlist']}</th></tr>".PHP_EOL;
+        echo '<tr><td class="data1">'.$selColumns->fetch().'</td>'.PHP_EOL;
         echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
-        echo '<td class=data1>'.$selIndex->fetch()."</td></tr>\n";
+        echo '<td class=data1>'.$selIndex->fetch().'</td></tr>'.PHP_EOL;
 
         // Tablespace (if there are any)
         if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
             echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strtablespace']}</th></tr>";
-            echo "<tr><td class=\"data1\" colspan=\"3\"><select name=\"tablespace\">\n";
+            echo '<tr><td class="data1" colspan="3"><select name="tablespace">'.PHP_EOL;
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
-            ('' == $_POST['tablespace']) ? ' selected="selected"' : '', "></option>\n";
+            ('' == $_POST['tablespace']) ? ' selected="selected"' : '', '></option>'.PHP_EOL;
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
                 $spcname = htmlspecialchars($tablespaces->fields['spcname']);
                 echo "\t\t\t\t<option value=\"{$spcname}\"",
-                ($spcname == $_POST['tablespace']) ? ' selected="selected"' : '', ">{$spcname}</option>\n";
+                ($spcname == $_POST['tablespace']) ? ' selected="selected"' : '', ">{$spcname}</option>".PHP_EOL;
                 $tablespaces->moveNext();
             }
-            echo "</select></td></tr>\n";
+            echo '</select></td></tr>'.PHP_EOL;
         }
 
-        echo "</table>\n";
+        echo '</table>'.PHP_EOL;
 
         echo $this->getFormInputsAndButtons(
             [
@@ -604,7 +604,7 @@ class ConstraintsController extends BaseController
             ]
         );
 
-        echo sprintf('</form>%s', "\n");
+        echo sprintf('</form>%s', PHP_EOL);
     }
 
     /**
@@ -673,17 +673,17 @@ class ConstraintsController extends BaseController
             $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/constraints\" method=\"post\">\n";
-            echo "<table>\n";
-            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>\n";
-            echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/constraints" method="post">'.PHP_EOL;
+            echo '<table>'.PHP_EOL;
+            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>".PHP_EOL;
+            echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>".PHP_EOL;
 
             echo "<tr><td class=\"data1\"><input name=\"name\" size=\"24\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['name']), "\" /></td>\n";
+            htmlspecialchars($_POST['name']), '" /></td>'.PHP_EOL;
 
             echo '<td class="data1">(<input name="definition" size="64" value="',
-            htmlspecialchars($_POST['definition']), "\" />)</td></tr>\n";
-            echo "</table>\n";
+            htmlspecialchars($_POST['definition']), '" />)</td></tr>'.PHP_EOL;
+            echo '</table>'.PHP_EOL;
 
             echo $this->getFormInputsAndButtons(
                 [
@@ -696,7 +696,7 @@ class ConstraintsController extends BaseController
                 ]
             );
 
-            echo sprintf('</form>%s', "\n");
+            echo sprintf('</form>%s', PHP_EOL);
         } else {
             if ('' == trim($_POST['definition'])) {
                 $this->addCheck(true, $this->lang['strcheckneedsdefinition']);
@@ -727,9 +727,9 @@ class ConstraintsController extends BaseController
             $this->lang['strconfdropconstraint'],
             $this->misc->printVal($_REQUEST['constraint']),
             $this->misc->printVal($_REQUEST['table'])
-        ), "</p>\n";
+        ), '</p>'.PHP_EOL;
 
-        echo sprintf('<form action="constraints" method="post">%s', "\n");
+        echo sprintf('<form action="constraints" method="post">%s', PHP_EOL);
 
         echo $this->getFormInputsAndButtons(
             [
@@ -747,7 +747,7 @@ class ConstraintsController extends BaseController
             ]
         );
 
-        echo sprintf('</form>%s', "\n");
+        echo sprintf('</form>%s', PHP_EOL);
     }
 
     /**

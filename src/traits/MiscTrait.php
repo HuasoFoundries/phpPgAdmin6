@@ -381,14 +381,14 @@ trait MiscTrait
 
         // Add line numbers if 'lineno' param is true
         /*if (isset($params['lineno']) && $params['lineno'] === true) {
-        $lines = explode("\n", $str);
+        $lines = explode(PHP_EOL, $str);
         $num   = count($lines);
         if ($num > 0) {
         $temp = "<table>\n<tr><td class=\"{$class}\" style=\"vertical-align: top; padding-right: 10px;\"><pre class=\"{$class}\">";
         for ($i = 1; $i <= $num; ++$i) {
-        $temp .= $i . "\n";
+        $temp .= $i . PHP_EOL;
         }
-        $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>"."\n";
+        $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>".PHP_EOL;
         $out = $temp;
         }
         unset($lines);

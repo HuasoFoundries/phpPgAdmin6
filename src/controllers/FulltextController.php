@@ -305,17 +305,17 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg');
             $this->printTitle($this->lang['strdrop'], 'pg.ftscfg.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdropftsconfig'], $this->misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdropftsconfig'], $this->misc->printVal($_REQUEST['ftscfg'])), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"dropconfig\" />\n";
-            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
-            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_REQUEST['ftscfg']), "\" />\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="dropconfig" />'.PHP_EOL;
+            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_REQUEST['ftscfg']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->dropFtsConfiguration($_POST['ftscfg'], isset($_POST['cascade']));
             if (0 == $status) {
@@ -335,19 +335,19 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
             $this->printTitle($this->lang['strdrop'], 'pg.ftsdict.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdropftsdict'], $this->misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdropftsdict'], $this->misc->printVal($_REQUEST['ftsdict'])), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"dropdict\" />\n";
-            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
-            echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_REQUEST['ftsdict']), "\" />\n";
-            //echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_REQUEST['ftscfg']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewdicts\" /></p>\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="dropdict" />'.PHP_EOL;
+            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_REQUEST['ftsdict']), '" />'.PHP_EOL;
+            //echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_REQUEST['ftscfg']), "\" />".PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->dropFtsDictionary($_POST['ftsdict'], isset($_POST['cascade']));
             if (0 == $status) {
@@ -387,15 +387,15 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreateconfig'], 'pg.ftscfg.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
-        echo "<table>\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
+        echo '<table>'.PHP_EOL;
         // conf name
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>\n";
+        htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>".PHP_EOL;
 
         // Template
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\">";
 
         $tpls   = [];
@@ -414,11 +414,11 @@ class FulltextController extends BaseController
             $ftscfgs->moveNext();
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($tpls, 'formTemplate', true, $tplsel, false);
-        echo "\n\t\t</td>\n\t</tr>\n";
+        echo "\n\t\t</td>\n\t</tr>".PHP_EOL;
 
         // Parser
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsparser']}</th>\n";
-        echo "\t\t<td class=\"data1\">\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsparser']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\">".PHP_EOL;
         $ftsparsers_ = [];
         $ftsparsel   = '';
         while (!$ftsparsers->EOF) {
@@ -436,22 +436,22 @@ class FulltextController extends BaseController
             $ftsparsers->moveNext();
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($ftsparsers_, 'formParser', true, $ftsparsel, false);
-        echo "\n\t\t</td>\n\t</tr>\n";
+        echo "\n\t\t</td>\n\t</tr>".PHP_EOL;
 
         // Comment
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
-        htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
+        htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>".PHP_EOL;
 
-        echo "</table>\n";
-        echo "<p>\n";
-        echo "<input type=\"hidden\" name=\"action\" value=\"createconfig\" />\n";
-        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
+        echo '</table>'.PHP_EOL;
+        echo '<p>'.PHP_EOL;
+        echo '<input type="hidden" name="action" value="createconfig" />'.PHP_EOL;
+        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-        echo "</p>\n";
-        echo "</form>\n";
+        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+        echo '</p>'.PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**
@@ -522,31 +522,31 @@ class FulltextController extends BaseController
             // Fetch all FTS parsers from the database
             $ftsparsers = $data->getFtsParsers();
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
-            echo "<table>\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
+            echo '<table>'.PHP_EOL;
 
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
             echo "\t\t<td class=\"data1\">";
             echo "\t\t\t<input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['formName']), "\" />\n";
-            echo "\t\t</td>\n";
-            echo "\t</tr>\n";
+            htmlspecialchars($_POST['formName']), '" />'.PHP_EOL;
+            echo "\t\t</td>".PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
 
             // Comment
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>\n";
-            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\"name=\"formComment\">", htmlspecialchars($_POST['formComment']), "</textarea></td>\n";
-            echo "\t</tr>\n";
-            echo "</table>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"alterconfig\" />\n";
-            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), "\" />\n";
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>".PHP_EOL;
+            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\"name=\"formComment\">", htmlspecialchars($_POST['formComment']), '</textarea></td>'.PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
+            echo '</table>'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="alterconfig" />'.PHP_EOL;
+            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
         }
     }
 
@@ -700,7 +700,7 @@ class FulltextController extends BaseController
         $this->printTabs('fulltext', 'ftsconfigs');
         $this->printMsg($msg);
 
-        echo "<h3>{$this->lang['strftsconfigmap']}</h3>\n";
+        echo "<h3>{$this->lang['strftsconfigmap']}</h3>".PHP_EOL;
 
         $map = $data->getFtsConfigurationMap($ftscfg);
 
@@ -812,16 +812,16 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreatedict'], 'pg.ftsdict.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
-        echo "<table>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
+        echo '<table>'.PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
         htmlspecialchars($_POST['formName']), '" />&nbsp;',
         '<input type="checkbox" name="formIsTemplate" id="formIsTemplate"', $_POST['formIsTemplate'] ? ' checked="checked" ' : '', " />\n",
-            "<label for=\"formIsTemplate\">{$this->lang['strftscreatedicttemplate']}</label></td>\n\t</tr>\n";
+            "<label for=\"formIsTemplate\">{$this->lang['strftscreatedicttemplate']}</label></td>\n\t</tr>".PHP_EOL;
 
         // Template
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\">";
         $tpls   = [];
         $tplsel = '';
@@ -839,39 +839,39 @@ class FulltextController extends BaseController
             $ftstpls->moveNext();
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($tpls, 'formTemplate', true, $tplsel, false);
-        echo "\n\t\t</td>\n\t</tr>\n";
+        echo "\n\t\t</td>\n\t</tr>".PHP_EOL;
 
         // TODO: what about maxlengths?
         // Lexize
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftslexize']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftslexize']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formLexize\" size=\"32\" maxlength=\"1000\" value=\"",
         htmlspecialchars($_POST['formLexize']), '" ', isset($_POST['formIsTemplate']) ? '' : ' disabled="disabled" ',
-            "/></td>\n\t</tr>\n";
+            "/></td>\n\t</tr>".PHP_EOL;
 
         // Init
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsinit']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsinit']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formInit\" size=\"32\" maxlength=\"1000\" value=\"",
         htmlspecialchars($_POST['formInit']), '"', @$_POST['formIsTemplate'] ? '' : ' disabled="disabled" ',
-            "/></td>\n\t</tr>\n";
+            "/></td>\n\t</tr>".PHP_EOL;
 
         // Option
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsoptionsvalues']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsoptionsvalues']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formOption\" size=\"32\" maxlength=\"1000\" value=\"",
-        htmlspecialchars($_POST['formOption']), "\" /></td>\n\t</tr>\n";
+        htmlspecialchars($_POST['formOption']), "\" /></td>\n\t</tr>".PHP_EOL;
 
         // Comment
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
-        htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
+        htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>".PHP_EOL;
 
-        echo "</table>\n";
-        echo "<p>\n";
-        echo "<input type=\"hidden\" name=\"action\" value=\"createdict\" />\n";
-        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
+        echo '</table>'.PHP_EOL;
+        echo '<p>'.PHP_EOL;
+        echo '<input type="hidden" name="action" value="createdict" />'.PHP_EOL;
+        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-        echo "</p>\n";
+        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+        echo '</p>'.PHP_EOL;
         echo "</form>\n",
             "<script type=\"text/javascript\">
 				function templateOpts() {
@@ -885,7 +885,7 @@ class FulltextController extends BaseController
 				document.getElementsByName('formIsTemplate')[0].onchange = templateOpts;
 
 				templateOpts();
-			</script>\n";
+			</script>".PHP_EOL;
     }
 
     /**
@@ -953,32 +953,32 @@ class FulltextController extends BaseController
 
             $this->coalesceArr($_POST, 'formName', $_REQUEST['ftsdict']);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
-            echo "<table>\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
+            echo '<table>'.PHP_EOL;
 
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
             echo "\t\t<td class=\"data1\">";
             echo "\t\t\t<input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['formName']), "\" />\n";
-            echo "\t\t</td>\n";
-            echo "\t</tr>\n";
+            htmlspecialchars($_POST['formName']), '" />'.PHP_EOL;
+            echo "\t\t</td>".PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
 
             // Comment
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>\n";
-            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\"name=\"formComment\">", htmlspecialchars($_POST['formComment']), "</textarea></td>\n";
-            echo "\t</tr>\n";
-            echo "</table>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"alterdict\" />\n";
-            echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_POST['ftsdict']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewdicts\" /></p>\n";
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>".PHP_EOL;
+            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\"name=\"formComment\">", htmlspecialchars($_POST['formComment']), '</textarea></td>'.PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
+            echo '</table>'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="alterdict" />'.PHP_EOL;
+            echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_POST['ftsdict']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
         }
     }
 
@@ -1022,27 +1022,27 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: proper breadcrumbs
             $this->printTitle($this->lang['strdrop'], 'pg.ftscfg.alter');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
 
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($this->lang['strconfdropftsmapping'], $this->misc->printVal($a['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
+                    echo '<p>', sprintf($this->lang['strconfdropftsmapping'], $this->misc->printVal($a['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), '</p>'.PHP_EOL;
                     printf('<input type="hidden" name="mapping[]" value="%s" />', htmlspecialchars($a['mapping']));
                 }
             } else {
-                echo '<p>', sprintf($this->lang['strconfdropftsmapping'], $this->misc->printVal($_REQUEST['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
-                echo '<input type="hidden" name="mapping" value="', htmlspecialchars($_REQUEST['mapping']), "\" />\n";
+                echo '<p>', sprintf($this->lang['strconfdropftsmapping'], $this->misc->printVal($_REQUEST['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), '</p>'.PHP_EOL;
+                echo '<input type="hidden" name="mapping" value="', htmlspecialchars($_REQUEST['mapping']), '" />'.PHP_EOL;
             }
 
-            echo "<input type=\"hidden\" name=\"ftscfg\" value=\"{$_REQUEST['ftscfg']}\" />\n";
-            echo "<input type=\"hidden\" name=\"action\" value=\"dropmapping\" />\n";
-            echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewconfig\" /></p>\n";
+            echo "<input type=\"hidden\" name=\"ftscfg\" value=\"{$_REQUEST['ftscfg']}\" />".PHP_EOL;
+            echo '<input type="hidden" name="action" value="dropmapping" />'.PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             // Case of multiaction drop
             if (is_array($_REQUEST['mapping'])) {
@@ -1079,11 +1079,11 @@ class FulltextController extends BaseController
 
             $this->coalesceArr($_POST, 'ftscfg', $_REQUEST['ftscfg']);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
 
-            echo "<table>\n";
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>\n";
+            echo '<table>'.PHP_EOL;
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>".PHP_EOL;
             echo "\t\t<td class=\"data1\">";
 
             $ma_mappings = [];
@@ -1100,17 +1100,17 @@ class FulltextController extends BaseController
             } else {
                 $mapping = $data->getFtsMappingByName($_POST['ftscfg'], $_POST['formMapping']);
                 echo $mapping->fields['name'];
-                echo '<input type="hidden" name="formMapping" value="', htmlspecialchars($_POST['formMapping']), "\" />\n";
+                echo '<input type="hidden" name="formMapping" value="', htmlspecialchars($_POST['formMapping']), '" />'.PHP_EOL;
             }
 
-            echo "\t\t</td>\n";
-            echo "\t</tr>\n";
+            echo "\t\t</td>".PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
 
             // Dictionary
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data left required\">{$this->lang['strftsdict']}</th>\n";
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strftsdict']}</th>".PHP_EOL;
             echo "\t\t<td class=\"data1\">";
-            echo "\t\t\t<select name=\"formDictionary\">\n";
+            echo "\t\t\t<select name=\"formDictionary\">".PHP_EOL;
             while (!$ftsdicts->EOF) {
                 $ftsdict = htmlspecialchars($ftsdicts->fields['name']);
                 echo "\t\t\t\t<option value=\"{$ftsdict}\"",
@@ -1118,24 +1118,24 @@ class FulltextController extends BaseController
                     $ftsdict == $_POST['formDictionary']
                     || $ftsdict == @$mapping->fields['dictionaries']
                     || $ftsdict == @$ma_mappings[0]->fields['dictionaries']
-                ) ? ' selected="selected"' : '', ">{$ftsdict}</option>\n";
+                ) ? ' selected="selected"' : '', ">{$ftsdict}</option>".PHP_EOL;
                 $ftsdicts->moveNext();
             }
 
-            echo "\t\t</td>\n";
-            echo "\t</tr>\n";
+            echo "\t\t</td>".PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
 
-            echo "</table>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"altermapping\" />\n";
-            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewconfig\" /></p>\n";
+            echo '</table>'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="altermapping" />'.PHP_EOL;
+            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>'.PHP_EOL;
 
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strftsnodictionaries']}</p>\n";
+            echo "<p>{$this->lang['strftsnodictionaries']}</p>".PHP_EOL;
         }
     }
 
@@ -1178,47 +1178,47 @@ class FulltextController extends BaseController
 
             $mappings = $data->getFtsMappings($_POST['ftscfg']);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/fulltext\" method=\"post\">\n";
-            echo "<table>\n";
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
+            echo '<table>'.PHP_EOL;
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>".PHP_EOL;
             echo "\t\t<td class=\"data1\">";
-            echo "\t\t\t<select name=\"formMapping\">\n";
+            echo "\t\t\t<select name=\"formMapping\">".PHP_EOL;
             while (!$mappings->EOF) {
                 $mapping      = htmlspecialchars($mappings->fields['name']);
                 $mapping_desc = htmlspecialchars($mappings->fields['description']);
                 echo "\t\t\t\t<option value=\"{$mapping}\"",
-                $mapping == $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : '', "</option>\n";
+                $mapping == $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : '', '</option>'.PHP_EOL;
                 $mappings->moveNext();
             }
-            echo "\t\t</td>\n";
-            echo "\t</tr>\n";
+            echo "\t\t</td>".PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
 
             // Dictionary
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data left required\">{$this->lang['strftsdict']}</th>\n";
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strftsdict']}</th>".PHP_EOL;
             echo "\t\t<td class=\"data1\">";
-            echo "\t\t\t<select name=\"formDictionary\">\n";
+            echo "\t\t\t<select name=\"formDictionary\">".PHP_EOL;
             while (!$ftsdicts->EOF) {
                 $ftsdict = htmlspecialchars($ftsdicts->fields['name']);
                 echo "\t\t\t\t<option value=\"{$ftsdict}\"",
-                $ftsdict == $_POST['formDictionary'] ? ' selected="selected"' : '', ">{$ftsdict}</option>\n";
+                $ftsdict == $_POST['formDictionary'] ? ' selected="selected"' : '', ">{$ftsdict}</option>".PHP_EOL;
                 $ftsdicts->moveNext();
             }
 
-            echo "\t\t</td>\n";
-            echo "\t</tr>\n";
+            echo "\t\t</td>".PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
 
-            echo "</table>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"addmapping\" />\n";
-            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), "\" />\n";
-            echo "<input type=\"hidden\" name=\"prev_action\" value=\"viewconfig\" /></p>\n";
+            echo '</table>'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="addmapping" />'.PHP_EOL;
+            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"add\" value=\"{$this->lang['stradd']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"add\" value=\"{$this->lang['stradd']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strftsnodictionaries']}</p>\n";
+            echo "<p>{$this->lang['strftsnodictionaries']}</p>".PHP_EOL;
         }
     }
 

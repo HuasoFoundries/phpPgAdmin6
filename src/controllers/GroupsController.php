@@ -178,16 +178,16 @@ class GroupsController extends BaseController
             $this->printTrail('group');
             $this->printTitle($this->lang['strdropmember'], 'pg.group.alter');
 
-            echo '<p>', sprintf($this->lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/groups" method="post">'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"hidden\" name=\"action\" value=\"drop_member\" />\n";
-            echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
-            echo '<input type="hidden" name="user" value="', htmlspecialchars($_REQUEST['user']), "\" />\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            echo "</form>\n";
+            echo '<input type="hidden" name="action" value="drop_member" />'.PHP_EOL;
+            echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="user" value="', htmlspecialchars($_REQUEST['user']), '" />'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->dropGroupMember($_REQUEST['group'], $_REQUEST['user']);
             if (0 == $status) {
@@ -247,20 +247,20 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/groups" method="post">'.PHP_EOL;
         echo '<select name="user">';
         while (!$users->EOF) {
             $uname = $this->misc->printVal($users->fields['usename']);
             echo "<option value=\"{$uname}\"",
-            ($uname == $_POST['user']) ? ' selected="selected"' : '', ">{$uname}</option>\n";
+            ($uname == $_POST['user']) ? ' selected="selected"' : '', ">{$uname}</option>".PHP_EOL;
             $users->moveNext();
         }
-        echo "</select>\n";
-        echo "<input type=\"submit\" value=\"{$this->lang['straddmember']}\" />\n";
+        echo '</select>'.PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['straddmember']}\" />".PHP_EOL;
         echo $this->misc->form;
-        echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
-        echo "<input type=\"hidden\" name=\"action\" value=\"add_member\" />\n";
-        echo "</form>\n";
+        echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), '" />'.PHP_EOL;
+        echo '<input type="hidden" name="action" value="add_member" />'.PHP_EOL;
+        echo '</form>'.PHP_EOL;
 
         $this->printNavLinks(['showall' => [
             'attr'    => [
@@ -288,15 +288,15 @@ class GroupsController extends BaseController
             $this->printTrail('group');
             $this->printTitle($this->lang['strdrop'], 'pg.group.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER."/src/views/groups\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/groups" method="post">'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), "\" />\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            echo "</form>\n";
+            echo '<input type="hidden" name="action" value="drop" />'.PHP_EOL;
+            echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), '" />'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->dropGroup($_REQUEST['group']);
             if (0 == $status) {
@@ -326,30 +326,30 @@ class GroupsController extends BaseController
         $this->printTitle($this->lang['strcreategroup'], 'pg.group.create');
         $this->printMsg($msg);
 
-        echo "<form action=\"\" method=\"post\">\n";
+        echo '<form action="" method="post">'.PHP_EOL;
         echo $this->misc->form;
-        echo "<table>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
-        echo "\t\t<td class=\"data\"><input size=\"32\" maxlength=\"{$data->_maxNameLen}\" name=\"name\" value=\"", htmlspecialchars($_POST['name']), "\" /></td>\n\t</tr>\n";
+        echo '<table>'.PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data\"><input size=\"32\" maxlength=\"{$data->_maxNameLen}\" name=\"name\" value=\"", htmlspecialchars($_POST['name']), "\" /></td>\n\t</tr>".PHP_EOL;
         if ($users->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>".PHP_EOL;
 
-            echo "\t\t<td class=\"data\">\n";
-            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(40, $users->recordCount()), "\">\n";
+            echo "\t\t<td class=\"data\">".PHP_EOL;
+            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(40, $users->recordCount()), '">'.PHP_EOL;
             while (!$users->EOF) {
                 $username = $users->fields['usename'];
                 echo "\t\t\t\t<option value=\"{$username}\"",
-                (in_array($username, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($username), "</option>\n";
+                (in_array($username, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($username), '</option>'.PHP_EOL;
                 $users->moveNext();
             }
-            echo "\t\t\t</select>\n";
-            echo "\t\t</td>\n\t</tr>\n";
+            echo "\t\t\t</select>".PHP_EOL;
+            echo "\t\t</td>\n\t</tr>".PHP_EOL;
         }
-        echo "</table>\n";
-        echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-        echo "</form>\n";
+        echo '</table>'.PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_create" />'.PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**

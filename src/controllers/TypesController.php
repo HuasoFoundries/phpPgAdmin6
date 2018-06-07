@@ -284,29 +284,29 @@ class TypesController extends BaseController
                 // no break
                 default:
                     $byval = $data->phpBool($typedata->fields['typbyval']);
-                    echo "<table>\n";
-                    echo "<tr><th class=\"data left\">{$this->lang['strname']}</th>\n";
-                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typname']), "</td></tr>\n";
-                    echo "<tr><th class=\"data left\">{$this->lang['strinputfn']}</th>\n";
-                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typin']), "</td></tr>\n";
-                    echo "<tr><th class=\"data left\">{$this->lang['stroutputfn']}</th>\n";
-                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typout']), "</td></tr>\n";
-                    echo "<tr><th class=\"data left\">{$this->lang['strlength']}</th>\n";
-                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typlen']), "</td></tr>\n";
-                    echo "<tr><th class=\"data left\">{$this->lang['strpassbyval']}</th>\n";
-                    echo '<td class="data1">', ($byval) ? $this->lang['stryes'] : $this->lang['strno'], "</td></tr>\n";
-                    echo "<tr><th class=\"data left\">{$this->lang['stralignment']}</th>\n";
-                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typalign']), "</td></tr>\n";
+                    echo '<table>'.PHP_EOL;
+                    echo "<tr><th class=\"data left\">{$this->lang['strname']}</th>".PHP_EOL;
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typname']), '</td></tr>'.PHP_EOL;
+                    echo "<tr><th class=\"data left\">{$this->lang['strinputfn']}</th>".PHP_EOL;
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typin']), '</td></tr>'.PHP_EOL;
+                    echo "<tr><th class=\"data left\">{$this->lang['stroutputfn']}</th>".PHP_EOL;
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typout']), '</td></tr>'.PHP_EOL;
+                    echo "<tr><th class=\"data left\">{$this->lang['strlength']}</th>".PHP_EOL;
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typlen']), '</td></tr>'.PHP_EOL;
+                    echo "<tr><th class=\"data left\">{$this->lang['strpassbyval']}</th>".PHP_EOL;
+                    echo '<td class="data1">', ($byval) ? $this->lang['stryes'] : $this->lang['strno'], '</td></tr>'.PHP_EOL;
+                    echo "<tr><th class=\"data left\">{$this->lang['stralignment']}</th>".PHP_EOL;
+                    echo '<td class="data1">', $this->misc->printVal($typedata->fields['typalign']), '</td></tr>'.PHP_EOL;
                     if ($data->hasEnumTypes() && $vals) {
                         $vals   = $vals->getArray();
                         $nbVals = count($vals);
-                        echo "<tr>\n\t<th class=\"data left\" rowspan=\"${nbVals}\">{$this->lang['strenumvalues']}</th>\n";
-                        echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>\n";
+                        echo "<tr>\n\t<th class=\"data left\" rowspan=\"${nbVals}\">{$this->lang['strenumvalues']}</th>".PHP_EOL;
+                        echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>".PHP_EOL;
                         for ($i = 1; $i < $nbVals; ++$i) {
-                            echo '<td class="data', 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>\n";
+                            echo '<td class="data', 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>".PHP_EOL;
                         }
                     }
-                    echo "</table>\n";
+                    echo '</table>'.PHP_EOL;
             }
 
             $this->printNavLinks(['showall' => [
@@ -340,16 +340,16 @@ class TypesController extends BaseController
             $this->printTrail('type');
             $this->printTitle($this->lang['strdrop'], 'pg.type.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdroptype'], $this->misc->printVal($_REQUEST['type'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdroptype'], $this->misc->printVal($_REQUEST['type'])), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), "\" />\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/types" method="post">'.PHP_EOL;
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="drop" />'.PHP_EOL;
+            echo '<input type="hidden" name="type" value="', htmlspecialchars($_REQUEST['type']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->dropType($_POST['type'], isset($_POST['cascade']));
             if (0 == $status) {
@@ -383,26 +383,26 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
-                echo "<table>\n";
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
+                echo '<form action="'.\SUBFOLDER.'/src/views/types" method="post">'.PHP_EOL;
+                echo '<table>'.PHP_EOL;
+                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-                htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strnumfields']}</th>\n";
+                htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>".PHP_EOL;
+                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strnumfields']}</th>".PHP_EOL;
                 echo "\t\t<td class=\"data\"><input name=\"fields\" size=\"5\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-                htmlspecialchars($_REQUEST['fields']), "\" /></td>\n\t</tr>\n";
+                htmlspecialchars($_REQUEST['fields']), "\" /></td>\n\t</tr>".PHP_EOL;
 
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
+                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
                 echo "\t\t<td><textarea name=\"typcomment\" rows=\"3\" cols=\"32\">",
-                htmlspecialchars($_REQUEST['typcomment']), "</textarea></td>\n\t</tr>\n";
+                htmlspecialchars($_REQUEST['typcomment']), "</textarea></td>\n\t</tr>".PHP_EOL;
 
-                echo "</table>\n";
-                echo "<p><input type=\"hidden\" name=\"action\" value=\"create_comp\" />\n";
-                echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
+                echo '</table>'.PHP_EOL;
+                echo '<p><input type="hidden" name="action" value="create_comp" />'.PHP_EOL;
+                echo '<input type="hidden" name="stage" value="2" />'.PHP_EOL;
                 echo $this->misc->form;
-                echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-                echo "</form>\n";
+                echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />".PHP_EOL;
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+                echo '</form>'.PHP_EOL;
 
                 break;
             case 2:
@@ -428,12 +428,12 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER.'/src/views/types" method="post">'.PHP_EOL;
 
                 // Output table header
-                echo "<table>\n";
+                echo '<table>'.PHP_EOL;
                 echo "\t<tr><th colspan=\"2\" class=\"data required\">{$this->lang['strfield']}</th><th colspan=\"2\" class=\"data required\">{$this->lang['strtype']}</th>";
-                echo "<th class=\"data\">{$this->lang['strlength']}</th><th class=\"data\">{$this->lang['strcomment']}</th></tr>\n";
+                echo "<th class=\"data\">{$this->lang['strlength']}</th><th class=\"data\">{$this->lang['strcomment']}</th></tr>".PHP_EOL;
 
                 for ($i = 0; $i < $_REQUEST['fields']; ++$i) {
                     if (!isset($_REQUEST['field'][$i])) {
@@ -448,41 +448,41 @@ class TypesController extends BaseController
                         $_REQUEST['colcomment'][$i] = '';
                     }
 
-                    echo "\t<tr>\n\t\t<td>", $i + 1, ".&nbsp;</td>\n";
+                    echo "\t<tr>\n\t\t<td>", $i + 1, '.&nbsp;</td>'.PHP_EOL;
                     echo "\t\t<td><input name=\"field[{$i}]\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-                    htmlspecialchars($_REQUEST['field'][$i]), "\" /></td>\n";
-                    echo "\t\t<td>\n\t\t\t<select name=\"type[{$i}]\">\n";
+                    htmlspecialchars($_REQUEST['field'][$i]), '" /></td>'.PHP_EOL;
+                    echo "\t\t<td>\n\t\t\t<select name=\"type[{$i}]\">".PHP_EOL;
                     $types->moveFirst();
                     while (!$types->EOF) {
                         $typname = $types->fields['typname'];
                         echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), '"',
                         (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] == $typname) ? ' selected="selected"' : '', '>',
-                        $this->misc->printVal($typname), "</option>\n";
+                        $this->misc->printVal($typname), '</option>'.PHP_EOL;
                         $types->moveNext();
                     }
-                    echo "\t\t\t</select>\n\t\t</td>\n";
+                    echo "\t\t\t</select>\n\t\t</td>".PHP_EOL;
 
                     // Output array type selector
-                    echo "\t\t<td>\n\t\t\t<select name=\"array[{$i}]\">\n";
-                    echo "\t\t\t\t<option value=\"\"", (isset($_REQUEST['array'][$i]) && $_REQUEST['array'][$i] == '') ? ' selected="selected"' : '', "></option>\n";
-                    echo "\t\t\t\t<option value=\"[]\"", (isset($_REQUEST['array'][$i]) && $_REQUEST['array'][$i] == '[]') ? ' selected="selected"' : '', ">[ ]</option>\n";
-                    echo "\t\t\t</select>\n\t\t</td>\n";
+                    echo "\t\t<td>\n\t\t\t<select name=\"array[{$i}]\">".PHP_EOL;
+                    echo "\t\t\t\t<option value=\"\"", (isset($_REQUEST['array'][$i]) && $_REQUEST['array'][$i] == '') ? ' selected="selected"' : '', '></option>'.PHP_EOL;
+                    echo "\t\t\t\t<option value=\"[]\"", (isset($_REQUEST['array'][$i]) && $_REQUEST['array'][$i] == '[]') ? ' selected="selected"' : '', '>[ ]</option>'.PHP_EOL;
+                    echo "\t\t\t</select>\n\t\t</td>".PHP_EOL;
 
                     echo "\t\t<td><input name=\"length[{$i}]\" size=\"10\" value=\"",
-                    htmlspecialchars($_REQUEST['length'][$i]), "\" /></td>\n";
+                    htmlspecialchars($_REQUEST['length'][$i]), '" /></td>'.PHP_EOL;
                     echo "\t\t<td><input name=\"colcomment[{$i}]\" size=\"40\" value=\"",
-                    htmlspecialchars($_REQUEST['colcomment'][$i]), "\" /></td>\n\t</tr>\n";
+                    htmlspecialchars($_REQUEST['colcomment'][$i]), "\" /></td>\n\t</tr>".PHP_EOL;
                 }
-                echo "</table>\n";
-                echo "<p><input type=\"hidden\" name=\"action\" value=\"create_comp\" />\n";
-                echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
+                echo '</table>'.PHP_EOL;
+                echo '<p><input type="hidden" name="action" value="create_comp" />'.PHP_EOL;
+                echo '<input type="hidden" name="stage" value="3" />'.PHP_EOL;
                 echo $this->misc->form;
-                echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
-                echo '<input type="hidden" name="fields" value="', htmlspecialchars($_REQUEST['fields']), "\" />\n";
-                echo '<input type="hidden" name="typcomment" value="', htmlspecialchars($_REQUEST['typcomment']), "\" />\n";
-                echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-                echo "</form>\n";
+                echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), '" />'.PHP_EOL;
+                echo '<input type="hidden" name="fields" value="', htmlspecialchars($_REQUEST['fields']), '" />'.PHP_EOL;
+                echo '<input type="hidden" name="typcomment" value="', htmlspecialchars($_REQUEST['typcomment']), '" />'.PHP_EOL;
+                echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+                echo '</form>'.PHP_EOL;
 
                 break;
             case 3:
@@ -529,7 +529,7 @@ class TypesController extends BaseController
 
                 break;
             default:
-                echo "<p>{$this->lang['strinvalidparam']}</p>\n";
+                echo "<p>{$this->lang['strinvalidparam']}</p>".PHP_EOL;
         }
     }
 
@@ -556,26 +556,26 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
-                echo "<table>\n";
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
+                echo '<form action="'.\SUBFOLDER.'/src/views/types" method="post">'.PHP_EOL;
+                echo '<table>'.PHP_EOL;
+                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-                htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>\n";
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strnumvalues']}</th>\n";
+                htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>".PHP_EOL;
+                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strnumvalues']}</th>".PHP_EOL;
                 echo "\t\t<td class=\"data\"><input name=\"values\" size=\"5\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-                htmlspecialchars($_REQUEST['values']), "\" /></td>\n\t</tr>\n";
+                htmlspecialchars($_REQUEST['values']), "\" /></td>\n\t</tr>".PHP_EOL;
 
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
+                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
                 echo "\t\t<td><textarea name=\"typcomment\" rows=\"3\" cols=\"32\">",
-                htmlspecialchars($_REQUEST['typcomment']), "</textarea></td>\n\t</tr>\n";
+                htmlspecialchars($_REQUEST['typcomment']), "</textarea></td>\n\t</tr>".PHP_EOL;
 
-                echo "</table>\n";
-                echo "<p><input type=\"hidden\" name=\"action\" value=\"create_enum\" />\n";
-                echo "<input type=\"hidden\" name=\"stage\" value=\"2\" />\n";
+                echo '</table>'.PHP_EOL;
+                echo '<p><input type="hidden" name="action" value="create_enum" />'.PHP_EOL;
+                echo '<input type="hidden" name="stage" value="2" />'.PHP_EOL;
                 echo $this->misc->form;
-                echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-                echo "</form>\n";
+                echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />".PHP_EOL;
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+                echo '</form>'.PHP_EOL;
 
                 break;
             case 2:
@@ -599,31 +599,31 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
+                echo '<form action="'.\SUBFOLDER.'/src/views/types" method="post">'.PHP_EOL;
 
                 // Output table header
-                echo "<table>\n";
-                echo "\t<tr><th colspan=\"2\" class=\"data required\">{$this->lang['strvalue']}</th></tr>\n";
+                echo '<table>'.PHP_EOL;
+                echo "\t<tr><th colspan=\"2\" class=\"data required\">{$this->lang['strvalue']}</th></tr>".PHP_EOL;
 
                 for ($i = 0; $i < $_REQUEST['values']; ++$i) {
                     if (!isset($_REQUEST['value'][$i])) {
                         $_REQUEST['value'][$i] = '';
                     }
 
-                    echo "\t<tr>\n\t\t<td>", $i + 1, ".&nbsp;</td>\n";
+                    echo "\t<tr>\n\t\t<td>", $i + 1, '.&nbsp;</td>'.PHP_EOL;
                     echo "\t\t<td><input name=\"value[{$i}]\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-                    htmlspecialchars($_REQUEST['value'][$i]), "\" /></td>\n\t</tr>\n";
+                    htmlspecialchars($_REQUEST['value'][$i]), "\" /></td>\n\t</tr>".PHP_EOL;
                 }
-                echo "</table>\n";
-                echo "<p><input type=\"hidden\" name=\"action\" value=\"create_enum\" />\n";
-                echo "<input type=\"hidden\" name=\"stage\" value=\"3\" />\n";
+                echo '</table>'.PHP_EOL;
+                echo '<p><input type="hidden" name="action" value="create_enum" />'.PHP_EOL;
+                echo '<input type="hidden" name="stage" value="3" />'.PHP_EOL;
                 echo $this->misc->form;
-                echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), "\" />\n";
-                echo '<input type="hidden" name="values" value="', htmlspecialchars($_REQUEST['values']), "\" />\n";
-                echo '<input type="hidden" name="typcomment" value="', htmlspecialchars($_REQUEST['typcomment']), "\" />\n";
-                echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-                echo "</form>\n";
+                echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), '" />'.PHP_EOL;
+                echo '<input type="hidden" name="values" value="', htmlspecialchars($_REQUEST['values']), '" />'.PHP_EOL;
+                echo '<input type="hidden" name="typcomment" value="', htmlspecialchars($_REQUEST['typcomment']), '" />'.PHP_EOL;
+                echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+                echo '</form>'.PHP_EOL;
 
                 break;
             case 3:
@@ -661,7 +661,7 @@ class TypesController extends BaseController
 
                 break;
             default:
-                echo "<p>{$this->lang['strinvalidparam']}</p>\n";
+                echo "<p>{$this->lang['strinvalidparam']}</p>".PHP_EOL;
         }
     }
 
@@ -700,72 +700,72 @@ class TypesController extends BaseController
         $this->printTitle($this->lang['strcreatetype'], 'pg.type.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/types\" method=\"post\">\n";
-        echo "<table>\n";
-        echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/types" method="post">'.PHP_EOL;
+        echo '<table>'.PHP_EOL;
+        echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
         echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['typname']), "\" /></td></tr>\n";
-        echo "<tr><th class=\"data left required\">{$this->lang['strinputfn']}</th>\n";
+        htmlspecialchars($_POST['typname']), '" /></td></tr>'.PHP_EOL;
+        echo "<tr><th class=\"data left required\">{$this->lang['strinputfn']}</th>".PHP_EOL;
         echo '<td class="data1"><select name="typin">';
         while (!$funcs->EOF) {
             $proname = htmlspecialchars($funcs->fields['proname']);
             echo "<option value=\"{$proname}\"",
-            ($proname == $_POST['typin']) ? ' selected="selected"' : '', ">{$proname}</option>\n";
+            ($proname == $_POST['typin']) ? ' selected="selected"' : '', ">{$proname}</option>".PHP_EOL;
             $funcs->moveNext();
         }
-        echo "</select></td></tr>\n";
-        echo "<tr><th class=\"data left required\">{$this->lang['stroutputfn']}</th>\n";
+        echo '</select></td></tr>'.PHP_EOL;
+        echo "<tr><th class=\"data left required\">{$this->lang['stroutputfn']}</th>".PHP_EOL;
         echo '<td class="data1"><select name="typout">';
         $funcs->moveFirst();
         while (!$funcs->EOF) {
             $proname = htmlspecialchars($funcs->fields['proname']);
             echo "<option value=\"{$proname}\"",
-            ($proname == $_POST['typout']) ? ' selected="selected"' : '', ">{$proname}</option>\n";
+            ($proname == $_POST['typout']) ? ' selected="selected"' : '', ">{$proname}</option>".PHP_EOL;
             $funcs->moveNext();
         }
-        echo "</select></td></tr>\n";
-        echo '<tr><th class="data left'.(version_compare($data->major_version, '7.4', '<') ? ' required' : '')."\">{$this->lang['strlength']}</th>\n";
+        echo '</select></td></tr>'.PHP_EOL;
+        echo '<tr><th class="data left'.(version_compare($data->major_version, '7.4', '<') ? ' required' : '')."\">{$this->lang['strlength']}</th>".PHP_EOL;
         echo '<td class="data1"><input name="typlen" size="8" value="',
         htmlspecialchars($_POST['typlen']), '" /></td></tr>';
-        echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>\n";
+        echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>".PHP_EOL;
         echo '<td class="data1"><input name="typdef" size="8" value="',
         htmlspecialchars($_POST['typdef']), '" /></td></tr>';
-        echo "<tr><th class=\"data left\">{$this->lang['strelement']}</th>\n";
+        echo "<tr><th class=\"data left\">{$this->lang['strelement']}</th>".PHP_EOL;
         echo '<td class="data1"><select name="typelem">';
-        echo "<option value=\"\"></option>\n";
+        echo '<option value=""></option>'.PHP_EOL;
         while (!$types->EOF) {
             $currname = htmlspecialchars($types->fields['typname']);
             echo "<option value=\"{$currname}\"",
-            ($currname == $_POST['typelem']) ? ' selected="selected"' : '', ">{$currname}</option>\n";
+            ($currname == $_POST['typelem']) ? ' selected="selected"' : '', ">{$currname}</option>".PHP_EOL;
             $types->moveNext();
         }
-        echo "</select></td></tr>\n";
-        echo "<tr><th class=\"data left\">{$this->lang['strdelimiter']}</th>\n";
+        echo '</select></td></tr>'.PHP_EOL;
+        echo "<tr><th class=\"data left\">{$this->lang['strdelimiter']}</th>".PHP_EOL;
         echo '<td class="data1"><input name="typdelim" size="1" maxlength="1" value="',
         htmlspecialchars($_POST['typdelim']), '" /></td></tr>';
-        echo "<tr><th class=\"data left\"><label for=\"typbyval\">{$this->lang['strpassbyval']}</label></th>\n";
+        echo "<tr><th class=\"data left\"><label for=\"typbyval\">{$this->lang['strpassbyval']}</label></th>".PHP_EOL;
         echo '<td class="data1"><input type="checkbox" id="typbyval" name="typbyval"',
         isset($_POST['typbyval']) ? ' checked="checked"' : '', ' /></td></tr>';
-        echo "<tr><th class=\"data left\">{$this->lang['stralignment']}</th>\n";
+        echo "<tr><th class=\"data left\">{$this->lang['stralignment']}</th>".PHP_EOL;
         echo '<td class="data1"><select name="typalign">';
         foreach ($data->typAligns as $v) {
             echo "<option value=\"{$v}\"",
-            ($v == $_POST['typalign']) ? ' selected="selected"' : '', ">{$v}</option>\n";
+            ($v == $_POST['typalign']) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
         }
-        echo "</select></td></tr>\n";
-        echo "<tr><th class=\"data left\">{$this->lang['strstorage']}</th>\n";
+        echo '</select></td></tr>'.PHP_EOL;
+        echo "<tr><th class=\"data left\">{$this->lang['strstorage']}</th>".PHP_EOL;
         echo '<td class="data1"><select name="typstorage">';
         foreach ($data->typStorages as $v) {
             echo "<option value=\"{$v}\"",
-            ($v == $_POST['typstorage']) ? ' selected="selected"' : '', ">{$v}</option>\n";
+            ($v == $_POST['typstorage']) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
         }
-        echo "</select></td></tr>\n";
-        echo "</table>\n";
-        echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
+        echo '</select></td></tr>'.PHP_EOL;
+        echo '</table>'.PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_create" />'.PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-        echo "</form>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**

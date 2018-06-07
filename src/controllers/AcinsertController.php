@@ -58,7 +58,7 @@ class AcinsertController extends BaseController
 
                 echo htmlentities($h, ENT_QUOTES, 'UTF-8'), '</th>';
             }
-            echo "</tr>\n";
+            echo '</tr>'.PHP_EOL;
             $i = 0;
             while ((!$res->EOF) && ($i < 11)) {
                 $j = 0;
@@ -75,13 +75,13 @@ class AcinsertController extends BaseController
                             '</a></td>';
                     }
                 }
-                echo "</tr>\n";
+                echo '</tr>'.PHP_EOL;
                 ++$i;
                 $res->moveNext();
             }
-            echo "</table>\n";
+            echo '</table>'.PHP_EOL;
 
-            $js = "<script type=\"text/javascript\">\n";
+            $js = '<script type="text/javascript">'.PHP_EOL;
 
             if ($_POST['offset']) {
                 echo '<a href="javascript:void(0)" id="fkprev">&lt;&lt; Prev</a>';

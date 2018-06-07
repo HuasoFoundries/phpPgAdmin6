@@ -63,11 +63,11 @@ trait ViewsMatviewsTrait
             $attrs = $data->getTableAttributes($_REQUEST[$this->keystring]);
 
             echo '<form action="'.\SUBFOLDER.'/src/views/'.$this->script.'" method="post" id="selectform">';
-            echo "\n";
+            echo PHP_EOL;
 
             if ($attrs->recordCount() > 0) {
                 // JavaScript for select all feature
-                echo '<script type="text/javascript">'."\n";
+                echo '<script type="text/javascript">'.PHP_EOL;
                 echo "//<![CDATA[\n";
                 echo "  function selectAll() {\n";
                 echo "      for (var i=0; i<document.getElementById('selectform').elements.length; i++) {\n";
@@ -77,10 +77,10 @@ trait ViewsMatviewsTrait
                 echo "          }\n";
                 echo "      }\n";
                 echo "  }\n";
-                echo '//]]>'."\n";
-                echo '</script>'."\n";
+                echo '//]]>'.PHP_EOL;
+                echo '</script>'.PHP_EOL;
 
-                echo '<table>'."\n";
+                echo '<table>'.PHP_EOL;
 
                 // Output table header
                 echo "<tr><th class=\"data\">{$this->lang['strshow']}</th><th class=\"data\">{$this->lang['strcolumn']}</th>";
@@ -101,42 +101,42 @@ trait ViewsMatviewsTrait
 
                     // Continue drawing row
                     $id = (0 == ($i % 2) ? '1' : '2');
-                    echo "<tr class=\"data{$id}\">"."\n";
+                    echo "<tr class=\"data{$id}\">".PHP_EOL;
                     echo '<td style="white-space:nowrap;">';
                     echo '<input type="checkbox" name="show[', htmlspecialchars($attrs->fields['attname']), ']"',
                     isset($_REQUEST['show'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></td>';
                     echo '<td style="white-space:nowrap;">', $this->misc->printVal($attrs->fields['attname']), '</td>';
                     echo '<td style="white-space:nowrap;">', $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), '</td>';
                     echo '<td style="white-space:nowrap;">';
-                    echo "<select name=\"ops[{$attrs->fields['attname']}]\">"."\n";
+                    echo "<select name=\"ops[{$attrs->fields['attname']}]\">".PHP_EOL;
                     foreach (array_keys($data->selectOps) as $v) {
                         echo '<option value="', htmlspecialchars($v), '"', ($_REQUEST['ops'][$attrs->fields['attname']] == $v) ? ' selected="selected"' : '',
-                        '>', htmlspecialchars($v), '</option>'."\n";
+                        '>', htmlspecialchars($v), '</option>'.PHP_EOL;
                     }
-                    echo '</select></td>'."\n";
+                    echo '</select></td>'.PHP_EOL;
                     echo '<td style="white-space:nowrap;">', $data->printField(
                         "values[{$attrs->fields['attname']}]",
                         $_REQUEST['values'][$attrs->fields['attname']],
                         $attrs->fields['type']
                     ), '</td>';
-                    echo '</tr>'."\n";
+                    echo '</tr>'.PHP_EOL;
                     ++$i;
                     $attrs->moveNext();
                 }
                 // Select all checkbox
                 echo "<tr><td colspan=\"5\"><input type=\"checkbox\" id=\"selectall\" name=\"selectall\" accesskey=\"a\" onclick=\"javascript:selectAll()\" /><label for=\"selectall\">{$this->lang['strselectallfields']}</label></td></tr>";
-                echo '</table>'."\n";
+                echo '</table>'.PHP_EOL;
             } else {
-                echo "<p>{$this->lang['strinvalidparam']}</p>"."\n";
+                echo "<p>{$this->lang['strinvalidparam']}</p>".PHP_EOL;
             }
 
-            echo '<p><input type="hidden" name="action" value="selectrows" />'."\n";
-            echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST[$this->keystring]), '" />'."\n";
-            echo '<input type="hidden" name="subject" value="view" />'."\n";
+            echo '<p><input type="hidden" name="action" value="selectrows" />'.PHP_EOL;
+            echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST[$this->keystring]), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="subject" value="view" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$this->lang['strselect']}\" />"."\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>"."\n";
-            echo '</form>'."\n";
+            echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$this->lang['strselect']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
 
             return;
         }
@@ -180,10 +180,10 @@ trait ViewsMatviewsTrait
 
         $tables = $data->getAllTables();
 
-        echo '<form action="'.\SUBFOLDER."/src/views/{$this->script}\" method=\"post\">"."\n";
-        echo '<table>'."\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/{$this->script}\" method=\"post\">".PHP_EOL;
+        echo '<table>'.PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strtables']}</th></tr>";
-        echo "<tr>\n<td class=\"data1\">"."\n";
+        echo "<tr>\n<td class=\"data1\">".PHP_EOL;
 
         $arrTables = [];
         while (!$tables->EOF) {
@@ -196,13 +196,13 @@ trait ViewsMatviewsTrait
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrTables, 'formTables[]', false, '', true);
 
-        echo "</td>\n</tr>"."\n";
-        echo '</table>'."\n";
-        echo '<p><input type="hidden" name="action" value="set_params_create" />'."\n";
+        echo "</td>\n</tr>".PHP_EOL;
+        echo '</table>'.PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="set_params_create" />'.PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />"."\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>"."\n";
-        echo '</form>'."\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**
@@ -411,24 +411,24 @@ trait ViewsMatviewsTrait
         }
         asort($arrFields);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/materializedviews" method="post">'."\n";
-        echo '<table>'."\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/materializedviews" method="post">'.PHP_EOL;
+        echo '<table>'.PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strviewname']}</th></tr>";
-        echo "<tr>\n<td class=\"data1\">"."\n";
+        echo "<tr>\n<td class=\"data1\">".PHP_EOL;
         // View name
-        echo '<input name="formView" value="'.htmlspecialchars($_REQUEST['formView'])."\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />"."\n";
-        echo "</td>\n</tr>"."\n";
+        echo '<input name="formView" value="'.htmlspecialchars($_REQUEST['formView'])."\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />".PHP_EOL;
+        echo "</td>\n</tr>".PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strcomment']}</th></tr>";
-        echo "<tr>\n<td class=\"data1\">"."\n";
+        echo "<tr>\n<td class=\"data1\">".PHP_EOL;
         // View comments
-        echo '<textarea name="formComment" rows="3" cols="32">'.htmlspecialchars($_REQUEST['formComment']).'</textarea>'."\n";
-        echo "</td>\n</tr>"."\n";
-        echo '</table>'."\n";
+        echo '<textarea name="formComment" rows="3" cols="32">'.htmlspecialchars($_REQUEST['formComment']).'</textarea>'.PHP_EOL;
+        echo "</td>\n</tr>".PHP_EOL;
+        echo '</table>'.PHP_EOL;
 
         // Output selector for fields to be retrieved from view
-        echo '<table>'."\n";
+        echo '<table>'.PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strcolumns']}</th></tr>";
-        echo "<tr>\n<td class=\"data1\">"."\n";
+        echo "<tr>\n<td class=\"data1\">".PHP_EOL;
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, 'formFields[]', false, '', true);
         echo "</td>\n</tr>";
         echo '<tr><td>';
@@ -438,7 +438,7 @@ trait ViewsMatviewsTrait
         echo '</td></tr></table><br />';
 
         // Output the Linking keys combo boxes
-        echo '<table>'."\n";
+        echo '<table>'.PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strviewlink']}</th></tr>";
         $rowClass = 'data1';
         $formLink = [];
@@ -446,7 +446,7 @@ trait ViewsMatviewsTrait
             // Initialise variables
             $this->coalesceArr($formLink[$i], 'operator', 'INNER JOIN');
 
-            echo "<tr>\n<td class=\"{$rowClass}\">"."\n";
+            echo "<tr>\n<td class=\"{$rowClass}\">".PHP_EOL;
 
             if (!$rsLinkKeys->EOF) {
                 $curLeftLink  = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
@@ -460,10 +460,10 @@ trait ViewsMatviewsTrait
             echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[${i}][leftlink]", true, $curLeftLink, false);
             echo \PHPPgAdmin\XHtml\HTMLController::printCombo($data->joinOps, "formLink[${i}][operator]", true, $formLink[$i]['operator']);
             echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formLink[${i}][rightlink]", true, $curRightLink, false);
-            echo "</td>\n</tr>"."\n";
+            echo "</td>\n</tr>".PHP_EOL;
             $rowClass = 'data1' == $rowClass ? 'data2' : 'data1';
         }
-        echo "</table>\n<br />"."\n";
+        echo "</table>\n<br />".PHP_EOL;
 
         // Build list of available operators (infix only)
         $arrOperators = [];
@@ -475,28 +475,28 @@ trait ViewsMatviewsTrait
 
         // Output additional conditions, note that this portion of the wizard treats the right hand side as literal values
         //(not as database objects) so field names will be treated as strings, use the above linking keys section to perform joins
-        echo '<table>'."\n";
+        echo '<table>'.PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strviewconditions']}</th></tr>";
         $rowClass = 'data1';
         for ($i = 0; $i < $linkCount; ++$i) {
-            echo "<tr>\n<td class=\"${rowClass}\">"."\n";
+            echo "<tr>\n<td class=\"${rowClass}\">".PHP_EOL;
             echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formCondition[${i}][field]");
             echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrOperators, "formCondition[${i}][operator]", false, '', false);
-            echo "<input type=\"text\" name=\"formCondition[${i}][txt]\" />"."\n";
-            echo "</td>\n</tr>"."\n";
+            echo "<input type=\"text\" name=\"formCondition[${i}][txt]\" />".PHP_EOL;
+            echo "</td>\n</tr>".PHP_EOL;
             $rowClass = 'data1' == $rowClass ? 'data2' : 'data1';
         }
-        echo '</table>'."\n";
-        echo '<p><input type="hidden" name="action" value="save_create_wiz" />'."\n";
+        echo '</table>'.PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_create_wiz" />'.PHP_EOL;
 
         foreach ($arrSelTables as $curTable) {
-            echo '<input type="hidden" name="formTables[]" value="'.htmlspecialchars(serialize($curTable)).'" />'."\n";
+            echo '<input type="hidden" name="formTables[]" value="'.htmlspecialchars(serialize($curTable)).'" />'.PHP_EOL;
         }
 
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />"."\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>"."\n";
-        echo '</form>'."\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     abstract public function doSetParamsCreate($msg = '');

@@ -235,42 +235,42 @@ class DataexportController extends BaseController
             $this->printMsg($msg);
         }
 
-        echo '<form action="'.\SUBFOLDER."/src/views/dataexport\" method=\"post\">\n";
-        echo "<table>\n";
-        echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/dataexport" method="post">'.PHP_EOL;
+        echo '<table>'.PHP_EOL;
+        echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">".PHP_EOL;
         // COPY and SQL require a table
         if (isset($_REQUEST['table'])) {
-            echo "<option value=\"copy\">COPY</option>\n";
-            echo "<option value=\"sql\">SQL</option>\n";
+            echo '<option value="copy">COPY</option>'.PHP_EOL;
+            echo '<option value="sql">SQL</option>'.PHP_EOL;
         }
-        echo "<option value=\"csv\">CSV</option>\n";
-        echo "<option value=\"tab\">{$this->lang['strtabbed']}</option>\n";
-        echo "<option value=\"html\">XHTML</option>\n";
-        echo "<option value=\"xml\">XML</option>\n";
+        echo '<option value="csv">CSV</option>'.PHP_EOL;
+        echo "<option value=\"tab\">{$this->lang['strtabbed']}</option>".PHP_EOL;
+        echo '<option value="html">XHTML</option>'.PHP_EOL;
+        echo '<option value="xml">XML</option>'.PHP_EOL;
         echo '</select></td></tr>';
-        echo "</table>\n";
+        echo '</table>'.PHP_EOL;
 
-        echo "<h3>{$this->lang['stroptions']}</h3>\n";
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>\n";
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>\n";
+        echo "<h3>{$this->lang['stroptions']}</h3>".PHP_EOL;
+        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>".PHP_EOL;
+        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>".PHP_EOL;
 
-        echo "<p><input type=\"hidden\" name=\"action\" value=\"export\" />\n";
-        echo "<input type=\"hidden\" name=\"what\" value=\"dataonly\" />\n";
+        echo '<p><input type="hidden" name="action" value="export" />'.PHP_EOL;
+        echo '<input type="hidden" name="what" value="dataonly" />'.PHP_EOL;
         if (isset($_REQUEST['table'])) {
-            echo '<input type="hidden" name="subject" value="table" />'."\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+            echo '<input type="hidden" name="subject" value="table" />'.PHP_EOL;
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
         } else {
-            echo '<input type="hidden" name="subject" value="table" />'."\n";
+            echo '<input type="hidden" name="subject" value="table" />'.PHP_EOL;
         }
         $this->prtrace('$_REQUEST[query]', $_REQUEST['query'], htmlspecialchars(urlencode($_REQUEST['query'])));
         $this->prtrace('$_SESSION[sqlquery]', $_SESSION['sqlquery'], htmlspecialchars(urlencode($_SESSION['sqlquery'])));
-        echo '<input type="hidden" name="query" value="', htmlspecialchars(urlencode($_REQUEST['query'])), "\" />\n";
+        echo '<input type="hidden" name="query" value="', htmlspecialchars(urlencode($_REQUEST['query'])), '" />'.PHP_EOL;
         if (isset($_REQUEST['search_path'])) {
-            echo '<input type="hidden" name="search_path" value="', htmlspecialchars($_REQUEST['search_path']), "\" />\n";
+            echo '<input type="hidden" name="search_path" value="', htmlspecialchars($_REQUEST['search_path']), '" />'.PHP_EOL;
         }
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>\n";
-        echo "</form>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
 
         $this->printFooter();
     }
@@ -300,7 +300,7 @@ class DataexportController extends BaseController
                     echo "\t", (is_null($v)) ? '\\N' : $v;
                 }
             }
-            echo "\n";
+            echo PHP_EOL;
             $rs->moveNext();
         }
         echo "\\.\n";
@@ -351,24 +351,24 @@ class DataexportController extends BaseController
 
     private function _mimicXml($data, $object, $oids, $rs)
     {
-        echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n";
-        echo "<data>\n";
+        echo '<?xml version="1.0" encoding="utf-8" ?>'.PHP_EOL;
+        echo '<data>'.PHP_EOL;
         if (!$rs->EOF) {
             // Output header row
             $j = 0;
-            echo "\t<header>\n";
+            echo "\t<header>".PHP_EOL;
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
                 $name  = htmlspecialchars($finfo->name);
                 $type  = htmlspecialchars($finfo->type);
-                echo "\t\t<column name=\"{$name}\" type=\"{$type}\" />\n";
+                echo "\t\t<column name=\"{$name}\" type=\"{$type}\" />".PHP_EOL;
             }
-            echo "\t</header>\n";
+            echo "\t</header>".PHP_EOL;
         }
-        echo "\t<records>\n";
+        echo "\t<records>".PHP_EOL;
         while (!$rs->EOF) {
             $j = 0;
-            echo "\t\t<row>\n";
+            echo "\t\t<row>".PHP_EOL;
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
                 $name  = htmlspecialchars($finfo->name);
@@ -376,13 +376,13 @@ class DataexportController extends BaseController
                     $v = htmlspecialchars($v);
                 }
 
-                echo "\t\t\t<column name=\"{$name}\"", (is_null($v) ? ' null="null"' : ''), ">{$v}</column>\n";
+                echo "\t\t\t<column name=\"{$name}\"", (is_null($v) ? ' null="null"' : ''), ">{$v}</column>".PHP_EOL;
             }
-            echo "\t\t</row>\n";
+            echo "\t\t</row>".PHP_EOL;
             $rs->moveNext();
         }
-        echo "\t</records>\n";
-        echo "</data>\n";
+        echo "\t</records>".PHP_EOL;
+        echo '</data>'.PHP_EOL;
     }
 
     private function _mimicSQL($data, $object, $oids, $rs)

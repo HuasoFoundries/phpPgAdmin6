@@ -281,34 +281,34 @@ class SchemasController extends BaseController
         $this->printTitle($this->lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
-        echo "<table style=\"width: 100%\">\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'.PHP_EOL;
+        echo '<table style="width: 100%">'.PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>\n";
+        htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>".PHP_EOL;
         // Owner
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strowner']}</th>\n";
-        echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formAuth\">\n";
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strowner']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formAuth\">".PHP_EOL;
         while (!$users->EOF) {
             $uname = htmlspecialchars($users->fields['usename']);
             echo "\t\t\t\t<option value=\"{$uname}\"",
-            ($uname == $_POST['formAuth']) ? ' selected="selected"' : '', ">{$uname}</option>\n";
+            ($uname == $_POST['formAuth']) ? ' selected="selected"' : '', ">{$uname}</option>".PHP_EOL;
             $users->moveNext();
         }
-        echo "\t\t\t</select>\n\t\t</td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
+        echo "\t\t\t</select>\n\t\t</td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
-        htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
+        htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>".PHP_EOL;
 
-        echo "</table>\n";
-        echo "<p>\n";
-        echo "<input type=\"hidden\" name=\"action\" value=\"create\" />\n";
-        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
+        echo '</table>'.PHP_EOL;
+        echo '<p>'.PHP_EOL;
+        echo '<input type="hidden" name="action" value="create" />'.PHP_EOL;
+        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-        echo "</p>\n";
-        echo "</form>\n";
+        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+        echo '</p>'.PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**
@@ -356,45 +356,45 @@ class SchemasController extends BaseController
 
             $this->coalesceArr($_POST, 'owner', $schema->fields['ownername']);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
-            echo "<table>\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'.PHP_EOL;
+            echo '<table>'.PHP_EOL;
 
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
             echo "\t\t<td class=\"data1\">";
             echo "\t\t\t<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['name']), "\" />\n";
-            echo "\t\t</td>\n";
-            echo "\t</tr>\n";
+            htmlspecialchars($_POST['name']), '" />'.PHP_EOL;
+            echo "\t\t</td>".PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
 
             if ($data->hasAlterSchemaOwner()) {
                 $users = $data->getUsers();
-                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>\n";
+                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>".PHP_EOL;
                 echo '<td class="data2"><select name="owner">';
                 while (!$users->EOF) {
                     $uname = $users->fields['usename'];
                     echo '<option value="', htmlspecialchars($uname), '"',
-                    ($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
+                    ($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), '</option>'.PHP_EOL;
                     $users->moveNext();
                 }
-                echo "</select></td></tr>\n";
+                echo '</select></td></tr>'.PHP_EOL;
             } else {
                 echo "<input name=\"owner\" value=\"{$_POST['owner']}\" type=\"hidden\" />";
             }
 
-            echo "\t<tr>\n";
-            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>\n";
-            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\" name=\"comment\">", htmlspecialchars($_POST['comment']), "</textarea></td>\n";
-            echo "\t</tr>\n";
-            echo "</table>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
-            echo '<input type="hidden" name="schema" value="', htmlspecialchars($_POST['schema']), "\" />\n";
+            echo "\t<tr>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>".PHP_EOL;
+            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\" name=\"comment\">", htmlspecialchars($_POST['comment']), '</textarea></td>'.PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
+            echo '</table>'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="alter" />'.PHP_EOL;
+            echo '<input type="hidden" name="schema" value="', htmlspecialchars($_POST['schema']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
         }
     }
 
@@ -433,26 +433,26 @@ class SchemasController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($this->lang['strdrop'], 'pg.schema.drop');
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'."\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/schemas" method="post">'.PHP_EOL;
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($this->lang['strconfdropschema'], $this->misc->printVal($a['nsp'])), "</p>\n";
-                    echo '<input type="hidden" name="nsp[]" value="', htmlspecialchars($a['nsp']), "\" />\n";
+                    echo '<p>', sprintf($this->lang['strconfdropschema'], $this->misc->printVal($a['nsp'])), '</p>'.PHP_EOL;
+                    echo '<input type="hidden" name="nsp[]" value="', htmlspecialchars($a['nsp']), '" />'.PHP_EOL;
                 }
             } else {
-                echo '<p>', sprintf($this->lang['strconfdropschema'], $this->misc->printVal($_REQUEST['nsp'])), "</p>\n";
-                echo '<input type="hidden" name="nsp" value="', htmlspecialchars($_REQUEST['nsp']), "\" />\n";
+                echo '<p>', sprintf($this->lang['strconfdropschema'], $this->misc->printVal($_REQUEST['nsp'])), '</p>'.PHP_EOL;
+                echo '<input type="hidden" name="nsp" value="', htmlspecialchars($_REQUEST['nsp']), '" />'.PHP_EOL;
             }
 
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), "\" />\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="drop" />'.PHP_EOL;
+            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             if (is_array($_POST['nsp'])) {
                 $msg    = '';

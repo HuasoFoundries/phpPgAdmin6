@@ -189,36 +189,36 @@ class TablespacesController extends BaseController
 
             $this->coalesceArr($_POST, 'comment', ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tablespaces\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/tablespaces" method="post">'.PHP_EOL;
             echo $this->misc->form;
-            echo "<table>\n";
-            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>\n";
+            echo '<table>'.PHP_EOL;
+            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
             echo '<td class="data1">';
             echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['name']), "\" /></td></tr>\n";
-            echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>\n";
+            htmlspecialchars($_POST['name']), '" /></td></tr>'.PHP_EOL;
+            echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>".PHP_EOL;
             echo '<td class="data1"><select name="owner">';
             while (!$users->EOF) {
                 $uname = $users->fields['usename'];
                 echo '<option value="', htmlspecialchars($uname), '"',
-                ($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
+                ($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), '</option>'.PHP_EOL;
                 $users->moveNext();
             }
-            echo "</select></td></tr>\n";
+            echo '</select></td></tr>'.PHP_EOL;
             if ($data->hasSharedComments()) {
-                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>\n";
+                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
                 echo '<td class="data1">';
                 echo '<textarea rows="3" cols="32" name="comment">',
-                htmlspecialchars($_POST['comment']), "</textarea></td></tr>\n";
+                htmlspecialchars($_POST['comment']), '</textarea></td></tr>'.PHP_EOL;
             }
-            echo "</table>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"save_edit\" />\n";
-            echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo '</table>'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="save_edit" />'.PHP_EOL;
+            echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), '" />'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
         }
     }
 
@@ -260,15 +260,15 @@ class TablespacesController extends BaseController
             $this->printTrail('tablespace');
             $this->printTitle($this->lang['strdrop'], 'pg.tablespace.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), "</p>\n";
+            echo '<p>', sprintf($this->lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER."/src/views/tablespaces\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/tablespaces" method="post">'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), "\" />\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            echo "</form>\n";
+            echo '<input type="hidden" name="action" value="drop" />'.PHP_EOL;
+            echo '<input type="hidden" name="tablespace" value="', htmlspecialchars($_REQUEST['tablespace']), '" />'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->droptablespace($_REQUEST['tablespace']);
             if (0 == $status) {
@@ -305,33 +305,33 @@ class TablespacesController extends BaseController
         $this->printTitle($this->lang['strcreatetablespace'], 'pg.tablespace.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/tablespaces\" method=\"post\">\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/tablespaces" method="post">'.PHP_EOL;
         echo $this->misc->form;
-        echo "<table>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
-        echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formSpcname\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_POST['formSpcname']), "\" /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strowner']}</th>\n";
-        echo "\t\t<td class=\"data1\"><select name=\"formOwner\">\n";
+        echo '<table>'.PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formSpcname\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_POST['formSpcname']), "\" /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strowner']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><select name=\"formOwner\">".PHP_EOL;
         while (!$users->EOF) {
             $uname = $users->fields['usename'];
             echo "\t\t\t<option value=\"", htmlspecialchars($uname), '"',
-            ($uname == $_POST['formOwner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), "</option>\n";
+            ($uname == $_POST['formOwner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), '</option>'.PHP_EOL;
             $users->moveNext();
         }
-        echo "\t\t</select></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strlocation']}</th>\n";
-        echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formLoc\" value=\"", htmlspecialchars($_POST['formLoc']), "\" /></td>\n\t</tr>\n";
+        echo "\t\t</select></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strlocation']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formLoc\" value=\"", htmlspecialchars($_POST['formLoc']), "\" /></td>\n\t</tr>".PHP_EOL;
         // Comments (if available)
         if ($data->hasSharedComments()) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
             echo "\t\t<td><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
-            htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>\n";
+            htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>".PHP_EOL;
         }
-        echo "</table>\n";
-        echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-        echo "</form>\n";
+        echo '</table>'.PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_create" />'.PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**

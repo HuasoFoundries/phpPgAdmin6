@@ -89,7 +89,7 @@ class HTMLHeaderController extends HTMLController
         $onload    = ($onloadInit ? 'onload="init();" ' : '');
 
         $bodyHtml = sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
-        $bodyHtml .= "\n";
+        $bodyHtml .= PHP_EOL;
 
         if (!$this->_no_output && $doBody) {
             echo $bodyHtml;
@@ -109,7 +109,7 @@ class HTMLHeaderController extends HTMLController
     {
         $title_html = '<h2>';
         $title_html .= $this->misc->printHelp($title, $help, false);
-        $title_html .= "</h2>\n";
+        $title_html .= '</h2>'.PHP_EOL;
 
         if ($do_print) {
             echo $title_html;

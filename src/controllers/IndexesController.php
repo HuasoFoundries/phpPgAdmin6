@@ -265,18 +265,18 @@ class IndexesController extends BaseController
             $this->printTabs($subject, 'indexes');
             $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<p>', sprintf($this->lang['strconfcluster'], $this->misc->printVal($_REQUEST['index'])), '</p>'."\n";
+            echo '<p>', sprintf($this->lang['strconfcluster'], $this->misc->printVal($_REQUEST['index'])), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/indexes" method="post">'."\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/indexes" method="post">'.PHP_EOL;
             echo '<p><input type="checkbox" id="analyze" name="analyze"', (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), ' />';
-            echo "<label for=\"analyze\">{$this->lang['stranalyze']}</label></p>"."\n";
-            echo '<input type="hidden" name="action" value="cluster_index" />'."\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />'."\n";
-            echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />'."\n";
+            echo "<label for=\"analyze\">{$this->lang['stranalyze']}</label></p>".PHP_EOL;
+            echo '<input type="hidden" name="action" value="cluster_index" />'.PHP_EOL;
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="index" value="', htmlspecialchars($_REQUEST['index']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"cluster\" value=\"{$this->lang['strclusterindex']}\" />"."\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />"."\n";
-            echo '</form>'."\n";
+            echo "<input type=\"submit\" name=\"cluster\" value=\"{$this->lang['strclusterindex']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             set_time_limit(0);
             list($status, $sql) = $data->clusterIndex($object, $_POST['index']);
@@ -362,9 +362,9 @@ class IndexesController extends BaseController
         $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
         $buttonRemove->set_attribute('type', 'button');
 
-        echo '<form onsubmit="doSelectAll();" name="formIndex" action="indexes" method="post">'."\n";
+        echo '<form onsubmit="doSelectAll();" name="formIndex" action="indexes" method="post">'.PHP_EOL;
 
-        echo '<table>'."\n";
+        echo '<table>'.PHP_EOL;
         echo '<tr><th class="data required" colspan="3">'.$this->lang['strindexname'].'</th></tr>';
         echo '<tr>';
         echo '<td class="data1" colspan="3">';
@@ -378,19 +378,19 @@ class IndexesController extends BaseController
         echo '<tr>';
         echo '<th class="data">'.$this->lang['strtablecolumnlist'].'</th><th class="data">&nbsp;</th>';
         echo '<th class="data required">'.$this->lang['strindexcolumnlist'].'</th>';
-        echo '</tr>'."\n";
+        echo '</tr>'.PHP_EOL;
 
-        echo '<tr><td class="data1">'.$selColumns->fetch().'</td>'."\n";
+        echo '<tr><td class="data1">'.$selColumns->fetch().'</td>'.PHP_EOL;
         echo '<td class="data1">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
-        echo '<td class="data1">'.$selIndex->fetch().'</td></tr>'."\n";
+        echo '<td class="data1">'.$selIndex->fetch().'</td></tr>'.PHP_EOL;
         echo '<tr>';
         echo '<th class="data left required" scope="row">'.$this->lang['strindextype'].'</th>';
         echo '<td colspan="2" class="data1"><select name="formIndexType">';
         foreach ($data->typIndexes as $v) {
             echo '<option value="', htmlspecialchars($v), '"',
-            ($v == $formIndexType) ? ' selected="selected"' : '', '>', htmlspecialchars($v), '</option>'."\n";
+            ($v == $formIndexType) ? ' selected="selected"' : '', '>', htmlspecialchars($v), '</option>'.PHP_EOL;
         }
-        echo '</select></td></tr>'."\n";
+        echo '</select></td></tr>'.PHP_EOL;
         echo '<tr>';
         echo "<th class=\"data left\" scope=\"row\"><label for=\"formUnique\">{$this->lang['strunique']}</label></th>";
         echo '<td  colspan="2" class="data1"><input type="checkbox" id="formUnique" name="formUnique"', ($formUnique ? 'checked="checked"' : ''), ' /></td>';
@@ -402,21 +402,21 @@ class IndexesController extends BaseController
 
         // Tablespace (if there are any)
         if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
-            echo '<tr>'."\n";
-            echo "<th class=\"data left\">{$this->lang['strtablespace']}</th>"."\n";
+            echo '<tr>'.PHP_EOL;
+            echo "<th class=\"data left\">{$this->lang['strtablespace']}</th>".PHP_EOL;
             echo '<td  colspan="2" class="data1">';
-            echo "\n\t\t\t<select name=\"formSpc\">"."\n";
+            echo "\n\t\t\t<select name=\"formSpc\">".PHP_EOL;
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
-            ('' == $formSpc) ? ' selected="selected"' : '', '></option>'."\n";
+            ('' == $formSpc) ? ' selected="selected"' : '', '></option>'.PHP_EOL;
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
                 $spcname = htmlspecialchars($tablespaces->fields['spcname']);
                 echo "\t\t\t\t<option value=\"{$spcname}\"",
-                ($spcname == $formSpc) ? ' selected="selected"' : '', ">{$spcname}</option>"."\n";
+                ($spcname == $formSpc) ? ' selected="selected"' : '', ">{$spcname}</option>".PHP_EOL;
                 $tablespaces->moveNext();
             }
-            echo "\t\t\t</select>\n\t\t</td>\n\t</tr>"."\n";
+            echo "\t\t\t</select>\n\t\t</td>\n\t</tr>".PHP_EOL;
         }
 
         if ($data->hasConcurrentIndexBuild()) {
@@ -428,13 +428,13 @@ class IndexesController extends BaseController
 
         echo '</table>';
 
-        echo '<p><input type="hidden" name="action" value="save_create_index" />'."\n";
+        echo '<p><input type="hidden" name="action" value="save_create_index" />'.PHP_EOL;
         echo $this->misc->form;
-        echo '<input type="hidden" name="subject" value="', htmlspecialchars($subject), '" />'."\n";
-        echo '<input type="hidden" name="'.$subject.'" value="', htmlspecialchars($object), '" />'."\n";
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />"."\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>"."\n";
-        echo '</form>'."\n";
+        echo '<input type="hidden" name="subject" value="', htmlspecialchars($subject), '" />'.PHP_EOL;
+        echo '<input type="hidden" name="'.$subject.'" value="', htmlspecialchars($object), '" />'.PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**
@@ -497,24 +497,24 @@ class IndexesController extends BaseController
             $this->printTrail('index');
             $this->printTitle($this->lang['strdrop'], 'pg.index.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdropindex'], $this->misc->printVal($this->getRequestParam('index'))), '</p>'."\n";
-            echo '<form action="'.\SUBFOLDER.'/src/views/indexes" method="post">'."\n";
-            echo '<input type="hidden" name="action" value="drop_index" />'."\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />'."\n";
-            echo '<input type="hidden" name="index" value="', htmlspecialchars($this->getRequestParam('index')), '" />'."\n";
+            echo '<p>', sprintf($this->lang['strconfdropindex'], $this->misc->printVal($this->getRequestParam('index'))), '</p>'.PHP_EOL;
+            echo '<form action="'.\SUBFOLDER.'/src/views/indexes" method="post">'.PHP_EOL;
+            echo '<input type="hidden" name="action" value="drop_index" />'.PHP_EOL;
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($object), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="index" value="', htmlspecialchars($this->getRequestParam('index')), '" />'.PHP_EOL;
             echo $this->misc->form;
             echo '<p><input type="checkbox" id="cascade" name="cascade" value="1" />';
-            echo '<label for="cascade">'.$this->lang['strcascade'].'</label></p>'."\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />"."\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />"."\n";
-            echo '</form>'."\n";
+            echo '<label for="cascade">'.$this->lang['strcascade'].'</label></p>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             try {
                 list($status, $sql) = $data->dropIndex($this->getPostParam('index'), $this->getPostParam('cascade'));
                 if (0 == $status) {
-                    $this->doDefault($sql."\n".$this->lang['strindexdropped']);
+                    $this->doDefault($sql.PHP_EOL.$this->lang['strindexdropped']);
                 } else {
-                    $this->doDefault($sql."\n".$this->lang['strindexdroppedbad']);
+                    $this->doDefault($sql.PHP_EOL.$this->lang['strindexdroppedbad']);
                 }
             } catch (\PHPPgAdmin\ADOdbException $e) {
                 $this->doDefault($this->lang['strindexdroppedbad']);

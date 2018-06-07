@@ -280,27 +280,27 @@ class ViewsController extends BaseController
             $this->printTrail('view');
             $this->printTitle($this->lang['strdrop'], 'pg.view.drop');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/views\" method=\"post\">\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/views" method="post">'.PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($this->lang['strconfdropview'], $this->misc->printVal($a['view'])), "</p>\n";
-                    echo '<input type="hidden" name="view[]" value="', htmlspecialchars($a['view']), "\" />\n";
+                    echo '<p>', sprintf($this->lang['strconfdropview'], $this->misc->printVal($a['view'])), '</p>'.PHP_EOL;
+                    echo '<input type="hidden" name="view[]" value="', htmlspecialchars($a['view']), '" />'.PHP_EOL;
                 }
             } else {
-                echo '<p>', sprintf($this->lang['strconfdropview'], $this->misc->printVal($_REQUEST['view'])), "</p>\n";
-                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), "\" />\n";
+                echo '<p>', sprintf($this->lang['strconfdropview'], $this->misc->printVal($_REQUEST['view'])), '</p>'.PHP_EOL;
+                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST['view']), '" />'.PHP_EOL;
             }
 
-            echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
+            echo '<input type="hidden" name="action" value="drop" />'.PHP_EOL;
 
             echo $this->misc->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />\n";
-            echo "</form>\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             if (is_array($_POST['view'])) {
                 $msg    = '';
@@ -398,23 +398,23 @@ class ViewsController extends BaseController
         $this->printTitle($this->lang['strcreateview'], 'pg.view.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/{$this->view_name}\" method=\"post\">\n";
-        echo "<table style=\"width: 100%\">\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>\n";
+        echo '<form action="'.\SUBFOLDER."/src/views/{$this->view_name}\" method=\"post\">".PHP_EOL;
+        echo '<table style="width: 100%">'.PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_REQUEST['formView']), "\" /></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>\n";
+        htmlspecialchars($_REQUEST['formView']), "\" /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>".PHP_EOL;
         echo "\t<td class=\"data1\"><textarea style=\"width:100%;\" rows=\"10\" cols=\"50\" name=\"formDefinition\">",
-        htmlspecialchars($_REQUEST['formDefinition']), "</textarea></td>\n\t</tr>\n";
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>\n";
+        htmlspecialchars($_REQUEST['formDefinition']), "</textarea></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
-        htmlspecialchars($_REQUEST['formComment']), "</textarea></td>\n\t</tr>\n";
-        echo "</table>\n";
-        echo "<p><input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
+        htmlspecialchars($_REQUEST['formComment']), "</textarea></td>\n\t</tr>".PHP_EOL;
+        echo '</table>'.PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_create" />'.PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-        echo "</form>\n";
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**

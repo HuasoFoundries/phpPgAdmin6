@@ -41,7 +41,7 @@ trait ViewsMatViewsPropertiesTrait
 
         // Show comment if any
         if (null !== $vdata->fields['relcomment']) {
-            echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>'."\n";
+            echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>'.PHP_EOL;
         }
 
         $columns = [
@@ -86,7 +86,7 @@ trait ViewsMatViewsPropertiesTrait
 
         echo $this->printTable($attrs, $columns, $actions, "{$this->view_name}-{$this->view_name}", $this->lang['strnodata'], $attPre);
 
-        echo '<br />'."\n";
+        echo '<br />'.PHP_EOL;
 
         $navlinks = [
             'browse' => [
@@ -264,15 +264,15 @@ trait ViewsMatViewsPropertiesTrait
         if ($vdata->RecordCount() > 0) {
             // Show comment if any
             if (null !== $vdata->fields['relcomment']) {
-                echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>'."\n";
+                echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>'.PHP_EOL;
             }
 
-            echo '<table style="width: 100%">'."\n";
-            echo "<tr><th class=\"data\">{$this->lang['strdefinition']}</th></tr>"."\n";
-            echo '<tr><td class="data1">', $this->misc->printVal($vdata->fields['vwdefinition']), '</td></tr>'."\n";
-            echo '</table>'."\n";
+            echo '<table style="width: 100%">'.PHP_EOL;
+            echo "<tr><th class=\"data\">{$this->lang['strdefinition']}</th></tr>".PHP_EOL;
+            echo '<tr><td class="data1">', $this->misc->printVal($vdata->fields['vwdefinition']), '</td></tr>'.PHP_EOL;
+            echo '</table>'.PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>"."\n";
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
         }
 
         $this->printNavLinks(['alter' => [

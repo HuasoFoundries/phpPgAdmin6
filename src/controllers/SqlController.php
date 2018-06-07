@@ -123,7 +123,7 @@ class SqlController extends BaseController
         $sqlCallback = function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection) {
             // Check if $rs is false, if so then there was a fatal error
             if (false === $rs) {
-                echo htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', nl2br(htmlspecialchars($_connection->getLastError())), "<br/>\n";
+                echo htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', nl2br(htmlspecialchars($_connection->getLastError())), '<br/>'.PHP_EOL;
             } else {
                 // Print query results
                 switch (pg_result_status($rs)) {
@@ -139,26 +139,26 @@ class SqlController extends BaseController
                         $row = pg_fetch_row($rs);
                         while (false !== $row) {
                             $id = (0 == ($i % 2) ? '1' : '2');
-                            echo "<tr class=\"data{$id}\">\n";
+                            echo "<tr class=\"data{$id}\">".PHP_EOL;
                             foreach ($row as $k => $v) {
                                 echo '<td style="white-space:nowrap;">', $misc->printVal($v, pg_fieldtype($rs, $k), ['null' => true]), '</td>';
                             }
-                            echo "</tr>\n";
+                            echo '</tr>'.PHP_EOL;
                             $row = pg_fetch_row($rs);
                             ++$i;
                         }
 
-                        echo "</table><br/>\n";
-                        echo $i, " {$lang['strrows']}</p>\n";
+                        echo '</table><br/>'.PHP_EOL;
+                        echo $i, " {$lang['strrows']}</p>".PHP_EOL;
 
                         break;
                     case \PGSQL_COMMAND_OK:
                         // If we have the command completion tag
                         if (version_compare(PHP_VERSION, '4.3', '>=')) {
-                            echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), "<br/>\n";
+                            echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), '<br/>'.PHP_EOL;
                         } elseif ($data->conn->Affected_Rows() > 0) {
                             // Otherwise if any rows have been affected
-                            echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>\n";
+                            echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>".PHP_EOL;
                         }
                         // Otherwise output nothing...
                         break;
@@ -207,27 +207,27 @@ class SqlController extends BaseController
                     $finfo = $rs->fetchField($k);
                     echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>';
                 }
-                echo "</tr>\n";
+                echo '</tr>'.PHP_EOL;
                 $i = 0;
                 while (!$rs->EOF) {
                     $id = (0 == ($i % 2) ? '1' : '2');
-                    echo "<tr class=\"data{$id}\">\n";
+                    echo "<tr class=\"data{$id}\">".PHP_EOL;
                     foreach ($rs->fields as $k => $v) {
                         $finfo = $rs->fetchField($k);
                         echo '<td style="white-space:nowrap;">', $this->misc->printVal($v, $finfo->type, ['null' => true]), '</td>';
                     }
-                    echo "</tr>\n";
+                    echo '</tr>'.PHP_EOL;
                     $rs->moveNext();
                     ++$i;
                 }
-                echo "</table>\n";
-                echo '<p>', $rs->recordCount(), " {$this->lang['strrows']}</p>\n";
+                echo '</table>'.PHP_EOL;
+                echo '<p>', $rs->recordCount(), " {$this->lang['strrows']}</p>".PHP_EOL;
             } elseif ($data->conn->Affected_Rows() > 0) {
                 // Otherwise if any rows have been affected
-                echo '<p>', $data->conn->Affected_Rows(), " {$this->lang['strrowsaff']}</p>\n";
+                echo '<p>', $data->conn->Affected_Rows(), " {$this->lang['strrowsaff']}</p>".PHP_EOL;
             } else {
                 // Otherwise nodata to print
-                echo '<p>', $this->lang['strnodata'], "</p>\n";
+                echo '<p>', $this->lang['strnodata'], '</p>'.PHP_EOL;
             }
 
             return $rs;
@@ -251,10 +251,10 @@ class SqlController extends BaseController
 
         // Display duration if we know it
         if (null !== $this->duration) {
-            echo '<p>', sprintf($this->lang['strruntime'], $this->duration), "</p>\n";
+            echo '<p>', sprintf($this->lang['strruntime'], $this->duration), '</p>'.PHP_EOL;
         }
 
-        echo "<p>{$this->lang['strsqlexecuted']}</p>\n";
+        echo "<p>{$this->lang['strsqlexecuted']}</p>".PHP_EOL;
 
         $navlinks = [];
         $fields   = [

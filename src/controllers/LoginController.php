@@ -93,7 +93,7 @@ class LoginController extends BaseController
                 $key = explode('?', $key)[1];
             }
 
-            $login_html .= '<input type="hidden" name="'.htmlspecialchars($key).'" value="'.htmlspecialchars($val).'" />'."\n";
+            $login_html .= '<input type="hidden" name="'.htmlspecialchars($key).'" value="'.htmlspecialchars($val).'" />'.PHP_EOL;
         }
 
         $login_html .= '<input type="hidden" name="loginServer" value="'.htmlspecialchars($server_id).'" />';

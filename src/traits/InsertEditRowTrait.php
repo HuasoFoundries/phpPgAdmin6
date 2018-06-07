@@ -93,7 +93,7 @@ trait InsertEditRowTrait
                 $constrs->moveNext();
             }
 
-            $fksprops['code'] = '<script type="text/javascript">'."\n";
+            $fksprops['code'] = '<script type="text/javascript">'.PHP_EOL;
             $fksprops['code'] .= "var constrs = {};\n";
             foreach ($fksprops['byconstr'] as $conid => $props) {
                 $fksprops['code'] .= "constrs.constr_{$conid} = {\n";
@@ -124,7 +124,7 @@ trait InsertEditRowTrait
             $fksprops['code'] .= "var server='".htmlentities($_REQUEST['server'], ENT_QUOTES, 'UTF-8')."';";
             $fksprops['code'] .= "var database='".addslashes(htmlentities($_REQUEST['database'], ENT_QUOTES, 'UTF-8'))."';";
             $fksprops['code'] .= "var subfolder='".SUBFOLDER."';";
-            $fksprops['code'] .= '</script>'."\n";
+            $fksprops['code'] .= '</script>'.PHP_EOL;
 
             $fksprops['code'] .= '<div id="fkbg"></div>';
             $fksprops['code'] .= '<div id="fklist"></div>';

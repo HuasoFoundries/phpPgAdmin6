@@ -399,7 +399,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">'.nl2br($msg).'</p>'."\n";
+            $html .= '<p class="message">'.nl2br($msg).'</p>'.PHP_EOL;
         }
         if ($do_print) {
             echo $html;

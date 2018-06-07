@@ -272,22 +272,22 @@ class TriggersController extends BaseController
         if ($triggerdata->recordCount() > 0) {
             $this->coalesceArr($_POST, 'name', $triggerdata->fields['tgname']);
 
-            echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
-            echo "<table>\n";
-            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/triggers" method="post">'.PHP_EOL;
+            echo '<table>'.PHP_EOL;
+            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>".PHP_EOL;
             echo '<td class="data1">';
             echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['name']), "\" />\n";
-            echo "</table>\n";
-            echo "<p><input type=\"hidden\" name=\"action\" value=\"alter\" />\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-            echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
+            htmlspecialchars($_POST['name']), '" />'.PHP_EOL;
+            echo '</table>'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="alter" />'.PHP_EOL;
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['strok']}\" />\n";
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['strok']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>\n";
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
         }
     }
 
@@ -308,17 +308,17 @@ class TriggersController extends BaseController
                 $this->lang['strconfdroptrigger'],
                 $this->misc->printVal($_REQUEST['trigger']),
                 $this->misc->printVal($_REQUEST['table'])
-            ), "</p>\n";
+            ), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
-            echo "<input type=\"hidden\" name=\"action\" value=\"drop\" />\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-            echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/triggers" method="post">'.PHP_EOL;
+            echo '<input type="hidden" name="action" value="drop" />'.PHP_EOL;
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>\n";
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />\n";
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />\n";
-            echo "</form>\n";
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
+            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->dropTrigger($_POST['trigger'], $_POST['table'], isset($_POST['cascade']));
             if (0 == $status) {
@@ -346,16 +346,16 @@ class TriggersController extends BaseController
                 $this->lang['strconfenabletrigger'],
                 $this->misc->printVal($_REQUEST['trigger']),
                 $this->misc->printVal($_REQUEST['table'])
-            ), "</p>\n";
+            ), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
-            echo "<input type=\"hidden\" name=\"action\" value=\"enable\" />\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-            echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/triggers" method="post">'.PHP_EOL;
+            echo '<input type="hidden" name="action" value="enable" />'.PHP_EOL;
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />\n";
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->enableTrigger($_POST['trigger'], $_POST['table']);
             if (0 == $status) {
@@ -383,16 +383,16 @@ class TriggersController extends BaseController
                 $this->lang['strconfdisabletrigger'],
                 $this->misc->printVal($_REQUEST['trigger']),
                 $this->misc->printVal($_REQUEST['table'])
-            ), "</p>\n";
+            ), '</p>'.PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
-            echo "<input type=\"hidden\" name=\"action\" value=\"disable\" />\n";
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
-            echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), "\" />\n";
+            echo '<form action="'.\SUBFOLDER.'/src/views/triggers" method="post">'.PHP_EOL;
+            echo '<input type="hidden" name="action" value="disable" />'.PHP_EOL;
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
+            echo '<input type="hidden" name="trigger" value="', htmlspecialchars($_REQUEST['trigger']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />\n";
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />\n";
-            echo "</form>\n";
+            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->disableTrigger($_POST['trigger'], $_POST['table']);
             if (0 == $status) {
@@ -443,35 +443,35 @@ class TriggersController extends BaseController
         $sel3 = new \PHPPgAdmin\XHtml\XHtmlSelect('formFrequency');
         $sel3->set_data($data->triggerFrequency);
 
-        echo '<form action="'.\SUBFOLDER."/src/views/triggers\" method=\"post\">\n";
-        echo "<table>\n";
-        echo "<tr>\n";
-        echo "		<th class=\"data\">{$this->lang['strname']}</th>\n";
-        echo "		<th class=\"data\">{$this->lang['strwhen']}</th>\n";
-        echo "</tr>\n";
-        echo "<tr>\n";
-        echo "		<td class=\"data1\"> <input type=\"text\" name=\"formTriggerName\" size=\"32\" /></td>\n";
-        echo '		<td class="data1"> ', $sel1->fetch(), "</td>\n";
-        echo "</tr>\n";
-        echo "<tr>\n";
-        echo "    <th class=\"data\">{$this->lang['strevent']}</th>\n";
-        echo "    <th class=\"data\">{$this->lang['strforeach']}</th>\n";
-        echo "</tr>\n";
-        echo "<tr>\n";
-        echo '     <td class="data1"> ', $sel2->fetch(), "</td>\n";
-        echo '     <td class="data1"> ', $sel3->fetch(), "</td>\n";
-        echo "</tr>\n";
-        echo "<tr><th class=\"data\"> {$this->lang['strfunction']}</th>\n";
-        echo "<th class=\"data\"> {$this->lang['strarguments']}</th></tr>\n";
-        echo '<tr><td class="data1">', $sel0->fetch(), "</td>\n";
-        echo "<td class=\"data1\">(<input type=\"text\" name=\"formTriggerArgs\" size=\"32\" />)</td>\n";
-        echo "</tr></table>\n";
-        echo "<p><input type=\"submit\" value=\"{$this->lang['strcreate']}\" />\n";
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>\n";
-        echo "<input type=\"hidden\" name=\"action\" value=\"save_create\" />\n";
-        echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), "\" />\n";
+        echo '<form action="'.\SUBFOLDER.'/src/views/triggers" method="post">'.PHP_EOL;
+        echo '<table>'.PHP_EOL;
+        echo '<tr>'.PHP_EOL;
+        echo "		<th class=\"data\">{$this->lang['strname']}</th>".PHP_EOL;
+        echo "		<th class=\"data\">{$this->lang['strwhen']}</th>".PHP_EOL;
+        echo '</tr>'.PHP_EOL;
+        echo '<tr>'.PHP_EOL;
+        echo '		<td class="data1"> <input type="text" name="formTriggerName" size="32" /></td>'.PHP_EOL;
+        echo '		<td class="data1"> ', $sel1->fetch(), '</td>'.PHP_EOL;
+        echo '</tr>'.PHP_EOL;
+        echo '<tr>'.PHP_EOL;
+        echo "    <th class=\"data\">{$this->lang['strevent']}</th>".PHP_EOL;
+        echo "    <th class=\"data\">{$this->lang['strforeach']}</th>".PHP_EOL;
+        echo '</tr>'.PHP_EOL;
+        echo '<tr>'.PHP_EOL;
+        echo '     <td class="data1"> ', $sel2->fetch(), '</td>'.PHP_EOL;
+        echo '     <td class="data1"> ', $sel3->fetch(), '</td>'.PHP_EOL;
+        echo '</tr>'.PHP_EOL;
+        echo "<tr><th class=\"data\"> {$this->lang['strfunction']}</th>".PHP_EOL;
+        echo "<th class=\"data\"> {$this->lang['strarguments']}</th></tr>".PHP_EOL;
+        echo '<tr><td class="data1">', $sel0->fetch(), '</td>'.PHP_EOL;
+        echo '<td class="data1">(<input type="text" name="formTriggerArgs" size="32" />)</td>'.PHP_EOL;
+        echo '</tr></table>'.PHP_EOL;
+        echo "<p><input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '<input type="hidden" name="action" value="save_create" />'.PHP_EOL;
+        echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
         echo $this->misc->form;
-        echo "</form>\n";
+        echo '</form>'.PHP_EOL;
     }
 
     /**

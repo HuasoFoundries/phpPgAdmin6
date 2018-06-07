@@ -148,7 +148,7 @@ class HTMLController
                 $tag .= htmlentities($attr).'="'.Decorator::get_sanitized_value($value, $link['fields'], 'html').'" ';
             }
         }
-        $tag .= '>'.Decorator::get_sanitized_value($link['content'], $link['fields'], 'html')."</a>\n";
+        $tag .= '>'.Decorator::get_sanitized_value($link['content'], $link['fields'], 'html').'</a>'.PHP_EOL;
 
         if ($do_print) {
             echo $tag;
@@ -172,7 +172,7 @@ class HTMLController
         if (null === $from || false === $from) {
             $from = __METHOD__;
         }
-        $list_html = "<ul class=\"{$class}\">\n";
+        $list_html = "<ul class=\"{$class}\">".PHP_EOL;
         foreach ($links as $link) {
             if ($from === 'PHPPgAdmin\Controller\BaseController::printNavLinks') {
                 //$this->prtrace($link);
@@ -180,9 +180,9 @@ class HTMLController
 
             $list_html .= "\t<li>";
             $list_html .= str_replace('.php', '', $this->printLink($link, false, $from));
-            $list_html .= "</li>\n";
+            $list_html .= '</li>'.PHP_EOL;
         }
-        $list_html .= "</ul>\n";
+        $list_html .= '</ul>'.PHP_EOL;
         if ($do_print) {
             echo $list_html;
         } else {
@@ -212,21 +212,21 @@ class HTMLController
         $htmlOut = '';
         if ($bMultiple) {
             // If multiple select combo
-            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">"."\n";
+            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">".PHP_EOL;
         } else {
-            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" class=\"select2\" >"."\n";
+            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" class=\"select2\" >".PHP_EOL;
         }
 
         if ($bBlankEntry) {
-            $htmlOut .= "<option value=\"\"></option>\n";
+            $htmlOut .= '<option value=""></option>'.PHP_EOL;
         }
 
         foreach ($arrOptions as $curKey => $curVal) {
             $curVal = htmlspecialchars($curVal);
             $curKey = htmlspecialchars($curKey);
-            $htmlOut .= sprintf('<option value="%s" %s >%s</option>%s', $curVal, ($curVal == $szDefault) ? 'selected="selected"' : '', $curKey, "\n");
+            $htmlOut .= sprintf('<option value="%s" %s >%s</option>%s', $curVal, ($curVal == $szDefault) ? 'selected="selected"' : '', $curKey, PHP_EOL);
         }
-        $htmlOut .= "</select>\n";
+        $htmlOut .= '</select>'.PHP_EOL;
 
         return $htmlOut;
     }
