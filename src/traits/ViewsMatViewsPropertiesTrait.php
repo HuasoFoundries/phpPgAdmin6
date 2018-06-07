@@ -84,7 +84,7 @@ trait ViewsMatViewsPropertiesTrait
             ],
         ];
 
-        echo $this->printTable($attrs, $columns, $actions, "{$this->view_name}-{$this->view_name}", null, $attPre);
+        echo $this->printTable($attrs, $columns, $actions, "{$this->view_name}-{$this->view_name}", $this->lang['strnodata'], $attPre);
 
         echo "<br />\n";
 

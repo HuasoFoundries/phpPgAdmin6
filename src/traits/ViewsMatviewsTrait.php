@@ -178,7 +178,7 @@ trait ViewsMatviewsTrait
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $tables = $data->getTables(true);
+        $tables = $data->getAllTables();
 
         echo '<form action="'.\SUBFOLDER."/src/views/{$this->script}\" method=\"post\">\n";
         echo "<table>\n";

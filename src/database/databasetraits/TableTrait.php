@@ -16,31 +16,39 @@ trait TableTrait
     use \PHPPgAdmin\Database\Traits\TriggerTrait;
 
     /**
-     * Return all tables in current database (and schema).
+     * Return all tables in current database excluding schemas 'pg_catalog', 'information_schema' and 'pg_toast'.
      *
-     * @param bool|true $all True to fetch all tables, false for just in current schema
      *
      * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
      */
-    public function getTables($all = false)
+    public function getAllTables()
     {
-        $c_schema = $this->_schema;
-        $this->clean($c_schema);
-        if ($all) {
-            // Exclude pg_catalog and information_schema tables
-            $sql = "SELECT
+        $sql = "SELECT
                         schemaname AS nspname,
                         tablename AS relname,
                         tableowner AS relowner
                     FROM pg_catalog.pg_tables
                     WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
                     ORDER BY schemaname, tablename";
-        } else {
-            $sql = "
+
+        return $this->selectSet($sql);
+    }
+
+    /**
+     * Return all tables in current database (and schema).
+     *
+     * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
+     */
+    public function getTables()
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+
+        $sql = "
                 SELECT c.relname,
                     pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
                     pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
-                    reltuples::bigint,
+                    reltuples::bigint as reltuples,
                     pt.spcname as tablespace,
                     pg_size_pretty(pg_total_relation_size(c.oid)) as table_size
                 FROM pg_catalog.pg_class c
@@ -49,7 +57,6 @@ trait TableTrait
                 WHERE c.relkind = 'r'
                 AND nspname='{$c_schema}'
                 ORDER BY c.relname";
-        }
 
         return $this->selectSet($sql);
     }

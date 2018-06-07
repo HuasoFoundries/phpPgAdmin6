@@ -13,9 +13,18 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class HTMLTableController extends HTMLController
 {
-    public $controller_name = 'HTMLTableController';
-    protected $ma           = [];
-    protected $class        = '';
+    public $controller_name                = 'HTMLTableController';
+    protected $ma                          = [];
+    protected $class                       = '';
+    protected $plugin_functions_parameters = [];
+    protected $has_ma                      = false;
+
+    protected $tabledata;
+    protected $columns;
+    protected $actions;
+    protected $place;
+    protected $nodata;
+    protected $pre_fn;
 
     /**
      * Display a table of data.
@@ -60,112 +69,180 @@ class HTMLTableController extends HTMLController
      *
      * @return string the html of the table
      */
-    public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null)
+    public function initialize(&$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null)
     {
-        $this->misc     = $this->misc;
-        $lang           = $this->lang;
-        $plugin_manager = $this->plugin_manager;
-
         // Action buttons hook's place
-        $plugin_functions_parameters = [
+        $this->plugin_functions_parameters = [
             'actionbuttons' => &$actions,
             'place'         => $place,
         ];
-        $plugin_manager->doHook('actionbuttons', $plugin_functions_parameters);
 
         if ($this->has_ma = isset($actions['multiactions'])) {
             $this->ma = $actions['multiactions'];
         }
-        $tablehtml = '';
-
         unset($actions['multiactions']);
 
-        if ($tabledata->recordCount() > 0) {
-            // Remove the 'comment' column if they have been disabled
-            if (!$this->conf['show_comments']) {
-                unset($columns['comment']);
-            }
+        $this->tabledata = $tabledata;
+        $this->columns   = $columns;
+        $this->actions   = $actions;
+        $this->place     = $place;
+        $this->nodata    = $nodata;
+        $this->pre_fn    = $pre_fn;
+    }
 
-            if (isset($columns['comment'])) {
-                // Uncomment this for clipped comments.
-                // TODO: This should be a user option.
-                //$columns['comment']['params']['clip'] = true;
-            }
+    public function printTable($turn_into_datatable = true, $with_body = true)
+    {
+        $plugin_manager = $this->plugin_manager;
 
-            if ($this->has_ma) {
-                $tablehtml .= '<script src="'.SUBFOLDER."/assets/js/multiactionform.js\" type=\"text/javascript\"></script>\n";
-                $tablehtml .= sprintf('<form id="multi_form" action="%s" method="post" enctype="multipart/form-data">%s', $this->ma['url'], "\n");
-                if (isset($this->ma['vars'])) {
-                    $this->prtrace($this->ma['vars']);
-                    foreach ($this->ma['vars'] as $k => $v) {
-                        $tablehtml .= sprintf('<input type="hidden" name="%s" value="%s" />', $k, $v);
-                    }
-                }
-            }
+        $plugin_manager->doHook('actionbuttons', $this->plugin_functions_parameters);
 
-            $tablehtml .= '<table width="auto" class="will_be_datatable '.$place.'">'."\n";
-
-            $tablehtml .= $this->getThead($columns, $actions);
-
-            //$this->prtrace($tabledata, $actions);
-
-            $tablehtml .= $this->getTbody($columns, $actions, $tabledata, $pre_fn);
-
-            $tablehtml .= $this->getTfooter($columns, $actions);
-
-            $tablehtml .= "</table>\n";
-
-            // Multi action table footer w/ options & [un]check'em all
-            if ($this->has_ma) {
-                // if default is not set or doesn't exist, set it to null
-                if (!isset($this->ma['default']) || !isset($actions[$this->ma['default']])) {
-                    $this->ma['default'] = null;
-                }
-
-                $tablehtml .= "<br />\n";
-                $tablehtml .= "<table>\n";
-                $tablehtml .= "<tr>\n";
-                $tablehtml .= "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$lang['stractionsonmultiplelines']}</th>\n";
-                $tablehtml .= "</tr>\n";
-                $tablehtml .= "<tr class=\"row1\">\n";
-                $tablehtml .= '<td>';
-                $tablehtml .= "<a href=\"#\" onclick=\"javascript:checkAll(true);\">{$lang['strselectall']}</a> / ";
-                $tablehtml .= "<a href=\"#\" onclick=\"javascript:checkAll(false);\">{$lang['strunselectall']}</a></td>\n";
-                $tablehtml .= "<td>&nbsp;--->&nbsp;</td>\n";
-                $tablehtml .= "<td>\n";
-                $tablehtml .= "\t<select name=\"action\">\n";
-                if (null == $this->ma['default']) {
-                    $tablehtml .= "\t\t<option value=\"\">--</option>\n";
-                }
-
-                foreach ($actions as $k => $a) {
-                    if (isset($a['multiaction'])) {
-                        $selected = $this->ma['default'] == $k ? ' selected="selected" ' : '';
-                        $tablehtml .= "\t\t";
-                        $tablehtml .= '<option value="'.$a['multiaction'].'" '.$selected.' rel="'.$k.'">'.$a['content'].'</option>';
-                        $tablehtml .= "\n";
-                    }
-                }
-
-                $tablehtml .= "\t</select>\n";
-                $tablehtml .= "<input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
-                $tablehtml .= $this->getForm();
-                $tablehtml .= "</td>\n";
-                $tablehtml .= "</tr>\n";
-                $tablehtml .= "</table>\n";
-                $tablehtml .= '</form>';
-            }
-        } else {
-            if (!is_null($nodata)) {
-                $tablehtml .= "<p>{$nodata}</p>\n";
-            }
+        if ($this->tabledata->recordCount() <= 0) {
+            return "<p>{$this->nodata}</p>\n";
         }
+
+        $tablehtml = '';
+        // Remove the 'comment' column if they have been disabled
+        if (!$this->conf['show_comments']) {
+            unset($this->columns['comment']);
+        }
+
+        if (isset($this->columns['comment'])) {
+            // Uncomment this for clipped comments.
+            // TODO: This should be a user option.
+            //$columns['comment']['params']['clip'] = true;
+        }
+
+        list($matop_html, $mabottom_html) = $this->_getMaHtml();
+
+        $tablehtml .= $matop_html;
+
+        $tablehtml .= '<table width="auto" class="'.($turn_into_datatable ? 'will_be_datatable ' : ' ').$this->place.'">'."\n";
+
+        $tablehtml .= $this->getThead();
+
+        //$this->prtrace($tabledata, $actions);
+
+        $tablehtml .= $with_body ? $this->getTbody() : '';
+
+        $tablehtml .= $this->getTfooter();
+
+        $tablehtml .= "</table>\n";
+
+        // Multi action table footer w/ options & [un]check'em all
+        $tablehtml .= $mabottom_html;
 
         return $tablehtml;
     }
 
-    private function getTbody($columns, $actions, $tabledata, $pre_fn)
+    private function _getMaHtml()
     {
+        $matop_html    = '';
+        $ma_bottomhtml = '';
+        $lang          = $this->lang;
+
+        if ($this->has_ma) {
+            $matop_html .= '<script src="'.SUBFOLDER."/assets/js/multiactionform.js\" type=\"text/javascript\"></script>\n";
+            $matop_html .= sprintf('<form id="multi_form" action="%s" method="post" enctype="multipart/form-data">%s', $this->ma['url'], "\n");
+            $this->coalesceArr($this->ma, 'vars', []);
+
+            foreach ($this->ma['vars'] as $k => $v) {
+                $matop_html .= sprintf('<input type="hidden" name="%s" value="%s" />', $k, $v);
+            }
+
+            // if default is not set or doesn't exist, set it to null
+            if (!isset($this->ma['default']) || !isset($this->actions[$this->ma['default']])) {
+                $this->ma['default'] = null;
+            }
+
+            $ma_bottomhtml .= "<br />\n";
+            $ma_bottomhtml .= "<table>\n";
+            $ma_bottomhtml .= "<tr>\n";
+            $ma_bottomhtml .= "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$lang['stractionsonmultiplelines']}</th>\n";
+            $ma_bottomhtml .= "</tr>\n";
+            $ma_bottomhtml .= "<tr class=\"row1\">\n";
+            $ma_bottomhtml .= '<td>';
+            $ma_bottomhtml .= "<a href=\"#\" onclick=\"javascript:checkAll(true);\">{$lang['strselectall']}</a> / ";
+            $ma_bottomhtml .= "<a href=\"#\" onclick=\"javascript:checkAll(false);\">{$lang['strunselectall']}</a></td>\n";
+            $ma_bottomhtml .= "<td>&nbsp;--->&nbsp;</td>\n";
+            $ma_bottomhtml .= "<td>\n";
+            $ma_bottomhtml .= "\t<select name=\"action\">\n";
+            if (null == $this->ma['default']) {
+                $ma_bottomhtml .= "\t\t<option value=\"\">--</option>\n";
+            }
+
+            foreach ($this->actions as $k => $a) {
+                if (isset($a['multiaction'])) {
+                    $selected = $this->ma['default'] == $k ? ' selected="selected" ' : '';
+                    $ma_bottomhtml .= "\t\t";
+                    $ma_bottomhtml .= '<option value="'.$a['multiaction'].'" '.$selected.' rel="'.$k.'">'.$a['content'].'</option>';
+                    $ma_bottomhtml .= "\n";
+                }
+            }
+
+            $ma_bottomhtml .= "\t</select>\n";
+            $ma_bottomhtml .= "<input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
+            $ma_bottomhtml .= $this->getForm();
+            $ma_bottomhtml .= "</td>\n";
+            $ma_bottomhtml .= "</tr>\n";
+            $ma_bottomhtml .= "</table>\n";
+            $ma_bottomhtml .= '</form>';
+        }
+
+        return [$matop_html, $ma_bottomhtml];
+    }
+
+    public function getThead()
+    {
+        $columns = $this->columns;
+        $actions = $this->actions;
+
+        $thead_html = "<thead><tr>\n";
+
+        // Display column headings
+        if ($this->has_ma) {
+            $thead_html .= '<th></th>';
+        }
+
+        foreach ($columns as $column_id => $column) {
+            // Handle cases where no class has been passed
+            if (isset($column['class'])) {
+                $this->class = '' !== $column['class'] ? " class=\"{$column['class']}\"" : '';
+            } else {
+                $this->class = '';
+            }
+
+            switch ($column_id) {
+                case 'actions':
+                    if (sizeof($actions) > 0) {
+                        $thead_html .= '<th class="data" >'.$column['title'].'</th>'."\n";
+                    }
+
+                    break;
+                default:
+                    $thead_html .= '<th class="data'.$this->class.'">';
+                    if (isset($column['help'])) {
+                        $thead_html .= $this->misc->printHelp($column['title'], $column['help'], false);
+                    } else {
+                        $thead_html .= $column['title'];
+                    }
+
+                    $thead_html .= "</th>\n";
+
+                    break;
+            }
+        }
+        $thead_html .= "</tr></thead>\n";
+
+        return $thead_html;
+    }
+
+    private function getTbody()
+    {
+        $columns   = $this->columns;
+        $actions   = $this->actions;
+        $tabledata = $this->tabledata;
+        $pre_fn    = $this->pre_fn;
+
         // Display table rows
         $i          = 0;
         $tbody_html = '<tbody>';
@@ -202,18 +279,15 @@ class HTMLTableController extends HTMLController
 
                 switch ($column_id) {
                     case 'actions':
-                        //$this->prtrace($column_id, $alt_actions);
+                        $tbody_html .= "<td class=\"opbutton{$id} {$this->class}\">";
                         foreach ($alt_actions as $action) {
                             if (isset($action['disable']) && true === $action['disable']) {
-                                $tbody_html .= "<td></td>\n";
-                            } else {
-                                //$this->prtrace($column_id, $action);
-                                $tbody_html .= "<td class=\"opbutton{$id} {$this->class}\">";
-                                $action['fields'] = $tabledata->fields;
-                                $tbody_html .= $this->printLink($action, false, __METHOD__);
-                                $tbody_html .= "</td>\n";
+                                continue;
                             }
+                            $action['fields'] = $tabledata->fields;
+                            $tbody_html .= $this->printLink($action, false, __METHOD__);
                         }
+                        $tbody_html .= "</td>\n";
 
                         break;
                     case 'comment':
@@ -258,50 +332,11 @@ class HTMLTableController extends HTMLController
         return $tbody_html;
     }
 
-    private function getThead($columns, $actions)
+    public function getTfooter()
     {
-        $thead_html = "<thead><tr>\n";
+        $columns = $this->columns;
+        $actions = $this->actions;
 
-        // Display column headings
-        if ($this->has_ma) {
-            $thead_html .= '<th></th>';
-        }
-
-        foreach ($columns as $column_id => $column) {
-            // Handle cases where no class has been passed
-            if (isset($column['class'])) {
-                $this->class = '' !== $column['class'] ? " class=\"{$column['class']}\"" : '';
-            } else {
-                $this->class = '';
-            }
-
-            switch ($column_id) {
-                case 'actions':
-                    if (sizeof($actions) > 0) {
-                        $thead_html .= '<th class="data" colspan="'.count($actions).'">'.$column['title'].'</th>'."\n";
-                    }
-
-                    break;
-                default:
-                    $thead_html .= '<th class="data'.$this->class.'">';
-                    if (isset($column['help'])) {
-                        $thead_html .= $this->misc->printHelp($column['title'], $column['help'], false);
-                    } else {
-                        $thead_html .= $column['title'];
-                    }
-
-                    $thead_html .= "</th>\n";
-
-                    break;
-            }
-        }
-        $thead_html .= "</tr></thead>\n";
-
-        return $thead_html;
-    }
-
-    private function getTfooter($columns, $actions)
-    {
         $tfoot_html = "<tfoot><tr>\n";
 
         // Handle cases where no class has been passed
@@ -320,7 +355,7 @@ class HTMLTableController extends HTMLController
             switch ($column_id) {
                 case 'actions':
                     if (sizeof($actions) > 0) {
-                        $tfoot_html .= '<td class="data" colspan="'.count($actions)."\"></td>\n";
+                        $tfoot_html .= '<td class="data"></td>'."\n";
                     }
 
                     break;

@@ -276,7 +276,7 @@ class TypesController extends BaseController
 
                     $actions = [];
 
-                    echo $this->printTable($attrs, $columns, $actions, 'types-properties', null, $attPre);
+                    echo $this->printTable($attrs, $columns, $actions, 'types-properties', $this->lang['strnodata'], $attPre);
 
                     break;
                 case 'e':

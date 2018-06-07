@@ -148,7 +148,7 @@ class DisplayController extends BaseController
 
         $this->printTabs($subject, $tabsPosition);
 
-        list($query, $title, $type) = $this->getQueryTitleAndType($data);
+        list($query, $title, $type) = $this->getQueryTitleAndType($data, $object);
         $this->printTitle($title);
 
         //$this->prtrace($subject, $object, $query, $_SESSION['sqlquery']);
@@ -243,7 +243,7 @@ class DisplayController extends BaseController
         $this->printNavLinks($navlinks, 'display-browse', get_defined_vars());
     }
 
-    public function getQueryTitleAndType($data)
+    public function getQueryTitleAndType($data, $object)
     {
         $fkey = $this->coalesceArr($_REQUEST, 'fkey')['fkey'];
 

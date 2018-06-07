@@ -248,7 +248,7 @@ class ConstraintsController extends BaseController
         $this->printMsg($msg);
 
         $attrs  = $data->getTableAttributes($_REQUEST['table']);
-        $tables = $data->getTables(true);
+        $tables = $data->getAllTables();
 
         $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
         $selColumns->set_style('width: 15em;');

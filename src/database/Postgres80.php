@@ -431,30 +431,22 @@ class Postgres80 extends Postgres81
     /**
      * Return all tables in current database (and schema).
      *
-     * @param bool|true $all True to fetch all tables, false for just in current schema
-     *
      * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
      */
-    public function getTables($all = false)
+    public function getTables()
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
-        if ($all) {
-            // Exclude pg_catalog and information_schema tables
-            $sql = "SELECT schemaname AS nspname, tablename AS relname, tableowner AS relowner
-                    FROM pg_catalog.pg_tables
-                    WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
-                    ORDER BY schemaname, tablename";
-        } else {
-            $sql = "SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+        $sql = "SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
                         pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
-                        reltuples::bigint
+                        reltuples::bigint as reltuples,
+                        null tablespace,
+                        'N/A' as table_size
                     FROM pg_catalog.pg_class c
                     LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                     WHERE c.relkind = 'r'
                     AND nspname='{$c_schema}'
                     ORDER BY c.relname";
-        }
 
         return $this->selectSet($sql);
     }

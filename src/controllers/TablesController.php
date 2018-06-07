@@ -137,21 +137,8 @@ class TablesController extends BaseController
         return $this->printFooter();
     }
 
-    /**
-     * Show default list of tables in the database.
-     *
-     * @param mixed $msg
-     */
-    public function doDefault($msg = '')
+    private function _getColumns()
     {
-        $data = $this->misc->getDatabaseAccessor();
-
-        $this->printTrail('schema');
-        $this->printTabs('schema', 'tables');
-        $this->printMsg($msg);
-
-        $tables = $data->getTables();
-
         $columns = [
             'table'      => [
                 'title' => $this->lang['strtable'],
@@ -185,6 +172,11 @@ class TablesController extends BaseController
             ],
         ];
 
+        return $columns;
+    }
+
+    private function _getActions()
+    {
         $actions = [
             'multiactions' => [
                 'keycols' => ['table' => 'relname'],
@@ -308,9 +300,27 @@ class TablesController extends BaseController
             //'cluster' TODO ?
         ];
 
-        if (!$data->hasTablespaces()) {
-            unset($columns['tablespace']);
-        }
+        return $actions;
+    }
+
+    /**
+     * Show default list of tables in the database.
+     *
+     * @param mixed $msg
+     */
+    public function doDefault($msg = '')
+    {
+        $data = $this->misc->getDatabaseAccessor();
+
+        $this->printTrail('schema');
+        $this->printTabs('schema', 'tables');
+        $this->printMsg($msg);
+
+        $tables = $data->getTables();
+
+        $columns = $this->_getColumns();
+
+        $actions = $this->_getActions();
 
         //\Kint::dump($tables);
 
@@ -714,7 +724,7 @@ class TablesController extends BaseController
             $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
             $this->printMsg($msg);
 
-            $tbltmp = $data->getTables(true);
+            $tbltmp = $data->getAllTables();
             $tbltmp = $tbltmp->getArray();
 
             $tables = [];

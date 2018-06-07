@@ -123,7 +123,7 @@ class ColpropertiesController extends BaseController
             }
 
             $actions = [];
-            echo $this->printTable($attrs, $column, $actions, $this->table_place, null, $attPre);
+            echo $this->printTable($attrs, $column, $actions, $this->table_place, $this->lang['strnodata'], $attPre);
 
             echo "<br />\n";
 

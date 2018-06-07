@@ -220,11 +220,13 @@ class BaseController
      *
      * @return string the html of the table
      */
-    public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null)
+    public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null)
     {
         $html_table = $this->_getTableController();
 
-        return $html_table->printTable($tabledata, $columns, $actions, $place, $nodata, $pre_fn);
+        $html_table->initialize($tabledata, $columns, $actions, $place, $nodata, $pre_fn);
+
+        return $html_table->printTable();
     }
 
     public function adjustTabsForTree($tabs)

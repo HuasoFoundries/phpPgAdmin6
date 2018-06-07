@@ -268,7 +268,7 @@ class TblpropertiesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', null, $attPre);
+        echo $this->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', $this->lang['strnodata'], $attPre);
 
         $navlinks = [
             'browse'    => [
