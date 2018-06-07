@@ -474,7 +474,7 @@ class FunctionsController extends BaseController
         }
 
         echo '<form action="'.\SUBFOLDER."/src/views/functions\" method=\"post\">\n";
-        echo "<table style=\"width: 90%\">\n";
+        echo "<table style=\"width: 95%\">\n";
         echo "<tr>\n";
         echo "<th class=\"data required\">{$this->lang['strschema']}</th>\n";
         echo "<th class=\"data required\">{$this->lang['strfunction']}</th>\n";
@@ -503,7 +503,7 @@ class FunctionsController extends BaseController
         echo "</td>\n";
         echo '<td class="data1">';
         echo '<input type="hidden" name="original_function" value="', htmlspecialchars($fndata->fields['proname']), "\" />\n";
-        echo "<input name=\"formFunction\" style=\"width: 100%\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_POST['formFunction']), '" />';
+        echo "<input name=\"formFunction\" style=\"width: 100%; box-sizing: border-box;\" maxlength=\"{$data->_maxNameLen}\" value=\"", htmlspecialchars($_POST['formFunction']), '" />';
         echo "</td>\n";
 
         echo '<td class="data1">', $this->misc->printVal($args), "\n";
@@ -622,74 +622,78 @@ class FunctionsController extends BaseController
 
         $funcdata  = $data->getFunction($_REQUEST['function_oid']);
         $func_full = '';
-        if ($funcdata->recordCount() > 0) {
-            // Deal with named parameters
-            $args = $this->_getPropertiesArgs($funcdata);
-
-            // Show comment if any
-            if (null !== $funcdata->fields['procomment']) {
-                echo '<p class="comment">', $this->misc->printVal($funcdata->fields['procomment']), "</p>\n";
-            }
-
-            $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-            $func_full                     = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
-            echo "<table style=\"width: 90%\">\n";
-            echo sprintf('<tr><th class="data">%s</th>%s', $this->lang['strfunction'], "\n");
-            echo sprintf('<th class="data">%s</th>%s', $this->lang['strarguments'], "\n");
-            echo sprintf('<th class="data">%s</th>%s', $this->lang['strreturns'], "\n");
-            echo sprintf('<th class="data">%s</th></tr>%s', $this->lang['strproglanguage'], "\n");
-            echo '<tr><td class="data1">', $this->misc->printVal($funcdata->fields['proname']), "</td>\n";
-            echo '<td class="data1">', $this->misc->printVal($args), "</td>\n";
-            echo '<td class="data1">';
-            if ($funcdata->fields['proretset']) {
-                echo 'setof ';
-            }
-
-            echo $this->misc->printVal($funcdata->fields['proresult']), "</td>\n";
-            echo '<td class="data1">', $this->misc->printVal($funcdata->fields['prolanguage']), "</td></tr>\n";
-
-            $fnlang = strtolower($funcdata->fields['prolanguage']);
-            if ('c' == $fnlang) {
-                echo "<tr><th class=\"data\" colspan=\"2\">{$this->lang['strobjectfile']}</th>\n";
-                echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>\n";
-                echo '<tr><td class="data1" colspan="2">', $this->misc->printVal($funcdata->fields['probin']), "</td>\n";
-                echo '<td class="data1" colspan="2">', $this->misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
-            } elseif ('internal' == $fnlang) {
-                echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strlinksymbol']}</th></tr>\n";
-                echo '<tr><td class="data1" colspan="4">', $this->misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
-            } else {
-                echo '<tr><td class="data1" colspan="4">';
-                echo sprintf('<pre><code class="%s hljs">%s</code></pre>', $fnlang, $funcdata->fields['prosrc']);
-                echo "</td></tr>\n";
-            }
-
-            // Display function cost options
-            if ($data->hasFunctionCosting()) {
-                echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strfunctioncosting']}</th></tr>\n";
-                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: ", $this->misc->printVal($funcdata->fields['procost']), ' </td>';
-                echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: ", $this->misc->printVal($funcdata->fields['prorows']), ' </td>';
-            }
-
-            // Show flags
-            if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
-                // Fetch an array of the function properties
-                $funcprops = $data->getFunctionProperties($funcdata->fields);
-                echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>\n";
-                echo "<tr><td class=\"data1\" colspan=\"4\">\n";
-                foreach ($funcprops as $v) {
-                    echo $this->misc->printVal($v), "<br />\n";
-                }
-                echo "</td></tr>\n";
-            }
-
-            echo "<tr><td class=\"data1\" colspan=\"5\">{$this->lang['strowner']}: ", htmlspecialchars($funcdata->fields['proowner']), "\n";
-            echo "</td></tr>\n";
-            echo "</table>\n";
-        } else {
+        if ($funcdata->recordCount() <= 0) {
             echo "<p>{$this->lang['strnodata']}</p>\n";
+
+            return $this->_printNavLinks('functions-properties', $func_full);
+        }
+        // Deal with named parameters
+        $args = $this->_getPropertiesArgs($funcdata);
+
+        // Show comment if any
+        if (null !== $funcdata->fields['procomment']) {
+            echo '<p class="comment">', $this->misc->printVal($funcdata->fields['procomment']), "</p>\n";
         }
 
-        $this->_printNavLinks('functions-properties', $func_full);
+        $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
+        $func_full                     = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
+
+        echo "<table style=\"width: 95%\">\n";
+
+        echo sprintf('<tr><th class="data">%s</th>%s', $this->lang['strfunction'], "\n");
+        echo sprintf('<th class="data">%s</th>%s', $this->lang['strarguments'], "\n");
+        echo sprintf('<th class="data">%s</th>%s', $this->lang['strreturns'], "\n");
+        echo sprintf('<th class="data">%s</th></tr>%s', $this->lang['strproglanguage'], "\n");
+
+        echo '<tr><td class="data1">', $this->misc->printVal($funcdata->fields['proname']), "</td>\n";
+        echo '<td class="data1">', $this->misc->printVal($args), "</td>\n";
+        echo '<td class="data1">';
+        if ($funcdata->fields['proretset']) {
+            echo 'setof ';
+        }
+
+        echo $this->misc->printVal($funcdata->fields['proresult']), "</td>\n";
+        echo '<td class="data1">', $this->misc->printVal($funcdata->fields['prolanguage']), "</td></tr>\n";
+
+        $fnlang = strtolower($funcdata->fields['prolanguage']);
+        if ('c' == $fnlang) {
+            echo "<tr><th class=\"data\" colspan=\"2\">{$this->lang['strobjectfile']}</th>\n";
+            echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>\n";
+            echo '<tr><td class="data1" colspan="2">', $this->misc->printVal($funcdata->fields['probin']), "</td>\n";
+            echo '<td class="data1" colspan="2">', $this->misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
+        } elseif ('internal' == $fnlang) {
+            echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strlinksymbol']}</th></tr>\n";
+            echo '<tr><td class="data1" colspan="4">', $this->misc->printVal($funcdata->fields['prosrc']), "</td></tr>\n";
+        } else {
+            echo '<tr><td class="data1" colspan="4">';
+            echo sprintf('<pre><code class="%s hljs">%s</code></pre>', $fnlang, $funcdata->fields['prosrc']);
+            echo "</td></tr>\n";
+        }
+
+        // Display function cost options
+        if ($data->hasFunctionCosting()) {
+            echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strfunctioncosting']}</th></tr>\n";
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: ", $this->misc->printVal($funcdata->fields['procost']), ' </td>';
+            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: ", $this->misc->printVal($funcdata->fields['prorows']), ' </td>';
+        }
+
+        // Show flags
+        if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+            // Fetch an array of the function properties
+            $funcprops = $data->getFunctionProperties($funcdata->fields);
+            echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>\n";
+            echo "<tr><td class=\"data1\" colspan=\"4\">\n";
+            foreach ($funcprops as $v) {
+                echo $this->misc->printVal($v), "<br />\n";
+            }
+            echo "</td></tr>\n";
+        }
+
+        echo "<tr><td class=\"data1\" colspan=\"5\">{$this->lang['strowner']}: ", htmlspecialchars($funcdata->fields['proowner']), "\n";
+        echo "</td></tr>\n";
+        echo "</table>\n";
+
+        return $this->_printNavLinks('functions-properties', $func_full);
     }
 
     /**
