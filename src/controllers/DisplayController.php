@@ -429,31 +429,15 @@ class DisplayController extends BaseController
         return $navlinks;
     }
 
-    public function printResultsTable($resultset, $page, $max_pages, $_gets, $object)
+    private function _getKeyAndActions($resultset, $object, $data, $page, $_gets)
     {
-        if (!is_object($resultset) || $resultset->recordCount() <= 0) {
-            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
-
-            return;
-        }
-
-        $data           = $this->misc->getDatabaseAccessor();
-        $plugin_manager = $this->plugin_manager;
-        $strings        = $_gets['strings'];
         $key            = [];
-
+        $strings        = $_gets['strings'];
+        $plugin_manager = $this->plugin_manager;
         // Fetch unique row identifier, if this is a table browse request.
         if ($object) {
             $key = $data->getRowIdentifier($object);
         }
-
-        $fkey_information = $this->getFKInfo();
-        // Show page navigation
-        $paginator = $this->_printPages($page, $max_pages, $_gets);
-
-        echo $paginator;
-        echo "<table id=\"data\">\n<tr>";
-
         // Check that the key is actually in the result set.  This can occur for select
         // operations where the key fields aren't part of the select.  XXX:  We should
         // be able to support this, somehow.
@@ -507,91 +491,116 @@ class DisplayController extends BaseController
         ];
         $plugin_manager->doHook('actionbuttons', $actions);
 
-        foreach (array_keys($actions['actionbuttons']) as $this->action) {
-            $actions['actionbuttons'][$this->action]['attr']['href']['urlvars'] = array_merge(
-                $actions['actionbuttons'][$this->action]['attr']['href']['urlvars'],
+        foreach (array_keys($actions['actionbuttons']) as $action) {
+            $actions['actionbuttons'][$action]['attr']['href']['urlvars'] = array_merge(
+                $actions['actionbuttons'][$action]['attr']['href']['urlvars'],
                 $_gets
             );
         }
 
-        $edit_params = isset($actions['actionbuttons']['edit']) ?
-        $actions['actionbuttons']['edit'] : [];
-        $delete_params = isset($actions['actionbuttons']['delete']) ?
-        $actions['actionbuttons']['delete'] : [];
+        return [$actions, $key];
+    }
+
+    public function printResultsTable($resultset, $page, $max_pages, $_gets, $object)
+    {
+        if (!is_object($resultset) || $resultset->recordCount() <= 0) {
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+
+            return;
+        }
+
+        $data = $this->misc->getDatabaseAccessor();
+
+        list($actions, $key) = $this->_getKeyAndActions($resultset, $object, $data, $page, $_gets);
+
+        $fkey_information = $this->getFKInfo();
+        // Show page navigation
+        $paginator = $this->_printPages($page, $max_pages, $_gets);
+
+        echo $paginator;
+        echo '<table id="data">'.PHP_EOL;
+        echo '<tr>';
 
         // Display edit and delete actions if we have a key
-        $colspan = count($buttons);
-        if ($colspan > 0 and count($key) > 0) {
-            echo "<th colspan=\"{$colspan}\" class=\"data\">{$this->lang['stractions']}</th>".PHP_EOL;
-        }
+        $display_action_column = (count($actions['actionbuttons']) > 0 && count($key) > 0);
+
+        echo $display_action_column ? "<th class=\"data\">{$this->lang['stractions']}</th>".PHP_EOL : '';
 
         // we show OIDs only if we are in TABLE or SELECT type browsing
         $this->printTableHeaderCells($resultset, $_gets, isset($object));
 
         echo '</tr>'.PHP_EOL;
 
-        $i = 0;
         reset($resultset->fields);
+
+        $trclass     = 'data2';
+        $buttonclass = 'opbutton2';
+
         while (!$resultset->EOF) {
-            $id = (0 == ($i % 2) ? '1' : '2');
-            echo "<tr class=\"data{$id}\">".PHP_EOL;
-            // Display edit and delete links if we have a key
-            if ($colspan <= 0 || count($key) <= 0) {
-                continue;
-            }
-            $keys_array = [];
-            $has_nulls  = false;
-            foreach ($key as $v) {
-                if (null === $resultset->fields[$v]) {
-                    $has_nulls = true;
+            $trclass     = ($trclass === 'data2') ? 'data1' : 'data2';
+            $buttonclass = ($buttonclass === 'opbutton2') ? 'opbutton1' : 'opbutton2';
 
-                    break;
-                }
-                $keys_array["key[{$v}]"] = $resultset->fields[$v];
-            }
-            if ($has_nulls) {
-                echo "<td colspan=\"{$colspan}\">&nbsp;</td>".PHP_EOL;
-                $this->printTableRowCells($resultset, $fkey_information, isset($object));
+            echo sprintf('<tr class="%s">', $trclass).PHP_EOL;
 
-                echo '</tr>'.PHP_EOL;
-                $resultset->moveNext();
-                ++$i;
-
-                continue;
-            }
-            if (isset($actions['actionbuttons']['edit'])) {
-                $actions['actionbuttons']['edit']                            = $edit_params;
-                $actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
-                    $actions['actionbuttons']['edit']['attr']['href']['urlvars'],
-                    $keys_array
-                );
-            }
-
-            if (isset($actions['actionbuttons']['delete'])) {
-                $actions['actionbuttons']['delete']                            = $delete_params;
-                $actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
-                    $actions['actionbuttons']['delete']['attr']['href']['urlvars'],
-                    $keys_array
-                );
-            }
-
-            foreach ($actions['actionbuttons'] as $this->action) {
-                echo "<td class=\"opbutton{$id}\">";
-                $this->printLink($this->action, true, __METHOD__);
-                echo '</td>'.PHP_EOL;
-            }
+            $this->_printResultsTableActionButtons($resultset, $key, $actions, $display_action_column, $buttonclass);
 
             $this->printTableRowCells($resultset, $fkey_information, isset($object));
 
             echo '</tr>'.PHP_EOL;
             $resultset->moveNext();
-            ++$i;
         }
         echo '</table>'.PHP_EOL;
 
         echo '<p>', $resultset->recordCount(), " {$this->lang['strrows']}</p>".PHP_EOL;
         // Show page navigation
         echo $paginator;
+    }
+
+    private function _printResultsTableActionButtons($resultset, $key, $actions, $display_action_column, $buttonclass)
+    {
+        if (!$display_action_column) {
+            return;
+        }
+
+        $edit_params   = isset($actions['actionbuttons']['edit']) ? $actions['actionbuttons']['edit'] : [];
+        $delete_params = isset($actions['actionbuttons']['delete']) ? $actions['actionbuttons']['delete'] : [];
+
+        $keys_array = [];
+        $has_nulls  = false;
+        foreach ($key as $v) {
+            if (null === $resultset->fields[$v]) {
+                $has_nulls = true;
+
+                break;
+            }
+            $keys_array["key[{$v}]"] = $resultset->fields[$v];
+        }
+        if ($has_nulls) {
+            echo '<td>&nbsp;</td>'.PHP_EOL;
+
+            return;
+        }
+        // Display edit and delete links if we have a key
+        if (isset($actions['actionbuttons']['edit'])) {
+            $actions['actionbuttons']['edit']                            = $edit_params;
+            $actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
+                $actions['actionbuttons']['edit']['attr']['href']['urlvars'],
+                $keys_array
+            );
+        }
+
+        if (isset($actions['actionbuttons']['delete'])) {
+            $actions['actionbuttons']['delete']                            = $delete_params;
+            $actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
+                $actions['actionbuttons']['delete']['attr']['href']['urlvars'],
+                $keys_array
+            );
+        }
+        echo sprintf('<td class="%s" style="white-space:nowrap">', $buttonclass);
+        foreach ($actions['actionbuttons'] as $action) {
+            $this->printLink($action, true, __METHOD__);
+        }
+        echo '</td>'.PHP_EOL;
     }
 
     /**
@@ -665,32 +674,39 @@ class DisplayController extends BaseController
             } else {
                 echo '<td style="white-space:nowrap;">';
 
-                if ((null !== $v) && isset($fkey_information['byfield'][$k])) {
-                    foreach ($fkey_information['byfield'][$k] as $conid) {
-                        $query_params = $fkey_information['byconstr'][$conid]['url_data'];
+                $this->_printFKLinks($resultset, $fkey_information, $k, $v, $printvalOpts);
 
-                        foreach ($fkey_information['byconstr'][$conid]['fkeys'] as $p_field => $f_field) {
-                            $query_params .= '&amp;'.urlencode("fkey[{$f_field}]").'='.urlencode($resultset->fields[$p_field]);
-                        }
-
-                        // $fkey_information['common_url'] is already urlencoded
-                        $query_params .= '&amp;'.$fkey_information['common_url'];
-                        echo '<div style="display:inline-block;">';
-                        echo '<a class="fk fk_'.htmlentities($conid, ENT_QUOTES, 'UTF-8')."\" href=\"display?{$query_params}\">";
-                        echo '<img src="'.$this->misc->icon('ForeignKey').'" style="vertical-align:middle;" alt="[fk]" title="'
-                        .htmlentities($fkey_information['byconstr'][$conid]['consrc'], ENT_QUOTES, 'UTF-8')
-                            .'" />';
-                        echo '</a>';
-                        echo '</div>';
-                    }
-                    $printvalOpts['class'] = 'fk_value';
-                }
                 $val = $this->misc->printVal($v, $finfo->type, $printvalOpts);
 
                 echo $val;
                 echo '</td>';
             }
         }
+    }
+
+    private function _printFKLinks($resultset, $fkey_information, $k, $v, &$printvalOpts)
+    {
+        if ((null === $v) || !isset($fkey_information['byfield'][$k])) {
+            return;
+        }
+
+        foreach ($fkey_information['byfield'][$k] as $conid) {
+            $query_params = $fkey_information['byconstr'][$conid]['url_data'];
+
+            foreach ($fkey_information['byconstr'][$conid]['fkeys'] as $p_field => $f_field) {
+                $query_params .= '&amp;'.urlencode("fkey[{$f_field}]").'='.urlencode($resultset->fields[$p_field]);
+            }
+
+            // $fkey_information['common_url'] is already urlencoded
+            $query_params .= '&amp;'.$fkey_information['common_url'];
+            $title = htmlentities($fkey_information['byconstr'][$conid]['consrc'], ENT_QUOTES, 'UTF-8');
+            echo '<div style="display:inline-block;">';
+            echo sprintf('<a class="fk fk_%s" href="display?%s">', htmlentities($conid, ENT_QUOTES, 'UTF-8'), $query_params);
+            echo sprintf('<img src="%s" style="vertical-align:middle;" alt="[fk]" title="%s" />', $this->misc->icon('ForeignKey'), $title);
+            echo '</a>';
+            echo '</div>';
+        }
+        $printvalOpts['class'] = 'fk_value';
     }
 
     private function _unserializeIfNotArray($the_array, $key)
