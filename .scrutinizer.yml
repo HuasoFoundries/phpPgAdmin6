@@ -29,28 +29,32 @@ checks:
             preserve_blanklines: false
             order_alphabetically: false
         fix_line_ending: true
+
 filter:
-    paths: 
-        - 'src/*'
+    paths: [src/*]
     excluded_paths:
-        - '.tests/*'
         - 'tests/*'
         - '*.min.js'
-        - 'js/'
+        - 'assets/js/'
+
 tools:
     php_code_sniffer:
         config:
             standard: PSR2
         filter:
             paths: ['src']
+
 build:
     environment:
         php: '7.1'
+        #postgresql: true
+    #dependencies:
+        #before:
+        #    - psql -c "CREATE DATABASE scrutinizer WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
+    tests:
+        override:
+          - 'php-scrutinizer-run'
+          - 'phpcs-run ./src/'
+          - 'make test'
     nodes:
-        analysis:
-            tests:
-                override:
-                    - php-scrutinizer-run
-                    - 'make test'
-
         tests: true
