@@ -103,14 +103,13 @@ tools:
     php_analyzer: true
     php_mess_detector: true
     php_changetracking: true
-    php_cs_fixer:
-        config: { level: psr2 }
     php_code_sniffer:
         config:
             standard: PSR2
     php_loc:
         excluded_dirs:
             - vendor
+            - tests
     php_pdepend:
         excluded_dirs:
             - vendor
@@ -125,8 +124,6 @@ build:
         #    - psql -c "CREATE DATABASE scrutinizer WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
     tests:
         override:
-          - 'php-scrutinizer-run'
-          - 'phpcs-run ./src/'
           - 'make test'
     nodes:
         tests: true

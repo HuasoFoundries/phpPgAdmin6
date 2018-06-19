@@ -96,7 +96,7 @@ class HTMLTableController extends HTMLController
         $plugin_manager->doHook('actionbuttons', $this->plugin_functions_parameters);
 
         if ($this->tabledata->recordCount() <= 0) {
-            return "<p>{$this->nodata}</p>".PHP_EOL;
+            return "<p>{$this->nodata}</p>" . PHP_EOL;
         }
 
         $tablehtml = '';
@@ -115,7 +115,7 @@ class HTMLTableController extends HTMLController
 
         $tablehtml .= $matop_html;
 
-        $tablehtml .= '<table width="auto" class="'.($turn_into_datatable ? 'will_be_datatable ' : ' ').$this->place.'">'.PHP_EOL;
+        $tablehtml .= '<table width="auto" class="' . ($turn_into_datatable ? 'will_be_datatable ' : ' ') . $this->place . '">' . PHP_EOL;
 
         $tablehtml .= $this->getThead();
 
@@ -125,7 +125,7 @@ class HTMLTableController extends HTMLController
 
         $tablehtml .= $this->getTfooter();
 
-        $tablehtml .= '</table>'.PHP_EOL;
+        $tablehtml .= '</table>' . PHP_EOL;
 
         // Multi action table footer w/ options & [un]check'em all
         $tablehtml .= $mabottom_html;
@@ -140,7 +140,7 @@ class HTMLTableController extends HTMLController
         $lang          = $this->lang;
 
         if ($this->has_ma) {
-            $matop_html .= '<script src="'.SUBFOLDER.'/assets/js/multiactionform.js" type="text/javascript"></script>'.PHP_EOL;
+            $matop_html .= '<script src="' . SUBFOLDER . '/assets/js/multiactionform.js" type="text/javascript"></script>' . PHP_EOL;
             $matop_html .= sprintf('<form id="multi_form" action="%s" method="post" enctype="multipart/form-data">%s', $this->ma['url'], PHP_EOL);
             $this->coalesceArr($this->ma, 'vars', []);
 
@@ -153,37 +153,37 @@ class HTMLTableController extends HTMLController
                 $this->ma['default'] = null;
             }
 
-            $ma_bottomhtml .= '<br />'.PHP_EOL;
-            $ma_bottomhtml .= '<table>'.PHP_EOL;
-            $ma_bottomhtml .= '<tr>'.PHP_EOL;
-            $ma_bottomhtml .= "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$lang['stractionsonmultiplelines']}</th>".PHP_EOL;
-            $ma_bottomhtml .= '</tr>'.PHP_EOL;
-            $ma_bottomhtml .= '<tr class="row1">'.PHP_EOL;
+            $ma_bottomhtml .= '<br />' . PHP_EOL;
+            $ma_bottomhtml .= '<table>' . PHP_EOL;
+            $ma_bottomhtml .= '<tr>' . PHP_EOL;
+            $ma_bottomhtml .= "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$lang['stractionsonmultiplelines']}</th>" . PHP_EOL;
+            $ma_bottomhtml .= '</tr>' . PHP_EOL;
+            $ma_bottomhtml .= '<tr class="row1">' . PHP_EOL;
             $ma_bottomhtml .= '<td>';
             $ma_bottomhtml .= "<a href=\"#\" onclick=\"javascript:checkAll(true);\">{$lang['strselectall']}</a> / ";
-            $ma_bottomhtml .= "<a href=\"#\" onclick=\"javascript:checkAll(false);\">{$lang['strunselectall']}</a></td>".PHP_EOL;
-            $ma_bottomhtml .= '<td>&nbsp;--->&nbsp;</td>'.PHP_EOL;
-            $ma_bottomhtml .= '<td>'.PHP_EOL;
-            $ma_bottomhtml .= "\t<select name=\"action\">".PHP_EOL;
+            $ma_bottomhtml .= "<a href=\"#\" onclick=\"javascript:checkAll(false);\">{$lang['strunselectall']}</a></td>" . PHP_EOL;
+            $ma_bottomhtml .= '<td>&nbsp;--->&nbsp;</td>' . PHP_EOL;
+            $ma_bottomhtml .= '<td>' . PHP_EOL;
+            $ma_bottomhtml .= "\t<select name=\"action\">" . PHP_EOL;
             if (null == $this->ma['default']) {
-                $ma_bottomhtml .= "\t\t<option value=\"\">--</option>".PHP_EOL;
+                $ma_bottomhtml .= "\t\t<option value=\"\">--</option>" . PHP_EOL;
             }
 
             foreach ($this->actions as $k => $a) {
                 if (isset($a['multiaction'])) {
                     $selected = $this->ma['default'] == $k ? ' selected="selected" ' : '';
                     $ma_bottomhtml .= "\t\t";
-                    $ma_bottomhtml .= '<option value="'.$a['multiaction'].'" '.$selected.' rel="'.$k.'">'.$a['content'].'</option>';
+                    $ma_bottomhtml .= '<option value="' . $a['multiaction'] . '" ' . $selected . ' rel="' . $k . '">' . $a['content'] . '</option>';
                     $ma_bottomhtml .= PHP_EOL;
                 }
             }
 
-            $ma_bottomhtml .= "\t</select>".PHP_EOL;
-            $ma_bottomhtml .= "<input type=\"submit\" value=\"{$lang['strexecute']}\" />".PHP_EOL;
+            $ma_bottomhtml .= "\t</select>" . PHP_EOL;
+            $ma_bottomhtml .= "<input type=\"submit\" value=\"{$lang['strexecute']}\" />" . PHP_EOL;
             $ma_bottomhtml .= $this->getForm();
-            $ma_bottomhtml .= '</td>'.PHP_EOL;
-            $ma_bottomhtml .= '</tr>'.PHP_EOL;
-            $ma_bottomhtml .= '</table>'.PHP_EOL;
+            $ma_bottomhtml .= '</td>' . PHP_EOL;
+            $ma_bottomhtml .= '</tr>' . PHP_EOL;
+            $ma_bottomhtml .= '</table>' . PHP_EOL;
             $ma_bottomhtml .= '</form>';
         }
 
@@ -195,7 +195,7 @@ class HTMLTableController extends HTMLController
         $columns = $this->columns;
         $actions = $this->actions;
 
-        $thead_html = '<thead><tr>'.PHP_EOL;
+        $thead_html = '<thead><tr>' . PHP_EOL;
 
         // Display column headings
         if ($this->has_ma) {
@@ -210,24 +210,24 @@ class HTMLTableController extends HTMLController
             switch ($column_id) {
                 case 'actions':
                     if (sizeof($actions) > 0) {
-                        $thead_html .= '<th class="data" >'.$column['title'].'</th>'.PHP_EOL;
+                        $thead_html .= '<th class="data" >' . $column['title'] . '</th>' . PHP_EOL;
                     }
 
                     break;
                 default:
-                    $thead_html .= '<th class="data'.$class.'">';
+                    $thead_html .= '<th class="data' . $class . '">';
                     if (isset($column['help'])) {
                         $thead_html .= $this->misc->printHelp($column['title'], $column['help'], false);
                     } else {
                         $thead_html .= $column['title'];
                     }
 
-                    $thead_html .= '</th>'.PHP_EOL;
+                    $thead_html .= '</th>' . PHP_EOL;
 
                     break;
             }
         }
-        $thead_html .= '</tr></thead>'.PHP_EOL;
+        $thead_html .= '</tr></thead>' . PHP_EOL;
 
         return $thead_html;
     }
@@ -255,14 +255,14 @@ class HTMLTableController extends HTMLController
                 $alt_actions = &$actions;
             }
 
-            $tbody_html .= sprintf('<tr class="data%s">', $id).PHP_EOL;
+            $tbody_html .= sprintf('<tr class="data%s">', $id) . PHP_EOL;
             if ($this->has_ma) {
                 $a = [];
                 foreach ($this->ma['keycols'] as $k => $v) {
                     $a[$k] = $tabledata->fields[$v];
                 }
                 //\Kint::dump($a);
-                $tbody_html .= sprintf('<td><input type="checkbox" name="ma[]" value="%s"/></td>', htmlentities(serialize($a), ENT_COMPAT, 'UTF-8')).PHP_EOL;
+                $tbody_html .= sprintf('<td><input type="checkbox" name="ma[]" value="%s"/></td>', htmlentities(serialize($a), ENT_COMPAT, 'UTF-8')) . PHP_EOL;
             }
 
             foreach ($columns as $column_id => $column) {
@@ -282,17 +282,17 @@ class HTMLTableController extends HTMLController
                             $action['fields'] = $tabledata->fields;
                             $tbody_html .= $this->printLink($action, false, __METHOD__);
                         }
-                        $tbody_html .= '</td>'.PHP_EOL;
+                        $tbody_html .= '</td>' . PHP_EOL;
 
                         break;
                     case 'comment':
                         $tbody_html .= "<td class='comment_cell'>";
-                        $val = htmlentities(Decorator::get_sanitized_value($column['field'], $tabledata->fields));
+                        $tbody_html .= htmlentities(Decorator::get_sanitized_value($column['field'], $tabledata->fields));
                         $tbody_html .= '</td>';
 
                         break;
                     default:
-                        $tbody_html .= '<td class="'.$class.'">';
+                        $tbody_html .= '<td class="' . $class . '">';
                         $val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);
                         if (!is_null($val)) {
                             if (isset($column['url'])) {
@@ -308,12 +308,12 @@ class HTMLTableController extends HTMLController
                             }
                         }
 
-                        $tbody_html .= '</td>'.PHP_EOL;
+                        $tbody_html .= '</td>' . PHP_EOL;
 
                         break;
                 }
             }
-            $tbody_html .= '</tr>'.PHP_EOL;
+            $tbody_html .= '</tr>' . PHP_EOL;
 
             $tabledata->moveNext();
             ++$i;
@@ -329,7 +329,7 @@ class HTMLTableController extends HTMLController
         $columns = $this->columns;
         $actions = $this->actions;
 
-        $tfoot_html = '<tfoot><tr>'.PHP_EOL;
+        $tfoot_html = '<tfoot><tr>' . PHP_EOL;
 
         // Display column headings
         if ($this->has_ma) {
@@ -342,10 +342,10 @@ class HTMLTableController extends HTMLController
             $class = (isset($column['class']) && '' !== $column['class']) ? $column['class'] : '';
 
             if ($column_id !== 'actions' || sizeof($actions) > 0) {
-                $tfoot_html .= "<td class=\"data{$class}\"></td>".PHP_EOL;
+                $tfoot_html .= "<td class=\"data{$class}\"></td>" . PHP_EOL;
             }
         }
-        $tfoot_html .= '</tr></tfoot>'.PHP_EOL;
+        $tfoot_html .= '</tr></tfoot>' . PHP_EOL;
 
         return $tfoot_html;
     }
@@ -363,7 +363,7 @@ class HTMLTableController extends HTMLController
     {
         $url_vars_html = '';
         foreach ($vars as $var => $varfield) {
-            $url_vars_html .= "{$var}=".urlencode($fields[$varfield]).'&amp;';
+            $url_vars_html .= "{$var}=" . urlencode($fields[$varfield]) . '&amp;';
         }
         if ($do_print) {
             echo $url_vars_html;

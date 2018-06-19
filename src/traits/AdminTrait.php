@@ -24,8 +24,6 @@ trait AdminTrait
 
         $script = $this->script;
 
-        $data = $this->misc->getDatabaseAccessor();
-
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($this->lang['strspecifytabletocluster']);
 
@@ -36,32 +34,32 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
             foreach ($_REQUEST['ma'] as $v) {
                 $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                echo '<p>', sprintf($this->lang['strconfclustertable'], $this->misc->printVal($a['table'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), '" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfclustertable'], $this->misc->printVal($a['table'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), '" />' . PHP_EOL;
             } //  END if multi cluster
         } else {
             $this->printTrail($type);
             $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
 
             if ('table' == $type) {
-                echo '<p>', sprintf($this->lang['strconfclustertable'], $this->misc->printVal($_REQUEST['object'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), '" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfclustertable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), '" />' . PHP_EOL;
             } else {
-                echo '<p>', sprintf($this->lang['strconfclusterdatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table" value="" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfclusterdatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table" value="" />' . PHP_EOL;
             }
         }
-        echo '<input type="hidden" name="action" value="cluster" />'.PHP_EOL;
+        echo '<input type="hidden" name="action" value="cluster" />' . PHP_EOL;
 
         echo $this->misc->form;
 
         echo "<input type=\"submit\" name=\"cluster\" value=\"{$this->lang['strcluster']}\" />\n"; //TODO
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . PHP_EOL;
         echo "</form>\n"; //  END single cluster
     }
 
@@ -87,36 +85,36 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strreindex'], 'pg.reindex');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
             foreach ($_REQUEST['ma'] as $v) {
                 $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                echo '<p>', sprintf($this->lang['strconfreindextable'], $this->misc->printVal($a['table'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), '" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfreindextable'], $this->misc->printVal($a['table'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), '" />' . PHP_EOL;
             } //  END if multi reindex
         } else {
             $this->printTrail($type);
             $this->printTitle($this->lang['strreindex'], 'pg.reindex');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
 
             if ('table' == $type) {
-                echo '<p>', sprintf($this->lang['strconfreindextable'], $this->misc->printVal($_REQUEST['object'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), '" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfreindextable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), '" />' . PHP_EOL;
             } else {
-                echo '<p>', sprintf($this->lang['strconfreindexdatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table" value="" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfreindexdatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table" value="" />' . PHP_EOL;
             }
         }
-        echo '<input type="hidden" name="action" value="reindex" />'.PHP_EOL;
+        echo '<input type="hidden" name="action" value="reindex" />' . PHP_EOL;
 
         if ($data->hasForceReindex()) {
-            echo "<p><input type=\"checkbox\" id=\"reindex_force\" name=\"reindex_force\" /><label for=\"reindex_force\">{$this->lang['strforce']}</label></p>".PHP_EOL;
+            echo "<p><input type=\"checkbox\" id=\"reindex_force\" name=\"reindex_force\" /><label for=\"reindex_force\">{$this->lang['strforce']}</label></p>" . PHP_EOL;
         }
 
         echo $this->misc->form;
 
         echo "<input type=\"submit\" name=\"reindex\" value=\"{$this->lang['strreindex']}\" />\n"; //TODO
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . PHP_EOL;
         echo "</form>\n"; //  END single reindex
     }
 
@@ -131,8 +129,6 @@ trait AdminTrait
 
         $script = $this->script;
 
-        $data = $this->misc->getDatabaseAccessor();
-
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($this->lang['strspecifytabletoanalyze']);
 
@@ -143,32 +139,32 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['stranalyze'], 'pg.analyze');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
             foreach ($_REQUEST['ma'] as $v) {
                 $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                 //\Kint::dump($a);
-                echo '<p>', sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($a['table'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), '" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($a['table'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), '" />' . PHP_EOL;
             } //  END if multi analyze
         } else {
             $this->printTrail($type);
             $this->printTitle($this->lang['stranalyze'], 'pg.analyze');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
 
             if ('table' == $type) {
-                echo '<p>', sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($_REQUEST['object'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), '" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), '" />' . PHP_EOL;
             } else {
-                echo '<p>', sprintf($this->lang['strconfanalyzedatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table" value="" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfanalyzedatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table" value="" />' . PHP_EOL;
             }
         }
-        echo '<input type="hidden" name="action" value="analyze" />'.PHP_EOL;
+        echo '<input type="hidden" name="action" value="analyze" />' . PHP_EOL;
         echo $this->misc->form;
 
         echo "<input type=\"submit\" name=\"analyze\" value=\"{$this->lang['stranalyze']}\" />\n"; //TODO
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . PHP_EOL;
         echo "</form>\n"; //  END single analyze
     }
 
@@ -181,8 +177,6 @@ trait AdminTrait
     {
         $script = ('database' == $type) ? 'database' : 'tables';
 
-        $data = $this->misc->getDatabaseAccessor();
-
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($this->lang['strspecifytabletovacuum']);
 
@@ -193,34 +187,34 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strvacuum'], 'pg.vacuum');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
             foreach ($_REQUEST['ma'] as $v) {
                 $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                echo '<p>', sprintf($this->lang['strconfvacuumtable'], $this->misc->printVal($a['table'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), '" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfvacuumtable'], $this->misc->printVal($a['table'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table[]" value="', htmlspecialchars($a['table']), '" />' . PHP_EOL;
             }
         } else {
             // END if multi vacuum
             $this->printTrail($type);
             $this->printTitle($this->lang['strvacuum'], 'pg.vacuum');
 
-            echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
 
             if ('table' == $type) {
-                echo '<p>', sprintf($this->lang['strconfvacuumtable'], $this->misc->printVal($_REQUEST['object'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), '" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfvacuumtable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['object']), '" />' . PHP_EOL;
             } else {
-                echo '<p>', sprintf($this->lang['strconfvacuumdatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="table" value="" />'.PHP_EOL;
+                echo '<p>', sprintf($this->lang['strconfvacuumdatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>' . PHP_EOL;
+                echo '<input type="hidden" name="table" value="" />' . PHP_EOL;
             }
         }
-        echo '<input type="hidden" name="action" value="vacuum" />'.PHP_EOL;
+        echo '<input type="hidden" name="action" value="vacuum" />' . PHP_EOL;
         echo $this->misc->form;
-        echo "<p><input type=\"checkbox\" id=\"vacuum_full\" name=\"vacuum_full\" /> <label for=\"vacuum_full\">{$this->lang['strfull']}</label></p>".PHP_EOL;
-        echo "<p><input type=\"checkbox\" id=\"vacuum_analyze\" name=\"vacuum_analyze\" /> <label for=\"vacuum_analyze\">{$this->lang['stranalyze']}</label></p>".PHP_EOL;
-        echo "<p><input type=\"checkbox\" id=\"vacuum_freeze\" name=\"vacuum_freeze\" /> <label for=\"vacuum_freeze\">{$this->lang['strfreeze']}</label></p>".PHP_EOL;
-        echo "<input type=\"submit\" name=\"vacuum\" value=\"{$this->lang['strvacuum']}\" />".PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+        echo "<p><input type=\"checkbox\" id=\"vacuum_full\" name=\"vacuum_full\" /> <label for=\"vacuum_full\">{$this->lang['strfull']}</label></p>" . PHP_EOL;
+        echo "<p><input type=\"checkbox\" id=\"vacuum_analyze\" name=\"vacuum_analyze\" /> <label for=\"vacuum_analyze\">{$this->lang['stranalyze']}</label></p>" . PHP_EOL;
+        echo "<p><input type=\"checkbox\" id=\"vacuum_freeze\" name=\"vacuum_freeze\" /> <label for=\"vacuum_freeze\">{$this->lang['strfreeze']}</label></p>" . PHP_EOL;
+        echo "<input type=\"submit\" name=\"vacuum\" value=\"{$this->lang['strvacuum']}\" />" . PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . PHP_EOL;
         echo "</form>\n"; //  END single vacuum
     }
 
@@ -288,44 +282,44 @@ trait AdminTrait
             $old_val['autovacuum_vacuum_cost_limit'] = '';
         }
 
-        echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
         echo $this->misc->form;
-        echo '<input type="hidden" name="action" value="editautovac" />'.PHP_EOL;
-        echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
+        echo '<input type="hidden" name="action" value="editautovac" />' . PHP_EOL;
+        echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />' . PHP_EOL;
 
-        echo "<br />\n<br />\n<table>".PHP_EOL;
-        echo "\t<tr><td>&nbsp;</td>".PHP_EOL;
-        echo "<th class=\"data\">{$this->lang['strnewvalues']}</th><th class=\"data\">{$this->lang['strdefaultvalues']}</th></tr>".PHP_EOL;
-        echo "\t<tr><th class=\"data left\">{$this->lang['strenable']}</th>".PHP_EOL;
-        echo '<td class="data1">'.PHP_EOL;
-        echo "<label for=\"on\">on</label><input type=\"radio\" name=\"autovacuum_enabled\" id=\"on\" value=\"on\" {$enabled} />".PHP_EOL;
-        echo "<label for=\"off\">off</label><input type=\"radio\" name=\"autovacuum_enabled\" id=\"off\" value=\"off\" {$disabled} /></td>".PHP_EOL;
-        echo "<th class=\"data left\">{$defaults['autovacuum']}</th></tr>".PHP_EOL;
-        echo "\t<tr><th class=\"data left\">{$this->lang['strvacuumbasethreshold']}</th>".PHP_EOL;
-        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_vacuum_threshold\" value=\"{$old_val['autovacuum_vacuum_threshold']}\" /></td>".PHP_EOL;
-        echo "<th class=\"data left\">{$defaults['autovacuum_vacuum_threshold']}</th></tr>".PHP_EOL;
-        echo "\t<tr><th class=\"data left\">{$this->lang['strvacuumscalefactor']}</th>".PHP_EOL;
-        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_vacuum_scale_factor\" value=\"{$old_val['autovacuum_vacuum_scale_factor']}\" /></td>".PHP_EOL;
-        echo "<th class=\"data left\">{$defaults['autovacuum_vacuum_scale_factor']}</th></tr>".PHP_EOL;
-        echo "\t<tr><th class=\"data left\">{$this->lang['stranalybasethreshold']}</th>".PHP_EOL;
-        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_analyze_threshold\" value=\"{$old_val['autovacuum_analyze_threshold']}\" /></td>".PHP_EOL;
-        echo "<th class=\"data left\">{$defaults['autovacuum_analyze_threshold']}</th></tr>".PHP_EOL;
-        echo "\t<tr><th class=\"data left\">{$this->lang['stranalyzescalefactor']}</th>".PHP_EOL;
-        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_analyze_scale_factor\" value=\"{$old_val['autovacuum_analyze_scale_factor']}\" /></td>".PHP_EOL;
-        echo "<th class=\"data left\">{$defaults['autovacuum_analyze_scale_factor']}</th></tr>".PHP_EOL;
-        echo "\t<tr><th class=\"data left\">{$this->lang['strvacuumcostdelay']}</th>".PHP_EOL;
-        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_vacuum_cost_delay\" value=\"{$old_val['autovacuum_vacuum_cost_delay']}\" /></td>".PHP_EOL;
-        echo "<th class=\"data left\">{$defaults['autovacuum_vacuum_cost_delay']}</th></tr>".PHP_EOL;
-        echo "\t<tr><th class=\"data left\">{$this->lang['strvacuumcostlimit']}</th>".PHP_EOL;
-        echo "<td class=\"datat1\"><input type=\"text\" name=\"autovacuum_vacuum_cost_limit\" value=\"{$old_val['autovacuum_vacuum_cost_limit']}\" /></td>".PHP_EOL;
-        echo "<th class=\"data left\">{$defaults['autovacuum_vacuum_cost_limit']}</th></tr>".PHP_EOL;
-        echo '</table>'.PHP_EOL;
+        echo "<br />\n<br />\n<table>" . PHP_EOL;
+        echo "\t<tr><td>&nbsp;</td>" . PHP_EOL;
+        echo "<th class=\"data\">{$this->lang['strnewvalues']}</th><th class=\"data\">{$this->lang['strdefaultvalues']}</th></tr>" . PHP_EOL;
+        echo "\t<tr><th class=\"data left\">{$this->lang['strenable']}</th>" . PHP_EOL;
+        echo '<td class="data1">' . PHP_EOL;
+        echo "<label for=\"on\">on</label><input type=\"radio\" name=\"autovacuum_enabled\" id=\"on\" value=\"on\" {$enabled} />" . PHP_EOL;
+        echo "<label for=\"off\">off</label><input type=\"radio\" name=\"autovacuum_enabled\" id=\"off\" value=\"off\" {$disabled} /></td>" . PHP_EOL;
+        echo "<th class=\"data left\">{$defaults['autovacuum']}</th></tr>" . PHP_EOL;
+        echo "\t<tr><th class=\"data left\">{$this->lang['strvacuumbasethreshold']}</th>" . PHP_EOL;
+        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_vacuum_threshold\" value=\"{$old_val['autovacuum_vacuum_threshold']}\" /></td>" . PHP_EOL;
+        echo "<th class=\"data left\">{$defaults['autovacuum_vacuum_threshold']}</th></tr>" . PHP_EOL;
+        echo "\t<tr><th class=\"data left\">{$this->lang['strvacuumscalefactor']}</th>" . PHP_EOL;
+        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_vacuum_scale_factor\" value=\"{$old_val['autovacuum_vacuum_scale_factor']}\" /></td>" . PHP_EOL;
+        echo "<th class=\"data left\">{$defaults['autovacuum_vacuum_scale_factor']}</th></tr>" . PHP_EOL;
+        echo "\t<tr><th class=\"data left\">{$this->lang['stranalybasethreshold']}</th>" . PHP_EOL;
+        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_analyze_threshold\" value=\"{$old_val['autovacuum_analyze_threshold']}\" /></td>" . PHP_EOL;
+        echo "<th class=\"data left\">{$defaults['autovacuum_analyze_threshold']}</th></tr>" . PHP_EOL;
+        echo "\t<tr><th class=\"data left\">{$this->lang['stranalyzescalefactor']}</th>" . PHP_EOL;
+        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_analyze_scale_factor\" value=\"{$old_val['autovacuum_analyze_scale_factor']}\" /></td>" . PHP_EOL;
+        echo "<th class=\"data left\">{$defaults['autovacuum_analyze_scale_factor']}</th></tr>" . PHP_EOL;
+        echo "\t<tr><th class=\"data left\">{$this->lang['strvacuumcostdelay']}</th>" . PHP_EOL;
+        echo "<td class=\"data1\"><input type=\"text\" name=\"autovacuum_vacuum_cost_delay\" value=\"{$old_val['autovacuum_vacuum_cost_delay']}\" /></td>" . PHP_EOL;
+        echo "<th class=\"data left\">{$defaults['autovacuum_vacuum_cost_delay']}</th></tr>" . PHP_EOL;
+        echo "\t<tr><th class=\"data left\">{$this->lang['strvacuumcostlimit']}</th>" . PHP_EOL;
+        echo "<td class=\"datat1\"><input type=\"text\" name=\"autovacuum_vacuum_cost_limit\" value=\"{$old_val['autovacuum_vacuum_cost_limit']}\" /></td>" . PHP_EOL;
+        echo "<th class=\"data left\">{$defaults['autovacuum_vacuum_cost_limit']}</th></tr>" . PHP_EOL;
+        echo '</table>' . PHP_EOL;
         echo '<br />';
         echo '<br />';
-        echo "<input type=\"submit\" name=\"save\" value=\"{$this->lang['strsave']}\" />".PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo "<input type=\"submit\" name=\"save\" value=\"{$this->lang['strsave']}\" />" . PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . PHP_EOL;
 
-        echo '</form>'.PHP_EOL;
+        echo '</form>' . PHP_EOL;
     }
 
     /**
@@ -336,7 +330,6 @@ trait AdminTrait
     public function confirmDropAutovacuum($type)
     {
         $script = ('database' == $type) ? 'database' : 'tables';
-        $data   = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['table'])) {
             $this->doAdmin($type, $this->lang['strspecifydelvacuumtable']);
@@ -352,14 +345,14 @@ trait AdminTrait
             $this->misc->printVal("\"{$_GET['schema']}\".\"{$_GET['table']}\"")
         );
 
-        echo "<form style=\"float: left\" action=\"{$script}\" method=\"post\">".PHP_EOL;
-        echo '<input type="hidden" name="action" value="delautovac" />'.PHP_EOL;
+        echo "<form style=\"float: left\" action=\"{$script}\" method=\"post\">" . PHP_EOL;
+        echo '<input type="hidden" name="action" value="delautovac" />' . PHP_EOL;
         echo $this->misc->form;
-        echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
-        echo '<input type="hidden" name="rel" value="', htmlspecialchars(serialize([$_REQUEST['schema'], $_REQUEST['table']])), '" />'.PHP_EOL;
-        echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />".PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
-        echo '</form>'.PHP_EOL;
+        echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />' . PHP_EOL;
+        echo '<input type="hidden" name="rel" value="', htmlspecialchars(serialize([$_REQUEST['schema'], $_REQUEST['table']])), '" />' . PHP_EOL;
+        echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . PHP_EOL;
+        echo '</form>' . PHP_EOL;
     }
 
     /**
@@ -369,9 +362,6 @@ trait AdminTrait
      */
     public function doCluster($type)
     {
-        $this->script = ('database' == $type) ? 'database' : 'tables';
-
-        $script = $this->script;
 
         $data = $this->misc->getDatabaseAccessor();
 
@@ -403,9 +393,9 @@ trait AdminTrait
                 list($status, $sql) = $data->clusterIndex($_REQUEST['object']);
                 $msg .= sprintf('%s<br />', $sql);
                 if (0 == $status) {
-                    $this->doAdmin($type, $msg.$this->lang['strclusteredgood']);
+                    $this->doAdmin($type, $msg . $this->lang['strclusteredgood']);
                 } else {
-                    $this->doAdmin($type, $msg.$this->lang['strclusteredbad']);
+                    $this->doAdmin($type, $msg . $this->lang['strclusteredbad']);
                 }
             }
         } else {
@@ -413,9 +403,9 @@ trait AdminTrait
             list($status, $sql) = $data->clusterIndex();
             $msg .= sprintf('%s<br />', $sql);
             if (0 == $status) {
-                $this->doAdmin($type, $msg.$this->lang['strclusteredgood']);
+                $this->doAdmin($type, $msg . $this->lang['strclusteredgood']);
             } else {
-                $this->doAdmin($type, $msg.$this->lang['strclusteredbad']);
+                $this->doAdmin($type, $msg . $this->lang['strclusteredbad']);
             }
         }
     }
@@ -427,10 +417,9 @@ trait AdminTrait
      */
     public function doReindex($type)
     {
-        $this->script = ('database' == $type) ? 'database' : 'tables';
-        $script       = $this->script;
-        $this->misc   = $this->misc;
-        $data         = $this->misc->getDatabaseAccessor();
+
+        $this->misc = $this->misc;
+        $data       = $this->misc->getDatabaseAccessor();
 
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($this->lang['strspecifytabletoreindex']);
@@ -472,9 +461,6 @@ trait AdminTrait
      */
     public function doAnalyze($type)
     {
-        $this->script = ('database' == $type) ? 'database' : 'tables';
-
-        $script = $this->script;
 
         $data = $this->misc->getDatabaseAccessor();
 
@@ -519,7 +505,6 @@ trait AdminTrait
      */
     public function doVacuum($type)
     {
-        $script = ('database' == $type) ? 'database' : 'tables';
 
         $data = $this->misc->getDatabaseAccessor();
 
@@ -645,10 +630,10 @@ trait AdminTrait
             printf("<p>{$this->lang['stradminontable']}</p>\n", $this->misc->printVal($_REQUEST['object']));
         }
 
-        echo '<table style="width: 50%">'.PHP_EOL;
-        echo '<tr>'.PHP_EOL;
+        echo '<table style="width: 50%">' . PHP_EOL;
+        echo '<tr>' . PHP_EOL;
         echo '<th class="data">';
-        $this->misc->printHelp($this->lang['strvacuum'], 'pg.admin.vacuum').'</th>'.PHP_EOL;
+        $this->misc->printHelp($this->lang['strvacuum'], 'pg.admin.vacuum') . '</th>' . PHP_EOL;
         echo '</th>';
         echo '<th class="data">';
         $this->misc->printHelp($this->lang['stranalyze'], 'pg.admin.analyze');
@@ -667,41 +652,41 @@ trait AdminTrait
         echo '</tr>';
 
         // Vacuum
-        echo '<tr class="row1">'.PHP_EOL;
-        echo '<td style="text-align: center; vertical-align: bottom">'.PHP_EOL;
-        echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+        echo '<tr class="row1">' . PHP_EOL;
+        echo '<td style="text-align: center; vertical-align: bottom">' . PHP_EOL;
+        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
 
-        echo '<p><input type="hidden" name="action" value="confirm_vacuum" />'.PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="confirm_vacuum" />' . PHP_EOL;
         echo $this->misc->form;
         echo $table_hidden_inputs;
-        echo "<input type=\"submit\" value=\"{$this->lang['strvacuum']}\" /></p>".PHP_EOL;
-        echo '</form>'.PHP_EOL;
-        echo '</td>'.PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['strvacuum']}\" /></p>" . PHP_EOL;
+        echo '</form>' . PHP_EOL;
+        echo '</td>' . PHP_EOL;
 
         // Analyze
-        echo '<td style="text-align: center; vertical-align: bottom">'.PHP_EOL;
-        echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
-        echo '<p><input type="hidden" name="action" value="confirm_analyze" />'.PHP_EOL;
+        echo '<td style="text-align: center; vertical-align: bottom">' . PHP_EOL;
+        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="confirm_analyze" />' . PHP_EOL;
         echo $this->misc->form;
         echo $table_hidden_inputs;
-        echo "<input type=\"submit\" value=\"{$this->lang['stranalyze']}\" /></p>".PHP_EOL;
-        echo '</form>'.PHP_EOL;
-        echo '</td>'.PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['stranalyze']}\" /></p>" . PHP_EOL;
+        echo '</form>' . PHP_EOL;
+        echo '</td>' . PHP_EOL;
 
         // Cluster
         echo $reclusterconf;
 
         // Reindex
-        echo '<td style="text-align: center; vertical-align: bottom">'.PHP_EOL;
-        echo '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
-        echo '<p><input type="hidden" name="action" value="confirm_reindex" />'.PHP_EOL;
+        echo '<td style="text-align: center; vertical-align: bottom">' . PHP_EOL;
+        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="confirm_reindex" />' . PHP_EOL;
         echo $this->misc->form;
         echo $table_hidden_inputs;
-        echo "<input type=\"submit\" value=\"{$this->lang['strreindex']}\" /></p>".PHP_EOL;
-        echo '</form>'.PHP_EOL;
-        echo '</td>'.PHP_EOL;
-        echo '</tr>'.PHP_EOL;
-        echo '</table>'.PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['strreindex']}\" /></p>" . PHP_EOL;
+        echo '</form>' . PHP_EOL;
+        echo '</td>' . PHP_EOL;
+        echo '</tr>' . PHP_EOL;
+        echo '</table>' . PHP_EOL;
 
         // Autovacuum
         $this->_printAutoVacuumConf($data, $type);
@@ -792,18 +777,18 @@ trait AdminTrait
         $recluster_help = sprintf('<th class="data">%s</th>', $this->misc->printHelp($this->lang['strclusterindex'], 'pg.index.cluster', false));
 
         $disabled      = '';
-        $reclusterconf = '<td style="text-align: center; vertical-align: bottom">'.PHP_EOL;
-        $reclusterconf .= '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
+        $reclusterconf = '<td style="text-align: center; vertical-align: bottom">' . PHP_EOL;
+        $reclusterconf .= '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . PHP_EOL;
         $reclusterconf .= $this->misc->form;
         $reclusterconf .= $table_hidden_inputs;
         if ('table' == $type && !$data->alreadyClustered($_REQUEST['object'])) {
             $disabled = 'disabled="disabled" ';
             $reclusterconf .= "{$this->lang['strnoclusteravailable']}<br />";
         }
-        $reclusterconf .= '<p><input type="hidden" name="action" value="confirm_cluster" />'.PHP_EOL;
-        $reclusterconf .= "<input type=\"submit\" value=\"{$this->lang['strclusterindex']}\" ${disabled}/></p>".PHP_EOL;
-        $reclusterconf .= '</form>'.PHP_EOL;
-        $reclusterconf .= '</td>'.PHP_EOL;
+        $reclusterconf .= '<p><input type="hidden" name="action" value="confirm_cluster" />' . PHP_EOL;
+        $reclusterconf .= "<input type=\"submit\" value=\"{$this->lang['strclusterindex']}\" ${disabled}/></p>" . PHP_EOL;
+        $reclusterconf .= '</form>' . PHP_EOL;
+        $reclusterconf .= '</td>' . PHP_EOL;
 
         return [$recluster_help, $reclusterconf];
     }
@@ -824,12 +809,12 @@ trait AdminTrait
         }
 
         echo "<br /><br /><h2>{$this->lang['strvacuumpertable']}</h2>";
-        echo '<p>'.(('on' == $defaults['autovacuum']) ? $this->lang['strturnedon'] : $this->lang['strturnedoff']).'</p>';
+        echo '<p>' . (('on' == $defaults['autovacuum']) ? $this->lang['strturnedon'] : $this->lang['strturnedoff']) . '</p>';
         echo "<p class=\"message\">{$this->lang['strnotdefaultinred']}</p>";
 
         $enlight = function ($f, $p) {
             if (isset($f[$p[0]]) and ($f[$p[0]] != $p[1])) {
-                return '<span style="color:#F33;font-weight:bold">'.htmlspecialchars($f[$p[0]]).'</span>';
+                return '<span style="color:#F33;font-weight:bold">' . htmlspecialchars($f[$p[0]]) . '</span>';
             }
 
             return htmlspecialchars($p[1]);
@@ -839,13 +824,13 @@ trait AdminTrait
             'namespace'                       => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
             'relname'                         => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url'   => \SUBFOLDER."/redirect/table?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
                 'vars'  => ['table' => 'relname', 'schema' => 'nspname'],
             ],
             'autovacuum_enabled'              => [
@@ -932,7 +917,7 @@ trait AdminTrait
         if (('table' == $type) and (0 == $autovac->RecordCount())) {
             echo '<br />';
 
-            echo '<a href="'.\SUBFOLDER."/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";
+            echo '<a href="' . \SUBFOLDER . "/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";
             echo htmlspecialchars($_REQUEST['table']);
             echo "\">{$this->lang['straddvacuumtable']}</a>";
         }
