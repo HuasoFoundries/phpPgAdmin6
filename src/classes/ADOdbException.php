@@ -24,7 +24,7 @@ namespace PHPPgAdmin;
  * @author John Lim
  * @copyright 2000-2013 John Lim <jlim@natsoft.com>
  * @copyright 2014      Damien Regad, Mark Newnham and the ADOdb community
- * @license MIT
+ * @license BSD-3-Clause
  *
  * @version   Release: 5.20.9
  */
@@ -139,9 +139,9 @@ class ADOdbException extends \Exception
 
                 $inputparams = $p2;
 
-                $error_msg = '<p><b>strsqlerror</b><br />'.nl2br($errmsg).'</p> <p><b>SQL:</b><br />'.nl2br($sql).'</p> ';
+                $error_msg = '<p><b>strsqlerror</b><br />' . nl2br($errmsg) . '</p> <p><b>SQL:</b><br />' . nl2br($sql) . '</p> ';
 
-                echo '<table class="error" cellpadding="5"><tr><td>'.nl2br($error_msg).'</td></tr></table><br />'."\n";
+                echo '<table class="error" cellpadding="5"><tr><td>' . nl2br($error_msg) . '</td></tr></table><br />' . "\n";
 
                 break;
             case 'PCONNECT':
