@@ -91,7 +91,7 @@ checks:
         no_short_method_names:
             minimum: '3'
         
-    javascript: true
+    javascript: false
 filter:
     paths: [src/*]
     excluded_paths:
@@ -100,12 +100,8 @@ filter:
         - 'assets/js/'
 
 tools:
-    php_analyzer: true
     php_mess_detector: true
     php_changetracking: true
-    php_code_sniffer:
-        config:
-            standard: PSR2
     php_loc:
         excluded_dirs:
             - vendor
@@ -119,9 +115,9 @@ build:
     environment:
         php: '7.1'
         #postgresql: true
-    #dependencies:
-        #before:
-        #    - psql -c "CREATE DATABASE scrutinizer WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
+        #dependencies:
+            #before:
+            # - psql -c "CREATE DATABASE scrutinizer WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
     tests:
         override:
           - php-scrutinizer-run

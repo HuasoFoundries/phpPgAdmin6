@@ -131,7 +131,12 @@ server {
 Please note that you have to customize your server name, php upstream (sock or IP) and optinally the subfolder you want phpPgAdmin6 to run on.
 
 
+## License
 
+This work is licensed under MIT or GPL 2.0 (or any later version) or BSD-3-Clause
+You can choose between one of them if you use this work.
+
+`SPDX-License-Identifier: MIT OR GPL-2.0-or-later OR BSD-3-Clause`
 
 
 

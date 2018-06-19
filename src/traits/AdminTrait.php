@@ -555,8 +555,6 @@ trait AdminTrait
             return;
         }
 
-        $script = ('database' == $type) ? 'database' : 'tables';
-
         $status = $data->saveAutovacuum(
             $_REQUEST['table'],
             $_POST['autovacuum_enabled'],
@@ -582,8 +580,7 @@ trait AdminTrait
      */
     public function doDropAutovacuum($type)
     {
-        $script = ('database' == $type) ? 'database' : 'tables';
-        $data   = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['table'])) {
             $this->doAdmin($type, $this->lang['strspecifydelvacuumtable']);
