@@ -103,6 +103,7 @@ tools:
     php_analyzer: true
     php_mess_detector: true
     php_changetracking: true
+    php-scrutinizer-run: true
     php_code_sniffer:
         config:
             standard: PSR2
