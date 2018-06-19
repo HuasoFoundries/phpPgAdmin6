@@ -362,7 +362,6 @@ trait AdminTrait
      */
     public function doCluster($type)
     {
-
         $data = $this->misc->getDatabaseAccessor();
 
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
@@ -417,7 +416,6 @@ trait AdminTrait
      */
     public function doReindex($type)
     {
-
         $this->misc = $this->misc;
         $data       = $this->misc->getDatabaseAccessor();
 
@@ -461,7 +459,6 @@ trait AdminTrait
      */
     public function doAnalyze($type)
     {
-
         $data = $this->misc->getDatabaseAccessor();
 
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
@@ -505,7 +502,6 @@ trait AdminTrait
      */
     public function doVacuum($type)
     {
-
         $data = $this->misc->getDatabaseAccessor();
 
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
