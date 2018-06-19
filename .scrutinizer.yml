@@ -103,7 +103,6 @@ tools:
     php_analyzer: true
     php_mess_detector: true
     php_changetracking: true
-    php-scrutinizer-run: true
     php_code_sniffer:
         config:
             standard: PSR2
@@ -125,6 +124,7 @@ build:
         #    - psql -c "CREATE DATABASE scrutinizer WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
     tests:
         override:
+          - php-scrutinizer-run
           - 'make test'
     nodes:
         tests: true
