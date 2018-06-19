@@ -29,29 +29,20 @@ checks:
             preserve_blanklines: false
             order_alphabetically: false
         fix_line_ending: true
-
 filter:
-    paths: [src/*]
+    paths: 
+        - 'src/*'
     excluded_paths:
+        - '.tests/*'
         - 'tests/*'
         - '*.min.js'
-        - 'assets/js/'
-
+        - 'js/'
 tools:
-    php_mess_detector: true
-    php_changetracking: true
     php_code_sniffer:
         config:
             standard: PSR2
-    php_loc:
-        excluded_dirs:
-            - vendor
-            - tests
-    php_pdepend:
-        excluded_dirs:
-            - vendor
-            - tests
-
+        filter:
+            paths: ['src']
 build:
     environment:
         php: '7.1'
@@ -60,5 +51,6 @@ build:
             tests:
                 override:
                     - php-scrutinizer-run
-                    - make test
+                    - 'make test'
+
         tests: true
