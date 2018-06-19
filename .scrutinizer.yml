@@ -1,96 +1,35 @@
 checks:
     php:
-        assignment_of_null_return: true
-        avoid_conflicting_incrementers: true
-        avoid_superglobals: false
-        avoid_useless_overridden_methods: true
-        closure_use_modifiable: true
-        closure_use_not_conflicting: true
         code_rating: true
-        deprecated_code_usage: true
         duplication: true
         fix_php_opening_tag: true
-        newline_at_end_of_file: true
-        no_commented_out_code: true
-        no_debug_code: true
-        no_duplicate_arguments: true
-        no_else_if_statements: true
-        no_empty_statements: true
-        no_exit: true
-        no_global_keyword: true
-        no_goto: true
-        no_mixed_inline_html: false
-        no_non_implemented_abstract_methods: true
-        no_property_on_interface: true
-        no_space_around_object_operator: true
-        no_space_before_semicolon: true
-        no_space_inside_cast_operator: true
-        no_trailing_whitespace: true
-        no_underscore_prefix_in_methods: true
-        no_underscore_prefix_in_properties: true
-        no_unnecessary_final_modifier: true
-        no_unnecessary_function_call_in_for_loop: true
-        no_unnecessary_if: true
-        non_commented_empty_catch_block: true
-        one_class_per_file: true
-        optional_parameters_at_the_end: true
-        overriding_private_members: true
-        param_doc_comment_if_not_inferrable: true
-        parameter_doc_comments: true
-        parameter_non_unique: true
-        parameters_in_camelcaps: true
-        php5_style_constructor: true
-        phpunit_assertions: true
-        precedence_in_conditions: true
-        precedence_mistakes: true
-        prefer_while_loop_over_for_loop: true
-        properties_in_camelcaps: true
-        property_assignments: true
-        psr2_class_declaration: true
-        psr2_control_structure_declaration: true
-        psr2_switch_declaration: true
-        remove_extra_empty_lines: true
         remove_php_closing_tag: true
-        remove_trailing_whitespace: true
+        no_mixed_inline_html: false
         require_braces_around_control_structures: true
-        require_php_tag_first: true
-        require_scope_for_methods: true
-        require_scope_for_properties: true
-        return_doc_comment_if_not_inferrable: true
-        return_doc_comments: true
+        psr2_control_structure_declaration: true
+        avoid_superglobals: false
         security_vulnerabilities: true
+        no_exit: true
         simplify_boolean_return: true
-        single_namespace_per_use: true
-        space_after_cast: true
-        spacing_around_conditional_operators: true
-        spacing_around_non_conditional_operators: true
-        spacing_of_function_arguments: true
-        sql_injection_vulnerabilities: true
-        switch_fallthrough_commented: true
-        symfony_request_injection: true
-        too_many_arguments: false
-        unreachable_code: true
-        unused_methods: true
-        unused_parameters: true
-        unused_properties: true
-        unused_variables: true
-        use_self_instead_of_fqcn: true
-        use_statement_alias_conflict: true
-        useless_calls: true
-        variable_existence: true
-        verify_access_scope_valid: true
-        verify_argument_usable_as_reference: true
-        verify_property_names: true
-        scope_indentation:
-            spaces_per_level: '4'
-
+        return_doc_comments: false
+        return_doc_comment_if_not_inferrable: false
+        remove_extra_empty_lines: true
+        parameter_doc_comments: false
         check_method_contracts:
             verify_interface_like_constraints: true
             verify_documented_constraints: true
             verify_parent_constraints: true
         no_short_method_names:
             minimum: '3'
-        
+        too_many_arguments: false
+        no_goto: true
+        fix_use_statements:
+            remove_unused: true
+            preserve_multiple: false
+            preserve_blanklines: false
+            order_alphabetically: false
+        fix_line_ending: true
+
 filter:
     paths: [src/*]
     excluded_paths:
@@ -101,6 +40,9 @@ filter:
 tools:
     php_mess_detector: true
     php_changetracking: true
+    php_code_sniffer:
+        config:
+            standard: PSR2
     php_loc:
         excluded_dirs:
             - vendor
@@ -109,17 +51,14 @@ tools:
         excluded_dirs:
             - vendor
             - tests
-      
+
 build:
     environment:
         php: '7.1'
-        #postgresql: true
-        #dependencies:
-            #before:
-            #    - psql -c "CREATE DATABASE scrutinizer WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
-    tests:
-        override:
-          - php-scrutinizer-run
-          - 'make test'
     nodes:
+        analysis:
+            tests:
+                override:
+                    - php-scrutinizer-run
+                    - make test
         tests: true
