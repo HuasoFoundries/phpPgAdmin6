@@ -695,6 +695,7 @@ class TablesController extends BaseController
                 $this->doCreate($this->lang['strtablecreatedbad']);
 
                 return;
+
                 break;
             default:
                 echo "<p>{$this->lang['strinvalidparam']}</p>".PHP_EOL;

@@ -31,9 +31,11 @@ class BrowserController extends BaseController
         switch ($action) {
             case 'tree':
                 return $this->doTree();
+
                 break;
             default:
                 return $this->doDefault();
+
                 break;
         }
     }

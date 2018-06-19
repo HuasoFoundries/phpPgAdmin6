@@ -171,6 +171,7 @@ trait RowTrait
                 }
 
                 return $value;
+
                 break;
             default:
                 // Checking variable fields is difficult as there might be a size
