@@ -31,9 +31,15 @@ trait SchemaTrait
         $sql = "
             SELECT pn.nspname,
                    pu.rolname AS nspowner,
-                   pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment,
-                   pg_size_pretty(SUM(pg_total_relation_size(pg_class.oid))) as schema_size
-            FROM pg_catalog.pg_namespace pn
+                   pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment, ";
+
+        if (isset($conf['display_sizes']) && $conf['display_sizes'] === true) {
+            $sql .= ' pg_size_pretty(SUM(pg_total_relation_size(pg_class.oid))) as schema_size ';
+        } else {
+            $sql .= " 'N/A' as schema_size ";
+        }
+
+        $sql .= " FROM pg_catalog.pg_namespace pn
             LEFT JOIN pg_catalog.pg_class  ON relnamespace = pn.oid
             LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
             {$where}

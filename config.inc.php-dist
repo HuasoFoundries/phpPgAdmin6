@@ -21,6 +21,9 @@ $conf['php_console'] = false;
 // $conf['error_log']='temp/phppga.php_error.log';
 
 
+// enable this to calculate schema and table sizes
+$conf['display_sizes'] = false;
+
 // An example server.  Create as many of these as you wish,
 // indexed from zero upwards.
 

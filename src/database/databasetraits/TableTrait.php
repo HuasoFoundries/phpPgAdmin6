@@ -49,9 +49,15 @@ trait TableTrait
                     pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
                     pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
                     reltuples::bigint as reltuples,
-                    pt.spcname as tablespace,
-                    pg_size_pretty(pg_total_relation_size(c.oid)) as table_size
-                FROM pg_catalog.pg_class c
+                    pt.spcname as tablespace, ";
+
+        if (isset($conf['display_sizes']) && $conf['display_sizes'] === true) {
+            $sql .= ' pg_size_pretty(pg_total_relation_size(c.oid)) as table_size ';
+        } else {
+            $sql .= "   'N/A' as table_size ";
+        }
+
+        $sql .= " FROM pg_catalog.pg_class c
                 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                 LEFT JOIN  pg_catalog.pg_tablespace pt ON  pt.oid=c.reltablespace
                 WHERE c.relkind = 'r'
