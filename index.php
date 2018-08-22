@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Single entrypoint of the app
  */
@@ -93,8 +92,6 @@ $app->post('/redirect/server', function (
         $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
 
-    //
-        //return $response->withStatus(302)->withHeader('Location', $destinationurl);
     } else {
         $_server_info = $this->misc->getServerInfo();
 

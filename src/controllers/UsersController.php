@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Controller;
@@ -111,6 +111,10 @@ class UsersController extends BaseController
             'user'      => [
                 'title' => $this->lang['strusername'],
                 'field' => Decorator::field('usename'),
+            ],
+            'group'     => [
+                'title' => $this->lang['strgroup'],
+                'field' => Decorator::field('group'),
             ],
             'superuser' => [
                 'title' => $this->lang['strsuper'],

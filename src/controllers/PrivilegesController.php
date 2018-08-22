@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Controller;
@@ -67,6 +67,7 @@ class PrivilegesController extends BaseController
             'table',
             'column',
             'view',
+            'function',
         ], true)) {
             $this->printTabs($subject, 'privileges');
         } else {

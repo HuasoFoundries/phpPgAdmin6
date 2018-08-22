@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Controller;
@@ -73,6 +73,15 @@ class FunctionsController extends BaseController
             case 'properties':
                 $header_template = 'header_highlight.twig';
                 $this->doProperties();
+
+                break;
+            case 'show':
+                if (isset($_GET['function'], $_GET['function_oid'])) {
+                    $header_template = 'header_highlight.twig';
+                    $this->showDefinition();
+                } else {
+                    $this->doDefault();
+                }
 
                 break;
             default:
@@ -431,6 +440,7 @@ class FunctionsController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('function');
+        $this->printTabs('function', 'definition');
         $this->printTitle($this->lang['stralter'], 'pg.function.alter');
         $this->printMsg($msg);
 
@@ -608,6 +618,63 @@ class FunctionsController extends BaseController
     }
 
     /**
+     * Show the creation sentence for this function.
+     *
+     * @param string $fname        The function name
+     * @param int    $function_oid The function oid
+     *
+     * @return string the navlinks to print at the bottom
+     */
+    public function showDefinition($fname, $function_oid)
+    {
+        $data = $this->misc->getDatabaseAccessor();
+
+        $this->printTrail('function');
+        $this->printTabs('function', 'export');
+        $this->printTitle($this->lang['strproperties'], 'pg.function');
+
+        $fname     = str_replace(' ', '', $f);
+        $funcdata  = $data->getFunctionDef($function_oid);
+        $func_full = '';
+        if ($funcdata->recordCount() <= 0) {
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+
+            return $this->_printNavLinks('functions-properties', $func_full);
+        }
+
+        echo '<table style="width: 95%">'.PHP_EOL;
+
+        $fnlang = strtolower($funcdata->fields['prolanguage']);
+        echo '<tr><td class="data1" colspan="4">';
+        echo sprintf('<pre><code class="sql hljs">%s', PHP_EOL);
+
+        echo sprintf('%s--%s', PHP_EOL, PHP_EOL);
+        echo sprintf('-- Name: %s; Type: FUNCTION; Schema: %s; Owner: %s', $fname, $funcdata->fields['nspname'], $funcdata->fields['relowner']);
+        echo sprintf('%s--%s%s', PHP_EOL, PHP_EOL, PHP_EOL);
+
+        echo sprintf('%s;', $funcdata->fields['pg_get_functiondef']);
+
+        echo sprintf('%s%sALTER FUNCTION %s OWNER TO %s;%s', PHP_EOL, PHP_EOL, $fname, $funcdata->fields['relowner'], PHP_EOL);
+
+        // Show comment if any
+        if (null !== $funcdata->fields['relcomment']) {
+            echo sprintf('%s--%s', PHP_EOL, PHP_EOL);
+            echo sprintf('-- Name: %s; Type: COMMENT; Schema: %s; Owner: %s', $fname, $funcdata->fields['nspname'], $funcdata->fields['relowner']);
+            echo sprintf('%s--%s%s', PHP_EOL, PHP_EOL, PHP_EOL);
+            echo sprintf("%sCOMMENT ON FUNCTION %s.%s IS '%s';%s", PHP_EOL, $funcdata->fields['nspname'], $fname, $funcdata->fields['relcomment'], PHP_EOL);
+            //echo '<p class="comment">', $this->misc->printVal($funcdata->fields['relcomment']), '</p>' . PHP_EOL;
+        }
+
+        echo sprintf('%s</code></pre>', PHP_EOL);
+
+        echo '</td></tr>'.PHP_EOL;
+
+        echo '</table>'.PHP_EOL;
+
+        return $this->_printNavLinks('functions-properties', $func_full);
+    }
+
+    /**
      * Show read only properties of a function.
      *
      * @param mixed $msg
@@ -617,6 +684,7 @@ class FunctionsController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printTrail('function');
+        $this->printTabs('function', 'definition');
         $this->printTitle($this->lang['strproperties'], 'pg.function');
         $this->printMsg($msg);
 
@@ -710,7 +778,8 @@ class FunctionsController extends BaseController
         }
 
         if ($confirm) {
-            $this->printTrail('schema');
+            $this->printTrail('function');
+            $this->printTabs('function', 'definition');
             $this->printTitle($this->lang['strdrop'], 'pg.function.drop');
 
             echo '<form action="'.\SUBFOLDER.'/src/views/functions" method="post">'.PHP_EOL;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Database;
@@ -323,6 +323,7 @@ class Postgres74 extends Postgres80
         $oldtype,
         $comment
     ) {
+        $sql    = '';
         $status = $this->beginTransaction();
         if ($status != 0) {
             return -1;
@@ -355,7 +356,7 @@ class Postgres74 extends Postgres80
 
         // Rename the column, if it has been changed
         if ($column != $name) {
-            $status = $this->renameColumn($table, $column, $name);
+            list($status, $sql) = $this->renameColumn($table, $column, $name);
             if ($status != 0) {
                 $this->rollbackTransaction();
 
@@ -374,7 +375,7 @@ class Postgres74 extends Postgres80
             return -5;
         }
 
-        return $this->endTransaction();
+        return [$this->endTransaction(), $sql];
     }
 
     /**

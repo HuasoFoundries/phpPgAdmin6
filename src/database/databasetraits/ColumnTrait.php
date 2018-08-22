@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -130,8 +130,9 @@ trait ColumnTrait
         $comment
     ) {
         // Begin transaction
-        $status = $this->beginTransaction();
-        $sql    = '';
+        $status    = $this->beginTransaction();
+        $sql       = '';
+        $sqlrename = '';
         if ($status != 0) {
             $this->rollbackTransaction();
 
@@ -140,7 +141,7 @@ trait ColumnTrait
 
         // Rename the column, if it has been changed
         if ($column != $name) {
-            $status = $this->renameColumn($table, $column, $name);
+            list($status, $sqlrename) = $this->renameColumn($table, $column, $name);
             if ($status != 0) {
                 $this->rollbackTransaction();
 
@@ -224,7 +225,7 @@ trait ColumnTrait
             return [-5, $sql];
         }
 
-        return [$this->endTransaction(), $sql];
+        return [$this->endTransaction(), $sqlrename.'<br>'.$sql];
     }
 
     /**
@@ -234,7 +235,7 @@ trait ColumnTrait
      * @param string $column  The column to be renamed
      * @param string $newName The new name for the column
      *
-     * @return int 0 if operation was successful
+     * @return array [0 if operation was successful, sql of sentence]
      */
     public function renameColumn($table, $column, $newName)
     {
@@ -246,7 +247,9 @@ trait ColumnTrait
 
         $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" RENAME COLUMN \"{$column}\" TO \"{$newName}\"";
 
-        return $this->execute($sql);
+        $status = $this->execute($sql);
+
+        return [$status, $sql];
     }
 
     /**
@@ -312,7 +315,9 @@ trait ColumnTrait
             $sql .= ' CASCADE';
         }
 
-        return $this->execute($sql);
+        $status = $this->execute($sql);
+
+        return [$status, $sql];
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -21,9 +21,21 @@ trait RoleTrait
     public function getRoles($rolename = '')
     {
         $sql = '
-			SELECT rolname, rolsuper, rolcreatedb, rolcreaterole, rolinherit,
-				rolcanlogin, rolconnlimit, rolvaliduntil, rolconfig
-			FROM pg_catalog.pg_roles';
+			SELECT
+                r.rolname,
+                r1.rolname as group,
+                r.rolsuper,
+                r.rolcreatedb,
+                r.rolcreaterole,
+                r.rolinherit,
+                r.rolcanlogin,
+                r.rolconnlimit,
+                r.rolvaliduntil,
+                r.rolconfig
+            FROM pg_catalog.pg_roles r
+            LEFT JOIN pg_catalog.pg_auth_members m ON (m.member = r.oid)
+            LEFT JOIN pg_roles r1 ON (m.roleid=r1.oid)
+            ';
         if ($rolename) {
             $sql .= " WHERE rolname!='{$rolename}'";
         }
@@ -45,9 +57,21 @@ trait RoleTrait
         $this->clean($rolename);
 
         $sql = "
-			SELECT rolname, rolsuper, rolcreatedb, rolcreaterole, rolinherit,
-				rolcanlogin, rolconnlimit, rolvaliduntil, rolconfig
-			FROM pg_catalog.pg_roles WHERE rolname='{$rolename}'";
+            SELECT
+                r.rolname,
+                r1.rolname as group,
+                r.rolsuper,
+                r.rolcreatedb,
+                r.rolcreaterole,
+                r.rolinherit,
+                r.rolcanlogin,
+                r.rolconnlimit,
+                r.rolvaliduntil,
+                r.rolconfig
+            FROM pg_catalog.pg_roles r
+            LEFT JOIN pg_catalog.pg_auth_members m ON (m.member = r.oid)
+            LEFT JOIN pg_roles r1 ON (m.roleid=r1.oid)
+            WHERE rolname='{$rolename}'";
 
         return $this->selectSet($sql);
     }
@@ -59,9 +83,15 @@ trait RoleTrait
      */
     public function getUsers()
     {
-        $sql = 'SELECT usename, usesuper, usecreatedb, valuntil AS useexpires, useconfig
-			FROM pg_user
-			ORDER BY usename';
+        $sql = 'SELECT
+                r.usename,
+                r1.rolname as group,
+                r.usesuper,
+                r.valuntil AS useexpires,
+                r.useconfig
+            FROM pg_catalog.pg_user r
+            LEFT JOIN pg_catalog.pg_auth_members m ON (m.member = r.usesysid)
+            LEFT JOIN pg_roles r1 ON (m.roleid=r1.oid)';
 
         return $this->selectSet($sql);
     }
@@ -77,9 +107,16 @@ trait RoleTrait
     {
         $this->clean($username);
 
-        $sql = "SELECT usename, usesuper, usecreatedb, valuntil AS useexpires, useconfig
-			FROM pg_user
-			WHERE usename='{$username}'";
+        $sql = "SELECT
+                r.usename,
+                r1.rolname as group,
+                r.usesuper,
+                r.valuntil AS useexpires,
+                r.useconfig
+            FROM pg_catalog.pg_user r
+            LEFT JOIN pg_catalog.pg_auth_members m ON (m.member = r.usesysid)
+            LEFT JOIN pg_roles r1 ON (m.roleid=r1.oid)
+			WHERE r.usename='{$username}'";
 
         return $this->selectSet($sql);
     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Controller;
@@ -795,10 +795,10 @@ class TblpropertiesController extends BaseController
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
             echo '</form>'.PHP_EOL;
         } else {
-            $status = $data->dropColumn($_POST['table'], $_POST['column'], isset($_POST['cascade']));
+            list($status, $sql) = $data->dropColumn($_POST['table'], $_POST['column'], isset($_POST['cascade']));
             if (0 == $status) {
                 $misc->setReloadBrowser(true);
-                $this->doDefault($this->lang['strcolumndropped']);
+                $this->doDefault(sprintf('%s %s %s', $sql, PHP_EOL, $this->lang['strcolumndropped']));
             } else {
                 $this->doDefault($this->lang['strcolumndroppedbad']);
             }

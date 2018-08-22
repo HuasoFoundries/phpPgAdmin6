@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Database;
@@ -177,10 +177,13 @@ class ADOdbBase
     public function execute($sql)
     {
         // Execute the statement
-        $rs = $this->conn->Execute($sql);
+        try {
+            $rs = $this->conn->Execute($sql);
 
-        // If failure, return error value
-        return $this->conn->ErrorNo();
+            return $this->conn->ErrorNo();
+        } catch (\Exception $e) {
+            return $e->getCode();
+        }
     }
 
     /**
@@ -202,13 +205,13 @@ class ADOdbBase
     public function selectSet($sql)
     {
         // Execute the statement
-        $rs = $this->conn->Execute($sql);
+        try {
+            $rs = $this->conn->Execute($sql);
 
-        if (!$rs) {
-            return $this->conn->ErrorNo();
+            return $rs;
+        } catch (\Exception $e) {
+            return $e->getCode();
         }
-
-        return $rs;
     }
 
     /**

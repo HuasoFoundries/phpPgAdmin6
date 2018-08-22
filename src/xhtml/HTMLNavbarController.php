@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -129,6 +129,7 @@ class HTMLNavbarController extends HTMLController
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
             $alltabs                            = $this->misc->getNavTabs($alltabs);
         }
+
         //$this->prtrace($tabs);
         $tabs_html = '';
 

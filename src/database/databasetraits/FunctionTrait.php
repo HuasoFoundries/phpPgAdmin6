@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -371,6 +371,35 @@ trait FunctionTrait
                 pc.oid = '{$function_oid}'::oid AND pc.prolang = pl.oid
                 AND pc.pronamespace = pn.oid
             ";
+
+        return $this->selectSet($sql);
+    }
+
+    /**
+     * Returns plain definition for a particular function.
+     *
+     * @param int $function_oid
+     *
+     * @return \PHPPgAdmin\ADORecordSet Function definition
+     */
+    public function getFunctionDef($function_oid)
+    {
+        $this->clean($function_oid);
+        $sql = "
+            SELECT
+                f.proname as relname,
+                n.nspname,
+                u.usename AS relowner,
+                 pg_catalog.obj_description(f.oid, 'pg_proc') as relcomment,
+                 (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=f.pronamespace) AS tablespace,
+                pg_get_functiondef(f.oid),
+                pl.lanname AS prolanguage
+                FROM pg_catalog.pg_proc f
+                JOIN pg_catalog.pg_namespace n ON (f.pronamespace = n.oid)
+                JOIN pg_catalog.pg_language pl ON pl.oid = f.prolang
+                LEFT JOIN pg_catalog.pg_user u ON u.usesysid=f.proowner
+                WHERE f.oid='{$function_oid}'
+        ";
 
         return $this->selectSet($sql);
     }

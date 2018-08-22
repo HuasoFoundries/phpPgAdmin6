@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin;
@@ -284,6 +284,8 @@ class Misc
      * @param mixed  $server_id the id of the server
      *
      * @internal mixed $plaform placeholder that will receive the value of the platform
+     *
+     * @return \PHPPgAdmin\Database\ADOdbBase the database accessor instance
      */
     public function getDatabaseAccessor($database = '', $server_id = null)
     {

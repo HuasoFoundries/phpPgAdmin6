@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Controller;
@@ -119,6 +119,10 @@ class RolesController extends BaseController
                 'field' => Decorator::field('rolname'),
                 'url'   => \SUBFOLDER."/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['rolename' => 'rolname'],
+            ],
+            'group'      => [
+                'title' => $this->lang['strgroup'],
+                'field' => Decorator::field('group'),
             ],
             'superuser'  => [
                 'title' => $this->lang['strsuper'],
