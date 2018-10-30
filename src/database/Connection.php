@@ -27,7 +27,7 @@ class Connection
     protected $server_info;
 
     protected $version_dictionary = [
-	'11'  => 'Postgres11',
+        '11'  => 'Postgres11',
         '10'  => 'Postgres10',
         '9.7' => 'Postgres96',
         '9.6' => 'Postgres96',
@@ -145,7 +145,7 @@ class Connection
 
         $version_parts = explode('.', $version);
 
-        if (in_array($version_parts[0],['10','11'])) {
+        if (in_array($version_parts[0], ['10','11'])) {
             $major_version = $version_parts[0];
         } else {
             $major_version = implode('.', [$version_parts[0], $version_parts[1]]);
