@@ -127,6 +127,39 @@ class SqleditController extends BaseController
         return $default_html;
     }
 
+    private function _getFilters()
+    {
+        $filters = [
+            'SCHEMA'     => ['langkey' => 'strschemas', 'selected' => ''],
+            'TABLE'      => ['langkey' => 'strtables', 'selected' => ''],
+            'VIEW'       => ['langkey' => 'strviews', 'selected' => ''],
+            'SEQUENCE'   => ['langkey' => 'strsequences', 'selected' => ''],
+            'COLUMN'     => ['langkey' => 'strcolumns', 'selected' => ''],
+            'RULE'       => ['langkey' => 'strrules', 'selected' => ''],
+            'INDEX'      => ['langkey' => 'strindexes', 'selected' => ''],
+            'TRIGGER'    => ['langkey' => 'strtriggers', 'selected' => ''],
+            'CONSTRAINT' => ['langkey' => 'strconstraints', 'selected' => ''],
+            'FUNCTION'   => ['langkey' => 'strfunctions', 'selected' => ''],
+            'DOMAIN'     => ['langkey' => 'strdomains', 'selected' => ''],
+        ];
+
+        return $filters;
+    }
+
+    private function _getAdvancedFilters()
+    {
+        $advanced_filters = [
+            'AGGREGATE'  => ['langkey' => 'straggregates', 'selected' => ''],
+            'TYPE'       => ['langkey' => 'strtypes', 'selected' => ''],
+            'OPERATOR'   => ['langkey' => 'stroperators', 'selected' => ''],
+            'OPCLASS'    => ['langkey' => 'stropclasses', 'selected' => ''],
+            'CONVERSION' => ['langkey' => 'strconversions', 'selected' => ''],
+            'LANGUAGE'   => ['langkey' => 'strlanguages', 'selected' => ''],
+        ];
+
+        return $advanced_filters;
+    }
+
     /**
      * Searches for a named database object.
      */
@@ -144,27 +177,28 @@ class SqleditController extends BaseController
         $default_html .= $this->printConnection('find', false);
         $default_html .= '<p><input class="focusme" name="term" id="term" value="'.htmlspecialchars($_REQUEST['term'])."\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />".PHP_EOL;
 
+        $filters          = $this->_getFilters();
+        $advanced_filters = $this->_getAdvancedFilters();
+
+        if (isset($filters[$_REQUEST['filter']])) {
+            $filters[$_REQUEST['filter']]['selected'] = ' selected="selected" ';
+        }
+
+        if (isset($advanced_filters[$_REQUEST['filter']])) {
+            $advanced_filters[$_REQUEST['filter']]['selected'] = ' selected="selected" ';
+        }
+
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
         $default_html .= "<select id='filter' name=\"filter\">".PHP_EOL;
-        $default_html .= "\t<option value=\"\"".('' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strallobjects']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"SCHEMA\"".('SCHEMA' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strschemas']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"TABLE\"".('TABLE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strtables']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"VIEW\"".('VIEW' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strviews']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"SEQUENCE\"".('SEQUENCE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strsequences']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"COLUMN\"".('COLUMN' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strcolumns']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"RULE\"".('RULE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strrules']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"INDEX\"".('INDEX' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strindexes']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"TRIGGER\"".('TRIGGER' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strtriggers']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"CONSTRAINT\"".('CONSTRAINT' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strconstraints']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"FUNCTION\"".('FUNCTION' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strfunctions']}</option>".PHP_EOL;
-        $default_html .= "\t<option value=\"DOMAIN\"".('DOMAIN' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strdomains']}</option>".PHP_EOL;
+        $default_html .= sprintf('%s<option value=""'.('' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strallobjects']}</option>".PHP_EOL, "\t");
+        foreach ($filters as $type => $props) {
+            $default_html .= sprintf('%s<option value="%s"  %s >%s</option>'.PHP_EOL, "\t", $type, $props['selected'], $this->lang[$props['langkey']]);
+        }
+
         if ($this->conf['show_advanced']) {
-            $default_html .= "\t<option value=\"AGGREGATE\"".('AGGREGATE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['straggregates']}</option>".PHP_EOL;
-            $default_html .= "\t<option value=\"TYPE\"".('TYPE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strtypes']}</option>".PHP_EOL;
-            $default_html .= "\t<option value=\"OPERATOR\"".('OPERATOR' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['stroperators']}</option>".PHP_EOL;
-            $default_html .= "\t<option value=\"OPCLASS\"".('OPCLASS' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['stropclasses']}</option>".PHP_EOL;
-            $default_html .= "\t<option value=\"CONVERSION\"".('CONVERSION' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strconversions']}</option>".PHP_EOL;
-            $default_html .= "\t<option value=\"LANGUAGE\"".('LANGUAGE' == $_REQUEST['filter'] ? ' selected="selected" ' : '').">{$this->lang['strlanguages']}</option>".PHP_EOL;
+            foreach ($advanced_filters as $type => $props) {
+                $default_html .= sprintf('%s<option value="%s"  %s >%s</option>'.PHP_EOL, "\t", $type, $props['selected'], $this->lang[$props['langkey']]);
+            }
         }
         $default_html .= '</select>'.PHP_EOL;
 
