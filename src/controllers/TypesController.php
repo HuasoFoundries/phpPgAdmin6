@@ -406,7 +406,6 @@ class TypesController extends BaseController
 
                 break;
             case 2:
-
                 // Check inputs
                 $fields = trim($_REQUEST['fields']);
                 if ('' == trim($_REQUEST['name'])) {
@@ -486,7 +485,6 @@ class TypesController extends BaseController
 
                 break;
             case 3:
-
                 // Check inputs
                 $fields = trim($_REQUEST['fields']);
                 if ('' == trim($_REQUEST['name'])) {
@@ -579,7 +577,6 @@ class TypesController extends BaseController
 
                 break;
             case 2:
-
                 // Check inputs
                 $values = trim($_REQUEST['values']);
                 if ('' == trim($_REQUEST['name'])) {
@@ -627,7 +624,6 @@ class TypesController extends BaseController
 
                 break;
             case 3:
-
                 // Check inputs
                 $values = trim($_REQUEST['values']);
                 if ('' == trim($_REQUEST['name'])) {

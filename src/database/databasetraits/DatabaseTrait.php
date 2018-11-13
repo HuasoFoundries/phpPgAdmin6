@@ -520,7 +520,9 @@ trait DatabaseTrait
             $sql .= " \"{$f_schema}\".\"{$table}\"";
         }
 
-        return $this->execute($sql);
+        $status = $this->execute($sql);
+
+        return [$status, $sql];
     }
 
     /**

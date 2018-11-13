@@ -5,11 +5,7 @@ $version = $composerinfo->version;
 
 $header = "PHPPgAdmin v$version";
 
- 
-        
-$config = PhpCsFixer\Config::create()
-    ->setRiskyAllowed(true)
-    ->setRules([
+$rules=[
         'no_php4_constructor'=>true,
         '@PHP56Migration' => true,
         '@PHPUnit60Migration:risky' => true,
@@ -38,7 +34,7 @@ $config = PhpCsFixer\Config::create()
         'method_chaining_indentation' => true,
         'method_argument_space' => ['ensure_fully_multiline' => true],
         'multiline_comment_opening_closing' => true,
-        'no_extra_blank_lines' => ['tokens' => ['break', 'continue', 'extra', 'return', 'throw', 'use', 'parenthesis_brace_block', 'square_brace_block', 'curly_brace_block']],
+        'no_extra_blank_lines' => ['tokens' => ['break', 'case', 'continue', 'curly_brace_block', 'default', 'extra', 'parenthesis_brace_block', 'return', 'square_brace_block', 'switch', 'throw', 'use', 'useTrait', 'use_trait']],
         'no_null_property_initialization' => true,
         'no_short_echo_tag' => true,
         'no_superfluous_elseif' => true,
@@ -70,7 +66,11 @@ $config = PhpCsFixer\Config::create()
             'align_equals' => true
         ]
 
-    ])
+];
+        
+$config = PhpCsFixer\Config::create()
+    ->setRiskyAllowed(true)
+    ->setRules($rules)
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->in(__DIR__.'/src/classes')
@@ -83,8 +83,8 @@ $config = PhpCsFixer\Config::create()
             ->in(__DIR__.'/src/traits')
             ->in(__DIR__.'/src/database/databasetraits')
             ->in(__DIR__.'/tests')
-    )
-;
+            
+    );
 
 // special handling of fabbot.io service if it's using too old PHP CS Fixer version
 try {

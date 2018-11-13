@@ -50,7 +50,10 @@ if (avoid_bogus_character) {
 				jQuery('.CodeMirror').css('height', (windowsize.height - height_difference));
 			});
 		} else {
-			jQuery('.CodeMirror').resizable();
+			window.setTimeout(function() {
+				jQuery('.CodeMirror').resizable();	
+			},1500)
+			
 		}
 	});
 }

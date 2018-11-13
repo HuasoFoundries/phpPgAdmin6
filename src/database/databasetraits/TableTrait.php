@@ -129,12 +129,12 @@ trait TableTrait
      * Returns the SQL definition for the table.
      * MUST be run within a transaction.
      *
-     * @param string    $table The table to define
-     * @param bool|true $clean True to issue drop command, false otherwise
+     * @param string $table       The table to define
+     * @param string $cleanprefix set to '-- ' to avoid issuing DROP statement
      *
      * @return string A string containing the formatted SQL code
      */
-    public function getTableDefPrefix($table, $clean = false)
+    public function getTableDefPrefix($table, $cleanprefix = '')
     {
         // Fetch table
         $t = $this->getTable($table);
@@ -171,12 +171,7 @@ trait TableTrait
         // Begin CREATE TABLE definition
         $sql .= "-- Definition\n\n";
         // DROP TABLE must be fully qualified in case a table with the same name exists
-        // in pg_catalog.
-        if (!$clean) {
-            $sql .= '-- ';
-        }
-
-        $sql .= 'DROP TABLE ';
+        $sql .= $cleanprefix.'DROP TABLE ';
         $sql .= "\"{$t->fields['nspname']}\".\"{$t->fields['relname']}\";\n";
         $sql .= "CREATE TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" (\n";
 
@@ -397,6 +392,7 @@ trait TableTrait
 
                         break;
                     case 'user':
+                    case 'role':
                         $this->fieldClean($v[1]);
                         $sql .= "\"{$v[1]}\";\n";
 
@@ -439,6 +435,7 @@ trait TableTrait
 
                         break;
                     case 'user':
+                    case 'role':
                         $this->fieldClean($v[1]);
                         $sql .= "\"{$v[1]}\"";
 
@@ -480,15 +477,20 @@ trait TableTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "
+        $sql = '
             SELECT
-              c.relname, n.nspname, u.usename AS relowner,
+              c.relname, n.nspname, ';
+
+        $sql .= ($this->hasRoles() ? ' coalesce(u.usename,r.rolname) ' : ' u.usename')." AS relowner,
               pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
-              (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
+              pt.spcname  AS tablespace
             FROM pg_catalog.pg_class c
+                LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid=c.reltablespace
                  LEFT JOIN pg_catalog.pg_user u ON u.usesysid = c.relowner
-                 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-            WHERE c.relkind = 'r'
+                 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace ";
+
+        $sql .= ($this->hasRoles() ? ' LEFT JOIN pg_catalog.pg_roles r ON c.relowner = r.oid ' : '').
+            " WHERE c.relkind = 'r'
                   AND n.nspname = '{$c_schema}'
                   AND n.oid = c.relnamespace
                   AND c.relname = '{$table}'";
@@ -497,55 +499,68 @@ trait TableTrait
     }
 
     /**
-     * Retrieve the attribute definition of a table.
+     * Retrieve all attributes definition of a table.
      *
-     * @param string $table The name of the table
-     * @param string $field (optional) The name of a field to return
+     * @param string $table    The name of the table
+     * @param string $c_schema The name of the schema
      *
      * @return \PHPPgAdmin\ADORecordSet All attributes in order
      */
-    public function getTableAttributes($table, $field = '')
+    private function _getTableAttributesAll($table, $c_schema)
     {
-        $c_schema = $this->_schema;
-        $this->clean($c_schema);
-        $this->clean($table);
-        $this->clean($field);
+        $sql = "
+            SELECT
+                a.attname,
+                a.attnum,
+                pg_catalog.format_type(a.atttypid, a.atttypmod) AS TYPE,
+                a.atttypmod,
+                a.attnotnull,
+                a.atthasdef,
+                pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, TRUE) AS adsrc,
+                a.attstattarget,
+                a.attstorage,
+                t.typstorage,
+                CASE
+                WHEN pc.oid IS NULL THEN FALSE
+                ELSE TRUE
+                END AS attisserial,
+                pg_catalog.col_description(a.attrelid, a.attnum) AS COMMENT
 
-        if ($field == '') {
-            // This query is made much more complex by the addition of the 'attisserial' field.
-            // The subquery to get that field checks to see if there is an internally dependent
-            // sequence on the field.
-            $sql = "
-                SELECT
-                    a.attname, a.attnum,
-                    pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
-                    a.atttypmod,
-                    a.attnotnull, a.atthasdef, pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true) as adsrc,
-                    a.attstattarget, a.attstorage, t.typstorage,
-                    (
-                        SELECT 1 FROM pg_catalog.pg_depend pd, pg_catalog.pg_class pc
-                        WHERE pd.objid=pc.oid
-                        AND pd.classid=pc.tableoid
-                        AND pd.refclassid=pc.tableoid
-                        AND pd.refobjid=a.attrelid
-                        AND pd.refobjsubid=a.attnum
-                        AND pd.deptype='i'
-                        AND pc.relkind='S'
-                    ) IS NOT NULL AS attisserial,
-                    pg_catalog.col_description(a.attrelid, a.attnum) AS comment
-                FROM
-                    pg_catalog.pg_attribute a LEFT JOIN pg_catalog.pg_attrdef adef
-                    ON a.attrelid=adef.adrelid
-                    AND a.attnum=adef.adnum
-                    LEFT JOIN pg_catalog.pg_type t ON a.atttypid=t.oid
-                WHERE
-                    a.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}'
-                        AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
-                        nspname = '{$c_schema}'))
-                    AND a.attnum > 0 AND NOT a.attisdropped
-                ORDER BY a.attnum";
-        } else {
-            $sql = "
+            FROM pg_catalog.pg_tables tbl
+            JOIN pg_catalog.pg_class tbl_class ON tbl.tablename=tbl_class.relname
+            JOIN  pg_catalog.pg_attribute a ON tbl_class.oid = a.attrelid
+            JOIN pg_catalog.pg_namespace    ON pg_namespace.oid = tbl_class.relnamespace
+                                            AND pg_namespace.nspname=tbl.schemaname
+            LEFT JOIN pg_catalog.pg_attrdef adef    ON a.attrelid=adef.adrelid
+                                                    AND a.attnum=adef.adnum
+            LEFT JOIN pg_catalog.pg_type t  ON a.atttypid=t.oid
+            LEFT JOIN  pg_catalog.pg_depend pd  ON pd.refobjid=a.attrelid
+                                                AND pd.refobjsubid=a.attnum
+                                                AND pd.deptype='i'
+            LEFT JOIN pg_catalog.pg_class pc ON pd.objid=pc.oid
+                                            AND pd.classid=pc.tableoid
+                                            AND pd.refclassid=pc.tableoid
+                                            AND pc.relkind='S'
+            WHERE tbl.tablename='{$table}'
+            AND tbl.schemaname='{$c_schema}'
+            AND a.attnum > 0 AND NOT a.attisdropped
+            ORDER BY a.attnum";
+
+        return $this->selectSet($sql);
+    }
+
+    /**
+     * Retrieve single attribute definition of a table.
+     *
+     * @param string $table    The name of the table
+     * @param string $c_schema The schema of the table
+     * @param string $field    (optional) The name of a field to return
+     *
+     * @return \PHPPgAdmin\ADORecordSet All attributes in order
+     */
+    private function _getTableAttribute($table, $c_schema, $field)
+    {
+        $sql = "
                 SELECT
                     a.attname, a.attnum,
                     pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
@@ -564,9 +579,33 @@ trait TableTrait
                         AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
                         nspname = '{$c_schema}'))
                     AND a.attname = '{$field}'";
-        }
 
         return $this->selectSet($sql);
+    }
+
+    /**
+     * Retrieve the attribute definition of a table.
+     *
+     * @param string $table The name of the table
+     * @param string $field (optional) The name of a field to return
+     *
+     * @return \PHPPgAdmin\ADORecordSet All attributes in order
+     */
+    public function getTableAttributes($table, $field = '')
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $this->clean($table);
+
+        if ($field == '') {
+            // This query is made much more complex by the addition of the 'attisserial' field.
+            // The subquery to get that field checks to see if there is an internally dependent
+            // sequence on the field.
+            return $this->_getTableAttributesAll($table, $c_schema);
+        }
+        $this->clean($field);
+
+        return $this->_getTableAttribute($table, $c_schema, $field);
     }
 
     /**

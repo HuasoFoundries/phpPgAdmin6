@@ -1,12 +1,12 @@
 <?php
+
 /**
- * Single entrypoint of the app
+ * PHPPgAdmin v6.0.0-beta.49
  */
-require_once __DIR__ . '/src/lib.inc.php';
+require_once __DIR__.'/src/lib.inc.php';
 
 // This section is made to be able to parse requests coming from PHP Builtin webserver
 if (PHP_SAPI === 'cli-server') {
-
     //include_once __DIR__ . '/src/cli.router.php';
     $will_redirect = false;
     $req_uri       = $_SERVER['REQUEST_URI'];
@@ -16,37 +16,38 @@ if (PHP_SAPI === 'cli-server') {
         $req_uri       = substr($req_uri, 10);
     }
     $filePath     = realpath(ltrim($req_uri, '/'));
-    $new_location = 'Location: http://' . $_SERVER['HTTP_HOST'] . $req_uri;
+    $new_location = 'Location: http://'.$_SERVER['HTTP_HOST'].$req_uri;
 
     if ($filePath && is_readable($filePath)) {
-
         // 1. check that file is not outside of this directory for security
         // 2. check for circular reference to router.php
         // 3. don't serve dotfiles
 
-        if (strpos($filePath, BASE_PATH . DIRECTORY_SEPARATOR) === 0 &&
-            $filePath != BASE_PATH . DIRECTORY_SEPARATOR . 'index.php' &&
+        if (strpos($filePath, BASE_PATH.DIRECTORY_SEPARATOR) === 0 &&
+            $filePath != BASE_PATH.DIRECTORY_SEPARATOR.'index.php' &&
             substr(basename($filePath), 0, 1) != '.'
         ) {
             if (strtolower(substr($filePath, -4)) == '.php') {
                 // php file; serve through interpreter
                 include $filePath;
+
                 return;
-            } elseif ($will_redirect) {
-                header($new_location, true, 301);
-                return;
-            } else {
-                // asset file; serve from filesystem
-                return false;
             }
+            if ($will_redirect) {
+                header($new_location, true, 301);
+
+                return;
+            }
+            // asset file; serve from filesystem
+            return false;
         }
     }
 }
 
 $app->get('/status', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
+    /* @scrutinizer ignore-unused */$request,
+    /* @scrutinizer ignore-unused */$response,
+    /* @scrutinizer ignore-unused */$args
 ) {
     return $response
         ->withHeader('Content-type', 'application/json')
@@ -54,9 +55,9 @@ $app->get('/status', function (
 });
 
 $app->post('/redirect/server', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
+    /* @scrutinizer ignore-unused */$request,
+    /* @scrutinizer ignore-unused */$response,
+    /* @scrutinizer ignore-unused */$args
 ) {
     $body = $response->getBody();
     $misc = $this->misc;
@@ -64,10 +65,10 @@ $app->post('/redirect/server', function (
     $loginShared   = $request->getParsedBodyParam('loginShared');
     $loginServer   = $request->getParsedBodyParam('loginServer');
     $loginUsername = $request->getParsedBodyParam('loginUsername');
-    $loginPassword = $request->getParsedBodyParam('loginPassword_' . md5($loginServer));
+    $loginPassword = $request->getParsedBodyParam('loginPassword_'.md5($loginServer));
 
     // If login action is set, then set session variables
-    if (boolval($loginServer) && boolval($loginUsername) && $loginPassword !== null) {
+    if ((bool) $loginServer && (bool) $loginUsername && $loginPassword !== null) {
         $_server_info = $this->misc->getServerInfo($loginServer);
 
         $_server_info['username'] = $loginUsername;
@@ -80,6 +81,7 @@ $app->post('/redirect/server', function (
         if ($data === null) {
             $login_controller = new \PHPPgAdmin\Controller\LoginController($this, true);
             $body->write($login_controller->doLoginForm($misc->getErrorMsg()));
+
             return $response;
         }
         // Check for shared credentials
@@ -90,32 +92,33 @@ $app->post('/redirect/server', function (
 
         $misc->setReloadBrowser(true);
         $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
+
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
+    }
+    $_server_info = $this->misc->getServerInfo();
 
-    } else {
-        $_server_info = $this->misc->getServerInfo();
+    if (!isset($_server_info['username'])) {
+        $destinationurl = $this->utils->getDestinationWithLastTab('server');
 
-        if (!isset($_server_info['username'])) {
-            $destinationurl = $this->utils->getDestinationWithLastTab('server');
-            return $response->withStatus(302)->withHeader('Location', $destinationurl);
-        }
+        return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
 });
 
 $app->get('/redirect[/{subject}]', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
+    /* @scrutinizer ignore-unused */$request,
+    /* @scrutinizer ignore-unused */$response,
+    /* @scrutinizer ignore-unused */$args
 ) {
     $subject        = (isset($args['subject'])) ? $args['subject'] : 'root';
     $destinationurl = $this->utils->getDestinationWithLastTab($subject);
+
     return $response->withStatus(302)->withHeader('Location', $destinationurl);
 });
 
 $app->map(['GET', 'POST'], '/src/views/{subject}', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
+    /* @scrutinizer ignore-unused */$request,
+    /* @scrutinizer ignore-unused */$response,
+    /* @scrutinizer ignore-unused */$args
 ) {
     $subject = $args['subject'];
     if ($subject === 'server') {
@@ -127,24 +130,26 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     $safe_subjects = ($subject === 'servers' || $subject === 'intro' || $subject === 'browser');
 
     if ($this->misc->getServerId() === null && !$safe_subjects) {
-        return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/servers');
+        return $response->withStatus(302)->withHeader('Location', SUBFOLDER.'/src/views/servers');
     }
     $_server_info = $this->misc->getServerInfo();
 
     if (!isset($_server_info['username']) && $subject !== 'login' && !$safe_subjects) {
-        $destinationurl = SUBFOLDER . '/src/views/login?server=' . $this->misc->getServerId();
+        $destinationurl = SUBFOLDER.'/src/views/login?server='.$this->misc->getServerId();
+
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
 
-    $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
+    $className  = '\PHPPgAdmin\Controller\\'.ucfirst($subject).'Controller';
     $controller = new $className($this);
+
     return $controller->render();
 });
 
 $app->get('/{subject:\w+}', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
+    /* @scrutinizer ignore-unused */$request,
+    /* @scrutinizer ignore-unused */$response,
+    /* @scrutinizer ignore-unused */$args
 ) {
     $subject      = (isset($args['subject'])) ? $args['subject'] : 'intro';
     $_server_info = $this->misc->getServerInfo();
@@ -165,9 +170,9 @@ $app->get('/{subject:\w+}', function (
 });
 
 $app->get('/', function (
-    /** @scrutinizer ignore-unused */$request,
-    /** @scrutinizer ignore-unused */$response,
-    /** @scrutinizer ignore-unused */$args
+    /* @scrutinizer ignore-unused */$request,
+    /* @scrutinizer ignore-unused */$response,
+    /* @scrutinizer ignore-unused */$args
 ) {
     $subject = 'intro';
 
@@ -177,7 +182,7 @@ $app->get('/', function (
 });
 
 $app->get('[/{path:.*}]', function ($request, $response, $args) {
-    $filepath     = \BASE_PATH . '/' . $args['path'];
+    $filepath     = \BASE_PATH.'/'.$args['path'];
     $query_string = $request->getUri()->getQuery();
 
     $this->utils->dump($query_string, $filepath);

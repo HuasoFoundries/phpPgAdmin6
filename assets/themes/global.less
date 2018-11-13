@@ -8,6 +8,24 @@ html {
 
   body {
 
+
+    &.sql_edit {
+      #sqlform {
+        #queryedition {
+          min-height: 80px;
+
+
+          &>.CodeMirror {
+            min-height: 70px;
+          }
+
+          #query {
+            min-height: 70px;
+          }
+        }
+      }
+    }
+
     &.detailbody {
       padding-top: 90px; //margin-bottom: -90px;
       margin-left: 10px !important;
@@ -20,6 +38,7 @@ html {
           z-index: 50;
           margin-left: -10px;
           z-index: 50;
+
           tbody {
             tr {
               td {
@@ -28,9 +47,11 @@ html {
             }
           }
         }
+
         &#data {
           td {
             white-space: nowrap;
+
             &.opbutton1,
             &.opbutton2,
             &.opbutton3 {
@@ -45,9 +66,11 @@ html {
             }
           }
         }
+
         &.will_be_datatable {
           td {
             white-space: nowrap;
+
             &.opbutton1,
             &.opbutton2,
             &.opbutton3 {
@@ -66,6 +89,7 @@ html {
             }
           }
         }
+
         tr.data1 td.opbutton1 a,
         tr.data2 td.opbutton2 a,
         tr.data3 td.opbutton3 a {
@@ -100,6 +124,7 @@ html {
         }
       }
     }
+
     .navlink {
       li {
         a {
@@ -136,6 +161,7 @@ html {
     }
 
     &.sql_edit {
+
       //padding-top: 35px;
       #flexbox_wrapper {
         height: 100%;
@@ -150,6 +176,7 @@ html {
     &.flexbox_body {
       height: 100%;
       margin: 0;
+
       .flexbox_wrapper {
 
         display: flex;
@@ -168,6 +195,7 @@ html {
           z-index: 80;
           display: none;
         }
+
         &>.detail_container {
           height: 100%;
           width: 100%;
@@ -195,6 +223,7 @@ html {
             float: left;
             width: 100%;
           }
+
           &.ui-resizable {
             width: 300px;
             flex: unset;
@@ -393,6 +422,7 @@ html {
       border-left: 1px dotted #999;
       font-size: smaller;
     }
+
     /** FK browsing **/
     div#root {
       position: absolute;
@@ -417,6 +447,7 @@ html {
     .highlight {
       background-color: #FFFF00;
     }
+
     /** Syntax highlighting **/
     .comment {
       color: #008080
@@ -445,15 +476,18 @@ html {
     form.sqlform {
       float: left;
       width: 100%;
+
       .sqledit_bottom_inputs {
         padding: 1%;
         width: 98%;
         float: left;
+
         p {
 
 
           label {
             float: left;
+
             #paginate {
               position: relative;
               top: 2px;
@@ -501,6 +535,7 @@ html {
     margin: 0; //zoom: 0.9;
     background: white;
     background-color: #ffffff;
+
     .flexbox_wrapper>.detail_container {
       height: 100%;
       width: 100%;
@@ -511,12 +546,15 @@ html {
       flex: 1 1;
       border: 4px red;
     }
+
     .topbar {
       display: none;
     }
+
     .trail {
       display: none;
     }
+
     h2 {
       display: none;
     }

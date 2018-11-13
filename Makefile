@@ -57,6 +57,7 @@ endif
 runcsfixer:
 	@if [ -f ./vendor/bin/php-cs-fixer ]; then \
 	    ./vendor/bin/php-cs-fixer --verbose fix ;\
+	    ./vendor/bin/php-cs-fixer --verbose fix index.php ;\
     else \
         echo -e "$(GREEN)php-cs-fixer$(WHITE) is $(RED)NOT$(WHITE) installed. Install it with $(GREEN)composer require --dev friendsofphp/php-cs-fixer$(WHITE)" ;\
     fi 

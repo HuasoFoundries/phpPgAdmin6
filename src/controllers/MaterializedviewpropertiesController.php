@@ -182,7 +182,6 @@ class MaterializedviewpropertiesController extends BaseController
 
         switch ($_REQUEST['stage']) {
             case 1:
-
                 $this->printTrail('column');
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
@@ -224,7 +223,6 @@ class MaterializedviewpropertiesController extends BaseController
 
                 break;
             case 2:
-
                 // Check inputs
                 if ('' == trim($_REQUEST['field'])) {
                     $_REQUEST['stage'] = 1;
