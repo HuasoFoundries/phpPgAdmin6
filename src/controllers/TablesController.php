@@ -42,7 +42,6 @@ class TablesController extends BaseController
 
         switch ($this->action) {
             case 'create':
-
                 if (isset($_POST['cancel'])) {
                     $this->doDefault();
                 } else {
@@ -515,7 +514,6 @@ class TablesController extends BaseController
 
                 break;
             case 2:
-
                 // Check inputs
                 $fields = trim($_REQUEST['fields']);
                 if ('' == trim($_REQUEST['name'])) {
@@ -636,7 +634,6 @@ class TablesController extends BaseController
 
                 break;
             case 3:
-
                 $this->coalesceArr($_REQUEST, 'notnull', []);
 
                 $this->coalesceArr($_REQUEST, 'uniquekey', []);

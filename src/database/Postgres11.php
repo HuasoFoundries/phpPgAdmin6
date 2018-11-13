@@ -1,13 +1,14 @@
 <?php
+
 /**
  * PHPPgAdmin v6.0.0-beta.49
  */
+
 namespace PHPPgAdmin\Database;
 
 /**
  * @file
  * PostgreSQL 11.x support
- *
  */
 /**
  * Class to add support for Postgres10.

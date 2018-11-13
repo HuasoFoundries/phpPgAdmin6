@@ -27,7 +27,7 @@ class DataimportController extends BaseController
 
         $this->printHeader();
         $this->printTrail('table');
-        $this->printTabs('table', 'import');
+        $tabs = $this->printTabs('table', 'import');
 
         // Default state for XML parser
         $state         = 'XML';
@@ -179,127 +179,129 @@ class DataimportController extends BaseController
         };
 
         // Check that file is specified and is an uploaded file
-        if (isset($_FILES['source']) && is_uploaded_file($_FILES['source']['tmp_name']) && is_readable($_FILES['source']['tmp_name'])) {
-            $fd = fopen($_FILES['source']['tmp_name'], 'rb');
-            // Check that file was opened successfully
-            if (false !== $fd) {
-                $null_array = self::loadNULLArray();
-                $status     = $data->beginTransaction();
-                if (0 != $status) {
-                    $this->halt($this->lang['strimporterror']);
-                }
-
-                // If format is set to 'auto', then determine format automatically from file name
-                if ('auto' == $_REQUEST['format']) {
-                    $extension = substr(strrchr($_FILES['source']['name'], '.'), 1);
-                    switch ($extension) {
-                        case 'csv':
-                            $_REQUEST['format'] = 'csv';
-
-                            break;
-                        case 'txt':
-                            $_REQUEST['format'] = 'tab';
-
-                            break;
-                        case 'xml':
-                            $_REQUEST['format'] = 'xml';
-
-                            break;
-                        default:
-                            $data->rollbackTransaction();
-                            $this->halt($this->lang['strimporterror-fileformat']);
-                    }
-                }
-
-                // Do different import technique depending on file format
-                switch ($_REQUEST['format']) {
-                    case 'csv':
-                    case 'tab':
-                        // XXX: Length of CSV lines limited to 100k
-                        $csv_max_line = 100000;
-                        // Set delimiter to tabs or commas
-                        if ('csv' == $_REQUEST['format']) {
-                            $csv_delimiter = ',';
-                        } else {
-                            $csv_delimiter = "\t";
-                        }
-
-                        // Get first line of field names
-                        $fields = fgetcsv($fd, $csv_max_line, $csv_delimiter);
-                        $row    = 2; //We start on the line AFTER the field names
-                        while ($line = fgetcsv($fd, $csv_max_line, $csv_delimiter)) {
-                            // Build value map
-                            $t_fields = [];
-                            $vars     = [];
-                            $nulls    = [];
-                            $format   = [];
-                            $types    = [];
-                            $i        = 0;
-                            foreach ($fields as $f) {
-                                // Check that there is a column
-                                if (!isset($line[$i])) {
-                                    $this->halt(sprintf($this->lang['strimporterrorline-badcolumnnum'], $row));
-                                }
-                                $t_fields[$i] = $f;
-
-                                // Check for nulls
-                                if (self::determineNull($line[$i], $null_array)) {
-                                    $nulls[$i] = 'on';
-                                }
-                                // Add to value array
-                                $vars[$i] = $line[$i];
-                                // Format is always VALUE
-                                $format[$i] = 'VALUE';
-                                // Type is always text
-                                $types[$i] = 'text';
-                                ++$i;
-                            }
-
-                            $status = $data->insertRow($_REQUEST['table'], $t_fields, $vars, $nulls, $format, $types);
-                            if (0 != $status) {
-                                $data->rollbackTransaction();
-                                $this->halt(sprintf($this->lang['strimporterrorline'], $row));
-                            }
-                            ++$row;
-                        }
-
-                        break;
-                    case 'xml':
-                        $parser = xml_parser_create();
-                        xml_set_element_handler($parser, $_startElement, $_endElement);
-                        xml_set_character_data_handler($parser, $_charHandler);
-
-                        while (!feof($fd)) {
-                            $line = fgets($fd, 4096);
-                            xml_parse($parser, $line);
-                        }
-
-                        xml_parser_free($parser);
-
-                        break;
-                    default:
-                        // Unknown type
-                        $data->rollbackTransaction();
-                        $this->halt($this->lang['strinvalidparam']);
-                }
-
-                $status = $data->endTransaction();
-                if (0 != $status) {
-                    $this->halt($this->lang['strimporterror']);
-                }
-                fclose($fd);
-
-                $this->printMsg($this->lang['strfileimported']);
-            } else {
-                // File could not be opened
-                $this->printMsg($this->lang['strimporterror']);
-            }
-        } else {
+        if (!isset($_FILES['source']) || !is_uploaded_file($_FILES['source']['tmp_name']) || !is_readable($_FILES['source']['tmp_name'])) {
             // Upload went wrong
             $this->printMsg($this->lang['strimporterror-uploadedfile']);
+
+            return $this->printFooter();
+        }
+        $fd = fopen($_FILES['source']['tmp_name'], 'rb');
+        // Check that file was opened successfully
+        if (false === $fd) {
+            // File could not be opened
+            $this->printMsg($this->lang['strimporterror']);
+
+            return $this->printFooter();
+        }
+        $null_array = self::loadNULLArray();
+        $status     = $data->beginTransaction();
+        if (0 != $status) {
+            $this->halt($this->lang['strimporterror']);
         }
 
-        $this->printFooter();
+        // If format is set to 'auto', then determine format automatically from file name
+        if ('auto' == $_REQUEST['format']) {
+            $extension = substr(strrchr($_FILES['source']['name'], '.'), 1);
+            switch ($extension) {
+                case 'csv':
+                    $_REQUEST['format'] = 'csv';
+
+                    break;
+                case 'txt':
+                    $_REQUEST['format'] = 'tab';
+
+                    break;
+                case 'xml':
+                    $_REQUEST['format'] = 'xml';
+
+                    break;
+                default:
+                    $data->rollbackTransaction();
+                    $this->halt($this->lang['strimporterror-fileformat']);
+            }
+        }
+
+        // Do different import technique depending on file format
+        switch ($_REQUEST['format']) {
+            case 'csv':
+            case 'tab':
+                // XXX: Length of CSV lines limited to 100k
+                $csv_max_line = 100000;
+                // Set delimiter to tabs or commas
+                if ('csv' == $_REQUEST['format']) {
+                    $csv_delimiter = ',';
+                } else {
+                    $csv_delimiter = "\t";
+                }
+
+                // Get first line of field names
+                $fields = fgetcsv($fd, $csv_max_line, $csv_delimiter);
+                $row    = 2; //We start on the line AFTER the field names
+                while ($line = fgetcsv($fd, $csv_max_line, $csv_delimiter)) {
+                    // Build value map
+                    $t_fields = [];
+                    $vars     = [];
+                    $nulls    = [];
+                    $format   = [];
+                    $types    = [];
+                    $i        = 0;
+                    foreach ($fields as $f) {
+                        // Check that there is a column
+                        if (!isset($line[$i])) {
+                            $this->halt(sprintf($this->lang['strimporterrorline-badcolumnnum'], $row));
+                        }
+                        $t_fields[$i] = $f;
+
+                        // Check for nulls
+                        if (self::determineNull($line[$i], $null_array)) {
+                            $nulls[$i] = 'on';
+                        }
+                        // Add to value array
+                        $vars[$i] = $line[$i];
+                        // Format is always VALUE
+                        $format[$i] = 'VALUE';
+                        // Type is always text
+                        $types[$i] = 'text';
+                        ++$i;
+                    }
+
+                    $status = $data->insertRow($_REQUEST['table'], $t_fields, $vars, $nulls, $format, $types);
+                    if (0 != $status) {
+                        $data->rollbackTransaction();
+                        $this->halt(sprintf($this->lang['strimporterrorline'], $row));
+                    }
+                    ++$row;
+                }
+
+                break;
+            case 'xml':
+                $parser = xml_parser_create();
+                xml_set_element_handler($parser, $_startElement, $_endElement);
+                xml_set_character_data_handler($parser, $_charHandler);
+
+                while (!feof($fd)) {
+                    $line = fgets($fd, 4096);
+                    xml_parse($parser, $line);
+                }
+
+                xml_parser_free($parser);
+
+                break;
+            default:
+                // Unknown type
+                $data->rollbackTransaction();
+                $this->halt($this->lang['strinvalidparam']);
+        }
+
+        $status = $data->endTransaction();
+        if (0 != $status) {
+            $this->printMsg($this->lang['strimporterror']);
+        }
+        fclose($fd);
+
+        $this->printMsg($this->lang['strfileimported']);
+
+        return $this->printFooter();
     }
 
     public static function loadNULLArray()

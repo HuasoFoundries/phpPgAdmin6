@@ -594,37 +594,38 @@ class TblpropertiesController extends BaseController
         $this->printMsg($msg);
 
         // Check that file uploads are enabled
-        if (ini_get('file_uploads')) {
-            // Don't show upload option if max size of uploads is zero
-            $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
-            if (is_double($max_size) && $max_size > 0) {
-                echo '<form action="'.\SUBFOLDER.'/src/views/dataimport" method="post" enctype="multipart/form-data">'.PHP_EOL;
-                echo '<table>'.PHP_EOL;
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strformat']}</th>".PHP_EOL;
-                echo "\t\t<td><select name=\"format\">".PHP_EOL;
-                echo "\t\t\t<option value=\"auto\">{$this->lang['strauto']}</option>".PHP_EOL;
-                echo "\t\t\t<option value=\"csv\">CSV</option>".PHP_EOL;
-                echo "\t\t\t<option value=\"tab\">{$this->lang['strtabbed']}</option>".PHP_EOL;
-                if (function_exists('xml_parser_create')) {
-                    echo "\t\t\t<option value=\"xml\">XML</option>".PHP_EOL;
-                }
-                echo "\t\t</select></td>\n\t</tr>".PHP_EOL;
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strallowednulls']}</th>".PHP_EOL;
-                echo "\t\t<td><label><input type=\"checkbox\" name=\"allowednulls[0]\" value=\"\\N\" checked=\"checked\" />{$this->lang['strbackslashn']}</label><br />".PHP_EOL;
-                echo "\t\t<label><input type=\"checkbox\" name=\"allowednulls[1]\" value=\"NULL\" />NULL</label><br />".PHP_EOL;
-                echo "\t\t<label><input type=\"checkbox\" name=\"allowednulls[2]\" value=\"\" />{$this->lang['stremptystring']}</label></td>\n\t</tr>".PHP_EOL;
-                echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strfile']}</th>".PHP_EOL;
-                echo "\t\t<td><input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"{$max_size}\" />";
-                echo "<input type=\"file\" name=\"source\" /></td>\n\t</tr>".PHP_EOL;
-                echo '</table>'.PHP_EOL;
-                echo '<p><input type="hidden" name="action" value="import" />'.PHP_EOL;
-                echo $misc->form;
-                echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
-                echo "<input type=\"submit\" value=\"{$this->lang['strimport']}\" /></p>".PHP_EOL;
-                echo '</form>'.PHP_EOL;
-            }
-        } else {
+        if (!ini_get('file_uploads')) {
             echo "<p>{$this->lang['strnouploads']}</p>".PHP_EOL;
+
+            return;
+        }
+        // Don't show upload option if max size of uploads is zero
+        $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
+        if (is_double($max_size) && $max_size > 0) {
+            echo '<form action="'.\SUBFOLDER.'/src/views/dataimport" method="post" enctype="multipart/form-data">'.PHP_EOL;
+            echo '<table>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strformat']}</th>".PHP_EOL;
+            echo "\t\t<td><select name=\"format\">".PHP_EOL;
+            echo "\t\t\t<option value=\"auto\">{$this->lang['strauto']}</option>".PHP_EOL;
+            echo "\t\t\t<option value=\"csv\">CSV</option>".PHP_EOL;
+            echo "\t\t\t<option value=\"tab\">{$this->lang['strtabbed']}</option>".PHP_EOL;
+            if (function_exists('xml_parser_create')) {
+                echo "\t\t\t<option value=\"xml\">XML</option>".PHP_EOL;
+            }
+            echo "\t\t</select></td>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strallowednulls']}</th>".PHP_EOL;
+            echo "\t\t<td><label><input type=\"checkbox\" name=\"allowednulls[0]\" value=\"\\N\" checked=\"checked\" />{$this->lang['strbackslashn']}</label><br />".PHP_EOL;
+            echo "\t\t<label><input type=\"checkbox\" name=\"allowednulls[1]\" value=\"NULL\" />NULL</label><br />".PHP_EOL;
+            echo "\t\t<label><input type=\"checkbox\" name=\"allowednulls[2]\" value=\"\" />{$this->lang['stremptystring']}</label></td>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strfile']}</th>".PHP_EOL;
+            echo "\t\t<td><input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"{$max_size}\" />";
+            echo "<input type=\"file\" name=\"source\" /></td>\n\t</tr>".PHP_EOL;
+            echo '</table>'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="import" />'.PHP_EOL;
+            echo $misc->form;
+            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
+            echo "<input type=\"submit\" value=\"{$this->lang['strimport']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         }
     }
 
@@ -743,7 +744,7 @@ class TblpropertiesController extends BaseController
                 }
                 $this->coalesceArr($_POST, 'length', '');
 
-                $status = $data->addColumn(
+                list($status, $sql) = $data->addColumn(
                     $_POST['table'],
                     $_POST['field'],
                     $_POST['type'],
@@ -755,7 +756,7 @@ class TblpropertiesController extends BaseController
                 );
                 if (0 == $status) {
                     $misc->setReloadBrowser(true);
-                    $this->doDefault($this->lang['strcolumnadded']);
+                    $this->doDefault(sprintf('%s %s %s', $sql, PHP_EOL, $this->lang['strcolumnadded']));
                 } else {
                     $_REQUEST['stage'] = 1;
                     $this->doAddColumn($this->lang['strcolumnaddedbad']);

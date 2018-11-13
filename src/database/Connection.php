@@ -145,7 +145,7 @@ class Connection
 
         $version_parts = explode('.', $version);
 
-        if (in_array($version_parts[0], ['10','11'])) {
+        if (in_array($version_parts[0], ['10', '11'], true)) {
             $major_version = $version_parts[0];
         } else {
             $major_version = implode('.', [$version_parts[0], $version_parts[1]]);

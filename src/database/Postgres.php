@@ -17,7 +17,6 @@ namespace PHPPgAdmin\Database;
 class Postgres extends ADOdbBase
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-
     use \PHPPgAdmin\Database\Traits\AggregateTrait;
     use \PHPPgAdmin\Database\Traits\DatabaseTrait;
     use \PHPPgAdmin\Database\Traits\DomainTrait;

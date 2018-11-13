@@ -12,8 +12,8 @@
 $args = preg_grep('/^-[dhom]/', array_slice($argv, 1), PREG_GREP_INVERT);
 
 // show help
-if (in_array('-h', $argv) || in_array('--help', $argv)) {
-    echo "\nusage: $argv[0] [-o] [-d]\n\n";
+if (in_array('-h', $argv, true) || in_array('--help', $argv, true)) {
+    echo "\nusage: {$argv[0]} [-o] [-d]\n\n";
     echo " -o       : output changes only, don't update file\n";
     echo " -d       : shows a diff of changes that would be made, implies -o\n\n";
     echo " -m       : convert mocks\n\n";
@@ -21,8 +21,8 @@ if (in_array('-h', $argv) || in_array('--help', $argv)) {
 }
 
 // handle diff output
-if (in_array('-d', $argv)) {
-    passthru('php ' . __FILE__ . " $argv[1] -o | diff -u {$argv[1]} -");
+if (in_array('-d', $argv, true)) {
+    passthru('php '.__FILE__." {$argv[1]} -o | diff -u {$argv[1]} -");
     exit(0);
 }
 
@@ -31,7 +31,7 @@ $php = file_get_contents($argv[1]);
 // ----------------------------
 // Convert Mockery
 
-if (in_array('-m', $argv)) {
+if (in_array('-m', $argv, true)) {
     $patterns = [
         '/->setReturn(?:Value|Reference)\((.+?),\s*(.+?)\);/ims' => '->shouldReceive(\1)->andReturn(\2);',
         '/->throwOn\((.+?),(.+?)\);/ims'                         => '->shouldReceive(\1)->andThrow(\2);',
@@ -75,7 +75,7 @@ foreach ($patterns as $from => $to) {
 // ----------------------------
 // Output
 
-if (in_array('-o', $argv)) {
+if (in_array('-o', $argv, true)) {
     echo $php;
 } else {
     if (file_get_contents($argv[1]) != $php) {
