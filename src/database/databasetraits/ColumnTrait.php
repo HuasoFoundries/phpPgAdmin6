@@ -23,7 +23,7 @@ trait ColumnTrait
      * @param mixed  $default The default for the column.  '' for none.
      * @param string $comment comment for the column
      *
-     * @return bool|int 0 success
+     * @return array first element is 0 on success, second element is sql sentence
      */
     public function addColumn($table, $column, $type, $array, $length, $notnull, $default, $comment)
     {
@@ -77,24 +77,26 @@ trait ColumnTrait
 
         $status = $this->beginTransaction();
         if ($status != 0) {
-            return -1;
+            return [-1, $sql];
         }
 
         $status = $this->execute($sql);
         if ($status != 0) {
             $this->rollbackTransaction();
 
-            return -1;
+            return [-1, $sql];
         }
 
         $status = $this->setComment('COLUMN', $column, $table, $comment);
         if ($status != 0) {
             $this->rollbackTransaction();
 
-            return -1;
+            return [-1, $sql];
         }
 
-        return $this->endTransaction();
+        $status = $this->endTransaction();
+
+        return [$status, $sql];
     }
 
     /**

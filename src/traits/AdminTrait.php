@@ -514,28 +514,26 @@ trait AdminTrait
         if (is_array($_REQUEST['table'])) {
             $msg = '';
             foreach ($_REQUEST['table'] as $t) {
-                $status = $data->vacuumDB($t, isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
-                if (0 == $status) {
-                    $msg .= sprintf('%s: %s<br />', htmlentities($t, ENT_QUOTES, 'UTF-8'), $this->lang['strvacuumgood']);
-                } else {
-                    $this->doDefault(sprintf('%s %s%s: %s<br />', $type, $msg, htmlentities($t, ENT_QUOTES, 'UTF-8'), $this->lang['strvacuumbad']));
-
-                    return;
+                list($status, $sql) = $data->vacuumDB($t, isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
+                if (0 !== $status) {
+                    return $this->doDefault(sprintf('%s %s%s: %s<br />', $type, $msg, htmlentities($t, ENT_QUOTES, 'UTF-8'), $this->lang['strvacuumbad']));
                 }
+                $msg .= sprintf('%s%s %s: %s<br />', $sql, PHP_EOL, htmlentities($t, ENT_QUOTES, 'UTF-8'), $this->lang['strvacuumgood']);
             }
             // Everything went fine, back to the Default page....
             $this->misc->setReloadBrowser(true);
-            $this->doDefault($msg);
-        } else {
-            //we must pass table here. When empty, vacuum the whole db
-            $status = $data->vacuumDB($_REQUEST['table'], isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
-            if (0 == $status) {
-                $this->misc->setReloadBrowser(true);
-                $this->doAdmin($type, $this->lang['strvacuumgood']);
-            } else {
-                $this->doAdmin($type, $this->lang['strvacuumbad']);
-            }
+
+            return $this->doDefault($msg);
         }
+        //we must pass table here. When empty, vacuum the whole db
+        list($status, $sql) = $data->vacuumDB($_REQUEST['table'], isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
+        if (0 == $status) {
+            $this->misc->setReloadBrowser(true);
+
+            return $this->doAdmin($type, sprintf('%s%s%s', $sql, PHP_EOL, $this->lang['strvacuumgood']));
+        }
+
+        return $this->doAdmin($type, $this->lang['strvacuumbad']);
     }
 
     /**

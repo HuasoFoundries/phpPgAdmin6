@@ -36,7 +36,7 @@ class DataexportController extends BaseController
         $format = 'N/A';
 
         // force behavior to assume there is no pg_dump in the system
-        $forcemimic = false;
+        $forcemimic = isset($_REQUEST['forcemimic']) ? $_REQUEST['forcemimic'] : false;
 
         // If format is set, then perform the export
         if (!isset($_REQUEST['what'])) {
@@ -89,11 +89,12 @@ class DataexportController extends BaseController
 
                 break;
         }
+        $cleanprefix = $clean ? '' : '-- ';
 
-        return $this->mimicDumpFeature($format, $clean, $oids);
+        return $this->mimicDumpFeature($format, $cleanprefix, $oids);
     }
 
-    protected function mimicDumpFeature($format, $clean, $oids)
+    protected function mimicDumpFeature($format, $cleanprefix, $oids)
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -111,34 +112,8 @@ class DataexportController extends BaseController
 
         // Include application functions
         $this->setNoOutput(true);
-        $clean    = false;
-        $response = $this
-            ->container
-            ->responseobj;
 
-        // Make it do a download, if necessary
-        if ('download' == $_REQUEST['output']) {
-            // Set headers.  MSIE is totally broken for SSL downloading, so
-            // we need to have it download in-place as plain text
-            if (strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])) {
-                $response = $response
-                    ->withHeader('Content-type', 'text/plain');
-            } else {
-                $response = $response
-                    ->withHeader('Content-type', 'application/download');
-
-                if (isset($this->extensions[$format])) {
-                    $ext = $this->extensions[$format];
-                } else {
-                    $ext = 'txt';
-                }
-                $response = $response
-                    ->withHeader('Content-Disposition', 'attachment; filename=dump.'.$ext);
-            }
-        } else {
-            $response = $response
-                ->withHeader('Content-type', 'text/plain');
-        }
+        $response = $this->_getResponse($format);
 
         $this->coalesceArr($_REQUEST, 'query', '');
 
@@ -164,7 +139,7 @@ class DataexportController extends BaseController
 
         // If the dump is not dataonly then dump the structure prefix
         if ('dataonly' != $_REQUEST['what']) {
-            $tabledefprefix = $data->getTableDefPrefix($object, $clean);
+            $tabledefprefix = $data->getTableDefPrefix($object, $cleanprefix);
             $this->prtrace('tabledefprefix', $tabledefprefix);
             echo $tabledefprefix;
         }
@@ -178,12 +153,7 @@ class DataexportController extends BaseController
             $data->conn->setFetchMode(\ADODB_FETCH_NUM);
 
             // Execute the query, if set, otherwise grab all rows from the table
-            if ($object) {
-                $rs = $data->dumpRelation($object, $oids);
-            } else {
-                $rs = $data->conn->Execute($_REQUEST['query']);
-                $this->prtrace('$_REQUEST[query]', $_REQUEST['query']);
-            }
+            $rs = $this->_getRS($data, $object, $oids);
 
             $response = $this->pickFormat($data, $object, $oids, $rs, $format, $response);
         }
@@ -200,7 +170,47 @@ class DataexportController extends BaseController
         return $response;
     }
 
-    public function pickFormat($data, $object, $oids, $rs, $format, $response)
+    private function _getRS($data, $object, $oids)
+    {
+        if ($object) {
+            return $data->dumpRelation($object, $oids);
+        }
+
+        $this->prtrace('$_REQUEST[query]', $_REQUEST['query']);
+
+        return $data->conn->Execute($_REQUEST['query']);
+    }
+
+    private function _getResponse($format)
+    {
+        $response = $this
+            ->container
+            ->responseobj;
+
+        // Make it do a download, if necessary
+        if ('download' !== $_REQUEST['output']) {
+            return $response
+                ->withHeader('Content-type', 'text/plain');
+        }
+        // Set headers.  MSIE is totally broken for SSL downloading, so
+        // we need to have it download in-place as plain text
+        if (strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])) {
+            return $response
+                ->withHeader('Content-type', 'text/plain');
+        }
+        $response = $response
+            ->withHeader('Content-type', 'application/download');
+
+        $ext = 'txt';
+        if (isset($this->extensions[$format])) {
+            $ext = $this->extensions[$format];
+        }
+
+        return $response
+            ->withHeader('Content-Disposition', 'attachment; filename=dump.'.$ext);
+    }
+
+    private function pickFormat($data, $object, $oids, $rs, $format, $response)
     {
         if ('copy' == $format) {
             $this->_mimicCopy($data, $object, $oids, $rs);
@@ -214,9 +224,8 @@ class DataexportController extends BaseController
             $this->_mimicXml($data, $object, $oids, $rs);
         } elseif ('sql' == $format) {
             $this->_mimicSQL($data, $object, $oids, $rs);
-        } else {
-            $this->_csvOrTab($data, $object, $oids, $rs, $format);
         }
+        $this->_csvOrTab($data, $object, $oids, $rs, $format);
 
         return $response;
     }
