@@ -91,7 +91,6 @@ $app->post('/redirect/server', function (
         $misc->setReloadBrowser(true);
         $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
-
     } else {
         $_server_info = $this->misc->getServerInfo();
 
