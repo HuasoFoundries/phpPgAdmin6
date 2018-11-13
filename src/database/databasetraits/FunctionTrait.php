@@ -264,13 +264,13 @@ trait FunctionTrait
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'" . $definition[0] . "'";
+            $sql .= "'".$definition[0]."'";
             if ($definition[1]) {
-                $sql .= ",'" . $definition[1] . "'";
+                $sql .= ",'".$definition[1]."'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'" . $definition . "'";
+            $sql .= "'".$definition."'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
@@ -402,37 +402,6 @@ trait FunctionTrait
         ";
 
         return $this->selectSet($sql);
-    }
-
-    /**
-     * Returns plain definition for a particular function.
-     *
-     * @param int $function_oid
-     *
-     * @return \PHPPgAdmin\ADORecordSet Function definition
-     *
-     */
-    public function getFunctionDef($function_oid)
-    {
-
-        $this->clean($function_oid);
-        $sql = "
-            SELECT
-                f.proname as relname,
-                n.nspname,
-                u.usename AS relowner,
-                 pg_catalog.obj_description(f.oid, 'pg_proc') as relcomment,
-                 (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=f.pronamespace) AS tablespace,
-                pg_get_functiondef(f.oid),
-                pl.lanname AS prolanguage
-                FROM pg_catalog.pg_proc f
-                JOIN pg_catalog.pg_namespace n ON (f.pronamespace = n.oid)
-                JOIN pg_catalog.pg_language pl ON pl.oid = f.prolang
-                LEFT JOIN pg_catalog.pg_user u ON u.usesysid=f.proowner
-                WHERE f.oid='{$function_oid}'
-        ";
-        return $this->selectSet($sql);
-
     }
 
     abstract public function fieldClean(&$str);

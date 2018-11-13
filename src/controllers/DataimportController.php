@@ -184,6 +184,7 @@ class DataimportController extends BaseController
         if (!isset($_FILES['source']) || !is_uploaded_file($_FILES['source']['tmp_name']) || !is_readable($_FILES['source']['tmp_name'])) {
             // Upload went wrong
             $this->printMsg($this->lang['strimporterror-uploadedfile']);
+
             return $this->printFooter();
         }
         $fd = fopen($_FILES['source']['tmp_name'], 'rb');
@@ -191,6 +192,7 @@ class DataimportController extends BaseController
         if (false === $fd) {
             // File could not be opened
             $this->printMsg($this->lang['strimporterror']);
+
             return $this->printFooter();
         }
         $null_array = self::loadNULLArray();

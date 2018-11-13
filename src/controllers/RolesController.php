@@ -117,7 +117,7 @@ class RolesController extends BaseController
             'role'       => [
                 'title' => $this->lang['strrole'],
                 'field' => Decorator::field('rolname'),
-                'url'   => \SUBFOLDER . "/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER."/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
                 'vars'  => ['rolename' => 'rolname'],
             ],
             'group'      => [
@@ -241,81 +241,81 @@ class RolesController extends BaseController
         $this->printTitle($this->lang['strcreaterole'], 'pg.role.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \SUBFOLDER . '/src/views/roles" method="post">' . PHP_EOL;
-        echo '<table>' . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\" style=\"width: 130px\">{$this->lang['strname']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formRolename\" value=\"", htmlspecialchars($_POST['formRolename']), "\" /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input size=\"15\" type=\"password\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconfirm']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input size=\"15\" type=\"password\" name=\"formConfirm\" value=\"", htmlspecialchars($_POST['formConfirm']), "\" /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>" . PHP_EOL;
+        echo '<form action="'.\SUBFOLDER.'/src/views/roles" method="post">'.PHP_EOL;
+        echo '<table>'.PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\" style=\"width: 130px\">{$this->lang['strname']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formRolename\" value=\"", htmlspecialchars($_POST['formRolename']), "\" /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input size=\"15\" type=\"password\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconfirm']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input size=\"15\" type=\"password\" name=\"formConfirm\" value=\"", htmlspecialchars($_POST['formConfirm']), "\" /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
-        (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>" . PHP_EOL;
+        (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
-        (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$this->lang['strcancreaterole']}</label></th>" . PHP_EOL;
+        (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$this->lang['strcancreaterole']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
-        (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$this->lang['strinheritsprivs']}</label></th>" . PHP_EOL;
+        (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$this->lang['strinheritsprivs']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
-        (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$this->lang['strcanlogin']}</label></th>" . PHP_EOL;
+        (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$this->lang['strcanlogin']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
-        (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconnlimit']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input size=\"23\" name=\"formExpires\" value=\"", htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>" . PHP_EOL;
+        (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconnlimit']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input size=\"23\" name=\"formExpires\" value=\"", htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>".PHP_EOL;
 
         $roles = $data->getRoles();
         if ($roles->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmemberof']}</th>" . PHP_EOL;
-            echo "\t\t<td class=\"data\">" . PHP_EOL;
-            echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">' . PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmemberof']}</th>".PHP_EOL;
+            echo "\t\t<td class=\"data\">".PHP_EOL;
+            echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">'.PHP_EOL;
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . PHP_EOL;
+                (in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>'.PHP_EOL;
                 $roles->moveNext();
             }
-            echo "\t\t\t</select>" . PHP_EOL;
-            echo "\t\t</td>\n\t</tr>" . PHP_EOL;
+            echo "\t\t\t</select>".PHP_EOL;
+            echo "\t\t</td>\n\t</tr>".PHP_EOL;
 
             $roles->moveFirst();
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>" . PHP_EOL;
-            echo "\t\t<td class=\"data\">" . PHP_EOL;
-            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">' . PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>".PHP_EOL;
+            echo "\t\t<td class=\"data\">".PHP_EOL;
+            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">'.PHP_EOL;
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . PHP_EOL;
+                (in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>'.PHP_EOL;
                 $roles->moveNext();
             }
-            echo "\t\t\t</select>" . PHP_EOL;
-            echo "\t\t</td>\n\t</tr>" . PHP_EOL;
+            echo "\t\t\t</select>".PHP_EOL;
+            echo "\t\t</td>\n\t</tr>".PHP_EOL;
 
             $roles->moveFirst();
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['stradminmembers']}</th>" . PHP_EOL;
-            echo "\t\t<td class=\"data\">" . PHP_EOL;
-            echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">' . PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['stradminmembers']}</th>".PHP_EOL;
+            echo "\t\t<td class=\"data\">".PHP_EOL;
+            echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">'.PHP_EOL;
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . PHP_EOL;
+                (in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>'.PHP_EOL;
                 $roles->moveNext();
             }
-            echo "\t\t\t</select>" . PHP_EOL;
-            echo "\t\t</td>\n\t</tr>" . PHP_EOL;
+            echo "\t\t\t</select>".PHP_EOL;
+            echo "\t\t</td>\n\t</tr>".PHP_EOL;
         }
 
-        echo '</table>' . PHP_EOL;
-        echo '<p><input type="hidden" name="action" value="save_create" />' . PHP_EOL;
+        echo '</table>'.PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_create" />'.PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . PHP_EOL;
-        echo '</form>' . PHP_EOL;
+        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**
@@ -464,7 +464,7 @@ class RolesController extends BaseController
         $roledata = $data->getRole($_REQUEST['rolename']);
 
         if ($roledata->recordCount() <= 0) {
-            echo "<p>{$this->lang['strnodata']}</p>" . PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
 
             return;
         }
@@ -478,33 +478,33 @@ class RolesController extends BaseController
 
         $this->_adjustPostVars($roledata, $canRename);
 
-        echo '<form action="' . \SUBFOLDER . '/src/views/roles" method="post">' . PHP_EOL;
-        echo '<table>' . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$this->lang['strname']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . htmlspecialchars($_POST['formNewRoleName']) . '" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconfirm']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formConfirm\" value=\"\" /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>" . PHP_EOL;
+        echo '<form action="'.\SUBFOLDER.'/src/views/roles" method="post">'.PHP_EOL;
+        echo '<table>'.PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$this->lang['strname']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"".htmlspecialchars($_POST['formNewRoleName']).'" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formPassword\" value=\"", htmlspecialchars($_POST['formPassword']), "\" /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconfirm']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"password\" size=\"15\" name=\"formConfirm\" value=\"\" /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
-        (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>" . PHP_EOL;
+        (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
-        (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$this->lang['strcancreaterole']}</label></th>" . PHP_EOL;
+        (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateRole\">{$this->lang['strcancreaterole']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
-        (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$this->lang['strinheritsprivs']}</label></th>" . PHP_EOL;
+        (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formInherits\">{$this->lang['strinheritsprivs']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
-        (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$this->lang['strcanlogin']}</label></th>" . PHP_EOL;
+        (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCanLogin\">{$this->lang['strcanlogin']}</label></th>".PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
-        (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconnlimit']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>" . PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>" . PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input size=\"23\" name=\"formExpires\" value=\"", htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>" . PHP_EOL;
+        (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strconnlimit']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input size=\"4\" name=\"formConnLimit\" value=\"", htmlspecialchars($_POST['formConnLimit']), "\" /></td>\n\t</tr>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>".PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input size=\"23\" name=\"formExpires\" value=\"", htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>".PHP_EOL;
 
         $this->_populateMemberof($data);
         $memberofold = implode(',', $_POST['memberof']);
@@ -517,55 +517,55 @@ class RolesController extends BaseController
 
         $roles = $data->getRoles($_REQUEST['rolename']);
         if ($roles->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmemberof']}</th>" . PHP_EOL;
-            echo "\t\t<td class=\"data\">" . PHP_EOL;
-            echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">' . PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmemberof']}</th>".PHP_EOL;
+            echo "\t\t<td class=\"data\">".PHP_EOL;
+            echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">'.PHP_EOL;
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . PHP_EOL;
+                (in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>'.PHP_EOL;
                 $roles->moveNext();
             }
-            echo "\t\t\t</select>" . PHP_EOL;
-            echo "\t\t</td>\n\t</tr>" . PHP_EOL;
+            echo "\t\t\t</select>".PHP_EOL;
+            echo "\t\t</td>\n\t</tr>".PHP_EOL;
 
             $roles->moveFirst();
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>" . PHP_EOL;
-            echo "\t\t<td class=\"data\">" . PHP_EOL;
-            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">' . PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>".PHP_EOL;
+            echo "\t\t<td class=\"data\">".PHP_EOL;
+            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">'.PHP_EOL;
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . PHP_EOL;
+                (in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>'.PHP_EOL;
                 $roles->moveNext();
             }
-            echo "\t\t\t</select>" . PHP_EOL;
-            echo "\t\t</td>\n\t</tr>" . PHP_EOL;
+            echo "\t\t\t</select>".PHP_EOL;
+            echo "\t\t</td>\n\t</tr>".PHP_EOL;
 
             $roles->moveFirst();
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['stradminmembers']}</th>" . PHP_EOL;
-            echo "\t\t<td class=\"data\">" . PHP_EOL;
-            echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">' . PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['stradminmembers']}</th>".PHP_EOL;
+            echo "\t\t<td class=\"data\">".PHP_EOL;
+            echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", min(20, $roles->recordCount()), '">'.PHP_EOL;
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
                 echo "\t\t\t\t<option value=\"{$rolename}\"",
-                (in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . PHP_EOL;
+                (in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>'.PHP_EOL;
                 $roles->moveNext();
             }
-            echo "\t\t\t</select>" . PHP_EOL;
-            echo "\t\t</td>\n\t</tr>" . PHP_EOL;
+            echo "\t\t\t</select>".PHP_EOL;
+            echo "\t\t</td>\n\t</tr>".PHP_EOL;
         }
-        echo '</table>' . PHP_EOL;
+        echo '</table>'.PHP_EOL;
 
-        echo '<p><input type="hidden" name="action" value="save_alter" />' . PHP_EOL;
-        echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), '" />' . PHP_EOL;
-        echo '<input type="hidden" name="memberofold" value="', isset($_POST['memberofold']) ? $_POST['memberofold'] : htmlspecialchars($memberofold), '" />' . PHP_EOL;
-        echo '<input type="hidden" name="membersold" value="', isset($_POST['membersold']) ? $_POST['membersold'] : htmlspecialchars($membersold), '" />' . PHP_EOL;
-        echo '<input type="hidden" name="adminmembersold" value="', isset($_POST['adminmembersold']) ? $_POST['adminmembersold'] : htmlspecialchars($adminmembersold), '" />' . PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_alter" />'.PHP_EOL;
+        echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), '" />'.PHP_EOL;
+        echo '<input type="hidden" name="memberofold" value="', isset($_POST['memberofold']) ? $_POST['memberofold'] : htmlspecialchars($memberofold), '" />'.PHP_EOL;
+        echo '<input type="hidden" name="membersold" value="', isset($_POST['membersold']) ? $_POST['membersold'] : htmlspecialchars($membersold), '" />'.PHP_EOL;
+        echo '<input type="hidden" name="adminmembersold" value="', isset($_POST['adminmembersold']) ? $_POST['adminmembersold'] : htmlspecialchars($adminmembersold), '" />'.PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . PHP_EOL;
-        echo '</form>' . PHP_EOL;
+        echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+        echo '</form>'.PHP_EOL;
     }
 
     /**
@@ -614,15 +614,15 @@ class RolesController extends BaseController
             $this->printTrail('role');
             $this->printTitle($this->lang['strdroprole'], 'pg.role.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdroprole'], $this->misc->printVal($_REQUEST['rolename'])), '</p>' . PHP_EOL;
+            echo '<p>', sprintf($this->lang['strconfdroprole'], $this->misc->printVal($_REQUEST['rolename'])), '</p>'.PHP_EOL;
 
-            echo '<form action="' . \SUBFOLDER . '/src/views/roles" method="post">' . PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="drop" />' . PHP_EOL;
-            echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), '" />' . PHP_EOL;
+            echo '<form action="'.\SUBFOLDER.'/src/views/roles" method="post">'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="drop" />'.PHP_EOL;
+            echo '<input type="hidden" name="rolename" value="', htmlspecialchars($_REQUEST['rolename']), '" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . PHP_EOL;
-            echo '</form>' . PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
+            echo '</form>'.PHP_EOL;
         } else {
             $status = $data->dropRole($_REQUEST['rolename']);
             if (0 == $status) {
@@ -654,60 +654,60 @@ class RolesController extends BaseController
             $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
             $roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
 
-            echo '<table>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data\" style=\"width: 130px\">Description</th>" . PHP_EOL;
-            echo "\t\t<th class=\"data\" style=\"width: 120\">Value</th>\n\t</tr>" . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strname']}</td>" . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", htmlspecialchars($_REQUEST['rolename']), "</td>\n\t</tr>" . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strsuper']}</td>" . PHP_EOL;
-            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolsuper']) ? $this->lang['stryes'] : $this->lang['strno']), "</td>\n\t</tr>" . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strcreatedb']}</td>" . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", (($roledata->fields['rolcreatedb']) ? $this->lang['stryes'] : $this->lang['strno']), '</td>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strcancreaterole']}</td>" . PHP_EOL;
-            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcreaterole']) ? $this->lang['stryes'] : $this->lang['strno']), '</td>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strinheritsprivs']}</td>" . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", (($roledata->fields['rolinherit']) ? $this->lang['stryes'] : $this->lang['strno']), '</td>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strcanlogin']}</td>" . PHP_EOL;
-            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcanlogin']) ? $this->lang['stryes'] : $this->lang['strno']), '</td>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strconnlimit']}</td>" . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $this->lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), '</td>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strexpires']}</td>" . PHP_EOL;
-            echo "\t\t<td class=\"data2\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $this->lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), '</td>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strsessiondefaults']}</td>" . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), '</td>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strmemberof']}</td>" . PHP_EOL;
+            echo '<table>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data\" style=\"width: 130px\">Description</th>".PHP_EOL;
+            echo "\t\t<th class=\"data\" style=\"width: 120\">Value</th>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strname']}</td>".PHP_EOL;
+            echo "\t\t<td class=\"data1\">", htmlspecialchars($_REQUEST['rolename']), "</td>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strsuper']}</td>".PHP_EOL;
+            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolsuper']) ? $this->lang['stryes'] : $this->lang['strno']), "</td>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strcreatedb']}</td>".PHP_EOL;
+            echo "\t\t<td class=\"data1\">", (($roledata->fields['rolcreatedb']) ? $this->lang['stryes'] : $this->lang['strno']), '</td>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strcancreaterole']}</td>".PHP_EOL;
+            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcreaterole']) ? $this->lang['stryes'] : $this->lang['strno']), '</td>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strinheritsprivs']}</td>".PHP_EOL;
+            echo "\t\t<td class=\"data1\">", (($roledata->fields['rolinherit']) ? $this->lang['stryes'] : $this->lang['strno']), '</td>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strcanlogin']}</td>".PHP_EOL;
+            echo "\t\t<td class=\"data2\">", (($roledata->fields['rolcanlogin']) ? $this->lang['stryes'] : $this->lang['strno']), '</td>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strconnlimit']}</td>".PHP_EOL;
+            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $this->lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), '</td>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strexpires']}</td>".PHP_EOL;
+            echo "\t\t<td class=\"data2\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $this->lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), '</td>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strsessiondefaults']}</td>".PHP_EOL;
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), '</td>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['strmemberof']}</td>".PHP_EOL;
             echo "\t\t<td class=\"data2\">";
             $memberof = $data->getMemberOf($_REQUEST['rolename']);
             if ($memberof->recordCount() > 0) {
                 while (!$memberof->EOF) {
-                    echo $this->misc->printVal($memberof->fields['rolname']), '<br />' . PHP_EOL;
+                    echo $this->misc->printVal($memberof->fields['rolname']), '<br />'.PHP_EOL;
                     $memberof->moveNext();
                 }
             }
-            echo "</td>\n\t</tr>" . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strmembers']}</td>" . PHP_EOL;
+            echo "</td>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data1\">{$this->lang['strmembers']}</td>".PHP_EOL;
             echo "\t\t<td class=\"data1\">";
             $members = $data->getMembers($_REQUEST['rolename']);
             if ($members->recordCount() > 0) {
                 while (!$members->EOF) {
-                    echo $this->misc->printVal($members->fields['rolname']), '<br />' . PHP_EOL;
+                    echo $this->misc->printVal($members->fields['rolname']), '<br />'.PHP_EOL;
                     $members->moveNext();
                 }
             }
-            echo "</td>\n\t</tr>" . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['stradminmembers']}</td>" . PHP_EOL;
+            echo "</td>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data2\">{$this->lang['stradminmembers']}</td>".PHP_EOL;
             echo "\t\t<td class=\"data2\">";
             $adminmembers = $data->getMembers($_REQUEST['rolename'], 't');
             if ($adminmembers->recordCount() > 0) {
                 while (!$adminmembers->EOF) {
-                    echo $this->misc->printVal($adminmembers->fields['rolname']), '<br />' . PHP_EOL;
+                    echo $this->misc->printVal($adminmembers->fields['rolname']), '<br />'.PHP_EOL;
                     $adminmembers->moveNext();
                 }
             }
-            echo "</td>\n\t</tr>" . PHP_EOL;
-            echo '</table>' . PHP_EOL;
+            echo "</td>\n\t</tr>".PHP_EOL;
+            echo '</table>'.PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
         }
 
         $navlinks = [
@@ -779,27 +779,27 @@ class RolesController extends BaseController
             $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
             $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-            echo '<table>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data\">{$this->lang['strname']}</th>" . PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strsuper']}</th>" . PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strcreatedb']}</th>" . PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strcancreaterole']}</th>" . PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strinheritsprivs']}</th>" . PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strconnlimit']}</th>" . PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strexpires']}</th>" . PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strsessiondefaults']}</th>" . PHP_EOL;
-            echo "\t</tr>" . PHP_EOL;
-            echo "\t<tr>\n\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolname']), '</td>' . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolsuper'], 'yesno'), '</td>' . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreatedb'], 'yesno'), '</td>' . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreaterole'], 'yesno'), '</td>' . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolinherit'], 'yesno'), '</td>' . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $this->lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), '</td>' . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $this->lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), '</td>' . PHP_EOL;
-            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), '</td>' . PHP_EOL;
-            echo "\t</tr>\n</table>" . PHP_EOL;
+            echo '<table>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data\">{$this->lang['strname']}</th>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strsuper']}</th>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strcreatedb']}</th>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strcancreaterole']}</th>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strinheritsprivs']}</th>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strconnlimit']}</th>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strexpires']}</th>".PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strsessiondefaults']}</th>".PHP_EOL;
+            echo "\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolname']), '</td>'.PHP_EOL;
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolsuper'], 'yesno'), '</td>'.PHP_EOL;
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreatedb'], 'yesno'), '</td>'.PHP_EOL;
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolcreaterole'], 'yesno'), '</td>'.PHP_EOL;
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolinherit'], 'yesno'), '</td>'.PHP_EOL;
+            echo "\t\t<td class=\"data1\">", ('-1' == $roledata->fields['rolconnlimit'] ? $this->lang['strnolimit'] : $this->misc->printVal($roledata->fields['rolconnlimit'])), '</td>'.PHP_EOL;
+            echo "\t\t<td class=\"data1\">", ('infinity' == $roledata->fields['rolvaliduntil'] || is_null($roledata->fields['rolvaliduntil']) ? $this->lang['strnever'] : $this->misc->printVal($roledata->fields['rolvaliduntil'])), '</td>'.PHP_EOL;
+            echo "\t\t<td class=\"data1\">", $this->misc->printVal($roledata->fields['rolconfig']), '</td>'.PHP_EOL;
+            echo "\t</tr>\n</table>".PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
         }
 
         $this->printNavLinks(['changepassword' => [
@@ -838,19 +838,19 @@ class RolesController extends BaseController
 
             $this->coalesceArr($_POST, 'confirm', '');
 
-            echo '<form action="' . \SUBFOLDER . '/src/views/roles" method="post">' . PHP_EOL;
-            echo '<table>' . PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>" . PHP_EOL;
+            echo '<form action="'.\SUBFOLDER.'/src/views/roles" method="post">'.PHP_EOL;
+            echo '<table>'.PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>".PHP_EOL;
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
-            htmlspecialchars($_POST['password']), "\" /></td>\n\t</tr>" . PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strconfirm']}</th>" . PHP_EOL;
-            echo "\t\t<td><input type=\"password\" name=\"confirm\" size=\"32\" value=\"\" /></td>\n\t</tr>" . PHP_EOL;
-            echo '</table>' . PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="changepassword" />' . PHP_EOL;
+            htmlspecialchars($_POST['password']), "\" /></td>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strconfirm']}</th>".PHP_EOL;
+            echo "\t\t<td><input type=\"password\" name=\"confirm\" size=\"32\" value=\"\" /></td>\n\t</tr>".PHP_EOL;
+            echo '</table>'.PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="changepassword" />'.PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"ok\" value=\"{$this->lang['strok']}\" />" . PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . PHP_EOL;
-            echo '</p></form>' . PHP_EOL;
+            echo "<input type=\"submit\" name=\"ok\" value=\"{$this->lang['strok']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+            echo '</p></form>'.PHP_EOL;
         } else {
             // Check that password is minimum length
             if (strlen($_POST['password']) < $this->conf['min_password_length']) {

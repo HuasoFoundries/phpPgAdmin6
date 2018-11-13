@@ -88,7 +88,7 @@ trait MiscTrait
                         'schema'   => $_REQUEST['schema'],
                         'table'    => $_REQUEST['table'],
                         'action'   => 'confselectrows',
-                    ]];
+                    ], ];
 
                 break;
             case 'view':
@@ -184,7 +184,7 @@ trait MiscTrait
                         'server'  => $_REQUEST['server'],
                         'subject' => 'plugin',
                         'plugin'  => $_REQUEST['plugin'],
-                    ]];
+                    ], ];
 
                 if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin']))) {
                     $vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
@@ -196,10 +196,10 @@ trait MiscTrait
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = SUBFOLDER . '/redirect';
+            $vars['url'] = SUBFOLDER.'/redirect';
         }
-        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER.'/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER.'/redirect/'.$vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -218,7 +218,7 @@ trait MiscTrait
         $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
         $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $this->lang['strellipsis'];
         if (strlen($str) > $maxlen) {
-            $str = substr($str, 0, $maxlen - 1) . $ellipsis;
+            $str = substr($str, 0, $maxlen - 1).$ellipsis;
         }
 
         return $str;
@@ -419,12 +419,12 @@ trait MiscTrait
     }
 
     /**
-     * Gets the tabs for root view
+     * Gets the tabs for root view.
      *
-     * @param array  $lang  The language array
-     * @param \PHPPgAdmin\Database\ADOdbBase  $data  The database accesor instance
+     * @param array                          $lang The language array
+     * @param \PHPPgAdmin\Database\ADOdbBase $data The database accesor instance
      *
-     * @return array  The tabs for root view
+     * @return array The tabs for root view
      */
     public function getTabsRoot($lang, $data)
     {
@@ -445,12 +445,12 @@ trait MiscTrait
     }
 
     /**
-     * Gets the tabs for server view
+     * Gets the tabs for server view.
      *
-     * @param array  $lang  The language array
-     * @param \PHPPgAdmin\Database\ADOdbBase  $data  The database accesor instance
+     * @param array                          $lang The language array
+     * @param \PHPPgAdmin\Database\ADOdbBase $data The database accesor instance
      *
-     * @return array  The tabs for server view
+     * @return array The tabs for server view
      */
     public function getTabsServer($lang, $data)
     {
@@ -532,12 +532,12 @@ trait MiscTrait
     }
 
     /**
-     * Gets the tabs for database view
+     * Gets the tabs for database view.
      *
-     * @param array  $lang  The language array
-     * @param \PHPPgAdmin\Database\ADOdbBase  $data  The database accesor instance
+     * @param array                          $lang The language array
+     * @param \PHPPgAdmin\Database\ADOdbBase $data The database accesor instance
      *
-     * @return array  The tabs for database view
+     * @return array The tabs for database view
      */
     public function getTabsDatabase($lang, $data)
     {
@@ -653,7 +653,7 @@ trait MiscTrait
                 'icon'    => 'Views',
             ],
             'matviews'    => [
-                'title'   => 'M ' . $lang['strviews'],
+                'title'   => 'M '.$lang['strviews'],
                 'url'     => 'materializedviews',
                 'urlvars' => ['subject' => 'schema'],
                 'help'    => 'pg.matview',
@@ -1023,7 +1023,7 @@ trait MiscTrait
                 'icon'    => 'Privileges',
             ],
             'show'       => [
-                'title'   => $lang['strshow'] . ' ' . $lang['strdefinition'],
+                'title'   => $lang['strshow'].' '.$lang['strdefinition'],
                 'url'     => 'functions',
                 'urlvars' => [
                     'subject'      => 'function',
@@ -1080,14 +1080,14 @@ trait MiscTrait
         $tabs = [
             'sql'  => [
                 'title'   => $lang['strsql'],
-                'url'     => \SUBFOLDER . '/src/views/sqledit',
+                'url'     => \SUBFOLDER.'/src/views/sqledit',
                 'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
                 'help'    => 'pg.sql',
                 'icon'    => 'SqlEditor',
             ],
             'find' => [
                 'title'   => $lang['strfind'],
-                'url'     => \SUBFOLDER . '/src/views/sqledit',
+                'url'     => \SUBFOLDER.'/src/views/sqledit',
                 'urlvars' => ['action' => 'find', 'subject' => 'schema'],
                 'icon'    => 'Search',
             ],
@@ -1223,51 +1223,6 @@ trait MiscTrait
                 break;
             case 'fulltext':$tabs = $this->getTabsFulltext($lang, $data);
 
-        return $tabs;
-    }
-
-    /**
-     * Retrieve the tab info for a specific tab bar.
-     *
-     * @param string $section the name of the tab bar
-     *
-     * @return array array of tabs
-     */
-    public function getNavTabs($section)
-    {
-        $data           = $this->getDatabaseAccessor();
-        $lang           = $this->lang;
-        $plugin_manager = $this->plugin_manager;
-
-        $hide_advanced = ($this->conf['show_advanced'] === false);
-        $tabs          = [];
-
-        switch ($section) {
-            case 'root':$tabs = $this->getTabsRoot($lang, $data);
-                break;
-            case 'server':$tabs = $this->getTabsServer($lang, $data);
-                break;
-            case 'database':$tabs = $this->getTabsDatabase($lang, $data);
-                break;
-            case 'schema':$tabs = $this->getTabsSchema($lang, $data);
-                break;
-            case 'table':$tabs = $this->getTabsTable($lang, $data);
-                break;
-            case 'view':$tabs = $this->getTabsView($lang, $data);
-                break;
-            case 'matview':$tabs = $this->getTabsMatview($lang, $data);
-                break;
-            case 'function':$tabs = $this->getTabsFunction($lang, $data);
-                break;
-            case 'aggregate':$tabs = $this->getTabsAggregate($lang, $data);
-                break;
-            case 'role':$tabs = $this->getTabsRole($lang, $data);
-                break;
-            case 'popup':$tabs = $this->getTabsPopup($lang, $data);
-                break;
-            case 'column':$tabs = $this->getTabsColumn($lang, $data);
-                break;
-            case 'fulltext':$tabs = $this->getTabsFulltext($lang, $data);
                 break;
         }
 
