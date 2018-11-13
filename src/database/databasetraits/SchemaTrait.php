@@ -33,7 +33,7 @@ trait SchemaTrait
                    pu.rolname AS nspowner,
                    pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment, ";
 
-        if (isset($conf['display_sizes']) && $conf['display_sizes'] === true) {
+        if (isset($this->conf['display_sizes']) && $this->conf['display_sizes'] === true) {
             $sql .= ' pg_size_pretty(SUM(pg_total_relation_size(pg_class.oid))) as schema_size ';
         } else {
             $sql .= " 'N/A' as schema_size ";
