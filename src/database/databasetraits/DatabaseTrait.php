@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -117,7 +117,7 @@ trait DatabaseTrait
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
 
-            $not_in = "('".implode("','", $hiddendbs)."')";
+            $not_in = "('" . implode("','", $hiddendbs) . "')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 
@@ -520,7 +520,8 @@ trait DatabaseTrait
             $sql .= " \"{$f_schema}\".\"{$table}\"";
         }
 
-        return $this->execute($sql);
+        $status = $this->execute($sql);
+        return [$status, $sql];
     }
 
     /**

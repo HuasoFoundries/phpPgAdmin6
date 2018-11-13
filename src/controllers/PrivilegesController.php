@@ -67,6 +67,7 @@ class PrivilegesController extends BaseController
             'table',
             'column',
             'view',
+            'function',
         ], true)) {
             $this->printTabs($subject, 'privileges');
         } else {
@@ -75,14 +76,14 @@ class PrivilegesController extends BaseController
 
         $this->printMsg($msg);
         if (!isset($data->privlist[$subject])) {
-            $this->container->utils->halt('No privileges defined for subject '.$subject);
+            $this->container->utils->halt('No privileges defined for subject ' . $subject);
 
             return;
         }
 
         // Determine whether object should be ref'd by name or oid.
-        if (isset($_REQUEST[$subject.'_oid'])) {
-            $object = $_REQUEST[$subject.'_oid'];
+        if (isset($_REQUEST[$subject . '_oid'])) {
+            $object = $_REQUEST[$subject . '_oid'];
         } else {
             $object = $_REQUEST[$subject];
         }
@@ -95,7 +96,7 @@ class PrivilegesController extends BaseController
         }
 
         if (sizeof($privileges) > 0) {
-            echo '<table>'.PHP_EOL;
+            echo '<table>' . PHP_EOL;
             if ($data->hasRoles()) {
                 echo "<tr><th class=\"data\">{$this->lang['strrole']}</th>";
             } else {
@@ -108,23 +109,23 @@ class PrivilegesController extends BaseController
                     continue;
                 }
 
-                echo "<th class=\"data\">{$v2}</th>".PHP_EOL;
+                echo "<th class=\"data\">{$v2}</th>" . PHP_EOL;
             }
             if ($data->hasGrantOption()) {
                 echo "<th class=\"data\">{$this->lang['strgrantor']}</th>";
             }
-            echo '</tr>'.PHP_EOL;
+            echo '</tr>' . PHP_EOL;
 
             // Loop over privileges, outputting them
             $i = 0;
             foreach ($privileges as $v) {
                 $id = (0 == ($i % 2) ? '1' : '2');
-                echo "<tr class=\"data{$id}\">".PHP_EOL;
+                echo "<tr class=\"data{$id}\">" . PHP_EOL;
                 if (!$data->hasRoles()) {
-                    echo '<td>', $this->misc->printVal($v[0]), '</td>'.PHP_EOL;
+                    echo '<td>', $this->misc->printVal($v[0]), '</td>' . PHP_EOL;
                 }
 
-                echo '<td>', $this->misc->printVal($v[1]), '</td>'.PHP_EOL;
+                echo '<td>', $this->misc->printVal($v[1]), '</td>' . PHP_EOL;
                 foreach ($data->privlist[$subject] as $v2) {
                     // Skip over ALL PRIVILEGES
                     if ('ALL PRIVILEGES' == $v2) {
@@ -143,18 +144,18 @@ class PrivilegesController extends BaseController
                         echo $this->lang['strasterisk'];
                     }
 
-                    echo '</td>'.PHP_EOL;
+                    echo '</td>' . PHP_EOL;
                 }
                 if ($data->hasGrantOption()) {
-                    echo '<td>', $this->misc->printVal($v[3]), '</td>'.PHP_EOL;
+                    echo '<td>', $this->misc->printVal($v[3]), '</td>' . PHP_EOL;
                 }
-                echo '</tr>'.PHP_EOL;
+                echo '</tr>' . PHP_EOL;
                 ++$i;
             }
 
             echo '</table>';
         } else {
-            echo "<p>{$this->lang['strnoprivileges']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnoprivileges']}</p>" . PHP_EOL;
         }
         $this->printGrantLinks();
     }
@@ -194,7 +195,7 @@ class PrivilegesController extends BaseController
         $object = $_REQUEST[$subject];
 
         if ('function' == $subject) {
-            $objectoid = $_REQUEST[$subject.'_oid'];
+            $objectoid = $_REQUEST[$subject . '_oid'];
             $urlvars   = [
                 'action'         => 'alter',
                 'server'         => $_REQUEST['server'],
@@ -299,81 +300,81 @@ class PrivilegesController extends BaseController
 
         $this->printTrail($_REQUEST['subject']);
 
-        $this->printTitle($this->lang['str'.$mode], 'pg.privilege.'.$mode);
+        $this->printTitle($this->lang['str' . $mode], 'pg.privilege.' . $mode);
 
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/privileges" method="post">'.PHP_EOL;
-        echo '<table>'.PHP_EOL;
-        echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>".PHP_EOL;
-        echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), '">'.PHP_EOL;
+        echo '<form action="' . \SUBFOLDER . '/src/views/privileges" method="post">' . PHP_EOL;
+        echo '<table>' . PHP_EOL;
+        echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>" . PHP_EOL;
+        echo '<td class="data1"><select name="username[]" multiple="multiple" size="', min(6, $users->recordCount()), '">' . PHP_EOL;
         while (!$users->EOF) {
             $uname = htmlspecialchars($users->fields['usename']);
             echo "<option value=\"{$uname}\"",
-            in_array($users->fields['usename'], $_REQUEST['username'], true) ? ' selected="selected"' : '', ">{$uname}</option>".PHP_EOL;
+            in_array($users->fields['usename'], $_REQUEST['username'], true) ? ' selected="selected"' : '', ">{$uname}</option>" . PHP_EOL;
             $users->moveNext();
         }
-        echo '</select></td></tr>'.PHP_EOL;
-        echo "<tr><th class=\"data left\">{$this->lang['strgroups']}</th>".PHP_EOL;
-        echo '<td class="data1">'.PHP_EOL;
-        echo '<input type="checkbox" id="public" name="public"', (isset($_REQUEST['public']) ? ' checked="checked"' : ''), ' /><label for="public">PUBLIC</label>'.PHP_EOL;
+        echo '</select></td></tr>' . PHP_EOL;
+        echo "<tr><th class=\"data left\">{$this->lang['strgroups']}</th>" . PHP_EOL;
+        echo '<td class="data1">' . PHP_EOL;
+        echo '<input type="checkbox" id="public" name="public"', (isset($_REQUEST['public']) ? ' checked="checked"' : ''), ' /><label for="public">PUBLIC</label>' . PHP_EOL;
         // Only show groups if there are groups!
         if ($groups->recordCount() > 0) {
-            echo '<br /><select name="groupname[]" multiple="multiple" size="', min(6, $groups->recordCount()), '">'.PHP_EOL;
+            echo '<br /><select name="groupname[]" multiple="multiple" size="', min(6, $groups->recordCount()), '">' . PHP_EOL;
             while (!$groups->EOF) {
                 $gname = htmlspecialchars($groups->fields['groname']);
                 echo "<option value=\"{$gname}\"",
-                in_array($groups->fields['groname'], $_REQUEST['groupname'], true) ? ' selected="selected"' : '', ">{$gname}</option>".PHP_EOL;
+                in_array($groups->fields['groname'], $_REQUEST['groupname'], true) ? ' selected="selected"' : '', ">{$gname}</option>" . PHP_EOL;
                 $groups->moveNext();
             }
-            echo '</select>'.PHP_EOL;
+            echo '</select>' . PHP_EOL;
         }
-        echo '</td></tr>'.PHP_EOL;
-        echo "<tr><th class=\"data left required\">{$this->lang['strprivileges']}</th>".PHP_EOL;
-        echo '<td class="data1">'.PHP_EOL;
+        echo '</td></tr>' . PHP_EOL;
+        echo "<tr><th class=\"data left required\">{$this->lang['strprivileges']}</th>" . PHP_EOL;
+        echo '<td class="data1">' . PHP_EOL;
         foreach ($data->privlist[$_REQUEST['subject']] as $v) {
             $v = htmlspecialchars($v);
             echo "<input type=\"checkbox\" id=\"privilege[${v}]\" name=\"privilege[${v}]\"",
-            isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', " /><label for=\"privilege[${v}]\">{$v}</label><br />".PHP_EOL;
+            isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', " /><label for=\"privilege[${v}]\">{$v}</label><br />" . PHP_EOL;
         }
-        echo '</td></tr>'.PHP_EOL;
+        echo '</td></tr>' . PHP_EOL;
         // Grant option
         if ($data->hasGrantOption()) {
-            echo "<tr><th class=\"data left\">{$this->lang['stroptions']}</th>".PHP_EOL;
-            echo '<td class="data1">'.PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['stroptions']}</th>" . PHP_EOL;
+            echo '<td class="data1">' . PHP_EOL;
             if ('grant' == $mode) {
                 echo '<input type="checkbox" id="grantoption" name="grantoption"',
-                isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', ' /><label for="grantoption">GRANT OPTION</label>'.PHP_EOL;
+                isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', ' /><label for="grantoption">GRANT OPTION</label>' . PHP_EOL;
             } elseif ('revoke' == $mode) {
                 echo '<input type="checkbox" id="grantoption" name="grantoption"',
-                isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', ' /><label for="grantoption">GRANT OPTION FOR</label><br />'.PHP_EOL;
+                isset($_REQUEST['grantoption']) ? ' checked="checked"' : '', ' /><label for="grantoption">GRANT OPTION FOR</label><br />' . PHP_EOL;
                 echo '<input type="checkbox" id="cascade" name="cascade"',
-                isset($_REQUEST['cascade']) ? ' checked="checked"' : '', ' /><label for="cascade">CASCADE</label><br />'.PHP_EOL;
+                isset($_REQUEST['cascade']) ? ' checked="checked"' : '', ' /><label for="cascade">CASCADE</label><br />' . PHP_EOL;
             }
-            echo '</td></tr>'.PHP_EOL;
+            echo '</td></tr>' . PHP_EOL;
         }
-        echo '</table>'.PHP_EOL;
+        echo '</table>' . PHP_EOL;
 
-        echo '<p><input type="hidden" name="action" value="save" />'.PHP_EOL;
-        echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), '" />'.PHP_EOL;
-        echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), '" />'.PHP_EOL;
-        if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-            echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'].'_oid'),
-            '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'].'_oid']), '" />'.PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save" />' . PHP_EOL;
+        echo '<input type="hidden" name="mode" value="', htmlspecialchars($mode), '" />' . PHP_EOL;
+        echo '<input type="hidden" name="subject" value="', htmlspecialchars($_REQUEST['subject']), '" />' . PHP_EOL;
+        if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+            echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject'] . '_oid'),
+            '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject'] . '_oid']), '" />' . PHP_EOL;
         }
 
         echo '<input type="hidden" name="', htmlspecialchars($_REQUEST['subject']),
-        '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject']]), '" />'.PHP_EOL;
+        '" value="', htmlspecialchars($_REQUEST[$_REQUEST['subject']]), '" />' . PHP_EOL;
         if ('column' == $_REQUEST['subject']) {
             echo '<input type="hidden" name="table" value="',
-            htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
+            htmlspecialchars($_REQUEST['table']), '" />' . PHP_EOL;
         }
 
         echo $this->misc->form;
-        echo sprintf('<input type="submit" name="%s" value="%s" />%s', $mode, $this->lang['str'.$mode], PHP_EOL);
+        echo sprintf('<input type="submit" name="%s" value="%s" />%s', $mode, $this->lang['str' . $mode], PHP_EOL);
 
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>";
-        echo '</form>'.PHP_EOL;
+        echo '</form>' . PHP_EOL;
     }
 
     /**
@@ -392,8 +393,8 @@ class PrivilegesController extends BaseController
         $this->coalesceArr($_REQUEST, 'privilege', []);
 
         // Determine whether object should be ref'd by name or oid.
-        if (isset($_REQUEST[$_REQUEST['subject'].'_oid'])) {
-            $object = $_REQUEST[$_REQUEST['subject'].'_oid'];
+        if (isset($_REQUEST[$_REQUEST['subject'] . '_oid'])) {
+            $object = $_REQUEST[$_REQUEST['subject'] . '_oid'];
         } else {
             $object = $_REQUEST[$_REQUEST['subject']];
         }

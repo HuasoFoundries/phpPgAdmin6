@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -23,7 +23,7 @@ trait ColumnTrait
      * @param mixed  $default The default for the column.  '' for none.
      * @param string $comment comment for the column
      *
-     * @return bool|int 0 success
+     * @return array first element is 0 on success, second element is sql sentence
      */
     public function addColumn($table, $column, $type, $array, $length, $notnull, $default, $comment)
     {
@@ -71,30 +71,31 @@ trait ColumnTrait
 
             // DEFAULT clause
             if ($default != '') {
-                $sql .= ' DEFAULT '.$default;
+                $sql .= ' DEFAULT ' . $default;
             }
         }
 
         $status = $this->beginTransaction();
         if ($status != 0) {
-            return -1;
+            return [-1, $sql];
         }
 
         $status = $this->execute($sql);
         if ($status != 0) {
             $this->rollbackTransaction();
 
-            return -1;
+            return [-1, $sql];
         }
 
         $status = $this->setComment('COLUMN', $column, $table, $comment);
         if ($status != 0) {
             $this->rollbackTransaction();
 
-            return -1;
+            return [-1, $sql];
         }
 
-        return $this->endTransaction();
+        $status = $this->endTransaction();
+        return [$status, $sql];
     }
 
     /**
@@ -130,8 +131,9 @@ trait ColumnTrait
         $comment
     ) {
         // Begin transaction
-        $status = $this->beginTransaction();
-        $sql    = '';
+        $status    = $this->beginTransaction();
+        $sql       = '';
+        $sqlrename = '';
         if ($status != 0) {
             $this->rollbackTransaction();
 
@@ -140,7 +142,7 @@ trait ColumnTrait
 
         // Rename the column, if it has been changed
         if ($column != $name) {
-            $status = $this->renameColumn($table, $column, $name);
+            list($status, $sqlrename) = $this->renameColumn($table, $column, $name);
             if ($status != 0) {
                 $this->rollbackTransaction();
 
@@ -157,7 +159,7 @@ trait ColumnTrait
         $toAlter = [];
         // Create the command for changing nullability
         if ($notnull != $oldnotnull) {
-            $toAlter[] = "ALTER COLUMN \"{$name}\" ".($notnull ? 'SET' : 'DROP').' NOT NULL';
+            $toAlter[] = "ALTER COLUMN \"{$name}\" " . ($notnull ? 'SET' : 'DROP') . ' NOT NULL';
         }
 
         // Add default, if it has changed
@@ -206,7 +208,7 @@ trait ColumnTrait
         if (!empty($toAlter)) {
             // Initialise an empty SQL string
             $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" "
-            .implode(',', $toAlter);
+            . implode(',', $toAlter);
 
             $status = $this->execute($sql);
             if ($status != 0) {
@@ -224,7 +226,7 @@ trait ColumnTrait
             return [-5, $sql];
         }
 
-        return [$this->endTransaction(), $sql];
+        return [$this->endTransaction(), $sqlrename . '<br>' . $sql];
     }
 
     /**
@@ -234,7 +236,7 @@ trait ColumnTrait
      * @param string $column  The column to be renamed
      * @param string $newName The new name for the column
      *
-     * @return int 0 if operation was successful
+     * @return array [0 if operation was successful, sql of sentence]
      */
     public function renameColumn($table, $column, $newName)
     {
@@ -246,7 +248,9 @@ trait ColumnTrait
 
         $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" RENAME COLUMN \"{$column}\" TO \"{$newName}\"";
 
-        return $this->execute($sql);
+        $status = $this->execute($sql);
+
+        return [$status, $sql];
     }
 
     /**
@@ -286,7 +290,7 @@ trait ColumnTrait
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" ".($state ? 'DROP' : 'SET').' NOT NULL';
+        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . ($state ? 'DROP' : 'SET') . ' NOT NULL';
 
         return $this->execute($sql);
     }
@@ -312,7 +316,9 @@ trait ColumnTrait
             $sql .= ' CASCADE';
         }
 
-        return $this->execute($sql);
+        $status = $this->execute($sql);
+
+        return [$status, $sql];
     }
 
     /**

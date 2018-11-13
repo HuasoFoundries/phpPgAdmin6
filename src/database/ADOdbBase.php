@@ -177,10 +177,12 @@ class ADOdbBase
     public function execute($sql)
     {
         // Execute the statement
-        $rs = $this->conn->Execute($sql);
-
-        // If failure, return error value
-        return $this->conn->ErrorNo();
+        try {
+            $rs = $this->conn->Execute($sql);
+            return $this->conn->ErrorNo();
+        } catch (\Exception $e) {
+            return $e->getCode();
+        }
     }
 
     /**
@@ -202,13 +204,12 @@ class ADOdbBase
     public function selectSet($sql)
     {
         // Execute the statement
-        $rs = $this->conn->Execute($sql);
-
-        if (!$rs) {
-            return $this->conn->ErrorNo();
+        try {
+            $rs = $this->conn->Execute($sql);
+            return $rs;
+        } catch (\Exception $e) {
+            return $e->getCode();
         }
-
-        return $rs;
     }
 
     /**
@@ -366,7 +367,7 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql .= $fields.$values.')';
+            $sql .= $fields . $values . ')';
         }
 
         // Check for failures
@@ -438,7 +439,7 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
             if (stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;

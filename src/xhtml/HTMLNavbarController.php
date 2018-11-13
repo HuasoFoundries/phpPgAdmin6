@@ -56,7 +56,7 @@ class HTMLNavbarController extends HTMLController
                     'text'    => $schema,
                     'icon'    => $this->misc->icon('Schema'),
                     'iconalt' => $lang['strschema'],
-                    'url'     => str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl.'&schema='.$schema),
+                    'url'     => str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl . '&schema=' . $schema),
                 ];
             }
             $viewVars['search_paths'] = $search_path_crumbs;
@@ -129,6 +129,7 @@ class HTMLNavbarController extends HTMLController
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
             $alltabs                            = $this->misc->getNavTabs($alltabs);
         }
+
         //$this->prtrace($tabs);
         $tabs_html = '';
 
@@ -154,7 +155,7 @@ class HTMLNavbarController extends HTMLController
         //$this->prtrace($tabs);
 
         if (count($tabs) > 0) {
-            $width = (int) (100 / count($tabs)).'%';
+            $width = (int) (100 / count($tabs)) . '%';
 
             $viewVars = [
                 'width'           => $width,
@@ -194,16 +195,16 @@ class HTMLNavbarController extends HTMLController
         $server_id   = $this->misc->getServerId();
         $reqvars     = $this->misc->getRequestVars('table');
 
-        $topbar_html = '<div class="topbar" data-controller="'.$this->controller_name.'"><table style="width: 100%"><tr><td>';
+        $topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><table style="width: 100%"><tr><td>';
 
         if ($server_info && isset($server_info['platform'], $server_info['username'])) {
             // top left informations when connected
             $topbar_html .= sprintf(
                 $lang['strtopbar'],
-                '<span class="platform">'.htmlspecialchars($server_info['platform']).'</span>',
-                '<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']).'</span>',
-                '<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
-                '<span class="username">'.htmlspecialchars($server_info['username']).'</span>'
+                '<span class="platform">' . htmlspecialchars($server_info['platform']) . '</span>',
+                '<span class="host">' . htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']) . '</span>',
+                '<span class="port">' . htmlspecialchars($server_info['port']) . '</span>',
+                '<span class="username">' . htmlspecialchars($server_info['username']) . '</span>'
             );
 
             $topbar_html .= '</td>';
@@ -214,7 +215,7 @@ class HTMLNavbarController extends HTMLController
                 'sql'     => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER.'/src/views/sqledit',
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'sql',
                             ]),
@@ -227,7 +228,7 @@ class HTMLNavbarController extends HTMLController
                 'history' => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER.'/src/views/history',
+                            'url'     => SUBFOLDER . '/src/views/history',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
@@ -239,7 +240,7 @@ class HTMLNavbarController extends HTMLController
                 'find'    => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER.'/src/views/sqledit',
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => array_merge($reqvars, [
                                 'action' => 'find',
                             ]),
@@ -252,7 +253,7 @@ class HTMLNavbarController extends HTMLController
                 'logout'  => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER.'/src/views/servers',
+                            'url'     => SUBFOLDER . '/src/views/servers',
                             'urlvars' => [
                                 'action'       => 'logout',
                                 'logoutServer' => sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
@@ -280,7 +281,7 @@ class HTMLNavbarController extends HTMLController
             $topbar_html .= "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
         }
 
-        $topbar_html .= '</tr></table></div>'.PHP_EOL;
+        $topbar_html .= '</tr></table></div>' . PHP_EOL;
 
         if ($do_print) {
             echo $topbar_html;
@@ -294,7 +295,7 @@ class HTMLNavbarController extends HTMLController
         $vars = $this->misc->getSubjectParams($subject);
         ksort($vars['params']);
 
-        return "{$vars['url']}?".http_build_query($vars['params'], '', '&amp;');
+        return "{$vars['url']}?" . http_build_query($vars['params'], '', '&amp;');
     }
 
     /**
@@ -314,7 +315,7 @@ class HTMLNavbarController extends HTMLController
 
         $trail['root'] = [
             'text' => $appName,
-            'url'  => SUBFOLDER.'/src/views/servers',
+            'url'  => SUBFOLDER . '/src/views/servers',
             'icon' => 'Introduction',
         ];
 
@@ -384,7 +385,7 @@ class HTMLNavbarController extends HTMLController
                 'icon'    => 'View',
             ],
             'matview' => [
-                'title'   => 'M'.$lang['strview'],
+                'title'   => 'M' . $lang['strview'],
                 'subject' => 'matview',
                 'help'    => 'pg.matview',
                 'icon'    => 'MViews',
@@ -438,7 +439,7 @@ class HTMLNavbarController extends HTMLController
         switch ($subject) {
             case 'function':
                 $trail[$subject] = [
-                    'title' => $lang['str'.$subject],
+                    'title' => $lang['str' . $subject],
                     'text'  => $_REQUEST[$subject],
                     'url'   => $this->getHREFSubject('function'),
                     'help'  => 'pg.function',
@@ -494,9 +495,9 @@ class HTMLNavbarController extends HTMLController
                             break;
                     }
                     $trail[$subject] = [
-                        'title' => array_key_exists('str'.$subject, $lang) ? $lang['str'.$subject] : $subject,
+                        'title' => array_key_exists('str' . $subject, $lang) ? $lang['str' . $subject] : $subject,
                         'text'  => $_REQUEST[$subject],
-                        'help'  => 'pg.'.$subject,
+                        'help'  => 'pg.' . $subject,
                         'icon'  => $icon,
                     ];
                 }

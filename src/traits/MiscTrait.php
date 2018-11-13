@@ -88,7 +88,7 @@ trait MiscTrait
                         'schema'   => $_REQUEST['schema'],
                         'table'    => $_REQUEST['table'],
                         'action'   => 'confselectrows',
-                    ], ];
+                    ]];
 
                 break;
             case 'view':
@@ -184,7 +184,7 @@ trait MiscTrait
                         'server'  => $_REQUEST['server'],
                         'subject' => 'plugin',
                         'plugin'  => $_REQUEST['plugin'],
-                    ], ];
+                    ]];
 
                 if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin']))) {
                     $vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
@@ -196,10 +196,10 @@ trait MiscTrait
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = SUBFOLDER.'/redirect';
+            $vars['url'] = SUBFOLDER . '/redirect';
         }
-        if ($vars['url'] == SUBFOLDER.'/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = SUBFOLDER.'/redirect/'.$vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -218,7 +218,7 @@ trait MiscTrait
         $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
         $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $this->lang['strellipsis'];
         if (strlen($str) > $maxlen) {
-            $str = substr($str, 0, $maxlen - 1).$ellipsis;
+            $str = substr($str, 0, $maxlen - 1) . $ellipsis;
         }
 
         return $str;
@@ -419,6 +419,756 @@ trait MiscTrait
     }
 
     /**
+     * Gets the tabs for root view
+     *
+     * @param array  $lang  The language array
+     * @param \PHPPgAdmin\Database\ADOdbBase  $data  The database accesor instance
+     *
+     * @return array  The tabs for root view
+     */
+    public function getTabsRoot($lang, $data)
+    {
+        $tabs = [
+            'intro'   => [
+                'title' => $lang['strintroduction'],
+                'url'   => 'intro',
+                'icon'  => 'Introduction',
+            ],
+            'servers' => [
+                'title' => $lang['strservers'],
+                'url'   => 'servers',
+                'icon'  => 'Servers',
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    /**
+     * Gets the tabs for server view
+     *
+     * @param array  $lang  The language array
+     * @param \PHPPgAdmin\Database\ADOdbBase  $data  The database accesor instance
+     *
+     * @return array  The tabs for server view
+     */
+    public function getTabsServer($lang, $data)
+    {
+        $hide_users = true;
+        $hide_roles = false;
+        if ($data) {
+            $hide_users = !$data->isSuperUser();
+        }
+
+        $tabs = [
+            'databases' => [
+                'title'   => $lang['strdatabases'],
+                'url'     => 'alldb',
+                'urlvars' => ['subject' => 'server'],
+                'help'    => 'pg.database',
+                'icon'    => 'Databases',
+            ],
+            'users'     => [
+                'title'   => $lang['strusers'],
+                'url'     => 'users',
+                'urlvars' => ['subject' => 'server'],
+                'hide'    => $hide_roles,
+                'help'    => 'pg.user',
+                'icon'    => 'Users',
+            ],
+        ];
+
+        if ($data && $data->hasRoles()) {
+            $tabs = array_merge($tabs, [
+                'roles' => [
+                    'title'   => $lang['strroles'],
+                    'url'     => 'roles',
+                    'urlvars' => ['subject' => 'server'],
+                    'hide'    => $hide_roles,
+                    'help'    => 'pg.role',
+                    'icon'    => 'Roles',
+                ],
+            ]);
+        } else {
+            $tabs = array_merge($tabs, [
+                'groups' => [
+                    'title'   => $lang['strgroups'],
+                    'url'     => 'groups',
+                    'urlvars' => ['subject' => 'server'],
+                    'hide'    => $hide_users,
+                    'help'    => 'pg.group',
+                    'icon'    => 'UserGroups',
+                ],
+            ]);
+        }
+
+        $tabs = array_merge($tabs, [
+            'account'     => [
+                'title'   => $lang['straccount'],
+                'url'     => ($data && $data->hasRoles()) ? 'roles' : 'users',
+                'urlvars' => ['subject' => 'server', 'action' => 'account'],
+                'hide'    => !$hide_users,
+                'help'    => 'pg.role',
+                'icon'    => 'User',
+            ],
+            'tablespaces' => [
+                'title'   => $lang['strtablespaces'],
+                'url'     => 'tablespaces',
+                'urlvars' => ['subject' => 'server'],
+                'hide'    => !$data || !$data->hasTablespaces(),
+                'help'    => 'pg.tablespace',
+                'icon'    => 'Tablespaces',
+            ],
+            'export'      => [
+                'title'   => $lang['strexport'],
+                'url'     => 'alldb',
+                'urlvars' => ['subject' => 'server', 'action' => 'export'],
+                'hide'    => !$this->isDumpEnabled(),
+                'icon'    => 'Export',
+            ],
+        ]);
+
+        return $tabs;
+    }
+
+    /**
+     * Gets the tabs for database view
+     *
+     * @param array  $lang  The language array
+     * @param \PHPPgAdmin\Database\ADOdbBase  $data  The database accesor instance
+     *
+     * @return array  The tabs for database view
+     */
+    public function getTabsDatabase($lang, $data)
+    {
+        $hide_advanced = ($this->conf['show_advanced'] === false);
+        $tabs          = [
+            'schemas'    => [
+                'title'   => $lang['strschemas'],
+                'url'     => 'schemas',
+                'urlvars' => ['subject' => 'database'],
+                'help'    => 'pg.schema',
+                'icon'    => 'Schemas',
+            ],
+            'sql'        => [
+                'title'   => $lang['strsql'],
+                'url'     => 'database',
+                'urlvars' => ['subject' => 'database', 'action' => 'sql', 'new' => 1],
+                'help'    => 'pg.sql',
+                'tree'    => false,
+                'icon'    => 'SqlEditor',
+            ],
+            'find'       => [
+                'title'   => $lang['strfind'],
+                'url'     => 'database',
+                'urlvars' => ['subject' => 'database', 'action' => 'find'],
+                'tree'    => false,
+                'icon'    => 'Search',
+            ],
+            'variables'  => [
+                'title'   => $lang['strvariables'],
+                'url'     => 'database',
+                'urlvars' => ['subject' => 'database', 'action' => 'variables'],
+                'help'    => 'pg.variable',
+                'tree'    => false,
+                'icon'    => 'Variables',
+            ],
+            'processes'  => [
+                'title'   => $lang['strprocesses'],
+                'url'     => 'database',
+                'urlvars' => ['subject' => 'database', 'action' => 'processes'],
+                'help'    => 'pg.process',
+                'tree'    => false,
+                'icon'    => 'Processes',
+            ],
+            'locks'      => [
+                'title'   => $lang['strlocks'],
+                'url'     => 'database',
+                'urlvars' => ['subject' => 'database', 'action' => 'locks'],
+                'help'    => 'pg.locks',
+                'tree'    => false,
+                'icon'    => 'Key',
+            ],
+            'admin'      => [
+                'title'   => $lang['stradmin'],
+                'url'     => 'database',
+                'urlvars' => ['subject' => 'database', 'action' => 'admin'],
+                'tree'    => false,
+                'icon'    => 'Admin',
+            ],
+            'privileges' => [
+                'title'   => $lang['strprivileges'],
+                'url'     => 'privileges',
+                'urlvars' => ['subject' => 'database'],
+                'hide'    => !isset($data->privlist['database']),
+                'help'    => 'pg.privilege',
+                'tree'    => false,
+                'icon'    => 'Privileges',
+            ],
+            'languages'  => [
+                'title'   => $lang['strlanguages'],
+                'url'     => 'languages',
+                'urlvars' => ['subject' => 'database'],
+                'hide'    => $hide_advanced,
+                'help'    => 'pg.language',
+                'icon'    => 'Languages',
+            ],
+            'casts'      => [
+                'title'   => $lang['strcasts'],
+                'url'     => 'casts',
+                'urlvars' => ['subject' => 'database'],
+                'hide'    => $hide_advanced,
+                'help'    => 'pg.cast',
+                'icon'    => 'Casts',
+            ],
+            'export'     => [
+                'title'   => $lang['strexport'],
+                'url'     => 'database',
+                'urlvars' => ['subject' => 'database', 'action' => 'export'],
+                'hide'    => !$this->isDumpEnabled(),
+                'tree'    => false,
+                'icon'    => 'Export',
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    public function getTabsSchema($lang, $data)
+    {
+        $hide_advanced = ($this->conf['show_advanced'] === false);
+        $tabs          = [
+            'tables'      => [
+                'title'   => $lang['strtables'],
+                'url'     => 'tables',
+                'urlvars' => ['subject' => 'schema'],
+                'help'    => 'pg.table',
+                'icon'    => 'Tables',
+            ],
+            'views'       => [
+                'title'   => $lang['strviews'],
+                'url'     => 'views',
+                'urlvars' => ['subject' => 'schema'],
+                'help'    => 'pg.view',
+                'icon'    => 'Views',
+            ],
+            'matviews'    => [
+                'title'   => 'M ' . $lang['strviews'],
+                'url'     => 'materializedviews',
+                'urlvars' => ['subject' => 'schema'],
+                'help'    => 'pg.matview',
+                'icon'    => 'MViews',
+            ],
+            'sequences'   => [
+                'title'   => $lang['strsequences'],
+                'url'     => 'sequences',
+                'urlvars' => ['subject' => 'schema'],
+                'help'    => 'pg.sequence',
+                'icon'    => 'Sequences',
+            ],
+            'functions'   => [
+                'title'   => $lang['strfunctions'],
+                'url'     => 'functions',
+                'urlvars' => ['subject' => 'schema'],
+                'help'    => 'pg.function',
+                'icon'    => 'Functions',
+            ],
+            'fulltext'    => [
+                'title'   => $lang['strfulltext'],
+                'url'     => 'fulltext',
+                'urlvars' => ['subject' => 'schema'],
+                'help'    => 'pg.fts',
+                'tree'    => true,
+                'icon'    => 'Fts',
+            ],
+            'domains'     => [
+                'title'   => $lang['strdomains'],
+                'url'     => 'domains',
+                'urlvars' => ['subject' => 'schema'],
+                'help'    => 'pg.domain',
+                'icon'    => 'Domains',
+            ],
+            'aggregates'  => [
+                'title'   => $lang['straggregates'],
+                'url'     => 'aggregates',
+                'urlvars' => ['subject' => 'schema'],
+                'hide'    => $hide_advanced,
+                'help'    => 'pg.aggregate',
+                'icon'    => 'Aggregates',
+            ],
+            'types'       => [
+                'title'   => $lang['strtypes'],
+                'url'     => 'types',
+                'urlvars' => ['subject' => 'schema'],
+                'hide'    => $hide_advanced,
+                'help'    => 'pg.type',
+                'icon'    => 'Types',
+            ],
+            'operators'   => [
+                'title'   => $lang['stroperators'],
+                'url'     => 'operators',
+                'urlvars' => ['subject' => 'schema'],
+                'hide'    => $hide_advanced,
+                'help'    => 'pg.operator',
+                'icon'    => 'Operators',
+            ],
+            'opclasses'   => [
+                'title'   => $lang['stropclasses'],
+                'url'     => 'opclasses',
+                'urlvars' => ['subject' => 'schema'],
+                'hide'    => $hide_advanced,
+                'help'    => 'pg.opclass',
+                'icon'    => 'OperatorClasses',
+            ],
+            'conversions' => [
+                'title'   => $lang['strconversions'],
+                'url'     => 'conversions',
+                'urlvars' => ['subject' => 'schema'],
+                'hide'    => $hide_advanced,
+                'help'    => 'pg.conversion',
+                'icon'    => 'Conversions',
+            ],
+            'privileges'  => [
+                'title'   => $lang['strprivileges'],
+                'url'     => 'privileges',
+                'urlvars' => ['subject' => 'schema'],
+                'help'    => 'pg.privilege',
+                'tree'    => false,
+                'icon'    => 'Privileges',
+            ],
+            'export'      => [
+                'title'   => $lang['strexport'],
+                'url'     => 'schemas',
+                'urlvars' => ['subject' => 'schema', 'action' => 'export'],
+                'hide'    => !$this->isDumpEnabled(),
+                'tree'    => false,
+                'icon'    => 'Export',
+            ],
+        ];
+        if (!$data->hasFTS()) {
+            unset($tabs['fulltext']);
+        }
+
+        return $tabs;
+    }
+
+    public function getTabsTable($lang, $data)
+    {
+        $tabs = [
+            'columns'     => [
+                'title'   => $lang['strcolumns'],
+                'url'     => 'tblproperties',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+                'icon'    => 'Columns',
+                'branch'  => true,
+            ],
+            'browse'      => [
+                'title'   => $lang['strbrowse'],
+                'icon'    => 'Columns',
+                'url'     => 'display',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+                'return'  => 'table',
+                'branch'  => true,
+            ],
+            'select'      => [
+                'title'   => $lang['strselect'],
+                'icon'    => 'Search',
+                'url'     => 'tables',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'confselectrows'],
+                'help'    => 'pg.sql.select',
+            ],
+            'insert'      => [
+                'title'   => $lang['strinsert'],
+                'url'     => 'tables',
+                'urlvars' => [
+                    'action' => 'confinsertrow',
+                    'table'  => Decorator::field('table'),
+                ],
+                'help'    => 'pg.sql.insert',
+                'icon'    => 'Operator',
+            ],
+            'indexes'     => [
+                'title'   => $lang['strindexes'],
+                'url'     => 'indexes',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+                'help'    => 'pg.index',
+                'icon'    => 'Indexes',
+                'branch'  => true,
+            ],
+            'constraints' => [
+                'title'   => $lang['strconstraints'],
+                'url'     => 'constraints',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+                'help'    => 'pg.constraint',
+                'icon'    => 'Constraints',
+                'branch'  => true,
+            ],
+            'triggers'    => [
+                'title'   => $lang['strtriggers'],
+                'url'     => 'triggers',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+                'help'    => 'pg.trigger',
+                'icon'    => 'Triggers',
+                'branch'  => true,
+            ],
+            'rules'       => [
+                'title'   => $lang['strrules'],
+                'url'     => 'rules',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+                'help'    => 'pg.rule',
+                'icon'    => 'Rules',
+                'branch'  => true,
+            ],
+            'admin'       => [
+                'title'   => $lang['stradmin'],
+                'url'     => 'tables',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'admin'],
+                'icon'    => 'Admin',
+            ],
+            'info'        => [
+                'title'   => $lang['strinfo'],
+                'url'     => 'info',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+                'icon'    => 'Statistics',
+            ],
+            'privileges'  => [
+                'title'   => $lang['strprivileges'],
+                'url'     => 'privileges',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
+                'help'    => 'pg.privilege',
+                'icon'    => 'Privileges',
+            ],
+            'import'      => [
+                'title'   => $lang['strimport'],
+                'url'     => 'tblproperties',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'import'],
+                'icon'    => 'Import',
+                'hide'    => false,
+            ],
+            'export'      => [
+                'title'   => $lang['strexport'],
+                'url'     => 'tblproperties',
+                'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'export'],
+                'icon'    => 'Export',
+                'hide'    => false,
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    public function getTabsView($lang, $data)
+    {
+        $tabs = [
+            'columns'    => [
+                'title'   => $lang['strcolumns'],
+                'url'     => 'viewproperties',
+                'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
+                'icon'    => 'Columns',
+                'branch'  => true,
+            ],
+            'browse'     => [
+                'title'   => $lang['strbrowse'],
+                'icon'    => 'Columns',
+                'url'     => 'display',
+                'urlvars' => [
+                    'action'  => 'confselectrows',
+                    'return'  => 'schema',
+                    'subject' => 'view',
+                    'view'    => Decorator::field('view'),
+                ],
+                'branch'  => true,
+            ],
+            'select'     => [
+                'title'   => $lang['strselect'],
+                'icon'    => 'Search',
+                'url'     => 'views',
+                'urlvars' => ['action' => 'confselectrows', 'view' => Decorator::field('view')],
+                'help'    => 'pg.sql.select',
+            ],
+            'definition' => [
+                'title'   => $lang['strdefinition'],
+                'url'     => 'viewproperties',
+                'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'definition'],
+                'icon'    => 'Definition',
+            ],
+            'rules'      => [
+                'title'   => $lang['strrules'],
+                'url'     => 'rules',
+                'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
+                'help'    => 'pg.rule',
+                'icon'    => 'Rules',
+                'branch'  => true,
+            ],
+            'privileges' => [
+                'title'   => $lang['strprivileges'],
+                'url'     => 'privileges',
+                'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
+                'help'    => 'pg.privilege',
+                'icon'    => 'Privileges',
+            ],
+            'export'     => [
+                'title'   => $lang['strexport'],
+                'url'     => 'viewproperties',
+                'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'export'],
+                'icon'    => 'Export',
+                'hide'    => false,
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    public function getTabsMatview($lang, $data)
+    {
+        $tabs = [
+            'columns'    => [
+                'title'   => $lang['strcolumns'],
+                'url'     => 'materializedviewproperties',
+                'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+                'icon'    => 'Columns',
+                'branch'  => true,
+            ],
+            'browse'     => [
+                'title'   => $lang['strbrowse'],
+                'icon'    => 'Columns',
+                'url'     => 'display',
+                'urlvars' => [
+                    'action'  => 'confselectrows',
+                    'return'  => 'schema',
+                    'subject' => 'matview',
+                    'matview' => Decorator::field('matview'),
+                ],
+                'branch'  => true,
+            ],
+            'select'     => [
+                'title'   => $lang['strselect'],
+                'icon'    => 'Search',
+                'url'     => 'materializedviews',
+                'urlvars' => ['action' => 'confselectrows', 'matview' => Decorator::field('matview')],
+                'help'    => 'pg.sql.select',
+            ],
+            'definition' => [
+                'title'   => $lang['strdefinition'],
+                'url'     => 'materializedviewproperties',
+                'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'definition'],
+                'icon'    => 'Definition',
+            ],
+            'indexes'    => [
+                'title'   => $lang['strindexes'],
+                'url'     => 'indexes',
+                'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+                'help'    => 'pg.index',
+                'icon'    => 'Indexes',
+                'branch'  => true,
+            ],
+            /*'constraints' => [
+            'title' => $lang['strconstraints'],
+            'url' => 'constraints',
+            'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+            'help' => 'pg.constraint',
+            'icon' => 'Constraints',
+            'branch' => true,
+             */
+
+            'rules'      => [
+                'title'   => $lang['strrules'],
+                'url'     => 'rules',
+                'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+                'help'    => 'pg.rule',
+                'icon'    => 'Rules',
+                'branch'  => true,
+            ],
+            'privileges' => [
+                'title'   => $lang['strprivileges'],
+                'url'     => 'privileges',
+                'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
+                'help'    => 'pg.privilege',
+                'icon'    => 'Privileges',
+            ],
+            'export'     => [
+                'title'   => $lang['strexport'],
+                'url'     => 'materializedviewproperties',
+                'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'export'],
+                'icon'    => 'Export',
+                'hide'    => false,
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    public function getTabsFunction($lang, $data)
+    {
+        $tabs = [
+            'definition' => [
+                'title'   => $lang['strdefinition'],
+                'url'     => 'functions',
+                'urlvars' => [
+                    'subject'      => 'function',
+                    'function'     => Decorator::field('function'),
+                    'function_oid' => Decorator::field('function_oid'),
+                    'action'       => 'properties',
+                ],
+                'icon'    => 'Definition',
+            ],
+            'privileges' => [
+                'title'   => $lang['strprivileges'],
+                'url'     => 'privileges',
+                'urlvars' => [
+                    'subject'      => 'function',
+                    'function'     => Decorator::field('function'),
+                    'function_oid' => Decorator::field('function_oid'),
+                ],
+                'icon'    => 'Privileges',
+            ],
+            'show'       => [
+                'title'   => $lang['strshow'] . ' ' . $lang['strdefinition'],
+                'url'     => 'functions',
+                'urlvars' => [
+                    'subject'      => 'function',
+                    'function'     => Decorator::field('function'),
+                    'function_oid' => Decorator::field('function_oid'),
+                    'action'       => 'show',
+                ],
+                'icon'    => 'Search',
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    public function getTabsAggregate($lang, $data)
+    {
+        $tabs = [
+            'definition' => [
+                'title'   => $lang['strdefinition'],
+                'url'     => 'aggregates',
+                'urlvars' => [
+                    'subject'  => 'aggregate',
+                    'aggrname' => Decorator::field('aggrname'),
+                    'aggrtype' => Decorator::field('aggrtype'),
+                    'action'   => 'properties',
+                ],
+                'icon'    => 'Definition',
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    public function getTabsRole($lang, $data)
+    {
+        $tabs = [
+            'definition' => [
+                'title'   => $lang['strdefinition'],
+                'url'     => 'roles',
+                'urlvars' => [
+                    'subject'  => 'role',
+                    'rolename' => Decorator::field('rolename'),
+                    'action'   => 'properties',
+                ],
+                'icon'    => 'Definition',
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    public function getTabsPopup($lang, $data)
+    {
+        $tabs = [
+            'sql'  => [
+                'title'   => $lang['strsql'],
+                'url'     => \SUBFOLDER . '/src/views/sqledit',
+                'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
+                'help'    => 'pg.sql',
+                'icon'    => 'SqlEditor',
+            ],
+            'find' => [
+                'title'   => $lang['strfind'],
+                'url'     => \SUBFOLDER . '/src/views/sqledit',
+                'urlvars' => ['action' => 'find', 'subject' => 'schema'],
+                'icon'    => 'Search',
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    public function getTabsColumn($lang, $data)
+    {
+        $tabs = [
+            'properties' => [
+                'title'   => $lang['strcolprop'],
+                'url'     => 'colproperties',
+                'urlvars' => [
+                    'subject' => 'column',
+                    'table'   => Decorator::field('table'),
+                    'view'    => Decorator::field('view'),
+                    'column'  => Decorator::field('column'),
+                ],
+                'icon'    => 'Column',
+            ],
+            'privileges' => [
+                'title'   => $lang['strprivileges'],
+                'url'     => 'privileges',
+                'urlvars' => [
+                    'subject' => 'column',
+                    'table'   => Decorator::field('table'),
+                    'view'    => Decorator::field('view'),
+                    'column'  => Decorator::field('column'),
+                ],
+                'help'    => 'pg.privilege',
+                'icon'    => 'Privileges',
+            ],
+        ];
+        if (empty($tabs['properties']['urlvars']['table'])) {
+            unset($tabs['properties']['urlvars']['table']);
+        }
+        if (empty($tabs['privileges']['urlvars']['table'])) {
+            unset($tabs['privileges']['urlvars']['table']);
+        }
+
+        return $tabs;
+    }
+
+    public function getTabsFulltext($lang, $data)
+    {
+        $tabs = [
+            'ftsconfigs' => [
+                'title'   => $lang['strftstabconfigs'],
+                'url'     => 'fulltext',
+                'urlvars' => ['subject' => 'schema'],
+                'hide'    => !$data->hasFTS(),
+                'help'    => 'pg.ftscfg',
+                'tree'    => true,
+                'icon'    => 'FtsCfg',
+            ],
+            'ftsdicts'   => [
+                'title'   => $lang['strftstabdicts'],
+                'url'     => 'fulltext',
+                'urlvars' => ['subject' => 'schema', 'action' => 'viewdicts'],
+                'hide'    => !$data->hasFTS(),
+                'help'    => 'pg.ftsdict',
+                'tree'    => true,
+                'icon'    => 'FtsDict',
+            ],
+            'ftsparsers' => [
+                'title'   => $lang['strftstabparsers'],
+                'url'     => 'fulltext',
+                'urlvars' => ['subject' => 'schema', 'action' => 'viewparsers'],
+                'hide'    => !$data->hasFTS(),
+                'help'    => 'pg.ftsparser',
+                'tree'    => true,
+                'icon'    => 'FtsParser',
+            ],
+        ];
+
+        return $tabs;
+    }
+
+    /**
      * Retrieve the tab info for a specific tab bar.
      *
      * @param string $section the name of the tab bar
@@ -435,686 +1185,31 @@ trait MiscTrait
         $tabs          = [];
 
         switch ($section) {
-            case 'root':
-                $tabs = [
-                    'intro'   => [
-                        'title' => $lang['strintroduction'],
-                        'url'   => 'intro',
-                        'icon'  => 'Introduction',
-                    ],
-                    'servers' => [
-                        'title' => $lang['strservers'],
-                        'url'   => 'servers',
-                        'icon'  => 'Servers',
-                    ],
-                ];
-
+            case 'root':$tabs = $this->getTabsRoot($lang, $data);
                 break;
-            case 'server':
-                $hide_users = true;
-                $hide_roles = false;
-                if ($data) {
-                    $hide_users = !$data->isSuperUser();
-                }
-
-                $tabs = [
-                    'databases' => [
-                        'title'   => $lang['strdatabases'],
-                        'url'     => 'alldb',
-                        'urlvars' => ['subject' => 'server'],
-                        'help'    => 'pg.database',
-                        'icon'    => 'Databases',
-                    ],
-                ];
-                if ($data && $data->hasRoles()) {
-                    $tabs = array_merge($tabs, [
-                        'users' => [
-                            'title'   => $lang['strusers'],
-                            'url'     => 'users',
-                            'urlvars' => ['subject' => 'server'],
-                            'hide'    => $hide_roles,
-                            'help'    => 'pg.user',
-                            'icon'    => 'Users',
-                        ],
-                        'roles' => [
-                            'title'   => $lang['strroles'],
-                            'url'     => 'roles',
-                            'urlvars' => ['subject' => 'server'],
-                            'hide'    => $hide_roles,
-                            'help'    => 'pg.role',
-                            'icon'    => 'Roles',
-                        ],
-                    ]);
-                } else {
-                    $tabs = array_merge($tabs, [
-                        'users'  => [
-                            'title'   => $lang['strusers'],
-                            'url'     => 'users',
-                            'urlvars' => ['subject' => 'server'],
-                            'hide'    => $hide_users,
-                            'help'    => 'pg.user',
-                            'icon'    => 'Users',
-                        ],
-                        'groups' => [
-                            'title'   => $lang['strgroups'],
-                            'url'     => 'groups',
-                            'urlvars' => ['subject' => 'server'],
-                            'hide'    => $hide_users,
-                            'help'    => 'pg.group',
-                            'icon'    => 'UserGroups',
-                        ],
-                    ]);
-                }
-
-                $tabs = array_merge($tabs, [
-                    'account'     => [
-                        'title'   => $lang['straccount'],
-                        'url'     => ($data && $data->hasRoles()) ? 'roles' : 'users',
-                        'urlvars' => ['subject' => 'server', 'action' => 'account'],
-                        'hide'    => !$hide_users,
-                        'help'    => 'pg.role',
-                        'icon'    => 'User',
-                    ],
-                    'tablespaces' => [
-                        'title'   => $lang['strtablespaces'],
-                        'url'     => 'tablespaces',
-                        'urlvars' => ['subject' => 'server'],
-                        'hide'    => !$data || !$data->hasTablespaces(),
-                        'help'    => 'pg.tablespace',
-                        'icon'    => 'Tablespaces',
-                    ],
-                    'export'      => [
-                        'title'   => $lang['strexport'],
-                        'url'     => 'alldb',
-                        'urlvars' => ['subject' => 'server', 'action' => 'export'],
-                        'hide'    => !$this->isDumpEnabled(),
-                        'icon'    => 'Export',
-                    ],
-                ]);
-
+            case 'server':$tabs = $this->getTabsServer($lang, $data);
                 break;
-            case 'database':
-                $tabs = [
-                    'schemas'    => [
-                        'title'   => $lang['strschemas'],
-                        'url'     => 'schemas',
-                        'urlvars' => ['subject' => 'database'],
-                        'help'    => 'pg.schema',
-                        'icon'    => 'Schemas',
-                    ],
-                    'sql'        => [
-                        'title'   => $lang['strsql'],
-                        'url'     => 'database',
-                        'urlvars' => ['subject' => 'database', 'action' => 'sql', 'new' => 1],
-                        'help'    => 'pg.sql',
-                        'tree'    => false,
-                        'icon'    => 'SqlEditor',
-                    ],
-                    'find'       => [
-                        'title'   => $lang['strfind'],
-                        'url'     => 'database',
-                        'urlvars' => ['subject' => 'database', 'action' => 'find'],
-                        'tree'    => false,
-                        'icon'    => 'Search',
-                    ],
-                    'variables'  => [
-                        'title'   => $lang['strvariables'],
-                        'url'     => 'database',
-                        'urlvars' => ['subject' => 'database', 'action' => 'variables'],
-                        'help'    => 'pg.variable',
-                        'tree'    => false,
-                        'icon'    => 'Variables',
-                    ],
-                    'processes'  => [
-                        'title'   => $lang['strprocesses'],
-                        'url'     => 'database',
-                        'urlvars' => ['subject' => 'database', 'action' => 'processes'],
-                        'help'    => 'pg.process',
-                        'tree'    => false,
-                        'icon'    => 'Processes',
-                    ],
-                    'locks'      => [
-                        'title'   => $lang['strlocks'],
-                        'url'     => 'database',
-                        'urlvars' => ['subject' => 'database', 'action' => 'locks'],
-                        'help'    => 'pg.locks',
-                        'tree'    => false,
-                        'icon'    => 'Key',
-                    ],
-                    'admin'      => [
-                        'title'   => $lang['stradmin'],
-                        'url'     => 'database',
-                        'urlvars' => ['subject' => 'database', 'action' => 'admin'],
-                        'tree'    => false,
-                        'icon'    => 'Admin',
-                    ],
-                    'privileges' => [
-                        'title'   => $lang['strprivileges'],
-                        'url'     => 'privileges',
-                        'urlvars' => ['subject' => 'database'],
-                        'hide'    => !isset($data->privlist['database']),
-                        'help'    => 'pg.privilege',
-                        'tree'    => false,
-                        'icon'    => 'Privileges',
-                    ],
-                    'languages'  => [
-                        'title'   => $lang['strlanguages'],
-                        'url'     => 'languages',
-                        'urlvars' => ['subject' => 'database'],
-                        'hide'    => $hide_advanced,
-                        'help'    => 'pg.language',
-                        'icon'    => 'Languages',
-                    ],
-                    'casts'      => [
-                        'title'   => $lang['strcasts'],
-                        'url'     => 'casts',
-                        'urlvars' => ['subject' => 'database'],
-                        'hide'    => $hide_advanced,
-                        'help'    => 'pg.cast',
-                        'icon'    => 'Casts',
-                    ],
-                    'export'     => [
-                        'title'   => $lang['strexport'],
-                        'url'     => 'database',
-                        'urlvars' => ['subject' => 'database', 'action' => 'export'],
-                        'hide'    => !$this->isDumpEnabled(),
-                        'tree'    => false,
-                        'icon'    => 'Export',
-                    ],
-                ];
-
+            case 'database':$tabs = $this->getTabsDatabase($lang, $data);
                 break;
-            case 'schema':
-                $tabs = [
-                    'tables'      => [
-                        'title'   => $lang['strtables'],
-                        'url'     => 'tables',
-                        'urlvars' => ['subject' => 'schema'],
-                        'help'    => 'pg.table',
-                        'icon'    => 'Tables',
-                    ],
-                    'views'       => [
-                        'title'   => $lang['strviews'],
-                        'url'     => 'views',
-                        'urlvars' => ['subject' => 'schema'],
-                        'help'    => 'pg.view',
-                        'icon'    => 'Views',
-                    ],
-                    'matviews'    => [
-                        'title'   => 'M '.$lang['strviews'],
-                        'url'     => 'materializedviews',
-                        'urlvars' => ['subject' => 'schema'],
-                        'help'    => 'pg.matview',
-                        'icon'    => 'MViews',
-                    ],
-                    'sequences'   => [
-                        'title'   => $lang['strsequences'],
-                        'url'     => 'sequences',
-                        'urlvars' => ['subject' => 'schema'],
-                        'help'    => 'pg.sequence',
-                        'icon'    => 'Sequences',
-                    ],
-                    'functions'   => [
-                        'title'   => $lang['strfunctions'],
-                        'url'     => 'functions',
-                        'urlvars' => ['subject' => 'schema'],
-                        'help'    => 'pg.function',
-                        'icon'    => 'Functions',
-                    ],
-                    'fulltext'    => [
-                        'title'   => $lang['strfulltext'],
-                        'url'     => 'fulltext',
-                        'urlvars' => ['subject' => 'schema'],
-                        'help'    => 'pg.fts',
-                        'tree'    => true,
-                        'icon'    => 'Fts',
-                    ],
-                    'domains'     => [
-                        'title'   => $lang['strdomains'],
-                        'url'     => 'domains',
-                        'urlvars' => ['subject' => 'schema'],
-                        'help'    => 'pg.domain',
-                        'icon'    => 'Domains',
-                    ],
-                    'aggregates'  => [
-                        'title'   => $lang['straggregates'],
-                        'url'     => 'aggregates',
-                        'urlvars' => ['subject' => 'schema'],
-                        'hide'    => $hide_advanced,
-                        'help'    => 'pg.aggregate',
-                        'icon'    => 'Aggregates',
-                    ],
-                    'types'       => [
-                        'title'   => $lang['strtypes'],
-                        'url'     => 'types',
-                        'urlvars' => ['subject' => 'schema'],
-                        'hide'    => $hide_advanced,
-                        'help'    => 'pg.type',
-                        'icon'    => 'Types',
-                    ],
-                    'operators'   => [
-                        'title'   => $lang['stroperators'],
-                        'url'     => 'operators',
-                        'urlvars' => ['subject' => 'schema'],
-                        'hide'    => $hide_advanced,
-                        'help'    => 'pg.operator',
-                        'icon'    => 'Operators',
-                    ],
-                    'opclasses'   => [
-                        'title'   => $lang['stropclasses'],
-                        'url'     => 'opclasses',
-                        'urlvars' => ['subject' => 'schema'],
-                        'hide'    => $hide_advanced,
-                        'help'    => 'pg.opclass',
-                        'icon'    => 'OperatorClasses',
-                    ],
-                    'conversions' => [
-                        'title'   => $lang['strconversions'],
-                        'url'     => 'conversions',
-                        'urlvars' => ['subject' => 'schema'],
-                        'hide'    => $hide_advanced,
-                        'help'    => 'pg.conversion',
-                        'icon'    => 'Conversions',
-                    ],
-                    'privileges'  => [
-                        'title'   => $lang['strprivileges'],
-                        'url'     => 'privileges',
-                        'urlvars' => ['subject' => 'schema'],
-                        'help'    => 'pg.privilege',
-                        'tree'    => false,
-                        'icon'    => 'Privileges',
-                    ],
-                    'export'      => [
-                        'title'   => $lang['strexport'],
-                        'url'     => 'schemas',
-                        'urlvars' => ['subject' => 'schema', 'action' => 'export'],
-                        'hide'    => !$this->isDumpEnabled(),
-                        'tree'    => false,
-                        'icon'    => 'Export',
-                    ],
-                ];
-                if (!$data->hasFTS()) {
-                    unset($tabs['fulltext']);
-                }
-
+            case 'schema':$tabs = $this->getTabsSchema($lang, $data);
                 break;
-            case 'table':
-                $tabs = [
-                    'columns'     => [
-                        'title'   => $lang['strcolumns'],
-                        'url'     => 'tblproperties',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-                        'icon'    => 'Columns',
-                        'branch'  => true,
-                    ],
-                    'browse'      => [
-                        'title'   => $lang['strbrowse'],
-                        'icon'    => 'Columns',
-                        'url'     => 'display',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-                        'return'  => 'table',
-                        'branch'  => true,
-                    ],
-                    'select'      => [
-                        'title'   => $lang['strselect'],
-                        'icon'    => 'Search',
-                        'url'     => 'tables',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'confselectrows'],
-                        'help'    => 'pg.sql.select',
-                    ],
-                    'insert'      => [
-                        'title'   => $lang['strinsert'],
-                        'url'     => 'tables',
-                        'urlvars' => [
-                            'action' => 'confinsertrow',
-                            'table'  => Decorator::field('table'),
-                        ],
-                        'help'    => 'pg.sql.insert',
-                        'icon'    => 'Operator',
-                    ],
-                    'indexes'     => [
-                        'title'   => $lang['strindexes'],
-                        'url'     => 'indexes',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-                        'help'    => 'pg.index',
-                        'icon'    => 'Indexes',
-                        'branch'  => true,
-                    ],
-                    'constraints' => [
-                        'title'   => $lang['strconstraints'],
-                        'url'     => 'constraints',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-                        'help'    => 'pg.constraint',
-                        'icon'    => 'Constraints',
-                        'branch'  => true,
-                    ],
-                    'triggers'    => [
-                        'title'   => $lang['strtriggers'],
-                        'url'     => 'triggers',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-                        'help'    => 'pg.trigger',
-                        'icon'    => 'Triggers',
-                        'branch'  => true,
-                    ],
-                    'rules'       => [
-                        'title'   => $lang['strrules'],
-                        'url'     => 'rules',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-                        'help'    => 'pg.rule',
-                        'icon'    => 'Rules',
-                        'branch'  => true,
-                    ],
-                    'admin'       => [
-                        'title'   => $lang['stradmin'],
-                        'url'     => 'tables',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'admin'],
-                        'icon'    => 'Admin',
-                    ],
-                    'info'        => [
-                        'title'   => $lang['strinfo'],
-                        'url'     => 'info',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-                        'icon'    => 'Statistics',
-                    ],
-                    'privileges'  => [
-                        'title'   => $lang['strprivileges'],
-                        'url'     => 'privileges',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table')],
-                        'help'    => 'pg.privilege',
-                        'icon'    => 'Privileges',
-                    ],
-                    'import'      => [
-                        'title'   => $lang['strimport'],
-                        'url'     => 'tblproperties',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'import'],
-                        'icon'    => 'Import',
-                        'hide'    => false,
-                    ],
-                    'export'      => [
-                        'title'   => $lang['strexport'],
-                        'url'     => 'tblproperties',
-                        'urlvars' => ['subject' => 'table', 'table' => Decorator::field('table'), 'action' => 'export'],
-                        'icon'    => 'Export',
-                        'hide'    => false,
-                    ],
-                ];
-
+            case 'table':$tabs = $this->getTabsTable($lang, $data);
                 break;
-            case 'view':
-                $tabs = [
-                    'columns'    => [
-                        'title'   => $lang['strcolumns'],
-                        'url'     => 'viewproperties',
-                        'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
-                        'icon'    => 'Columns',
-                        'branch'  => true,
-                    ],
-                    'browse'     => [
-                        'title'   => $lang['strbrowse'],
-                        'icon'    => 'Columns',
-                        'url'     => 'display',
-                        'urlvars' => [
-                            'action'  => 'confselectrows',
-                            'return'  => 'schema',
-                            'subject' => 'view',
-                            'view'    => Decorator::field('view'),
-                        ],
-                        'branch'  => true,
-                    ],
-                    'select'     => [
-                        'title'   => $lang['strselect'],
-                        'icon'    => 'Search',
-                        'url'     => 'views',
-                        'urlvars' => ['action' => 'confselectrows', 'view' => Decorator::field('view')],
-                        'help'    => 'pg.sql.select',
-                    ],
-                    'definition' => [
-                        'title'   => $lang['strdefinition'],
-                        'url'     => 'viewproperties',
-                        'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'definition'],
-                        'icon'    => 'Definition',
-                    ],
-                    'rules'      => [
-                        'title'   => $lang['strrules'],
-                        'url'     => 'rules',
-                        'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
-                        'help'    => 'pg.rule',
-                        'icon'    => 'Rules',
-                        'branch'  => true,
-                    ],
-                    'privileges' => [
-                        'title'   => $lang['strprivileges'],
-                        'url'     => 'privileges',
-                        'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view')],
-                        'help'    => 'pg.privilege',
-                        'icon'    => 'Privileges',
-                    ],
-                    'export'     => [
-                        'title'   => $lang['strexport'],
-                        'url'     => 'viewproperties',
-                        'urlvars' => ['subject' => 'view', 'view' => Decorator::field('view'), 'action' => 'export'],
-                        'icon'    => 'Export',
-                        'hide'    => false,
-                    ],
-                ];
-
+            case 'view':$tabs = $this->getTabsView($lang, $data);
                 break;
-            case 'matview':
-                $tabs = [
-                    'columns'    => [
-                        'title'   => $lang['strcolumns'],
-                        'url'     => 'materializedviewproperties',
-                        'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
-                        'icon'    => 'Columns',
-                        'branch'  => true,
-                    ],
-                    'browse'     => [
-                        'title'   => $lang['strbrowse'],
-                        'icon'    => 'Columns',
-                        'url'     => 'display',
-                        'urlvars' => [
-                            'action'  => 'confselectrows',
-                            'return'  => 'schema',
-                            'subject' => 'matview',
-                            'matview' => Decorator::field('matview'),
-                        ],
-                        'branch'  => true,
-                    ],
-                    'select'     => [
-                        'title'   => $lang['strselect'],
-                        'icon'    => 'Search',
-                        'url'     => 'materializedviews',
-                        'urlvars' => ['action' => 'confselectrows', 'matview' => Decorator::field('matview')],
-                        'help'    => 'pg.sql.select',
-                    ],
-                    'definition' => [
-                        'title'   => $lang['strdefinition'],
-                        'url'     => 'materializedviewproperties',
-                        'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'definition'],
-                        'icon'    => 'Definition',
-                    ],
-                    'indexes'    => [
-                        'title'   => $lang['strindexes'],
-                        'url'     => 'indexes',
-                        'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
-                        'help'    => 'pg.index',
-                        'icon'    => 'Indexes',
-                        'branch'  => true,
-                    ],
-                    /*'constraints' => [
-                    'title' => $lang['strconstraints'],
-                    'url' => 'constraints',
-                    'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
-                    'help' => 'pg.constraint',
-                    'icon' => 'Constraints',
-                    'branch' => true,
-                     */
-
-                    'rules'      => [
-                        'title'   => $lang['strrules'],
-                        'url'     => 'rules',
-                        'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
-                        'help'    => 'pg.rule',
-                        'icon'    => 'Rules',
-                        'branch'  => true,
-                    ],
-                    'privileges' => [
-                        'title'   => $lang['strprivileges'],
-                        'url'     => 'privileges',
-                        'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview')],
-                        'help'    => 'pg.privilege',
-                        'icon'    => 'Privileges',
-                    ],
-                    'export'     => [
-                        'title'   => $lang['strexport'],
-                        'url'     => 'materializedviewproperties',
-                        'urlvars' => ['subject' => 'matview', 'matview' => Decorator::field('matview'), 'action' => 'export'],
-                        'icon'    => 'Export',
-                        'hide'    => false,
-                    ],
-                ];
-
+            case 'matview':$tabs = $this->getTabsMatview($lang, $data);
                 break;
-            case 'function':
-                $tabs = [
-                    'definition' => [
-                        'title'   => $lang['strdefinition'],
-                        'url'     => 'functions',
-                        'urlvars' => [
-                            'subject'      => 'function',
-                            'function'     => Decorator::field('function'),
-                            'function_oid' => Decorator::field('function_oid'),
-                            'action'       => 'properties',
-                        ],
-                        'icon'    => 'Definition',
-                    ],
-                    'privileges' => [
-                        'title'   => $lang['strprivileges'],
-                        'url'     => 'privileges',
-                        'urlvars' => [
-                            'subject'      => 'function',
-                            'function'     => Decorator::field('function'),
-                            'function_oid' => Decorator::field('function_oid'),
-                        ],
-                        'icon'    => 'Privileges',
-                    ],
-                ];
-
+            case 'function':$tabs = $this->getTabsFunction($lang, $data);
                 break;
-            case 'aggregate':
-                $tabs = [
-                    'definition' => [
-                        'title'   => $lang['strdefinition'],
-                        'url'     => 'aggregates',
-                        'urlvars' => [
-                            'subject'  => 'aggregate',
-                            'aggrname' => Decorator::field('aggrname'),
-                            'aggrtype' => Decorator::field('aggrtype'),
-                            'action'   => 'properties',
-                        ],
-                        'icon'    => 'Definition',
-                    ],
-                ];
-
+            case 'aggregate':$tabs = $this->getTabsAggregate($lang, $data);
                 break;
-            case 'role':
-                $tabs = [
-                    'definition' => [
-                        'title'   => $lang['strdefinition'],
-                        'url'     => 'roles',
-                        'urlvars' => [
-                            'subject'  => 'role',
-                            'rolename' => Decorator::field('rolename'),
-                            'action'   => 'properties',
-                        ],
-                        'icon'    => 'Definition',
-                    ],
-                ];
-
+            case 'role':$tabs = $this->getTabsRole($lang, $data);
                 break;
-            case 'popup':
-                $tabs = [
-                    'sql'  => [
-                        'title'   => $lang['strsql'],
-                        'url'     => \SUBFOLDER.'/src/views/sqledit',
-                        'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
-                        'help'    => 'pg.sql',
-                        'icon'    => 'SqlEditor',
-                    ],
-                    'find' => [
-                        'title'   => $lang['strfind'],
-                        'url'     => \SUBFOLDER.'/src/views/sqledit',
-                        'urlvars' => ['action' => 'find', 'subject' => 'schema'],
-                        'icon'    => 'Search',
-                    ],
-                ];
-
+            case 'popup':$tabs = $this->getTabsPopup($lang, $data);
                 break;
-            case 'column':
-                $tabs = [
-                    'properties' => [
-                        'title'   => $lang['strcolprop'],
-                        'url'     => 'colproperties',
-                        'urlvars' => [
-                            'subject' => 'column',
-                            'table'   => Decorator::field('table'),
-                            'view'    => Decorator::field('view'),
-                            'column'  => Decorator::field('column'),
-                        ],
-                        'icon'    => 'Column',
-                    ],
-                    'privileges' => [
-                        'title'   => $lang['strprivileges'],
-                        'url'     => 'privileges',
-                        'urlvars' => [
-                            'subject' => 'column',
-                            'table'   => Decorator::field('table'),
-                            'view'    => Decorator::field('view'),
-                            'column'  => Decorator::field('column'),
-                        ],
-                        'help'    => 'pg.privilege',
-                        'icon'    => 'Privileges',
-                    ],
-                ];
-                if (empty($tabs['properties']['urlvars']['table'])) {
-                    unset($tabs['properties']['urlvars']['table']);
-                }
-                if (empty($tabs['privileges']['urlvars']['table'])) {
-                    unset($tabs['privileges']['urlvars']['table']);
-                }
-
+            case 'column':$tabs = $this->getTabsColumn($lang, $data);
                 break;
-            case 'fulltext':
-                $tabs = [
-                    'ftsconfigs' => [
-                        'title'   => $lang['strftstabconfigs'],
-                        'url'     => 'fulltext',
-                        'urlvars' => ['subject' => 'schema'],
-                        'hide'    => !$data->hasFTS(),
-                        'help'    => 'pg.ftscfg',
-                        'tree'    => true,
-                        'icon'    => 'FtsCfg',
-                    ],
-                    'ftsdicts'   => [
-                        'title'   => $lang['strftstabdicts'],
-                        'url'     => 'fulltext',
-                        'urlvars' => ['subject' => 'schema', 'action' => 'viewdicts'],
-                        'hide'    => !$data->hasFTS(),
-                        'help'    => 'pg.ftsdict',
-                        'tree'    => true,
-                        'icon'    => 'FtsDict',
-                    ],
-                    'ftsparsers' => [
-                        'title'   => $lang['strftstabparsers'],
-                        'url'     => 'fulltext',
-                        'urlvars' => ['subject' => 'schema', 'action' => 'viewparsers'],
-                        'hide'    => !$data->hasFTS(),
-                        'help'    => 'pg.ftsparser',
-                        'tree'    => true,
-                        'icon'    => 'FtsParser',
-                    ],
-                ];
-
+            case 'fulltext':$tabs = $this->getTabsFulltext($lang, $data);
                 break;
         }
 
