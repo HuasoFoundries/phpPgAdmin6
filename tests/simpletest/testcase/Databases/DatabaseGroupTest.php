@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.49
+ * PHPPgAdmin v6.0.0-beta.50
  */
 require_once 'DatabaseTest.php';
 require_once 'SqlTest.php';
