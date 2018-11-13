@@ -117,7 +117,7 @@ trait DatabaseTrait
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
 
-            $not_in = "('".implode("','", $hiddendbs)."')";
+            $not_in = "('" . implode("','", $hiddendbs) . "')";
             $clause .= " AND pdb.datname NOT IN {$not_in} ";
         }
 
@@ -496,7 +496,7 @@ trait DatabaseTrait
      * @param bool   $full    If true, selects "full" vacuum
      * @param bool   $freeze  If true, selects aggressive "freezing" of tuples
      *
-     * @return bool 0 if successful
+     * @return array result status and sql sentence
      */
     public function vacuumDB($table = '', $analyze = false, $full = false, $freeze = false)
     {

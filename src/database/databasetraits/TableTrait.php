@@ -163,7 +163,7 @@ trait TableTrait
         }
 
         // Output a reconnect command to create the table as the correct user
-        $sql = $this->getChangeUserSQL($t->fields['relowner'])."\n\n";
+        $sql = $this->getChangeUserSQL($t->fields['relowner']) . "\n\n";
 
         // Set schema search path
         $sql .= "SET search_path = \"{$t->fields['nspname']}\", pg_catalog;\n\n";
@@ -171,7 +171,7 @@ trait TableTrait
         // Begin CREATE TABLE definition
         $sql .= "-- Definition\n\n";
         // DROP TABLE must be fully qualified in case a table with the same name exists
-        $sql .= $cleanprefix.'DROP TABLE ';
+        $sql .= $cleanprefix . 'DROP TABLE ';
         $sql .= "\"{$t->fields['nspname']}\".\"{$t->fields['relname']}\";\n";
         $sql .= "CREATE TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" (\n";
 
@@ -191,7 +191,7 @@ trait TableTrait
                     $sql .= ' BIGSERIAL';
                 }
             } else {
-                $sql .= ' '.$this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
+                $sql .= ' ' . $this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
 
                 // Add NOT NULL if necessary
                 if ($this->phpBool($atts->fields['attnotnull'])) {
@@ -231,12 +231,12 @@ trait TableTrait
                 switch ($cons->fields['contype']) {
                     case 'p':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'PRIMARY KEY ('.join(',', $keys).')';
+                        $sql .= 'PRIMARY KEY (' . join(',', $keys) . ')';
 
                         break;
                     case 'u':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'UNIQUE ('.join(',', $keys).')';
+                        $sql .= 'UNIQUE (' . join(',', $keys) . ')';
 
                         break;
                     default:
@@ -385,7 +385,7 @@ trait TableTrait
                 }
 
                 // Output privileges with no GRANT OPTION
-                $sql .= 'GRANT '.join(', ', $nongrant)." ON TABLE \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT ' . join(', ', $nongrant) . " ON TABLE \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= "PUBLIC;\n";
@@ -428,7 +428,7 @@ trait TableTrait
                     $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
                 }
 
-                $sql .= 'GRANT '.join(', ', $v[4])." ON \"{$t->fields['relname']}\" TO ";
+                $sql .= 'GRANT ' . join(', ', $v[4]) . " ON \"{$t->fields['relname']}\" TO ";
                 switch ($v[0]) {
                     case 'public':
                         $sql .= 'PUBLIC';
@@ -481,7 +481,7 @@ trait TableTrait
             SELECT
               c.relname, n.nspname, ';
 
-        $sql .= ($this->hasRoles() ? ' coalesce(u.usename,r.rolname) ' : ' u.usename')." AS relowner,
+        $sql .= ($this->hasRoles() ? ' coalesce(u.usename,r.rolname) ' : ' u.usename') . " AS relowner,
               pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
               pt.spcname  AS tablespace
             FROM pg_catalog.pg_class c
@@ -489,7 +489,7 @@ trait TableTrait
                  LEFT JOIN pg_catalog.pg_user u ON u.usesysid = c.relowner
                  LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace ";
 
-        $sql .= ($this->hasRoles() ? ' LEFT JOIN pg_catalog.pg_roles r ON c.relowner = r.oid ' : '').
+        $sql .= ($this->hasRoles() ? ' LEFT JOIN pg_catalog.pg_roles r ON c.relowner = r.oid ' : '') .
             " WHERE c.relkind = 'r'
                   AND n.nspname = '{$c_schema}'
                   AND n.oid = c.relnamespace
@@ -704,7 +704,7 @@ trait TableTrait
         if ($indexes->RecordCount() > 0) {
             $sql .= "\n-- Indexes\n\n";
             while (!$indexes->EOF) {
-                $sql .= $indexes->fields['inddef'].";\n";
+                $sql .= $indexes->fields['inddef'] . ";\n";
 
                 $indexes->moveNext();
             }
@@ -739,7 +739,7 @@ trait TableTrait
         if ($rules->RecordCount() > 0) {
             $sql .= "\n-- Rules\n\n";
             while (!$rules->EOF) {
-                $sql .= $rules->fields['definition']."\n";
+                $sql .= $rules->fields['definition'] . "\n";
 
                 $rules->moveNext();
             }
@@ -967,7 +967,7 @@ trait TableTrait
             }
         }
         if (count($primarykeycolumns) > 0) {
-            $sql .= ', PRIMARY KEY ('.implode(', ', $primarykeycolumns).')';
+            $sql .= ', PRIMARY KEY (' . implode(', ', $primarykeycolumns) . ')';
         }
 
         $sql .= ')';
@@ -1290,7 +1290,7 @@ trait TableTrait
 
         $sql = "TRUNCATE TABLE \"{$f_schema}\".\"{$table}\" ";
         if ($cascade) {
-            $sql = $sql.' CASCADE';
+            $sql = $sql . ' CASCADE';
         }
 
         $status = $this->execute($sql);
@@ -1390,7 +1390,7 @@ trait TableTrait
 
         // Actually retrieve the rows
         if ($oids) {
-            $oid_str = $this->id.', ';
+            $oid_str = $this->id . ', ';
         } else {
             $oid_str = '';
         }
@@ -1531,7 +1531,7 @@ trait TableTrait
             $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
         }
 
-        $sql = $sql.implode(',', $params).');';
+        $sql = $sql . implode(',', $params) . ');';
 
         return $this->execute($sql);
     }
@@ -1559,6 +1559,8 @@ trait TableTrait
             );"
         );
     }
+
+    abstract public function hasRoles();
 
     abstract public function fieldClean(&$str);
 

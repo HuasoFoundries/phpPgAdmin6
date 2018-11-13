@@ -27,7 +27,7 @@ class DataimportController extends BaseController
 
         $this->printHeader();
         $this->printTrail('table');
-        $tabs = $this->printTabs('table', 'import');
+        $this->printTabs('table', 'import');
 
         // Default state for XML parser
         $state         = 'XML';
