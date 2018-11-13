@@ -163,100 +163,23 @@ trait TableTrait
         }
 
         // Output a reconnect command to create the table as the correct user
-        $sql = $this->getChangeUserSQL($t->fields['relowner']) . "\n\n";
+        $sql = $this->getChangeUserSQL($t->fields['relowner'])."\n\n";
 
-        // Set schema search path
-        $sql .= "SET search_path = \"{$t->fields['nspname']}\", pg_catalog;\n\n";
-
-        // Begin CREATE TABLE definition
-        $sql .= "-- Definition\n\n";
-        // DROP TABLE must be fully qualified in case a table with the same name exists
-        $sql .= $cleanprefix . 'DROP TABLE ';
-        $sql .= "\"{$t->fields['nspname']}\".\"{$t->fields['relname']}\";\n";
-        $sql .= "CREATE TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" (\n";
+        $sql = $this->_dumpCreate($t, $sql, $cleanprefix);
 
         // Output all table columns
         $col_comments_sql = ''; // Accumulate comments on columns
         $num              = $atts->RecordCount() + $cons->RecordCount();
         $i                = 1;
-        while (!$atts->EOF) {
-            $this->fieldClean($atts->fields['attname']);
-            $sql .= "    \"{$atts->fields['attname']}\"";
-            // Dump SERIAL and BIGSERIAL columns correctly
-            if ($this->phpBool($atts->fields['attisserial']) &&
-                ($atts->fields['type'] == 'integer' || $atts->fields['type'] == 'bigint')) {
-                if ($atts->fields['type'] == 'integer') {
-                    $sql .= ' SERIAL';
-                } else {
-                    $sql .= ' BIGSERIAL';
-                }
-            } else {
-                $sql .= ' ' . $this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
 
-                // Add NOT NULL if necessary
-                if ($this->phpBool($atts->fields['attnotnull'])) {
-                    $sql .= ' NOT NULL';
-                }
+        $sql = $this->_dumpSerials($atts, $sql, $col_comments_sql, $num);
 
-                // Add default if necessary
-                if ($atts->fields['adsrc'] !== null) {
-                    $sql .= " DEFAULT {$atts->fields['adsrc']}";
-                }
-            }
+        $consOutput = $this->_dumpConstraints($cons, $sql, $num);
 
-            // Output comma or not
-            if ($i < $num) {
-                $sql .= ",\n";
-            } else {
-                $sql .= "\n";
-            }
-
-            // Does this column have a comment?
-            if ($atts->fields['comment'] !== null) {
-                $this->clean($atts->fields['comment']);
-                $col_comments_sql .= "COMMENT ON COLUMN \"{$t->fields['relname']}\".\"{$atts->fields['attname']}\"  IS '{$atts->fields['comment']}';\n";
-            }
-
-            $atts->moveNext();
-            ++$i;
+        if ($consOutput === null) {
+            return null;
         }
-        // Output all table constraints
-        while (!$cons->EOF) {
-            $this->fieldClean($cons->fields['conname']);
-            $sql .= "    CONSTRAINT \"{$cons->fields['conname']}\" ";
-            // Nasty hack to support pre-7.4 PostgreSQL
-            if ($cons->fields['consrc'] !== null) {
-                $sql .= $cons->fields['consrc'];
-            } else {
-                switch ($cons->fields['contype']) {
-                    case 'p':
-                        $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'PRIMARY KEY (' . join(',', $keys) . ')';
-
-                        break;
-                    case 'u':
-                        $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'UNIQUE (' . join(',', $keys) . ')';
-
-                        break;
-                    default:
-                        // Unrecognised constraint
-                        $this->rollbackTransaction();
-
-                        return null;
-                }
-            }
-
-            // Output comma or not
-            if ($i < $num) {
-                $sql .= ",\n";
-            } else {
-                $sql .= "\n";
-            }
-
-            $cons->moveNext();
-            ++$i;
-        }
+        $sql = $consOutput;
 
         $sql .= ')';
 
@@ -296,6 +219,165 @@ trait TableTrait
 
         $sql .= ";\n";
 
+        $colStorage = $this->_dumpColStats($atts, $sql);
+
+        if ($colStorage === null) {
+            return null;
+        }
+        $sql = $colStorage;
+
+        // Comment
+        if ($t->fields['relcomment'] !== null) {
+            $this->clean($t->fields['relcomment']);
+            $sql .= "\n-- Comment\n\n";
+            $sql .= "COMMENT ON TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" IS '{$t->fields['relcomment']}';\n";
+        }
+
+        // Add comments on columns, if any
+        if ($col_comments_sql != '') {
+            $sql .= $col_comments_sql;
+        }
+
+        // Privileges
+        $privs = $this->getPrivileges($table, 'table');
+        if (!is_array($privs)) {
+            $this->rollbackTransaction();
+
+            return null;
+        }
+
+        $privsOutput = $this->_dumpPrivileges($privs, $sql);
+
+        if ($privsOutput === null) {
+            return null;
+        }
+        $sql .= $privsOutput;
+
+        // Add a newline to separate data that follows (if any)
+        $sql .= "\n";
+
+        return $sql;
+    }
+
+    /**
+     * Dumps serial-like columns in the table.
+     *
+     * @param \PHPPgAdmin\ADORecordSet $atts             table attributes
+     * @param string                   $sql              The sql sentence generated so far
+     * @param string                   $col_comments_sql Column comments, passed by reference
+     * @param int                      $num              Table attributes count + table constraints count
+     *
+     * @return string original $sql plus appended strings
+     */
+    private function _dumpSerials($atts, $sql, &$col_comments_sql, $num)
+    {
+        while (!$atts->EOF) {
+            $this->fieldClean($atts->fields['attname']);
+            $sql .= "    \"{$atts->fields['attname']}\"";
+            // Dump SERIAL and BIGSERIAL columns correctly
+            if ($this->phpBool($atts->fields['attisserial']) &&
+                ($atts->fields['type'] == 'integer' || $atts->fields['type'] == 'bigint')) {
+                if ($atts->fields['type'] == 'integer') {
+                    $sql .= ' SERIAL';
+                } else {
+                    $sql .= ' BIGSERIAL';
+                }
+            } else {
+                $sql .= ' '.$this->formatType($atts->fields['type'], $atts->fields['atttypmod']);
+
+                // Add NOT NULL if necessary
+                if ($this->phpBool($atts->fields['attnotnull'])) {
+                    $sql .= ' NOT NULL';
+                }
+
+                // Add default if necessary
+                if ($atts->fields['adsrc'] !== null) {
+                    $sql .= " DEFAULT {$atts->fields['adsrc']}";
+                }
+            }
+
+            // Output comma or not
+            if ($i < $num) {
+                $sql .= ",\n";
+            } else {
+                $sql .= "\n";
+            }
+
+            // Does this column have a comment?
+            if ($atts->fields['comment'] !== null) {
+                $this->clean($atts->fields['comment']);
+                $col_comments_sql .= "COMMENT ON COLUMN \"{$t->fields['relname']}\".\"{$atts->fields['attname']}\"  IS '{$atts->fields['comment']}';\n";
+            }
+
+            $atts->moveNext();
+            ++$i;
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Dumps constraints.
+     *
+     * @param \PHPPgAdmin\ADORecordSet $cons The table constraints
+     * @param string                   $sql  The sql sentence generated so far
+     * @param int                      $num  Table attributes count + table constraints count
+     *
+     * @return string original $sql plus appended strings
+     */
+    private function _dumpConstraints($cons, $sql, $num)
+    {
+        // Output all table constraints
+        while (!$cons->EOF) {
+            $this->fieldClean($cons->fields['conname']);
+            $sql .= "    CONSTRAINT \"{$cons->fields['conname']}\" ";
+            // Nasty hack to support pre-7.4 PostgreSQL
+            if ($cons->fields['consrc'] !== null) {
+                $sql .= $cons->fields['consrc'];
+            } else {
+                switch ($cons->fields['contype']) {
+                    case 'p':
+                        $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
+                        $sql .= 'PRIMARY KEY ('.join(',', $keys).')';
+
+                        break;
+                    case 'u':
+                        $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
+                        $sql .= 'UNIQUE ('.join(',', $keys).')';
+
+                        break;
+                    default:
+                        // Unrecognised constraint
+                        $this->rollbackTransaction();
+
+                        return null;
+                }
+            }
+
+            // Output comma or not
+            if ($i < $num) {
+                $sql .= ",\n";
+            } else {
+                $sql .= "\n";
+            }
+
+            $cons->moveNext();
+            ++$i;
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Dumps col statistics.
+     *
+     * @param \PHPPgAdmin\ADORecordSet $atts table attributes
+     * @param string                   $sql  The sql sentence generated so far
+     *
+     * @return string original $sql plus appended strings
+     */
+    private function _dumpColStats($atts, $sql)
+    {
         // Column storage and statistics
         $atts->moveFirst();
         $first = true;
@@ -340,126 +422,142 @@ trait TableTrait
             $atts->moveNext();
         }
 
-        // Comment
-        if ($t->fields['relcomment'] !== null) {
-            $this->clean($t->fields['relcomment']);
-            $sql .= "\n-- Comment\n\n";
-            $sql .= "COMMENT ON TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" IS '{$t->fields['relcomment']}';\n";
+        return $sql;
+    }
+
+    /**
+     * Dumps privileges.
+     *
+     * @param \PHPPgAdmin\ADORecordSet $privs The table privileges
+     * @param string                   $sql   The sql sentence generated so far
+     *
+     * @return string original $sql plus appended strings
+     */
+    private function _dumpPrivileges($privs, $sql)
+    {
+        if (sizeof($privs) <= 0) {
+            return $sql;
         }
+        $sql .= "\n-- Privileges\n\n";
+        /*
+         * Always start with REVOKE ALL FROM PUBLIC, so that we don't have to
+         * wire-in knowledge about the default public privileges for different
+         * kinds of objects.
+         */
+        $sql .= "REVOKE ALL ON TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" FROM PUBLIC;\n";
+        foreach ($privs as $v) {
+            // Get non-GRANT OPTION privs
+            $nongrant = array_diff($v[2], $v[4]);
 
-        // Add comments on columns, if any
-        if ($col_comments_sql != '') {
-            $sql .= $col_comments_sql;
-        }
+            // Skip empty or owner ACEs
+            if (sizeof($v[2]) == 0 || ($v[0] == 'user' && $v[1] == $t->fields['relowner'])) {
+                continue;
+            }
 
-        // Privileges
-        $privs = $this->getPrivileges($table, 'table');
-        if (!is_array($privs)) {
-            $this->rollbackTransaction();
+            // Change user if necessary
+            if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
+                $grantor = $v[3];
+                $this->clean($grantor);
+                $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
+            }
 
-            return null;
-        }
+            // Output privileges with no GRANT OPTION
+            $sql .= 'GRANT '.join(', ', $nongrant)." ON TABLE \"{$t->fields['relname']}\" TO ";
+            switch ($v[0]) {
+                case 'public':
+                    $sql .= "PUBLIC;\n";
 
-        if (sizeof($privs) > 0) {
-            $sql .= "\n-- Privileges\n\n";
-            /*
-             * Always start with REVOKE ALL FROM PUBLIC, so that we don't have to
-             * wire-in knowledge about the default public privileges for different
-             * kinds of objects.
-             */
-            $sql .= "REVOKE ALL ON TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" FROM PUBLIC;\n";
-            foreach ($privs as $v) {
-                // Get non-GRANT OPTION privs
-                $nongrant = array_diff($v[2], $v[4]);
+                    break;
+                case 'user':
+                case 'role':
+                    $this->fieldClean($v[1]);
+                    $sql .= "\"{$v[1]}\";\n";
 
-                // Skip empty or owner ACEs
-                if (sizeof($v[2]) == 0 || ($v[0] == 'user' && $v[1] == $t->fields['relowner'])) {
-                    continue;
-                }
+                    break;
+                case 'group':
+                    $this->fieldClean($v[1]);
+                    $sql .= "GROUP \"{$v[1]}\";\n";
 
-                // Change user if necessary
-                if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
-                    $grantor = $v[3];
-                    $this->clean($grantor);
-                    $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
-                }
+                    break;
+                default:
+                    // Unknown privilege type - fail
+                    $this->rollbackTransaction();
 
-                // Output privileges with no GRANT OPTION
-                $sql .= 'GRANT ' . join(', ', $nongrant) . " ON TABLE \"{$t->fields['relname']}\" TO ";
-                switch ($v[0]) {
-                    case 'public':
-                        $sql .= "PUBLIC;\n";
+                    return null;
+            }
 
-                        break;
-                    case 'user':
-                    case 'role':
-                        $this->fieldClean($v[1]);
-                        $sql .= "\"{$v[1]}\";\n";
+            // Reset user if necessary
+            if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
+                $sql .= "RESET SESSION AUTHORIZATION;\n";
+            }
 
-                        break;
-                    case 'group':
-                        $this->fieldClean($v[1]);
-                        $sql .= "GROUP \"{$v[1]}\";\n";
+            // Output privileges with GRANT OPTION
 
-                        break;
-                    default:
-                        // Unknown privilege type - fail
-                        $this->rollbackTransaction();
+            // Skip empty or owner ACEs
+            if (!$this->hasGrantOption() || sizeof($v[4]) == 0) {
+                continue;
+            }
 
-                        return null;
-                }
+            // Change user if necessary
+            if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
+                $grantor = $v[3];
+                $this->clean($grantor);
+                $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
+            }
 
-                // Reset user if necessary
-                if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
-                    $sql .= "RESET SESSION AUTHORIZATION;\n";
-                }
+            $sql .= 'GRANT '.join(', ', $v[4])." ON \"{$t->fields['relname']}\" TO ";
+            switch ($v[0]) {
+                case 'public':
+                    $sql .= 'PUBLIC';
 
-                // Output privileges with GRANT OPTION
+                    break;
+                case 'user':
+                case 'role':
+                    $this->fieldClean($v[1]);
+                    $sql .= "\"{$v[1]}\"";
 
-                // Skip empty or owner ACEs
-                if (!$this->hasGrantOption() || sizeof($v[4]) == 0) {
-                    continue;
-                }
+                    break;
+                case 'group':
+                    $this->fieldClean($v[1]);
+                    $sql .= "GROUP \"{$v[1]}\"";
 
-                // Change user if necessary
-                if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
-                    $grantor = $v[3];
-                    $this->clean($grantor);
-                    $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
-                }
+                    break;
+                default:
+                    // Unknown privilege type - fail
+                    return null;
+            }
+            $sql .= " WITH GRANT OPTION;\n";
 
-                $sql .= 'GRANT ' . join(', ', $v[4]) . " ON \"{$t->fields['relname']}\" TO ";
-                switch ($v[0]) {
-                    case 'public':
-                        $sql .= 'PUBLIC';
-
-                        break;
-                    case 'user':
-                    case 'role':
-                        $this->fieldClean($v[1]);
-                        $sql .= "\"{$v[1]}\"";
-
-                        break;
-                    case 'group':
-                        $this->fieldClean($v[1]);
-                        $sql .= "GROUP \"{$v[1]}\"";
-
-                        break;
-                    default:
-                        // Unknown privilege type - fail
-                        return null;
-                }
-                $sql .= " WITH GRANT OPTION;\n";
-
-                // Reset user if necessary
-                if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
-                    $sql .= "RESET SESSION AUTHORIZATION;\n";
-                }
+            // Reset user if necessary
+            if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
+                $sql .= "RESET SESSION AUTHORIZATION;\n";
             }
         }
 
-        // Add a newline to separate data that follows (if any)
-        $sql .= "\n";
+        return $sql;
+    }
+
+    /**
+     * Dumps a create.
+     *
+     * @param \PHPPgAdmin\ADORecordSet $tblfields   table fields object
+     * @param string                   $sql         The sql sentence generated so far
+     * @param string                   $cleanprefix set to '-- ' to avoid issuing DROP statement
+     * @param mixed                    $fields
+     *
+     * @return string original $sql plus appended strings
+     */
+    private function _dumpCreate($fields, $sql, $cleanprefix)
+    {
+        // Set schema search path
+        $sql .= "SET search_path = \"{$tblfields->fields['nspname']}\", pg_catalog;\n\n";
+
+        // Begin CREATE TABLE definition
+        $sql .= "-- Definition\n\n";
+        // DROP TABLE must be fully qualified in case a table with the same name exists
+        $sql .= $cleanprefix.'DROP TABLE ';
+        $sql .= "\"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\";\n";
+        $sql .= "CREATE TABLE \"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\" (\n";
 
         return $sql;
     }
@@ -481,7 +579,7 @@ trait TableTrait
             SELECT
               c.relname, n.nspname, ';
 
-        $sql .= ($this->hasRoles() ? ' coalesce(u.usename,r.rolname) ' : ' u.usename') . " AS relowner,
+        $sql .= ($this->hasRoles() ? ' coalesce(u.usename,r.rolname) ' : ' u.usename')." AS relowner,
               pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
               pt.spcname  AS tablespace
             FROM pg_catalog.pg_class c
@@ -489,7 +587,7 @@ trait TableTrait
                  LEFT JOIN pg_catalog.pg_user u ON u.usesysid = c.relowner
                  LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace ";
 
-        $sql .= ($this->hasRoles() ? ' LEFT JOIN pg_catalog.pg_roles r ON c.relowner = r.oid ' : '') .
+        $sql .= ($this->hasRoles() ? ' LEFT JOIN pg_catalog.pg_roles r ON c.relowner = r.oid ' : '').
             " WHERE c.relkind = 'r'
                   AND n.nspname = '{$c_schema}'
                   AND n.oid = c.relnamespace
@@ -704,7 +802,7 @@ trait TableTrait
         if ($indexes->RecordCount() > 0) {
             $sql .= "\n-- Indexes\n\n";
             while (!$indexes->EOF) {
-                $sql .= $indexes->fields['inddef'] . ";\n";
+                $sql .= $indexes->fields['inddef'].";\n";
 
                 $indexes->moveNext();
             }
@@ -739,7 +837,7 @@ trait TableTrait
         if ($rules->RecordCount() > 0) {
             $sql .= "\n-- Rules\n\n";
             while (!$rules->EOF) {
-                $sql .= $rules->fields['definition'] . "\n";
+                $sql .= $rules->fields['definition']."\n";
 
                 $rules->moveNext();
             }
@@ -967,7 +1065,7 @@ trait TableTrait
             }
         }
         if (count($primarykeycolumns) > 0) {
-            $sql .= ', PRIMARY KEY (' . implode(', ', $primarykeycolumns) . ')';
+            $sql .= ', PRIMARY KEY ('.implode(', ', $primarykeycolumns).')';
         }
 
         $sql .= ')';
@@ -1290,7 +1388,7 @@ trait TableTrait
 
         $sql = "TRUNCATE TABLE \"{$f_schema}\".\"{$table}\" ";
         if ($cascade) {
-            $sql = $sql . ' CASCADE';
+            $sql = $sql.' CASCADE';
         }
 
         $status = $this->execute($sql);
@@ -1390,7 +1488,7 @@ trait TableTrait
 
         // Actually retrieve the rows
         if ($oids) {
-            $oid_str = $this->id . ', ';
+            $oid_str = $this->id.', ';
         } else {
             $oid_str = '';
         }
@@ -1531,7 +1629,7 @@ trait TableTrait
             $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
         }
 
-        $sql = $sql . implode(',', $params) . ');';
+        $sql = $sql.implode(',', $params).');';
 
         return $this->execute($sql);
     }

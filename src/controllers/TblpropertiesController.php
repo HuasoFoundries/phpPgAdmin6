@@ -103,172 +103,25 @@ class TblpropertiesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $misc = $this->misc;
-        $data = $misc->getDatabaseAccessor();
-
-        $attPre = function (&$rowdata, $actions) use ($data) {
-            $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-            $attname                  = $rowdata->fields['attname'];
-            $table                    = $_REQUEST['table'];
-            $data->fieldClean($attname);
-            $data->fieldClean($table);
-
-            $actions['browse']['attr']['href']['urlvars']['query'] = "SELECT \"{$attname}\", count(*) AS \"count\"
-                FROM \"{$table}\" GROUP BY \"{$attname}\" ORDER BY \"{$attname}\"";
-
-            return $actions;
-        };
-
-        $cstrRender = function ($s, $p) use ($misc, $data) {
-            $str = '';
-            foreach ($p['keys'] as $k => $c) {
-                if (is_null($p['keys'][$k]['consrc'])) {
-                    $atts        = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
-                    $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
-                }
-
-                if ($c['p_field'] == $s) {
-                    switch ($c['contype']) {
-                        case 'p':
-                            $str .= '<a href="constraints?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
-                            $misc->icon('PrimaryKey').'" alt="[pk]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
-
-                            break;
-                        case 'f':
-                            $str .= '<a href="tblproperties?'.$misc->href.'&amp;table='.urlencode($c['f_table']).'&amp;schema='.urlencode($c['f_schema']).'"><img src="'.
-                            $misc->icon('ForeignKey').'" alt="[fk]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
-
-                            break;
-                        case 'u':
-                            $str .= '<a href="constraints?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
-                            $misc->icon('UniqueConstraint').'" alt="[uniq]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
-
-                            break;
-                        case 'c':
-                            $str .= '<a href="constraints?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
-                            $misc->icon('CheckConstraint').'" alt="[check]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
-                    }
-                }
-            }
-
-            return $str;
-        };
+        $misc       = $this->misc;
+        $this->data = $misc->getDatabaseAccessor();
 
         $this->printTrail('table');
         $this->printTabs('table', 'columns');
         $this->printMsg($msg);
 
         // Get table
-        $tdata = $data->getTable($_REQUEST['table']);
+        $tdata = $this->data->getTable($_REQUEST['table']);
         // Get columns
-        $attrs = $data->getTableAttributes($_REQUEST['table']);
+        $attrs = $this->data->getTableAttributes($_REQUEST['table']);
         // Get constraints keys
-        $ck = $data->getConstraintsWithFields($_REQUEST['table']);
+        $ck = $this->data->getConstraintsWithFields($_REQUEST['table']);
 
         // Show comment if any
         if (null !== $tdata->fields['relcomment']) {
             echo '<p class="comment">', $misc->printVal($tdata->fields['relcomment']), '</p>'.PHP_EOL;
         }
-
-        $columns = [
-            'column'  => [
-                'title' => $this->lang['strcolumn'],
-                'field' => Decorator::field('attname'),
-                'url'   => "colproperties?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
-                'vars'  => ['column' => 'attname'],
-            ],
-            'type'    => [
-                'title' => $this->lang['strtype'],
-                'field' => Decorator::field('+type'),
-            ],
-            'notnull' => [
-                'title'  => $this->lang['strnotnull'],
-                'field'  => Decorator::field('attnotnull'),
-                'type'   => 'bool',
-                'params' => ['true' => 'NOT NULL', 'false' => ''],
-            ],
-            'default' => [
-                'title' => $this->lang['strdefault'],
-                'field' => Decorator::field('adsrc'),
-            ],
-            'keyprop' => [
-                'title'  => $this->lang['strconstraints'],
-                'class'  => 'constraint_cell',
-                'field'  => Decorator::field('attname'),
-                'type'   => 'callback',
-                'params' => [
-                    'function' => $cstrRender,
-                    'keys'     => $ck->getArray(),
-                ],
-            ],
-            'actions' => [
-                'title' => $this->lang['stractions'],
-            ],
-            'comment' => [
-                'title' => $this->lang['strcomment'],
-                'field' => Decorator::field('comment'),
-            ],
-        ];
-
-        $actions = [
-            'browse'     => [
-                'content' => $this->lang['strbrowse'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'display',
-                        'urlvars' => [
-                            'table'   => $_REQUEST['table'],
-                            'subject' => 'column',
-                            'return'  => 'table',
-                            'column'  => Decorator::field('attname'),
-                        ],
-                    ],
-                ],
-            ],
-            'alter'      => [
-                'content' => $this->lang['stralter'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'colproperties',
-                        'urlvars' => [
-                            'subject' => 'column',
-                            'action'  => 'properties',
-                            'table'   => $_REQUEST['table'],
-                            'column'  => Decorator::field('attname'),
-                        ],
-                    ],
-                ],
-            ],
-            'privileges' => [
-                'content' => $this->lang['strprivileges'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'privileges',
-                        'urlvars' => [
-                            'subject' => 'column',
-                            'table'   => $_REQUEST['table'],
-                            'column'  => Decorator::field('attname'),
-                        ],
-                    ],
-                ],
-            ],
-            'drop'       => [
-                'content' => $this->lang['strdrop'],
-                'attr'    => [
-                    'href' => [
-                        'url'     => 'tblproperties',
-                        'urlvars' => [
-                            'subject' => 'column',
-                            'action'  => 'confirm_drop',
-                            'table'   => $_REQUEST['table'],
-                            'column'  => Decorator::field('attname'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        echo $this->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', $this->lang['strnodata'], $attPre);
+        $this->_printTable($ck, $attrs);
 
         $navlinks = [
             'browse'    => [
@@ -804,5 +657,174 @@ class TblpropertiesController extends BaseController
                 $this->doDefault($this->lang['strcolumndroppedbad']);
             }
         }
+    }
+
+    private function _getAttPre($data)
+    {
+        $attPre = function (&$rowdata, $actions) use ($data) {
+            $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
+            $attname                  = $rowdata->fields['attname'];
+            $table                    = $_REQUEST['table'];
+            $data->fieldClean($attname);
+            $data->fieldClean($table);
+
+            $actions['browse']['attr']['href']['urlvars']['query'] = "SELECT \"{$attname}\", count(*) AS \"count\"
+                FROM \"{$table}\" GROUP BY \"{$attname}\" ORDER BY \"{$attname}\"";
+
+            return $actions;
+        };
+
+        return $attPre;
+    }
+
+    private function _getCstrRender($misc, $data)
+    {
+        $cstrRender = function ($s, $p) use ($misc, $data) {
+            $str = '';
+            foreach ($p['keys'] as $k => $c) {
+                if (is_null($p['keys'][$k]['consrc'])) {
+                    $atts        = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
+                    $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
+                }
+
+                if ($c['p_field'] == $s) {
+                    switch ($c['contype']) {
+                        case 'p':
+                            $str .= '<a href="constraints?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
+                            $misc->icon('PrimaryKey').'" alt="[pk]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
+
+                            break;
+                        case 'f':
+                            $str .= '<a href="tblproperties?'.$misc->href.'&amp;table='.urlencode($c['f_table']).'&amp;schema='.urlencode($c['f_schema']).'"><img src="'.
+                            $misc->icon('ForeignKey').'" alt="[fk]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
+
+                            break;
+                        case 'u':
+                            $str .= '<a href="constraints?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
+                            $misc->icon('UniqueConstraint').'" alt="[uniq]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
+
+                            break;
+                        case 'c':
+                            $str .= '<a href="constraints?'.$misc->href.'&amp;table='.urlencode($c['p_table']).'&amp;schema='.urlencode($c['p_schema']).'"><img src="'.
+                            $misc->icon('CheckConstraint').'" alt="[check]" title="'.htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8').'" /></a>';
+                    }
+                }
+            }
+
+            return $str;
+        };
+
+        return $cstrRender;
+    }
+
+    private function _printTable($ck, $attrs)
+    {
+        $misc = $this->misc;
+
+        $data = $this->data;
+
+        $attPre = $this->_getAttPre($data);
+
+        $cstrRender = $this->_getCstrRender($misc, $data);
+
+        $columns = [
+            'column'  => [
+                'title' => $this->lang['strcolumn'],
+                'field' => Decorator::field('attname'),
+                'url'   => "colproperties?subject=column&amp;{$misc->href}&amp;table=".urlencode($_REQUEST['table']).'&amp;',
+                'vars'  => ['column' => 'attname'],
+            ],
+            'type'    => [
+                'title' => $this->lang['strtype'],
+                'field' => Decorator::field('+type'),
+            ],
+            'notnull' => [
+                'title'  => $this->lang['strnotnull'],
+                'field'  => Decorator::field('attnotnull'),
+                'type'   => 'bool',
+                'params' => ['true' => 'NOT NULL', 'false' => ''],
+            ],
+            'default' => [
+                'title' => $this->lang['strdefault'],
+                'field' => Decorator::field('adsrc'),
+            ],
+            'keyprop' => [
+                'title'  => $this->lang['strconstraints'],
+                'class'  => 'constraint_cell',
+                'field'  => Decorator::field('attname'),
+                'type'   => 'callback',
+                'params' => [
+                    'function' => $cstrRender,
+                    'keys'     => $ck->getArray(),
+                ],
+            ],
+            'actions' => [
+                'title' => $this->lang['stractions'],
+            ],
+            'comment' => [
+                'title' => $this->lang['strcomment'],
+                'field' => Decorator::field('comment'),
+            ],
+        ];
+
+        $actions = [
+            'browse'     => [
+                'content' => $this->lang['strbrowse'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'display',
+                        'urlvars' => [
+                            'table'   => $_REQUEST['table'],
+                            'subject' => 'column',
+                            'return'  => 'table',
+                            'column'  => Decorator::field('attname'),
+                        ],
+                    ],
+                ],
+            ],
+            'alter'      => [
+                'content' => $this->lang['stralter'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'colproperties',
+                        'urlvars' => [
+                            'subject' => 'column',
+                            'action'  => 'properties',
+                            'table'   => $_REQUEST['table'],
+                            'column'  => Decorator::field('attname'),
+                        ],
+                    ],
+                ],
+            ],
+            'privileges' => [
+                'content' => $this->lang['strprivileges'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'privileges',
+                        'urlvars' => [
+                            'subject' => 'column',
+                            'table'   => $_REQUEST['table'],
+                            'column'  => Decorator::field('attname'),
+                        ],
+                    ],
+                ],
+            ],
+            'drop'       => [
+                'content' => $this->lang['strdrop'],
+                'attr'    => [
+                    'href' => [
+                        'url'     => 'tblproperties',
+                        'urlvars' => [
+                            'subject' => 'column',
+                            'action'  => 'confirm_drop',
+                            'table'   => $_REQUEST['table'],
+                            'column'  => Decorator::field('attname'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        echo $this->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', $this->lang['strnodata'], $attPre);
     }
 }
