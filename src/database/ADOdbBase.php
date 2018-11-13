@@ -172,7 +172,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL query to execute
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset or an error code
      */
     public function execute($sql)
     {

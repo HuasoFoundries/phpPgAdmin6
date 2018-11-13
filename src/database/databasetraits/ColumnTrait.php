@@ -303,7 +303,7 @@ trait ColumnTrait
      * @param string $column  The column to be dropped
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return int 0 if operation was successful
+     * @return array [int status, string sql sentence]
      */
     public function dropColumn($table, $column, $cascade)
     {

@@ -614,7 +614,7 @@ class DisplayController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!is_array($resultset->fields)) {
+        if (!is_object($resultset) || $resultset->recordCount() <= 0) {
             return;
         }
 

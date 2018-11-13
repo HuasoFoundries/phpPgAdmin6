@@ -163,7 +163,7 @@ trait TableTrait
         }
 
         // Output a reconnect command to create the table as the correct user
-        $sql = $this->getChangeUserSQL($t->fields['relowner'])."\n\n";
+        $sql = "-- PHPPgAdmin\n".$this->getChangeUserSQL($t->fields['relowner'])."\n\n";
 
         $sql = $this->_dumpCreate($t, $sql, $cleanprefix);
 
@@ -172,9 +172,9 @@ trait TableTrait
         $num              = $atts->RecordCount() + $cons->RecordCount();
         $i                = 1;
 
-        $sql = $this->_dumpSerials($atts, $sql, $col_comments_sql, $num);
+        $sql = $this->_dumpSerials($atts, $t, $sql, $col_comments_sql, $i, $num);
 
-        $consOutput = $this->_dumpConstraints($cons, $sql, $num);
+        $consOutput = $this->_dumpConstraints($cons, $table, $sql, $i, $num);
 
         if ($consOutput === null) {
             return null;
@@ -219,7 +219,7 @@ trait TableTrait
 
         $sql .= ";\n";
 
-        $colStorage = $this->_dumpColStats($atts, $sql);
+        $colStorage = $this->_dumpColStats($atts, $t, $sql);
 
         if ($colStorage === null) {
             return null;
@@ -246,12 +246,12 @@ trait TableTrait
             return null;
         }
 
-        $privsOutput = $this->_dumpPrivileges($privs, $sql);
+        $privsOutput = $this->_dumpPrivileges($privs, $t, $sql);
 
         if ($privsOutput === null) {
             return null;
         }
-        $sql .= $privsOutput;
+        $sql = $privsOutput;
 
         // Add a newline to separate data that follows (if any)
         $sql .= "\n";
@@ -263,13 +263,22 @@ trait TableTrait
      * Dumps serial-like columns in the table.
      *
      * @param \PHPPgAdmin\ADORecordSet $atts             table attributes
-     * @param string                   $sql              The sql sentence generated so far
-     * @param string                   $col_comments_sql Column comments, passed by reference
-     * @param int                      $num              Table attributes count + table constraints count
+     * @param \PHPPgAdmin\ADORecordSet $tblfields        table fields object
+     * @param string                   $sql              The sql sentence
+     *                                                   generated so far
+     * @param string                   $col_comments_sql Column comments,
+     *                                                   passed by reference
+     * @param int                      $i                current counter to
+     *                                                   know if we should
+     *                                                   append a comma to the
+     *                                                   sentence
+     * @param int                      $num              Table attributes
+     *                                                   count + table
+     *                                                   constraints count
      *
      * @return string original $sql plus appended strings
      */
-    private function _dumpSerials($atts, $sql, &$col_comments_sql, $num)
+    private function _dumpSerials($atts, $tblfields, $sql, &$col_comments_sql, $i, $num)
     {
         while (!$atts->EOF) {
             $this->fieldClean($atts->fields['attname']);
@@ -306,7 +315,7 @@ trait TableTrait
             // Does this column have a comment?
             if ($atts->fields['comment'] !== null) {
                 $this->clean($atts->fields['comment']);
-                $col_comments_sql .= "COMMENT ON COLUMN \"{$t->fields['relname']}\".\"{$atts->fields['attname']}\"  IS '{$atts->fields['comment']}';\n";
+                $col_comments_sql .= "COMMENT ON COLUMN \"{$tblfields->fields['relname']}\".\"{$atts->fields['attname']}\"  IS '{$atts->fields['comment']}';\n";
             }
 
             $atts->moveNext();
@@ -319,13 +328,17 @@ trait TableTrait
     /**
      * Dumps constraints.
      *
-     * @param \PHPPgAdmin\ADORecordSet $cons The table constraints
-     * @param string                   $sql  The sql sentence generated so far
-     * @param int                      $num  Table attributes count + table constraints count
+     * @param \PHPPgAdmin\ADORecordSet $cons  The table constraints
+     * @param string                   $table The table to define
+     * @param string                   $sql   The sql sentence generated so
+     *                                        far
+     * @param mixed                    $i
+     * @param int                      $num   Table attributes count + table
+     *                                        constraints count
      *
      * @return string original $sql plus appended strings
      */
-    private function _dumpConstraints($cons, $sql, $num)
+    private function _dumpConstraints($cons, $table, $sql, $i, $num)
     {
         // Output all table constraints
         while (!$cons->EOF) {
@@ -371,12 +384,13 @@ trait TableTrait
     /**
      * Dumps col statistics.
      *
-     * @param \PHPPgAdmin\ADORecordSet $atts table attributes
-     * @param string                   $sql  The sql sentence generated so far
+     * @param \PHPPgAdmin\ADORecordSet $atts      table attributes
+     * @param \PHPPgAdmin\ADORecordSet $tblfields table field attributes
+     * @param string                   $sql       The sql sentence generated so far
      *
      * @return string original $sql plus appended strings
      */
-    private function _dumpColStats($atts, $sql)
+    private function _dumpColStats($atts, $tblfields, $sql)
     {
         // Column storage and statistics
         $atts->moveFirst();
@@ -389,7 +403,7 @@ trait TableTrait
                     $sql .= "\n";
                     $first = false;
                 }
-                $sql .= "ALTER TABLE ONLY \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" ALTER COLUMN \"{$atts->fields['attname']}\" SET STATISTICS {$atts->fields['attstattarget']};\n";
+                $sql .= "ALTER TABLE ONLY \"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\" ALTER COLUMN \"{$atts->fields['attname']}\" SET STATISTICS {$atts->fields['attstattarget']};\n";
             }
             // Then storage
             if ($atts->fields['attstorage'] != $atts->fields['typstorage']) {
@@ -416,7 +430,7 @@ trait TableTrait
 
                         return null;
                 }
-                $sql .= "ALTER TABLE ONLY \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" ALTER COLUMN \"{$atts->fields['attname']}\" SET STORAGE {$storage};\n";
+                $sql .= "ALTER TABLE ONLY \"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\" ALTER COLUMN \"{$atts->fields['attname']}\" SET STORAGE {$storage};\n";
             }
 
             $atts->moveNext();
@@ -428,12 +442,13 @@ trait TableTrait
     /**
      * Dumps privileges.
      *
-     * @param \PHPPgAdmin\ADORecordSet $privs The table privileges
-     * @param string                   $sql   The sql sentence generated so far
+     * @param \PHPPgAdmin\ADORecordSet $privs     The table privileges
+     * @param \PHPPgAdmin\ADORecordSet $tblfields The table fields definition
+     * @param string                   $sql       The sql sentence generated so far
      *
      * @return string original $sql plus appended strings
      */
-    private function _dumpPrivileges($privs, $sql)
+    private function _dumpPrivileges($privs, $tblfields, $sql)
     {
         if (sizeof($privs) <= 0) {
             return $sql;
@@ -444,25 +459,25 @@ trait TableTrait
          * wire-in knowledge about the default public privileges for different
          * kinds of objects.
          */
-        $sql .= "REVOKE ALL ON TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" FROM PUBLIC;\n";
+        $sql .= "REVOKE ALL ON TABLE \"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\" FROM PUBLIC;\n";
         foreach ($privs as $v) {
             // Get non-GRANT OPTION privs
             $nongrant = array_diff($v[2], $v[4]);
 
             // Skip empty or owner ACEs
-            if (sizeof($v[2]) == 0 || ($v[0] == 'user' && $v[1] == $t->fields['relowner'])) {
+            if (sizeof($v[2]) == 0 || ($v[0] == 'user' && $v[1] == $tblfields->fields['relowner'])) {
                 continue;
             }
 
             // Change user if necessary
-            if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
+            if ($this->hasGrantOption() && $v[3] != $tblfields->fields['relowner']) {
                 $grantor = $v[3];
                 $this->clean($grantor);
                 $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
             }
 
             // Output privileges with no GRANT OPTION
-            $sql .= 'GRANT '.join(', ', $nongrant)." ON TABLE \"{$t->fields['relname']}\" TO ";
+            $sql .= 'GRANT '.join(', ', $nongrant)." ON TABLE \"{$tblfields->fields['relname']}\" TO ";
             switch ($v[0]) {
                 case 'public':
                     $sql .= "PUBLIC;\n";
@@ -487,7 +502,7 @@ trait TableTrait
             }
 
             // Reset user if necessary
-            if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
+            if ($this->hasGrantOption() && $v[3] != $tblfields->fields['relowner']) {
                 $sql .= "RESET SESSION AUTHORIZATION;\n";
             }
 
@@ -499,13 +514,13 @@ trait TableTrait
             }
 
             // Change user if necessary
-            if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
+            if ($this->hasGrantOption() && $v[3] != $tblfields->fields['relowner']) {
                 $grantor = $v[3];
                 $this->clean($grantor);
                 $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
             }
 
-            $sql .= 'GRANT '.join(', ', $v[4])." ON \"{$t->fields['relname']}\" TO ";
+            $sql .= 'GRANT '.join(', ', $v[4])." ON \"{$tblfields->fields['relname']}\" TO ";
             switch ($v[0]) {
                 case 'public':
                     $sql .= 'PUBLIC';
@@ -529,7 +544,7 @@ trait TableTrait
             $sql .= " WITH GRANT OPTION;\n";
 
             // Reset user if necessary
-            if ($this->hasGrantOption() && $v[3] != $t->fields['relowner']) {
+            if ($this->hasGrantOption() && $v[3] != $tblfields->fields['relowner']) {
                 $sql .= "RESET SESSION AUTHORIZATION;\n";
             }
         }
@@ -547,7 +562,7 @@ trait TableTrait
      *
      * @return string original $sql plus appended strings
      */
-    private function _dumpCreate($fields, $sql, $cleanprefix)
+    private function _dumpCreate($tblfields, $sql, $cleanprefix)
     {
         // Set schema search path
         $sql .= "SET search_path = \"{$tblfields->fields['nspname']}\", pg_catalog;\n\n";
@@ -1657,6 +1672,10 @@ trait TableTrait
             );"
         );
     }
+
+    abstract public function formatType($typname, $typmod);
+
+    abstract public function hasGrantOption();
 
     abstract public function hasRoles();
 
