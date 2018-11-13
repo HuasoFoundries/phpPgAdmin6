@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Database;
@@ -27,6 +27,7 @@ class Connection
     protected $server_info;
 
     protected $version_dictionary = [
+        '11'  => 'Postgres11',
         '10'  => 'Postgres10',
         '9.7' => 'Postgres96',
         '9.6' => 'Postgres96',
@@ -144,8 +145,8 @@ class Connection
 
         $version_parts = explode('.', $version);
 
-        if ($version_parts[0] == '10') {
-            $major_version = '10';
+        if (in_array($version_parts[0], ['10','11'])) {
+            $major_version = $version_parts[0];
         } else {
             $major_version = implode('.', [$version_parts[0], $version_parts[1]]);
         }

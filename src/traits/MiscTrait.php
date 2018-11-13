@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Traits;
@@ -1164,6 +1164,64 @@ trait MiscTrait
                 'icon'    => 'FtsParser',
             ],
         ];
+
+        return $tabs;
+    }
+
+    /**
+     * Retrieve the tab info for a specific tab bar.
+     *
+     * @param string $section the name of the tab bar
+     *
+     * @return array array of tabs
+     */
+    public function getNavTabs($section)
+    {
+        $data           = $this->getDatabaseAccessor();
+        $lang           = $this->lang;
+        $plugin_manager = $this->plugin_manager;
+
+        $hide_advanced = ($this->conf['show_advanced'] === false);
+        $tabs          = [];
+
+        switch ($section) {
+            case 'root':$tabs = $this->getTabsRoot($lang, $data);
+
+                break;
+            case 'server':$tabs = $this->getTabsServer($lang, $data);
+
+                break;
+            case 'database':$tabs = $this->getTabsDatabase($lang, $data);
+
+                break;
+            case 'schema':$tabs = $this->getTabsSchema($lang, $data);
+
+                break;
+            case 'table':$tabs = $this->getTabsTable($lang, $data);
+
+                break;
+            case 'view':$tabs = $this->getTabsView($lang, $data);
+
+                break;
+            case 'matview':$tabs = $this->getTabsMatview($lang, $data);
+
+                break;
+            case 'function':$tabs = $this->getTabsFunction($lang, $data);
+
+                break;
+            case 'aggregate':$tabs = $this->getTabsAggregate($lang, $data);
+
+                break;
+            case 'role':$tabs = $this->getTabsRole($lang, $data);
+
+                break;
+            case 'popup':$tabs = $this->getTabsPopup($lang, $data);
+
+                break;
+            case 'column':$tabs = $this->getTabsColumn($lang, $data);
+
+                break;
+            case 'fulltext':$tabs = $this->getTabsFulltext($lang, $data);
 
         return $tabs;
     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.48
+ * PHPPgAdmin v6.0.0-beta.49
  */
 
 namespace PHPPgAdmin\Controller;
@@ -620,12 +620,12 @@ class FunctionsController extends BaseController
     }
 
     /**
-     * Show the creation sentence for this function
+     * Show the creation sentence for this function.
      *
-     * @param string  $fname         The function name
-     * @param integer  $function_oid The function oid
+     * @param string $fname        The function name
+     * @param int    $function_oid The function oid
      *
-     * @return string  the navlinks to print at the bottom
+     * @return string the navlinks to print at the bottom
      */
     public function showDefinition($fname, $function_oid)
     {
@@ -639,12 +639,12 @@ class FunctionsController extends BaseController
         $funcdata  = $data->getFunctionDef($function_oid);
         $func_full = '';
         if ($funcdata->recordCount() <= 0) {
-            echo "<p>{$this->lang['strnodata']}</p>" . PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
 
             return $this->_printNavLinks('functions-properties', $func_full);
         }
 
-        echo '<table style="width: 95%">' . PHP_EOL;
+        echo '<table style="width: 95%">'.PHP_EOL;
 
         $fnlang = strtolower($funcdata->fields['prolanguage']);
         echo '<tr><td class="data1" colspan="4">';
@@ -669,9 +669,9 @@ class FunctionsController extends BaseController
 
         echo sprintf('%s</code></pre>', PHP_EOL);
 
-        echo '</td></tr>' . PHP_EOL;
+        echo '</td></tr>'.PHP_EOL;
 
-        echo '</table>' . PHP_EOL;
+        echo '</table>'.PHP_EOL;
 
         return $this->_printNavLinks('functions-properties', $func_full);
     }
