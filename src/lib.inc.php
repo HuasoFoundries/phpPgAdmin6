@@ -152,7 +152,6 @@ $container['php_console'] = $handler;
 $container->offsetSet('server', isset($_REQUEST['server']) ? $_REQUEST['server'] : null);
 $container->offsetSet('database', isset($_REQUEST['database']) ? $_REQUEST['database'] : null);
 $container->offsetSet('schema', isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null);
-\Kint::dump($container);
 
 $container['flash'] = function () {
     return new \Slim\Flash\Messages();
