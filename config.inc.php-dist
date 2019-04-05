@@ -22,6 +22,7 @@ $conf['php_console'] = false;
 
 
 // enable this to calculate schema and table sizes
+// e.g. $conf['display_sizes'] = ['schemas'=>false,'tables'=>true];
 $conf['display_sizes'] = false;
 
 // An example server.  Create as many of these as you wish,

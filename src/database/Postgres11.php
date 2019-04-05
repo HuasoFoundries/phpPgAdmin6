@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.50
+ * PHPPgAdmin v6.0.0-beta.51
  */
 
 namespace PHPPgAdmin\Database;
@@ -19,7 +19,8 @@ class Postgres11 extends Postgres10
 
     /**
      * Returns a list of all functions in the database.
-     * In PG 11 proagg was replaced with prokind
+     * In PG 11 proagg was replaced with prokind.
+     *
      * @see https://www.postgresql.org/docs/11/catalog-pg-proc.html
      *
      * @param bool  $all  If true, will find all available functions, if false just those in search path
@@ -68,5 +69,4 @@ class Postgres11 extends Postgres10
 
         return $this->selectSet($sql);
     }
-
 }

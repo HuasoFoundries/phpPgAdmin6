@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.50
+ * PHPPgAdmin v6.0.0-beta.51
  */
 require_once 'ColumnTest.php';
 require_once 'IndexesTest.php';

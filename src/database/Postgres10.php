@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.50
+ * PHPPgAdmin v6.0.0-beta.51
  */
 
 namespace PHPPgAdmin\Database;
@@ -39,19 +39,19 @@ class Postgres10 extends Postgres96
                     reltuples::bigint as reltuples,
                     pt.spcname as tablespace, ";
 
-        /**
+        /*
          * Either display_sizes is true for tables and schemas,
          * or we must check if said config is an associative array
          */
         if (isset($this->conf['display_sizes']) &&
-            ($this->conf['display_sizes'] === true ||
+            (
+                $this->conf['display_sizes'] === true ||
                 (
                     is_array($this->conf['display_sizes']) &&
                     array_key_exists('tables', $this->conf['display_sizes']) &&
                     $this->conf['display_sizes']['tables'] === true
                 )
             )
-
         ) {
             $sql .= ' pg_size_pretty(pg_total_relation_size(c.oid)) as table_size ';
         } else {

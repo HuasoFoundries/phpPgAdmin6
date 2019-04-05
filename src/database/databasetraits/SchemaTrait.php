@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.50
+ * PHPPgAdmin v6.0.0-beta.51
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -33,19 +33,19 @@ trait SchemaTrait
                    pu.rolname AS nspowner,
                    pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment, ";
 
-        /**
+        /*
          * Either display_sizes is true for tables and schemas,
          * or we must check if said config is an associative array
          */
         if (isset($this->conf['display_sizes']) &&
-            ($this->conf['display_sizes'] === true ||
+            (
+                $this->conf['display_sizes'] === true ||
                 (
                     is_array($this->conf['display_sizes']) &&
                     array_key_exists('schemas', $this->conf['display_sizes']) &&
                     $this->conf['display_sizes']['schemas'] === true
                 )
             )
-
         ) {
             $sql .= ' pg_size_pretty(SUM(pg_total_relation_size(pg_class.oid))) as schema_size ';
         } else {
@@ -133,7 +133,7 @@ trait SchemaTrait
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "' . implode('","', $temp) . '"';
+        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
 
         return $this->execute($sql);
     }
