@@ -4,7 +4,7 @@ tests/selenium/config.test.php
 .php.tools.ini
 .*.sh
 sftp-config*
-config.inc.php*
+config.*.php*
 !config.inc.php-dist
 
 

@@ -204,6 +204,7 @@ class DbexportController extends BaseController
 
         // Execute command and return the output to the screen
         passthru($cmd);
+        //\Kint::dump($cmd);
 
         return $response;
     }
