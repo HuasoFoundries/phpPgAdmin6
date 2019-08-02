@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database;
@@ -358,7 +358,7 @@ class Postgres extends ADOdbBase
 			AND attnum IN ('".join("','", $atts)."')";
 
         $rs = $this->selectSet($sql);
-        if ($rs->RecordCount() != sizeof($atts)) {
+        if ($rs->recordCount() != sizeof($atts)) {
             return -2;
         }
 

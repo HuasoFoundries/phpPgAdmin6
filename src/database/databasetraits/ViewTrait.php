@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -132,7 +132,7 @@ trait ViewTrait
     {
         $data = $this->getView($view);
 
-        if ($data->RecordCount() != 1) {
+        if ($data->recordCount() != 1) {
             return -2;
         }
 

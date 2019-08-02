@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 // Import necessary library files to setup the testcase.

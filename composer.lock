@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3bd603a89ef0441c81b2bad33fc92c70",
+    "content-hash": "29e1dc72b88357d431a25d76e10e2f62",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -2425,6 +2425,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2018-05-29T13:54:20+00:00"
         },
         {

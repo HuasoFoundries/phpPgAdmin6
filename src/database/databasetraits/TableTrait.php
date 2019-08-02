@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -151,7 +151,7 @@ trait TableTrait
     {
         // Fetch table
         $t = $this->getTable($table);
-        if (!is_object($t) || $t->RecordCount() != 1) {
+        if (!is_object($t) || $t->recordCount() != 1) {
             $this->rollbackTransaction();
 
             return null;
@@ -182,7 +182,7 @@ trait TableTrait
 
         // Output all table columns
         $col_comments_sql = ''; // Accumulate comments on columns
-        $num              = $atts->RecordCount() + $cons->RecordCount();
+        $num              = $atts->recordCount() + $cons->recordCount();
         $i                = 1;
 
         $sql = $this->_dumpSerials($atts, $t, $sql, $col_comments_sql, $i, $num);
@@ -205,7 +205,7 @@ trait TableTrait
          * as inherited NOT NULL and CHECK constraints.  So for the time being, we just do
          * not claim to support inheritance.
          * $parents = $this->getTableParents($table);
-         * if ($parents->RecordCount() > 0) {
+         * if ($parents->recordCount() > 0) {
          * $sql .= " INHERITS (";
          * while (!$parents->EOF) {
          * $this->fieldClean($parents->fields['relname']);
@@ -798,7 +798,7 @@ trait TableTrait
             AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}')";
 
         $rs = $this->selectSet($sql);
-        if ($rs->RecordCount() != 1) {
+        if ($rs->recordCount() != 1) {
             return null;
         }
 
@@ -827,7 +827,7 @@ trait TableTrait
             return null;
         }
 
-        if ($indexes->RecordCount() > 0) {
+        if ($indexes->recordCount() > 0) {
             $sql .= "\n-- Indexes\n\n";
             while (!$indexes->EOF) {
                 $sql .= $indexes->fields['inddef'].";\n";
@@ -844,7 +844,7 @@ trait TableTrait
             return null;
         }
 
-        if ($triggers->RecordCount() > 0) {
+        if ($triggers->recordCount() > 0) {
             $sql .= "\n-- Triggers\n\n";
             while (!$triggers->EOF) {
                 $sql .= $triggers->fields['tgdef'];
@@ -862,7 +862,7 @@ trait TableTrait
             return null;
         }
 
-        if ($rules->RecordCount() > 0) {
+        if ($rules->recordCount() > 0) {
             $sql .= "\n-- Rules\n\n";
             while (!$rules->EOF) {
                 $sql .= $rules->fields['definition']."\n";
@@ -1216,7 +1216,7 @@ trait TableTrait
     {
         $data = $this->getTable($table);
 
-        if ($data->RecordCount() != 1) {
+        if ($data->recordCount() != 1) {
             return -2;
         }
 

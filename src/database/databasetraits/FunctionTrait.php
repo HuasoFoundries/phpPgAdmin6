@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -62,7 +62,8 @@ trait FunctionTrait
     }
 
     /**
-     * Returns a list of all functions that can be used in triggers
+     * Returns a list of all functions that can be used in triggers.
+     *
      * @return \PHPPgAdmin\ADORecordSet Functions that can be used in a trigger
      */
     public function getTriggerFunctions()
@@ -273,13 +274,13 @@ trait FunctionTrait
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'" . $definition[0] . "'";
+            $sql .= "'".$definition[0]."'";
             if ($definition[1]) {
-                $sql .= ",'" . $definition[1] . "'";
+                $sql .= ",'".$definition[1]."'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'" . $definition . "'";
+            $sql .= "'".$definition."'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";

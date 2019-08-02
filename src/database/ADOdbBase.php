@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database;
@@ -234,7 +234,7 @@ class ADOdbBase
             return $this->conn->ErrorNo();
         }
 
-        if ($rs->RecordCount() == 0) {
+        if ($rs->recordCount() == 0) {
             return -1;
         }
 

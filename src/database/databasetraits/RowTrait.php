@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -74,7 +74,7 @@ trait RowTrait
 
         // If none, check for an OID column.  Even though OIDs can be duplicated, the edit and delete row
         // functions check that they're only modiying a single row.  Otherwise, return empty array.
-        if ($rs->RecordCount() == 0) {
+        if ($rs->recordCount() == 0) {
             // Check for OID column
             $temp = [];
             if ($this->hasObjectID($table)) {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -114,7 +114,7 @@ trait SequenceTrait
     {
         // Get the minimum value of the sequence
         $seq = $this->getSequence($sequence);
-        if ($seq->RecordCount() != 1) {
+        if ($seq->recordCount() != 1) {
             return -1;
         }
 
@@ -253,7 +253,7 @@ trait SequenceTrait
 
         $data = $this->getSequence($sequence);
 
-        if ($data->RecordCount() != 1) {
+        if ($data->recordCount() != 1) {
             return -2;
         }
 

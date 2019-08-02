@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database;
@@ -216,7 +216,7 @@ class Postgres83 extends Postgres84
 			WHERE vacrelid = {$toid};");
 
         $status = -1; // ini
-        if ($rs->RecordCount() and ($rs->fields['vacrelid'] == $toid)) {
+        if ($rs->recordCount() and ($rs->fields['vacrelid'] == $toid)) {
             // table exists in pg_autovacuum, UPDATE
             $sql = sprintf(
                 "UPDATE \"pg_catalog\".\"pg_autovacuum\" SET

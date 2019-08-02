@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -34,7 +34,7 @@ trait IndexTrait
 
         $v = $this->selectSet($sql);
 
-        return !($v->RecordCount() == 0);
+        return !($v->recordCount() == 0);
     }
 
     /**

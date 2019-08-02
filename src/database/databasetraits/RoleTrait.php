@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -185,15 +185,15 @@ trait RoleTrait
         }
 
         if (is_array($new_roles_to_add) && sizeof($new_roles_to_add) > 0) {
-            $sql .= ' IN ROLE "' . join('", "', $new_roles_to_add) . '"';
+            $sql .= ' IN ROLE "'.join('", "', $new_roles_to_add).'"';
         }
 
         if (is_array($new_members_of_role) && sizeof($new_members_of_role) > 0) {
-            $sql .= ' ROLE "' . join('", "', $new_members_of_role) . '"';
+            $sql .= ' ROLE "'.join('", "', $new_members_of_role).'"';
         }
 
         if (is_array($new_admins_of_role) && sizeof($new_admins_of_role) > 0) {
-            $sql .= ' ADMIN "' . join('", "', $new_admins_of_role) . '"';
+            $sql .= ' ADMIN "'.join('", "', $new_admins_of_role).'"';
         }
 
         return $this->execute($sql);
@@ -209,7 +209,7 @@ trait RoleTrait
      */
     public function _encryptPassword($username, $password)
     {
-        return 'md5' . md5($password . $username);
+        return 'md5'.md5($password.$username);
     }
 
     /**
@@ -590,7 +590,7 @@ trait RoleTrait
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
         if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "' . join('", "', $groups) . '"';
+            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
         }
 
         if ($expiry != '') {
@@ -859,7 +859,7 @@ trait RoleTrait
 
         if (is_array($users) && sizeof($users) > 0) {
             $this->fieldArrayClean($users);
-            $sql .= ' WITH USER "' . join('", "', $users) . '"';
+            $sql .= ' WITH USER "'.join('", "', $users).'"';
         }
 
         return $this->execute($sql);

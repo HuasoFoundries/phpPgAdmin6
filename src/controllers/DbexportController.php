@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Controller;
@@ -48,7 +48,7 @@ class DbexportController extends BaseController
 
         // Obtain the pg_dump version number and check if the path is good
         $version = [];
-        preg_match('/(\\d+(?:\\.\\d+)?)(?:\\.\\d+)?.*$/', exec($exe . ' --version'), $version);
+        preg_match('/(\\d+(?:\\.\\d+)?)(?:\\.\\d+)?.*$/', exec($exe.' --version'), $version);
 
         if (empty($version)) {
             $this->prtrace('$exe', $exe, 'version', $version[1]);
@@ -97,20 +97,20 @@ class DbexportController extends BaseController
         }
 
         // Set environmental variables that pg_dump uses
-        putenv('PGPASSWORD=' . $server_info['password']);
-        putenv('PGUSER=' . $server_info['username']);
+        putenv('PGPASSWORD='.$server_info['password']);
+        putenv('PGUSER='.$server_info['username']);
         $hostname = $server_info['host'];
         if (null !== $hostname && '' != $hostname) {
-            putenv('PGHOST=' . $hostname);
+            putenv('PGHOST='.$hostname);
         }
         $port = $server_info['port'];
         if (null !== $port && '' != $port) {
-            putenv('PGPORT=' . $port);
+            putenv('PGPORT='.$port);
         }
 
         // Build command for executing pg_dump.  '-i' means ignore version differences.
         if (((float) $version[1]) < 9.5) {
-            $cmd = $exe . ' -i';
+            $cmd = $exe.' -i';
         } else {
             $cmd = $exe;
         }
@@ -125,7 +125,7 @@ class DbexportController extends BaseController
         switch ($_REQUEST['subject']) {
             case 'schema':
                 // This currently works for 8.2+ (due to the orthoganl -t -n issue introduced then)
-                $cmd .= ' -n ' . $this->misc->escapeShellArg("\"{$f_schema}\"");
+                $cmd .= ' -n '.$this->misc->escapeShellArg("\"{$f_schema}\"");
 
                 break;
             case 'table':
@@ -138,13 +138,13 @@ class DbexportController extends BaseController
                 // Starting in 8.2, -n and -t are orthagonal, so we now schema qualify
                 // the table name in the -t argument and quote both identifiers
                 if (((float) $version[1]) >= 8.2) {
-                    $cmd .= ' -t ' . $this->misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
+                    $cmd .= ' -t '.$this->misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
                 } else {
                     // If we are 7.4 or higher, assume they are using 7.4 pg_dump and
                     // set dump schema as well.  Also, mixed case dumping has been fixed
                     // then..
-                    $cmd .= ' -t ' . $this->misc->escapeShellArg($f_object)
-                    . ' -n ' . $this->misc->escapeShellArg($f_schema);
+                    $cmd .= ' -t '.$this->misc->escapeShellArg($f_object)
+                    .' -n '.$this->misc->escapeShellArg($f_schema);
                 }
         }
 
@@ -185,7 +185,7 @@ class DbexportController extends BaseController
         }
 
         if (!$dumpall) {
-            putenv('PGDATABASE=' . $_REQUEST['database']);
+            putenv('PGDATABASE='.$_REQUEST['database']);
         } else {
             //$cmd .= ' --no-role-password';
             putenv('PGDATABASE');

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Traits;
@@ -905,7 +905,7 @@ trait AdminTrait
 
         echo $this->printTable($autovac, $columns, $actions, 'admin-admin', $this->lang['strnovacuumconf']);
 
-        if (('table' == $type) and (0 == $autovac->RecordCount())) {
+        if (('table' == $type) and (0 == $autovac->recordCount())) {
             echo '<br />';
 
             echo '<a href="'.\SUBFOLDER."/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";

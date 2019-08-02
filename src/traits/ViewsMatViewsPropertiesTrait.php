@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Traits;
@@ -261,7 +261,7 @@ trait ViewsMatViewsPropertiesTrait
         $this->printTabs($this->subject, 'definition');
         $this->printMsg($msg);
 
-        if ($vdata->RecordCount() > 0) {
+        if ($vdata->recordCount() > 0) {
             // Show comment if any
             if (null !== $vdata->fields['relcomment']) {
                 echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>'.PHP_EOL;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.51
+ * PHPPgAdmin v6.0.0-beta.52
  */
 
 namespace PHPPgAdmin\Traits;
@@ -107,7 +107,7 @@ trait HelperTrait
     {
         $result = [];
 
-        if ($set->RecordCount() <= 0) {
+        if ($set->recordCount() <= 0) {
             return $result;
         }
         while (!$set->EOF) {
