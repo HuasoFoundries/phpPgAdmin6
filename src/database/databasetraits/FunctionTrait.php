@@ -62,6 +62,15 @@ trait FunctionTrait
     }
 
     /**
+     * Returns a list of all functions that can be used in triggers
+     * @return \PHPPgAdmin\ADORecordSet Functions that can be used in a trigger
+     */
+    public function getTriggerFunctions()
+    {
+        return $this->getFunctions(true, 'trigger');
+    }
+
+    /**
      * Returns an array containing a function's properties.
      *
      * @param array $f The array of data for the function
@@ -264,13 +273,13 @@ trait FunctionTrait
 
         if (is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'".$definition[0]."'";
+            $sql .= "'" . $definition[0] . "'";
             if ($definition[1]) {
-                $sql .= ",'".$definition[1]."'";
+                $sql .= ",'" . $definition[1] . "'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'".$definition."'";
+            $sql .= "'" . $definition . "'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
