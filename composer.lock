@@ -197,16 +197,16 @@
         },
         {
             "name": "php-console/php-console",
-            "version": "3.1.7",
+            "version": "3.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barbushin/php-console.git",
-                "reference": "c171ec62669d5c616cfa62de7a30df3c6237e831"
+                "reference": "aa1d71d4ea3dc91e126edc9aa4f3c10eb8559cff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barbushin/php-console/zipball/c171ec62669d5c616cfa62de7a30df3c6237e831",
-                "reference": "c171ec62669d5c616cfa62de7a30df3c6237e831",
+                "url": "https://api.github.com/repos/barbushin/php-console/zipball/aa1d71d4ea3dc91e126edc9aa4f3c10eb8559cff",
+                "reference": "aa1d71d4ea3dc91e126edc9aa4f3c10eb8559cff",
                 "shasum": ""
             },
             "require": {
@@ -244,7 +244,7 @@
                 "google chrome",
                 "php"
             ],
-            "time": "2018-02-25T12:43:21+00:00"
+            "time": "2019-07-25T03:43:28+00:00"
         },
         {
             "name": "pimple/pimple",
