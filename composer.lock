@@ -3040,24 +3040,20 @@
         },
         {
             "name": "simpletest/simpletest",
-            "version": "v1.1.7",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simpletest/simpletest.git",
-                "reference": "2f8c466c114bdb9c11028a0c3e6d1380ae6a18dc"
+                "reference": "4fb6006517a1428785a0ea704fbedcc675421ec4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simpletest/simpletest/zipball/2f8c466c114bdb9c11028a0c3e6d1380ae6a18dc",
-                "reference": "2f8c466c114bdb9c11028a0c3e6d1380ae6a18dc",
+                "url": "https://api.github.com/repos/simpletest/simpletest/zipball/4fb6006517a1428785a0ea704fbedcc675421ec4",
+                "reference": "4fb6006517a1428785a0ea704fbedcc675421ec4",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.0.5"
-            },
-            "replace": {
-                "lastcraft/simpletest": "self.version",
-                "vierbergenlars/simpletest": "self.version"
+                "php": "^7.1"
             },
             "type": "library",
             "autoload": {
@@ -3070,14 +3066,6 @@
                 "LGPL-2.0+"
             ],
             "authors": [
-                {
-                    "name": "Lars Vierbergen",
-                    "email": "vierbergenlars@gmail.com"
-                },
-                {
-                    "name": "Lachlan Donald",
-                    "email": "lachlan@ljd.cc"
-                },
                 {
                     "name": "Marcus Baker",
                     "email": "marcus@lastcraft.com",
@@ -3098,6 +3086,17 @@
                 {
                     "name": "Edward Z. Yang",
                     "role": "Original developer"
+                },
+                {
+                    "name": "Lachlan Donald",
+                    "email": "lachlan@ljd.cc"
+                },
+                {
+                    "name": "Lars Vierbergen",
+                    "email": "vierbergenlars@gmail.com"
+                },
+                {
+                    "name": "Jens A. Koch"
                 }
             ],
             "description": "Unit testing, mock objects and web testing framework for PHP built around test cases.",
@@ -3109,7 +3108,7 @@
                 "testing",
                 "unit-test"
             ],
-            "time": "2015-09-21T18:19:52+00:00"
+            "time": "2019-09-17T15:08:22+00:00"
         },
         {
             "name": "symfony/browser-kit",
