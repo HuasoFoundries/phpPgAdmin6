@@ -39,7 +39,7 @@
         "php-console/php-console": "~3.1",
 
         "twig/twig": "~1.28",
-        "kint-php/kint": "^2.1",
+        "kint-php/kint": "^3.3",
         "adodb/adodb-php": "^5.20",
         "slim/flash": "^0.4.0"
     },
