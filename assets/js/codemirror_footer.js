@@ -1,5 +1,16 @@
 var avoid_bogus_character = true;
 if (avoid_bogus_character) {
+  window.addEventListener(
+    "loaded",
+    function(e) {
+      console.log(e.defaultPrevented); // will be false
+      e.preventDefault(); // does nothing since the listener is passive
+      console.log(e.defaultPrevented); // still false
+      alert("loaded");
+    },
+    { passive: true }
+  );
+
   jQuery(document).ready(function() {
     if (typeof CodeMirror === "undefined") {
       return;
@@ -31,7 +42,7 @@ if (avoid_bogus_character) {
           jQuery(".CodeMirror").css("height", $("#query").attr("rows") * 26);
 
           if (location.pathname.indexOf("sqledit") !== -1) {
-            var windowsize = {
+            /* var windowsize = {
               height: jQuery(window).innerHeight(),
               width: jQuery(window).innerWidth(),
               height_difference: height_difference
@@ -51,11 +62,13 @@ if (avoid_bogus_character) {
                 windowsize.height - height_difference
               );
             });
+            */
           } else {
             window.setTimeout(function() {
               jQuery(".CodeMirror")
-                .focus()
-                .resizable();
+                .attr("resizable", "true")
+                .focus();
+              //  .resizable();
             }, 2500);
           }
         });

@@ -44,6 +44,8 @@ if (!defined('ADODB_ERROR_HANDLER')) {
 // Start session (if not auto-started)
 if (!ini_get('session.auto_start')) {
     session_name('PPA_ID');
+    session_set_cookie_params(0, null, null, null, true, null, true);
+
     session_start();
 }
 
@@ -67,9 +69,18 @@ function maybeRenderIframes($c, $response, $subject, $query_string)
 
 $handler             = PhpConsole\Handler::getInstance();
 \Kint::$enabled_mode = DEBUGMODE;
+function ddd(...$v)
+{
+    d(...$v);
+    exit;
+}
+
+\Kint::$aliases[] = 'ddd';
+
 ini_set('display_errors', intval(DEBUGMODE));
 ini_set('display_startup_errors', intval(DEBUGMODE));
 if (DEBUGMODE) {
+    ini_set('opcache.revalidate_freq', 0);
     error_reporting(E_ALL);
 }
 
@@ -417,6 +428,7 @@ $app->add(
                 \PC::debug($message, 'Flash: ' . $key);
             }
         }
+
         // First execute anything else
         $response = $next($request, $response);
 
