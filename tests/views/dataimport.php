@@ -1,8 +1,9 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
+
 $do_render = false;
 if (!defined('BASE_PATH')) {
     require_once '../../src/lib.inc.php';
