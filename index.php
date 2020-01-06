@@ -9,8 +9,8 @@ require_once __DIR__ . '/src/lib.inc.php';
 if (PHP_SAPI === 'cli-server') {
     //include_once __DIR__ . '/src/cli.router.php';
     $will_redirect = false;
-    $req_uri       = $_SERVER['REQUEST_URI'];
-    $first10chars  = substr($_SERVER['REQUEST_URI'], 0, 10);
+    $req_uri       = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : $_SERVER['REQUEST_URI'];
+    $first10chars  = substr($req_uri, 0, 10);
     if ($first10chars === '/index.php') {
         $will_redirect = true;
         $req_uri       = substr($req_uri, 10);
@@ -161,7 +161,7 @@ $app->get('/{subject:\w+}', function (
     $query_string = $request->getUri()->getQuery();
     $server_id    = $request->getQueryParam('server');
 
-    //$this->utils->dumpAndDie($_server_info);
+    $this->utils->prtrace($_server_info);
 
     if (!isset($_server_info['username'])) {
         $subject = 'login';

@@ -7,23 +7,31 @@ html {
   margin: 0;
 
   body {
-
-
     &.sql_edit {
       #sqlform {
         #queryedition {
           min-height: 80px;
 
-
-          &>.CodeMirror {
+          & > .CodeMirror {
             min-height: 70px;
-
-            .cm-m-sql {
-              &.cm-keyword {
-                text-transform: uppercase;
+            .CodeMirror-scroll {
+              .CodeMirror-sizer {
+                margin-left: 40px !important;
+                .cm-m-sql {
+                  &.cm-keyword {
+                    text-transform: uppercase;
+                  }
+                }
+              }
+              .CodeMirror-gutters {
+                .CodeMirror-linenumbers {
+                  min-width: 30px !important;
+                }
+                .CodeMirror-foldgutter {
+                  width: 0.7em !important;
+                }
               }
             }
-
           }
 
           #query {
@@ -168,7 +176,6 @@ html {
     }
 
     &.sql_edit {
-
       //padding-top: 35px;
       #flexbox_wrapper {
         height: 100%;
@@ -185,13 +192,12 @@ html {
       margin: 0;
 
       .flexbox_wrapper {
-
         display: flex;
         height: 100%;
         margin: 0;
 
         .ui-resizable-helper {
-          border: 2px dotted #00F;
+          border: 2px dotted #00f;
         }
 
         #masking_overlay {
@@ -203,7 +209,7 @@ html {
           display: none;
         }
 
-        &>.detail_container {
+        & > .detail_container {
           height: 100%;
           width: 100%;
           margin: 0px;
@@ -213,8 +219,7 @@ html {
           flex: 1 1;
         }
 
-        &>#browser_container {
-
+        & > #browser_container {
           height: 100%;
           margin: 0px;
           padding: 0px;
@@ -222,7 +227,7 @@ html {
           float: left;
           flex: 0 0 300px;
 
-          &>.browser_container {
+          & > .browser_container {
             height: 100%;
             margin: 0px;
             padding: 0px;
@@ -241,26 +246,22 @@ html {
               right: -8px;
               background: #84a0ad;
               top: 45%;
-              height: 50px
+              height: 50px;
             }
           }
         }
       }
 
-
       &.rtl {
         .flexbox_wrapper {
-
-          &>.detail_container {
+          & > .detail_container {
             float: right;
             flex-grow: 1;
           }
 
-          &>#browser_container {
-
+          & > #browser_container {
             float: right;
             flex: 0 0 300px;
-
 
             &.ui-resizable {
               flex: unset;
@@ -272,14 +273,13 @@ html {
                 left: -8px;
                 background: #84a0ad;
                 top: 45%;
-                height: 50px
+                height: 50px;
               }
             }
           }
         }
       }
     }
-
 
     /** Browser Tree using XLoadTree 2 **/
     &.browser {
@@ -295,7 +295,7 @@ html {
       }
 
       .webfx-tree-row {
-        white-space: nowrap
+        white-space: nowrap;
       }
 
       .webfx-tree-children {
@@ -305,41 +305,40 @@ html {
       }
 
       .webfx-tree-row img {
-        vertical-align: middle
+        vertical-align: middle;
       }
 
       .webfx-tree-item-label {
-        margin-left: 0.5ex
+        margin-left: 0.5ex;
       }
 
       .webfx-tree-icon {
-        margin-left: 1px
+        margin-left: 1px;
       }
 
       .webfx-tree-hide-root {
-        display: none
+        display: none;
       }
     }
-
 
     img {
       border: none;
     }
 
     p.message {
-      color: blue
+      color: blue;
     }
 
     p.comment {
-      font-style: italic
+      font-style: italic;
     }
 
     .left {
-      text-align: left
+      text-align: left;
     }
 
     .pre {
-      white-space: pre
+      white-space: pre;
     }
 
     .arg_icon {
@@ -362,10 +361,6 @@ html {
       top: 27px;
       margin-left: -10px !important;
     }
-
-
-
-
 
     /** auto-complete on insert **/
     #fkbg {
@@ -393,7 +388,7 @@ html {
     }
 
     #fklist th {
-      border: 1px solid #aaa
+      border: 1px solid #aaa;
     }
 
     #fklist td,
@@ -414,7 +409,7 @@ html {
     }
 
     .ac_values {
-      width: 100%
+      width: 100%;
     }
 
     /** bottom link back to top **/
@@ -452,33 +447,29 @@ html {
     }
 
     .highlight {
-      background-color: #FFFF00;
+      background-color: #ffff00;
     }
 
     /** Syntax highlighting **/
     .comment {
-      color: #008080
+      color: #008080;
     }
 
     .keyword {
-      color: #FF8000
+      color: #ff8000;
     }
 
     .literal {
-      color: #808080
+      color: #808080;
     }
 
     .bold {
       font-weight: bold;
     }
 
-
     .select2-container {
-
       min-width: 250px;
     }
-
-
 
     form.sqlform {
       float: left;
@@ -490,8 +481,6 @@ html {
         float: left;
 
         p {
-
-
           label {
             float: left;
 
@@ -510,15 +499,13 @@ html {
     }
 
     .CodeMirror {
-      border: 1px solid #AAA;
+      border: 1px solid #aaa;
       padding: 3px;
       font-size: 1.1em;
       line-height: 1.5em;
     }
   }
 }
-
-
 
 @media print {
   @page {
@@ -543,7 +530,7 @@ html {
     background: white;
     background-color: #ffffff;
 
-    .flexbox_wrapper>.detail_container {
+    .flexbox_wrapper > .detail_container {
       height: 100%;
       width: 100%;
       margin: 0px;

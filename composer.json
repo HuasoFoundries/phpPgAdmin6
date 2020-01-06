@@ -9,14 +9,13 @@
         "BSD-3-Clause"
     ],
     "authors": [
-    {
-        "name": "Amenadiel",
-        "email": "amenadiel@gmail.com"
-    }],
-    "autoload":
-    {
-        "psr-4":
         {
+            "name": "Amenadiel",
+            "email": "amenadiel@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
             "PHPPgAdmin\\": "src/classes",
             "PHPPgAdmin\\Controller\\": "src/controllers",
             "PHPPgAdmin\\Middleware\\": "src/middleware",
@@ -27,31 +26,27 @@
             "PHPPgAdmin\\Database\\Traits\\": "src/database/databasetraits",
             "PHPPgAdmin\\Help\\": "src/help",
             "PHPPgAdmin\\Translations\\": "src/translations"
-
         }
     },
-    "require":
-    {
+    "require": {
         "php": ">=5.6.0",
         "ext-pgsql": "*",
         "slim/slim": "^3.6",
-        "slim/twig-view": "~2.1.1",
-        "php-console/php-console": "~3.1",
-
+        "slim/twig-view": "~2.5.1",
         "twig/twig": "~1.28",
-        "kint-php/kint": "^2.1",
         "adodb/adodb-php": "^5.20",
         "slim/flash": "^0.4.0"
     },
-    "require-dev":
-    {
-        "friendsofphp/php-cs-fixer": "^2.4",
+    "require-dev": {
+        "kint-php/kint": "~3.3",
         "codeception/codeception": "*",
         "simpletest/simpletest": "^1.1",
-        "phpmd/phpmd": "^2.6"
+        "phpmd/phpmd": "^2.6",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "php-console/php-console": "^3.1",
+        "codeception/module-asserts": "^1.1"
     },
-    "scripts":
-    {
+    "scripts": {
         "post-install-cmd": [
             "php -r \"chmod( __DIR__ . '/temp', 0777);\"",
             "php -r \"chmod( __DIR__ . '/temp/twigcache', 0777);\"",

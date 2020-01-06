@@ -180,7 +180,7 @@ class Misc
      */
     public function printHelp($str, $help = null, $do_print = true)
     {
-        //\PC::debug(['str' => $str, 'help' => $help], 'printHelp');
+
         if ($help !== null) {
             $helplink = $this->getHelpLink($help);
             $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">';
@@ -440,7 +440,6 @@ class Misc
      */
     public function getServerInfo($server_id = null)
     {
-        //\PC::debug(['$server_id' => $server_id]);
 
         if ($server_id !== null) {
             $this->_server_id = $server_id;
@@ -499,7 +498,7 @@ class Misc
      */
     public function setServerInfo($key, $value, $server_id = null)
     {
-        //\PC::debug('setsetverinfo');
+
         if ($server_id === null) {
             $server_id = $this->container->requestobj->getParam('server');
         }
@@ -508,14 +507,14 @@ class Misc
             if ($value === null) {
                 unset($_SESSION['webdbLogin'][$server_id]);
             } else {
-                //\PC::debug(['server_id' => $server_id, 'value' => $value], 'webdbLogin null key');
+
                 $_SESSION['webdbLogin'][$server_id] = $value;
             }
         } else {
             if ($value === null) {
                 unset($_SESSION['webdbLogin'][$server_id][$key]);
             } else {
-                //\PC::debug(['server_id' => $server_id, 'key' => $key, 'value' => $value], __FILE__ . ' ' . __LINE__ . ' webdbLogin key ' . $key);
+
                 $_SESSION['webdbLogin'][$server_id][$key] = $value;
             }
         }
@@ -595,7 +594,7 @@ class Misc
     public function setHREF()
     {
         $this->href = $this->getHREF();
-        //\PC::debug($this->href, 'Misc::href');
+
         return $this;
     }
 
@@ -648,7 +647,7 @@ class Misc
         $this->form = implode("\n", $form);
 
         return $this->form;
-        //\PC::debug($this->form, 'Misc::form');
+
     }
 
     /**

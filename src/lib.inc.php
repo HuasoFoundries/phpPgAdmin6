@@ -15,6 +15,9 @@ ini_set('arg_separator.output', '&amp;');
 if (!is_writable(BASE_PATH . '/temp')) {
     die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
 }
+// base value for PHPConsole handler to avoid undefined variable
+$handler = null;
+require_once BASE_PATH . '/vendor/autoload.php';
 
 // Check to see if the configuration file exists, if not, explain
 if (file_exists(BASE_PATH . '/config.inc.php')) {
@@ -23,15 +26,11 @@ if (file_exists(BASE_PATH . '/config.inc.php')) {
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 }
-
 if (isset($conf['error_log'])) {
     ini_set('error_log', BASE_PATH . '/' . $conf['error_log']);
 }
-
 $debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
 define('DEBUGMODE', $debugmode);
-
-require_once BASE_PATH . '/vendor/autoload.php';
 
 if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
     define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
@@ -44,11 +43,16 @@ if (!defined('ADODB_ERROR_HANDLER')) {
 // Start session (if not auto-started)
 if (!ini_get('session.auto_start')) {
     session_name('PPA_ID');
-    session_set_cookie_params(0, null, null, null, true, null, true);
+
+    $use_ssl = isset($_SERVER['HTTPS']) &&
+    isset($conf['HTTPS_COOKIE']) &&
+    boolval($conf['HTTPS_COOKIE']) !== false;
+    session_set_cookie_params(0, null, null, $use_ssl, true);
 
     session_start();
 }
 
+// Global functions and polyfills
 function maybeRenderIframes($c, $response, $subject, $query_string)
 {
     $in_test = $c->view->offsetGet('in_test');
@@ -66,12 +70,41 @@ function maybeRenderIframes($c, $response, $subject, $query_string)
 
     return $c->view->render($response, 'iframe_view.twig', $viewVars);
 };
+// Dumb Polyfill to avoid errors with Kint
+if (
+    class_exists('Kint')) {
+    \Kint::$enabled_mode                = DEBUGMODE;
+    Kint\Renderer\RichRenderer::$folder = false;
 
-$handler             = PhpConsole\Handler::getInstance();
+} else {
+    class Kint
+    {
+        static $enabled_mode = false;
+        static $aliases      = [];
+        public static function dump() {}
+    }
+}
+
+// Polyfill for PHPConsole
+if (isset($conf['php_console']) &&
+    class_exists('PhpConsole') &&
+    $conf['php_console'] === true) {
+    \PhpConsole\Helper::register(); // it will register global PC class
+    if (!is_null($handler)) {
+        $handler->start(); // initialize handlers*/
+    }
+
+} else {
+    class PC
+    {
+        public static function debug() {}
+    }
+}
+
 \Kint::$enabled_mode = DEBUGMODE;
 function ddd(...$v)
 {
-    d(...$v);
+    \Kint::dump(...$v);
     exit;
 }
 
@@ -84,62 +117,11 @@ if (DEBUGMODE) {
     error_reporting(E_ALL);
 }
 
-if (isset($_SERVER['HTTP_USER_AGENT'])) {
-    $useragent = $_SERVER['HTTP_USER_AGENT'];
-    if (strpos($useragent, 'Chrome') === false) {
-        $conf['php_console'] = false;
-    }
-}
-
-if (!isset($conf['php_console']) || $conf['php_console'] !== true) {
-    $handler->setHandleErrors(false); // disable errors handling
-    $handler->setHandleExceptions(false); // disable exceptions handling
-    $handler->setCallOldHandlers(true); // disable passing errors & exceptions to prviously defined handlers
-}
-
-$composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
-$appVersion   = $composerinfo->version;
-
-$config = [
-    'msg'       => '',
-    'appThemes' => [
-        'default'    => 'Default',
-        'cappuccino' => 'Cappuccino',
-        'gotar'      => 'Blue/Green',
-        'bootstrap'  => 'Bootstrap3',
-    ],
-    'settings'  => [
-        'displayErrorDetails'               => DEBUGMODE,
-        'determineRouteBeforeAppMiddleware' => true,
-        'base_path'                         => BASE_PATH,
-        'debug'                             => DEBUGMODE,
-
-        'routerCacheFile'                   => BASE_PATH . '/temp/route.cache.php',
-
-        // Configuration file version.  If this is greater than that in config.inc.php, then
-        // the app will refuse to run.  This and $conf['version'] should be incremented whenever
-        // backwards incompatible changes are made to config.inc.php-dist.
-        'base_version'                      => 60,
-        // Application version
-        'appVersion'                        => 'v' . $appVersion,
-        // Application name
-        'appName'                           => 'phpPgAdmin6',
-
-        // PostgreSQL and PHP minimum version
-        'postgresqlMinVer'                  => '9.3',
-        'phpMinVer'                         => '5.6',
-        'displayErrorDetails'               => DEBUGMODE,
-        'addContentLengthHeader'            => false,
-    ],
-];
-
-$app = new \Slim\App($config);
-
-// Fetch DI Container
-$container = $app->getContainer();
+// Fetch App and DI Container
+list($container, $app) = \PHPPgAdmin\ContainerUtils::createContainer();
 
 if ($container instanceof \Psr\Container\ContainerInterface) {
-    \PhpConsole\Helper::register(); // it will register global PC class
+
     if (PHP_SAPI == 'cli-server') {
         $subfolder = '/index.php';
     } elseif (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
@@ -153,11 +135,8 @@ if ($container instanceof \Psr\Container\ContainerInterface) {
     trigger_error("App Container must be an instance of \Psr\Container\ContainerInterface", E_USER_ERROR);
 }
 
-$container['version']     = 'v' . $appVersion;
-$container['errors']      = [];
 $container['requestobj']  = $container['request'];
 $container['responseobj'] = $container['response'];
-$container['php_console'] = $handler;
 
 // This should be deprecated once we're sure no php scripts are required directly
 $container->offsetSet('server', isset($_REQUEST['server']) ? $_REQUEST['server'] : null);
@@ -168,17 +147,15 @@ $container['flash'] = function () {
     return new \Slim\Flash\Messages();
 };
 
-$container['utils'] = function ($c) {
-    $utils = new \PHPPgAdmin\ContainerUtils($c);
-    return $utils;
-};
-
+// Complete missing conf keys
 $container['conf'] = function ($c) use ($conf) {
 
     //\Kint::dump($conf);
     // Plugins are removed
     $conf['plugins'] = [];
-
+    if (!isset($conf['theme'])) {
+        $conf['theme'] = 'default';
+    }
     foreach ($conf['servers'] as &$server) {
         if (!isset($server['port'])) {
             $server['port'] = 5432;
@@ -219,91 +196,28 @@ $container['misc'] = function ($c) {
     // 4. Check for theme by server/db/user
     $_server_info = $misc->getServerInfo();
 
-    //\PC::debug($_server_info, 'server info');
-
     /* starting with PostgreSQL 9.0, we can set the application name */
     if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {
         putenv('PGAPPNAME=' . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
     }
 
-    $themefolders = [];
-    if ($gestor = opendir(THEME_PATH)) {
-
-        /* This is the right way to iterate on a folder */
-        while (false !== ($foldername = readdir($gestor))) {
-            if ($foldername == '.' || $foldername == '..') {
-                continue;
-            }
-
-            $folderpath = THEME_PATH . DIRECTORY_SEPARATOR . $foldername;
-
-            // if $folderpath if indeed a folder and contains a global.css file, then it's a theme
-            if (is_dir($folderpath) && is_file($folderpath . DIRECTORY_SEPARATOR . 'global.css')) {
-                $themefolders[$foldername] = $folderpath;
-            }
-        }
-
-        closedir($gestor);
-    }
-
-    //\PC::debug($themefolders, 'themefolders');
-    /* select the theme */
-    unset($_theme);
-
-    // List of themes
-    if (!isset($conf['theme'])) {
-        $conf['theme'] = 'default';
-    }
-    // 1. Check for the theme from a request var.
-    // This happens when you use the selector in the intro screen
-    if (isset($_REQUEST['theme']) && array_key_exists($_REQUEST['theme'], $themefolders)) {
-        $_theme = $_REQUEST['theme'];
-    } elseif (!isset($_theme) && isset($_SESSION['ppaTheme']) && array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
-        // 2. Check for theme session var
-        $_theme = $_SESSION['ppaTheme'];
-    } elseif (!isset($_theme) && isset($_COOKIE['ppaTheme']) && array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
-        // 3. Check for theme in cookie var
-        $_theme = $_COOKIE['ppaTheme'];
-    }
-
-    if (!isset($_theme) && !is_null($_server_info) && array_key_exists('theme', $_server_info)) {
-        $server_theme = $_server_info['theme'];
-
-        if (isset($server_theme['default']) && array_key_exists($server_theme['default'], $themefolders)) {
-            $_theme = $server_theme['default'];
-        }
-
-        if (isset($_REQUEST['database'])
-            && isset($server_theme['db'][$_REQUEST['database']])
-            && array_key_exists($server_theme['db'][$_REQUEST['database']], $themefolders)
-        ) {
-            $_theme = $server_theme['db'][$_REQUEST['database']];
-        }
-
-        if (isset($_server_info['username'])
-            && isset($server_theme['user'][$_server_info['username']])
-            && array_key_exists($server_theme['user'][$_server_info['username']], $themefolders)
-        ) {
-            $_theme = $server_theme['user'][$_server_info['username']];
-        }
-    }
+    $_theme = $c->utils->getTheme($conf, $_server_info);
     // if any of the above conditions had set the $_theme variable
     // then we store it in the session and a cookie
     // and we overwrite $conf['theme'] with its value
-    if (isset($_theme)) {
+    if (!is_null($_theme)) {
         /* save the selected theme in cookie for a year */
         setcookie('ppaTheme', $_theme, time() + 31536000, '/');
         $_SESSION['ppaTheme'] = $_theme;
-        $conf['theme']        = $_theme;
     }
 
-    $misc->setConf('theme', $conf['theme']);
+    $misc->setConf('theme', $_theme);
 
     return $misc;
 };
 
 // Register Twig View helper
-$container['view'] = function ($c) {
+$container['view'] = function ($c) use ($handler) {
     $conf = $c->get('conf');
     $misc = $c->misc;
 
@@ -331,11 +245,6 @@ $container['view'] = function ($c) {
     $view->offsetSet('appName', $c->get('settings')['appName']);
 
     $misc->setView($view);
-
-    //\PC::debug($c->conf, 'conf');
-    //\PC::debug($c->view->offsetGet('subfolder'), 'subfolder');
-    //\PC::debug($c->view->offsetGet('theme'), 'theme');
-
     return $view;
 };
 
@@ -371,8 +280,7 @@ $container['haltHandler'] = function ($c) {
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route
 $app->add(
-    function ($request, $response, $next) use ($handler) {
-        $handler->start(); // initialize handlers*/
+    function ($request, $response, $next) {
 
         $this['requestobj']  = $request;
         $this['responseobj'] = $response;
