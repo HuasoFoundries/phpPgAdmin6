@@ -27,10 +27,12 @@ class ViewpropertiesController extends BaseController
         if ('tree' == $this->action) {
             return $this->doTree();
         }
+        $footer_template = 'footer.twig';
+        $header_template = 'header.twig';
 
-        $this->printHeader($this->headerTitle('', '', $_REQUEST[$this->subject]));
-        $this->printBody();
+        ob_start();
 
+        $this->printFooter(true, $footer_template);
         switch ($this->action) {
             case 'save_edit':
                 if (isset($_POST['cancel'])) {
@@ -41,6 +43,8 @@ class ViewpropertiesController extends BaseController
 
                 break;
             case 'edit':
+                $footer_template = 'header_sqledit.twig';
+                $footer_template = 'footer_sqledit.twig';
                 $this->doEdit();
 
                 break;
@@ -89,8 +93,13 @@ class ViewpropertiesController extends BaseController
 
                 break;
         }
+        $output = ob_get_clean();
 
-        $this->printFooter();
+        $this->printHeader($this->headerTitle('', '', $_REQUEST[$this->subject]), null, true, $header_template);
+        $this->printBody();
+
+        echo $output;
+        $this->printFooter(true, $footer_template);
     }
 
     /**
@@ -122,6 +131,7 @@ class ViewpropertiesController extends BaseController
         $this->printMsg($msg);
 
         $viewdata = $data->getView($_REQUEST[$this->subject]);
+        $this->printHeader($this->headerTitle(), null, true, 'header_sqledit.twig');
 
         if ($viewdata->recordCount() > 0) {
             if (!isset($_POST['formDefinition'])) {
@@ -129,23 +139,49 @@ class ViewpropertiesController extends BaseController
                 $_POST['formComment']    = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/viewproperties" method="post">'.PHP_EOL;
-            echo '<table style="width: 100%">'.PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>".PHP_EOL;
-            echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
-            htmlspecialchars($_POST['formDefinition']), "</textarea></td>\n\t</tr>".PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
-            echo "\t\t<td class=\"data1\"><textarea rows=\"3\" cols=\"32\" name=\"formComment\">",
-            htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>".PHP_EOL;
-            echo '</table>'.PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="save_edit" />'.PHP_EOL;
-            echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST[$this->subject]), '" />'.PHP_EOL;
-            echo $this->misc->form;
-            echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            $variables = (object) [
+                'subfolder'      => \SUBFOLDER . '/src/views/viewproperties',
+
+                'formDefinition' => htmlspecialchars($_POST['formDefinition']),
+
+                'formComment'    => htmlspecialchars($_POST['formComment']),
+
+                'subject'        => htmlspecialchars($_REQUEST[$this->subject])];
+
+            $edition_area = <<<EOT
+
+<form action="{$variables->subfolder}" method="post">
+  <table style="width: 100%">
+    <tr>
+      <th class="data left required">{$this->lang['strdefinition']}</th>
+      <td class="data1">
+        <textarea style="width: 100%;" rows="20" cols="50" id="query" name="formDefinition">
+            {$variables->formDefinition}
+        </textarea>
+      </td>
+    </tr>
+    <tr>
+      <th class="data left">{$this->lang['strcomment']}</th>
+      <td class="data1">
+        <textarea rows="3" cols="32" name="formComment">
+          {$variables->formComment}
+        </textarea>
+      </td>
+    </tr>
+  </table>
+  <p>
+    <input type="hidden" name="action" value="save_edit" />
+    <input type="hidden" name="view" value="{$variables->subject}" />
+    {$this->misc->form}
+    <input type="submit" value="{$this->lang['stralter']}" />
+    <input type="submit" name="cancel" value="{$this->lang['strcancel']}" />
+  </p>
+</form>
+EOT;
+            echo $edition_area;
+
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>" . PHP_EOL;
         }
     }
 
@@ -166,10 +202,10 @@ class ViewpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="'.\SUBFOLDER.'/src/views/viewproperties" method="post">'.PHP_EOL;
+                echo '<form action="' . \SUBFOLDER . '/src/views/viewproperties" method="post">' . PHP_EOL;
 
                 // Output view header
-                echo '<table>'.PHP_EOL;
+                echo '<table>' . PHP_EOL;
                 echo "<tr><th class=\"data required\">{$this->lang['strname']}</th><th class=\"data required\">{$this->lang['strtype']}</th>";
                 echo "<th class=\"data\">{$this->lang['strdefault']}</th><th class=\"data\">{$this->lang['strcomment']}</th></tr>";
 
@@ -190,16 +226,16 @@ class ViewpropertiesController extends BaseController
                 echo '<td><input name="comment" size="32" value="',
                 htmlspecialchars($_REQUEST['comment']), '" /></td>';
 
-                echo '</table>'.PHP_EOL;
-                echo '<p><input type="hidden" name="action" value="properties" />'.PHP_EOL;
-                echo '<input type="hidden" name="stage" value="2" />'.PHP_EOL;
+                echo '</table>' . PHP_EOL;
+                echo '<p><input type="hidden" name="action" value="properties" />' . PHP_EOL;
+                echo '<input type="hidden" name="stage" value="2" />' . PHP_EOL;
                 echo $this->misc->form;
-                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST[$this->subject]), '" />'.PHP_EOL;
-                echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), '" />'.PHP_EOL;
-                echo '<input type="hidden" name="olddefault" value="', htmlspecialchars($_REQUEST['olddefault']), '" />'.PHP_EOL;
-                echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-                echo '</form>'.PHP_EOL;
+                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST[$this->subject]), '" />' . PHP_EOL;
+                echo '<input type="hidden" name="column" value="', htmlspecialchars($_REQUEST['column']), '" />' . PHP_EOL;
+                echo '<input type="hidden" name="olddefault" value="', htmlspecialchars($_REQUEST['olddefault']), '" />' . PHP_EOL;
+                echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . PHP_EOL;
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . PHP_EOL;
+                echo '</form>' . PHP_EOL;
 
                 break;
             case 2:
@@ -237,7 +273,7 @@ class ViewpropertiesController extends BaseController
 
                 break;
             default:
-                echo "<p>{$this->lang['strinvalidparam']}</p>".PHP_EOL;
+                echo "<p>{$this->lang['strinvalidparam']}</p>" . PHP_EOL;
         }
     }
 
@@ -262,54 +298,54 @@ class ViewpropertiesController extends BaseController
 
                 $this->coalesceArr($_POST, 'comment', $view->fields['relcomment']);
 
-                echo '<form action="'.\SUBFOLDER.'/src/views/viewproperties" method="post">'.PHP_EOL;
-                echo '<table>'.PHP_EOL;
-                echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+                echo '<form action="' . \SUBFOLDER . '/src/views/viewproperties" method="post">' . PHP_EOL;
+                echo '<table>' . PHP_EOL;
+                echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . PHP_EOL;
                 echo '<td class="data1">';
                 echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-                htmlspecialchars($_POST['name']), '" /></td></tr>'.PHP_EOL;
+                htmlspecialchars($_POST['name']), '" /></td></tr>' . PHP_EOL;
 
                 if ($data->isSuperUser()) {
                     // Fetch all users
                     $users = $data->getUsers();
 
-                    echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>".PHP_EOL;
+                    echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>" . PHP_EOL;
                     echo '<td class="data1"><select name="owner">';
                     while (!$users->EOF) {
                         $uname = $users->fields['usename'];
                         echo '<option value="', htmlspecialchars($uname), '"',
-                        ($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), '</option>'.PHP_EOL;
+                        ($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), '</option>' . PHP_EOL;
                         $users->moveNext();
                     }
-                    echo '</select></td></tr>'.PHP_EOL;
+                    echo '</select></td></tr>' . PHP_EOL;
                 }
 
                 if ($data->hasAlterTableSchema()) {
                     $schemas = $data->getSchemas();
-                    echo "<tr><th class=\"data left required\">{$this->lang['strschema']}</th>".PHP_EOL;
+                    echo "<tr><th class=\"data left required\">{$this->lang['strschema']}</th>" . PHP_EOL;
                     echo '<td class="data1"><select name="newschema">';
                     while (!$schemas->EOF) {
                         $schema = $schemas->fields['nspname'];
                         echo '<option value="', htmlspecialchars($schema), '"',
-                        ($schema == $_POST['newschema']) ? ' selected="selected"' : '', '>', htmlspecialchars($schema), '</option>'.PHP_EOL;
+                        ($schema == $_POST['newschema']) ? ' selected="selected"' : '', '>', htmlspecialchars($schema), '</option>' . PHP_EOL;
                         $schemas->moveNext();
                     }
-                    echo '</select></td></tr>'.PHP_EOL;
+                    echo '</select></td></tr>' . PHP_EOL;
                 }
 
-                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>" . PHP_EOL;
                 echo '<td class="data1">';
                 echo '<textarea rows="3" cols="32" name="comment">',
-                htmlspecialchars($_POST['comment']), '</textarea></td></tr>'.PHP_EOL;
-                echo '</table>'.PHP_EOL;
-                echo '<input type="hidden" name="action" value="alter" />'.PHP_EOL;
-                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST[$this->subject]), '" />'.PHP_EOL;
+                htmlspecialchars($_POST['comment']), '</textarea></td></tr>' . PHP_EOL;
+                echo '</table>' . PHP_EOL;
+                echo '<input type="hidden" name="action" value="alter" />' . PHP_EOL;
+                echo '<input type="hidden" name="view" value="', htmlspecialchars($_REQUEST[$this->subject]), '" />' . PHP_EOL;
                 echo $this->misc->form;
-                echo "<p><input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-                echo '</form>'.PHP_EOL;
+                echo "<p><input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . PHP_EOL;
+                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . PHP_EOL;
+                echo '</form>' . PHP_EOL;
             } else {
-                echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+                echo "<p>{$this->lang['strnodata']}</p>" . PHP_EOL;
             }
         } else {
             // For databases that don't allow owner change
