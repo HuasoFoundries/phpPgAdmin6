@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Database;
@@ -27,6 +27,8 @@ class Connection
     protected $server_info;
 
     protected $version_dictionary = [
+        '13'  => 'Postgres13',
+        '12'  => 'Postgres12',
         '11'  => 'Postgres11',
         '10'  => 'Postgres10',
         '9.7' => 'Postgres96',
@@ -94,8 +96,12 @@ class Connection
         } catch (\PHPPgAdmin\ADOdbException $e) {
         $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
          */
-
-        $this->conn->connect($pghost, $user, $password, $database);
+        try {
+            $this->conn->connect($pghost, $user, $password, $database);
+            $this->prtrace($this->conn);
+        } catch (\Exception $e) {
+            $this->prtrace($e->getMessage(), $e->getTrace());
+        }
     }
 
     public function getConnectionResult()
@@ -144,8 +150,7 @@ class Connection
         $description = "PostgreSQL {$version}";
 
         $version_parts = explode('.', $version);
-
-        if (in_array($version_parts[0], ['10', '11'], true)) {
+        if ((int) ($version_parts[0] >= 10)) {
             $major_version = $version_parts[0];
         } else {
             $major_version = implode('.', [$version_parts[0], $version_parts[1]]);

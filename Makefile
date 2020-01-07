@@ -6,6 +6,7 @@ XDSWI := $(shell command -v xd_swi 2> /dev/null)
 HAS_PHPMD := $(shell command -v phpmd 2> /dev/null)
 HAS_CSFIXER:= $(shell command -v php-cs-fixer 2> /dev/null)
 XDSWI_STATUS:=$(shell command xd_swi stat 2> /dev/null)
+CURRENT_BRANCH:=$(shell command git rev-parse --abbrev-ref HEAD 2> /dev/null)
 DATENOW:=`date +'%Y-%m-%d'`
 YELLOW=\033[0;33m
 RED=\033[0;31m
@@ -18,6 +19,7 @@ default: install
 
 version:
 	@echo $(VERSION)
+	echo CURRENT_BRANCH is $(CURRENT_BRANCH)
 
 
 
@@ -42,13 +44,17 @@ mocktag:
 
 
 tag_and_push:
-		git checkout master
-		git merge develop
+	@if [[ "$(CURRENT_BRANCH)" != "master" ]]; then \
+		git checkout master ;\
+		git merge $(CURRENT_BRANCH) ;\
+	fi 
+
 		git commit -a -m "Creating Tag v$(v) at $(DATENOW) - $(m)"
-		git tag v$(v)
-		git push
-		git push --tags
-		git checkout develop
+		#git tag v$(v)
+		#git push
+		#git push --tags
+	
+		git checkout $(CURRENT_BRANCH)
 
 
 

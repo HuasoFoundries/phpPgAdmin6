@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,7 +11,7 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 11.x support
  */
 /**
- * Class to add support for Postgres10.
+ * Class to add support for Postgres11.
  */
 class Postgres11 extends Postgres10
 {
