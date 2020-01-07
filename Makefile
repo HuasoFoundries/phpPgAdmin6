@@ -44,7 +44,7 @@ mocktag:
 tag_and_push:
 		git checkout master
 		git merge develop
-		git commit -a -m "Creating tag Tag v$(v) at $(DATENOW) - $(m)"
+		git commit -a -m "Creating Tag v$(v) at $(DATENOW) - $(m)"
 		git tag v$(v)
 		git push
 		git push --tags
