@@ -1,0 +1,19 @@
+preset: recommended
+risky: true
+finder:
+  exclude:
+    - modules
+    - node_modules
+    - storage
+    - vendor
+    - tests
+    - 
+  name: "*.php"
+
+enabled:
+  - align_double_arrow
+  - align_equals
+  - align_phpdoc
+  - function_to_constant
+  - short_array_syntax
+  - single_quote

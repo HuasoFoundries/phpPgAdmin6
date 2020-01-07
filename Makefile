@@ -65,7 +65,7 @@ runcsfixer:
         echo -e "$(GREEN)php-cs-fixer$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
         echo -e "Install it with $(GREEN)phive install php-cs-fixer global$(WHITE)" ;\
     else \
-	    php-cs-fixer --verbose fix ;\
+	    php-cs-fixer --verbose fix --using-cache no;\
 	    php-cs-fixer --verbose fix index.php ;\
     fi 
 
