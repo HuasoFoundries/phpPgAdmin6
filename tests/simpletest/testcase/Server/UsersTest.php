@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
 
 // Import the precondition class.
@@ -54,16 +54,23 @@ class UsersTest extends PreconditionSet
         $this->assertTrue($this->clickLink($lang['strcreateuser']));
 
         // Enter information for creating a user.
-        $this->assertTrue($this->setField('formUsername', $this->_superUserName));
-        $this->assertTrue($this->setField('formPassword', '123456'));
-        $this->assertTrue($this->setField('formConfirm', '123456'));
-        $this->assertTrue($this->setField('formSuper', true));
-        $this->assertTrue($this->setField('formCreateDB', true));
+        $formUsernameResult = $this->assertTrue($this->setField('formUsername', $this->_superUserName));
+        $formPasswordResult = $this->assertTrue($this->setField('formPassword', '123456'));
+        $formConfirmResult  = $this->assertTrue($this->setField('formConfirm', '123456'));
+        $formSuperResult    = $this->assertTrue($this->setField('formSuper', true));
+        $formCreateDBResult = $this->assertTrue($this->setField('formCreateDB', true));
+        var_dump([
+            'formUsernameResult' => $formUsernameResult,
+            'formPasswordResult' => $formPasswordResult,
+            'formConfirmResult'  => $formConfirmResult,
+            'formSuperResult'    => $formSuperResult,
+            'formCreateDBResult' => $formCreateDBResult,
 
+        ]);
         // Then submit and verify it.
         $this->assertTrue($this->clickSubmit($lang['strcreate']));
         $this->assertText($this->_superUserName);
-
+        die();
         return true;
     }
 
@@ -129,7 +136,7 @@ class UsersTest extends PreconditionSet
             $this->get("${webUrl}/users", [
                 'action'   => 'edit',
                 'username' => $this->_superUserName,
-                'server'   => $SERVER, ])
+                'server'   => $SERVER])
         );
 
         // Enter the information for altering the user's properties.
@@ -161,7 +168,7 @@ class UsersTest extends PreconditionSet
             $this->get("${webUrl}/users", [
                 'action'   => 'confirm_drop',
                 'username' => $this->_superUserName,
-                'server'   => $SERVER, ])
+                'server'   => $SERVER])
         );
 
         // Confirm to drop the user and verify it.
@@ -192,9 +199,9 @@ class UsersTest extends PreconditionSet
         // Turn to the old browser which we login with super user at very beginning.
         $this->assertTrue($this->get("${webUrl}/users", ['server' => $SERVER]));
         $this->assertTrue(
-            $this->get("${webUrl}/users", ['action'     => 'confirm_drop',
+            $this->get("${webUrl}/users", ['action' => 'confirm_drop',
                 'username'                              => $this->_powerUserName,
-                'server'                                => $SERVER, ])
+                'server'                                => $SERVER])
         );
 
         // Confirm to drop the user and verify it.
@@ -228,7 +235,7 @@ class UsersTest extends PreconditionSet
             $this->get("${webUrl}/users", [
                 'action'   => 'confirm_drop',
                 'username' => $SUPER_USER_NAME,
-                'server'   => $SERVER, ])
+                'server'   => $SERVER])
         );
 
         // Confirm to drop the user and verify it.

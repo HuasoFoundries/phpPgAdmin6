@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
 
 // Import the precondition class.
@@ -28,7 +28,6 @@ class ConstraintsTest extends PreconditionSet
 
         $this->login(
             $SUPER_USER_NAME,
-
             $SUPER_USER_PASSWORD,
             "${webUrl}/login"
         );

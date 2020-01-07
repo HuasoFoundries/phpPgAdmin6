@@ -1,8 +1,9 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
+
 class FunctionalTester extends \Codeception\Actor
 {
     use _generated\FunctionalTesterActions;

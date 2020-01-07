@@ -1,4 +1,4 @@
-\connect postgres
+\connect scrutinizer
 \i tests/simpletest/data/config.sql
 
 DROP DATABASE :dbname;

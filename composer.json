@@ -1,6 +1,6 @@
 {
     "name": "huasofoundries/phppgadmin6",
-    "version": "6.0.0-beta.52",
+    "version": "6.0.0-RC1",
     "description": "Like phpmyadmin but for postgres",
     "type": "project",
     "license": [
@@ -33,7 +33,7 @@
         "ext-pgsql": "*",
         "slim/slim": "^3.6",
         "slim/twig-view": "~2.5.1",
-        "twig/twig": "~1.28",
+        "twig/twig": "~1.42.4",
         "adodb/adodb-php": "^5.20",
         "slim/flash": "^0.4.0"
     },
@@ -41,7 +41,6 @@
         "kint-php/kint": "~3.3",
         "codeception/codeception": "*",
         "simpletest/simpletest": "^1.1",
-        "phpmd/phpmd": "^2.6",
         "friendsofphp/php-cs-fixer": "^2.16",
         "php-console/php-console": "^3.1",
         "codeception/module-asserts": "^1.1"

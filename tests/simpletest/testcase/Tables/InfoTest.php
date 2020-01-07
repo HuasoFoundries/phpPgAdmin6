@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
 
 // Import the precondition class.
@@ -28,7 +28,6 @@ class InfoTest extends PreconditionSet
 
         $this->login(
             $POWER_USER_NAME,
-
             $POWER_USER_PASSWORD,
             "${webUrl}/login"
         );

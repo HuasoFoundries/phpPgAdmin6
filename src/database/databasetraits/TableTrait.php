@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -17,7 +17,6 @@ trait TableTrait
 
     /**
      * Return all tables in current database excluding schemas 'pg_catalog', 'information_schema' and 'pg_toast'.
-     *
      *
      * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
      */

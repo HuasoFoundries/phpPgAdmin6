@@ -1,16 +1,19 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
-require_once __DIR__.'/../../src/lib.inc.php';
-require_once __DIR__.'/../../src/lang/english.php';
+
+require_once __DIR__ . '/../../src/lib.inc.php';
+require_once __DIR__ . '/../../src/translations/English.php';
+$english = new PHPPgAdmin\Translations\English();
+$lang    = $english->getLang();
 
 require_once 'config.tests.php';
 
-set_include_path($PHP_SIMPLETEST_HOME.':'.'./testcase'.':'.get_include_path());
+set_include_path($PHP_SIMPLETEST_HOME . ':' . './testcase' . ':' . get_include_path());
 
-$run = true;
+$run = false;
 
 if ($run) {
     require_once 'testcase/testphpPgAdminMain.php';

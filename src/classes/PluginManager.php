@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
 
 namespace PHPPgAdmin;
@@ -38,8 +38,6 @@ class PluginManager
 
     /**
      * Register the plugins.
-     *
-     * @param \Slim\Container $container
      *
      * @internal param $this ->language - Language that have been used
      *

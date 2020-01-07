@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
 
 namespace PHPPgAdmin\Traits;
@@ -274,7 +274,6 @@ trait ExportTrait
     /**
      * Offers the option of export database without user credentials. When running in Amazon RDS this is the workaround
      * to make pg_dumpall work at all.
-     *
      *
      * @param mixed $version10orMore
      *
