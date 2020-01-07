@@ -15,7 +15,6 @@ class PopulateRequestResponse extends Middleware
         \Psr\Http\Message\ResponseInterface $response,
         $next
     ) {
-
         $container                = $this->container;
         $container['requestobj']  = $request;
         $container['responseobj'] = $response;
