@@ -9,26 +9,24 @@
 
 
 
-// Set this to true to enable debug features
-$conf['debugmode'] = false;
-
 // Enable this to debug on console using
 // https://github.com/barbushin/php-console
 // (Only in Chrome)
 $conf['php_console'] = true;
 
 $conf['debugmode'] = true;
-
 if ($conf['php_console'] === true &&
     // PHP_CONSOLE doesn't work on PHP 7.4 yet
     version_compare(PHP_VERSION, 7.4, '<') &&
-    isset($_SERVER['HTTP_USER_AGENT']) &&
-    stripos($_SERVER['HTTP_USER_AGENT'], 'chrome') !== false) {
+    class_exists('PhpConsole\Handler')) {
 
-    $handler = PhpConsole\Handler::getInstance();
+    $phpConsoleHandler = PhpConsole\Handler::getInstance();
 
+/* Get the reference to the connector instance
+$connector=$phpConsoleHandler->getConnector();
+ */
 /* Set a password for PHPConsole Connector
-$connector=$handler->getConnector();
+$connector->setPassword('yohoho123', true);
  */
 
 /* enable in SSL mode only
@@ -36,12 +34,13 @@ $connector->enableSslOnlyMode();
  */
 
 /* Override default Handler behavior:
-$handler->setHandleErrors(false);  // disable errors handling
-$handler->setHandleExceptions(false); // disable exceptions handling
-$handler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
+$phpConsoleHandler->setHandleErrors(false);  // disable errors handling
+$phpConsoleHandler->setHandleExceptions(false); // disable exceptions handling
+$phpConsoleHandler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
  */
 
 }
+
 
 // optionally, set a path for your error log, relative to this project root
 // $conf['error_log']='temp/phppga.php_error.log';

@@ -178,15 +178,6 @@ $container['plugin_manager'] = function ($c) {
     return $plugin_manager;
 };
 
-$container['serializer'] = function ($c) {
-    $serializerbuilder = \JMS\Serializer\SerializerBuilder::create();
-    $serializer        = $serializerbuilder
-        ->setCacheDir(BASE_PATH . '/temp/jms')
-        ->setDebug($c->get('settings')['debug'])
-        ->build();
-    return $serializer;
-};
-
 // Create Misc class references
 $container['misc'] = function ($c) {
     $misc = new \PHPPgAdmin\Misc($c);
@@ -202,17 +193,12 @@ $container['misc'] = function ($c) {
     }
 
     $_theme = $c->utils->getTheme($conf, $_server_info);
-    // if any of the above conditions had set the $_theme variable
-    // then we store it in the session and a cookie
-    // and we overwrite $conf['theme'] with its value
     if (!is_null($_theme)) {
         /* save the selected theme in cookie for a year */
         setcookie('ppaTheme', $_theme, time() + 31536000, '/');
         $_SESSION['ppaTheme'] = $_theme;
+        $misc->setConf('theme', $_theme);
     }
-
-    $misc->setConf('theme', $_theme);
-
     return $misc;
 };
 
@@ -279,71 +265,7 @@ $container['haltHandler'] = function ($c) {
 
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route
-$app->add(
-    function ($request, $response, $next) {
-
-        $this['requestobj']  = $request;
-        $this['responseobj'] = $response;
-
-        $this['server']   = $request->getParam('server');
-        $this['database'] = $request->getParam('database');
-        $this['schema']   = $request->getParam('schema');
-        $misc             = $this->get('misc');
-
-        $misc->setHREF();
-        $misc->setForm();
-
-        $this->view->offsetSet('METHOD', $request->getMethod());
-        if ($request->getAttribute('route')) {
-            $this->view->offsetSet('subject', $request->getAttribute('route')->getArgument('subject'));
-        }
-
-        $query_string = $request->getUri()->getQuery();
-        $this->view->offsetSet('query_string', $query_string);
-        $path = (SUBFOLDER ? (SUBFOLDER . '/') : '') . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
-        $this->view->offsetSet('path', $path);
-
-        $params = $request->getParams();
-
-        $viewparams = [];
-
-        foreach ($params as $key => $value) {
-            if (is_scalar($value)) {
-                $viewparams[$key] = $value;
-            }
-        }
-
-        if (isset($_COOKIE['IN_TEST'])) {
-            $in_test = (string) $_COOKIE['IN_TEST'];
-        } else {
-            $in_test = '0';
-        }
-
-        // remove tabs and linebreaks from query
-        if (isset($params['query'])) {
-            $viewparams['query'] = str_replace(["\r", "\n", "\t"], ' ', $params['query']);
-        }
-        $this->view->offsetSet('params', $viewparams);
-        $this->view->offsetSet('in_test', $in_test);
-
-        if (count($this['errors']) > 0) {
-            return ($this->haltHandler)($this->requestobj, $this->responseobj, $this['errors'], 412);
-        }
-
-        $messages = $this->flash->getMessages();
-        if (!empty($messages)) {
-            foreach ($messages as $key => $message) {
-                \PC::debug($message, 'Flash: ' . $key);
-            }
-        }
-
-        // First execute anything else
-        $response = $next($request, $response);
-
-        // Any other request, pass on current response
-        return $response;
-    }
-);
+$app->add(new \PHPPgAdmin\Middleware\PopulateRequestResponse($container));
 
 $container['action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 

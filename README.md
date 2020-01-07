@@ -11,22 +11,25 @@ PHP Based administration tool for PostgreSQL. Blazing fast routing with [Slim Fr
 
 This is a hard fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) which adds the following enhancements:
 
-- Composer Installation and dependency management
-- Autoloading (thanks to the above)
-- Namespaced classes
-- Removal of global variables
-- Full PHP 7+ support
-- Support for PG 9.3+ features (Materialized Views, BRIN Indexes, etc)
-- Nice urls
+-   Composer Installation and dependency management
+-   [PSR-2 Coding Standard](https://www.php-fig.org/psr/psr-2) (Will evolve to PSR-12 soon)
+-   [PSR-4 Autoloading](https://www.php-fig.org/psr/psr-4)
+-   Removal of global variables (WIP)
+-   Removal of superglobals in favour of [PSR-7 Message interfaces](http://www.php-fig.org/psr/psr-7/) (WIP)
+-   Full PHP 7+ support
+-   Usage of Dependency Injection compliant with [PSR-11 Container interface](http://www.php-fig.org/psr/psr-11/)
+-   Support for PG 9.3+ features (Materialized Views, BRIN Indexes, etc)
+-   Nice urls
 
 ### WIP
 
 Other enhancements are in progress and would be a nice to have:
 
-- Replace usage of superglobals with [PSR-7 Message interfaces](http://www.php-fig.org/psr/psr-7/) to carry information around.
-- Usage of Dependency Injection compliant with [PSR-11 Container interface](http://www.php-fig.org/psr/psr-11/)
+## Requirements
 
-This project is made on top of [Slim Framework 3](https://www.slimframework.com/) and communicates with the Database using [AdoDB](https://adodb.org/)
+-   PHP 5.6+ (but you should really, really consider switching to at least v7.1)
+-   ext-psql
+-   [Composer](https://getcomposer.org/download/)
 
 ## Installation
 
@@ -51,7 +54,7 @@ composer install --no-dev
 If there's something broken and I cannot risk breaking the rest to fix your issue, I might push a fix or feature to [develop branch](https://github.com/HuasoFoundries/phpPgAdmin6/tree/develop). Said branch can be installed as
 
 ```sh
-composer create-project huasofoundries/phppgadmin6 <FOLDER> *@beta --no-dev --prefer-dist
+composer create-project huasofoundries/phppgadmin6 <FOLDER> v6.*.*@beta --no-dev --prefer-dist
 ```
 
 (or, you know, clone the repo and make sure you're in develop branch)
@@ -134,12 +137,12 @@ You can choose between one of them if you use this work.
 We're preserving due credits to all people that contributed in the past, as well as other release notes
 contained in the old version of [phppgadmin](https://github.com/phppgadmin/phppgadmin)
 
-- [Bugs](docs/BUGS.md)
-- [Changelog](docs/CHANGELOG.md) (_outdated_)
-- [Credits](docs/CREDITS.md)
-- [Developers](docs/DEVELOPERS.md)
-- [FAQ](docs/FAQ.md) (_outdated_)
-- [History](docs/HISTORY.md) (_outdated_)
-- [Translators](docs/TRANSLATORS.md)
+-   [Bugs](docs/BUGS.md)
+-   [Changelog](docs/CHANGELOG.md) (_outdated_)
+-   [Credits](docs/CREDITS.md)
+-   [Developers](docs/DEVELOPERS.md)
+-   [FAQ](docs/FAQ.md) (_outdated_)
+-   [History](docs/HISTORY.md) (_outdated_)
+-   [Translators](docs/TRANSLATORS.md)
 
 Kudos to all people that helped build the original project, upon which this one was built.
