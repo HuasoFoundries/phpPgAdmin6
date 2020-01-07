@@ -1,9 +1,8 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
-
 class UnitTester extends \Codeception\Actor
 {
     use _generated\UnitTesterActions;

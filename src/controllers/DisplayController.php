@@ -1,15 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class DisplayController extends BaseController
 {
@@ -769,14 +767,14 @@ class DisplayController extends BaseController
                 echo $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
                 echo '<input type="hidden" name="types[', htmlspecialchars($attrs->fields['attname']), ']" value="',
                 htmlspecialchars($attrs->fields['type']), '" /></td>';
-                ++$elements;
+                $elements++;
                 echo '<td style="white-space:nowrap;">'.PHP_EOL;
                 echo '<select name="format['.htmlspecialchars($attrs->fields['attname']), ']">'.PHP_EOL;
                 echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attname']] == 'VALUE') ? ' selected="selected"' : '', ">{$this->lang['strvalue']}</option>".PHP_EOL;
                 $selected = ($_REQUEST['format'][$attrs->fields['attname']] == 'EXPRESSION') ? ' selected="selected"' : '';
                 echo '<option value="EXPRESSION"'.$selected.">{$this->lang['strexpression']}</option>".PHP_EOL;
                 echo "</select>\n</td>".PHP_EOL;
-                ++$elements;
+                $elements++;
                 echo '<td style="white-space:nowrap;">';
                 // Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
                 if (!$attrs->fields['attnotnull']) {
@@ -786,7 +784,7 @@ class DisplayController extends BaseController
                     }
                     echo "<label><span><input type=\"checkbox\" class=\"nullcheckbox\" name=\"nulls[{$attrs->fields['attname']}]\"",
                     isset($_REQUEST['nulls'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></span></label></td>'.PHP_EOL;
-                    ++$elements;
+                    $elements++;
                 } else {
                     echo '&nbsp;</td>';
                 }
@@ -811,9 +809,9 @@ class DisplayController extends BaseController
                 echo $data->printField("values[{$attrs->fields['attname']}]", $resultset->fields[$attrs->fields['attname']], $attrs->fields['type'], $extras);
 
                 echo '</td>';
-                ++$elements;
+                $elements++;
                 echo '</tr>'.PHP_EOL;
-                ++$i;
+                $i++;
                 $attrs->moveNext();
             }
             echo '</table>'.PHP_EOL;
@@ -1118,7 +1116,7 @@ class DisplayController extends BaseController
 
         list($min_page, $max_page) = $this->_getMinMaxPages($page, $pages);
 
-        for ($i = $min_page; $i <= $max_page; ++$i) {
+        for ($i = $min_page; $i <= $max_page; $i++) {
             $result .= (($i === $page) ? $i : sprintf('<a class="pagenav" href="display?%s&page=%s">%s</a>', $url, $i, $i)).PHP_EOL;
         }
 

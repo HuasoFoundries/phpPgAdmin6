@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Traits;
@@ -13,8 +13,6 @@ namespace PHPPgAdmin\Traits;
 
 /**
  * A trait with helpers methods to debug, halt the app and format text to html.
- *
- * @package PHPPgAdmin
  */
 trait HelperTrait
 {

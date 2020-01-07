@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -109,7 +109,7 @@ class LoginController extends BaseController
         $login_html .= '<td><input id="loginPassword" type="password" name="loginPassword_'.$md5_server.'" size="24" /></td>';
         $login_html .= '</tr>';
         $login_html .= '</table>';
-        if (sizeof($this->conf['servers']) > 1) {
+        if (count($this->conf['servers']) > 1) {
             $checked = isset($_POST['loginShared']) ? 'checked="checked"' : '';
             $login_html .= '<p><input type="checkbox" id="loginShared" name="loginShared" '.$checked.' />';
             $login_html .= '<label for="loginShared">'.$this->lang['strtrycred'].'</label></p>';

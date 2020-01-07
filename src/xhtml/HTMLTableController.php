@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -209,7 +209,7 @@ class HTMLTableController extends HTMLController
 
             switch ($column_id) {
                 case 'actions':
-                    if (sizeof($actions) > 0) {
+                    if (count($actions) > 0) {
                         $thead_html .= '<th class="data" >'.$column['title'].'</th>'.PHP_EOL;
                     }
 
@@ -316,7 +316,7 @@ class HTMLTableController extends HTMLController
             $tbody_html .= '</tr>'.PHP_EOL;
 
             $tabledata->moveNext();
-            ++$i;
+            $i++;
         }
 
         $tbody_html .= '</tbody>';
@@ -341,7 +341,7 @@ class HTMLTableController extends HTMLController
 
             $class = (isset($column['class']) && '' !== $column['class']) ? $column['class'] : '';
 
-            if ($column_id !== 'actions' || sizeof($actions) > 0) {
+            if ($column_id !== 'actions' || count($actions) > 0) {
                 $tfoot_html .= "<td class=\"data{$class}\"></td>".PHP_EOL;
             }
         }

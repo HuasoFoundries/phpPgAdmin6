@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin;
@@ -13,8 +13,6 @@ namespace PHPPgAdmin;
 
 /**
  * A class that adds convenience methods to the container.
- *
- * @package PHPPgAdmin
  */
 class ContainerUtils
 {
@@ -31,7 +29,7 @@ class ContainerUtils
      */
     public function __construct()
     {
-        $composerinfo = json_decode(file_get_contents(BASE_PATH.'/composer.json'));
+        $composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
         $appVersion   = $composerinfo->version;
 
         $phpMinVer = (str_replace(['<', '>', '='], '', $composerinfo->require->php));
@@ -49,14 +47,14 @@ class ContainerUtils
                 'base_path'                         => BASE_PATH,
                 'debug'                             => DEBUGMODE,
 
-                'routerCacheFile'                   => BASE_PATH.'/temp/route.cache.php',
+                'routerCacheFile'                   => BASE_PATH . '/temp/route.cache.php',
 
                 // Configuration file version.  If this is greater than that in config.inc.php, then
                 // the app will refuse to run.  This and $conf['version'] should be incremented whenever
                 // backwards incompatible changes are made to config.inc.php-dist.
                 'base_version'                      => 60,
                 // Application version
-                'appVersion'                        => 'v'.$appVersion,
+                'appVersion'                        => 'v' . $appVersion,
                 // Application name
                 'appName'                           => 'phpPgAdmin6',
 
@@ -73,7 +71,7 @@ class ContainerUtils
         // Fetch DI Container
         $container            = $this->app->getContainer();
         $container['utils']   = $this;
-        $container['version'] = 'v'.$appVersion;
+        $container['version'] = 'v' . $appVersion;
         $container['errors']  = [];
 
         $this->container = $container;
@@ -88,24 +86,76 @@ class ContainerUtils
         return [self::$instance->container, self::$instance->app];
     }
 
+    public function icon($icon)
+    {
+
+        $conf = $this->container->conf;
+        if (is_string($icon)) {
+            $path = "/assets/images/themes/{$conf['theme']}/{$icon}";
+            if (file_exists(\BASE_PATH . $path . '.png')) {
+                return SUBFOLDER . $path . '.png';
+            }
+
+            if (file_exists(\BASE_PATH . $path . '.gif')) {
+                return SUBFOLDER . $path . '.gif';
+            }
+
+            if (file_exists(\BASE_PATH . $path . '.ico')) {
+                return SUBFOLDER . $path . '.ico';
+            }
+
+            $path = "/assets/images/themes/default/{$icon}";
+            if (file_exists(\BASE_PATH . $path . '.png')) {
+                return SUBFOLDER . $path . '.png';
+            }
+
+            if (file_exists(\BASE_PATH . $path . '.gif')) {
+                return SUBFOLDER . $path . '.gif';
+            }
+
+            if (file_exists(\BASE_PATH . $path . '.ico')) {
+                return SUBFOLDER . $path . '.ico';
+            }
+        } else {
+            // Icon from plugins
+            $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
+            if (file_exists(\BASE_PATH . $path . '.png')) {
+                return SUBFOLDER . $path . '.png';
+            }
+
+            if (file_exists(\BASE_PATH . $path . '.gif')) {
+                return SUBFOLDER . $path . '.gif';
+            }
+
+            if (file_exists(\BASE_PATH . $path . '.ico')) {
+                return SUBFOLDER . $path . '.ico';
+            }
+        }
+
+        return '';
+    }
+
     public function maybeRenderIframes($response, $subject, $query_string)
     {
         $c       = $this->container;
         $in_test = $c->view->offsetGet('in_test');
 
         if ($in_test === '1') {
-            $className  = '\PHPPgAdmin\Controller\\'.ucfirst($subject).'Controller';
+            $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
             $controller = new $className($c);
 
             return $controller->render();
         }
-
         $viewVars = [
-            'url'            => '/src/views/'.$subject.($query_string ? '?'.$query_string : ''),
+            'icon'           => [
+                'Refresh' => $this->icon('Refresh'),
+                'Servers' => $this->icon('Servers'),
+            ],
+            'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
             'headertemplate' => 'header.twig',
         ];
 
-        return $c->view->render($response, 'iframe_view.twig', $viewVars);
+        return $c->view->render($response, 'main.twig', $viewVars);
     }
 
     /**
@@ -206,10 +256,10 @@ class ContainerUtils
 
         // if server_id isn't set, then you will be redirected to intro
         if ($this->container->requestobj->getQueryParam('server') === null) {
-            $destinationurl = \SUBFOLDER.'/src/views/intro';
+            $destinationurl = \SUBFOLDER . '/src/views/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
-            $destinationurl = \SUBFOLDER.'/src/views/login'.($query_string ? '?'.$query_string : '');
+            $destinationurl = \SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
         }
 
         return $destinationurl;
@@ -233,7 +283,7 @@ class ContainerUtils
             $destinationurl = $this->getRedirectUrl();
         } else {
             $url = $this->container->misc->getLastTabURL($subject);
-            $this->addFlash($url, 'getLastTabURL for '.$subject);
+            $this->addFlash($url, 'getLastTabURL for ' . $subject);
             // Load query vars into superglobal arrays
             if (isset($url['urlvars'])) {
                 $urlvars = [];

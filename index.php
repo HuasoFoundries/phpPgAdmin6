@@ -3,7 +3,6 @@
 /**
  * PHPPgAdmin v6.0.0-RC2
  */
-
 require_once __DIR__.'/src/lib.inc.php';
 
 // This section is made to be able to parse requests coming from PHP Builtin webserver

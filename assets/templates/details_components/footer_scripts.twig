@@ -22,8 +22,14 @@ var reload = '{{reload}}';
 if (!window.inPopUp) {
 
 
-	if (reload !== 'none') {
-		parent.frames && parent.frames.browser && parent.frames.browser.location.replace('{{subfolder}}/src/views/browser');
+	if (reload !== 'none' && parent && typeof parent.$==='function') {
+		try {
+
+		parent.$('#lazy').jstree().refresh()
+		} catch (err) {
+			parent.console.warn(err);
+		}
+
 	}
 
 	if (reload === 'other' && !parent.frames.length && in_test === '0') {

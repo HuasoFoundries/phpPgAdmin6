@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -76,7 +76,7 @@ class AcinsertController extends BaseController
                     }
                 }
                 echo '</tr>'.PHP_EOL;
-                ++$i;
+                $i++;
                 $res->moveNext();
             }
             echo '</table>'.PHP_EOL;

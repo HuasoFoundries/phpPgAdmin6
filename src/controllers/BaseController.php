@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -9,8 +9,6 @@ namespace PHPPgAdmin\Controller;
 ini_set('display_errors', 1);
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class BaseController
 {
@@ -45,7 +43,8 @@ class BaseController
     public $controller_title = 'base';
     protected $table_controller;
     protected $trail_controller;
-    protected $tree_controller;
+    private static $_tree_controller = null;
+
     protected $footer_controller;
     protected $header_controller;
     protected $scripts = '';
@@ -68,7 +67,7 @@ class BaseController
         $this->container = $container;
         $this->lang      = $container->get('lang');
 
-        $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
+        $this->controller_name = str_replace(__NAMESPACE__ . '\\', '', get_class($this));
         $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
         $this->script          = $this->view_name;
 
@@ -153,7 +152,7 @@ class BaseController
     {
         $title = $title ? $title : $this->controller_title;
 
-        return $prefix.$this->lang[$title].($suffix ? ': '.$suffix : '');
+        return $prefix . $this->lang[$title] . ($suffix ? ': ' . $suffix : '');
     }
 
     public function getContainer()
@@ -164,7 +163,11 @@ class BaseController
     private function _getTableController()
     {
         if (null === $this->table_controller) {
-            $this->table_controller = new \PHPPgAdmin\XHtml\HTMLTableController($this->getContainer(), $this->controller_name);
+            $this->prtrace(__METHOD__);
+            $this->table_controller = new \PHPPgAdmin\XHtml\HTMLTableController(
+                $this->getContainer(),
+                $this->controller_name
+            );
         }
 
         return $this->table_controller;
@@ -173,7 +176,11 @@ class BaseController
     private function _getFooterController()
     {
         if (null === $this->footer_controller) {
-            $this->footer_controller = new \PHPPgAdmin\XHtml\HTMLFooterController($this->getContainer(), $this->controller_name);
+            $this->prtrace(__METHOD__);
+            $this->footer_controller = new \PHPPgAdmin\XHtml\HTMLFooterController(
+                $this->getContainer(),
+                $this->controller_name
+            );
         }
 
         return $this->footer_controller;
@@ -182,7 +189,11 @@ class BaseController
     private function _getHeaderController()
     {
         if (null === $this->header_controller) {
-            $this->header_controller = new \PHPPgAdmin\XHtml\HTMLHeaderController($this->getContainer(), $this->controller_name);
+            $this->prtrace(__METHOD__);
+            $this->header_controller = new \PHPPgAdmin\XHtml\HTMLHeaderController(
+                $this->getContainer(),
+                $this->controller_name
+            );
         }
 
         return $this->header_controller;
@@ -191,19 +202,50 @@ class BaseController
     private function _getNavbarController()
     {
         if (null === $this->trail_controller) {
-            $this->trail_controller = new \PHPPgAdmin\XHtml\HTMLNavbarController($this->getContainer(), $this->controller_name);
+            $this->prtrace(__METHOD__);
+            $this->trail_controller = new \PHPPgAdmin\XHtml\HTMLNavbarController(
+                $this->getContainer(),
+                $this->controller_name
+            );
         }
 
         return $this->trail_controller;
     }
 
-    private function _getTreeController()
+    /**
+     * Gets the tree instance.
+     *
+     * @param \Slim\Container $container        the $app container
+     * @param <type>  $controller_name  The controller name
+     *
+     * @return \PHPPgAdmin\XHtml\TreeController The tree controller instance.
+     */
+    private static function _getTreeInstance($container, $controller_name)
     {
-        if (null === $this->tree_controller) {
-            $this->tree_controller = new \PHPPgAdmin\XHtml\TreeController($this->getContainer(), $this->controller_name);
+        if (null === self::$_tree_controller) {
+            self::$_tree_controller = new \PHPPgAdmin\XHtml\TreeController(
+                $container,
+                $controller_name
+            );
         }
 
-        return $this->tree_controller;
+        return self::$_tree_controller;
+    }
+
+    /**
+     * Gets the tree controller.
+     *
+     * @param string  $from  From where is this method being called, for debug purposes
+     *
+     * @return \PHPPgAdmin\XHtml\TreeController  The tree controller.
+     */
+    private function _getTreeController($from)
+    {
+        //$tree = self::_getTreeInstance($this->getContainer(), $this->controller_name);
+        $tree = new \PHPPgAdmin\XHtml\TreeController($this->getContainer(), $this->controller_name);
+        $this->prtrace(__METHOD__);
+        return $tree;
+
     }
 
     /**
@@ -229,7 +271,8 @@ class BaseController
 
     public function adjustTabsForTree($tabs)
     {
-        $tree = $this->_getTreeController();
+        //$tree = self::_getTreeInstance($this->getContainer(), $this->controller_name);
+        $tree = $this->_getTreeController(__METHOD__);
 
         return $tree->adjustTabsForTree($tabs);
     }
@@ -240,15 +283,24 @@ class BaseController
      * @param \PHPPgAdmin\ArrayRecordSet $_treedata a set of records to populate the tree
      * @param array                      $attrs     Attributes for tree items
      * @param string                     $section   The section where the branch is linked in the tree
-     * @param bool                       $print     either to return or echo the result
      *
-     * @return \Slim\Http\Response|string the json rendered tree
+     * @return string the json rendered tree
      */
-    public function printTree(&$_treedata, &$attrs, $section, $print = true)
+    public function printTree(&$_treedata, &$attrs, $section)
     {
-        $tree = $this->_getTreeController();
 
-        return $tree->printTree($_treedata, $attrs, $section, $print);
+        $tree = $this->_getTreeController(__METHOD__);
+
+        $treedata = [];
+
+        if ($_treedata->recordCount() > 0) {
+            while (!$_treedata->EOF) {
+                $treedata[] = $_treedata->fields;
+                $_treedata->moveNext();
+            }
+        }
+
+        return $tree->printTreeJSON($treedata, $attrs, $section);
     }
 
     public function printTrail($trail = [], $do_print = true)
@@ -300,11 +352,25 @@ class BaseController
         return $footer_controller->setNoBottomLink($flag);
     }
 
-    public function printFooter($doBody = true, $template = 'footer.twig')
+    /**
+     * Prints or returns the controller's footer
+     *
+     * @param boolean  $doBody      If false, return the body instead of print. Defaults to true
+     * @param string   $template    The template to render
+     * @param array    $viewParams  Optional - extra view parameters
+     *
+     * @return <type>  ( description_of_the_return_value )
+     */
+    public function printFooter($doBody = true, $template = 'footer.twig', $viewParams = [])
     {
         $footer_controller = $this->_getFooterController();
 
-        return $footer_controller->printFooter($doBody, $template);
+        $footer_html = $footer_controller->getFooter($template, $viewParams);
+        if ($doBody) {
+            echo $footer_html;
+        } else {
+            return $footer_html;
+        }
     }
 
     public function printReload($database, $do_print = true)
@@ -397,7 +463,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">'.nl2br($msg).'</p>'.PHP_EOL;
+            $html .= '<p class="message">' . nl2br($msg) . '</p>' . PHP_EOL;
         }
         if ($do_print) {
             echo $html;

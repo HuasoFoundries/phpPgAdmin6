@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class TypesController extends BaseController
 {
@@ -302,7 +300,7 @@ class TypesController extends BaseController
                         $nbVals = count($vals);
                         echo "<tr>\n\t<th class=\"data left\" rowspan=\"${nbVals}\">{$this->lang['strenumvalues']}</th>".PHP_EOL;
                         echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>".PHP_EOL;
-                        for ($i = 1; $i < $nbVals; ++$i) {
+                        for ($i = 1; $i < $nbVals; $i++) {
                             echo '<td class="data', 2 - ($i % 2), "\">{$vals[$i]['enumval']}</td></tr>".PHP_EOL;
                         }
                     }
@@ -434,7 +432,7 @@ class TypesController extends BaseController
                 echo "\t<tr><th colspan=\"2\" class=\"data required\">{$this->lang['strfield']}</th><th colspan=\"2\" class=\"data required\">{$this->lang['strtype']}</th>";
                 echo "<th class=\"data\">{$this->lang['strlength']}</th><th class=\"data\">{$this->lang['strcomment']}</th></tr>".PHP_EOL;
 
-                for ($i = 0; $i < $_REQUEST['fields']; ++$i) {
+                for ($i = 0; $i < $_REQUEST['fields']; $i++) {
                     if (!isset($_REQUEST['field'][$i])) {
                         $_REQUEST['field'][$i] = '';
                     }
@@ -602,7 +600,7 @@ class TypesController extends BaseController
                 echo '<table>'.PHP_EOL;
                 echo "\t<tr><th colspan=\"2\" class=\"data required\">{$this->lang['strvalue']}</th></tr>".PHP_EOL;
 
-                for ($i = 0; $i < $_REQUEST['values']; ++$i) {
+                for ($i = 0; $i < $_REQUEST['values']; $i++) {
                     if (!isset($_REQUEST['value'][$i])) {
                         $_REQUEST['value'][$i] = '';
                     }

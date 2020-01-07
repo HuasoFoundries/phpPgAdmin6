@@ -1,11 +1,10 @@
 <?php
 
 /**
- * Function library read in upon startup
+ * Function library read in upon startup.
  *
  * Release: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
-
 defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
 
 define('THEME_PATH', BASE_PATH . '/assets/themes');
@@ -53,35 +52,17 @@ if (!ini_get('session.auto_start')) {
     session_start();
 }
 
-// Global functions and polyfills
-function maybeRenderIframes($c, $response, $subject, $query_string)
-{
-    $in_test = $c->view->offsetGet('in_test');
-
-    if ($in_test === '1') {
-        $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
-        $controller = new $className($c);
-        return $controller->render();
-    }
-
-    $viewVars = [
-        'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
-        'headertemplate' => 'header.twig',
-    ];
-
-    return $c->view->render($response, 'iframe_view.twig', $viewVars);
-};
 // Dumb Polyfill to avoid errors with Kint
 if (
     class_exists('Kint')) {
     \Kint::$enabled_mode                = DEBUGMODE;
     Kint\Renderer\RichRenderer::$folder = false;
-
 } else {
     class Kint
     {
-        static $enabled_mode = false;
-        static $aliases      = [];
+        public static $enabled_mode = false;
+        public static $aliases      = [];
+
         public static function dump() {}
     }
 }
@@ -96,19 +77,19 @@ function ddd(...$v)
 \Kint::$aliases[] = 'ddd';
 // Polyfill for PHPConsole
 if (isset($conf['php_console']) &&
-    class_exists('PhpConsole\Helper') &&
+    class_exists('\PhpConsole\Helper') &&
     $conf['php_console'] === true) {
     \PhpConsole\Helper::register(); // it will register global PC class
     if (!is_null($phpConsoleHandler)) {
         $phpConsoleHandler->start(); // initialize phpConsoleHandler*/
     }
-
 } else {
     class PC
     {
         public static function debug() {}
     }
 }
+//\PC::dump($phpConsoleHandler);
 
 ini_set('display_errors', intval(DEBUGMODE));
 ini_set('display_startup_errors', intval(DEBUGMODE));
@@ -121,7 +102,6 @@ if (DEBUGMODE) {
 list($container, $app) = \PHPPgAdmin\ContainerUtils::createContainer();
 
 if ($container instanceof \Psr\Container\ContainerInterface) {
-
     if (PHP_SAPI == 'cli-server') {
         $subfolder = '/index.php';
     } elseif (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
@@ -164,6 +144,7 @@ $container['conf'] = function ($c) use ($conf) {
             $server['sslmode'] = 'unspecified';
         }
     }
+
     return $conf;
 };
 
@@ -175,6 +156,7 @@ $container['lang'] = function ($c) {
 
 $container['plugin_manager'] = function ($c) {
     $plugin_manager = new \PHPPgAdmin\PluginManager($c);
+
     return $plugin_manager;
 };
 
@@ -199,6 +181,7 @@ $container['misc'] = function ($c) {
         $_SESSION['ppaTheme'] = $_theme;
         $misc->setConf('theme', $_theme);
     }
+
     return $misc;
 };
 
@@ -231,6 +214,7 @@ $container['view'] = function ($c) {
     $view->offsetSet('appName', $c->get('settings')['appName']);
 
     $misc->setView($view);
+
     return $view;
 };
 

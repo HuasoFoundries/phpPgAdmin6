@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class FunctionsController extends BaseController
 {
@@ -390,8 +388,8 @@ class FunctionsController extends BaseController
         $names_arr     = $data->phpArray($fndata->fields['proargnames']);
         $modes_arr     = $data->phpArray($fndata->fields['proargmodes']);
         $args          = '';
-        $args_arr_size = sizeof($args_arr);
-        for ($i = 0; $i < $args_arr_size; ++$i) {
+        $args_arr_size = count($args_arr);
+        for ($i = 0; $i < $args_arr_size; $i++) {
             if (0 != $i) {
                 $args .= ', ';
             }
@@ -576,7 +574,7 @@ class FunctionsController extends BaseController
         }
 
         // Display function properties
-        if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+        if (is_array($data->funcprops) && count($data->funcprops) > 0) {
             echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strproperties']}</th></tr>".PHP_EOL;
             echo '<tr><td class="data1" colspan="5">'.PHP_EOL;
             $i = 0;
@@ -588,7 +586,7 @@ class FunctionsController extends BaseController
                     '>', $this->misc->printVal($p), '</option>'.PHP_EOL;
                 }
                 echo '</select><br />'.PHP_EOL;
-                ++$i;
+                $i++;
             }
             echo '</td></tr>'.PHP_EOL;
         }
@@ -746,7 +744,7 @@ class FunctionsController extends BaseController
         }
 
         // Show flags
-        if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+        if (is_array($data->funcprops) && count($data->funcprops) > 0) {
             // Fetch an array of the function properties
             $funcprops = $data->getFunctionProperties($funcdata->fields);
             echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>".PHP_EOL;
@@ -1067,7 +1065,7 @@ class FunctionsController extends BaseController
         }
 
         // Display function properties
-        if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+        if (is_array($data->funcprops) && count($data->funcprops) > 0) {
             echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>".PHP_EOL;
             echo '<tr><td class="data1" colspan="4">'.PHP_EOL;
             $i = 0;
@@ -1079,7 +1077,7 @@ class FunctionsController extends BaseController
                     '>', $this->misc->printVal($p), '</option>'.PHP_EOL;
                 }
                 echo '</select><br />'.PHP_EOL;
-                ++$i;
+                $i++;
             }
             echo '</td></tr>'.PHP_EOL;
         }
@@ -1214,7 +1212,7 @@ class FunctionsController extends BaseController
             $szReturn .= '<script type="text/javascript">';
             $szReturn .= "RebuildArgTR('{$szMode}','{$szArgName}','{$szArgType}',new Boolean({$bArgIsArray},{$subfolder}));";
             $szReturn .= '</script>;';
-            ++$nC;
+            $nC++;
         }
 
         return $szReturn;
@@ -1264,8 +1262,8 @@ class FunctionsController extends BaseController
             $names_arr     = $data->phpArray($funcdata->fields['proargnames']);
             $modes_arr     = $data->phpArray($funcdata->fields['proargmodes']);
             $args          = '';
-            $args_arr_size = sizeof($args_arr);
-            for ($i = 0; $i < $args_arr_size; ++$i) {
+            $args_arr_size = count($args_arr);
+            for ($i = 0; $i < $args_arr_size; $i++) {
                 if (0 != $i) {
                     $args .= ', ';
                 }

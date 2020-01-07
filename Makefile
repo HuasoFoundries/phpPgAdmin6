@@ -18,8 +18,7 @@ default: install
 .PHONY: tag install test csfixer create_testdb destroy_testdb run_local phpmd
 
 version:
-	@echo $(VERSION)
-	echo CURRENT_BRANCH is $(CURRENT_BRANCH)
+	@echo -e "Current version is: ${GREEN} $(VERSION) ${WHITE}"
 
 
 

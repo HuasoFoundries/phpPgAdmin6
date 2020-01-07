@@ -1,15 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for PortugueseBr language.
- *
- * @package PHPPgAdmin
  */
 class PortugueseBr extends English
 {

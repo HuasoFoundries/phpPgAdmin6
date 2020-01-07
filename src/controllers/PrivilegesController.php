@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC2
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -95,7 +95,7 @@ class PrivilegesController extends BaseController
             $privileges = $data->getPrivileges($object, $subject);
         }
 
-        if (sizeof($privileges) > 0) {
+        if (count($privileges) > 0) {
             echo '<table>'.PHP_EOL;
             if ($data->hasRoles()) {
                 echo "<tr><th class=\"data\">{$this->lang['strrole']}</th>";
@@ -150,7 +150,7 @@ class PrivilegesController extends BaseController
                     echo '<td>', $this->misc->printVal($v[3]), '</td>'.PHP_EOL;
                 }
                 echo '</tr>'.PHP_EOL;
-                ++$i;
+                $i++;
             }
 
             echo '</table>';
