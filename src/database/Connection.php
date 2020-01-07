@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +11,6 @@ namespace PHPPgAdmin\Database;
  * Class to represent a database connection
  *
  * Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Connection
 {

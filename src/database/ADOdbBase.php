@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +11,6 @@ namespace PHPPgAdmin\Database;
  * Parent class of all ADODB objects.
  *
  * Id: ADOdbBase.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class ADOdbBase
 {
@@ -350,7 +348,7 @@ class ADOdbBase
         $this->fieldClean($table);
         $sql = '';
         // Build clause
-        if (sizeof($vars) > 0) {
+        if (count($vars) > 0) {
             $fields = '';
             $values = '';
             foreach ($vars as $key => $value) {
@@ -568,15 +566,15 @@ class ADOdbBase
                 $elements[] = substr($arr, $j, $i - $j);
                 $j          = $i + 1;
             }
-            ++$i;
+            $i++;
         }
         // Add final text to the array
         $elements[] = substr($arr, $j);
 
-        $elementcount = sizeof($elements);
+        $elementcount = count($elements);
         // Do one further loop over the elements array to remote double quoting
         // and escaping of double quotes and backslashes
-        for ($i = 0; $i < $elementcount; ++$i) {
+        for ($i = 0; $i < $elementcount; $i++) {
             $v = $elements[$i];
             if (strpos($v, '"') === 0) {
                 $v            = substr($v, 1, strlen($v) - 2);

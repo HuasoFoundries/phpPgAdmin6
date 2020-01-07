@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin;
@@ -19,7 +19,6 @@ namespace PHPPgAdmin;
  * Latest version is available at http://php.weblogs.com
  * Exception-handling code using PHP5 exceptions (try-catch-throw).
  *
- * @package PHPPgAdmin
  *
  * @author John Lim
  * @copyright 2000-2013 John Lim <jlim@natsoft.com>
@@ -158,6 +157,6 @@ class ADOdbException extends \Exception
 
         //\PC::debug(['errno' => $errno, 'fn' => $fn, 'errmsg' => $errmsg], $tag);
 
-        throw new \PHPPgAdmin\ADOdbException($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
+        throw new self($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
     }
 }

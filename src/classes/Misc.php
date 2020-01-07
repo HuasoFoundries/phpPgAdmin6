@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin;
@@ -11,16 +11,12 @@ namespace PHPPgAdmin;
  * Class to hold various commonly used functions
  *
  * Id: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 
 /**
  * Class to hold various commonly used functions.
  *
  * Release: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Misc
 {

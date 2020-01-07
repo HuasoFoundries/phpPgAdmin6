@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +11,6 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.0 support
  *
  * Id: Postgres80.php,v 1.28 2007/12/12 04:11:10 xzilla Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres80 extends Postgres81
 {

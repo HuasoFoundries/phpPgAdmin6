@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -9,8 +9,6 @@ namespace PHPPgAdmin\Controller;
 ini_set('display_errors', 1);
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class BaseController
 {

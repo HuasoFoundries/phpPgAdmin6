@@ -1,15 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Japanese language.
- *
- * @package PHPPgAdmin
  */
 class Japanese extends English
 {

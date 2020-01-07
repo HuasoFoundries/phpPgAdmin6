@@ -22,7 +22,7 @@ if (in_array('-h', $argv, true) || in_array('--help', $argv, true)) {
 
 // handle diff output
 if (in_array('-d', $argv, true)) {
-    passthru('php ' . __FILE__ . " {$argv[1]} -o | diff -u {$argv[1]} -");
+    passthru('php '.__FILE__." {$argv[1]} -o | diff -u {$argv[1]} -");
     exit(0);
 }
 

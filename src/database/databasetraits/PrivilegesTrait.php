@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -122,7 +122,7 @@ trait PrivilegesTrait
                 $aces[] = substr($acl, $j, $i - $j);
                 $j      = $i + 1;
             }
-            ++$i;
+            $i++;
         }
         // Add final text to the array
         $aces[] = substr($acl, $j);
@@ -172,7 +172,7 @@ trait PrivilegesTrait
                     $in_quotes = !$in_quotes;
                 } elseif ($char == '"' && $next_char == '"') {
                     // Skip over escaped double quotes
-                    ++$i;
+                    $i++;
                 } elseif ($char == '=' && !$in_quotes) {
                     // Split on current equals sign
                     $entity = substr($v, 0, $i);
@@ -180,7 +180,7 @@ trait PrivilegesTrait
 
                     break;
                 }
-                ++$i;
+                $i++;
             }
 
             // Check for quoting on entity name, and unescape if necessary
@@ -194,7 +194,7 @@ trait PrivilegesTrait
             $row = [$atype, $entity, [], '', []];
 
             // Loop over chars and add privs to $row
-            for ($i = 0; $i < strlen($chars); ++$i) {
+            for ($i = 0; $i < strlen($chars); $i++) {
                 // Append to row's privs list the string representing
                 // the privilege
                 $char = substr($chars, $i, 1);
@@ -260,12 +260,12 @@ trait PrivilegesTrait
         $this->fieldArrayClean($groupnames);
 
         // Input checking
-        if (!is_array($privileges) || sizeof($privileges) == 0) {
+        if (!is_array($privileges) || count($privileges) == 0) {
             return -3;
         }
 
         if (!is_array($usernames) || !is_array($groupnames) ||
-            (!$public && sizeof($usernames) == 0 && sizeof($groupnames) == 0)) {
+            (!$public && count($usernames) == 0 && count($groupnames) == 0)) {
             return -4;
         }
 
@@ -285,9 +285,9 @@ trait PrivilegesTrait
         } else {
             if ($type == 'column') {
                 $this->fieldClean($object);
-                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' '.implode(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' '.join(', ', $privileges);
+                $sql .= ' '.implode(', ', $privileges);
             }
         }
 

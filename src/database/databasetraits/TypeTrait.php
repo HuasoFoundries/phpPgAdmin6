@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -251,7 +251,7 @@ trait TypeTrait
 
         $nbval = count($values);
 
-        for ($i = 0; $i < $nbval; ++$i) {
+        for ($i = 0; $i < $nbval; $i++) {
             $this->clean($values[$i]);
         }
 
@@ -327,7 +327,7 @@ trait TypeTrait
         $first       = true;
         $comment_sql = ''; // Accumulate comments for the columns
         $sql         = "CREATE TYPE \"{$f_schema}\".\"{$name}\" AS (";
-        for ($i = 0; $i < $fields; ++$i) {
+        for ($i = 0; $i < $fields; $i++) {
             $this->fieldClean($field[$i]);
             $this->clean($type[$i]);
             $this->clean($length[$i]);

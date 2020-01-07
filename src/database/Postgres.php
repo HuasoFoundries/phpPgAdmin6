@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +11,6 @@ namespace PHPPgAdmin\Database;
  * Note: This Class uses ADODB and returns RecordSets.
  *
  * Id: Postgres.php,v 1.320 2008/02/20 20:43:09 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres extends ADOdbBase
 {
@@ -348,17 +346,17 @@ class Postgres extends ADOdbBase
             return -1;
         }
 
-        if (sizeof($atts) == 0) {
+        if (count($atts) == 0) {
             return [];
         }
 
         $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
 			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
 			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('".join("','", $atts)."')";
+			AND attnum IN ('".implode("','", $atts)."')";
 
         $rs = $this->selectSet($sql);
-        if ($rs->recordCount() != sizeof($atts)) {
+        if ($rs->recordCount() != count($atts)) {
             return -2;
         }
 
@@ -443,7 +441,7 @@ class Postgres extends ADOdbBase
         // Loop over each line in the file
         while (!feof($fd)) {
             $line = fgets($fd);
-            ++$lineno;
+            $lineno++;
 
             // Nothing left on line? Then ignore...
             if (trim($line) == '') {
@@ -466,7 +464,7 @@ class Postgres extends ADOdbBase
                 /* was the previous character a backslash? */
                 if ($i > 0 && substr($line, $i - $prevlen, 1) == '\\') {
                     $this->prtrace('bslash_count', $bslash_count, $line);
-                    ++$bslash_count;
+                    $bslash_count++;
                 } else {
                     $bslash_count = 0;
                 }
@@ -502,7 +500,7 @@ class Postgres extends ADOdbBase
                 } elseif (substr($line, $i, 2) == '/*') {
                     $this->prtrace('open_xcomment', $in_xcomment, $line, $i, $prevlen, $thislen);
                     if ($in_xcomment == 0) {
-                        ++$in_xcomment;
+                        $in_xcomment++;
                         $finishpos = strpos(substr($line, $i, $len), '*/');
                         if ($finishpos === false) {
                             $line = substr($line, 0, $i); /* remove comment */
@@ -556,9 +554,9 @@ class Postgres extends ADOdbBase
                     } /* count nested parentheses */
 
                     if (substr($line, $i, 1) == '(') {
-                        ++$paren_level;
+                        $paren_level++;
                     } elseif (substr($line, $i, 1) == ')' && $paren_level > 0) {
-                        --$paren_level;
+                        $paren_level--;
                     } elseif (substr($line, $i, 1) == ';' && !$bslash_count && !$paren_level) {
                         $subline = substr(substr($line, 0, $i), $query_start);
                         /*
@@ -589,7 +587,7 @@ class Postgres extends ADOdbBase
                                 // 4 == PGSQL_COPY_FROM
                                 while (!feof($fd)) {
                                     $copy = fgets($fd, 32768);
-                                    ++$lineno;
+                                    $lineno++;
                                     pg_put_line($conn, $copy);
                                     if ($copy == "\\.\n" || $copy == "\\.\r\n") {
                                         pg_end_copy($conn);
@@ -648,7 +646,7 @@ class Postgres extends ADOdbBase
                 // 4 == PGSQL_COPY_FROM
                 while (!feof($fd)) {
                     $copy = fgets($fd, 32768);
-                    ++$lineno;
+                    $lineno++;
                     pg_put_line($conn, $copy);
                     if ($copy == "\\.\n" || $copy == "\\.\r\n") {
                         pg_end_copy($conn);
@@ -838,7 +836,7 @@ class Postgres extends ADOdbBase
         $this->fieldArrayClean($show);
 
         // If an empty array is passed in, then show all columns
-        if (sizeof($show) == 0) {
+        if (count($show) == 0) {
             if ($this->hasObjectID($table)) {
                 $sql = "SELECT \"{$this->id}\", * FROM ";
             } else {
@@ -852,7 +850,7 @@ class Postgres extends ADOdbBase
                 $sql = 'SELECT "';
             }
 
-            $sql .= join('","', $show).'" FROM ';
+            $sql .= implode('","', $show).'" FROM ';
         }
 
         $this->fieldClean($table);
@@ -866,7 +864,7 @@ class Postgres extends ADOdbBase
 
         // If we have values specified, add them to the WHERE clause
         $first = true;
-        if (is_array($values) && sizeof($values) > 0) {
+        if (is_array($values) && count($values) > 0) {
             foreach ($values as $k => $v) {
                 if ($v != '' || $this->selectOps[$ops[$k]] == 'p') {
                     $this->fieldClean($k);
@@ -906,7 +904,7 @@ class Postgres extends ADOdbBase
         }
 
         // ORDER BY
-        if (is_array($orderby) && sizeof($orderby) > 0) {
+        if (is_array($orderby) && count($orderby) > 0) {
             $sql .= ' ORDER BY ';
             $first = true;
             foreach ($orderby as $k => $v) {

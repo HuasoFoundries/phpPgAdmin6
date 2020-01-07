@@ -1,15 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Turkish language.
- *
- * @package PHPPgAdmin
  */
 class Turkish extends English
 {

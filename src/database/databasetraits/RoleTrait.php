@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -184,16 +184,16 @@ trait RoleTrait
             $sql .= " VALID UNTIL 'infinity'";
         }
 
-        if (is_array($new_roles_to_add) && sizeof($new_roles_to_add) > 0) {
-            $sql .= ' IN ROLE "'.join('", "', $new_roles_to_add).'"';
+        if (is_array($new_roles_to_add) && count($new_roles_to_add) > 0) {
+            $sql .= ' IN ROLE "'.implode('", "', $new_roles_to_add).'"';
         }
 
-        if (is_array($new_members_of_role) && sizeof($new_members_of_role) > 0) {
-            $sql .= ' ROLE "'.join('", "', $new_members_of_role).'"';
+        if (is_array($new_members_of_role) && count($new_members_of_role) > 0) {
+            $sql .= ' ROLE "'.implode('", "', $new_members_of_role).'"';
         }
 
-        if (is_array($new_admins_of_role) && sizeof($new_admins_of_role) > 0) {
-            $sql .= ' ADMIN "'.join('", "', $new_admins_of_role).'"';
+        if (is_array($new_admins_of_role) && count($new_admins_of_role) > 0) {
+            $sql .= ' ADMIN "'.implode('", "', $new_admins_of_role).'"';
         }
 
         return $this->execute($sql);
@@ -589,8 +589,8 @@ trait RoleTrait
 
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
-        if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
+        if (is_array($groups) && count($groups) > 0) {
+            $sql .= ' IN GROUP "'.implode('", "', $groups).'"';
         }
 
         if ($expiry != '') {
@@ -857,9 +857,9 @@ trait RoleTrait
 
         $sql = "CREATE GROUP \"{$groname}\"";
 
-        if (is_array($users) && sizeof($users) > 0) {
+        if (is_array($users) && count($users) > 0) {
             $this->fieldArrayClean($users);
-            $sql .= ' WITH USER "'.join('", "', $users).'"';
+            $sql .= ' WITH USER "'.implode('", "', $users).'"';
         }
 
         return $this->execute($sql);

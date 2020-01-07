@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin;
@@ -13,8 +13,6 @@ namespace PHPPgAdmin;
 
 /**
  * A class that adds convenience methods to the container.
- *
- * @package PHPPgAdmin
  */
 class ContainerUtils
 {

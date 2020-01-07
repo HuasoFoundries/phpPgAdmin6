@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -116,10 +116,10 @@ trait SchemaTrait
             return -1;
         }
 
-        if (sizeof($paths) == 0) {
+        if (count($paths) == 0) {
             return -2;
         }
-        if (sizeof($paths) == 1 && $paths[0] == '') {
+        if (count($paths) == 1 && $paths[0] == '') {
             // Need to handle empty paths in some cases
             $paths[0] = 'pg_catalog';
         }

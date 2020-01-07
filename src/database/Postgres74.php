@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -12,8 +12,6 @@ namespace PHPPgAdmin\Database;
  * Note: This class uses ADODB and returns RecordSets.
  *
  * Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres74 extends Postgres80
 {
@@ -460,7 +458,7 @@ class Postgres74 extends Postgres80
 				pg_catalog.pg_constraint AS c
 				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
 				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]';
-        for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
+        for ($i = 2; $i <= $rs->fields['nb']; $i++) {
             $sql .= " OR f1.attnum=c.conkey[${i}]";
         }
         $sql .= '))
@@ -470,7 +468,7 @@ class Postgres74 extends Postgres80
 				) ON (c.confrelid=r2.oid)
 				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
 					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)';
-        for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
+        for ($i = 2; $i <= $rs->fields['nb']; $i++) {
             $sql .= " OR (c.confkey[${i}]=f2.attnum AND c.conkey[${i}]=f1.attnum)";
         }
 

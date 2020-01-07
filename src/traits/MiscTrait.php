@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Traits;
@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * A trait to deal with nav tabs.
- *
- * @package PHPPgAdmin
  */
 trait MiscTrait
 {
@@ -215,7 +213,7 @@ trait MiscTrait
         if (!isset($params['clip']) || $params['clip'] !== true) {
             return $str;
         }
-        $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
+        $maxlen   = isset($params['cliplen']) && is_int($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
         $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $this->lang['strellipsis'];
         if (strlen($str) > $maxlen) {
             $str = substr($str, 0, $maxlen - 1).$ellipsis;

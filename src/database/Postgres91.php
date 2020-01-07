@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -13,8 +13,6 @@ namespace PHPPgAdmin\Database;
 
 /**
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $.
- *
- * @package PHPPgAdmin
  */
 class Postgres91 extends Postgres92
 {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class TablesController extends BaseController
 {
@@ -544,7 +542,7 @@ class TablesController extends BaseController
                 echo "<th class=\"data\">{$this->lang['struniquekey']}</th><th class=\"data\">{$this->lang['strprimarykey']}</th>";
                 echo "<th class=\"data\">{$this->lang['strdefault']}</th><th class=\"data\">{$this->lang['strcomment']}</th></tr>".PHP_EOL;
 
-                for ($i = 0; $i < $_REQUEST['fields']; ++$i) {
+                for ($i = 0; $i < $_REQUEST['fields']; $i++) {
                     if (!isset($_REQUEST['field'][$i])) {
                         $_REQUEST['field'][$i] = '';
                     }
@@ -885,7 +883,7 @@ class TablesController extends BaseController
                         $attrs->fields['type']
                     ), '</td>';
                     echo '</tr>'.PHP_EOL;
-                    ++$i;
+                    $i++;
                     $attrs->moveNext();
                 }
                 // Select all checkbox
@@ -920,7 +918,7 @@ class TablesController extends BaseController
             }
         }
 
-        if (0 == sizeof($_POST['show'])) {
+        if (0 == count($_POST['show'])) {
             $this->doSelectRows(true, $this->lang['strselectneedscol']);
         } else {
             // Generate query SQL
@@ -1031,7 +1029,7 @@ class TablesController extends BaseController
                 }
                 echo '</td>'.PHP_EOL;
                 echo '</tr>'.PHP_EOL;
-                ++$i;
+                $i++;
                 $attrs->moveNext();
             }
             echo '</table>'.PHP_EOL;

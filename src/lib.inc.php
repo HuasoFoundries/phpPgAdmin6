@@ -1,34 +1,33 @@
 <?php
 
 /**
- * Function library read in upon startup
+ * Function library read in upon startup.
  *
  * Release: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
  */
-
 defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
 
-define('THEME_PATH', BASE_PATH . '/assets/themes');
+define('THEME_PATH', BASE_PATH.'/assets/themes');
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 
-if (!is_writable(BASE_PATH . '/temp')) {
+if (!is_writable(BASE_PATH.'/temp')) {
     die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
 }
-require_once BASE_PATH . '/vendor/autoload.php';
+require_once BASE_PATH.'/vendor/autoload.php';
 
 // base value for PHPConsole handler to avoid undefined variable
 $phpConsoleHandler = null;
 // Check to see if the configuration file exists, if not, explain
-if (file_exists(BASE_PATH . '/config.inc.php')) {
+if (file_exists(BASE_PATH.'/config.inc.php')) {
     $conf = [];
-    include BASE_PATH . '/config.inc.php';
+    include BASE_PATH.'/config.inc.php';
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 }
 
 if (isset($conf['error_log'])) {
-    ini_set('error_log', BASE_PATH . '/' . $conf['error_log']);
+    ini_set('error_log', BASE_PATH.'/'.$conf['error_log']);
 }
 $debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
 define('DEBUGMODE', $debugmode);
@@ -59,18 +58,19 @@ function maybeRenderIframes($c, $response, $subject, $query_string)
     $in_test = $c->view->offsetGet('in_test');
 
     if ($in_test === '1') {
-        $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
+        $className  = '\PHPPgAdmin\Controller\\'.ucfirst($subject).'Controller';
         $controller = new $className($c);
+
         return $controller->render();
     }
 
     $viewVars = [
-        'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
+        'url'            => '/src/views/'.$subject.($query_string ? '?'.$query_string : ''),
         'headertemplate' => 'header.twig',
     ];
 
     return $c->view->render($response, 'iframe_view.twig', $viewVars);
-};
+}
 // Dumb Polyfill to avoid errors with Kint
 if (
     class_exists('Kint')) {
@@ -81,6 +81,7 @@ if (
     {
         public static $enabled_mode = false;
         public static $aliases      = [];
+
         public static function dump()
         {
         }
@@ -129,7 +130,7 @@ if ($container instanceof \Psr\Container\ContainerInterface) {
         $subfolder = $conf['subfolder'];
     } else {
         $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
-        $subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
+        $subfolder           = str_replace('/'.basename($normalized_php_self), '', $normalized_php_self);
     }
     define('SUBFOLDER', $subfolder);
 } else {
@@ -165,6 +166,7 @@ $container['conf'] = function ($c) use ($conf) {
             $server['sslmode'] = 'unspecified';
         }
     }
+
     return $conf;
 };
 
@@ -176,6 +178,7 @@ $container['lang'] = function ($c) {
 
 $container['plugin_manager'] = function ($c) {
     $plugin_manager = new \PHPPgAdmin\PluginManager($c);
+
     return $plugin_manager;
 };
 
@@ -190,7 +193,7 @@ $container['misc'] = function ($c) {
 
     /* starting with PostgreSQL 9.0, we can set the application name */
     if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {
-        putenv('PGAPPNAME=' . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
+        putenv('PGAPPNAME='.$c->get('settings')['appName'].'_'.$c->get('settings')['appVersion']);
     }
 
     $_theme = $c->utils->getTheme($conf, $_server_info);
@@ -200,6 +203,7 @@ $container['misc'] = function ($c) {
         $_SESSION['ppaTheme'] = $_theme;
         $misc->setConf('theme', $_theme);
     }
+
     return $misc;
 };
 
@@ -208,8 +212,8 @@ $container['view'] = function ($c) {
     $conf = $c->get('conf');
     $misc = $c->misc;
 
-    $view = new \Slim\Views\Twig(BASE_PATH . '/assets/templates', [
-        'cache'       => BASE_PATH . '/temp/twigcache',
+    $view = new \Slim\Views\Twig(BASE_PATH.'/assets/templates', [
+        'cache'       => BASE_PATH.'/temp/twigcache',
         'auto_reload' => $c->get('settings')['debug'],
         'debug'       => $c->get('settings')['debug'],
     ]);
@@ -232,6 +236,7 @@ $container['view'] = function ($c) {
     $view->offsetSet('appName', $c->get('settings')['appName']);
 
     $misc->setView($view);
+
     return $view;
 };
 
@@ -242,11 +247,11 @@ $container['haltHandler'] = function ($c) {
         $html = '<p>The application could not run because of the following error:</p>';
 
         $output = sprintf(
-            "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
-            '<title>%s</title><style>' .
-            'body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}' .
-            'h3{margin:0;font-size:28px;font-weight:normal;line-height:30px;}' .
-            'span{display:inline-block;font-size:16px;}' .
+            "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>".
+            '<title>%s</title><style>'.
+            'body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}'.
+            'h3{margin:0;font-size:28px;font-weight:normal;line-height:30px;}'.
+            'span{display:inline-block;font-size:16px;}'.
             '</style></head><body><h3>%s</h3><p>%s</p><span>%s</span></body></html>',
             $title,
             $title,
