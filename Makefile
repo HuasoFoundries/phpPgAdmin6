@@ -45,7 +45,11 @@ tag_and_push:
 
 		git checkout master
 		git merge develop
+<<<<<<< HEAD
 		git rm --cached tests -r 
+=======
+		rm -rf tests/*
+>>>>>>> d36ef853... excluding tests from distro
 		echo '*' > tests/.gitignore 
 		git commit -a -m "Creating tag Tag v$(v) at $(DATENOW) - $(m)"
 		rm tests/.gitignore
