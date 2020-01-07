@@ -48,13 +48,11 @@ tag_and_push:
 		git checkout master ;\
 		git merge $(CURRENT_BRANCH) ;\
 	fi 
-
-		git commit -a -m "Creating Tag v$(v) at $(DATENOW) - $(m)"
-		#git tag v$(v)
-		#git push
-		#git push --tags
-	
-		git checkout $(CURRENT_BRANCH)
+	@git commit -a -m "Creating Tag v$(v) at $(DATENOW) - $(m)" ;\
+	git tag v$(v) ;\
+	git push ;\
+	git push --tags ;\
+	git checkout $(CURRENT_BRANCH)
 
 
 
