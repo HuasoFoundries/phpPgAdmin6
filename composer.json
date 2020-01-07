@@ -41,7 +41,6 @@
         "kint-php/kint": "~3.3",
         "codeception/codeception": "*",
         "simpletest/simpletest": "^1.1",
-        "friendsofphp/php-cs-fixer": "^2.16",
         "php-console/php-console": "^3.1",
         "codeception/module-asserts": "^1.1"
     },

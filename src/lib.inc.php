@@ -15,10 +15,10 @@ ini_set('arg_separator.output', '&amp;');
 if (!is_writable(BASE_PATH . '/temp')) {
     die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
 }
-// base value for PHPConsole handler to avoid undefined variable
-$handler = null;
 require_once BASE_PATH . '/vendor/autoload.php';
 
+// base value for PHPConsole handler to avoid undefined variable
+$phpConsoleHandler = null;
 // Check to see if the configuration file exists, if not, explain
 if (file_exists(BASE_PATH . '/config.inc.php')) {
     $conf = [];
@@ -26,6 +26,7 @@ if (file_exists(BASE_PATH . '/config.inc.php')) {
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 }
+
 if (isset($conf['error_log'])) {
     ini_set('error_log', BASE_PATH . '/' . $conf['error_log']);
 }
@@ -85,22 +86,6 @@ if (
     }
 }
 
-// Polyfill for PHPConsole
-if (isset($conf['php_console']) &&
-    class_exists('PhpConsole') &&
-    $conf['php_console'] === true) {
-    \PhpConsole\Helper::register(); // it will register global PC class
-    if (!is_null($handler)) {
-        $handler->start(); // initialize handlers*/
-    }
-
-} else {
-    class PC
-    {
-        public static function debug() {}
-    }
-}
-
 \Kint::$enabled_mode = DEBUGMODE;
 function ddd(...$v)
 {
@@ -109,6 +94,21 @@ function ddd(...$v)
 }
 
 \Kint::$aliases[] = 'ddd';
+// Polyfill for PHPConsole
+if (isset($conf['php_console']) &&
+    class_exists('PhpConsole\Helper') &&
+    $conf['php_console'] === true) {
+    \PhpConsole\Helper::register(); // it will register global PC class
+    if (!is_null($phpConsoleHandler)) {
+        $phpConsoleHandler->start(); // initialize phpConsoleHandler*/
+    }
+
+} else {
+    class PC
+    {
+        public static function debug() {}
+    }
+}
 
 ini_set('display_errors', intval(DEBUGMODE));
 ini_set('display_startup_errors', intval(DEBUGMODE));
@@ -217,7 +217,7 @@ $container['misc'] = function ($c) {
 };
 
 // Register Twig View helper
-$container['view'] = function ($c) use ($handler) {
+$container['view'] = function ($c) {
     $conf = $c->get('conf');
     $misc = $c->misc;
 
