@@ -1,27 +1,10 @@
 preset: recommended
-
-risky: false
-
-enabled:
-  - long_array_syntax
-  - strict
-  - unalign_double_arrow
-
-
+risky: true
 finder:
   exclude:
-    - "tests"
-  name:
-    - "*.php"
-  not-name:
-    - "*Stub.php"
-  contains:
-    - "Foo"
-  not-contains:
-    - "config"
-  path:
-    - "foo/Stuff"
-  not-path:
-    - "libraries"
-  depth:
-    - "< 3
+    - modules
+    - node_modules
+    - storage
+    - vendor
+  name: "*.php"
+  not-name: "*.blade.php"
