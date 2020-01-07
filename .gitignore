@@ -14,5 +14,5 @@ fabfile*
 /.idea/*
 phppga
 .php_cs.cache
-info.php
+
 playground

@@ -42,23 +42,13 @@ mocktag:
 
 
 tag_and_push:
-
 		git checkout master
 		git merge develop
-<<<<<<< HEAD
-		git rm --cached tests -r 
-=======
-		rm -rf tests/*
->>>>>>> d36ef853... excluding tests from distro
-		echo '*' > tests/.gitignore 
 		git commit -a -m "Creating tag Tag v$(v) at $(DATENOW) - $(m)"
-		rm tests/.gitignore
-		#git tag v$(v)
-		#git push
-		#git push --tags
+		git tag v$(v)
+		git push
+		git push --tags
 		git checkout develop
-		git reset --soft master
-		git commit -am "Return to develop after tag v$(v)"
 
 
 
