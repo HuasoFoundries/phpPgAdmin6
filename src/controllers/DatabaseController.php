@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class DatabaseController extends BaseController
 {
@@ -124,8 +122,8 @@ class DatabaseController extends BaseController
     public function doTree($print = true)
     {
         $reqvars = $this->misc->getRequestVars('database');
-        $tabs    = $this->misc->getNavTabs('database');
-        $items   = $this->adjustTabsForTree($tabs);
+        $tabs = $this->misc->getNavTabs('database');
+        $items = $this->adjustTabsForTree($tabs);
 
         $attrs = [
             'text'   => Decorator::field('title'),
@@ -232,7 +230,7 @@ class DatabaseController extends BaseController
 
     private function _printTypeOption($curr)
     {
-        $filter     = $_REQUEST['filter'];
+        $filter = $_REQUEST['filter'];
         $optionhtml = sprintf('%s<option value="%s" %s>', "\t", $curr, ($curr === $filter) ? ' selected="selected"' : '');
         $optionhtml .= $this->_translatedType($curr);
         $optionhtml .= '</option>'.PHP_EOL;
@@ -430,7 +428,7 @@ class DatabaseController extends BaseController
     public function doFind()
     {
         $data = $this->misc->getDatabaseAccessor();
-        $rs   = $data->findObject($_REQUEST['term'], $_REQUEST['filter']);
+        $rs = $data->findObject($_REQUEST['term'], $_REQUEST['filter']);
         if ($rs->recordCount() > 0) {
             $curr = '';
             while (!$rs->EOF) {
@@ -480,7 +478,7 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         $subject = 'database';
-        $object  = $_REQUEST['database'];
+        $object = $_REQUEST['database'];
 
         echo $this->formHeader('dbexport');
 
@@ -750,7 +748,7 @@ class DatabaseController extends BaseController
         if (ini_get('file_uploads')) {
             // Don't show upload option if max size of uploads is zero
             $max_size = $this->misc->inisizeToBytes(ini_get('upload_max_filesize'));
-            if (is_double($max_size) && $max_size > 0) {
+            if (is_float($max_size) && $max_size > 0) {
                 echo "<p><input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"{$max_size}\" />".PHP_EOL;
                 echo "<label for=\"script\">{$this->lang['struploadscript']}</label> <input id=\"script\" name=\"script\" type=\"file\" /></p>".PHP_EOL;
             }

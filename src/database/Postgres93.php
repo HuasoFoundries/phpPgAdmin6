@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -25,7 +25,7 @@ class Postgres93 extends Postgres94
     public function getFunctions($all = false, $type = null)
     {
         if ($all) {
-            $where    = 'pg_catalog.pg_function_is_visible(p.oid)';
+            $where = 'pg_catalog.pg_function_is_visible(p.oid)';
             $distinct = 'DISTINCT ON (p.proname)';
 
             if ($type) {
@@ -34,7 +34,7 @@ class Postgres93 extends Postgres94
         } else {
             $c_schema = $this->_schema;
             $this->clean($c_schema);
-            $where    = "n.nspname = '{$c_schema}'";
+            $where = "n.nspname = '{$c_schema}'";
             $distinct = '';
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -64,10 +64,10 @@ trait HasTrait
     // Extra "magic" types.  BIGSERIAL was added in PostgreSQL 7.2.
     public $extraTypes = ['SERIAL', 'BIGSERIAL'];
     // Foreign key stuff.  First element MUST be the default.
-    public $fkactions    = ['NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT'];
+    public $fkactions = ['NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT'];
     public $fkdeferrable = ['NOT DEFERRABLE', 'DEFERRABLE'];
-    public $fkinitial    = ['INITIALLY IMMEDIATE', 'INITIALLY DEFERRED'];
-    public $fkmatches    = ['MATCH SIMPLE', 'MATCH FULL'];
+    public $fkinitial = ['INITIALLY IMMEDIATE', 'INITIALLY DEFERRED'];
+    public $fkmatches = ['MATCH SIMPLE', 'MATCH FULL'];
     // Function properties
     public $funcprops = [
         ['', 'VOLATILE', 'IMMUTABLE', 'STABLE'],

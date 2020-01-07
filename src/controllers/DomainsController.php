@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class DomainsController extends BaseController
 {
@@ -272,8 +270,8 @@ class DomainsController extends BaseController
 
         if ($domaindata->recordCount() > 0) {
             if (!isset($_POST['domname'])) {
-                $_POST['domtype']                 = $domaindata->fields['domtype'];
-                $_POST['domdefault']              = $domaindata->fields['domdef'];
+                $_POST['domtype'] = $domaindata->fields['domtype'];
+                $_POST['domdefault'] = $domaindata->fields['domdef'];
                 $domaindata->fields['domnotnull'] = $data->phpBool($domaindata->fields['domnotnull']);
                 if ($domaindata->fields['domnotnull']) {
                     $_POST['domnotnull'] = 'on';

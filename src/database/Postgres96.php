@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -12,7 +12,7 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres96 extends Postgres
 {
-    public $typIndexes    = ['BTREE', 'BRIN', 'RTREE', 'GIST', 'GIN', 'HASH', 'SP-GIST'];
+    public $typIndexes = ['BTREE', 'BRIN', 'RTREE', 'GIST', 'GIN', 'HASH', 'SP-GIST'];
     public $major_version = 9.6;
 
     // Administration functions
@@ -85,8 +85,8 @@ class Postgres96 extends Postgres
 
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
-        if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
+        if (is_array($groups) && count($groups) > 0) {
+            $sql .= ' IN GROUP "'.implode('", "', $groups).'"';
         }
 
         if ($expiry != '') {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,13 +10,11 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class IndexesController extends BaseController
 {
     public $controller_title = 'strindexes';
-    public $scripts          = '<script src="'.\SUBFOLDER.'/assets/js/indexes.js" type="text/javascript"></script>';
+    public $scripts = '<script src="'.\SUBFOLDER.'/assets/js/indexes.js" type="text/javascript"></script>';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -89,14 +87,14 @@ class IndexesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $lang   = $this->lang;
+        $lang = $this->lang;
         $indPre = function (&$rowdata, $actions) use ($data, $lang) {
             if ($data->phpBool($rowdata->fields['indisprimary'])) {
                 $rowdata->fields['+constraints'] = $lang['strprimarykey'];
-                $actions['drop']['disable']      = true;
+                $actions['drop']['disable'] = true;
             } elseif ($data->phpBool($rowdata->fields['indisunique'])) {
                 $rowdata->fields['+constraints'] = $lang['struniquekey'];
-                $actions['drop']['disable']      = true;
+                $actions['drop']['disable'] = true;
             } else {
                 $rowdata->fields['+constraints'] = '';
             }
@@ -106,7 +104,7 @@ class IndexesController extends BaseController
         $this->coalesceArr($_REQUEST, 'subject', 'table');
 
         $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object = urlencode($_REQUEST[$_REQUEST['subject']]);
 
         $this->printTrail($subject);
         $this->printTabs($subject, 'indexes');
@@ -218,7 +216,7 @@ class IndexesController extends BaseController
         $this->coalesceArr($_REQUEST, 'subject', 'table');
 
         $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$subject]);
+        $object = urlencode($_REQUEST[$subject]);
 
         $indexes = $data->getIndexes($object);
 
@@ -253,7 +251,7 @@ class IndexesController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'subject', 'table');
         $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$subject]);
+        $object = urlencode($_REQUEST[$subject]);
 
         //$this->printTrail($subject);
 
@@ -319,15 +317,15 @@ class IndexesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $subject = urlencode($this->getRequestParam('subject', 'table'));
-        $object  = urlencode($this->getRequestParam($subject));
+        $object = urlencode($this->getRequestParam($subject));
 
         $formIndexName = $this->getPostParam('formIndexName', '');
         $formIndexType = $this->getPostParam('formIndexType');
-        $formUnique    = $this->getPostParam('formUnique');
-        $formConcur    = $this->getPostParam('formConcur');
-        $formWhere     = $this->getPostParam('formWhere', '');
-        $formSpc       = $this->getPostParam('formSpc', '');
-        $tablespaces   = null;
+        $formUnique = $this->getPostParam('formUnique');
+        $formConcur = $this->getPostParam('formConcur');
+        $formWhere = $this->getPostParam('formWhere', '');
+        $formSpc = $this->getPostParam('formSpc', '');
+        $tablespaces = null;
 
         $attrs = $data->getTableAttributes($object);
         // Fetch all tablespaces from the database
@@ -448,7 +446,7 @@ class IndexesController extends BaseController
 
         $this->coalesceArr($_POST, 'subject', 'table');
         $subject = urlencode($_POST['subject']);
-        $object  = urlencode($_POST[$subject]);
+        $object = urlencode($_POST[$subject]);
 
         // Handle databases that don't have partial indexes
         $formWhere = $this->getPostParam('formWhere', '');
@@ -491,7 +489,7 @@ class IndexesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $subject = urlencode($this->getRequestParam('subject', 'table'));
-        $object  = urlencode($this->getRequestParam($subject));
+        $object = urlencode($this->getRequestParam($subject));
 
         if ($confirm) {
             $this->printTrail('index');

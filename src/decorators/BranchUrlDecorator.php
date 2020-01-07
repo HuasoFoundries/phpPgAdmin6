@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -30,7 +30,7 @@ class BranchUrlDecorator extends Decorator
             $sep = '?';
             ksort($queryVars);
             foreach ($queryVars as $var => $value) {
-                $varname  = Decorator::value_url($var, $fields);
+                $varname = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
                 $url .= $sep.$varname.'='.$varvalue;
                 $sep = '&';

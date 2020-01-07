@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -108,8 +108,8 @@ trait PrivilegesTrait
 
         // Pick out individual ACE's by carefully parsing.  This is necessary in order
         // to cope with usernames and stuff that contain commas
-        $aces      = [];
-        $i         = $j         = 0;
+        $aces = [];
+        $i = $j = 0;
         $in_quotes = false;
         while ($i < strlen($acl)) {
             // If current char is a double quote and it's not escaped, then
@@ -120,9 +120,9 @@ trait PrivilegesTrait
             } elseif ($char == ',' && !$in_quotes) {
                 // Add text so far to the array
                 $aces[] = substr($acl, $j, $i - $j);
-                $j      = $i + 1;
+                $j = $i + 1;
             }
-            ++$i;
+            $i++;
         }
         // Add final text to the array
         $aces[] = substr($acl, $j);
@@ -159,28 +159,28 @@ trait PrivilegesTrait
             }
 
             // Break on unquoted equals sign...
-            $i         = 0;
+            $i = 0;
             $in_quotes = false;
-            $entity    = null;
-            $chars     = null;
+            $entity = null;
+            $chars = null;
             while ($i < strlen($v)) {
                 // If current char is a double quote and it's not escaped, then
                 // enter quoted bit
-                $char      = substr($v, $i, 1);
+                $char = substr($v, $i, 1);
                 $next_char = substr($v, $i + 1, 1);
                 if ($char == '"' && ($i == 0 || $next_char != '"')) {
                     $in_quotes = !$in_quotes;
                 } elseif ($char == '"' && $next_char == '"') {
                     // Skip over escaped double quotes
-                    ++$i;
+                    $i++;
                 } elseif ($char == '=' && !$in_quotes) {
                     // Split on current equals sign
                     $entity = substr($v, 0, $i);
-                    $chars  = substr($v, $i + 1);
+                    $chars = substr($v, $i + 1);
 
                     break;
                 }
-                ++$i;
+                $i++;
             }
 
             // Check for quoting on entity name, and unescape if necessary
@@ -194,7 +194,7 @@ trait PrivilegesTrait
             $row = [$atype, $entity, [], '', []];
 
             // Loop over chars and add privs to $row
-            for ($i = 0; $i < strlen($chars); ++$i) {
+            for ($i = 0; $i < strlen($chars); $i++) {
                 // Append to row's privs list the string representing
                 // the privilege
                 $char = substr($chars, $i, 1);
@@ -260,12 +260,12 @@ trait PrivilegesTrait
         $this->fieldArrayClean($groupnames);
 
         // Input checking
-        if (!is_array($privileges) || sizeof($privileges) == 0) {
+        if (!is_array($privileges) || count($privileges) == 0) {
             return -3;
         }
 
         if (!is_array($usernames) || !is_array($groupnames) ||
-            (!$public && sizeof($usernames) == 0 && sizeof($groupnames) == 0)) {
+            (!$public && count($usernames) == 0 && count($groupnames) == 0)) {
             return -4;
         }
 
@@ -285,9 +285,9 @@ trait PrivilegesTrait
         } else {
             if ($type == 'column') {
                 $this->fieldClean($object);
-                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' '.implode(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' '.join(', ', $privileges);
+                $sql .= ' '.implode(', ', $privileges);
             }
         }
 

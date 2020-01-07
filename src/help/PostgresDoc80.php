@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Help;
@@ -17,14 +17,14 @@ class PostgresDoc80 extends PostgresDoc74
     {
         parent::__construct($conf, $major_version);
 
-        $this->help_page['pg.column.add'][0]  = 'ddl-alter.html#AEN2217';
+        $this->help_page['pg.column.add'][0] = 'ddl-alter.html#AEN2217';
         $this->help_page['pg.column.drop'][0] = 'ddl-alter.html#AEN2226';
 
-        $this->help_page['pg.constraint.add']         = 'ddl-alter.html#AEN2217';
-        $this->help_page['pg.constraint.check']       = 'ddl-constraints.html#AEN1978';
-        $this->help_page['pg.constraint.drop']        = 'ddl-alter.html#AEN2226';
+        $this->help_page['pg.constraint.add'] = 'ddl-alter.html#AEN2217';
+        $this->help_page['pg.constraint.check'] = 'ddl-constraints.html#AEN1978';
+        $this->help_page['pg.constraint.drop'] = 'ddl-alter.html#AEN2226';
         $this->help_page['pg.constraint.primary_key'] = 'ddl-constraints.html#AEN2055';
-        $this->help_page['pg.constraint.unique_key']  = 'ddl-constraints.html#AEN2033';
+        $this->help_page['pg.constraint.unique_key'] = 'ddl-constraints.html#AEN2033';
 
         $this->help_page['pg.domain'] = 'extend-type-system.html#AEN27940';
 

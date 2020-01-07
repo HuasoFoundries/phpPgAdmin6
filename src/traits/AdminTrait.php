@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Traits;
@@ -71,9 +71,9 @@ trait AdminTrait
     public function confirmReindex($type)
     {
         $this->script = ('database' == $type) ? 'database' : 'tables';
-        $script       = $this->script;
-        $this->misc   = $this->misc;
-        $data         = $this->misc->getDatabaseAccessor();
+        $script = $this->script;
+        $this->misc = $this->misc;
+        $data = $this->misc->getDatabaseAccessor();
 
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($this->lang['strspecifytabletoreindex']);
@@ -246,15 +246,15 @@ trait AdminTrait
             return;
         }
 
-        $old_val  = $data->getTableAutovacuum($_REQUEST['table']);
+        $old_val = $data->getTableAutovacuum($_REQUEST['table']);
         $defaults = $data->getAutovacuum();
-        $old_val  = $old_val->fields;
+        $old_val = $old_val->fields;
 
         if (isset($old_val['autovacuum_enabled']) and ('off' == $old_val['autovacuum_enabled'])) {
-            $enabled  = '';
+            $enabled = '';
             $disabled = 'checked="checked"';
         } else {
-            $enabled  = 'checked="checked"';
+            $enabled = 'checked="checked"';
             $disabled = '';
         }
 
@@ -417,7 +417,7 @@ trait AdminTrait
     public function doReindex($type)
     {
         $this->misc = $this->misc;
-        $data       = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (('table' == $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($this->lang['strspecifytabletoreindex']);
@@ -764,10 +764,10 @@ trait AdminTrait
         if (!$data->hasRecluster()) {
             return ['', ''];
         }
-        $script         = $this->script;
+        $script = $this->script;
         $recluster_help = sprintf('<th class="data">%s</th>', $this->misc->printHelp($this->lang['strclusterindex'], 'pg.index.cluster', false));
 
-        $disabled      = '';
+        $disabled = '';
         $reclusterconf = '<td style="text-align: center; vertical-align: bottom">'.PHP_EOL;
         $reclusterconf .= '<form action="'.\SUBFOLDER."/src/views/{$script}\" method=\"post\">".PHP_EOL;
         $reclusterconf .= $this->misc->form;

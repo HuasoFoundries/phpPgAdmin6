@@ -1,15 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class ViewpropertiesController extends BaseController
 {
@@ -17,7 +15,7 @@ class ViewpropertiesController extends BaseController
     use \PHPPgAdmin\Traits\ViewsMatViewsPropertiesTrait;
 
     public $controller_title = 'strviews';
-    public $subject          = 'view';
+    public $subject = 'view';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -136,7 +134,7 @@ class ViewpropertiesController extends BaseController
         if ($viewdata->recordCount() > 0) {
             if (!isset($_POST['formDefinition'])) {
                 $_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
-                $_POST['formComment']    = $viewdata->fields['relcomment'];
+                $_POST['formComment'] = $viewdata->fields['relcomment'];
             }
 
             $variables = (object) [
@@ -210,7 +208,7 @@ EOT;
                 $column = $data->getTableAttributes($_REQUEST[$this->subject], $_REQUEST['column']);
 
                 if (!isset($_REQUEST['default'])) {
-                    $_REQUEST['field']   = $column->fields['attname'];
+                    $_REQUEST['field'] = $column->fields['attname'];
                     $_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
                     $_REQUEST['comment'] = $column->fields['comment'];
                 }

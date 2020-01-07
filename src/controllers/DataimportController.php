@@ -1,15 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class DataimportController extends BaseController
 {
@@ -30,11 +28,11 @@ class DataimportController extends BaseController
         $this->printTabs('table', 'import');
 
         // Default state for XML parser
-        $state         = 'XML';
+        $state = 'XML';
         $curr_col_name = null;
-        $curr_col_val  = null;
+        $curr_col_val = null;
         $curr_col_null = false;
-        $curr_row      = [];
+        $curr_row = [];
 
         /**
          * Character data handler for XML import feature.
@@ -87,14 +85,14 @@ class DataimportController extends BaseController
                         $data->rollbackTransaction();
                         $this->halt($lang['strimporterror']);
                     }
-                    $state    = 'ROW';
+                    $state = 'ROW';
                     $curr_row = [];
 
                     break;
                 case 'COLUMN':
                     // We handle columns in rows
                     if ('ROW' == $state) {
-                        $state         = 'COLUMN';
+                        $state = 'COLUMN';
                         $curr_col_name = $attrs['NAME'];
                         $curr_col_null = isset($attrs['NULL']);
                     } elseif ('HEADER' != $state) {
@@ -134,11 +132,11 @@ class DataimportController extends BaseController
                 case 'ROW':
                     // Build value map in order to insert row into table
                     $fields = [];
-                    $vars   = [];
-                    $nulls  = [];
+                    $vars = [];
+                    $nulls = [];
                     $format = [];
-                    $types  = [];
-                    $i      = 0;
+                    $types = [];
+                    $i = 0;
                     foreach ($curr_row as $k => $v) {
                         $fields[$i] = $k;
                         // Check for nulls
@@ -152,7 +150,7 @@ class DataimportController extends BaseController
                         $format[$i] = 'VALUE';
                         // Type is always text
                         $types[$i] = 'text';
-                        ++$i;
+                        $i++;
                     }
                     $status = $data->insertRow($_REQUEST['table'], $fields, $vars, $nulls, $format, $types);
                     if (0 != $status) {
@@ -160,15 +158,15 @@ class DataimportController extends BaseController
                         $this->halt($lang['strimporterror']);
                     }
                     $curr_row = [];
-                    $state    = 'RECORDS';
+                    $state = 'RECORDS';
 
                     break;
                 case 'COLUMN':
                     $curr_row[$curr_col_name] = ($curr_col_null ? null : $curr_col_val);
-                    $curr_col_name            = null;
-                    $curr_col_val             = null;
-                    $curr_col_null            = false;
-                    $state                    = 'ROW';
+                    $curr_col_name = null;
+                    $curr_col_val = null;
+                    $curr_col_null = false;
+                    $state = 'ROW';
 
                     break;
                 default:
@@ -194,7 +192,7 @@ class DataimportController extends BaseController
             return $this->printFooter();
         }
         $null_array = self::loadNULLArray();
-        $status     = $data->beginTransaction();
+        $status = $data->beginTransaction();
         if (0 != $status) {
             $this->halt($this->lang['strimporterror']);
         }
@@ -236,15 +234,15 @@ class DataimportController extends BaseController
 
                 // Get first line of field names
                 $fields = fgetcsv($fd, $csv_max_line, $csv_delimiter);
-                $row    = 2; //We start on the line AFTER the field names
+                $row = 2; //We start on the line AFTER the field names
                 while ($line = fgetcsv($fd, $csv_max_line, $csv_delimiter)) {
                     // Build value map
                     $t_fields = [];
-                    $vars     = [];
-                    $nulls    = [];
-                    $format   = [];
-                    $types    = [];
-                    $i        = 0;
+                    $vars = [];
+                    $nulls = [];
+                    $format = [];
+                    $types = [];
+                    $i = 0;
                     foreach ($fields as $f) {
                         // Check that there is a column
                         if (!isset($line[$i])) {
@@ -262,7 +260,7 @@ class DataimportController extends BaseController
                         $format[$i] = 'VALUE';
                         // Type is always text
                         $types[$i] = 'text';
-                        ++$i;
+                        $i++;
                     }
 
                     $status = $data->insertRow($_REQUEST['table'], $t_fields, $vars, $nulls, $format, $types);
@@ -270,7 +268,7 @@ class DataimportController extends BaseController
                         $data->rollbackTransaction();
                         $this->halt(sprintf($this->lang['strimporterrorline'], $row));
                     }
-                    ++$row;
+                    $row++;
                 }
 
                 break;

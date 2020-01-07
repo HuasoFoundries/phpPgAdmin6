@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -17,14 +17,14 @@ class LoginController extends BaseController
     protected $data;
     protected $database;
     protected $server_id;
-    public $appLangFiles        = [];
-    public $appThemes           = [];
-    public $appName             = '';
-    public $appVersion          = '';
-    public $form                = '';
-    public $href                = '';
-    public $lang                = [];
-    public $controller_title    = 'strlogin';
+    public $appLangFiles = [];
+    public $appThemes = [];
+    public $appName = '';
+    public $appVersion = '';
+    public $form = '';
+    public $href = '';
+    public $lang = [];
+    public $controller_title = 'strlogin';
     protected $no_db_connection = true;
 
     /**
@@ -65,13 +65,13 @@ class LoginController extends BaseController
         }
         foreach ($_REQUEST as $key => $val) {
             if (false !== strpos($key, '?')) {
-                $namexploded               = explode('?', $key);
+                $namexploded = explode('?', $key);
                 $_REQUEST[$namexploded[1]] = htmlspecialchars($val);
             }
         }
 
         $server_info = $this->misc->getServerInfo($server_id);
-        $title       = sprintf($this->lang['strlogintitle'], $server_info['desc']);
+        $title = sprintf($this->lang['strlogintitle'], $server_info['desc']);
 
         $printTitle = $this->printTitle($title, null, false);
 
@@ -109,7 +109,7 @@ class LoginController extends BaseController
         $login_html .= '<td><input id="loginPassword" type="password" name="loginPassword_'.$md5_server.'" size="24" /></td>';
         $login_html .= '</tr>';
         $login_html .= '</table>';
-        if (sizeof($this->conf['servers']) > 1) {
+        if (count($this->conf['servers']) > 1) {
             $checked = isset($_POST['loginShared']) ? 'checked="checked"' : '';
             $login_html .= '<p><input type="checkbox" id="loginShared" name="loginShared" '.$checked.' />';
             $login_html .= '<label for="loginShared">'.$this->lang['strtrycred'].'</label></p>';

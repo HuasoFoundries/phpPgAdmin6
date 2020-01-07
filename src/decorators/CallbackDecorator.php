@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -11,7 +11,7 @@ class CallbackDecorator extends Decorator
     public function __construct($callback, $param = null)
     {
         $this->fn = $callback;
-        $this->p  = $param;
+        $this->p = $param;
     }
 
     public function value($fields)

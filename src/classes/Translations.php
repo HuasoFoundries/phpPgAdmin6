@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin;
@@ -165,9 +165,9 @@ class Translations
     public function __construct($container)
     {
         $appLangFiles = $this->appLangFiles;
-        $appClasses   = $this->appClasses;
-        $_language    = $this->_language;
-        $conf         = $container->conf;
+        $appClasses = $this->appClasses;
+        $_language = $this->_language;
+        $conf = $container->conf;
 
         $languages_iso_code = $this->languages_iso_code;
 
@@ -216,7 +216,7 @@ class Translations
         $container->offsetSet('language', $_language);
         $container->offsetSet('isolang', $_isolang);
 
-        $this->lang            = $langClass->getLang();
+        $this->lang = $langClass->getLang();
         $this->lang['isolang'] = $_isolang;
     }
 
@@ -230,7 +230,7 @@ class Translations
      */
     private function _pregMatchAcceptLanguage()
     {
-        $_language   = null;
+        $_language = null;
         $_acceptLang = [];
         preg_match_all(
             '/\s*([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;q=([01](?:.[0-9]{0,3})?))?\s*(?:,|$)/',

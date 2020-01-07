@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class RolesController extends BaseController
 {
@@ -98,7 +96,7 @@ class RolesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $lang                = $this->lang;
+        $lang = $this->lang;
         $renderRoleConnLimit = function ($val) use ($lang) {
             return '-1' == $val ? $lang['strnolimit'] : htmlspecialchars($val);
         };
@@ -396,8 +394,8 @@ class RolesController extends BaseController
         }
 
         $_POST['formConnLimit'] = '-1' == $roledata->fields['rolconnlimit'] ? '' : $roledata->fields['rolconnlimit'];
-        $_POST['formExpires']   = 'infinity' == $roledata->fields['rolvaliduntil'] ? '' : $roledata->fields['rolvaliduntil'];
-        $_POST['formPassword']  = '';
+        $_POST['formExpires'] = 'infinity' == $roledata->fields['rolvaliduntil'] ? '' : $roledata->fields['rolvaliduntil'];
+        $_POST['formPassword'] = '';
     }
 
     private function _populateMemberof($data)
@@ -468,13 +466,13 @@ class RolesController extends BaseController
 
             return;
         }
-        $server_info                       = $this->misc->getServerInfo();
-        $canRename                         = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
-        $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-        $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+        $server_info = $this->misc->getServerInfo();
+        $canRename = $data->hasUserRename() && ($_REQUEST['rolename'] != $server_info['username']);
+        $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+        $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
         $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-        $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-        $roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
+        $roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
+        $roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
 
         $this->_adjustPostVars($roledata, $canRename);
 
@@ -648,11 +646,11 @@ class RolesController extends BaseController
 
         $roledata = $data->getRole($_REQUEST['rolename']);
         if ($roledata->recordCount() > 0) {
-            $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-            $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+            $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+            $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-            $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-            $roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
+            $roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
+            $roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
 
             echo '<table>'.PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data\" style=\"width: 130px\">Description</th>".PHP_EOL;
@@ -767,7 +765,7 @@ class RolesController extends BaseController
 
         $server_info = $this->misc->getServerInfo();
 
-        $roledata             = $data->getRole($server_info['username']);
+        $roledata = $data->getRole($server_info['username']);
         $_REQUEST['rolename'] = $server_info['username'];
 
         $this->printTrail('role');
@@ -775,10 +773,10 @@ class RolesController extends BaseController
         $this->printMsg($msg);
 
         if ($roledata->recordCount() > 0) {
-            $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-            $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+            $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+            $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-            $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
+            $roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
             echo '<table>'.PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data\">{$this->lang['strname']}</th>".PHP_EOL;
             echo "\t\t<th class=\"data\">{$this->lang['strsuper']}</th>".PHP_EOL;

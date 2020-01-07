@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Traits;
@@ -19,8 +19,8 @@ trait ViewsMatviewsTrait
 
     public function doSubTree()
     {
-        $tabs    = $this->misc->getNavTabs($this->keystring);
-        $items   = $this->adjustTabsForTree($tabs);
+        $tabs = $this->misc->getNavTabs($this->keystring);
+        $items = $this->adjustTabsForTree($tabs);
         $reqvars = $this->misc->getRequestVars($this->keystring);
 
         $attrs = [
@@ -120,7 +120,7 @@ trait ViewsMatviewsTrait
                         $attrs->fields['type']
                     ), '</td>';
                     echo '</tr>'.PHP_EOL;
-                    ++$i;
+                    $i++;
                     $attrs->moveNext();
                 }
                 // Select all checkbox
@@ -155,13 +155,13 @@ trait ViewsMatviewsTrait
             }
         }
 
-        if (0 == sizeof($_POST['show'])) {
+        if (0 == count($_POST['show'])) {
             return $this->doSelectRows(true, $this->lang['strselectneedscol']);
         }
         // Generate query SQL
         $query = $data->getSelectSQL($_REQUEST[$this->keystring], array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
 
-        $_REQUEST['query']  = $query;
+        $_REQUEST['query'] = $query;
         $_REQUEST['return'] = 'schema';
 
         $this->setNoOutput(true);
@@ -187,10 +187,10 @@ trait ViewsMatviewsTrait
 
         $arrTables = [];
         while (!$tables->EOF) {
-            $arrTmp                      = [];
-            $arrTmp['schemaname']        = $tables->fields['nspname'];
-            $arrTmp['tablename']         = $tables->fields['relname'];
-            $schema_and_name             = $tables->fields['nspname'].'.'.$tables->fields['relname'];
+            $arrTmp = [];
+            $arrTmp['schemaname'] = $tables->fields['nspname'];
+            $arrTmp['tablename'] = $tables->fields['relname'];
+            $schema_and_name = $tables->fields['nspname'].'.'.$tables->fields['relname'];
             $arrTables[$schema_and_name] = serialize($arrTmp);
             $tables->moveNext();
         }
@@ -226,7 +226,7 @@ trait ViewsMatviewsTrait
             $tmpHsh[$arrTmp['fieldname']] = 1;
         } elseif ('rename' == $_POST['dblFldMeth']) {
             // field exist and must be renamed
-            ++$tmpHsh[$arrTmp['fieldname']];
+            $tmpHsh[$arrTmp['fieldname']]++;
             $selFields .= $field_element.'  AS  "'.implode('_', $field_arr).'_'.$tmpHsh[$arrTmp['fieldname']].'", ';
         }
         //  if field already exist, just ignore this one
@@ -235,7 +235,7 @@ trait ViewsMatviewsTrait
     private function _getArrLinks()
     {
         $arrLinks = [];
-        $count    = 0;
+        $count = 0;
         // If we have links, out put the JOIN ... ON statements
         if (is_array($_POST['formLink'])) {
             // Filter out invalid/blank entries for our links
@@ -246,7 +246,7 @@ trait ViewsMatviewsTrait
                 }
             }
             // We must perform some magic to make sure that we have a valid join order
-            $count = sizeof($arrLinks);
+            $count = count($arrLinks);
         }
 
         return [$arrLinks, $count];
@@ -284,8 +284,8 @@ trait ViewsMatviewsTrait
 
         $selFields = substr($selFields, 0, -2);
         unset($arrTmp, $tmpHsh);
-        $linkFields  = '';
-        $arrJoined   = [];
+        $linkFields = '';
+        $arrJoined = [];
         $arrUsedTbls = [];
 
         list($arrLinks, $count) = $this->_getArrLinks();
@@ -296,7 +296,7 @@ trait ViewsMatviewsTrait
 
         while ($j < $count) {
             foreach ($arrLinks as $curLink) {
-                $arrLeftLink  = unserialize($curLink['leftlink']);
+                $arrLeftLink = unserialize($curLink['leftlink']);
                 $arrRightLink = unserialize($curLink['rightlink']);
                 $data->fieldArrayClean($arrLeftLink);
                 $data->fieldArrayClean($arrRightLink);
@@ -325,7 +325,7 @@ trait ViewsMatviewsTrait
                     $arrUsedTbls[] = $tbl2;
                 }
             }
-            ++$j;
+            $j++;
         }
 
         //if linkFields has no length then either _POST['formLink'] was not set, or there were no join conditions
@@ -375,23 +375,23 @@ trait ViewsMatviewsTrait
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $tblCount     = sizeof($_POST['formTables']);
+        $tblCount = count($_POST['formTables']);
         $arrSelTables = [];
         //unserialize our schema/table information and store in arrSelTables
-        for ($i = 0; $i < $tblCount; ++$i) {
+        for ($i = 0; $i < $tblCount; $i++) {
             $arrSelTables[] = unserialize($_POST['formTables'][$i]);
         }
 
         //get linking keys
         $rsLinkKeys = $data->getLinkingKeys($arrSelTables);
-        $linkCount  = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
+        $linkCount = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
 
         $arrFields = []; //array that will hold all our table/field names
 
         //if we have schemas we need to specify the correct schema for each table we're retrieiving
         //with getTableAttributes
         $curSchema = $data->_schema;
-        for ($i = 0; $i < $tblCount; ++$i) {
+        for ($i = 0; $i < $tblCount; $i++) {
             if ($arrSelTables[$i]['schemaname'] != $data->_schema) {
                 $data->setSchema($arrSelTables[$i]['schemaname']);
             }
@@ -442,18 +442,18 @@ trait ViewsMatviewsTrait
         echo "<tr><th class=\"data\">{$this->lang['strviewlink']}</th></tr>";
         $rowClass = 'data1';
         $formLink = [];
-        for ($i = 0; $i < $linkCount; ++$i) {
+        for ($i = 0; $i < $linkCount; $i++) {
             // Initialise variables
             $this->coalesceArr($formLink[$i], 'operator', 'INNER JOIN');
 
             echo "<tr>\n<td class=\"{$rowClass}\">".PHP_EOL;
 
             if (!$rsLinkKeys->EOF) {
-                $curLeftLink  = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
+                $curLeftLink = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
                 $curRightLink = htmlspecialchars(serialize(['schemaname' => $rsLinkKeys->fields['f_schema'], 'tablename' => $rsLinkKeys->fields['f_table'], 'fieldname' => $rsLinkKeys->fields['f_field']]));
                 $rsLinkKeys->moveNext();
             } else {
-                $curLeftLink  = '';
+                $curLeftLink = '';
                 $curRightLink = '';
             }
 
@@ -478,7 +478,7 @@ trait ViewsMatviewsTrait
         echo '<table>'.PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strviewconditions']}</th></tr>";
         $rowClass = 'data1';
-        for ($i = 0; $i < $linkCount; ++$i) {
+        for ($i = 0; $i < $linkCount; $i++) {
             echo "<tr>\n<td class=\"${rowClass}\">".PHP_EOL;
             echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formCondition[${i}][field]");
             echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrOperators, "formCondition[${i}][operator]", false, '', false);

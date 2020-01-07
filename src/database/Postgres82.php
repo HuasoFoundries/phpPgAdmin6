@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +11,6 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.2 support
  *
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres82 extends Postgres83
 {
@@ -87,7 +85,7 @@ class Postgres82 extends Postgres83
         if (!empty($name) && ($seqrs->fields['seqname'] != $name)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
             if ($status == 0) {
                 $seqrs->fields['seqname'] = $name;
@@ -116,7 +114,7 @@ class Postgres82 extends Postgres83
         if (!empty($name) && ($name != $vwrs->fields['relname'])) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
             if ($status == 0) {
                 $vwrs->fields['relname'] = $name;

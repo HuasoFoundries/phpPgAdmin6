@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -29,12 +29,12 @@ trait TypeTrait
         $is_array = false;
         if (substr($typname, 0, 1) == '_') {
             $is_array = true;
-            $typname  = substr($typname, 1);
+            $typname = substr($typname, 1);
         }
 
         // Show lengths on bpchar and varchar
         if ($typname == 'bpchar') {
-            $len  = $typmod - $varhdrsz;
+            $len = $typmod - $varhdrsz;
             $temp = 'character';
             if ($len > 1) {
                 $temp .= "({$len})";
@@ -48,8 +48,8 @@ trait TypeTrait
             $temp = 'numeric';
             if ($typmod != -1) {
                 $tmp_typmod = $typmod - $varhdrsz;
-                $precision  = ($tmp_typmod >> 16) & 0xffff;
-                $scale      = $tmp_typmod & 0xffff;
+                $precision = ($tmp_typmod >> 16) & 0xffff;
+                $scale = $tmp_typmod & 0xffff;
                 $temp .= "({$precision}, {$scale})";
             }
         } else {
@@ -251,7 +251,7 @@ trait TypeTrait
 
         $nbval = count($values);
 
-        for ($i = 0; $i < $nbval; ++$i) {
+        for ($i = 0; $i < $nbval; $i++) {
             $this->clean($values[$i]);
         }
 
@@ -323,11 +323,11 @@ trait TypeTrait
             return -1;
         }
 
-        $found       = false;
-        $first       = true;
+        $found = false;
+        $first = true;
         $comment_sql = ''; // Accumulate comments for the columns
-        $sql         = "CREATE TYPE \"{$f_schema}\".\"{$name}\" AS (";
-        for ($i = 0; $i < $fields; ++$i) {
+        $sql = "CREATE TYPE \"{$f_schema}\".\"{$name}\" AS (";
+        for ($i = 0; $i < $fields; $i++) {
             $this->fieldClean($field[$i]);
             $this->clean($type[$i]);
             $this->clean($length[$i]);

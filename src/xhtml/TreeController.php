@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -16,28 +16,28 @@ class TreeController
     use \PHPPgAdmin\Traits\HelperTrait;
 
     protected $container;
-    public $form             = '';
-    public $href             = '';
-    public $lang             = [];
-    public $action           = '';
-    public $controller_name  = 'TreeController';
+    public $form = '';
+    public $href = '';
+    public $lang = [];
+    public $action = '';
+    public $controller_name = 'TreeController';
     public $controller_title = 'base';
 
     // Constructor
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
         $this->container = $container;
-        $this->lang      = $container->get('lang');
+        $this->lang = $container->get('lang');
         //$this->conf           = $container->get('conf');
-        $this->view           = $container->get('view');
+        $this->view = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
-        $this->appName        = $container->get('settings')['appName'];
-        $this->appVersion     = $container->get('settings')['appVersion'];
-        $this->appLangFiles   = $container->get('appLangFiles');
-        $this->misc           = $container->get('misc');
-        $this->conf           = $this->misc->getConf();
-        $this->appThemes      = $container->get('appThemes');
-        $this->action         = $container->get('action');
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
+        $this->appLangFiles = $container->get('appLangFiles');
+        $this->misc = $container->get('misc');
+        $this->conf = $this->misc->getConf();
+        $this->appThemes = $container->get('appThemes');
+        $this->action = $container->get('action');
         if (null !== $controller_name) {
             $this->controller_name = $controller_name;
         }
@@ -140,7 +140,7 @@ class TreeController
                     $url = str_replace('//', '/', \SUBFOLDER.'/src/views/'.$url);
                 }
                 if ($url) {
-                    $tree['url']      = $url;
+                    $tree['url'] = $url;
                     $tree['children'] = true;
                 }
 
@@ -155,7 +155,7 @@ class TreeController
         if (true === $print) {
             if (isset($_REQUEST['children'])) {
                 $children = $parent;
-                $parent   = ['children' => $children];
+                $parent = ['children' => $children];
             }
 
             return $this

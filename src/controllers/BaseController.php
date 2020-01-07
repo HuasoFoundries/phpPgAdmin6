@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -9,8 +9,6 @@ namespace PHPPgAdmin\Controller;
 ini_set('display_errors', 1);
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class BaseController
 {
@@ -22,13 +20,13 @@ class BaseController
     protected $database;
     protected $server_id;
     public $appLangFiles = [];
-    public $appThemes    = [];
-    public $appName      = '';
-    public $appVersion   = '';
-    public $form         = '';
-    public $href         = '';
-    public $lang         = [];
-    public $action       = '';
+    public $appThemes = [];
+    public $appName = '';
+    public $appVersion = '';
+    public $form = '';
+    public $href = '';
+    public $lang = [];
+    public $action = '';
     public $controller_name;
 
     /**
@@ -49,7 +47,7 @@ class BaseController
     protected $footer_controller;
     protected $header_controller;
     protected $scripts = '';
-    public $msg        = '';
+    public $msg = '';
     public $view;
     public $plugin_manager;
     public $misc;
@@ -66,27 +64,27 @@ class BaseController
     public function __construct(\Slim\Container $container)
     {
         $this->container = $container;
-        $this->lang      = $container->get('lang');
+        $this->lang = $container->get('lang');
 
         $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
-        $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
-        $this->script          = $this->view_name;
+        $this->view_name = str_replace('controller', '', strtolower($this->controller_name));
+        $this->script = $this->view_name;
 
-        $this->view           = $container->get('view');
+        $this->view = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
-        $this->msg            = $container->get('msg');
-        $this->appLangFiles   = $container->get('appLangFiles');
+        $this->msg = $container->get('msg');
+        $this->appLangFiles = $container->get('appLangFiles');
 
         $this->misc = $container->get('misc');
         $this->conf = $this->misc->getConf();
 
         $this->appThemes = $container->get('appThemes');
-        $this->action    = $container->get('action');
+        $this->action = $container->get('action');
 
-        $this->appName          = $container->get('settings')['appName'];
-        $this->appVersion       = $container->get('settings')['appVersion'];
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
         $this->postgresqlMinVer = $container->get('settings')['postgresqlMinVer'];
-        $this->phpMinVer        = $container->get('settings')['phpMinVer'];
+        $this->phpMinVer = $container->get('settings')['phpMinVer'];
 
         $msg = $container->get('msg');
 
@@ -253,7 +251,7 @@ class BaseController
 
     public function printTrail($trail = [], $do_print = true)
     {
-        $from       = __METHOD__;
+        $from = __METHOD__;
         $html_trail = $this->_getNavbarController();
 
         return $html_trail->printTrail($trail, $do_print, $from);
@@ -261,7 +259,7 @@ class BaseController
 
     public function printNavLinks($navlinks, $place, $env = [], $do_print = true)
     {
-        $from              = __METHOD__;
+        $from = __METHOD__;
         $footer_controller = $this->_getFooterController();
 
         return $footer_controller->printNavLinks($navlinks, $place, $env, $do_print, $from);
@@ -269,7 +267,7 @@ class BaseController
 
     public function printTabs($tabs, $activetab, $do_print = true)
     {
-        $from       = __METHOD__;
+        $from = __METHOD__;
         $html_trail = $this->_getNavbarController();
 
         return $html_trail->printTabs($tabs, $activetab, $do_print, $from);
@@ -349,7 +347,7 @@ class BaseController
 
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
-        $title             = $title ? $title : $this->headerTitle();
+        $title = $title ? $title : $this->headerTitle();
         $header_controller = $this->_getHeaderController();
 
         return $header_controller->printHeader($title, $script, $do_print, $template);
@@ -395,7 +393,7 @@ class BaseController
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
-        $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
+        $msg = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
             $html .= '<p class="message">'.nl2br($msg).'</p>'.PHP_EOL;
         }

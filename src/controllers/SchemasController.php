@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class SchemasController extends BaseController
 {
@@ -455,7 +453,7 @@ class SchemasController extends BaseController
             echo '</form>'.PHP_EOL;
         } else {
             if (is_array($_POST['nsp'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['nsp'] as $s) {
@@ -501,7 +499,7 @@ class SchemasController extends BaseController
         $this->printMsg($msg);
 
         $subject = 'schema';
-        $object  = $_REQUEST['schema'];
+        $object = $_REQUEST['schema'];
 
         echo $this->formHeader('dbexport');
 

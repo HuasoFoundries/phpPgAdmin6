@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Help;
@@ -20,7 +20,7 @@ class PostgresDoc74
     public function __construct($conf, $major_version)
     {
         $this->major_version = $major_version;
-        $this->conf          = $conf;
+        $this->conf = $conf;
 
         // TODO: Check and fix links
         $this->help_page = [

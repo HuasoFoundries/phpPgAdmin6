@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -97,7 +97,7 @@ trait DatabaseTrait
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf        = $this->conf;
+        $conf = $this->conf;
         $server_info = $this->server_info;
 
         //$this->prtrace('server_info', $server_info);

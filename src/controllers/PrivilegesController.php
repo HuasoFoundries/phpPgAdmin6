@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -11,7 +11,7 @@ namespace PHPPgAdmin\Controller;
  */
 class PrivilegesController extends BaseController
 {
-    public $table_place      = 'privileges-privileges';
+    public $table_place = 'privileges-privileges';
     public $controller_title = 'strprivileges';
 
     /**
@@ -51,7 +51,7 @@ class PrivilegesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $data    = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         $subject = $_REQUEST['subject'];
 
         $this->printTrail($subject);
@@ -95,7 +95,7 @@ class PrivilegesController extends BaseController
             $privileges = $data->getPrivileges($object, $subject);
         }
 
-        if (sizeof($privileges) > 0) {
+        if (count($privileges) > 0) {
             echo '<table>'.PHP_EOL;
             if ($data->hasRoles()) {
                 echo "<tr><th class=\"data\">{$this->lang['strrole']}</th>";
@@ -150,7 +150,7 @@ class PrivilegesController extends BaseController
                     echo '<td>', $this->misc->printVal($v[3]), '</td>'.PHP_EOL;
                 }
                 echo '</tr>'.PHP_EOL;
-                ++$i;
+                $i++;
             }
 
             echo '</table>';
@@ -162,10 +162,10 @@ class PrivilegesController extends BaseController
 
     public function printGrantLinks()
     {
-        $data     = $this->misc->getDatabaseAccessor();
-        $subject  = $_REQUEST['subject'];
+        $data = $this->misc->getDatabaseAccessor();
+        $subject = $_REQUEST['subject'];
         $alllabel = '';
-        $alltxt   = '';
+        $alltxt = '';
         // Links for granting to a user or group
         switch ($subject) {
             case 'table':
@@ -174,20 +174,20 @@ class PrivilegesController extends BaseController
             case 'function':
             case 'tablespace':
                 $alllabel = "showall{$subject}s";
-                $allurl   = "{$subject}s";
-                $alltxt   = $this->lang["strshowall{$subject}s"];
+                $allurl = "{$subject}s";
+                $alltxt = $this->lang["strshowall{$subject}s"];
 
                 break;
             case 'schema':
                 $alllabel = 'showallschemas';
-                $allurl   = 'schemas';
-                $alltxt   = $this->lang['strshowallschemas'];
+                $allurl = 'schemas';
+                $alltxt = $this->lang['strshowallschemas'];
 
                 break;
             case 'database':
                 $alllabel = 'showalldatabases';
-                $allurl   = 'alldb';
-                $alltxt   = $this->lang['strshowalldatabases'];
+                $allurl = 'alldb';
+                $alltxt = $this->lang['strshowalldatabases'];
 
                 break;
         }
@@ -196,7 +196,7 @@ class PrivilegesController extends BaseController
 
         if ('function' == $subject) {
             $objectoid = $_REQUEST[$subject.'_oid'];
-            $urlvars   = [
+            $urlvars = [
                 'action'         => 'alter',
                 'server'         => $_REQUEST['server'],
                 'database'       => $_REQUEST['database'],

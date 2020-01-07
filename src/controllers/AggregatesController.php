@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,12 +10,10 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class AggregatesController extends BaseController
 {
-    public $table_place      = 'aggregates-aggregates';
+    public $table_place = 'aggregates-aggregates';
     public $controller_title = 'straggregates';
 
     /**
@@ -96,7 +94,7 @@ class AggregatesController extends BaseController
         $this->printMsg($msg);
 
         $aggregates = $this->data->getAggregates();
-        $columns    = [
+        $columns = [
             'aggrname'    => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('proname'),
@@ -182,8 +180,8 @@ class AggregatesController extends BaseController
         $this->data = $this->misc->getDatabaseAccessor();
 
         $aggregates = $this->data->getAggregates();
-        $proto      = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
-        $reqvars    = $this->misc->getRequestVars('aggregate');
+        $proto = Decorator::concat(Decorator::field('proname'), ' (', Decorator::field('proargtypes'), ')');
+        $reqvars = $this->misc->getRequestVars('aggregate');
 
         $attrs = [
             'text'    => $proto,

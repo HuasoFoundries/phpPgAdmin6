@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class ConstraintsController extends BaseController
 {
@@ -118,8 +116,8 @@ class ConstraintsController extends BaseController
 
         $cnPre = function (&$rowdata) use ($data) {
             if (is_null($rowdata->fields['consrc'])) {
-                $atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
-                $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
+                $atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
+                $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').implode(',', $atts).')';
             } else {
                 $rowdata->fields['+definition'] = $rowdata->fields['consrc'];
             }
@@ -247,7 +245,7 @@ class ConstraintsController extends BaseController
         $this->printTitle($this->lang['straddfk'], 'pg.constraint.foreign_key');
         $this->printMsg($msg);
 
-        $attrs  = $data->getTableAttributes($_REQUEST['table']);
+        $attrs = $data->getTableAttributes($_REQUEST['table']);
         $tables = $data->getAllTables();
 
         $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
@@ -329,7 +327,7 @@ class ConstraintsController extends BaseController
         // Check that they've given at least one source column
         if (!isset($_REQUEST['SourceColumnList']) && (!isset($_POST['IndexColumnList']) ||
             !is_array($_POST['IndexColumnList']) ||
-            0 == sizeof($_POST['IndexColumnList']))) {
+            0 == count($_POST['IndexColumnList']))) {
             return $this->formAddForeignKey($this->lang['strfkneedscols']);
         }
         // Copy the IndexColumnList variable from stage 1
@@ -476,8 +474,8 @@ class ConstraintsController extends BaseController
 
         // If IndexColumnList or SourceColumnList are empty, return to screen to select referencing table columns
         if (!is_array($_POST['IndexColumnList'])
-            || 0 == sizeof($_POST['IndexColumnList'])
-            || 0 == sizeof($temp)) {
+            || 0 == count($_POST['IndexColumnList'])
+            || 0 == count($temp)) {
             return $this->_selectFKColumns($this->lang['strfkneedscols']);
         }
 
@@ -533,7 +531,7 @@ class ConstraintsController extends BaseController
 
         $this->printMsg($msg);
 
-        $attrs       = $data->getTableAttributes($_REQUEST['table']);
+        $attrs = $data->getTableAttributes($_REQUEST['table']);
         $tablespaces = null;
         // Fetch all tablespaces from the database
         if ($data->hasTablespaces()) {
@@ -624,7 +622,7 @@ class ConstraintsController extends BaseController
         if ('primary' == $type) {
             // Check that they've given at least one column
             if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
-                || 0 == sizeof($_POST['IndexColumnList'])
+                || 0 == count($_POST['IndexColumnList'])
             ) {
                 $this->formPrimaryOrUniqueKey($type, $this->lang['strpkneedscols']);
             } else {
@@ -638,7 +636,7 @@ class ConstraintsController extends BaseController
         } elseif ('unique' == $type) {
             // Check that they've given at least one column
             if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
-                || 0 == sizeof($_POST['IndexColumnList'])
+                || 0 == count($_POST['IndexColumnList'])
             ) {
                 $this->formPrimaryOrUniqueKey($type, $this->lang['struniqneedscols']);
             } else {

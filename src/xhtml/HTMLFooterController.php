@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -11,9 +11,9 @@ namespace PHPPgAdmin\XHtml;
  */
 class HTMLFooterController extends HTMLController
 {
-    public $controller_name        = 'HTMLFooterController';
+    public $controller_name = 'HTMLFooterController';
     private $_reload_drop_database = false;
-    private $_no_bottom_link       = false;
+    private $_no_bottom_link = false;
 
     /**
      * Sets the value of $_reload_drop_database which in turn will trigger a reload in the browser frame.

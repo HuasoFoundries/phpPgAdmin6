@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,13 +10,11 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class AlldbController extends BaseController
 {
     use \PHPPgAdmin\Traits\ExportTrait;
-    public $table_place      = 'alldb-databases';
+    public $table_place = 'alldb-databases';
     public $controller_title = 'strdatabases';
 
     /**
@@ -273,7 +271,7 @@ class AlldbController extends BaseController
             if ($data->hasAlterDatabaseOwner() && $data->isSuperUser()) {
                 // Fetch all users
 
-                $rs    = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
+                $rs = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
                 $owner = isset($rs->fields['usename']) ? $rs->fields['usename'] : '';
                 $users = $data->getUsers();
 
@@ -288,7 +286,7 @@ class AlldbController extends BaseController
                 echo '</select></td></tr>'.PHP_EOL;
             }
             if ($data->hasSharedComments()) {
-                $rs      = $data->getDatabaseComment($_REQUEST['alterdatabase']);
+                $rs = $data->getDatabaseComment($_REQUEST['alterdatabase']);
                 $comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
                 echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
                 echo '<td class="data1">';
@@ -560,7 +558,7 @@ class AlldbController extends BaseController
         $this->printMsg($msg);
 
         $subject = 'server';
-        $object  = $_REQUEST['server'];
+        $object = $_REQUEST['server'];
 
         $this->prtrace($this->misc->getServerInfo());
 

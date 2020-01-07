@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -270,7 +270,7 @@ trait ViewTrait
         if (!empty($name) && ($name != $vwrs->fields['relname'])) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER ${type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER ${type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
             if ($status == 0) {
                 $vwrs->fields['relname'] = $name;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,15 +10,13 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class HistoryController extends BaseController
 {
     use \PHPPgAdmin\Traits\ServersTrait;
     public $EOF;
     public $fields;
-    public $scripts          = '<script type="text/javascript">window.inPopUp=true;</script>';
+    public $scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
     public $controller_title = 'strhistory';
 
     /**

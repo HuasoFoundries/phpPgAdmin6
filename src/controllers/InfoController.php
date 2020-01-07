@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class InfoController extends BaseController
 {
@@ -54,13 +52,13 @@ class InfoController extends BaseController
         $this->shownull = ['null' => true];
 
         // Fetch info
-        $referrers      = $data->getReferrers($_REQUEST['table']);
-        $parents        = $data->getTableParents($_REQUEST['table']);
-        $children       = $data->getTableChildren($_REQUEST['table']);
+        $referrers = $data->getReferrers($_REQUEST['table']);
+        $parents = $data->getTableParents($_REQUEST['table']);
+        $children = $data->getTableChildren($_REQUEST['table']);
         $tablestatstups = $data->getStatsTableTuples($_REQUEST['table']);
-        $tablestatsio   = $data->getStatsTableIO($_REQUEST['table']);
+        $tablestatsio = $data->getStatsTableIO($_REQUEST['table']);
         $indexstatstups = $data->getStatsIndexTuples($_REQUEST['table']);
-        $indexstatsio   = $data->getStatsIndexIO($_REQUEST['table']);
+        $indexstatsio = $data->getStatsIndexIO($_REQUEST['table']);
 
         // Check that there is some info
         if (($referrers === -99 || ($referrers !== -99 && 0 == $referrers->recordCount()))
@@ -176,7 +174,7 @@ class InfoController extends BaseController
             echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['n_tup_del'], 'int4', $this->shownull), '</td>'.PHP_EOL;
             echo "\t</tr>".PHP_EOL;
             $tablestatstups->movenext();
-            ++$i;
+            $i++;
         }
 
         echo '</table>'.PHP_EOL;
@@ -258,7 +256,7 @@ class InfoController extends BaseController
             echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>".PHP_EOL;
             echo "\t</tr>".PHP_EOL;
             $tablestatsio->movenext();
-            ++$i;
+            $i++;
         }
 
         echo '</table>'.PHP_EOL;
@@ -286,7 +284,7 @@ class InfoController extends BaseController
             echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_tup_fetch'], 'int4', $this->shownull), '</td>'.PHP_EOL;
             echo "\t</tr>".PHP_EOL;
             $indexstatstups->movenext();
-            ++$i;
+            $i++;
         }
 
         echo '</table>'.PHP_EOL;
@@ -321,7 +319,7 @@ class InfoController extends BaseController
             echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>".PHP_EOL;
             echo "\t</tr>".PHP_EOL;
             $indexstatsio->movenext();
-            ++$i;
+            $i++;
         }
 
         echo '</table>'.PHP_EOL;

@@ -1,15 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class DisplayController extends BaseController
 {
@@ -20,7 +18,7 @@ class DisplayController extends BaseController
      */
     public function render()
     {
-        $this->misc     = $this->misc;
+        $this->misc = $this->misc;
         $plugin_manager = $this->plugin_manager;
 
         if ('dobrowsefk' == $this->action) {
@@ -114,7 +112,7 @@ class DisplayController extends BaseController
     public function doBrowse($msg = '')
     {
         $this->misc = $this->misc;
-        $data       = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // If current page is not set, default to first page
         $page = $this->coalesceArr($_REQUEST, 'page', 1)['page'];
@@ -127,7 +125,7 @@ class DisplayController extends BaseController
 
         if ($subject === 'column' && $object && isset($_REQUEST['f_schema'], $_REQUEST['f_table'])) {
             $f_schema = $_REQUEST['f_schema'];
-            $f_table  = $_REQUEST['f_table'];
+            $f_table = $_REQUEST['f_table'];
 
             $_REQUEST['query'] = "SELECT \"{$object}\",
             count(*) AS \"count\"
@@ -254,20 +252,20 @@ class DisplayController extends BaseController
             foreach (array_keys($fkey) as $x) {
                 $ops[$x] = '=';
             }
-            $query             = $data->getSelectSQL($_REQUEST['table'], [], $fkey, $ops);
+            $query = $data->getSelectSQL($_REQUEST['table'], [], $fkey, $ops);
             $_REQUEST['query'] = $query;
         }
 
         $title = 'strqueryresults';
-        $type  = 'QUERY';
+        $type = 'QUERY';
 
         if ($object && $query) {
             $_SESSION['sqlquery'] = $query;
-            $title                = 'strselect';
-            $type                 = 'SELECT';
+            $title = 'strselect';
+            $type = 'SELECT';
         } elseif ($object) {
             $title = 'strselect';
-            $type  = 'TABLE';
+            $type = 'TABLE';
         } elseif (isset($_SESSION['sqlquery'])) {
             $query = $_SESSION['sqlquery'];
         }
@@ -285,7 +283,7 @@ class DisplayController extends BaseController
         $this->setIfIsset($fields['schema'], $_REQUEST['schema'], null, false);
 
         $navlinks = [];
-        $strings  = $_gets['strings'];
+        $strings = $_gets['strings'];
         // Return
         if (isset($_REQUEST['return'])) {
             $urlvars = $this->misc->getSubjectParams($_REQUEST['return']);
@@ -431,8 +429,8 @@ class DisplayController extends BaseController
 
     private function _getKeyAndActions($resultset, $object, $data, $page, $_gets)
     {
-        $key            = [];
-        $strings        = $_gets['strings'];
+        $key = [];
+        $strings = $_gets['strings'];
         $plugin_manager = $this->plugin_manager;
         // Fetch unique row identifier, if this is a table browse request.
         if ($object) {
@@ -533,11 +531,11 @@ class DisplayController extends BaseController
 
         reset($resultset->fields);
 
-        $trclass     = 'data2';
+        $trclass = 'data2';
         $buttonclass = 'opbutton2';
 
         while (!$resultset->EOF) {
-            $trclass     = ($trclass === 'data2') ? 'data1' : 'data2';
+            $trclass = ($trclass === 'data2') ? 'data1' : 'data2';
             $buttonclass = ($buttonclass === 'opbutton2') ? 'opbutton1' : 'opbutton2';
 
             echo sprintf('<tr class="%s">', $trclass).PHP_EOL;
@@ -562,11 +560,11 @@ class DisplayController extends BaseController
             return;
         }
 
-        $edit_params   = isset($actions['actionbuttons']['edit']) ? $actions['actionbuttons']['edit'] : [];
+        $edit_params = isset($actions['actionbuttons']['edit']) ? $actions['actionbuttons']['edit'] : [];
         $delete_params = isset($actions['actionbuttons']['delete']) ? $actions['actionbuttons']['delete'] : [];
 
         $keys_array = [];
-        $has_nulls  = false;
+        $has_nulls = false;
         foreach ($key as $v) {
             if (null === $resultset->fields[$v]) {
                 $has_nulls = true;
@@ -582,7 +580,7 @@ class DisplayController extends BaseController
         }
         // Display edit and delete links if we have a key
         if (isset($actions['actionbuttons']['edit'])) {
-            $actions['actionbuttons']['edit']                            = $edit_params;
+            $actions['actionbuttons']['edit'] = $edit_params;
             $actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
                 $actions['actionbuttons']['edit']['attr']['href']['urlvars'],
                 $keys_array
@@ -590,7 +588,7 @@ class DisplayController extends BaseController
         }
 
         if (isset($actions['actionbuttons']['delete'])) {
-            $actions['actionbuttons']['delete']                            = $delete_params;
+            $actions['actionbuttons']['delete'] = $delete_params;
             $actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
                 $actions['actionbuttons']['delete']['attr']['href']['urlvars'],
                 $keys_array
@@ -629,7 +627,7 @@ class DisplayController extends BaseController
 
                 continue;
             }
-            $args['page']    = $_REQUEST['page'];
+            $args['page'] = $_REQUEST['page'];
             $args['sortkey'] = $index + 1;
             // Sort direction opposite to current direction, unless it's currently ''
             $args['sortdir'] = ('asc' == $_REQUEST['sortdir'] && $_REQUEST['sortkey'] == ($index + 1)) ? 'desc' : 'asc';
@@ -658,7 +656,7 @@ class DisplayController extends BaseController
     public function printTableRowCells(&$resultset, &$fkey_information, $withOid)
     {
         $data = $this->misc->getDatabaseAccessor();
-        $j    = 0;
+        $j = 0;
 
         $this->coalesceArr($_REQUEST, 'strings', 'collapsed');
 
@@ -736,7 +734,7 @@ class DisplayController extends BaseController
         $this->printTitle($this->lang['streditrow']);
         $this->printMsg($msg);
 
-        $attrs     = $data->getTableAttributes($_REQUEST['table']);
+        $attrs = $data->getTableAttributes($_REQUEST['table']);
         $resultset = $data->browseRow($_REQUEST['table'], $key);
 
         $fksprops = $this->_getFKProps();
@@ -744,7 +742,7 @@ class DisplayController extends BaseController
         echo '<form action="'.\SUBFOLDER.'/src/views/display" method="post" id="ac_form">'.PHP_EOL;
 
         $elements = 0;
-        $error    = true;
+        $error = true;
         if (1 == $resultset->recordCount() && $attrs->recordCount() > 0) {
             echo '<table>'.PHP_EOL;
 
@@ -756,7 +754,7 @@ class DisplayController extends BaseController
             $i = 0;
             while (!$attrs->EOF) {
                 $attrs->fields['attnotnull'] = $data->phpBool($attrs->fields['attnotnull']);
-                $id                          = (0 == ($i % 2) ? '1' : '2');
+                $id = (0 == ($i % 2) ? '1' : '2');
 
                 // Initialise variables
                 if (!isset($_REQUEST['format'][$attrs->fields['attname']])) {
@@ -769,14 +767,14 @@ class DisplayController extends BaseController
                 echo $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
                 echo '<input type="hidden" name="types[', htmlspecialchars($attrs->fields['attname']), ']" value="',
                 htmlspecialchars($attrs->fields['type']), '" /></td>';
-                ++$elements;
+                $elements++;
                 echo '<td style="white-space:nowrap;">'.PHP_EOL;
                 echo '<select name="format['.htmlspecialchars($attrs->fields['attname']), ']">'.PHP_EOL;
                 echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attname']] == 'VALUE') ? ' selected="selected"' : '', ">{$this->lang['strvalue']}</option>".PHP_EOL;
                 $selected = ($_REQUEST['format'][$attrs->fields['attname']] == 'EXPRESSION') ? ' selected="selected"' : '';
                 echo '<option value="EXPRESSION"'.$selected.">{$this->lang['strexpression']}</option>".PHP_EOL;
                 echo "</select>\n</td>".PHP_EOL;
-                ++$elements;
+                $elements++;
                 echo '<td style="white-space:nowrap;">';
                 // Output null box if the column allows nulls (doesn't look at CHECKs or ASSERTIONS)
                 if (!$attrs->fields['attnotnull']) {
@@ -786,7 +784,7 @@ class DisplayController extends BaseController
                     }
                     echo "<label><span><input type=\"checkbox\" class=\"nullcheckbox\" name=\"nulls[{$attrs->fields['attname']}]\"",
                     isset($_REQUEST['nulls'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></span></label></td>'.PHP_EOL;
-                    ++$elements;
+                    $elements++;
                 } else {
                     echo '&nbsp;</td>';
                 }
@@ -804,16 +802,16 @@ class DisplayController extends BaseController
                 }
 
                 if ((false !== $fksprops) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
-                    $extras['id']           = "attr_{$attrs->fields['attnum']}";
+                    $extras['id'] = "attr_{$attrs->fields['attnum']}";
                     $extras['autocomplete'] = 'off';
                 }
 
                 echo $data->printField("values[{$attrs->fields['attname']}]", $resultset->fields[$attrs->fields['attname']], $attrs->fields['type'], $extras);
 
                 echo '</td>';
-                ++$elements;
+                $elements++;
                 echo '</tr>'.PHP_EOL;
-                ++$i;
+                $i++;
                 $attrs->moveNext();
             }
             echo '</table>'.PHP_EOL;
@@ -1027,7 +1025,7 @@ class DisplayController extends BaseController
         foreach ($_REQUEST['fkey'] as $x => $y) {
             $ops[$x] = '=';
         }
-        $query             = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+        $query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
         $_REQUEST['query'] = $query;
 
         $fkinfo = $this->getFKInfo();
@@ -1118,7 +1116,7 @@ class DisplayController extends BaseController
 
         list($min_page, $max_page) = $this->_getMinMaxPages($page, $pages);
 
-        for ($i = $min_page; $i <= $max_page; ++$i) {
+        for ($i = $min_page; $i <= $max_page; $i++) {
             $result .= (($i === $page) ? $i : sprintf('<a class="pagenav" href="display?%s&page=%s">%s</a>', $url, $i, $i)).PHP_EOL;
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,15 +10,13 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class TablesController extends BaseController
 {
     use \PHPPgAdmin\Traits\AdminTrait;
     use \PHPPgAdmin\Traits\InsertEditRowTrait;
 
-    public $table_place      = 'tables-tables';
+    public $table_place = 'tables-tables';
     public $controller_title = 'strtables';
 
     /**
@@ -401,8 +399,8 @@ class TablesController extends BaseController
 
     public function doSubTree()
     {
-        $tabs    = $this->misc->getNavTabs('table');
-        $items   = $this->adjustTabsForTree($tabs);
+        $tabs = $this->misc->getNavTabs('table');
+        $items = $this->adjustTabsForTree($tabs);
         $reqvars = $this->misc->getRequestVars('table');
 
         $attrs = [
@@ -527,7 +525,7 @@ class TablesController extends BaseController
                     return;
                 }
 
-                $types        = $data->getTypes(true, false, true);
+                $types = $data->getTypes(true, false, true);
                 $types_for_js = [];
 
                 $this->printTrail('schema');
@@ -544,7 +542,7 @@ class TablesController extends BaseController
                 echo "<th class=\"data\">{$this->lang['struniquekey']}</th><th class=\"data\">{$this->lang['strprimarykey']}</th>";
                 echo "<th class=\"data\">{$this->lang['strdefault']}</th><th class=\"data\">{$this->lang['strcomment']}</th></tr>".PHP_EOL;
 
-                for ($i = 0; $i < $_REQUEST['fields']; ++$i) {
+                for ($i = 0; $i < $_REQUEST['fields']; $i++) {
                     if (!isset($_REQUEST['field'][$i])) {
                         $_REQUEST['field'][$i] = '';
                     }
@@ -574,7 +572,7 @@ class TablesController extends BaseController
                     }
                     $types->moveFirst();
                     while (!$types->EOF) {
-                        $typname                = $types->fields['typname'];
+                        $typname = $types->fields['typname'];
                         $types_for_js[$typname] = 1;
                         echo "\t\t\t\t<option value=\"", htmlspecialchars($typname), '"',
                         (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] == $typname) ? ' selected="selected"' : '', '>',
@@ -585,7 +583,7 @@ class TablesController extends BaseController
                     if (0 == $i) {
                         // only define js types array once
                         $predefined_size_types = array_intersect($data->predefined_size_types, array_keys($types_for_js));
-                        $escaped_predef_types  = []; // the JS escaped array elements
+                        $escaped_predef_types = []; // the JS escaped array elements
                         foreach ($predefined_size_types as $value) {
                             $escaped_predef_types[] = "'{$value}'";
                         }
@@ -747,7 +745,7 @@ class TablesController extends BaseController
                 $tblsp_ = $data->getTablespaces();
                 if ($tblsp_->recordCount() > 0) {
                     $tblsp_ = $tblsp_->getArray();
-                    $tblsp  = [];
+                    $tblsp = [];
                     foreach ($tblsp_ as $a) {
                         $tblsp[$a['spcname']] = $a['spcname'];
                     }
@@ -885,7 +883,7 @@ class TablesController extends BaseController
                         $attrs->fields['type']
                     ), '</td>';
                     echo '</tr>'.PHP_EOL;
-                    ++$i;
+                    $i++;
                     $attrs->moveNext();
                 }
                 // Select all checkbox
@@ -920,7 +918,7 @@ class TablesController extends BaseController
             }
         }
 
-        if (0 == sizeof($_POST['show'])) {
+        if (0 == count($_POST['show'])) {
             $this->doSelectRows(true, $this->lang['strselectneedscol']);
         } else {
             // Generate query SQL
@@ -930,7 +928,7 @@ class TablesController extends BaseController
                 $_POST['values'],
                 $_POST['ops']
             );
-            $_REQUEST['query']  = $query;
+            $_REQUEST['query'] = $query;
             $_REQUEST['return'] = 'selectrows';
 
             $this->setNoOutput(true);
@@ -972,11 +970,11 @@ class TablesController extends BaseController
             echo "<th class=\"data\">{$this->lang['strformat']}</th>";
             echo "<th class=\"data\">{$this->lang['strnull']}</th><th class=\"data\">{$this->lang['strvalue']}</th></tr>";
 
-            $i      = 0;
+            $i = 0;
             $fields = [];
             while (!$attrs->EOF) {
                 $fields[$attrs->fields['attnum']] = $attrs->fields['attname'];
-                $attrs->fields['attnotnull']      = $data->phpBool($attrs->fields['attnotnull']);
+                $attrs->fields['attnotnull'] = $data->phpBool($attrs->fields['attnotnull']);
                 // Set up default value if there isn't one already
                 if (!isset($_REQUEST['values'][$attrs->fields['attnum']])) {
                     $_REQUEST['values'][$attrs->fields['attnum']] = $attrs->fields['adsrc'];
@@ -1031,7 +1029,7 @@ class TablesController extends BaseController
                 }
                 echo '</td>'.PHP_EOL;
                 echo '</tr>'.PHP_EOL;
-                ++$i;
+                $i++;
                 $attrs->moveNext();
             }
             echo '</table>'.PHP_EOL;
@@ -1085,7 +1083,7 @@ class TablesController extends BaseController
                     return $this->doDefault($this->lang['strrowinserted']);
                 }
                 $_REQUEST['values'] = [];
-                $_REQUEST['nulls']  = [];
+                $_REQUEST['nulls'] = [];
 
                 return $this->formInsertRow($this->lang['strrowinserted']);
             }
@@ -1215,7 +1213,7 @@ class TablesController extends BaseController
         } else {
             //If multi drop
             if (is_array($_REQUEST['table'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_REQUEST['table'] as $t) {

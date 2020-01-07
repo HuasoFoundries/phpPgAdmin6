@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +11,6 @@ namespace PHPPgAdmin\Database;
  * Parent class of all ADODB objects.
  *
  * Id: ADOdbBase.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class ADOdbBase
 {
@@ -33,7 +31,7 @@ class ADOdbBase
      */
     public function __construct(&$conn, $container, $server_info)
     {
-        $this->container   = $container;
+        $this->container = $container;
         $this->server_info = $server_info;
 
         $this->lang = $container->get('lang');
@@ -350,7 +348,7 @@ class ADOdbBase
         $this->fieldClean($table);
         $sql = '';
         // Build clause
-        if (sizeof($vars) > 0) {
+        if (count($vars) > 0) {
             $fields = '';
             $values = '';
             foreach ($vars as $key => $value) {
@@ -401,7 +399,7 @@ class ADOdbBase
     {
         $this->fieldClean($table);
 
-        $setClause   = '';
+        $setClause = '';
         $whereClause = '';
 
         // Populate the syntax arrays
@@ -554,8 +552,8 @@ class ADOdbBase
 
         // Pick out array entries by carefully parsing.  This is necessary in order
         // to cope with double quotes and commas, etc.
-        $elements  = [];
-        $i         = $j         = 0;
+        $elements = [];
+        $i = $j = 0;
         $in_quotes = false;
         while ($i < strlen($arr)) {
             // If current char is a double quote and it's not escaped, then
@@ -566,22 +564,22 @@ class ADOdbBase
             } elseif ($char == ',' && !$in_quotes) {
                 // Add text so far to the array
                 $elements[] = substr($arr, $j, $i - $j);
-                $j          = $i + 1;
+                $j = $i + 1;
             }
-            ++$i;
+            $i++;
         }
         // Add final text to the array
         $elements[] = substr($arr, $j);
 
-        $elementcount = sizeof($elements);
+        $elementcount = count($elements);
         // Do one further loop over the elements array to remote double quoting
         // and escaping of double quotes and backslashes
-        for ($i = 0; $i < $elementcount; ++$i) {
+        for ($i = 0; $i < $elementcount; $i++) {
             $v = $elements[$i];
             if (strpos($v, '"') === 0) {
-                $v            = substr($v, 1, strlen($v) - 2);
-                $v            = str_replace('\\"', '"', $v);
-                $v            = str_replace('\\\\', '\\', $v);
+                $v = substr($v, 1, strlen($v) - 2);
+                $v = str_replace('\\"', '"', $v);
+                $v = str_replace('\\\\', '\\', $v);
                 $elements[$i] = $v;
             }
         }

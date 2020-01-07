@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1
+ * PHPPgAdmin v6.0.0-RC1.
  */
 
 namespace PHPPgAdmin\Traits;
@@ -13,8 +13,6 @@ namespace PHPPgAdmin\Traits;
 
 /**
  * A trait with helpers methods to debug, halt the app and format text to html.
- *
- * @package PHPPgAdmin
  */
 trait HelperTrait
 {
@@ -229,8 +227,8 @@ trait HelperTrait
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
         $folder = dirname(dirname(__DIR__));
-        $file   = str_replace($folder, '', $backtrace[0]['file']);
-        $line   = $backtrace[0]['line'];
+        $file = str_replace($folder, '', $backtrace[0]['file']);
+        $line = $backtrace[0]['line'];
 
         call_user_func_array('\Kint::dump', func_get_args());
         $this->halt('stopped by user at '.$file.' line '.$line);
