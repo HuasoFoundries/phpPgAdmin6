@@ -76,13 +76,14 @@ if (
     class_exists('Kint')) {
     \Kint::$enabled_mode                = DEBUGMODE;
     Kint\Renderer\RichRenderer::$folder = false;
-
 } else {
     class Kint
     {
-        static $enabled_mode = false;
-        static $aliases      = [];
-        public static function dump() {}
+        public static $enabled_mode = false;
+        public static $aliases      = [];
+        public static function dump()
+        {
+        }
     }
 }
 
@@ -102,11 +103,12 @@ if (isset($conf['php_console']) &&
     if (!is_null($phpConsoleHandler)) {
         $phpConsoleHandler->start(); // initialize phpConsoleHandler*/
     }
-
 } else {
     class PC
     {
-        public static function debug() {}
+        public static function debug()
+        {
+        }
     }
 }
 
@@ -121,7 +123,6 @@ if (DEBUGMODE) {
 list($container, $app) = \PHPPgAdmin\ContainerUtils::createContainer();
 
 if ($container instanceof \Psr\Container\ContainerInterface) {
-
     if (PHP_SAPI == 'cli-server') {
         $subfolder = '/index.php';
     } elseif (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
