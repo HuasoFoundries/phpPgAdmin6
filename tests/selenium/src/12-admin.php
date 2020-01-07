@@ -1,8 +1,9 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
+    
     $test_title = 'Admin tests';
 
     if (isset($_GET['run'])) {
@@ -13,9 +14,9 @@
         * 1/ swing through the admin panel
         */
         $t = new TestBuilder(
-        $test_title,
-        'Test the admin interfaces.'
-    );
+            $test_title,
+            'Test the admin interfaces.'
+        );
 
         $t->login($admin_user, $admin_user_pass);
 

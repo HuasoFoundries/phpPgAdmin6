@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
 
 /**
@@ -60,7 +60,6 @@ class PreconditionSet extends WebTestCase
 
         $this->login(
             $SUPER_USER_NAME,
-
             $SUPER_USER_PASSWORD,
             "${webUrl}/login"
         );
@@ -91,7 +90,6 @@ class PreconditionSet extends WebTestCase
 
         $this->login(
             $SUPER_USER_NAME,
-
             $SUPER_USER_PASSWORD,
             "${webUrl}/login"
         );
@@ -134,14 +132,12 @@ class PreconditionSet extends WebTestCase
 
         $this->login(
             $SUPER_USER_NAME,
-
             $SUPER_USER_PASSWORD,
             "${webUrl}/login"
         );
 
         $this->get(
             "${webUrl}/tables",
-
             [
                 'server'   => $SERVER,
                 'action'   => 'create',
@@ -203,7 +199,6 @@ class PreconditionSet extends WebTestCase
 
         $this->get(
             "${webUrl}/tables",
-
             [
                 'server'   => $SERVER,
                 'action'   => 'confirm_drop',

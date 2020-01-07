@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
 
 namespace PHPPgAdmin;
@@ -112,7 +112,7 @@ class Misc
 
         if (count($this->conf['servers']) === 1) {
             $info             = $this->conf['servers'][0];
-            $this->_server_id = sha1($info['host'] . ':' . $info['port'] . ':' . $info['sslmode']);
+            $this->_server_id = sha1($info['host'].':'.$info['port'].':'.$info['sslmode']);
         } elseif ($request_server !== null) {
             $this->_server_id = $request_server;
         } elseif (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
@@ -180,11 +180,10 @@ class Misc
      */
     public function printHelp($str, $help = null, $do_print = true)
     {
-
         if ($help !== null) {
             $helplink = $this->getHelpLink($help);
-            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">';
-            $str .= $this->lang['strhelpicon'] . '</a>';
+            $str .= '<a class="help" href="'.$helplink.'" title="'.$this->lang['strhelp'].'" target="phppgadminhelp">';
+            $str .= $this->lang['strhelpicon'].'</a>';
         }
         if ($do_print) {
             echo $str;
@@ -202,7 +201,7 @@ class Misc
      */
     public function getHelpLink($help)
     {
-        return htmlspecialchars(SUBFOLDER . '/help?help=' . urlencode($help) . '&server=' . urlencode($this->getServerId()));
+        return htmlspecialchars(SUBFOLDER.'/help?help='.urlencode($help).'&server='.urlencode($this->getServerId()));
     }
 
     /**
@@ -333,7 +332,7 @@ class Misc
 
                 return null;
             }
-            $_type = '\PHPPgAdmin\Database\\' . $_type;
+            $_type = '\PHPPgAdmin\Database\\'.$_type;
 
             $this->prtrace('driver:', $_type);
 
@@ -440,7 +439,6 @@ class Misc
      */
     public function getServerInfo($server_id = null)
     {
-
         if ($server_id !== null) {
             $this->_server_id = $server_id;
         } elseif ($this->_server_info !== null) {
@@ -456,7 +454,7 @@ class Misc
 
         // Otherwise, look for it in the conf file
         foreach ($this->conf['servers'] as $idx => $info) {
-            $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+            $server_string = $info['host'].':'.$info['port'].':'.$info['sslmode'];
             $server_sha    = sha1($server_string);
 
             if ($this->_server_id === $server_string ||
@@ -498,7 +496,6 @@ class Misc
      */
     public function setServerInfo($key, $value, $server_id = null)
     {
-
         if ($server_id === null) {
             $server_id = $this->container->requestobj->getParam('server');
         }
@@ -507,14 +504,12 @@ class Misc
             if ($value === null) {
                 unset($_SESSION['webdbLogin'][$server_id]);
             } else {
-
                 $_SESSION['webdbLogin'][$server_id] = $value;
             }
         } else {
             if ($value === null) {
                 unset($_SESSION['webdbLogin'][$server_id][$key]);
             } else {
-
                 $_SESSION['webdbLogin'][$server_id][$key] = $value;
             }
         }
@@ -614,13 +609,13 @@ class Misc
         $schema   = $this->container->schema || isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null;
 
         if ($server && $exclude_from !== 'server') {
-            $href[] = 'server=' . urlencode($server);
+            $href[] = 'server='.urlencode($server);
         }
         if ($database && $exclude_from !== 'database') {
-            $href[] = 'database=' . urlencode($database);
+            $href[] = 'database='.urlencode($database);
         }
         if ($schema && $exclude_from !== 'schema') {
-            $href[] = 'schema=' . urlencode($schema);
+            $href[] = 'schema='.urlencode($schema);
         }
 
         $this->href = htmlentities(implode('&', $href));
@@ -635,19 +630,18 @@ class Misc
     {
         $form = [];
         if ($this->container->server) {
-            $form[] = '<input type="hidden" name="server" value="' . htmlspecialchars($this->container->server) . '" />';
+            $form[] = '<input type="hidden" name="server" value="'.htmlspecialchars($this->container->server).'" />';
         }
         if ($this->container->database) {
-            $form[] = '<input type="hidden" name="database" value="' . htmlspecialchars($this->container->database) . '" />';
+            $form[] = '<input type="hidden" name="database" value="'.htmlspecialchars($this->container->database).'" />';
         }
 
         if ($this->container->schema) {
-            $form[] = '<input type="hidden" name="schema" value="' . htmlspecialchars($this->container->schema) . '" />';
+            $form[] = '<input type="hidden" name="schema" value="'.htmlspecialchars($this->container->schema).'" />';
         }
         $this->form = implode("\n", $form);
 
         return $this->form;
-
     }
 
     /**
@@ -737,43 +731,43 @@ class Misc
     {
         if (is_string($icon)) {
             $path = "/assets/images/themes/{$this->conf['theme']}/{$icon}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
+            if (file_exists(\BASE_PATH.$path.'.png')) {
+                return SUBFOLDER.$path.'.png';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
+            if (file_exists(\BASE_PATH.$path.'.gif')) {
+                return SUBFOLDER.$path.'.gif';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
+            if (file_exists(\BASE_PATH.$path.'.ico')) {
+                return SUBFOLDER.$path.'.ico';
             }
 
             $path = "/assets/images/themes/default/{$icon}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
+            if (file_exists(\BASE_PATH.$path.'.png')) {
+                return SUBFOLDER.$path.'.png';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
+            if (file_exists(\BASE_PATH.$path.'.gif')) {
+                return SUBFOLDER.$path.'.gif';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
+            if (file_exists(\BASE_PATH.$path.'.ico')) {
+                return SUBFOLDER.$path.'.ico';
             }
         } else {
             // Icon from plugins
             $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
+            if (file_exists(\BASE_PATH.$path.'.png')) {
+                return SUBFOLDER.$path.'.png';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
+            if (file_exists(\BASE_PATH.$path.'.gif')) {
+                return SUBFOLDER.$path.'.gif';
             }
 
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
+            if (file_exists(\BASE_PATH.$path.'.ico')) {
+                return SUBFOLDER.$path.'.ico';
             }
         }
 
@@ -820,7 +814,7 @@ class Misc
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $data->fieldClean($str);
 
-            return '"' . $str . '"';
+            return '"'.$str.'"';
         }
 
         return escapeshellcmd($str);

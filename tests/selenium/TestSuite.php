@@ -1,8 +1,9 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
+    
     chdir('../..'); /* go back to root so we can include scripts */
 
     function oops($dbms, $fn, $errno, $errmsg, $p1=false, $p2=false)

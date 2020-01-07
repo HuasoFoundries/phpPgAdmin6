@@ -3,8 +3,10 @@ VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)",/\1/p')
 SHELL = /usr/bin/env bash
 
 XDSWI := $(shell command -v xd_swi 2> /dev/null)
-HASPHPMD := $(shell command -v phpmd 2> /dev/null)
-
+HAS_PHPMD := $(shell command -v phpmd 2> /dev/null)
+HAS_CSFIXER:= $(shell command -v php-cs-fixer 2> /dev/null)
+XDSWI_STATUS:=$(shell command xd_swi stat 2> /dev/null)
+DATENOW:=`date +'%Y-%m-%d'`
 YELLOW=\033[0;33m
 RED=\033[0;31m
 WHITE=\033[0m
@@ -24,6 +26,7 @@ install:
 	composer install --no-dev
 	chmod 777 temp -R
 
+fix_permissions: 
 fix_permissions:
 	sudo chmod 777 temp -R	
 
@@ -33,16 +36,24 @@ update_version:
 	sed -i s/"$(VERSION)"/"$(v)"/g composer.json
 	composer update nothing --lock --root-reqs --prefer-dist
 
+
+mocktag:
+	echo "Creating tag Tag v$(v) at $(DATENOW) - $(m)"
+
+
 tag_and_push:
-		git add --all
-		git commit -a -m "Tag v $(v) $(m)"
-		git tag v$(v)
-		git push
-		git push --tags
+
 		git checkout master
 		git merge develop
-		git push
+		git rm --cached tests/selenium -r
+		git rm --cached tests/simpletest -r
+		git commit -a -m "Creating tag Tag v$(v) at $(DATENOW) - $(m)"
+		#git tag v$(v)
+		#git push
+		#git push --tags
 		git checkout develop
+		git reset --soft master
+		git commit -am "Return to develop after tag v$(v)"
 
 
 
@@ -55,11 +66,12 @@ endif
 	./vendor/bin/codecept run unit --debug
 
 runcsfixer:
-	@if [ -f ./vendor/bin/php-cs-fixer ]; then \
-	    ./vendor/bin/php-cs-fixer --verbose fix ;\
-	    ./vendor/bin/php-cs-fixer --verbose fix index.php ;\
+		@if [[ "$(HAS_CSFIXER)" == "" ]]; then \
+        echo -e "$(GREEN)php-cs-fixer$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
+        echo -e "Install it with $(GREEN)phive install php-cs-fixer global$(WHITE)" ;\
     else \
-        echo -e "$(GREEN)php-cs-fixer$(WHITE) is $(RED)NOT$(WHITE) installed. Install it with $(GREEN)composer require --dev friendsofphp/php-cs-fixer$(WHITE)" ;\
+	    php-cs-fixer --verbose fix ;\
+	    php-cs-fixer --verbose fix index.php ;\
     fi 
 
 csfixer:
@@ -68,24 +80,25 @@ csfixer:
     else \
         xd_swi off ;\
 		${MAKE} runcsfixer --no-print-directory ;\
-		xd_swi on	;\
+		xd_swi $(XDSWI_STATUS)	;\
     fi
 	
 phpmd:
-	@if [ -f ./vendor/bin/phpmd ]; then \
-	    ./vendor/bin/phpmd $(target) text .phpmd.xml |  sed "s/.*\///" ;\
+	@if [ "$(HAS_PHPMD)" == "" ]; then \
+        echo -e "$(GREEN)phpmd$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
+        echo -e "Install it with $(GREEN)phive install phpmd$(WHITE)" ;\
     else \
-        echo -e "$(GREEN)phpmd$(WHITE) is $(RED)NOT$(WHITE) installed. Install it with $(GREEN)composer require --dev phpmd/phpmd$(WHITE)" ;\
+	    phpmd src text .phpmd.xml |  sed "s/.*\///" ;\
     fi ;\
     echo ""
 	
 
 
 create_testdb:
-	PGPASSWORD=scrutinizer psql -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql
+	PGPASSWORD=scrutinizer psql   -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql
 
 destroy_testdb:
-	PGPASSWORD=scrutinizer psql -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_remove.sql	
+	PGPASSWORD=scrutinizer psql   -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_remove.sql	
 
 run_local:
 	${MAKE} fix_permissions

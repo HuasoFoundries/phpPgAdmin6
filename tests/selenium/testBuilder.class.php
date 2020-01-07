@@ -1,8 +1,9 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-beta.52
+ * PHPPgAdmin v6.0.0-RC1
  */
+
 $_no_db_connection = true; // load lib.inc.php without trying to connect
 
 /**
