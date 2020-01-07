@@ -3,7 +3,7 @@
 $composerinfo          = json_decode(file_get_contents('composer.json'));
 $version = $composerinfo->version;
 
-$header = "PHPPgAdmin v$version";
+$header = "PHPPgAdmin v$version.";
 
 $rules=[
     '@PHP56Migration' => true,
