@@ -6,7 +6,7 @@ tests/selenium/config.test.php
 sftp-config*
 config.*.php*
 !config.inc.php-dist
-
+!tests/config*
 
 vendor
 *.log
