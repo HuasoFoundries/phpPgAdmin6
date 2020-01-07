@@ -1,19 +1,27 @@
 preset: recommended
-risky: true
-finder:
-  exclude:
-    - modules
-    - node_modules
-    - storage
-    - vendor
-    - tests
-    - 
-  name: "*.php"
+
+risky: false
 
 enabled:
-  - align_double_arrow
-  - align_equals
-  - align_phpdoc
-  - function_to_constant
-  - short_array_syntax
-  - single_quote
+  - long_array_syntax
+  - strict
+  - unalign_double_arrow
+
+
+finder:
+  exclude:
+    - "tests"
+  name:
+    - "*.php"
+  not-name:
+    - "*Stub.php"
+  contains:
+    - "Foo"
+  not-contains:
+    - "config"
+  path:
+    - "foo/Stuff"
+  not-path:
+    - "libraries"
+  depth:
+    - "< 3
