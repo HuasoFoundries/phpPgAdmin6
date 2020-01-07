@@ -42,18 +42,13 @@ mocktag:
 
 
 tag_and_push:
-
 		git checkout master
 		git merge develop
-		git rm --cached tests/selenium -r
-		git rm --cached tests/simpletest -r
-		git commit -a -m "Creating tag Tag v$(v) at $(DATENOW) - $(m)"
-		#git tag v$(v)
-		#git push
-		#git push --tags
+		git commit -a -m "Creating Tag v$(v) at $(DATENOW) - $(m)"
+		git tag v$(v)
+		git push
+		git push --tags
 		git checkout develop
-		git reset --soft master
-		git commit -am "Return to develop after tag v$(v)"
 
 
 
