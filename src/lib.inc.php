@@ -39,24 +39,49 @@ if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
 if (!defined('ADODB_ERROR_HANDLER')) {
     define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 }
-
+if (!is_writable(session_save_path())) {
+    echo 'Session path "' . session_save_path() . '" is not writable for PHP!';
+}
 // Start session (if not auto-started)
 if (!ini_get('session.auto_start')) {
     session_name('PPA_ID');
 
     $use_ssl = isset($_SERVER['HTTPS']) &&
-    isset($conf['HTTPS_COOKIE']) &&
-    boolval($conf['HTTPS_COOKIE']) !== false;
-    session_set_cookie_params(0, null, null, $use_ssl, true);
+        (!isset($conf['HTTPS_COOKIE']) ||
+        boolval($conf['HTTPS_COOKIE']) !== false);
+    session_set_cookie_params(0, '/', null, $use_ssl, true);
 
     session_start();
 }
 
+// Polyfill for PHPConsole
+if (isset($conf['php_console']) &&
+    class_exists('\PhpConsole\Helper') &&
+    $conf['php_console'] === true) {
+    \PhpConsole\Helper::register(); // it will register global PC class
+    if (!is_null($phpConsoleHandler)) {
+        $phpConsoleHandler->start(); // initialize phpConsoleHandler*/
+    }
+} else {
+    class PC
+    {
+        public static function debug() {}
+
+    }
+}
+//dd($phpConsoleHandler);
+
+ini_set('display_errors', intval(DEBUGMODE));
+ini_set('display_startup_errors', intval(DEBUGMODE));
+if (DEBUGMODE) {
+    ini_set('opcache.revalidate_freq', 0);
+    error_reporting(E_ALL);
+}
 // Dumb Polyfill to avoid errors with Kint
 if (
-    class_exists('Kint')) {
-    \Kint::$enabled_mode                = DEBUGMODE;
-    Kint\Renderer\RichRenderer::$folder = false;
+    class_exists('\Kint')) {
+    \Kint::$enabled_mode                 = DEBUGMODE;
+    \Kint\Renderer\RichRenderer::$folder = false;
 } else {
     class Kint
     {
@@ -72,30 +97,6 @@ function ddd(...$v)
 {
     \Kint::dump(...$v);
     exit;
-}
-
-\Kint::$aliases[] = 'ddd';
-// Polyfill for PHPConsole
-if (isset($conf['php_console']) &&
-    class_exists('\PhpConsole\Helper') &&
-    $conf['php_console'] === true) {
-    \PhpConsole\Helper::register(); // it will register global PC class
-    if (!is_null($phpConsoleHandler)) {
-        $phpConsoleHandler->start(); // initialize phpConsoleHandler*/
-    }
-} else {
-    class PC
-    {
-        public static function debug() {}
-    }
-}
-//\PC::dump($phpConsoleHandler);
-
-ini_set('display_errors', intval(DEBUGMODE));
-ini_set('display_startup_errors', intval(DEBUGMODE));
-if (DEBUGMODE) {
-    ini_set('opcache.revalidate_freq', 0);
-    error_reporting(E_ALL);
 }
 
 // Fetch App and DI Container

@@ -209,7 +209,7 @@ html {
           display: none;
         }
 
-        & > #detail_container {
+        & > .detail_container {
           height: 100%;
           width: 100%;
           margin: 0px;
@@ -217,16 +217,6 @@ html {
           text-align: left;
           float: left;
           flex: 1 1;
-
-          .detail_content {
-            height: 100%;
-            width: 100%;
-            margin: 0px;
-            padding: 0px;
-            text-align: left;
-            float: left;
-            flex: 1 1;
-          }
         }
 
         & > #browser_container {
@@ -236,6 +226,15 @@ html {
           text-align: left;
           float: left;
           flex: 0 0 300px;
+
+          & > .browser_container {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            text-align: left;
+            float: left;
+            width: 100%;
+          }
 
           &.ui-resizable {
             width: 300px;
@@ -279,6 +278,46 @@ html {
             }
           }
         }
+      }
+    }
+
+    /** Browser Tree using XLoadTree 2 **/
+    &.browser {
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+      text-align: left;
+
+      .refreshTree {
+        float: right;
+        text-align: right;
+        padding: 0 3px;
+      }
+
+      .webfx-tree-row {
+        white-space: nowrap;
+      }
+
+      .webfx-tree-children {
+        background-repeat: repeat-y;
+        background-position-y: 1px !important;
+        /* IE only */
+      }
+
+      .webfx-tree-row img {
+        vertical-align: middle;
+      }
+
+      .webfx-tree-item-label {
+        margin-left: 0.5ex;
+      }
+
+      .webfx-tree-icon {
+        margin-left: 1px;
+      }
+
+      .webfx-tree-hide-root {
+        display: none;
       }
     }
 
@@ -467,53 +506,7 @@ html {
     }
   }
 }
-body > .browser {
-  border: 2px solid red;
-}
-/** Browser Tree using XLoadTree 2 **/
-body.browser,
-body .browser {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-  .refreshTree {
-    position: absolute;
-    right: 0;
-    z-index: 1000;
-  }
-  .refreshTree {
-    float: right;
-    text-align: right;
-    padding: 0 3px;
-  }
 
-  .webfx-tree-row {
-    white-space: nowrap;
-  }
-
-  .webfx-tree-children {
-    background-repeat: repeat-y;
-    background-position-y: 1px !important;
-    /* IE only */
-  }
-
-  .webfx-tree-row img {
-    vertical-align: middle;
-  }
-
-  .webfx-tree-item-label {
-    margin-left: 0.5ex;
-  }
-
-  .webfx-tree-icon {
-    margin-left: 1px;
-  }
-
-  .webfx-tree-hide-root {
-    display: none;
-  }
-}
 @media print {
   @page {
     size: 215.9mm 279.4mm;

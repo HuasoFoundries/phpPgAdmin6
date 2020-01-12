@@ -155,7 +155,7 @@ class ContainerUtils
             'headertemplate' => 'header.twig',
         ];
 
-        return $c->view->render($response, 'main.twig', $viewVars);
+        return $c->view->render($response, 'iframe_view.twig', $viewVars);
     }
 
     /**

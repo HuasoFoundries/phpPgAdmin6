@@ -61,7 +61,7 @@ class HTMLFooterController extends HTMLController
         }
 
         $this->view->offsetSet('script_footer', '');
-        $this->view->offsetSet('inPopUp', $inPopUp);
+//        $this->view->offsetSet('inPopUp', $inPopUp);
         $this->view->offsetSet('reload', $reload_param);
         $this->view->offsetSet('footer_template', $template);
         $this->view->offsetSet('print_bottom_link', !$this->_no_bottom_link);
