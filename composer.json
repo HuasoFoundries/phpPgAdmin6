@@ -1,6 +1,6 @@
 {
     "name": "huasofoundries/phppgadmin6",
-    "version": "6.0.0-RC2",
+    "version": "6.0.0-RC3",
     "description": "Like phpmyadmin but for postgres",
     "type": "project",
     "license": [
