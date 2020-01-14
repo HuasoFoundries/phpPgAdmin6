@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC3
+ * PHPPgAdmin v6.0.0-RC4
  */
 
 namespace PHPPgAdmin\Controller;
@@ -831,7 +831,7 @@ class TablesController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/tables" method="post" id="selectform">'.PHP_EOL;
+            echo '<form action="'.\SUBFOLDER.'/src/views/display" method="post" id="selectform">'.PHP_EOL;
             if ($attrs->recordCount() > 0) {
                 // JavaScript for select all feature
                 echo '<script type="text/javascript">'.PHP_EOL;

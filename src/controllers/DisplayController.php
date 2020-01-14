@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC3
+ * PHPPgAdmin v6.0.0-RC4
  */
 
 namespace PHPPgAdmin\Controller;
@@ -133,6 +133,15 @@ class DisplayController extends BaseController
             count(*) AS \"count\"
             FROM \"{$f_schema}\".\"{$f_table}\"
             GROUP BY \"{$object}\" ORDER BY \"{$object}\"";
+        } elseif ($subject === 'table' && !isset($_REQUEST['query'])) {
+            $query = $data->getSelectSQL(
+                $_REQUEST['table'],
+                array_keys($_POST['show']),
+                $_POST['values'],
+                $_POST['ops']
+            );
+            $_REQUEST['query']  = $query;
+            $_REQUEST['return'] = 'selectrows';
         }
 
         //$object = $this->setIfIsset($object, $_REQUEST[$subject]);

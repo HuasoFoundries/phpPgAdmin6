@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC3
+ * PHPPgAdmin v6.0.0-RC4
  */
 
 class AcceptanceTester extends \Codeception\Actor

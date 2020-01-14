@@ -11,7 +11,7 @@
 
 
 
-$conf['debugmode'] = true;
+$conf['debugmode'] = false;
 
 $conf['register_debuggers']=function() {
 	// If debugmode is active, and $conf['register_debuggers']
