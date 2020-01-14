@@ -1,13 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Lithuanian language.
+ *
+ * @package PHPPgAdmin
  */
 class Lithuanian extends English
 {
