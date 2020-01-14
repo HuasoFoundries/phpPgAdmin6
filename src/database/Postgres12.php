@@ -16,4 +16,17 @@ namespace PHPPgAdmin\Database;
 class Postgres12 extends Postgres11
 {
     public $major_version = 12;
+
+    /**
+     * Checks to see whether or not a table has a unique id column.
+     * @deprecated this field has been removed of pg_class as of PG 12
+     * @see https://www.postgresql.org/docs/12/catalog-pg-class.html
+     * @param string $table The table name
+     *
+     * @return false
+     */
+    public function hasObjectID($table)
+    {
+        return null;
+    }
 }
