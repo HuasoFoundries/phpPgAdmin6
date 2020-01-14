@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -51,12 +51,15 @@ class HTMLNavbarController extends HTMLController
             $dburl              = $crumbs['database']['url'];
             $search_paths       = $data->getSearchPath();
             foreach ($search_paths as $schema) {
+                $url         = str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl.'&schema='.$schema);
+                $destination = $this->container->utils->getDestinationWithLastTab('database');
+                //$this->dump(['url' => $url, 'destination' => $destination]);
                 $search_path_crumbs[$schema] = [
                     'title'   => $lang['strschema'],
                     'text'    => $schema,
                     'icon'    => $this->misc->icon('Schema'),
                     'iconalt' => $lang['strschema'],
-                    'url'     => str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl.'&schema='.$schema),
+                    'url'     => $url,
                 ];
             }
             $viewVars['search_paths'] = $search_path_crumbs;

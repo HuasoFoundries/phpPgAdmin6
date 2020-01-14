@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -46,6 +46,49 @@ class TreeController
     /**
      * Produce JSON data for the browser tree.
      *
+     * @param \PHPPgAdmin\ArrayRecordSet $_treedata a set of records to populate the tree
+     * @param array                      $attrs     Attributes for tree items
+     *                                              'text' - the text for the tree node
+     *                                              'icon' - an icon for node
+     *                                              'openIcon' - an alternative icon when the node is expanded
+     *                                              'toolTip' - tool tip text for the node
+     *                                              'action' - URL to visit when single clicking the node
+     *                                              'iconAction' - URL to visit when single clicking the icon node
+     *                                              'branch' - URL for child nodes (tree XML)
+     *                                              'expand' - the action to return XML for the subtree
+     *                                              'nodata' - message to display when node has no children
+     * @param string                     $section   The section where the branch is linked in the tree
+     * @param bool                       $print     either to return or echo the result
+     *
+     * @return \Slim\Http\Response|string the json rendered tree
+     */
+    public function printTree(&$_treedata, &$attrs, $section, $print = true)
+    {
+        $plugin_manager = $this->plugin_manager;
+
+        $treedata = [];
+
+        if ($_treedata->recordCount() > 0) {
+            while (!$_treedata->EOF) {
+                $treedata[] = $_treedata->fields;
+                $_treedata->moveNext();
+            }
+        }
+
+        $tree_params = [
+            'treedata' => &$treedata,
+            'attrs'    => &$attrs,
+            'section'  => $section,
+        ];
+
+        $plugin_manager->doHook('tree', $tree_params);
+
+        return $this->printTreeJSON($treedata, $attrs, $print);
+    }
+
+    /**
+     * Produce JSON data for the browser tree.
+     *
      * @param array $treedata a set of records to populate the tree
      * @param array $attrs    Attributes for tree items
      *                        'text' - the text for the tree node
@@ -57,30 +100,22 @@ class TreeController
      *                        'branch' - URL for child nodes (tree JSON)
      *                        'expand' - the action to return JSON for the subtree
      *                        'nodata' - message to display when node has no children
-     * @param string  $section section of the tree
+     * @param bool  $print    either to return or echo the result
      *
      * @return \Slim\Http\Response|string the json rendered tree
      */
-    public function printTreeJSON(&$treedata, &$attrs, $section = '')
+    private function printTreeJSON(&$treedata, &$attrs, $print = true)
     {
-        $tree_params = [
-            'treedata' => &$treedata,
-            'attrs'    => &$attrs,
-            'section'  => $section,
-        ];
-        $plugin_manager = $this->plugin_manager;
-        $plugin_manager->doHook('tree', $tree_params);
-
         $parent = [];
 
         if (isset($attrs['is_root'])) {
             $parent = [
                 'id'       => 'root',
                 'children' => true,
-                'icon'     => \SUBFOLDER . '/assets/images/themes/default/Servers.png',
+                'icon'     => \SUBFOLDER.'/assets/images/themes/default/Servers.png',
                 'state'    => ['opened' => true],
-                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER . '/src/views/servers')],
-                'url'      => str_replace('//', '/', \SUBFOLDER . '/src/views/servers?action=tree'),
+                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER.'/src/views/servers')],
+                'url'      => str_replace('//', '/', \SUBFOLDER.'/src/views/servers?action=tree'),
                 'text'     => 'Servers',
             ];
         } elseif (count($treedata) > 0) {
@@ -102,7 +137,7 @@ class TreeController
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
                 if ($url && strpos($url, '/src/views') === false) {
-                    $url = str_replace('//', '/', \SUBFOLDER . '/src/views/' . $url);
+                    $url = str_replace('//', '/', \SUBFOLDER.'/src/views/'.$url);
                 }
                 if ($url) {
                     $tree['url']      = $url;
@@ -117,17 +152,20 @@ class TreeController
             $parent = ['children' => false];
         }
 
-        if (isset($_REQUEST['children'])) {
-            $children = $parent;
-            $parent   = ['children' => $children];
+        if (true === $print) {
+            if (isset($_REQUEST['children'])) {
+                $children = $parent;
+                $parent   = ['children' => $children];
+            }
+
+            return $this
+                ->container
+                ->responseobj
+                ->withStatus(200)
+                ->withJson($parent);
         }
 
-        return $this
-            ->container
-            ->responseobj
-            ->withStatus(200)
-            ->withJson($parent);
-
+        return $parent;
     }
 
     /**

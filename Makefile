@@ -30,6 +30,7 @@ install:
 fix_permissions: 
 fix_permissions:
 	sudo chmod 777 temp -R	
+	sudo  chown -R www-data:www-data temp/sessions
 
 update_version:
 	@echo "Current version is " ${VERSION} ;\
@@ -89,7 +90,15 @@ phpmd:
 	    phpmd src text .phpmd.xml |  sed "s/.*\///" ;\
     fi ;\
     echo ""
-	
+
+var_dumper:
+	@if [ -f "vendor/bin/var-dump-server" ]; then \
+		vendor/bin/var-dump-server ;\
+	else \
+		 echo -e "$(GREEN)symfony/var-dumper$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
+        echo -e "Install it with $(GREEN)composer require symfony/var-dumper$(WHITE)" ;\
+	fi;
+	@echo ""
 
 
 create_testdb:

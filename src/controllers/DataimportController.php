@@ -1,13 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
+ *
+ * @package PHPPgAdmin
  */
 class DataimportController extends BaseController
 {
@@ -150,7 +152,7 @@ class DataimportController extends BaseController
                         $format[$i] = 'VALUE';
                         // Type is always text
                         $types[$i] = 'text';
-                        $i++;
+                        ++$i;
                     }
                     $status = $data->insertRow($_REQUEST['table'], $fields, $vars, $nulls, $format, $types);
                     if (0 != $status) {
@@ -260,7 +262,7 @@ class DataimportController extends BaseController
                         $format[$i] = 'VALUE';
                         // Type is always text
                         $types[$i] = 'text';
-                        $i++;
+                        ++$i;
                     }
 
                     $status = $data->insertRow($_REQUEST['table'], $t_fields, $vars, $nulls, $format, $types);
@@ -268,7 +270,7 @@ class DataimportController extends BaseController
                         $data->rollbackTransaction();
                         $this->halt(sprintf($this->lang['strimporterrorline'], $row));
                     }
-                    $row++;
+                    ++$row;
                 }
 
                 break;

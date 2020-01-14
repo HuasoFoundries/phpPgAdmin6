@@ -75,7 +75,7 @@ class Connection
         // Ignore host if null
         if ($host === null || $host == '') {
             if ($port !== null && $port != '') {
-                $pghost = ':' . $port;
+                $pghost = ':'.$port;
             } else {
                 $pghost = '';
             }
@@ -85,7 +85,7 @@ class Connection
 
         // Add sslmode to $pghost as needed
         if (($sslmode == 'disable') || ($sslmode == 'allow') || ($sslmode == 'prefer') || ($sslmode == 'require')) {
-            $pghost .= ':' . $sslmode;
+            $pghost .= ':'.$sslmode;
         } elseif ($sslmode == 'legacy') {
             $pghost .= ' requiressl=1';
         }

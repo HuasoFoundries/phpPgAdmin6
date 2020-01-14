@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin;
@@ -13,6 +13,8 @@ namespace PHPPgAdmin;
 
 /**
  * A class that adds convenience methods to the container.
+ *
+ * @package PHPPgAdmin
  */
 class ContainerUtils
 {
@@ -33,7 +35,10 @@ class ContainerUtils
         $appVersion   = $composerinfo->version;
 
         $phpMinVer = (str_replace(['<', '>', '='], '', $composerinfo->require->php));
-        $config    = [
+        //$this->prtrace($appVersion);
+        //$this->dump($composerinfo);
+
+        $config = [
             'msg'       => '',
             'appThemes' => [
                 'default'    => 'Default',
@@ -47,7 +52,7 @@ class ContainerUtils
                 'base_path'                         => BASE_PATH,
                 'debug'                             => DEBUGMODE,
 
-                'routerCacheFile'                   => BASE_PATH . '/temp/route.cache.php',
+                // 'routerCacheFile'                   => BASE_PATH . '/temp/route.cache.php',
 
                 // Configuration file version.  If this is greater than that in config.inc.php, then
                 // the app will refuse to run.  This and $conf['version'] should be incremented whenever
@@ -86,55 +91,6 @@ class ContainerUtils
         return [self::$instance->container, self::$instance->app];
     }
 
-    public function icon($icon)
-    {
-
-        $conf = $this->container->conf;
-        if (is_string($icon)) {
-            $path = "/assets/images/themes/{$conf['theme']}/{$icon}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
-            }
-
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
-            }
-
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
-            }
-
-            $path = "/assets/images/themes/default/{$icon}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
-            }
-
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
-            }
-
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
-            }
-        } else {
-            // Icon from plugins
-            $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
-            if (file_exists(\BASE_PATH . $path . '.png')) {
-                return SUBFOLDER . $path . '.png';
-            }
-
-            if (file_exists(\BASE_PATH . $path . '.gif')) {
-                return SUBFOLDER . $path . '.gif';
-            }
-
-            if (file_exists(\BASE_PATH . $path . '.ico')) {
-                return SUBFOLDER . $path . '.ico';
-            }
-        }
-
-        return '';
-    }
-
     public function maybeRenderIframes($response, $subject, $query_string)
     {
         $c       = $this->container;
@@ -146,11 +102,8 @@ class ContainerUtils
 
             return $controller->render();
         }
+
         $viewVars = [
-            'icon'           => [
-                'Refresh' => $this->icon('Refresh'),
-                'Servers' => $this->icon('Servers'),
-            ],
             'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
             'headertemplate' => 'header.twig',
         ];
@@ -299,7 +252,7 @@ class ContainerUtils
             $destinationurl = $actionurl->value($_GET);
         }
         $destinationurl = str_replace('views/?', "views/{$subject}?", $destinationurl);
-        //$this->prtrace('destinationurl for ' . $subject, $destinationurl);
+        // $this->prtrace('destinationurl for ' . $subject, $destinationurl);
         return $destinationurl;
     }
 

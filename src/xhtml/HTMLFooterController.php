@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -44,14 +44,12 @@ class HTMLFooterController extends HTMLController
     }
 
     /**
-     * fetches the page footer.
+     * Prints the page footer.
      *
-     * @param string  $template    the template's name
-     * @param array   $viewParams  Optional - extra view parameters
-     *
-     * @return string  the html content for the footer section
+     * @param bool  $doBody   True to output body tag, false to return the html
+     * @param mixed $template
      */
-    public function getFooter($template = 'footer.twig', $viewParams = [])
+    public function printFooter($doBody = true, $template = 'footer.twig')
     {
         $reload_param = 'none';
         if ($this->misc->getReloadBrowser()) {
@@ -61,15 +59,17 @@ class HTMLFooterController extends HTMLController
         }
 
         $this->view->offsetSet('script_footer', '');
-//        $this->view->offsetSet('inPopUp', $inPopUp);
         $this->view->offsetSet('reload', $reload_param);
         $this->view->offsetSet('footer_template', $template);
         $this->view->offsetSet('print_bottom_link', !$this->_no_bottom_link);
-        foreach ($viewParams as $key => $value) {
-            $this->view->offsetSet($key, $value);
-        }
-        return $this->view->fetch($template);
 
+        $footer_html = $this->view->fetch($template);
+
+        if ($doBody) {
+            echo $footer_html;
+        } else {
+            return $footer_html;
+        }
     }
 
     /**
@@ -79,9 +79,9 @@ class HTMLFooterController extends HTMLController
      */
     public function setFocus($object)
     {
-        echo '<script type="text/javascript">' . PHP_EOL;
+        echo '<script type="text/javascript">'.PHP_EOL;
         echo "   document.{$object}.focus();\n";
-        echo '</script>' . PHP_EOL;
+        echo '</script>'.PHP_EOL;
     }
 
     /**
@@ -93,11 +93,11 @@ class HTMLFooterController extends HTMLController
      */
     public function setWindowName($name, $addServer = true)
     {
-        echo '<script type="text/javascript">' . PHP_EOL;
+        echo '<script type="text/javascript">'.PHP_EOL;
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
-        echo '//]]>' . PHP_EOL;
-        echo '</script>' . PHP_EOL;
+        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo '//]]>'.PHP_EOL;
+        echo '</script>'.PHP_EOL;
     }
 
     /**
@@ -111,11 +111,13 @@ class HTMLFooterController extends HTMLController
      *                         Allows to give some environnement details to plugins.
      *                         and 'browse' is the place inside that code (doBrowse).
      * @param bool   $do_print if true, print html, if false, return html
-     * @param stromg  $from     who is calling this method (mostly for debug)
+     * @param mixed  $from     can either be null, false or the method calling this one
      */
     public function printNavLinks($navlinks, $place, $env, $do_print, $from)
     {
-
+        if (null === $from || false === $from) {
+            $from = __METHOD__;
+        }
         //$this->prtrace($navlinks);
         $plugin_manager = $this->plugin_manager;
 
@@ -128,9 +130,11 @@ class HTMLFooterController extends HTMLController
         $plugin_manager->doHook('navlinks', $plugin_functions_parameters);
 
         if (count($navlinks) > 0) {
-
-            return $this->printLinksList($navlinks, 'navlink', $do_print, $from);
-
+            if ($do_print) {
+                $this->printLinksList($navlinks, 'navlink', true, $from);
+            } else {
+                return $this->printLinksList($navlinks, 'navlink', false, $from);
+            }
         }
     }
 }

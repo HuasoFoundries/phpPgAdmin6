@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Controller;
@@ -81,7 +81,7 @@ class LoginController extends BaseController
             $login_html .= $this->printMsg($msg, false);
         }
 
-        $login_html .= '<form id="login_form"  method="post" name="login_form" action="'.\SUBFOLDER.'/redirect/server?server='.htmlspecialchars($server_id).'">';
+        $login_html .= '<form id="login_form"    method="post" name="login_form" action="'.\SUBFOLDER.'/redirect/server?server='.htmlspecialchars($server_id).'">';
 
         $md5_server = md5($server_id);
         // Pass request vars through form (is this a security risk???)
@@ -109,7 +109,7 @@ class LoginController extends BaseController
         $login_html .= '<td><input id="loginPassword" type="password" name="loginPassword_'.$md5_server.'" size="24" /></td>';
         $login_html .= '</tr>';
         $login_html .= '</table>';
-        if (count($this->conf['servers']) > 1) {
+        if (sizeof($this->conf['servers']) > 1) {
             $checked = isset($_POST['loginShared']) ? 'checked="checked"' : '';
             $login_html .= '<p><input type="checkbox" id="loginShared" name="loginShared" '.$checked.' />';
             $login_html .= '<label for="loginShared">'.$this->lang['strtrycred'].'</label></p>';

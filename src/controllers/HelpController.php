@@ -1,13 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
+ *
+ * @package PHPPgAdmin
  */
 class HelpController extends BaseController
 {
@@ -37,7 +39,6 @@ class HelpController extends BaseController
         if (isset($_REQUEST['help'])) {
             $url = $data->getHelp($_REQUEST['help']);
 
-            //\PC::debug(['url' => $url], 'HelpController::doDefault');
             if (is_array($url)) {
                 $this->doChoosePage($url);
 
@@ -65,11 +66,11 @@ class HelpController extends BaseController
 
         echo $this->printMsg($msg);
 
-        echo '<dl>'.PHP_EOL;
+        echo '<dl>' . PHP_EOL;
 
         $pages = $data->getHelpPages();
         foreach ($pages as $page => $dummy) {
-            echo "<dt>{$page}</dt>".PHP_EOL;
+            echo "<dt>{$page}</dt>" . PHP_EOL;
 
             $urls = $data->getHelp($page);
             if (!is_array($urls)) {
@@ -77,11 +78,11 @@ class HelpController extends BaseController
             }
 
             foreach ($urls as $url) {
-                echo "<dd><a href=\"{$url}\">{$url}</a></dd>".PHP_EOL;
+                echo "<dd><a href=\"{$url}\">{$url}</a></dd>" . PHP_EOL;
             }
         }
 
-        echo '</dl>'.PHP_EOL;
+        echo '</dl>' . PHP_EOL;
 
         $this->printFooter();
     }
@@ -93,11 +94,11 @@ class HelpController extends BaseController
 
         $this->printTitle($this->lang['strselecthelppage']);
 
-        echo '<ul>'.PHP_EOL;
+        echo '<ul>' . PHP_EOL;
         foreach ($urls as $url) {
-            echo "<li><a href=\"{$url}\">{$url}</a></li>".PHP_EOL;
+            echo "<li><a href=\"{$url}\">{$url}</a></li>" . PHP_EOL;
         }
-        echo '</ul>'.PHP_EOL;
+        echo '</ul>' . PHP_EOL;
 
         $this->printFooter();
     }

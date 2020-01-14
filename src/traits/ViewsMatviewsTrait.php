@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Traits;
@@ -120,7 +120,7 @@ trait ViewsMatviewsTrait
                         $attrs->fields['type']
                     ), '</td>';
                     echo '</tr>'.PHP_EOL;
-                    $i++;
+                    ++$i;
                     $attrs->moveNext();
                 }
                 // Select all checkbox
@@ -155,7 +155,7 @@ trait ViewsMatviewsTrait
             }
         }
 
-        if (0 == count($_POST['show'])) {
+        if (0 == sizeof($_POST['show'])) {
             return $this->doSelectRows(true, $this->lang['strselectneedscol']);
         }
         // Generate query SQL
@@ -226,7 +226,7 @@ trait ViewsMatviewsTrait
             $tmpHsh[$arrTmp['fieldname']] = 1;
         } elseif ('rename' == $_POST['dblFldMeth']) {
             // field exist and must be renamed
-            $tmpHsh[$arrTmp['fieldname']]++;
+            ++$tmpHsh[$arrTmp['fieldname']];
             $selFields .= $field_element.'  AS  "'.implode('_', $field_arr).'_'.$tmpHsh[$arrTmp['fieldname']].'", ';
         }
         //  if field already exist, just ignore this one
@@ -246,7 +246,7 @@ trait ViewsMatviewsTrait
                 }
             }
             // We must perform some magic to make sure that we have a valid join order
-            $count = count($arrLinks);
+            $count = sizeof($arrLinks);
         }
 
         return [$arrLinks, $count];
@@ -325,7 +325,7 @@ trait ViewsMatviewsTrait
                     $arrUsedTbls[] = $tbl2;
                 }
             }
-            $j++;
+            ++$j;
         }
 
         //if linkFields has no length then either _POST['formLink'] was not set, or there were no join conditions
@@ -375,10 +375,10 @@ trait ViewsMatviewsTrait
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $tblCount     = count($_POST['formTables']);
+        $tblCount     = sizeof($_POST['formTables']);
         $arrSelTables = [];
         //unserialize our schema/table information and store in arrSelTables
-        for ($i = 0; $i < $tblCount; $i++) {
+        for ($i = 0; $i < $tblCount; ++$i) {
             $arrSelTables[] = unserialize($_POST['formTables'][$i]);
         }
 
@@ -391,7 +391,7 @@ trait ViewsMatviewsTrait
         //if we have schemas we need to specify the correct schema for each table we're retrieiving
         //with getTableAttributes
         $curSchema = $data->_schema;
-        for ($i = 0; $i < $tblCount; $i++) {
+        for ($i = 0; $i < $tblCount; ++$i) {
             if ($arrSelTables[$i]['schemaname'] != $data->_schema) {
                 $data->setSchema($arrSelTables[$i]['schemaname']);
             }
@@ -442,7 +442,7 @@ trait ViewsMatviewsTrait
         echo "<tr><th class=\"data\">{$this->lang['strviewlink']}</th></tr>";
         $rowClass = 'data1';
         $formLink = [];
-        for ($i = 0; $i < $linkCount; $i++) {
+        for ($i = 0; $i < $linkCount; ++$i) {
             // Initialise variables
             $this->coalesceArr($formLink[$i], 'operator', 'INNER JOIN');
 
@@ -478,7 +478,7 @@ trait ViewsMatviewsTrait
         echo '<table>'.PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strviewconditions']}</th></tr>";
         $rowClass = 'data1';
-        for ($i = 0; $i < $linkCount; $i++) {
+        for ($i = 0; $i < $linkCount; ++$i) {
             echo "<tr>\n<td class=\"${rowClass}\">".PHP_EOL;
             echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrFields, "formCondition[${i}][field]");
             echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrOperators, "formCondition[${i}][operator]", false, '', false);

@@ -1,13 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
+ *
+ * @package PHPPgAdmin
  */
 class SqlController extends BaseController
 {
@@ -129,7 +131,7 @@ class SqlController extends BaseController
                         // If rows returned, then display the results
                         $num_fields = pg_numfields($rs);
                         echo "<p><table>\n<tr>";
-                        for ($k = 0; $k < $num_fields; $k++) {
+                        for ($k = 0; $k < $num_fields; ++$k) {
                             echo '<th class="data">', $misc->printVal(pg_fieldname($rs, $k)), '</th>';
                         }
 
@@ -143,7 +145,7 @@ class SqlController extends BaseController
                             }
                             echo '</tr>'.PHP_EOL;
                             $row = pg_fetch_row($rs);
-                            $i++;
+                            ++$i;
                         }
 
                         echo '</table><br/>'.PHP_EOL;
@@ -216,7 +218,7 @@ class SqlController extends BaseController
                     }
                     echo '</tr>'.PHP_EOL;
                     $rs->moveNext();
-                    $i++;
+                    ++$i;
                 }
                 echo '</table>'.PHP_EOL;
                 echo '<p>', $rs->recordCount(), " {$this->lang['strrows']}</p>".PHP_EOL;

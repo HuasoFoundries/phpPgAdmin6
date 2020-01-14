@@ -15,15 +15,20 @@ if (!is_writable(BASE_PATH . '/temp')) {
     die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
 }
 require_once BASE_PATH . '/vendor/autoload.php';
-
-// base value for PHPConsole handler to avoid undefined variable
-$phpConsoleHandler = null;
 // Check to see if the configuration file exists, if not, explain
 if (file_exists(BASE_PATH . '/config.inc.php')) {
     $conf = [];
     include BASE_PATH . '/config.inc.php';
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
+}
+$setSession = (defined('PHP_SESSION_ACTIVE') ? session_status() != PHP_SESSION_ACTIVE : !session_id()) && !headers_sent() && !ini_get('session.auto_start');
+
+if ($setSession) {
+    session_set_cookie_params(0, '/', null, isset($_SERVER['HTTPS']));
+    session_name('PPA_ID');
+
+    session_start();
 }
 
 if (isset($conf['error_log'])) {
@@ -42,61 +47,15 @@ if (!defined('ADODB_ERROR_HANDLER')) {
 if (!is_writable(session_save_path())) {
     echo 'Session path "' . session_save_path() . '" is not writable for PHP!';
 }
-// Start session (if not auto-started)
-if (!ini_get('session.auto_start')) {
-    session_name('PPA_ID');
-
-    $use_ssl = isset($_SERVER['HTTPS']) &&
-        (!isset($conf['HTTPS_COOKIE']) ||
-        boolval($conf['HTTPS_COOKIE']) !== false);
-    session_set_cookie_params(0, '/', null, $use_ssl, true);
-
-    session_start();
-}
-
-// Polyfill for PHPConsole
-if (isset($conf['php_console']) &&
-    class_exists('\PhpConsole\Helper') &&
-    $conf['php_console'] === true) {
-    \PhpConsole\Helper::register(); // it will register global PC class
-    if (!is_null($phpConsoleHandler)) {
-        $phpConsoleHandler->start(); // initialize phpConsoleHandler*/
-    }
-} else {
-    class PC
-    {
-        public static function debug() {}
-
-    }
-}
-//dd($phpConsoleHandler);
 
 ini_set('display_errors', intval(DEBUGMODE));
 ini_set('display_startup_errors', intval(DEBUGMODE));
 if (DEBUGMODE) {
     ini_set('opcache.revalidate_freq', 0);
     error_reporting(E_ALL);
-}
-// Dumb Polyfill to avoid errors with Kint
-if (
-    class_exists('\Kint')) {
-    \Kint::$enabled_mode                 = DEBUGMODE;
-    \Kint\Renderer\RichRenderer::$folder = false;
-} else {
-    class Kint
-    {
-        public static $enabled_mode = false;
-        public static $aliases      = [];
-
-        public static function dump() {}
+    if (array_key_exists('register_debuggers', $conf) && is_callable($conf['register_debuggers'])) {
+        $conf['register_debuggers']();
     }
-}
-
-\Kint::$enabled_mode = DEBUGMODE;
-function ddd(...$v)
-{
-    \Kint::dump(...$v);
-    exit;
 }
 
 // Fetch App and DI Container

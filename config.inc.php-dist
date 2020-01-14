@@ -9,37 +9,52 @@
 
 
 
-// Enable this to debug on console using
-// https://github.com/barbushin/php-console
-// (Only in Chrome)
-$conf['php_console'] = true;
+
 
 $conf['debugmode'] = true;
-if ($conf['php_console'] === true &&
-    // PHP_CONSOLE doesn't work on PHP 7.4 yet
-    version_compare(PHP_VERSION, 7.4, '<') &&
+
+$conf['register_debuggers']=function() {
+	// If debugmode is active, and $conf['register_debuggers']
+	// is a function (or a callable), it will be invoked before 
+	// instancing the app's container
+	define('THIS_WAS_PRODUCTION',false);
+	// e.g. register Whoops as exception handler
+	if (THIS_WAS_PRODUCTION
+	   && class_exists('Whoops\Run')) {
+        $whoops = new Whoops\Run();
+        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
+        $whoops->register();
+    }
+
+  	// Using PHP-Console
+  	// PHP_CONSOLE doesn't work on PHP 7.4 yet
+	// https://github.com/barbushin/php-console
+	// (Only in Chrome)
+  if (THIS_WAS_PRODUCTION && 
+    version_compare(PHP_VERSION, 7.4, '<') && 
     class_exists('PhpConsole\Handler')) {
+	    $phpConsoleHandler = \PhpConsole\Handler::getInstance();
+	 	$connector=$phpConsoleHandler->getConnector();
+	 	$connector->setPassword('yohoho123', true);
+	 	$connector->enableSslOnlyMode();
+		$phpConsoleHandler->start(); 
+	}
 
-    $phpConsoleHandler = PhpConsole\Handler::getInstance();
+	// Example with Kint
+	if (THIS_WAS_PRODUCTION && 
+		class_exists('Kint')) {
+	    \Kint::$enabled_mode                 = true;
+	    \Kint\Renderer\RichRenderer::$folder = false;
+		function ddd(...$v)
+		{
+	    	\Kint::dump(...$v);
+	    	exit;
+		}
+		
+		\Kint::$aliases[] = 'ddd';
+	}
+};
 
-/* Get the reference to the connector instance
-$connector=$phpConsoleHandler->getConnector();
- */
-/* Set a password for PHPConsole Connector
-$connector->setPassword('yohoho123', true);
- */
-
-/* enable in SSL mode only
-$connector->enableSslOnlyMode();
- */
-
-/* Override default Handler behavior:
-$phpConsoleHandler->setHandleErrors(false);  // disable errors handling
-$phpConsoleHandler->setHandleExceptions(false); // disable exceptions handling
-$phpConsoleHandler->setCallOldHandlers(false); // disable passing errors & exceptions to prviously defined handlers
- */
-
-}
 
 
 // optionally, set a path for your error log, relative to this project root

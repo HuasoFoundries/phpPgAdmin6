@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,6 +10,8 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
+ * @package PHPPgAdmin
  */
 class TblpropertiesController extends BaseController
 {
@@ -452,7 +454,7 @@ class TblpropertiesController extends BaseController
         }
         // Don't show upload option if max size of uploads is zero
         $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
-        if (is_float($max_size) && $max_size > 0) {
+        if (is_double($max_size) && $max_size > 0) {
             echo '<form action="'.\SUBFOLDER.'/src/views/dataimport" method="post" enctype="multipart/form-data">'.PHP_EOL;
             echo '<table>'.PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strformat']}</th>".PHP_EOL;
@@ -682,7 +684,7 @@ class TblpropertiesController extends BaseController
             foreach ($p['keys'] as $k => $c) {
                 if (is_null($p['keys'][$k]['consrc'])) {
                     $atts        = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
-                    $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').implode(',', $atts).')';
+                    $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
                 }
 
                 if ($c['p_field'] == $s) {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,6 +10,8 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
+ * @package PHPPgAdmin
  */
 class AlldbController extends BaseController
 {
@@ -101,13 +103,18 @@ class AlldbController extends BaseController
 
         $this->misc->setReloadBrowser(true);
 
-        $href = $this->misc->getHREF();
-
+        $href        = $this->misc->getHREF();
+        $redirecturl = $this->container->utils->getDestinationWithLastTab('database');
+        /*       $this->prtrace([
+        'redirecturl' => $redirecturl,
+        'href'        => $href]
+        );
+         */
         $columns = [
             'database'   => [
                 'title' => $this->lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url'   => \SUBFOLDER."/redirect/database?{$href}&amp;",
+                'url'   => \SUBFOLDER.$redirecturl.'&amp;',
                 'vars'  => ['database' => 'datname'],
             ],
             'owner'      => [
@@ -560,7 +567,7 @@ class AlldbController extends BaseController
         $subject = 'server';
         $object  = $_REQUEST['server'];
 
-        $this->prtrace($this->misc->getServerInfo());
+//        $this->prtrace($this->misc->getServerInfo());
 
         echo $this->formHeader('dbexport');
 

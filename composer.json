@@ -29,7 +29,7 @@
         }
     },
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.1",
         "ext-pgsql": "*",
         "slim/slim": "^3.6",
         "slim/twig-view": "~2.5.1",
@@ -41,7 +41,6 @@
         "kint-php/kint": "~3.3",
         "codeception/codeception": "*",
         "simpletest/simpletest": "^1.1",
-        "php-console/php-console": "^3.1",
         "codeception/module-asserts": "^1.1",
         "filp/whoops": "^2.7",
         "symfony/var-dumper": "^5.0"

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,6 +10,8 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
+ * @package PHPPgAdmin
  */
 class InfoController extends BaseController
 {
@@ -174,7 +176,7 @@ class InfoController extends BaseController
             echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['n_tup_del'], 'int4', $this->shownull), '</td>'.PHP_EOL;
             echo "\t</tr>".PHP_EOL;
             $tablestatstups->movenext();
-            $i++;
+            ++$i;
         }
 
         echo '</table>'.PHP_EOL;
@@ -256,7 +258,7 @@ class InfoController extends BaseController
             echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>".PHP_EOL;
             echo "\t</tr>".PHP_EOL;
             $tablestatsio->movenext();
-            $i++;
+            ++$i;
         }
 
         echo '</table>'.PHP_EOL;
@@ -284,7 +286,7 @@ class InfoController extends BaseController
             echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_tup_fetch'], 'int4', $this->shownull), '</td>'.PHP_EOL;
             echo "\t</tr>".PHP_EOL;
             $indexstatstups->movenext();
-            $i++;
+            ++$i;
         }
 
         echo '</table>'.PHP_EOL;
@@ -319,7 +321,7 @@ class InfoController extends BaseController
             echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>".PHP_EOL;
             echo "\t</tr>".PHP_EOL;
             $indexstatsio->movenext();
-            $i++;
+            ++$i;
         }
 
         echo '</table>'.PHP_EOL;

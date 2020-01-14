@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -22,7 +22,6 @@ class Decorator
 
     public static function get_sanitized_value(&$var, &$fields, $esc = null)
     {
-        //self::statictrace($var, $fields, $esc);
         if (is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
             $val = $var->value($fields);
         } else {

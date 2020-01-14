@@ -34,7 +34,7 @@ class PopulateRequestResponse extends Middleware
 
         $query_string = $request->getUri()->getQuery();
         $container->view->offsetSet('query_string', $query_string);
-        $path = (SUBFOLDER ? (SUBFOLDER.'/') : '').$request->getUri()->getPath().($query_string ? '?'.$query_string : '');
+        $path = (SUBFOLDER ? (SUBFOLDER . '/') : '') . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
         $container->view->offsetSet('path', $path);
 
         $params = $request->getParams();
@@ -67,7 +67,7 @@ class PopulateRequestResponse extends Middleware
         $messages = $container->flash->getMessages();
         if (!empty($messages)) {
             foreach ($messages as $key => $message) {
-                \PC::debug($message, 'Flash: '.$key);
+                $this->prtrace('Flash: ' . $key . ' =  ' . json_encode($message));
             }
         }
 

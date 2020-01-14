@@ -1,13 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
+ *
+ * @package PHPPgAdmin
  */
 class IntroController extends BaseController
 {

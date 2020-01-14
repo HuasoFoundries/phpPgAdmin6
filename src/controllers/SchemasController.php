@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,6 +10,8 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
+ *
+ * @package PHPPgAdmin
  */
 class SchemasController extends BaseController
 {
@@ -95,13 +97,14 @@ class SchemasController extends BaseController
         $this->printMsg($msg);
 
         // Check that the DB actually supports schemas
-        $schemas = $data->getSchemas();
+        $schemas     = $data->getSchemas();
+        $destination = $this->container->utils->getDestinationWithLastTab('schema');
 
         $columns = [
             'schema'      => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => \SUBFOLDER."/redirect/schema?{$this->misc->href}&amp;",
+                'url'   => \SUBFOLDER."{$destination}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
             'owner'       => [

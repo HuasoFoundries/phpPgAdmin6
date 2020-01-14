@@ -60,7 +60,7 @@ jQuery(document).ready(function() {
 
   window.setTimeout(function() {
     autoResize(() => {
-      jQuery(".CodeMirror").style("resize", "both");
+      jQuery(".CodeMirror").css("resize", "both");
     });
   }, 1500);
 });

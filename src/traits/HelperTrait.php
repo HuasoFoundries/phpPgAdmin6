@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC1.
+ * PHPPgAdmin v6.0.0-RC2
  */
 
 namespace PHPPgAdmin\Traits;
@@ -41,56 +41,35 @@ trait HelperTrait
     public function addFlash($content, $key = '')
     {
         if ($key === '') {
-            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-
-            $btarray0 = ([
-                'class2'    => $backtrace[1]['class'],
-                'type2'     => $backtrace[1]['type'],
-                'function2' => $backtrace[1]['function'],
-                'spacer4'   => ' ',
-                'line2'     => $backtrace[0]['line'],
-            ]);
-
-            $key = implode('', $btarray0);
+            $key = self::getBackTrace();
         }
-
+        // $this->dump(__METHOD__ . ': addMessage ' . $key . '  ' . json_encode($content));
         $this->container->flash->addMessage($key, $content);
     }
 
-    /**
-     * Receives N parameters and sends them to the console adding where was it called from.
-     */
-    public function prtrace()
+    public static function getBackTrace($offset = 0)
     {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $i0        = $offset;
+        $i1        = $offset + 1;
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $offset + 3);
 
         $btarray0 = ([
-            /*'class0'    => $backtrace[3]['class'],
-            'type0'     => $backtrace[3]['type'],
-            'function0' => $backtrace[3]['function'],
-            'spacer0'   => ' ',
-            'line0'     => $backtrace[2]['line'],
+            'class'    => $backtrace[$i1]['class'] === 'Closure' ?
+            $backtrace[$i0]['file'] :
+            $backtrace[$i1]['class'],
 
-            'spacer1'   => PHP_EOL,
+            'type'     => $backtrace[$i1]['type'],
 
-            'class1'    => $backtrace[2]['class'],
-            'type1'     => $backtrace[2]['type'],
-            'function1' => $backtrace[2]['function'],
-            'spacer2'   => ' ',
-            'line1'     => $backtrace[1]['line'],
+            'function' => $backtrace[$i1]['function'] === '{closure}'
+            ? $backtrace[$i0]['function'] :
+            $backtrace[$i1]['function'],
 
-            'spacer3'   => PHP_EOL,*/
-
-            'class2'    => $backtrace[1]['class'],
-            'type2'     => $backtrace[1]['type'],
-            'function2' => $backtrace[1]['function'],
-            'spacer4'   => ' ',
-            'line2'     => $backtrace[0]['line'],
+            'spacer4'  => ' ',
+            'line'     => $backtrace[$i0]['line'],
         ]);
 
-        $tag = implode('', $btarray0);
-
-        \PC::debug(func_get_args(), $tag);
+        return $btarray0;
+        //dump($backtrace);
     }
 
     /**
@@ -165,27 +144,6 @@ trait HelperTrait
         return $array;
     }
 
-    /**
-     * Receives N parameters and sends them to the console adding where was it
-     * called from.
-     */
-    public static function statictrace()
-    {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-
-        $btarray0 = [
-            'class'    => $backtrace[1]['class'],
-            'type'     => $backtrace[1]['type'],
-            'function' => $backtrace[1]['function'],
-            'spacer'   => ' ',
-            'line'     => $backtrace[0]['line'],
-        ];
-
-        $tag = implode('', $btarray0);
-
-        \PC::debug(func_get_args(), $tag);
-    }
-
     public static function formatSizeUnits($bytes, $lang)
     {
         if ($bytes == -1) {
@@ -217,20 +175,52 @@ trait HelperTrait
         return str_replace(['<br>', '<br/>', '<br />'], PHP_EOL, $msg);
     }
 
-    public function dump()
+    /**
+     * Receives N parameters and sends them to the console adding where was it called from.
+     */
+    public function prtrace(...$args)
     {
-        call_user_func_array(['Kint', 'dump'], func_get_args());
+        return self::staticTrace($args);
     }
 
-    public function dumpAndDie()
+    public function dump(...$args)
     {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        return self::staticTrace($args);
+    }
 
-        $folder = dirname(dirname(__DIR__));
-        $file   = str_replace($folder, '', $backtrace[0]['file']);
-        $line   = $backtrace[0]['line'];
+    /**
+     * Receives N parameters and sends them to the console adding where was it
+     * called from.
+     *
+     * @param mixed $variablesToDump
+     * @param mixed $exitAfterwards
+     */
+    private static function staticTrace(
+        $variablesToDump = [],
+        string $whoCalledMe = '',
+        $exitAfterwards = false
+    ) {
+        if (!$variablesToDump) {
+            $variablesToDump = func_get_args();
+        }
+        if ($whoCalledMe === '') {
+            $whoCalledMe = str_replace(BASE_PATH, '', implode('', self::getBackTrace(2)));
+        }
+        if ($exitAfterwards && function_exists('dd')) {
+            dd([
+                'args' => $variablesToDump,
+                'from' => $whoCalledMe,
+            ]);
+        } elseif (function_exists('dump')) {
+            dump([
+                'args' => $variablesToDump,
+                'from' => $whoCalledMe,
+            ]);
+        }
+    }
 
-        call_user_func_array('\Kint::dump', func_get_args());
-        $this->halt('stopped by user at '.$file.' line '.$line);
+    public function dumpAndDie(...$args)
+    {
+        return self::staticTrace($args);
     }
 }
