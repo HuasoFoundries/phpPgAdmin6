@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC5
+ * PHPPgAdmin v6.0.0-RC6
  */
 
 namespace PHPPgAdmin\Controller;

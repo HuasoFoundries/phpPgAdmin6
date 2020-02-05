@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC5
+ * PHPPgAdmin v6.0.0-RC6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -35,11 +35,11 @@ class ActionUrlDecorator extends Decorator
                     continue;
                 }
                 //dump($fields, $var, $value);
-                $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($value, $fields);
+                $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($value, $fields);
                 $sep = '&';
             }
         }
 
-        return \SUBFOLDER . '/src/views/' . str_replace('.php', '', $url);
+        return \SUBFOLDER.'/src/views/'.str_replace('.php', '', $url);
     }
 }
