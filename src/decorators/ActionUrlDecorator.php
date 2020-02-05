@@ -34,12 +34,12 @@ class ActionUrlDecorator extends Decorator
                 if (!is_scalar($value)) {
                     continue;
                 }
-                dump($fields, $var, $value);
-                $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($value, $fields);
+                //dump($fields, $var, $value);
+                $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($value, $fields);
                 $sep = '&';
             }
         }
 
-        return \SUBFOLDER.'/src/views/'.str_replace('.php', '', $url);
+        return \SUBFOLDER . '/src/views/' . str_replace('.php', '', $url);
     }
 }
