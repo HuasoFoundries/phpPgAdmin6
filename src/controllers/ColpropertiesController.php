@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC4
+ * PHPPgAdmin v6.0.0-RC5
  */
 
 namespace PHPPgAdmin\Controller;
@@ -96,7 +96,7 @@ class ColpropertiesController extends BaseController
             if (null !== $attrs->fields['comment']) {
                 echo '<p class="comment">', $this->misc->printVal($attrs->fields['comment']), '</p>'.PHP_EOL;
             }
-            $this->prtrace('$isTable', $isTable);
+            //$this->prtrace('$isTable', $isTable);
 
             $column = [
                 'column' => [
@@ -232,7 +232,7 @@ class ColpropertiesController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'stage', 1);
 
-        $this->prtrace('$_REQUEST', $_REQUEST, 'msg', $msg);
+        #$this->prtrace('$_REQUEST', $_REQUEST, 'msg', $msg);
 
         switch ($_REQUEST['stage']) {
             case 1:
@@ -263,7 +263,7 @@ class ColpropertiesController extends BaseController
                     $_REQUEST['field'] = $column->fields['attname'];
                     $_REQUEST['type']  = $column->fields['base_type'];
                     // Check to see if its' an array type...
-                    // XXX: HACKY
+                    // @todo this is pretty hacky!
                     if ('[]' == substr($column->fields['base_type'], strlen($column->fields['base_type']) - 2)) {
                         $_REQUEST['type']  = substr($column->fields['base_type'], 0, strlen($column->fields['base_type']) - 2);
                         $_REQUEST['array'] = '[]';
@@ -272,7 +272,7 @@ class ColpropertiesController extends BaseController
                         $_REQUEST['array'] = '';
                     }
                     // To figure out the length, look in the brackets :(
-                    // XXX: HACKY
+                    //  @todo this is pretty hacky
                     if ($column->fields['type'] != $column->fields['base_type'] && preg_match('/\\(([0-9, ]*)\\)/', $column->fields['type'], $bits)) {
                         $_REQUEST['length'] = $bits[1];
                     } else {
@@ -380,7 +380,7 @@ class ColpropertiesController extends BaseController
                     $_REQUEST['comment']
                 );
 
-                $this->prtrace('status', $status, 'sql', $sql);
+                //$this->prtrace('status', $status, 'sql', $sql);
                 if (0 == $status) {
                     if ($_REQUEST['column'] != $_REQUEST['field']) {
                         $_REQUEST['column'] = $_REQUEST['field'];

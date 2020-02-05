@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC4
+ * PHPPgAdmin v6.0.0-RC5
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -10,20 +10,20 @@ class IfEmptyDecorator extends Decorator
 {
     public function __construct($value, $empty, $full = null)
     {
-        $this->v = $value;
-        $this->e = $empty;
+        $this->val   = $value;
+        $this->empty = $empty;
         if (null !== $full) {
-            $this->f = $full;
+            $this->full = $full;
         }
     }
 
     public function value($fields)
     {
-        $val = Decorator::get_sanitized_value($this->v, $fields);
+        $val = Decorator::get_sanitized_value($this->val, $fields);
         if (empty($val)) {
-            return Decorator::get_sanitized_value($this->e, $fields);
+            return Decorator::get_sanitized_value($this->empty, $fields);
         }
 
-        return isset($this->f) ? Decorator::get_sanitized_value($this->f, $fields) : $val;
+        return isset($this->full) ? Decorator::get_sanitized_value($this->full, $fields) : $val;
     }
 }

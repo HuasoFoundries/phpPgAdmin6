@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC4
+ * PHPPgAdmin v6.0.0-RC5
  */
 
 class ContainerTest extends \Codeception\Test\Unit

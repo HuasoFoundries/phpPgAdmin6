@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC4
+ * PHPPgAdmin v6.0.0-RC5
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -10,15 +10,15 @@ class RedirectUrlDecorator extends Decorator
 {
     public function __construct($base, $queryVars = null)
     {
-        $this->b = $base;
+        $this->base = $base;
         if (null !== $queryVars) {
-            $this->q = $queryVars;
+            $this->queryVars = $queryVars;
         }
     }
 
     public function value($fields)
     {
-        $url = Decorator::get_sanitized_value($this->b, $fields);
+        $url = Decorator::get_sanitized_value($this->base, $fields);
 
         if (false === $url) {
             return '';
@@ -26,8 +26,8 @@ class RedirectUrlDecorator extends Decorator
 
         //$this->prtrace('url', $url);
 
-        if (!empty($this->q)) {
-            $queryVars = Decorator::get_sanitized_value($this->q, $fields);
+        if (!empty($this->queryVars)) {
+            $queryVars = Decorator::get_sanitized_value($this->queryVars, $fields);
 
             $sep = '?';
             ksort($queryVars);

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC4
+ * PHPPgAdmin v6.0.0-RC5
  */
 
 namespace PHPPgAdmin\Controller;
@@ -105,14 +105,14 @@ class IndexesController extends BaseController
         };
         $this->coalesceArr($_REQUEST, 'subject', 'table');
 
-        $subject = urlencode($_REQUEST['subject']);
-        $object  = urlencode($_REQUEST[$_REQUEST['subject']]);
+        $subject = urlencode($this->getRequestParam('subject', 'table'));
+        $object  = urlencode($this->getRequestParam($subject));
 
         $this->printTrail($subject);
         $this->printTabs($subject, 'indexes');
         $this->printMsg($msg);
 
-        $indexes = $data->getIndexes($_REQUEST[$_REQUEST['subject']]);
+        $indexes = $data->getIndexes($object);
 
         $columns = [
             'index'       => [

@@ -45,7 +45,7 @@ mocktag:
 
 tag_and_push:
 	@git commit -a -m "Creating Tag v$(v) at $(DATENOW) - $(m)" ;\
-
+	git push ;\
 	if [[ "$(CURRENT_BRANCH)" != "master" ]]; then \
 		git checkout master ;\
 		git merge $(CURRENT_BRANCH) ;\

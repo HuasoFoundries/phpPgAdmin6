@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC4
+ * PHPPgAdmin v6.0.0-RC5
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -12,12 +12,12 @@ class Decorator
 
     public function __construct($value)
     {
-        $this->v = $value;
+        $this->val = $value;
     }
 
     public function value($fields)
     {
-        return $this->v;
+        return $this->val;
     }
 
     public static function get_sanitized_value(&$var, &$fields, $esc = null)
