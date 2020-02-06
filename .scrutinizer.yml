@@ -20,7 +20,7 @@ checks:
             verify_documented_constraints: true
             verify_parent_constraints: true
         no_short_method_names:
-            minimum: '3'
+            minimum: "3"
         too_many_arguments: false
         no_goto: true
         fix_use_statements:
@@ -33,28 +33,28 @@ checks:
 filter:
     paths: [src/*]
     excluded_paths:
-        - 'tests/*'
-        - '*.min.js'
-        - 'assets/js/'
+        - "tests/*"
+        - "*.min.js"
+        - "assets/js/"
 
 tools:
     php_code_sniffer:
         config:
             standard: PSR2
         filter:
-            paths: ['src']
+            paths: ["src"]
 
 build:
     environment:
-        php: '7.1'
+        php: "7.2"
         #postgresql: true
     #dependencies:
-        #before:
-        #    - psql -c "CREATE DATABASE scrutinizer WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
+    #before:
+    #    - psql -c "CREATE DATABASE scrutinizer WITH OWNER = scrutinizer ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' TEMPLATE template0"
     tests:
         override:
-          - 'php-scrutinizer-run'
-          - 'phpcs-run ./src/'
-          - 'make test'
+            - "php-scrutinizer-run"
+            - "phpcs-run ./src/"
+            - "make test"
     nodes:
         tests: true
