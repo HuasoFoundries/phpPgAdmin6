@@ -1,21 +1,19 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class SqleditController extends BaseController
 {
     use \PHPPgAdmin\Traits\ServersTrait;
 
-    public $query   = '';
+    public $query = '';
     public $subject = '';
     public $start_time;
     public $duration;
@@ -27,13 +25,13 @@ class SqleditController extends BaseController
     {
         switch ($this->action) {
             case 'find':
-                $title     = $this->lang['strfind'];
+                $title = $this->lang['strfind'];
                 $body_text = $this->doFind();
 
                 break;
             case 'sql':
             default:
-                $title     = $this->lang['strsql'];
+                $title = $this->lang['strsql'];
                 $body_text = $this->doDefault();
 
                 break;
@@ -63,7 +61,7 @@ class SqleditController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'search_path', implode(',', $data->getSearchPath()));
         $search_path = htmlspecialchars($_REQUEST['search_path']);
-        $sqlquery    = htmlspecialchars($_SESSION['sqlquery']);
+        $sqlquery = htmlspecialchars($_SESSION['sqlquery']);
 
         $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'sql', false);
 
@@ -93,7 +91,7 @@ class SqleditController extends BaseController
         if (ini_get('file_uploads')) {
             // Don't show upload option if max size of uploads is zero
             $max_size = $this->misc->inisizeToBytes(ini_get('upload_max_filesize'));
-            if (is_double($max_size) && $max_size > 0) {
+            if (is_float($max_size) && $max_size > 0) {
                 $default_html .= '<p class="upload_sql_script">';
                 $default_html .= '<input type="hidden" name="MAX_FILE_SIZE" value="'.$max_size.'" />';
                 $default_html .= PHP_EOL;
@@ -177,7 +175,7 @@ class SqleditController extends BaseController
         $default_html .= $this->printConnection('find', false);
         $default_html .= '<p><input class="focusme" name="term" id="term" value="'.htmlspecialchars($_REQUEST['term'])."\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />".PHP_EOL;
 
-        $filters          = $this->_getFilters();
+        $filters = $this->_getFilters();
         $advanced_filters = $this->_getAdvancedFilters();
 
         if (isset($filters[$_REQUEST['filter']])) {

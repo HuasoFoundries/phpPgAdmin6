@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,12 +10,10 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class FunctionsController extends BaseController
 {
-    public $table_place      = 'functions-functions';
+    public $table_place = 'functions-functions';
     public $controller_title = 'strfunctions';
 
     /**
@@ -387,11 +385,11 @@ class FunctionsController extends BaseController
         } else {
             $args_arr = explode(', ', $fndata->fields['proarguments']);
         }
-        $names_arr     = $data->phpArray($fndata->fields['proargnames']);
-        $modes_arr     = $data->phpArray($fndata->fields['proargmodes']);
-        $args          = '';
-        $args_arr_size = sizeof($args_arr);
-        for ($i = 0; $i < $args_arr_size; ++$i) {
+        $names_arr = $data->phpArray($fndata->fields['proargnames']);
+        $modes_arr = $data->phpArray($fndata->fields['proargmodes']);
+        $args = '';
+        $args_arr_size = count($args_arr);
+        for ($i = 0; $i < $args_arr_size; $i++) {
             if (0 != $i) {
                 $args .= ', ';
             }
@@ -576,7 +574,7 @@ class FunctionsController extends BaseController
         }
 
         // Display function properties
-        if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+        if (is_array($data->funcprops) && count($data->funcprops) > 0) {
             echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strproperties']}</th></tr>".PHP_EOL;
             echo '<tr><td class="data1" colspan="5">'.PHP_EOL;
             $i = 0;
@@ -588,7 +586,7 @@ class FunctionsController extends BaseController
                     '>', $this->misc->printVal($p), '</option>'.PHP_EOL;
                 }
                 echo '</select><br />'.PHP_EOL;
-                ++$i;
+                $i++;
             }
             echo '</td></tr>'.PHP_EOL;
         }
@@ -633,8 +631,8 @@ class FunctionsController extends BaseController
         $this->printTabs('function', 'export');
         $this->printTitle($this->lang['strproperties'], 'pg.function');
 
-        $fname     = str_replace(' ', '', $f);
-        $funcdata  = $data->getFunctionDef($function_oid);
+        $fname = str_replace(' ', '', $f);
+        $funcdata = $data->getFunctionDef($function_oid);
         $func_full = '';
         if ($funcdata->recordCount() <= 0) {
             echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
@@ -688,7 +686,7 @@ class FunctionsController extends BaseController
         $this->printTitle($this->lang['strproperties'], 'pg.function');
         $this->printMsg($msg);
 
-        $funcdata  = $data->getFunction($_REQUEST['function_oid']);
+        $funcdata = $data->getFunction($_REQUEST['function_oid']);
         $func_full = '';
         if ($funcdata->recordCount() <= 0) {
             echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
@@ -704,7 +702,7 @@ class FunctionsController extends BaseController
         }
 
         $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-        $func_full                     = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
+        $func_full = $funcdata->fields['proname'].'('.$funcdata->fields['proarguments'].')';
 
         echo '<table style="width: 95%">'.PHP_EOL;
 
@@ -746,7 +744,7 @@ class FunctionsController extends BaseController
         }
 
         // Show flags
-        if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+        if (is_array($data->funcprops) && count($data->funcprops) > 0) {
             // Fetch an array of the function properties
             $funcprops = $data->getFunctionProperties($funcdata->fields);
             echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>".PHP_EOL;
@@ -807,7 +805,7 @@ class FunctionsController extends BaseController
             echo '</form>'.PHP_EOL;
         } else {
             if (is_array($_POST['function_oid'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['function_oid'] as $k => $s) {
@@ -878,8 +876,8 @@ class FunctionsController extends BaseController
 
         $_POST['formComment'] = $this->getPostParam('formComment', '');
 
-        $types  = $data->getTypes(true, true, true);
-        $langs  = $data->getLanguages(true);
+        $types = $data->getTypes(true, true, true);
+        $langs = $data->getLanguages(true);
         $fnlang = strtolower($_POST['formLanguage']);
 
         switch ($fnlang) {
@@ -917,7 +915,7 @@ class FunctionsController extends BaseController
         $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="'.
         htmlspecialchars($_POST['formArguments']).'" /></td>';
 
-        $szSetOfSelected    = '';
+        $szSetOfSelected = '';
         $szNotSetOfSelected = '';
         if ('' == $_POST['formSetOf']) {
             $szNotSetOfSelected = ' selected="selected"';
@@ -934,7 +932,7 @@ class FunctionsController extends BaseController
 
         // Create string array type selector
 
-        $szArraySelected    = '';
+        $szArraySelected = '';
         $szNotArraySelected = '';
         if ('' == $_POST['formArray']) {
             $szNotArraySelected = ' selected="selected"';
@@ -971,8 +969,8 @@ class FunctionsController extends BaseController
 
         $szLanguage .= '</td>';
         $szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$this->lang['strarguments']}</th></tr>";
-        $arrayModes    = ['IN', 'OUT', 'INOUT'];
-        $szModes       = '<select name="formArgModes[]" style="width:100%;">';
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $szModes = '<select name="formArgModes[]" style="width:100%;">';
         foreach ($arrayModes as $pV) {
             $szModes .= "<option value=\"{$pV}\">{$pV}</option>";
         }
@@ -1067,7 +1065,7 @@ class FunctionsController extends BaseController
         }
 
         // Display function properties
-        if (is_array($data->funcprops) && sizeof($data->funcprops) > 0) {
+        if (is_array($data->funcprops) && count($data->funcprops) > 0) {
             echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>".PHP_EOL;
             echo '<tr><td class="data1" colspan="4">'.PHP_EOL;
             $i = 0;
@@ -1079,7 +1077,7 @@ class FunctionsController extends BaseController
                     '>', $this->misc->printVal($p), '</option>'.PHP_EOL;
                 }
                 echo '</select><br />'.PHP_EOL;
-                ++$i;
+                $i++;
             }
             echo '</td></tr>'.PHP_EOL;
         }
@@ -1188,12 +1186,12 @@ class FunctionsController extends BaseController
      */
     private function _buildJSRows($szArgs)
     {
-        $arrayModes      = ['IN', 'OUT', 'INOUT'];
-        $arrayArgs       = explode(',', $szArgs);
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $arrayArgs = explode(',', $szArgs);
         $arrayProperArgs = [];
-        $nC              = 0;
-        $szReturn        = '';
-        $szMode          = [];
+        $nC = 0;
+        $szReturn = '';
+        $szMode = [];
         foreach ($arrayArgs as $pV) {
             $arrayWords = explode(' ', $pV);
             if (true === in_array($arrayWords[0], $arrayModes, true)) {
@@ -1202,19 +1200,19 @@ class FunctionsController extends BaseController
             }
             $szArgName = array_shift($arrayWords);
             if (false === strpos($arrayWords[count($arrayWords) - 1], '[]')) {
-                $szArgType   = implode(' ', $arrayWords);
+                $szArgType = implode(' ', $arrayWords);
                 $bArgIsArray = 'false';
             } else {
-                $szArgType   = str_replace('[]', '', implode(' ', $arrayWords));
+                $szArgType = str_replace('[]', '', implode(' ', $arrayWords));
                 $bArgIsArray = 'true';
             }
             $arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
-            $subfolder         = \SUBFOLDER;
+            $subfolder = \SUBFOLDER;
             // $this->prtrace($subfolder);
             $szReturn .= '<script type="text/javascript">';
             $szReturn .= "RebuildArgTR('{$szMode}','{$szArgName}','{$szArgType}',new Boolean({$bArgIsArray},{$subfolder}));";
             $szReturn .= '</script>;';
-            ++$nC;
+            $nC++;
         }
 
         return $szReturn;
@@ -1224,8 +1222,8 @@ class FunctionsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $arrayModes  = ['IN', 'OUT', 'INOUT'];
-        $arrayTypes  = $data->getTypes(true, true, true);
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $arrayTypes = $data->getTypes(true, true, true);
         $arrayPTypes = [];
         $arrayPModes = [];
 
@@ -1261,11 +1259,11 @@ class FunctionsController extends BaseController
             } else {
                 $args_arr = explode(', ', $funcdata->fields['proarguments']);
             }
-            $names_arr     = $data->phpArray($funcdata->fields['proargnames']);
-            $modes_arr     = $data->phpArray($funcdata->fields['proargmodes']);
-            $args          = '';
-            $args_arr_size = sizeof($args_arr);
-            for ($i = 0; $i < $args_arr_size; ++$i) {
+            $names_arr = $data->phpArray($funcdata->fields['proargnames']);
+            $modes_arr = $data->phpArray($funcdata->fields['proargmodes']);
+            $args = '';
+            $args_arr_size = count($args_arr);
+            for ($i = 0; $i < $args_arr_size; $i++) {
                 if (0 != $i) {
                     $args .= ', ';
                 }

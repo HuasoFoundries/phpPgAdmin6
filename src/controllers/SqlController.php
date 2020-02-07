@@ -1,19 +1,17 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class SqlController extends BaseController
 {
-    public $query   = '';
+    public $query = '';
     public $subject = '';
     public $start_time;
     public $duration;
@@ -33,11 +31,11 @@ class SqlController extends BaseController
         if (isset($_REQUEST['subject']) && 'history' == $_REQUEST['subject']) {
             // Or maybe we came from the history popup
             $_SESSION['sqlquery'] = $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$_GET['queryid']]['query'];
-            $this->query          = $_SESSION['sqlquery'];
+            $this->query = $_SESSION['sqlquery'];
         } elseif (isset($_POST['query'])) {
             // Or maybe we came from an sql form
             $_SESSION['sqlquery'] = $_POST['query'];
-            $this->query          = $_SESSION['sqlquery'];
+            $this->query = $_SESSION['sqlquery'];
         } else {
             echo 'could not find the query!!';
         }
@@ -100,8 +98,8 @@ class SqlController extends BaseController
 
             return $this->execute_query();
         } catch (\PHPPgAdmin\ADOdbException $e) {
-            $message   = $e->getMessage();
-            $trace     = $e->getTraceAsString();
+            $message = $e->getMessage();
+            $trace = $e->getTraceAsString();
             $lastError = $_connection->getLastError();
             $this->prtrace(['message' => $message, 'trace' => $trace, 'lastError' => $lastError]);
 
@@ -111,10 +109,10 @@ class SqlController extends BaseController
 
     private function execute_script()
     {
-        $misc        = $this->misc;
-        $data        = $this->misc->getDatabaseAccessor();
+        $misc = $this->misc;
+        $data = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();
-        $lang        = $this->lang;
+        $lang = $this->lang;
         /**
          * This is a callback function to display the result of each separate query.
          *
@@ -131,11 +129,11 @@ class SqlController extends BaseController
                         // If rows returned, then display the results
                         $num_fields = pg_numfields($rs);
                         echo "<p><table>\n<tr>";
-                        for ($k = 0; $k < $num_fields; ++$k) {
+                        for ($k = 0; $k < $num_fields; $k++) {
                             echo '<th class="data">', $misc->printVal(pg_fieldname($rs, $k)), '</th>';
                         }
 
-                        $i   = 0;
+                        $i = 0;
                         $row = pg_fetch_row($rs);
                         while (false !== $row) {
                             $id = (0 == ($i % 2) ? '1' : '2');
@@ -145,7 +143,7 @@ class SqlController extends BaseController
                             }
                             echo '</tr>'.PHP_EOL;
                             $row = pg_fetch_row($rs);
-                            ++$i;
+                            $i++;
                         }
 
                         echo '</table><br/>'.PHP_EOL;
@@ -218,7 +216,7 @@ class SqlController extends BaseController
                     }
                     echo '</tr>'.PHP_EOL;
                     $rs->moveNext();
-                    ++$i;
+                    $i++;
                 }
                 echo '</table>'.PHP_EOL;
                 echo '<p>', $rs->recordCount(), " {$this->lang['strrows']}</p>".PHP_EOL;
@@ -241,7 +239,7 @@ class SqlController extends BaseController
         // May as well try to time the query
         if (null !== $this->start_time) {
             list($usec, $sec) = explode(' ', microtime());
-            $end_time         = ((float) $usec + (float) $sec);
+            $end_time = ((float) $usec + (float) $sec);
             // Get duration in milliseconds, round to 3dp's
             $this->duration = number_format(($end_time - $this->start_time) * 1000, 3);
         }
@@ -257,7 +255,7 @@ class SqlController extends BaseController
         echo "<p>{$this->lang['strsqlexecuted']}</p>".PHP_EOL;
 
         $navlinks = [];
-        $fields   = [
+        $fields = [
             'server'   => $_REQUEST['server'],
             'database' => $_REQUEST['database'],
         ];
@@ -268,7 +266,7 @@ class SqlController extends BaseController
 
         // Return
         if (isset($_REQUEST['return'])) {
-            $urlvars          = $this->misc->getSubjectParams($_REQUEST['return']);
+            $urlvars = $this->misc->getSubjectParams($_REQUEST['return']);
             $navlinks['back'] = [
                 'attr'    => [
                     'href' => [

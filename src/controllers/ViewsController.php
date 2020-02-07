@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,14 +10,12 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class ViewsController extends BaseController
 {
     use \PHPPgAdmin\Traits\ViewsMatviewsTrait;
 
-    public $table_place      = 'views-views';
+    public $table_place = 'views-views';
     public $controller_title = 'strviews';
 
     // this member variable is view for views and matview for materialized views
@@ -303,7 +301,7 @@ class ViewsController extends BaseController
             echo '</form>'.PHP_EOL;
         } else {
             if (is_array($_POST['view'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['view'] as $s) {

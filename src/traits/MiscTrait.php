@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Traits;
@@ -15,8 +15,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * A trait to deal with nav tabs.
- *
- * @package PHPPgAdmin
  */
 trait MiscTrait
 {
@@ -215,7 +213,7 @@ trait MiscTrait
         if (!isset($params['clip']) || $params['clip'] !== true) {
             return $str;
         }
-        $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
+        $maxlen = isset($params['cliplen']) && is_int($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
         $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $this->lang['strellipsis'];
         if (strlen($str) > $maxlen) {
             $str = substr($str, 0, $maxlen - 1).$ellipsis;
@@ -237,18 +235,18 @@ trait MiscTrait
 
         switch ($str) {
             case 't':
-                $out   = (isset($params['true']) ? $params['true'] : $lang['strtrue']);
+                $out = (isset($params['true']) ? $params['true'] : $lang['strtrue']);
                 $align = 'center';
 
                 break;
             case 'f':
-                $out   = (isset($params['false']) ? $params['false'] : $lang['strfalse']);
+                $out = (isset($params['false']) ? $params['false'] : $lang['strfalse']);
                 $align = 'center';
 
                 break;
             default:
                 $align = null;
-                $out   = htmlspecialchars($str);
+                $out = htmlspecialchars($str);
         }
 
         return [$str, $align, $out];
@@ -300,7 +298,7 @@ trait MiscTrait
 
         $str = $this->maybeClipStr($str, $params);
 
-        $out   = '';
+        $out = '';
         $class = '';
 
         switch ($type) {
@@ -316,7 +314,7 @@ trait MiscTrait
             case 'cid':
             case 'tid':
                 $align = 'right';
-                $out   = nl2br(htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                $out = nl2br(htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
 
                 break;
             case 'yesno':
@@ -326,15 +324,15 @@ trait MiscTrait
 
                 break;
             case 'bytea':
-                $tag   = 'div';
+                $tag = 'div';
                 $class = 'pre';
-                $out   = $data->escapeBytea($str);
+                $out = $data->escapeBytea($str);
 
                 break;
             case 'errormsg':
-                $tag   = 'pre';
+                $tag = 'pre';
                 $class = 'error';
-                $out   = htmlspecialchars($str);
+                $out = htmlspecialchars($str);
 
                 break;
             case 'pre':
@@ -368,9 +366,9 @@ trait MiscTrait
                 // character, a space at the start of a line, or a space at the start of
                 // the whole string then render within a pre-formatted element (<pre>).
                 if (preg_match('/(^ |  |\t|\n )/m', $str)) {
-                    $tag   = 'pre';
+                    $tag = 'pre';
                     $class = 'data';
-                    $out   = htmlspecialchars($str);
+                    $out = htmlspecialchars($str);
                 } else {
                     //$tag = 'span';
                     $out = nl2br(htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
@@ -414,7 +412,7 @@ trait MiscTrait
         if (isset($tag)) {
             $alignattr = isset($align) ? " style=\"text-align: {$align}\"" : '';
             $classattr = !empty($class) ? " class=\"{$class}\"" : '';
-            $out       = "<{$tag}{$alignattr}{$classattr}>{$out}</{$tag}>";
+            $out = "<{$tag}{$alignattr}{$classattr}>{$out}</{$tag}>";
         }
     }
 
@@ -542,7 +540,7 @@ trait MiscTrait
     public function getTabsDatabase($lang, $data)
     {
         $hide_advanced = ($this->conf['show_advanced'] === false);
-        $tabs          = [
+        $tabs = [
             'schemas'    => [
                 'title'   => $lang['strschemas'],
                 'url'     => 'schemas',
@@ -637,7 +635,7 @@ trait MiscTrait
     public function getTabsSchema($lang, $data)
     {
         $hide_advanced = ($this->conf['show_advanced'] === false);
-        $tabs          = [
+        $tabs = [
             'tables'      => [
                 'title'   => $lang['strtables'],
                 'url'     => 'tables',
@@ -1177,12 +1175,12 @@ trait MiscTrait
      */
     public function getNavTabs($section)
     {
-        $data           = $this->getDatabaseAccessor();
-        $lang           = $this->lang;
+        $data = $this->getDatabaseAccessor();
+        $lang = $this->lang;
         $plugin_manager = $this->plugin_manager;
 
         $hide_advanced = ($this->conf['show_advanced'] === false);
-        $tabs          = [];
+        $tabs = [];
 
         switch ($section) {
             case 'root':$tabs = $this->getTabsRoot($lang, $data);

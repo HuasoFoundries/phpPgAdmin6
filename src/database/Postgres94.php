@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Database;
@@ -12,6 +12,6 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres94 extends Postgres95
 {
-    public $typIndexes    = ['BTREE', 'RTREE', 'GIST', 'GIN', 'HASH', 'SP-GIST'];
+    public $typIndexes = ['BTREE', 'RTREE', 'GIST', 'GIN', 'HASH', 'SP-GIST'];
     public $major_version = 9.4;
 }

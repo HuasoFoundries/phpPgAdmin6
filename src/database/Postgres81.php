@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +11,6 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.1 support
  *
  * Id: Postgres81.php,v 1.21 2008/01/19 13:46:15 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres81 extends Postgres82
 {
@@ -58,7 +56,7 @@ class Postgres81 extends Postgres82
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf        = $this->conf;
+        $conf = $this->conf;
         $server_info = $this->server_info;
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {

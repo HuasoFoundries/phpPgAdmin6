@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -12,7 +12,7 @@ namespace PHPPgAdmin\XHtml;
 class HTMLHeaderController extends HTMLController
 {
     public $controller_name = 'HTMLHeaderController';
-    private $_no_output     = false;
+    private $_no_output = false;
 
     /**
      * Sets the value of private member variable $_no_output.
@@ -45,15 +45,15 @@ class HTMLHeaderController extends HTMLController
             newrelic_disable_autorum();
         }
 
-        $lang           = $this->lang;
+        $lang = $this->lang;
         $plugin_manager = $this->plugin_manager;
 
         $viewVars = [];
 
-        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
+        $viewVars['dir'] = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
-        $viewVars['appName']        = htmlspecialchars($this->appName);
+        $viewVars['title'] = ('' !== $title) ? ' - '.$title : '';
+        $viewVars['appName'] = htmlspecialchars($this->appName);
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
@@ -86,7 +86,7 @@ class HTMLHeaderController extends HTMLController
     public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
         $bodyClass = $this->lang['applangdir'].' '.htmlspecialchars($bodyClass);
-        $onload    = ($onloadInit ? 'onload="init();" ' : '');
+        $onload = ($onloadInit ? 'onload="init();" ' : '');
 
         $bodyHtml = sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
         $bodyHtml .= PHP_EOL;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Traits;
@@ -24,7 +24,7 @@ trait ServersTrait
     public function getServers($recordset = false, $group = false)
     {
         $logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
-        $srvs   = [];
+        $srvs = [];
 
         if (($group !== false) && ($group !== 'all')) {
             if (isset($this->conf['srv_groups'][$group]['servers'])) {
@@ -41,7 +41,7 @@ trait ServersTrait
         foreach ($this->conf['servers'] as $idx => $info) {
             $server_id = $info['host'].':'.$info['port'].':'.$info['sslmode'];
             if ($group === false || isset($group[$idx]) || ($group === 'all')) {
-                $server_id  = $info['host'].':'.$info['port'].':'.$info['sslmode'];
+                $server_id = $info['host'].':'.$info['port'].':'.$info['sslmode'];
                 $server_sha = sha1($server_id);
 
                 if (isset($logins[$server_sha])) {
@@ -52,8 +52,8 @@ trait ServersTrait
                     $srvs[$server_sha] = $info;
                 }
 
-                $srvs[$server_sha]['id']     = $server_id;
-                $srvs[$server_sha]['sha']    = $server_sha;
+                $srvs[$server_sha]['id'] = $server_id;
+                $srvs[$server_sha]['sha'] = $server_sha;
                 $srvs[$server_sha]['action'] = Decorator::url(
                     '/redirect/server',
                     [
@@ -61,7 +61,7 @@ trait ServersTrait
                     ]
                 );
                 if (isset($srvs[$server_sha]['username'])) {
-                    $srvs[$server_sha]['icon']   = 'Server';
+                    $srvs[$server_sha]['icon'] = 'Server';
                     $srvs[$server_sha]['branch'] = Decorator::url(
                         '/src/views/alldb',
                         [
@@ -71,7 +71,7 @@ trait ServersTrait
                         ]
                     );
                 } else {
-                    $srvs[$server_sha]['icon']   = 'DisconnectedServer';
+                    $srvs[$server_sha]['icon'] = 'DisconnectedServer';
                     $srvs[$server_sha]['branch'] = false;
                 }
             }
@@ -98,8 +98,8 @@ trait ServersTrait
         $connection_html = '<table class="printconnection" style="width: 100%"><tr><td class="popup_select1">'.PHP_EOL;
 
         $conf_servers = $this->getServers();
-        $server_id    = $this->misc->getServerId();
-        $servers      = [];
+        $server_id = $this->misc->getServerId();
+        $servers = [];
         foreach ($conf_servers as $key => $info) {
             if (empty($info['username'])) {
                 continue;
@@ -136,7 +136,7 @@ trait ServersTrait
             $connection_html .= '<input type="hidden" name="database" value="'.htmlspecialchars($servers[$server_id]['defaultdb']).'" />'.PHP_EOL;
         } else {
             // Get the list of all databases
-            $data      = $this->misc->getDatabaseAccessor();
+            $data = $this->misc->getDatabaseAccessor();
             $databases = $data->getDatabases();
             if ($databases->recordCount() > 0) {
                 $connection_html .= '<label>';
@@ -149,7 +149,7 @@ trait ServersTrait
                 }
 
                 while (!$databases->EOF) {
-                    $dbname     = $databases->fields['datname'];
+                    $dbname = $databases->fields['datname'];
                     $dbselected = isset($_REQUEST['database']) && $dbname == $_REQUEST['database'] ? ' selected="selected"' : '';
                     $connection_html .= '<option value="'.htmlspecialchars($dbname).'" '.$dbselected.'>'.htmlspecialchars($dbname).'</option>'.PHP_EOL;
 

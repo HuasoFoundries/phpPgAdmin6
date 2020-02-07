@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin;
@@ -19,7 +19,6 @@ namespace PHPPgAdmin;
  * Latest version is available at http://php.weblogs.com
  * Exception-handling code using PHP5 exceptions (try-catch-throw).
  *
- * @package PHPPgAdmin
  *
  * @author John Lim
  * @copyright 2000-2013 John Lim <jlim@natsoft.com>
@@ -31,9 +30,9 @@ class ADOdbException extends \Exception
 {
     public $dbms;
     public $fn;
-    public $sql      = '';
-    public $params   = '';
-    public $host     = '';
+    public $sql = '';
+    public $params = '';
+    public $host = '';
     public $database = '';
 
     /**
@@ -53,15 +52,15 @@ class ADOdbException extends \Exception
     {
         switch ($fn) {
             case 'EXECUTE':
-                $this->sql    = is_array($p1) ? $p1[0] : $p1;
+                $this->sql = is_array($p1) ? $p1[0] : $p1;
                 $this->params = $p2;
-                $s            = "${dbms} error: [${errno}: ${errmsg}] in ${fn}(\"{$this->sql}\")";
+                $s = "${dbms} error: [${errno}: ${errmsg}] in ${fn}(\"{$this->sql}\")";
 
                 break;
             case 'PCONNECT':
             case 'CONNECT':
                 $user = $thisConnection->user;
-                $s    = "${dbms} error: [${errno}: ${errmsg}] in ${fn}(${p1}, '${user}', '****', ${p2})";
+                $s = "${dbms} error: [${errno}: ${errmsg}] in ${fn}(${p1}, '${user}', '****', ${p2})";
 
                 break;
             default:
@@ -72,10 +71,10 @@ class ADOdbException extends \Exception
 
         $this->dbms = $dbms;
         if ($thisConnection) {
-            $this->host     = $thisConnection->host;
+            $this->host = $thisConnection->host;
             $this->database = $thisConnection->database;
         }
-        $this->fn  = $fn;
+        $this->fn = $fn;
         $this->msg = $errmsg;
 
         if (!is_numeric($errno)) {
@@ -118,8 +117,8 @@ class ADOdbException extends \Exception
         ];
 
         $errmsg = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($errmsg), ENT_NOQUOTES);
-        $p1     = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p1), ENT_NOQUOTES);
-        $p2     = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p2), ENT_NOQUOTES);
+        $p1 = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p1), ENT_NOQUOTES);
+        $p2 = htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p2), ENT_NOQUOTES);
 
         switch ($fn) {
             case 'EXECUTE':
@@ -158,6 +157,6 @@ class ADOdbException extends \Exception
 
         //\PC::debug(['errno' => $errno, 'fn' => $fn, 'errmsg' => $errmsg], $tag);
 
-        throw new \PHPPgAdmin\ADOdbException($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
+        throw new self($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
     }
 }

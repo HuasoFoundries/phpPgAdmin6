@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -181,8 +181,8 @@ trait TableTrait
 
         // Output all table columns
         $col_comments_sql = ''; // Accumulate comments on columns
-        $num              = $atts->recordCount() + $cons->recordCount();
-        $i                = 1;
+        $num = $atts->recordCount() + $cons->recordCount();
+        $i = 1;
 
         $sql = $this->_dumpSerials($atts, $t, $sql, $col_comments_sql, $i, $num);
 
@@ -331,7 +331,7 @@ trait TableTrait
             }
 
             $atts->moveNext();
-            ++$i;
+            $i++;
         }
 
         return $sql;
@@ -363,12 +363,12 @@ trait TableTrait
                 switch ($cons->fields['contype']) {
                     case 'p':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'PRIMARY KEY ('.join(',', $keys).')';
+                        $sql .= 'PRIMARY KEY ('.implode(',', $keys).')';
 
                         break;
                     case 'u':
                         $keys = $this->getAttributeNames($table, explode(' ', $cons->fields['indkey']));
-                        $sql .= 'UNIQUE ('.join(',', $keys).')';
+                        $sql .= 'UNIQUE ('.implode(',', $keys).')';
 
                         break;
                     default:
@@ -387,7 +387,7 @@ trait TableTrait
             }
 
             $cons->moveNext();
-            ++$i;
+            $i++;
         }
 
         return $sql;
@@ -462,7 +462,7 @@ trait TableTrait
      */
     private function _dumpPrivileges($privs, $tblfields, $sql)
     {
-        if (sizeof($privs) <= 0) {
+        if (count($privs) <= 0) {
             return $sql;
         }
         $sql .= "\n-- Privileges\n\n";
@@ -477,7 +477,7 @@ trait TableTrait
             $nongrant = array_diff($v[2], $v[4]);
 
             // Skip empty or owner ACEs
-            if (sizeof($v[2]) == 0 || ($v[0] == 'user' && $v[1] == $tblfields->fields['relowner'])) {
+            if (count($v[2]) == 0 || ($v[0] == 'user' && $v[1] == $tblfields->fields['relowner'])) {
                 continue;
             }
 
@@ -489,7 +489,7 @@ trait TableTrait
             }
 
             // Output privileges with no GRANT OPTION
-            $sql .= 'GRANT '.join(', ', $nongrant)." ON TABLE \"{$tblfields->fields['relname']}\" TO ";
+            $sql .= 'GRANT '.implode(', ', $nongrant)." ON TABLE \"{$tblfields->fields['relname']}\" TO ";
             switch ($v[0]) {
                 case 'public':
                     $sql .= "PUBLIC;\n";
@@ -521,7 +521,7 @@ trait TableTrait
             // Output privileges with GRANT OPTION
 
             // Skip empty or owner ACEs
-            if (!$this->hasGrantOption() || sizeof($v[4]) == 0) {
+            if (!$this->hasGrantOption() || count($v[4]) == 0) {
                 continue;
             }
 
@@ -532,7 +532,7 @@ trait TableTrait
                 $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
             }
 
-            $sql .= 'GRANT '.join(', ', $v[4])." ON \"{$tblfields->fields['relname']}\" TO ";
+            $sql .= 'GRANT '.implode(', ', $v[4])." ON \"{$tblfields->fields['relname']}\" TO ";
             switch ($v[0]) {
                 case 'public':
                     $sql .= 'PUBLIC';
@@ -1001,11 +1001,11 @@ trait TableTrait
             return -1;
         }
 
-        $found       = false;
-        $first       = true;
+        $found = false;
+        $first = true;
         $comment_sql = ''; //Accumulate comments for the columns
-        $sql         = "CREATE TABLE \"{$f_schema}\".\"{$name}\" (";
-        for ($i = 0; $i < $fields; ++$i) {
+        $sql = "CREATE TABLE \"{$f_schema}\".\"{$name}\" (";
+        for ($i = 0; $i < $fields; $i++) {
             $this->fieldClean($field[$i]);
             $this->clean($type[$i]);
             $this->clean($length[$i]);
@@ -1086,7 +1086,7 @@ trait TableTrait
 
         // PRIMARY KEY
         $primarykeycolumns = [];
-        for ($i = 0; $i < $fields; ++$i) {
+        for ($i = 0; $i < $fields; $i++) {
             if (isset($primarykey[$i])) {
                 $primarykeycolumns[] = "\"{$field[$i]}\"";
             }
@@ -1360,7 +1360,7 @@ trait TableTrait
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
 
-            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
             if ($status == 0) {
                 $tblrs->fields['relname'] = $name;
@@ -1460,7 +1460,7 @@ trait TableTrait
         }
 
         // Set serializable
-        $sql    = 'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE';
+        $sql = 'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE';
         $status = $this->execute($sql);
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -1469,7 +1469,7 @@ trait TableTrait
         }
 
         // Set datestyle to ISO
-        $sql    = 'SET DATESTYLE = ISO';
+        $sql = 'SET DATESTYLE = ISO';
         $status = $this->execute($sql);
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -1478,7 +1478,7 @@ trait TableTrait
         }
 
         // Set extra_float_digits to 2
-        $sql    = 'SET extra_float_digits TO 2';
+        $sql = 'SET extra_float_digits TO 2';
         $status = $this->execute($sql);
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -1570,7 +1570,7 @@ trait TableTrait
 
             foreach (explode(',', $_autovacs->fields['reloptions']) as $var) {
                 list($o, $v) = explode('=', $var);
-                $_[$o]       = $v;
+                $_[$o] = $v;
             }
 
             $autovacs[] = $_;

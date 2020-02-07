@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class OperatorsController extends BaseController
 {
@@ -179,7 +177,7 @@ class OperatorsController extends BaseController
         $this->printTitle($this->lang['strproperties'], 'pg.operator');
         $this->printMsg($msg);
 
-        $oprdata                       = $data->getOperator($_REQUEST['operator_oid']);
+        $oprdata = $data->getOperator($_REQUEST['operator_oid']);
         $oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
 
         if ($oprdata->recordCount() > 0) {

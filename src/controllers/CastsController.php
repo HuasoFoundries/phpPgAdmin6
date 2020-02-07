@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class CastsController extends BaseController
 {
@@ -48,7 +46,7 @@ class CastsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $lang              = $this->lang;
+        $lang = $this->lang;
         $renderCastContext = function ($val) use ($lang) {
             switch ($val) {
                 case 'e':

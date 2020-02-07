@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class GroupsController extends BaseController
 {
@@ -214,7 +212,7 @@ class GroupsController extends BaseController
         $this->printMsg($msg);
 
         $groupdata = $data->getGroup($_REQUEST['group']);
-        $users     = $data->getUsers();
+        $users = $data->getUsers();
 
         if ($groupdata->recordCount() > 0) {
             $columns = [

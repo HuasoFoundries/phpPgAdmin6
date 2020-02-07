@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin;
@@ -13,8 +13,6 @@ namespace PHPPgAdmin;
 
 /**
  * A class that implements the plugin's system.
- *
- * @package PHPPgAdmin
  */
 class PluginManager
 {
@@ -22,7 +20,7 @@ class PluginManager
     /**
      * Attributes.
      */
-    private $_plugins_list    = [];
+    private $_plugins_list = [];
     private $_available_hooks = [
         'head',
         'toplinks',
@@ -34,7 +32,7 @@ class PluginManager
         'logout',
     ];
     private $_actions = [];
-    private $_hooks   = [];
+    private $_hooks = [];
 
     /**
      * Register the plugins.
@@ -46,9 +44,9 @@ class PluginManager
      */
     public function __construct(\Slim\Container $container)
     {
-        $this->language  = $container->has('language') ? $container->get('language') : 'english';
-        $this->lang      = $container->get('lang');
-        $this->conf      = $container->get('conf');
+        $this->language = $container->has('language') ? $container->get('language') : 'english';
+        $this->lang = $container->get('lang');
+        $this->conf = $container->get('conf');
         $this->container = $container;
         if (!isset($this->conf['plugins'])) {
             return;
@@ -86,7 +84,7 @@ class PluginManager
         //The $plugin_name is the identification of the plugin.
         //Example: PluginExample is the identification for PluginExample
         //It will be used to get a specific plugin from the _plugins_list.
-        $plugin_name                       = $plugin->get_name();
+        $plugin_name = $plugin->get_name();
         $this->_plugins_list[$plugin_name] = $plugin;
 
         //Register the plugin's functions
@@ -99,7 +97,7 @@ class PluginManager
         }
 
         //Register the plugin's _actions
-        $_actions                     = $plugin->get__actions();
+        $_actions = $plugin->get__actions();
         $this->_actions[$plugin_name] = $_actions;
     }
 

@@ -1,9 +1,8 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
-
 require_once __DIR__.'/src/lib.inc.php';
 
 // This section is made to be able to parse requests coming from PHP Builtin webserver
@@ -13,9 +12,9 @@ if (PHP_SAPI === 'cli-server') {
     $req_uri = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : $_SERVER['REQUEST_URI'];
     if (substr($req_uri, 0, 10) === '/index.php') {
         $will_redirect = true;
-        $req_uri       = substr($req_uri, 10);
+        $req_uri = substr($req_uri, 10);
     }
-    $filePath     = realpath(ltrim($req_uri, '/'));
+    $filePath = realpath(ltrim($req_uri, '/'));
     $new_location = 'Location: http://'.$_SERVER['HTTP_HOST'].$req_uri;
 
     if ($filePath && // 1. check that filepath is set

@@ -11,7 +11,7 @@ class Middleware
     public function __construct($container)
     {
         $this->container = $container;
-        $this->router    = $container->get('router');
+        $this->router = $container->get('router');
     }
 
     public function __get($property)

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -43,13 +43,13 @@ trait ColumnTrait
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
                     $qual = substr($type, 9);
-                    $sql  = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" timestamp({$length}){$qual}";
+                    $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" timestamp({$length}){$qual}";
 
                     break;
                 case 'time with time zone':
                 case 'time without time zone':
                     $qual = substr($type, 4);
-                    $sql  = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" time({$length}){$qual}";
+                    $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" time({$length}){$qual}";
 
                     break;
                 default:
@@ -132,8 +132,8 @@ trait ColumnTrait
         $comment
     ) {
         // Begin transaction
-        $status    = $this->beginTransaction();
-        $sql       = '';
+        $status = $this->beginTransaction();
+        $sql = '';
         $sqlrename = '';
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -181,13 +181,13 @@ trait ColumnTrait
                 // time zone types
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
-                    $qual  = substr($type, 9);
+                    $qual = substr($type, 9);
                     $ftype = "timestamp({$length}){$qual}";
 
                     break;
                 case 'time with time zone':
                 case 'time without time zone':
-                    $qual  = substr($type, 4);
+                    $qual = substr($type, 4);
                     $ftype = "time({$length}){$qual}";
 
                     break;

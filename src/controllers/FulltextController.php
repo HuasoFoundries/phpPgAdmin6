@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class FulltextController extends BaseController
 {
@@ -219,7 +217,7 @@ class FulltextController extends BaseController
      */
     public function doTree()
     {
-        $tabs  = $this->misc->getNavTabs('fulltext');
+        $tabs = $this->misc->getNavTabs('fulltext');
         $items = $this->adjustTabsForTree($tabs);
 
         $reqvars = $this->misc->getRequestVars('ftscfg');
@@ -251,17 +249,17 @@ class FulltextController extends BaseController
 
         switch ($what) {
             case 'FtsCfg':
-                $items   = $data->getFtsConfigurations(false);
+                $items = $data->getFtsConfigurations(false);
                 $urlvars = ['action' => 'viewconfig', 'ftscfg' => Decorator::field('name')];
 
                 break;
             case 'FtsDict':
-                $items   = $data->getFtsDictionaries(false);
+                $items = $data->getFtsDictionaries(false);
                 $urlvars = ['action' => 'viewdicts'];
 
                 break;
             case 'FtsParser':
-                $items   = $data->getFtsParsers(false);
+                $items = $data->getFtsParsers(false);
                 $urlvars = ['action' => 'viewparsers'];
 
                 break;
@@ -398,12 +396,12 @@ class FulltextController extends BaseController
         echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\">";
 
-        $tpls   = [];
+        $tpls = [];
         $tplsel = '';
         while (!$ftscfgs->EOF) {
             $data->fieldClean($ftscfgs->fields['schema']);
             $data->fieldClean($ftscfgs->fields['name']);
-            $tplname        = $ftscfgs->fields['schema'].'.'.$ftscfgs->fields['name'];
+            $tplname = $ftscfgs->fields['schema'].'.'.$ftscfgs->fields['name'];
             $tpls[$tplname] = serialize([
                 'name'   => $ftscfgs->fields['name'],
                 'schema' => $ftscfgs->fields['schema'],
@@ -420,7 +418,7 @@ class FulltextController extends BaseController
         echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsparser']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\">".PHP_EOL;
         $ftsparsers_ = [];
-        $ftsparsel   = '';
+        $ftsparsel = '';
         while (!$ftsparsers->EOF) {
             $data->fieldClean($ftsparsers->fields['schema']);
             $data->fieldClean($ftsparsers->fields['name']);
@@ -555,7 +553,7 @@ class FulltextController extends BaseController
      */
     public function doSaveAlterConfig()
     {
-        $data   = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         $status = $data->updateFtsConfiguration($_POST['ftscfg'], $_POST['formComment'], $_POST['formName']);
         if (0 == $status) {
             $this->doDefault($this->lang['strftsconfigaltered']);
@@ -823,12 +821,12 @@ class FulltextController extends BaseController
         // Template
         echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>".PHP_EOL;
         echo "\t\t<td class=\"data1\">";
-        $tpls   = [];
+        $tpls = [];
         $tplsel = '';
         while (!$ftstpls->EOF) {
             $data->fieldClean($ftstpls->fields['schema']);
             $data->fieldClean($ftstpls->fields['name']);
-            $tplname        = $ftstpls->fields['schema'].'.'.$ftstpls->fields['name'];
+            $tplname = $ftstpls->fields['schema'].'.'.$ftstpls->fields['name'];
             $tpls[$tplname] = serialize([
                 'name'   => $ftstpls->fields['name'],
                 'schema' => $ftstpls->fields['schema'],
@@ -1093,7 +1091,7 @@ class FulltextController extends BaseController
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
                     printf('<input type="hidden" name="formMapping[]" value="%s" />', htmlspecialchars($a['mapping']));
-                    $ma_mappings[]       = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
+                    $ma_mappings[] = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
                     $ma_mappings_names[] = $a['mapping'];
                 }
                 echo implode(', ', $ma_mappings_names);
@@ -1147,7 +1145,7 @@ class FulltextController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
-        $status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
+        $status = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
         if (0 == $status) {
             $this->doViewConfig($_POST['ftscfg'], $this->lang['strftsmappingaltered']);
         } else {
@@ -1185,7 +1183,7 @@ class FulltextController extends BaseController
             echo "\t\t<td class=\"data1\">";
             echo "\t\t\t<select name=\"formMapping\">".PHP_EOL;
             while (!$mappings->EOF) {
-                $mapping      = htmlspecialchars($mappings->fields['name']);
+                $mapping = htmlspecialchars($mappings->fields['name']);
                 $mapping_desc = htmlspecialchars($mappings->fields['description']);
                 echo "\t\t\t\t<option value=\"{$mapping}\"",
                 $mapping == $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : '', '</option>'.PHP_EOL;
@@ -1230,7 +1228,7 @@ class FulltextController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
-        $status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);
+        $status = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);
         if (0 == $status) {
             $this->doViewConfig($_POST['ftscfg'], $this->lang['strftsmappingadded']);
         } else {

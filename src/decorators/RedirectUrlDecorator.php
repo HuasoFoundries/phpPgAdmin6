@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -32,7 +32,7 @@ class RedirectUrlDecorator extends Decorator
             $sep = '?';
             ksort($queryVars);
             foreach ($queryVars as $var => $value) {
-                $varname  = Decorator::value_url($var, $fields);
+                $varname = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
                 if ('subject' == $varname) {
                     $url = '/'.str_replace('redirect?', 'redirect/'.$varvalue.'?', $url);

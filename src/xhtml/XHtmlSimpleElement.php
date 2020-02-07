@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -46,7 +46,7 @@ class XHtmlSimpleElement
 
     public function is_element()
     {
-        $lower_classname   = strtolower(get_class($this));
+        $lower_classname = strtolower(get_class($this));
         $is_element_string = str_replace('phppgadmin\xhtml\xhtml', '', $lower_classname);
         //$this->prtrace('is_element_string', $is_element_string, 'lower_classname', $lower_classname, '__CLASS__');
         return $is_element_string;

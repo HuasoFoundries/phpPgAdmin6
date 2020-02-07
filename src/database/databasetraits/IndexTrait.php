@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -230,7 +230,7 @@ trait IndexTrait
 				pg_catalog.pg_constraint AS c
 				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
 				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]';
-        for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
+        for ($i = 2; $i <= $rs->fields['nb']; $i++) {
             $sql .= " OR f1.attnum=c.conkey[${i}]";
         }
         $sql .= '))
@@ -240,7 +240,7 @@ trait IndexTrait
 				) ON (c.confrelid=r2.oid)
 				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
 					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)';
-        for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
+        for ($i = 2; $i <= $rs->fields['nb']; $i++) {
             $sql .= " OR (c.confkey[${i}]=f2.attnum AND c.conkey[${i}]=f1.attnum)";
         }
 
@@ -264,7 +264,7 @@ trait IndexTrait
      */
     public function addPrimaryKey($table, $fields, $name = '', $tablespace = '')
     {
-        if (!is_array($fields) || sizeof($fields) == 0) {
+        if (!is_array($fields) || count($fields) == 0) {
             return -1;
         }
 
@@ -280,7 +280,7 @@ trait IndexTrait
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'PRIMARY KEY ("'.join('","', $fields).'")';
+        $sql .= 'PRIMARY KEY ("'.implode('","', $fields).'")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -301,7 +301,7 @@ trait IndexTrait
      */
     public function addUniqueKey($table, $fields, $name = '', $tablespace = '')
     {
-        if (!is_array($fields) || sizeof($fields) == 0) {
+        if (!is_array($fields) || count($fields) == 0) {
             return -1;
         }
 
@@ -317,7 +317,7 @@ trait IndexTrait
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'UNIQUE ("'.join('","', $fields).'")';
+        $sql .= 'UNIQUE ("'.implode('","', $fields).'")';
 
         if ($tablespace != '' && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
@@ -381,7 +381,7 @@ trait IndexTrait
         }
 
         // Properly lock the table
-        $sql    = "LOCK TABLE \"{$f_schema}\".\"{$table}\" IN ACCESS EXCLUSIVE MODE";
+        $sql = "LOCK TABLE \"{$f_schema}\".\"{$table}\" IN ACCESS EXCLUSIVE MODE";
         $status = $this->execute($sql);
         if ($status != 0) {
             $this->rollbackTransaction();
@@ -450,8 +450,8 @@ trait IndexTrait
         $initially,
         $name = ''
     ) {
-        if (!is_array($sfields) || sizeof($sfields) == 0 ||
-            !is_array($tfields) || sizeof($tfields) == 0) {
+        if (!is_array($sfields) || count($sfields) == 0 ||
+            !is_array($tfields) || count($tfields) == 0) {
             return -1;
         }
 
@@ -469,9 +469,9 @@ trait IndexTrait
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'FOREIGN KEY ("'.join('","', $sfields).'") ';
+        $sql .= 'FOREIGN KEY ("'.implode('","', $sfields).'") ';
         // Target table needs to be fully qualified
-        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"".join('","', $tfields).'") ';
+        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"".implode('","', $tfields).'") ';
         if ($match != $this->fkmatches[0]) {
             $sql .= " {$match}";
         }
@@ -535,12 +535,12 @@ trait IndexTrait
 
         $this->clean($tables[0]['tablename']);
         $this->clean($tables[0]['schemaname']);
-        $tables_list        = "'{$tables[0]['tablename']}'";
-        $schema_list        = "'{$tables[0]['schemaname']}'";
+        $tables_list = "'{$tables[0]['tablename']}'";
+        $schema_list = "'{$tables[0]['schemaname']}'";
         $schema_tables_list = "'{$tables[0]['schemaname']}.{$tables[0]['tablename']}'";
-        $tablescount        = sizeof($tables);
+        $tablescount = count($tables);
 
-        for ($i = 1; $i < $tablescount; ++$i) {
+        for ($i = 1; $i < $tablescount; $i++) {
             $this->clean($tables[$i]['tablename']);
             $this->clean($tables[$i]['schemaname']);
             $tables_list .= ", '{$tables[$i]['tablename']}'";
@@ -566,7 +566,7 @@ trait IndexTrait
         //parse our output to find the highest dimension of foreign keys since pc.conkey is stored in an array
         $rs = $this->selectSet($sql);
         while (!$rs->EOF) {
-            $arrData      = explode(':', $rs->fields['arr_dim']);
+            $arrData = explode(':', $rs->fields['arr_dim']);
             $strdimension = trim(substr($arrData[1], 0, strlen($arrData[1]) - 1));
             $tmpDimension = (int) $strdimension;
             $maxDimension = $tmpDimension > $maxDimension ? $tmpDimension : $maxDimension;
@@ -575,7 +575,7 @@ trait IndexTrait
 
         //we know the highest index for foreign keys that conkey goes up to, expand for us in an IN query
         $cons_str = '( (pfield.attnum = conkey[1] AND cfield.attnum = confkey[1]) ';
-        for ($i = 2; $i <= $maxDimension; ++$i) {
+        for ($i = 2; $i <= $maxDimension; $i++) {
             $cons_str .= "OR (pfield.attnum = conkey[{$i}] AND cfield.attnum = confkey[{$i}]) ";
         }
         $cons_str .= ') ';

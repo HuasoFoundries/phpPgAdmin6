@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -125,7 +125,7 @@ class Decorator
         // at value evaluation time.
 
         if (func_num_args() > 2) {
-            $v    = func_get_args();
+            $v = func_get_args();
             $base = array_shift($v);
 
             return new UrlDecorator($base, new ArrayMergeDecorator($v));

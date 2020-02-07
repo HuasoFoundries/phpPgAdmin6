@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Help;
@@ -17,9 +17,9 @@ class PostgresDoc81 extends PostgresDoc80
     {
         parent::__construct($conf, $major_version);
 
-        $this->help_page['pg.role']        = 'user-manag.html';
+        $this->help_page['pg.role'] = 'user-manag.html';
         $this->help_page['pg.role.create'] = ['sql-createrole.html', 'user-manag.html#DATABASE-ROLES'];
-        $this->help_page['pg.role.alter']  = ['sql-alterrole.html', 'role-attributes.html'];
-        $this->help_page['pg.role.drop']   = ['sql-droprole.html', 'user-manag.html#DATABASE-ROLES'];
+        $this->help_page['pg.role.alter'] = ['sql-alterrole.html', 'role-attributes.html'];
+        $this->help_page['pg.role.drop'] = ['sql-droprole.html', 'user-manag.html#DATABASE-ROLES'];
     }
 }

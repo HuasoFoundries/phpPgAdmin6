@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -26,7 +26,7 @@ trait RowTrait
         $this->fieldClean($table);
 
         $sql = "SELECT * FROM \"{$f_schema}\".\"{$table}\"";
-        if (is_array($key) && sizeof($key) > 0) {
+        if (is_array($key) && count($key) > 0) {
             $sql .= ' WHERE true';
             foreach ($key as $k => $v) {
                 $this->fieldClean($k);
@@ -121,7 +121,7 @@ trait RowTrait
         // Build clause
         if (count($values) > 0) {
             // Escape all field names
-            $fields   = array_map(['\PHPPgAdmin\Database\Postgres', 'fieldClean'], $fields);
+            $fields = array_map(['\PHPPgAdmin\Database\Postgres', 'fieldClean'], $fields);
             $f_schema = $this->_schema;
             $this->fieldClean($table);
             $this->fieldClean($f_schema);
@@ -231,7 +231,7 @@ trait RowTrait
         $this->fieldClean($table);
         $sql = '';
         // Build clause
-        if (sizeof($vars) > 0) {
+        if (count($vars) > 0) {
             foreach ($vars as $key => $value) {
                 $this->fieldClean($key);
 

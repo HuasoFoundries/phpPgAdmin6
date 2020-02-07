@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +11,6 @@ namespace PHPPgAdmin\Database;
  * Class to represent a database connection
  *
  * Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Connection
 {
@@ -58,10 +56,10 @@ class Connection
      */
     public function __construct($server_info, $database, $container, $fetchMode = ADODB_FETCH_ASSOC)
     {
-        $host     = $server_info['host'];
-        $port     = $server_info['port'];
-        $sslmode  = $server_info['sslmode'];
-        $user     = $server_info['username'];
+        $host = $server_info['host'];
+        $port = $server_info['port'];
+        $sslmode = $server_info['sslmode'];
+        $user = $server_info['username'];
         $password = $server_info['password'];
 
         $this->server_info = $server_info;
@@ -131,7 +129,7 @@ class Connection
         if (!isset($version)) {
             $adodb = new ADOdbBase($this->conn, $this->container, $this->server_info);
 
-            $sql   = 'SELECT VERSION() AS version';
+            $sql = 'SELECT VERSION() AS version';
             $field = $adodb->selectField($sql, 'version');
 
             // Check the platform, if it's mingw, set it

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin;
@@ -11,16 +11,12 @@ namespace PHPPgAdmin;
  * Class to hold various commonly used functions
  *
  * Id: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 
 /**
  * Class to hold various commonly used functions.
  *
  * Release: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Misc
 {
@@ -29,20 +25,20 @@ class Misc
 
     private $_connection;
     private $_no_db_connection = false;
-    private $_reload_browser   = false;
+    private $_reload_browser = false;
     private $_data;
     private $_database;
     private $_server_id;
     private $_server_info;
     private $_error_msg = '';
 
-    public $appLangFiles    = [];
-    public $appName         = '';
-    public $appVersion      = '';
-    public $form            = '';
-    public $href            = '';
+    public $appLangFiles = [];
+    public $appName = '';
+    public $appVersion = '';
+    public $form = '';
+    public $href = '';
     public $controller_name = 'Misc';
-    public $lang            = [];
+    public $lang = [];
 
     protected $container;
 
@@ -58,12 +54,12 @@ class Misc
 
         //$this->view           = $container->get('view');
         $this->plugin_manager = $container->get('plugin_manager');
-        $this->appLangFiles   = $container->get('appLangFiles');
+        $this->appLangFiles = $container->get('appLangFiles');
 
-        $this->appName          = $container->get('settings')['appName'];
-        $this->appVersion       = $container->get('settings')['appVersion'];
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
         $this->postgresqlMinVer = $container->get('settings')['postgresqlMinVer'];
-        $this->phpMinVer        = $container->get('settings')['phpMinVer'];
+        $this->phpMinVer = $container->get('settings')['phpMinVer'];
 
         $base_version = $container->get('settings')['base_version'];
 
@@ -111,7 +107,7 @@ class Misc
         $request_server = $this->serverToSha();
 
         if (count($this->conf['servers']) === 1) {
-            $info             = $this->conf['servers'][0];
+            $info = $this->conf['servers'][0];
             $this->_server_id = sha1($info['host'].':'.$info['port'].':'.$info['sslmode']);
         } elseif ($request_server !== null) {
             $this->_server_id = $request_server;
@@ -342,7 +338,7 @@ class Misc
             // Create a database wrapper class for easy manipulation of the
             // connection.
 
-            $this->_data           = new $_type($_connection->conn, $this->container, $server_info);
+            $this->_data = new $_type($_connection->conn, $this->container, $server_info);
             $this->_data->platform = $_connection->platform;
 
             //$this->_data->getHelpPages();
@@ -382,7 +378,7 @@ class Misc
             if ($server_id !== null) {
                 $this->_server_id = $server_id;
             }
-            $server_info     = $this->getServerInfo($this->_server_id);
+            $server_info = $this->getServerInfo($this->_server_id);
             $database_to_use = $this->getDatabase($database);
 
             // Perform extra security checks if this config option is set
@@ -455,7 +451,7 @@ class Misc
         // Otherwise, look for it in the conf file
         foreach ($this->conf['servers'] as $idx => $info) {
             $server_string = $info['host'].':'.$info['port'].':'.$info['sslmode'];
-            $server_sha    = sha1($server_string);
+            $server_sha = sha1($server_string);
 
             if ($this->_server_id === $server_string ||
                 $this->_server_id === $server_sha
@@ -604,9 +600,9 @@ class Misc
     {
         $href = [];
 
-        $server   = $this->container->server || isset($_REQUEST['server']) ? $_REQUEST['server'] : null;
+        $server = $this->container->server || isset($_REQUEST['server']) ? $_REQUEST['server'] : null;
         $database = $this->container->database || isset($_REQUEST['database']) ? $_REQUEST['database'] : null;
-        $schema   = $this->container->schema || isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null;
+        $schema = $this->container->schema || isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null;
 
         if ($server && $exclude_from !== 'server') {
             $href[] = 'server='.urlencode($server);
@@ -693,7 +689,7 @@ class Misc
             return false;
         }
 
-        $nSize   = (float) $a_IniParts[1];
+        $nSize = (float) $a_IniParts[1];
         $strUnit = strtolower($a_IniParts[2]);
 
         switch ($strUnit) {
@@ -829,9 +825,9 @@ class Misc
     public function saveScriptHistory($script)
     {
         list($usec, $sec) = explode(' ', microtime());
-        $time             = ((float) $usec + (float) $sec);
+        $time = ((float) $usec + (float) $sec);
 
-        $server   = $this->container->server ? $this->container->server : $_REQUEST['server'];
+        $server = $this->container->server ? $this->container->server : $_REQUEST['server'];
         $database = $this->container->database ? $this->container->database : $_REQUEST['database'];
 
         $_SESSION['history'][$server][$database]["${time}"] = [

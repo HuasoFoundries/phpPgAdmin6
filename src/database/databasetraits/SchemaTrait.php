@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -116,10 +116,10 @@ trait SchemaTrait
             return -1;
         }
 
-        if (sizeof($paths) == 0) {
+        if (count($paths) == 0) {
             return -2;
         }
-        if (sizeof($paths) == 1 && $paths[0] == '') {
+        if (count($paths) == 1 && $paths[0] == '') {
             // Need to handle empty paths in some cases
             $paths[0] = 'pg_catalog';
         }
@@ -220,7 +220,7 @@ trait SchemaTrait
         $schema_rs = $this->getSchemaByName($schemaname);
         /* Only if the owner change */
         if ($schema_rs->fields['ownername'] != $owner) {
-            $sql    = "ALTER SCHEMA \"{$schemaname}\" OWNER TO \"{$owner}\"";
+            $sql = "ALTER SCHEMA \"{$schemaname}\" OWNER TO \"{$owner}\"";
             $status = $this->execute($sql);
             if ($status != 0) {
                 $this->rollbackTransaction();
@@ -231,7 +231,7 @@ trait SchemaTrait
 
         // Only if the name has changed
         if ($name != $schemaname) {
-            $sql    = "ALTER SCHEMA \"{$schemaname}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER SCHEMA \"{$schemaname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
             if ($status != 0) {
                 $this->rollbackTransaction();

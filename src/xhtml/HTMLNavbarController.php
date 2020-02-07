@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -22,7 +22,7 @@ class HTMLNavbarController extends HTMLController
             }
 
             if (isset($crumb['title'])) {
-                $crumbs[$crumb_id]['title']   = $crumb['title'];
+                $crumbs[$crumb_id]['title'] = $crumb['title'];
                 $crumbs[$crumb_id]['iconalt'] = $crumb['title'];
             } else {
                 $crumbs[$crumb_id]['iconalt'] = 'Database Root';
@@ -48,10 +48,10 @@ class HTMLNavbarController extends HTMLController
         $lang = $this->lang;
         if (isset($crumbs['database'])) {
             $search_path_crumbs = [];
-            $dburl              = $crumbs['database']['url'];
-            $search_paths       = $data->getSearchPath();
+            $dburl = $crumbs['database']['url'];
+            $search_paths = $data->getSearchPath();
             foreach ($search_paths as $schema) {
-                $url         = str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl.'&schema='.$schema);
+                $url = str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl.'&schema='.$schema);
                 $destination = $this->container->utils->getDestinationWithLastTab('database');
                 //$this->dump(['url' => $url, 'destination' => $destination]);
                 $search_path_crumbs[$schema] = [
@@ -78,13 +78,13 @@ class HTMLNavbarController extends HTMLController
     public function printTrail($trail = [], $do_print = true, $from = null)
     {
         $plugin_manager = $this->plugin_manager;
-        $from           = $from ? $from : __METHOD__;
+        $from = $from ? $from : __METHOD__;
 
         $trail_html = $this->printTopbar(false, $from);
 
         if (is_string($trail)) {
             $subject = $trail;
-            $trail   = $this->_getTrail($subject);
+            $trail = $this->_getTrail($subject);
             // Trail hook's place
             $plugin_functions_parameters = [
                 'trail'   => &$trail,
@@ -130,7 +130,7 @@ class HTMLNavbarController extends HTMLController
 
         if (is_string($alltabs)) {
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
-            $alltabs                            = $this->misc->getNavTabs($alltabs);
+            $alltabs = $this->misc->getNavTabs($alltabs);
         }
 
         //$this->prtrace($tabs);
@@ -141,8 +141,8 @@ class HTMLNavbarController extends HTMLController
         if (count($alltabs) > 0) {
             foreach ($alltabs as $tab_id => $tab) {
                 if (!isset($tab['hide']) || true !== $tab['hide']) {
-                    $tabs[$tab_id]            = $tab;
-                    $tabs[$tab_id]['active']  = ($tab_id == $activetab) ? ' active' : '';
+                    $tabs[$tab_id] = $tab;
+                    $tabs[$tab_id]['active'] = ($tab_id == $activetab) ? ' active' : '';
                     $tabs[$tab_id]['tablink'] = str_replace(['&amp;', '.php'], ['&', ''], htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
                     //$this->prtrace('link for ' . $tab_id, $tabs[$tab_id]['tablink']);
                     if (isset($tab['icon']) && $icon = $this->misc->icon($tab['icon'])) {
@@ -188,15 +188,15 @@ class HTMLNavbarController extends HTMLController
     {
         $from = $from ? $from : __METHOD__;
 
-        $lang           = $this->lang;
+        $lang = $this->lang;
         $plugin_manager = $this->plugin_manager;
-        $this->misc     = $this->misc;
-        $appName        = $this->misc->appName;
-        $appVersion     = $this->misc->appVersion;
+        $this->misc = $this->misc;
+        $appName = $this->misc->appName;
+        $appVersion = $this->misc->appVersion;
 
         $server_info = $this->misc->getServerInfo();
-        $server_id   = $this->misc->getServerId();
-        $reqvars     = $this->misc->getRequestVars('table');
+        $server_id = $this->misc->getServerId();
+        $reqvars = $this->misc->getRequestVars('table');
 
         $topbar_html = '<div class="topbar" data-controller="'.$this->controller_name.'"><table style="width: 100%"><tr><td>';
 
@@ -326,7 +326,7 @@ class HTMLNavbarController extends HTMLController
             return $trail;
         }
 
-        $server_info     = $this->misc->getServerInfo();
+        $server_info = $this->misc->getServerInfo();
         $trail['server'] = [
             'title' => $lang['strserver'],
             'text'  => $server_info['desc'],

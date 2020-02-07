@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class BrowserController extends BaseController
 {
@@ -67,9 +65,9 @@ class BrowserController extends BaseController
     public function doTree()
     {
         $treedata = new \PHPPgAdmin\ArrayRecordSet([]);
-        $reqvars  = [];
-        $action   = Decorator::url('/src/views/servers');
-        $branch   = Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']);
+        $reqvars = [];
+        $action = Decorator::url('/src/views/servers');
+        $branch = Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']);
         // $this->dump($branch);
         $attrs = [
             'text'    => 'Servers',

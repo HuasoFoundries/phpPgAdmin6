@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -10,7 +10,7 @@ class IfEmptyDecorator extends Decorator
 {
     public function __construct($value, $empty, $full = null)
     {
-        $this->val   = $value;
+        $this->val = $value;
         $this->empty = $empty;
         if (null !== $full) {
             $this->full = $full;

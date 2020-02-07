@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class UsersController extends BaseController
 {
@@ -96,7 +94,7 @@ class UsersController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $lang             = $this->lang;
+        $lang = $this->lang;
         $renderUseExpires = function ($val) use ($lang) {
             return 'infinity' == $val ? $lang['strnever'] : htmlspecialchars($val);
         };
@@ -198,7 +196,7 @@ class UsersController extends BaseController
 
         $server_info = $this->misc->getServerInfo();
 
-        $userdata         = $data->getUser($server_info['username']);
+        $userdata = $data->getUser($server_info['username']);
         $_REQUEST['user'] = $server_info['username'];
 
         $this->printTrail('user');
@@ -206,7 +204,7 @@ class UsersController extends BaseController
         $this->printMsg($msg);
 
         if ($userdata->recordCount() > 0) {
-            $userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
+            $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
             $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
             echo '<table>'.PHP_EOL;
             echo "<tr><th class=\"data\">{$this->lang['strusername']}</th><th class=\"data\">{$this->lang['strsuper']}</th><th class=\"data\">{$this->lang['strcreatedb']}</th><th class=\"data\">{$this->lang['strexpires']}</th>";
@@ -308,9 +306,9 @@ class UsersController extends BaseController
         $userdata = $data->getUser($_REQUEST['username']);
 
         if ($userdata->recordCount() > 0) {
-            $server_info                     = $this->misc->getServerInfo();
-            $canRename                       = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
-            $userdata->fields['usesuper']    = $data->phpBool($userdata->fields['usesuper']);
+            $server_info = $this->misc->getServerInfo();
+            $canRename = $data->hasUserRename() && ($_REQUEST['username'] != $server_info['username']);
+            $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
             $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
 
             if (!isset($_POST['formExpires'])) {
@@ -326,7 +324,7 @@ class UsersController extends BaseController
                     $_POST['formCreateDB'] = '';
                 }
 
-                $_POST['formExpires']  = 'infinity' == $userdata->fields['useexpires'] ? '' : $userdata->fields['useexpires'];
+                $_POST['formExpires'] = 'infinity' == $userdata->fields['useexpires'] ? '' : $userdata->fields['useexpires'];
                 $_POST['formPassword'] = '';
             }
 

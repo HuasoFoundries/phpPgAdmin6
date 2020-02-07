@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class TblpropertiesController extends BaseController
 {
@@ -103,7 +101,7 @@ class TblpropertiesController extends BaseController
      */
     public function doDefault($msg = '')
     {
-        $misc       = $this->misc;
+        $misc = $this->misc;
         $this->data = $misc->getDatabaseAccessor();
 
         $this->printTrail('table');
@@ -326,7 +324,7 @@ class TblpropertiesController extends BaseController
         // Fetch table info
         $table = $data->getTable($_REQUEST['table']);
         // Fetch all users
-        $users       = $data->getUsers();
+        $users = $data->getUsers();
         $tablespaces = null;
         // Fetch all tablespaces from the database
         if ($data->hasTablespaces()) {
@@ -413,9 +411,9 @@ class TblpropertiesController extends BaseController
 
     public function doExport($msg = '')
     {
-        $data    = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         $subject = 'table';
-        $object  = $_REQUEST['table'];
+        $object = $_REQUEST['table'];
         // Determine whether or not the table has an object ID
         $hasID = $data->hasObjectID($object);
         $this->prtrace('$hasID', $hasID);
@@ -454,7 +452,7 @@ class TblpropertiesController extends BaseController
         }
         // Don't show upload option if max size of uploads is zero
         $max_size = $misc->inisizeToBytes(ini_get('upload_max_filesize'));
-        if (is_double($max_size) && $max_size > 0) {
+        if (is_float($max_size) && $max_size > 0) {
             echo '<form action="'.\SUBFOLDER.'/src/views/dataimport" method="post" enctype="multipart/form-data">'.PHP_EOL;
             echo '<table>'.PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strformat']}</th>".PHP_EOL;
@@ -510,7 +508,7 @@ class TblpropertiesController extends BaseController
                 $this->coalesceArr($_POST, 'comment', '');
 
                 // Fetch all available types
-                $types        = $data->getTypes(true, false, true);
+                $types = $data->getTypes(true, false, true);
                 $types_for_js = [];
 
                 $this->printTrail('table');
@@ -543,7 +541,7 @@ class TblpropertiesController extends BaseController
                     }
                 }
                 while (!$types->EOF) {
-                    $typname        = $types->fields['typname'];
+                    $typname = $types->fields['typname'];
                     $types_for_js[] = $typname;
                     echo "\t<option value=\"", htmlspecialchars($typname), '"', ($typname == $_POST['type']) ? ' selected="selected"' : '', '>',
                     $misc->printVal($typname), '</option>'.PHP_EOL;
@@ -557,7 +555,7 @@ class TblpropertiesController extends BaseController
                 echo "\t<option value=\"[]\"", ('[]' == $_POST['array']) ? ' selected="selected"' : '', '>[ ]</option>'.PHP_EOL;
                 echo '</select></td>'.PHP_EOL;
                 $predefined_size_types = array_intersect($data->predefined_size_types, $types_for_js);
-                $escaped_predef_types  = []; // the JS escaped array elements
+                $escaped_predef_types = []; // the JS escaped array elements
                 foreach ($predefined_size_types as $value) {
                     $escaped_predef_types[] = "'{$value}'";
                 }
@@ -663,8 +661,8 @@ class TblpropertiesController extends BaseController
     {
         $attPre = function (&$rowdata, $actions) use ($data) {
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-            $attname                  = $rowdata->fields['attname'];
-            $table                    = $_REQUEST['table'];
+            $attname = $rowdata->fields['attname'];
+            $table = $_REQUEST['table'];
             $data->fieldClean($attname);
             $data->fieldClean($table);
 
@@ -683,8 +681,8 @@ class TblpropertiesController extends BaseController
             $str = '';
             foreach ($p['keys'] as $k => $c) {
                 if (is_null($p['keys'][$k]['consrc'])) {
-                    $atts        = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
-                    $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
+                    $atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
+                    $c['consrc'] = ('u' == $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').implode(',', $atts).')';
                 }
 
                 if ($c['p_field'] == $s) {

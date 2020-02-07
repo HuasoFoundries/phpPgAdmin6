@@ -15,14 +15,14 @@ class PopulateRequestResponse extends Middleware
         \Psr\Http\Message\ResponseInterface $response,
         $next
     ) {
-        $container                = $this->container;
-        $container['requestobj']  = $request;
+        $container = $this->container;
+        $container['requestobj'] = $request;
         $container['responseobj'] = $response;
 
-        $container['server']   = $request->getParam('server');
+        $container['server'] = $request->getParam('server');
         $container['database'] = $request->getParam('database');
-        $container['schema']   = $request->getParam('schema');
-        $misc                  = $container->get('misc');
+        $container['schema'] = $request->getParam('schema');
+        $misc = $container->get('misc');
 
         $misc->setHREF();
         $misc->setForm();
@@ -34,7 +34,7 @@ class PopulateRequestResponse extends Middleware
 
         $query_string = $request->getUri()->getQuery();
         $container->view->offsetSet('query_string', $query_string);
-        $path = (SUBFOLDER ? (SUBFOLDER . '/') : '') . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
+        $path = (SUBFOLDER ? (SUBFOLDER.'/') : '').$request->getUri()->getPath().($query_string ? '?'.$query_string : '');
         $container->view->offsetSet('path', $path);
 
         $params = $request->getParams();

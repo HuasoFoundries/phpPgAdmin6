@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,17 +10,15 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class ServersController extends BaseController
 {
     use \PHPPgAdmin\Traits\ServersTrait;
 
     public $table_place = 'servers-servers';
-    public $section     = 'servers';
-    public $query       = '';
-    public $subject     = '';
+    public $section = 'servers';
+    public $query = '';
+    public $subject = '';
     public $start_time;
     public $duration;
     public $controller_title = 'strservers';
@@ -74,7 +72,7 @@ class ServersController extends BaseController
         $this->printMsg($msg);
         $group = isset($_GET['group']) ? $_GET['group'] : false;
 
-        $groups  = $this->getServersGroups(true, $group);
+        $groups = $this->getServersGroups(true, $group);
         $columns = [
             'group' => [
                 'title' => $this->lang['strgroup'],
@@ -150,7 +148,7 @@ class ServersController extends BaseController
 
     public function doTree()
     {
-        $nodes    = [];
+        $nodes = [];
         $group_id = isset($_GET['group']) ? $_GET['group'] : false;
 
         // root with srv_groups

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Traits;
@@ -49,8 +49,8 @@ trait HelperTrait
 
     public static function getBackTrace($offset = 0)
     {
-        $i0        = $offset;
-        $i1        = $offset + 1;
+        $i0 = $offset;
+        $i1 = $offset + 1;
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $offset + 3);
 
         $btarray0 = ([

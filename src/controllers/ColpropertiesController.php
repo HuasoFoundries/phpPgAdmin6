@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,13 +10,11 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class ColpropertiesController extends BaseController
 {
-    public $tableName        = '';
-    public $table_place      = 'colproperties-colproperties';
+    public $tableName = '';
+    public $table_place = 'colproperties-colproperties';
     public $controller_title = 'strtables';
 
     /**
@@ -128,8 +126,8 @@ class ColpropertiesController extends BaseController
             echo '<br />'.PHP_EOL;
 
             $f_attname = $_REQUEST['column'];
-            $f_table   = $this->tableName;
-            $f_schema  = $data->_schema;
+            $f_table = $this->tableName;
+            $f_schema = $data->_schema;
             $data->fieldClean($f_attname);
             $data->fieldClean($f_table);
             $data->fieldClean($f_schema);
@@ -232,7 +230,7 @@ class ColpropertiesController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'stage', 1);
 
-        #$this->prtrace('$_REQUEST', $_REQUEST, 'msg', $msg);
+        //$this->prtrace('$_REQUEST', $_REQUEST, 'msg', $msg);
 
         switch ($_REQUEST['stage']) {
             case 1:
@@ -254,21 +252,21 @@ class ColpropertiesController extends BaseController
                 }
                 echo "<th class=\"data\">{$this->lang['strnotnull']}</th>\n<th class=\"data\">{$this->lang['strdefault']}</th>\n<th class=\"data\">{$this->lang['strcomment']}</th></tr>".PHP_EOL;
 
-                $column                       = $data->getTableAttributes($_REQUEST['table'], $_REQUEST['column']);
+                $column = $data->getTableAttributes($_REQUEST['table'], $_REQUEST['column']);
                 $column->fields['attnotnull'] = $data->phpBool($column->fields['attnotnull']);
 
                 // Upon first drawing the screen, load the existing column information
                 // from the database.
                 if (!isset($_REQUEST['default'])) {
                     $_REQUEST['field'] = $column->fields['attname'];
-                    $_REQUEST['type']  = $column->fields['base_type'];
+                    $_REQUEST['type'] = $column->fields['base_type'];
                     // Check to see if its' an array type...
                     // @todo this is pretty hacky!
                     if ('[]' == substr($column->fields['base_type'], strlen($column->fields['base_type']) - 2)) {
-                        $_REQUEST['type']  = substr($column->fields['base_type'], 0, strlen($column->fields['base_type']) - 2);
+                        $_REQUEST['type'] = substr($column->fields['base_type'], 0, strlen($column->fields['base_type']) - 2);
                         $_REQUEST['array'] = '[]';
                     } else {
-                        $_REQUEST['type']  = $column->fields['base_type'];
+                        $_REQUEST['type'] = $column->fields['base_type'];
                         $_REQUEST['array'] = '';
                     }
                     // To figure out the length, look in the brackets :(
@@ -295,12 +293,12 @@ class ColpropertiesController extends BaseController
                 $escaped_predef_types = []; // the JS escaped array elements
                 if ($data->hasAlterColumnType()) {
                     // Fetch all available types
-                    $types        = $data->getTypes(true, false, true);
+                    $types = $data->getTypes(true, false, true);
                     $types_for_js = [];
 
                     echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">".PHP_EOL;
                     while (!$types->EOF) {
-                        $typname        = $types->fields['typname'];
+                        $typname = $types->fields['typname'];
                         $types_for_js[] = $typname;
                         echo "\t<option value=\"", htmlspecialchars($typname), '"', ($typname == $_REQUEST['type']) ? ' selected="selected"' : '', '>',
                         $this->misc->printVal($typname), '</option>'.PHP_EOL;

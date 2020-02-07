@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Traits;
@@ -228,7 +228,7 @@ trait ViewsMatViewsPropertiesTrait
         $this->printMsg($msg);
 
         $subject = $this->subject;
-        $object  = $_REQUEST[$this->subject];
+        $object = $_REQUEST[$this->subject];
 
         echo $this->formHeader();
         // Data only

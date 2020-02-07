@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin;
@@ -13,8 +13,6 @@ namespace PHPPgAdmin;
 
 /**
  * A class that adds convenience methods to the container.
- *
- * @package PHPPgAdmin
  */
 class ContainerUtils
 {
@@ -32,7 +30,7 @@ class ContainerUtils
     public function __construct()
     {
         $composerinfo = json_decode(file_get_contents(BASE_PATH.'/composer.json'));
-        $appVersion   = $composerinfo->version;
+        $appVersion = $composerinfo->version;
 
         $phpMinVer = (str_replace(['<', '>', '='], '', $composerinfo->require->php));
         //$this->prtrace($appVersion);
@@ -74,10 +72,10 @@ class ContainerUtils
         $this->app = new \Slim\App($config);
 
         // Fetch DI Container
-        $container            = $this->app->getContainer();
-        $container['utils']   = $this;
+        $container = $this->app->getContainer();
+        $container['utils'] = $this;
         $container['version'] = 'v'.$appVersion;
-        $container['errors']  = [];
+        $container['errors'] = [];
 
         $this->container = $container;
     }
@@ -93,11 +91,11 @@ class ContainerUtils
 
     public function maybeRenderIframes($response, $subject, $query_string)
     {
-        $c       = $this->container;
+        $c = $this->container;
         $in_test = $c->view->offsetGet('in_test');
 
         if ($in_test === '1') {
-            $className  = '\PHPPgAdmin\Controller\\'.ucfirst($subject).'Controller';
+            $className = '\PHPPgAdmin\Controller\\'.ucfirst($subject).'Controller';
             $controller = new $className($c);
 
             return $controller->render();
@@ -245,10 +243,10 @@ class ContainerUtils
                     $urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
                 }
                 $_REQUEST = array_merge($_REQUEST, $urlvars);
-                $_GET     = array_merge($_GET, $urlvars);
+                $_GET = array_merge($_GET, $urlvars);
             }
 
-            $actionurl      = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
+            $actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
             $destinationurl = $actionurl->value($_GET);
         }
         $destinationurl = str_replace('views/?', "views/{$subject}?", $destinationurl);
@@ -265,7 +263,7 @@ class ContainerUtils
      */
     public function addError($errormsg)
     {
-        $errors   = $this->container->get('errors');
+        $errors = $this->container->get('errors');
         $errors[] = $errormsg;
         $this->container->offsetSet('errors', $errors);
 

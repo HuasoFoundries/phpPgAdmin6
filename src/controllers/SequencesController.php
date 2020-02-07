@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC8.
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +10,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class SequencesController extends BaseController
 {
@@ -428,7 +426,7 @@ class SequencesController extends BaseController
             echo '</form>'.PHP_EOL;
         } else {
             if (is_array($_POST['sequence'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
                 if (0 == $status) {
                     foreach ($_POST['sequence'] as $s) {
