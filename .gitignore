@@ -9,6 +9,8 @@ config.*.php*
 !tests/config*
 
 vendor
+!assets/vendor
+
 *.log
 fabfile*
 /.idea/*

@@ -10,7 +10,7 @@
     ],
     "authors": [
         {
-            "name": "Amenadiel",
+            "name": "FFFlabs",
             "email": "amenadiel@gmail.com"
         }
     ],
@@ -46,17 +46,11 @@
         "symfony/var-dumper": "^5.0"
     },
     "scripts": {
-        "post-install-cmd": [
-            "php -r \"chmod( __DIR__ . '/temp', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/twigcache', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/jms', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/logs', 0777);\""
+        "fix_temp_permissions": [
+            "php -r \"chmod( __DIR__ . '/temp', 0777);\""
         ],
-        "post-create-project-cmd": [
-            "php -r \"chmod( __DIR__ . '/temp', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/twigcache', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/jms', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/logs', 0777);\""
-        ]
+        "clear": "@fix_temp_permissions",
+        "post-install-cmd": "@clear_temp_folder",
+        "post-create-project-cmd": "@clear_temp_folder"
     }
 }
