@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC7
+ * PHPPgAdmin v6.0.0-RC8
  */
 
 namespace PHPPgAdmin\Help;

@@ -1,6 +1,6 @@
 {
     "name": "huasofoundries/phppgadmin6",
-    "version": "6.0.0-RC7",
+    "version": "6.0.0-RC8",
     "description": "Like phpmyadmin but for postgres",
     "type": "project",
     "license": [
@@ -47,7 +47,10 @@
     },
     "scripts": {
         "fix_temp_permissions": [
-            "php -r \"chmod( __DIR__ . '/temp', 0777);\""
+            "php -r \"chmod( __DIR__ . '/temp', 0777);\"",
+            "php -r \"chmod( __DIR__ . '/temp/logs', 0777);\"",
+            "php -r \"chmod( __DIR__ . '/temp/sessions', 0777);\"",
+            "php -r \"chmod( __DIR__ . '/temp/twigcache', 0777);\""
         ],
         "clear": "@fix_temp_permissions",
         "post-install-cmd": "@clear_temp_folder",
