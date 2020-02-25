@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC8
  */
 
 namespace PHPPgAdmin;
@@ -82,24 +82,43 @@ class ContainerUtils
         $this->container = $container;
     }
 
-    public static function createContainer()
+    public static function createContainer($conf)
     {
         if (!self::$instance) {
             self::$instance = new self();
         }
 
-        $display_sizes = $conf['display_sizes'] ?? false;
+        // Complete missing conf keys
+        self::$instance->container['conf'] = function ($c) use ($conf) {
+            $display_sizes = $conf['display_sizes'] ?? false;
 
-        $conf['display_sizes'] = [
+            $conf['display_sizes'] = [
                 'schemas' => (bool) $display_sizes,
                 'tables'  => (bool) $display_sizes,
             ];
-        if (is_array($display_sizes)) {
-            $conf['display_sizes'] = [
+            if (is_array($display_sizes)) {
+                $conf['display_sizes'] = [
                     'schemas' => $display_sizes['schemas'] ?? in_array('schemas', $display_sizes, true),
                     'tables'  => $display_sizes['tables'] ?? in_array('tables', $display_sizes, true),
                 ];
-        }
+            }
+
+            // Plugins are removed
+            $conf['plugins'] = [];
+            if (!isset($conf['theme'])) {
+                $conf['theme'] = 'default';
+            }
+            foreach ($conf['servers'] as &$server) {
+                if (!isset($server['port'])) {
+                    $server['port'] = 5432;
+                }
+                if (!isset($server['sslmode'])) {
+                    $server['sslmode'] = 'unspecified';
+                }
+            }
+
+            return $conf;
+        };
 
         return [self::$instance->container, self::$instance->app];
     }

@@ -25,3 +25,4 @@ temp/sessions/*
 config.inc.php
 config.yml
 tests/_output
+debug.*.php

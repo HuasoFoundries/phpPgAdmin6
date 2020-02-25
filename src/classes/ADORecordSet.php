@@ -18,6 +18,10 @@ namespace PHPPgAdmin;
  *
  * @package PHPPgAdmin
  */
-class ADORecordSet extends \ADORecordSet
+class ADORecordSet extends \ADORecordSet implements \Countable
 {
+    public function count()
+    {
+        return $this->recordCount();
+    }
 }

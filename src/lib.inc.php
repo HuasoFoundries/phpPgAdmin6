@@ -15,6 +15,7 @@ if (!is_writable(BASE_PATH . '/temp')) {
     die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
 }
 require_once BASE_PATH . '/vendor/autoload.php';
+
 // Check to see if the configuration file exists, if not, explain
 if (file_exists(BASE_PATH . '/config.inc.php')) {
     $conf = [];
@@ -54,7 +55,7 @@ if (DEBUGMODE) {
 }
 
 // Fetch App and DI Container
-list($container, $app) = \PHPPgAdmin\ContainerUtils::createContainer();
+list($container, $app) = \PHPPgAdmin\ContainerUtils::createContainer($conf);
 
 if ($container instanceof \Psr\Container\ContainerInterface) {
     if (PHP_SAPI == 'cli-server') {
@@ -80,27 +81,6 @@ $container->offsetSet('schema', isset($_REQUEST['schema']) ? $_REQUEST['schema']
 
 $container['flash'] = function () {
     return new \Slim\Flash\Messages();
-};
-
-// Complete missing conf keys
-$container['conf'] = function ($c) use ($conf) {
-
-    //\Kint::dump($conf);
-    // Plugins are removed
-    $conf['plugins'] = [];
-    if (!isset($conf['theme'])) {
-        $conf['theme'] = 'default';
-    }
-    foreach ($conf['servers'] as &$server) {
-        if (!isset($server['port'])) {
-            $server['port'] = 5432;
-        }
-        if (!isset($server['sslmode'])) {
-            $server['sslmode'] = 'unspecified';
-        }
-    }
-
-    return $conf;
 };
 
 $container['lang'] = function ($c) {
