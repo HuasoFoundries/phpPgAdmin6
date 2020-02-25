@@ -56,7 +56,7 @@ if (DEBUGMODE) {
 
 // Fetch App and DI Container
 list($container, $app) = \PHPPgAdmin\ContainerUtils::createContainer($conf);
-
+$subfolder             = '';
 if ($container instanceof \Psr\Container\ContainerInterface) {
     if (PHP_SAPI == 'cli-server') {
         $subfolder = '/index.php';
@@ -66,10 +66,10 @@ if ($container instanceof \Psr\Container\ContainerInterface) {
         $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
         $subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
     }
-    define('SUBFOLDER', $subfolder);
 } else {
     trigger_error("App Container must be an instance of \Psr\Container\ContainerInterface", E_USER_ERROR);
 }
+define('SUBFOLDER', $subfolder);
 
 $container['requestobj']  = $container['request'];
 $container['responseobj'] = $container['response'];
