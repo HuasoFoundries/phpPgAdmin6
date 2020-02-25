@@ -14,7 +14,7 @@ trait ViewTrait
     /**
      * Returns a list of all views in the database.
      *
-     * @return \PHPPgAdmin\ADORecordSet All views
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getViews()
     {
@@ -34,7 +34,7 @@ trait ViewTrait
     /**
      * Returns a list of all materialized views in the database.
      *
-     * @return \PHPPgAdmin\ADORecordSet All materialized views
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getMaterializedViews()
     {
@@ -159,7 +159,7 @@ trait ViewTrait
      *
      * @param string $view The name of the view or materialized to retrieve
      *
-     * @return \PHPPgAdmin\ADORecordSet [Materialized] View info
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getView($view)
     {
@@ -232,7 +232,7 @@ trait ViewTrait
      * @param \PHPPgAdmin\ADORecordSet $vwrs  The view recordSet returned by getView()
      * @param null|string              $owner
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      *
      * @internal param  $name new view's owner
      */
@@ -260,7 +260,7 @@ trait ViewTrait
      * @param \PHPPgAdmin\ADORecordSet $vwrs The view recordSet returned by getView()
      * @param string                   $name The new view's name
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function alterViewName($vwrs, $name)
     {
@@ -288,7 +288,7 @@ trait ViewTrait
      * @param \PHPPgAdmin\ADORecordSet $vwrs   The view recordSet returned by getView()
      * @param string                   $schema
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      *
      * @internal param The $name new view's schema
      */
@@ -316,7 +316,7 @@ trait ViewTrait
      * @param string $viewname The name of the view to drop
      * @param string $cascade  True to cascade drop, false to restrict
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function dropView($viewname, $cascade)
     {

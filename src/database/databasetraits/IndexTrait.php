@@ -125,7 +125,7 @@ trait IndexTrait
      * @param bool   $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in
      *                      7.2-7.3, ignored in >=7.4
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function reindex($type, $name, $force = false)
     {
@@ -194,7 +194,7 @@ trait IndexTrait
      *
      * @param string $table the table where we are looking for fk
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getConstraintsWithFields($table)
     {
@@ -260,7 +260,7 @@ trait IndexTrait
      * @param string $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string $tablespace (optional) The tablespace for the schema, '' indicates default
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function addPrimaryKey($table, $fields, $name = '', $tablespace = '')
     {
@@ -297,7 +297,7 @@ trait IndexTrait
      * @param string      $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string      $tablespace (optional) The tablespace for the schema, '' indicates default
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function addUniqueKey($table, $fields, $name = '', $tablespace = '')
     {
@@ -335,7 +335,7 @@ trait IndexTrait
      * @param string $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function addCheckConstraint($table, $definition, $name = '')
     {
@@ -432,7 +432,7 @@ trait IndexTrait
      * @param string $initially  The initially parameter for the FK (eg. INITIALLY IMMEDIATE)
      * @param string $name       [optional] The name to give the key, otherwise default name is assigned
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      *
      * @internal param \PHPPgAdmin\Database\The $target table that contains the target columns
      * @internal param \PHPPgAdmin\Database\The $intially initial deferrability (eg. INITIALLY IMMEDIATE)
@@ -503,7 +503,7 @@ trait IndexTrait
      * @param string $type       The type of constraint (c, f, u or p)
      * @param bool   $cascade    True to cascade drop, false to restrict
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function dropConstraint($constraint, $relation, $type, $cascade)
     {

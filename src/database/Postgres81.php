@@ -54,7 +54,7 @@ class Postgres81 extends Postgres82
      *
      * @param null|string $currentdatabase
      *
-     * @return \PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet|int A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -144,6 +144,9 @@ class Postgres81 extends Postgres82
 
     // Autovacuum functions
 
+    /**
+     * @return \PHPPgAdmin\ADORecordSet|int
+     */
     public function saveAutovacuum(
         $table,
         $vacenabled,
@@ -250,7 +253,7 @@ class Postgres81 extends Postgres82
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function getProcesses($database = null)
     {
@@ -278,7 +281,7 @@ class Postgres81 extends Postgres82
      *
      * @param string $spcname namespace
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function getTablespace($spcname)
     {
@@ -295,7 +298,7 @@ class Postgres81 extends Postgres82
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function getTablespaces($all = false)
     {

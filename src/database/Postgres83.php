@@ -103,7 +103,7 @@ class Postgres83 extends Postgres84
      *
      * @param string $table
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function getTableAutovacuum($table = '')
     {
@@ -149,6 +149,9 @@ class Postgres83 extends Postgres84
         return $this->selectSet($sql);
     }
 
+    /**
+     * @return \PHPPgAdmin\ADORecordSet|int
+     */
     public function saveAutovacuum(
         $table,
         $vacenabled,
@@ -264,6 +267,9 @@ class Postgres83 extends Postgres84
         return $status;
     }
 
+    /**
+     * @return bool|int
+     */
     public function dropAutovacuum($table)
     {
         $c_schema = $this->_schema;
@@ -295,7 +301,7 @@ class Postgres83 extends Postgres84
      * @param bool                     $cycledvalue  Sequence can cycle ?
      * @param int                      $startvalue   The sequence start value when issueing a restart (ignored)
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int 0 if operation was successful
      */
     public function alterSequenceProps(
         $seqrs,
@@ -351,7 +357,7 @@ class Postgres83 extends Postgres84
      * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
      * @param string                   $owner sequence owner
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int 0 if operation was successful
      *
      * @internal param string The $name new owner for the sequence
      */
@@ -379,7 +385,7 @@ class Postgres83 extends Postgres84
      *
      * @param $function_oid
      *
-     * @return \PHPPgAdmin\ADORecordSet Function info
+     * @return \PHPPgAdmin\ADORecordSet|int Function info
      *
      * @internal param string $func name of the function to retrieve
      */

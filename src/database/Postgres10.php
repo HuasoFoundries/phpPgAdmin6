@@ -25,7 +25,7 @@ class Postgres10 extends Postgres96
     /**
      * Return all tables in current database (and schema).
      *
-     * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet|int All tables, sorted alphabetically
      */
     public function getTables()
     {

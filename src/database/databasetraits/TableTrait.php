@@ -18,7 +18,7 @@ trait TableTrait
     /**
      * Return all tables in current database excluding schemas 'pg_catalog', 'information_schema' and 'pg_toast'.
      *
-     * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getAllTables()
     {
@@ -36,7 +36,7 @@ trait TableTrait
     /**
      * Return all tables in current database (and schema).
      *
-     * @return \PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getTables()
     {
@@ -75,7 +75,7 @@ trait TableTrait
      *
      * @param string $table The table to find the parents for
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getTableParents($table)
     {
@@ -105,7 +105,7 @@ trait TableTrait
      *
      * @param string $table The table to find the children for
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getTableChildren($table)
     {
@@ -135,9 +135,9 @@ trait TableTrait
      * @param string $table       The table to define
      * @param string $cleanprefix set to '-- ' to avoid issuing DROP statement
      *
-     * @return string A string containing the formatted SQL code
+     * @return null|string
      */
-    public function getTableDefPrefix($table, $cleanprefix = '')
+    public function getTableDefPrefix($table, $cleanprefix = ''): ?string
     {
         // Fetch table
         $t = $this->getTable($table);
@@ -339,9 +339,9 @@ trait TableTrait
      * @param int                      $num   Table attributes count + table
      *                                        constraints count
      *
-     * @return string original $sql plus appended strings
+     * @return null|string
      */
-    private function _dumpConstraints($cons, $table, $sql, $i, $num)
+    private function _dumpConstraints($cons, $table, $sql, $i, $num): ?string
     {
         // Output all table constraints
         while (!$cons->EOF) {
@@ -391,9 +391,9 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblfields table field attributes
      * @param string                   $sql       The sql sentence generated so far
      *
-     * @return string original $sql plus appended strings
+     * @return null|string
      */
-    private function _dumpColStats($atts, $tblfields, $sql)
+    private function _dumpColStats($atts, $tblfields, $sql): ?string
     {
         // Column storage and statistics
         $atts->moveFirst();
@@ -449,9 +449,9 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblfields The table fields definition
      * @param string                   $sql       The sql sentence generated so far
      *
-     * @return string original $sql plus appended strings
+     * @return null|string
      */
-    private function _dumpPrivileges($privs, $tblfields, $sql)
+    private function _dumpPrivileges($privs, $tblfields, $sql): ?string
     {
         if (sizeof($privs) <= 0) {
             return $sql;
@@ -585,7 +585,7 @@ trait TableTrait
      *
      * @param string $table The name of the table
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getTable($table)
     {
@@ -620,7 +620,7 @@ trait TableTrait
      * @param string $table    The name of the table
      * @param string $c_schema The name of the schema
      *
-     * @return \PHPPgAdmin\ADORecordSet All attributes in order
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     private function _getTableAttributesAll($table, $c_schema)
     {
@@ -672,7 +672,7 @@ trait TableTrait
      * @param string $c_schema The schema of the table
      * @param string $field    (optional) The name of a field to return
      *
-     * @return \PHPPgAdmin\ADORecordSet All attributes in order
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     private function _getTableAttribute($table, $c_schema, $field)
     {
@@ -729,7 +729,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getConstraints($table)
     {
@@ -803,9 +803,9 @@ trait TableTrait
      *
      * @param string $table The table to define
      *
-     * @return string A string containing the formatted SQL code
+     * @return null|string
      */
-    public function getTableDefSuffix($table)
+    public function getTableDefSuffix($table): ?string
     {
         $sql = '';
 
@@ -870,7 +870,7 @@ trait TableTrait
      * @param string $table  The name of a table whose indexes to retrieve
      * @param bool   $unique Only get unique/pk indexes
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getIndexes($table = '', $unique = false)
     {
@@ -897,7 +897,7 @@ trait TableTrait
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getTriggers($table = '')
     {
@@ -928,7 +928,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getRules($table)
     {
@@ -1289,7 +1289,7 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
      * @param null|string              $owner
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function alterTableOwner($tblrs, $owner = null)
     {
@@ -1315,7 +1315,7 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblrs      The table RecordSet returned by getTable()
      * @param null|string              $tablespace
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function alterTableTablespace($tblrs, $tablespace = null)
     {
@@ -1341,7 +1341,7 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
      * @param string                   $name  The new table's name
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function alterTableName($tblrs, $name = null)
     {
@@ -1372,7 +1372,7 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblrs  The table RecordSet returned by getTable()
      * @param null|string              $schema
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function alterTableSchema($tblrs, $schema = null)
     {
@@ -1420,7 +1420,7 @@ trait TableTrait
      * @param string $table   The table to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function dropTable($table, $cascade)
     {
@@ -1498,7 +1498,7 @@ trait TableTrait
      * @param string $relation The name of a relation
      * @param bool   $oids     true to dump also the oids
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset on success
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function dumpRelation($relation, $oids)
     {
@@ -1598,7 +1598,7 @@ trait TableTrait
      * @param int    $vaccostdelay   vacuum cost delay
      * @param int    $vaccostlimit   vacuum cost limit
      *
-     * @return bool 0 if successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function saveAutovacuum(
         $table,
@@ -1659,7 +1659,7 @@ trait TableTrait
      *
      * @param string $table The table
      *
-     * @return bool 0 if successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function dropAutovacuum($table)
     {

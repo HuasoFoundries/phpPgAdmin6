@@ -22,7 +22,7 @@ class Postgres96 extends Postgres
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function getProcesses($database = null)
     {
@@ -66,7 +66,7 @@ class Postgres96 extends Postgres
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param array  $groups     The groups to create the user in
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int 0 if operation was successful
      *
      * @internal param $group (array) The groups to create the user in
      */

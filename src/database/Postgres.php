@@ -179,7 +179,7 @@ class Postgres extends ADOdbBase
      * @param string $term   The search term
      * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function findObject($term, $filter)
     {
@@ -376,7 +376,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all True to get all languages, regardless of show_system
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function getLanguages($all = false)
     {

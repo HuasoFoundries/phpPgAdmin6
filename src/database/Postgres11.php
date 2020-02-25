@@ -26,7 +26,7 @@ class Postgres11 extends Postgres10
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If truthy, will return functions of type trigger
      *
-     * @return \PHPPgAdmin\ADORecordSet All functions
+     * @return \PHPPgAdmin\ADORecordSet|int All functions
      */
     public function getFunctions($all = false, $type = null)
     {

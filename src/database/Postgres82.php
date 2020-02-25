@@ -51,7 +51,7 @@ class Postgres82 extends Postgres83
     /**
      * Returns table locks information in the current database.
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function getLocks()
     {
@@ -79,7 +79,7 @@ class Postgres82 extends Postgres83
      * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
      * @param string                   $name  The new name for the sequence
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int 0 if operation was successful
      */
     public function alterSequenceName($seqrs, $name)
     {
@@ -107,7 +107,7 @@ class Postgres82 extends Postgres83
      * @param \PHPPgAdmin\ADORecordSet $vwrs The view recordSet returned by getView()
      * @param string                   $name The new view's name
      *
-     * @return int -1 if Failed
+     * @return \PHPPgAdmin\ADORecordSet|int -1 if Failed
      */
     public function alterViewName($vwrs, $name)
     {
@@ -135,7 +135,7 @@ class Postgres82 extends Postgres83
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function getTriggers($table = '')
     {
@@ -167,7 +167,7 @@ class Postgres82 extends Postgres83
      *
      * @param int $function_oid
      *
-     * @return \PHPPgAdmin\ADORecordSet Function info
+     * @return \PHPPgAdmin\ADORecordSet|int Function info
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -338,7 +338,7 @@ class Postgres82 extends Postgres83
      *
      * @param int $operator_oid The oid of the operator
      *
-     * @return \PHPPgAdmin\ADORecordSet Function info
+     * @return \PHPPgAdmin\ADORecordSet|int Function info
      */
     public function getOperator($operator_oid)
     {
@@ -374,7 +374,7 @@ class Postgres82 extends Postgres83
     /**
      * Gets all opclasses.
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int A recordset
      */
     public function getOpClasses()
     {

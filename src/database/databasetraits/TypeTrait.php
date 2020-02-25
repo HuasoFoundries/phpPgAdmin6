@@ -69,7 +69,7 @@ trait TypeTrait
      *
      * @param string $typname The name of the view to retrieve
      *
-     * @return \PHPPgAdmin\ADORecordSet type info
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getType($typname)
     {
@@ -88,7 +88,7 @@ trait TypeTrait
      * @param bool $tabletypes If true, will include table types
      * @param bool $domains    If true, will include domains
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getTypes($all = false, $tabletypes = false, $domains = false)
     {
@@ -145,7 +145,7 @@ trait TypeTrait
      * @param string $typalign
      * @param string $typstorage
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      *
      * @internal param $ ...
      */
@@ -207,7 +207,7 @@ trait TypeTrait
      * @param string $typname The name of the type to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function dropType($typname, $cascade)
     {
@@ -283,7 +283,7 @@ trait TypeTrait
      *
      * @param string $name
      *
-     * @return \PHPPgAdmin\ADORecordSet A recordset
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getEnumValues($name)
     {
@@ -425,7 +425,7 @@ trait TypeTrait
     /**
      * Returns a list of all casts in the database.
      *
-     * @return \PHPPgAdmin\ADORecordSet All casts
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getCasts()
     {
@@ -470,7 +470,7 @@ trait TypeTrait
     /**
      * Returns a list of all conversions in the database.
      *
-     * @return \PHPPgAdmin\ADORecordSet All conversions
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getConversions()
     {
