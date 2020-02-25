@@ -103,7 +103,7 @@ class Postgres83 extends Postgres84
      *
      * @param string $table
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTableAutovacuum($table = '')
     {
@@ -150,7 +150,16 @@ class Postgres83 extends Postgres84
     }
 
     /**
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @param mixed $table
+     * @param mixed $vacenabled
+     * @param mixed $vacthreshold
+     * @param mixed $vacscalefactor
+     * @param mixed $anathresold
+     * @param mixed $anascalefactor
+     * @param mixed $vaccostdelay
+     * @param mixed $vaccostlimit
+     *
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function saveAutovacuum(
         $table,
@@ -268,6 +277,8 @@ class Postgres83 extends Postgres84
     }
 
     /**
+     * @param mixed $table
+     *
      * @return bool|int
      */
     public function dropAutovacuum($table)
@@ -301,7 +312,7 @@ class Postgres83 extends Postgres84
      * @param bool                     $cycledvalue  Sequence can cycle ?
      * @param int                      $startvalue   The sequence start value when issueing a restart (ignored)
      *
-     * @return \PHPPgAdmin\ADORecordSet|int 0 if operation was successful
+     * @return int|\PHPPgAdmin\ADORecordSet 0 if operation was successful
      */
     public function alterSequenceProps(
         $seqrs,
@@ -357,7 +368,7 @@ class Postgres83 extends Postgres84
      * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
      * @param string                   $owner sequence owner
      *
-     * @return \PHPPgAdmin\ADORecordSet|int 0 if operation was successful
+     * @return int|\PHPPgAdmin\ADORecordSet 0 if operation was successful
      *
      * @internal param string The $name new owner for the sequence
      */
@@ -385,7 +396,7 @@ class Postgres83 extends Postgres84
      *
      * @param $function_oid
      *
-     * @return \PHPPgAdmin\ADORecordSet|int Function info
+     * @return int|\PHPPgAdmin\ADORecordSet Function info
      *
      * @internal param string $func name of the function to retrieve
      */

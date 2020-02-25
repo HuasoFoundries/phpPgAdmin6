@@ -18,7 +18,7 @@ trait TableTrait
     /**
      * Return all tables in current database excluding schemas 'pg_catalog', 'information_schema' and 'pg_toast'.
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getAllTables()
     {
@@ -36,7 +36,7 @@ trait TableTrait
     /**
      * Return all tables in current database (and schema).
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getTables()
     {
@@ -75,7 +75,7 @@ trait TableTrait
      *
      * @param string $table The table to find the parents for
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getTableParents($table)
     {
@@ -105,7 +105,7 @@ trait TableTrait
      *
      * @param string $table The table to find the children for
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getTableChildren($table)
     {
@@ -134,8 +134,6 @@ trait TableTrait
      *
      * @param string $table       The table to define
      * @param string $cleanprefix set to '-- ' to avoid issuing DROP statement
-     *
-     * @return null|string
      */
     public function getTableDefPrefix($table, $cleanprefix = ''): ?string
     {
@@ -338,8 +336,6 @@ trait TableTrait
      * @param mixed                    $i
      * @param int                      $num   Table attributes count + table
      *                                        constraints count
-     *
-     * @return null|string
      */
     private function _dumpConstraints($cons, $table, $sql, $i, $num): ?string
     {
@@ -390,8 +386,6 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $atts      table attributes
      * @param \PHPPgAdmin\ADORecordSet $tblfields table field attributes
      * @param string                   $sql       The sql sentence generated so far
-     *
-     * @return null|string
      */
     private function _dumpColStats($atts, $tblfields, $sql): ?string
     {
@@ -448,8 +442,6 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $privs     The table privileges
      * @param \PHPPgAdmin\ADORecordSet $tblfields The table fields definition
      * @param string                   $sql       The sql sentence generated so far
-     *
-     * @return null|string
      */
     private function _dumpPrivileges($privs, $tblfields, $sql): ?string
     {
@@ -585,7 +577,7 @@ trait TableTrait
      *
      * @param string $table The name of the table
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getTable($table)
     {
@@ -620,7 +612,7 @@ trait TableTrait
      * @param string $table    The name of the table
      * @param string $c_schema The name of the schema
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     private function _getTableAttributesAll($table, $c_schema)
     {
@@ -672,7 +664,7 @@ trait TableTrait
      * @param string $c_schema The schema of the table
      * @param string $field    (optional) The name of a field to return
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     private function _getTableAttribute($table, $c_schema, $field)
     {
@@ -729,7 +721,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getConstraints($table)
     {
@@ -802,8 +794,6 @@ trait TableTrait
      * dumped after the table contents for speed and efficiency reasons.
      *
      * @param string $table The table to define
-     *
-     * @return null|string
      */
     public function getTableDefSuffix($table): ?string
     {
@@ -870,7 +860,7 @@ trait TableTrait
      * @param string $table  The name of a table whose indexes to retrieve
      * @param bool   $unique Only get unique/pk indexes
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getIndexes($table = '', $unique = false)
     {
@@ -897,7 +887,7 @@ trait TableTrait
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getTriggers($table = '')
     {
@@ -928,7 +918,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getRules($table)
     {
@@ -1289,7 +1279,7 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
      * @param null|string              $owner
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterTableOwner($tblrs, $owner = null)
     {
@@ -1315,7 +1305,7 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblrs      The table RecordSet returned by getTable()
      * @param null|string              $tablespace
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterTableTablespace($tblrs, $tablespace = null)
     {
@@ -1341,7 +1331,7 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
      * @param string                   $name  The new table's name
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterTableName($tblrs, $name = null)
     {
@@ -1372,7 +1362,7 @@ trait TableTrait
      * @param \PHPPgAdmin\ADORecordSet $tblrs  The table RecordSet returned by getTable()
      * @param null|string              $schema
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterTableSchema($tblrs, $schema = null)
     {
@@ -1420,7 +1410,7 @@ trait TableTrait
      * @param string $table   The table to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropTable($table, $cascade)
     {
@@ -1498,7 +1488,7 @@ trait TableTrait
      * @param string $relation The name of a relation
      * @param bool   $oids     true to dump also the oids
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dumpRelation($relation, $oids)
     {
@@ -1598,7 +1588,7 @@ trait TableTrait
      * @param int    $vaccostdelay   vacuum cost delay
      * @param int    $vaccostlimit   vacuum cost limit
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function saveAutovacuum(
         $table,
@@ -1659,7 +1649,7 @@ trait TableTrait
      *
      * @param string $table The table
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropAutovacuum($table)
     {

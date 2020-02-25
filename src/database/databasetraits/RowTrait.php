@@ -17,7 +17,7 @@ trait RowTrait
      * @param string $table The name of a table
      * @param array  $key   The associative array holding the key to retrieve
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function browseRow($table, $key)
     {
@@ -107,7 +107,7 @@ trait RowTrait
      * @param array  $format An array of the data type (VALUE or EXPRESSION)
      * @param array  $types  An array of field types
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function insertRow($table, $fields, $values, $nulls, $format, $types)
     {

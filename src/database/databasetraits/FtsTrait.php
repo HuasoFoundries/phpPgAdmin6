@@ -82,7 +82,7 @@ trait FtsTrait
      *
      * @param bool $all if false, returns schema qualified FTS confs
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFtsConfigurations($all = true)
     {
@@ -116,7 +116,7 @@ trait FtsTrait
      *
      * @param string $ftscfg Name of the FTS configuration
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFtsConfigurationMap($ftscfg)
     {
@@ -156,7 +156,7 @@ trait FtsTrait
      *
      * @param bool $all if false, return only Parsers from the current schema
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFtsParsers($all = true)
     {
@@ -185,7 +185,7 @@ trait FtsTrait
      *
      * @param bool $all if false, return only Dics from the current schema
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFtsDictionaries($all = true)
     {
@@ -211,7 +211,7 @@ trait FtsTrait
     /**
      * Returns all FTS dictionary templates available.
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFtsDictionaryTemplates()
     {
@@ -242,7 +242,7 @@ trait FtsTrait
      * @param string $ftscfg  The configuration's name
      * @param bool   $cascade true to Cascade to dependenced objects
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropFtsConfiguration($ftscfg, $cascade)
     {
@@ -264,7 +264,7 @@ trait FtsTrait
      * @param string $ftsdict The dico's name
      * @param bool   $cascade Cascade to dependenced objects
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      *
      * @todo Support of dictionary templates dropping
      */
@@ -469,7 +469,7 @@ trait FtsTrait
      *
      * @param string $ftsdict The name of the FTS dictionary
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFtsDictionaryByName($ftsdict)
     {
@@ -504,7 +504,7 @@ trait FtsTrait
      * @param string $action   What to do with the mapping: add, alter or drop
      * @param string $dictname Dictionary that will process tokens given or null in case of drop action
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      *
      * @internal param string $cfgname The name of the FTS configuration to alter
      */
@@ -550,7 +550,7 @@ trait FtsTrait
      * @param string $ftscfg  The name of the FTS configuration
      * @param string $mapping The name of the mapping
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFtsMappingByName($ftscfg, $mapping)
     {
@@ -590,7 +590,7 @@ trait FtsTrait
      *
      * @param string $ftscfg The config's name that use the parser
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFtsMappings($ftscfg)
     {
@@ -608,7 +608,7 @@ trait FtsTrait
      *
      * @param string $ftscfg The name of the FTS configuration
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFtsConfigurationByName($ftscfg)
     {

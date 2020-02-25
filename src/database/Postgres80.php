@@ -57,7 +57,7 @@ class Postgres80 extends Postgres81
      *
      * @param null|string $currentdatabase
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A list of databases, sorted alphabetically
+     * @return int|\PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -104,7 +104,7 @@ class Postgres80 extends Postgres81
     /**
      * Return all schemas in the current database.
      *
-     * @return \PHPPgAdmin\ADORecordSet|int All schemas, sorted alphabetically
+     * @return int|\PHPPgAdmin\ADORecordSet All schemas, sorted alphabetically
      */
     public function getSchemas()
     {
@@ -132,7 +132,7 @@ class Postgres80 extends Postgres81
      *
      * @param string $schema The name of the schema
      *
-     * @return \PHPPgAdmin\ADORecordSet|int Schema information
+     * @return int|\PHPPgAdmin\ADORecordSet Schema information
      */
     public function getSchemaByName($schema)
     {
@@ -155,7 +155,7 @@ class Postgres80 extends Postgres81
      * @param string $username The username
      * @param string $password The new password
      *
-     * @return \PHPPgAdmin\ADORecordSet|int 0 if operation was successful
+     * @return int|\PHPPgAdmin\ADORecordSet 0 if operation was successful
      */
     public function changePassword($username, $password)
     {
@@ -176,7 +176,7 @@ class Postgres80 extends Postgres81
      * @param string $name     The name of the aggregate
      * @param string $basetype The input data type of the aggregate
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function getAggregate($name, $basetype)
     {
@@ -431,7 +431,7 @@ class Postgres80 extends Postgres81
     /**
      * Return all tables in current database (and schema).
      *
-     * @return \PHPPgAdmin\ADORecordSet|int All tables, sorted alphabetically
+     * @return int|\PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
      */
     public function getTables()
     {

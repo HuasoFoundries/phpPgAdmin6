@@ -16,7 +16,7 @@ trait SchemaTrait
     /**
      * Return all schemas in the current database.
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getSchemas()
     {
@@ -99,7 +99,7 @@ trait SchemaTrait
      *
      * @param mixed $paths An array of schemas in required search order
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function setSearchPath($paths)
     {
@@ -239,7 +239,7 @@ trait SchemaTrait
      *
      * @param string $schema The name of the schema
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getSchemaByName($schema)
     {
@@ -262,7 +262,7 @@ trait SchemaTrait
      * @param string $schemaname The name of the schema to drop
      * @param bool   $cascade    True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropSchema($schemaname, $cascade)
     {

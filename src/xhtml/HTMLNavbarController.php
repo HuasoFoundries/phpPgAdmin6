@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -43,7 +43,7 @@ class HTMLNavbarController extends HTMLController
     }
 
     /**
-     * @param array $viewVars
+     * @param mixed $crumbs
      */
     private function _getSearchPathsCrumbs($crumbs, array $viewVars)
     {
@@ -181,8 +181,6 @@ class HTMLNavbarController extends HTMLController
      *
      * @param bool       $do_print true to print, false to return html
      * @param null|mixed $from     which method is calling this one
-     *
-     * @return null|string
      */
     private function printTopbar($do_print = true, $from = null): ?string
     {

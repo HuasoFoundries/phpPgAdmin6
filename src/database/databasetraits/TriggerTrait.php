@@ -17,7 +17,7 @@ trait TriggerTrait
      * @param string $table   The name of a table whose triggers to retrieve
      * @param string $trigger The name of the trigger to retrieve
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getTrigger($table, $trigger)
     {
@@ -47,7 +47,7 @@ trait TriggerTrait
      * @param string $tgfrequency
      * @param string $tgargs      The function arguments
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function createTrigger($tgname, $table, $tgproc, $tgtime, $tgevent, $tgfrequency, $tgargs)
     {
@@ -72,7 +72,7 @@ trait TriggerTrait
      * @param string $trigger The name of the trigger to alter
      * @param string $name    The new name for the trigger
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterTrigger($table, $trigger, $name)
     {
@@ -94,7 +94,7 @@ trait TriggerTrait
      * @param string $table   The table from which to drop the trigger
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropTrigger($tgname, $table, $cascade)
     {
@@ -117,7 +117,7 @@ trait TriggerTrait
      * @param string $tgname The name of the trigger to enable
      * @param string $table  The table in which to enable the trigger
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function enableTrigger($tgname, $table)
     {
@@ -137,7 +137,7 @@ trait TriggerTrait
      * @param string $tgname The name of the trigger to disable
      * @param string $table  The table in which to disable the trigger
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function disableTrigger($tgname, $table)
     {
@@ -188,7 +188,7 @@ trait TriggerTrait
      * @param bool   $replace (optional) True to replace existing rule, false
      *                        otherwise
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function createRule($name, $event, $table, $where, $instead, $type, $action, $replace = false)
     {
@@ -232,7 +232,7 @@ trait TriggerTrait
      * @param string $relation The relation from which to drop
      * @param string $cascade  True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropRule($rule, $relation, $cascade)
     {

@@ -63,7 +63,7 @@ class Postgres74 extends Postgres80
      *
      * @param null|string $currentdatabase
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A list of databases, sorted alphabetically
+     * @return int|\PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -110,7 +110,7 @@ class Postgres74 extends Postgres80
      * @param string $term   The search term
      * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function findObject($term, $filter)
     {
@@ -257,7 +257,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns table locks information in the current database.
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function getLocks()
     {
@@ -383,7 +383,7 @@ class Postgres74 extends Postgres80
      *
      * @param string $table The name of the table
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTable($table)
     {
@@ -424,7 +424,7 @@ class Postgres74 extends Postgres80
      *
      * @param string $table the table where we are looking for fk
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function getConstraintsWithFields($table)
     {
@@ -489,7 +489,7 @@ class Postgres74 extends Postgres80
      *
      * @param bool $all
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function getSequences($all = false)
     {
@@ -520,7 +520,7 @@ class Postgres74 extends Postgres80
      *
      * @param int $function_oid function identifier
      *
-     * @return \PHPPgAdmin\ADORecordSet|int Function info
+     * @return int|\PHPPgAdmin\ADORecordSet Function info
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -560,7 +560,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns a list of all casts in the database.
      *
-     * @return \PHPPgAdmin\ADORecordSet|int All casts
+     * @return int|\PHPPgAdmin\ADORecordSet All casts
      */
     public function getCasts()
     {

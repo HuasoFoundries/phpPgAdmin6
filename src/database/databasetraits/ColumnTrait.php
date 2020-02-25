@@ -261,7 +261,7 @@ trait ColumnTrait
      * @param string $column  The column name to set
      * @param mixed  $default The new default value
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function setColumnDefault($table, $column, $default)
     {
@@ -282,7 +282,7 @@ trait ColumnTrait
      * @param string $column The column to alter
      * @param bool   $state  True to set null, false to set not null
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function setColumnNull($table, $column, $state)
     {
@@ -328,7 +328,7 @@ trait ColumnTrait
      * @param string $table  The table from which to drop
      * @param string $column The column name to drop default
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropColumnDefault($table, $column)
     {

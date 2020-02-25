@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -65,8 +65,6 @@ class HTMLTableController extends HTMLController
      *                                                                       It can return an array of actions specific to the row,  or if nothing is returned then the standard actions are used.
      *                                                                       (see TblpropertiesController and ConstraintsController for examples)
      *                                                                       The function must not must not store urls because     they are relative and won't work out of context.
-     *
-     * @return void
      */
     public function initialize(&$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null): void
     {

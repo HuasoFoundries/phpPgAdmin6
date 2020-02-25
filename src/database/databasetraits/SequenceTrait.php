@@ -16,7 +16,7 @@ trait SequenceTrait
      *
      * @param bool $all true to get all sequences of all schemas
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getSequences($all = false)
     {
@@ -46,7 +46,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function nextvalSequence($sequence)
     {
@@ -68,7 +68,7 @@ trait SequenceTrait
      * @param string $sequence  Sequence name
      * @param number $nextvalue The next value
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function setvalSequence($sequence, $nextvalue)
     {
@@ -90,7 +90,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function restartSequence($sequence)
     {
@@ -108,7 +108,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function resetSequence($sequence)
     {
@@ -136,7 +136,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getSequence($sequence)
     {
@@ -169,7 +169,7 @@ trait SequenceTrait
      * @param number $cachevalue  The cache value
      * @param bool   $cycledvalue True if cycled, false otherwise
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function createSequence(
         $sequence,
@@ -383,7 +383,7 @@ trait SequenceTrait
      * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
      * @param string                   $owner the new owner of the sequence
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      *
      * @internal string $name new owner for the sequence
      */
@@ -416,7 +416,7 @@ trait SequenceTrait
      * @param null|bool                $cycledvalue  Sequence can cycle ?
      * @param number                   $startvalue   The sequence start value when issueing a restart
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterSequenceProps(
         $seqrs,
@@ -476,7 +476,7 @@ trait SequenceTrait
      * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
      * @param string                   $name  The new name for the sequence
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterSequenceName($seqrs, $name)
     {
@@ -502,7 +502,7 @@ trait SequenceTrait
      * @param \PHPPgAdmin\ADORecordSet $seqrs  The sequence RecordSet returned by getSequence()
      * @param string                   $schema
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      *
      * @internal param The $name new schema for the sequence
      */
@@ -526,7 +526,7 @@ trait SequenceTrait
      * @param $sequence Sequence name
      * @param $cascade  True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropSequence($sequence, $cascade)
     {

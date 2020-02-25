@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 // This section is made to be able to parse requests coming from PHP Builtin webserver

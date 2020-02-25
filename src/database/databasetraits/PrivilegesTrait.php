@@ -240,7 +240,7 @@ trait PrivilegesTrait
      * @param bool   $cascade     True for cascade revoke, false otherwise
      * @param string $table       the column's table if type=column
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function setPrivileges(
         $mode,

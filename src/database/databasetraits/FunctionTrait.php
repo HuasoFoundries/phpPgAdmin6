@@ -17,7 +17,7 @@ trait FunctionTrait
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If truthy, will return functions of type trigger
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFunctions($all = false, $type = null)
     {
@@ -328,7 +328,7 @@ trait FunctionTrait
      * @param int  $function_oid The OID of the function to drop
      * @param bool $cascade      True to cascade drop, false to restrict
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropFunction($function_oid, $cascade)
     {
@@ -351,7 +351,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -390,7 +390,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFunctionDef($function_oid)
     {

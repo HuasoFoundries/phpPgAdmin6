@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin;
@@ -22,8 +22,6 @@ class ADORecordSet extends \ADORecordSet implements \Countable
 {
     /**
      * Returns the recordCount.
-     *
-     * @return int
      */
     public function count(): int
     {

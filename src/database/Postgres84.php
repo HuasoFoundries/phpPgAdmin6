@@ -39,7 +39,7 @@ class Postgres84 extends Postgres90
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function getTriggers($table = '')
     {
@@ -71,7 +71,7 @@ class Postgres84 extends Postgres90
      * @param string $term   The search term
      * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return \PHPPgAdmin\ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function findObject($term, $filter)
     {
