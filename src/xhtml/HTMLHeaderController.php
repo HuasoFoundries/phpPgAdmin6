@@ -49,9 +49,9 @@ class HTMLHeaderController extends HTMLController
 
         $viewVars = [];
 
-        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
+        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
+        $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
         $viewVars['appName']        = htmlspecialchars($this->appName);
 
         $viewVars['script'] = $script;
@@ -82,7 +82,7 @@ class HTMLHeaderController extends HTMLController
      */
     public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
-        $bodyClass = $this->lang['applangdir'] . ' ' . htmlspecialchars($bodyClass);
+        $bodyClass = $this->lang['applangdir'].' '.htmlspecialchars($bodyClass);
         $onload    = ($onloadInit ? 'onload="init();" ' : '');
 
         $bodyHtml = sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
@@ -106,7 +106,7 @@ class HTMLHeaderController extends HTMLController
     {
         $title_html = '<h2>';
         $title_html .= $this->misc->printHelp($title, $help, false);
-        $title_html .= '</h2>' . PHP_EOL;
+        $title_html .= '</h2>'.PHP_EOL;
 
         if ($do_print) {
             echo $title_html;

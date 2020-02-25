@@ -31,7 +31,7 @@ class ContainerUtils
      */
     public function __construct()
     {
-        $composerinfo = json_decode(file_get_contents(BASE_PATH . '/composer.json'));
+        $composerinfo = json_decode(file_get_contents(BASE_PATH.'/composer.json'));
         $appVersion   = $composerinfo->version;
 
         $phpMinVer = (str_replace(['<', '>', '='], '', $composerinfo->require->php));
@@ -59,7 +59,7 @@ class ContainerUtils
                 // backwards incompatible changes are made to config.inc.php-dist.
                 'base_version'                      => 60,
                 // Application version
-                'appVersion'                        => 'v' . $appVersion,
+                'appVersion'                        => 'v'.$appVersion,
                 // Application name
                 'appName'                           => 'phpPgAdmin6',
 
@@ -76,7 +76,7 @@ class ContainerUtils
         // Fetch DI Container
         $container            = $this->app->getContainer();
         $container['utils']   = $this;
-        $container['version'] = 'v' . $appVersion;
+        $container['version'] = 'v'.$appVersion;
         $container['errors']  = [];
 
         $this->container = $container;
@@ -93,13 +93,13 @@ class ContainerUtils
             $display_sizes = $conf['display_sizes'] ?? false;
 
             $conf['display_sizes'] = [
-                'schemas' => boolval($display_sizes),
-                'tables'  => boolval($display_sizes),
+                'schemas' => (bool) $display_sizes,
+                'tables'  => (bool) $display_sizes,
             ];
             if (is_array($display_sizes)) {
                 $conf['display_sizes'] = [
-                    'schemas' => $display_sizes['schemas'] ?? in_array('schemas', $display_sizes),
-                    'tables'  => $display_sizes['tables'] ?? in_array('tables', $display_sizes),
+                    'schemas' => $display_sizes['schemas'] ?? in_array('schemas', $display_sizes, true),
+                    'tables'  => $display_sizes['tables'] ?? in_array('tables', $display_sizes, true),
                 ];
             }
 
@@ -129,14 +129,14 @@ class ContainerUtils
         $in_test = $c->view->offsetGet('in_test');
 
         if ($in_test === '1') {
-            $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
+            $className  = '\PHPPgAdmin\Controller\\'.ucfirst($subject).'Controller';
             $controller = new $className($c);
 
             return $controller->render();
         }
 
         $viewVars = [
-            'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
+            'url'            => '/src/views/'.$subject.($query_string ? '?'.$query_string : ''),
             'headertemplate' => 'header.twig',
         ];
 
@@ -241,10 +241,10 @@ class ContainerUtils
 
         // if server_id isn't set, then you will be redirected to intro
         if ($this->container->requestobj->getQueryParam('server') === null) {
-            $destinationurl = \SUBFOLDER . '/src/views/intro';
+            $destinationurl = \SUBFOLDER.'/src/views/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
-            $destinationurl = \SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = \SUBFOLDER.'/src/views/login'.($query_string ? '?'.$query_string : '');
         }
 
         return $destinationurl;
@@ -268,7 +268,7 @@ class ContainerUtils
             $destinationurl = $this->getRedirectUrl();
         } else {
             $url = $this->container->misc->getLastTabURL($subject);
-            $this->addFlash($url, 'getLastTabURL for ' . $subject);
+            $this->addFlash($url, 'getLastTabURL for '.$subject);
             // Load query vars into superglobal arrays
             if (isset($url['urlvars'])) {
                 $urlvars = [];

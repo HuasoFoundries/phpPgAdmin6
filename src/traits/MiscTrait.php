@@ -51,7 +51,6 @@ trait MiscTrait
                     'subject' => 'database',
                     'subject' => 'server',
                     'server'  => $_REQUEST['server'],
-
                 ]];
 
                 break;
@@ -61,21 +60,18 @@ trait MiscTrait
                     'server'   => $_REQUEST['server'],
                     'action'   => 'properties',
                     'rolename' => $_REQUEST['rolename'],
-
                 ]];
 
                 break;
             case 'database':
                 $vars = ['params' => array_merge($common_params, [
                     'subject' => 'database',
-
                 ])];
 
                 break;
             case 'schema':
                 $vars = ['params' => array_merge($common_params, [
                     'subject' => 'schema',
-
                 ])];
 
                 break;
@@ -84,7 +80,6 @@ trait MiscTrait
                     'subject' => 'table',
 
                     'table'   => $_REQUEST['table'],
-
                 ])];
 
                 break;
@@ -95,15 +90,13 @@ trait MiscTrait
                         'subject' => 'table',
                         'table'   => $_REQUEST['table'],
                         'action'  => 'confselectrows',
-
-                    ])];
+                    ]), ];
 
                 break;
             case 'view':
                 $vars = ['params' => array_merge($common_params, [
                     'subject' => 'view',
                     'view'    => $_REQUEST['view'],
-
                 ])];
 
                 break;
@@ -111,7 +104,6 @@ trait MiscTrait
                 $vars = ['params' => array_merge($common_params, [
                     'subject' => 'matview',
                     'matview' => $_REQUEST['matview'],
-
                 ])];
 
                 break;
@@ -121,7 +113,6 @@ trait MiscTrait
                     'subject' => 'fulltext',
                     'action'  => 'viewconfig',
                     'ftscfg'  => $_REQUEST['ftscfg'],
-
                 ])];
 
                 break;
@@ -130,7 +121,6 @@ trait MiscTrait
                     'subject'      => 'function',
                     'function'     => $_REQUEST['function'],
                     'function_oid' => $_REQUEST['function_oid'],
-
                 ])];
 
                 break;
@@ -140,7 +130,6 @@ trait MiscTrait
                     'action'   => 'properties',
                     'aggrname' => $_REQUEST['aggrname'],
                     'aggrtype' => $_REQUEST['aggrtype'],
-
                 ])];
 
                 break;
@@ -151,7 +140,6 @@ trait MiscTrait
 
                         'table'   => $_REQUEST['table'],
                         'column'  => $_REQUEST['column'],
-
                     ])];
                 } elseif (isset($_REQUEST['view'])) {
                     $vars = ['params' => array_merge($common_params, [
@@ -159,7 +147,6 @@ trait MiscTrait
 
                         'view'    => $_REQUEST['view'],
                         'column'  => $_REQUEST['column'],
-
                     ])];
                 } elseif (isset($_REQUEST['matview'])) {
                     $vars = ['params' => array_merge($common_params, [
@@ -167,21 +154,19 @@ trait MiscTrait
 
                         'matview' => $_REQUEST['matview'],
                         'column'  => $_REQUEST['column'],
-
                     ])];
                 }
 
                 break;
-
             default:
                 return false;
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = SUBFOLDER . '/redirect';
+            $vars['url'] = SUBFOLDER.'/redirect';
         }
-        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER.'/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER.'/redirect/'.$vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -200,7 +185,7 @@ trait MiscTrait
         $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
         $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $this->lang['strellipsis'];
         if (strlen($str) > $maxlen) {
-            $str = substr($str, 0, $maxlen - 1) . $ellipsis;
+            $str = substr($str, 0, $maxlen - 1).$ellipsis;
         }
 
         return $str;
@@ -635,7 +620,7 @@ trait MiscTrait
                 'icon'    => 'Views',
             ],
             'matviews'    => [
-                'title'   => 'M ' . $lang['strviews'],
+                'title'   => 'M '.$lang['strviews'],
                 'url'     => 'materializedviews',
                 'urlvars' => ['subject' => 'schema'],
                 'help'    => 'pg.matview',
@@ -1005,7 +990,7 @@ trait MiscTrait
                 'icon'    => 'Privileges',
             ],
             'show'       => [
-                'title'   => $lang['strshow'] . ' ' . $lang['strdefinition'],
+                'title'   => $lang['strshow'].' '.$lang['strdefinition'],
                 'url'     => 'functions',
                 'urlvars' => [
                     'subject'      => 'function',
@@ -1062,14 +1047,14 @@ trait MiscTrait
         $tabs = [
             'sql'  => [
                 'title'   => $lang['strsql'],
-                'url'     => \SUBFOLDER . '/src/views/sqledit',
+                'url'     => \SUBFOLDER.'/src/views/sqledit',
                 'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
                 'help'    => 'pg.sql',
                 'icon'    => 'SqlEditor',
             ],
             'find' => [
                 'title'   => $lang['strfind'],
-                'url'     => \SUBFOLDER . '/src/views/sqledit',
+                'url'     => \SUBFOLDER.'/src/views/sqledit',
                 'urlvars' => ['action' => 'find', 'subject' => 'schema'],
                 'icon'    => 'Search',
             ],

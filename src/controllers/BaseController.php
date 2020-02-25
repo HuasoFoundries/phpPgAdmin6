@@ -68,7 +68,7 @@ class BaseController
         $this->container = $container;
         $this->lang      = $container->get('lang');
 
-        $this->controller_name = str_replace(__NAMESPACE__ . '\\', '', get_class($this));
+        $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
         $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
         $this->script          = $this->view_name;
 
@@ -153,7 +153,7 @@ class BaseController
     {
         $title = $title ? $title : $this->controller_title;
 
-        return $prefix . $this->lang[$title] . ($suffix ? ': ' . $suffix : '');
+        return $prefix.$this->lang[$title].($suffix ? ': '.$suffix : '');
     }
 
     public function getContainer()
@@ -397,7 +397,7 @@ class BaseController
         $html = '';
         $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
         if ('' != $msg) {
-            $html .= '<p class="message">' . nl2br($msg) . '</p>' . PHP_EOL;
+            $html .= '<p class="message">'.nl2br($msg).'</p>'.PHP_EOL;
         }
         if ($do_print) {
             echo $html;
