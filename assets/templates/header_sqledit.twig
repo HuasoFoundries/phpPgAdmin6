@@ -5,20 +5,32 @@
 
         
                 
+        {% include 'components/common_head.twig' %}
         <link href="{{subfolder}}/assets/vendor/codemirror/lib/codemirror.css" type="text/css" rel="stylesheet" />
+        <script src="{{subfolder}}/assets/vendor/codemirror/lib/codemirror.js"></script>
+        <script src="{{subfolder}}/assets/vendor/codemirror/addon/mode/loadmode.js"></script>
+        <script src="{{subfolder}}/assets/vendor/codemirror/mode/meta.js"></script>
+        
+
+
+        {#
         <link href="{{subfolder}}/assets/vendor/codemirror/addon/fold/foldgutter.css" type="text/css" rel="stylesheet" />
         <link href="{{subfolder}}/assets/vendor/codemirror/addon/hint/show-hint.css" type="text/css" rel="stylesheet" />
-        {% include 'components/common_head.twig' %}
-        <script src="{{subfolder}}/assets/vendor/codemirror/lib/codemirror.js"></script>
-        <script src="{{subfolder}}/assets/vendor/codemirror/mode/sql/sql.js"></script>
-        <script src="{{subfolder}}/assets/vendor/codemirror/mode/meta.js"></script>
-        <script src="{{subfolder}}/assets/vendor/codemirror/addon/fold/foldgutter.js"></script>
-        <script src="{{subfolder}}/assets/vendor/codemirror/addon/hint/sql-hint.js"></script>
-        <script src="{{subfolder}}/assets/vendor/codemirror/addon/mode/loadmode.js"></script>
         <script src="{{subfolder}}/assets/vendor/codemirror/addon/hint/show-hint.js"></script>
+        <script src="{{subfolder}}/assets/vendor/codemirror/addon/fold/foldgutter.js"></script>
         <script src="{{subfolder}}/assets/vendor/codemirror/addon/fold/foldcode.js"></script>
         <script src="{{subfolder}}/assets/vendor/codemirror/addon/fold/indent-fold.js"></script>
-        {#
+                    <script src="{{subfolder}}/assets/vendor/codemirror/addon/lint/lint.js"></script>
+        <script src="{{subfolder}}/assets/vendor/codemirror/addon/hint/sql-hint.js"></script>
+        <script src="{{subfolder}}/assets/vendor/codemirror/mode/sql/sql.js"></script>
+        <script src="{{subfolder}}/assets/vendor/codemirror/addon/fold/brace-fold.js"></script>
+          <script src="{{subfolder}}/assets/vendor/codemirror/lib/codemirror.js"></script>
+                    <script src="{{subfolder}}/assets/vendor/codemirror/mode/sql/sql.js"></script>
+                    <script src="{{subfolder}}/assets/vendor/codemirror/addon/runmode/runmode.js"></script>
+                            <script src="{{subfolder}}/assets/vendor/codemirror/addon/mode/loadmode.js"></script>
+
+                    <script src="{{subfolder}}/assets/vendor/codemirror/addon/hint/show-hint.js"></script>
+                    <script src="{{subfolder}}/assets/vendor/codemirror/addon/hint/sql-hint.js"></script>
           <link href="{{subfolder}}/assets/vendor/codemirror/codemirror.css" type="text/css" rel="stylesheet" />
         <link href="{{subfolder}}/assets/vendor/codemirror/addon/fold/foldgutter.css" type="text/css" rel="stylesheet" />
         <link href="{{subfolder}}/assets/vendor/codemirror/addon/hint/show-hint.css" type="text/css" rel="stylesheet" />

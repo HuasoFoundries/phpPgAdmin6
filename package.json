@@ -1,0 +1,15 @@
+{
+  "name": "@huasofoundries/phppgadmin6",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:HuasoFoundries/phpPgAdmin6.git",
+  "author": "ffflabs <amenadiel@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.19.1"
+  }
+}
