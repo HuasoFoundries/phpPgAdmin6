@@ -65,11 +65,11 @@ class PopulateRequestResponse extends Middleware
         }
 
         $messages = $container->flash->getMessages();
-        if (!empty($messages)) {
-            foreach ($messages as $key => $message) {
-                //$this->prtrace('Flash: ' . $key . ' =  ' . json_encode($message));
-            }
+        /*if (!empty($messages)) {
+        foreach ($messages as $key => $message) {
+        $this->prtrace('Flash: ' . $key . ' =  ' . json_encode($message));
         }
+        }*/
 
         // First execute anything else
         $response = $next($request, $response);
