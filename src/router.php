@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/lib.inc.php';
 $app->get('/status', function (
     /* @scrutinizer ignore-unused */
     $request,
@@ -8,9 +8,12 @@ $app->get('/status', function (
     /* @scrutinizer ignore-unused */
     $args
 ) {
+    //dump($this->get('settings')->all());
     return $response
         ->withHeader('Content-type', 'application/json')
-        ->withJson(['version' => $this->version]);
+        ->withJson(
+            DEBUGMODE ? $this->get('settings')->all() : ['version' => $this->version]
+        );
 });
 
 $app->post('/redirect/server', function (

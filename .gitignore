@@ -18,3 +18,5 @@ phppga
 .php_cs.cache
 
 playground
+node_modules
+

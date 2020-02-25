@@ -11,5 +11,23 @@
 		<script src="{{subfolder}}/assets/vendor/jquery/jquery-ui.min.js"></script>
 
 		{{script|raw}}
+		<script>
+
+				window.stateObj = {
+					{%	for key, value in params %}
+					'{{key}}': "{{value}}",
+					{% endfor %}
+ 					dir: '{{lang.applangdir}}',
+ 					in_test: '{{in_test}}',
+ 					reload: '{{reload}}',
+					method: '{{METHOD}}',
+					subfolder:'{{subfolder}}',
+					path:"{{path}}",
+					query_string:"{{query_string}}",
+					strconfdropcred:"{{strconfdropcred}}",
+				};
+
+		</script>
+
 
 		<title data-headertemplate="{{headertemplate}}" data-subfolder="{{subfolder}}">{{appName}}{{title}}</title>

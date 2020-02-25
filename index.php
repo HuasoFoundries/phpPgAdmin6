@@ -4,8 +4,6 @@
  * PHPPgAdmin v6.0.0-RC8
  */
 
-require_once __DIR__.'/src/lib.inc.php';
-
 // This section is made to be able to parse requests coming from PHP Builtin webserver
 if (PHP_SAPI === 'cli-server') {
     $will_redirect = false;
@@ -16,12 +14,12 @@ if (PHP_SAPI === 'cli-server') {
         $req_uri       = substr($req_uri, 10);
     }
     $filePath     = realpath(ltrim($req_uri, '/'));
-    $new_location = 'Location: http://'.$_SERVER['HTTP_HOST'].$req_uri;
+    $new_location = 'Location: http://' . $_SERVER['HTTP_HOST'] . $req_uri;
 
     if ($filePath && // 1. check that filepath is set
         is_readable($filePath) && // 2. and references a readable file/folder
-        strpos($filePath, BASE_PATH.DIRECTORY_SEPARATOR) === 0 && // 3. And is inside this folder
-        $filePath != BASE_PATH.DIRECTORY_SEPARATOR.'index.php' && // 4. discard circular references to index.php
+        strpos($filePath, BASE_PATH . DIRECTORY_SEPARATOR) === 0 && // 3. And is inside this folder
+        $filePath != BASE_PATH . DIRECTORY_SEPARATOR . 'index.php' && // 4. discard circular references to index.php
         substr(basename($filePath), 0, 1) != '.' // 5. don't serve dotfiles
     ) {
         if (strtolower(substr($filePath, -4)) == '.php') {
@@ -39,4 +37,4 @@ if (PHP_SAPI === 'cli-server') {
         return false;
     }
 }
-require_once __DIR__.'/src/router.php';
+require_once __DIR__ . '/src/router.php';
