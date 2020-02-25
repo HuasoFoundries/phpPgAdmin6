@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC8
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin;
@@ -88,18 +88,19 @@ class ContainerUtils
             self::$instance = new self();
         }
 
-            $display_sizes = $conf['display_sizes'] ?? false;
+        $display_sizes = $conf['display_sizes'] ?? false;
 
-            $conf['display_sizes'] = [
+        $conf['display_sizes'] = [
                 'schemas' => (bool) $display_sizes,
                 'tables'  => (bool) $display_sizes,
             ];
-            if (is_array($display_sizes)) {
-                $conf['display_sizes'] = [
+        if (is_array($display_sizes)) {
+            $conf['display_sizes'] = [
                     'schemas' => $display_sizes['schemas'] ?? in_array('schemas', $display_sizes, true),
                     'tables'  => $display_sizes['tables'] ?? in_array('tables', $display_sizes, true),
                 ];
-            }
+        }
+
         return [self::$instance->container, self::$instance->app];
     }
 
