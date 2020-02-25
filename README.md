@@ -4,7 +4,6 @@ PHP Based administration tool for PostgreSQL. Blazing fast routing with [Slim Fr
 
 [![Packagist](https://img.shields.io/packagist/dm/huasofoundries/phppgadmin6.svg)](https://packagist.org/packages/huasofoundries/phppgadmin6)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/289a56c1c7d94216b3d089c220689e9e)](https://www.codacy.com/app/amenadiel/phpPgAdmin6?utm_source=github.com&utm_medium=referral&utm_content=HuasoFoundries/phpPgAdmin6&utm_campaign=Badge_Grade)
-[![StyleCI](https://styleci.io/repos/21398998/shield?branch=develop)](https://styleci.io/repos/21398998)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/?branch=develop)
 [![Build Status](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/build-status/develop)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHuasoFoundries%2FphpPgAdmin6.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FHuasoFoundries%2FphpPgAdmin6?ref=badge_shield)
@@ -27,7 +26,7 @@ Other enhancements are in progress and would be a nice to have:
 
 ## Requirements
 
--   PHP 5.6+ (but you should really, really consider switching to at least v7.1)
+-   PHP 7.1+ (but you should really, really consider switching to at least v7.1)
 -   ext-psql
 -   [Composer](https://getcomposer.org/download/)
 

@@ -35,7 +35,8 @@
         "slim/twig-view": "~2.5.1",
         "twig/twig": "~1.42.4",
         "adodb/adodb-php": "^5.20",
-        "slim/flash": "^0.4.0"
+        "slim/flash": "^0.4.0",
+        "symfony/yaml": "^5.0"
     },
     "require-dev": {
         "kint-php/kint": "~3.3",
@@ -48,12 +49,14 @@
     "scripts": {
         "fix_temp_permissions": [
             "php -r \"chmod( __DIR__ . '/temp', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/logs', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/sessions', 0777);\"",
             "php -r \"chmod( __DIR__ . '/temp/twigcache', 0777);\""
         ],
-        "clear": "@fix_temp_permissions",
-        "post-install-cmd": "@clear_temp_folder",
-        "post-create-project-cmd": "@clear_temp_folder"
+        "clear_twig_cache": [
+            "@fix_temp_permissions",
+            "php -r \"array_map( 'unlink', array_filter((array) glob('temp/twigcache/**/*.php', GLOB_BRACE)));\"",
+            "php -r \"array_map( 'rmdir', array_filter((array) glob('temp/twigcache/*', GLOB_BRACE)));\""
+        ],
+        "post-install-cmd": "@clear_twig_cache",
+        "post-create-project-cmd": "@clear_twig_cache"
     }
 }
