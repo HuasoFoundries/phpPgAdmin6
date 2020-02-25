@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC8
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -34,7 +34,7 @@ class XHtmlSimpleElement
         $this->_element = $this->is_element();
     }
 
-    public function set_style($style)
+    public function set_style(string $style)
     {
         $this->set_attribute('style', $style);
     }
@@ -84,7 +84,7 @@ class XHtmlSimpleElement
         echo $this->fetch();
     }
 
-    public function set_attribute($attr, $value)
+    public function set_attribute(string $attr, string $value)
     {
         $this->_attributes[$attr] = $value;
     }

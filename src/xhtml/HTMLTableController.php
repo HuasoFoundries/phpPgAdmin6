@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC8
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -66,9 +66,9 @@ class HTMLTableController extends HTMLController
      *                                                                       (see TblpropertiesController and ConstraintsController for examples)
      *                                                                       The function must not must not store urls because     they are relative and won't work out of context.
      *
-     * @return string the html of the table
+     * @return void
      */
-    public function initialize(&$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null)
+    public function initialize(&$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null): void
     {
         // Action buttons hook's place
         $this->plugin_functions_parameters = [
@@ -355,7 +355,7 @@ class HTMLTableController extends HTMLController
         return $this->form;
     }
 
-    private function printUrlVars(&$vars, &$fields, $do_print = true)
+    private function printUrlVars(&$vars, &$fields, bool $do_print = true)
     {
         $url_vars_html = '';
         foreach ($vars as $var => $varfield) {

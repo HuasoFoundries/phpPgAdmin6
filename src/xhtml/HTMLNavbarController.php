@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC8
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -42,7 +42,10 @@ class HTMLNavbarController extends HTMLController
         return $crumbs;
     }
 
-    private function _getSearchPathsCrumbs($crumbs, $viewVars)
+    /**
+     * @param array $viewVars
+     */
+    private function _getSearchPathsCrumbs($crumbs, array $viewVars)
     {
         $data = $this->misc->getDatabaseAccessor();
         $lang = $this->lang;
@@ -179,9 +182,9 @@ class HTMLNavbarController extends HTMLController
      * @param bool       $do_print true to print, false to return html
      * @param null|mixed $from     which method is calling this one
      *
-     * @return string
+     * @return null|string
      */
-    private function printTopbar($do_print = true, $from = null)
+    private function printTopbar($do_print = true, $from = null): ?string
     {
         $from = $from ? $from : __METHOD__;
 
@@ -291,7 +294,7 @@ class HTMLNavbarController extends HTMLController
         }
     }
 
-    private function getHREFSubject($subject)
+    private function getHREFSubject(string $subject)
     {
         $vars = $this->misc->getSubjectParams($subject);
         ksort($vars['params']);
@@ -414,7 +417,11 @@ class HTMLNavbarController extends HTMLController
         return $trail;
     }
 
-    private function _getTrailsFromArray($trail, $the_array)
+    /**
+     * @param (mixed|string)[][] $trail
+     * @param (mixed|string)[][] $the_array
+     */
+    private function _getTrailsFromArray(array $trail, array $the_array)
     {
         foreach ($the_array as $key => $value) {
             if (isset($_REQUEST[$key])) {
@@ -433,7 +440,7 @@ class HTMLNavbarController extends HTMLController
         return $trail;
     }
 
-    private function _getLastTrailPart($subject, $trail)
+    private function _getLastTrailPart(string $subject, $trail)
     {
         $lang = $this->lang;
 
