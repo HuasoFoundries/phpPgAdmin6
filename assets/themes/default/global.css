@@ -1,20 +1,15 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,700,400italic);
-
-
-
-
+@import url(https://fonts.googleapis.com/css?family=Roboto:400, 700, 400italic);
 
 /**
  * Default style sheet
  */
 
-
 /** ELEMENTS */
 
 body {
-    background-color: #F5F5F7;
+    background-color: #f5f5f7;
     margin: 0;
-    font-family: roboto;
+    /*font-family: roboto;*/
     padding: 0;
     font-size: smaller;
     /*0.8em;*/
@@ -22,7 +17,7 @@ body {
 
 body.browser {
     background-color: #efefef;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: smaller;
     /*1em;*/
     border-right: 1px dashed #c0c0c0;
@@ -32,7 +27,7 @@ body.bottombar {
     background-color: #b0bec5;
     margin: 0px;
     padding: 0px;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: smaller;
     /*1em;*/
     text-align: left;
@@ -42,7 +37,7 @@ h2 {
     color: #336699;
     font-size: medium;
     /*1.3em;*/
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-weight: bold;
     border: 2px solid #cfd8dc;
     background-color: #eceff1;
@@ -53,20 +48,20 @@ h2 {
 h3 {
     color: #336699;
     font-size: small;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-weight: bold;
 }
 
 table.error {
-    background-color: #cfd8dc
+    background-color: #cfd8dc;
 }
 
 table.error td {
-    background-color: #cfd8dc
+    background-color: #cfd8dc;
 }
 
 table.navbar {
-    background-color: #cfd8dc
+    background-color: #cfd8dc;
 }
 
 table.navbar td {
@@ -74,20 +69,20 @@ table.navbar td {
     color: #000000;
     background-color: #eceff1;
     text-align: center;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: smaller;
     /* 0.9em */
     font-weight: bold;
 }
 
 table.navbar td.active {
-    background-color: #cfd8dc
+    background-color: #cfd8dc;
 }
 
 th.data {
     color: #000000;
     background-color: #cfd8dc;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: 1em;
     padding: 2px 4px;
 }
@@ -105,14 +100,14 @@ td.dat {
 }
 
 th.required {
-    text-decoration: underline
+    text-decoration: underline;
 }
 
 td.topbar {
     background-color: #b0bec5;
     margin: 0px 0px;
     padding: 0px;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: smaller;
     /*0.8em;*/
     text-align: left;
@@ -130,7 +125,7 @@ ul.navlink {
 }
 
 ul.navlink {
-    margin: 20px 0
+    margin: 20px 0;
 }
 
 ul.toplink li,
@@ -151,7 +146,7 @@ tr.data1,
 tr.data2,
 tr.data3 {
     color: #000000;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: smaller;
     /*0.8em;*/
 }
@@ -159,7 +154,7 @@ tr.data3 {
 tr.data1:hover,
 tr.data2:hover,
 tr.data3:hover {
-    background-color: #DDD;
+    background-color: #ddd;
 }
 
 .row1,
@@ -176,17 +171,17 @@ tr.data3:hover {
 
 .row3,
 .data3 {
-    background-color: #eceff1
+    background-color: #eceff1;
 }
 
 td.opbutton1 {
     color: #000000;
-    border-top: 1px solid #FFFFFF;
-    border-right: 1px solid #706D41;
-    border-bottom: 1px solid #706D41;
-    border-left: 1px solid #FFFFFF;
+    border-top: 1px solid #ffffff;
+    border-right: 1px solid #706d41;
+    border-bottom: 1px solid #706d41;
+    border-left: 1px solid #ffffff;
     cursor: pointer;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: smaller;
     /*0.8em;*/
     padding-left: 6px;
@@ -196,12 +191,12 @@ td.opbutton1 {
 
 td.opbutton2 {
     color: #000000;
-    border-top: 1px solid #FFFFFF;
-    border-right: 1px solid #706D41;
-    border-bottom: 1px solid #706D41;
-    border-left: 1px solid #FFFFFF;
+    border-top: 1px solid #ffffff;
+    border-right: 1px solid #706d41;
+    border-bottom: 1px solid #706d41;
+    border-left: 1px solid #ffffff;
     cursor: pointer;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: smaller;
     /*0.8em;*/
     padding-left: 6px;
@@ -210,7 +205,7 @@ td.opbutton2 {
 }
 
 .topbar {
-    border: 2px solid #b0bec5
+    border: 2px solid #b0bec5;
 }
 
 .topbar,
@@ -243,7 +238,7 @@ td.opbutton2 {
 }
 
 .trail .crumb {
-    background-color: #eceff1
+    background-color: #eceff1;
 }
 
 .crumb,
@@ -263,11 +258,11 @@ table.tabs {
 }
 
 .tab {
-    text-align: center
+    text-align: center;
 }
 
 .tabs .active {
-    background-color: #cfd8dc
+    background-color: #cfd8dc;
 }
 
 .tab .icon {
@@ -305,13 +300,6 @@ table.tabs {
     float: left;
 }
 
-
-
-
-
-
-
-
 /*.tab .label {
     display: inline-block;
     float: left;
@@ -319,7 +307,7 @@ table.tabs {
 
 a:active {
     color: #989973;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-weight: normal;
     text-decoration: underline;
 }
@@ -327,19 +315,19 @@ a:active {
 a,
 a:link {
     color: #336699;
-    font-family: roboto;
+    /*font-family: roboto;*/
     text-decoration: none;
 }
 
 a:visited {
     color: #336699;
-    font-family: roboto;
+    /*font-family: roboto;*/
     text-decoration: none;
 }
 
 a:hover {
     color: #cc0000;
-    font-family: roboto;
+    /*font-family: roboto;*/
     text-decoration: none;
 }
 
@@ -348,7 +336,7 @@ a.toplink:link,
 ul.navlink li a,
 ul.toplink li a {
     color: #336699;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-weight: bold;
     text-decoration: none;
 }
@@ -358,7 +346,7 @@ a.toplink:visited,
 ul.navlink li a:visited,
 ul.toplink li a:visited {
     color: #336699;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-weight: bold;
     text-decoration: none;
 }
@@ -368,7 +356,7 @@ a.toplink:hover,
 ul.navlink li a:hover,
 ul.toplink li a:hover {
     color: #cc0000;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-weight: bold;
     text-decoration: none;
 }
@@ -378,28 +366,28 @@ a.toplink:active,
 ul.navlink li a:active,
 ul.toplink li a:active {
     color: #cc0000;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-weight: bold;
     text-decoration: none;
 }
 
 .active a {
-    font-weight: bold
+    font-weight: bold;
 }
 
 a.help {
-    color: #E68800;
+    color: #e68800;
     font-size: smaller;
     vertical-align: super;
     text-decoration: none;
 }
 
 pre {
-    font-size: 110%
+    font-size: 110%;
 }
 
 pre.data {
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: 100%;
 }
 
@@ -409,11 +397,11 @@ pre.error {
 }
 
 .intro li {
-    font-weight: bold
+    font-weight: bold;
 }
 
 .ac_field {
-    border: 1px solid #D9D95F
+    border: 1px solid #d9d95f;
 }
 
 .bottom_link {
@@ -423,16 +411,9 @@ pre.error {
     font-size: smaller;
 }
 
-
-
-
-
-
-
-
 /** FK browsing **/
 
-div#root>div.fk {
+div#root > div.fk {
     border: 1px solid #000;
 }
 
@@ -446,13 +427,13 @@ div.logo {
     background-color: #b0bec5;
     margin: 0px;
     padding: 0px;
-    font-family: roboto;
+    /*font-family: roboto;*/
     font-size: smaller;
     /* 1em; */
     border: none;
     border-bottom: 2px solid #999;
     margin-bottom: 2px;
-    background-image: url('../../images/themes/default/title_blue.png');
+    background-image: url("../../images/themes/default/title_blue.png");
     background-repeat: no-repeat;
     background-size: contain;
     height: 50px;
