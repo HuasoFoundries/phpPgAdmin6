@@ -90,7 +90,7 @@ trait MiscTrait
                         'subject' => 'table',
                         'table'   => $_REQUEST['table'],
                         'action'  => 'confselectrows',
-                    ]), ];
+                    ])];
 
                 break;
             case 'view':
@@ -163,10 +163,10 @@ trait MiscTrait
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = SUBFOLDER.'/redirect';
+            $vars['url'] = SUBFOLDER . '/redirect';
         }
-        if ($vars['url'] == SUBFOLDER.'/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = SUBFOLDER.'/redirect/'.$vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -185,7 +185,7 @@ trait MiscTrait
         $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
         $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $this->lang['strellipsis'];
         if (strlen($str) > $maxlen) {
-            $str = substr($str, 0, $maxlen - 1).$ellipsis;
+            $str = substr($str, 0, $maxlen - 1) . $ellipsis;
         }
 
         return $str;
@@ -193,6 +193,7 @@ trait MiscTrait
 
     public function printBoolean($type, &$str, $params)
     {
+        $lang = $this->$lang;
         if ($type === 'yesno') {
             $this->coalesceArr($params, 'true', $lang['stryes']);
             $this->coalesceArr($params, 'false', $lang['strno']);
@@ -621,7 +622,7 @@ trait MiscTrait
                 'icon'    => 'Views',
             ],
             'matviews'    => [
-                'title'   => 'M '.$lang['strviews'],
+                'title'   => 'M ' . $lang['strviews'],
                 'url'     => 'materializedviews',
                 'urlvars' => ['subject' => 'schema'],
                 'help'    => 'pg.matview',
@@ -995,7 +996,7 @@ trait MiscTrait
                 'icon'    => 'Privileges',
             ],
             'show'       => [
-                'title'   => $lang['strshow'].' '.$lang['strdefinition'],
+                'title'   => $lang['strshow'] . ' ' . $lang['strdefinition'],
                 'url'     => 'functions',
                 'urlvars' => [
                     'subject'      => 'function',
@@ -1055,14 +1056,14 @@ trait MiscTrait
         $tabs = [
             'sql'  => [
                 'title'   => $lang['strsql'],
-                'url'     => \SUBFOLDER.'/src/views/sqledit',
+                'url'     => \SUBFOLDER . '/src/views/sqledit',
                 'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
                 'help'    => 'pg.sql',
                 'icon'    => 'SqlEditor',
             ],
             'find' => [
                 'title'   => $lang['strfind'],
-                'url'     => \SUBFOLDER.'/src/views/sqledit',
+                'url'     => \SUBFOLDER . '/src/views/sqledit',
                 'urlvars' => ['action' => 'find', 'subject' => 'schema'],
                 'icon'    => 'Search',
             ],
