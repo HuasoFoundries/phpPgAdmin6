@@ -1,12 +1,6 @@
 <?php
-
-/**
-* Central phpPgAdmin configuration.  As a user you may modify the
-* settings here for your particular configuration.
-*
-* $Id: config.inc.php-dist,v 1.55 2008/02/18 21:10:31 xzilla Exp $
-*/
-
+// Allows to load yaml config. Matching keys will override config defined in this file
+use Symfony\Component\Yaml\Yaml;
 
 
 
@@ -67,41 +61,48 @@ $conf['display_sizes'] = false;
 
 // An example server.  Create as many of these as you wish,
 // indexed from zero upwards.
+$server_index=0;
 
-// Display name for the server on the login screen
-$conf['servers'][0]['desc'] = 'PostgreSQL';
+$conf['servers'][$server_index] = [
+    // Display name for the server on the login screen
+    'desc'            => 'PostgreSQL',
 
-// Hostname or IP address for server.  Use '' for UNIX domain socket.
-// use 'localhost' for TCP/IP connection on this computer
-$conf['servers'][0]['host'] = '';
+    // Hostname or IP address for server.  Use '' for UNIX domain socket.
+    // use 'localhost' for TCP/IP connection on this computer
+    'host'            => '',
 
-// Database port on server (5432 is the PostgreSQL default)
-$conf['servers'][0]['port'] = 5432;
+    // Database port on server (5432 is the PostgreSQL default)
+    'port'            => 5432,
 
-// Database SSL mode
-// Possible options: disable, allow, prefer, require
-// To require SSL on older servers use option: legacy
-// To ignore the SSL mode, use option: unspecified
-$conf['servers'][0]['sslmode'] = 'allow';
+    // Database SSL mode
+    // Possible options: disable, allow, prefer, require
+    // To require SSL on older servers use option: legacy
+    // To ignore the SSL mode, use option: unspecified
+    'sslmode'         => 'allow',
 
-// Change the default database only if you cannot connect to template1.
-// For a PostgreSQL 8.1+ server, you can set this to 'postgres'.
-$conf['servers'][0]['defaultdb'] = 'template1';
+    // Change the default database only if you cannot connect to template1.
+    // For a PostgreSQL 8.1+ server, you can set this to 'postgres'.
+    'defaultdb'       => 'template1',
 
-// Specify the path to the database dump utilities for this server.
-// You can set these to '' if no dumper is available.
-$conf['servers'][0]['pg_dump_path'] = '/usr/bin/pg_dump';
-$conf['servers'][0]['pg_dumpall_path'] = '/usr/bin/pg_dumpall';
+    // Specify the path to the database dump utilities for this server.
+    // You can set these to '' if no dumper is available.
+    'pg_dump_path'    => '/usr/bin/pg_dump',
+    'pg_dumpall_path' => '/usr/bin/pg_dumpall',
+];
 
 // Example for a second server (PostgreSQL for Windows)
-//$conf['servers'][1]['desc'] = 'Test Server';
-//$conf['servers'][1]['host'] = '127.0.0.1';
-//$conf['servers'][1]['port'] = 5432;
-//$conf['servers'][1]['sslmode'] = 'allow';
-//$conf['servers'][1]['defaultdb'] = 'template1';
-//$conf['servers'][1]['pg_dump_path'] = 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dump.exe';
-//$conf['servers'][1]['pg_dumpall_path'] = 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dumpall.exe';
-
+/*
+$server_index++;
+$conf['servers'][$server_index][
+	'desc'=> 'Test Server',
+	'host'=> '127.0.0.1',
+	'port'=> 5432,
+	'sslmode'=> 'allow',
+	'defaultdb'=> 'template1',
+	'pg_dump_path'=> 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dump.exe',
+	'pg_dumpall_path'=> 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dumpall.exe'
+];
+*/
 
 /* Groups definition */
 /* Groups allow administrators to logicaly group servers together under
@@ -211,18 +212,16 @@ $conf['help_base'] = 'http://www.postgresql.org/docs/%s/interactive/';
 // Time in seconds. If set to 0, refreshing data using ajax will be disabled (locks and activity pages)
 $conf['ajax_refresh'] = 3;
 
-/** Plugins management
- * Add plugin names to the following array to activate them
- * Example:
- *   $conf['plugins'] = array(
- *     'Example',
- *     'Slony'
- *   );
- */
-$conf['plugins'] = [];
 
-/*****************************************
- * Don't modify anything below this line *
- *****************************************/
-
-$conf['version'] = 60;
+// If there's a config.yml in the root folder, parse it and merge its contents with $conf array
+// see config.example.yml
+$yamlConfigPath = implode(DIRECTORY_SEPARATOR, [__DIR__, 'config.yml']);
+if (is_readable($yamlConfigPath) && class_exists('Symfony\Component\Yaml\Yaml')) {
+    try {
+        $yamlConfig = Symfony\Component\Yaml\Yaml::parseFile($yamlConfigPath);
+        $conf       = array_merge($conf, $yamlConfig);
+    } catch (\Exception $e) {
+        die($e->getMessage());
+        error_log($e->getTraceAsString());
+    }
+}

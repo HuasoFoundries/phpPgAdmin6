@@ -35,7 +35,8 @@
         "slim/twig-view": "~2.5.1",
         "twig/twig": "~1.42.4",
         "adodb/adodb-php": "^5.20",
-        "slim/flash": "^0.4.0"
+        "slim/flash": "^0.4.0",
+        "symfony/yaml": "^5.0"
     },
     "require-dev": {
         "kint-php/kint": "~3.3",
