@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:400, 700, 400italic);
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,700,400italic");
 
 /**
  * Default style sheet
@@ -9,7 +9,7 @@
 body {
     background-color: #f5f5f7;
     margin: 0;
-    /*font-family: roboto;*/
+    font-family: roboto;
     padding: 0;
     font-size: smaller;
     /*0.8em;*/
@@ -17,7 +17,7 @@ body {
 
 body.browser {
     background-color: #efefef;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: smaller;
     /*1em;*/
     border-right: 1px dashed #c0c0c0;
@@ -27,7 +27,7 @@ body.bottombar {
     background-color: #b0bec5;
     margin: 0px;
     padding: 0px;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: smaller;
     /*1em;*/
     text-align: left;
@@ -37,7 +37,7 @@ h2 {
     color: #336699;
     font-size: medium;
     /*1.3em;*/
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-weight: bold;
     border: 2px solid #cfd8dc;
     background-color: #eceff1;
@@ -48,7 +48,7 @@ h2 {
 h3 {
     color: #336699;
     font-size: small;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-weight: bold;
 }
 
@@ -69,7 +69,7 @@ table.navbar td {
     color: #000000;
     background-color: #eceff1;
     text-align: center;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: smaller;
     /* 0.9em */
     font-weight: bold;
@@ -82,7 +82,7 @@ table.navbar td.active {
 th.data {
     color: #000000;
     background-color: #cfd8dc;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: 1em;
     padding: 2px 4px;
 }
@@ -107,7 +107,7 @@ td.topbar {
     background-color: #b0bec5;
     margin: 0px 0px;
     padding: 0px;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: smaller;
     /*0.8em;*/
     text-align: left;
@@ -146,7 +146,7 @@ tr.data1,
 tr.data2,
 tr.data3 {
     color: #000000;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: smaller;
     /*0.8em;*/
 }
@@ -181,7 +181,7 @@ td.opbutton1 {
     border-bottom: 1px solid #706d41;
     border-left: 1px solid #ffffff;
     cursor: pointer;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: smaller;
     /*0.8em;*/
     padding-left: 6px;
@@ -196,7 +196,7 @@ td.opbutton2 {
     border-bottom: 1px solid #706d41;
     border-left: 1px solid #ffffff;
     cursor: pointer;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: smaller;
     /*0.8em;*/
     padding-left: 6px;
@@ -307,7 +307,7 @@ table.tabs {
 
 a:active {
     color: #989973;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-weight: normal;
     text-decoration: underline;
 }
@@ -315,19 +315,19 @@ a:active {
 a,
 a:link {
     color: #336699;
-    /*font-family: roboto;*/
+    font-family: roboto;
     text-decoration: none;
 }
 
 a:visited {
     color: #336699;
-    /*font-family: roboto;*/
+    font-family: roboto;
     text-decoration: none;
 }
 
 a:hover {
     color: #cc0000;
-    /*font-family: roboto;*/
+    font-family: roboto;
     text-decoration: none;
 }
 
@@ -336,7 +336,7 @@ a.toplink:link,
 ul.navlink li a,
 ul.toplink li a {
     color: #336699;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-weight: bold;
     text-decoration: none;
 }
@@ -346,7 +346,7 @@ a.toplink:visited,
 ul.navlink li a:visited,
 ul.toplink li a:visited {
     color: #336699;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-weight: bold;
     text-decoration: none;
 }
@@ -356,7 +356,7 @@ a.toplink:hover,
 ul.navlink li a:hover,
 ul.toplink li a:hover {
     color: #cc0000;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-weight: bold;
     text-decoration: none;
 }
@@ -366,7 +366,7 @@ a.toplink:active,
 ul.navlink li a:active,
 ul.toplink li a:active {
     color: #cc0000;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-weight: bold;
     text-decoration: none;
 }
@@ -387,7 +387,7 @@ pre {
 }
 
 pre.data {
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: 100%;
 }
 
@@ -427,7 +427,7 @@ div.logo {
     background-color: #b0bec5;
     margin: 0px;
     padding: 0px;
-    /*font-family: roboto;*/
+    font-family: roboto;
     font-size: smaller;
     /* 1em; */
     border: none;

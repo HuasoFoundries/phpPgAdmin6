@@ -77,8 +77,7 @@ class HTMLNavbarController extends HTMLController
      */
     public function printTrail($trail = [], $do_print = true, $from = null)
     {
-        $plugin_manager = $this->plugin_manager;
-        $from           = $from ? $from : __METHOD__;
+        $from = $from ? $from : __METHOD__;
 
         $trail_html = $this->printTopbar(false, $from);
 
@@ -90,8 +89,6 @@ class HTMLNavbarController extends HTMLController
                 'trail'   => &$trail,
                 'section' => $subject,
             ];
-
-            $plugin_manager->doHook('trail', $plugin_functions_parameters);
         }
 
         $crumbs = $this->_getCrumbs($trail);
@@ -188,11 +185,11 @@ class HTMLNavbarController extends HTMLController
     {
         $from = $from ? $from : __METHOD__;
 
-        $lang           = $this->lang;
-        $plugin_manager = $this->plugin_manager;
-        $this->misc     = $this->misc;
-        $appName        = $this->misc->appName;
-        $appVersion     = $this->misc->appVersion;
+        $lang = $this->lang;
+
+        $this->misc = $this->misc;
+        $appName    = $this->misc->appName;
+        $appVersion = $this->misc->appVersion;
 
         $server_info = $this->misc->getServerInfo();
         $server_id   = $this->misc->getServerId();
@@ -275,8 +272,6 @@ class HTMLNavbarController extends HTMLController
             $plugin_functions_parameters = [
                 'toplinks' => &$toplinks,
             ];
-
-            $plugin_manager->doHook('toplinks', $plugin_functions_parameters);
 
             $topbar_html .= '<td style="text-align: right">';
 

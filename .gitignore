@@ -20,3 +20,7 @@ phppga
 playground
 node_modules
 
+temp/sessions/*
+
+config.inc.php
+config.yml

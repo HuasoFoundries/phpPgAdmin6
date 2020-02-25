@@ -79,9 +79,9 @@ class HTMLFooterController extends HTMLController
      */
     public function setFocus($object)
     {
-        echo '<script type="text/javascript">'.PHP_EOL;
+        echo '<script type="text/javascript">' . PHP_EOL;
         echo "   document.{$object}.focus();\n";
-        echo '</script>'.PHP_EOL;
+        echo '</script>' . PHP_EOL;
     }
 
     /**
@@ -93,11 +93,11 @@ class HTMLFooterController extends HTMLController
      */
     public function setWindowName($name, $addServer = true)
     {
-        echo '<script type="text/javascript">'.PHP_EOL;
+        echo '<script type="text/javascript">' . PHP_EOL;
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
-        echo '//]]>'.PHP_EOL;
-        echo '</script>'.PHP_EOL;
+        echo "   window.name = '{$name}", ($addServer ? ':' . htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo '//]]>' . PHP_EOL;
+        echo '</script>' . PHP_EOL;
     }
 
     /**
@@ -119,7 +119,6 @@ class HTMLFooterController extends HTMLController
             $from = __METHOD__;
         }
         //$this->prtrace($navlinks);
-        $plugin_manager = $this->plugin_manager;
 
         // Navlinks hook's place
         $plugin_functions_parameters = [
@@ -127,7 +126,6 @@ class HTMLFooterController extends HTMLController
             'place'    => $place,
             'env'      => $env,
         ];
-        $plugin_manager->doHook('navlinks', $plugin_functions_parameters);
 
         if (count($navlinks) > 0) {
             if ($do_print) {

@@ -98,7 +98,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => \SUBFOLDER.'/redirect/server?',
+                'url'   => \SUBFOLDER . '/redirect/server?',
                 'vars'  => ['server' => 'sha'],
             ],
             'host'     => [
@@ -190,10 +190,6 @@ class ServersController extends BaseController
 
     public function doLogout()
     {
-        $plugin_manager = $this->plugin_manager;
-
-        $plugin_manager->doHook('logout', $_REQUEST['logoutServer']);
-
         $server_info = $this->misc->getServerInfo($_REQUEST['logoutServer']);
         $this->misc->setServerInfo(null, null, $_REQUEST['logoutServer']);
 

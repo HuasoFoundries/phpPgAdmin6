@@ -22,9 +22,20 @@ trait MiscTrait
 {
     public function getSubjectParams($subject)
     {
-        $plugin_manager = $this->plugin_manager;
+        $vars          = [];
+        $common_params = [];
 
-        $vars = [];
+        if (array_key_exists('server', $_REQUEST)) {
+            $common_params['server'] = $_REQUEST['server'];
+        }
+
+        if (array_key_exists('database', $_REQUEST)) {
+            $common_params['database'] = $_REQUEST['database'];
+        }
+
+        if (array_key_exists('schema', $_REQUEST)) {
+            $common_params['schema'] = $_REQUEST['schema'];
+        }
 
         switch ($subject) {
             case 'root':
@@ -37,169 +48,140 @@ trait MiscTrait
                 break;
             case 'server':
                 $vars = ['params' => [
-                    'server'  => $_REQUEST['server'],
+                    'subject' => 'database',
                     'subject' => 'server',
+                    'server'  => $_REQUEST['server'],
+
                 ]];
 
                 break;
             case 'role':
                 $vars = ['params' => [
-                    'server'   => $_REQUEST['server'],
                     'subject'  => 'role',
+                    'server'   => $_REQUEST['server'],
                     'action'   => 'properties',
                     'rolename' => $_REQUEST['rolename'],
+
                 ]];
 
                 break;
             case 'database':
-                $vars = ['params' => [
-                    'server'   => $_REQUEST['server'],
-                    'subject'  => 'database',
-                    'database' => $_REQUEST['database'],
-                ]];
+                $vars = ['params' => array_merge($common_params, [
+                    'subject' => 'database',
+
+                ])];
 
                 break;
             case 'schema':
-                $vars = ['params' => [
-                    'server'   => $_REQUEST['server'],
-                    'subject'  => 'schema',
-                    'database' => $_REQUEST['database'],
-                    'schema'   => $_REQUEST['schema'],
-                ]];
+                $vars = ['params' => array_merge($common_params, [
+                    'subject' => 'schema',
+
+                ])];
 
                 break;
             case 'table':
-                $vars = ['params' => [
-                    'server'   => $_REQUEST['server'],
-                    'subject'  => 'table',
-                    'database' => $_REQUEST['database'],
-                    'schema'   => $_REQUEST['schema'],
-                    'table'    => $_REQUEST['table'],
-                ]];
+                $vars = ['params' => array_merge($common_params, [
+                    'subject' => 'table',
+
+                    'table'   => $_REQUEST['table'],
+
+                ])];
 
                 break;
             case 'selectrows':
                 $vars = [
                     'url'    => 'tables',
-                    'params' => [
-                        'server'   => $_REQUEST['server'],
-                        'subject'  => 'table',
-                        'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        'table'    => $_REQUEST['table'],
-                        'action'   => 'confselectrows',
-                    ], ];
+                    'params' => array_merge($common_params, [
+                        'subject' => 'table',
+                        'table'   => $_REQUEST['table'],
+                        'action'  => 'confselectrows',
+
+                    ])];
 
                 break;
             case 'view':
-                $vars = ['params' => [
-                    'server'   => $_REQUEST['server'],
-                    'subject'  => 'view',
-                    'database' => $_REQUEST['database'],
-                    'schema'   => $_REQUEST['schema'],
-                    'view'     => $_REQUEST['view'],
-                ]];
+                $vars = ['params' => array_merge($common_params, [
+                    'subject' => 'view',
+                    'view'    => $_REQUEST['view'],
+
+                ])];
 
                 break;
             case 'matview':
-                $vars = ['params' => [
-                    'server'   => $_REQUEST['server'],
-                    'subject'  => 'matview',
-                    'database' => $_REQUEST['database'],
-                    'schema'   => $_REQUEST['schema'],
-                    'matview'  => $_REQUEST['matview'],
-                ]];
+                $vars = ['params' => array_merge($common_params, [
+                    'subject' => 'matview',
+                    'matview' => $_REQUEST['matview'],
+
+                ])];
 
                 break;
             case 'fulltext':
             case 'ftscfg':
-                $vars = ['params' => [
-                    'server'   => $_REQUEST['server'],
-                    'subject'  => 'fulltext',
-                    'database' => $_REQUEST['database'],
-                    'schema'   => $_REQUEST['schema'],
-                    'action'   => 'viewconfig',
-                    'ftscfg'   => $_REQUEST['ftscfg'],
-                ]];
+                $vars = ['params' => array_merge($common_params, [
+                    'subject' => 'fulltext',
+                    'action'  => 'viewconfig',
+                    'ftscfg'  => $_REQUEST['ftscfg'],
+
+                ])];
 
                 break;
             case 'function':
-                $vars = ['params' => [
-                    'server'       => $_REQUEST['server'],
+                $vars = ['params' => array_merge($common_params, [
                     'subject'      => 'function',
-                    'database'     => $_REQUEST['database'],
-                    'schema'       => $_REQUEST['schema'],
                     'function'     => $_REQUEST['function'],
                     'function_oid' => $_REQUEST['function_oid'],
-                ]];
+
+                ])];
 
                 break;
             case 'aggregate':
-                $vars = ['params' => [
-                    'server'   => $_REQUEST['server'],
+                $vars = ['params' => array_merge($common_params, [
                     'subject'  => 'aggregate',
                     'action'   => 'properties',
-                    'database' => $_REQUEST['database'],
-                    'schema'   => $_REQUEST['schema'],
                     'aggrname' => $_REQUEST['aggrname'],
                     'aggrtype' => $_REQUEST['aggrtype'],
-                ]];
+
+                ])];
 
                 break;
             case 'column':
                 if (isset($_REQUEST['table'])) {
-                    $vars = ['params' => [
-                        'server'   => $_REQUEST['server'],
-                        'subject'  => 'column',
-                        'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        'table'    => $_REQUEST['table'],
-                        'column'   => $_REQUEST['column'],
-                    ]];
+                    $vars = ['params' => array_merge($common_params, [
+                        'subject' => 'column',
+
+                        'table'   => $_REQUEST['table'],
+                        'column'  => $_REQUEST['column'],
+
+                    ])];
                 } elseif (isset($_REQUEST['view'])) {
-                    $vars = ['params' => [
-                        'server'   => $_REQUEST['server'],
-                        'subject'  => 'column',
-                        'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        'view'     => $_REQUEST['view'],
-                        'column'   => $_REQUEST['column'],
-                    ]];
+                    $vars = ['params' => array_merge($common_params, [
+                        'subject' => 'column',
+
+                        'view'    => $_REQUEST['view'],
+                        'column'  => $_REQUEST['column'],
+
+                    ])];
                 } elseif (isset($_REQUEST['matview'])) {
-                    $vars = ['params' => [
-                        'server'   => $_REQUEST['server'],
-                        'subject'  => 'column',
-                        'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        'matview'  => $_REQUEST['matview'],
-                        'column'   => $_REQUEST['column'],
-                    ]];
+                    $vars = ['params' => array_merge($common_params, [
+                        'subject' => 'column',
+
+                        'matview' => $_REQUEST['matview'],
+                        'column'  => $_REQUEST['column'],
+
+                    ])];
                 }
 
                 break;
-            case 'plugin':
-                $vars = [
-                    'url'    => 'plugin',
-                    'params' => [
-                        'server'  => $_REQUEST['server'],
-                        'subject' => 'plugin',
-                        'plugin'  => $_REQUEST['plugin'],
-                    ], ];
 
-                if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin']))) {
-                    $vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
-                }
-
-                break;
             default:
                 return false;
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = SUBFOLDER.'/redirect';
+            $vars['url'] = SUBFOLDER . '/redirect';
         }
-        if ($vars['url'] == SUBFOLDER.'/redirect' && isset($vars['params']['subject'])) {
-            $vars['url'] = SUBFOLDER.'/redirect/'.$vars['params']['subject'];
+        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
+            $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -218,7 +200,7 @@ trait MiscTrait
         $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
         $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $this->lang['strellipsis'];
         if (strlen($str) > $maxlen) {
-            $str = substr($str, 0, $maxlen - 1).$ellipsis;
+            $str = substr($str, 0, $maxlen - 1) . $ellipsis;
         }
 
         return $str;
@@ -653,7 +635,7 @@ trait MiscTrait
                 'icon'    => 'Views',
             ],
             'matviews'    => [
-                'title'   => 'M '.$lang['strviews'],
+                'title'   => 'M ' . $lang['strviews'],
                 'url'     => 'materializedviews',
                 'urlvars' => ['subject' => 'schema'],
                 'help'    => 'pg.matview',
@@ -1023,7 +1005,7 @@ trait MiscTrait
                 'icon'    => 'Privileges',
             ],
             'show'       => [
-                'title'   => $lang['strshow'].' '.$lang['strdefinition'],
+                'title'   => $lang['strshow'] . ' ' . $lang['strdefinition'],
                 'url'     => 'functions',
                 'urlvars' => [
                     'subject'      => 'function',
@@ -1080,14 +1062,14 @@ trait MiscTrait
         $tabs = [
             'sql'  => [
                 'title'   => $lang['strsql'],
-                'url'     => \SUBFOLDER.'/src/views/sqledit',
+                'url'     => \SUBFOLDER . '/src/views/sqledit',
                 'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
                 'help'    => 'pg.sql',
                 'icon'    => 'SqlEditor',
             ],
             'find' => [
                 'title'   => $lang['strfind'],
-                'url'     => \SUBFOLDER.'/src/views/sqledit',
+                'url'     => \SUBFOLDER . '/src/views/sqledit',
                 'urlvars' => ['action' => 'find', 'subject' => 'schema'],
                 'icon'    => 'Search',
             ],
@@ -1177,9 +1159,8 @@ trait MiscTrait
      */
     public function getNavTabs($section)
     {
-        $data           = $this->getDatabaseAccessor();
-        $lang           = $this->lang;
-        $plugin_manager = $this->plugin_manager;
+        $data = $this->getDatabaseAccessor();
+        $lang = $this->lang;
 
         $hide_advanced = ($this->conf['show_advanced'] === false);
         $tabs          = [];
@@ -1231,7 +1212,6 @@ trait MiscTrait
             'tabs'    => &$tabs,
             'section' => $section,
         ];
-        $plugin_manager->doHook('tabs', $plugin_functions_parameters);
 
         return $tabs;
     }

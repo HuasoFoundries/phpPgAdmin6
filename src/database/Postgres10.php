@@ -43,16 +43,7 @@ class Postgres10 extends Postgres96
          * Either display_sizes is true for tables and schemas,
          * or we must check if said config is an associative array
          */
-        if (isset($this->conf['display_sizes']) &&
-            (
-                $this->conf['display_sizes'] === true ||
-                (
-                    is_array($this->conf['display_sizes']) &&
-                    array_key_exists('tables', $this->conf['display_sizes']) &&
-                    $this->conf['display_sizes']['tables'] === true
-                )
-            )
-        ) {
+        if ($this->conf['display_sizes']['tables']) {
             $sql .= ' pg_size_pretty(pg_total_relation_size(c.oid)) as table_size ';
         } else {
             $sql .= "   'N/A' as table_size ";

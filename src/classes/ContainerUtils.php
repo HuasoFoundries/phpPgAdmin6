@@ -90,8 +90,19 @@ class ContainerUtils
 
         // Complete missing conf keys
         self::$instance->container['conf'] = function ($c) use ($conf) {
+            $display_sizes = $conf['display_sizes'] ?? false;
 
-            //\Kint::dump($conf);
+            $conf['display_sizes'] = [
+                'schemas' => boolval($display_sizes),
+                'tables'  => boolval($display_sizes),
+            ];
+            if (is_array($display_sizes)) {
+                $conf['display_sizes'] = [
+                    'schemas' => $display_sizes['schemas'] ?? in_array('schemas', $display_sizes),
+                    'tables'  => $display_sizes['tables'] ?? in_array('tables', $display_sizes),
+                ];
+            }
+
             // Plugins are removed
             $conf['plugins'] = [];
             if (!isset($conf['theme'])) {

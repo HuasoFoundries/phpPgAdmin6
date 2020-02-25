@@ -23,18 +23,19 @@ if (file_exists(BASE_PATH . '/config.inc.php')) {
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 }
-$setSession = (defined('PHP_SESSION_ACTIVE') ? session_status() != PHP_SESSION_ACTIVE : !session_id()) && !headers_sent() && !ini_get('session.auto_start');
+$shouldSetSession = (defined('PHP_SESSION_ACTIVE') ? session_status() != PHP_SESSION_ACTIVE : !session_id())
+&& !headers_sent()
+&& !ini_get('session.auto_start');
 
 if ($setSession) {
+    if (!is_writable(session_save_path())) {
+        die('Session path "' . session_save_path() . '" is not writable for PHP!');
+    }
     session_set_cookie_params(0, '/', null, isset($_SERVER['HTTPS']));
     session_name('PPA_ID');
-
     session_start();
 }
 
-if (isset($conf['error_log'])) {
-    ini_set('error_log', BASE_PATH . '/' . $conf['error_log']);
-}
 $debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
 define('DEBUGMODE', $debugmode);
 
@@ -45,13 +46,10 @@ if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
 if (!defined('ADODB_ERROR_HANDLER')) {
     define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 }
-if (!is_writable(session_save_path())) {
-    echo 'Session path "' . session_save_path() . '" is not writable for PHP!';
-}
 
-ini_set('display_errors', intval(DEBUGMODE));
-ini_set('display_startup_errors', intval(DEBUGMODE));
 if (DEBUGMODE) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
     ini_set('opcache.revalidate_freq', 0);
     error_reporting(E_ALL);
     if (array_key_exists('register_debuggers', $conf) && is_callable($conf['register_debuggers'])) {
@@ -92,12 +90,6 @@ $container['lang'] = function ($c) {
     $translations = new \PHPPgAdmin\Translations($c);
 
     return $translations->lang;
-};
-
-$container['plugin_manager'] = function ($c) {
-    $plugin_manager = new \PHPPgAdmin\PluginManager($c);
-
-    return $plugin_manager;
 };
 
 // Create Misc class references

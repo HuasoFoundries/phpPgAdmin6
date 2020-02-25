@@ -285,9 +285,9 @@ trait PrivilegesTrait
         } else {
             if ($type == 'column') {
                 $this->fieldClean($object);
-                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' ' . join(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' '.join(', ', $privileges);
+                $sql .= ' ' . join(', ', $privileges);
             }
         }
 
@@ -334,7 +334,7 @@ trait PrivilegesTrait
                 return -1;
         }
 
-        // Dump PUBLIC
+        // Dump
         $first = true;
         $sql .= ($mode == 'GRANT') ? ' TO ' : ' FROM ';
         if ($public) {

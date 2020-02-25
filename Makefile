@@ -30,7 +30,7 @@ install:
 fix_permissions: 
 fix_permissions:
 	sudo chmod 777 temp -R	
-	sudo  chown -R www-data:www-data temp/sessions
+	sudo chown -R www-data:www-data temp/sessions
 
 update_version:
 	@echo "Current version is " ${VERSION} ;\

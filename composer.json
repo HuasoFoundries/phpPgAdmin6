@@ -49,12 +49,14 @@
     "scripts": {
         "fix_temp_permissions": [
             "php -r \"chmod( __DIR__ . '/temp', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/logs', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/sessions', 0777);\"",
             "php -r \"chmod( __DIR__ . '/temp/twigcache', 0777);\""
         ],
-        "clear": "@fix_temp_permissions",
-        "post-install-cmd": "@clear_temp_folder",
-        "post-create-project-cmd": "@clear_temp_folder"
+        "clear_twig_cache": [
+            "@fix_temp_permissions",
+            "php -r \"array_map( 'unlink', array_filter((array) glob('temp/twigcache/**/*.php', GLOB_BRACE)));\"",
+            "php -r \"array_map( 'rmdir', array_filter((array) glob('temp/twigcache/*', GLOB_BRACE)));\""
+        ],
+        "post-install-cmd": "@clear_twig_cache",
+        "post-create-project-cmd": "@clear_twig_cache"
     }
 }

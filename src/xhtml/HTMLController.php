@@ -26,17 +26,17 @@ class HTMLController
     // Constructor
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
-        $this->container      = $container;
-        $this->lang           = $container->get('lang');
-        $this->view           = $container->get('view');
-        $this->plugin_manager = $container->get('plugin_manager');
-        $this->appName        = $container->get('settings')['appName'];
-        $this->appVersion     = $container->get('settings')['appVersion'];
-        $this->appLangFiles   = $container->get('appLangFiles');
-        $this->misc           = $container->get('misc');
-        $this->conf           = $this->misc->getConf();
-        $this->appThemes      = $container->get('appThemes');
-        $this->action         = $container->get('action');
+        $this->container = $container;
+        $this->lang      = $container->get('lang');
+        $this->view      = $container->get('view');
+
+        $this->appName      = $container->get('settings')['appName'];
+        $this->appVersion   = $container->get('settings')['appVersion'];
+        $this->appLangFiles = $container->get('appLangFiles');
+        $this->misc         = $container->get('misc');
+        $this->conf         = $this->misc->getConf();
+        $this->appThemes    = $container->get('appThemes');
+        $this->action       = $container->get('action');
 
         if (null !== $controller_name) {
             $this->controller_name = $controller_name;
@@ -108,7 +108,7 @@ class HTMLController
 
         ksort($urlvars);
         foreach ($urlvars as $var => $varfield) {
-            $url .= $sep.Decorator::value_url($var, $fields).'='.Decorator::value_url($varfield, $fields);
+            $url .= $sep . Decorator::value_url($var, $fields) . '=' . Decorator::value_url($varfield, $fields);
             $sep = '&';
         }
 
@@ -141,12 +141,12 @@ class HTMLController
         $tag  = '<a ';
         foreach ($link['attr'] as $attr => $value) {
             if ('href' == $attr and is_array($value)) {
-                $tag .= 'href="'.htmlentities($this->getActionUrl($value, $link['fields'], $from)).'" ';
+                $tag .= 'href="' . htmlentities($this->getActionUrl($value, $link['fields'], $from)) . '" ';
             } else {
-                $tag .= htmlentities($attr).'="'.Decorator::get_sanitized_value($value, $link['fields'], 'html').'" ';
+                $tag .= htmlentities($attr) . '="' . Decorator::get_sanitized_value($value, $link['fields'], 'html') . '" ';
             }
         }
-        $tag .= '>'.Decorator::get_sanitized_value($link['content'], $link['fields'], 'html').'</a>'.PHP_EOL;
+        $tag .= '>' . Decorator::get_sanitized_value($link['content'], $link['fields'], 'html') . '</a>' . PHP_EOL;
 
         if ($do_print) {
             echo $tag;
@@ -170,7 +170,7 @@ class HTMLController
         if (null === $from || false === $from) {
             $from = __METHOD__;
         }
-        $list_html = "<ul class=\"{$class}\">".PHP_EOL;
+        $list_html = "<ul class=\"{$class}\">" . PHP_EOL;
         foreach ($links as $link) {
             if ($from === 'PHPPgAdmin\Controller\BaseController::printNavLinks') {
                 //$this->prtrace($link);
@@ -178,9 +178,9 @@ class HTMLController
 
             $list_html .= "\t<li>";
             $list_html .= str_replace('.php', '', $this->printLink($link, false, $from));
-            $list_html .= '</li>'.PHP_EOL;
+            $list_html .= '</li>' . PHP_EOL;
         }
-        $list_html .= '</ul>'.PHP_EOL;
+        $list_html .= '</ul>' . PHP_EOL;
         if ($do_print) {
             echo $list_html;
         } else {
@@ -210,13 +210,13 @@ class HTMLController
         $htmlOut = '';
         if ($bMultiple) {
             // If multiple select combo
-            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">".PHP_EOL;
+            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" multiple=\"multiple\" size=\"${iSize}\">" . PHP_EOL;
         } else {
-            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" class=\"select2\" >".PHP_EOL;
+            $htmlOut .= "<select rel=\"printCombo\" name=\"${szName}\" id=\"${szName}\" class=\"select2\" >" . PHP_EOL;
         }
 
         if ($bBlankEntry) {
-            $htmlOut .= '<option value=""></option>'.PHP_EOL;
+            $htmlOut .= '<option value=""></option>' . PHP_EOL;
         }
 
         foreach ($arrOptions as $curKey => $curVal) {
@@ -224,7 +224,7 @@ class HTMLController
             $curKey = htmlspecialchars($curKey);
             $htmlOut .= sprintf('<option value="%s" %s >%s</option>%s', $curVal, ($curVal == $szDefault) ? 'selected="selected"' : '', $curKey, PHP_EOL);
         }
-        $htmlOut .= '</select>'.PHP_EOL;
+        $htmlOut .= '</select>' . PHP_EOL;
 
         return $htmlOut;
     }

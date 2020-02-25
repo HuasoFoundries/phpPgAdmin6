@@ -45,14 +45,13 @@ class HTMLHeaderController extends HTMLController
             newrelic_disable_autorum();
         }
 
-        $lang           = $this->lang;
-        $plugin_manager = $this->plugin_manager;
+        $lang = $this->lang;
 
         $viewVars = [];
 
-        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
+        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
+        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
         $viewVars['appName']        = htmlspecialchars($this->appName);
 
         $viewVars['script'] = $script;
@@ -61,8 +60,6 @@ class HTMLHeaderController extends HTMLController
 
         /*$plugins_head = [];
         $_params      = ['heads' => &$plugins_head];
-
-        $plugin_manager->doHook('head', $_params);
 
         foreach ($plugins_head as $tag) {
         $header_html .= $tag;
@@ -85,7 +82,7 @@ class HTMLHeaderController extends HTMLController
      */
     public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
-        $bodyClass = $this->lang['applangdir'].' '.htmlspecialchars($bodyClass);
+        $bodyClass = $this->lang['applangdir'] . ' ' . htmlspecialchars($bodyClass);
         $onload    = ($onloadInit ? 'onload="init();" ' : '');
 
         $bodyHtml = sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
@@ -109,7 +106,7 @@ class HTMLHeaderController extends HTMLController
     {
         $title_html = '<h2>';
         $title_html .= $this->misc->printHelp($title, $help, false);
-        $title_html .= '</h2>'.PHP_EOL;
+        $title_html .= '</h2>' . PHP_EOL;
 
         if ($do_print) {
             echo $title_html;
