@@ -26,10 +26,7 @@ $shouldSetSession = (defined('PHP_SESSION_ACTIVE') ? session_status() != PHP_SES
 && !headers_sent()
 && !ini_get('session.auto_start');
 
-if ($shouldSetSession) {
-    if (!is_writable(session_save_path())) {
-        die('Session path "' . session_save_path() . '" is not writable for PHP!');
-    }
+if ($shouldSetSession && PHP_SAPI !== 'cli') {
     session_set_cookie_params(0, '/', null, isset($_SERVER['HTTPS']));
     session_name('PPA_ID');
     session_start();
