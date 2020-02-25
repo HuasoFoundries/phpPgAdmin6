@@ -334,7 +334,7 @@ trait PrivilegesTrait
                 return -1;
         }
 
-        // Dump PUBLIC
+        // Dump
         $first = true;
         $sql .= ($mode == 'GRANT') ? ' TO ' : ' FROM ';
         if ($public) {

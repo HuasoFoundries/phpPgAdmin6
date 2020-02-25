@@ -20,8 +20,7 @@ class DisplayController extends BaseController
      */
     public function render()
     {
-        $this->misc     = $this->misc;
-        $plugin_manager = $this->plugin_manager;
+        $this->misc = $this->misc;
 
         if ('dobrowsefk' == $this->action) {
             return $this->doBrowseFK();
@@ -443,9 +442,9 @@ class DisplayController extends BaseController
 
     private function _getKeyAndActions($resultset, $object, $data, $page, $_gets)
     {
-        $key            = [];
-        $strings        = $_gets['strings'];
-        $plugin_manager = $this->plugin_manager;
+        $key     = [];
+        $strings = $_gets['strings'];
+
         // Fetch unique row identifier, if this is a table browse request.
         if ($object) {
             $key = $data->getRowIdentifier($object);
@@ -501,7 +500,6 @@ class DisplayController extends BaseController
             'actionbuttons' => &$buttons,
             'place'         => 'display-browse',
         ];
-        $plugin_manager->doHook('actionbuttons', $actions);
 
         foreach (array_keys($actions['actionbuttons']) as $action) {
             $actions['actionbuttons'][$action]['attr']['href']['urlvars'] = array_merge(

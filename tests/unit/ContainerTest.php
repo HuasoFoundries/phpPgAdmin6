@@ -42,14 +42,6 @@ class ContainerTest extends \Codeception\Test\Unit
         );
     }
 
-    public function testContainerplugin_manager()
-    {
-        $this->assertTrue(
-            $this->container->plugin_manager instanceof \PHPPgAdmin\PluginManager,
-            '$container->plugin_manager must be an instance of nstanceof  \PHPPgAdmin\PluginManager'
-        );
-    }
-
     public function testContainermisc()
     {
         $this->assertTrue(

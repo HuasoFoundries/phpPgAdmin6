@@ -57,8 +57,8 @@ class Misc
         $this->conf = $container->get('conf');
 
         //$this->view           = $container->get('view');
-        $this->plugin_manager = $container->get('plugin_manager');
-        $this->appLangFiles   = $container->get('appLangFiles');
+
+        $this->appLangFiles = $container->get('appLangFiles');
 
         $this->appName          = $container->get('settings')['appName'];
         $this->appVersion       = $container->get('settings')['appVersion'];
@@ -729,49 +729,37 @@ class Misc
 
     public function icon($icon)
     {
-        if (is_string($icon)) {
-            $path = "/assets/images/themes/{$this->conf['theme']}/{$icon}";
-            if (file_exists(\BASE_PATH.$path.'.png')) {
-                return SUBFOLDER.$path.'.png';
-            }
-
-            if (file_exists(\BASE_PATH.$path.'.gif')) {
-                return SUBFOLDER.$path.'.gif';
-            }
-
-            if (file_exists(\BASE_PATH.$path.'.ico')) {
-                return SUBFOLDER.$path.'.ico';
-            }
-
-            $path = "/assets/images/themes/default/{$icon}";
-            if (file_exists(\BASE_PATH.$path.'.png')) {
-                return SUBFOLDER.$path.'.png';
-            }
-
-            if (file_exists(\BASE_PATH.$path.'.gif')) {
-                return SUBFOLDER.$path.'.gif';
-            }
-
-            if (file_exists(\BASE_PATH.$path.'.ico')) {
-                return SUBFOLDER.$path.'.ico';
-            }
-        } else {
-            // Icon from plugins
-            $path = "/plugins/{$icon[0]}/images/{$icon[1]}";
-            if (file_exists(\BASE_PATH.$path.'.png')) {
-                return SUBFOLDER.$path.'.png';
-            }
-
-            if (file_exists(\BASE_PATH.$path.'.gif')) {
-                return SUBFOLDER.$path.'.gif';
-            }
-
-            if (file_exists(\BASE_PATH.$path.'.ico')) {
-                return SUBFOLDER.$path.'.ico';
-            }
+        if (!is_string($icon)) {
+            return '';
+        }
+        $theme        = $this->conf['theme'];
+        $path         = 'assets/images/themes';
+        $default_icon = sprintf('%s/%s/default/DisconnectedServer.png', SUBFOLDER, $path);
+        if (is_readable(sprintf('%s/%s/%s/%s.png', \BASE_PATH, $path, $theme, $icon))) {
+            return sprintf('%s/%s/%s/%s.png', \SUBFOLDER, $path, $theme, $icon);
         }
 
-        return '';
+        if (is_readable(sprintf('%s/%s/%s/%s.gif', \BASE_PATH, $path, $theme, $icon))) {
+            return sprintf('%s/%s/%s/%s.gif', \SUBFOLDER, $path, $theme, $icon);
+        }
+
+        if (is_readable(sprintf('%s/%s/%s/%s.ico', \BASE_PATH, $path, $theme, $icon))) {
+            return sprintf('%s/%s/%s/%s.ico', \SUBFOLDER, $path, $theme, $icon);
+        }
+
+        if (is_readable(sprintf('%s/%s/default/%s.png', \BASE_PATH, $path, $icon))) {
+            return sprintf('%s/%s/default/%s.png', \SUBFOLDER, $path, $icon);
+        }
+
+        if (is_readable(sprintf('%s/%s/default/%s.gif', \BASE_PATH, $path, $icon))) {
+            return sprintf('%s/%s/default/%s.gif', \SUBFOLDER, $path, $icon);
+        }
+
+        if (is_readable(sprintf('%s/%s/default/%s.ico', \BASE_PATH, $path, $icon))) {
+            return sprintf('%s/%s/default/%s.ico', \SUBFOLDER, $path, $icon);
+        }
+
+        return $default_icon;
     }
 
     /**

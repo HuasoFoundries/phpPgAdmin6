@@ -91,10 +91,6 @@ class HTMLTableController extends HTMLController
 
     public function printTable($turn_into_datatable = true, $with_body = true)
     {
-        $plugin_manager = $this->plugin_manager;
-
-        $plugin_manager->doHook('actionbuttons', $this->plugin_functions_parameters);
-
         if ($this->tabledata->recordCount() <= 0) {
             return "<p>{$this->nodata}</p>".PHP_EOL;
         }

@@ -119,7 +119,6 @@ class HTMLFooterController extends HTMLController
             $from = __METHOD__;
         }
         //$this->prtrace($navlinks);
-        $plugin_manager = $this->plugin_manager;
 
         // Navlinks hook's place
         $plugin_functions_parameters = [
@@ -127,7 +126,6 @@ class HTMLFooterController extends HTMLController
             'place'    => $place,
             'env'      => $env,
         ];
-        $plugin_manager->doHook('navlinks', $plugin_functions_parameters);
 
         if (count($navlinks) > 0) {
             if ($do_print) {

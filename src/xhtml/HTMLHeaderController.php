@@ -45,8 +45,7 @@ class HTMLHeaderController extends HTMLController
             newrelic_disable_autorum();
         }
 
-        $lang           = $this->lang;
-        $plugin_manager = $this->plugin_manager;
+        $lang = $this->lang;
 
         $viewVars = [];
 
@@ -61,8 +60,6 @@ class HTMLHeaderController extends HTMLController
 
         /*$plugins_head = [];
         $_params      = ['heads' => &$plugins_head];
-
-        $plugin_manager->doHook('head', $_params);
 
         foreach ($plugins_head as $tag) {
         $header_html .= $tag;
