@@ -23,7 +23,7 @@ $version = $tags[$current_branch] ?? $tags['develop'];
 
 
 $composer_tags = $composerinfo->extra->current_tags;
-
+var_dump($composerinfo->extra->current_tags);
 if (
     \array_key_exists( trim($current_branch), $tags) &&
     ($tags['master'] !== $composer_tags->master
