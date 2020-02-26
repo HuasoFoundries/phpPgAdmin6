@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -34,7 +37,7 @@ trait IndexTrait
 
         $v = $this->selectSet($sql);
 
-        return !($v->recordCount() == 0);
+        return !(0 === $v->recordCount());
     }
 
     /**
@@ -70,21 +73,21 @@ trait IndexTrait
 
         $sql .= " ON \"{$f_schema}\".\"{$table}\" USING {$type} ";
 
-        if (is_array($columns)) {
+        if (\is_array($columns)) {
             $this->arrayClean($columns);
-            $sql .= '("'.implode('","', $columns).'")';
+            $sql .= '("' . \implode('","', $columns) . '")';
         } else {
-            $sql .= '('.$columns.')';
+            $sql .= '(' . $columns . ')';
         }
 
         // Tablespace
-        if ($this->hasTablespaces() && $tablespace != '') {
+        if ($this->hasTablespaces() && '' !== $tablespace) {
             $this->fieldClean($tablespace);
             $sql .= " TABLESPACE \"{$tablespace}\"";
         }
 
         // Predicate
-        if (trim($where) != '') {
+        if ('' !== \trim($where)) {
             $sql .= " WHERE ({$where})";
         }
 
@@ -108,6 +111,7 @@ trait IndexTrait
         $this->fieldClean($index);
 
         $sql = "DROP INDEX \"{$f_schema}\".\"{$index}\"";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }
@@ -132,9 +136,11 @@ trait IndexTrait
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($name);
+
         switch ($type) {
             case 'DATABASE':
                 $sql = "REINDEX {$type} \"{$name}\"";
+
                 if ($force) {
                     $sql .= ' FORCE';
                 }
@@ -143,6 +149,7 @@ trait IndexTrait
             case 'TABLE':
             case 'INDEX':
                 $sql = "REINDEX {$type} \"{$f_schema}\".\"{$name}\"";
+
                 if ($force) {
                     $sql .= ' FORCE';
                 }
@@ -230,8 +237,9 @@ trait IndexTrait
 				pg_catalog.pg_constraint AS c
 				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
 				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]';
+
         for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
-            $sql .= " OR f1.attnum=c.conkey[${i}]";
+            $sql .= " OR f1.attnum=c.conkey[{$i}]";
         }
         $sql .= '))
 				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
@@ -240,11 +248,12 @@ trait IndexTrait
 				) ON (c.confrelid=r2.oid)
 				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
 					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)';
+
         for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
-            $sql .= " OR (c.confkey[${i}]=f2.attnum AND c.conkey[${i}]=f1.attnum)";
+            $sql .= " OR (c.confkey[{$i}]=f2.attnum AND c.conkey[{$i}]=f1.attnum)";
         }
 
-        $sql .= sprintf("))
+        $sql .= \sprintf("))
 			WHERE
 				r1.relname = '%s' AND ns1.nspname='%s'
 			ORDER BY 1", $table, $c_schema);
@@ -264,7 +273,7 @@ trait IndexTrait
      */
     public function addPrimaryKey($table, $fields, $name = '', $tablespace = '')
     {
-        if (!is_array($fields) || sizeof($fields) == 0) {
+        if (!\is_array($fields) || 0 === \count($fields)) {
             return -1;
         }
 
@@ -276,13 +285,14 @@ trait IndexTrait
         $this->fieldClean($tablespace);
 
         $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD ";
-        if ($name != '') {
+
+        if ('' !== $name) {
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'PRIMARY KEY ("'.join('","', $fields).'")';
+        $sql .= 'PRIMARY KEY ("' . \implode('","', $fields) . '")';
 
-        if ($tablespace != '' && $this->hasTablespaces()) {
+        if ('' !== $tablespace && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
         }
 
@@ -301,7 +311,7 @@ trait IndexTrait
      */
     public function addUniqueKey($table, $fields, $name = '', $tablespace = '')
     {
-        if (!is_array($fields) || sizeof($fields) == 0) {
+        if (!\is_array($fields) || 0 === \count($fields)) {
             return -1;
         }
 
@@ -313,13 +323,14 @@ trait IndexTrait
         $this->fieldClean($tablespace);
 
         $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD ";
-        if ($name != '') {
+
+        if ('' !== $name) {
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'UNIQUE ("'.join('","', $fields).'")';
+        $sql .= 'UNIQUE ("' . \implode('","', $fields) . '")';
 
-        if ($tablespace != '' && $this->hasTablespaces()) {
+        if ('' !== $tablespace && $this->hasTablespaces()) {
             $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
         }
 
@@ -346,7 +357,8 @@ trait IndexTrait
         // @@ How the heck do you clean a definition???
 
         $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD ";
-        if ($name != '') {
+
+        if ('' !== $name) {
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
@@ -376,14 +388,16 @@ trait IndexTrait
 
         // Begin transaction
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -2;
         }
 
         // Properly lock the table
         $sql    = "LOCK TABLE \"{$f_schema}\".\"{$table}\" IN ACCESS EXCLUSIVE MODE";
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -3;
@@ -394,7 +408,8 @@ trait IndexTrait
 			AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
 			nspname = '{$c_schema}')) AND rcname='{$name}'";
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -4;
@@ -407,7 +422,8 @@ trait IndexTrait
 						nspname = '{$c_schema}')))
 					WHERE relname='{$c_table}'";
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -4;
@@ -450,8 +466,8 @@ trait IndexTrait
         $initially,
         $name = ''
     ) {
-        if (!is_array($sfields) || sizeof($sfields) == 0 ||
-            !is_array($tfields) || sizeof($tfields) == 0) {
+        if (!\is_array($sfields) || 0 === \count($sfields) ||
+            !\is_array($tfields) || 0 === \count($tfields)) {
             return -1;
         }
 
@@ -465,30 +481,32 @@ trait IndexTrait
         $this->fieldClean($name);
 
         $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD ";
-        if ($name != '') {
+
+        if ('' !== $name) {
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
-        $sql .= 'FOREIGN KEY ("'.join('","', $sfields).'") ';
+        $sql .= 'FOREIGN KEY ("' . \implode('","', $sfields) . '") ';
         // Target table needs to be fully qualified
-        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"".join('","', $tfields).'") ';
-        if ($match != $this->fkmatches[0]) {
+        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"" . \implode('","', $tfields) . '") ';
+
+        if ($match !== $this->fkmatches[0]) {
             $sql .= " {$match}";
         }
 
-        if ($upd_action != $this->fkactions[0]) {
+        if ($upd_action !== $this->fkactions[0]) {
             $sql .= " ON UPDATE {$upd_action}";
         }
 
-        if ($del_action != $this->fkactions[0]) {
+        if ($del_action !== $this->fkactions[0]) {
             $sql .= " ON DELETE {$del_action}";
         }
 
-        if ($deferrable != $this->fkdeferrable[0]) {
+        if ($deferrable !== $this->fkdeferrable[0]) {
             $sql .= " {$deferrable}";
         }
 
-        if ($initially != $this->fkinitial[0]) {
+        if ($initially !== $this->fkinitial[0]) {
             $sql .= " {$initially}";
         }
 
@@ -513,6 +531,7 @@ trait IndexTrait
         $this->fieldClean($relation);
 
         $sql = "ALTER TABLE \"{$f_schema}\".\"{$relation}\" DROP CONSTRAINT \"{$constraint}\"";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }
@@ -529,7 +548,7 @@ trait IndexTrait
      */
     public function getLinkingKeys($tables)
     {
-        if (!is_array($tables)) {
+        if (!\is_array($tables)) {
             return -1;
         }
 
@@ -538,7 +557,7 @@ trait IndexTrait
         $tables_list        = "'{$tables[0]['tablename']}'";
         $schema_list        = "'{$tables[0]['schemaname']}'";
         $schema_tables_list = "'{$tables[0]['schemaname']}.{$tables[0]['tablename']}'";
-        $tablescount        = sizeof($tables);
+        $tablescount        = \count($tables);
 
         for ($i = 1; $i < $tablescount; ++$i) {
             $this->clean($tables[$i]['tablename']);
@@ -560,14 +579,15 @@ trait IndexTrait
 			WHERE
 				pc.contype = 'f'
 				AND (pc.conrelid = pgc1.relfilenode OR pc.confrelid = pgc1.relfilenode)
-				AND pgc1.relname IN (${tables_list})
+				AND pgc1.relname IN ({$tables_list})
 			";
 
         //parse our output to find the highest dimension of foreign keys since pc.conkey is stored in an array
         $rs = $this->selectSet($sql);
+
         while (!$rs->EOF) {
-            $arrData      = explode(':', $rs->fields['arr_dim']);
-            $strdimension = trim(substr($arrData[1], 0, strlen($arrData[1]) - 1));
+            $arrData      = \explode(':', $rs->fields['arr_dim']);
+            $strdimension = \trim(\mb_substr($arrData[1], 0, \mb_strlen($arrData[1]) - 1));
             $tmpDimension = (int) $strdimension;
             $maxDimension = $tmpDimension > $maxDimension ? $tmpDimension : $maxDimension;
             $rs->MoveNext();
@@ -575,6 +595,7 @@ trait IndexTrait
 
         //we know the highest index for foreign keys that conkey goes up to, expand for us in an IN query
         $cons_str = '( (pfield.attnum = conkey[1] AND cfield.attnum = confkey[1]) ';
+
         for ($i = 2; $i <= $maxDimension; ++$i) {
             $cons_str .= "OR (pfield.attnum = conkey[{$i}] AND cfield.attnum = confkey[{$i}]) ";
         }
@@ -594,8 +615,8 @@ trait IndexTrait
 				pg_catalog.pg_class AS pgc2,
 				pg_catalog.pg_attribute AS pfield,
 				pg_catalog.pg_attribute AS cfield,
-				(SELECT oid AS ns_id, nspname FROM pg_catalog.pg_namespace WHERE nspname IN (${schema_list}) ) AS pgns1,
- 				(SELECT oid AS ns_id, nspname FROM pg_catalog.pg_namespace WHERE nspname IN (${schema_list}) ) AS pgns2
+				(SELECT oid AS ns_id, nspname FROM pg_catalog.pg_namespace WHERE nspname IN ({$schema_list}) ) AS pgns1,
+ 				(SELECT oid AS ns_id, nspname FROM pg_catalog.pg_namespace WHERE nspname IN ({$schema_list}) ) AS pgns2
 			WHERE
 				pc.contype = 'f'
 				AND pgc1.relnamespace = pgns1.ns_id
@@ -604,9 +625,9 @@ trait IndexTrait
 				AND pc.confrelid = pgc2.relfilenode
 				AND pfield.attrelid = pc.conrelid
 				AND cfield.attrelid = pc.confrelid
-				AND ${cons_str}
-				AND pgns1.nspname || '.' || pgc1.relname IN (${schema_tables_list})
-				AND pgns2.nspname || '.' || pgc2.relname IN (${schema_tables_list})
+				AND {$cons_str}
+				AND pgns1.nspname || '.' || pgc1.relname IN ({$schema_tables_list})
+				AND pgns2.nspname || '.' || pgc2.relname IN ({$schema_tables_list})
 		";
 
         return $this->selectSet($sql);
@@ -624,7 +645,8 @@ trait IndexTrait
         $this->clean($table);
 
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -1;
         }
 

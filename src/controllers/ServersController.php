@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,19 +13,23 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class ServersController extends BaseController
 {
     use \PHPPgAdmin\Traits\ServersTrait;
 
     public $table_place = 'servers-servers';
-    public $section     = 'servers';
-    public $query       = '';
-    public $subject     = '';
+
+    public $section = 'servers';
+
+    public $query = '';
+
+    public $subject = '';
+
     public $start_time;
+
     public $duration;
+
     public $controller_title = 'strservers';
 
     protected $no_db_connection = true;
@@ -32,7 +39,7 @@ class ServersController extends BaseController
      */
     public function render()
     {
-        if ('tree' == $this->action) {
+        if ('tree' === $this->action) {
             return $this->doTree();
         }
 
@@ -42,7 +49,8 @@ class ServersController extends BaseController
         $server_html .= $this->printBody(false);
         $server_html .= $this->printTrail('root', false);
 
-        ob_start();
+        \ob_start();
+
         switch ($this->action) {
             case 'logout':
                 $this->doLogout();
@@ -54,7 +62,7 @@ class ServersController extends BaseController
                 break;
         }
 
-        $server_html .= ob_get_clean();
+        $server_html .= \ob_get_clean();
 
         $server_html .= $this->printFooter(false);
 
@@ -68,11 +76,11 @@ class ServersController extends BaseController
         }
     }
 
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $this->printTabs('root', 'servers');
         $this->printMsg($msg);
-        $group = isset($_GET['group']) ? $_GET['group'] : false;
+        $group = $_GET['group'] ?? false;
 
         $groups  = $this->getServersGroups(true, $group);
         $columns = [
@@ -84,11 +92,12 @@ class ServersController extends BaseController
             ],
         ];
         $actions = [];
+
         if ((false !== $group) &&
             (isset($this->conf['srv_groups'][$group])) &&
-            ($groups->recordCount() > 0)
+            (0 < $groups->recordCount())
         ) {
-            $this->printTitle(sprintf($this->lang['strgroupgroups'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
+            $this->printTitle(\sprintf($this->lang['strgroupgroups'], \htmlentities($this->conf['srv_groups'][$group]['desc'], \ENT_QUOTES, 'UTF-8')));
             echo $this->printTable($groups, $columns, $actions, $this->table_place);
         }
 
@@ -98,7 +107,7 @@ class ServersController extends BaseController
             'server'   => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => \SUBFOLDER.'/redirect/server?',
+                'url'   => self::SUBFOLDER . '/redirect/server?',
                 'vars'  => ['server' => 'sha'],
             ],
             'host'     => [
@@ -133,7 +142,7 @@ class ServersController extends BaseController
             ],
         ];
 
-        $svPre = function (&$rowdata) use ($actions) {
+        $svPre = static function (&$rowdata) use ($actions) {
             $actions['logout']['disable'] = empty($rowdata->fields['username']);
 
             return $actions;
@@ -142,7 +151,7 @@ class ServersController extends BaseController
         if ((false !== $group) &&
             isset($this->conf['srv_groups'][$group])
         ) {
-            $this->printTitle(sprintf($this->lang['strgroupservers'], htmlentities($this->conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), null);
+            $this->printTitle(\sprintf($this->lang['strgroupservers'], \htmlentities($this->conf['srv_groups'][$group]['desc'], \ENT_QUOTES, 'UTF-8')), null);
             $actions['logout']['attr']['href']['urlvars']['group'] = $group;
         }
         echo $this->printTable($servers, $columns, $actions, $this->table_place, $this->lang['strnoobjects'], $svPre);
@@ -151,19 +160,19 @@ class ServersController extends BaseController
     public function doTree()
     {
         $nodes    = [];
-        $group_id = isset($_GET['group']) ? $_GET['group'] : false;
+        $group_id = $_GET['group'] ?? false;
 
         // root with srv_groups
-        if (isset($this->conf['srv_groups']) and count($this->conf['srv_groups']) > 0
-            and false === $group_id) {
+        if (isset($this->conf['srv_groups']) && 0 < \count($this->conf['srv_groups'])
+            && false === $group_id) {
             $nodes = $this->getServersGroups(true);
-        } elseif (isset($this->conf['srv_groups']) and false !== $group_id) {
+        } elseif (isset($this->conf['srv_groups']) && false !== $group_id) {
             // group subtree
             if ('all' !== $group_id) {
                 $nodes = $this->getServersGroups(false, $group_id);
             }
 
-            $nodes = array_merge($nodes, $this->getServers(false, $group_id));
+            $nodes = \array_merge($nodes, $this->getServers(false, $group_id));
             $nodes = new \PHPPgAdmin\ArrayRecordSet($nodes);
         } else {
             // no srv_group
@@ -188,7 +197,7 @@ class ServersController extends BaseController
         return $this->printTree($nodes, $attrs, $this->section);
     }
 
-    public function doLogout()
+    public function doLogout(): void
     {
         $server_info = $this->misc->getServerInfo($_REQUEST['logoutServer']);
         $this->misc->setServerInfo(null, null, $_REQUEST['logoutServer']);
@@ -197,7 +206,7 @@ class ServersController extends BaseController
 
         $this->misc->setReloadBrowser(true);
 
-        echo sprintf($this->lang['strlogoutmsg'], $server_info['desc']);
+        echo \sprintf($this->lang['strlogoutmsg'], $server_info['desc']);
     }
 
     /**
@@ -214,14 +223,14 @@ class ServersController extends BaseController
 
         if (isset($this->conf['srv_groups'])) {
             foreach ($this->conf['srv_groups'] as $i => $group) {
-                if ((($group_id === false) && (!isset($group['parents']))) ||
-                    ($group_id !== false) &&
+                if (((false === $group_id) && (!isset($group['parents']))) ||
+                    (false !== $group_id) &&
                     isset($group['parents']) &&
-                    in_array(
+                    \in_array(
                         $group_id,
-                        explode(
+                        \explode(
                             ',',
-                            preg_replace('/\s/', '', $group['parents'])
+                            \preg_replace('/\s/', '', $group['parents'])
                         ),
                         true
                     )
@@ -247,7 +256,7 @@ class ServersController extends BaseController
                 }
             }
 
-            if ($group_id === false) {
+            if (false === $group_id) {
                 $grps['all'] = [
                     'id'     => 'all',
                     'desc'   => $this->lang['strallservers'],

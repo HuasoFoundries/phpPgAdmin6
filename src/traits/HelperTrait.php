@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Traits;
@@ -17,13 +20,36 @@ namespace PHPPgAdmin\Traits;
 trait HelperTrait
 {
     /**
+     * static reference to subfolder in which the app is running.
+     *
+     * @var null|string
+     */
+    public static $subFolder = null;
+
+    /**
+     * Gets the subfolder.
+     *
+     * @param string $path The path
+     *
+     * @return string the subfolder
+     */
+    public function getSubfolder(string $path = ''): string
+    {
+        if (null === self::$subFolder) {
+            self::$subFolder = $this->container->subfolder;
+        }
+
+        return \implode(\DIRECTORY_SEPARATOR, [self::$subFolder, $path]);
+    }
+
+    /**
      * Halts the execution of the program. It's like calling exit() but using builtin Slim Exceptions.
      *
      * @param string $msg The message to show to the user
      *
      * @throws \Slim\Exception\SlimException (description)
      */
-    public function halt($msg = 'An error has happened')
+    public function halt($msg = 'An error has happened'): void
     {
         $body = $this->container->responseobj->getBody();
         $body->write($msg);
@@ -38,9 +64,9 @@ trait HelperTrait
      * @param string $key     The key to associate with the message. Defaults to the stack
      *                        trace of the closure or method that called addFlassh
      */
-    public function addFlash($content, $key = '')
+    public function addFlash($content, $key = ''): void
     {
-        if ($key === '') {
+        if ('' === $key) {
             $key = self::getBackTrace();
         }
         // $this->dump(__METHOD__ . ': addMessage ' . $key . '  ' . json_encode($content));
@@ -51,24 +77,22 @@ trait HelperTrait
     {
         $i0        = $offset;
         $i1        = $offset + 1;
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $offset + 3);
+        $backtrace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, $offset + 3);
 
-        $btarray0 = ([
-            'class'    => $backtrace[$i1]['class'] === 'Closure' ?
+        return [
+            'class'    => 'Closure' === $backtrace[$i1]['class'] ?
             $backtrace[$i0]['file'] :
             $backtrace[$i1]['class'],
 
             'type'     => $backtrace[$i1]['type'],
 
-            'function' => $backtrace[$i1]['function'] === '{closure}'
+            'function' => '{closure}' === $backtrace[$i1]['function']
             ? $backtrace[$i0]['function'] :
             $backtrace[$i1]['function'],
 
             'spacer4'  => ' ',
             'line'     => $backtrace[$i0]['line'],
-        ]);
-
-        return $btarray0;
+        ];
         //dump($backtrace);
     }
 
@@ -84,9 +108,10 @@ trait HelperTrait
     {
         $result = [];
 
-        if ($set->recordCount() <= 0) {
+        if (0 >= $set->recordCount()) {
             return $result;
         }
+
         while (!$set->EOF) {
             $result[] = $field ? $set->fields[$field] : $set;
             $set->moveNext();
@@ -114,7 +139,8 @@ trait HelperTrait
 
             return $var1;
         }
-        if ($set === true) {
+
+        if (true === $set) {
             $var1 = $default;
 
             return $var1;
@@ -137,7 +163,7 @@ trait HelperTrait
      */
     public function coalesceArr(&$array, $key, $default = null, $set = true)
     {
-        if (!isset($array[$key]) && $set === true) {
+        if (!isset($array[$key]) && true === $set) {
             $array[$key] = $default;
         }
 
@@ -146,18 +172,18 @@ trait HelperTrait
 
     public static function formatSizeUnits($bytes, $lang)
     {
-        if ($bytes == -1) {
+        if (-1 === $bytes) {
             $bytes = $lang['strnoaccess'];
-        } elseif ($bytes >= 1099511627776) {
-            $bytes = sprintf('%s %s', number_format($bytes / 1099511627776, 0), $lang['strtb']);
-        } elseif ($bytes >= 1073741824) {
-            $bytes = sprintf('%s %s', number_format($bytes / 1073741824, 0), $lang['strgb']);
-        } elseif ($bytes >= 1048576) {
-            $bytes = sprintf('%s %s', number_format($bytes / 1048576, 0), $lang['strmb']);
-        } elseif ($bytes >= 1024) {
-            $bytes = sprintf('%s %s', number_format($bytes / 1024, 0), $lang['strkb']);
+        } elseif (1099511627776 <= $bytes) {
+            $bytes = \sprintf('%s %s', \number_format($bytes / 1099511627776, 0), $lang['strtb']);
+        } elseif (1073741824 <= $bytes) {
+            $bytes = \sprintf('%s %s', \number_format($bytes / 1073741824, 0), $lang['strgb']);
+        } elseif (1048576 <= $bytes) {
+            $bytes = \sprintf('%s %s', \number_format($bytes / 1048576, 0), $lang['strmb']);
+        } elseif (1024 <= $bytes) {
+            $bytes = \sprintf('%s %s', \number_format($bytes / 1024, 0), $lang['strkb']);
         } else {
-            $bytes = sprintf('%s %s', $bytes, $lang['strbytes']);
+            $bytes = \sprintf('%s %s', $bytes, $lang['strbytes']);
         }
 
         return $bytes;
@@ -172,11 +198,13 @@ trait HelperTrait
      */
     public static function br2ln($msg)
     {
-        return str_replace(['<br>', '<br/>', '<br />'], PHP_EOL, $msg);
+        return \str_replace(['<br>', '<br/>', '<br />'], \PHP_EOL, $msg);
     }
 
     /**
      * Receives N parameters and sends them to the console adding where was it called from.
+     *
+     * @param array $args
      */
     public function prtrace(...$args)
     {
@@ -184,6 +212,11 @@ trait HelperTrait
     }
 
     public function dump(...$args)
+    {
+        return self::staticTrace($args);
+    }
+
+    public function dumpAndDie(...$args)
     {
         return self::staticTrace($args);
     }
@@ -199,28 +232,25 @@ trait HelperTrait
         $variablesToDump = [],
         string $whoCalledMe = '',
         $exitAfterwards = false
-    ) {
+    ): void {
         if (!$variablesToDump) {
-            $variablesToDump = func_get_args();
+            $variablesToDump = \func_get_args();
         }
-        if ($whoCalledMe === '') {
-            $whoCalledMe = str_replace(BASE_PATH, '', implode('', self::getBackTrace(2)));
+
+        if ('' === $whoCalledMe) {
+            $whoCalledMe = \str_replace(BASE_PATH, '', \implode('', self::getBackTrace(2)));
         }
-        if ($exitAfterwards && function_exists('dd')) {
+
+        if ($exitAfterwards && \function_exists('dd')) {
             dd([
                 'args' => $variablesToDump,
                 'from' => $whoCalledMe,
             ]);
-        } elseif (function_exists('dump')) {
+        } elseif (\function_exists('dump')) {
             dump([
                 'args' => $variablesToDump,
                 'from' => $whoCalledMe,
             ]);
         }
-    }
-
-    public function dumpAndDie(...$args)
-    {
-        return self::staticTrace($args);
     }
 }

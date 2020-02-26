@@ -1,96 +1,90 @@
 <?php
 
-/**
- * Function library read in upon startup.
- *
- * Release: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
- */
-defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
+//// declare(strict_types = 1);
 
-define('THEME_PATH', BASE_PATH . '/assets/themes');
+/**
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ */
+
+\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
+
+\define('THEME_PATH', BASE_PATH . '/assets/themes');
 // Enforce PHP environment
 ini_set('arg_separator.output', '&amp;');
 
-if (!is_writable(BASE_PATH . '/temp')) {
+if (!\is_writable(BASE_PATH . '/temp')) {
     die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
 }
+
 require_once BASE_PATH . '/vendor/autoload.php';
 
 // Check to see if the configuration file exists, if not, explain
-if (file_exists(BASE_PATH . '/config.inc.php')) {
+if (\file_exists(BASE_PATH . '/config.inc.php')) {
     $conf = [];
+
     include BASE_PATH . '/config.inc.php';
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 }
-$shouldSetSession = (defined('PHP_SESSION_ACTIVE') ? session_status() != PHP_SESSION_ACTIVE : !session_id())
-&& !headers_sent()
-&& !ini_get('session.auto_start');
+$shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
+&& !\headers_sent()
+&& !\ini_get('session.auto_start');
 
-if ($shouldSetSession && PHP_SAPI !== 'cli') {
-    session_set_cookie_params(0, '/', null, isset($_SERVER['HTTPS']));
-    session_name('PPA_ID');
-    session_start();
+if ($shouldSetSession && \PHP_SAPI !== 'cli') {
+    \session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']));
+    \session_name('PPA_ID');
+    \session_start();
 }
 
-$debugmode = (!isset($conf['debugmode'])) ? false : boolval($conf['debugmode']);
-define('DEBUGMODE', $debugmode);
+$debugmode = (!isset($conf['debugmode'])) ? false : (bool) ($conf['debugmode']);
+defined('DEBUGMODE') || \define('DEBUGMODE', $debugmode);
 
-if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
-    define('ADODB_ERROR_HANDLER_TYPE', E_USER_ERROR);
+if (!\defined('ADODB_ERROR_HANDLER_TYPE')) {
+    \define('ADODB_ERROR_HANDLER_TYPE', \E_USER_ERROR);
 }
 
-if (!defined('ADODB_ERROR_HANDLER')) {
-    define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
+if (!\defined('ADODB_ERROR_HANDLER')) {
+    \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 }
-
 if (DEBUGMODE) {
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    ini_set('opcache.revalidate_freq', 0);
-    error_reporting(E_ALL);
-    if (array_key_exists('register_debuggers', $conf) && is_callable($conf['register_debuggers'])) {
+    ini_set('display_errors', 'On');
+
+    ini_set('display_startup_errors', 'On');
+    ini_set('opcache.revalidate_freq', '0');
+    \error_reporting(\E_ALL);
+
+    if (\array_key_exists('register_debuggers', $conf) && \is_callable($conf['register_debuggers'])) {
         $conf['register_debuggers']();
     }
 }
 
 // Fetch App and DI Container
-list($container, $app) = \PHPPgAdmin\ContainerUtils::createContainer($conf);
-$subfolder             = '';
-if ($container instanceof \Psr\Container\ContainerInterface) {
-    if (PHP_SAPI == 'cli-server') {
-        $subfolder = '/index.php';
-    } elseif (isset($conf['subfolder']) && is_string($conf['subfolder'])) {
-        $subfolder = $conf['subfolder'];
-    } else {
-        $normalized_php_self = str_replace('/src/views', '', $container->environment->get('PHP_SELF'));
-        $subfolder           = str_replace('/' . basename($normalized_php_self), '', $normalized_php_self);
-    }
-} else {
-    trigger_error("App Container must be an instance of \Psr\Container\ContainerInterface", E_USER_ERROR);
+[$container, $app] = \PHPPgAdmin\ContainerUtils::createContainer($conf);
+
+if (!$container instanceof \Psr\Container\ContainerInterface) {
+    \trigger_error('App Container must be an instance of \\Psr\\Container\\ContainerInterface', \E_USER_ERROR);
 }
-define('SUBFOLDER', $subfolder);
 
 $container['requestobj']  = $container['request'];
 $container['responseobj'] = $container['response'];
 
 // This should be deprecated once we're sure no php scripts are required directly
-$container->offsetSet('server', isset($_REQUEST['server']) ? $_REQUEST['server'] : null);
-$container->offsetSet('database', isset($_REQUEST['database']) ? $_REQUEST['database'] : null);
-$container->offsetSet('schema', isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null);
+$container->offsetSet('server', $_REQUEST['server'] ?? null);
+$container->offsetSet('database', $_REQUEST['database'] ?? null);
+$container->offsetSet('schema', $_REQUEST['schema'] ?? null);
 
-$container['flash'] = function () {
+$container['flash'] = static function () {
     return new \Slim\Flash\Messages();
 };
 
-$container['lang'] = function ($c) {
+$container['lang'] = static function ($c) {
     $translations = new \PHPPgAdmin\Translations($c);
 
     return $translations->lang;
 };
 
 // Create Misc class references
-$container['misc'] = function ($c) {
+$container['misc'] = static function ($c) {
     $misc = new \PHPPgAdmin\Misc($c);
 
     $conf = $c->get('conf');
@@ -99,14 +93,15 @@ $container['misc'] = function ($c) {
     $_server_info = $misc->getServerInfo();
 
     /* starting with PostgreSQL 9.0, we can set the application name */
-    if (isset($_server_info['pgVersion']) && $_server_info['pgVersion'] >= 9) {
-        putenv('PGAPPNAME=' . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
+    if (isset($_server_info['pgVersion']) && 9 <= $_server_info['pgVersion']) {
+        \putenv('PGAPPNAME=' . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
     }
 
     $_theme = $c->utils->getTheme($conf, $_server_info);
-    if (!is_null($_theme)) {
+
+    if (null !== $_theme) {
         /* save the selected theme in cookie for a year */
-        setcookie('ppaTheme', $_theme, time() + 31536000, '/');
+        \setcookie('ppaTheme', $_theme, \time() + 31536000, '/');
         $_SESSION['ppaTheme'] = $_theme;
         $misc->setConf('theme', $_theme);
     }
@@ -115,7 +110,7 @@ $container['misc'] = function ($c) {
 };
 
 // Register Twig View helper
-$container['view'] = function ($c) {
+$container['view'] = static function ($c) {
     $conf = $c->get('conf');
     $misc = $c->misc;
 
@@ -125,14 +120,14 @@ $container['view'] = function ($c) {
         'debug'       => $c->get('settings')['debug'],
     ]);
     $environment              = $c->get('environment');
-    $base_script_trailing_str = substr($environment['SCRIPT_NAME'], 1);
+    $base_script_trailing_str = \mb_substr($environment['SCRIPT_NAME'], 1);
     $request_basepath         = $c['request']->getUri()->getBasePath();
     // Instantiate and add Slim specific extension
-    $basePath = rtrim(str_ireplace($base_script_trailing_str, '', $request_basepath), '/');
+    $basePath = \rtrim(\str_ireplace($base_script_trailing_str, '', $request_basepath), '/');
 
     $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
 
-    $view->offsetSet('subfolder', SUBFOLDER);
+    $view->offsetSet('subfolder', $c->subfolder);
     $view->offsetSet('theme', $c->misc->getConf('theme'));
     $view->offsetSet('Favicon', $c->misc->icon('Favicon'));
     $view->offsetSet('Introduction', $c->misc->icon('Introduction'));
@@ -147,13 +142,13 @@ $container['view'] = function ($c) {
     return $view;
 };
 
-$container['haltHandler'] = function ($c) {
-    return function ($request, $response, $exits, $status = 500) use ($c) {
+$container['haltHandler'] = static function ($c) {
+    return static function ($request, $response, $exits, $status = 500) use ($c) {
         $title = 'PHPPgAdmin Error';
 
         $html = '<p>The application could not run because of the following error:</p>';
 
-        $output = sprintf(
+        $output = \sprintf(
             "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
             '<title>%s</title><style>' .
             'body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}' .
@@ -163,7 +158,7 @@ $container['haltHandler'] = function ($c) {
             $title,
             $title,
             $html,
-            implode('<br>', $exits)
+            \implode('<br>', $exits)
         );
 
         $body = $response->getBody(); //new \Slim\Http\Body(fopen('php://temp', 'r+'));
@@ -180,10 +175,11 @@ $container['haltHandler'] = function ($c) {
 // as the value of $request and $response, which already contain the route
 $app->add(new \PHPPgAdmin\Middleware\PopulateRequestResponse($container));
 
-$container['action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+$container['action'] = $_REQUEST['action'] ?? '';
 
 if (!isset($msg)) {
     $msg = '';
 }
 
 $container['msg'] = $msg;
+//ddd($container->misc);

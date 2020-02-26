@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +14,6 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 9.0 support
  *
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres90 extends Postgres91
 {

@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,13 +13,13 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class AlldbController extends BaseController
 {
     use \PHPPgAdmin\Traits\ExportTrait;
-    public $table_place      = 'alldb-databases';
+
+    public $table_place = 'alldb-databases';
+
     public $controller_title = 'strdatabases';
 
     /**
@@ -24,13 +27,14 @@ class AlldbController extends BaseController
      */
     public function render()
     {
-        if ('tree' == $this->action) {
+        if ('tree' === $this->action) {
             return $this->doTree();
         }
 
         $header_template = 'header.twig';
 
-        ob_start();
+        \ob_start();
+
         switch ($this->action) {
             case 'export':
                 $this->doExport();
@@ -78,7 +82,7 @@ class AlldbController extends BaseController
 
                 break;
         }
-        $output = ob_get_clean();
+        $output = \ob_get_clean();
 
         $this->printHeader($this->headerTitle(), null, true, $header_template);
         $this->printBody();
@@ -92,7 +96,7 @@ class AlldbController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $this->printTrail('server');
         $this->printTabs('server', 'databases');
@@ -114,7 +118,7 @@ class AlldbController extends BaseController
             'database'   => [
                 'title' => $this->lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url'   => \SUBFOLDER.$redirecturl.'&amp;',
+                'url'   => self::SUBFOLDER . $redirecturl . '&amp;',
                 'vars'  => ['database' => 'datname'],
             ],
             'owner'      => [
@@ -185,6 +189,7 @@ class AlldbController extends BaseController
                 ],
             ],
         ];
+
         if ($data->hasAlterDatabase()) {
             $actions['alter'] = [
                 'content' => $this->lang['stralter'],
@@ -233,7 +238,7 @@ class AlldbController extends BaseController
                 'content' => $this->lang['strcreatedatabase'],
             ],
         ];
-        $this->printNavLinks($navlinks, $this->table_place, get_defined_vars());
+        $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
     }
 
     public function doTree()
@@ -260,7 +265,7 @@ class AlldbController extends BaseController
      *
      * @param mixed $confirm
      */
-    public function doAlter($confirm)
+    public function doAlter($confirm): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -268,12 +273,12 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['stralter'], 'pg.database.alter');
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/alldb" method="post">'.PHP_EOL;
-            echo '<table>'.PHP_EOL;
-            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/alldb" method="post">' . \PHP_EOL;
+            echo '<table>' . \PHP_EOL;
+            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
             echo "<input name=\"newname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_REQUEST['alterdatabase']), '" /></td></tr>'.PHP_EOL;
+            \htmlspecialchars($_REQUEST['alterdatabase']), '" /></td></tr>' . \PHP_EOL;
 
             if ($data->hasAlterDatabaseOwner() && $data->isSuperUser()) {
                 // Fetch all users
@@ -282,38 +287,40 @@ class AlldbController extends BaseController
                 $owner = isset($rs->fields['usename']) ? $rs->fields['usename'] : '';
                 $users = $data->getUsers();
 
-                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>".PHP_EOL;
+                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
                 echo '<td class="data1"><select name="owner">';
+
                 while (!$users->EOF) {
                     $uname = $users->fields['usename'];
-                    echo '<option value="', htmlspecialchars($uname), '"',
-                    ($uname == $owner) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), '</option>'.PHP_EOL;
+                    echo '<option value="', \htmlspecialchars($uname), '"',
+                    ($uname === $owner) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
                     $users->moveNext();
                 }
-                echo '</select></td></tr>'.PHP_EOL;
+                echo '</select></td></tr>' . \PHP_EOL;
             }
+
             if ($data->hasSharedComments()) {
                 $rs      = $data->getDatabaseComment($_REQUEST['alterdatabase']);
                 $comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
-                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
                 echo '<td class="data1">';
                 echo '<textarea rows="3" cols="32" name="dbcomment">',
-                htmlspecialchars($comment), '</textarea></td></tr>'.PHP_EOL;
+                \htmlspecialchars($comment), '</textarea></td></tr>' . \PHP_EOL;
             }
-            echo '</table>'.PHP_EOL;
-            echo '<input type="hidden" name="action" value="alter" />'.PHP_EOL;
+            echo '</table>' . \PHP_EOL;
+            echo '<input type="hidden" name="action" value="alter" />' . \PHP_EOL;
             echo $this->misc->form;
             echo '<input type="hidden" name="oldname" value="',
-            htmlspecialchars($_REQUEST['alterdatabase']), '" />'.PHP_EOL;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            \htmlspecialchars($_REQUEST['alterdatabase']), '" />' . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
             $this->coalesceArr($_POST, 'owner', '');
 
             $this->coalesceArr($_POST, 'dbcomment', '');
 
-            if (0 == $data->alterDatabase($_POST['oldname'], $_POST['newname'], $_POST['owner'], $_POST['dbcomment'])) {
+            if (0 === $data->alterDatabase($_POST['oldname'], $_POST['newname'], $_POST['owner'], $_POST['dbcomment'])) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($this->lang['strdatabasealtered']);
             } else {
@@ -339,35 +346,37 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['strdrop'], 'pg.database.drop');
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/alldb" method="post">'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/alldb" method="post">' . \PHP_EOL;
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
-                    $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($this->lang['strconfdropdatabase'], $this->misc->printVal($a['database'])), '</p>'.PHP_EOL;
-                    printf('<input type="hidden" name="dropdatabase[]" value="%s" />', htmlspecialchars($a['database']));
+                    $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
+                    echo '<p>', \sprintf($this->lang['strconfdropdatabase'], $this->misc->printVal($a['database'])), '</p>' . \PHP_EOL;
+                    \printf('<input type="hidden" name="dropdatabase[]" value="%s" />', \htmlspecialchars($a['database']));
                 }
             } else {
-                echo '<p>', sprintf($this->lang['strconfdropdatabase'], $this->misc->printVal($_REQUEST['dropdatabase'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="dropdatabase" value="', htmlspecialchars($_REQUEST['dropdatabase']), '" />'.PHP_EOL;
+                echo '<p>', \sprintf($this->lang['strconfdropdatabase'], $this->misc->printVal($_REQUEST['dropdatabase'])), '</p>' . \PHP_EOL;
+                echo '<input type="hidden" name="dropdatabase" value="', \htmlspecialchars($_REQUEST['dropdatabase']), '" />' . \PHP_EOL;
                 // END if multi drop
             }
 
-            echo '<input type="hidden" name="action" value="drop" />'.PHP_EOL;
+            echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
             echo "</form>\n"; //  END confirm
         } else {
             //If multi drop
-            if (is_array($_REQUEST['dropdatabase'])) {
+            if (\is_array($_REQUEST['dropdatabase'])) {
                 $msg = '';
+
                 foreach ($_REQUEST['dropdatabase'] as $d) {
                     $status = $data->dropDatabase($d);
-                    if (0 == $status) {
-                        $msg .= sprintf('%s: %s<br />', htmlentities($d, ENT_QUOTES, 'UTF-8'), $this->lang['strdatabasedropped']);
+
+                    if (0 === $status) {
+                        $msg .= \sprintf('%s: %s<br />', \htmlentities($d, \ENT_QUOTES, 'UTF-8'), $this->lang['strdatabasedropped']);
                     } else {
-                        $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($d, ENT_QUOTES, 'UTF-8'), $this->lang['strdatabasedroppedbad']));
+                        $this->doDefault(\sprintf('%s%s: %s<br />', $msg, \htmlentities($d, \ENT_QUOTES, 'UTF-8'), $this->lang['strdatabasedroppedbad']));
 
                         return;
                     }
@@ -377,7 +386,8 @@ class AlldbController extends BaseController
                 $this->doDefault($msg);
             } else {
                 $status = $data->dropDatabase($_POST['dropdatabase']);
-                if (0 == $status) {
+
+                if (0 === $status) {
                     $this->setReloadDropDatabase(true);
                     $this->doDefault($this->lang['strdatabasedropped']);
                 } else {
@@ -395,7 +405,7 @@ class AlldbController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = '')
+    public function doCreate($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -422,45 +432,47 @@ class AlldbController extends BaseController
             $tablespaces = $data->getTablespaces();
         }
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/alldb" method="post">'.PHP_EOL;
-        echo '<table>'.PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . '/src/views/alldb" method="post">' . \PHP_EOL;
+        echo '<table>' . \PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>".PHP_EOL;
+        \htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>" . \PHP_EOL;
 
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strtemplatedb']}</th>".PHP_EOL;
-        echo "\t\t<td class=\"data1\">".PHP_EOL;
-        echo "\t\t\t<select name=\"formTemplate\">".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strtemplatedb']}</th>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\">" . \PHP_EOL;
+        echo "\t\t\t<select name=\"formTemplate\">" . \PHP_EOL;
         // Always offer template0 and template1
         echo "\t\t\t\t<option value=\"template0\"",
-        ('template0' == $_POST['formTemplate']) ? ' selected="selected"' : '', '>template0</option>'.PHP_EOL;
+        ('template0' === $_POST['formTemplate']) ? ' selected="selected"' : '', '>template0</option>' . \PHP_EOL;
         echo "\t\t\t\t<option value=\"template1\"",
-        ('template1' == $_POST['formTemplate']) ? ' selected="selected"' : '', '>template1</option>'.PHP_EOL;
+        ('template1' === $_POST['formTemplate']) ? ' selected="selected"' : '', '>template1</option>' . \PHP_EOL;
+
         while (!$templatedbs->EOF) {
-            $dbname = htmlspecialchars($templatedbs->fields['datname']);
-            if ('template1' != $dbname) {
+            $dbname = \htmlspecialchars($templatedbs->fields['datname']);
+
+            if ('template1' !== $dbname) {
                 // filter out for $this->conf[show_system] users so we dont get duplicates
                 echo "\t\t\t\t<option value=\"{$dbname}\"",
-                ($dbname == $_POST['formTemplate']) ? ' selected="selected"' : '', ">{$dbname}</option>".PHP_EOL;
+                ($dbname === $_POST['formTemplate']) ? ' selected="selected"' : '', ">{$dbname}</option>" . \PHP_EOL;
             }
             $templatedbs->moveNext();
         }
-        echo "\t\t\t</select>".PHP_EOL;
-        echo "\t\t</td>\n\t</tr>".PHP_EOL;
+        echo "\t\t\t</select>" . \PHP_EOL;
+        echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
 
         // ENCODING
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strencoding']}</th>".PHP_EOL;
-        echo "\t\t<td class=\"data1\">".PHP_EOL;
-        echo "\t\t\t<select name=\"formEncoding\">".PHP_EOL;
-        echo "\t\t\t\t<option value=\"\"></option>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strencoding']}</th>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\">" . \PHP_EOL;
+        echo "\t\t\t<select name=\"formEncoding\">" . \PHP_EOL;
+        echo "\t\t\t\t<option value=\"\"></option>" . \PHP_EOL;
 
         foreach ($data->codemap as $key) {
-            echo "\t\t\t\t<option value=\"", htmlspecialchars($key), '"',
-            ($key == $_POST['formEncoding']) ? ' selected="selected"' : '', '>',
-            $this->misc->printVal($key), '</option>'.PHP_EOL;
+            echo "\t\t\t\t<option value=\"", \htmlspecialchars($key), '"',
+            ($key === $_POST['formEncoding']) ? ' selected="selected"' : '', '>',
+            $this->misc->printVal($key), '</option>' . \PHP_EOL;
         }
-        echo "\t\t\t</select>".PHP_EOL;
-        echo "\t\t</td>\n\t</tr>".PHP_EOL;
+        echo "\t\t\t</select>" . \PHP_EOL;
+        echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
 
         if ($data->hasDatabaseCollation()) {
             $this->coalesceArr($_POST, 'formCollate', '');
@@ -468,54 +480,54 @@ class AlldbController extends BaseController
             $this->coalesceArr($_POST, 'formCType', '');
 
             // LC_COLLATE
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcollation']}</th>".PHP_EOL;
-            echo "\t\t<td class=\"data1\">".PHP_EOL;
-            echo "\t\t\t<input name=\"formCollate\" value=\"", htmlspecialchars($_POST['formCollate']), '" />'.PHP_EOL;
-            echo "\t\t</td>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcollation']}</th>" . \PHP_EOL;
+            echo "\t\t<td class=\"data1\">" . \PHP_EOL;
+            echo "\t\t\t<input name=\"formCollate\" value=\"", \htmlspecialchars($_POST['formCollate']), '" />' . \PHP_EOL;
+            echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
 
             // LC_CTYPE
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strctype']}</th>".PHP_EOL;
-            echo "\t\t<td class=\"data1\">".PHP_EOL;
-            echo "\t\t\t<input name=\"formCType\" value=\"", htmlspecialchars($_POST['formCType']), '" />'.PHP_EOL;
-            echo "\t\t</td>\n\t</tr>".PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strctype']}</th>" . \PHP_EOL;
+            echo "\t\t<td class=\"data1\">" . \PHP_EOL;
+            echo "\t\t\t<input name=\"formCType\" value=\"", \htmlspecialchars($_POST['formCType']), '" />' . \PHP_EOL;
+            echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
         }
 
         // Tablespace (if there are any)
-        if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strtablespace']}</th>".PHP_EOL;
-            echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formSpc\">".PHP_EOL;
+        if ($data->hasTablespaces() && 0 < $tablespaces->recordCount()) {
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strtablespace']}</th>" . \PHP_EOL;
+            echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formSpc\">" . \PHP_EOL;
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
-            ('' == $_POST['formSpc']) ? ' selected="selected"' : '', '></option>'.PHP_EOL;
+            ('' === $_POST['formSpc']) ? ' selected="selected"' : '', '></option>' . \PHP_EOL;
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
-                $spcname = htmlspecialchars($tablespaces->fields['spcname']);
+                $spcname = \htmlspecialchars($tablespaces->fields['spcname']);
                 echo "\t\t\t\t<option value=\"{$spcname}\"",
-                ($spcname == $_POST['formSpc']) ? ' selected="selected"' : '', ">{$spcname}</option>".PHP_EOL;
+                ($spcname === $_POST['formSpc']) ? ' selected="selected"' : '', ">{$spcname}</option>" . \PHP_EOL;
                 $tablespaces->moveNext();
             }
-            echo "\t\t\t</select>\n\t\t</td>\n\t</tr>".PHP_EOL;
+            echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
         }
 
         // Comments (if available)
         if ($data->hasSharedComments()) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
             echo "\t\t<td><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
-            htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>".PHP_EOL;
+            \htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
         }
 
-        echo '</table>'.PHP_EOL;
-        echo '<p><input type="hidden" name="action" value="save_create" />'.PHP_EOL;
+        echo '</table>' . \PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-        echo '</form>'.PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo '</form>' . \PHP_EOL;
     }
 
     /**
      * Actually creates the new view in the database.
      */
-    public function doSaveCreate()
+    public function doSaveCreate(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -532,7 +544,7 @@ class AlldbController extends BaseController
         $this->coalesceArr($_POST, 'formCType', null);
 
         // Check that they've given a name and a definition
-        if ('' == $_POST['formName']) {
+        if ('' === $_POST['formName']) {
             $this->doCreate($this->lang['strdatabaseneedsname']);
         } else {
             $status = $data->createDatabase(
@@ -544,7 +556,8 @@ class AlldbController extends BaseController
                 $_POST['formCollate'],
                 $_POST['formCType']
             );
-            if (0 == $status) {
+
+            if (0 === $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($this->lang['strdatabasecreated']);
             } else {
@@ -558,7 +571,7 @@ class AlldbController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doExport($msg = '')
+    public function doExport($msg = ''): void
     {
         $this->printTrail('server');
         $this->printTabs('server', 'export');
@@ -579,7 +592,7 @@ class AlldbController extends BaseController
 
         $server_info = $this->misc->getServerInfo();
 
-        echo $this->offerNoRoleExport(isset($server_info['pgVersion']) && (float) (substr($server_info['pgVersion'], 0, 3)) >= 10);
+        echo $this->offerNoRoleExport(isset($server_info['pgVersion']) && 10 <= (float) (\mb_substr($server_info['pgVersion'], 0, 3)));
 
         // dumpall doesn't support gzip
         echo $this->displayOrDownload(false);

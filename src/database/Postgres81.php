@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,12 +14,11 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.1 support
  *
  * Id: Postgres81.php,v 1.21 2008/01/19 13:46:15 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres81 extends Postgres82
 {
     public $major_version = 8.1;
+
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
@@ -29,6 +31,7 @@ class Postgres81 extends Postgres82
         'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
         'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
     ];
+
     // List of characters in acl lists and the privileges they
     // refer to.
     public $privmap = [
@@ -44,6 +47,7 @@ class Postgres81 extends Postgres82
         'C' => 'CREATE',
         'T' => 'TEMPORARY',
     ];
+
     // Array of allowed index types
     public $typIndexes = ['BTREE', 'RTREE', 'GIST', 'HASH'];
 
@@ -69,7 +73,7 @@ class Postgres81 extends Postgres82
             $clause = '';
         }
 
-        if ($currentdatabase !== null) {
+        if (null !== $currentdatabase) {
             $this->clean($currentdatabase);
             $orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
         } else {
@@ -117,15 +121,17 @@ class Postgres81 extends Postgres82
         //ignore $comment, not supported pre 8.2
 
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
         }
 
-        if ($dbName != $newName) {
+        if ($dbName !== $newName) {
             $status = $this->alterDatabaseRename($dbName, $newName);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -3;
@@ -133,7 +139,8 @@ class Postgres81 extends Postgres82
         }
 
         $status = $this->alterDatabaseOwner($newName, $newOwner);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -2;
@@ -215,9 +222,9 @@ class Postgres81 extends Postgres82
 			WHERE vacrelid = {$toid};");
 
         $status = -1; // ini
-        if ($rs->recordCount() and ($rs->fields['vacrelid'] == $toid)) {
+        if ($rs->recordCount() && ($rs->fields['vacrelid'] === $toid)) {
             // table exists in pg_autovacuum, UPDATE
-            $sql = sprintf(
+            $sql = \sprintf(
                 "UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
 						enabled = '%s',
 						vac_base_thresh = %s,
@@ -228,7 +235,7 @@ class Postgres81 extends Postgres82
 						vac_cost_limit = %s
 					WHERE vacrelid = {$toid};
 				",
-                ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
+                ('on' === $_POST['autovacuum_enabled']) ? 't' : 'f',
                 $_POST['autovacuum_vacuum_threshold'],
                 $_POST['autovacuum_vacuum_scale_factor'],
                 $_POST['autovacuum_analyze_threshold'],
@@ -239,11 +246,11 @@ class Postgres81 extends Postgres82
             $status = $this->execute($sql);
         } else {
             // table doesn't exists in pg_autovacuum, INSERT
-            $sql = sprintf(
+            $sql = \sprintf(
                 "INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
 				VALUES (%s, '%s', %s, %s, %s, %s, %s, %s)",
                 $toid,
-                ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
+                ('on' === $_POST['autovacuum_enabled']) ? 't' : 'f',
                 $_POST['autovacuum_vacuum_threshold'],
                 $_POST['autovacuum_vacuum_scale_factor'],
                 $_POST['autovacuum_analyze_threshold'],
@@ -266,7 +273,7 @@ class Postgres81 extends Postgres82
      */
     public function getProcesses($database = null)
     {
-        if ($database === null) {
+        if (null === $database) {
             $sql = "SELECT datname, usename, procpid AS pid, current_query AS query, query_start,
                   case when (select count(*) from pg_locks where pid=pg_stat_activity.procpid and granted is false) > 0 then 't' else 'f' end as waiting
 				FROM pg_catalog.pg_stat_activity

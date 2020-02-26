@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +14,6 @@ namespace PHPPgAdmin\Database;
  * Parent class of all ADODB objects.
  *
  * Id: ADOdbBase.php,v 1.24 2008/02/20 20:43:10 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class ADOdbBase
 {
@@ -20,8 +21,11 @@ class ADOdbBase
     use \PHPPgAdmin\Database\Traits\HasTrait;
 
     public $lang;
+
     public $conf;
+
     protected $container;
+
     protected $server_info;
 
     /**
@@ -109,7 +113,7 @@ class ADOdbBase
                 return -1;
         }
 
-        if ($comment != '') {
+        if ('' !== $comment) {
             $sql .= "'{$comment}';";
         } else {
             $sql .= 'NULL;';
@@ -123,7 +127,7 @@ class ADOdbBase
      *
      * @param bool $debug True to turn on debugging, false otherwise
      */
-    public function setDebug($debug)
+    public function setDebug($debug): void
     {
         $this->conn->debug = $debug;
     }
@@ -138,11 +142,11 @@ class ADOdbBase
     public function fieldArrayClean(&$arr)
     {
         foreach ($arr as $k => $v) {
-            if ($v === null) {
+            if (null === $v) {
                 continue;
             }
 
-            $arr[$k] = str_replace('"', '""', $v);
+            $arr[$k] = \str_replace('"', '""', $v);
         }
 
         return $arr;
@@ -158,10 +162,10 @@ class ADOdbBase
     public function arrayClean(&$arr)
     {
         foreach ($arr as $k => $v) {
-            if ($v === null) {
+            if (null === $v) {
                 continue;
             }
-            $arr[$k] = pg_escape_string($v);
+            $arr[$k] = \pg_escape_string($v);
         }
 
         return $arr;
@@ -190,7 +194,7 @@ class ADOdbBase
      * Closes the connection the database class
      * relies on.
      */
-    public function close()
+    public function close(): void
     {
         $this->conn->close();
     }
@@ -206,9 +210,7 @@ class ADOdbBase
     {
         // Execute the statement
         try {
-            $rs = $this->conn->Execute($sql);
-
-            return $rs;
+            return $this->conn->Execute($sql);
         } catch (\Exception $e) {
             return $e->getCode();
         }
@@ -234,7 +236,7 @@ class ADOdbBase
             return $this->conn->ErrorNo();
         }
 
-        if ($rs->recordCount() == 0) {
+        if (0 === $rs->recordCount()) {
             return -1;
         }
 
@@ -254,7 +256,7 @@ class ADOdbBase
     {
         $this->fieldClean($table);
 
-        reset($conditions);
+        \reset($conditions);
 
         if (!empty($schema)) {
             $this->fieldClean($schema);
@@ -267,6 +269,7 @@ class ADOdbBase
         foreach ($conditions as $key => $value) {
             $this->clean($key);
             $this->clean($value);
+
             if ($sql) {
                 $sql .= " AND \"{$key}\"='{$value}'";
             } else {
@@ -277,13 +280,13 @@ class ADOdbBase
         // Check for failures
         if (!$this->conn->Execute($sql)) {
             // Check for referential integrity failure
-            if (stristr($this->conn->ErrorMsg(), 'referential')) {
+            if (\mb_stristr($this->conn->ErrorMsg(), 'referential')) {
                 return -1;
             }
         }
 
         // Check for no rows modified
-        if ($this->conn->Affected_Rows() == 0) {
+        if (0 === $this->conn->Affected_Rows()) {
             return -2;
         }
 
@@ -299,10 +302,10 @@ class ADOdbBase
      */
     public function fieldClean(&$str)
     {
-        if ($str === null) {
+        if (null === $str) {
             return null;
         }
-        $str = str_replace('"', '""', $str);
+        $str = \str_replace('"', '""', $str);
 
         return $str;
     }
@@ -316,11 +319,11 @@ class ADOdbBase
      */
     public function clean(&$str)
     {
-        if ($str === null) {
+        if (null === $str) {
             return null;
         }
-        $str = str_replace("\r\n", "\n", $str);
-        $str = pg_escape_string($str);
+        $str = \str_replace("\r\n", "\n", $str);
+        $str = \pg_escape_string($str);
 
         return $str;
     }
@@ -334,7 +337,7 @@ class ADOdbBase
      */
     public function escapeBytea($data)
     {
-        return htmlentities($data, ENT_QUOTES, 'UTF-8');
+        return \htmlentities($data, \ENT_QUOTES, 'UTF-8');
     }
 
     /**
@@ -350,9 +353,10 @@ class ADOdbBase
         $this->fieldClean($table);
         $sql = '';
         // Build clause
-        if (sizeof($vars) > 0) {
+        if (0 < \count($vars)) {
             $fields = '';
             $values = '';
+
             foreach ($vars as $key => $value) {
                 $this->clean($key);
                 $this->clean($value);
@@ -369,17 +373,17 @@ class ADOdbBase
                     $values = ") VALUES ('{$value}'";
                 }
             }
-            $sql .= $fields.$values.')';
+            $sql .= $fields . $values . ')';
         }
 
         // Check for failures
         if (!$this->conn->Execute($sql)) {
             // Check for unique constraint failure
-            if (stristr($this->conn->ErrorMsg(), 'unique')) {
+            if (\mb_stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
             }
 
-            if (stristr($this->conn->ErrorMsg(), 'referential')) {
+            if (\mb_stristr($this->conn->ErrorMsg(), 'referential')) {
                 return -2;
             } // Check for referential integrity failure
         }
@@ -405,11 +409,12 @@ class ADOdbBase
         $whereClause = '';
 
         // Populate the syntax arrays
-        reset($vars);
+        \reset($vars);
         //while (list($key, $value) = each($vars)) {
         foreach ($vars as $key => $value) {
             $this->fieldClean($key);
             $this->clean($value);
+
             if ($setClause) {
                 $setClause .= ", \"{$key}\"='{$value}'";
             } else {
@@ -417,10 +422,11 @@ class ADOdbBase
             }
         }
 
-        reset($nulls);
+        \reset($nulls);
         //while (list(, $value) = each($nulls)) {
         foreach ($nulls as $key => $value) {
             $this->fieldClean($value);
+
             if ($setClause) {
                 $setClause .= ", \"{$value}\"=NULL";
             } else {
@@ -428,11 +434,12 @@ class ADOdbBase
             }
         }
 
-        reset($where);
+        \reset($where);
         //while (list($key, $value) = each($where)) {
         foreach ($where as $key => $value) {
             $this->fieldClean($key);
             $this->clean($value);
+
             if ($whereClause) {
                 $whereClause .= " AND \"{$key}\"='{$value}'";
             } else {
@@ -441,19 +448,19 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($setClause.$whereClause)) {
+        if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
-            if (stristr($this->conn->ErrorMsg(), 'unique')) {
+            if (\mb_stristr($this->conn->ErrorMsg(), 'unique')) {
                 return -1;
             }
 
-            if (stristr($this->conn->ErrorMsg(), 'referential')) {
+            if (\mb_stristr($this->conn->ErrorMsg(), 'referential')) {
                 return -2;
             } // Check for referential integrity failure
         }
 
         // Check for no rows modified
-        if ($this->conn->Affected_Rows() == 0) {
+        if (0 === $this->conn->Affected_Rows()) {
             return -3;
         }
 
@@ -535,7 +542,7 @@ class ADOdbBase
      */
     public function phpBool($parameter)
     {
-        return $parameter === 't';
+        return 't' === $parameter;
     }
 
     /**
@@ -550,38 +557,41 @@ class ADOdbBase
     public function phpArray($dbarr)
     {
         // Take off the first and last characters (the braces)
-        $arr = substr($dbarr, 1, strlen($dbarr) - 2);
+        $arr = \mb_substr($dbarr, 1, \mb_strlen($dbarr) - 2);
 
         // Pick out array entries by carefully parsing.  This is necessary in order
         // to cope with double quotes and commas, etc.
         $elements  = [];
         $i         = $j         = 0;
         $in_quotes = false;
-        while ($i < strlen($arr)) {
+
+        while (\mb_strlen($arr) > $i) {
             // If current char is a double quote and it's not escaped, then
             // enter quoted bit
-            $char = substr($arr, $i, 1);
-            if ($char == '"' && ($i == 0 || substr($arr, $i - 1, 1) != '\\')) {
+            $char = \mb_substr($arr, $i, 1);
+
+            if ('"' === $char && (0 === $i || '\\' !== \mb_substr($arr, $i - 1, 1))) {
                 $in_quotes = !$in_quotes;
-            } elseif ($char == ',' && !$in_quotes) {
+            } elseif (',' === $char && !$in_quotes) {
                 // Add text so far to the array
-                $elements[] = substr($arr, $j, $i - $j);
+                $elements[] = \mb_substr($arr, $j, $i - $j);
                 $j          = $i + 1;
             }
             ++$i;
         }
         // Add final text to the array
-        $elements[] = substr($arr, $j);
+        $elements[] = \mb_substr($arr, $j);
 
-        $elementcount = sizeof($elements);
+        $elementcount = \count($elements);
         // Do one further loop over the elements array to remote double quoting
         // and escaping of double quotes and backslashes
         for ($i = 0; $i < $elementcount; ++$i) {
             $v = $elements[$i];
-            if (strpos($v, '"') === 0) {
-                $v            = substr($v, 1, strlen($v) - 2);
-                $v            = str_replace('\\"', '"', $v);
-                $v            = str_replace('\\\\', '\\', $v);
+
+            if (0 === \mb_strpos($v, '"')) {
+                $v            = \mb_substr($v, 1, \mb_strlen($v) - 2);
+                $v            = \str_replace('\\"', '"', $v);
+                $v            = \str_replace('\\\\', '\\', $v);
                 $elements[$i] = $v;
             }
         }

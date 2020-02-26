@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +14,6 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.4 support
  *
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres84 extends Postgres90
 {
@@ -88,8 +89,8 @@ class Postgres84 extends Postgres90
         // Escape search term for ILIKE match
         $this->clean($term);
         $this->clean($filter);
-        $term = str_replace('_', '\_', $term);
-        $term = str_replace('%', '\%', $term);
+        $term = \str_replace('_', '\_', $term);
+        $term = \str_replace('%', '\%', $term);
 
         // Exclude system relations if necessary
         if (!$conf['show_system']) {
@@ -104,7 +105,8 @@ class Postgres84 extends Postgres90
 
         // Apply outer filter
         $sql = '';
-        if ($filter != '') {
+
+        if ('' !== $filter) {
             $sql = 'SELECT * FROM (';
         }
 
@@ -206,7 +208,7 @@ class Postgres84 extends Postgres90
 			";
         }
 
-        if ($filter != '') {
+        if ('' !== $filter) {
             // We use like to make RULE, CONSTRAINT and COLUMN searches work
             $sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
         }

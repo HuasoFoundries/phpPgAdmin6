@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -12,12 +15,11 @@ namespace PHPPgAdmin\Database;
  * Note: This class uses ADODB and returns RecordSets.
  *
  * Id: Postgres74.php,v 1.72 2008/02/20 21:06:18 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres74 extends Postgres80
 {
     public $major_version = 7.4;
+
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
@@ -51,7 +53,8 @@ class Postgres74 extends Postgres80
         $this->clean($newName);
 
         $status = $this->alterDatabaseRename($dbName, $newName);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -3;
         }
 
@@ -126,8 +129,8 @@ class Postgres74 extends Postgres80
          */
 
         // Escape search term for ILIKE match
-        $term = str_replace('_', '\\_', $term);
-        $term = str_replace('%', '\\%', $term);
+        $term = \str_replace('_', '\\_', $term);
+        $term = \str_replace('%', '\\%', $term);
         $this->clean($term);
         $this->clean($filter);
 
@@ -144,7 +147,8 @@ class Postgres74 extends Postgres80
 
         // Apply outer filter
         $sql = '';
-        if ($filter != '') {
+
+        if ('' !== $filter) {
             $sql = 'SELECT * FROM (';
         }
 
@@ -244,7 +248,7 @@ class Postgres74 extends Postgres80
 			";
         }
 
-        if ($filter != '') {
+        if ('' !== $filter) {
             // We use like to make RULE, CONSTRAINT and COLUMN searches work
             $sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
         }
@@ -325,14 +329,16 @@ class Postgres74 extends Postgres80
     ) {
         $sql    = '';
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -1;
         }
 
         // @@ NEED TO HANDLE "NESTED" TRANSACTION HERE
-        if ($notnull != $oldnotnull) {
+        if ($notnull !== $oldnotnull) {
             $status = $this->setColumnNull($table, $column, !$notnull);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -2;
@@ -340,14 +346,14 @@ class Postgres74 extends Postgres80
         }
 
         // Set default, if it has changed
-        if ($default != $olddefault) {
-            if ($default == '') {
+        if ($default !== $olddefault) {
+            if ('' === $default) {
                 $status = $this->dropColumnDefault($table, $column);
             } else {
                 $status = $this->setColumnDefault($table, $column, $default);
             }
 
-            if ($status != 0) {
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -3;
@@ -355,9 +361,10 @@ class Postgres74 extends Postgres80
         }
 
         // Rename the column, if it has been changed
-        if ($column != $name) {
+        if ($column !== $name) {
             list($status, $sql) = $this->renameColumn($table, $column, $name);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -4;
@@ -369,7 +376,8 @@ class Postgres74 extends Postgres80
         $this->fieldClean($name);
         $this->fieldClean($table);
         $status = $this->setComment('COLUMN', $name, $table, $comment);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -5;
@@ -460,8 +468,9 @@ class Postgres74 extends Postgres80
 				pg_catalog.pg_constraint AS c
 				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
 				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]';
+
         for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
-            $sql .= " OR f1.attnum=c.conkey[${i}]";
+            $sql .= " OR f1.attnum=c.conkey[{$i}]";
         }
         $sql .= '))
 				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
@@ -470,11 +479,12 @@ class Postgres74 extends Postgres80
 				) ON (c.confrelid=r2.oid)
 				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
 					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)';
+
         for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
-            $sql .= " OR (c.confkey[${i}]=f2.attnum AND c.conkey[${i}]=f1.attnum)";
+            $sql .= " OR (c.confkey[{$i}]=f2.attnum AND c.conkey[{$i}]=f1.attnum)";
         }
 
-        $sql .= sprintf("))
+        $sql .= \sprintf("))
 			WHERE
 				r1.relname = '%s' AND ns1.nspname='%s'
 			ORDER BY 1", $table, $c_schema);
@@ -495,6 +505,7 @@ class Postgres74 extends Postgres80
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
+
         if ($all) {
             // Exclude pg_catalog and information_schema tables
             $sql = "SELECT n.nspname, c.relname AS seqname, u.usename AS seqowner
@@ -547,7 +558,7 @@ class Postgres74 extends Postgres80
 		FROM
 			pg_catalog.pg_proc pc, pg_catalog.pg_language pl, pg_catalog.pg_namespace n
 		WHERE
-			pc.oid = '${function_oid}'::oid
+			pc.oid = '{$function_oid}'::oid
 			AND pc.prolang = pl.oid
 			AND n.oid = pc.pronamespace
 		";
@@ -669,21 +680,24 @@ class Postgres74 extends Postgres80
 
         // Comment
         $status = $this->setComment('TABLE', '', $tblrs->fields['relname'], $comment);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -4;
         }
 
         // Owner
         $this->fieldClean($owner);
         $status = $this->alterTableOwner($tblrs, $owner);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -5;
         }
 
         // Rename
         $this->fieldClean($name);
         $status = $this->alterTableName($tblrs, $name);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -3;
         }
 

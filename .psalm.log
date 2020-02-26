@@ -1,0 +1,15 @@
+------------------------------
+339 errors found
+------------------------------
+1617 other issues found.
+You can hide them with --show-info=false
+------------------------------
+Psalm can automatically fix 97 issues.
+Run Psalm again with 
+--alter --issues=InvalidReturnType,InvalidNullableReturnType,MissingParamType --dry-run
+to see what it can fix.
+------------------------------
+
+Checks took 14.46 seconds and used 203.375MB of memory
+Psalm was able to infer types for 81.7737% of the codebase
+

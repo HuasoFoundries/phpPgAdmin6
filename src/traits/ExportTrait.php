@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Traits;
@@ -12,6 +15,7 @@ namespace PHPPgAdmin\Traits;
 trait ExportTrait
 {
     public $href = '';
+
     public $misc;
 
     /**
@@ -25,45 +29,45 @@ trait ExportTrait
     public function dataOnly($hasID, $onlyCopyAndSQL = false)
     {
         $content = '<tr>';
-        $content .= '<th class="data left" rowspan="'.($hasID ? 2 : 1).'">';
+        $content .= '<th class="data left" rowspan="' . ($hasID ? 2 : 1) . '">';
         $content .= '<input type="radio" id="what1" name="what" value="dataonly" checked="checked" />';
-        $content .= sprintf(
+        $content .= \sprintf(
             '<label for="what1">%s</label></th>%s',
             $this->lang['strdataonly'],
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<td>%s</td>%s',
             $this->lang['strformat'],
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= '<td><select name="d_format">'.PHP_EOL;
-        $content .= '<option value="copy">COPY</option>'.PHP_EOL;
-        $content .= '<option value="sql">SQL</option>'.PHP_EOL;
+        $content .= '<td><select name="d_format">' . \PHP_EOL;
+        $content .= '<option value="copy">COPY</option>' . \PHP_EOL;
+        $content .= '<option value="sql">SQL</option>' . \PHP_EOL;
 
         if (!$onlyCopyAndSQL) {
-            $content .= '<option value="csv">CSV</option>'.PHP_EOL;
-            $content .= "<option value=\"tab\">{$this->lang['strtabbed']}</option>".PHP_EOL;
-            $content .= '<option value="html">XHTML</option>'.PHP_EOL;
-            $content .= '<option value="xml">XML</option>'.PHP_EOL;
+            $content .= '<option value="csv">CSV</option>' . \PHP_EOL;
+            $content .= "<option value=\"tab\">{$this->lang['strtabbed']}</option>" . \PHP_EOL;
+            $content .= '<option value="html">XHTML</option>' . \PHP_EOL;
+            $content .= '<option value="xml">XML</option>' . \PHP_EOL;
         }
 
-        $content .= sprintf(
+        $content .= \sprintf(
             '</select>%s</td>%s</tr>%s',
-            PHP_EOL,
-            PHP_EOL,
-            PHP_EOL
+            \PHP_EOL,
+            \PHP_EOL,
+            \PHP_EOL
         );
 
         if ($hasID) {
-            $content .= sprintf(
+            $content .= \sprintf(
                 '<tr><td><label for="d_oids">%s</td>',
                 $this->lang['stroids']
             );
-            $content .= sprintf(
+            $content .= \sprintf(
                 '<td><input type="checkbox" id="d_oids" name="d_oids" /></td>%s</tr>%s',
-                PHP_EOL,
-                PHP_EOL
+                \PHP_EOL,
+                \PHP_EOL
             );
         }
 
@@ -80,46 +84,47 @@ trait ExportTrait
     public function structureAndData($hasID)
     {
         $content = '<tr>';
-        $content .= '<th class="data left" rowspan="'.($hasID ? 3 : 2).'">';
+        $content .= '<th class="data left" rowspan="' . ($hasID ? 3 : 2) . '">';
         $content .= '<input type="radio" id="what3" name="what" value="structureanddata" />';
-        $content .= sprintf(
+        $content .= \sprintf(
             '<label for="what3">%s</label></th>%s',
             $this->lang['strstructureanddata'],
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<td>%s</td>%s',
             $this->lang['strformat'],
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= '<td><select name="sd_format">'.PHP_EOL;
-        $content .= '<option value="copy">COPY</option>'.PHP_EOL;
-        $content .= '<option value="sql">SQL</option>'.PHP_EOL;
-        $content .= sprintf(
+        $content .= '<td><select name="sd_format">' . \PHP_EOL;
+        $content .= '<option value="copy">COPY</option>' . \PHP_EOL;
+        $content .= '<option value="sql">SQL</option>' . \PHP_EOL;
+        $content .= \sprintf(
             '</select>%s</td>%s</tr>%s',
-            PHP_EOL,
-            PHP_EOL,
-            PHP_EOL
+            \PHP_EOL,
+            \PHP_EOL,
+            \PHP_EOL
         );
 
-        $content .= sprintf(
+        $content .= \sprintf(
             '<tr><td><label for="sd_clean">%s</label></td>',
             $this->lang['strdrop']
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<td><input type="checkbox" id="sd_clean" name="sd_clean" /></td>%s</tr>%s',
-            PHP_EOL,
-            PHP_EOL
+            \PHP_EOL,
+            \PHP_EOL
         );
+
         if ($hasID) {
-            $content .= sprintf(
+            $content .= \sprintf(
                 '<tr><td><label for="sd_oids">%s</label></td>',
                 $this->lang['stroids']
             );
-            $content .= sprintf(
+            $content .= \sprintf(
                 '<td><input type="checkbox" id="sd_oids" name="sd_oids" /></td>%s</tr>%s',
-                PHP_EOL,
-                PHP_EOL
+                \PHP_EOL,
+                \PHP_EOL
             );
         }
 
@@ -137,23 +142,23 @@ trait ExportTrait
     public function structureOnly($checked = false)
     {
         $content = '<tr><th class="data left">';
-        $content .= sprintf(
+        $content .= \sprintf(
             '<input type="radio" id="what2" name="what" value="structureonly" %s />',
             $checked ? 'checked="checked"' : ''
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<label for="what2">%s</label></th>',
             $this->lang['strstructureonly'],
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<td><label for="no_role_info">%s</label></td>',
             $this->lang['strdrop']
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<td><input type="checkbox" id="no_role_info" name="no_role_info" /></td>%s</tr>%s',
-            PHP_EOL,
-            PHP_EOL
+            \PHP_EOL,
+            \PHP_EOL
         );
 
         return $content;
@@ -168,21 +173,21 @@ trait ExportTrait
      */
     public function formHeader($endpoint = 'dataexport')
     {
-        $content = sprintf(
+        $content = \sprintf(
             '<form id="export_form" action="%s/%s" method="post">%s',
-            \SUBFOLDER.'/src/views',
+            \SUBFOLDER . '/src/views',
             $endpoint,
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= '<table>'.PHP_EOL;
-        $content .= sprintf(
+        $content .= '<table>' . \PHP_EOL;
+        $content .= \sprintf(
             '<tr><th class="data">%s</th>',
             $this->lang['strformat']
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<th class="data" colspan="2">%s</th></tr>%s',
             $this->lang['stroptions'],
-            PHP_EOL
+            \PHP_EOL
         );
 
         return $content;
@@ -198,28 +203,28 @@ trait ExportTrait
      */
     public function formFooter($subject, $object)
     {
-        $content = '<p><input type="hidden" name="action" value="export" />'.PHP_EOL;
+        $content = '<p><input type="hidden" name="action" value="export" />' . \PHP_EOL;
 
         $content .= $this->misc->form;
-        $content .= sprintf(
+        $content .= \sprintf(
             '<input type="hidden" name="subject" value="%s" />%s',
             $subject,
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<input type="hidden" name="%s" value="%s" />',
             $subject,
-            htmlspecialchars($object),
-            PHP_EOL
+            \htmlspecialchars($object),
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<input type="submit" value="%s" /></p>%s',
             $this->lang['strexport'],
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '</form>%s',
-            PHP_EOL
+            \PHP_EOL
         );
 
         return $content;
@@ -234,38 +239,38 @@ trait ExportTrait
      */
     public function displayOrDownload($offerGzip = false)
     {
-        $content = sprintf(
+        $content = \sprintf(
             '</table>%s',
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<h3>%s</h3>%s',
             $this->lang['stroptions'],
-            PHP_EOL
+            \PHP_EOL
         );
         $content .= '<p><input type="radio" id="output1" name="output" value="show" checked="checked" />';
-        $content .= sprintf(
+        $content .= \sprintf(
             '<label for="output1">%s</label>',
             $this->lang['strshow'],
-            PHP_EOL
+            \PHP_EOL
         );
         $content .= '<br/><input type="radio" id="output2" name="output" value="download" />';
-        $content .= sprintf(
+        $content .= \sprintf(
             '<label for="output2">%s</label>',
             $this->lang['strdownload']
         );
 
         if ($offerGzip) {
             $content .= '<br /><input type="radio" id="output3" name="output" value="gzipped" />';
-            $content .= sprintf(
+            $content .= \sprintf(
                 '<label for="output3">%s</label>%s',
                 $this->lang['strdownloadgzipped'],
-                PHP_EOL
+                \PHP_EOL
             );
         }
-        $content .= sprintf(
+        $content .= \sprintf(
             '</p>%s',
-            PHP_EOL
+            \PHP_EOL
         );
 
         return $content;
@@ -282,33 +287,34 @@ trait ExportTrait
     public function offerNoRoleExport($version10orMore)
     {
         $this->prtrace($version10orMore);
+
         if (!$version10orMore) {
             return '';
         }
-        $content = '<tr>'.PHP_EOL;
-        $content .= sprintf(
+        $content = '<tr>' . \PHP_EOL;
+        $content .= \sprintf(
             '<tr>%s<td colspan="3">&nbsp</td></tr>%s',
-            PHP_EOL,
-            PHP_EOL
+            \PHP_EOL,
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<tr>%s<th class="data left" colspan="3"><h3>%s <br> %s</h3></th></tr>%s',
-            PHP_EOL,
+            \PHP_EOL,
             'Use the option below if your platform prevents dumping DBs',
             'with role info (e.g. Amazon RDS)',
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<tr>%s<td colspan="2"><label for="no_role_passwords">%s</label><a href="%s">?</></td>%s',
-            PHP_EOL,
+            \PHP_EOL,
             'Avoid dumping roles',
             'https://www.postgresql.org/docs/10/app-pg-dumpall.html',
-            PHP_EOL
+            \PHP_EOL
         );
-        $content .= sprintf(
+        $content .= \sprintf(
             '<td><input type="checkbox" id="no_role_passwords" name="no_role_passwords" /></td>%s</tr>%s',
-            PHP_EOL,
-            PHP_EOL
+            \PHP_EOL,
+            \PHP_EOL
         );
 
         return $content;

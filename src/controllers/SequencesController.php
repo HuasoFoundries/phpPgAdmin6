@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +13,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class SequencesController extends BaseController
 {
@@ -22,7 +23,7 @@ class SequencesController extends BaseController
      */
     public function render()
     {
-        if ('tree' == $this->action) {
+        if ('tree' === $this->action) {
             return $this->doTree();
         }
 
@@ -111,7 +112,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -202,7 +203,7 @@ class SequencesController extends BaseController
                 ],
             ],
             'content' => $this->lang['strcreatesequence'],
-        ]], 'sequences-sequences', get_defined_vars());
+        ]], 'sequences-sequences', \get_defined_vars());
     }
 
     /**
@@ -238,7 +239,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = '')
+    public function doProperties($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
         $this->printTrail('sequence');
@@ -248,17 +249,18 @@ class SequencesController extends BaseController
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
-        if (is_object($sequence) && $sequence->recordCount() > 0) {
+        if (\is_object($sequence) && 0 < $sequence->recordCount()) {
             $sequence->fields['is_cycled'] = $data->phpBool($sequence->fields['is_cycled']);
             $sequence->fields['is_called'] = $data->phpBool($sequence->fields['is_called']);
 
             // Show comment if any
             if (null !== $sequence->fields['seqcomment']) {
-                echo '<p class="comment">', $this->misc->printVal($sequence->fields['seqcomment']), '</p>'.PHP_EOL;
+                echo '<p class="comment">', $this->misc->printVal($sequence->fields['seqcomment']), '</p>' . \PHP_EOL;
             }
 
             echo '<table border="0">';
             echo "<tr><th class=\"data\">{$this->lang['strname']}</th>";
+
             if ($data->hasAlterSequenceStart()) {
                 echo "<th class=\"data\">{$this->lang['strstartvalue']}</th>";
             }
@@ -272,6 +274,7 @@ class SequencesController extends BaseController
             echo "<th class=\"data\">{$this->lang['striscalled']}</th></tr>";
             echo '<tr>';
             echo '<td class="data1">', $this->misc->printVal($sequence->fields['seqname']), '</td>';
+
             if ($data->hasAlterSequenceStart()) {
                 echo '<td class="data1">', $this->misc->printVal($sequence->fields['start_value']), '</td>';
             }
@@ -381,9 +384,9 @@ class SequencesController extends BaseController
                 unset($navlinks['restart']);
             }
 
-            $this->printNavLinks($navlinks, 'sequences-properties', get_defined_vars());
+            $this->printNavLinks($navlinks, 'sequences-properties', \get_defined_vars());
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
         }
     }
 
@@ -406,44 +409,47 @@ class SequencesController extends BaseController
             $this->printTitle($this->lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/sequences" method="post">'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/sequences" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
-                    $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($this->lang['strconfdropsequence'], $this->misc->printVal($a['sequence'])), '</p>'.PHP_EOL;
-                    printf('<input type="hidden" name="sequence[]" value="%s" />', htmlspecialchars($a['sequence']));
+                    $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
+                    echo '<p>', \sprintf($this->lang['strconfdropsequence'], $this->misc->printVal($a['sequence'])), '</p>' . \PHP_EOL;
+                    \printf('<input type="hidden" name="sequence[]" value="%s" />', \htmlspecialchars($a['sequence']));
                 }
             } else {
-                echo '<p>', sprintf($this->lang['strconfdropsequence'], $this->misc->printVal($_REQUEST['sequence'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="sequence" value="', htmlspecialchars($_REQUEST['sequence']), '" />'.PHP_EOL;
+                echo '<p>', \sprintf($this->lang['strconfdropsequence'], $this->misc->printVal($_REQUEST['sequence'])), '</p>' . \PHP_EOL;
+                echo '<input type="hidden" name="sequence" value="', \htmlspecialchars($_REQUEST['sequence']), '" />' . \PHP_EOL;
             }
 
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="drop" />'.PHP_EOL;
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
-            if (is_array($_POST['sequence'])) {
+            if (\is_array($_POST['sequence'])) {
                 $msg    = '';
                 $status = $data->beginTransaction();
-                if (0 == $status) {
+
+                if (0 === $status) {
                     foreach ($_POST['sequence'] as $s) {
                         $status = $data->dropSequence($s, isset($_POST['cascade']));
-                        if (0 == $status) {
-                            $msg .= sprintf('%s: %s<br />', htmlentities($s, ENT_QUOTES, 'UTF-8'), $this->lang['strsequencedropped']);
+
+                        if (0 === $status) {
+                            $msg .= \sprintf('%s: %s<br />', \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strsequencedropped']);
                         } else {
                             $data->endTransaction();
-                            $this->doDefault(sprintf('%s%s: %s<br />', $msg, htmlentities($s, ENT_QUOTES, 'UTF-8'), $this->lang['strsequencedroppedbad']));
+                            $this->doDefault(\sprintf('%s%s: %s<br />', $msg, \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strsequencedroppedbad']));
 
                             return;
                         }
                     }
                 }
-                if (0 == $data->endTransaction()) {
+
+                if (0 === $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($msg);
@@ -452,7 +458,8 @@ class SequencesController extends BaseController
                 }
             } else {
                 $status = $data->dropSequence($_POST['sequence'], isset($_POST['cascade']));
-                if (0 == $status) {
+
+                if (0 === $status) {
                     $this->misc->setReloadBrowser(true);
                     $this->doDefault($this->lang['strsequencedropped']);
                 } else {
@@ -467,7 +474,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreateSequence($msg = '')
+    public function doCreateSequence($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -487,54 +494,54 @@ class SequencesController extends BaseController
         $this->printTitle($this->lang['strcreatesequence'], 'pg.sequence.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/sequences" method="post">'.PHP_EOL;
-        echo '<table>'.PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . '/src/views/sequences" method="post">' . \PHP_EOL;
+        echo '<table>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+        echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "<td class=\"data1\"><input name=\"formSequenceName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formSequenceName']), '" /></td></tr>'.PHP_EOL;
+        \htmlspecialchars($_POST['formSequenceName']), '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strincrementby']}</th>".PHP_EOL;
+        echo "<tr><th class=\"data left\">{$this->lang['strincrementby']}</th>" . \PHP_EOL;
         echo '<td class="data1"><input name="formIncrement" size="5" value="',
-        htmlspecialchars($_POST['formIncrement']), '" /> </td></tr>'.PHP_EOL;
+        \htmlspecialchars($_POST['formIncrement']), '" /> </td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strminvalue']}</th>".PHP_EOL;
+        echo "<tr><th class=\"data left\">{$this->lang['strminvalue']}</th>" . \PHP_EOL;
         echo '<td class="data1"><input name="formMinValue" size="5" value="',
-        htmlspecialchars($_POST['formMinValue']), '" /></td></tr>'.PHP_EOL;
+        \htmlspecialchars($_POST['formMinValue']), '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strmaxvalue']}</th>".PHP_EOL;
+        echo "<tr><th class=\"data left\">{$this->lang['strmaxvalue']}</th>" . \PHP_EOL;
         echo '<td class="data1"><input name="formMaxValue" size="5" value="',
-        htmlspecialchars($_POST['formMaxValue']), '" /></td></tr>'.PHP_EOL;
+        \htmlspecialchars($_POST['formMaxValue']), '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strstartvalue']}</th>".PHP_EOL;
+        echo "<tr><th class=\"data left\">{$this->lang['strstartvalue']}</th>" . \PHP_EOL;
         echo '<td class="data1"><input name="formStartValue" size="5" value="',
-        htmlspecialchars($_POST['formStartValue']), '" /></td></tr>'.PHP_EOL;
+        \htmlspecialchars($_POST['formStartValue']), '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strcachevalue']}</th>".PHP_EOL;
+        echo "<tr><th class=\"data left\">{$this->lang['strcachevalue']}</th>" . \PHP_EOL;
         echo '<td class="data1"><input name="formCacheValue" size="5" value="',
-        htmlspecialchars($_POST['formCacheValue']), '" /></td></tr>'.PHP_EOL;
+        \htmlspecialchars($_POST['formCacheValue']), '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\"><label for=\"formCycledValue\">{$this->lang['strcancycle']}</label></th>".PHP_EOL;
+        echo "<tr><th class=\"data left\"><label for=\"formCycledValue\">{$this->lang['strcancycle']}</label></th>" . \PHP_EOL;
         echo '<td class="data1"><input type="checkbox" id="formCycledValue" name="formCycledValue" ',
-        (isset($_POST['formCycledValue']) ? ' checked="checked"' : ''), ' /></td></tr>'.PHP_EOL;
+        (isset($_POST['formCycledValue']) ? ' checked="checked"' : ''), ' /></td></tr>' . \PHP_EOL;
 
-        echo '</table>'.PHP_EOL;
-        echo '<p><input type="hidden" name="action" value="save_create_sequence" />'.PHP_EOL;
+        echo '</table>' . \PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_create_sequence" />' . \PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-        echo '</form>'.PHP_EOL;
+        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo '</form>' . \PHP_EOL;
     }
 
     /**
      * Actually creates the new sequence in the database.
      */
-    public function doSaveCreateSequence()
+    public function doSaveCreateSequence(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name and at least one column
-        if ('' == $_POST['formSequenceName']) {
+        if ('' === $_POST['formSequenceName']) {
             $this->doCreateSequence($this->lang['strsequenceneedsname']);
         } else {
             $status = $data->createSequence(
@@ -546,7 +553,8 @@ class SequencesController extends BaseController
                 $_POST['formCacheValue'],
                 isset($_POST['formCycledValue'])
             );
-            if (0 == $status) {
+
+            if (0 === $status) {
                 $this->doDefault($this->lang['strsequencecreated']);
             } else {
                 $this->doCreateSequence($this->lang['strsequencecreatedbad']);
@@ -557,12 +565,13 @@ class SequencesController extends BaseController
     /**
      * Restarts a sequence.
      */
-    public function doRestart()
+    public function doRestart(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->restartSequence($_REQUEST['sequence']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->doProperties($this->lang['strsequencerestart']);
         } else {
             $this->doProperties($this->lang['strsequencerestartbad']);
@@ -572,12 +581,13 @@ class SequencesController extends BaseController
     /**
      * Resets a sequence.
      */
-    public function doReset()
+    public function doReset(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->resetSequence($_REQUEST['sequence']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->doProperties($this->lang['strsequencereset']);
         } else {
             $this->doProperties($this->lang['strsequenceresetbad']);
@@ -587,12 +597,13 @@ class SequencesController extends BaseController
     /**
      * Set Nextval of a sequence.
      */
-    public function doNextval()
+    public function doNextval(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->nextvalSequence($_REQUEST['sequence']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->doProperties($this->lang['strsequencenextval']);
         } else {
             $this->doProperties($this->lang['strsequencenextvalbad']);
@@ -602,12 +613,13 @@ class SequencesController extends BaseController
     /**
      * Function to save after 'setval'ing a sequence.
      */
-    public function doSaveSetval()
+    public function doSaveSetval(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->setvalSequence($_POST['sequence'], $_POST['nextvalue']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->doProperties($this->lang['strsequencesetval']);
         } else {
             $this->doProperties($this->lang['strsequencesetvalbad']);
@@ -619,7 +631,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doSetval($msg = '')
+    public function doSetval($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -630,29 +642,29 @@ class SequencesController extends BaseController
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
-        if (is_object($sequence) && $sequence->recordCount() > 0) {
-            echo '<form action="'.\SUBFOLDER.'/src/views/sequences" method="post">'.PHP_EOL;
+        if (\is_object($sequence) && 0 < $sequence->recordCount()) {
+            echo '<form action="' . self::SUBFOLDER . '/src/views/sequences" method="post">' . \PHP_EOL;
             echo '<table border="0">';
-            echo "<tr><th class=\"data left required\">{$this->lang['strlastvalue']}</th>".PHP_EOL;
+            echo "<tr><th class=\"data left required\">{$this->lang['strlastvalue']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
             echo "<input name=\"nextvalue\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            $this->misc->printVal($sequence->fields['last_value']), '" /></td></tr>'.PHP_EOL;
-            echo '</table>'.PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="setval" />'.PHP_EOL;
-            echo '<input type="hidden" name="sequence" value="', htmlspecialchars($_REQUEST['sequence']), '" />'.PHP_EOL;
+            $this->misc->printVal($sequence->fields['last_value']), '" /></td></tr>' . \PHP_EOL;
+            echo '</table>' . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="setval" />' . \PHP_EOL;
+            echo '<input type="hidden" name="sequence" value="', \htmlspecialchars($_REQUEST['sequence']), '" />' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"setval\" value=\"{$this->lang['strsetval']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"setval\" value=\"{$this->lang['strsetval']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
         }
     }
 
     /**
      * Function to save after altering a sequence.
      */
-    public function doSaveAlter()
+    public function doSaveAlter(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -689,14 +701,15 @@ class SequencesController extends BaseController
             $_POST['formStartValue']
         );
 
-        if (0 == $status) {
-            if ($_POST['sequence'] != $_POST['name']) {
+        if (0 === $status) {
+            if ($_POST['sequence'] !== $_POST['name']) {
                 // Jump them to the new view name
                 $_REQUEST['sequence'] = $_POST['name'];
                 // Force a browser reload
                 $this->misc->setReloadBrowser(true);
             }
-            if (!empty($_POST['newschema']) && ($_POST['newschema'] != $data->_schema)) {
+
+            if (!empty($_POST['newschema']) && ($_POST['newschema'] !== $data->_schema)) {
                 // Jump them to the new sequence schema
                 $this->misc->setCurrentSchema($_POST['newschema']);
                 $this->misc->setReloadBrowser(true);
@@ -712,7 +725,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = '')
+    public function doAlter($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -723,7 +736,7 @@ class SequencesController extends BaseController
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
-        if (is_object($sequence) && $sequence->recordCount() > 0) {
+        if (\is_object($sequence) && 0 < $sequence->recordCount()) {
             $this->coalesceArr($_POST, 'name', $_REQUEST['sequence']);
 
             $this->coalesceArr($_POST, 'comment', $sequence->fields['seqcomment']);
@@ -734,90 +747,93 @@ class SequencesController extends BaseController
 
             // Handle Checkbox Value
             $sequence->fields['is_cycled'] = $data->phpBool($sequence->fields['is_cycled']);
+
             if ($sequence->fields['is_cycled']) {
                 $_POST['formCycledValue'] = 'on';
             }
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/sequences" method="post">'.PHP_EOL;
-            echo '<table>'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/sequences" method="post">' . \PHP_EOL;
+            echo '<table>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
             echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['name']), '" /></td></tr>'.PHP_EOL;
+            \htmlspecialchars($_POST['name']), '" /></td></tr>' . \PHP_EOL;
 
             if ($data->isSuperUser()) {
                 // Fetch all users
                 $users = $data->getUsers();
 
-                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>".PHP_EOL;
+                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
                 echo '<td class="data1"><select name="owner">';
+
                 while (!$users->EOF) {
                     $uname = $users->fields['usename'];
-                    echo '<option value="', htmlspecialchars($uname), '"',
-                    ($uname == $_POST['owner']) ? ' selected="selected"' : '', '>', htmlspecialchars($uname), '</option>'.PHP_EOL;
+                    echo '<option value="', \htmlspecialchars($uname), '"',
+                    ($uname === $_POST['owner']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
                     $users->moveNext();
                 }
-                echo '</select></td></tr>'.PHP_EOL;
+                echo '</select></td></tr>' . \PHP_EOL;
             }
 
             if ($data->hasAlterSequenceSchema()) {
                 $schemas = $data->getSchemas();
-                echo "<tr><th class=\"data left required\">{$this->lang['strschema']}</th>".PHP_EOL;
+                echo "<tr><th class=\"data left required\">{$this->lang['strschema']}</th>" . \PHP_EOL;
                 echo '<td class="data1"><select name="newschema">';
+
                 while (!$schemas->EOF) {
                     $schema = $schemas->fields['nspname'];
-                    echo '<option value="', htmlspecialchars($schema), '"',
-                    ($schema == $_POST['newschema']) ? ' selected="selected"' : '', '>', htmlspecialchars($schema), '</option>'.PHP_EOL;
+                    echo '<option value="', \htmlspecialchars($schema), '"',
+                    ($schema === $_POST['newschema']) ? ' selected="selected"' : '', '>', \htmlspecialchars($schema), '</option>' . \PHP_EOL;
                     $schemas->moveNext();
                 }
-                echo '</select></td></tr>'.PHP_EOL;
+                echo '</select></td></tr>' . \PHP_EOL;
             }
 
-            echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
             echo '<textarea rows="3" cols="32" name="comment">',
-            htmlspecialchars($_POST['comment']), '</textarea></td></tr>'.PHP_EOL;
+            \htmlspecialchars($_POST['comment']), '</textarea></td></tr>' . \PHP_EOL;
 
             if ($data->hasAlterSequenceStart()) {
-                echo "<tr><th class=\"data left\">{$this->lang['strstartvalue']}</th>".PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strstartvalue']}</th>" . \PHP_EOL;
                 echo '<td class="data1"><input name="formStartValue" size="5" value="',
-                htmlspecialchars($sequence->fields['start_value']), '" /></td></tr>'.PHP_EOL;
+                \htmlspecialchars($sequence->fields['start_value']), '" /></td></tr>' . \PHP_EOL;
             }
 
-            echo "<tr><th class=\"data left\">{$this->lang['strrestartvalue']}</th>".PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strrestartvalue']}</th>" . \PHP_EOL;
             echo '<td class="data1"><input name="formRestartValue" size="5" value="',
-            htmlspecialchars($sequence->fields['last_value']), '" /></td></tr>'.PHP_EOL;
+            \htmlspecialchars($sequence->fields['last_value']), '" /></td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\">{$this->lang['strincrementby']}</th>".PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strincrementby']}</th>" . \PHP_EOL;
             echo '<td class="data1"><input name="formIncrement" size="5" value="',
-            htmlspecialchars($sequence->fields['increment_by']), '" /> </td></tr>'.PHP_EOL;
+            \htmlspecialchars($sequence->fields['increment_by']), '" /> </td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\">{$this->lang['strmaxvalue']}</th>".PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strmaxvalue']}</th>" . \PHP_EOL;
             echo '<td class="data1"><input name="formMaxValue" size="5" value="',
-            htmlspecialchars($sequence->fields['max_value']), '" /></td></tr>'.PHP_EOL;
+            \htmlspecialchars($sequence->fields['max_value']), '" /></td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\">{$this->lang['strminvalue']}</th>".PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strminvalue']}</th>" . \PHP_EOL;
             echo '<td class="data1"><input name="formMinValue" size="5" value="',
-            htmlspecialchars($sequence->fields['min_value']), '" /></td></tr>'.PHP_EOL;
+            \htmlspecialchars($sequence->fields['min_value']), '" /></td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\">{$this->lang['strcachevalue']}</th>".PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strcachevalue']}</th>" . \PHP_EOL;
             echo '<td class="data1"><input name="formCacheValue" size="5" value="',
-            htmlspecialchars($sequence->fields['cache_value']), '" /></td></tr>'.PHP_EOL;
+            \htmlspecialchars($sequence->fields['cache_value']), '" /></td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\"><label for=\"formCycledValue\">{$this->lang['strcancycle']}</label></th>".PHP_EOL;
+            echo "<tr><th class=\"data left\"><label for=\"formCycledValue\">{$this->lang['strcancycle']}</label></th>" . \PHP_EOL;
             echo '<td class="data1"><input type="checkbox" id="formCycledValue" name="formCycledValue" ',
-            (isset($_POST['formCycledValue']) ? ' checked="checked"' : ''), ' /></td></tr>'.PHP_EOL;
+            (isset($_POST['formCycledValue']) ? ' checked="checked"' : ''), ' /></td></tr>' . \PHP_EOL;
 
-            echo '</table>'.PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="alter" />'.PHP_EOL;
+            echo '</table>' . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="alter" />' . \PHP_EOL;
             echo $this->misc->form;
-            echo '<input type="hidden" name="sequence" value="', htmlspecialchars($_REQUEST['sequence']), '" />'.PHP_EOL;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo '<input type="hidden" name="sequence" value="', \htmlspecialchars($_REQUEST['sequence']), '" />' . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
         }
     }
 }

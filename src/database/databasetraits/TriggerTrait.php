@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -104,6 +107,7 @@ trait TriggerTrait
         $this->fieldClean($table);
 
         $sql = "DROP TRIGGER \"{$tgname}\" ON \"{$f_schema}\".\"{$table}\"";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }
@@ -196,27 +200,30 @@ trait TriggerTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($name);
         $this->fieldClean($table);
-        if (!in_array($event, $this->rule_events, true)) {
+
+        if (!\in_array($event, $this->rule_events, true)) {
             return -1;
         }
 
         $sql = 'CREATE';
+
         if ($replace) {
             $sql .= ' OR REPLACE';
         }
 
         $sql .= " RULE \"{$name}\" AS ON {$event} TO \"{$f_schema}\".\"{$table}\"";
         // Can't escape WHERE clause
-        if ($where != '') {
+        if ('' !== $where) {
             $sql .= " WHERE {$where}";
         }
 
         $sql .= ' DO';
+
         if ($instead) {
             $sql .= ' INSTEAD';
         }
 
-        if ($type == 'NOTHING') {
+        if ('NOTHING' === $type) {
             $sql .= ' NOTHING';
         } else {
             $sql .= " ({$action})";
@@ -242,6 +249,7 @@ trait TriggerTrait
         $this->fieldClean($relation);
 
         $sql = "DROP RULE \"{$rule}\" ON \"{$f_schema}\".\"{$relation}\"";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }

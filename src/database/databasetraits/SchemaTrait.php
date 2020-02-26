@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -65,10 +68,10 @@ trait SchemaTrait
         // Get the current schema search path, including 'pg_catalog'.
         $search_path = $this->getSearchPath();
         // Prepend $schema to search path
-        array_unshift($search_path, $schema);
+        \array_unshift($search_path, $schema);
         $status = $this->setSearchPath($search_path);
 
-        if ($status == 0) {
+        if (0 === $status) {
             $this->_schema = $schema;
 
             return 0;
@@ -103,28 +106,30 @@ trait SchemaTrait
      */
     public function setSearchPath($paths)
     {
-        if (!is_array($paths)) {
+        if (!\is_array($paths)) {
             return -1;
         }
 
-        if (sizeof($paths) == 0) {
+        if (0 === \count($paths)) {
             return -2;
         }
-        if (sizeof($paths) == 1 && $paths[0] == '') {
+
+        if (1 === \count($paths) && '' === $paths[0]) {
             // Need to handle empty paths in some cases
             $paths[0] = 'pg_catalog';
         }
 
         // Loop over all the paths to check that none are empty
         $temp = [];
+
         foreach ($paths as $schema) {
-            if ($schema != '') {
+            if ('' !== $schema) {
                 $temp[] = $schema;
             }
         }
         $this->fieldArrayClean($temp);
 
-        $sql = 'SET SEARCH_PATH TO "'.implode('","', $temp).'"';
+        $sql = 'SET SEARCH_PATH TO "' . \implode('","', $temp) . '"';
 
         return $this->execute($sql);
     }
@@ -144,29 +149,33 @@ trait SchemaTrait
         $this->fieldClean($authorization);
 
         $sql = "CREATE SCHEMA \"{$schemaname}\"";
-        if ($authorization != '') {
+
+        if ('' !== $authorization) {
             $sql .= " AUTHORIZATION \"{$authorization}\"";
         }
 
-        if ($comment != '') {
+        if ('' !== $comment) {
             $status = $this->beginTransaction();
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 return -1;
             }
         }
 
         // Create the new schema
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
         }
 
         // Set the comment
-        if ($comment != '') {
+        if ('' !== $comment) {
             $status = $this->setComment('SCHEMA', $schemaname, '', $comment);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -1;
@@ -195,14 +204,16 @@ trait SchemaTrait
         $this->fieldClean($owner);
 
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
         }
 
         $status = $this->setComment('SCHEMA', $schemaname, '', $comment);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
@@ -210,10 +221,11 @@ trait SchemaTrait
 
         $schema_rs = $this->getSchemaByName($schemaname);
         /* Only if the owner change */
-        if ($schema_rs->fields['ownername'] != $owner) {
+        if ($schema_rs->fields['ownername'] !== $owner) {
             $sql    = "ALTER SCHEMA \"{$schemaname}\" OWNER TO \"{$owner}\"";
             $status = $this->execute($sql);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -1;
@@ -221,10 +233,11 @@ trait SchemaTrait
         }
 
         // Only if the name has changed
-        if ($name != $schemaname) {
+        if ($name !== $schemaname) {
             $sql    = "ALTER SCHEMA \"{$schemaname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -1;
@@ -269,6 +282,7 @@ trait SchemaTrait
         $this->fieldClean($schemaname);
 
         $sql = "DROP SCHEMA \"{$schemaname}\"";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }

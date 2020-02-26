@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -11,9 +14,11 @@ namespace PHPPgAdmin\XHtml;
  */
 class HTMLFooterController extends HTMLController
 {
-    public $controller_name        = 'HTMLFooterController';
+    public $controller_name = 'HTMLFooterController';
+
     private $_reload_drop_database = false;
-    private $_no_bottom_link       = false;
+
+    private $_no_bottom_link = false;
 
     /**
      * Sets the value of $_reload_drop_database which in turn will trigger a reload in the browser frame.
@@ -52,6 +57,7 @@ class HTMLFooterController extends HTMLController
     public function printFooter($doBody = true, $template = 'footer.twig')
     {
         $reload_param = 'none';
+
         if ($this->misc->getReloadBrowser()) {
             $reload_param = 'other';
         } elseif ($this->_reload_drop_database) {
@@ -77,11 +83,11 @@ class HTMLFooterController extends HTMLController
      *
      * @param string $object eg. forms[0].username
      */
-    public function setFocus($object)
+    public function setFocus($object): void
     {
-        echo '<script type="text/javascript">'.PHP_EOL;
+        echo '<script type="text/javascript">' . \PHP_EOL;
         echo "   document.{$object}.focus();\n";
-        echo '</script>'.PHP_EOL;
+        echo '</script>' . \PHP_EOL;
     }
 
     /**
@@ -91,13 +97,13 @@ class HTMLFooterController extends HTMLController
      * @param bool   $addServer if true (default) then the server id is
      *                          attached to the name
      */
-    public function setWindowName($name, $addServer = true)
+    public function setWindowName($name, $addServer = true): void
     {
-        echo '<script type="text/javascript">'.PHP_EOL;
+        echo '<script type="text/javascript">' . \PHP_EOL;
         echo "//<![CDATA[\n";
-        echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
-        echo '//]]>'.PHP_EOL;
-        echo '</script>'.PHP_EOL;
+        echo "   window.name = '{$name}", ($addServer ? ':' . \htmlspecialchars($this->misc->getServerId()) : ''), "';\n";
+        echo '//]]>' . \PHP_EOL;
+        echo '</script>' . \PHP_EOL;
     }
 
     /**
@@ -127,7 +133,7 @@ class HTMLFooterController extends HTMLController
             'env'      => $env,
         ];
 
-        if (count($navlinks) > 0) {
+        if (0 < \count($navlinks)) {
             if ($do_print) {
                 $this->printLinksList($navlinks, 'navlink', true, $from);
             } else {

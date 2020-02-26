@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin;
@@ -11,8 +14,6 @@ namespace PHPPgAdmin;
  * Really simple RecordSet to allow printTable of arrays.
  *
  * Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
- *
- * @package PHPPgAdmin
  */
 
 /**
@@ -20,15 +21,16 @@ namespace PHPPgAdmin;
  * Mimics the behavior of an ADORecordset.
  *
  * Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
- *
- * @package PHPPgAdmin
  */
 class ArrayRecordSet
 {
-    private $_array;
-    private $_count;
     public $EOF = false;
+
     public $fields;
+
+    private $_array;
+
+    private $_count;
 
     /**
      * Constructor.
@@ -38,9 +40,10 @@ class ArrayRecordSet
     public function __construct($data)
     {
         $this->_array = $data;
-        $this->_count = count($this->_array);
-        $this->fields = reset($this->_array);
-        if ($this->fields === false) {
+        $this->_count = \count($this->_array);
+        $this->fields = \reset($this->_array);
+
+        if (false === $this->fields) {
             $this->EOF = true;
         }
     }
@@ -59,10 +62,11 @@ class ArrayRecordSet
      * Advance the internal pointer of the instance array
      * if no more fields are left, marks the instance variable $EOF as true.
      */
-    public function moveNext()
+    public function moveNext(): void
     {
-        $this->fields = next($this->_array);
-        if ($this->fields === false) {
+        $this->fields = \next($this->_array);
+
+        if (false === $this->fields) {
             $this->EOF = true;
         }
     }

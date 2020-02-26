@@ -1,34 +1,59 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
 
-ini_set('display_errors', 1);
+use PHPPgAdmin\XHtml;
+
+\defined('BASE_PATH') || \define(BASE_PATH, \dirname(__DIR__, 2));
+\defined('SUBFOLDER') || \define(
+    'SUBFOLDER',
+    \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
+);
+\defined('DEBUGMODE') || \define('DEBUGMODE', false);
+
+\ini_set('display_errors', DEBUGMODE);
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class BaseController
 {
     use \PHPPgAdmin\Traits\HelperTrait;
+    /**
+     * @var string
+     */
+    const BASE_PATH = BASE_PATH;
+    /**
+     * @var string
+     */
+    const SUBFOLDER = SUBFOLDER;
+    /**
+     * @var string
+     */
+    const DEBUGMODE = DEBUGMODE;
 
-    protected $container;
-    protected $app;
-    protected $data;
-    protected $database;
-    protected $server_id;
     public $appLangFiles = [];
-    public $appThemes    = [];
-    public $appName      = '';
-    public $appVersion   = '';
-    public $form         = '';
-    public $href         = '';
-    public $lang         = [];
-    public $action       = '';
+
+    public $appThemes = [];
+
+    public $appName = '';
+
+    public $appVersion = '';
+
+    public $form = '';
+
+    public $href = '';
+
+    public $lang = [];
+
+    public $action = '';
+
     public $controller_name;
 
     /**
@@ -37,24 +62,61 @@ class BaseController
      * @var string
      */
     public $view_name;
+
     /**
      * Used to print the title passing its value to $lang.
      *
      * @var string
      */
     public $controller_title = 'base';
-    protected $table_controller;
-    protected $trail_controller;
-    protected $tree_controller;
-    protected $footer_controller;
-    protected $header_controller;
-    protected $scripts = '';
-    public $msg        = '';
+
+    public $msg = '';
+
     public $view;
 
     public $misc;
+
     public $conf;
+
     public $phpMinVer;
+
+    protected $container;
+
+    protected $app;
+
+    protected $data;
+
+    protected $database;
+
+    protected $server_id;
+
+    /**
+     * @var XHtml\HTMLTableController
+     */
+    protected $_table_controller;
+
+    /**
+     * @var XHtml\HTMLFooterController
+     */
+    protected $_footer_controller;
+
+    /**
+     * @var XHtml\HTMLHeaderController
+     */
+    protected $_header_controller;
+
+    /**
+     * @var XHtml\HTMLNavbarController
+     */
+    protected $_trail_controller;
+
+    /**
+     * @var TreeController
+     */
+    protected $_tree_controller;
+
+    protected $scripts = '';
+
     protected $no_db_connection = false;
 
     /**
@@ -68,8 +130,8 @@ class BaseController
         $this->container = $container;
         $this->lang      = $container->get('lang');
 
-        $this->controller_name = str_replace(__NAMESPACE__.'\\', '', get_class($this));
-        $this->view_name       = str_replace('controller', '', strtolower($this->controller_name));
+        $this->controller_name = \str_replace(__NAMESPACE__ . '\\', '', \get_class($this));
+        $this->view_name       = \str_replace('controller', '', \mb_strtolower($this->controller_name));
         $this->script          = $this->view_name;
 
         $this->view = $container->get('view');
@@ -103,7 +165,7 @@ class BaseController
             $_server_info = $this->misc->getServerInfo();
             // Redirect to the login form if not logged in
             if (!isset($_server_info['username'])) {
-                $msg = sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
+                $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
 
                 $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
 
@@ -114,6 +176,7 @@ class BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     * @return string|void
      */
     public function render()
     {
@@ -153,57 +216,12 @@ class BaseController
     {
         $title = $title ? $title : $this->controller_title;
 
-        return $prefix.$this->lang[$title].($suffix ? ': '.$suffix : '');
+        return $prefix . $this->lang[$title] . ($suffix ? ': ' . $suffix : '');
     }
 
     public function getContainer()
     {
         return $this->container;
-    }
-
-    private function _getTableController()
-    {
-        if (null === $this->table_controller) {
-            $this->table_controller = new \PHPPgAdmin\XHtml\HTMLTableController($this->getContainer(), $this->controller_name);
-        }
-
-        return $this->table_controller;
-    }
-
-    private function _getFooterController()
-    {
-        if (null === $this->footer_controller) {
-            $this->footer_controller = new \PHPPgAdmin\XHtml\HTMLFooterController($this->getContainer(), $this->controller_name);
-        }
-
-        return $this->footer_controller;
-    }
-
-    private function _getHeaderController()
-    {
-        if (null === $this->header_controller) {
-            $this->header_controller = new \PHPPgAdmin\XHtml\HTMLHeaderController($this->getContainer(), $this->controller_name);
-        }
-
-        return $this->header_controller;
-    }
-
-    private function _getNavbarController()
-    {
-        if (null === $this->trail_controller) {
-            $this->trail_controller = new \PHPPgAdmin\XHtml\HTMLNavbarController($this->getContainer(), $this->controller_name);
-        }
-
-        return $this->trail_controller;
-    }
-
-    private function _getTreeController()
-    {
-        if (null === $this->tree_controller) {
-            $this->tree_controller = new \PHPPgAdmin\XHtml\TreeController($this->getContainer(), $this->controller_name);
-        }
-
-        return $this->tree_controller;
     }
 
     /**
@@ -227,7 +245,14 @@ class BaseController
         return $html_table->printTable();
     }
 
-    public function adjustTabsForTree($tabs)
+    /**
+     * Hides or show tree tabs according to their properties.
+     *
+     * @param array $tabs The tabs
+     *
+     * @return \PHPPgAdmin\ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
+     */
+    public function adjustTabsForTree(&$tabs)
     {
         $tree = $this->_getTreeController();
 
@@ -395,10 +420,12 @@ class BaseController
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
-        $msg  = htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
-        if ('' != $msg) {
-            $html .= '<p class="message">'.nl2br($msg).'</p>'.PHP_EOL;
+        $msg  = \htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
+
+        if ('' !== $msg) {
+            $html .= '<p class="message">' . \nl2br($msg) . '</p>' . \PHP_EOL;
         }
+
         if ($do_print) {
             echo $html;
 
@@ -406,5 +433,50 @@ class BaseController
         }
 
         return $html;
+    }
+
+    private function _getTableController()
+    {
+        if (null === $this->_table_controller) {
+            $this->_table_controller = new XHtml\HTMLTableController($this->getContainer(), $this->controller_name);
+        }
+
+        return $this->_table_controller;
+    }
+
+    private function _getFooterController()
+    {
+        if (null === $this->_footer_controller) {
+            $this->_footer_controller = new XHtml\HTMLFooterController($this->getContainer(), $this->controller_name);
+        }
+
+        return $this->_footer_controller;
+    }
+
+    private function _getHeaderController()
+    {
+        if (null === $this->_header_controller) {
+            $this->_header_controller = new XHtml\HTMLHeaderController($this->getContainer(), $this->controller_name);
+        }
+
+        return $this->_header_controller;
+    }
+
+    private function _getNavbarController()
+    {
+        if (null === $this->_trail_controller) {
+            $this->_trail_controller = new XHtml\HTMLNavbarController($this->getContainer(), $this->controller_name);
+        }
+
+        return $this->_trail_controller;
+    }
+
+    private function _getTreeController()
+    {
+        if (null === $this->_tree_controller) {
+            $this->_tree_controller = new TreeController($this->getContainer(), $this->controller_name);
+        }
+
+        return $this->_tree_controller;
     }
 }

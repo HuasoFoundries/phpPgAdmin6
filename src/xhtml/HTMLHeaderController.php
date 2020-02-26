@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -12,7 +15,8 @@ namespace PHPPgAdmin\XHtml;
 class HTMLHeaderController extends HTMLController
 {
     public $controller_name = 'HTMLHeaderController';
-    private $_no_output     = false;
+
+    private $_no_output = false;
 
     /**
      * Sets the value of private member variable $_no_output.
@@ -41,7 +45,7 @@ class HTMLHeaderController extends HTMLController
      */
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
-        if (function_exists('newrelic_disable_autorum')) {
+        if (\function_exists('newrelic_disable_autorum')) {
             newrelic_disable_autorum();
         }
 
@@ -49,10 +53,10 @@ class HTMLHeaderController extends HTMLController
 
         $viewVars = [];
 
-        $viewVars['dir']            = (0 != strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="'.htmlspecialchars($lang['applangdir']).'"' : '';
+        $viewVars['dir']            = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - '.$title : '';
-        $viewVars['appName']        = htmlspecialchars($this->appName);
+        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
+        $viewVars['appName']        = \htmlspecialchars($this->appName);
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
@@ -66,7 +70,7 @@ class HTMLHeaderController extends HTMLController
         }*/
 
         if (!$this->_no_output && $do_print) {
-            header('Content-Type: text/html; charset=utf-8');
+            \header('Content-Type: text/html; charset=utf-8');
             echo $header_html;
         } else {
             return $header_html;
@@ -82,11 +86,11 @@ class HTMLHeaderController extends HTMLController
      */
     public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
-        $bodyClass = $this->lang['applangdir'].' '.htmlspecialchars($bodyClass);
+        $bodyClass = $this->lang['applangdir'] . ' ' . \htmlspecialchars($bodyClass);
         $onload    = ($onloadInit ? 'onload="init();" ' : '');
 
-        $bodyHtml = sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
-        $bodyHtml .= PHP_EOL;
+        $bodyHtml = \sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
+        $bodyHtml .= \PHP_EOL;
 
         if (!$this->_no_output && $doBody) {
             echo $bodyHtml;
@@ -106,7 +110,7 @@ class HTMLHeaderController extends HTMLController
     {
         $title_html = '<h2>';
         $title_html .= $this->misc->printHelp($title, $help, false);
-        $title_html .= '</h2>'.PHP_EOL;
+        $title_html .= '</h2>' . \PHP_EOL;
 
         if ($do_print) {
             echo $title_html;

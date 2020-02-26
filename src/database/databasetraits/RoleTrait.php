@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -36,6 +39,7 @@ trait RoleTrait
             LEFT JOIN pg_catalog.pg_auth_members m ON (m.member = r.oid)
             LEFT JOIN pg_roles r1 ON (m.roleid=r1.oid)
             ';
+
         if ($rolename) {
             $sql .= " WHERE r.rolname!='{$rolename}'";
         }
@@ -163,7 +167,8 @@ trait RoleTrait
         $this->fieldArrayClean($new_admins_of_role);
 
         $sql = "CREATE ROLE \"{$rolename}\"";
-        if ($password != '') {
+
+        if ('' !== $password) {
             $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
         }
 
@@ -172,28 +177,29 @@ trait RoleTrait
         $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
         $sql .= $inherits ? ' INHERIT' : ' NOINHERIT';
         $sql .= $login ? ' LOGIN' : ' NOLOGIN';
-        if ($connlimit != '') {
+
+        if ('' !== $connlimit) {
             $sql .= " CONNECTION LIMIT {$connlimit}";
         } else {
             $sql .= ' CONNECTION LIMIT -1';
         }
 
-        if ($expiry != '') {
+        if ('' !== $expiry) {
             $sql .= " VALID UNTIL '{$expiry}'";
         } else {
             $sql .= " VALID UNTIL 'infinity'";
         }
 
-        if (is_array($new_roles_to_add) && sizeof($new_roles_to_add) > 0) {
-            $sql .= ' IN ROLE "'.join('", "', $new_roles_to_add).'"';
+        if (\is_array($new_roles_to_add) && 0 < \count($new_roles_to_add)) {
+            $sql .= ' IN ROLE "' . \implode('", "', $new_roles_to_add) . '"';
         }
 
-        if (is_array($new_members_of_role) && sizeof($new_members_of_role) > 0) {
-            $sql .= ' ROLE "'.join('", "', $new_members_of_role).'"';
+        if (\is_array($new_members_of_role) && 0 < \count($new_members_of_role)) {
+            $sql .= ' ROLE "' . \implode('", "', $new_members_of_role) . '"';
         }
 
-        if (is_array($new_admins_of_role) && sizeof($new_admins_of_role) > 0) {
-            $sql .= ' ADMIN "'.join('", "', $new_admins_of_role).'"';
+        if (\is_array($new_admins_of_role) && 0 < \count($new_admins_of_role)) {
+            $sql .= ' ADMIN "' . \implode('", "', $new_admins_of_role) . '"';
         }
 
         return $this->execute($sql);
@@ -209,7 +215,7 @@ trait RoleTrait
      */
     public function _encryptPassword($username, $password)
     {
-        return 'md5'.md5($password.$username);
+        return 'md5' . \md5($password . $username);
     }
 
     /**
@@ -253,13 +259,15 @@ trait RoleTrait
         $newrolename
     ) {
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -1;
         }
 
-        if ($rolename != $newrolename) {
+        if ($rolename !== $newrolename) {
             $status = $this->renameRole($rolename, $newrolename);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -3;
@@ -284,7 +292,8 @@ trait RoleTrait
             $original_members,
             $original_admins
         );
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -2;
@@ -307,116 +316,6 @@ trait RoleTrait
         $this->fieldClean($newrolename);
 
         $sql = "ALTER ROLE \"{$rolename}\" RENAME TO \"{$newrolename}\"";
-
-        return $this->execute($sql);
-    }
-
-    private function _dealWithOldParentRoles($original_parent_roles, $new_roles_to_add, $rolename)
-    {
-        $old = explode(',', $original_parent_roles);
-
-        // Grant the roles of the old role owners to the new owner
-        foreach ($new_roles_to_add as $m) {
-            if (!in_array($m, $old, true)) {
-                $status = $this->grantRole($m, $rolename);
-                if ($status != 0) {
-                    return -1;
-                }
-            }
-        }
-
-        // Revoke the new role to the old members if they don't have the requested role name
-
-        foreach ($old as $o) {
-            if (!in_array($o, $new_roles_to_add, true)) {
-                $status = $this->revokeRole($o, $rolename, 0, 'CASCADE');
-                if ($status != 0) {
-                    return -1;
-                }
-            }
-        }
-
-        return 0;
-    }
-
-    private function _dealWithOriginalMembers($original_members, $new_members_of_role, $rolename)
-    {
-        //members
-        $old = explode(',', $original_members);
-        foreach ($new_members_of_role as $m) {
-            if (!in_array($m, $old, true)) {
-                $status = $this->grantRole($rolename, $m);
-                if ($status != 0) {
-                    return -1;
-                }
-            }
-        }
-        if ($original_members) {
-            foreach ($old as $o) {
-                if (!in_array($o, $new_members_of_role, true)) {
-                    $status = $this->revokeRole($rolename, $o, 0, 'CASCADE');
-                    if ($status != 0) {
-                        return -1;
-                    }
-                }
-            }
-        }
-
-        return 0;
-    }
-
-    private function _dealWithOriginalAdmins($original_admins, $new_admins_of_role, $rolename)
-    {
-        $old = explode(',', $original_admins);
-        foreach ($new_admins_of_role as $m) {
-            if (!in_array($m, $old, true)) {
-                $status = $this->grantRole($rolename, $m, 1);
-                if ($status != 0) {
-                    return -1;
-                }
-            }
-        }
-
-        foreach ($old as $o) {
-            if (!in_array($o, $new_admins_of_role, true)) {
-                $status = $this->revokeRole($rolename, $o, 1, 'CASCADE');
-                if ($status != 0) {
-                    return -1;
-                }
-            }
-        }
-
-        return 0;
-    }
-
-    private function _alterRole($rolename, $password, $connlimit, $expiry, $superuser, $createdb, $createrole, $inherits, $login)
-    {
-        $enc = $this->_encryptPassword($rolename, $password);
-        $this->clean($enc);
-        $this->clean($connlimit);
-        $this->clean($expiry);
-
-        $sql = "ALTER ROLE \"{$rolename}\"";
-        if ($password != '') {
-            $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
-        }
-
-        $sql .= $superuser ? ' SUPERUSER' : ' NOSUPERUSER';
-        $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
-        $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
-        $sql .= $inherits ? ' INHERIT' : ' NOINHERIT';
-        $sql .= $login ? ' LOGIN' : ' NOLOGIN';
-        if ($connlimit != '') {
-            $sql .= " CONNECTION LIMIT {$connlimit}";
-        } else {
-            $sql .= ' CONNECTION LIMIT -1';
-        }
-
-        if ($expiry != '') {
-            $sql .= " VALID UNTIL '{$expiry}'";
-        } else {
-            $sql .= " VALID UNTIL 'infinity'";
-        }
 
         return $this->execute($sql);
     }
@@ -466,7 +365,8 @@ trait RoleTrait
         $this->fieldArrayClean($new_admins_of_role);
 
         $status = $this->_alterRole($rolename, $password, $connlimit, $expiry, $superuser, $createdb, $createrole, $inherits, $login);
-        if ($status !== 0) {
+
+        if (0 !== $status) {
             return -1;
         }
 
@@ -475,21 +375,24 @@ trait RoleTrait
         // role from them if they are not among the new authorized members
         if ($original_parent_roles) {
             $status = $this->_dealWithOldParentRoles($original_parent_roles, $new_roles_to_add, $rolename);
-            if ($status !== 0) {
+
+            if (0 !== $status) {
                 return -1;
             }
         }
 
         if ($original_members) {
             $status = $this->_dealWithOriginalMembers($original_members, $new_members_of_role, $rolename);
-            if ($status !== 0) {
+
+            if (0 !== $status) {
                 return -1;
             }
         }
 
         if ($original_admins) {
             $status = $this->_dealWithOriginalAdmins($original_admins, $new_admins_of_role, $rolename);
-            if ($status !== 0) {
+
+            if (0 !== $status) {
                 return -1;
             }
         }
@@ -512,7 +415,8 @@ trait RoleTrait
         $this->fieldClean($rolename);
 
         $sql = "GRANT \"{$role}\" TO \"{$rolename}\"";
-        if ($admin == 1) {
+
+        if (1 === $admin) {
             $sql .= ' WITH ADMIN OPTION';
         }
 
@@ -535,7 +439,8 @@ trait RoleTrait
         $this->fieldClean($rolename);
 
         $sql = 'REVOKE ';
-        if ($admin == 1) {
+
+        if (1 === $admin) {
             $sql .= 'ADMIN OPTION FOR ';
         }
 
@@ -583,17 +488,19 @@ trait RoleTrait
         $this->fieldArrayClean($groups);
 
         $sql = "CREATE USER \"{$username}\"";
-        if ($password != '') {
+
+        if ('' !== $password) {
             $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
         }
 
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
-        if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
+
+        if (\is_array($groups) && 0 < \count($groups)) {
+            $sql .= ' IN GROUP "' . \implode('", "', $groups) . '"';
         }
 
-        if ($expiry != '') {
+        if ('' !== $expiry) {
             $sql .= " VALID UNTIL '{$expiry}'";
         } else {
             $sql .= " VALID UNTIL 'infinity'";
@@ -617,13 +524,15 @@ trait RoleTrait
     public function setRenameUser($username, $password, $createdb, $createuser, $expiry, $newname)
     {
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -1;
         }
 
-        if ($username != $newname) {
+        if ($username !== $newname) {
             $status = $this->renameUser($username, $newname);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -3;
@@ -632,7 +541,8 @@ trait RoleTrait
         }
 
         $status = $this->setUser($username, $password, $createdb, $createuser, $expiry);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -2;
@@ -680,13 +590,15 @@ trait RoleTrait
         $this->clean($expiry);
 
         $sql = "ALTER USER \"{$username}\"";
-        if ($password != '') {
+
+        if ('' !== $password) {
             $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
         }
 
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
-        if ($expiry != '') {
+
+        if ('' !== $expiry) {
             $sql .= " VALID UNTIL '{$expiry}'";
         } else {
             $sql .= " VALID UNTIL 'infinity'";
@@ -857,9 +769,9 @@ trait RoleTrait
 
         $sql = "CREATE GROUP \"{$groname}\"";
 
-        if (is_array($users) && sizeof($users) > 0) {
+        if (\is_array($users) && 0 < \count($users)) {
             $this->fieldArrayClean($users);
-            $sql .= ' WITH USER "'.join('", "', $users).'"';
+            $sql .= ' WITH USER "' . \implode('", "', $users) . '"';
         }
 
         return $this->execute($sql);
@@ -902,4 +814,125 @@ trait RoleTrait
     abstract public function getFunction($function_oid);
 
     abstract public function fieldArrayClean(&$arr);
+
+    private function _dealWithOldParentRoles($original_parent_roles, $new_roles_to_add, $rolename)
+    {
+        $old = \explode(',', $original_parent_roles);
+
+        // Grant the roles of the old role owners to the new owner
+        foreach ($new_roles_to_add as $m) {
+            if (!\in_array($m, $old, true)) {
+                $status = $this->grantRole($m, $rolename);
+
+                if (0 !== $status) {
+                    return -1;
+                }
+            }
+        }
+
+        // Revoke the new role to the old members if they don't have the requested role name
+
+        foreach ($old as $o) {
+            if (!\in_array($o, $new_roles_to_add, true)) {
+                $status = $this->revokeRole($o, $rolename, 0, 'CASCADE');
+
+                if (0 !== $status) {
+                    return -1;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private function _dealWithOriginalMembers($original_members, $new_members_of_role, $rolename)
+    {
+        //members
+        $old = \explode(',', $original_members);
+
+        foreach ($new_members_of_role as $m) {
+            if (!\in_array($m, $old, true)) {
+                $status = $this->grantRole($rolename, $m);
+
+                if (0 !== $status) {
+                    return -1;
+                }
+            }
+        }
+
+        if ($original_members) {
+            foreach ($old as $o) {
+                if (!\in_array($o, $new_members_of_role, true)) {
+                    $status = $this->revokeRole($rolename, $o, 0, 'CASCADE');
+
+                    if (0 !== $status) {
+                        return -1;
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private function _dealWithOriginalAdmins($original_admins, $new_admins_of_role, $rolename)
+    {
+        $old = \explode(',', $original_admins);
+
+        foreach ($new_admins_of_role as $m) {
+            if (!\in_array($m, $old, true)) {
+                $status = $this->grantRole($rolename, $m, 1);
+
+                if (0 !== $status) {
+                    return -1;
+                }
+            }
+        }
+
+        foreach ($old as $o) {
+            if (!\in_array($o, $new_admins_of_role, true)) {
+                $status = $this->revokeRole($rolename, $o, 1, 'CASCADE');
+
+                if (0 !== $status) {
+                    return -1;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private function _alterRole($rolename, $password, $connlimit, $expiry, $superuser, $createdb, $createrole, $inherits, $login)
+    {
+        $enc = $this->_encryptPassword($rolename, $password);
+        $this->clean($enc);
+        $this->clean($connlimit);
+        $this->clean($expiry);
+
+        $sql = "ALTER ROLE \"{$rolename}\"";
+
+        if ('' !== $password) {
+            $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
+        }
+
+        $sql .= $superuser ? ' SUPERUSER' : ' NOSUPERUSER';
+        $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
+        $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
+        $sql .= $inherits ? ' INHERIT' : ' NOINHERIT';
+        $sql .= $login ? ' LOGIN' : ' NOLOGIN';
+
+        if ('' !== $connlimit) {
+            $sql .= " CONNECTION LIMIT {$connlimit}";
+        } else {
+            $sql .= ' CONNECTION LIMIT -1';
+        }
+
+        if ('' !== $expiry) {
+            $sql .= " VALID UNTIL '{$expiry}'";
+        } else {
+            $sql .= " VALID UNTIL 'infinity'";
+        }
+
+        return $this->execute($sql);
+    }
 }

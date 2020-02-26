@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Traits;
@@ -15,8 +18,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * A trait to deal with nav tabs.
- *
- * @package PHPPgAdmin
  */
 trait MiscTrait
 {
@@ -25,15 +26,15 @@ trait MiscTrait
         $vars          = [];
         $common_params = [];
 
-        if (array_key_exists('server', $_REQUEST)) {
+        if (\array_key_exists('server', $_REQUEST)) {
             $common_params['server'] = $_REQUEST['server'];
         }
 
-        if (array_key_exists('database', $_REQUEST)) {
+        if (\array_key_exists('database', $_REQUEST)) {
             $common_params['database'] = $_REQUEST['database'];
         }
 
-        if (array_key_exists('schema', $_REQUEST)) {
+        if (\array_key_exists('schema', $_REQUEST)) {
             $common_params['schema'] = $_REQUEST['schema'];
         }
 
@@ -64,19 +65,19 @@ trait MiscTrait
 
                 break;
             case 'database':
-                $vars = ['params' => array_merge($common_params, [
+                $vars = ['params' => \array_merge($common_params, [
                     'subject' => 'database',
                 ])];
 
                 break;
             case 'schema':
-                $vars = ['params' => array_merge($common_params, [
+                $vars = ['params' => \array_merge($common_params, [
                     'subject' => 'schema',
                 ])];
 
                 break;
             case 'table':
-                $vars = ['params' => array_merge($common_params, [
+                $vars = ['params' => \array_merge($common_params, [
                     'subject' => 'table',
 
                     'table'   => $_REQUEST['table'],
@@ -86,7 +87,7 @@ trait MiscTrait
             case 'selectrows':
                 $vars = [
                     'url'    => 'tables',
-                    'params' => array_merge($common_params, [
+                    'params' => \array_merge($common_params, [
                         'subject' => 'table',
                         'table'   => $_REQUEST['table'],
                         'action'  => 'confselectrows',
@@ -94,14 +95,14 @@ trait MiscTrait
 
                 break;
             case 'view':
-                $vars = ['params' => array_merge($common_params, [
+                $vars = ['params' => \array_merge($common_params, [
                     'subject' => 'view',
                     'view'    => $_REQUEST['view'],
                 ])];
 
                 break;
             case 'matview':
-                $vars = ['params' => array_merge($common_params, [
+                $vars = ['params' => \array_merge($common_params, [
                     'subject' => 'matview',
                     'matview' => $_REQUEST['matview'],
                 ])];
@@ -109,7 +110,7 @@ trait MiscTrait
                 break;
             case 'fulltext':
             case 'ftscfg':
-                $vars = ['params' => array_merge($common_params, [
+                $vars = ['params' => \array_merge($common_params, [
                     'subject' => 'fulltext',
                     'action'  => 'viewconfig',
                     'ftscfg'  => $_REQUEST['ftscfg'],
@@ -117,7 +118,7 @@ trait MiscTrait
 
                 break;
             case 'function':
-                $vars = ['params' => array_merge($common_params, [
+                $vars = ['params' => \array_merge($common_params, [
                     'subject'      => 'function',
                     'function'     => $_REQUEST['function'],
                     'function_oid' => $_REQUEST['function_oid'],
@@ -125,7 +126,7 @@ trait MiscTrait
 
                 break;
             case 'aggregate':
-                $vars = ['params' => array_merge($common_params, [
+                $vars = ['params' => \array_merge($common_params, [
                     'subject'  => 'aggregate',
                     'action'   => 'properties',
                     'aggrname' => $_REQUEST['aggrname'],
@@ -135,21 +136,21 @@ trait MiscTrait
                 break;
             case 'column':
                 if (isset($_REQUEST['table'])) {
-                    $vars = ['params' => array_merge($common_params, [
+                    $vars = ['params' => \array_merge($common_params, [
                         'subject' => 'column',
 
                         'table'   => $_REQUEST['table'],
                         'column'  => $_REQUEST['column'],
                     ])];
                 } elseif (isset($_REQUEST['view'])) {
-                    $vars = ['params' => array_merge($common_params, [
+                    $vars = ['params' => \array_merge($common_params, [
                         'subject' => 'column',
 
                         'view'    => $_REQUEST['view'],
                         'column'  => $_REQUEST['column'],
                     ])];
                 } elseif (isset($_REQUEST['matview'])) {
-                    $vars = ['params' => array_merge($common_params, [
+                    $vars = ['params' => \array_merge($common_params, [
                         'subject' => 'column',
 
                         'matview' => $_REQUEST['matview'],
@@ -165,7 +166,8 @@ trait MiscTrait
         if (!isset($vars['url'])) {
             $vars['url'] = SUBFOLDER . '/redirect';
         }
-        if ($vars['url'] == SUBFOLDER . '/redirect' && isset($vars['params']['subject'])) {
+
+        if (SUBFOLDER . '/redirect' === $vars['url'] && isset($vars['params']['subject'])) {
             $vars['url'] = SUBFOLDER . '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
@@ -179,13 +181,14 @@ trait MiscTrait
             $str = $params['map'][$str];
         }
         // Clip the value if the 'clip' parameter is true.
-        if (!isset($params['clip']) || $params['clip'] !== true) {
+        if (!isset($params['clip']) || true !== $params['clip']) {
             return $str;
         }
-        $maxlen   = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
-        $ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $this->lang['strellipsis'];
-        if (strlen($str) > $maxlen) {
-            $str = substr($str, 0, $maxlen - 1) . $ellipsis;
+        $maxlen   = isset($params['cliplen']) && \is_int($params['cliplen']) ? $params['cliplen'] : $this->conf['max_chars'];
+        $ellipsis = $params['ellipsis'] ?? $this->lang['strellipsis'];
+
+        if (\mb_strlen($str) > $maxlen) {
+            $str = \mb_substr($str, 0, $maxlen - 1) . $ellipsis;
         }
 
         return $str;
@@ -193,30 +196,31 @@ trait MiscTrait
 
     public function printBoolean($type, &$str, $params)
     {
-        $lang = $this->$lang;
-        if ($type === 'yesno') {
+        $lang = $this->lang;
+
+        if ('yesno' === $type) {
             $this->coalesceArr($params, 'true', $lang['stryes']);
             $this->coalesceArr($params, 'false', $lang['strno']);
         }
 
-        if (is_bool($str)) {
+        if (\is_bool($str)) {
             $str = $str ? 't' : 'f';
         }
 
         switch ($str) {
             case 't':
-                $out   = (isset($params['true']) ? $params['true'] : $lang['strtrue']);
+                $out   = ($params['true'] ?? $lang['strtrue']);
                 $align = 'center';
 
                 break;
             case 'f':
-                $out   = (isset($params['false']) ? $params['false'] : $lang['strfalse']);
+                $out   = ($params['false'] ?? $lang['strfalse']);
                 $align = 'center';
 
                 break;
             default:
                 $align = null;
-                $out   = htmlspecialchars($str);
+                $out   = \htmlspecialchars($str);
         }
 
         return [$str, $align, $out];
@@ -253,16 +257,17 @@ trait MiscTrait
     public function printVal($str, $type = null, $params = [])
     {
         $lang = $this->lang;
-        if ($this->_data === null) {
+
+        if (null === $this->_data) {
             $data = $this->getDatabaseAccessor();
         } else {
             $data = $this->_data;
         }
 
         // Shortcircuit for a NULL value
-        if (is_null($str)) {
+        if (null === $str) {
             return isset($params['null'])
-            ? ($params['null'] === true ? '<i>NULL</i>' : $params['null'])
+            ? (true === $params['null'] ? '<i>NULL</i>' : $params['null'])
             : '';
         }
 
@@ -284,7 +289,7 @@ trait MiscTrait
             case 'cid':
             case 'tid':
                 $align = 'right';
-                $out   = nl2br(htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                $out   = \nl2br(\htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
 
                 break;
             case 'yesno':
@@ -302,12 +307,12 @@ trait MiscTrait
             case 'errormsg':
                 $tag   = 'pre';
                 $class = 'error';
-                $out   = htmlspecialchars($str);
+                $out   = \htmlspecialchars($str);
 
                 break;
             case 'pre':
                 $tag = 'pre';
-                $out = htmlspecialchars($str);
+                $out = \htmlspecialchars($str);
 
                 break;
             case 'prenoescape':
@@ -316,7 +321,7 @@ trait MiscTrait
 
                 break;
             case 'nbsp':
-                $out = nl2br(str_replace(' ', '&nbsp;', \PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                $out = \nl2br(\str_replace(' ', '&nbsp;', \PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
 
                 break;
             case 'verbatim':
@@ -335,37 +340,22 @@ trait MiscTrait
                 // If the string contains at least one instance of >1 space in a row, a tab
                 // character, a space at the start of a line, or a space at the start of
                 // the whole string then render within a pre-formatted element (<pre>).
-                if (preg_match('/(^ |  |\t|\n )/m', $str)) {
+                if (\preg_match('/(^ |  |\t|\n )/m', $str)) {
                     $tag   = 'pre';
                     $class = 'data';
-                    $out   = htmlspecialchars($str);
+                    $out   = \htmlspecialchars($str);
                 } else {
                     //$tag = 'span';
-                    $out = nl2br(htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                    $out = \nl2br(\htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
                 }
         }
 
         $this->adjustClassAlignTag($class, $align, $tag, $out, $params);
 
-        // Add line numbers if 'lineno' param is true
-        /*if (isset($params['lineno']) && $params['lineno'] === true) {
-        $lines = explode(PHP_EOL, $str);
-        $num   = count($lines);
-        if ($num > 0) {
-        $temp = "<table>\n<tr><td class=\"{$class}\" style=\"vertical-align: top; padding-right: 10px;\"><pre class=\"{$class}\">";
-        for ($i = 1; $i <= $num; ++$i) {
-        $temp .= $i . PHP_EOL;
-        }
-        $temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>".PHP_EOL;
-        $out = $temp;
-        }
-        unset($lines);
-        }*/
-
         return $out;
     }
 
-    public function adjustClassAlignTag(&$class, &$align, &$tag, &$out, $params)
+    public function adjustClassAlignTag(&$class, &$align, &$tag, &$out, $params): void
     {
         if (isset($params['class'])) {
             $class = $params['class'];
@@ -396,7 +386,8 @@ trait MiscTrait
     public function getTabsRoot($data)
     {
         $lang = $this->lang;
-        $tabs = [
+
+        return [
             'intro'   => [
                 'title' => $lang['strintroduction'],
                 'url'   => 'intro',
@@ -408,8 +399,6 @@ trait MiscTrait
                 'icon'  => 'Servers',
             ],
         ];
-
-        return $tabs;
     }
 
     /**
@@ -424,6 +413,7 @@ trait MiscTrait
         $lang       = $this->lang;
         $hide_users = true;
         $hide_roles = false;
+
         if ($data) {
             $hide_users = !$data->isSuperUser();
         }
@@ -447,7 +437,7 @@ trait MiscTrait
         ];
 
         if ($data && $data->hasRoles()) {
-            $tabs = array_merge($tabs, [
+            $tabs = \array_merge($tabs, [
                 'roles' => [
                     'title'   => $lang['strroles'],
                     'url'     => 'roles',
@@ -458,7 +448,7 @@ trait MiscTrait
                 ],
             ]);
         } else {
-            $tabs = array_merge($tabs, [
+            $tabs = \array_merge($tabs, [
                 'groups' => [
                     'title'   => $lang['strgroups'],
                     'url'     => 'groups',
@@ -470,7 +460,7 @@ trait MiscTrait
             ]);
         }
 
-        $tabs = array_merge($tabs, [
+        return \array_merge($tabs, [
             'account'     => [
                 'title'   => $lang['straccount'],
                 'url'     => ($data && $data->hasRoles()) ? 'roles' : 'users',
@@ -495,8 +485,6 @@ trait MiscTrait
                 'icon'    => 'Export',
             ],
         ]);
-
-        return $tabs;
     }
 
     /**
@@ -509,8 +497,9 @@ trait MiscTrait
     public function getTabsDatabase($data)
     {
         $lang          = $this->lang;
-        $hide_advanced = ($this->conf['show_advanced'] === false);
-        $tabs          = [
+        $hide_advanced = (false === $this->conf['show_advanced']);
+
+        return [
             'schemas'    => [
                 'title'   => $lang['strschemas'],
                 'url'     => 'schemas',
@@ -598,14 +587,12 @@ trait MiscTrait
                 'icon'    => 'Export',
             ],
         ];
-
-        return $tabs;
     }
 
     public function getTabsSchema($data)
     {
         $lang          = $this->lang;
-        $hide_advanced = ($this->conf['show_advanced'] === false);
+        $hide_advanced = (false === $this->conf['show_advanced']);
         $tabs          = [
             'tables'      => [
                 'title'   => $lang['strtables'],
@@ -714,6 +701,7 @@ trait MiscTrait
                 'icon'    => 'Export',
             ],
         ];
+
         if (!$data->hasFTS()) {
             unset($tabs['fulltext']);
         }
@@ -724,7 +712,8 @@ trait MiscTrait
     public function getTabsTable($data)
     {
         $lang = $this->lang;
-        $tabs = [
+
+        return [
             'columns'     => [
                 'title'   => $lang['strcolumns'],
                 'url'     => 'tblproperties',
@@ -823,14 +812,13 @@ trait MiscTrait
                 'hide'    => false,
             ],
         ];
-
-        return $tabs;
     }
 
     public function getTabsView($data)
     {
         $lang = $this->lang;
-        $tabs = [
+
+        return [
             'columns'    => [
                 'title'   => $lang['strcolumns'],
                 'url'     => 'viewproperties',
@@ -886,14 +874,13 @@ trait MiscTrait
                 'hide'    => false,
             ],
         ];
-
-        return $tabs;
     }
 
     public function getTabsMatview($data)
     {
         $lang = $this->lang;
-        $tabs = [
+
+        return [
             'columns'    => [
                 'title'   => $lang['strcolumns'],
                 'url'     => 'materializedviewproperties',
@@ -966,14 +953,13 @@ trait MiscTrait
                 'hide'    => false,
             ],
         ];
-
-        return $tabs;
     }
 
     public function getTabsFunction($data)
     {
         $lang = $this->lang;
-        $tabs = [
+
+        return [
             'definition' => [
                 'title'   => $lang['strdefinition'],
                 'url'     => 'functions',
@@ -1007,14 +993,13 @@ trait MiscTrait
                 'icon'    => 'Search',
             ],
         ];
-
-        return $tabs;
     }
 
     public function getTabsAggregate($data)
     {
         $lang = $this->lang;
-        $tabs = [
+
+        return [
             'definition' => [
                 'title'   => $lang['strdefinition'],
                 'url'     => 'aggregates',
@@ -1027,14 +1012,13 @@ trait MiscTrait
                 'icon'    => 'Definition',
             ],
         ];
-
-        return $tabs;
     }
 
     public function getTabsRole($data)
     {
         $lang = $this->lang;
-        $tabs = [
+
+        return [
             'definition' => [
                 'title'   => $lang['strdefinition'],
                 'url'     => 'roles',
@@ -1046,14 +1030,13 @@ trait MiscTrait
                 'icon'    => 'Definition',
             ],
         ];
-
-        return $tabs;
     }
 
     public function getTabsPopup($data)
     {
         $lang = $this->lang;
-        $tabs = [
+
+        return [
             'sql'  => [
                 'title'   => $lang['strsql'],
                 'url'     => \SUBFOLDER . '/src/views/sqledit',
@@ -1068,8 +1051,6 @@ trait MiscTrait
                 'icon'    => 'Search',
             ],
         ];
-
-        return $tabs;
     }
 
     public function getTabsColumn($data)
@@ -1100,9 +1081,11 @@ trait MiscTrait
                 'icon'    => 'Privileges',
             ],
         ];
+
         if (empty($tabs['properties']['urlvars']['table'])) {
             unset($tabs['properties']['urlvars']['table']);
         }
+
         if (empty($tabs['privileges']['urlvars']['table'])) {
             unset($tabs['privileges']['urlvars']['table']);
         }
@@ -1113,7 +1096,8 @@ trait MiscTrait
     public function getTabsFulltext($data)
     {
         $lang = $this->lang;
-        $tabs = [
+
+        return [
             'ftsconfigs' => [
                 'title'   => $lang['strftstabconfigs'],
                 'url'     => 'fulltext',
@@ -1142,8 +1126,6 @@ trait MiscTrait
                 'icon'    => 'FtsParser',
             ],
         ];
-
-        return $tabs;
     }
 
     /**
@@ -1158,7 +1140,7 @@ trait MiscTrait
         $data = $this->getDatabaseAccessor();
         $lang = $this->lang;
 
-        $hide_advanced = ($this->conf['show_advanced'] === false);
+        $hide_advanced = (false === $this->conf['show_advanced']);
         $tabs          = [];
 
         switch ($section) {
@@ -1224,10 +1206,11 @@ trait MiscTrait
         //$data = $this->getDatabaseAccessor();
 
         $tabs = $this->getNavTabs($section);
+
         if (isset($_SESSION['webdbLastTab'][$section], $tabs[$_SESSION['webdbLastTab'][$section]])) {
             $tab = $tabs[$_SESSION['webdbLastTab'][$section]];
         } else {
-            $tab = reset($tabs);
+            $tab = \reset($tabs);
         }
         // $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
 

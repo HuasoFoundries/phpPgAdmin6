@@ -6,7 +6,7 @@
 
 // Include application functions
 
-$do_render = false;
+function tblpropertiesFactory($container) { $do_render = false ;
 if (!defined('BASE_PATH')) {
     require_once '../../src/lib.inc.php';
     $do_render = true;
@@ -15,3 +15,4 @@ $controller = new \PHPPgAdmin\Controller\TblpropertiesController($container);
 if ($do_render) {
     $controller->render();
 }
+return $controller; }

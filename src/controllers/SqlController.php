@@ -1,22 +1,27 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class SqlController extends BaseController
 {
-    public $query   = '';
+    public $query = '';
+
     public $subject = '';
+
     public $start_time;
+
     public $duration;
+
     public $controller_title = 'strqueryresults';
 
     /**
@@ -26,11 +31,11 @@ class SqlController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        set_time_limit(0);
+        \set_time_limit(0);
 
         // We need to store the query in a session for editing purposes
         // We avoid GPC vars to avoid truncating long queries
-        if (isset($_REQUEST['subject']) && 'history' == $_REQUEST['subject']) {
+        if (isset($_REQUEST['subject']) && 'history' === $_REQUEST['subject']) {
             // Or maybe we came from the history popup
             $_SESSION['sqlquery'] = $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$_GET['queryid']]['query'];
             $this->query          = $_SESSION['sqlquery'];
@@ -44,7 +49,7 @@ class SqlController extends BaseController
 
         // Pagination maybe set by a get link that has it as FALSE,
         // if that's the case, unset the variable.
-        if (isset($_REQUEST['paginate']) && 'f' == $_REQUEST['paginate']) {
+        if (isset($_REQUEST['paginate']) && 'f' === $_REQUEST['paginate']) {
             unset($_REQUEST['paginate'], $_POST['paginate'], $_GET['paginate']);
         }
 
@@ -56,8 +61,8 @@ class SqlController extends BaseController
         // script for pagination
         // if a file is given or the request is an explain, do not paginate
         if (isset($_REQUEST['paginate']) &&
-            !(isset($_FILES['script']) && $_FILES['script']['size'] > 0) &&
-            (0 == preg_match('/^\s*explain/i', $this->query))) {
+            !(isset($_FILES['script']) && 0 < $_FILES['script']['size']) &&
+            (0 === \preg_match('/^\s*explain/i', $this->query))) {
             //if (!(isset($_FILES['script']) && $_FILES['script']['size'] > 0)) {
 
             $display_controller = new DisplayController($this->getContainer());
@@ -72,14 +77,14 @@ class SqlController extends BaseController
 
         // Set the schema search path
         if (isset($_REQUEST['search_path'])) {
-            if (0 != $data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path'])))) {
+            if (0 !== $data->setSearchPath(\array_map('trim', \explode(',', $_REQUEST['search_path'])))) {
                 return $this->printFooter();
             }
         }
 
         // May as well try to time the query
-        if (function_exists('microtime')) {
-            list($usec, $sec) = explode(' ', microtime());
+        if (\function_exists('microtime')) {
+            list($usec, $sec) = \explode(' ', \microtime());
             $this->start_time = ((float) $usec + (float) $sec);
         }
 
@@ -94,7 +99,7 @@ class SqlController extends BaseController
 
         try {
             // Execute the query.  If it's a script upload, special handling is necessary
-            if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
+            if (isset($_FILES['script']) && 0 < $_FILES['script']['size']) {
                 return $this->execute_script();
             }
 
@@ -120,45 +125,48 @@ class SqlController extends BaseController
          *
          * @param ADORecordSet $rs The recordset returned by the script execetor
          */
-        $sqlCallback = function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection) {
+        $sqlCallback = static function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection): void {
             // Check if $rs is false, if so then there was a fatal error
             if (false === $rs) {
-                echo htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', nl2br(htmlspecialchars($_connection->getLastError())), '<br/>'.PHP_EOL;
+                echo \htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', \nl2br(\htmlspecialchars($_connection->getLastError())), '<br/>' . \PHP_EOL;
             } else {
                 // Print query results
-                switch (pg_result_status($rs)) {
+                switch (\pg_result_status($rs)) {
                     case \PGSQL_TUPLES_OK:
                         // If rows returned, then display the results
-                        $num_fields = pg_numfields($rs);
+                        $num_fields = \pg_numfields($rs);
                         echo "<p><table>\n<tr>";
+
                         for ($k = 0; $k < $num_fields; ++$k) {
-                            echo '<th class="data">', $misc->printVal(pg_fieldname($rs, $k)), '</th>';
+                            echo '<th class="data">', $misc->printVal(\pg_fieldname($rs, $k)), '</th>';
                         }
 
                         $i   = 0;
-                        $row = pg_fetch_row($rs);
+                        $row = \pg_fetch_row($rs);
+
                         while (false !== $row) {
-                            $id = (0 == ($i % 2) ? '1' : '2');
-                            echo "<tr class=\"data{$id}\">".PHP_EOL;
+                            $id = (0 === ($i % 2) ? '1' : '2');
+                            echo "<tr class=\"data{$id}\">" . \PHP_EOL;
+
                             foreach ($row as $k => $v) {
-                                echo '<td style="white-space:nowrap;">', $misc->printVal($v, pg_fieldtype($rs, $k), ['null' => true]), '</td>';
+                                echo '<td style="white-space:nowrap;">', $misc->printVal($v, \pg_fieldtype($rs, $k), ['null' => true]), '</td>';
                             }
-                            echo '</tr>'.PHP_EOL;
-                            $row = pg_fetch_row($rs);
+                            echo '</tr>' . \PHP_EOL;
+                            $row = \pg_fetch_row($rs);
                             ++$i;
                         }
 
-                        echo '</table><br/>'.PHP_EOL;
-                        echo $i, " {$lang['strrows']}</p>".PHP_EOL;
+                        echo '</table><br/>' . \PHP_EOL;
+                        echo $i, " {$lang['strrows']}</p>" . \PHP_EOL;
 
                         break;
                     case \PGSQL_COMMAND_OK:
                         // If we have the command completion tag
-                        if (version_compare(PHP_VERSION, '4.3', '>=')) {
-                            echo htmlspecialchars(pg_result_status($rs, PGSQL_STATUS_STRING)), '<br/>'.PHP_EOL;
-                        } elseif ($data->conn->Affected_Rows() > 0) {
+                        if (\version_compare(\PHP_VERSION, '4.3', '>=')) {
+                            echo \htmlspecialchars(\pg_result_status($rs, \PGSQL_STATUS_STRING)), '<br/>' . \PHP_EOL;
+                        } elseif (0 < $data->conn->Affected_Rows()) {
                             // Otherwise if any rows have been affected
-                            echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>".PHP_EOL;
+                            echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>" . \PHP_EOL;
                         }
                         // Otherwise output nothing...
                         break;
@@ -179,20 +187,20 @@ class SqlController extends BaseController
 
         // Set fetch mode to NUM so that duplicate field names are properly returned
         $data->conn->setFetchMode(\ADODB_FETCH_NUM);
-        set_time_limit(25000);
+        \set_time_limit(25000);
 
         $rs = $data->conn->Execute($this->query);
 
-        echo '<form method="post" id="sqlform" action="'.$_SERVER['REQUEST_URI'].'">';
+        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
-        echo htmlspecialchars($this->query);
+        echo \htmlspecialchars($this->query);
         echo '</textarea><br>';
         echo $this->misc->setForm();
         echo '<input type="submit"/></form>';
 
         // $rs will only be an object if there is no error
-        if (is_object($rs)) {
+        if (\is_object($rs)) {
             // Request was run, saving it in history
             if (!isset($_REQUEST['nohistory'])) {
                 $this->misc->saveScriptHistory($this->query);
@@ -201,33 +209,36 @@ class SqlController extends BaseController
             // Now, depending on what happened do various things
 
             // First, if rows returned, then display the results
-            if ($rs->recordCount() > 0) {
+            if (0 < $rs->recordCount()) {
                 echo "<table>\n<tr>";
+
                 foreach ($rs->fields as $k => $v) {
                     $finfo = $rs->fetchField($k);
                     echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>';
                 }
-                echo '</tr>'.PHP_EOL;
+                echo '</tr>' . \PHP_EOL;
                 $i = 0;
+
                 while (!$rs->EOF) {
-                    $id = (0 == ($i % 2) ? '1' : '2');
-                    echo "<tr class=\"data{$id}\">".PHP_EOL;
+                    $id = (0 === ($i % 2) ? '1' : '2');
+                    echo "<tr class=\"data{$id}\">" . \PHP_EOL;
+
                     foreach ($rs->fields as $k => $v) {
                         $finfo = $rs->fetchField($k);
                         echo '<td style="white-space:nowrap;">', $this->misc->printVal($v, $finfo->type, ['null' => true]), '</td>';
                     }
-                    echo '</tr>'.PHP_EOL;
+                    echo '</tr>' . \PHP_EOL;
                     $rs->moveNext();
                     ++$i;
                 }
-                echo '</table>'.PHP_EOL;
-                echo '<p>', $rs->recordCount(), " {$this->lang['strrows']}</p>".PHP_EOL;
-            } elseif ($data->conn->Affected_Rows() > 0) {
+                echo '</table>' . \PHP_EOL;
+                echo '<p>', $rs->recordCount(), " {$this->lang['strrows']}</p>" . \PHP_EOL;
+            } elseif (0 < $data->conn->Affected_Rows()) {
                 // Otherwise if any rows have been affected
-                echo '<p>', $data->conn->Affected_Rows(), " {$this->lang['strrowsaff']}</p>".PHP_EOL;
+                echo '<p>', $data->conn->Affected_Rows(), " {$this->lang['strrowsaff']}</p>" . \PHP_EOL;
             } else {
                 // Otherwise nodata to print
-                echo '<p>', $this->lang['strnodata'], '</p>'.PHP_EOL;
+                echo '<p>', $this->lang['strnodata'], '</p>' . \PHP_EOL;
             }
 
             return $rs;
@@ -240,10 +251,10 @@ class SqlController extends BaseController
 
         // May as well try to time the query
         if (null !== $this->start_time) {
-            list($usec, $sec) = explode(' ', microtime());
+            list($usec, $sec) = \explode(' ', \microtime());
             $end_time         = ((float) $usec + (float) $sec);
             // Get duration in milliseconds, round to 3dp's
-            $this->duration = number_format(($end_time - $this->start_time) * 1000, 3);
+            $this->duration = \number_format(($end_time - $this->start_time) * 1000, 3);
         }
 
         // Reload the browser as we may have made schema changes
@@ -251,10 +262,10 @@ class SqlController extends BaseController
 
         // Display duration if we know it
         if (null !== $this->duration) {
-            echo '<p>', sprintf($this->lang['strruntime'], $this->duration), '</p>'.PHP_EOL;
+            echo '<p>', \sprintf($this->lang['strruntime'], $this->duration), '</p>' . \PHP_EOL;
         }
 
-        echo "<p>{$this->lang['strsqlexecuted']}</p>".PHP_EOL;
+        echo "<p>{$this->lang['strsqlexecuted']}</p>" . \PHP_EOL;
 
         $navlinks = [];
         $fields   = [
@@ -285,7 +296,7 @@ class SqlController extends BaseController
             'attr'    => [
                 'href' => [
                     'url'     => 'database',
-                    'urlvars' => array_merge($fields, [
+                    'urlvars' => \array_merge($fields, [
                         'action' => 'sql',
                     ]),
                 ],
@@ -294,14 +305,14 @@ class SqlController extends BaseController
         ];
 
         // Create view and download
-        if ('' !== $this->query && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
+        if ('' !== $this->query && isset($rs) && \is_object($rs) && 0 < $rs->recordCount()) {
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [
                     'attr'    => [
                         'href' => [
                             'url'     => 'views',
-                            'urlvars' => array_merge($fields, [
+                            'urlvars' => \array_merge($fields, [
                                 'action' => 'create',
                             ]),
                         ],
@@ -325,7 +336,7 @@ class SqlController extends BaseController
             ];
         }
 
-        $this->printNavLinks($navlinks, 'sql-form', get_defined_vars());
+        $this->printNavLinks($navlinks, 'sql-form', \get_defined_vars());
 
         return $this->printFooter($doBody, $template);
     }

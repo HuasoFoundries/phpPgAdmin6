@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +13,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class FulltextController extends BaseController
 {
@@ -22,10 +23,11 @@ class FulltextController extends BaseController
      */
     public function render()
     {
-        if ('tree' == $this->action) {
+        if ('tree' === $this->action) {
             return $this->doTree();
         }
-        if ('subtree' == $this->action) {
+
+        if ('subtree' === $this->action) {
             return $this->doSubTree($_REQUEST['what']);
         }
 
@@ -134,7 +136,7 @@ class FulltextController extends BaseController
         return $this->printFooter();
     }
 
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -211,7 +213,7 @@ class FulltextController extends BaseController
             ],
         ];
 
-        $this->printNavLinks($navlinks, 'fulltext-fulltext', get_defined_vars());
+        $this->printNavLinks($navlinks, 'fulltext-fulltext', \get_defined_vars());
     }
 
     /**
@@ -294,10 +296,10 @@ class FulltextController extends BaseController
             ),
         ];
 
-        return $this->printTree($items, $attrs, strtolower($what));
+        return $this->printTree($items, $attrs, \mb_strtolower($what));
     }
 
-    public function doDropConfig($confirm)
+    public function doDropConfig($confirm): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -305,20 +307,21 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg');
             $this->printTitle($this->lang['strdrop'], 'pg.ftscfg.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdropftsconfig'], $this->misc->printVal($_REQUEST['ftscfg'])), '</p>'.PHP_EOL;
+            echo '<p>', \sprintf($this->lang['strconfdropftsconfig'], $this->misc->printVal($_REQUEST['ftscfg'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="dropconfig" />'.PHP_EOL;
-            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
-            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_REQUEST['ftscfg']), '" />'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="dropconfig" />' . \PHP_EOL;
+            echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
+            echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_REQUEST['ftscfg']), '" />' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropFtsConfiguration($_POST['ftscfg'], isset($_POST['cascade']));
-            if (0 == $status) {
+
+            if (0 === $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doDefault($this->lang['strftsconfigdropped']);
             } else {
@@ -327,7 +330,7 @@ class FulltextController extends BaseController
         }
     }
 
-    public function doDropDict($confirm)
+    public function doDropDict($confirm): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -335,22 +338,23 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: change to smth related to dictionary
             $this->printTitle($this->lang['strdrop'], 'pg.ftsdict.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdropftsdict'], $this->misc->printVal($_REQUEST['ftsdict'])), '</p>'.PHP_EOL;
+            echo '<p>', \sprintf($this->lang['strconfdropftsdict'], $this->misc->printVal($_REQUEST['ftsdict'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="dropdict" />'.PHP_EOL;
-            echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
-            echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_REQUEST['ftsdict']), '" />'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="dropdict" />' . \PHP_EOL;
+            echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
+            echo '<input type="hidden" name="ftsdict" value="', \htmlspecialchars($_REQUEST['ftsdict']), '" />' . \PHP_EOL;
             //echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_REQUEST['ftscfg']), "\" />".PHP_EOL;
-            echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>'.PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropFtsDictionary($_POST['ftsdict'], isset($_POST['cascade']));
-            if (0 == $status) {
+
+            if (0 === $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doViewDicts($this->lang['strftsdictdropped']);
             } else {
@@ -364,7 +368,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreateConfig($msg = '')
+    public function doCreateConfig($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -387,71 +391,75 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreateconfig'], 'pg.ftscfg.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
-        echo '<table>'.PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+        echo '<table>' . \PHP_EOL;
         // conf name
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>".PHP_EOL;
+        \htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>" . \PHP_EOL;
 
         // Template
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\">";
 
         $tpls   = [];
         $tplsel = '';
+
         while (!$ftscfgs->EOF) {
             $data->fieldClean($ftscfgs->fields['schema']);
             $data->fieldClean($ftscfgs->fields['name']);
-            $tplname        = $ftscfgs->fields['schema'].'.'.$ftscfgs->fields['name'];
-            $tpls[$tplname] = serialize([
+            $tplname        = $ftscfgs->fields['schema'] . '.' . $ftscfgs->fields['name'];
+            $tpls[$tplname] = \serialize([
                 'name'   => $ftscfgs->fields['name'],
                 'schema' => $ftscfgs->fields['schema'],
             ]);
-            if ($_POST['formTemplate'] == $tpls[$tplname]) {
-                $tplsel = htmlspecialchars($tpls[$tplname]);
+
+            if ($_POST['formTemplate'] === $tpls[$tplname]) {
+                $tplsel = \htmlspecialchars($tpls[$tplname]);
             }
             $ftscfgs->moveNext();
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($tpls, 'formTemplate', true, $tplsel, false);
-        echo "\n\t\t</td>\n\t</tr>".PHP_EOL;
+        echo "\n\t\t</td>\n\t</tr>" . \PHP_EOL;
 
         // Parser
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsparser']}</th>".PHP_EOL;
-        echo "\t\t<td class=\"data1\">".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsparser']}</th>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\">" . \PHP_EOL;
         $ftsparsers_ = [];
         $ftsparsel   = '';
+
         while (!$ftsparsers->EOF) {
             $data->fieldClean($ftsparsers->fields['schema']);
             $data->fieldClean($ftsparsers->fields['name']);
-            $parsername = $ftsparsers->fields['schema'].'.'.$ftsparsers->fields['name'];
+            $parsername = $ftsparsers->fields['schema'] . '.' . $ftsparsers->fields['name'];
 
-            $ftsparsers_[$parsername] = serialize([
+            $ftsparsers_[$parsername] = \serialize([
                 'parser' => $ftsparsers->fields['name'],
                 'schema' => $ftsparsers->fields['schema'],
             ]);
-            if ($_POST['formParser'] == $ftsparsers_[$parsername]) {
-                $ftsparsel = htmlspecialchars($ftsparsers_[$parsername]);
+
+            if ($_POST['formParser'] === $ftsparsers_[$parsername]) {
+                $ftsparsel = \htmlspecialchars($ftsparsers_[$parsername]);
             }
             $ftsparsers->moveNext();
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($ftsparsers_, 'formParser', true, $ftsparsel, false);
-        echo "\n\t\t</td>\n\t</tr>".PHP_EOL;
+        echo "\n\t\t</td>\n\t</tr>" . \PHP_EOL;
 
         // Comment
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
-        htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>".PHP_EOL;
+        \htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
 
-        echo '</table>'.PHP_EOL;
-        echo '<p>'.PHP_EOL;
-        echo '<input type="hidden" name="action" value="createconfig" />'.PHP_EOL;
-        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
+        echo '</table>' . \PHP_EOL;
+        echo '<p>' . \PHP_EOL;
+        echo '<input type="hidden" name="action" value="createconfig" />' . \PHP_EOL;
+        echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
-        echo '</p>'.PHP_EOL;
-        echo '</form>'.PHP_EOL;
+        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+        echo '</p>' . \PHP_EOL;
+        echo '</form>' . \PHP_EOL;
     }
 
     /**
@@ -463,32 +471,33 @@ class FulltextController extends BaseController
 
         $err = '';
         // Check that they've given a name
-        if ('' == $_POST['formName']) {
+        if ('' === $_POST['formName']) {
             $err .= "{$this->lang['strftsconfigneedsname']}<br />";
         }
 
-        if (('' != $_POST['formParser']) && ('' != $_POST['formTemplate'])) {
+        if (('' !== $_POST['formParser']) && ('' !== $_POST['formTemplate'])) {
             $err .= "{$this->lang['strftscantparsercopy']}<br />";
         }
 
-        if ($err !== '') {
+        if ('' !== $err) {
             return $this->doCreateConfig($err);
         }
 
-        if ('' != $_POST['formParser']) {
-            $formParser = unserialize($_POST['formParser']);
+        if ('' !== $_POST['formParser']) {
+            $formParser = \unserialize($_POST['formParser']);
         } else {
             $formParser = '';
         }
 
-        if ('' != $_POST['formTemplate']) {
-            $formTemplate = unserialize($_POST['formTemplate']);
+        if ('' !== $_POST['formTemplate']) {
+            $formTemplate = \unserialize($_POST['formTemplate']);
         } else {
             $formTemplate = '';
         }
 
         $status = $data->createFtsConfiguration($_POST['formName'], $formParser, $formTemplate, $_POST['formComment']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->misc->setReloadBrowser(true);
             $this->doDefault($this->lang['strftsconfigcreated']);
         } else {
@@ -501,7 +510,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlterConfig($msg = '')
+    public function doAlterConfig($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -510,7 +519,8 @@ class FulltextController extends BaseController
         $this->printMsg($msg);
 
         $ftscfg = $data->getFtsConfigurationByName($_REQUEST['ftscfg']);
-        if ($ftscfg->recordCount() > 0) {
+
+        if (0 < $ftscfg->recordCount()) {
             $this->coalesceArr($_POST, 'formComment', $ftscfg->fields['comment']);
 
             $this->coalesceArr($_POST, 'ftscfg', $_REQUEST['ftscfg']);
@@ -522,42 +532,43 @@ class FulltextController extends BaseController
             // Fetch all FTS parsers from the database
             $ftsparsers = $data->getFtsParsers();
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
-            echo '<table>'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<table>' . \PHP_EOL;
 
-            echo "\t<tr>".PHP_EOL;
-            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+            echo "\t<tr>" . \PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\">";
             echo "\t\t\t<input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['formName']), '" />'.PHP_EOL;
-            echo "\t\t</td>".PHP_EOL;
-            echo "\t</tr>".PHP_EOL;
+            \htmlspecialchars($_POST['formName']), '" />' . \PHP_EOL;
+            echo "\t\t</td>" . \PHP_EOL;
+            echo "\t</tr>" . \PHP_EOL;
 
             // Comment
-            echo "\t<tr>".PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>".PHP_EOL;
-            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\"name=\"formComment\">", htmlspecialchars($_POST['formComment']), '</textarea></td>'.PHP_EOL;
-            echo "\t</tr>".PHP_EOL;
-            echo '</table>'.PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="alterconfig" />'.PHP_EOL;
-            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), '" />'.PHP_EOL;
+            echo "\t<tr>" . \PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\"name=\"formComment\">", \htmlspecialchars($_POST['formComment']), '</textarea></td>' . \PHP_EOL;
+            echo "\t</tr>" . \PHP_EOL;
+            echo '</table>' . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="alterconfig" />' . \PHP_EOL;
+            echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_POST['ftscfg']), '" />' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
         }
     }
 
     /**
      * Save the form submission containing changes to a FTS configuration.
      */
-    public function doSaveAlterConfig()
+    public function doSaveAlterConfig(): void
     {
         $data   = $this->misc->getDatabaseAccessor();
         $status = $data->updateFtsConfiguration($_POST['ftscfg'], $_POST['formComment'], $_POST['formName']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->doDefault($this->lang['strftsconfigaltered']);
         } else {
             $this->doAlterConfig($this->lang['strftsconfigalteredbad']);
@@ -569,7 +580,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doViewParsers($msg = '')
+    public function doViewParsers($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -607,7 +618,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doViewDicts($msg = '')
+    public function doViewDicts($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -682,7 +693,7 @@ class FulltextController extends BaseController
             ],
         ];
 
-        $this->printNavLinks($navlinks, 'fulltext-viewdicts', get_defined_vars());
+        $this->printNavLinks($navlinks, 'fulltext-viewdicts', \get_defined_vars());
     }
 
     /**
@@ -691,7 +702,7 @@ class FulltextController extends BaseController
      * @param mixed $ftscfg
      * @param mixed $msg
      */
-    public function doViewConfig($ftscfg, $msg = '')
+    public function doViewConfig($ftscfg, $msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -700,7 +711,7 @@ class FulltextController extends BaseController
         $this->printTabs('fulltext', 'ftsconfigs');
         $this->printMsg($msg);
 
-        echo "<h3>{$this->lang['strftsconfigmap']}</h3>".PHP_EOL;
+        echo "<h3>{$this->lang['strftsconfigmap']}</h3>" . \PHP_EOL;
 
         $map = $data->getFtsConfigurationMap($ftscfg);
 
@@ -778,7 +789,7 @@ class FulltextController extends BaseController
             ],
         ];
 
-        $this->printNavLinks($navlinks, 'fulltext-viewconfig', get_defined_vars());
+        $this->printNavLinks($navlinks, 'fulltext-viewconfig', \get_defined_vars());
     }
 
     /**
@@ -786,7 +797,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreateDict($msg = '')
+    public function doCreateDict($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -812,68 +823,70 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreatedict'], 'pg.ftsdict.create');
         $this->printMsg($msg);
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
-        echo '<table>'.PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+        echo '<table>' . \PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-        htmlspecialchars($_POST['formName']), '" />&nbsp;',
+        \htmlspecialchars($_POST['formName']), '" />&nbsp;',
         '<input type="checkbox" name="formIsTemplate" id="formIsTemplate"', $_POST['formIsTemplate'] ? ' checked="checked" ' : '', " />\n",
-            "<label for=\"formIsTemplate\">{$this->lang['strftscreatedicttemplate']}</label></td>\n\t</tr>".PHP_EOL;
+        "<label for=\"formIsTemplate\">{$this->lang['strftscreatedicttemplate']}</label></td>\n\t</tr>" . \PHP_EOL;
 
         // Template
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftstemplate']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\">";
         $tpls   = [];
         $tplsel = '';
+
         while (!$ftstpls->EOF) {
             $data->fieldClean($ftstpls->fields['schema']);
             $data->fieldClean($ftstpls->fields['name']);
-            $tplname        = $ftstpls->fields['schema'].'.'.$ftstpls->fields['name'];
-            $tpls[$tplname] = serialize([
+            $tplname        = $ftstpls->fields['schema'] . '.' . $ftstpls->fields['name'];
+            $tpls[$tplname] = \serialize([
                 'name'   => $ftstpls->fields['name'],
                 'schema' => $ftstpls->fields['schema'],
             ]);
-            if ($_POST['formTemplate'] == $tpls[$tplname]) {
-                $tplsel = htmlspecialchars($tpls[$tplname]);
+
+            if ($_POST['formTemplate'] === $tpls[$tplname]) {
+                $tplsel = \htmlspecialchars($tpls[$tplname]);
             }
             $ftstpls->moveNext();
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($tpls, 'formTemplate', true, $tplsel, false);
-        echo "\n\t\t</td>\n\t</tr>".PHP_EOL;
+        echo "\n\t\t</td>\n\t</tr>" . \PHP_EOL;
 
         // TODO: what about maxlengths?
         // Lexize
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftslexize']}</th>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftslexize']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formLexize\" size=\"32\" maxlength=\"1000\" value=\"",
-        htmlspecialchars($_POST['formLexize']), '" ', isset($_POST['formIsTemplate']) ? '' : ' disabled="disabled" ',
-            "/></td>\n\t</tr>".PHP_EOL;
+        \htmlspecialchars($_POST['formLexize']), '" ', isset($_POST['formIsTemplate']) ? '' : ' disabled="disabled" ',
+        "/></td>\n\t</tr>" . \PHP_EOL;
 
         // Init
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsinit']}</th>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsinit']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formInit\" size=\"32\" maxlength=\"1000\" value=\"",
-        htmlspecialchars($_POST['formInit']), '"', @$_POST['formIsTemplate'] ? '' : ' disabled="disabled" ',
-            "/></td>\n\t</tr>".PHP_EOL;
+        \htmlspecialchars($_POST['formInit']), '"', $_POST['formIsTemplate'] ? '' : ' disabled="disabled" ',
+        "/></td>\n\t</tr>" . \PHP_EOL;
 
         // Option
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsoptionsvalues']}</th>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strftsoptionsvalues']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formOption\" size=\"32\" maxlength=\"1000\" value=\"",
-        htmlspecialchars($_POST['formOption']), "\" /></td>\n\t</tr>".PHP_EOL;
+        \htmlspecialchars($_POST['formOption']), "\" /></td>\n\t</tr>" . \PHP_EOL;
 
         // Comment
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>".PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
-        htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>".PHP_EOL;
+        \htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
 
-        echo '</table>'.PHP_EOL;
-        echo '<p>'.PHP_EOL;
-        echo '<input type="hidden" name="action" value="createdict" />'.PHP_EOL;
-        echo '<input type="hidden" name="database" value="', htmlspecialchars($_REQUEST['database']), '" />'.PHP_EOL;
+        echo '</table>' . \PHP_EOL;
+        echo '<p>' . \PHP_EOL;
+        echo '<input type="hidden" name="action" value="createdict" />' . \PHP_EOL;
+        echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
         echo $this->misc->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
-        echo '</p>'.PHP_EOL;
+        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+        echo '</p>' . \PHP_EOL;
         echo "</form>\n",
-            "<script type=\"text/javascript\">
+        "<script type=\"text/javascript\">
 				function templateOpts() {
 					isTpl = document.getElementsByName('formIsTemplate')[0].checked;
 					document.getElementsByName('formTemplate')[0].disabled = isTpl;
@@ -885,24 +898,24 @@ class FulltextController extends BaseController
 				document.getElementsByName('formIsTemplate')[0].onchange = templateOpts;
 
 				templateOpts();
-			</script>".PHP_EOL;
+			</script>" . \PHP_EOL;
     }
 
     /**
      * Actually creates the new FTS dictionary in the database.
      */
-    public function doSaveCreateDict()
+    public function doSaveCreateDict(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         // Check that they've given a name
-        if ('' == $_POST['formName']) {
+        if ('' === $_POST['formName']) {
             $this->doCreateDict($this->lang['strftsdictneedsname']);
         } else {
             $this->coalesceArr($_POST, 'formIsTemplate', false);
 
             if (isset($_POST['formTemplate'])) {
-                $formTemplate = unserialize($_POST['formTemplate']);
+                $formTemplate = \unserialize($_POST['formTemplate']);
             } else {
                 $formTemplate = '';
             }
@@ -923,7 +936,7 @@ class FulltextController extends BaseController
                 $_POST['formComment']
             );
 
-            if (0 == $status) {
+            if (0 === $status) {
                 $this->misc->setReloadBrowser(true);
                 $this->doViewDicts($this->lang['strftsdictcreated']);
             } else {
@@ -937,7 +950,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlterDict($msg = '')
+    public function doAlterDict($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -946,51 +959,53 @@ class FulltextController extends BaseController
         $this->printMsg($msg);
 
         $ftsdict = $data->getFtsDictionaryByName($_REQUEST['ftsdict']);
-        if ($ftsdict->recordCount() > 0) {
+
+        if (0 < $ftsdict->recordCount()) {
             $this->coalesceArr($_POST, 'formComment', $ftsdict->fields['comment']);
 
             $this->coalesceArr($_POST, 'ftsdict', $_REQUEST['ftsdict']);
 
             $this->coalesceArr($_POST, 'formName', $_REQUEST['ftsdict']);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
-            echo '<table>'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<table>' . \PHP_EOL;
 
-            echo "\t<tr>".PHP_EOL;
-            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
+            echo "\t<tr>" . \PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\">";
             echo "\t\t\t<input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['formName']), '" />'.PHP_EOL;
-            echo "\t\t</td>".PHP_EOL;
-            echo "\t</tr>".PHP_EOL;
+            \htmlspecialchars($_POST['formName']), '" />' . \PHP_EOL;
+            echo "\t\t</td>" . \PHP_EOL;
+            echo "\t</tr>" . \PHP_EOL;
 
             // Comment
-            echo "\t<tr>".PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>".PHP_EOL;
-            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\"name=\"formComment\">", htmlspecialchars($_POST['formComment']), '</textarea></td>'.PHP_EOL;
-            echo "\t</tr>".PHP_EOL;
-            echo '</table>'.PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="alterdict" />'.PHP_EOL;
-            echo '<input type="hidden" name="ftsdict" value="', htmlspecialchars($_POST['ftsdict']), '" />'.PHP_EOL;
-            echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>'.PHP_EOL;
+            echo "\t<tr>" . \PHP_EOL;
+            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+            echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\"name=\"formComment\">", \htmlspecialchars($_POST['formComment']), '</textarea></td>' . \PHP_EOL;
+            echo "\t</tr>" . \PHP_EOL;
+            echo '</table>' . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="alterdict" />' . \PHP_EOL;
+            echo '<input type="hidden" name="ftsdict" value="', \htmlspecialchars($_POST['ftsdict']), '" />' . \PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
         }
     }
 
     /**
      * Save the form submission containing changes to a FTS dictionary.
      */
-    public function doSaveAlterDict()
+    public function doSaveAlterDict(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->updateFtsDictionary($_POST['ftsdict'], $_POST['formComment'], $_POST['formName']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->doViewDicts($this->lang['strftsdictaltered']);
         } else {
             $this->doAlterDict($this->lang['strftsdictalteredbad']);
@@ -1002,7 +1017,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $confirm
      */
-    public function doDropMapping($confirm)
+    public function doDropMapping($confirm): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1022,32 +1037,33 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: proper breadcrumbs
             $this->printTitle($this->lang['strdrop'], 'pg.ftscfg.alter');
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
 
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
-                    $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    echo '<p>', sprintf($this->lang['strconfdropftsmapping'], $this->misc->printVal($a['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), '</p>'.PHP_EOL;
-                    printf('<input type="hidden" name="mapping[]" value="%s" />', htmlspecialchars($a['mapping']));
+                    $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
+                    echo '<p>', \sprintf($this->lang['strconfdropftsmapping'], $this->misc->printVal($a['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), '</p>' . \PHP_EOL;
+                    \printf('<input type="hidden" name="mapping[]" value="%s" />', \htmlspecialchars($a['mapping']));
                 }
             } else {
-                echo '<p>', sprintf($this->lang['strconfdropftsmapping'], $this->misc->printVal($_REQUEST['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), '</p>'.PHP_EOL;
-                echo '<input type="hidden" name="mapping" value="', htmlspecialchars($_REQUEST['mapping']), '" />'.PHP_EOL;
+                echo '<p>', \sprintf($this->lang['strconfdropftsmapping'], $this->misc->printVal($_REQUEST['mapping']), $this->misc->printVal($_REQUEST['ftscfg'])), '</p>' . \PHP_EOL;
+                echo '<input type="hidden" name="mapping" value="', \htmlspecialchars($_REQUEST['mapping']), '" />' . \PHP_EOL;
             }
 
-            echo "<input type=\"hidden\" name=\"ftscfg\" value=\"{$_REQUEST['ftscfg']}\" />".PHP_EOL;
-            echo '<input type="hidden" name="action" value="dropmapping" />'.PHP_EOL;
-            echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>'.PHP_EOL;
+            echo "<input type=\"hidden\" name=\"ftscfg\" value=\"{$_REQUEST['ftscfg']}\" />" . \PHP_EOL;
+            echo '<input type="hidden" name="action" value="dropmapping" />' . \PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
             // Case of multiaction drop
-            if (is_array($_REQUEST['mapping'])) {
+            if (\is_array($_REQUEST['mapping'])) {
                 $status = $data->changeFtsMapping($_REQUEST['ftscfg'], $_REQUEST['mapping'], 'drop');
-                if (0 != $status) {
+
+                if (0 !== $status) {
                     $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdroppedbad']);
 
                     return;
@@ -1055,7 +1071,8 @@ class FulltextController extends BaseController
                 $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdropped']);
             } else {
                 $status = $data->changeFtsMapping($_REQUEST['ftscfg'], [$_REQUEST['mapping']], 'drop');
-                if (0 == $status) {
+
+                if (0 === $status) {
                     $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdropped']);
                 } else {
                     $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdroppedbad']);
@@ -1064,7 +1081,7 @@ class FulltextController extends BaseController
         }
     }
 
-    public function doAlterMapping($msg = '')
+    public function doAlterMapping($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
         $this->printTrail('ftscfg');
@@ -1072,83 +1089,87 @@ class FulltextController extends BaseController
         $this->printMsg($msg);
 
         $ftsdicts = $data->getFtsDictionaries();
-        if ($ftsdicts->recordCount() > 0) {
-            $this->coalesceArr($_POST, 'formMapping', @$_REQUEST['mapping']);
+
+        if (0 < $ftsdicts->recordCount()) {
+            $this->coalesceArr($_POST, 'formMapping', $_REQUEST['mapping']);
 
             $this->coalesceArr($_POST, 'formDictionary', '');
 
             $this->coalesceArr($_POST, 'ftscfg', $_REQUEST['ftscfg']);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
 
-            echo '<table>'.PHP_EOL;
-            echo "\t<tr>".PHP_EOL;
-            echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>".PHP_EOL;
+            echo '<table>' . \PHP_EOL;
+            echo "\t<tr>" . \PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\">";
 
             $ma_mappings = [];
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
                 $ma_mappings_names = [];
+
                 foreach ($_REQUEST['ma'] as $v) {
-                    $a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-                    printf('<input type="hidden" name="formMapping[]" value="%s" />', htmlspecialchars($a['mapping']));
+                    $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
+                    \printf('<input type="hidden" name="formMapping[]" value="%s" />', \htmlspecialchars($a['mapping']));
                     $ma_mappings[]       = $data->getFtsMappingByName($_POST['ftscfg'], $a['mapping']);
                     $ma_mappings_names[] = $a['mapping'];
                 }
-                echo implode(', ', $ma_mappings_names);
+                echo \implode(', ', $ma_mappings_names);
             } else {
                 $mapping = $data->getFtsMappingByName($_POST['ftscfg'], $_POST['formMapping']);
                 echo $mapping->fields['name'];
-                echo '<input type="hidden" name="formMapping" value="', htmlspecialchars($_POST['formMapping']), '" />'.PHP_EOL;
+                echo '<input type="hidden" name="formMapping" value="', \htmlspecialchars($_POST['formMapping']), '" />' . \PHP_EOL;
             }
 
-            echo "\t\t</td>".PHP_EOL;
-            echo "\t</tr>".PHP_EOL;
+            echo "\t\t</td>" . \PHP_EOL;
+            echo "\t</tr>" . \PHP_EOL;
 
             // Dictionary
-            echo "\t<tr>".PHP_EOL;
-            echo "\t\t<th class=\"data left required\">{$this->lang['strftsdict']}</th>".PHP_EOL;
+            echo "\t<tr>" . \PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strftsdict']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\">";
-            echo "\t\t\t<select name=\"formDictionary\">".PHP_EOL;
+            echo "\t\t\t<select name=\"formDictionary\">" . \PHP_EOL;
+
             while (!$ftsdicts->EOF) {
-                $ftsdict = htmlspecialchars($ftsdicts->fields['name']);
+                $ftsdict = \htmlspecialchars($ftsdicts->fields['name']);
                 echo "\t\t\t\t<option value=\"{$ftsdict}\"",
                 (
-                    $ftsdict == $_POST['formDictionary']
-                    || $ftsdict == @$mapping->fields['dictionaries']
-                    || $ftsdict == @$ma_mappings[0]->fields['dictionaries']
-                ) ? ' selected="selected"' : '', ">{$ftsdict}</option>".PHP_EOL;
+                    $ftsdict === $_POST['formDictionary']
+                    || $ftsdict === $mapping->fields['dictionaries']
+                    || $ftsdict === $ma_mappings[0]->fields['dictionaries']
+                ) ? ' selected="selected"' : '', ">{$ftsdict}</option>" . \PHP_EOL;
                 $ftsdicts->moveNext();
             }
 
-            echo "\t\t</td>".PHP_EOL;
-            echo "\t</tr>".PHP_EOL;
+            echo "\t\t</td>" . \PHP_EOL;
+            echo "\t</tr>" . \PHP_EOL;
 
-            echo '</table>'.PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="altermapping" />'.PHP_EOL;
-            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), '" />'.PHP_EOL;
-            echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>'.PHP_EOL;
+            echo '</table>' . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="altermapping" />' . \PHP_EOL;
+            echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_POST['ftscfg']), '" />' . \PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>' . \PHP_EOL;
 
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strftsnodictionaries']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strftsnodictionaries']}</p>" . \PHP_EOL;
         }
     }
 
     /**
      * Save the form submission containing changes to a FTS mapping.
      */
-    public function doSaveAlterMapping()
+    public function doSaveAlterMapping(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
+        $mappingArray = (\is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
         $status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'alter', $_POST['formDictionary']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->doViewConfig($_POST['ftscfg'], $this->lang['strftsmappingaltered']);
         } else {
             $this->doAlterMapping($this->lang['strftsmappingalteredbad']);
@@ -1160,7 +1181,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAddMapping($msg = '')
+    public function doAddMapping($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1169,7 +1190,8 @@ class FulltextController extends BaseController
         $this->printMsg($msg);
 
         $ftsdicts = $data->getFtsDictionaries();
-        if ($ftsdicts->recordCount() > 0) {
+
+        if (0 < $ftsdicts->recordCount()) {
             $this->coalesceArr($_POST, 'formMapping', '');
 
             $this->coalesceArr($_POST, 'formDictionary', '');
@@ -1178,60 +1200,63 @@ class FulltextController extends BaseController
 
             $mappings = $data->getFtsMappings($_POST['ftscfg']);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/fulltext" method="post">'.PHP_EOL;
-            echo '<table>'.PHP_EOL;
-            echo "\t<tr>".PHP_EOL;
-            echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>".PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<table>' . \PHP_EOL;
+            echo "\t<tr>" . \PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\">";
-            echo "\t\t\t<select name=\"formMapping\">".PHP_EOL;
+            echo "\t\t\t<select name=\"formMapping\">" . \PHP_EOL;
+
             while (!$mappings->EOF) {
-                $mapping      = htmlspecialchars($mappings->fields['name']);
-                $mapping_desc = htmlspecialchars($mappings->fields['description']);
+                $mapping      = \htmlspecialchars($mappings->fields['name']);
+                $mapping_desc = \htmlspecialchars($mappings->fields['description']);
                 echo "\t\t\t\t<option value=\"{$mapping}\"",
-                $mapping == $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : '', '</option>'.PHP_EOL;
+                $mapping === $_POST['formMapping'] ? ' selected="selected"' : '', ">{$mapping}", $mapping_desc ? " - {$mapping_desc}" : '', '</option>' . \PHP_EOL;
                 $mappings->moveNext();
             }
-            echo "\t\t</td>".PHP_EOL;
-            echo "\t</tr>".PHP_EOL;
+            echo "\t\t</td>" . \PHP_EOL;
+            echo "\t</tr>" . \PHP_EOL;
 
             // Dictionary
-            echo "\t<tr>".PHP_EOL;
-            echo "\t\t<th class=\"data left required\">{$this->lang['strftsdict']}</th>".PHP_EOL;
+            echo "\t<tr>" . \PHP_EOL;
+            echo "\t\t<th class=\"data left required\">{$this->lang['strftsdict']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\">";
-            echo "\t\t\t<select name=\"formDictionary\">".PHP_EOL;
+            echo "\t\t\t<select name=\"formDictionary\">" . \PHP_EOL;
+
             while (!$ftsdicts->EOF) {
-                $ftsdict = htmlspecialchars($ftsdicts->fields['name']);
+                $ftsdict = \htmlspecialchars($ftsdicts->fields['name']);
                 echo "\t\t\t\t<option value=\"{$ftsdict}\"",
-                $ftsdict == $_POST['formDictionary'] ? ' selected="selected"' : '', ">{$ftsdict}</option>".PHP_EOL;
+                $ftsdict === $_POST['formDictionary'] ? ' selected="selected"' : '', ">{$ftsdict}</option>" . \PHP_EOL;
                 $ftsdicts->moveNext();
             }
 
-            echo "\t\t</td>".PHP_EOL;
-            echo "\t</tr>".PHP_EOL;
+            echo "\t\t</td>" . \PHP_EOL;
+            echo "\t</tr>" . \PHP_EOL;
 
-            echo '</table>'.PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="addmapping" />'.PHP_EOL;
-            echo '<input type="hidden" name="ftscfg" value="', htmlspecialchars($_POST['ftscfg']), '" />'.PHP_EOL;
-            echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>'.PHP_EOL;
+            echo '</table>' . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="addmapping" />' . \PHP_EOL;
+            echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_POST['ftscfg']), '" />' . \PHP_EOL;
+            echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"add\" value=\"{$this->lang['stradd']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"add\" value=\"{$this->lang['stradd']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strftsnodictionaries']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strftsnodictionaries']}</p>" . \PHP_EOL;
         }
     }
 
     /**
      * Save the form submission containing parameters of a new FTS mapping.
      */
-    public function doSaveAddMapping()
+    public function doSaveAddMapping(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $mappingArray = (is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
+        $mappingArray = (\is_array($_POST['formMapping']) ? $_POST['formMapping'] : [$_POST['formMapping']]);
         $status       = $data->changeFtsMapping($_POST['ftscfg'], $mappingArray, 'add', $_POST['formDictionary']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->doViewConfig($_POST['ftscfg'], $this->lang['strftsmappingadded']);
         } else {
             $this->doAddMapping($this->lang['strftsmappingaddedbad']);

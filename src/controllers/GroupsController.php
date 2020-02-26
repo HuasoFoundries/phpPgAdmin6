@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +13,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class GroupsController extends BaseController
 {
@@ -20,7 +21,7 @@ class GroupsController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render()
+    public function render(): void
     {
         $this->printHeader();
         $this->printBody();
@@ -92,7 +93,7 @@ class GroupsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -142,18 +143,19 @@ class GroupsController extends BaseController
                 ],
             ],
             'content' => $this->lang['strcreategroup'],
-        ]], 'groups-groups', get_defined_vars());
+        ]], 'groups-groups', \get_defined_vars());
     }
 
     /**
      * Add user to a group.
      */
-    public function doAddMember()
+    public function doAddMember(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->addGroupMember($_REQUEST['group'], $_REQUEST['user']);
-        if (0 == $status) {
+
+        if (0 === $status) {
             $this->doProperties($this->lang['strmemberadded']);
         } else {
             $this->doProperties($this->lang['strmemberaddedbad']);
@@ -166,7 +168,7 @@ class GroupsController extends BaseController
      * @param mixed $confirm
      * @param mixed $msg
      */
-    public function doDropMember($confirm, $msg = '')
+    public function doDropMember($confirm, $msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -178,19 +180,20 @@ class GroupsController extends BaseController
             $this->printTrail('group');
             $this->printTitle($this->lang['strdropmember'], 'pg.group.alter');
 
-            echo '<p>', sprintf($this->lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), '</p>'.PHP_EOL;
+            echo '<p>', \sprintf($this->lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/groups" method="post">'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/groups" method="post">' . \PHP_EOL;
             echo $this->misc->form;
-            echo '<input type="hidden" name="action" value="drop_member" />'.PHP_EOL;
-            echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), '" />'.PHP_EOL;
-            echo '<input type="hidden" name="user" value="', htmlspecialchars($_REQUEST['user']), '" />'.PHP_EOL;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo '<input type="hidden" name="action" value="drop_member" />' . \PHP_EOL;
+            echo '<input type="hidden" name="group" value="', \htmlspecialchars($_REQUEST['group']), '" />' . \PHP_EOL;
+            echo '<input type="hidden" name="user" value="', \htmlspecialchars($_REQUEST['user']), '" />' . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropGroupMember($_REQUEST['group'], $_REQUEST['user']);
-            if (0 == $status) {
+
+            if (0 === $status) {
                 $this->doProperties($this->lang['strmemberdropped']);
             } else {
                 $this->doDropMember(true, $this->lang['strmemberdroppedbad']);
@@ -203,7 +206,7 @@ class GroupsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = '')
+    public function doProperties($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -216,7 +219,7 @@ class GroupsController extends BaseController
         $groupdata = $data->getGroup($_REQUEST['group']);
         $users     = $data->getUsers();
 
-        if ($groupdata->recordCount() > 0) {
+        if (0 < $groupdata->recordCount()) {
             $columns = [
                 'members' => [
                     'title' => $this->lang['strmembers'],
@@ -247,20 +250,21 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="'.\SUBFOLDER.'/src/views/groups" method="post">'.PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . '/src/views/groups" method="post">' . \PHP_EOL;
         echo '<select name="user">';
+
         while (!$users->EOF) {
             $uname = $this->misc->printVal($users->fields['usename']);
             echo "<option value=\"{$uname}\"",
-            ($uname == $_POST['user']) ? ' selected="selected"' : '', ">{$uname}</option>".PHP_EOL;
+            ($uname === $_POST['user']) ? ' selected="selected"' : '', ">{$uname}</option>" . \PHP_EOL;
             $users->moveNext();
         }
-        echo '</select>'.PHP_EOL;
-        echo "<input type=\"submit\" value=\"{$this->lang['straddmember']}\" />".PHP_EOL;
+        echo '</select>' . \PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['straddmember']}\" />" . \PHP_EOL;
         echo $this->misc->form;
-        echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), '" />'.PHP_EOL;
-        echo '<input type="hidden" name="action" value="add_member" />'.PHP_EOL;
-        echo '</form>'.PHP_EOL;
+        echo '<input type="hidden" name="group" value="', \htmlspecialchars($_REQUEST['group']), '" />' . \PHP_EOL;
+        echo '<input type="hidden" name="action" value="add_member" />' . \PHP_EOL;
+        echo '</form>' . \PHP_EOL;
 
         $this->printNavLinks(['showall' => [
             'attr'    => [
@@ -272,7 +276,7 @@ class GroupsController extends BaseController
                 ],
             ],
             'content' => $this->lang['strshowallgroups'],
-        ]], 'groups-properties', get_defined_vars());
+        ]], 'groups-properties', \get_defined_vars());
     }
 
     /**
@@ -280,7 +284,7 @@ class GroupsController extends BaseController
      *
      * @param mixed $confirm
      */
-    public function doDrop($confirm)
+    public function doDrop($confirm): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -288,18 +292,19 @@ class GroupsController extends BaseController
             $this->printTrail('group');
             $this->printTitle($this->lang['strdrop'], 'pg.group.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), '</p>'.PHP_EOL;
+            echo '<p>', \sprintf($this->lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/groups" method="post">'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/groups" method="post">' . \PHP_EOL;
             echo $this->misc->form;
-            echo '<input type="hidden" name="action" value="drop" />'.PHP_EOL;
-            echo '<input type="hidden" name="group" value="', htmlspecialchars($_REQUEST['group']), '" />'.PHP_EOL;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
+            echo '<input type="hidden" name="group" value="', \htmlspecialchars($_REQUEST['group']), '" />' . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropGroup($_REQUEST['group']);
-            if (0 == $status) {
+
+            if (0 === $status) {
                 $this->doDefault($this->lang['strgroupdropped']);
             } else {
                 $this->doDefault($this->lang['strgroupdroppedbad']);
@@ -312,7 +317,7 @@ class GroupsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = '')
+    public function doCreate($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
         $this->coalesceArr($_POST, 'name', '');
@@ -326,47 +331,50 @@ class GroupsController extends BaseController
         $this->printTitle($this->lang['strcreategroup'], 'pg.group.create');
         $this->printMsg($msg);
 
-        echo '<form action="" method="post">'.PHP_EOL;
+        echo '<form action="" method="post">' . \PHP_EOL;
         echo $this->misc->form;
-        echo '<table>'.PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>".PHP_EOL;
-        echo "\t\t<td class=\"data\"><input size=\"32\" maxlength=\"{$data->_maxNameLen}\" name=\"name\" value=\"", htmlspecialchars($_POST['name']), "\" /></td>\n\t</tr>".PHP_EOL;
-        if ($users->recordCount() > 0) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>".PHP_EOL;
+        echo '<table>' . \PHP_EOL;
+        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
+        echo "\t\t<td class=\"data\"><input size=\"32\" maxlength=\"{$data->_maxNameLen}\" name=\"name\" value=\"", \htmlspecialchars($_POST['name']), "\" /></td>\n\t</tr>" . \PHP_EOL;
 
-            echo "\t\t<td class=\"data\">".PHP_EOL;
-            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", min(40, $users->recordCount()), '">'.PHP_EOL;
+        if (0 < $users->recordCount()) {
+            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strmembers']}</th>" . \PHP_EOL;
+
+            echo "\t\t<td class=\"data\">" . \PHP_EOL;
+            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", \min(40, $users->recordCount()), '">' . \PHP_EOL;
+
             while (!$users->EOF) {
                 $username = $users->fields['usename'];
                 echo "\t\t\t\t<option value=\"{$username}\"",
-                (in_array($username, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($username), '</option>'.PHP_EOL;
+                (\in_array($username, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($username), '</option>' . \PHP_EOL;
                 $users->moveNext();
             }
-            echo "\t\t\t</select>".PHP_EOL;
-            echo "\t\t</td>\n\t</tr>".PHP_EOL;
+            echo "\t\t\t</select>" . \PHP_EOL;
+            echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
         }
-        echo '</table>'.PHP_EOL;
-        echo '<p><input type="hidden" name="action" value="save_create" />'.PHP_EOL;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />".PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-        echo '</form>'.PHP_EOL;
+        echo '</table>' . \PHP_EOL;
+        echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
+        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
+        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo '</form>' . \PHP_EOL;
     }
 
     /**
      * Actually creates the new group in the database.
      */
-    public function doSaveCreate()
+    public function doSaveCreate(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         $this->coalesceArr($_POST, 'members', []);
 
         // Check form vars
-        if ('' == trim($_POST['name'])) {
+        if ('' === \trim($_POST['name'])) {
             $this->doCreate($this->lang['strgroupneedsname']);
         } else {
             $status = $data->createGroup($_POST['name'], $_POST['members']);
-            if (0 == $status) {
+
+            if (0 === $status) {
                 $this->doDefault($this->lang['strgroupcreated']);
             } else {
                 $this->doCreate($this->lang['strgroupcreatedbad']);

@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +13,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class ConstraintsController extends BaseController
 {
@@ -22,13 +23,13 @@ class ConstraintsController extends BaseController
      */
     public function render()
     {
-        if ('tree' == $this->action) {
+        if ('tree' === $this->action) {
             return $this->/* @scrutinizer ignore-call */doTree();
         }
 
         $this->printHeader(
-            $this->lang['strtables'].' - '.$_REQUEST['table'].' - '.$this->lang['strconstraints'],
-            '<script src="'.\SUBFOLDER.'/assets/js/indexes.js" type="text/javascript"></script>',
+            $this->lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $this->lang['strconstraints'],
+            '<script src="' . self::SUBFOLDER . '/assets/js/indexes.js" type="text/javascript"></script>',
             true,
             'header_select2.twig'
         );
@@ -44,12 +45,13 @@ class ConstraintsController extends BaseController
         ];
 
         $onloadInit = false;
-        if (in_array($this->action, $onloadInitActions, true)) {
+
+        if (\in_array($this->action, $onloadInitActions, true)) {
             $onloadInit = true;
         }
         $this->printBody(true, 'detailbody', $onloadInit);
 
-        if (isset($_POST['cancel']) || ($this->action === 'drop' && !isset($_POST['drop']))) {
+        if (isset($_POST['cancel']) || ('drop' === $this->action && !isset($_POST['drop']))) {
             $this->action = 'default';
         }
 
@@ -112,14 +114,14 @@ class ConstraintsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $cnPre = function (&$rowdata) use ($data) {
-            if (is_null($rowdata->fields['consrc'])) {
-                $atts                           = $data->getAttributeNames($_REQUEST['table'], explode(' ', $rowdata->fields['indkey']));
-                $rowdata->fields['+definition'] = ('u' == $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (').join(',', $atts).')';
+        $cnPre = static function (&$rowdata) use ($data): void {
+            if (null === $rowdata->fields['consrc']) {
+                $atts                           = $data->getAttributeNames($_REQUEST['table'], \explode(' ', $rowdata->fields['indkey']));
+                $rowdata->fields['+definition'] = ('u' === $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (') . \implode(',', $atts) . ')';
             } else {
                 $rowdata->fields['+definition'] = $rowdata->fields['consrc'];
             }
@@ -231,7 +233,7 @@ class ConstraintsController extends BaseController
                 'content' => $this->lang['straddfk'],
             ],
         ];
-        $this->printNavLinks($navlinks, 'constraints-constraints', get_defined_vars());
+        $this->printNavLinks($navlinks, 'constraints-constraints', \get_defined_vars());
     }
 
     /**
@@ -239,7 +241,7 @@ class ConstraintsController extends BaseController
      *
      * @param string $msg The message
      */
-    public function formAddForeignKey($msg = '')
+    public function formAddForeignKey($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -253,7 +255,7 @@ class ConstraintsController extends BaseController
         $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
         $selColumns->set_style('width: 15em;');
 
-        if ($attrs->recordCount() > 0) {
+        if (0 < $attrs->recordCount()) {
             while (!$attrs->EOF) {
                 $xmloption = new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']);
                 $selColumns->add($xmloption);
@@ -272,36 +274,38 @@ class ConstraintsController extends BaseController
         $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
         $buttonRemove->set_attribute('type', 'button');
 
-        echo '<form onsubmit="doSelectAll();" name="formIndex" action="constraints" method="post">'.PHP_EOL;
+        echo '<form onsubmit="doSelectAll();" name="formIndex" action="constraints" method="post">' . \PHP_EOL;
 
-        echo '<table>'.PHP_EOL;
-        echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strname']}</th></tr>".PHP_EOL;
-        echo "<tr><td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>".PHP_EOL;
-        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strfkcolumnlist']}</th></tr>".PHP_EOL;
-        echo '<tr><td class="data1">'.$selColumns->fetch().'</td>'.PHP_EOL;
-        echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>'.PHP_EOL;
-        echo '<td class=data1>'.$selIndex->fetch().'</td></tr>'.PHP_EOL;
+        echo '<table>' . \PHP_EOL;
+        echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strname']}</th></tr>" . \PHP_EOL;
+        echo "<tr><td class=\"data1\" colspan=\"3\"><input type=\"text\" name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>" . \PHP_EOL;
+        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strfkcolumnlist']}</th></tr>" . \PHP_EOL;
+        echo '<tr><td class="data1">' . $selColumns->fetch() . '</td>' . \PHP_EOL;
+        echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>' . \PHP_EOL;
+        echo '<td class=data1>' . $selIndex->fetch() . '</td></tr>' . \PHP_EOL;
         echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strfktarget']}</th></tr>";
         echo '<tr>';
         echo '<td class="data1" colspan="3"><select class="select2" name="target">';
+
         while (!$tables->EOF) {
             $key = ['schemaname' => $tables->fields['nspname'], 'tablename' => $tables->fields['relname']];
-            $key = serialize($key);
-            echo '<option value="', htmlspecialchars($key), '">';
-            if ($tables->fields['nspname'] != $_REQUEST['schema']) {
-                echo htmlspecialchars($tables->fields['nspname']), '.';
+            $key = \serialize($key);
+            echo '<option value="', \htmlspecialchars($key), '">';
+
+            if ($tables->fields['nspname'] !== $_REQUEST['schema']) {
+                echo \htmlspecialchars($tables->fields['nspname']), '.';
             }
-            echo htmlspecialchars($tables->fields['relname']), '</option>'.PHP_EOL;
+            echo \htmlspecialchars($tables->fields['relname']), '</option>' . \PHP_EOL;
             $tables->moveNext();
         }
-        echo '</select>'.PHP_EOL;
+        echo '</select>' . \PHP_EOL;
         echo '</td></tr>';
-        echo '</table>'.PHP_EOL;
+        echo '</table>' . \PHP_EOL;
 
         echo $this->getFormInputsAndButtons(
             [
                 ['name' => 'action', 'type' => 'hidden', 'value' => 'select_referenced_columns'],
-                ['name' => 'table', 'type' => 'hidden', 'value' => htmlspecialchars($_REQUEST['table'])],
+                ['name' => 'table', 'type' => 'hidden', 'value' => \htmlspecialchars($_REQUEST['table'])],
             ],
             [
                 ['type' => 'submit', 'name' => '', 'value' => $this->lang['stradd']],
@@ -309,146 +313,7 @@ class ConstraintsController extends BaseController
             ]
         );
 
-        echo sprintf('</form>%s', PHP_EOL);
-    }
-
-    /**
-     * Prints second screen of FK creation, where you select which columns
-     * to use in the referencing table.
-     *
-     * @param string $msg optional message to display
-     */
-    private function _selectFKColumns($msg = '')
-    {
-        $data = $this->misc->getDatabaseAccessor();
-
-        $this->coalesceArr($_POST, 'name', '');
-
-        $this->coalesceArr($_POST, 'target', '');
-
-        // Check that they've given at least one source column
-        if (!isset($_REQUEST['SourceColumnList']) && (!isset($_POST['IndexColumnList']) ||
-            !is_array($_POST['IndexColumnList']) ||
-            0 == sizeof($_POST['IndexColumnList']))) {
-            return $this->formAddForeignKey($this->lang['strfkneedscols']);
-        }
-        // Copy the IndexColumnList variable from stage 1
-        if (isset($_REQUEST['IndexColumnList']) && !isset($_REQUEST['SourceColumnList'])) {
-            $_REQUEST['SourceColumnList'] = serialize($_REQUEST['IndexColumnList']);
-        }
-
-        // Initialise variables
-        $this->coalesceArr($_POST, 'upd_action', null);
-
-        $this->coalesceArr($_POST, 'del_action', null);
-
-        $this->coalesceArr($_POST, 'match', null);
-
-        $this->coalesceArr($_POST, 'deferrable', null);
-
-        $this->coalesceArr($_POST, 'initially', null);
-
-        $_REQUEST['target'] = unserialize($_REQUEST['target']);
-
-        $this->printTrail('table');
-        $this->printTitle($this->lang['straddfk'], 'pg.constraint.foreign_key');
-        $this->printMsg($msg);
-
-        // Unserialize target and fetch appropriate table. This is a bit messy
-        // because the table could be in another schema.
-        $data->setSchema($_REQUEST['target']['schemaname']);
-        $attrs = $data->getTableAttributes($_REQUEST['target']['tablename']);
-        $data->setSchema($_REQUEST['schema']);
-
-        $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
-        $selColumns->set_style('width: 15em;');
-
-        if ($attrs->recordCount() > 0) {
-            while (!$attrs->EOF) {
-                $xmloption = new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']);
-                $selColumns->add($xmloption);
-                $attrs->moveNext();
-            }
-        }
-
-        $selIndex = new \PHPPgAdmin\XHtml\XHtmlSelect('IndexColumnList[]', true, 10);
-        $selIndex->set_style('width: 15em;');
-        $selIndex->set_attribute('id', 'IndexColumnList');
-        $buttonAdd = new \PHPPgAdmin\XHtml\XHtmlButton('add', '>>');
-        $buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
-        $buttonAdd->set_attribute('type', 'button');
-
-        $buttonRemove = new \PHPPgAdmin\XHtml\XHtmlButton('remove', '<<');
-        $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
-        $buttonRemove->set_attribute('type', 'button');
-
-        echo '<form onsubmit="doSelectAll();" name="formIndex" action="constraints" method="post">'.PHP_EOL;
-
-        echo '<table>'.PHP_EOL;
-        echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strfktarget']}</th></tr>";
-        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$this->lang['strfkcolumnlist']}</th></tr>".PHP_EOL;
-        echo '<tr><td class="data1">'.$selColumns->fetch().'</td>'.PHP_EOL;
-        echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
-        echo '<td class="data1">'.$selIndex->fetch().'</td></tr>'.PHP_EOL;
-        echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['stractions']}</th></tr>";
-        echo '<tr>';
-        echo '<td class="data1" colspan="3">'.PHP_EOL;
-        // ON SELECT actions
-        echo "{$this->lang['stronupdate']} <select name=\"upd_action\">";
-        foreach ($data->fkactions as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['upd_action'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
-        }
-
-        echo '</select><br />'.PHP_EOL;
-
-        // ON DELETE actions
-        echo "{$this->lang['strondelete']} <select name=\"del_action\">";
-        foreach ($data->fkactions as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['del_action'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
-        }
-
-        echo '</select><br />'.PHP_EOL;
-
-        // MATCH options
-        echo '<select name="match">';
-        foreach ($data->fkmatches as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['match'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
-        }
-
-        echo '</select><br />'.PHP_EOL;
-
-        // DEFERRABLE options
-        echo '<select name="deferrable">';
-        foreach ($data->fkdeferrable as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['deferrable'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
-        }
-
-        echo '</select><br />'.PHP_EOL;
-
-        // INITIALLY options
-        echo '<select name="initially">';
-        foreach ($data->fkinitial as $v) {
-            echo "<option value=\"{$v}\"", ($_POST['initially'] == $v) ? ' selected="selected"' : '', ">{$v}</option>".PHP_EOL;
-        }
-
-        echo '</select>'.PHP_EOL;
-        echo '</td></tr>'.PHP_EOL;
-        echo '</table>'.PHP_EOL;
-
-        echo '<p>';
-
-        echo '<input type="hidden" name="name" value="', htmlspecialchars($_REQUEST['name']), '" />'.PHP_EOL;
-        echo '<input type="hidden" name="target" value="', htmlspecialchars(serialize($_REQUEST['target'])), '" />'.PHP_EOL;
-        echo '<input type="hidden" name="SourceColumnList" value="', htmlspecialchars($_REQUEST['SourceColumnList']), '" />'.PHP_EOL;
-
-        echo $this->getActionTableAndButtons(
-            'save_add_foreign_key',
-            htmlspecialchars($_REQUEST['table']),
-            $this->lang['stradd'],
-            $this->lang['strcancel']
-        );
-
-        echo sprintf('</p>%s</form>%s', PHP_EOL, PHP_EOL);
+        echo \sprintf('</form>%s', \PHP_EOL);
     }
 
     /**
@@ -469,15 +334,15 @@ class ConstraintsController extends BaseController
         $this->coalesceArr($_POST, 'IndexColumnList', []);
 
         // Unserialize target
-        $_POST['target'] = unserialize($_POST['target']);
+        $_POST['target'] = \unserialize($_POST['target']);
 
         // Check that they've given at least one column
-        $temp = unserialize($_POST['SourceColumnList']);
+        $temp = \unserialize($_POST['SourceColumnList']);
 
         // If IndexColumnList or SourceColumnList are empty, return to screen to select referencing table columns
-        if (!is_array($_POST['IndexColumnList'])
-            || 0 == sizeof($_POST['IndexColumnList'])
-            || 0 == sizeof($temp)) {
+        if (!\is_array($_POST['IndexColumnList'])
+            || 0 === \count($_POST['IndexColumnList'])
+            || 0 === \count($temp)) {
             return $this->_selectFKColumns($this->lang['strfkneedscols']);
         }
 
@@ -485,7 +350,7 @@ class ConstraintsController extends BaseController
             $_POST['table'],
             $_POST['target']['schemaname'],
             $_POST['target']['tablename'],
-            unserialize($_POST['SourceColumnList']),
+            \unserialize($_POST['SourceColumnList']),
             $_POST['IndexColumnList'],
             $_POST['upd_action'],
             $_POST['del_action'],
@@ -494,7 +359,8 @@ class ConstraintsController extends BaseController
             $_POST['initially'],
             $_POST['name']
         );
-        if (0 == $status) {
+
+        if (0 === $status) {
             return $this->doDefault($this->lang['strfkadded']);
         }
 
@@ -507,7 +373,7 @@ class ConstraintsController extends BaseController
      * @param string $type either primary or unique
      * @param string $msg  optional message
      */
-    public function formPrimaryOrUniqueKey($type, $msg = '')
+    public function formPrimaryOrUniqueKey($type, $msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
         $this->coalesceArr($_POST, 'name', '');
@@ -543,7 +409,7 @@ class ConstraintsController extends BaseController
         $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
         $selColumns->set_style('width: 15em;');
 
-        if ($attrs->recordCount() > 0) {
+        if (0 < $attrs->recordCount()) {
             while (!$attrs->EOF) {
                 $new_option = new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']);
                 $selColumns->add($new_option);
@@ -562,41 +428,41 @@ class ConstraintsController extends BaseController
         $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
         $buttonRemove->set_attribute('type', 'button');
 
-        echo '<form onsubmit="doSelectAll();" name="formIndex" action="constraints" method="post">'.PHP_EOL;
+        echo '<form onsubmit="doSelectAll();" name="formIndex" action="constraints" method="post">' . \PHP_EOL;
 
-        echo '<table>'.PHP_EOL;
+        echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strname']}</th></tr>";
         echo '<tr>';
-        echo '<td class="data1" colspan="3"><input type="text" name="name" value="', htmlspecialchars($_POST['name']),
+        echo '<td class="data1" colspan="3"><input type="text" name="name" value="', \htmlspecialchars($_POST['name']),
             "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" /></td></tr>";
-        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strindexcolumnlist']}</th></tr>".PHP_EOL;
-        echo '<tr><td class="data1">'.$selColumns->fetch().'</td>'.PHP_EOL;
-        echo '<td class="data1" style="text-align: center">'.$buttonRemove->fetch().$buttonAdd->fetch().'</td>';
-        echo '<td class=data1>'.$selIndex->fetch().'</td></tr>'.PHP_EOL;
+        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=\"data required\">{$this->lang['strindexcolumnlist']}</th></tr>" . \PHP_EOL;
+        echo '<tr><td class="data1">' . $selColumns->fetch() . '</td>' . \PHP_EOL;
+        echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
+        echo '<td class=data1>' . $selIndex->fetch() . '</td></tr>' . \PHP_EOL;
 
         // Tablespace (if there are any)
-        if ($data->hasTablespaces() && $tablespaces->recordCount() > 0) {
+        if ($data->hasTablespaces() && 0 < $tablespaces->recordCount()) {
             echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strtablespace']}</th></tr>";
-            echo '<tr><td class="data1" colspan="3"><select name="tablespace">'.PHP_EOL;
+            echo '<tr><td class="data1" colspan="3"><select name="tablespace">' . \PHP_EOL;
             // Always offer the default (empty) option
             echo "\t\t\t\t<option value=\"\"",
-            ('' == $_POST['tablespace']) ? ' selected="selected"' : '', '></option>'.PHP_EOL;
+            ('' === $_POST['tablespace']) ? ' selected="selected"' : '', '></option>' . \PHP_EOL;
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
-                $spcname = htmlspecialchars($tablespaces->fields['spcname']);
+                $spcname = \htmlspecialchars($tablespaces->fields['spcname']);
                 echo "\t\t\t\t<option value=\"{$spcname}\"",
-                ($spcname == $_POST['tablespace']) ? ' selected="selected"' : '', ">{$spcname}</option>".PHP_EOL;
+                ($spcname === $_POST['tablespace']) ? ' selected="selected"' : '', ">{$spcname}</option>" . \PHP_EOL;
                 $tablespaces->moveNext();
             }
-            echo '</select></td></tr>'.PHP_EOL;
+            echo '</select></td></tr>' . \PHP_EOL;
         }
 
-        echo '</table>'.PHP_EOL;
+        echo '</table>' . \PHP_EOL;
 
         echo $this->getFormInputsAndButtons(
             [
-                ['name' => 'action', 'type' => 'hidden', 'value' => ($type === 'primary' ? 'save_add_primary_key' : 'save_add_unique_key')],
-                ['name' => 'table', 'type' => 'hidden', 'value' => htmlspecialchars($_REQUEST['table'])],
+                ['name' => 'action', 'type' => 'hidden', 'value' => ('primary' === $type ? 'save_add_primary_key' : 'save_add_unique_key')],
+                ['name' => 'table', 'type' => 'hidden', 'value' => \htmlspecialchars($_REQUEST['table'])],
             ],
             [
                 ['type' => 'submit', 'name' => '', 'value' => $this->lang['stradd']],
@@ -604,7 +470,7 @@ class ConstraintsController extends BaseController
             ]
         );
 
-        echo sprintf('</form>%s', PHP_EOL);
+        echo \sprintf('</form>%s', \PHP_EOL);
     }
 
     /**
@@ -621,29 +487,31 @@ class ConstraintsController extends BaseController
         // Default tablespace to empty if it isn't set
         $this->coalesceArr($_POST, 'tablespace', '');
 
-        if ('primary' == $type) {
+        if ('primary' === $type) {
             // Check that they've given at least one column
-            if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
-                || 0 == sizeof($_POST['IndexColumnList'])
+            if (!isset($_POST['IndexColumnList']) || !\is_array($_POST['IndexColumnList'])
+                || 0 === \count($_POST['IndexColumnList'])
             ) {
                 $this->formPrimaryOrUniqueKey($type, $this->lang['strpkneedscols']);
             } else {
                 $status = $data->addPrimaryKey($_POST['table'], $_POST['IndexColumnList'], $_POST['name'], $_POST['tablespace']);
-                if (0 == $status) {
+
+                if (0 === $status) {
                     return $this->doDefault($this->lang['strpkadded']);
                 }
 
                 return $this->formPrimaryOrUniqueKey($type, $this->lang['strpkaddedbad']);
             }
-        } elseif ('unique' == $type) {
+        } elseif ('unique' === $type) {
             // Check that they've given at least one column
-            if (!isset($_POST['IndexColumnList']) || !is_array($_POST['IndexColumnList'])
-                || 0 == sizeof($_POST['IndexColumnList'])
+            if (!isset($_POST['IndexColumnList']) || !\is_array($_POST['IndexColumnList'])
+                || 0 === \count($_POST['IndexColumnList'])
             ) {
                 $this->formPrimaryOrUniqueKey($type, $this->lang['struniqneedscols']);
             } else {
                 $status = $data->addUniqueKey($_POST['table'], $_POST['IndexColumnList'], $_POST['name'], $_POST['tablespace']);
-                if (0 == $status) {
+
+                if (0 === $status) {
                     return $this->doDefault($this->lang['struniqadded']);
                 }
 
@@ -673,22 +541,22 @@ class ConstraintsController extends BaseController
             $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/constraints" method="post">'.PHP_EOL;
-            echo '<table>'.PHP_EOL;
-            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>".PHP_EOL;
-            echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>".PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/constraints" method="post">' . \PHP_EOL;
+            echo '<table>' . \PHP_EOL;
+            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>" . \PHP_EOL;
 
             echo "<tr><td class=\"data1\"><input name=\"name\" size=\"24\" maxlength=\"{$data->_maxNameLen}\" value=\"",
-            htmlspecialchars($_POST['name']), '" /></td>'.PHP_EOL;
+            \htmlspecialchars($_POST['name']), '" /></td>' . \PHP_EOL;
 
             echo '<td class="data1">(<input name="definition" size="64" value="',
-            htmlspecialchars($_POST['definition']), '" />)</td></tr>'.PHP_EOL;
-            echo '</table>'.PHP_EOL;
+            \htmlspecialchars($_POST['definition']), '" />)</td></tr>' . \PHP_EOL;
+            echo '</table>' . \PHP_EOL;
 
             echo $this->getFormInputsAndButtons(
                 [
                     ['name' => 'action', 'type' => 'hidden', 'value' => 'save_add_check'],
-                    ['name' => 'table', 'type' => 'hidden', 'value' => htmlspecialchars($_REQUEST['table'])],
+                    ['name' => 'table', 'type' => 'hidden', 'value' => \htmlspecialchars($_REQUEST['table'])],
                 ],
                 [
                     ['type' => 'submit', 'name' => '', 'value' => $this->lang['stradd']],
@@ -696,9 +564,9 @@ class ConstraintsController extends BaseController
                 ]
             );
 
-            echo sprintf('</form>%s', PHP_EOL);
+            echo \sprintf('</form>%s', \PHP_EOL);
         } else {
-            if ('' == trim($_POST['definition'])) {
+            if ('' === \trim($_POST['definition'])) {
                 $this->addCheck(true, $this->lang['strcheckneedsdefinition']);
             } else {
                 $status = $data->addCheckConstraint(
@@ -706,7 +574,8 @@ class ConstraintsController extends BaseController
                     $_POST['definition'],
                     $_POST['name']
                 );
-                if (0 == $status) {
+
+                if (0 === $status) {
                     return $this->doDefault($this->lang['strcheckadded']);
                 }
 
@@ -718,25 +587,25 @@ class ConstraintsController extends BaseController
     /**
      * Prints the drop form.
      */
-    public function formDrop()
+    public function formDrop(): void
     {
         $this->printTrail('constraint');
         $this->printTitle($this->lang['strdrop'], 'pg.constraint.drop');
 
-        echo '<p>', sprintf(
+        echo '<p>', \sprintf(
             $this->lang['strconfdropconstraint'],
             $this->misc->printVal($_REQUEST['constraint']),
             $this->misc->printVal($_REQUEST['table'])
-        ), '</p>'.PHP_EOL;
+        ), '</p>' . \PHP_EOL;
 
-        echo sprintf('<form action="constraints" method="post">%s', PHP_EOL);
+        echo \sprintf('<form action="constraints" method="post">%s', \PHP_EOL);
 
         echo $this->getFormInputsAndButtons(
             [
                 ['name' => 'action', 'value' => 'drop', 'type' => 'hidden'],
-                ['name' => 'table', 'value' => htmlspecialchars($_REQUEST['table']), 'type' => 'hidden'],
-                ['name' => 'constraint', 'value' => htmlspecialchars($_REQUEST['constraint']), 'type' => 'hidden'],
-                ['name' => 'type', 'value' => htmlspecialchars($_REQUEST['type']), 'type' => 'hidden'],
+                ['name' => 'table', 'value' => \htmlspecialchars($_REQUEST['table']), 'type' => 'hidden'],
+                ['name' => 'constraint', 'value' => \htmlspecialchars($_REQUEST['constraint']), 'type' => 'hidden'],
+                ['name' => 'type', 'value' => \htmlspecialchars($_REQUEST['type']), 'type' => 'hidden'],
             ],
             [
                 ['type' => 'submit', 'name' => 'drop', 'value' => $this->lang['strdrop']],
@@ -747,7 +616,7 @@ class ConstraintsController extends BaseController
             ]
         );
 
-        echo sprintf('</form>%s', PHP_EOL);
+        echo \sprintf('</form>%s', \PHP_EOL);
     }
 
     /**
@@ -758,10 +627,155 @@ class ConstraintsController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $status = $data->dropConstraint($_POST['constraint'], $_POST['table'], $_POST['type'], isset($_POST['cascade']));
-        if (0 == $status) {
+
+        if (0 === $status) {
             return $this->doDefault($this->lang['strconstraintdropped']);
         }
 
         return $this->doDefault($this->lang['strconstraintdroppedbad']);
+    }
+
+    /**
+     * Prints second screen of FK creation, where you select which columns
+     * to use in the referencing table.
+     *
+     * @param string $msg optional message to display
+     */
+    private function _selectFKColumns($msg = '')
+    {
+        $data = $this->misc->getDatabaseAccessor();
+
+        $this->coalesceArr($_POST, 'name', '');
+
+        $this->coalesceArr($_POST, 'target', '');
+
+        // Check that they've given at least one source column
+        if (!isset($_REQUEST['SourceColumnList']) && (!isset($_POST['IndexColumnList']) ||
+            !\is_array($_POST['IndexColumnList']) ||
+            0 === \count($_POST['IndexColumnList']))) {
+            return $this->formAddForeignKey($this->lang['strfkneedscols']);
+        }
+        // Copy the IndexColumnList variable from stage 1
+        if (isset($_REQUEST['IndexColumnList']) && !isset($_REQUEST['SourceColumnList'])) {
+            $_REQUEST['SourceColumnList'] = \serialize($_REQUEST['IndexColumnList']);
+        }
+
+        // Initialise variables
+        $this->coalesceArr($_POST, 'upd_action', null);
+
+        $this->coalesceArr($_POST, 'del_action', null);
+
+        $this->coalesceArr($_POST, 'match', null);
+
+        $this->coalesceArr($_POST, 'deferrable', null);
+
+        $this->coalesceArr($_POST, 'initially', null);
+
+        $_REQUEST['target'] = \unserialize($_REQUEST['target']);
+
+        $this->printTrail('table');
+        $this->printTitle($this->lang['straddfk'], 'pg.constraint.foreign_key');
+        $this->printMsg($msg);
+
+        // Unserialize target and fetch appropriate table. This is a bit messy
+        // because the table could be in another schema.
+        $data->setSchema($_REQUEST['target']['schemaname']);
+        $attrs = $data->getTableAttributes($_REQUEST['target']['tablename']);
+        $data->setSchema($_REQUEST['schema']);
+
+        $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
+        $selColumns->set_style('width: 15em;');
+
+        if (0 < $attrs->recordCount()) {
+            while (!$attrs->EOF) {
+                $xmloption = new \PHPPgAdmin\XHtml\XHtmlOption($attrs->fields['attname']);
+                $selColumns->add($xmloption);
+                $attrs->moveNext();
+            }
+        }
+
+        $selIndex = new \PHPPgAdmin\XHtml\XHtmlSelect('IndexColumnList[]', true, 10);
+        $selIndex->set_style('width: 15em;');
+        $selIndex->set_attribute('id', 'IndexColumnList');
+        $buttonAdd = new \PHPPgAdmin\XHtml\XHtmlButton('add', '>>');
+        $buttonAdd->set_attribute('onclick', 'buttonPressed(this);');
+        $buttonAdd->set_attribute('type', 'button');
+
+        $buttonRemove = new \PHPPgAdmin\XHtml\XHtmlButton('remove', '<<');
+        $buttonRemove->set_attribute('onclick', 'buttonPressed(this);');
+        $buttonRemove->set_attribute('type', 'button');
+
+        echo '<form onsubmit="doSelectAll();" name="formIndex" action="constraints" method="post">' . \PHP_EOL;
+
+        echo '<table>' . \PHP_EOL;
+        echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['strfktarget']}</th></tr>";
+        echo "<tr><th class=\"data\">{$this->lang['strtablecolumnlist']}</th><th class=\"data\">&nbsp;</th><th class=data>{$this->lang['strfkcolumnlist']}</th></tr>" . \PHP_EOL;
+        echo '<tr><td class="data1">' . $selColumns->fetch() . '</td>' . \PHP_EOL;
+        echo '<td class="data1" style="text-align: center">' . $buttonRemove->fetch() . $buttonAdd->fetch() . '</td>';
+        echo '<td class="data1">' . $selIndex->fetch() . '</td></tr>' . \PHP_EOL;
+        echo "<tr><th class=\"data\" colspan=\"3\">{$this->lang['stractions']}</th></tr>";
+        echo '<tr>';
+        echo '<td class="data1" colspan="3">' . \PHP_EOL;
+        // ON SELECT actions
+        echo "{$this->lang['stronupdate']} <select name=\"upd_action\">";
+
+        foreach ($data->fkactions as $v) {
+            echo "<option value=\"{$v}\"", ($_POST['upd_action'] === $v) ? ' selected="selected"' : '', ">{$v}</option>" . \PHP_EOL;
+        }
+
+        echo '</select><br />' . \PHP_EOL;
+
+        // ON DELETE actions
+        echo "{$this->lang['strondelete']} <select name=\"del_action\">";
+
+        foreach ($data->fkactions as $v) {
+            echo "<option value=\"{$v}\"", ($_POST['del_action'] === $v) ? ' selected="selected"' : '', ">{$v}</option>" . \PHP_EOL;
+        }
+
+        echo '</select><br />' . \PHP_EOL;
+
+        // MATCH options
+        echo '<select name="match">';
+
+        foreach ($data->fkmatches as $v) {
+            echo "<option value=\"{$v}\"", ($_POST['match'] === $v) ? ' selected="selected"' : '', ">{$v}</option>" . \PHP_EOL;
+        }
+
+        echo '</select><br />' . \PHP_EOL;
+
+        // DEFERRABLE options
+        echo '<select name="deferrable">';
+
+        foreach ($data->fkdeferrable as $v) {
+            echo "<option value=\"{$v}\"", ($_POST['deferrable'] === $v) ? ' selected="selected"' : '', ">{$v}</option>" . \PHP_EOL;
+        }
+
+        echo '</select><br />' . \PHP_EOL;
+
+        // INITIALLY options
+        echo '<select name="initially">';
+
+        foreach ($data->fkinitial as $v) {
+            echo "<option value=\"{$v}\"", ($_POST['initially'] === $v) ? ' selected="selected"' : '', ">{$v}</option>" . \PHP_EOL;
+        }
+
+        echo '</select>' . \PHP_EOL;
+        echo '</td></tr>' . \PHP_EOL;
+        echo '</table>' . \PHP_EOL;
+
+        echo '<p>';
+
+        echo '<input type="hidden" name="name" value="', \htmlspecialchars($_REQUEST['name']), '" />' . \PHP_EOL;
+        echo '<input type="hidden" name="target" value="', \htmlspecialchars(\serialize($_REQUEST['target'])), '" />' . \PHP_EOL;
+        echo '<input type="hidden" name="SourceColumnList" value="', \htmlspecialchars($_REQUEST['SourceColumnList']), '" />' . \PHP_EOL;
+
+        echo $this->getActionTableAndButtons(
+            'save_add_foreign_key',
+            \htmlspecialchars($_REQUEST['table']),
+            $this->lang['stradd'],
+            $this->lang['strcancel']
+        );
+
+        echo \sprintf('</p>%s</form>%s', \PHP_EOL, \PHP_EOL);
     }
 }

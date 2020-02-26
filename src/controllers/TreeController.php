@@ -1,27 +1,60 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
-namespace PHPPgAdmin\XHtml;
+namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base TreeController controller class.
  */
-class TreeController
+class TreeController extends BaseController
 {
     use \PHPPgAdmin\Traits\HelperTrait;
+    /**
+     * @var string
+     */
+    const BASE_PATH = BASE_PATH;
+    /**
+     * @var string
+     */
+    const SUBFOLDER = SUBFOLDER;
+    /**
+     * @var string
+     */
+    const DEBUGMODE = DEBUGMODE;
+
+    public $form = '';
+
+    public $href = '';
+
+    public $lang = [];
+
+    public $action = '';
+
+    public $controller_name = 'TreeController';
+
+    public $controller_title = 'base';
+
+    public $misc;
+
+    public $conf;
+
+    public $appThemes;
+
+    public $view;
+
+    public $appVersion;
+
+    public $appLangFiles;
 
     protected $container;
-    public $form             = '';
-    public $href             = '';
-    public $lang             = [];
-    public $action           = '';
-    public $controller_name  = 'TreeController';
-    public $controller_title = 'base';
 
     // Constructor
     public function __construct(\Slim\Container $container, $controller_name = null)
@@ -38,6 +71,7 @@ class TreeController
         $this->conf         = $this->misc->getConf();
         $this->appThemes    = $container->get('appThemes');
         $this->action       = $container->get('action');
+
         if (null !== $controller_name) {
             $this->controller_name = $controller_name;
         }
@@ -66,7 +100,7 @@ class TreeController
     {
         $treedata = [];
 
-        if ($_treedata->recordCount() > 0) {
+        if (0 < $_treedata->recordCount()) {
             while (!$_treedata->EOF) {
                 $treedata[] = $_treedata->fields;
                 $_treedata->moveNext();
@@ -80,6 +114,24 @@ class TreeController
         ];
 
         return $this->printTreeJSON($treedata, $attrs, $print);
+    }
+
+    /**
+     * Hides or show tree tabs according to their properties.
+     *
+     * @param array $tabs The tabs
+     *
+     * @return \PHPPgAdmin\ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
+     */
+    public function adjustTabsForTree(&$tabs)
+    {
+        foreach ($tabs as $i => $tab) {
+            if ((isset($tab['hide']) && true === $tab['hide']) || (isset($tab['tree']) && false === $tab['tree'])) {
+                unset($tabs[$i]);
+            }
+        }
+
+        return new \PHPPgAdmin\ArrayRecordSet($tabs);
     }
 
     /**
@@ -108,22 +160,23 @@ class TreeController
             $parent = [
                 'id'       => 'root',
                 'children' => true,
-                'icon'     => \SUBFOLDER.'/assets/images/themes/default/Servers.png',
+                'icon'     => \SUBFOLDER . '/assets/images/themes/default/Servers.png',
                 'state'    => ['opened' => true],
-                'a_attr'   => ['href' => str_replace('//', '/', \SUBFOLDER.'/src/views/servers')],
-                'url'      => str_replace('//', '/', \SUBFOLDER.'/src/views/servers?action=tree'),
+                'a_attr'   => ['href' => \str_replace('//', '/', \SUBFOLDER . '/src/views/servers')],
+                'url'      => \str_replace('//', '/', \SUBFOLDER . '/src/views/servers?action=tree'),
                 'text'     => 'Servers',
             ];
-        } elseif (count($treedata) > 0) {
+        } elseif (0 < \count($treedata)) {
             foreach ($treedata as $rec) {
                 $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['icon'], $rec));
+
                 if (!empty($attrs['openicon'])) {
                     $icon = $this->misc->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
                 }
 
                 $tree = [
                     'text'       => Decorator::get_sanitized_value($attrs['text'], $rec),
-                    'id'         => sha1(Decorator::get_sanitized_value($attrs['action'], $rec)),
+                    'id'         => \sha1(Decorator::get_sanitized_value($attrs['action'], $rec)),
                     'icon'       => Decorator::get_sanitized_value($icon, $rec),
                     'iconaction' => Decorator::get_sanitized_value($attrs['iconAction'], $rec),
                     'openicon'   => Decorator::get_sanitized_value($icon, $rec),
@@ -132,9 +185,11 @@ class TreeController
                     'children'   => false,
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
-                if ($url && strpos($url, '/src/views') === false) {
-                    $url = str_replace('//', '/', \SUBFOLDER.'/src/views/'.$url);
+
+                if ($url && false === \mb_strpos($url, '/src/views')) {
+                    $url = \str_replace('//', '/', \SUBFOLDER . '/src/views/' . $url);
                 }
+
                 if ($url) {
                     $tree['url']      = $url;
                     $tree['children'] = true;
@@ -162,23 +217,5 @@ class TreeController
         }
 
         return $parent;
-    }
-
-    /**
-     * Hides or show tree tabs according to their properties.
-     *
-     * @param array $tabs The tabs
-     *
-     * @return \PHPPgAdmin\ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
-     */
-    public function adjustTabsForTree(&$tabs)
-    {
-        foreach ($tabs as $i => $tab) {
-            if ((isset($tab['hide']) && true === $tab['hide']) || (isset($tab['tree']) && false === $tab['tree'])) {
-                unset($tabs[$i]);
-            }
-        }
-
-        return new \PHPPgAdmin\ArrayRecordSet($tabs);
     }
 }
