@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Traits;
@@ -225,8 +222,9 @@ trait HelperTrait
      * Receives N parameters and sends them to the console adding where was it
      * called from.
      *
-     * @param mixed $variablesToDump
-     * @param mixed $exitAfterwards
+     * @param mixed  $variablesToDump
+     * @param mixed  $exitAfterwards
+     * @param string $whoCalledMe
      */
     private static function staticTrace(
         $variablesToDump = [],

@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -75,6 +72,7 @@ class TypesController extends BaseController
                 $this->doProperties();
 
                 break;
+
             default:
                 $this->doDefault();
 
@@ -536,6 +534,7 @@ class TypesController extends BaseController
                 }
 
                 break;
+
             default:
                 echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
         }
@@ -670,6 +669,7 @@ class TypesController extends BaseController
                 }
 
                 break;
+
             default:
                 echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
         }

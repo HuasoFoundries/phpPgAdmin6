@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 // This section is made to be able to parse requests coming from PHP Builtin webserver

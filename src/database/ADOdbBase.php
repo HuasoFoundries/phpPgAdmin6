@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -108,6 +105,7 @@ class ADOdbBase
                 $sql .= "\"{$f_schema}\".\"{$obj_name}\" (\"{$basetype}\") IS ";
 
                 break;
+
             default:
                 // Unknown object type
                 return -1;

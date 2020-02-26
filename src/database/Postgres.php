@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -172,6 +169,7 @@ class Postgres extends ADOdbBase
                 echo "</textarea>\n";
 
                 break;
+
             default:
                 echo '<input name="', \htmlspecialchars($name), '" value="', \htmlspecialchars($value), "\" size=\"35\"{$extra_str} />\n";
 
@@ -735,6 +733,7 @@ class Postgres extends ADOdbBase
                 }
 
                 break;
+
             default:
                 return -4;
         }
@@ -893,6 +892,7 @@ class Postgres extends ADOdbBase
                             $sql .= "\"{$k}\" {$ops[$k]}('{$v}')";
 
                             break;
+
                         default:
                             // Shouldn't happen
                     }

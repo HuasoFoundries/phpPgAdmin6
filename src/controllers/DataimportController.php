@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -105,6 +102,7 @@ class DataimportController extends BaseController
                     }
 
                     break;
+
                 default:
                     // An unrecognised tag means failure
                     $data->rollbackTransaction();
@@ -174,6 +172,7 @@ class DataimportController extends BaseController
                     $state                    = 'ROW';
 
                     break;
+
                 default:
                     // An unrecognised tag means failure
                     $data->rollbackTransaction();
@@ -220,6 +219,7 @@ class DataimportController extends BaseController
                     $_REQUEST['format'] = 'xml';
 
                     break;
+
                 default:
                     $data->rollbackTransaction();
                     $this->halt($this->lang['strimporterror-fileformat']);
@@ -294,6 +294,7 @@ class DataimportController extends BaseController
                 \xml_parser_free($parser);
 
                 break;
+
             default:
                 // Unknown type
                 $data->rollbackTransaction();

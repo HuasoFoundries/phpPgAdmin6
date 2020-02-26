@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -183,6 +180,7 @@ trait RowTrait
                 return $value;
 
                 break;
+
             default:
                 // Checking variable fields is difficult as there might be a size
                 // attribute...

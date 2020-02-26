@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -55,6 +52,7 @@ trait ColumnTrait
                     $sql  = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" time({$length}){$qual}";
 
                     break;
+
                 default:
                     $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" {$type}({$length})";
             }
@@ -150,7 +148,7 @@ trait ColumnTrait
 
         // Rename the column, if it has been changed
         if ($column !== $name) {
-            list($status, $sqlrename) = $this->renameColumn($table, $column, $name);
+            [$status, $sqlrename] = $this->renameColumn($table, $column, $name);
 
             if (0 !== $status) {
                 $this->rollbackTransaction();
@@ -199,6 +197,7 @@ trait ColumnTrait
                     $ftype = "time({$length}){$qual}";
 
                     break;
+
                 default:
                     $ftype = "{$type}({$length})";
             }

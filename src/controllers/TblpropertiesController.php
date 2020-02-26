@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -83,6 +80,7 @@ class TblpropertiesController extends BaseController
                 $this->doDrop(true);
 
                 break;
+
             default:
                 $this->doDefault();
 
@@ -608,7 +606,7 @@ class TblpropertiesController extends BaseController
                 }
                 $this->coalesceArr($_POST, 'length', '');
 
-                list($status, $sql) = $data->addColumn(
+                [$status, $sql] = $data->addColumn(
                     $_POST['table'],
                     $_POST['field'],
                     $_POST['type'],
@@ -630,6 +628,7 @@ class TblpropertiesController extends BaseController
                 }
 
                 break;
+
             default:
                 echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
         }
@@ -661,7 +660,7 @@ class TblpropertiesController extends BaseController
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
-            list($status, $sql) = $data->dropColumn($_POST['table'], $_POST['column'], isset($_POST['cascade']));
+            [$status, $sql] = $data->dropColumn($_POST['table'], $_POST['column'], isset($_POST['cascade']));
 
             if (0 === $status) {
                 $misc->setReloadBrowser(true);

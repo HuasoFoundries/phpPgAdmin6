@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Traits;
@@ -159,6 +156,7 @@ trait MiscTrait
                 }
 
                 break;
+
             default:
                 return false;
         }
@@ -218,6 +216,7 @@ trait MiscTrait
                 $align = 'center';
 
                 break;
+
             default:
                 $align = null;
                 $out   = \htmlspecialchars($str);
@@ -295,7 +294,7 @@ trait MiscTrait
             case 'yesno':
             case 'bool':
             case 'boolean':
-                list($str, $align, $out) = $this->printBoolean($type, $str, $params);
+                [$str, $align, $out] = $this->printBoolean($type, $str, $params);
 
                 break;
             case 'bytea':
@@ -336,6 +335,7 @@ trait MiscTrait
                 $out = \PHPPgAdmin\Traits\HelperTrait::formatSizeUnits($str, $lang);
 
                 break;
+
             default:
                 // If the string contains at least one instance of >1 space in a row, a tab
                 // character, a space at the start of a line, or a space at the start of

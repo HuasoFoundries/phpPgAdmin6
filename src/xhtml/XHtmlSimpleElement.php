@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -21,7 +18,6 @@ namespace PHPPgAdmin\XHtml;
  *
  * Used to generate Xhtml-Code for simple xhtml elements
  * (i.e. elements, that can't contain child elements)
- *
  *
  * @author    Felix Meinhold
  */

@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -61,6 +58,7 @@ class TablespacesController extends BaseController
                 $this->doAlter();
 
                 break;
+
             default:
                 $this->doDefault();
 

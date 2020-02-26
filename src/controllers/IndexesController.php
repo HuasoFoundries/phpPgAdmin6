@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -79,6 +76,7 @@ class IndexesController extends BaseController
                 $this->doDropIndex(true);
 
                 break;
+
             default:
                 $this->doDefault();
 
@@ -282,7 +280,7 @@ class IndexesController extends BaseController
             echo '</form>' . \PHP_EOL;
         } else {
             \set_time_limit(0);
-            list($status, $sql) = $data->clusterIndex($object, $_POST['index']);
+            [$status, $sql] = $data->clusterIndex($object, $_POST['index']);
 
             if (0 === $status) {
                 if (isset($_POST['analyze'])) {
@@ -469,7 +467,7 @@ class IndexesController extends BaseController
         if ('' === $IndexColumnList) {
             $this->doCreateIndex($this->lang['strindexneedscols']);
         } else {
-            list($status, $sql) = $data->createIndex(
+            [$status, $sql] = $data->createIndex(
                 $this->getPostParam('formIndexName', ''),
                 $object,
                 $IndexColumnList,
@@ -517,7 +515,7 @@ class IndexesController extends BaseController
             echo '</form>' . \PHP_EOL;
         } else {
             try {
-                list($status, $sql) = $data->dropIndex($this->getPostParam('index'), $this->getPostParam('cascade'));
+                [$status, $sql] = $data->dropIndex($this->getPostParam('index'), $this->getPostParam('cascade'));
 
                 if (0 === $status) {
                     $this->doDefault($sql . \PHP_EOL . $this->lang['strindexdropped']);

@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -121,6 +118,7 @@ class TablesController extends BaseController
                 $this->doDrop(true);
 
                 break;
+
             default:
                 if (false === $this->adminActions($this->action, 'table')) {
                     $header_template = 'header_datatables.twig';
@@ -540,6 +538,7 @@ class TablesController extends BaseController
                 return;
 
                 break;
+
             default:
                 echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
         }
@@ -1031,7 +1030,7 @@ class TablesController extends BaseController
 
             if (\is_array($_REQUEST['table'])) {
                 foreach ($_REQUEST['table'] as $t) {
-                    list($status, $sql) = $data->emptyTable($t, isset($_POST['cascade']));
+                    [$status, $sql] = $data->emptyTable($t, isset($_POST['cascade']));
 
                     if (0 === $status) {
                         $msg .= \sprintf('%s<br />', $sql);
@@ -1044,7 +1043,7 @@ class TablesController extends BaseController
                 }
                 $this->doDefault($msg); //  END mutli empty
             } else {
-                list($status, $sql) = $data->emptyTable($_POST['table'], isset($_POST['cascade']));
+                [$status, $sql] = $data->emptyTable($_POST['table'], isset($_POST['cascade']));
 
                 if (0 === $status) {
                     $msg .= \sprintf('%s<br />', $sql);

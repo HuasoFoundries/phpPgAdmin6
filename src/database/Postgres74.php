@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -362,7 +359,7 @@ class Postgres74 extends Postgres80
 
         // Rename the column, if it has been changed
         if ($column !== $name) {
-            list($status, $sql) = $this->renameColumn($table, $column, $name);
+            [$status, $sql] = $this->renameColumn($table, $column, $name);
 
             if (0 !== $status) {
                 $this->rollbackTransaction();

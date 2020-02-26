@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin;
@@ -70,6 +67,7 @@ class ADOdbException extends \Exception
                 $s    = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}({$p1}, '{$user}', '****', {$p2})";
 
                 break;
+
             default:
                 $s = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}({$p1}, {$p2})";
 
@@ -154,6 +152,7 @@ class ADOdbException extends \Exception
             case 'CONNECT':
                 // do nothing;
                 break;
+
             default:
                 $s = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}({$p1}, {$p2})\n";
                 echo "<table class=\"error\" cellpadding=\"5\"><tr><td>{$s}</td></tr></table><br />\n";

@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -78,6 +75,7 @@ trait PrivilegesTrait
                 $sql = "SELECT spcacl AS acl FROM pg_catalog.pg_tablespace WHERE spcname='{$object}'";
 
                 break;
+
             default:
                 return -1;
         }
@@ -200,6 +198,7 @@ trait PrivilegesTrait
                 $sql .= " ON TABLESPACE \"{$object}\"";
 
                 break;
+
             default:
                 return -1;
         }

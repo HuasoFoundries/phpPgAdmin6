@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -73,6 +70,7 @@ class DisplayController extends BaseController
                 $this->doDelRow(true);
 
                 break;
+
             default:
                 $header_template = 'header_sqledit.twig';
                 $footer_template = 'footer_sqledit.twig';
@@ -164,7 +162,7 @@ class DisplayController extends BaseController
 
         $this->printTabs($subject, $tabsPosition);
 
-        list($query, $title, $type) = $this->getQueryTitleAndType($data, $object);
+        [$query, $title, $type] = $this->getQueryTitleAndType($data, $object);
         $this->printTitle($this->lang[$title]);
 
         //$this->prtrace($subject, $object, $query, $_SESSION['sqlquery']);
@@ -457,7 +455,7 @@ class DisplayController extends BaseController
 
         $data = $this->misc->getDatabaseAccessor();
 
-        list($actions, $key) = $this->_getKeyAndActions($resultset, $object, $data, $page, $_gets);
+        [$actions, $key] = $this->_getKeyAndActions($resultset, $object, $data, $page, $_gets);
 
         $fkey_information = $this->getFKInfo();
         // Show page navigation
@@ -1155,7 +1153,7 @@ class DisplayController extends BaseController
             $result .= \sprintf('<a class="pagenav" href="?%s&page=%s">%s</a>%s', $url, $page - 1, $lang['strprev'], \PHP_EOL);
         }
 
-        list($min_page, $max_page) = $this->_getMinMaxPages($page, $pages);
+        [$min_page, $max_page] = $this->_getMinMaxPages($page, $pages);
 
         for ($i = $min_page; $i <= $max_page; ++$i) {
             $result .= (($i === $page) ? $i : \sprintf('<a class="pagenav" href="display?%s&page=%s">%s</a>', $url, $i, $i)) . \PHP_EOL;

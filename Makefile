@@ -1,4 +1,4 @@
-VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)",/\1/p')
+VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)"/\1/p')
 
 SHELL = /usr/bin/env bash
 
@@ -25,11 +25,11 @@ version:
 	echo -e "$(WHITE) "
 
 
-install: fix_permissions
+install: fix_permissions composer_update
 install: 
 	@composer install --no-interaction --no-progress --no-suggest --prefer-dist ;\
 	composer validate --strict ;\
-	#composer normalize
+	composer normalize
 
 
 

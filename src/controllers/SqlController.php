@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -84,7 +81,7 @@ class SqlController extends BaseController
 
         // May as well try to time the query
         if (\function_exists('microtime')) {
-            list($usec, $sec) = \explode(' ', \microtime());
+            [$usec, $sec]     = \explode(' ', \microtime());
             $this->start_time = ((float) $usec + (float) $sec);
         }
 
@@ -172,6 +169,7 @@ class SqlController extends BaseController
                         break;
                     case \PGSQL_EMPTY_QUERY:
                         break;
+
                     default:
                         break;
                 }
@@ -251,8 +249,8 @@ class SqlController extends BaseController
 
         // May as well try to time the query
         if (null !== $this->start_time) {
-            list($usec, $sec) = \explode(' ', \microtime());
-            $end_time         = ((float) $usec + (float) $sec);
+            [$usec, $sec] = \explode(' ', \microtime());
+            $end_time     = ((float) $usec + (float) $sec);
             // Get duration in milliseconds, round to 3dp's
             $this->duration = \number_format(($end_time - $this->start_time) * 1000, 3);
         }

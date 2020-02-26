@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -236,7 +233,7 @@ class MaterializedviewpropertiesController extends BaseController
                 }
 
                 // Alter the matview column
-                list($status, $sql) = $data->alterColumn(
+                [$status, $sql] = $data->alterColumn(
                     $_REQUEST[$this->subject],
                     $_REQUEST['column'],
                     $_REQUEST['field'],
@@ -261,6 +258,7 @@ class MaterializedviewpropertiesController extends BaseController
                 }
 
                 break;
+
             default:
                 echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
         }

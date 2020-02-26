@@ -1,16 +1,14 @@
 <?php
 
-//// declare(strict_types = 1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 \defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
 
 \define('THEME_PATH', BASE_PATH . '/assets/themes');
 // Enforce PHP environment
-ini_set('arg_separator.output', '&amp;');
+\ini_set('arg_separator.output', '&amp;');
 
 if (!\is_writable(BASE_PATH . '/temp')) {
     die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
@@ -37,7 +35,7 @@ if ($shouldSetSession && \PHP_SAPI !== 'cli') {
 }
 
 $debugmode = (!isset($conf['debugmode'])) ? false : (bool) ($conf['debugmode']);
-defined('DEBUGMODE') || \define('DEBUGMODE', $debugmode);
+\defined('DEBUGMODE') || \define('DEBUGMODE', $debugmode);
 
 if (!\defined('ADODB_ERROR_HANDLER_TYPE')) {
     \define('ADODB_ERROR_HANDLER_TYPE', \E_USER_ERROR);
@@ -46,11 +44,12 @@ if (!\defined('ADODB_ERROR_HANDLER_TYPE')) {
 if (!\defined('ADODB_ERROR_HANDLER')) {
     \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 }
-if (DEBUGMODE) {
-    ini_set('display_errors', 'On');
 
-    ini_set('display_startup_errors', 'On');
-    ini_set('opcache.revalidate_freq', '0');
+if (DEBUGMODE) {
+    \ini_set('display_errors', 'On');
+
+    \ini_set('display_startup_errors', 'On');
+    \ini_set('opcache.revalidate_freq', '0');
     \error_reporting(\E_ALL);
 
     if (\array_key_exists('register_debuggers', $conf) && \is_callable($conf['register_debuggers'])) {

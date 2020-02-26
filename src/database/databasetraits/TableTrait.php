@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -651,6 +648,7 @@ trait TableTrait
                     $sql .= $qual;
 
                     break;
+
                 default:
                     $sql .= "\"{$field[$i]}\" {$type[$i]}";
 
@@ -1136,8 +1134,8 @@ trait TableTrait
             ];
 
             foreach (\explode(',', $_autovacs->fields['reloptions']) as $var) {
-                list($o, $v) = \explode('=', $var);
-                $_[$o]       = $v;
+                [$o, $v] = \explode('=', $var);
+                $_[$o]   = $v;
             }
 
             $autovacs[] = $_;
@@ -1453,6 +1451,7 @@ trait TableTrait
                         $sql .= 'UNIQUE (' . \implode(',', $keys) . ')';
 
                         break;
+
                     default:
                         // Unrecognised constraint
                         $this->rollbackTransaction();
@@ -1517,6 +1516,7 @@ trait TableTrait
                         $storage = 'EXTENDED';
 
                         break;
+
                     default:
                         // Unknown storage type
                         $this->rollbackTransaction();
@@ -1587,6 +1587,7 @@ trait TableTrait
                     $sql .= "GROUP \"{$v[1]}\";\n";
 
                     break;
+
                 default:
                     // Unknown privilege type - fail
                     $this->rollbackTransaction();
@@ -1631,6 +1632,7 @@ trait TableTrait
                     $sql .= "GROUP \"{$v[1]}\"";
 
                     break;
+
                 default:
                     // Unknown privilege type - fail
                     return null;

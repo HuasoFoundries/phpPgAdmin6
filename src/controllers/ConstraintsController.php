@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -100,6 +97,7 @@ class ConstraintsController extends BaseController
                 $this->formDrop();
 
                 break;
+
             default:
                 $this->doDefault();
 
@@ -391,6 +389,7 @@ class ConstraintsController extends BaseController
                 $this->printTitle($this->lang['stradduniq'], 'pg.constraint.unique_key');
 
                 break;
+
             default:
                 $this->doDefault($this->lang['strinvalidparam']);
 

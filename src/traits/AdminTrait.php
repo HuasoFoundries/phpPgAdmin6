@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Traits;
@@ -383,7 +380,7 @@ trait AdminTrait
             // cluster one or more table
             if (\is_array($_REQUEST['table'])) {
                 foreach ($_REQUEST['table'] as $o) {
-                    list($status, $sql) = $data->clusterIndex($o);
+                    [$status, $sql] = $data->clusterIndex($o);
                     $msg .= \sprintf('%s<br />', $sql);
 
                     if (0 === $status) {
@@ -397,7 +394,7 @@ trait AdminTrait
                 // Everything went fine, back to the Default page....
                 $this->doDefault($msg);
             } else {
-                list($status, $sql) = $data->clusterIndex($_REQUEST['object']);
+                [$status, $sql] = $data->clusterIndex($_REQUEST['object']);
                 $msg .= \sprintf('%s<br />', $sql);
 
                 if (0 === $status) {
@@ -408,7 +405,7 @@ trait AdminTrait
             }
         } else {
             // Cluster all tables in database
-            list($status, $sql) = $data->clusterIndex();
+            [$status, $sql] = $data->clusterIndex();
             $msg .= \sprintf('%s<br />', $sql);
 
             if (0 === $status) {
@@ -531,7 +528,7 @@ trait AdminTrait
             $msg = '';
 
             foreach ($_REQUEST['table'] as $t) {
-                list($status, $sql) = $data->vacuumDB($t, isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
+                [$status, $sql] = $data->vacuumDB($t, isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
 
                 if (0 !== $status) {
                     return $this->doDefault(\sprintf('%s %s%s: %s<br />', $type, $msg, \htmlentities($t, \ENT_QUOTES, 'UTF-8'), $this->lang['strvacuumbad']));
@@ -544,7 +541,7 @@ trait AdminTrait
             return $this->doDefault($msg);
         }
         //we must pass table here. When empty, vacuum the whole db
-        list($status, $sql) = $data->vacuumDB($_REQUEST['table'], isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
+        [$status, $sql] = $data->vacuumDB($_REQUEST['table'], isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
 
         if (0 === $status) {
             $this->misc->setReloadBrowser(true);
@@ -652,7 +649,7 @@ trait AdminTrait
         $table_hidden_inputs = ('table' === $type) ?
         \sprintf('<input type="hidden" name="table" value="%s" />%s<input type="hidden" name="subject" value="table" />', \htmlspecialchars($_REQUEST['object']), \PHP_EOL, \PHP_EOL) : '';
 
-        list($recluster_help, $reclusterconf) = $this->_getReclusterConf($data, $type, $table_hidden_inputs);
+        [$recluster_help, $reclusterconf] = $this->_getReclusterConf($data, $type, $table_hidden_inputs);
 
         echo $recluster_help;
 
@@ -772,6 +769,7 @@ trait AdminTrait
                 $this->doDropAutovacuum($type);
 
                 break;
+
             default:
                 return false;
         }

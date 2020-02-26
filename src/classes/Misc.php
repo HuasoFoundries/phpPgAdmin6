@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin;
@@ -863,8 +860,8 @@ class Misc
      */
     public function saveScriptHistory($script): void
     {
-        list($usec, $sec) = \explode(' ', \microtime());
-        $time             = ((float) $usec + (float) $sec);
+        [$usec, $sec] = \explode(' ', \microtime());
+        $time         = ((float) $usec + (float) $sec);
 
         $server   = $this->container->server ? $this->container->server : $_REQUEST['server'];
         $database = $this->container->database ? $this->container->database : $_REQUEST['database'];

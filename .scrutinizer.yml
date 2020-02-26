@@ -46,7 +46,7 @@ tools:
 
 build:
     environment:
-        php: "7.2"
+        php: "7.3"
         #postgresql: true
     #dependencies:
     #before:
@@ -56,5 +56,6 @@ build:
             - "php-scrutinizer-run"
             - "phpcs-run ./src/"
             - "make test"
+            - "make psalm"
     nodes:
         tests: true

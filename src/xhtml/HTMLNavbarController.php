@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -155,6 +152,7 @@ class HTMLNavbarController extends HTMLController
 
     /**
      * @param mixed $crumbs
+     * @param array $viewVars
      */
     private function _getSearchPathsCrumbs($crumbs, array $viewVars)
     {
@@ -481,6 +479,7 @@ class HTMLNavbarController extends HTMLController
                 ];
 
                 break;
+
             default:
                 if (isset($_REQUEST[$subject])) {
                     switch ($subject) {
@@ -504,6 +503,7 @@ class HTMLNavbarController extends HTMLController
                             $icon = 'Index';
 
                             break;
+
                         default:
                             $icon = null;
 

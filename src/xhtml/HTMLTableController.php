@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -116,7 +113,7 @@ class HTMLTableController extends HTMLController
             //$columns['comment']['params']['clip'] = true;
         }
 
-        list($matop_html, $mabottom_html) = $this->_getMaHtml();
+        [$matop_html, $mabottom_html] = $this->_getMaHtml();
 
         $tablehtml .= $matop_html;
 
@@ -162,6 +159,7 @@ class HTMLTableController extends HTMLController
                     }
 
                     break;
+
                 default:
                     $thead_html .= '<th class="data' . $class . '">';
 
@@ -328,6 +326,7 @@ class HTMLTableController extends HTMLController
                         $tbody_html .= '</td>';
 
                         break;
+
                     default:
                         $tbody_html .= '<td class="' . $class . '">';
                         $val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);

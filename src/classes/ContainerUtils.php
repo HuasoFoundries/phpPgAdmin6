@@ -1,10 +1,7 @@
 <?php
 
-// declare(strict_types=1);
-
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin;
@@ -18,7 +15,7 @@ use Slim\App;
     \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
 );
 \defined('DEBUGMODE') || \define('DEBUGMODE', false);
-defined('IN_TEST') || define('IN_TEST', false);
+\defined('IN_TEST') || \define('IN_TEST', false);
 /**
  * @file
  * A class that adds convenience methods to the container
