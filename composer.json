@@ -28,6 +28,7 @@
         "codeception/module-asserts": "^1.1",
         "ergebnis/composer-normalize": "^2.2",
         "ergebnis/php-cs-fixer-config": "^2.0",
+        "ocramius/package-versions": "~1.4",
         "filp/whoops": "^2.7",
         "friendsofphp/php-cs-fixer": "^2.16",
         "kint-php/kint": "~3.3",
