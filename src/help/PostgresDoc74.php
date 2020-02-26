@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Help;
@@ -14,7 +17,9 @@ class PostgresDoc74
     use \PHPPgAdmin\Traits\HelperTrait;
 
     protected $major_version;
+
     protected $help_page;
+
     protected $conf;
 
     public function __construct($conf, $major_version)
@@ -167,7 +172,7 @@ class PostgresDoc74
 
     public function getHelpBase()
     {
-        return sprintf(str_replace('http://', 'https://', $this->conf['help_base']), (string) ($this->major_version));
+        return \sprintf(\str_replace('http://', 'https://', $this->conf['help_base']), (string) ($this->major_version));
     }
 
     public function getHelpPage()

@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -57,14 +60,14 @@ trait OperatorTrait
 
         $sql = "DROP OPERATOR \"{$f_schema}\".{$opr->fields['oprname']} (";
         // Quoting or formatting here???
-        if ($opr->fields['oprleftname'] !== null) {
-            $sql .= $opr->fields['oprleftname'].', ';
+        if (null !== $opr->fields['oprleftname']) {
+            $sql .= $opr->fields['oprleftname'] . ', ';
         } else {
             $sql .= 'NONE, ';
         }
 
-        if ($opr->fields['oprrightname'] !== null) {
-            $sql .= $opr->fields['oprrightname'].')';
+        if (null !== $opr->fields['oprrightname']) {
+            $sql .= $opr->fields['oprrightname'] . ')';
         } else {
             $sql .= 'NONE)';
         }

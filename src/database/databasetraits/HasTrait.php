@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -17,10 +20,13 @@ trait HasTrait
     public $platform = 'UNKNOWN';
 
     public $major_version = 9.6;
+
     // Max object name length
     public $_maxNameLen = 63;
+
     // Store the current schema
     public $_schema;
+
     // Map of database encoding names to HTTP encoding names.  If a
     // database encoding does not appear in this list, then its HTTP
     // encoding name is the same as its database encoding name.
@@ -60,14 +66,21 @@ trait HasTrait
         'WIN1256'    => 'CP1256',
         'WIN1258'    => 'CP1258',
     ];
+
     public $defaultprops = ['', '', ''];
+
     // Extra "magic" types.  BIGSERIAL was added in PostgreSQL 7.2.
     public $extraTypes = ['SERIAL', 'BIGSERIAL'];
+
     // Foreign key stuff.  First element MUST be the default.
-    public $fkactions    = ['NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT'];
+    public $fkactions = ['NO ACTION', 'RESTRICT', 'CASCADE', 'SET NULL', 'SET DEFAULT'];
+
     public $fkdeferrable = ['NOT DEFERRABLE', 'DEFERRABLE'];
-    public $fkinitial    = ['INITIALLY IMMEDIATE', 'INITIALLY DEFERRED'];
-    public $fkmatches    = ['MATCH SIMPLE', 'MATCH FULL'];
+
+    public $fkinitial = ['INITIALLY IMMEDIATE', 'INITIALLY DEFERRED'];
+
+    public $fkmatches = ['MATCH SIMPLE', 'MATCH FULL'];
+
     // Function properties
     public $funcprops = [
         ['', 'VOLATILE', 'IMMUTABLE', 'STABLE'],
@@ -77,13 +90,16 @@ trait HasTrait
 
     // Default help URL
     public $help_base;
+
     // Help sub pages
     public $help_page;
+
     // Name of id column
     public $id = 'oid';
 
     // Supported join operations for use with view wizard
     public $joinOps = ['INNER JOIN' => 'INNER JOIN', 'LEFT JOIN' => 'LEFT JOIN', 'RIGHT JOIN' => 'RIGHT JOIN', 'FULL JOIN' => 'FULL JOIN'];
+
     // Map of internal language name to syntax highlighting name
     public $langmap = [
         'sql'       => 'SQL',
@@ -111,6 +127,7 @@ trait HasTrait
         'plruby'    => 'Ruby',
         'plrubyu'   => 'Ruby',
     ];
+
     // Predefined size types
     public $predefined_size_types = [
         'abstime',
@@ -153,6 +170,7 @@ trait HasTrait
         'void',
         'xid',
     ];
+
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
@@ -166,6 +184,7 @@ trait HasTrait
         'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
         'column'     => ['SELECT', 'INSERT', 'UPDATE', 'REFERENCES', 'ALL PRIVILEGES'],
     ];
+
     // List of characters in acl lists and the privileges they
     // refer to.
     public $privmap = [
@@ -183,8 +202,10 @@ trait HasTrait
         'T' => 'TEMPORARY',
         'c' => 'CONNECT',
     ];
+
     // Rule action types
     public $rule_events = ['SELECT', 'INSERT', 'UPDATE', 'DELETE'];
+
     // Select operators
     public $selectOps = [
         '='                   => 'i',
@@ -224,6 +245,7 @@ trait HasTrait
         '@> plainto_tsquery'  => 't',
         '<@ plainto_tsquery'  => 't',
     ];
+
     // Array of allowed trigger events
     public $triggerEvents = [
         'INSERT',
@@ -234,20 +256,28 @@ trait HasTrait
         'DELETE OR UPDATE',
         'INSERT OR DELETE OR UPDATE',
     ];
+
     // When to execute the trigger
     public $triggerExecTimes = ['BEFORE', 'AFTER'];
+
     // How often to execute the trigger
     public $triggerFrequency = ['ROW', 'STATEMENT'];
+
     // Array of allowed type alignments
     public $typAligns = ['char', 'int2', 'int4', 'double'];
+
     // The default type alignment
     public $typAlignDef = 'int4';
+
     // Default index type
     public $typIndexDef = 'BTREE';
+
     // Array of allowed index types
     public $typIndexes = ['BTREE', 'RTREE', 'GIST', 'GIN', 'HASH'];
+
     // Array of allowed type storage attributes
     public $typStorages = ['plain', 'external', 'extended', 'main'];
+
     // The default type storage
     public $typStorageDef = 'plain';
 

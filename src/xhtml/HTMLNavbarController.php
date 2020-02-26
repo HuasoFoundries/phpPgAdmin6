@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -12,64 +15,6 @@ namespace PHPPgAdmin\XHtml;
 class HTMLNavbarController extends HTMLController
 {
     public $controller_name = 'HTMLNavbarController';
-
-    private function _getCrumbs($trail)
-    {
-        $crumbs = [];
-        foreach ($trail as $crumb_id => $crumb) {
-            if (isset($crumb['url'])) {
-                $crumbs[$crumb_id]['url'] = str_replace('&amp;', '&', $crumb['url']);
-            }
-
-            if (isset($crumb['title'])) {
-                $crumbs[$crumb_id]['title']   = $crumb['title'];
-                $crumbs[$crumb_id]['iconalt'] = $crumb['title'];
-            } else {
-                $crumbs[$crumb_id]['iconalt'] = 'Database Root';
-            }
-
-            if (isset($crumb['icon']) && $icon = $this->misc->icon($crumb['icon'])) {
-                $crumbs[$crumb_id]['icon'] = $icon;
-            }
-
-            $crumbs[$crumb_id]['text'] = $crumb['text'];
-
-            if (isset($crumb['help'])) {
-                $crumbs[$crumb_id]['helpurl'] = str_replace('&amp;', '&', $this->misc->getHelpLink($crumb['help']));
-            }
-        }
-
-        return $crumbs;
-    }
-
-    /**
-     * @param mixed $crumbs
-     */
-    private function _getSearchPathsCrumbs($crumbs, array $viewVars)
-    {
-        $data = $this->misc->getDatabaseAccessor();
-        $lang = $this->lang;
-        if (isset($crumbs['database'])) {
-            $search_path_crumbs = [];
-            $dburl              = $crumbs['database']['url'];
-            $search_paths       = $data->getSearchPath();
-            foreach ($search_paths as $schema) {
-                $url         = str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl.'&schema='.$schema);
-                $destination = $this->container->utils->getDestinationWithLastTab('database');
-                //$this->dump(['url' => $url, 'destination' => $destination]);
-                $search_path_crumbs[$schema] = [
-                    'title'   => $lang['strschema'],
-                    'text'    => $schema,
-                    'icon'    => $this->misc->icon('Schema'),
-                    'iconalt' => $lang['strschema'],
-                    'url'     => $url,
-                ];
-            }
-            $viewVars['search_paths'] = $search_path_crumbs;
-        }
-
-        return $viewVars;
-    }
 
     /**
      * Display a bread crumb trail.
@@ -84,7 +29,7 @@ class HTMLNavbarController extends HTMLController
 
         $trail_html = $this->printTopbar(false, $from);
 
-        if (is_string($trail)) {
+        if (\is_string($trail)) {
             $subject = $trail;
             $trail   = $this->_getTrail($subject);
             // Trail hook's place
@@ -128,7 +73,7 @@ class HTMLNavbarController extends HTMLController
 
         $this->misc = $this->misc;
 
-        if (is_string($alltabs)) {
+        if (\is_string($alltabs)) {
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
             $alltabs                            = $this->misc->getNavTabs($alltabs);
         }
@@ -138,18 +83,20 @@ class HTMLNavbarController extends HTMLController
 
         //Getting only visible tabs
         $tabs = [];
-        if (count($alltabs) > 0) {
+
+        if (0 < \count($alltabs)) {
             foreach ($alltabs as $tab_id => $tab) {
                 if (!isset($tab['hide']) || true !== $tab['hide']) {
                     $tabs[$tab_id]            = $tab;
-                    $tabs[$tab_id]['active']  = ($tab_id == $activetab) ? ' active' : '';
-                    $tabs[$tab_id]['tablink'] = str_replace(['&amp;', '.php'], ['&', ''], htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
+                    $tabs[$tab_id]['active']  = ($tab_id === $activetab) ? ' active' : '';
+                    $tabs[$tab_id]['tablink'] = \str_replace(['&amp;', '.php'], ['&', ''], \htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
                     //$this->prtrace('link for ' . $tab_id, $tabs[$tab_id]['tablink']);
                     if (isset($tab['icon']) && $icon = $this->misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
                     }
+
                     if (isset($tab['help'])) {
-                        $tabs[$tab_id]['helpurl'] = str_replace('&amp;', '&', $this->misc->getHelpLink($tab['help']));
+                        $tabs[$tab_id]['helpurl'] = \str_replace('&amp;', '&', $this->misc->getHelpLink($tab['help']));
                     }
                 }
             }
@@ -157,8 +104,8 @@ class HTMLNavbarController extends HTMLController
 
         //$this->prtrace($tabs);
 
-        if (count($tabs) > 0) {
-            $width = (int) (100 / count($tabs)).'%';
+        if (0 < \count($tabs)) {
+            $width = (int) (100 / \count($tabs)) . '%';
 
             $viewVars = [
                 'width'           => $width,
@@ -176,13 +123,74 @@ class HTMLNavbarController extends HTMLController
         }
     }
 
+    private function _getCrumbs($trail)
+    {
+        $crumbs = [];
+
+        foreach ($trail as $crumb_id => $crumb) {
+            if (isset($crumb['url'])) {
+                $crumbs[$crumb_id]['url'] = \str_replace('&amp;', '&', $crumb['url']);
+            }
+
+            if (isset($crumb['title'])) {
+                $crumbs[$crumb_id]['title']   = $crumb['title'];
+                $crumbs[$crumb_id]['iconalt'] = $crumb['title'];
+            } else {
+                $crumbs[$crumb_id]['iconalt'] = 'Database Root';
+            }
+
+            if (isset($crumb['icon']) && $icon = $this->misc->icon($crumb['icon'])) {
+                $crumbs[$crumb_id]['icon'] = $icon;
+            }
+
+            $crumbs[$crumb_id]['text'] = $crumb['text'];
+
+            if (isset($crumb['help'])) {
+                $crumbs[$crumb_id]['helpurl'] = \str_replace('&amp;', '&', $this->misc->getHelpLink($crumb['help']));
+            }
+        }
+
+        return $crumbs;
+    }
+
+    /**
+     * @param mixed $crumbs
+     */
+    private function _getSearchPathsCrumbs($crumbs, array $viewVars)
+    {
+        $data = $this->misc->getDatabaseAccessor();
+        $lang = $this->lang;
+
+        if (isset($crumbs['database'])) {
+            $search_path_crumbs = [];
+            $dburl              = $crumbs['database']['url'];
+            $search_paths       = $data->getSearchPath();
+
+            foreach ($search_paths as $schema) {
+                $url         = \str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl . '&schema=' . $schema);
+                $destination = $this->container->utils->getDestinationWithLastTab('database');
+                //$this->dump(['url' => $url, 'destination' => $destination]);
+                $search_path_crumbs[$schema] = [
+                    'title'   => $lang['strschema'],
+                    'text'    => $schema,
+                    'icon'    => $this->misc->icon('Schema'),
+                    'iconalt' => $lang['strschema'],
+                    'url'     => $url,
+                ];
+            }
+            $viewVars['search_paths'] = $search_path_crumbs;
+        }
+
+        return $viewVars;
+    }
+
     /**
      * [printTopbar description].
      *
      * @param bool       $do_print true to print, false to return html
      * @param null|mixed $from     which method is calling this one
      */
-    private function printTopbar($do_print = true, $from = null): ?string
+    private function printTopbar($do_print = true, $from = null):  ? string
     {
         $from = $from ? $from : __METHOD__;
 
@@ -196,16 +204,16 @@ class HTMLNavbarController extends HTMLController
         $server_id   = $this->misc->getServerId();
         $reqvars     = $this->misc->getRequestVars('table');
 
-        $topbar_html = '<div class="topbar" data-controller="'.$this->controller_name.'"><table style="width: 100%"><tr><td>';
+        $topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><table style="width: 100%"><tr><td>';
 
         if ($server_info && isset($server_info['platform'], $server_info['username'])) {
             // top left informations when connected
-            $topbar_html .= sprintf(
+            $topbar_html .= \sprintf(
                 $lang['strtopbar'],
-                '<span class="platform">'.htmlspecialchars($server_info['platform']).'</span>',
-                '<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']).'</span>',
-                '<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
-                '<span class="username">'.htmlspecialchars($server_info['username']).'</span>'
+                '<span class="platform">' . \htmlspecialchars($server_info['platform']) . '</span>',
+                '<span class="host">' . \htmlspecialchars((empty($server_info['host'])) ? 'localhost' : $server_info['host']) . '</span>',
+                '<span class="port">' . \htmlspecialchars($server_info['port']) . '</span>',
+                '<span class="username">' . \htmlspecialchars($server_info['username']) . '</span>'
             );
 
             $topbar_html .= '</td>';
@@ -216,8 +224,8 @@ class HTMLNavbarController extends HTMLController
                 'sql'     => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER.'/src/views/sqledit',
-                            'urlvars' => array_merge($reqvars, [
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
+                            'urlvars' => \array_merge($reqvars, [
                                 'action' => 'sql',
                             ]),
                         ],
@@ -230,8 +238,8 @@ class HTMLNavbarController extends HTMLController
                 'history' => [
                     'attr'    => [
                         'href'  => [
-                            'url'     => SUBFOLDER.'/src/views/history',
-                            'urlvars' => array_merge($reqvars, [
+                            'url'     => SUBFOLDER . '/src/views/history',
+                            'urlvars' => \array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
                         ],
@@ -243,8 +251,8 @@ class HTMLNavbarController extends HTMLController
                 'find'    => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER.'/src/views/sqledit',
-                            'urlvars' => array_merge($reqvars, [
+                            'url'     => SUBFOLDER . '/src/views/sqledit',
+                            'urlvars' => \array_merge($reqvars, [
                                 'action' => 'find',
                             ]),
                         ],
@@ -257,10 +265,10 @@ class HTMLNavbarController extends HTMLController
                 'logout'  => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER.'/src/views/servers',
+                            'url'     => SUBFOLDER . '/src/views/servers',
                             'urlvars' => [
                                 'action'       => 'logout',
-                                'logoutServer' => sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
+                                'logoutServer' => \sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
                             ],
                         ],
                         'id'   => 'toplink_logout',
@@ -283,7 +291,7 @@ class HTMLNavbarController extends HTMLController
             $topbar_html .= "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
         }
 
-        $topbar_html .= '</tr></table></div>'.PHP_EOL;
+        $topbar_html .= '</tr></table></div>' . \PHP_EOL;
 
         if ($do_print) {
             echo $topbar_html;
@@ -295,9 +303,9 @@ class HTMLNavbarController extends HTMLController
     private function getHREFSubject(string $subject)
     {
         $vars = $this->misc->getSubjectParams($subject);
-        ksort($vars['params']);
+        \ksort($vars['params']);
 
-        return "{$vars['url']}?".http_build_query($vars['params'], '', '&amp;');
+        return "{$vars['url']}?" . \http_build_query($vars['params'], '', '&amp;');
     }
 
     /**
@@ -317,11 +325,11 @@ class HTMLNavbarController extends HTMLController
 
         $trail['root'] = [
             'text' => $appName,
-            'url'  => SUBFOLDER.'/src/views/servers',
+            'url'  => SUBFOLDER . '/src/views/servers',
             'icon' => 'Introduction',
         ];
 
-        if ('root' == $subject) {
+        if ('root' === $subject) {
             return $trail;
         }
 
@@ -334,7 +342,7 @@ class HTMLNavbarController extends HTMLController
             'icon'  => 'Server',
         ];
 
-        if ('server' == $subject) {
+        if ('server' === $subject) {
             return $trail;
         }
 
@@ -355,7 +363,7 @@ class HTMLNavbarController extends HTMLController
 
         $trail = $this->_getTrailsFromArray($trail, $database_rolename);
 
-        if (in_array($subject, ['database', 'role'], true)) {
+        if (\in_array($subject, ['database', 'role'], true)) {
             return $trail;
         }
 
@@ -369,7 +377,8 @@ class HTMLNavbarController extends HTMLController
         ];
 
         $trail = $this->_getTrailsFromArray($trail, $schema);
-        if ('schema' == $subject) {
+
+        if ('schema' === $subject) {
             return $trail;
         }
 
@@ -387,7 +396,7 @@ class HTMLNavbarController extends HTMLController
                 'icon'    => 'View',
             ],
             'matview' => [
-                'title'   => 'M'.$lang['strview'],
+                'title'   => 'M' . $lang['strview'],
                 'subject' => 'matview',
                 'help'    => 'pg.matview',
                 'icon'    => 'MViews',
@@ -402,11 +411,11 @@ class HTMLNavbarController extends HTMLController
 
         $trail = $this->_getTrailsFromArray($trail, $table_view_matview_fts);
 
-        if (in_array($subject, ['table', 'view', 'matview', 'ftscfg'], true)) {
+        if (\in_array($subject, ['table', 'view', 'matview', 'ftscfg'], true)) {
             return $trail;
         }
 
-        if (!is_null($subject)) {
+        if (null !== $subject) {
             $trail = $this->_getLastTrailPart($subject, $trail);
         }
 
@@ -445,7 +454,7 @@ class HTMLNavbarController extends HTMLController
         switch ($subject) {
             case 'function':
                 $trail[$subject] = [
-                    'title' => $lang['str'.$subject],
+                    'title' => $lang['str' . $subject],
                     'text'  => $_REQUEST[$subject],
                     'url'   => $this->getHREFSubject('function'),
                     'help'  => 'pg.function',
@@ -501,9 +510,9 @@ class HTMLNavbarController extends HTMLController
                             break;
                     }
                     $trail[$subject] = [
-                        'title' => array_key_exists('str'.$subject, $lang) ? $lang['str'.$subject] : $subject,
+                        'title' => \array_key_exists('str' . $subject, $lang) ? $lang['str' . $subject] : $subject,
                         'text'  => $_REQUEST[$subject],
-                        'help'  => 'pg.'.$subject,
+                        'help'  => 'pg.' . $subject,
                         'icon'  => $icon,
                     ];
                 }

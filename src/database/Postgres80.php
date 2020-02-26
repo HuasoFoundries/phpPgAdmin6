@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,12 +14,11 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.0 support
  *
  * Id: Postgres80.php,v 1.28 2007/12/12 04:11:10 xzilla Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres80 extends Postgres81
 {
     public $major_version = 8.0;
+
     // Map of database encoding names to HTTP encoding names.  If a
     // database encoding does not appear in this list, then its HTTP
     // encoding name is the same as its database encoding name.
@@ -258,6 +260,29 @@ class Postgres80 extends Postgres81
     }
 
     /**
+     * Return all tables in current database (and schema).
+     *
+     * @return int|\PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
+     */
+    public function getTables()
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $sql = "SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+                        pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+                        reltuples::bigint as reltuples,
+                        null tablespace,
+                        'N/A' as table_size
+                    FROM pg_catalog.pg_class c
+                    LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+                    WHERE c.relkind = 'r'
+                    AND nspname='{$c_schema}'
+                    ORDER BY c.relname";
+
+        return $this->selectSet($sql);
+    }
+
+    /**
      * Protected method which alter a table
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
@@ -276,28 +301,32 @@ class Postgres80 extends Postgres81
 
         // Comment
         $status = $this->setComment('TABLE', '', $tblrs->fields['relname'], $comment);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -4;
         }
 
         // Owner
         $this->fieldClean($owner);
         $status = $this->alterTableOwner($tblrs, $owner);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -5;
         }
 
         // Tablespace
         $this->fieldClean($tablespace);
         $status = $this->alterTableTablespace($tblrs, $tablespace);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -6;
         }
 
         // Rename
         $this->fieldClean($name);
         $status = $this->alterTableName($tblrs, $name);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -3;
         }
 
@@ -319,28 +348,31 @@ class Postgres80 extends Postgres81
     protected function _alterView($vwrs, $name, $owner, $schema, $comment)
     {
         $type = 'VIEW';
-        if ($vwrs->fields['relkind'] === 'm') {
+
+        if ('m' === $vwrs->fields['relkind']) {
             $type = 'MATERIALIZED VIEW';
         }
         /* $schema not supported in pg80- */
         $this->fieldArrayClean($vwrs->fields);
 
         // Comment
-        if ($this->setComment($type, $vwrs->fields['relname'], '', $comment) != 0) {
+        if (0 !== $this->setComment($type, $vwrs->fields['relname'], '', $comment)) {
             return -4;
         }
 
         // Owner
         $this->fieldClean($owner);
         $status = $this->alterViewOwner($vwrs, $owner);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -5;
         }
 
         // Rename
         $this->fieldClean($name);
         $status = $this->alterViewName($vwrs, $name);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -3;
         }
 
@@ -385,14 +417,16 @@ class Postgres80 extends Postgres81
 
         // Comment
         $status = $this->setComment('SEQUENCE', $seqrs->fields['seqname'], '', $comment);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -4;
         }
 
         // Owner
         $this->fieldClean($owner);
         $status = $this->alterSequenceOwner($seqrs, $owner);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -5;
         }
 
@@ -414,40 +448,19 @@ class Postgres80 extends Postgres81
             $cycledvalue,
             null
         );
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -6;
         }
 
         // Rename
         $this->fieldClean($name);
         $status = $this->alterSequenceName($seqrs, $name);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return -3;
         }
 
         return 0;
-    }
-
-    /**
-     * Return all tables in current database (and schema).
-     *
-     * @return int|\PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
-     */
-    public function getTables()
-    {
-        $c_schema = $this->_schema;
-        $this->clean($c_schema);
-        $sql = "SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
-                        pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
-                        reltuples::bigint as reltuples,
-                        null tablespace,
-                        'N/A' as table_size
-                    FROM pg_catalog.pg_class c
-                    LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-                    WHERE c.relkind = 'r'
-                    AND nspname='{$c_schema}'
-                    ORDER BY c.relname";
-
-        return $this->selectSet($sql);
     }
 }

@@ -1,15 +1,16 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class DataexportController extends BaseController
 {
@@ -21,6 +22,7 @@ class DataexportController extends BaseController
         'html' => 'html',
         'xml'  => 'xml',
     ];
+
     public $controller_title = 'strexport';
 
     /**
@@ -28,7 +30,7 @@ class DataexportController extends BaseController
      */
     public function render()
     {
-        set_time_limit(0);
+        \set_time_limit(0);
 
         // if (!isset($_REQUEST['table']) && !isset($_REQUEST['query']))
         // What must we do in this case? Maybe redirect to the homepage?
@@ -36,7 +38,7 @@ class DataexportController extends BaseController
         $format = 'N/A';
 
         // force behavior to assume there is no pg_dump in the system
-        $forcemimic = isset($_REQUEST['forcemimic']) ? $_REQUEST['forcemimic'] : false;
+        $forcemimic = $_REQUEST['forcemimic'] ?? false;
 
         // If format is set, then perform the export
         if (!isset($_REQUEST['what'])) {
@@ -49,11 +51,12 @@ class DataexportController extends BaseController
         $this->setNoOutput(true);
         $clean = false;
         $oids  = false;
+
         switch ($_REQUEST['what']) {
             case 'dataonly':
                 // Check to see if they have pg_dump set up and if they do, use that
                 // instead of custom dump code
-                if (!$forcemimic && $this->misc->isDumpEnabled() && ('copy' == $_REQUEST['d_format'] || 'sql' == $_REQUEST['d_format'])) {
+                if (!$forcemimic && $this->misc->isDumpEnabled() && ('copy' === $_REQUEST['d_format'] || 'sql' === $_REQUEST['d_format'])) {
                     $this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
                     $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
 
@@ -94,11 +97,68 @@ class DataexportController extends BaseController
         return $this->mimicDumpFeature($format, $cleanprefix, $oids);
     }
 
+    public function doDefault($msg = ''): void
+    {
+        if (!isset($_REQUEST['query']) || empty($_REQUEST['query'])) {
+            $_REQUEST['query'] = $_SESSION['sqlquery'];
+        }
+
+        $this->printHeader();
+        $this->printBody();
+        $this->printTrail($_REQUEST['subject'] ?? 'database');
+        $this->printTitle($this->lang['strexport']);
+
+        if (isset($msg)) {
+            $this->printMsg($msg);
+        }
+
+        echo '<form action="' . self::SUBFOLDER . '/src/views/dataexport" method="post">' . \PHP_EOL;
+        echo '<table>' . \PHP_EOL;
+        echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">" . \PHP_EOL;
+        // COPY and SQL require a table
+        if (isset($_REQUEST['table'])) {
+            echo '<option value="copy">COPY</option>' . \PHP_EOL;
+            echo '<option value="sql">SQL</option>' . \PHP_EOL;
+        }
+        echo '<option value="csv">CSV</option>' . \PHP_EOL;
+        echo "<option value=\"tab\">{$this->lang['strtabbed']}</option>" . \PHP_EOL;
+        echo '<option value="html">XHTML</option>' . \PHP_EOL;
+        echo '<option value="xml">XML</option>' . \PHP_EOL;
+        echo '</select></td></tr>';
+        echo '</table>' . \PHP_EOL;
+
+        echo "<h3>{$this->lang['stroptions']}</h3>" . \PHP_EOL;
+        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>" . \PHP_EOL;
+        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>" . \PHP_EOL;
+
+        echo '<p><input type="hidden" name="action" value="export" />' . \PHP_EOL;
+        echo '<input type="hidden" name="what" value="dataonly" />' . \PHP_EOL;
+
+        if (isset($_REQUEST['table'])) {
+            echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
+            echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+        } else {
+            echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
+        }
+        $this->prtrace('$_REQUEST[query]', $_REQUEST['query'], \htmlspecialchars(\urlencode($_REQUEST['query'])));
+        $this->prtrace('$_SESSION[sqlquery]', $_SESSION['sqlquery'], \htmlspecialchars(\urlencode($_SESSION['sqlquery'])));
+        echo '<input type="hidden" name="query" value="', \htmlspecialchars(\urlencode($_REQUEST['query'])), '" />' . \PHP_EOL;
+
+        if (isset($_REQUEST['search_path'])) {
+            echo '<input type="hidden" name="search_path" value="', \htmlspecialchars($_REQUEST['search_path']), '" />' . \PHP_EOL;
+        }
+        echo $this->misc->form;
+        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>" . \PHP_EOL;
+        echo '</form>' . \PHP_EOL;
+
+        $this->printFooter();
+    }
+
     protected function mimicDumpFeature($format, $cleanprefix, $oids)
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        set_time_limit(0);
+        \set_time_limit(0);
 
         // if (!isset($_REQUEST['table']) && !isset($_REQUEST['query']))
         // What must we do in this case? Maybe redirect to the homepage?
@@ -117,11 +177,11 @@ class DataexportController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'query', '');
 
-        $_REQUEST['query'] = trim(urldecode($_REQUEST['query']));
+        $_REQUEST['query'] = \trim(\urldecode($_REQUEST['query']));
 
         // Set the schema search path
         if (isset($_REQUEST['search_path'])) {
-            $data->setSearchPath(array_map('trim', explode(',', $_REQUEST['search_path'])));
+            $data->setSearchPath(\array_map('trim', \explode(',', $_REQUEST['search_path'])));
         } elseif (isset($_REQUEST['schema'])) {
             $data->setSearchPath($_REQUEST['schema']);
         }
@@ -138,14 +198,14 @@ class DataexportController extends BaseController
         $tabledefsuffix = '';
 
         // If the dump is not dataonly then dump the structure prefix
-        if ('dataonly' != $_REQUEST['what']) {
+        if ('dataonly' !== $_REQUEST['what']) {
             $tabledefprefix = $data->getTableDefPrefix($object, $cleanprefix);
             $this->prtrace('tabledefprefix', $tabledefprefix);
             echo $tabledefprefix;
         }
 
         // If the dump is not structureonly then dump the actual data
-        if ('structureonly' != $_REQUEST['what']) {
+        if ('structureonly' !== $_REQUEST['what']) {
             // Get database encoding
             //$dbEncoding = $data->getDatabaseEncoding();
 
@@ -157,7 +217,8 @@ class DataexportController extends BaseController
 
             $response = $this->pickFormat($data, $object, $oids, $rs, $format, $response);
         }
-        if ('dataonly' != $_REQUEST['what']) {
+
+        if ('dataonly' !== $_REQUEST['what']) {
             $data->conn->setFetchMode(\ADODB_FETCH_ASSOC);
             $tabledefsuffix = $data->getTableDefSuffix($object);
             $this->prtrace('tabledefsuffix', $tabledefsuffix);
@@ -194,7 +255,7 @@ class DataexportController extends BaseController
         }
         // Set headers.  MSIE is totally broken for SSL downloading, so
         // we need to have it download in-place as plain text
-        if (strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])) {
+        if (\mb_strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') && isset($_SERVER['HTTPS'])) {
             return $response
                 ->withHeader('Content-type', 'text/plain');
         }
@@ -202,27 +263,28 @@ class DataexportController extends BaseController
             ->withHeader('Content-type', 'application/download');
 
         $ext = 'txt';
+
         if (isset($this->extensions[$format])) {
             $ext = $this->extensions[$format];
         }
 
         return $response
-            ->withHeader('Content-Disposition', 'attachment; filename=dump.'.$ext);
+            ->withHeader('Content-Disposition', 'attachment; filename=dump.' . $ext);
     }
 
     private function pickFormat($data, $object, $oids, $rs, $format, $response)
     {
-        if ('copy' == $format) {
+        if ('copy' === $format) {
             $this->_mimicCopy($data, $object, $oids, $rs);
-        } elseif ('html' == $format) {
+        } elseif ('html' === $format) {
             $response = $response
                 ->withHeader('Content-type', 'text/html');
             $this->_mimicHtml($data, $object, $oids, $rs);
-        } elseif ('xml' == $format) {
+        } elseif ('xml' === $format) {
             $response = $response
                 ->withHeader('Content-type', 'application/xml');
             $this->_mimicXml($data, $object, $oids, $rs);
-        } elseif ('sql' == $format) {
+        } elseif ('sql' === $format) {
             $this->_mimicSQL($data, $object, $oids, $rs);
         }
         $this->_csvOrTab($data, $object, $oids, $rs, $format);
@@ -230,69 +292,17 @@ class DataexportController extends BaseController
         return $response;
     }
 
-    public function doDefault($msg = '')
-    {
-        if (!isset($_REQUEST['query']) || empty($_REQUEST['query'])) {
-            $_REQUEST['query'] = $_SESSION['sqlquery'];
-        }
-
-        $this->printHeader();
-        $this->printBody();
-        $this->printTrail(isset($_REQUEST['subject']) ? $_REQUEST['subject'] : 'database');
-        $this->printTitle($this->lang['strexport']);
-        if (isset($msg)) {
-            $this->printMsg($msg);
-        }
-
-        echo '<form action="'.\SUBFOLDER.'/src/views/dataexport" method="post">'.PHP_EOL;
-        echo '<table>'.PHP_EOL;
-        echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">".PHP_EOL;
-        // COPY and SQL require a table
-        if (isset($_REQUEST['table'])) {
-            echo '<option value="copy">COPY</option>'.PHP_EOL;
-            echo '<option value="sql">SQL</option>'.PHP_EOL;
-        }
-        echo '<option value="csv">CSV</option>'.PHP_EOL;
-        echo "<option value=\"tab\">{$this->lang['strtabbed']}</option>".PHP_EOL;
-        echo '<option value="html">XHTML</option>'.PHP_EOL;
-        echo '<option value="xml">XML</option>'.PHP_EOL;
-        echo '</select></td></tr>';
-        echo '</table>'.PHP_EOL;
-
-        echo "<h3>{$this->lang['stroptions']}</h3>".PHP_EOL;
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>".PHP_EOL;
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>".PHP_EOL;
-
-        echo '<p><input type="hidden" name="action" value="export" />'.PHP_EOL;
-        echo '<input type="hidden" name="what" value="dataonly" />'.PHP_EOL;
-        if (isset($_REQUEST['table'])) {
-            echo '<input type="hidden" name="subject" value="table" />'.PHP_EOL;
-            echo '<input type="hidden" name="table" value="', htmlspecialchars($_REQUEST['table']), '" />'.PHP_EOL;
-        } else {
-            echo '<input type="hidden" name="subject" value="table" />'.PHP_EOL;
-        }
-        $this->prtrace('$_REQUEST[query]', $_REQUEST['query'], htmlspecialchars(urlencode($_REQUEST['query'])));
-        $this->prtrace('$_SESSION[sqlquery]', $_SESSION['sqlquery'], htmlspecialchars(urlencode($_SESSION['sqlquery'])));
-        echo '<input type="hidden" name="query" value="', htmlspecialchars(urlencode($_REQUEST['query'])), '" />'.PHP_EOL;
-        if (isset($_REQUEST['search_path'])) {
-            echo '<input type="hidden" name="search_path" value="', htmlspecialchars($_REQUEST['search_path']), '" />'.PHP_EOL;
-        }
-        echo $this->misc->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>".PHP_EOL;
-        echo '</form>'.PHP_EOL;
-
-        $this->printFooter();
-    }
-
-    private function _mimicCopy($data, $object, $oids, $rs)
+    private function _mimicCopy($data, $object, $oids, $rs): void
     {
         $data->fieldClean($object);
         echo "COPY \"{$_REQUEST['table']}\"";
+
         if ($oids) {
             echo ' WITH OIDS';
         }
 
         echo " FROM stdin;\n";
+
         while (!$rs->EOF) {
             $first = true;
             //while (list($k, $v) = each($rs->fields)) {
@@ -301,21 +311,22 @@ class DataexportController extends BaseController
                 $v = $data->escapeBytea($v);
 
                 // We add an extra escaping slash onto octal encoded characters
-                $v = preg_replace('/\\\\([0-7]{3})/', '\\\\\1', $v);
+                $v = \preg_replace('/\\\\([0-7]{3})/', '\\\\\1', $v);
+
                 if ($first) {
-                    echo (is_null($v)) ? '\\N' : $v;
+                    echo (null === $v) ? '\\N' : $v;
                     $first = false;
                 } else {
-                    echo "\t", (is_null($v)) ? '\\N' : $v;
+                    echo "\t", (null === $v) ? '\\N' : $v;
                 }
             }
-            echo PHP_EOL;
+            echo \PHP_EOL;
             $rs->moveNext();
         }
         echo "\\.\n";
     }
 
-    private function _mimicHtml($data, $object, $oids, $rs)
+    private function _mimicHtml($data, $object, $oids, $rs): void
     {
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n";
         echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n";
@@ -326,12 +337,15 @@ class DataexportController extends BaseController
         echo "<body>\r\n";
         echo "<table class=\"phppgadmin\">\r\n";
         echo "\t<tr>\r\n";
+
         if (!$rs->EOF) {
             // Output header row
             $j = 0;
+
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
-                if ($finfo->name == $data->id && !$oids) {
+
+                if ($finfo->name === $data->id && !$oids) {
                     continue;
                 }
 
@@ -339,12 +353,15 @@ class DataexportController extends BaseController
             }
         }
         echo "\t</tr>\r\n";
+
         while (!$rs->EOF) {
             echo "\t<tr>\r\n";
             $j = 0;
+
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
-                if ($finfo->name == $data->id && !$oids) {
+
+                if ($finfo->name === $data->id && !$oids) {
                     continue;
                 }
 
@@ -358,50 +375,57 @@ class DataexportController extends BaseController
         echo "</html>\r\n";
     }
 
-    private function _mimicXml($data, $object, $oids, $rs)
+    private function _mimicXml($data, $object, $oids, $rs): void
     {
-        echo '<?xml version="1.0" encoding="utf-8" ?>'.PHP_EOL;
-        echo '<data>'.PHP_EOL;
+        echo '<?xml version="1.0" encoding="utf-8" ?>' . \PHP_EOL;
+        echo '<data>' . \PHP_EOL;
+
         if (!$rs->EOF) {
             // Output header row
             $j = 0;
-            echo "\t<header>".PHP_EOL;
+            echo "\t<header>" . \PHP_EOL;
+
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
-                $name  = htmlspecialchars($finfo->name);
-                $type  = htmlspecialchars($finfo->type);
-                echo "\t\t<column name=\"{$name}\" type=\"{$type}\" />".PHP_EOL;
+                $name  = \htmlspecialchars($finfo->name);
+                $type  = \htmlspecialchars($finfo->type);
+                echo "\t\t<column name=\"{$name}\" type=\"{$type}\" />" . \PHP_EOL;
             }
-            echo "\t</header>".PHP_EOL;
+            echo "\t</header>" . \PHP_EOL;
         }
-        echo "\t<records>".PHP_EOL;
+        echo "\t<records>" . \PHP_EOL;
+
         while (!$rs->EOF) {
             $j = 0;
-            echo "\t\t<row>".PHP_EOL;
+            echo "\t\t<row>" . \PHP_EOL;
+
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
-                $name  = htmlspecialchars($finfo->name);
-                if (!is_null($v)) {
-                    $v = htmlspecialchars($v);
+                $name  = \htmlspecialchars($finfo->name);
+
+                if (null !== $v) {
+                    $v = \htmlspecialchars($v);
                 }
 
-                echo "\t\t\t<column name=\"{$name}\"", (is_null($v) ? ' null="null"' : ''), ">{$v}</column>".PHP_EOL;
+                echo "\t\t\t<column name=\"{$name}\"", (null === $v ? ' null="null"' : ''), ">{$v}</column>" . \PHP_EOL;
             }
-            echo "\t\t</row>".PHP_EOL;
+            echo "\t\t</row>" . \PHP_EOL;
             $rs->moveNext();
         }
-        echo "\t</records>".PHP_EOL;
-        echo '</data>'.PHP_EOL;
+        echo "\t</records>" . \PHP_EOL;
+        echo '</data>' . \PHP_EOL;
     }
 
-    private function _mimicSQL($data, $object, $oids, $rs)
+    private function _mimicSQL($data, $object, $oids, $rs): void
     {
         $data->fieldClean($object);
         $values = '';
+
         while (!$rs->EOF) {
             echo "INSERT INTO \"{$object}\" (";
             $first = true;
             $j     = 0;
+
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
                 $k     = $finfo->name;
@@ -409,27 +433,29 @@ class DataexportController extends BaseController
                 //                        if ($k == $data->id) continue;
                 // Output field
                 $data->fieldClean($k);
+
                 if ($first) {
                     echo "\"{$k}\"";
                 } else {
                     echo ", \"{$k}\"";
                 }
 
-                if (!is_null($v)) {
+                if (null !== $v) {
                     // Output value
                     // addCSlashes converts all weird ASCII characters to octal representation,
                     // EXCEPT the 'special' ones like \r \n \t, etc.
-                    $v = addcslashes($v, "\0..\37\177..\377");
+                    $v = \addcslashes($v, "\0..\37\177..\377");
                     // We add an extra escaping slash onto octal encoded characters
-                    $v = preg_replace('/\\\\([0-7]{3})/', '\\\1', $v);
+                    $v = \preg_replace('/\\\\([0-7]{3})/', '\\\1', $v);
                     // Finally, escape all apostrophes
-                    $v = str_replace("'", "''", $v);
+                    $v = \str_replace("'", "''", $v);
                 }
+
                 if ($first) {
-                    $values = (is_null($v) ? 'NULL' : "'{$v}'");
+                    $values = (null === $v ? 'NULL' : "'{$v}'");
                     $first  = false;
                 } else {
-                    $values .= ', '.((is_null($v) ? 'NULL' : "'{$v}'"));
+                    $values .= ', ' . ((null === $v ? 'NULL' : "'{$v}'"));
                 }
             }
             echo ") VALUES ({$values});\n";
@@ -437,7 +463,7 @@ class DataexportController extends BaseController
         }
     }
 
-    private function _csvOrTab($data, $object, $oids, $rs, $format)
+    private function _csvOrTab($data, $object, $oids, $rs, $format): void
     {
         switch ($format) {
             case 'tab':
@@ -450,14 +476,17 @@ class DataexportController extends BaseController
 
                 break;
         }
+
         if (!$rs->EOF) {
             // Output header row
             $first = true;
+
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($k);
                 $v     = $finfo->name;
-                if (!is_null($v)) {
-                    $v = str_replace('"', '""', $v);
+
+                if (null !== $v) {
+                    $v = \str_replace('"', '""', $v);
                 }
 
                 if ($first) {
@@ -469,18 +498,20 @@ class DataexportController extends BaseController
             }
             echo "\r\n";
         }
+
         while (!$rs->EOF) {
             $first = true;
+
             foreach ($rs->fields as $k => $v) {
-                if (!is_null($v)) {
-                    $v = str_replace('"', '""', $v);
+                if (null !== $v) {
+                    $v = \str_replace('"', '""', $v);
                 }
 
                 if ($first) {
-                    echo (is_null($v)) ? '"\\N"' : "\"{$v}\"";
+                    echo (null === $v) ? '"\\N"' : "\"{$v}\"";
                     $first = false;
                 } else {
-                    echo is_null($v) ? "{$sep}\"\\N\"" : "{$sep}\"{$v}\"";
+                    echo null === $v ? "{$sep}\"\\N\"" : "{$sep}\"{$v}\"";
                 }
             }
             echo "\r\n";

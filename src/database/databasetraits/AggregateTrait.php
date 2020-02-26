@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -40,29 +43,32 @@ trait AggregateTrait
         $this->beginTransaction();
 
         $sql = "CREATE AGGREGATE \"{$f_schema}\".\"{$name}\" (BASETYPE = \"{$basetype}\", SFUNC = \"{$sfunc}\", STYPE = \"{$stype}\"";
-        if (trim($ffunc) != '') {
+
+        if ('' !== \trim($ffunc)) {
             $sql .= ", FINALFUNC = \"{$ffunc}\"";
         }
 
-        if (trim($initcond) != '') {
+        if ('' !== \trim($initcond)) {
             $sql .= ", INITCOND = \"{$initcond}\"";
         }
 
-        if (trim($sortop) != '') {
+        if ('' !== \trim($sortop)) {
             $sql .= ", SORTOP = \"{$sortop}\"";
         }
 
         $sql .= ')';
 
         $status = $this->execute($sql);
+
         if ($status) {
             $this->rollbackTransaction();
 
             return -1;
         }
 
-        if (trim($comment) != '') {
+        if ('' !== \trim($comment)) {
             $status = $this->setComment('AGGREGATE', $name, '', $comment, $basetype);
+
             if ($status) {
                 $this->rollbackTransaction();
 
@@ -90,6 +96,7 @@ trait AggregateTrait
         $this->fieldClean($aggrtype);
 
         $sql = "DROP AGGREGATE \"{$f_schema}\".\"{$aggrname}\" (\"{$aggrtype}\")";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }
@@ -121,11 +128,11 @@ trait AggregateTrait
             FROM pg_catalog.pg_proc p, pg_catalog.pg_namespace n, pg_catalog.pg_user u, pg_catalog.pg_aggregate a
             WHERE n.oid = p.pronamespace AND p.proowner=u.usesysid AND p.oid=a.aggfnoid
                 AND p.proisagg AND n.nspname='{$c_schema}'
-                AND p.proname='".$name."'
+                AND p.proname='" . $name . "'
                 AND CASE p.proargtypes[0]
                     WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype THEN ''
                     ELSE pg_catalog.format_type(p.proargtypes[0], NULL)
-                END ='".$basetype."'";
+                END ='" . $basetype . "'";
 
         return $this->selectSet($sql);
     }
@@ -187,9 +194,10 @@ trait AggregateTrait
         $this->beginTransaction();
 
         // Change the owner, if it has changed
-        if ($aggrowner != $newaggrowner) {
+        if ($aggrowner !== $newaggrowner) {
             $status = $this->changeAggregateOwner($aggrname, $aggrtype, $newaggrowner);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -1;
@@ -197,8 +205,9 @@ trait AggregateTrait
         }
 
         // Set the comment, if it has changed
-        if ($aggrcomment != $newaggrcomment) {
+        if ($aggrcomment !== $newaggrcomment) {
             $status = $this->setComment('AGGREGATE', $aggrname, '', $newaggrcomment, $aggrtype);
+
             if ($status) {
                 $this->rollbackTransaction();
 
@@ -207,9 +216,10 @@ trait AggregateTrait
         }
 
         // Change the schema, if it has changed
-        if ($aggrschema != $newaggrschema) {
+        if ($aggrschema !== $newaggrschema) {
             $status = $this->changeAggregateSchema($aggrname, $aggrtype, $newaggrschema);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -3;
@@ -217,9 +227,10 @@ trait AggregateTrait
         }
 
         // Rename the aggregate, if it has changed
-        if ($aggrname != $newaggrname) {
+        if ($aggrname !== $newaggrname) {
             $status = $this->renameAggregate($newaggrschema, $aggrname, $aggrtype, $newaggrname);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -4;
@@ -282,7 +293,7 @@ trait AggregateTrait
     public function renameAggregate($aggrschema, $aggrname, $aggrtype, $newaggrname)
     {
         /* this function is called from alterAggregate where params are cleaned */
-        $sql = "ALTER AGGREGATE \"{$aggrschema}\"".'.'."\"{$aggrname}\" (\"{$aggrtype}\") RENAME TO \"{$newaggrname}\"";
+        $sql = "ALTER AGGREGATE \"{$aggrschema}\"" . '.' . "\"{$aggrname}\" (\"{$aggrtype}\") RENAME TO \"{$newaggrname}\"";
 
         return $this->execute($sql);
     }

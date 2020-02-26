@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -32,38 +35,43 @@ trait FtsTrait
         $this->fieldClean($cfgname);
 
         $sql = "CREATE TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$cfgname}\" (";
-        if ($parser != '') {
+
+        if ('' !== $parser) {
             $this->fieldClean($parser['schema']);
             $this->fieldClean($parser['parser']);
             $parser = "\"{$parser['schema']}\".\"{$parser['parser']}\"";
             $sql .= " PARSER = {$parser}";
         }
-        if ($template != '') {
+
+        if ('' !== $template) {
             $this->fieldClean($template['schema']);
             $this->fieldClean($template['name']);
             $sql .= " COPY = \"{$template['schema']}\".\"{$template['name']}\"";
         }
         $sql .= ')';
 
-        if ($comment != '') {
+        if ('' !== $comment) {
             $status = $this->beginTransaction();
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 return -1;
             }
         }
 
         // Create the FTS configuration
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
         }
 
         // Set the comment
-        if ($comment != '') {
+        if ('' !== $comment) {
             $status = $this->setComment('TEXT SEARCH CONFIGURATION', $cfgname, '', $comment);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -1;
@@ -251,6 +259,7 @@ trait FtsTrait
         $this->fieldClean($ftscfg);
 
         $sql = "DROP TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$ftscfg}\"";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }
@@ -276,6 +285,7 @@ trait FtsTrait
 
         $sql = 'DROP TEXT SEARCH DICTIONARY';
         $sql .= " \"{$f_schema}\".\"{$ftsdict}\"";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }
@@ -295,7 +305,8 @@ trait FtsTrait
     public function updateFtsConfiguration($cfgname, $comment, $name)
     {
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
@@ -304,21 +315,23 @@ trait FtsTrait
         $this->fieldClean($cfgname);
 
         $status = $this->setComment('TEXT SEARCH CONFIGURATION', $cfgname, '', $comment);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
         }
 
         // Only if the name has changed
-        if ($name != $cfgname) {
+        if ($name !== $cfgname) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             $this->fieldClean($name);
 
             $sql    = "ALTER TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$cfgname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -1;
@@ -359,13 +372,15 @@ trait FtsTrait
         $this->fieldClean($option);
 
         $sql = 'CREATE TEXT SEARCH';
+
         if ($isTemplate) {
             $sql .= " TEMPLATE \"{$f_schema}\".\"{$dictname}\" (";
-            if ($lexize != '') {
+
+            if ('' !== $lexize) {
                 $sql .= " LEXIZE = {$lexize}";
             }
 
-            if ($init != '') {
+            if ('' !== $init) {
                 $sql .= ", INIT = {$init}";
             }
 
@@ -373,14 +388,16 @@ trait FtsTrait
             $whatToComment = 'TEXT SEARCH TEMPLATE';
         } else {
             $sql .= " DICTIONARY \"{$f_schema}\".\"{$dictname}\" (";
-            if ($template != '') {
+
+            if ('' !== $template) {
                 $this->fieldClean($template['schema']);
                 $this->fieldClean($template['name']);
                 $template = "\"{$template['schema']}\".\"{$template['name']}\"";
 
                 $sql .= " TEMPLATE = {$template}";
             }
-            if ($option != '') {
+
+            if ('' !== $option) {
                 $sql .= ", {$option}";
             }
 
@@ -390,25 +407,28 @@ trait FtsTrait
 
         /* if comment, begin a transaction to
          * run both commands */
-        if ($comment != '') {
+        if ('' !== $comment) {
             $status = $this->beginTransaction();
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 return -1;
             }
         }
 
         // Create the FTS dictionary
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
         }
 
         // Set the comment
-        if ($comment != '') {
+        if ('' !== $comment) {
             $status = $this->setComment($whatToComment, $dictname, '', $comment);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -1;
@@ -432,7 +452,8 @@ trait FtsTrait
     public function updateFtsDictionary($dictname, $comment, $name)
     {
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
@@ -440,21 +461,23 @@ trait FtsTrait
 
         $this->fieldClean($dictname);
         $status = $this->setComment('TEXT SEARCH DICTIONARY', $dictname, '', $comment);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
         }
 
         // Only if the name has changed
-        if ($name != $dictname) {
+        if ($name !== $dictname) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             $this->fieldClean($name);
 
             $sql    = "ALTER TEXT SEARCH DICTIONARY \"{$f_schema}\".\"{$dictname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -1;
@@ -510,7 +533,7 @@ trait FtsTrait
      */
     public function changeFtsMapping($ftscfg, $mapping, $action, $dictname = null)
     {
-        if (count($mapping) > 0) {
+        if (0 < \count($mapping)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             $this->fieldClean($ftscfg);
@@ -533,8 +556,9 @@ trait FtsTrait
             }
 
             $sql = "ALTER TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$ftscfg}\" {$whatToDo} MAPPING FOR ";
-            $sql .= implode(',', $mapping);
-            if ($action != 'drop' && !empty($dictname)) {
+            $sql .= \implode(',', $mapping);
+
+            if ('drop' !== $action && !empty($dictname)) {
                 $sql .= " WITH {$dictname}";
             }
 

@@ -1,15 +1,16 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class HelpController extends BaseController
 {
@@ -18,7 +19,7 @@ class HelpController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render()
+    public function render(): void
     {
         switch ($this->action) {
             case 'browse':
@@ -32,21 +33,21 @@ class HelpController extends BaseController
         }
     }
 
-    public function doDefault()
+    public function doDefault(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         if (isset($_REQUEST['help'])) {
             $url = $data->getHelp($_REQUEST['help']);
 
-            if (is_array($url)) {
+            if (\is_array($url)) {
                 $this->doChoosePage($url);
 
                 return;
             }
 
             if ($url) {
-                header("Location: ${url}");
+                \header("Location: {$url}");
 
                 return;
             }
@@ -55,7 +56,7 @@ class HelpController extends BaseController
         $this->doBrowse($this->lang['strinvalidhelppage']);
     }
 
-    public function doBrowse($msg = '')
+    public function doBrowse($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -66,39 +67,42 @@ class HelpController extends BaseController
 
         echo $this->printMsg($msg);
 
-        echo '<dl>'.PHP_EOL;
+        echo '<dl>' . \PHP_EOL;
 
         $pages = $data->getHelpPages();
+
         foreach ($pages as $page => $dummy) {
-            echo "<dt>{$page}</dt>".PHP_EOL;
+            echo "<dt>{$page}</dt>" . \PHP_EOL;
 
             $urls = $data->getHelp($page);
-            if (!is_array($urls)) {
+
+            if (!\is_array($urls)) {
                 $urls = [$urls];
             }
 
             foreach ($urls as $url) {
-                echo "<dd><a href=\"{$url}\">{$url}</a></dd>".PHP_EOL;
+                echo "<dd><a href=\"{$url}\">{$url}</a></dd>" . \PHP_EOL;
             }
         }
 
-        echo '</dl>'.PHP_EOL;
+        echo '</dl>' . \PHP_EOL;
 
         $this->printFooter();
     }
 
-    public function doChoosePage($urls)
+    public function doChoosePage($urls): void
     {
         $this->printHeader();
         $this->printBody();
 
         $this->printTitle($this->lang['strselecthelppage']);
 
-        echo '<ul>'.PHP_EOL;
+        echo '<ul>' . \PHP_EOL;
+
         foreach ($urls as $url) {
-            echo "<li><a href=\"{$url}\">{$url}</a></li>".PHP_EOL;
+            echo "<li><a href=\"{$url}\">{$url}</a></li>" . \PHP_EOL;
         }
-        echo '</ul>'.PHP_EOL;
+        echo '</ul>' . \PHP_EOL;
 
         $this->printFooter();
     }

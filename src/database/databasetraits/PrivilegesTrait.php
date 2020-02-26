@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -81,149 +84,16 @@ trait PrivilegesTrait
 
         // Fetch the ACL for object
         $acl = $this->selectField($sql, 'acl');
-        if ($acl == -1) {
+
+        if (-1 === $acl) {
             return -2;
         }
 
-        if ($acl == '' || $acl === null || !(bool) $acl) {
+        if ('' === $acl || null === $acl || !(bool) $acl) {
             return [];
         }
 
         return $this->parseACL($acl);
-    }
-
-    /**
-     * Internal function used for parsing ACLs.
-     *
-     * @param string $acl The ACL to parse (of type aclitem[])
-     *
-     * @return array|int Privileges array or integer with error code
-     *
-     * @internal bool $in_quotes toggles acl in_quotes attribute
-     */
-    protected function parseACL($acl)
-    {
-        // Take off the first and last characters (the braces)
-        $acl = substr($acl, 1, strlen($acl) - 2);
-
-        // Pick out individual ACE's by carefully parsing.  This is necessary in order
-        // to cope with usernames and stuff that contain commas
-        $aces      = [];
-        $i         = $j         = 0;
-        $in_quotes = false;
-        while ($i < strlen($acl)) {
-            // If current char is a double quote and it's not escaped, then
-            // enter quoted bit
-            $char = substr($acl, $i, 1);
-            if ($char == '"' && ($i == 0 || substr($acl, $i - 1, 1) != '\\')) {
-                $in_quotes = !$in_quotes;
-            } elseif ($char == ',' && !$in_quotes) {
-                // Add text so far to the array
-                $aces[] = substr($acl, $j, $i - $j);
-                $j      = $i + 1;
-            }
-            ++$i;
-        }
-        // Add final text to the array
-        $aces[] = substr($acl, $j);
-
-        // Create the array to be returned
-        $temp = [];
-
-        // For each ACE, generate an entry in $temp
-        foreach ($aces as $v) {
-            // If the ACE begins with a double quote, strip them off both ends
-            // and unescape backslashes and double quotes
-            // $unquote = false;
-            if (strpos($v, '"') === 0) {
-                $v = substr($v, 1, strlen($v) - 2);
-                $v = str_replace('\\"', '"', $v);
-                $v = str_replace('\\\\', '\\', $v);
-            }
-
-            // Figure out type of ACE (public, user or group)
-            if (strpos($v, '=') === 0) {
-                $atype = 'public';
-            } else {
-                if ($this->hasRoles()) {
-                    $atype = 'role';
-                } else {
-                    if (strpos($v, 'group ') === 0) {
-                        $atype = 'group';
-                        // Tear off 'group' prefix
-                        $v = substr($v, 6);
-                    } else {
-                        $atype = 'user';
-                    }
-                }
-            }
-
-            // Break on unquoted equals sign...
-            $i         = 0;
-            $in_quotes = false;
-            $entity    = null;
-            $chars     = null;
-            while ($i < strlen($v)) {
-                // If current char is a double quote and it's not escaped, then
-                // enter quoted bit
-                $char      = substr($v, $i, 1);
-                $next_char = substr($v, $i + 1, 1);
-                if ($char == '"' && ($i == 0 || $next_char != '"')) {
-                    $in_quotes = !$in_quotes;
-                } elseif ($char == '"' && $next_char == '"') {
-                    // Skip over escaped double quotes
-                    ++$i;
-                } elseif ($char == '=' && !$in_quotes) {
-                    // Split on current equals sign
-                    $entity = substr($v, 0, $i);
-                    $chars  = substr($v, $i + 1);
-
-                    break;
-                }
-                ++$i;
-            }
-
-            // Check for quoting on entity name, and unescape if necessary
-            if (strpos($entity, '"') === 0) {
-                $entity = substr($entity, 1, strlen($entity) - 2);
-                $entity = str_replace('""', '"', $entity);
-            }
-
-            // New row to be added to $temp
-            // (type, grantee, privileges, grantor, grant option?
-            $row = [$atype, $entity, [], '', []];
-
-            // Loop over chars and add privs to $row
-            for ($i = 0; $i < strlen($chars); ++$i) {
-                // Append to row's privs list the string representing
-                // the privilege
-                $char = substr($chars, $i, 1);
-                if ($char == '*') {
-                    $row[4][] = $this->privmap[substr($chars, $i - 1, 1)];
-                } elseif ($char == '/') {
-                    $grantor = substr($chars, $i + 1);
-                    // Check for quoting
-                    if (strpos($grantor, '"') === 0) {
-                        $grantor = substr($grantor, 1, strlen($grantor) - 2);
-                        $grantor = str_replace('""', '"', $grantor);
-                    }
-                    $row[3] = $grantor;
-
-                    break;
-                } else {
-                    if (!isset($this->privmap[$char])) {
-                        return -3;
-                    }
-
-                    $row[2][] = $this->privmap[$char];
-                }
-            }
-
-            // Append row to temp
-            $temp[] = $row;
-        }
-
-        return $temp;
     }
 
     /**
@@ -260,34 +130,34 @@ trait PrivilegesTrait
         $this->fieldArrayClean($groupnames);
 
         // Input checking
-        if (!is_array($privileges) || sizeof($privileges) == 0) {
+        if (!\is_array($privileges) || 0 === \count($privileges)) {
             return -3;
         }
 
-        if (!is_array($usernames) || !is_array($groupnames) ||
-            (!$public && sizeof($usernames) == 0 && sizeof($groupnames) == 0)) {
+        if (!\is_array($usernames) || !\is_array($groupnames) ||
+            (!$public && 0 === \count($usernames) && 0 === \count($groupnames))) {
             return -4;
         }
 
-        if ($mode != 'GRANT' && $mode != 'REVOKE') {
+        if ('GRANT' !== $mode && 'REVOKE' !== $mode) {
             return -5;
         }
 
         $sql = $mode;
 
         // Grant option
-        if ($this->hasGrantOption() && $mode == 'REVOKE' && $grantoption) {
+        if ($this->hasGrantOption() && 'REVOKE' === $mode && $grantoption) {
             $sql .= ' GRANT OPTION FOR';
         }
 
-        if (in_array('ALL PRIVILEGES', $privileges, true)) {
+        if (\in_array('ALL PRIVILEGES', $privileges, true)) {
             $sql .= ' ALL PRIVILEGES';
         } else {
-            if ($type == 'column') {
+            if ('column' === $type) {
                 $this->fieldClean($object);
-                $sql .= ' '.join(" (\"{$object}\"), ", $privileges);
+                $sql .= ' ' . \implode(" (\"{$object}\"), ", $privileges);
             } else {
-                $sql .= ' '.join(', ', $privileges);
+                $sql .= ' ' . \implode(', ', $privileges);
             }
         }
 
@@ -336,7 +206,8 @@ trait PrivilegesTrait
 
         // Dump
         $first = true;
-        $sql .= ($mode == 'GRANT') ? ' TO ' : ' FROM ';
+        $sql .= ('GRANT' === $mode) ? ' TO ' : ' FROM ';
+
         if ($public) {
             $sql .= 'PUBLIC';
             $first = false;
@@ -361,12 +232,12 @@ trait PrivilegesTrait
         }
 
         // Grant option
-        if ($this->hasGrantOption() && $mode == 'GRANT' && $grantoption) {
+        if ($this->hasGrantOption() && 'GRANT' === $mode && $grantoption) {
             $sql .= ' WITH GRANT OPTION';
         }
 
         // Cascade revoke
-        if ($this->hasGrantOption() && $mode == 'REVOKE' && $cascade) {
+        if ($this->hasGrantOption() && 'REVOKE' === $mode && $cascade) {
             $sql .= ' CASCADE';
         }
 
@@ -398,4 +269,143 @@ trait PrivilegesTrait
     abstract public function selectField($sql, $field);
 
     abstract public function hasRoles();
+
+    /**
+     * Internal function used for parsing ACLs.
+     *
+     * @param string $acl The ACL to parse (of type aclitem[])
+     *
+     * @return array|int Privileges array or integer with error code
+     *
+     * @internal bool $in_quotes toggles acl in_quotes attribute
+     */
+    protected function parseACL($acl)
+    {
+        // Take off the first and last characters (the braces)
+        $acl = \mb_substr($acl, 1, \mb_strlen($acl) - 2);
+
+        // Pick out individual ACE's by carefully parsing.  This is necessary in order
+        // to cope with usernames and stuff that contain commas
+        $aces      = [];
+        $i         = $j         = 0;
+        $in_quotes = false;
+
+        while (\mb_strlen($acl) > $i) {
+            // If current char is a double quote and it's not escaped, then
+            // enter quoted bit
+            $char = \mb_substr($acl, $i, 1);
+
+            if ('"' === $char && (0 === $i || '\\' !== \mb_substr($acl, $i - 1, 1))) {
+                $in_quotes = !$in_quotes;
+            } elseif (',' === $char && !$in_quotes) {
+                // Add text so far to the array
+                $aces[] = \mb_substr($acl, $j, $i - $j);
+                $j      = $i + 1;
+            }
+            ++$i;
+        }
+        // Add final text to the array
+        $aces[] = \mb_substr($acl, $j);
+
+        // Create the array to be returned
+        $temp = [];
+
+        // For each ACE, generate an entry in $temp
+        foreach ($aces as $v) {
+            // If the ACE begins with a double quote, strip them off both ends
+            // and unescape backslashes and double quotes
+            // $unquote = false;
+            if (0 === \mb_strpos($v, '"')) {
+                $v = \mb_substr($v, 1, \mb_strlen($v) - 2);
+                $v = \str_replace('\\"', '"', $v);
+                $v = \str_replace('\\\\', '\\', $v);
+            }
+
+            // Figure out type of ACE (public, user or group)
+            if (0 === \mb_strpos($v, '=')) {
+                $atype = 'public';
+            } else {
+                if ($this->hasRoles()) {
+                    $atype = 'role';
+                } else {
+                    if (0 === \mb_strpos($v, 'group ')) {
+                        $atype = 'group';
+                        // Tear off 'group' prefix
+                        $v = \mb_substr($v, 6);
+                    } else {
+                        $atype = 'user';
+                    }
+                }
+            }
+
+            // Break on unquoted equals sign...
+            $i         = 0;
+            $in_quotes = false;
+            $entity    = null;
+            $chars     = null;
+
+            while (\mb_strlen($v) > $i) {
+                // If current char is a double quote and it's not escaped, then
+                // enter quoted bit
+                $char      = \mb_substr($v, $i, 1);
+                $next_char = \mb_substr($v, $i + 1, 1);
+
+                if ('"' === $char && (0 === $i || '"' !== $next_char)) {
+                    $in_quotes = !$in_quotes;
+                } elseif ('"' === $char && '"' === $next_char) {
+                    // Skip over escaped double quotes
+                    ++$i;
+                } elseif ('=' === $char && !$in_quotes) {
+                    // Split on current equals sign
+                    $entity = \mb_substr($v, 0, $i);
+                    $chars  = \mb_substr($v, $i + 1);
+
+                    break;
+                }
+                ++$i;
+            }
+
+            // Check for quoting on entity name, and unescape if necessary
+            if (0 === \mb_strpos($entity, '"')) {
+                $entity = \mb_substr($entity, 1, \mb_strlen($entity) - 2);
+                $entity = \str_replace('""', '"', $entity);
+            }
+
+            // New row to be added to $temp
+            // (type, grantee, privileges, grantor, grant option?
+            $row = [$atype, $entity, [], '', []];
+
+            // Loop over chars and add privs to $row
+            for ($i = 0;\mb_strlen($chars) > $i; ++$i) {
+                // Append to row's privs list the string representing
+                // the privilege
+                $char = \mb_substr($chars, $i, 1);
+
+                if ('*' === $char) {
+                    $row[4][] = $this->privmap[\mb_substr($chars, $i - 1, 1)];
+                } elseif ('/' === $char) {
+                    $grantor = \mb_substr($chars, $i + 1);
+                    // Check for quoting
+                    if (0 === \mb_strpos($grantor, '"')) {
+                        $grantor = \mb_substr($grantor, 1, \mb_strlen($grantor) - 2);
+                        $grantor = \str_replace('""', '"', $grantor);
+                    }
+                    $row[3] = $grantor;
+
+                    break;
+                } else {
+                    if (!isset($this->privmap[$char])) {
+                        return -3;
+                    }
+
+                    $row[2][] = $this->privmap[$char];
+                }
+            }
+
+            // Append row to temp
+            $temp[] = $row;
+        }
+
+        return $temp;
+    }
 }

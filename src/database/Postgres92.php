@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -12,7 +15,8 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres92 extends Postgres93
 {
-    public $typIndexes    = ['BTREE', 'RTREE', 'GIST', 'GIN', 'HASH'];
+    public $typIndexes = ['BTREE', 'RTREE', 'GIST', 'GIN', 'HASH'];
+
     public $major_version = 9.2;
 
     /**
@@ -24,7 +28,7 @@ class Postgres92 extends Postgres93
      */
     public function getProcesses($database = null)
     {
-        if ($database === null) {
+        if (null === $database) {
             $sql = "SELECT datname, usename, pid, waiting, state_change as query_start,
                   case when state='idle in transaction' then '<IDLE> in transaction' when state = 'idle' then '<IDLE>' else query end as query
 				FROM pg_catalog.pg_stat_activity

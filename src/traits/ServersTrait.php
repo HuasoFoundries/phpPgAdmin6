@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Traits;
@@ -23,12 +26,12 @@ trait ServersTrait
      */
     public function getServers($recordset = false, $group = false)
     {
-        $logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
+        $logins = isset($_SESSION['webdbLogin']) && \is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : [];
         $srvs   = [];
 
-        if (($group !== false) && ($group !== 'all')) {
+        if ((false !== $group) && ('all' !== $group)) {
             if (isset($this->conf['srv_groups'][$group]['servers'])) {
-                $group = array_fill_keys(explode(',', preg_replace(
+                $group = \array_fill_keys(\explode(',', \preg_replace(
                     '/\s/',
                     '',
                     $this->conf['srv_groups'][$group]['servers']
@@ -39,10 +42,11 @@ trait ServersTrait
         }
 
         foreach ($this->conf['servers'] as $idx => $info) {
-            $server_id = $info['host'].':'.$info['port'].':'.$info['sslmode'];
-            if ($group === false || isset($group[$idx]) || ($group === 'all')) {
-                $server_id  = $info['host'].':'.$info['port'].':'.$info['sslmode'];
-                $server_sha = sha1($server_id);
+            $server_id = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+
+            if (false === $group || isset($group[$idx]) || ('all' === $group)) {
+                $server_id  = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+                $server_sha = \sha1($server_id);
 
                 if (isset($logins[$server_sha])) {
                     $srvs[$server_sha] = $logins[$server_sha];
@@ -60,6 +64,7 @@ trait ServersTrait
                         'server' => Decorator::field('sha'),
                     ]
                 );
+
                 if (isset($srvs[$server_sha]['username'])) {
                     $srvs[$server_sha]['icon']   = 'Server';
                     $srvs[$server_sha]['branch'] = Decorator::url(
@@ -77,8 +82,8 @@ trait ServersTrait
             }
         }
 
-        uasort($srvs, function ($a, $b) {
-            return strcmp($a['desc'], $b['desc']);
+        \uasort($srvs, static function ($a, $b) {
+            return \strcmp($a['desc'], $b['desc']);
         });
 
         if ($recordset) {
@@ -88,81 +93,87 @@ trait ServersTrait
         return $srvs;
     }
 
-    /*
+    /**
      * Output dropdown list to select server and
      * databases form the popups windows.
+     *
      * @param string $the_action an action identifying the purpose of this snipper sql|find|history
+     * @param mixed  $do_print
      */
     public function printConnection($the_action, $do_print = true)
     {
-        $connection_html = '<table class="printconnection" style="width: 100%"><tr><td class="popup_select1">'.PHP_EOL;
+        $connection_html = '<table class="printconnection" style="width: 100%"><tr><td class="popup_select1">' . \PHP_EOL;
 
         $conf_servers = $this->getServers();
         $server_id    = $this->misc->getServerId();
         $servers      = [];
+
         foreach ($conf_servers as $key => $info) {
             if (empty($info['username'])) {
                 continue;
             }
             $info['selected'] = '';
+
             if ($this->getRequestParam('server') === $info['id'] || $this->getRequestParam('server') === $key) {
                 $info['selected'] = ' selected="selected" ';
             }
             $servers[$key] = $info;
         }
-        $connection_html .= '<input type="hidden" readonly="readonly" value="'.$the_action.'" id="the_action">';
+        $connection_html .= '<input type="hidden" readonly="readonly" value="' . $the_action . '" id="the_action">';
 
-        if (count($servers) === 1) {
-            $connection_html .= '<input type="hidden" readonly="readonly" value="'.$server_id.'" name="server">';
+        if (1 === \count($servers)) {
+            $connection_html .= '<input type="hidden" readonly="readonly" value="' . $server_id . '" name="server">';
         } else {
             $connection_html .= '<label>';
             $connection_html .= $this->misc->printHelp($this->lang['strserver'], 'pg.server', false);
             $connection_html .= ': </label>';
-            $connection_html .= " <select name=\"server\" id='selectserver' >".PHP_EOL;
+            $connection_html .= " <select name=\"server\" id='selectserver' >" . \PHP_EOL;
+
             foreach ($servers as $id => $server) {
-                $connection_html .= '<option value="'.$id.'" '.$server['selected'].'>';
-                $connection_html .= htmlspecialchars("{$server['desc']} ({$server['id']})");
-                $connection_html .= '</option>'.PHP_EOL;
+                $connection_html .= '<option value="' . $id . '" ' . $server['selected'] . '>';
+                $connection_html .= \htmlspecialchars("{$server['desc']} ({$server['id']})");
+                $connection_html .= '</option>' . \PHP_EOL;
             }
-            $connection_html .= '</select>'.PHP_EOL;
+            $connection_html .= '</select>' . \PHP_EOL;
         }
 
-        $connection_html .= '</td><td class="popup_select2" style="text-align: right">'.PHP_EOL;
+        $connection_html .= '</td><td class="popup_select2" style="text-align: right">' . \PHP_EOL;
 
-        if (count($servers) === 1 &&
+        if (1 === \count($servers) &&
             isset($servers[$server_id]['useonlydefaultdb']) &&
-            $servers[$server_id]['useonlydefaultdb'] === true
+            true === $servers[$server_id]['useonlydefaultdb']
         ) {
-            $connection_html .= '<input type="hidden" name="database" value="'.htmlspecialchars($servers[$server_id]['defaultdb']).'" />'.PHP_EOL;
+            $connection_html .= '<input type="hidden" name="database" value="' . \htmlspecialchars($servers[$server_id]['defaultdb']) . '" />' . \PHP_EOL;
         } else {
             // Get the list of all databases
             $data      = $this->misc->getDatabaseAccessor();
             $databases = $data->getDatabases();
-            if ($databases->recordCount() > 0) {
+
+            if (0 < $databases->recordCount()) {
                 $connection_html .= '<label>';
                 $connection_html .= $this->misc->printHelp($this->lang['strdatabase'], 'pg.database', false);
-                $connection_html .= ": <select  id='selectdb'  name=\"database\" >".PHP_EOL;
+                $connection_html .= ": <select  id='selectdb'  name=\"database\" >" . \PHP_EOL;
 
                 //if no database was selected, user should select one
                 if (!isset($_REQUEST['database'])) {
-                    $connection_html .= '<option value="">--</option>'.PHP_EOL;
+                    $connection_html .= '<option value="">--</option>' . \PHP_EOL;
                 }
 
                 while (!$databases->EOF) {
                     $dbname     = $databases->fields['datname'];
-                    $dbselected = isset($_REQUEST['database']) && $dbname == $_REQUEST['database'] ? ' selected="selected"' : '';
-                    $connection_html .= '<option value="'.htmlspecialchars($dbname).'" '.$dbselected.'>'.htmlspecialchars($dbname).'</option>'.PHP_EOL;
+                    $dbselected = isset($_REQUEST['database']) && $dbname === $_REQUEST['database'] ? ' selected="selected"' : '';
+                    $connection_html .= '<option value="' . \htmlspecialchars($dbname) . '" ' . $dbselected . '>' . \htmlspecialchars($dbname) . '</option>' . \PHP_EOL;
 
                     $databases->moveNext();
                 }
-                $connection_html .= '</select></label>'.PHP_EOL;
+                $connection_html .= '</select></label>' . \PHP_EOL;
             } else {
                 $server_info = $this->misc->getServerInfo();
-                $connection_html .= '<input type="hidden" name="database" value="'.htmlspecialchars($server_info['defaultdb']).'" />'.PHP_EOL;
+                $connection_html .= '<input type="hidden" name="database" value="' . \htmlspecialchars($server_info['defaultdb']) . '" />' . \PHP_EOL;
             }
         }
 
-        $connection_html .= '</td></tr></table>'.PHP_EOL;
+        $connection_html .= '</td></tr></table>' . \PHP_EOL;
 
         if ($do_print) {
             echo $connection_html;

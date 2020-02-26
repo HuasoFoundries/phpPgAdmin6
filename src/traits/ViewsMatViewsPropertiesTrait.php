@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Traits;
@@ -14,7 +17,9 @@ use PHPPgAdmin\Decorators\Decorator;
 trait ViewsMatViewsPropertiesTrait
 {
     public $href = '';
+
     public $misc;
+
     public $view_name;
 
     /**
@@ -22,11 +27,11 @@ trait ViewsMatViewsPropertiesTrait
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $attPre = function (&$rowdata) use ($data) {
+        $attPre = static function (&$rowdata) use ($data): void {
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
         };
 
@@ -41,14 +46,14 @@ trait ViewsMatViewsPropertiesTrait
 
         // Show comment if any
         if (null !== $vdata->fields['relcomment']) {
-            echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>'.PHP_EOL;
+            echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>' . \PHP_EOL;
         }
 
         $columns = [
             'column'  => [
                 'title' => $this->lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=".urlencode($_REQUEST[$this->subject]).'&amp;',
+                'url'   => "colproperties?subject=column&amp;{$this->misc->href}&amp;view=" . \urlencode($_REQUEST[$this->subject]) . '&amp;',
                 'vars'  => ['column' => 'attname'],
             ],
             'type'    => [
@@ -86,7 +91,7 @@ trait ViewsMatViewsPropertiesTrait
 
         echo $this->printTable($attrs, $columns, $actions, "{$this->view_name}-{$this->view_name}", $this->lang['strnodata'], $attPre);
 
-        echo '<br />'.PHP_EOL;
+        echo '<br />' . \PHP_EOL;
 
         $navlinks = [
             'browse' => [
@@ -108,7 +113,7 @@ trait ViewsMatViewsPropertiesTrait
             'select' => [
                 'attr'    => [
                     'href' => [
-                        'url'     => str_replace('properties', 's', $this->view_name),
+                        'url'     => \str_replace('properties', 's', $this->view_name),
                         'urlvars' => [
                             'action'       => 'confselectrows',
                             'server'       => $_REQUEST['server'],
@@ -123,7 +128,7 @@ trait ViewsMatViewsPropertiesTrait
             'drop'   => [
                 'attr'    => [
                     'href' => [
-                        'url'     => str_replace('properties', 's', $this->view_name),
+                        'url'     => \str_replace('properties', 's', $this->view_name),
                         'urlvars' => [
                             'action'       => 'confirm_drop',
                             'server'       => $_REQUEST['server'],
@@ -152,7 +157,8 @@ trait ViewsMatViewsPropertiesTrait
             ],
         ];
         $this->prtrace($this->view_name);
-        if ($this->view_name === 'materializedviewproperties') {
+
+        if ('materializedviewproperties' === $this->view_name) {
             $navlinks['refresh'] = [
                 'attr'    => [
                     'href' => [
@@ -170,7 +176,7 @@ trait ViewsMatViewsPropertiesTrait
             ];
         }
 
-        $this->printNavLinks($navlinks, "{$this->view_name}-{$this->view_name}", get_defined_vars());
+        $this->printNavLinks($navlinks, "{$this->view_name}-{$this->view_name}", \get_defined_vars());
     }
 
     public function doTree()
@@ -221,7 +227,7 @@ trait ViewsMatViewsPropertiesTrait
      *
      * @param mixed $msg
      */
-    public function doExport($msg = '')
+    public function doExport($msg = ''): void
     {
         $this->printTrail($this->subject);
         $this->printTabs($this->subject, 'export');
@@ -250,7 +256,7 @@ trait ViewsMatViewsPropertiesTrait
      *
      * @param mixed $msg
      */
-    public function doDefinition($msg = '')
+    public function doDefinition($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -261,18 +267,18 @@ trait ViewsMatViewsPropertiesTrait
         $this->printTabs($this->subject, 'definition');
         $this->printMsg($msg);
 
-        if ($vdata->recordCount() > 0) {
+        if (0 < $vdata->recordCount()) {
             // Show comment if any
             if (null !== $vdata->fields['relcomment']) {
-                echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>'.PHP_EOL;
+                echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>' . \PHP_EOL;
             }
 
-            echo '<table style="width: 100%">'.PHP_EOL;
-            echo "<tr><th class=\"data\">{$this->lang['strdefinition']}</th></tr>".PHP_EOL;
-            echo '<tr><td class="data1">', $this->misc->printVal($vdata->fields['vwdefinition']), '</td></tr>'.PHP_EOL;
-            echo '</table>'.PHP_EOL;
+            echo '<table style="width: 100%">' . \PHP_EOL;
+            echo "<tr><th class=\"data\">{$this->lang['strdefinition']}</th></tr>" . \PHP_EOL;
+            echo '<tr><td class="data1">', $this->misc->printVal($vdata->fields['vwdefinition']), '</td></tr>' . \PHP_EOL;
+            echo '</table>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
         }
 
         $this->printNavLinks(['alter' => [
@@ -289,6 +295,6 @@ trait ViewsMatViewsPropertiesTrait
                 ],
             ],
             'content' => $this->lang['stralter'],
-        ]], "{$this->view_name}-definition", get_defined_vars());
+        ]], "{$this->view_name}-definition", \get_defined_vars());
     }
 }

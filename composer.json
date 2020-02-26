@@ -1,6 +1,5 @@
 {
     "name": "huasofoundries/phppgadmin6",
-    "version": "6.0.0-RC9",
     "description": "Like phpmyadmin but for postgres",
     "type": "project",
     "license": [
@@ -44,15 +43,22 @@
         "simpletest/simpletest": "^1.1",
         "codeception/module-asserts": "^1.1",
         "filp/whoops": "^2.7",
-        "symfony/var-dumper": "^5.0"
+        "symfony/var-dumper": "^5.0",
+        "vimeo/psalm": "^3.9",
+        "ergebnis/composer-normalize": "^2.2",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "ergebnis/php-cs-fixer-config": "^2.0"
+    },
+    "extra": {
+        "version": "6.0.0-RC9",
+        "current_tags": {
+            "master": "6.0.0-RC9",
+            "develop": "6.0.0-RC9"
+        }
     },
     "scripts": {
-        "fix_temp_permissions": [
-            "php -r \"chmod( __DIR__ . '/temp', 0777);\"",
-            "php -r \"chmod( __DIR__ . '/temp/twigcache', 0777);\""
-        ],
         "clear_twig_cache": [
-            "@fix_temp_permissions",
+            "make fix_permissions",
             "php -r \"array_map( 'unlink', array_filter((array) glob('temp/twigcache/**/*.php', GLOB_BRACE)));\"",
             "php -r \"array_map( 'rmdir', array_filter((array) glob('temp/twigcache/*', GLOB_BRACE)));\""
         ],

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -22,16 +22,16 @@ class Decorator
 
     public static function get_sanitized_value(&$var, &$fields, $esc = null)
     {
-        if (is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
+        if (\is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
             $val = $var->value($fields);
         } else {
             $val = &$var;
         }
 
-        if (is_string($val)) {
+        if (\is_string($val)) {
             switch ($esc) {
                 case 'xml':
-                    return strtr($val, [
+                    return \strtr($val, [
                         '&' => '&amp;',
                         "'" => '&apos;',
                         '"' => '&quot;',
@@ -39,9 +39,9 @@ class Decorator
                         '>' => '&gt;',
                     ]);
                 case 'html':
-                    return htmlentities($val, ENT_COMPAT, 'UTF-8');
+                    return \htmlentities($val, \ENT_COMPAT, 'UTF-8');
                 case 'url':
-                    return urlencode($val);
+                    return \urlencode($val);
             }
         }
 
@@ -60,7 +60,7 @@ class Decorator
 
     public static function concat(/* ... */)
     {
-        return new \PHPPgAdmin\Decorators\ConcatDecorator(func_get_args());
+        return new \PHPPgAdmin\Decorators\ConcatDecorator(\func_get_args());
     }
 
     public static function replace($str, $params)
@@ -78,9 +78,9 @@ class Decorator
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
-        if (func_num_args() > 2) {
-            $v = func_get_args();
-            array_shift($v);
+        if (2 < \func_num_args()) {
+            $v = \func_get_args();
+            \array_shift($v);
 
             return new BranchUrlDecorator($base, new ArrayMergeDecorator($v));
         }
@@ -93,9 +93,9 @@ class Decorator
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
-        if (func_num_args() > 2) {
-            $v = func_get_args();
-            array_shift($v);
+        if (2 < \func_num_args()) {
+            $v = \func_get_args();
+            \array_shift($v);
 
             return new ActionUrlDecorator($base, new ArrayMergeDecorator($v));
         }
@@ -108,9 +108,9 @@ class Decorator
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
-        if (func_num_args() > 2) {
-            $v = func_get_args();
-            array_shift($v);
+        if (2 < \func_num_args()) {
+            $v = \func_get_args();
+            \array_shift($v);
 
             return new RedirectUrlDecorator($base, new ArrayMergeDecorator($v));
         }
@@ -124,9 +124,9 @@ class Decorator
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
 
-        if (func_num_args() > 2) {
-            $v    = func_get_args();
-            $base = array_shift($v);
+        if (2 < \func_num_args()) {
+            $v = \func_get_args();
+            $base = \array_shift($v);
 
             return new UrlDecorator($base, new ArrayMergeDecorator($v));
         }

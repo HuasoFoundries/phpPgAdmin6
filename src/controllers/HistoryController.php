@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,15 +13,17 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class HistoryController extends BaseController
 {
     use \PHPPgAdmin\Traits\ServersTrait;
+
     public $EOF;
+
     public $fields;
-    public $scripts          = '<script type="text/javascript">window.inPopUp=true;</script>';
+
+    public $scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
+
     public $controller_title = 'strhistory';
 
     /**
@@ -63,21 +68,21 @@ class HistoryController extends BaseController
         return $this->printFooter(true, 'footer_sqledit.twig');
     }
 
-    public function doDefault()
+    public function doDefault(): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         $this->printHeader($this->headerTitle(), $this->scripts, true, 'header.twig');
 
         // Bring to the front always
-        echo '<body onload="window.focus();">'.PHP_EOL;
+        echo '<body onload="window.focus();">' . \PHP_EOL;
 
-        echo '<form action="'.\SUBFOLDER.'/src/views/history" method="post">'.PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . '/src/views/history" method="post">' . \PHP_EOL;
         $this->printConnection('history');
         echo '</form><br />';
 
         if (!isset($_REQUEST['database'])) {
-            echo "<p>{$this->lang['strnodatabaseselected']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnodatabaseselected']}</p>" . \PHP_EOL;
 
             return;
         }
@@ -133,7 +138,7 @@ class HistoryController extends BaseController
 
             echo $this->printTable($history, $columns, $actions, 'history-history', $this->lang['strnohistory']);
         } else {
-            echo "<p>{$this->lang['strnohistory']}</p>".PHP_EOL;
+            echo "<p>{$this->lang['strnohistory']}</p>" . \PHP_EOL;
         }
 
         $navlinks = [
@@ -153,7 +158,7 @@ class HistoryController extends BaseController
         ];
 
         if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])
-            && count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
+            && \count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
             $navlinks['download'] = [
                 'attr'    => [
                     'href' => [
@@ -182,69 +187,70 @@ class HistoryController extends BaseController
             ];
         }
 
-        $this->printNavLinks($navlinks, 'history-history', get_defined_vars());
+        $this->printNavLinks($navlinks, 'history-history', \get_defined_vars());
     }
 
-    public function doDelHistory($qid, $confirm)
+    public function doDelHistory($qid, $confirm): void
     {
         if ($confirm) {
             $this->printHeader($this->headerTitle(), $this->scripts);
 
             // Bring to the front always
-            echo '<body onload="window.focus();">'.PHP_EOL;
+            echo '<body onload="window.focus();">' . \PHP_EOL;
 
-            echo "<h3>{$this->lang['strdelhistory']}</h3>".PHP_EOL;
-            echo "<p>{$this->lang['strconfdelhistory']}</p>".PHP_EOL;
+            echo "<h3>{$this->lang['strdelhistory']}</h3>" . \PHP_EOL;
+            echo "<p>{$this->lang['strconfdelhistory']}</p>" . \PHP_EOL;
 
-            echo '<pre>', htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), '</pre>';
-            echo '<form action="'.\SUBFOLDER.'/src/views/history" method="post">'.PHP_EOL;
-            echo '<input type="hidden" name="action" value="delhistory" />'.PHP_EOL;
-            echo "<input type=\"hidden\" name=\"queryid\" value=\"${qid}\" />".PHP_EOL;
+            echo '<pre>', \htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], \ENT_QUOTES, 'UTF-8'), '</pre>';
+            echo '<form action="' . self::SUBFOLDER . '/src/views/history" method="post">' . \PHP_EOL;
+            echo '<input type="hidden" name="action" value="delhistory" />' . \PHP_EOL;
+            echo "<input type=\"hidden\" name=\"queryid\" value=\"{$qid}\" />" . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
             unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]);
         }
     }
 
-    public function doClearHistory($confirm)
+    public function doClearHistory($confirm): void
     {
         if ($confirm) {
             $this->printHeader($this->headerTitle(), $this->scripts);
 
             // Bring to the front always
-            echo '<body onload="window.focus();">'.PHP_EOL;
+            echo '<body onload="window.focus();">' . \PHP_EOL;
 
-            echo "<h3>{$this->lang['strclearhistory']}</h3>".PHP_EOL;
-            echo "<p>{$this->lang['strconfclearhistory']}</p>".PHP_EOL;
+            echo "<h3>{$this->lang['strclearhistory']}</h3>" . \PHP_EOL;
+            echo "<p>{$this->lang['strconfclearhistory']}</p>" . \PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/history" method="post">'.PHP_EOL;
-            echo '<input type="hidden" name="action" value="clearhistory" />'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/history" method="post">' . \PHP_EOL;
+            echo '<input type="hidden" name="action" value="clearhistory" />' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
             unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
         }
     }
 
-    public function doDownloadHistory()
+    public function doDownloadHistory(): void
     {
-        header('Content-Type: application/download');
-        $datetime = date('YmdHis');
-        header("Content-Disposition: attachment; filename=history{$datetime}.sql");
+        \header('Content-Type: application/download');
+        $datetime = \date('YmdHis');
+        \header("Content-Disposition: attachment; filename=history{$datetime}.sql");
 
         foreach ($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']] as $queries) {
-            $query = rtrim($queries['query']);
+            $query = \rtrim($queries['query']);
             echo $query;
-            if (';' != substr($query, -1)) {
+
+            if (';' !== \mb_substr($query, -1)) {
                 echo ';';
             }
 
-            echo PHP_EOL;
+            echo \PHP_EOL;
         }
     }
 }

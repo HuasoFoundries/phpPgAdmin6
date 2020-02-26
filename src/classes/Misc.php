@@ -1,50 +1,82 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin;
+
+\defined('BASE_PATH') || \define(BASE_PATH, \dirname(__DIR__, 2));
+\defined('SUBFOLDER') || \define(
+    'SUBFOLDER',
+    \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
+);
+\defined('DEBUGMODE') || \define('DEBUGMODE', false);
 
 /**
  * @file
  * Class to hold various commonly used functions
  *
  * Id: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 
 /**
  * Class to hold various commonly used functions.
  *
  * Release: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Misc
 {
     use \PHPPgAdmin\Traits\HelperTrait;
     use \PHPPgAdmin\Traits\MiscTrait;
 
-    private $_connection;
-    private $_no_db_connection = false;
-    private $_reload_browser   = false;
-    private $_data;
-    private $_database;
-    private $_server_id;
-    private $_server_info;
-    private $_error_msg = '';
+    /**
+     * @var string
+     */
+    const BASE_PATH = BASE_PATH;
+    /**
+     * @var string
+     */
+    const SUBFOLDER = SUBFOLDER;
+    /**
+     * @var string
+     */
+    const DEBUGMODE = DEBUGMODE;
 
-    public $appLangFiles    = [];
-    public $appName         = '';
-    public $appVersion      = '';
-    public $form            = '';
-    public $href            = '';
+    public $appLangFiles = [];
+
+    public $appName = '';
+
+    public $appVersion = '';
+
+    public $form = '';
+
+    public $href = '';
+
     public $controller_name = 'Misc';
-    public $lang            = [];
+
+    public $lang = [];
 
     protected $container;
+
+    private $_connection;
+
+    private $_no_db_connection = false;
+
+    private $_reload_browser = false;
+
+    private $_data;
+
+    private $_database;
+
+    private $_server_id;
+
+    private $_server_info;
+
+    private $_error_msg = '';
 
     /**
      * @param \Slim\Container $container The container
@@ -75,13 +107,13 @@ class Misc
         }
 
         // Check database support is properly compiled in
-        if (!function_exists('pg_connect')) {
+        if (!\function_exists('pg_connect')) {
             $container->get('utils')->addError($this->lang['strnotloaded']);
         }
 
         // Check the version of PHP
-        if (version_compare(PHP_VERSION, $this->phpMinVer, '<')) {
-            $container->get('utils')->addError(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
+        if (\version_compare(\PHP_VERSION, $this->phpMinVer, '<')) {
+            $container->get('utils')->addError(\sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
         }
         //$this->dumpAndDie($this);
 
@@ -91,12 +123,14 @@ class Misc
     public function serverToSha()
     {
         $request_server = $this->container->requestobj->getParam('server');
-        if ($request_server === null) {
+
+        if (null === $request_server) {
             return null;
         }
-        $srv_array = explode(':', $request_server);
-        if (count($srv_array) === 3) {
-            return sha1($request_server);
+        $srv_array = \explode(':', $request_server);
+
+        if (3 === \count($srv_array)) {
+            return \sha1($request_server);
         }
 
         return $request_server;
@@ -110,14 +144,14 @@ class Misc
 
         $request_server = $this->serverToSha();
 
-        if (count($this->conf['servers']) === 1) {
+        if (1 === \count($this->conf['servers'])) {
             $info             = $this->conf['servers'][0];
-            $this->_server_id = sha1($info['host'].':'.$info['port'].':'.$info['sslmode']);
-        } elseif ($request_server !== null) {
+            $this->_server_id = \sha1($info['host'] . ':' . $info['port'] . ':' . $info['sslmode']);
+        } elseif (null !== $request_server) {
             $this->_server_id = $request_server;
-        } elseif (isset($_SESSION['webdbLogin']) && count($_SESSION['webdbLogin']) > 0) {
+        } elseif (isset($_SESSION['webdbLogin']) && 0 < \count($_SESSION['webdbLogin'])) {
             //$this->prtrace('webdbLogin', $_SESSION['webdbLogin']);
-            $this->_server_id = array_keys($_SESSION['webdbLogin'])[0];
+            $this->_server_id = \array_keys($_SESSION['webdbLogin'])[0];
         }
 
         return $this->_server_id;
@@ -161,10 +195,11 @@ class Misc
      */
     public function getConf($key = null)
     {
-        if ($key === null) {
+        if (null === $key) {
             return $this->conf;
         }
-        if (array_key_exists($key, $this->conf)) {
+
+        if (\array_key_exists($key, $this->conf)) {
             return $this->conf[$key];
         }
 
@@ -180,11 +215,12 @@ class Misc
      */
     public function printHelp($str, $help = null, $do_print = true)
     {
-        if ($help !== null) {
+        if (null !== $help) {
             $helplink = $this->getHelpLink($help);
-            $str .= '<a class="help" href="'.$helplink.'" title="'.$this->lang['strhelp'].'" target="phppgadminhelp">';
-            $str .= $this->lang['strhelpicon'].'</a>';
+            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">';
+            $str .= $this->lang['strhelpicon'] . '</a>';
         }
+
         if ($do_print) {
             echo $str;
         } else {
@@ -201,7 +237,7 @@ class Misc
      */
     public function getHelpLink($help)
     {
-        return htmlspecialchars(SUBFOLDER.'/help?help='.urlencode($help).'&server='.urlencode($this->getServerId()));
+        return \htmlspecialchars($this->getSubfolder('help?help=') . \urlencode($help) . '&server=' . \urlencode($this->getServerId()));
     }
 
     /**
@@ -290,7 +326,7 @@ class Misc
     {
         $lang = $this->lang;
 
-        if ($server_id !== null) {
+        if (null !== $server_id) {
             $this->_server_id = $server_id;
         }
         //$this->prtrace($this->_server_id);
@@ -301,7 +337,7 @@ class Misc
             return null;
         }
 
-        if ($this->_data === null) {
+        if (null === $this->_data) {
             try {
                 $_connection = $this->getConnection($database, $this->_server_id);
             } catch (\Exception $e) {
@@ -325,14 +361,14 @@ class Misc
 
             //$this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
 
-            if ($_type === null) {
-                $errormsg = sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer);
+            if (null === $_type) {
+                $errormsg = \sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer);
                 $this->container->utils->addError($errormsg);
                 $this->setErrorMsg($errormsg);
 
                 return null;
             }
-            $_type = '\PHPPgAdmin\Database\\'.$_type;
+            $_type = '\PHPPgAdmin\Database\\' . $_type;
 
             //$this->prtrace('driver:', $_type);
 
@@ -357,13 +393,13 @@ class Misc
             }
         }
 
-        if ($this->_no_db_connection === false &&
-            $this->getDatabase() !== null &&
+        if (false === $this->_no_db_connection &&
+            null !== $this->getDatabase() &&
             isset($_REQUEST['schema'])
         ) {
             $status = $this->_data->setSchema($_REQUEST['schema']);
 
-            if ($status != 0) {
+            if (0 !== $status) {
                 $this->container->utils->addError($this->lang['strbadschema']);
                 $this->setErrorMsg($this->lang['strbadschema']);
 
@@ -378,8 +414,8 @@ class Misc
     {
         $lang = $this->lang;
 
-        if ($this->_connection === null) {
-            if ($server_id !== null) {
+        if (null === $this->_connection) {
+            if (null !== $server_id) {
                 $this->_server_id = $server_id;
             }
             $server_info     = $this->getServerInfo($this->_server_id);
@@ -397,7 +433,7 @@ class Misc
                 ];
 
                 if (isset($server_info['username']) &&
-                    array_key_exists(strtolower($server_info['username']), $bad_usernames)
+                    \array_key_exists(\mb_strtolower($server_info['username']), $bad_usernames)
                 ) {
                     $msg = $lang['strlogindisallowed'];
 
@@ -405,7 +441,7 @@ class Misc
                 }
 
                 if (!isset($server_info['password']) ||
-                    $server_info['password'] == ''
+                    '' === $server_info['password']
                 ) {
                     $msg = $lang['strlogindisallowed'];
 
@@ -439,9 +475,9 @@ class Misc
      */
     public function getServerInfo($server_id = null)
     {
-        if ($server_id !== null) {
+        if (null !== $server_id) {
             $this->_server_id = $server_id;
-        } elseif ($this->_server_info !== null) {
+        } elseif (null !== $this->_server_info) {
             return $this->_server_info;
         }
 
@@ -454,8 +490,8 @@ class Misc
 
         // Otherwise, look for it in the conf file
         foreach ($this->conf['servers'] as $idx => $info) {
-            $server_string = $info['host'].':'.$info['port'].':'.$info['sslmode'];
-            $server_sha    = sha1($server_string);
+            $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
+            $server_sha    = \sha1($server_string);
 
             if ($this->_server_id === $server_string ||
                 $this->_server_id === $server_sha
@@ -474,7 +510,7 @@ class Misc
             }
         }
 
-        if ($server_id === null) {
+        if (null === $server_id) {
             $this->_server_info = null;
 
             return $this->_server_info;
@@ -494,20 +530,20 @@ class Misc
      * @param mixed       $value     the new value, or null to unset the parameter
      * @param null|string $server_id the server identifier, or null for current server
      */
-    public function setServerInfo($key, $value, $server_id = null)
+    public function setServerInfo($key, $value, $server_id = null): void
     {
-        if ($server_id === null) {
+        if (null === $server_id) {
             $server_id = $this->container->requestobj->getParam('server');
         }
 
-        if ($key === null) {
-            if ($value === null) {
+        if (null === $key) {
+            if (null === $value) {
                 unset($_SESSION['webdbLogin'][$server_id]);
             } else {
                 $_SESSION['webdbLogin'][$server_id] = $value;
             }
         } else {
-            if ($value === null) {
+            if (null === $value) {
                 unset($_SESSION['webdbLogin'][$server_id][$key]);
             } else {
                 $_SESSION['webdbLogin'][$server_id][$key] = $value;
@@ -517,19 +553,19 @@ class Misc
 
     public function getDatabase($database = '')
     {
-        if ($this->_server_id === null && !isset($_REQUEST['database'])) {
+        if (null === $this->_server_id && !isset($_REQUEST['database'])) {
             return null;
         }
 
         $server_info = $this->getServerInfo($this->_server_id);
 
-        if ($this->_server_id !== null &&
+        if (null !== $this->_server_id &&
             isset($server_info['useonlydefaultdb']) &&
-            $server_info['useonlydefaultdb'] === true &&
+            true === $server_info['useonlydefaultdb'] &&
             isset($server_info['defaultdb'])
         ) {
             $this->_database = $server_info['defaultdb'];
-        } elseif ($database !== '') {
+        } elseif ('' !== $database) {
             $this->_database = $database;
         } elseif (isset($_REQUEST['database'])) {
             // Connect to the current database
@@ -556,7 +592,8 @@ class Misc
         $data = $this->getDatabaseAccessor();
 
         $status = $data->setSchema($schema);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             return $status;
         }
 
@@ -608,17 +645,19 @@ class Misc
         $database = $this->container->database || isset($_REQUEST['database']) ? $_REQUEST['database'] : null;
         $schema   = $this->container->schema || isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null;
 
-        if ($server && $exclude_from !== 'server') {
-            $href[] = 'server='.urlencode($server);
-        }
-        if ($database && $exclude_from !== 'database') {
-            $href[] = 'database='.urlencode($database);
-        }
-        if ($schema && $exclude_from !== 'schema') {
-            $href[] = 'schema='.urlencode($schema);
+        if ($server && 'server' !== $exclude_from) {
+            $href[] = 'server=' . \urlencode($server);
         }
 
-        $this->href = htmlentities(implode('&', $href));
+        if ($database && 'database' !== $exclude_from) {
+            $href[] = 'database=' . \urlencode($database);
+        }
+
+        if ($schema && 'schema' !== $exclude_from) {
+            $href[] = 'schema=' . \urlencode($schema);
+        }
+
+        $this->href = \htmlentities(\implode('&', $href));
 
         return $this->href;
     }
@@ -629,17 +668,19 @@ class Misc
     public function setForm()
     {
         $form = [];
+
         if ($this->container->server) {
-            $form[] = '<input type="hidden" name="server" value="'.htmlspecialchars($this->container->server).'" />';
+            $form[] = '<input type="hidden" name="server" value="' . \htmlspecialchars($this->container->server) . '" />';
         }
+
         if ($this->container->database) {
-            $form[] = '<input type="hidden" name="database" value="'.htmlspecialchars($this->container->database).'" />';
+            $form[] = '<input type="hidden" name="database" value="' . \htmlspecialchars($this->container->database) . '" />';
         }
 
         if ($this->container->schema) {
-            $form[] = '<input type="hidden" name="schema" value="'.htmlspecialchars($this->container->schema).'" />';
+            $form[] = '<input type="hidden" name="schema" value="' . \htmlspecialchars($this->container->schema) . '" />';
         }
-        $this->form = implode("\n", $form);
+        $this->form = \implode("\n", $form);
 
         return $this->form;
     }
@@ -650,15 +691,16 @@ class Misc
      *
      * @param mixed $var The variable to strip (passed by reference)
      */
-    public function stripVar(&$var)
+    public function stripVar(&$var): void
     {
-        if (is_array($var)) {
+        if (\is_array($var)) {
             foreach ($var as $k => $v) {
                 $this->stripVar($var[$k]);
 
                 /* magic_quotes_gpc escape keys as well ...*/
-                if (is_string($k)) {
-                    $ek = stripslashes($k);
+                if (\is_string($k)) {
+                    $ek = \stripslashes($k);
+
                     if ($ek !== $k) {
                         $var[$ek] = $var[$k];
                         unset($var[$k]);
@@ -666,7 +708,7 @@ class Misc
                 }
             }
         } else {
-            $var = stripslashes($var);
+            $var = \stripslashes($var);
         }
     }
 
@@ -685,16 +727,16 @@ class Misc
         // that the parameter represents. Or false if $strIniSize is unparseable.
         $a_IniParts = [];
 
-        if (!is_string($strIniSize)) {
+        if (!\is_string($strIniSize)) {
             return false;
         }
 
-        if (!preg_match('/^(\d+)([bkm]*)$/i', $strIniSize, $a_IniParts)) {
+        if (!\preg_match('/^(\d+)([bkm]*)$/i', $strIniSize, $a_IniParts)) {
             return false;
         }
 
         $nSize   = (float) $a_IniParts[1];
-        $strUnit = strtolower($a_IniParts[2]);
+        $strUnit = \mb_strtolower($a_IniParts[2]);
 
         switch ($strUnit) {
             case 'm':
@@ -710,15 +752,18 @@ class Misc
     public function getRequestVars($subject = '')
     {
         $v = [];
+
         if (!empty($subject)) {
             $v['subject'] = $subject;
         }
 
-        if ($this->_server_id !== null && $subject != 'root') {
+        if (null !== $this->_server_id && 'root' !== $subject) {
             $v['server'] = $this->_server_id;
-            if ($this->_database !== null && $subject != 'server') {
+
+            if (null !== $this->_database && 'server' !== $subject) {
                 $v['database'] = $this->_database;
-                if (isset($_REQUEST['schema']) && $subject != 'database') {
+
+                if (isset($_REQUEST['schema']) && 'database' !== $subject) {
                     $v['schema'] = $_REQUEST['schema'];
                 }
             }
@@ -729,34 +774,36 @@ class Misc
 
     public function icon($icon)
     {
-        if (!is_string($icon)) {
+        if (!\is_string($icon)) {
             return '';
         }
+
         $theme        = $this->conf['theme'];
         $path         = 'assets/images/themes';
-        $default_icon = sprintf('%s/%s/default/DisconnectedServer.png', SUBFOLDER, $path);
-        if (is_readable(sprintf('%s/%s/%s/%s.png', \BASE_PATH, $path, $theme, $icon))) {
-            return sprintf('%s/%s/%s/%s.png', \SUBFOLDER, $path, $theme, $icon);
+        $default_icon = \sprintf('%s/%s/default/DisconnectedServer.png', self::SUBFOLDER, $path);
+
+        if (\is_readable(\sprintf('%s/%s/%s/%s.png', self::BASE_PATH, $path, $theme, $icon))) {
+            return \sprintf('%s/%s/%s/%s.png', self::SUBFOLDER, $path, $theme, $icon);
         }
 
-        if (is_readable(sprintf('%s/%s/%s/%s.gif', \BASE_PATH, $path, $theme, $icon))) {
-            return sprintf('%s/%s/%s/%s.gif', \SUBFOLDER, $path, $theme, $icon);
+        if (\is_readable(\sprintf('%s/%s/%s/%s.gif', self::BASE_PATH, $path, $theme, $icon))) {
+            return \sprintf('%s/%s/%s/%s.gif', self::SUBFOLDER, $path, $theme, $icon);
         }
 
-        if (is_readable(sprintf('%s/%s/%s/%s.ico', \BASE_PATH, $path, $theme, $icon))) {
-            return sprintf('%s/%s/%s/%s.ico', \SUBFOLDER, $path, $theme, $icon);
+        if (\is_readable(\sprintf('%s/%s/%s/%s.ico', self::BASE_PATH, $path, $theme, $icon))) {
+            return \sprintf('%s/%s/%s/%s.ico', self::SUBFOLDER, $path, $theme, $icon);
         }
 
-        if (is_readable(sprintf('%s/%s/default/%s.png', \BASE_PATH, $path, $icon))) {
-            return sprintf('%s/%s/default/%s.png', \SUBFOLDER, $path, $icon);
+        if (\is_readable(\sprintf('%s/%s/default/%s.png', self::BASE_PATH, $path, $icon))) {
+            return \sprintf('%s/%s/default/%s.png', self::SUBFOLDER, $path, $icon);
         }
 
-        if (is_readable(sprintf('%s/%s/default/%s.gif', \BASE_PATH, $path, $icon))) {
-            return sprintf('%s/%s/default/%s.gif', \SUBFOLDER, $path, $icon);
+        if (\is_readable(\sprintf('%s/%s/default/%s.gif', self::BASE_PATH, $path, $icon))) {
+            return \sprintf('%s/%s/default/%s.gif', self::SUBFOLDER, $path, $icon);
         }
 
-        if (is_readable(sprintf('%s/%s/default/%s.ico', \BASE_PATH, $path, $icon))) {
-            return sprintf('%s/%s/default/%s.ico', \SUBFOLDER, $path, $icon);
+        if (\is_readable(\sprintf('%s/%s/default/%s.ico', self::BASE_PATH, $path, $icon))) {
+            return \sprintf('%s/%s/default/%s.ico', self::SUBFOLDER, $path, $icon);
         }
 
         return $default_icon;
@@ -774,18 +821,18 @@ class Misc
         //$data = $this->getDatabaseAccessor();
         $lang = $this->lang;
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if ('WIN' === \mb_strtoupper(\mb_substr(\PHP_OS, 0, 3))) {
             // Due to annoying PHP bugs, shell arguments cannot be escaped
             // (command simply fails), so we cannot allow complex objects
             // to be dumped.
-            if (preg_match('/^[_.[:alnum:]]+$/', $str)) {
+            if (\preg_match('/^[_.[:alnum:]]+$/', $str)) {
                 return $str;
             }
 
             return $this->halt($lang['strcannotdumponwindows']);
         }
 
-        return escapeshellarg($str);
+        return \escapeshellarg($str);
     }
 
     /**
@@ -799,13 +846,13 @@ class Misc
     {
         $data = $this->getDatabaseAccessor();
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if ('WIN' === \mb_strtoupper(\mb_substr(\PHP_OS, 0, 3))) {
             $data->fieldClean($str);
 
-            return '"'.$str.'"';
+            return '"' . $str . '"';
         }
 
-        return escapeshellcmd($str);
+        return \escapeshellcmd($str);
     }
 
     /**
@@ -814,15 +861,15 @@ class Misc
      *
      * @param string $script the SQL script to save
      */
-    public function saveScriptHistory($script)
+    public function saveScriptHistory($script): void
     {
-        list($usec, $sec) = explode(' ', microtime());
+        list($usec, $sec) = \explode(' ', \microtime());
         $time             = ((float) $usec + (float) $sec);
 
         $server   = $this->container->server ? $this->container->server : $_REQUEST['server'];
         $database = $this->container->database ? $this->container->database : $_REQUEST['database'];
 
-        $_SESSION['history'][$server][$database]["${time}"] = [
+        $_SESSION['history'][$server][$database]["{$time}"] = [
             'query'    => $script,
             'paginate' => !isset($_REQUEST['paginate']) ? 'f' : 't',
             'queryid'  => $time,

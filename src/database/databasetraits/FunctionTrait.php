@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -83,11 +86,11 @@ trait FunctionTrait
         $temp = [];
 
         // Volatility
-        if ($f['provolatile'] == 'v') {
+        if ('v' === $f['provolatile']) {
             $temp[] = 'VOLATILE';
-        } elseif ($f['provolatile'] == 'i') {
+        } elseif ('i' === $f['provolatile']) {
             $temp[] = 'IMMUTABLE';
-        } elseif ($f['provolatile'] == 's') {
+        } elseif ('s' === $f['provolatile']) {
             $temp[] = 'STABLE';
         } else {
             return -1;
@@ -95,6 +98,7 @@ trait FunctionTrait
 
         // Null handling
         $f['proisstrict'] = $this->phpBool($f['proisstrict']);
+
         if ($f['proisstrict']) {
             $temp[] = 'RETURNS NULL ON NULL INPUT';
         } else {
@@ -103,6 +107,7 @@ trait FunctionTrait
 
         // Security
         $f['prosecdef'] = $this->phpBool($f['prosecdef']);
+
         if ($f['prosecdef']) {
             $temp[] = 'SECURITY DEFINER';
         } else {
@@ -152,7 +157,8 @@ trait FunctionTrait
     ) {
         // Begin a transaction
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
@@ -160,7 +166,8 @@ trait FunctionTrait
 
         // Replace the existing function
         $status = $this->createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, true);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return $status;
@@ -172,10 +179,11 @@ trait FunctionTrait
         // Rename the function, if necessary
         $this->fieldClean($newname);
         /* $funcname is escaped in createFunction */
-        if ($funcname != $newname) {
+        if ($funcname !== $newname) {
             $sql    = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) RENAME TO \"{$newname}\"";
             $status = $this->execute($sql);
-            if ($status != 0) {
+
+            if (0 !== $status) {
                 $this->rollbackTransaction();
 
                 return -5;
@@ -187,10 +195,12 @@ trait FunctionTrait
         // Alter the owner, if necessary
         if ($this->hasFunctionAlterOwner()) {
             $this->fieldClean($newown);
-            if ($funcown != $newown) {
+
+            if ($funcown !== $newown) {
                 $sql    = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) OWNER TO \"{$newown}\"";
                 $status = $this->execute($sql);
-                if ($status != 0) {
+
+                if (0 !== $status) {
                     $this->rollbackTransaction();
 
                     return -6;
@@ -202,10 +212,11 @@ trait FunctionTrait
         if ($this->hasFunctionAlterSchema()) {
             $this->fieldClean($newschema);
             /* $funcschema is escaped in createFunction */
-            if ($funcschema != $newschema) {
+            if ($funcschema !== $newschema) {
                 $sql    = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) SET SCHEMA \"{$newschema}\"";
                 $status = $this->execute($sql);
-                if ($status != 0) {
+
+                if (0 !== $status) {
                     $this->rollbackTransaction();
 
                     return -7;
@@ -238,7 +249,8 @@ trait FunctionTrait
     {
         // Begin a transaction
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
@@ -254,33 +266,36 @@ trait FunctionTrait
         $this->fieldClean($f_schema);
 
         $sql = 'CREATE';
+
         if ($replace) {
             $sql .= ' OR REPLACE';
         }
 
         $sql .= " FUNCTION \"{$f_schema}\".\"{$funcname}\" (";
 
-        if ($args != '') {
+        if ('' !== $args) {
             $sql .= $args;
         }
 
         // For some reason, the returns field cannot have quotes...
         $sql .= ') RETURNS ';
+
         if ($setof) {
             $sql .= 'SETOF ';
         }
 
         $sql .= "{$returns} AS ";
 
-        if (is_array($definition)) {
+        if (\is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'".$definition[0]."'";
+            $sql .= "'" . $definition[0] . "'";
+
             if ($definition[1]) {
-                $sql .= ",'".$definition[1]."'";
+                $sql .= ",'" . $definition[1] . "'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'".$definition."'";
+            $sql .= "'" . $definition . "'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
@@ -290,14 +305,14 @@ trait FunctionTrait
             $sql .= " COST {$cost}";
         }
 
-        if ($rows != 0) {
+        if (0 !== $rows) {
             $sql .= " ROWS {$rows}";
         }
 
         // Add flags
         foreach ($flags as $v) {
             // Skip default flags
-            if ($v == '') {
+            if ('' === $v) {
                 continue;
             }
 
@@ -305,7 +320,8 @@ trait FunctionTrait
         }
 
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -3;
@@ -313,7 +329,8 @@ trait FunctionTrait
 
         /* set the comment */
         $status = $this->setComment('FUNCTION', "\"{$funcname}\"({$args})", null, $comment);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -4;
@@ -339,6 +356,7 @@ trait FunctionTrait
         $this->fieldClean($fn->fields['proname']);
 
         $sql = "DROP FUNCTION \"{$f_schema}\".\"{$fn->fields['proname']}\"({$fn->fields['proarguments']})";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }

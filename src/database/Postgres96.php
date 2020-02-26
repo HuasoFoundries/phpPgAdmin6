@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -12,7 +15,8 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres96 extends Postgres
 {
-    public $typIndexes    = ['BTREE', 'BRIN', 'RTREE', 'GIST', 'GIN', 'HASH', 'SP-GIST'];
+    public $typIndexes = ['BTREE', 'BRIN', 'RTREE', 'GIST', 'GIN', 'HASH', 'SP-GIST'];
+
     public $major_version = 9.6;
 
     // Administration functions
@@ -26,7 +30,7 @@ class Postgres96 extends Postgres
      */
     public function getProcesses($database = null)
     {
-        if ($database === null) {
+        if (null === $database) {
             $sql = "SELECT datid, datname, pid, usename, application_name, client_addr, state, wait_event_type, wait_event, state_change as query_start,
 					CASE
                         WHEN state='active' THEN query
@@ -79,17 +83,19 @@ class Postgres96 extends Postgres
         $this->fieldArrayClean($groups);
 
         $sql = "CREATE USER \"{$username}\"";
-        if ($password != '') {
+
+        if ('' !== $password) {
             $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
         }
 
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
-        if (is_array($groups) && sizeof($groups) > 0) {
-            $sql .= ' IN GROUP "'.join('", "', $groups).'"';
+
+        if (\is_array($groups) && 0 < \count($groups)) {
+            $sql .= ' IN GROUP "' . \implode('", "', $groups) . '"';
         }
 
-        if ($expiry != '') {
+        if ('' !== $expiry) {
             $sql .= " VALID UNTIL '{$expiry}'";
         } else {
             $sql .= " VALID UNTIL 'infinity'";

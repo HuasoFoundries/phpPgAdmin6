@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -126,7 +129,7 @@ trait DomainTrait
 
         $sql = "CREATE DOMAIN \"{$f_schema}\".\"{$domain}\" AS ";
 
-        if ($length == '') {
+        if ('' === $length) {
             $sql .= $type;
         } else {
             switch ($type) {
@@ -134,13 +137,13 @@ trait DomainTrait
                 // time zone types
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
-                    $qual = substr($type, 9);
+                    $qual = \mb_substr($type, 9);
                     $sql .= "timestamp({$length}){$qual}";
 
                     break;
                 case 'time with time zone':
                 case 'time without time zone':
-                    $qual = substr($type, 4);
+                    $qual = \mb_substr($type, 4);
                     $sql .= "time({$length}){$qual}";
 
                     break;
@@ -158,11 +161,11 @@ trait DomainTrait
             $sql .= ' NOT NULL';
         }
 
-        if ($default != '') {
+        if ('' !== $default) {
             $sql .= " DEFAULT {$default}";
         }
 
-        if ($this->hasDomainConstraints() && $check != '') {
+        if ($this->hasDomainConstraints() && '' !== $check) {
             $sql .= " CHECK ({$check})";
         }
 
@@ -187,21 +190,23 @@ trait DomainTrait
         $this->fieldClean($domowner);
 
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
         }
 
         // Default
-        if ($domdefault == '') {
+        if ('' === $domdefault) {
             $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" DROP DEFAULT";
         } else {
             $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" SET DEFAULT {$domdefault}";
         }
 
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -2;
@@ -215,7 +220,8 @@ trait DomainTrait
         }
 
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -3;
@@ -225,7 +231,8 @@ trait DomainTrait
         $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" OWNER TO \"{$domowner}\"";
 
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -4;
@@ -249,6 +256,7 @@ trait DomainTrait
         $this->fieldClean($domain);
 
         $sql = "DROP DOMAIN \"{$f_schema}\".\"{$domain}\"";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }
@@ -273,7 +281,8 @@ trait DomainTrait
         $this->fieldClean($name);
 
         $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" ADD ";
-        if ($name != '') {
+
+        if ('' !== $name) {
             $sql .= "CONSTRAINT \"{$name}\" ";
         }
 
@@ -299,6 +308,7 @@ trait DomainTrait
         $this->fieldClean($constraint);
 
         $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" DROP CONSTRAINT \"{$constraint}\"";
+
         if ($cascade) {
             $sql .= ' CASCADE';
         }

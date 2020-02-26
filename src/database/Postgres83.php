@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +14,6 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.3 support
  *
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres83 extends Postgres84
 {
@@ -30,6 +31,7 @@ class Postgres83 extends Postgres84
         'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
         'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
     ];
+
     // List of characters in acl lists and the privileges they
     // refer to.
     public $privmap = [
@@ -69,7 +71,7 @@ class Postgres83 extends Postgres84
             $clause = '';
         }
 
-        if ($currentdatabase != null) {
+        if (null !== $currentdatabase) {
             $this->clean($currentdatabase);
             $orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
         } else {
@@ -109,7 +111,7 @@ class Postgres83 extends Postgres84
     {
         $sql = '';
 
-        if ($table !== '') {
+        if ('' !== $table) {
             $this->clean($table);
             $c_schema = $this->_schema;
             $this->clean($c_schema);
@@ -228,9 +230,9 @@ class Postgres83 extends Postgres84
 			WHERE vacrelid = {$toid};");
 
         $status = -1; // ini
-        if ($rs->recordCount() and ($rs->fields['vacrelid'] == $toid)) {
+        if ($rs->recordCount() && ($rs->fields['vacrelid'] === $toid)) {
             // table exists in pg_autovacuum, UPDATE
-            $sql = sprintf(
+            $sql = \sprintf(
                 "UPDATE \"pg_catalog\".\"pg_autovacuum\" SET
 						enabled = '%s',
 						vac_base_thresh = %s,
@@ -243,7 +245,7 @@ class Postgres83 extends Postgres84
 						freeze_max_age = %s
 					WHERE vacrelid = {$toid};
 				",
-                ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
+                ('on' === $_POST['autovacuum_enabled']) ? 't' : 'f',
                 $_POST['autovacuum_vacuum_threshold'],
                 $_POST['autovacuum_vacuum_scale_factor'],
                 $_POST['autovacuum_analyze_threshold'],
@@ -256,11 +258,11 @@ class Postgres83 extends Postgres84
             $status = $this->execute($sql);
         } else {
             // table doesn't exists in pg_autovacuum, INSERT
-            $sql = sprintf(
+            $sql = \sprintf(
                 "INSERT INTO \"pg_catalog\".\"pg_autovacuum\"
 				VALUES (%s, '%s', %s, %s, %s, %s, %s, %s, %s, %s )",
                 $toid,
-                ($_POST['autovacuum_enabled'] == 'on') ? 't' : 'f',
+                ('on' === $_POST['autovacuum_enabled']) ? 't' : 'f',
                 $_POST['autovacuum_vacuum_threshold'],
                 $_POST['autovacuum_vacuum_scale_factor'],
                 $_POST['autovacuum_analyze_threshold'],
@@ -326,32 +328,32 @@ class Postgres83 extends Postgres84
     ) {
         $sql = '';
         /* vars are cleaned in _alterSequence */
-        if (!empty($increment) && ($increment != $seqrs->fields['increment_by'])) {
+        if (!empty($increment) && ($increment !== $seqrs->fields['increment_by'])) {
             $sql .= " INCREMENT {$increment}";
         }
 
-        if (!empty($minvalue) && ($minvalue != $seqrs->fields['min_value'])) {
+        if (!empty($minvalue) && ($minvalue !== $seqrs->fields['min_value'])) {
             $sql .= " MINVALUE {$minvalue}";
         }
 
-        if (!empty($maxvalue) && ($maxvalue != $seqrs->fields['max_value'])) {
+        if (!empty($maxvalue) && ($maxvalue !== $seqrs->fields['max_value'])) {
             $sql .= " MAXVALUE {$maxvalue}";
         }
 
-        if (!empty($restartvalue) && ($restartvalue != $seqrs->fields['last_value'])) {
+        if (!empty($restartvalue) && ($restartvalue !== $seqrs->fields['last_value'])) {
             $sql .= " RESTART {$restartvalue}";
         }
 
-        if (!empty($cachevalue) && ($cachevalue != $seqrs->fields['cache_value'])) {
+        if (!empty($cachevalue) && ($cachevalue !== $seqrs->fields['cache_value'])) {
             $sql .= " CACHE {$cachevalue}";
         }
 
         // toggle cycle yes/no
-        if (!is_null($cycledvalue)) {
-            $sql .= (!$cycledvalue ? ' NO ' : '').' CYCLE';
+        if (null !== $cycledvalue) {
+            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
         }
 
-        if ($sql != '') {
+        if ('' !== $sql) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" {$sql}";
@@ -378,7 +380,7 @@ class Postgres83 extends Postgres84
         // careful to avoid this generally as changing owner is a
         // superuser only function.
         /* vars are cleaned in _alterSequence */
-        if (!empty($owner) && ($seqrs->fields['seqowner'] != $owner)) {
+        if (!empty($owner) && ($seqrs->fields['seqowner'] !== $owner)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             $sql = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" OWNER TO \"{$owner}\"";

@@ -1,7 +1,9 @@
+
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 class ContainerTest extends \Codeception\Test\Unit
@@ -15,9 +17,11 @@ class ContainerTest extends \Codeception\Test\Unit
     protected function _before()
     {
         $Helper          = $this->getModule('\Helper\Unit');
-        $this->container = $Helper->getContainer();
+        $this->container = $Helper::getContainer();
+        //dump($this->container->environment->all());
+        //\Codeception\Util\Debug::debug($container);
+
         $this->container->misc->setNoDBConnection(true);
-        //\Codeception\Util\Debug::debug('BASE_PATH is ' . \BASE_PATH);
     }
 
     protected function _after()

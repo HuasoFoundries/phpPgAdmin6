@@ -1,35 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
  */
 
 // This section is made to be able to parse requests coming from PHP Builtin webserver
-if (PHP_SAPI === 'cli-server') {
+if (\PHP_SAPI === 'cli-server') {
     $will_redirect = false;
-    // @todo is PHP_SELF is not set, chances are REQUEST_URI won't either
-    $req_uri = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : $_SERVER['REQUEST_URI'];
-    if (substr($req_uri, 0, 10) === '/index.php') {
+    /** @todo is PHP_SELF is not set, chances are REQUEST_URI won't either */
+    $req_uri = $_SERVER['PHP_SELF'] ?? $_SERVER['REQUEST_URI'];
+
+    if ('/index.php' === \mb_substr($req_uri, 0, 10)) {
         $will_redirect = true;
-        $req_uri       = substr($req_uri, 10);
+        $req_uri = \mb_substr($req_uri, 10);
     }
-    $filePath     = realpath(ltrim($req_uri, '/'));
-    $new_location = 'Location: http://'.$_SERVER['HTTP_HOST'].$req_uri;
+    $filePath = \realpath(\ltrim($req_uri, '/'));
+    $new_location = 'Location: http://' . $_SERVER['HTTP_HOST'] . $req_uri;
 
     if ($filePath && // 1. check that filepath is set
-        is_readable($filePath) && // 2. and references a readable file/folder
-        strpos($filePath, BASE_PATH.DIRECTORY_SEPARATOR) === 0 && // 3. And is inside this folder
-        $filePath != BASE_PATH.DIRECTORY_SEPARATOR.'index.php' && // 4. discard circular references to index.php
-        substr(basename($filePath), 0, 1) != '.' // 5. don't serve dotfiles
+        \is_readable($filePath) && // 2. and references a readable file/folder
+        0 === \mb_strpos($filePath, BASE_PATH . \DIRECTORY_SEPARATOR) && // 3. And is inside this folder
+        BASE_PATH . \DIRECTORY_SEPARATOR . 'index.php' !== $filePath && // 4. discard circular references to index.php
+        '.' !== \mb_substr(\basename($filePath), 0, 1) // 5. don't serve dotfiles
     ) {
-        if (strtolower(substr($filePath, -4)) == '.php') {
+        if ('.php' === \mb_strtolower(\mb_substr($filePath, -4))) {
             // php file; serve through interpreter
             include $filePath;
 
             return;
         }
+
         if ($will_redirect) {
-            header($new_location, true, 301);
+            \header($new_location, true, 301);
 
             return;
         }
@@ -38,4 +42,4 @@ if (PHP_SAPI === 'cli-server') {
     }
 }
 
-require_once __DIR__.'/src/router.php';
+require_once __DIR__ . '/src/router.php';

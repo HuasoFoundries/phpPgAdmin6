@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -17,8 +17,9 @@ class ReplaceDecorator extends Decorator
     public function value($fields)
     {
         $str = $this->s;
+
         foreach ($this->p as $k => $v) {
-            $str = str_replace($k, Decorator::get_sanitized_value($v, $fields), $str);
+            $str = \str_replace($k, Decorator::get_sanitized_value($v, $fields), $str);
         }
 
         return $str;

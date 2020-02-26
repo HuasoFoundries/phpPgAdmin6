@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -13,8 +16,6 @@ namespace PHPPgAdmin\Database;
 
 /**
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $.
- *
- * @package PHPPgAdmin
  */
 class Postgres91 extends Postgres92
 {
@@ -31,7 +32,7 @@ class Postgres91 extends Postgres92
      */
     public function getProcesses($database = null)
     {
-        if ($database === null) {
+        if (null === $database) {
             $sql = 'SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
 				FROM pg_catalog.pg_stat_activity
 				ORDER BY datname, usename, procpid';

@@ -1,28 +1,44 @@
 selenium/tests/config.inc.php
 tests/selenium/config.test.php
 *sublime*
-.php.tools.ini
+
+
+
+
+
+###> deploy files
+fabfile*
+phppga
 .*.sh
+
+
+###> editor specific files
+/.idea/*
+sublime-*
+.php.tools.ini
+
+
+###> temp and generated files
+temp/sessions/*
+playground
+*.log
+tests/_output
+
+###> Vendor files
+node_modules
+vendor
+!assets/vendor
+
+###> Config files other tan examples
+config.yml
+.configs/
 sftp-config*
 config.*.php*
 !config.inc.php-dist
 !tests/config*
 
-vendor
-!assets/vendor
 
-*.log
-fabfile*
-/.idea/*
-phppga
+###> cache for linters and fixers
+.build
 .php_cs.cache
-
-playground
-node_modules
-
-temp/sessions/*
-
-config.inc.php
-config.yml
-tests/_output
-debug.*.php
+.phpunit.result.cache

@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -18,6 +21,7 @@ class XHtmlSelect extends XHtmlElement
         parent::__construct();
 
         $this->set_attribute('name', $name);
+
         if ($multiple) {
             $this->set_attribute('multiple', 'multiple');
         }
@@ -27,11 +31,11 @@ class XHtmlSelect extends XHtmlElement
         }
     }
 
-    public function set_data(&$data, $delim = ',')
+    public function set_data(&$data, $delim = ','): void
     {
-        switch (gettype($data)) {
+        switch (\gettype($data)) {
             case 'string':
-                $this->_data = explode($delim, $data);
+                $this->_data = \explode($delim, $data);
 
                 break;
             case 'array':

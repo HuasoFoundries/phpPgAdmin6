@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,19 +14,17 @@ namespace PHPPgAdmin\Database;
  * Class to represent a database connection
  *
  * Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Connection
 {
     use \PHPPgAdmin\Traits\HelperTrait;
 
     public $conn;
+
     public $platform = 'UNKNOWN';
-    // The backend platform.  Set to UNKNOWN by default.
-    private $_connection_result;
 
     protected $container;
+
     protected $server_info;
 
     protected $version_dictionary = [
@@ -47,6 +48,9 @@ class Connection
         '7.5' => 'Postgres80',
         '7.4' => 'Postgres74',
     ];
+
+    // The backend platform.  Set to UNKNOWN by default.
+    private $_connection_result;
 
     /**
      * Creates a new connection.  Will actually make a database connection.
@@ -73,9 +77,9 @@ class Connection
         $this->conn->setFetchMode($fetchMode);
 
         // Ignore host if null
-        if ($host === null || $host == '') {
-            if ($port !== null && $port != '') {
-                $pghost = ':'.$port;
+        if (null === $host || '' === $host) {
+            if (null !== $port && '' !== $port) {
+                $pghost = ':' . $port;
             } else {
                 $pghost = '';
             }
@@ -84,9 +88,9 @@ class Connection
         }
 
         // Add sslmode to $pghost as needed
-        if (($sslmode == 'disable') || ($sslmode == 'allow') || ($sslmode == 'prefer') || ($sslmode == 'require')) {
-            $pghost .= ':'.$sslmode;
-        } elseif ($sslmode == 'legacy') {
+        if (('disable' === $sslmode) || ('allow' === $sslmode) || ('prefer' === $sslmode) || ('require' === $sslmode)) {
+            $pghost .= ':' . $sslmode;
+        } elseif ('legacy' === $sslmode) {
             $pghost .= ' requiressl=1';
         }
 
@@ -119,7 +123,7 @@ class Connection
      */
     public function getDriver(&$description)
     {
-        $v = pg_version($this->conn->_connectionID);
+        $v = \pg_version($this->conn->_connectionID);
 
         //\PhpConsole\Handler::getInstance()->debug($v, 'pg_version');
 
@@ -135,11 +139,12 @@ class Connection
             $field = $adodb->selectField($sql, 'version');
 
             // Check the platform, if it's mingw, set it
-            if (preg_match('/ mingw /i', $field)) {
+            if (\preg_match('/ mingw /i', $field)) {
                 $this->platform = 'MINGW';
             }
 
-            $params = explode(' ', $field);
+            $params = \explode(' ', $field);
+
             if (!isset($params[1])) {
                 return -3;
             }
@@ -149,23 +154,24 @@ class Connection
 
         $description = "PostgreSQL {$version}";
 
-        $version_parts = explode('.', $version);
-        if ((int) ($version_parts[0] >= 10)) {
+        $version_parts = \explode('.', $version);
+
+        if ((int) (10 <= $version_parts[0])) {
             $major_version = $version_parts[0];
         } else {
-            $major_version = implode('.', [$version_parts[0], $version_parts[1]]);
+            $major_version = \implode('.', [$version_parts[0], $version_parts[1]]);
         }
 
         //$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), 'version' => $version, 'major_version' => $major_version]);
         // Detect version and choose appropriate database driver
-        if (array_key_exists($major_version, $this->version_dictionary)) {
+        if (\array_key_exists($major_version, $this->version_dictionary)) {
             return $this->version_dictionary[$major_version];
         }
 
         /* All <7.4 versions are not supported */
         // if major version is 7 or less and wasn't cought in the
         // switch/case block, we have an unsupported version.
-        if ((int) substr($version, 0, 1) < 8) {
+        if (8 > (int) \mb_substr($version, 0, 1)) {
             return null;
         }
 
@@ -180,6 +186,6 @@ class Connection
      */
     public function getLastError()
     {
-        return pg_last_error($this->conn->_connectionID);
+        return \pg_last_error($this->conn->_connectionID);
     }
 }

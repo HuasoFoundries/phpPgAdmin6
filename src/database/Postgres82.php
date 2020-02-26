@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Database;
@@ -11,8 +14,6 @@ namespace PHPPgAdmin\Database;
  * PostgreSQL 8.2 support
  *
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $
- *
- * @package PHPPgAdmin
  */
 class Postgres82 extends Postgres83
 {
@@ -84,12 +85,13 @@ class Postgres82 extends Postgres83
     public function alterSequenceName($seqrs, $name)
     {
         /* vars are cleaned in _alterSequence */
-        if (!empty($name) && ($seqrs->fields['seqname'] != $name)) {
+        if (!empty($name) && ($seqrs->fields['seqname'] !== $name)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             $sql    = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
-            if ($status == 0) {
+
+            if (0 === $status) {
                 $seqrs->fields['seqname'] = $name;
             } else {
                 return $status;
@@ -113,12 +115,13 @@ class Postgres82 extends Postgres83
     {
         // Rename (only if name has changed)
         /* $vwrs and $name are cleaned in _alterView */
-        if (!empty($name) && ($name != $vwrs->fields['relname'])) {
+        if (!empty($name) && ($name !== $vwrs->fields['relname'])) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             $sql    = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
-            if ($status == 0) {
+
+            if (0 === $status) {
                 $vwrs->fields['relname'] = $name;
             } else {
                 return $status;
@@ -223,7 +226,8 @@ class Postgres82 extends Postgres83
     {
         // Begin a transaction
         $status = $this->beginTransaction();
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
@@ -237,33 +241,36 @@ class Postgres82 extends Postgres83
         $this->arrayClean($flags);
 
         $sql = 'CREATE';
+
         if ($replace) {
             $sql .= ' OR REPLACE';
         }
 
         $sql .= " FUNCTION \"{$f_schema}\".\"{$funcname}\" (";
 
-        if ($args != '') {
+        if ('' !== $args) {
             $sql .= $args;
         }
 
         // For some reason, the returns field cannot have quotes...
         $sql .= ') RETURNS ';
+
         if ($setof) {
             $sql .= 'SETOF ';
         }
 
         $sql .= "{$returns} AS ";
 
-        if (is_array($definition)) {
+        if (\is_array($definition)) {
             $this->arrayClean($definition);
-            $sql .= "'".$definition[0]."'";
+            $sql .= "'" . $definition[0] . "'";
+
             if ($definition[1]) {
-                $sql .= ",'".$definition[1]."'";
+                $sql .= ",'" . $definition[1] . "'";
             }
         } else {
             $this->clean($definition);
-            $sql .= "'".$definition."'";
+            $sql .= "'" . $definition . "'";
         }
 
         $sql .= " LANGUAGE \"{$language}\"";
@@ -271,7 +278,7 @@ class Postgres82 extends Postgres83
         // Add flags
         foreach ($flags as $v) {
             // Skip default flags
-            if ($v == '') {
+            if ('' === $v) {
                 continue;
             }
 
@@ -279,7 +286,8 @@ class Postgres82 extends Postgres83
         }
 
         $status = $this->execute($sql);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -3;
@@ -287,7 +295,8 @@ class Postgres82 extends Postgres83
 
         /* set the comment */
         $status = $this->setComment('FUNCTION', "\"{$funcname}\"({$args})", null, $comment);
-        if ($status != 0) {
+
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -4;

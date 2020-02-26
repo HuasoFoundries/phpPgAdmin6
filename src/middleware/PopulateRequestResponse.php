@@ -1,5 +1,11 @@
 <?php
 
+// declare(strict_types=1);
+
+/**
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ */
+
 namespace PHPPgAdmin\Middleware;
 
 /**
@@ -28,6 +34,7 @@ class PopulateRequestResponse extends Middleware
         $misc->setForm();
 
         $container->view->offsetSet('METHOD', $request->getMethod());
+
         if ($request->getAttribute('route')) {
             $container->view->offsetSet('subject', $request->getAttribute('route')->getArgument('subject'));
         }
@@ -42,7 +49,7 @@ class PopulateRequestResponse extends Middleware
         $viewparams = [];
 
         foreach ($params as $key => $value) {
-            if (is_scalar($value)) {
+            if (\is_scalar($value)) {
                 $viewparams[$key] = $value;
             }
         }
@@ -55,12 +62,12 @@ class PopulateRequestResponse extends Middleware
 
         // remove tabs and linebreaks from query
         if (isset($params['query'])) {
-            $viewparams['query'] = str_replace(["\r", "\n", "\t"], ' ', $params['query']);
+            $viewparams['query'] = \str_replace(["\r", "\n", "\t"], ' ', $params['query']);
         }
         $container->view->offsetSet('params', $viewparams);
         $container->view->offsetSet('in_test', $in_test);
 
-        if (count($container['errors']) > 0) {
+        if (0 < \count($container['errors'])) {
             return ($container->haltHandler)($container->requestobj, $container->responseobj, $container['errors'], 412);
         }
 

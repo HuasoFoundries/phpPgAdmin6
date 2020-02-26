@@ -1,4 +1,11 @@
 <?php
+
+// declare(strict_types=1);
+
+/**
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ */
+
 require_once __DIR__ . '/lib.inc.php';
 $app->get('/status', function (
     /* @scrutinizer ignore-unused */
@@ -30,10 +37,10 @@ $app->post('/redirect/server', function (
     $loginShared   = $request->getParsedBodyParam('loginShared');
     $loginServer   = $request->getParsedBodyParam('loginServer');
     $loginUsername = $request->getParsedBodyParam('loginUsername');
-    $loginPassword = $request->getParsedBodyParam('loginPassword_' . md5($loginServer));
+    $loginPassword = $request->getParsedBodyParam('loginPassword_' . \md5($loginServer));
 
     // If login action is set, then set session variables
-    if ((bool) $loginServer && (bool) $loginUsername && $loginPassword !== null) {
+    if ((bool) $loginServer && (bool) $loginUsername && null !== $loginPassword) {
         $_server_info = $this->misc->getServerInfo($loginServer);
 
         $_server_info['username'] = $loginUsername;
@@ -43,14 +50,14 @@ $app->post('/redirect/server', function (
 
         $data = $misc->getDatabaseAccessor();
 
-        if ($data === null) {
+        if (null === $data) {
             $login_controller = new \PHPPgAdmin\Controller\LoginController($this, true);
             $body->write($login_controller->doLoginForm($misc->getErrorMsg()));
 
             return $response;
         }
         // Check for shared credentials
-        if ($loginShared !== null) {
+        if (null !== $loginShared) {
             $_SESSION['sharedUsername'] = $loginUsername;
             $_SESSION['sharedPassword'] = $loginPassword;
         }
@@ -58,6 +65,7 @@ $app->post('/redirect/server', function (
         $misc->setReloadBrowser(true);
 
         $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
+
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
     $_server_info = $this->misc->getServerInfo();
@@ -79,6 +87,7 @@ $app->get('/redirect[/{subject}]', function (
 ) {
     $subject        = (isset($args['subject'])) ? $args['subject'] : 'root';
     $destinationurl = $this->utils->getDestinationWithLastTab($subject);
+
     return $response->withStatus(302)->withHeader('Location', $destinationurl);
 });
 
@@ -91,24 +100,25 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     $args
 ) {
     $subject = $args['subject'];
-    if ($subject === 'server') {
+
+    if ('server' === $subject) {
         $subject = 'servers';
     }
     $_server_info = $this->misc->getServerInfo();
 
-    $safe_subjects = ($subject === 'servers' || $subject === 'intro' || $subject === 'browser');
+    $safe_subjects = ('servers' === $subject || 'intro' === $subject || 'browser' === $subject);
 
-    if ($this->misc->getServerId() === null && !$safe_subjects) {
+    if (null === $this->misc->getServerId() && !$safe_subjects) {
         return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/servers');
     }
 
-    if (!isset($_server_info['username']) && $subject !== 'login' && !$safe_subjects) {
+    if (!isset($_server_info['username']) && 'login' !== $subject && !$safe_subjects) {
         $destinationurl = SUBFOLDER . '/src/views/login?server=' . $this->misc->getServerId();
 
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
 
-    $className  = '\PHPPgAdmin\Controller\\' . ucfirst($subject) . 'Controller';
+    $className  = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     $controller = new $className($this);
 
     return $controller->render();
@@ -133,7 +143,7 @@ $app->get('/{subject:\w+}', function (
         $subject = 'login';
     }
 
-    if ($subject === 'login' && $server_id === null) {
+    if ('login' === $subject && null === $server_id) {
         $subject = 'servers';
     }
 

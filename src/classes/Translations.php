@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin;
@@ -83,8 +86,6 @@ class Translations
         'ukrainian'          => 'Ukrainian',
     ];
 
-    private $_language;
-
     /**
      * ISO639 language code to language file mapping.
      * See http://www.w3.org/WAI/ER/IG/ert/iso639.htm for language codes
@@ -162,6 +163,8 @@ class Translations
         'ukrainian'          => 'uk',
     ];
 
+    private $_language;
+
     public function __construct($container)
     {
         $appLangFiles = $this->appLangFiles;
@@ -178,7 +181,7 @@ class Translations
         // 1. Check for the language from a request var
         if (isset($_REQUEST['language'], $appLangFiles[$_REQUEST['language']])) {
             /* save the selected language in cookie for a year */
-            setcookie('webdbLanguage', $_REQUEST['language'], time() + 31536000);
+            \setcookie('webdbLanguage', $_REQUEST['language'], \time() + 31536000);
             $_language = $_REQUEST['language'];
         } elseif (!isset($_language) && isset($_SESSION['webdbLanguage'], $appLangFiles[$_SESSION['webdbLanguage']])) {
             // 2. Check for language in $_SESSION superglobal
@@ -186,12 +189,12 @@ class Translations
         } elseif (!isset($_language) && isset($_COOKIE['webdbLanguage'], $appLangFiles[$_COOKIE['webdbLanguage']])) {
             // 3. Check for language in $_COOKIE superglobal
             $_language = $_COOKIE['webdbLanguage'];
-        } elseif (!isset($_language) && $conf['default_lang'] == 'auto' && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        } elseif (!isset($_language) && 'auto' === $conf['default_lang'] && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             // 4. Check for acceptable languages in$_SERVER['HTTP_ACCEPT_LANGUAGE']
             // extract acceptable language tags
             // (http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4)
             $_language = $this->_pregMatchAcceptLanguage();
-        } elseif (!isset($_language) && $conf['default_lang'] != 'auto' && isset($appLangFiles[$conf['default_lang']])) {
+        } elseif (!isset($_language) && 'auto' !== $conf['default_lang'] && isset($appLangFiles[$conf['default_lang']])) {
             // 5. Otherwise resort to the default set in the config file
             $_language = $conf['default_lang'];
         } else {
@@ -199,13 +202,13 @@ class Translations
             $_language = 'english';
         }
 
-        $_type = '\PHPPgAdmin\Translations\\'.$appClasses[$_language];
+        $_type = '\PHPPgAdmin\Translations\\' . $appClasses[$_language];
 
         $langClass = new $_type();
 
         $_SESSION['webdbLanguage'] = $_language;
 
-        if (array_key_exists($_language, $languages_iso_code)) {
+        if (\array_key_exists($_language, $languages_iso_code)) {
             $_isolang = $languages_iso_code[$_language];
         } else {
             $_isolang = 'en';
@@ -232,19 +235,20 @@ class Translations
     {
         $_language   = null;
         $_acceptLang = [];
-        preg_match_all(
+        \preg_match_all(
             '/\s*([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;q=([01](?:.[0-9]{0,3})?))?\s*(?:,|$)/',
-            strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']),
+            \mb_strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']),
             $_m,
-            PREG_SET_ORDER
+            \PREG_SET_ORDER
         );
+
         foreach ($_m as $_l) {
             // $_l[1] = language tag, [2] = quality
             if (!isset($_l[2])) {
                 $_l[2] = 1;
             }
             // Default quality to 1
-            if ($_l[2] > 0 && $_l[2] <= 1 && isset($this->availableLanguages[$_l[1]])) {
+            if (0 < $_l[2] && 1 >= $_l[2] && isset($this->availableLanguages[$_l[1]])) {
                 // Build up array of (quality => language_file)
                 $_acceptLang[$_l[2]] = $this->availableLanguages[$_l[1]];
             }
@@ -253,8 +257,8 @@ class Translations
 
         if (!empty($_acceptLang)) {
             // Sort acceptable languages by quality
-            krsort($_acceptLang, SORT_NUMERIC);
-            $_language = reset($_acceptLang);
+            \krsort($_acceptLang, \SORT_NUMERIC);
+            $_language = \reset($_acceptLang);
             unset($_acceptLang);
         }
 

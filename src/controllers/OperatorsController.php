@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
@@ -10,8 +13,6 @@ use PHPPgAdmin\Decorators\Decorator;
 
 /**
  * Base controller class.
- *
- * @package PHPPgAdmin
  */
 class OperatorsController extends BaseController
 {
@@ -22,7 +23,7 @@ class OperatorsController extends BaseController
      */
     public function render()
     {
-        if ('tree' == $this->action) {
+        if ('tree' === $this->action) {
             return $this->doTree();
         }
 
@@ -104,7 +105,7 @@ class OperatorsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -171,7 +172,7 @@ class OperatorsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = '')
+    public function doProperties($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -182,42 +183,42 @@ class OperatorsController extends BaseController
         $oprdata                       = $data->getOperator($_REQUEST['operator_oid']);
         $oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
 
-        if ($oprdata->recordCount() > 0) {
-            echo '<table>'.PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strname']}</th>".PHP_EOL;
-            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprname']), '</td></tr>'.PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strleftarg']}</th>".PHP_EOL;
-            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprleftname']), '</td></tr>'.PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strrightarg']}</th>".PHP_EOL;
-            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrightname']), '</td></tr>'.PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strcommutator']}</th>".PHP_EOL;
-            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprcom']), '</td></tr>'.PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strnegator']}</th>".PHP_EOL;
-            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprnegate']), '</td></tr>'.PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strjoin']}</th>".PHP_EOL;
-            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprjoin']), '</td></tr>'.PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strhashes']}</th>".PHP_EOL;
-            echo '<td class="data1">', ($oprdata->fields['oprcanhash']) ? $this->lang['stryes'] : $this->lang['strno'], '</td></tr>'.PHP_EOL;
+        if (0 < $oprdata->recordCount()) {
+            echo '<table>' . \PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprname']), '</td></tr>' . \PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strleftarg']}</th>" . \PHP_EOL;
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprleftname']), '</td></tr>' . \PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strrightarg']}</th>" . \PHP_EOL;
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrightname']), '</td></tr>' . \PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strcommutator']}</th>" . \PHP_EOL;
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprcom']), '</td></tr>' . \PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strnegator']}</th>" . \PHP_EOL;
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprnegate']), '</td></tr>' . \PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strjoin']}</th>" . \PHP_EOL;
+            echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprjoin']), '</td></tr>' . \PHP_EOL;
+            echo "<tr><th class=\"data left\">{$this->lang['strhashes']}</th>" . \PHP_EOL;
+            echo '<td class="data1">', ($oprdata->fields['oprcanhash']) ? $this->lang['stryes'] : $this->lang['strno'], '</td></tr>' . \PHP_EOL;
 
             // these field only exists in 8.2 and before in pg_catalog
             if (isset($oprdata->fields['oprlsortop'])) {
-                echo "<tr><th class=\"data left\">{$this->lang['strmerges']}</th>".PHP_EOL;
-                echo '<td class="data1">', ('0' !== $oprdata->fields['oprlsortop'] && '0' !== $oprdata->fields['oprrsortop']) ? $this->lang['stryes'] : $this->lang['strno'], '</td></tr>'.PHP_EOL;
-                echo "<tr><th class=\"data left\">{$this->lang['strrestrict']}</th>".PHP_EOL;
-                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrest']), '</td></tr>'.PHP_EOL;
-                echo "<tr><th class=\"data left\">{$this->lang['strleftsort']}</th>".PHP_EOL;
-                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprlsortop']), '</td></tr>'.PHP_EOL;
-                echo "<tr><th class=\"data left\">{$this->lang['strrightsort']}</th>".PHP_EOL;
-                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrsortop']), '</td></tr>'.PHP_EOL;
-                echo "<tr><th class=\"data left\">{$this->lang['strlessthan']}</th>".PHP_EOL;
-                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprltcmpop']), '</td></tr>'.PHP_EOL;
-                echo "<tr><th class=\"data left\">{$this->lang['strgreaterthan']}</th>".PHP_EOL;
-                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprgtcmpop']), '</td></tr>'.PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strmerges']}</th>" . \PHP_EOL;
+                echo '<td class="data1">', ('0' !== $oprdata->fields['oprlsortop'] && '0' !== $oprdata->fields['oprrsortop']) ? $this->lang['stryes'] : $this->lang['strno'], '</td></tr>' . \PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strrestrict']}</th>" . \PHP_EOL;
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrest']), '</td></tr>' . \PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strleftsort']}</th>" . \PHP_EOL;
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprlsortop']), '</td></tr>' . \PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strrightsort']}</th>" . \PHP_EOL;
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprrsortop']), '</td></tr>' . \PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strlessthan']}</th>" . \PHP_EOL;
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprltcmpop']), '</td></tr>' . \PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strgreaterthan']}</th>" . \PHP_EOL;
+                echo '<td class="data1">', $this->misc->printVal($oprdata->fields['oprgtcmpop']), '</td></tr>' . \PHP_EOL;
             } else {
-                echo "<tr><th class=\"data left\">{$this->lang['strmerges']}</th>".PHP_EOL;
-                echo '<td class="data1">', $data->phpBool($oprdata->fields['oprcanmerge']) ? $this->lang['stryes'] : $this->lang['strno'], '</td></tr>'.PHP_EOL;
+                echo "<tr><th class=\"data left\">{$this->lang['strmerges']}</th>" . \PHP_EOL;
+                echo '<td class="data1">', $data->phpBool($oprdata->fields['oprcanmerge']) ? $this->lang['stryes'] : $this->lang['strno'], '</td></tr>' . \PHP_EOL;
             }
-            echo '</table>'.PHP_EOL;
+            echo '</table>' . \PHP_EOL;
 
             $this->printNavLinks(
                 [
@@ -233,9 +234,9 @@ class OperatorsController extends BaseController
                             ],
                         ],
                         'content' => $this->lang['strshowalloperators'],
-                    ], ],
+                    ]],
                 'operators-properties',
-                get_defined_vars()
+                \get_defined_vars()
             );
         } else {
             $this->doDefault($this->lang['strinvalidparam']);
@@ -247,7 +248,7 @@ class OperatorsController extends BaseController
      *
      * @param mixed $confirm
      */
-    public function doDrop($confirm)
+    public function doDrop($confirm): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -255,20 +256,21 @@ class OperatorsController extends BaseController
             $this->printTrail('operator');
             $this->printTitle($this->lang['strdrop'], 'pg.operator.drop');
 
-            echo '<p>', sprintf($this->lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), '</p>'.PHP_EOL;
+            echo '<p>', \sprintf($this->lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="'.\SUBFOLDER.'/src/views/operators" method="post">'.PHP_EOL;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>".PHP_EOL;
-            echo '<p><input type="hidden" name="action" value="drop" />'.PHP_EOL;
-            echo '<input type="hidden" name="operator" value="', htmlspecialchars($_REQUEST['operator']), '" />'.PHP_EOL;
-            echo '<input type="hidden" name="operator_oid" value="', htmlspecialchars($_REQUEST['operator_oid']), '" />'.PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . '/src/views/operators" method="post">' . \PHP_EOL;
+            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
+            echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
+            echo '<input type="hidden" name="operator" value="', \htmlspecialchars($_REQUEST['operator']), '" />' . \PHP_EOL;
+            echo '<input type="hidden" name="operator_oid" value="', \htmlspecialchars($_REQUEST['operator_oid']), '" />' . \PHP_EOL;
             echo $this->misc->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />".PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>".PHP_EOL;
-            echo '</form>'.PHP_EOL;
+            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
+            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropOperator($_POST['operator_oid'], isset($_POST['cascade']));
-            if (0 == $status) {
+
+            if (0 === $status) {
                 $this->doDefault($this->lang['stroperatordropped']);
             } else {
                 $this->doDefault($this->lang['stroperatordroppedbad']);

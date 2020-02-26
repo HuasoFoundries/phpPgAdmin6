@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -16,8 +16,9 @@ class ArrayMergeDecorator extends Decorator
     public function value($fields)
     {
         $accum = [];
+
         foreach ($this->m as $var) {
-            $accum = array_merge($accum, Decorator::get_sanitized_value($var, $fields));
+            $accum = \array_merge($accum, Decorator::get_sanitized_value($var, $fields));
         }
 
         return $accum;
