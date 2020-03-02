@@ -1539,16 +1539,16 @@
         },
         {
             "name": "ergebnis/php-cs-fixer-config",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/php-cs-fixer-config.git",
-                "reference": "42453e7d7d95c045fd036dede4274069eb83d32c"
+                "reference": "a9758108670f0479bf15b4ebad9c845f3a462fa1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/42453e7d7d95c045fd036dede4274069eb83d32c",
-                "reference": "42453e7d7d95c045fd036dede4274069eb83d32c",
+                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/a9758108670f0479bf15b4ebad9c845f3a462fa1",
+                "reference": "a9758108670f0479bf15b4ebad9c845f3a462fa1",
                 "shasum": ""
             },
             "require": {
@@ -1557,21 +1557,21 @@
                 "php": "^7.1"
             },
             "require-dev": {
-                "ergebnis/composer-normalize": "^2.2.2",
+                "ergebnis/composer-normalize": "^2.2.4",
                 "ergebnis/license": "~0.1.0",
-                "ergebnis/phpstan-rules": "~0.14.2",
+                "ergebnis/phpstan-rules": "~0.14.3",
                 "ergebnis/test-util": "~0.9.1",
                 "infection/infection": "~0.13.6",
-                "jangregor/phpstan-prophecy": "~0.6.0",
+                "jangregor/phpstan-prophecy": "~0.6.2",
                 "phpstan/extension-installer": "^1.0.3",
-                "phpstan/phpstan": "~0.12.5",
+                "phpstan/phpstan": "~0.12.11",
                 "phpstan/phpstan-deprecation-rules": "~0.12.2",
                 "phpstan/phpstan-phpunit": "~0.12.6",
-                "phpstan/phpstan-strict-rules": "~0.12.1",
+                "phpstan/phpstan-strict-rules": "~0.12.2",
                 "phpunit/phpunit": "^7.5.20",
-                "psalm/plugin-phpunit": "~0.8.1",
+                "psalm/plugin-phpunit": "~0.9.0",
                 "symfony/filesystem": "^4.4.0",
-                "vimeo/psalm": "^3.8.3"
+                "vimeo/psalm": "^3.9.3"
             },
             "type": "library",
             "autoload": {
@@ -1591,7 +1591,7 @@
             ],
             "description": "Provides a configuration factory and multiple rule sets for friendsofphp/php-cs-fixer.",
             "homepage": "https://github.com/ergebnis/php-cs-fixer-config",
-            "time": "2020-01-20T08:00:08+00:00"
+            "time": "2020-02-28T15:52:06+00:00"
         },
         {
             "name": "felixfbecker/advanced-json-rpc",
@@ -5055,7 +5055,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
-    "prefer-stable": true,
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.1",
