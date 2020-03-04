@@ -52,7 +52,7 @@ class BaseController
     public $action = '';
 
     public $controller_name;
-
+    protected $script;
     /**
      * Used.
      *

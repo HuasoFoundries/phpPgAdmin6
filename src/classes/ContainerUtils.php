@@ -9,10 +9,11 @@ namespace PHPPgAdmin;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 
-\defined('BASE_PATH') || \define(BASE_PATH, \dirname(__DIR__, 2));
+\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
+\defined('THEME_PATH') || \define('THEME_PATH', BASE_PATH . '/assets/themes');
 \defined('SUBFOLDER') || \define(
     'SUBFOLDER',
-    \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
+    \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', 'BASE_PATH')
 );
 \defined('DEBUGMODE') || \define('DEBUGMODE', false);
 \defined('IN_TEST') || \define('IN_TEST', false);
@@ -43,7 +44,7 @@ class ContainerUtils
     /**
      * @var ContainerInterface
      */
-    protected $_container;
+    protected $container;
 
     /**
      * @var App
@@ -67,7 +68,7 @@ class ContainerUtils
         //$this->prtrace($appVersion);
         //$this->dump($composerinfo);
         $settings = [
-            'displayErrorDetails'               => self::DEBUGMODE,
+
             'determineRouteBeforeAppMiddleware' => true,
             'base_path'                         => self::BASE_PATH,
             'debug'                             => self::DEBUGMODE,
@@ -105,19 +106,20 @@ class ContainerUtils
         $this->_app = new App($config);
 
         // Fetch DI Container
-        $container            = $this->_app->getContainer();
-        $container['utils']   = $this;
-        $container['version'] = 'v' . $appVersion;
-        $container['errors']  = [];
-
-        $this->_container = $container;
+        $container                = $this->_app->getContainer();
+        $container['utils']       = $this;
+        $container['version']     = 'v' . $appVersion;
+        $container['errors']      = [];
+        $container['requestobj']  = $container['request'];
+        $container['responseobj'] = $container['response'];
+        $this->container          = $container;
     }
 
     public static function getContainerInstance()
     {
         $_instance = self::getInstance();
 
-        if (!$container = $_instance->_container) {
+        if (!$container = $_instance->container) {
             throw new \Exception('Could not get a container');
         }
 
@@ -216,16 +218,13 @@ class ContainerUtils
     /**
      * Gets the theme from
      * 1. The $_REQUEST global (when it's chosen from start screen)
-     * 2. Server specific config theme
-     * 3.- $_SESSION global (subsequent requests after 1.)
-     * 4.- $_COOKIE global (mostly fallback for $_SESSION after 1.- and 3.-)
-     * 5.- theme as set in config
-     * 6.- 'default' theme.
+     * 2. Server specific config theme 3.- $_SESSION global (subsequent requests after 1.) 4.- $_COOKIE global (mostly
+     *    fallback for $_SESSION after 1.- and 3.-) 5.- theme as set in config 6.- 'default' theme.
      *
-     * @param <type>     $conf         The conf
-     * @param null|mixed $_server_info
+     * @param array       $conf          The conf
+     * @param null|mixed  $_server_info
      *
-     * @return string the theme
+     * @return string  the theme
      */
     public function getTheme(array $conf, $_server_info = null)
     {
@@ -271,10 +270,10 @@ class ContainerUtils
      */
     public function getRedirectUrl()
     {
-        $query_string = $this->_container->requestobj->getUri()->getQuery();
+        $query_string = $this->container->requestobj->getUri()->getQuery();
 
         // if server_id isn't set, then you will be redirected to intro
-        if (null === $this->_container->requestobj->getQueryParam('server')) {
+        if (null === $this->container->requestobj->getQueryParam('server')) {
             $destinationurl = \SUBFOLDER . '/src/views/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
@@ -294,14 +293,14 @@ class ContainerUtils
      */
     public function getDestinationWithLastTab($subject)
     {
-        $_server_info = $this->_container->misc->getServerInfo();
+        $_server_info = $this->container->misc->getServerInfo();
         $this->addFlash($subject, 'getDestinationWithLastTab');
         //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
         if (!isset($_server_info['username'])) {
             $destinationurl = $this->getRedirectUrl();
         } else {
-            $url = $this->_container->misc->getLastTabURL($subject);
+            $url = $this->container->misc->getLastTabURL($subject);
             $this->addFlash($url, 'getLastTabURL for ' . $subject);
             // Load query vars into superglobal arrays
             if (isset($url['urlvars'])) {
@@ -328,15 +327,15 @@ class ContainerUtils
      *
      * @param string $errormsg The error msg
      *
-     * @return \Slim\Container The app container
+     * @return \Slim\ContainerInterface The app container
      */
-    public function addError($errormsg)
+    public function addError(string $errormsg): \Slim\ContainerInterface
     {
-        $errors   = $this->_container->get('errors');
+        $errors   = $this->container->get('errors');
         $errors[] = $errormsg;
-        $this->_container->offsetSet('errors', $errors);
+        $this->container->offsetSet('errors', $errors);
 
-        return $this->_container;
+        return $this->container;
     }
 
     /**

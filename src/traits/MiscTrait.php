@@ -46,7 +46,6 @@ trait MiscTrait
                 break;
             case 'server':
                 $vars = ['params' => [
-                    'subject' => 'database',
                     'subject' => 'server',
                     'server'  => $_REQUEST['server'],
                 ]];

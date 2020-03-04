@@ -44,7 +44,7 @@ class XHtmlSimpleElement
     public $_htmlcode;
 
     public $_attributes = [];
-
+    public $container;
     /**
      * Constructor.
      *

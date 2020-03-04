@@ -34,7 +34,8 @@
         "kint-php/kint": "~3.3",
         "simpletest/simpletest": "^1.1",
         "symfony/var-dumper": "^5.0",
-        "vimeo/psalm": "^3.9"
+        "vimeo/psalm": "^3.9",
+        "phpstan/phpstan": "^0.12.14"
     },
     "extra": {
         "current_tags": {

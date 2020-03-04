@@ -74,7 +74,11 @@ class Misc
     private $_server_info;
 
     private $_error_msg = '';
+    public $conf;
 
+    public $phpMinVer;
+    public $postgresqlMinVer;
+    public $view;
     /**
      * @param \Slim\Container $container The container
      */
@@ -317,9 +321,9 @@ class Misc
      *
      * @internal mixed $plaform placeholder that will receive the value of the platform
      *
-     * @return \PHPPgAdmin\Database\ADOdbBase the database accessor instance
+     * @return \PHPPgAdmin\Database\ADOdbBase|null the database accessor instance
      */
-    public function getDatabaseAccessor($database = '', $server_id = null)
+    public function getDatabaseAccessor($database = '', $server_id = null):  ? \PHPPgAdmin\Database\ADOdbBase
     {
         $lang = $this->lang;
 
@@ -527,7 +531,7 @@ class Misc
      * @param mixed       $value     the new value, or null to unset the parameter
      * @param null|string $server_id the server identifier, or null for current server
      */
-    public function setServerInfo($key, $value, $server_id = null): void
+    public function setServerInfo($key, $value, $server_id = null) : void
     {
         if (null === $server_id) {
             $server_id = $this->container->requestobj->getParam('server');

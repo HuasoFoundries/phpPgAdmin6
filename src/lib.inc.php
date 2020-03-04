@@ -64,9 +64,6 @@ if (!$container instanceof \Psr\Container\ContainerInterface) {
     \trigger_error('App Container must be an instance of \\Psr\\Container\\ContainerInterface', \E_USER_ERROR);
 }
 
-$container['requestobj']  = $container['request'];
-$container['responseobj'] = $container['response'];
-
 // This should be deprecated once we're sure no php scripts are required directly
 $container->offsetSet('server', $_REQUEST['server'] ?? null);
 $container->offsetSet('database', $_REQUEST['database'] ?? null);

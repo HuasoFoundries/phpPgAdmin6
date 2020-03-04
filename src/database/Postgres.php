@@ -744,7 +744,7 @@ class Postgres extends ADOdbBase
         // Open a transaction
         $status = $this->beginTransaction();
 
-        if (0 !== $status) {
+        if ($status !== false) {
             return -1;
         }
 
@@ -753,7 +753,7 @@ class Postgres extends ADOdbBase
         if ($this->hasReadOnlyQueries()) {
             $status = $this->execute('SET TRANSACTION READ ONLY');
 
-            if (0 !== $status) {
+            if ($status !== false) {
                 $this->rollbackTransaction();
 
                 return -5;
@@ -804,7 +804,7 @@ class Postgres extends ADOdbBase
         $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
         $status = $this->endTransaction();
 
-        if (0 !== $status) {
+        if ($status !== false) {
             $this->rollbackTransaction();
 
             return -1;

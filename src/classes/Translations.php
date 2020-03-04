@@ -11,6 +11,7 @@ namespace PHPPgAdmin;
  */
 class Translations
 {
+    public $lang;
     // List of language files, and encoded language name.
 
     public $appLangFiles = [
@@ -117,7 +118,6 @@ class Translations
         'pt'         => 'portuguese-pt',
         'ro'         => 'romanian',
         'ru'         => 'russian',
-        'ru'         => 'russian',
         'sk'         => 'slovak',
         'es'         => 'spanish',
         'sv'         => 'swedish',
@@ -152,7 +152,7 @@ class Translations
         'portuguese-pt'      => 'pt',
         'romanian'           => 'ro',
         'russian'            => 'ru',
-        'russian'            => 'ru',
+
         'slovak'             => 'sk',
         'spanish'            => 'es',
         'swedish'            => 'sv',

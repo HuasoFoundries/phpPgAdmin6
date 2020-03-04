@@ -1,0 +1,42 @@
+parameters:
+
+	paths:
+		- src
+	
+	tmpDir: ./.build/phpstan
+
+	# The level 8 is the highest level
+	level: 5
+
+	autoload_files:
+		- vendor/adodb/adodb-php/adodb.inc.php
+
+	excludes_analyse:
+		- .build/*
+		- tests/*
+		- assets/*
+		- temp/*
+		- vendor/*
+		- src/classes/ADO*		
+		- router.php
+
+	treatPhpDocTypesAsCertain: false
+
+	
+
+	ignoreErrors:
+		-
+			message: '#Access to an undefined property Psr\Container\ContainerInterface::\$[a-zA-Z ]+#'
+			paths:
+				- src/classes/*
+
+		-
+			message: "#^Access to an undefined property Psr\\\\Container\\\\ContainerInterface\\:\\:\\$[a-zA-Z]+.*#"
+			paths:
+				- src/classes/*
+		- 
+			message: "#^Call to an undefined method PHPPgAdmin\\\\Database\\\\ADO.*#"
+			paths:
+				- src/*
+
+		- '#Other error to catch anywhere#'	

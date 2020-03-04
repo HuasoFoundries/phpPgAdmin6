@@ -121,14 +121,14 @@ var_dumper:
 	@echo ""
 
 folder ?= src
-psalm: FOLDER_BASENAME:=`basename $(folder)`
+psalm: FOLDER_BASENAME:=`basename $(folder)|sed 's/src//'`
 psalm:
 	@if [ -f "vendor/bin/psalm" ]; then \
 		mkdir -p .build/psalm ;\
 		${MAKE} disable_xdebug  --no-print-directory ;\
 		vendor/bin/psalm --show-info=false \
 			  --config=psalm.xml \
-			  --set-baseline=psalm-baseline-$(FOLDER_BASENAME).xml \
+			  --set-baseline=.build/psalm/psalm-baseline$(FOLDER_BASENAME).xml \
 			  --shepherd $(folder) ;\
 		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
 	else \
@@ -136,6 +136,23 @@ psalm:
 		echo -e "Install it with $(GREEN)composer require --dev vimeo/psalm$(WHITE)" ;\
 	fi
 	@echo ""
+
+
+phpstan:
+	@${MAKE} disable_xdebug  --no-print-directory 
+	@if [ ! -f "vendor/bin/phpstan" ]; then \
+		echo -e "$(GREEN)phpstan$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
+		echo -e "Install it with $(GREEN)composer require --dev phpstan/phpstan$(WHITE)" ;\
+		exit 0 ;\
+	fi
+	
+	@mkdir -p .build/phpstan ;\
+	./vendor/bin/phpstan analyse --memory-limit=2G   ${error_format}  
+	@${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory ;\
+	echo ""
+
+
+
 
 create_testdb:
 	PGPASSWORD=scrutinizer psql   -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql

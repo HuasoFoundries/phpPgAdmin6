@@ -201,33 +201,43 @@ trait HelperTrait
     /**
      * Receives N parameters and sends them to the console adding where was it called from.
      *
-     * @param array $args
+     * @param array  ...$args
      */
-    public function prtrace(...$args)
+    public function prtrace(array...$args): void
     {
-        return self::staticTrace($args);
+        self::staticTrace($args, '', false);
     }
 
-    public function dump(...$args)
+    /**
+     * { function_description }
+     *
+     * @param array  ...$args  The arguments
+     */
+    public function dump(array...$args): void
     {
-        return self::staticTrace($args);
+        self::staticTrace($args, '', false);
     }
 
-    public function dumpAndDie(...$args)
+    /**
+     * Dumps and die.
+     *
+     * @param array  ...$args  The arguments
+     */
+    public function dumpAndDie(array...$args): void
     {
-        return self::staticTrace($args);
+        self::staticTrace($args, '', true);
     }
 
     /**
      * Receives N parameters and sends them to the console adding where was it
      * called from.
      *
-     * @param mixed  $variablesToDump
-     * @param mixed  $exitAfterwards
+     * @param array   $variablesToDump
      * @param string $whoCalledMe
+     * @param boolean  $exitAfterwards
      */
     private static function staticTrace(
-        $variablesToDump = [],
+        array $variablesToDump = [],
         string $whoCalledMe = '',
         $exitAfterwards = false
     ): void {

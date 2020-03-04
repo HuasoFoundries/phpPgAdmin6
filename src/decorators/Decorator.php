@@ -9,7 +9,7 @@ namespace PHPPgAdmin\Decorators;
 class Decorator
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-
+    public $container;
     public function __construct($value)
     {
         $this->val = $value;
@@ -125,7 +125,7 @@ class Decorator
         // at value evaluation time.
 
         if (2 < \func_num_args()) {
-            $v = \func_get_args();
+            $v    = \func_get_args();
             $base = \array_shift($v);
 
             return new UrlDecorator($base, new ArrayMergeDecorator($v));
