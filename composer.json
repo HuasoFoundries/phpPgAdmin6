@@ -59,6 +59,7 @@
         }
     },
     "scripts": {
+        "phpstan": "phpstan analyse src --memory-limit=2G ",
         "post-install-cmd": "@clear_twig_cache",
         "post-create-project-cmd": "@clear_twig_cache",
         "clear_twig_cache": [

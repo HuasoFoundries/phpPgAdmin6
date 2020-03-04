@@ -25,7 +25,7 @@ class Decorator
     /**
      * @param null|string $esc
      */
-    public static function get_sanitized_value(&$var, &array $fields, ?string $esc = null)
+    public static function get_sanitized_value(&$var, array &$fields, ? string $esc = null)
     {
         if (\is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
             $val = $var->value($fields);
@@ -57,7 +57,7 @@ class Decorator
      * @param \Closure|\Closure|\Closure $callback
      * @param (mixed|string)[]|null $params
      */
-    public static function callback($callback, ?array $params = null)
+    public static function callback($callback, ? array $params = null)
     {
         return new \PHPPgAdmin\Decorators\CallbackDecorator($callback, $params);
     }
@@ -86,7 +86,7 @@ class Decorator
     /**
      * @param array|null $default
      */
-    public static function field(string $fieldName, ?array $default = null)
+    public static function field(string $fieldName, ? array $default = null)
     {
         return new FieldDecorator($fieldName, $default);
     }
@@ -109,7 +109,7 @@ class Decorator
     /**
      * @param array|null $vars
      */
-    public static function actionurl(string $base, ?array $vars = null/* ... */)
+    public static function actionurl(string $base, ? array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -142,14 +142,14 @@ class Decorator
     /**
      * @param array|null $vars
      */
-    public static function url(string $base, ?array $vars = null/* ... */)
+    public static function url(string $base, ? array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
 
         if (2 < \func_num_args()) {
-            $v = \func_get_args();
+            $v    = \func_get_args();
             $base = \array_shift($v);
 
             return new UrlDecorator($base, new ArrayMergeDecorator($v));

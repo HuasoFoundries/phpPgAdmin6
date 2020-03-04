@@ -1,12 +1,16 @@
+#includes:
+#    - .build/phpstan/phpstan.baseline.neon
+
 parameters:
 
+	
 	paths:
 		- src
 	
 	tmpDir: ./.build/phpstan
 
 	# The level 8 is the highest level
-	level: 4
+	level: 3
 
 	autoload_files:
 		- vendor/adodb/adodb-php/adodb.inc.php
@@ -18,7 +22,7 @@ parameters:
 		- temp/*
 		- vendor/*
 		- src/classes/ADO*		
-		- router.php
+		- src/router.php
 
 	treatPhpDocTypesAsCertain: false
 
@@ -26,6 +30,27 @@ parameters:
 
 
 	ignoreErrors:
+
+#		-	
+#			message: "#^Offset '[a-zA-Z0-9_]+' does not exist on array[.*].$#"
+#			path: src/*
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$[a-zA-Z0-9_]+$#"
+			path: src/*
+		-
+			message: "#^Access to an undefined property Psr\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:\\$[a-zA-Z0-9_]+\\.$#"
+			path: src/*
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:\\$[a-zA-Z0-9_]+\\.$#"
+			path: src/*
+		-
+			message: "#^Result of method PHPPgAdmin\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:[a-zA-Z0-9_]+\\(\\) \\(void\\) is used\\.$#"
+			path: src/*
+
+		-
+			message: "#^Constructor of class [a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+ has an unused parameter \\$[a-zA-Z0-9_]+\\.$#"
+			path: src/*
 		#- '#Property [^\s] has no typehint specified#'
 		#- '#Call to an undefined method [a-zA-Z0-9\\_]+::expects\(\)#'
 		#- '#Access to an undefined property PHPPgAdmin::\$[a-zA-Z0-9_]+#'
