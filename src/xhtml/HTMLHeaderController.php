@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -50,10 +50,10 @@ class HTMLHeaderController extends HTMLController
 
         $viewVars = [];
 
-        $viewVars['dir']            = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
+        $viewVars['dir'] = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
-        $viewVars['appName']        = \htmlspecialchars($this->appName);
+        $viewVars['title'] = ('' !== $title) ? ' - ' . $title : '';
+        $viewVars['appName'] = \htmlspecialchars($this->appName);
 
         $viewVars['script'] = $script;
         //$this->prtrace($viewVars);
@@ -84,7 +84,7 @@ class HTMLHeaderController extends HTMLController
     public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
         $bodyClass = $this->lang['applangdir'] . ' ' . \htmlspecialchars($bodyClass);
-        $onload    = ($onloadInit ? 'onload="init();" ' : '');
+        $onload = ($onloadInit ? 'onload="init();" ' : '');
 
         $bodyHtml = \sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
         $bodyHtml .= \PHP_EOL;

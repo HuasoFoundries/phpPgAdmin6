@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -400,7 +400,7 @@ trait SequenceTrait
         if (!empty($name) && ($seqrs->fields['seqname'] !== $name)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 === $status) {

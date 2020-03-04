@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -120,7 +120,7 @@ trait TablespaceTrait
         }
 
         // Owner
-        $sql    = "ALTER TABLESPACE \"{$spcname}\" OWNER TO \"{$owner}\"";
+        $sql = "ALTER TABLESPACE \"{$spcname}\" OWNER TO \"{$owner}\"";
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -131,7 +131,7 @@ trait TablespaceTrait
 
         // Rename (only if name has changed)
         if ($name !== $spcname) {
-            $sql    = "ALTER TABLESPACE \"{$spcname}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TABLESPACE \"{$spcname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {

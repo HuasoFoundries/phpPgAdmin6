@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Traits;
@@ -779,13 +779,21 @@ trait AdminTrait
 
     abstract public function doDefault($msg = '');
 
-    abstract public function printTrail($trail = [], $do_print = true);
+    /**
+     * Prints a trail.
+     *
+     * @param array|string    $trail     The trail
+     * @param boolean  $do_print  The do print
+     *
+     * @return string ( description_of_the_return_value )
+     */
+    abstract public function printTrail($trail = [], bool $do_print = true);
 
-    abstract public function printTitle($title, $help = null, $do_print = true);
+    abstract public function printTitle(string $title, ? string $help = null, bool $do_print = true);
 
     abstract public function printMsg($msg, $do_print = true);
 
-    abstract public function printTabs($tabs, $activetab, $do_print = true);
+    abstract public function printTabs(string $tabs, string $activetab, bool $do_print = true);
 
     abstract public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null);
 
@@ -815,7 +823,7 @@ trait AdminTrait
         return [$recluster_help, $reclusterconf];
     }
 
-    private function _printAutoVacuumConf($data, $type): void
+    private function _printAutoVacuumConf($data, $type) : void
     {
         if (!$data->hasAutovacuum()) {
             return;

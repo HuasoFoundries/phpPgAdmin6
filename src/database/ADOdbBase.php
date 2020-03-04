@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database;
@@ -34,7 +34,7 @@ class ADOdbBase
      */
     public function __construct(&$conn, $container, $server_info)
     {
-        $this->container   = $container;
+        $this->container = $container;
         $this->server_info = $server_info;
 
         $this->lang = $container->get('lang');
@@ -403,7 +403,7 @@ class ADOdbBase
     {
         $this->fieldClean($table);
 
-        $setClause   = '';
+        $setClause = '';
         $whereClause = '';
 
         // Populate the syntax arrays
@@ -559,8 +559,8 @@ class ADOdbBase
 
         // Pick out array entries by carefully parsing.  This is necessary in order
         // to cope with double quotes and commas, etc.
-        $elements  = [];
-        $i         = $j         = 0;
+        $elements = [];
+        $i = $j = 0;
         $in_quotes = false;
 
         while (\mb_strlen($arr) > $i) {
@@ -573,7 +573,7 @@ class ADOdbBase
             } elseif (',' === $char && !$in_quotes) {
                 // Add text so far to the array
                 $elements[] = \mb_substr($arr, $j, $i - $j);
-                $j          = $i + 1;
+                $j = $i + 1;
             }
             ++$i;
         }
@@ -587,9 +587,9 @@ class ADOdbBase
             $v = $elements[$i];
 
             if (0 === \mb_strpos($v, '"')) {
-                $v            = \mb_substr($v, 1, \mb_strlen($v) - 2);
-                $v            = \str_replace('\\"', '"', $v);
-                $v            = \str_replace('\\\\', '\\', $v);
+                $v = \mb_substr($v, 1, \mb_strlen($v) - 2);
+                $v = \str_replace('\\"', '"', $v);
+                $v = \str_replace('\\\\', '\\', $v);
                 $elements[$i] = $v;
             }
         }

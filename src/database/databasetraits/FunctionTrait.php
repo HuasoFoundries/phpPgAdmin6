@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -22,7 +22,7 @@ trait FunctionTrait
     public function getFunctions($all = false, $type = null)
     {
         if ($all) {
-            $where    = 'pg_catalog.pg_function_is_visible(p.oid)';
+            $where = 'pg_catalog.pg_function_is_visible(p.oid)';
             $distinct = 'DISTINCT ON (p.proname)';
 
             if ($type) {
@@ -31,7 +31,7 @@ trait FunctionTrait
         } else {
             $c_schema = $this->_schema;
             $this->clean($c_schema);
-            $where    = "n.nspname = '{$c_schema}'";
+            $where = "n.nspname = '{$c_schema}'";
             $distinct = '';
         }
 
@@ -64,7 +64,7 @@ trait FunctionTrait
     /**
      * Returns a list of all functions that can be used in triggers.
      *
-     * @return \PHPPgAdmin\ADORecordSet Functions that can be used in a trigger
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function getTriggerFunctions()
     {
@@ -177,7 +177,7 @@ trait FunctionTrait
         $this->fieldClean($newname);
         /* $funcname is escaped in createFunction */
         if ($funcname !== $newname) {
-            $sql    = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) RENAME TO \"{$newname}\"";
+            $sql = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) RENAME TO \"{$newname}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -194,7 +194,7 @@ trait FunctionTrait
             $this->fieldClean($newown);
 
             if ($funcown !== $newown) {
-                $sql    = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) OWNER TO \"{$newown}\"";
+                $sql = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) OWNER TO \"{$newown}\"";
                 $status = $this->execute($sql);
 
                 if (0 !== $status) {
@@ -210,7 +210,7 @@ trait FunctionTrait
             $this->fieldClean($newschema);
             /* $funcschema is escaped in createFunction */
             if ($funcschema !== $newschema) {
-                $sql    = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) SET SCHEMA \"{$newschema}\"";
+                $sql = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) SET SCHEMA \"{$newschema}\"";
                 $status = $this->execute($sql);
 
                 if (0 !== $status) {
@@ -347,7 +347,7 @@ trait FunctionTrait
     public function dropFunction($function_oid, $cascade)
     {
         // Function comes in with $object as function OID
-        $fn       = $this->getFunction($function_oid);
+        $fn = $this->getFunction($function_oid);
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($fn->fields['proname']);

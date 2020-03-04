@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -28,13 +28,13 @@ class SqleditController extends BaseController
     {
         switch ($this->action) {
             case 'find':
-                $title     = $this->lang['strfind'];
+                $title = $this->lang['strfind'];
                 $body_text = $this->doFind();
 
                 break;
             case 'sql':
             default:
-                $title     = $this->lang['strsql'];
+                $title = $this->lang['strsql'];
                 $body_text = $this->doDefault();
 
                 break;
@@ -64,7 +64,7 @@ class SqleditController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'search_path', \implode(',', $data->getSearchPath()));
         $search_path = \htmlspecialchars($_REQUEST['search_path']);
-        $sqlquery    = \htmlspecialchars($_SESSION['sqlquery']);
+        $sqlquery = \htmlspecialchars($_SESSION['sqlquery']);
 
         $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'sql', false);
 
@@ -146,7 +146,7 @@ class SqleditController extends BaseController
         $default_html .= $this->printConnection('find', false);
         $default_html .= '<p><input class="focusme" name="term" id="term" value="' . \htmlspecialchars($_REQUEST['term']) . "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />" . \PHP_EOL;
 
-        $filters          = $this->_getFilters();
+        $filters = $this->_getFilters();
         $advanced_filters = $this->_getAdvancedFilters();
 
         if (isset($filters[$_REQUEST['filter']])) {
@@ -185,29 +185,29 @@ class SqleditController extends BaseController
     private function _getFilters()
     {
         return [
-            'SCHEMA'     => ['langkey' => 'strschemas', 'selected' => ''],
-            'TABLE'      => ['langkey' => 'strtables', 'selected' => ''],
-            'VIEW'       => ['langkey' => 'strviews', 'selected' => ''],
-            'SEQUENCE'   => ['langkey' => 'strsequences', 'selected' => ''],
-            'COLUMN'     => ['langkey' => 'strcolumns', 'selected' => ''],
-            'RULE'       => ['langkey' => 'strrules', 'selected' => ''],
-            'INDEX'      => ['langkey' => 'strindexes', 'selected' => ''],
-            'TRIGGER'    => ['langkey' => 'strtriggers', 'selected' => ''],
+            'SCHEMA' => ['langkey' => 'strschemas', 'selected' => ''],
+            'TABLE' => ['langkey' => 'strtables', 'selected' => ''],
+            'VIEW' => ['langkey' => 'strviews', 'selected' => ''],
+            'SEQUENCE' => ['langkey' => 'strsequences', 'selected' => ''],
+            'COLUMN' => ['langkey' => 'strcolumns', 'selected' => ''],
+            'RULE' => ['langkey' => 'strrules', 'selected' => ''],
+            'INDEX' => ['langkey' => 'strindexes', 'selected' => ''],
+            'TRIGGER' => ['langkey' => 'strtriggers', 'selected' => ''],
             'CONSTRAINT' => ['langkey' => 'strconstraints', 'selected' => ''],
-            'FUNCTION'   => ['langkey' => 'strfunctions', 'selected' => ''],
-            'DOMAIN'     => ['langkey' => 'strdomains', 'selected' => ''],
+            'FUNCTION' => ['langkey' => 'strfunctions', 'selected' => ''],
+            'DOMAIN' => ['langkey' => 'strdomains', 'selected' => ''],
         ];
     }
 
     private function _getAdvancedFilters()
     {
         return [
-            'AGGREGATE'  => ['langkey' => 'straggregates', 'selected' => ''],
-            'TYPE'       => ['langkey' => 'strtypes', 'selected' => ''],
-            'OPERATOR'   => ['langkey' => 'stroperators', 'selected' => ''],
-            'OPCLASS'    => ['langkey' => 'stropclasses', 'selected' => ''],
+            'AGGREGATE' => ['langkey' => 'straggregates', 'selected' => ''],
+            'TYPE' => ['langkey' => 'strtypes', 'selected' => ''],
+            'OPERATOR' => ['langkey' => 'stroperators', 'selected' => ''],
+            'OPCLASS' => ['langkey' => 'stropclasses', 'selected' => ''],
             'CONVERSION' => ['langkey' => 'strconversions', 'selected' => ''],
-            'LANGUAGE'   => ['langkey' => 'strlanguages', 'selected' => ''],
+            'LANGUAGE' => ['langkey' => 'strlanguages', 'selected' => ''],
         ];
     }
 }

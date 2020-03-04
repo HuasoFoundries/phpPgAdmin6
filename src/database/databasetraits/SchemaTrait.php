@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -58,7 +58,7 @@ trait SchemaTrait
      *
      * @param string $schema The the name of the schema to work in
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function setSchema($schema)
     {
@@ -219,7 +219,7 @@ trait SchemaTrait
         $schema_rs = $this->getSchemaByName($schemaname);
         /* Only if the owner change */
         if ($schema_rs->fields['ownername'] !== $owner) {
-            $sql    = "ALTER SCHEMA \"{$schemaname}\" OWNER TO \"{$owner}\"";
+            $sql = "ALTER SCHEMA \"{$schemaname}\" OWNER TO \"{$owner}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -231,7 +231,7 @@ trait SchemaTrait
 
         // Only if the name has changed
         if ($name !== $schemaname) {
-            $sql    = "ALTER SCHEMA \"{$schemaname}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER SCHEMA \"{$schemaname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {

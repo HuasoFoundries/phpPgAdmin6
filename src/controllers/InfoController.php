@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -38,9 +38,9 @@ class InfoController extends BaseController
      *
      * @param string $msg
      *
-     * @return string|void
+     * @return void
      */
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -52,13 +52,13 @@ class InfoController extends BaseController
         $this->shownull = ['null' => true];
 
         // Fetch info
-        $referrers      = $data->getReferrers($_REQUEST['table']);
-        $parents        = $data->getTableParents($_REQUEST['table']);
-        $children       = $data->getTableChildren($_REQUEST['table']);
+        $referrers = $data->getReferrers($_REQUEST['table']);
+        $parents = $data->getTableParents($_REQUEST['table']);
+        $children = $data->getTableChildren($_REQUEST['table']);
         $tablestatstups = $data->getStatsTableTuples($_REQUEST['table']);
-        $tablestatsio   = $data->getStatsTableIO($_REQUEST['table']);
+        $tablestatsio = $data->getStatsTableIO($_REQUEST['table']);
         $indexstatstups = $data->getStatsIndexTuples($_REQUEST['table']);
-        $indexstatsio   = $data->getStatsIndexIO($_REQUEST['table']);
+        $indexstatsio = $data->getStatsIndexIO($_REQUEST['table']);
 
         // Check that there is some info
         if ((-99 === $referrers || (-99 !== $referrers && 0 === $referrers->recordCount()))
@@ -110,11 +110,11 @@ class InfoController extends BaseController
         echo "<h3>{$this->lang['strchildtables']}</h3>" . \PHP_EOL;
 
         $columns = [
-            'schema'  => [
+            'schema' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
             ],
-            'table'   => [
+            'table' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
             ],
@@ -126,12 +126,12 @@ class InfoController extends BaseController
         $actions = [
             'properties' => [
                 'content' => $this->lang['strproperties'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'tblproperties',
+                        'url' => 'tblproperties',
                         'urlvars' => [
                             'schema' => Decorator::field('nspname'),
-                            'table'  => Decorator::field('relname'),
+                            'table' => Decorator::field('relname'),
                         ],
                     ],
                 ],
@@ -335,11 +335,11 @@ class InfoController extends BaseController
         echo "<h3>{$this->lang['strparenttables']}</h3>" . \PHP_EOL;
 
         $columns = [
-            'schema'  => [
+            'schema' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
             ],
-            'table'   => [
+            'table' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
             ],
@@ -351,12 +351,12 @@ class InfoController extends BaseController
         $actions = [
             'properties' => [
                 'content' => $this->lang['strproperties'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'tblproperties',
+                        'url' => 'tblproperties',
                         'urlvars' => [
                             'schema' => Decorator::field('nspname'),
-                            'table'  => Decorator::field('relname'),
+                            'table' => Decorator::field('relname'),
                         ],
                     ],
                 ],
@@ -371,15 +371,15 @@ class InfoController extends BaseController
         echo "<h3>{$this->lang['strreferringtables']}</h3>" . \PHP_EOL;
 
         $columns = [
-            'schema'     => [
+            'schema' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
             ],
-            'table'      => [
+            'table' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
             ],
-            'name'       => [
+            'name' => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('conname'),
             ],
@@ -387,7 +387,7 @@ class InfoController extends BaseController
                 'title' => $this->lang['strdefinition'],
                 'field' => Decorator::field('consrc'),
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
         ];
@@ -395,12 +395,12 @@ class InfoController extends BaseController
         $actions = [
             'properties' => [
                 'content' => $this->lang['strproperties'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints',
+                        'url' => 'constraints',
                         'urlvars' => [
                             'schema' => Decorator::field('nspname'),
-                            'table'  => Decorator::field('relname'),
+                            'table' => Decorator::field('relname'),
                         ],
                     ],
                 ],

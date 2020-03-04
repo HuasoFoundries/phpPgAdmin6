@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -46,7 +46,7 @@ class CastsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $lang              = $this->lang;
+        $lang = $this->lang;
         $renderCastContext = static function ($val) use ($lang) {
             switch ($val) {
                 case 'e':
@@ -74,18 +74,18 @@ class CastsController extends BaseController
                 'title' => $this->lang['strtargettype'],
                 'field' => Decorator::field('casttarget'),
             ],
-            'function'    => [
-                'title'  => $this->lang['strfunction'],
-                'field'  => Decorator::field('castfunc'),
+            'function' => [
+                'title' => $this->lang['strfunction'],
+                'field' => Decorator::field('castfunc'),
                 'params' => ['null' => $this->lang['strbinarycompat']],
             ],
-            'implicit'    => [
-                'title'  => $this->lang['strimplicit'],
-                'field'  => Decorator::field('castcontext'),
-                'type'   => 'callback',
+            'implicit' => [
+                'title' => $this->lang['strimplicit'],
+                'field' => Decorator::field('castcontext'),
+                'type' => 'callback',
                 'params' => ['function' => $renderCastContext, 'align' => 'center'],
             ],
-            'comment'     => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('castcomment'),
             ],

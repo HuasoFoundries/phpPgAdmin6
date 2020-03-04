@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -42,7 +42,7 @@ class ConversionsController extends BaseController
      *
      * @param string $msg
      *
-     * @return string|void
+     * @return void
      */
     public function doDefault($msg = '')
     {
@@ -55,7 +55,7 @@ class ConversionsController extends BaseController
         $conversions = $data->getconversions();
 
         $columns = [
-            'conversion'      => [
+            'conversion' => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('conname'),
             ],
@@ -67,12 +67,12 @@ class ConversionsController extends BaseController
                 'title' => $this->lang['strtargetencoding'],
                 'field' => Decorator::field('contoencoding'),
             ],
-            'default'         => [
+            'default' => [
                 'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('condefault'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'comment'         => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('concomment'),
             ],

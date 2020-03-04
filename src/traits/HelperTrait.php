@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Traits;
@@ -72,23 +72,23 @@ trait HelperTrait
 
     public static function getBackTrace($offset = 0)
     {
-        $i0        = $offset;
-        $i1        = $offset + 1;
+        $i0 = $offset;
+        $i1 = $offset + 1;
         $backtrace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, $offset + 3);
 
         return [
-            'class'    => 'Closure' === $backtrace[$i1]['class'] ?
+            'class' => 'Closure' === $backtrace[$i1]['class'] ?
             $backtrace[$i0]['file'] :
             $backtrace[$i1]['class'],
 
-            'type'     => $backtrace[$i1]['type'],
+            'type' => $backtrace[$i1]['type'],
 
             'function' => '{closure}' === $backtrace[$i1]['function']
             ? $backtrace[$i0]['function'] :
             $backtrace[$i1]['function'],
 
-            'spacer4'  => ' ',
-            'line'     => $backtrace[$i0]['line'],
+            'spacer4' => ' ',
+            'line' => $backtrace[$i0]['line'],
         ];
         //dump($backtrace);
     }
@@ -201,19 +201,19 @@ trait HelperTrait
     /**
      * Receives N parameters and sends them to the console adding where was it called from.
      *
-     * @param array  ...$args
+     * @param array ...$args
      */
-    public function prtrace(array...$args): void
+    public function prtrace(array ...$args): void
     {
         self::staticTrace($args, '', false);
     }
 
     /**
-     * { function_description }
+     * { function_description }.
      *
-     * @param array  ...$args  The arguments
+     * @param array ...$args The arguments
      */
-    public function dump(array...$args): void
+    public function dump(array ...$args): void
     {
         self::staticTrace($args, '', false);
     }
@@ -221,9 +221,9 @@ trait HelperTrait
     /**
      * Dumps and die.
      *
-     * @param array  ...$args  The arguments
+     * @param array ...$args The arguments
      */
-    public function dumpAndDie(array...$args): void
+    public function dumpAndDie(array ...$args): void
     {
         self::staticTrace($args, '', true);
     }
@@ -232,9 +232,9 @@ trait HelperTrait
      * Receives N parameters and sends them to the console adding where was it
      * called from.
      *
-     * @param array   $variablesToDump
+     * @param array  $variablesToDump
      * @param string $whoCalledMe
-     * @param boolean  $exitAfterwards
+     * @param bool   $exitAfterwards
      */
     private static function staticTrace(
         array $variablesToDump = [],

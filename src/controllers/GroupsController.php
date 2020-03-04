@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -102,11 +102,11 @@ class GroupsController extends BaseController
         $groups = $data->getGroups();
 
         $columns = [
-            'group'   => [
+            'group' => [
                 'title' => $this->lang['strgroup'],
                 'field' => Decorator::field('groname'),
-                'url'   => "groups?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['group' => 'groname'],
+                'url' => "groups?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['group' => 'groname'],
             ],
             'actions' => [
                 'title' => $this->lang['stractions'],
@@ -116,12 +116,12 @@ class GroupsController extends BaseController
         $actions = [
             'drop' => [
                 'content' => $this->lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'groups',
+                        'url' => 'groups',
                         'urlvars' => [
                             'action' => 'confirm_drop',
-                            'group'  => Decorator::field('groname'),
+                            'group' => Decorator::field('groname'),
                         ],
                     ],
                 ],
@@ -131,9 +131,9 @@ class GroupsController extends BaseController
         echo $this->printTable($groups, $columns, $actions, 'groups-properties', $this->lang['strnogroups']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'groups',
+                    'url' => 'groups',
                     'urlvars' => [
                         'action' => 'create',
                         'server' => $_REQUEST['server'],
@@ -215,7 +215,7 @@ class GroupsController extends BaseController
         $this->printMsg($msg);
 
         $groupdata = $data->getGroup($_REQUEST['group']);
-        $users     = $data->getUsers();
+        $users = $data->getUsers();
 
         if (0 < $groupdata->recordCount()) {
             $columns = [
@@ -231,13 +231,13 @@ class GroupsController extends BaseController
             $actions = [
                 'drop' => [
                     'content' => $this->lang['strdrop'],
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'groups',
+                            'url' => 'groups',
                             'urlvars' => [
                                 'action' => 'confirm_drop_member',
-                                'group'  => $_REQUEST['group'],
-                                'user'   => Decorator::field('usename'),
+                                'group' => $_REQUEST['group'],
+                                'user' => Decorator::field('usename'),
                             ],
                         ],
                     ],
@@ -265,9 +265,9 @@ class GroupsController extends BaseController
         echo '</form>' . \PHP_EOL;
 
         $this->printNavLinks(['showall' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'groups',
+                    'url' => 'groups',
                     'urlvars' => [
                         'server' => $_REQUEST['server'],
                     ],

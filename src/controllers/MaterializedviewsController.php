@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -124,17 +124,17 @@ class MaterializedviewsController extends BaseController
             $this->keystring => [
                 'title' => 'M ' . $this->lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url'   => self::SUBFOLDER . "/redirect/matview?{$this->misc->href}&amp;",
-                'vars'  => [$this->keystring => 'relname'],
+                'url' => self::SUBFOLDER . "/redirect/matview?{$this->misc->href}&amp;",
+                'vars' => [$this->keystring => 'relname'],
             ],
-            'owner'          => [
+            'owner' => [
                 'title' => $this->lang['strowner'],
                 'field' => Decorator::field('relowner'),
             ],
-            'actions'        => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
-            'comment'        => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('relcomment'),
             ],
@@ -143,29 +143,29 @@ class MaterializedviewsController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => [$this->keystring => 'relname'],
-                'url'     => 'materializedviews',
+                'url' => 'materializedviews',
             ],
-            'browse'       => [
+            'browse' => [
                 'content' => $this->lang['strbrowse'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'display',
+                        'url' => 'display',
                         'urlvars' => [
-                            'action'         => 'confselectrows',
-                            'subject'        => $this->keystring,
-                            'return'         => 'schema',
+                            'action' => 'confselectrows',
+                            'subject' => $this->keystring,
+                            'return' => 'schema',
                             $this->keystring => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
-            'select'       => [
+            'select' => [
                 'content' => $this->lang['strselect'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'materializedviews',
+                        'url' => 'materializedviews',
                         'urlvars' => [
-                            'action'         => 'confselectrows',
+                            'action' => 'confselectrows',
                             $this->keystring => Decorator::field('relname'),
                         ],
                     ],
@@ -179,26 +179,26 @@ class MaterializedviewsController extends BaseController
             //                'vars'    => array('matview' => 'relname'),
             //            ),
 
-            'alter'        => [
+            'alter' => [
                 'content' => $this->lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'materializedviewproperties',
+                        'url' => 'materializedviewproperties',
                         'urlvars' => [
-                            'action'         => 'confirm_alter',
+                            'action' => 'confirm_alter',
                             $this->keystring => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
-            'drop'         => [
+            'drop' => [
                 'multiaction' => 'confirm_drop',
-                'content'     => $this->lang['strdrop'],
-                'attr'        => [
+                'content' => $this->lang['strdrop'],
+                'attr' => [
                     'href' => [
-                        'url'     => 'materializedviews',
+                        'url' => 'materializedviews',
                         'urlvars' => [
-                            'action'         => 'confirm_drop',
+                            'action' => 'confirm_drop',
                             $this->keystring => Decorator::field('relname'),
                         ],
                     ],
@@ -209,29 +209,29 @@ class MaterializedviewsController extends BaseController
         echo $this->printTable($matviews, $columns, $actions, $this->table_place, $this->lang['strnoviews']);
 
         $navlinks = [
-            'create'    => [
-                'attr'    => [
+            'create' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'materializedviews',
+                        'url' => 'materializedviews',
                         'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
                 'content' => $this->lang['strcreateview'],
             ],
             'createwiz' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'materializedviews',
+                        'url' => 'materializedviews',
                         'urlvars' => [
-                            'action'   => 'wiz_create',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'wiz_create',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -253,12 +253,12 @@ class MaterializedviewsController extends BaseController
         $reqvars = $this->misc->getRequestVars($this->keystring);
 
         $attrs = [
-            'text'       => Decorator::field('relname'),
-            'icon'       => 'MViews',
+            'text' => Decorator::field('relname'),
+            'icon' => 'MViews',
             'iconAction' => Decorator::url('display', $reqvars, [$this->keystring => Decorator::field('relname')]),
-            'toolTip'    => Decorator::field('relcomment'),
-            'action'     => Decorator::redirecturl('redirect', $reqvars, [$this->keystring => Decorator::field('relname')]),
-            'branch'     => Decorator::url('materializedviews', $reqvars, ['action' => 'subtree', $this->keystring => Decorator::field('relname')]),
+            'toolTip' => Decorator::field('relcomment'),
+            'action' => Decorator::redirecturl('redirect', $reqvars, [$this->keystring => Decorator::field('relname')]),
+            'branch' => Decorator::url('materializedviews', $reqvars, ['action' => 'subtree', $this->keystring => Decorator::field('relname')]),
         ];
 
         return $this->printTree($matviews, $attrs, 'matviews');
@@ -304,7 +304,7 @@ class MaterializedviewsController extends BaseController
             echo '</form>' . \PHP_EOL;
         } else {
             if (\is_array($_POST['view'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
 
                 if (0 === $status) {

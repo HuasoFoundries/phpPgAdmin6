@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -325,7 +325,7 @@ trait FtsTrait
             $this->fieldClean($f_schema);
             $this->fieldClean($name);
 
-            $sql    = "ALTER TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$cfgname}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$cfgname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -471,7 +471,7 @@ trait FtsTrait
             $this->fieldClean($f_schema);
             $this->fieldClean($name);
 
-            $sql    = "ALTER TEXT SEARCH DICTIONARY \"{$f_schema}\".\"{$dictname}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TEXT SEARCH DICTIONARY \"{$f_schema}\".\"{$dictname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -587,7 +587,7 @@ trait FtsTrait
             WHERE c.cfgname = '{$ftscfg}'
                 AND n.nspname='{$c_schema}'");
 
-        $oid       = $oidSet->fields['oid'];
+        $oid = $oidSet->fields['oid'];
         $cfgparser = $oidSet->fields['cfgparser'];
 
         $tokenIdSet = $this->selectSet("SELECT tokid

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -88,7 +88,7 @@ class HelpController extends BaseController
         $this->printFooter();
     }
 
-    public function doChoosePage($urls): void
+    public function doChoosePage(array $urls): void
     {
         $this->printHeader();
         $this->printBody();

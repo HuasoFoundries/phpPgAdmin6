@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -167,7 +167,7 @@ trait TriggerTrait
      * @param string $type    NOTHING for a do nothing rule, SOMETHING to use given action
      * @param string $action  The action to take
      *
-     * @return int 0 if operation was successful
+     * @return \PHPPgAdmin\ADORecordSet|int
      */
     public function setRule($name, $event, $table, $where, $instead, $type, $action)
     {

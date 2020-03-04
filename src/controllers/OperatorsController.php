@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -81,15 +81,15 @@ class OperatorsController extends BaseController
         $reqvars = $this->misc->getRequestVars('operator');
 
         $attrs = [
-            'text'    => $proto,
-            'icon'    => 'Operator',
+            'text' => $proto,
+            'icon' => 'Operator',
             'toolTip' => Decorator::field('oprcomment'),
-            'action'  => Decorator::actionurl(
+            'action' => Decorator::actionurl(
                 'operators',
                 $reqvars,
                 [
-                    'action'       => 'properties',
-                    'operator'     => $proto,
+                    'action' => 'properties',
+                    'operator' => $proto,
                     'operator_oid' => Decorator::field('oid'),
                 ]
             ),
@@ -117,10 +117,10 @@ class OperatorsController extends BaseController
             'operator' => [
                 'title' => $this->lang['stroperator'],
                 'field' => Decorator::field('oprname'),
-                'url'   => "operators?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['operator' => 'oprname', 'operator_oid' => 'oid'],
+                'url' => "operators?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['operator' => 'oprname', 'operator_oid' => 'oid'],
             ],
-            'leftarg'  => [
+            'leftarg' => [
                 'title' => $this->lang['strleftarg'],
                 'field' => Decorator::field('oprleftname'),
             ],
@@ -128,14 +128,14 @@ class OperatorsController extends BaseController
                 'title' => $this->lang['strrightarg'],
                 'field' => Decorator::field('oprrightname'),
             ],
-            'returns'  => [
+            'returns' => [
                 'title' => $this->lang['strreturns'],
                 'field' => Decorator::field('resultname'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
-            'comment'  => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('oprcomment'),
             ],
@@ -147,12 +147,12 @@ class OperatorsController extends BaseController
                 // 'url'   => "operators?action=confirm_drop&amp;{$this->misc->href}&amp;",
                 // 'vars'  => array('operator' => 'oprname', 'operator_oid' => 'oid'),
                 'content' => $this->lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'operators',
+                        'url' => 'operators',
                         'urlvars' => [
-                            'action'       => 'confirm_drop',
-                            'operator'     => Decorator::field('oprname'),
+                            'action' => 'confirm_drop',
+                            'operator' => Decorator::field('oprname'),
                             'operator_oid' => Decorator::field('oid'),
                         ],
                     ],
@@ -178,7 +178,7 @@ class OperatorsController extends BaseController
         $this->printTitle($this->lang['strproperties'], 'pg.operator');
         $this->printMsg($msg);
 
-        $oprdata                       = $data->getOperator($_REQUEST['operator_oid']);
+        $oprdata = $data->getOperator($_REQUEST['operator_oid']);
         $oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
 
         if (0 < $oprdata->recordCount()) {
@@ -221,18 +221,18 @@ class OperatorsController extends BaseController
             $this->printNavLinks(
                 [
                     'showall' => [
-                        'attr'    => [
+                        'attr' => [
                             'href' => [
-                                'url'     => 'operators',
+                                'url' => 'operators',
                                 'urlvars' => [
-                                    'server'   => $_REQUEST['server'],
+                                    'server' => $_REQUEST['server'],
                                     'database' => $_REQUEST['database'],
-                                    'schema'   => $_REQUEST['schema'],
+                                    'schema' => $_REQUEST['schema'],
                                 ],
                             ],
                         ],
                         'content' => $this->lang['strshowalloperators'],
-                    ]],
+                    ], ],
                 'operators-properties',
                 \get_defined_vars()
             );

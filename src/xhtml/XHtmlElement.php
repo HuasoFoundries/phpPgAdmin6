@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -32,7 +32,7 @@ class XHtmlElement extends XHtmlSimpleElement
     /**
      * Adds an xhtml child to element.
      *
-     * @param XHtmlElement $object The element to become a child of element
+     * @param XHtmlOption $object
      */
     public function add(XHtmlOption &$object): void
     {

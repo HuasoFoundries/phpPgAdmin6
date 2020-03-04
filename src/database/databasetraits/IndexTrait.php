@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -392,7 +392,7 @@ trait IndexTrait
         }
 
         // Properly lock the table
-        $sql    = "LOCK TABLE \"{$f_schema}\".\"{$table}\" IN ACCESS EXCLUSIVE MODE";
+        $sql = "LOCK TABLE \"{$f_schema}\".\"{$table}\" IN ACCESS EXCLUSIVE MODE";
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -552,10 +552,10 @@ trait IndexTrait
 
         $this->clean($tables[0]['tablename']);
         $this->clean($tables[0]['schemaname']);
-        $tables_list        = "'{$tables[0]['tablename']}'";
-        $schema_list        = "'{$tables[0]['schemaname']}'";
+        $tables_list = "'{$tables[0]['tablename']}'";
+        $schema_list = "'{$tables[0]['schemaname']}'";
         $schema_tables_list = "'{$tables[0]['schemaname']}.{$tables[0]['tablename']}'";
-        $tablescount        = \count($tables);
+        $tablescount = \count($tables);
 
         for ($i = 1; $i < $tablescount; ++$i) {
             $this->clean($tables[$i]['tablename']);
@@ -584,7 +584,7 @@ trait IndexTrait
         $rs = $this->selectSet($sql);
 
         while (!$rs->EOF) {
-            $arrData      = \explode(':', $rs->fields['arr_dim']);
+            $arrData = \explode(':', $rs->fields['arr_dim']);
             $strdimension = \trim(\mb_substr($arrData[1], 0, \mb_strlen($arrData[1]) - 1));
             $tmpDimension = (int) $strdimension;
             $maxDimension = $tmpDimension > $maxDimension ? $tmpDimension : $maxDimension;

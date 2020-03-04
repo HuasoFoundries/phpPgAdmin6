@@ -76,6 +76,8 @@ ifeq ("$(wildcard config.inc.php)","")
 	cp config.inc.php-dist config.inc.php
 endif
 	./vendor/bin/codecept run unit --debug
+	find ./src -name \*.php -print0 | xargs -0 -n 1 php -l
+
 
 csfixer:
 	@if [ -f "vendor/bin/php-cs-fixer" ]; then \
@@ -152,7 +154,7 @@ phpstan:
 	echo ""
 
 
-
+fixers: phpmd psalm phpstan
 
 create_testdb:
 	PGPASSWORD=scrutinizer psql   -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql

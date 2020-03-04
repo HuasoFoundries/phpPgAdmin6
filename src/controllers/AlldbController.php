@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -105,7 +105,7 @@ class AlldbController extends BaseController
 
         $this->misc->setReloadBrowser(true);
 
-        $href        = $this->misc->getHREF();
+        $href = $this->misc->getHREF();
         $redirecturl = $this->container->utils->getDestinationWithLastTab('database');
         /*       $this->prtrace([
         'redirecturl' => $redirecturl,
@@ -113,17 +113,17 @@ class AlldbController extends BaseController
         );
          */
         $columns = [
-            'database'   => [
+            'database' => [
                 'title' => $this->lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url'   => self::SUBFOLDER . $redirecturl . '&amp;',
-                'vars'  => ['database' => 'datname'],
+                'url' => self::SUBFOLDER . $redirecturl . '&amp;',
+                'vars' => ['database' => 'datname'],
             ],
-            'owner'      => [
+            'owner' => [
                 'title' => $this->lang['strowner'],
                 'field' => Decorator::field('datowner'),
             ],
-            'encoding'   => [
+            'encoding' => [
                 'title' => $this->lang['strencoding'],
                 'field' => Decorator::field('datencoding'),
             ],
@@ -132,23 +132,23 @@ class AlldbController extends BaseController
                 'title' => $this->lang['strtablespace'],
                 'field' => Decorator::field('tablespace'),
             ],
-            'dbsize'     => [
+            'dbsize' => [
                 'title' => $this->lang['strsize'],
                 'field' => Decorator::field('dbsize'),
-                'type'  => 'prettysize',
+                'type' => 'prettysize',
             ],
             'lc_collate' => [
                 'title' => $this->lang['strcollation'],
                 'field' => Decorator::field('datcollate'),
             ],
-            'lc_ctype'   => [
+            'lc_ctype' => [
                 'title' => $this->lang['strctype'],
                 'field' => Decorator::field('datctype'),
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
-            'comment'    => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('datcomment'),
             ],
@@ -157,30 +157,30 @@ class AlldbController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['database' => 'datname'],
-                'url'     => 'alldb',
+                'url' => 'alldb',
                 'default' => null,
             ],
-            'drop'         => [
-                'content'     => $this->lang['strdrop'],
-                'attr'        => [
+            'drop' => [
+                'content' => $this->lang['strdrop'],
+                'attr' => [
                     'href' => [
-                        'url'     => 'alldb',
+                        'url' => 'alldb',
                         'urlvars' => [
-                            'subject'      => 'database',
-                            'action'       => 'confirm_drop',
+                            'subject' => 'database',
+                            'action' => 'confirm_drop',
                             'dropdatabase' => Decorator::field('datname'),
                         ],
                     ],
                 ],
                 'multiaction' => 'confirm_drop',
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $this->lang['strprivileges'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges',
+                        'url' => 'privileges',
                         'urlvars' => [
-                            'subject'  => 'database',
+                            'subject' => 'database',
                             'database' => Decorator::field('datname'),
                         ],
                     ],
@@ -191,12 +191,12 @@ class AlldbController extends BaseController
         if ($data->hasAlterDatabase()) {
             $actions['alter'] = [
                 'content' => $this->lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'alldb',
+                        'url' => 'alldb',
                         'urlvars' => [
-                            'subject'       => 'database',
-                            'action'        => 'confirm_alter',
+                            'subject' => 'database',
+                            'action' => 'confirm_alter',
                             'alterdatabase' => Decorator::field('datname'),
                         ],
                     ],
@@ -224,9 +224,9 @@ class AlldbController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'alldb',
+                        'url' => 'alldb',
                         'urlvars' => [
                             'action' => 'create',
                             'server' => $_REQUEST['server'],
@@ -248,11 +248,11 @@ class AlldbController extends BaseController
         $reqvars = $this->misc->getRequestVars('database');
 
         $attrs = [
-            'text'    => Decorator::field('datname'),
-            'icon'    => 'Database',
+            'text' => Decorator::field('datname'),
+            'icon' => 'Database',
             'toolTip' => Decorator::field('datcomment'),
-            'action'  => Decorator::redirecturl('redirect', $reqvars, ['subject' => 'database', 'database' => Decorator::field('datname')]),
-            'branch'  => Decorator::url('/src/views/database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
+            'action' => Decorator::redirecturl('redirect', $reqvars, ['subject' => 'database', 'database' => Decorator::field('datname')]),
+            'branch' => Decorator::url('/src/views/database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
         ];
 
         return $this->printTree($databases, $attrs, 'databases');
@@ -281,7 +281,7 @@ class AlldbController extends BaseController
             if ($data->hasAlterDatabaseOwner() && $data->isSuperUser()) {
                 // Fetch all users
 
-                $rs    = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
+                $rs = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
                 $owner = isset($rs->fields['usename']) ? $rs->fields['usename'] : '';
                 $users = $data->getUsers();
 
@@ -298,7 +298,7 @@ class AlldbController extends BaseController
             }
 
             if ($data->hasSharedComments()) {
-                $rs      = $data->getDatabaseComment($_REQUEST['alterdatabase']);
+                $rs = $data->getDatabaseComment($_REQUEST['alterdatabase']);
                 $comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
                 echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
                 echo '<td class="data1">';
@@ -576,7 +576,7 @@ class AlldbController extends BaseController
         $this->printMsg($msg);
 
         $subject = 'server';
-        $object  = $_REQUEST['server'];
+        $object = $_REQUEST['server'];
 
 //        $this->prtrace($this->misc->getServerInfo());
 

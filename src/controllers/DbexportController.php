@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -200,10 +200,10 @@ class DbexportController extends BaseController
         $this->prtrace(
             'ENV VARS',
             [
-                'PGUSER'     => \getenv('PGUSER'),
+                'PGUSER' => \getenv('PGUSER'),
                 'PGPASSWORD' => \getenv('PGPASSWORD'),
-                'PGHOST'     => \getenv('PGHOST'),
-                'PGPORT'     => \getenv('PGPORT'),
+                'PGHOST' => \getenv('PGHOST'),
+                'PGPORT' => \getenv('PGPORT'),
                 'PGDATABASE' => \getenv('PGDATABASE'),
             ]
         );

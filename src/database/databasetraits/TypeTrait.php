@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -30,12 +30,12 @@ trait TypeTrait
 
         if ('_' === \mb_substr($typname, 0, 1)) {
             $is_array = true;
-            $typname  = \mb_substr($typname, 1);
+            $typname = \mb_substr($typname, 1);
         }
 
         // Show lengths on bpchar and varchar
         if ('bpchar' === $typname) {
-            $len  = $typmod - $varhdrsz;
+            $len = $typmod - $varhdrsz;
             $temp = 'character';
 
             if (1 < $len) {
@@ -52,8 +52,8 @@ trait TypeTrait
 
             if (-1 !== $typmod) {
                 $tmp_typmod = $typmod - $varhdrsz;
-                $precision  = ($tmp_typmod >> 16) & 0xffff;
-                $scale      = $tmp_typmod & 0xffff;
+                $precision = ($tmp_typmod >> 16) & 0xffff;
+                $scale = $tmp_typmod & 0xffff;
                 $temp .= "({$precision}, {$scale})";
             }
         } else {
@@ -334,10 +334,10 @@ trait TypeTrait
             return -1;
         }
 
-        $found       = false;
-        $first       = true;
+        $found = false;
+        $first = true;
         $comment_sql = ''; // Accumulate comments for the columns
-        $sql         = "CREATE TYPE \"{$f_schema}\".\"{$name}\" AS (";
+        $sql = "CREATE TYPE \"{$f_schema}\".\"{$name}\" AS (";
 
         for ($i = 0; $i < $fields; ++$i) {
             $this->fieldClean($field[$i]);

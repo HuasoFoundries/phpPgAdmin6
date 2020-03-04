@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Middleware;
@@ -17,7 +17,7 @@ class Middleware
     public function __construct($container)
     {
         $this->container = $container;
-        $this->router    = $container->get('router');
+        $this->router = $container->get('router');
     }
 
     public function __get($property)

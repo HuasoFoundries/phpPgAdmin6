@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -118,7 +118,7 @@ class ConstraintsController extends BaseController
 
         $cnPre = static function (&$rowdata) use ($data): void {
             if (null === $rowdata->fields['consrc']) {
-                $atts                           = $data->getAttributeNames($_REQUEST['table'], \explode(' ', $rowdata->fields['indkey']));
+                $atts = $data->getAttributeNames($_REQUEST['table'], \explode(' ', $rowdata->fields['indkey']));
                 $rowdata->fields['+definition'] = ('u' === $rowdata->fields['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (') . \implode(',', $atts) . ')';
             } else {
                 $rowdata->fields['+definition'] = $rowdata->fields['consrc'];
@@ -139,12 +139,12 @@ class ConstraintsController extends BaseController
             'definition' => [
                 'title' => $this->lang['strdefinition'],
                 'field' => Decorator::field('+definition'),
-                'type'  => 'pre',
+                'type' => 'pre',
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
-            'comment'    => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('constcomment'),
             ],
@@ -153,14 +153,14 @@ class ConstraintsController extends BaseController
         $actions = [
             'drop' => [
                 'content' => $this->lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints',
+                        'url' => 'constraints',
                         'urlvars' => [
-                            'action'     => 'confirm_drop',
-                            'table'      => $_REQUEST['table'],
+                            'action' => 'confirm_drop',
+                            'table' => $_REQUEST['table'],
                             'constraint' => Decorator::field('conname'),
-                            'type'       => Decorator::field('contype'),
+                            'type' => Decorator::field('contype'),
                         ],
                     ],
                 ],
@@ -171,60 +171,60 @@ class ConstraintsController extends BaseController
 
         $navlinks = [
             'addcheck' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints',
+                        'url' => 'constraints',
                         'urlvars' => [
-                            'action'   => 'add_check',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'add_check',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
+                            'schema' => $_REQUEST['schema'],
+                            'table' => $_REQUEST['table'],
                         ],
                     ],
                 ],
                 'content' => $this->lang['straddcheck'],
             ],
-            'adduniq'  => [
-                'attr'    => [
+            'adduniq' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints',
+                        'url' => 'constraints',
                         'urlvars' => [
-                            'action'   => 'add_unique_key',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'add_unique_key',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
+                            'schema' => $_REQUEST['schema'],
+                            'table' => $_REQUEST['table'],
                         ],
                     ],
                 ],
                 'content' => $this->lang['stradduniq'],
             ],
-            'addpk'    => [
-                'attr'    => [
+            'addpk' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints',
+                        'url' => 'constraints',
                         'urlvars' => [
-                            'action'   => 'add_primary_key',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'add_primary_key',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
+                            'schema' => $_REQUEST['schema'],
+                            'table' => $_REQUEST['table'],
                         ],
                     ],
                 ],
                 'content' => $this->lang['straddpk'],
             ],
-            'addfk'    => [
-                'attr'    => [
+            'addfk' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'constraints',
+                        'url' => 'constraints',
                         'urlvars' => [
-                            'action'   => 'add_foreign_key',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'add_foreign_key',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'table'    => $_REQUEST['table'],
+                            'schema' => $_REQUEST['schema'],
+                            'table' => $_REQUEST['table'],
                         ],
                     ],
                 ],
@@ -247,7 +247,7 @@ class ConstraintsController extends BaseController
         $this->printTitle($this->lang['straddfk'], 'pg.constraint.foreign_key');
         $this->printMsg($msg);
 
-        $attrs  = $data->getTableAttributes($_REQUEST['table']);
+        $attrs = $data->getTableAttributes($_REQUEST['table']);
         $tables = $data->getAllTables();
 
         $selColumns = new \PHPPgAdmin\XHtml\XHtmlSelect('TableColumnList', true, 10);
@@ -398,7 +398,7 @@ class ConstraintsController extends BaseController
 
         $this->printMsg($msg);
 
-        $attrs       = $data->getTableAttributes($_REQUEST['table']);
+        $attrs = $data->getTableAttributes($_REQUEST['table']);
         $tablespaces = null;
         // Fetch all tablespaces from the database
         if ($data->hasTablespaces()) {

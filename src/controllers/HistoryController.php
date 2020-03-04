@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -90,31 +90,31 @@ class HistoryController extends BaseController
 
             //Kint::dump($history);
             $columns = [
-                'query'    => [
+                'query' => [
                     'title' => $this->lang['strsql'],
                     'field' => Decorator::field('query'),
                 ],
                 'paginate' => [
                     'title' => $this->lang['strpaginate'],
                     'field' => Decorator::field('paginate'),
-                    'type'  => 'yesno',
+                    'type' => 'yesno',
                 ],
-                'actions'  => [
+                'actions' => [
                     'title' => $this->lang['stractions'],
                 ],
             ];
 
             $actions = [
-                'run'    => [
+                'run' => [
                     'content' => $this->lang['strexecute'],
-                    'attr'    => [
-                        'href'   => [
-                            'url'     => 'sql',
+                    'attr' => [
+                        'href' => [
+                            'url' => 'sql',
                             'urlvars' => [
-                                'subject'   => 'history',
+                                'subject' => 'history',
                                 'nohistory' => 't',
-                                'queryid'   => Decorator::field('queryid'),
-                                'paginate'  => Decorator::field('paginate'),
+                                'queryid' => Decorator::field('queryid'),
+                                'paginate' => Decorator::field('paginate'),
                             ],
                         ],
                         'target' => 'detail',
@@ -122,11 +122,11 @@ class HistoryController extends BaseController
                 ],
                 'remove' => [
                     'content' => $this->lang['strdelete'],
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'history',
+                            'url' => 'history',
                             'urlvars' => [
-                                'action'  => 'confdelhistory',
+                                'action' => 'confdelhistory',
                                 'queryid' => Decorator::field('queryid'),
                             ],
                         ],
@@ -141,12 +141,12 @@ class HistoryController extends BaseController
 
         $navlinks = [
             'refresh' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'history',
+                        'url' => 'history',
                         'urlvars' => [
-                            'action'   => 'history',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'history',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                         ],
                     ],
@@ -158,12 +158,12 @@ class HistoryController extends BaseController
         if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])
             && \count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
             $navlinks['download'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'history',
+                        'url' => 'history',
                         'urlvars' => [
-                            'action'   => 'download',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'download',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                         ],
                     ],
@@ -171,12 +171,12 @@ class HistoryController extends BaseController
                 'content' => $this->lang['strdownload'],
             ];
             $navlinks['clear'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'history',
+                        'url' => 'history',
                         'urlvars' => [
-                            'action'   => 'confclearhistory',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'confclearhistory',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                         ],
                     ],
@@ -188,7 +188,7 @@ class HistoryController extends BaseController
         $this->printNavLinks($navlinks, 'history-history', \get_defined_vars());
     }
 
-    public function doDelHistory($qid, $confirm): void
+    public function doDelHistory($qid, bool $confirm): void
     {
         if ($confirm) {
             $this->printHeader($this->headerTitle(), $this->scripts);
@@ -212,7 +212,7 @@ class HistoryController extends BaseController
         }
     }
 
-    public function doClearHistory($confirm): void
+    public function doClearHistory(bool $confirm): void
     {
         if ($confirm) {
             $this->printHeader($this->headerTitle(), $this->scripts);

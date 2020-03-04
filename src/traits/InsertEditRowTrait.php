@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Traits;
@@ -47,8 +47,8 @@ trait InsertEditRowTrait
 
         $fksprops = [
             'byconstr' => [],
-            'byfield'  => [],
-            'code'     => '',
+            'byfield' => [],
+            'code' => '',
         ];
 
         $constrs = $data->getConstraintsWithFields($table);
@@ -60,15 +60,15 @@ trait InsertEditRowTrait
                     if (!isset($fksprops['byconstr'][$constrs->fields['conid']])) {
                         $fksprops['byconstr'][$constrs->fields['conid']] = [
                             'confrelid' => $constrs->fields['confrelid'],
-                            'f_table'   => $constrs->fields['f_table'],
-                            'f_schema'  => $constrs->fields['f_schema'],
-                            'pattnums'  => [],
+                            'f_table' => $constrs->fields['f_table'],
+                            'f_schema' => $constrs->fields['f_schema'],
+                            'pattnums' => [],
                             'pattnames' => [],
                             'fattnames' => [],
                         ];
                     }
 
-                    $fksprops['byconstr'][$constrs->fields['conid']]['pattnums'][]  = $constrs->fields['p_attnum'];
+                    $fksprops['byconstr'][$constrs->fields['conid']]['pattnums'][] = $constrs->fields['p_attnum'];
                     $fksprops['byconstr'][$constrs->fields['conid']]['pattnames'][] = $constrs->fields['p_field'];
                     $fksprops['byconstr'][$constrs->fields['conid']]['fattnames'][] = $constrs->fields['f_field'];
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -42,7 +42,7 @@ class OpclassesController extends BaseController
      *
      * @param string $msg
      *
-     * @return string|void
+     * @return void
      */
     public function doDefault($msg = '')
     {
@@ -59,20 +59,20 @@ class OpclassesController extends BaseController
                 'title' => $this->lang['straccessmethod'],
                 'field' => Decorator::field('amname'),
             ],
-            'opclass'      => [
+            'opclass' => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('opcname'),
             ],
-            'type'         => [
+            'type' => [
                 'title' => $this->lang['strtype'],
                 'field' => Decorator::field('opcintype'),
             ],
-            'default'      => [
+            'default' => [
                 'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('opcdefault'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'comment'      => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('opccomment'),
             ],
@@ -96,8 +96,8 @@ class OpclassesController extends BaseController
         $proto = Decorator::concat(Decorator::field('opcname'), '/', Decorator::field('amname'));
 
         $attrs = [
-            'text'    => $proto,
-            'icon'    => 'OperatorClass',
+            'text' => $proto,
+            'icon' => 'OperatorClass',
             'toolTip' => Decorator::field('opccomment'),
         ];
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Middleware;
@@ -19,14 +19,14 @@ class PopulateRequestResponse extends Middleware
         \Psr\Http\Message\ResponseInterface $response,
         $next
     ) {
-        $container                = $this->container;
-        $container['requestobj']  = $request;
+        $container = $this->container;
+        $container['requestobj'] = $request;
         $container['responseobj'] = $response;
 
-        $container['server']   = $request->getParam('server');
+        $container['server'] = $request->getParam('server');
         $container['database'] = $request->getParam('database');
-        $container['schema']   = $request->getParam('schema');
-        $misc                  = $container->get('misc');
+        $container['schema'] = $request->getParam('schema');
+        $misc = $container->get('misc');
 
         $misc->setHREF();
         $misc->setForm();

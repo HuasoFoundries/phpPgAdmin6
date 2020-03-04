@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -16,9 +16,11 @@ class HTMLNavbarController extends HTMLController
     /**
      * Display a bread crumb trail.
      *
-     * @param array|string $trail an array of breadcrumb items, or a string to identify one of them
-     * @param  $do_print true to echo, false to return html
-     * @param null|string $from
+     * @param array|string  $trail     an array of breadcrumb items, or a string to identify one of them
+     * @param boolean $do_print  true  to echo, false to return html
+     * @param null|string   $from
+     *
+     * @return string  ( description_of_the_return_value )
      */
     public function printTrail($trail = [], $do_print = true, $from = null)
     {
@@ -50,6 +52,7 @@ class HTMLNavbarController extends HTMLController
 
         if ($do_print) {
             echo $trail_html;
+            return '';
         } else {
             return $trail_html;
         }

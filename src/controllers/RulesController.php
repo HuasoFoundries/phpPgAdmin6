@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -77,7 +77,7 @@ class RulesController extends BaseController
         $rules = $data->getRules($_REQUEST[$_REQUEST['subject']]);
 
         $columns = [
-            'rule'       => [
+            'rule' => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('rulename'),
             ],
@@ -85,26 +85,26 @@ class RulesController extends BaseController
                 'title' => $this->lang['strdefinition'],
                 'field' => Decorator::field('definition'),
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
         ];
 
         $subject = \urlencode($_REQUEST['subject']);
-        $object  = \urlencode($_REQUEST[$_REQUEST['subject']]);
+        $object = \urlencode($_REQUEST[$_REQUEST['subject']]);
 
         $actions = [
             'drop' => [
                 'content' => $this->lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'rules',
+                        'url' => 'rules',
                         'urlvars' => [
-                            'action'  => 'confirm_drop',
+                            'action' => 'confirm_drop',
                             'reltype' => $subject,
-                            $subject  => $object,
+                            $subject => $object,
                             'subject' => 'rule',
-                            'rule'    => Decorator::field('rulename'),
+                            'rule' => Decorator::field('rulename'),
                         ],
                     ],
                 ],
@@ -114,16 +114,16 @@ class RulesController extends BaseController
         echo $this->printTable($rules, $columns, $actions, 'rules-rules', $this->lang['strnorules']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'rules',
+                    'url' => 'rules',
                     'urlvars' => [
-                        'action'   => 'create_rule',
-                        'server'   => $_REQUEST['server'],
+                        'action' => 'create_rule',
+                        'server' => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
-                        'schema'   => $_REQUEST['schema'],
-                        $subject   => $object,
-                        'subject'  => $subject,
+                        'schema' => $_REQUEST['schema'],
+                        $subject => $object,
+                        'subject' => $subject,
                     ],
                 ],
             ],

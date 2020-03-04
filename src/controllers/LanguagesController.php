@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -57,10 +57,10 @@ class LanguagesController extends BaseController
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('lanname'),
             ],
-            'trusted'  => [
+            'trusted' => [
                 'title' => $this->lang['strtrusted'],
                 'field' => Decorator::field('lanpltrusted'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
             'function' => [
                 'title' => $this->lang['strfunction'],

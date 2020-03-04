@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -97,7 +97,7 @@ class RolesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $lang                = $this->lang;
+        $lang = $this->lang;
         $renderRoleConnLimit = static function ($val) use ($lang) {
             return '-1' === $val ? $lang['strnolimit'] : \htmlspecialchars($val);
         };
@@ -113,54 +113,54 @@ class RolesController extends BaseController
         $roles = $data->getRoles();
 
         $columns = [
-            'role'       => [
+            'role' => [
                 'title' => $this->lang['strrole'],
                 'field' => Decorator::field('rolname'),
-                'url'   => self::SUBFOLDER . "/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['rolename' => 'rolname'],
+                'url' => self::SUBFOLDER . "/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['rolename' => 'rolname'],
             ],
-            'group'      => [
+            'group' => [
                 'title' => $this->lang['strgroup'],
                 'field' => Decorator::field('group'),
             ],
-            'superuser'  => [
+            'superuser' => [
                 'title' => $this->lang['strsuper'],
                 'field' => Decorator::field('rolsuper'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'createdb'   => [
+            'createdb' => [
                 'title' => $this->lang['strcreatedb'],
                 'field' => Decorator::field('rolcreatedb'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
             'createrole' => [
                 'title' => $this->lang['strcancreaterole'],
                 'field' => Decorator::field('rolcreaterole'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'inherits'   => [
+            'inherits' => [
                 'title' => $this->lang['strinheritsprivs'],
                 'field' => Decorator::field('rolinherit'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'canloging'  => [
+            'canloging' => [
                 'title' => $this->lang['strcanlogin'],
                 'field' => Decorator::field('rolcanlogin'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'connlimit'  => [
-                'title'  => $this->lang['strconnlimit'],
-                'field'  => Decorator::field('rolconnlimit'),
-                'type'   => 'callback',
+            'connlimit' => [
+                'title' => $this->lang['strconnlimit'],
+                'field' => Decorator::field('rolconnlimit'),
+                'type' => 'callback',
                 'params' => ['function' => $renderRoleConnLimit],
             ],
-            'expires'    => [
-                'title'  => $this->lang['strexpires'],
-                'field'  => Decorator::field('rolvaliduntil'),
-                'type'   => 'callback',
+            'expires' => [
+                'title' => $this->lang['strexpires'],
+                'field' => Decorator::field('rolvaliduntil'),
+                'type' => 'callback',
                 'params' => ['function' => $renderRoleExpires, 'null' => $this->lang['strnever']],
             ],
-            'actions'    => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
         ];
@@ -168,23 +168,23 @@ class RolesController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $this->lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles',
+                        'url' => 'roles',
                         'urlvars' => [
-                            'action'   => 'alter',
+                            'action' => 'alter',
                             'rolename' => Decorator::field('rolname'),
                         ],
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $this->lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles',
+                        'url' => 'roles',
                         'urlvars' => [
-                            'action'   => 'confirm_drop',
+                            'action' => 'confirm_drop',
                             'rolename' => Decorator::field('rolname'),
                         ],
                     ],
@@ -196,9 +196,9 @@ class RolesController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles',
+                        'url' => 'roles',
                         'urlvars' => [
                             'action' => 'create',
                             'server' => $_REQUEST['server'],
@@ -383,13 +383,13 @@ class RolesController extends BaseController
 
             return;
         }
-        $server_info                       = $this->misc->getServerInfo();
-        $canRename                         = $data->hasUserRename() && ($_REQUEST['rolename'] !== $server_info['username']);
-        $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-        $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+        $server_info = $this->misc->getServerInfo();
+        $canRename = $data->hasUserRename() && ($_REQUEST['rolename'] !== $server_info['username']);
+        $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+        $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
         $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-        $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-        $roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
+        $roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
+        $roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
 
         $this->_adjustPostVars($roledata, $canRename);
 
@@ -569,11 +569,11 @@ class RolesController extends BaseController
         $roledata = $data->getRole($_REQUEST['rolename']);
 
         if (0 < $roledata->recordCount()) {
-            $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-            $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+            $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+            $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-            $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
-            $roledata->fields['rolcanlogin']   = $data->phpBool($roledata->fields['rolcanlogin']);
+            $roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
+            $roledata->fields['rolcanlogin'] = $data->phpBool($roledata->fields['rolcanlogin']);
 
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data\" style=\"width: 130px\">Description</th>" . \PHP_EOL;
@@ -636,9 +636,9 @@ class RolesController extends BaseController
 
         $navlinks = [
             'showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles',
+                        'url' => 'roles',
                         'urlvars' => [
                             'server' => $_REQUEST['server'],
                         ],
@@ -646,26 +646,26 @@ class RolesController extends BaseController
                 ],
                 'content' => $this->lang['strshowallroles'],
             ],
-            'alter'   => [
-                'attr'    => [
+            'alter' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles',
+                        'url' => 'roles',
                         'urlvars' => [
-                            'action'   => 'alter',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'alter',
+                            'server' => $_REQUEST['server'],
                             'rolename' => $_REQUEST['rolename'],
                         ],
                     ],
                 ],
                 'content' => $this->lang['stralter'],
             ],
-            'drop'    => [
-                'attr'    => [
+            'drop' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'roles',
+                        'url' => 'roles',
                         'urlvars' => [
-                            'action'   => 'confirm_drop',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'confirm_drop',
+                            'server' => $_REQUEST['server'],
                             'rolename' => $_REQUEST['rolename'],
                         ],
                     ],
@@ -691,7 +691,7 @@ class RolesController extends BaseController
 
         $server_info = $this->misc->getServerInfo();
 
-        $roledata             = $data->getRole($server_info['username']);
+        $roledata = $data->getRole($server_info['username']);
         $_REQUEST['rolename'] = $server_info['username'];
 
         $this->printTrail('role');
@@ -699,10 +699,10 @@ class RolesController extends BaseController
         $this->printMsg($msg);
 
         if (0 < $roledata->recordCount()) {
-            $roledata->fields['rolsuper']      = $data->phpBool($roledata->fields['rolsuper']);
-            $roledata->fields['rolcreatedb']   = $data->phpBool($roledata->fields['rolcreatedb']);
+            $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
+            $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
-            $roledata->fields['rolinherit']    = $data->phpBool($roledata->fields['rolinherit']);
+            $roledata->fields['rolinherit'] = $data->phpBool($roledata->fields['rolinherit']);
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo "\t\t<th class=\"data\">{$this->lang['strsuper']}</th>" . \PHP_EOL;
@@ -727,9 +727,9 @@ class RolesController extends BaseController
         }
 
         $this->printNavLinks(['changepassword' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'roles',
+                    'url' => 'roles',
                     'urlvars' => [
                         'action' => 'confchangepassword',
                         'server' => $_REQUEST['server'],
@@ -831,8 +831,8 @@ class RolesController extends BaseController
         }
 
         $_POST['formConnLimit'] = '-1' === $roledata->fields['rolconnlimit'] ? '' : $roledata->fields['rolconnlimit'];
-        $_POST['formExpires']   = 'infinity' === $roledata->fields['rolvaliduntil'] ? '' : $roledata->fields['rolvaliduntil'];
-        $_POST['formPassword']  = '';
+        $_POST['formExpires'] = 'infinity' === $roledata->fields['rolvaliduntil'] ? '' : $roledata->fields['rolvaliduntil'];
+        $_POST['formPassword'] = '';
     }
 
     private function _populateMemberof($data): void

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\XHtml;
 
-\defined('BASE_PATH') || \define(BASE_PATH, \dirname(__DIR__, 2));
+\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
 \defined('SUBFOLDER') || \define(
     'SUBFOLDER',
     \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
@@ -52,7 +52,7 @@ class BaseController
     public $action = '';
 
     public $controller_name;
-    protected $script;
+
     /**
      * Used.
      *
@@ -76,6 +76,8 @@ class BaseController
     public $conf;
 
     public $phpMinVer;
+
+    protected $script;
 
     protected $container;
 
@@ -174,7 +176,7 @@ class BaseController
     /**
      * Default method to render the controller according to the action parameter.
      *
-     * @return string|void
+     * @return void
      */
     public function render()
     {
@@ -274,7 +276,15 @@ class BaseController
         return $tree->printTree($_treedata, $attrs, $section, $print);
     }
 
-    public function printTrail($trail = [], $do_print = true)
+    /**
+     * Prints a trail.
+     *
+     * @param array|string  $trail
+     * @param boolean       $do_print  The do print
+     *
+     * @return string  ( description_of_the_return_value )
+     */
+    public function printTrail($trail = [], bool $do_print = true)
     {
         $from       = __METHOD__;
         $html_trail = $this->_getNavbarController();
@@ -282,7 +292,10 @@ class BaseController
         return $html_trail->printTrail($trail, $do_print, $from);
     }
 
-    public function printNavLinks($navlinks, $place, $env = [], $do_print = true)
+    /**
+     * @param (array|mixed)[][] $navlinks
+     */
+    public function printNavLinks(array $navlinks, string $place, array $env = [], $do_print = true)
     {
         $from              = __METHOD__;
         $footer_controller = $this->_getFooterController();
@@ -290,7 +303,7 @@ class BaseController
         return $footer_controller->printNavLinks($navlinks, $place, $env, $do_print, $from);
     }
 
-    public function printTabs($tabs, $activetab, $do_print = true)
+    public function printTabs(string $tabs, string $activetab, bool $do_print = true)
     {
         $from       = __METHOD__;
         $html_trail = $this->_getNavbarController();
@@ -298,7 +311,11 @@ class BaseController
         return $html_trail->printTabs($tabs, $activetab, $do_print, $from);
     }
 
-    public function printLink($link, $do_print = true, $from = null)
+    /**
+     * @param true $do_print
+     * @param null|string $from
+     */
+    public function printLink($link, bool $do_print = true, ? string $from = null)
     {
         if (null === $from) {
             $from = __METHOD__;
@@ -309,21 +326,27 @@ class BaseController
         return $html_trail->printLink($link, $do_print, $from);
     }
 
-    public function setReloadDropDatabase($flag)
+    /**
+     * @param true $flag
+     */
+    public function setReloadDropDatabase(bool $flag)
     {
         $footer_controller = $this->_getFooterController();
 
         return $footer_controller->setReloadDropDatabase($flag);
     }
 
-    public function setNoBottomLink($flag)
+    /**
+     * @param true $flag
+     */
+    public function setNoBottomLink(bool $flag)
     {
         $footer_controller = $this->_getFooterController();
 
         return $footer_controller->setNoBottomLink($flag);
     }
 
-    public function printFooter($doBody = true, $template = 'footer.twig')
+    public function printFooter(bool $doBody = true, string $template = 'footer.twig')
     {
         $footer_controller = $this->_getFooterController();
 
@@ -363,14 +386,20 @@ class BaseController
         return $footer_controller->setWindowName($name, $addServer);
     }
 
-    public function setNoOutput($flag)
+    /**
+     * @param true $flag
+     */
+    public function setNoOutput(bool $flag)
     {
         $header_controller = $this->_getHeaderController();
 
         return $header_controller->setNoOutput((bool) $flag);
     }
 
-    public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
+    /**
+     * @param null|string $script
+     */
+    public function printHeader(string $title = '', ? string $script = null, bool $do_print = true, string $template = 'header.twig')
     {
         $title             = $title ? $title : $this->headerTitle();
         $header_controller = $this->_getHeaderController();
@@ -378,26 +407,35 @@ class BaseController
         return $header_controller->printHeader($title, $script, $do_print, $template);
     }
 
-    public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
+    public function printBody(bool $doBody = true, string $bodyClass = 'detailbody', bool $onloadInit = false)
     {
         $header_controller = $this->_getHeaderController();
 
         return $header_controller->printBody($doBody, $bodyClass, $onloadInit);
     }
 
-    public function printTitle($title, $help = null, $do_print = true)
+    /**
+     * @param null|string $help
+     */
+    public function printTitle(string $title, ? string $help = null, bool $do_print = true)
     {
         $header_controller = $this->_getHeaderController();
 
         return $header_controller->printTitle($title, $help, $do_print);
     }
 
-    public function getRequestParam($key, $default = null)
+    /**
+     * @param null|string $default
+     */
+    public function getRequestParam(string $key, ? string $default = null)
     {
         return $this->container->requestobj->getParam($key, $default);
     }
 
-    public function getPostParam($key, $default = null)
+    /**
+     * @param array|null|string $default
+     */
+    public function getPostParam(string $key, $default = null)
     {
         return $this->container->requestobj->getParsedBodyParam($key, $default);
     }

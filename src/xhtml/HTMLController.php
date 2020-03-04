@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -66,16 +66,16 @@ class HTMLController
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
         $this->container = $container;
-        $this->lang      = $container->get('lang');
-        $this->view      = $container->get('view');
+        $this->lang = $container->get('lang');
+        $this->view = $container->get('view');
 
-        $this->appName      = $container->get('settings')['appName'];
-        $this->appVersion   = $container->get('settings')['appVersion'];
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
         $this->appLangFiles = $container->get('appLangFiles');
-        $this->misc         = $container->get('misc');
-        $this->conf         = $this->misc->getConf();
-        $this->appThemes    = $container->get('appThemes');
-        $this->action       = $container->get('action');
+        $this->misc = $container->get('misc');
+        $this->conf = $this->misc->getConf();
+        $this->appThemes = $container->get('appThemes');
+        $this->action = $container->get('action');
 
         if (null !== $controller_name) {
             $this->controller_name = $controller_name;
@@ -110,7 +110,7 @@ class HTMLController
             $link['fields'] = $_REQUEST;
         }
         $from = $from ? $from : __METHOD__;
-        $tag  = '<a ';
+        $tag = '<a ';
 
         foreach ($link['attr'] as $attr => $value) {
             if ('href' === $attr && \is_array($value)) {
@@ -204,9 +204,9 @@ class HTMLController
             $subject = '';
         }
 
-        $server   = $this->container->server;
+        $server = $this->container->server;
         $database = $this->container->database;
-        $schema   = $this->container->schema;
+        $schema = $this->container->schema;
 
         /*
         $server   = $this->container->has('server') ? $this->container->server : $_REQUEST['server'];

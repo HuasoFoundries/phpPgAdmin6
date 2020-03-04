@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -126,8 +126,8 @@ class HTMLFooterController extends HTMLController
         // Navlinks hook's place
         $plugin_functions_parameters = [
             'navlinks' => &$navlinks,
-            'place'    => $place,
-            'env'      => $env,
+            'place' => $place,
+            'env' => $env,
         ];
 
         if (0 < \count($navlinks)) {

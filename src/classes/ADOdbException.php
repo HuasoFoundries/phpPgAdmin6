@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin;
@@ -56,15 +56,15 @@ class ADOdbException extends \Exception
     {
         switch ($fn) {
             case 'EXECUTE':
-                $this->sql    = \is_array($p1) ? $p1[0] : $p1;
+                $this->sql = \is_array($p1) ? $p1[0] : $p1;
                 $this->params = $p2;
-                $s            = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}(\"{$this->sql}\")";
+                $s = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}(\"{$this->sql}\")";
 
                 break;
             case 'PCONNECT':
             case 'CONNECT':
                 $user = $thisConnection->user;
-                $s    = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}({$p1}, '{$user}', '****', {$p2})";
+                $s = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}({$p1}, '{$user}', '****', {$p2})";
 
                 break;
 
@@ -77,10 +77,10 @@ class ADOdbException extends \Exception
         $this->dbms = $dbms;
 
         if ($thisConnection) {
-            $this->host     = $thisConnection->host;
+            $this->host = $thisConnection->host;
             $this->database = $thisConnection->database;
         }
-        $this->fn  = $fn;
+        $this->fn = $fn;
         $this->msg = $errmsg;
 
         if (!\is_numeric($errno)) {
@@ -114,17 +114,17 @@ class ADOdbException extends \Exception
         $backtrace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $btarray0 = [
-            'msg'      => 'ADOdbException at ',
-            'class'    => $backtrace[1]['class'],
-            'type'     => $backtrace[1]['type'],
+            'msg' => 'ADOdbException at ',
+            'class' => $backtrace[1]['class'],
+            'type' => $backtrace[1]['type'],
             'function' => $backtrace[1]['function'],
-            'spacer'   => ' ',
-            'line'     => $backtrace[0]['line'],
+            'spacer' => ' ',
+            'line' => $backtrace[0]['line'],
         ];
 
         $errmsg = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($errmsg), \ENT_NOQUOTES);
-        $p1     = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p1), \ENT_NOQUOTES);
-        $p2     = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p2), \ENT_NOQUOTES);
+        $p1 = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p1), \ENT_NOQUOTES);
+        $p2 = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p2), \ENT_NOQUOTES);
 
         switch ($fn) {
             case 'EXECUTE':

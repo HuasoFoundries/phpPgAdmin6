@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -86,18 +86,18 @@ class IndexesController extends BaseController
         return $this->printFooter();
     }
 
-    public function doDefault($msg = ''): void
+    public function doDefault(string $msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $lang   = $this->lang;
+        $lang = $this->lang;
         $indPre = static function (&$rowdata, $actions) use ($data, $lang) {
             if ($data->phpBool($rowdata->fields['indisprimary'])) {
                 $rowdata->fields['+constraints'] = $lang['strprimarykey'];
-                $actions['drop']['disable']      = true;
+                $actions['drop']['disable'] = true;
             } elseif ($data->phpBool($rowdata->fields['indisunique'])) {
                 $rowdata->fields['+constraints'] = $lang['struniquekey'];
-                $actions['drop']['disable']      = true;
+                $actions['drop']['disable'] = true;
             } else {
                 $rowdata->fields['+constraints'] = '';
             }
@@ -107,7 +107,7 @@ class IndexesController extends BaseController
         $this->coalesceArr($_REQUEST, 'subject', 'table');
 
         $subject = \urlencode($this->getRequestParam('subject', 'table'));
-        $object  = \urlencode($this->getRequestParam($subject));
+        $object = \urlencode($this->getRequestParam($subject));
 
         $this->printTrail($subject);
         $this->printTabs($subject, 'indexes');
@@ -116,29 +116,29 @@ class IndexesController extends BaseController
         $indexes = $data->getIndexes($object);
 
         $columns = [
-            'index'       => [
+            'index' => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('indname'),
             ],
-            'definition'  => [
+            'definition' => [
                 'title' => $this->lang['strdefinition'],
                 'field' => Decorator::field('inddef'),
             ],
             'constraints' => [
-                'title'  => $this->lang['strconstraints'],
-                'field'  => Decorator::field('+constraints'),
-                'type'   => 'verbatim',
+                'title' => $this->lang['strconstraints'],
+                'field' => Decorator::field('+constraints'),
+                'type' => 'verbatim',
                 'params' => ['align' => 'center'],
             ],
-            'clustered'   => [
+            'clustered' => [
                 'title' => $this->lang['strclustered'],
                 'field' => Decorator::field('indisclustered'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'actions'     => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
-            'comment'     => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('idxcomment'),
             ],
@@ -149,42 +149,42 @@ class IndexesController extends BaseController
         $actions = [
             'cluster' => [
                 'content' => $this->lang['strclusterindex'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => $url,
+                        'url' => $url,
                         'urlvars' => [
-                            'action'  => 'confirm_cluster_index',
+                            'action' => 'confirm_cluster_index',
                             'subject' => $subject,
-                            $subject  => $object,
-                            'index'   => Decorator::field('indname'),
+                            $subject => $object,
+                            'index' => Decorator::field('indname'),
                         ],
                     ],
                 ],
             ],
             'reindex' => [
                 'content' => $this->lang['strreindex'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => $url,
+                        'url' => $url,
                         'urlvars' => [
-                            'action'  => 'reindex',
+                            'action' => 'reindex',
                             'subject' => $subject,
-                            $subject  => $object,
-                            'index'   => Decorator::field('indname'),
+                            $subject => $object,
+                            'index' => Decorator::field('indname'),
                         ],
                     ],
                 ],
             ],
-            'drop'    => [
+            'drop' => [
                 'content' => $this->lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => $url,
+                        'url' => $url,
                         'urlvars' => [
-                            'action'  => 'confirm_drop_index',
+                            'action' => 'confirm_drop_index',
                             'subject' => $subject,
-                            $subject  => $object,
-                            'index'   => Decorator::field('indname'),
+                            $subject => $object,
+                            'index' => Decorator::field('indname'),
                         ],
                     ],
                 ],
@@ -195,16 +195,16 @@ class IndexesController extends BaseController
 
         $this->printNavLinks([
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'indexes',
+                        'url' => 'indexes',
                         'urlvars' => [
-                            'action'   => 'create_index',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create_index',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            $subject   => $object,
-                            'subject'  => $subject,
+                            'schema' => $_REQUEST['schema'],
+                            $subject => $object,
+                            'subject' => $subject,
                         ],
                     ],
                 ],
@@ -219,7 +219,7 @@ class IndexesController extends BaseController
         $this->coalesceArr($_REQUEST, 'subject', 'table');
 
         $subject = \urlencode($_REQUEST['subject']);
-        $object  = \urlencode($_REQUEST[$subject]);
+        $object = \urlencode($_REQUEST[$subject]);
 
         $indexes = $data->getIndexes($object);
 
@@ -254,7 +254,7 @@ class IndexesController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'subject', 'table');
         $subject = \urlencode($_REQUEST['subject']);
-        $object  = \urlencode($_REQUEST[$subject]);
+        $object = \urlencode($_REQUEST[$subject]);
 
         //$this->printTrail($subject);
 
@@ -323,15 +323,15 @@ class IndexesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $subject = \urlencode($this->getRequestParam('subject', 'table'));
-        $object  = \urlencode($this->getRequestParam($subject));
+        $object = \urlencode($this->getRequestParam($subject));
 
         $formIndexName = $this->getPostParam('formIndexName', '');
         $formIndexType = $this->getPostParam('formIndexType');
-        $formUnique    = $this->getPostParam('formUnique');
-        $formConcur    = $this->getPostParam('formConcur');
-        $formWhere     = $this->getPostParam('formWhere', '');
-        $formSpc       = $this->getPostParam('formSpc', '');
-        $tablespaces   = null;
+        $formUnique = $this->getPostParam('formUnique');
+        $formConcur = $this->getPostParam('formConcur');
+        $formWhere = $this->getPostParam('formWhere', '');
+        $formSpc = $this->getPostParam('formSpc', '');
+        $tablespaces = null;
 
         $attrs = $data->getTableAttributes($object);
         // Fetch all tablespaces from the database
@@ -453,7 +453,7 @@ class IndexesController extends BaseController
 
         $this->coalesceArr($_POST, 'subject', 'table');
         $subject = \urlencode($_POST['subject']);
-        $object  = \urlencode($_POST[$subject]);
+        $object = \urlencode($_POST[$subject]);
 
         // Handle databases that don't have partial indexes
         $formWhere = $this->getPostParam('formWhere', '');
@@ -496,7 +496,7 @@ class IndexesController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         $subject = \urlencode($this->getRequestParam('subject', 'table'));
-        $object  = \urlencode($this->getRequestParam($subject));
+        $object = \urlencode($this->getRequestParam($subject));
 
         if ($confirm) {
             $this->printTrail('index');

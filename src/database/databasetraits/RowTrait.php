@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -126,7 +126,7 @@ trait RowTrait
         // Build clause
         if (0 < \count($values)) {
             // Escape all field names
-            $fields   = \array_map(['\PHPPgAdmin\Database\Postgres', 'fieldClean'], $fields);
+            $fields = \array_map(['\PHPPgAdmin\Database\Postgres', 'fieldClean'], $fields);
             $f_schema = $this->_schema;
             $this->fieldClean($table);
             $this->fieldClean($f_schema);

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -22,7 +22,7 @@ class AcinsertController extends BaseController
             $offset = " OFFSET {$_POST['offset']}";
         } else {
             $_POST['offset'] = 0;
-            $offset          = ' OFFSET 0';
+            $offset = ' OFFSET 0';
         }
 
         $fkeynames = [];

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -285,8 +285,8 @@ trait PrivilegesTrait
 
         // Pick out individual ACE's by carefully parsing.  This is necessary in order
         // to cope with usernames and stuff that contain commas
-        $aces      = [];
-        $i         = $j         = 0;
+        $aces = [];
+        $i = $j = 0;
         $in_quotes = false;
 
         while (\mb_strlen($acl) > $i) {
@@ -299,7 +299,7 @@ trait PrivilegesTrait
             } elseif (',' === $char && !$in_quotes) {
                 // Add text so far to the array
                 $aces[] = \mb_substr($acl, $j, $i - $j);
-                $j      = $i + 1;
+                $j = $i + 1;
             }
             ++$i;
         }
@@ -338,15 +338,15 @@ trait PrivilegesTrait
             }
 
             // Break on unquoted equals sign...
-            $i         = 0;
+            $i = 0;
             $in_quotes = false;
-            $entity    = null;
-            $chars     = null;
+            $entity = null;
+            $chars = null;
 
             while (\mb_strlen($v) > $i) {
                 // If current char is a double quote and it's not escaped, then
                 // enter quoted bit
-                $char      = \mb_substr($v, $i, 1);
+                $char = \mb_substr($v, $i, 1);
                 $next_char = \mb_substr($v, $i + 1, 1);
 
                 if ('"' === $char && (0 === $i || '"' !== $next_char)) {
@@ -357,7 +357,7 @@ trait PrivilegesTrait
                 } elseif ('=' === $char && !$in_quotes) {
                     // Split on current equals sign
                     $entity = \mb_substr($v, 0, $i);
-                    $chars  = \mb_substr($v, $i + 1);
+                    $chars = \mb_substr($v, $i + 1);
 
                     break;
                 }
@@ -375,7 +375,7 @@ trait PrivilegesTrait
             $row = [$atype, $entity, [], '', []];
 
             // Loop over chars and add privs to $row
-            for ($i = 0;\mb_strlen($chars) > $i; ++$i) {
+            for ($i = 0; \mb_strlen($chars) > $i; ++$i) {
                 // Append to row's privs list the string representing
                 // the privilege
                 $char = \mb_substr($chars, $i, 1);

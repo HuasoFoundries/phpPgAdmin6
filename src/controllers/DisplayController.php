@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -115,7 +115,7 @@ class DisplayController extends BaseController
     public function doBrowse($msg = '')
     {
         $this->misc = $this->misc;
-        $data       = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         // If current page is not set, default to first page
         $page = $this->coalesceArr($_REQUEST, 'page', 1)['page'];
@@ -128,23 +128,23 @@ class DisplayController extends BaseController
 
         if ('column' === $subject && $object && isset($_REQUEST['f_schema'], $_REQUEST['f_table'])) {
             $f_schema = $_REQUEST['f_schema'];
-            $f_table  = $_REQUEST['f_table'];
+            $f_table = $_REQUEST['f_table'];
 
             $_REQUEST['query'] = "SELECT \"{$object}\",
             count(*) AS \"count\"
             FROM \"{$f_schema}\".\"{$f_table}\"
             GROUP BY \"{$object}\" ORDER BY \"{$object}\"";
         } elseif ('table' === $subject && !isset($_REQUEST['query'])) {
-            $show   = $this->getPostParam('show', []);
+            $show = $this->getPostParam('show', []);
             $values = $this->getPostParam('values', []);
-            $ops    = $this->getPostParam('ops', []);
-            $query  = $data->getSelectSQL(
+            $ops = $this->getPostParam('ops', []);
+            $query = $data->getSelectSQL(
                 $_REQUEST['table'],
                 \array_keys($show),
                 $values,
                 $ops
             );
-            $_REQUEST['query']  = $query;
+            $_REQUEST['query'] = $query;
             $_REQUEST['return'] = 'selectrows';
         }
 
@@ -204,7 +204,7 @@ class DisplayController extends BaseController
 
         // Build strings for GETs in array
         $_gets = [
-            'server'   => $_REQUEST['server'],
+            'server' => $_REQUEST['server'],
             'database' => $_REQUEST['database'],
         ];
 
@@ -270,20 +270,20 @@ class DisplayController extends BaseController
             foreach (\array_keys($fkey) as $x) {
                 $ops[$x] = '=';
             }
-            $query             = $data->getSelectSQL($_REQUEST['table'], [], $fkey, $ops);
+            $query = $data->getSelectSQL($_REQUEST['table'], [], $fkey, $ops);
             $_REQUEST['query'] = $query;
         }
 
         $title = 'strqueryresults';
-        $type  = 'QUERY';
+        $type = 'QUERY';
 
         if ($object && $query) {
             $_SESSION['sqlquery'] = $query;
-            $title                = 'strselect';
-            $type                 = 'SELECT';
+            $title = 'strselect';
+            $type = 'SELECT';
         } elseif ($object) {
             $title = 'strselect';
-            $type  = 'TABLE';
+            $type = 'TABLE';
         } elseif (isset($_SESSION['sqlquery'])) {
             $query = $_SESSION['sqlquery'];
         }
@@ -291,25 +291,28 @@ class DisplayController extends BaseController
         return [$query, $title, $type];
     }
 
-    public function getBrowseNavLinks($type, $_gets, $page, $subject, $object, $resultset)
+    /**
+     * @param array $_gets
+     */
+    public function getBrowseNavLinks($type, array $_gets, $page, $subject, $object, $resultset)
     {
         $fields = [
-            'server'   => $_REQUEST['server'],
+            'server' => $_REQUEST['server'],
             'database' => $_REQUEST['database'],
         ];
 
         $this->setIfIsset($fields['schema'], $_REQUEST['schema'], null, false);
 
         $navlinks = [];
-        $strings  = $_gets['strings'];
+        $strings = $_gets['strings'];
         // Return
         if (isset($_REQUEST['return'])) {
             $urlvars = $this->misc->getSubjectParams($_REQUEST['return']);
 
             $navlinks['back'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => $urlvars['url'],
+                        'url' => $urlvars['url'],
                         'urlvars' => $urlvars['params'],
                     ],
                 ],
@@ -320,13 +323,13 @@ class DisplayController extends BaseController
         // Edit SQL link
         if ('QUERY' === $type) {
             $navlinks['edit'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'database',
+                        'url' => 'database',
                         'urlvars' => \array_merge(
                             $fields,
                             [
-                                'action'   => 'sql',
+                                'action' => 'sql',
                                 'paginate' => 'on',
                             ]
                         ),
@@ -337,14 +340,14 @@ class DisplayController extends BaseController
         }
 
         $navlinks['collapse'] = [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'display',
+                    'url' => 'display',
                     'urlvars' => \array_merge(
                         $_gets,
                         [
                             'strings' => 'expanded',
-                            'page'    => $page,
+                            'page' => $page,
                         ]
                     ),
                 ],
@@ -354,14 +357,14 @@ class DisplayController extends BaseController
         // Expand/Collapse
         if ('expanded' === $strings) {
             $navlinks['collapse'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'display',
+                        'url' => 'display',
                         'urlvars' => \array_merge(
                             $_gets,
                             [
                                 'strings' => 'collapsed',
-                                'page'    => $page,
+                                'page' => $page,
                             ]
                         ),
                     ],
@@ -375,13 +378,13 @@ class DisplayController extends BaseController
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'views',
+                            'url' => 'views',
                             'urlvars' => \array_merge(
                                 $fields,
                                 [
-                                    'action'         => 'create',
+                                    'action' => 'create',
                                     'formDefinition' => $_REQUEST['query'],
                                 ]
                             ),
@@ -396,9 +399,9 @@ class DisplayController extends BaseController
             $this->setIfIsset($urlvars['search_path'], $_REQUEST['search_path'], null, false);
 
             $navlinks['download'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'dataexport',
+                        'url' => 'dataexport',
                         'urlvars' => \array_merge($fields, $urlvars),
                     ],
                 ],
@@ -409,14 +412,14 @@ class DisplayController extends BaseController
         // Insert
         if (isset($object) && (isset($subject) && 'table' === $subject)) {
             $navlinks['insert'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'tables',
+                        'url' => 'tables',
                         'urlvars' => \array_merge(
                             $fields,
                             [
                                 'action' => 'confinsertrow',
-                                'table'  => $object,
+                                'table' => $object,
                             ]
                         ),
                     ],
@@ -427,14 +430,14 @@ class DisplayController extends BaseController
 
         // Refresh
         $navlinks['refresh'] = [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'display',
+                    'url' => 'display',
                     'urlvars' => \array_merge(
                         $_gets,
                         [
                             'strings' => $strings,
-                            'page'    => $page,
+                            'page' => $page,
                         ]
                     ),
                 ],
@@ -445,7 +448,10 @@ class DisplayController extends BaseController
         return $navlinks;
     }
 
-    public function printResultsTable($resultset, $page, $max_pages, $_gets, $object): void
+    /**
+     * @param array $_gets
+     */
+    public function printResultsTable($resultset, $page, $max_pages, array $_gets, $object): void
     {
         if (!\is_object($resultset) || 0 >= $resultset->recordCount()) {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -477,11 +483,11 @@ class DisplayController extends BaseController
 
         \reset($resultset->fields);
 
-        $trclass     = 'data2';
+        $trclass = 'data2';
         $buttonclass = 'opbutton2';
 
         while (!$resultset->EOF) {
-            $trclass     = ('data2' === $trclass) ? 'data1' : 'data2';
+            $trclass = ('data2' === $trclass) ? 'data1' : 'data2';
             $buttonclass = ('opbutton2' === $buttonclass) ? 'opbutton1' : 'opbutton2';
 
             echo \sprintf('<tr class="%s">', $trclass) . \PHP_EOL;
@@ -526,7 +532,7 @@ class DisplayController extends BaseController
 
                 continue;
             }
-            $args['page']    = $_REQUEST['page'];
+            $args['page'] = $_REQUEST['page'];
             $args['sortkey'] = $index + 1;
             // Sort direction opposite to current direction, unless it's currently ''
             $args['sortdir'] = ('asc' === $_REQUEST['sortdir'] && ($index + 1) === $_REQUEST['sortkey']) ? 'desc' : 'asc';
@@ -556,7 +562,7 @@ class DisplayController extends BaseController
     public function printTableRowCells(&$resultset, &$fkey_information, $withOid): void
     {
         $data = $this->misc->getDatabaseAccessor();
-        $j    = 0;
+        $j = 0;
 
         $this->coalesceArr($_REQUEST, 'strings', 'collapsed');
 
@@ -598,7 +604,7 @@ class DisplayController extends BaseController
         $this->printTitle($this->lang['streditrow']);
         $this->printMsg($msg);
 
-        $attrs     = $data->getTableAttributes($_REQUEST['table']);
+        $attrs = $data->getTableAttributes($_REQUEST['table']);
         $resultset = $data->browseRow($_REQUEST['table'], $key);
 
         $fksprops = $this->_getFKProps();
@@ -606,7 +612,7 @@ class DisplayController extends BaseController
         echo '<form action="' . self::SUBFOLDER . '/src/views/display" method="post" id="ac_form">' . \PHP_EOL;
 
         $elements = 0;
-        $error    = true;
+        $error = true;
 
         if (1 === $resultset->recordCount() && 0 < $attrs->recordCount()) {
             echo '<table>' . \PHP_EOL;
@@ -620,7 +626,7 @@ class DisplayController extends BaseController
 
             while (!$attrs->EOF) {
                 $attrs->fields['attnotnull'] = $data->phpBool($attrs->fields['attnotnull']);
-                $id                          = (0 === ($i % 2) ? '1' : '2');
+                $id = (0 === ($i % 2) ? '1' : '2');
 
                 // Initialise variables
                 if (!isset($_REQUEST['format'][$attrs->fields['attname']])) {
@@ -671,7 +677,7 @@ class DisplayController extends BaseController
                 }
 
                 if ((false !== $fksprops) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
-                    $extras['id']           = "attr_{$attrs->fields['attnum']}";
+                    $extras['id'] = "attr_{$attrs->fields['attnum']}";
                     $extras['autocomplete'] = 'off';
                 }
 
@@ -872,8 +878,8 @@ class DisplayController extends BaseController
                         if (!isset($fkey_information['byconstr'][$constr['conid']])) {
                             $fkey_information['byconstr'][$constr['conid']] = [
                                 'url_data' => 'table=' . \urlencode($constr['f_table']) . '&amp;schema=' . \urlencode($constr['f_schema']),
-                                'fkeys'    => [],
-                                'consrc'   => $constr['consrc'],
+                                'fkeys' => [],
+                                'consrc' => $constr['consrc'],
                             ];
                         }
 
@@ -903,7 +909,7 @@ class DisplayController extends BaseController
         foreach ($_REQUEST['fkey'] as $x => $y) {
             $ops[$x] = '=';
         }
-        $query             = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
+        $query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
         $_REQUEST['query'] = $query;
 
         $fkinfo = $this->getFKInfo();
@@ -942,9 +948,9 @@ class DisplayController extends BaseController
         echo '</div>';
     }
 
-    private function _getKeyAndActions($resultset, $object, $data, $page, $_gets)
+    private function _getKeyAndActions(object $resultset, $object, $data, $page, $_gets)
     {
-        $key     = [];
+        $key = [];
         $strings = $_gets['strings'];
 
         // Fetch unique row identifier, if this is a table browse request.
@@ -965,16 +971,16 @@ class DisplayController extends BaseController
         }
 
         $buttons = [
-            'edit'   => [
+            'edit' => [
                 'content' => $this->lang['stredit'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'display',
+                        'url' => 'display',
                         'urlvars' => \array_merge(
                             [
-                                'action'  => 'confeditrow',
+                                'action' => 'confeditrow',
                                 'strings' => $strings,
-                                'page'    => $page,
+                                'page' => $page,
                             ],
                             $_gets
                         ),
@@ -983,14 +989,14 @@ class DisplayController extends BaseController
             ],
             'delete' => [
                 'content' => $this->lang['strdelete'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'display',
+                        'url' => 'display',
                         'urlvars' => \array_merge(
                             [
-                                'action'  => 'confdelrow',
+                                'action' => 'confdelrow',
                                 'strings' => $strings,
-                                'page'    => $page,
+                                'page' => $page,
                             ],
                             $_gets
                         ),
@@ -1000,7 +1006,7 @@ class DisplayController extends BaseController
         ];
         $actions = [
             'actionbuttons' => &$buttons,
-            'place'         => 'display-browse',
+            'place' => 'display-browse',
         ];
 
         foreach (\array_keys($actions['actionbuttons']) as $action) {
@@ -1013,17 +1019,17 @@ class DisplayController extends BaseController
         return [$actions, $key];
     }
 
-    private function _printResultsTableActionButtons($resultset, $key, $actions, $display_action_column, $buttonclass): void
+    private function _printResultsTableActionButtons(\PHPPgAdmin\ADORecordSet $resultset, $key, $actions, bool $display_action_column, string $buttonclass): void
     {
         if (!$display_action_column) {
             return;
         }
 
-        $edit_params   = $actions['actionbuttons']['edit'] ?? [];
+        $edit_params = $actions['actionbuttons']['edit'] ?? [];
         $delete_params = $actions['actionbuttons']['delete'] ?? [];
 
         $keys_array = [];
-        $has_nulls  = false;
+        $has_nulls = false;
 
         foreach ($key as $v) {
             if (null === $resultset->fields[$v]) {
@@ -1041,7 +1047,7 @@ class DisplayController extends BaseController
         }
         // Display edit and delete links if we have a key
         if (isset($actions['actionbuttons']['edit'])) {
-            $actions['actionbuttons']['edit']                            = $edit_params;
+            $actions['actionbuttons']['edit'] = $edit_params;
             $actions['actionbuttons']['edit']['attr']['href']['urlvars'] = \array_merge(
                 $actions['actionbuttons']['edit']['attr']['href']['urlvars'],
                 $keys_array
@@ -1049,7 +1055,7 @@ class DisplayController extends BaseController
         }
 
         if (isset($actions['actionbuttons']['delete'])) {
-            $actions['actionbuttons']['delete']                            = $delete_params;
+            $actions['actionbuttons']['delete'] = $delete_params;
             $actions['actionbuttons']['delete']['attr']['href']['urlvars'] = \array_merge(
                 $actions['actionbuttons']['delete']['attr']['href']['urlvars'],
                 $keys_array
@@ -1063,7 +1069,10 @@ class DisplayController extends BaseController
         echo '</td>' . \PHP_EOL;
     }
 
-    private function _printFKLinks($resultset, $fkey_information, $k, $v, &$printvalOpts): void
+    /**
+     * @param bool[] $printvalOpts
+     */
+    private function _printFKLinks(\PHPPgAdmin\ADORecordSet $resultset, array $fkey_information, $k, $v, &array $printvalOpts): void
     {
         if ((null === $v) || !isset($fkey_information['byfield'][$k])) {
             return;
@@ -1088,7 +1097,7 @@ class DisplayController extends BaseController
         $printvalOpts['class'] = 'fk_value';
     }
 
-    private function _unserializeIfNotArray($the_array, $key)
+    private function _unserializeIfNotArray(array $the_array, string $key)
     {
         if (!isset($the_array[$key])) {
             return [];
@@ -1101,7 +1110,7 @@ class DisplayController extends BaseController
         return \unserialize(\urldecode($the_array[$key]));
     }
 
-    private function _getMinMaxPages($page, $pages)
+    private function _getMinMaxPages(int $page, int $pages)
     {
         $window = 10;
 
@@ -1132,7 +1141,7 @@ class DisplayController extends BaseController
      * @param array $gets      -  the parameters to include in the link to the wanted page
      * @param int   $max_width - the number of pages to make available at any one time (default = 20)
      *
-     * @return string the pagination links
+     * @return null|string the pagination links
      */
     private function _printPages($page, $pages, $gets, $max_width = 20)
     {

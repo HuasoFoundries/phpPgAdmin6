@@ -1,12 +1,12 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin;
 
-\defined('BASE_PATH') || \define(BASE_PATH, \dirname(__DIR__, 2));
+\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
 \defined('SUBFOLDER') || \define(
     'SUBFOLDER',
     \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
@@ -57,6 +57,14 @@ class Misc
 
     public $lang = [];
 
+    public $conf;
+
+    public $phpMinVer;
+
+    public $postgresqlMinVer;
+
+    public $view;
+
     protected $container;
 
     private $_connection;
@@ -74,11 +82,7 @@ class Misc
     private $_server_info;
 
     private $_error_msg = '';
-    public $conf;
 
-    public $phpMinVer;
-    public $postgresqlMinVer;
-    public $view;
     /**
      * @param \Slim\Container $container The container
      */
@@ -321,7 +325,7 @@ class Misc
      *
      * @internal mixed $plaform placeholder that will receive the value of the platform
      *
-     * @return \PHPPgAdmin\Database\ADOdbBase|null the database accessor instance
+     * @return null|\PHPPgAdmin\Database\ADOdbBase the database accessor instance
      */
     public function getDatabaseAccessor($database = '', $server_id = null):  ? \PHPPgAdmin\Database\ADOdbBase
     {
@@ -411,7 +415,7 @@ class Misc
         return $this->_data;
     }
 
-    public function getConnection($database = '', $server_id = null)
+    public function getConnection(string $database = '', $server_id = null)
     {
         $lang = $this->lang;
 
@@ -815,9 +819,9 @@ class Misc
      *
      * @param string $str The string to escape
      *
-     * @return string The escaped string
+     * @return null|string The escaped string
      */
-    public function escapeShellArg($str)
+    public function escapeShellArg($str):  ? string
     {
         //$data = $this->getDatabaseAccessor();
         $lang = $this->lang;
@@ -862,7 +866,7 @@ class Misc
      *
      * @param string $script the SQL script to save
      */
-    public function saveScriptHistory($script): void
+    public function saveScriptHistory($script) : void
     {
         [$usec, $sec] = \explode(' ', \microtime());
         $time         = ((float) $usec + (float) $sec);

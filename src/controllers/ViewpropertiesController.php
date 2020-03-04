@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Controller;
@@ -137,16 +137,16 @@ class ViewpropertiesController extends BaseController
         if (0 < $viewdata->recordCount()) {
             if (!isset($_POST['formDefinition'])) {
                 $_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
-                $_POST['formComment']    = $viewdata->fields['relcomment'];
+                $_POST['formComment'] = $viewdata->fields['relcomment'];
             }
 
             $variables = (object) [
-                'subfolder'      => self::SUBFOLDER . '/src/views/viewproperties',
+                'subfolder' => self::SUBFOLDER . '/src/views/viewproperties',
 
                 'formDefinition' => \htmlspecialchars($_POST['formDefinition']),
 
-                'formComment'    => \htmlspecialchars($_POST['formComment']),
-                'subject'        => \htmlspecialchars($_REQUEST[$this->subject])];
+                'formComment' => \htmlspecialchars($_POST['formComment']),
+                'subject' => \htmlspecialchars($_REQUEST[$this->subject]), ];
 
             $edition_area = <<<EOT
 
@@ -211,7 +211,7 @@ EOT;
                 $column = $data->getTableAttributes($_REQUEST[$this->subject], $_REQUEST['column']);
 
                 if (!isset($_REQUEST['default'])) {
-                    $_REQUEST['field']   = $column->fields['attname'];
+                    $_REQUEST['field'] = $column->fields['attname'];
                     $_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
                     $_REQUEST['comment'] = $column->fields['comment'];
                 }
@@ -278,7 +278,7 @@ EOT;
         }
     }
 
-    public function doAlter($confirm = false, $msg = ''): void
+    public function doAlter(bool $confirm = false, $msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -50,7 +50,7 @@ trait OperatorTrait
     public function dropOperator($operator_oid, $cascade)
     {
         // Function comes in with $object as operator OID
-        $opr      = $this->getOperator($operator_oid);
+        $opr = $this->getOperator($operator_oid);
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($opr->fields['oprname']);

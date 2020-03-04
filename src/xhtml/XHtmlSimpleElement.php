@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -44,7 +44,9 @@ class XHtmlSimpleElement
     public $_htmlcode;
 
     public $_attributes = [];
+
     public $container;
+
     /**
      * Constructor.
      *
