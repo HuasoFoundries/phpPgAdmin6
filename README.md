@@ -26,9 +26,11 @@ Other enhancements are in progress and would be a nice to have:
 
 ## Requirements
 
--   PHP 7.1+ (but you should really, really consider switching to at least v7.1)
+-   PHP 7.1+
 -   ext-psql
 -   [Composer](https://getcomposer.org/download/)
+
+(If you're using PHP 5.6+, you can still try versions RC2 and below, but you should really, realy upgrade).
 
 ## Installation
 
