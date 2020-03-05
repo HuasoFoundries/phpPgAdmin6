@@ -1,7 +1,10 @@
 <?php
 
+// declare(strict_types=1);
+
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ *
  */
 
 namespace PHPPgAdmin\Controller;
@@ -19,10 +22,8 @@ class BrowserController extends BaseController
      * Default method to render the controller according to the action parameter.
      *
      * @param null|mixed $action
-     *
-     * @return string
      */
-    public function render($action = null): string
+    public function render($action = null)
     {
         if (null === $action) {
             $action = $this->action;
@@ -33,7 +34,6 @@ class BrowserController extends BaseController
                 return $this->doTree();
 
                 break;
-
             default:
                 return $this->doDefault();
 
@@ -68,16 +68,16 @@ class BrowserController extends BaseController
     public function doTree()
     {
         $treedata = new \PHPPgAdmin\ArrayRecordSet([]);
-        $reqvars = [];
-        $action = Decorator::url('/src/views/servers');
-        $branch = Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']);
+        $reqvars  = [];
+        $action   = Decorator::url('/src/views/servers');
+        $branch   = Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']);
         // $this->dump($branch);
         $attrs = [
-            'text' => 'Servers',
-            'icon' => 'Servers',
+            'text'    => 'Servers',
+            'icon'    => 'Servers',
             'is_root' => 'true',
-            'action' => $action,
-            'branch' => $branch,
+            'action'  => $action,
+            'branch'  => $branch,
         ];
 
         return $this->printTree($treedata, $attrs, 'server');
