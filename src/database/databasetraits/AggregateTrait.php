@@ -83,7 +83,7 @@ trait AggregateTrait
      * @param string $aggrtype The input data type of the aggregate
      * @param bool   $cascade  True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function dropAggregate($aggrname, $aggrtype, $cascade)
     {
@@ -107,7 +107,7 @@ trait AggregateTrait
      * @param string $name     The name of the aggregate
      * @param string $basetype The input data type of the aggregate
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getAggregate($name, $basetype)
     {
@@ -137,7 +137,7 @@ trait AggregateTrait
     /**
      * Gets all aggregates.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getAggregates()
     {
@@ -244,7 +244,7 @@ trait AggregateTrait
      * @param string $aggrtype     The input data type of the aggregate
      * @param string $newaggrowner The new owner of the aggregate
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function changeAggregateOwner($aggrname, $aggrtype, $newaggrowner)
     {
@@ -264,7 +264,7 @@ trait AggregateTrait
      * @param string $aggrtype      The input data type of the aggregate
      * @param string $newaggrschema The new schema for the aggregate
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function changeAggregateSchema($aggrname, $aggrtype, $newaggrschema)
     {
@@ -285,7 +285,7 @@ trait AggregateTrait
      * @param string $aggrtype    The actual input data type of the aggregate
      * @param string $newaggrname The new name of the aggregate
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function renameAggregate($aggrschema, $aggrname, $aggrtype, $newaggrname)
     {

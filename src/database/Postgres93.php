@@ -20,12 +20,12 @@ class Postgres93 extends Postgres94
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If not null, will find all trigger functions
      *
-     * @return int|\PHPPgAdmin\ADORecordSet All functions
+     * @return int|\ADORecordSet All functions
      */
     public function getFunctions($all = false, $type = null)
     {
         if ($all) {
-            $where = 'pg_catalog.pg_function_is_visible(p.oid)';
+            $where    = 'pg_catalog.pg_function_is_visible(p.oid)';
             $distinct = 'DISTINCT ON (p.proname)';
 
             if ($type) {
@@ -34,7 +34,7 @@ class Postgres93 extends Postgres94
         } else {
             $c_schema = $this->_schema;
             $this->clean($c_schema);
-            $where = "n.nspname = '{$c_schema}'";
+            $where    = "n.nspname = '{$c_schema}'";
             $distinct = '';
         }
 

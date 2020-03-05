@@ -16,7 +16,7 @@ trait SchemaTrait
     /**
      * Return all schemas in the current database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getSchemas()
     {
@@ -58,7 +58,7 @@ trait SchemaTrait
      *
      * @param string $schema The the name of the schema to work in
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return \ADORecordSet|int
      */
     public function setSchema($schema)
     {
@@ -99,7 +99,7 @@ trait SchemaTrait
      *
      * @param mixed $paths An array of schemas in required search order
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function setSearchPath($paths)
     {
@@ -219,7 +219,7 @@ trait SchemaTrait
         $schema_rs = $this->getSchemaByName($schemaname);
         /* Only if the owner change */
         if ($schema_rs->fields['ownername'] !== $owner) {
-            $sql = "ALTER SCHEMA \"{$schemaname}\" OWNER TO \"{$owner}\"";
+            $sql    = "ALTER SCHEMA \"{$schemaname}\" OWNER TO \"{$owner}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -231,7 +231,7 @@ trait SchemaTrait
 
         // Only if the name has changed
         if ($name !== $schemaname) {
-            $sql = "ALTER SCHEMA \"{$schemaname}\" RENAME TO \"{$name}\"";
+            $sql    = "ALTER SCHEMA \"{$schemaname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -249,7 +249,7 @@ trait SchemaTrait
      *
      * @param string $schema The name of the schema
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getSchemaByName($schema)
     {
@@ -272,7 +272,7 @@ trait SchemaTrait
      * @param string $schemaname The name of the schema to drop
      * @param bool   $cascade    True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function dropSchema($schemaname, $cascade)
     {

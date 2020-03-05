@@ -43,11 +43,11 @@ class Postgres extends ADOdbBase
     public function __construct(&$conn, $container, $server_info)
     {
         //$this->prtrace('major_version :' . $this->major_version);
-        $this->conn = $conn;
+        $this->conn      = $conn;
         $this->container = $container;
 
-        $this->lang = $container->get('lang');
-        $this->conf = $container->get('conf');
+        $this->lang        = $container->get('lang');
+        $this->conf        = $container->get('conf');
         $this->server_info = $server_info;
     }
 
@@ -89,7 +89,7 @@ class Postgres extends ADOdbBase
         if (null === $this->help_page || null === $this->help_base) {
             $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . \str_replace('.', '', $this->major_version);
 
-            $help_class = new $help_classname($this->conf, $this->major_version);
+            $help_class      = new $help_classname($this->conf, $this->major_version);
             $this->help_page = $help_class->getHelpPage();
             $this->help_base = $help_class->getHelpBase();
         }
@@ -183,7 +183,7 @@ class Postgres extends ADOdbBase
      * @param string $term   The search term
      * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return int|\ADORecordSet A recordset
      */
     public function findObject($term, $filter)
     {
@@ -207,10 +207,10 @@ class Postgres extends ADOdbBase
         if (!$conf['show_system']) {
             // XXX: The mention of information_schema here is in the wrong place, but
             // it's the quickest fix to exclude the info schema from 7.4
-            $where = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
+            $where     = " AND pn.nspname NOT LIKE \$_PATERN_\$pg\\_%\$_PATERN_\$ AND pn.nspname != 'information_schema'";
             $lan_where = 'AND pl.lanispl';
         } else {
-            $where = '';
+            $where     = '';
             $lan_where = '';
         }
 
@@ -383,7 +383,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all True to get all languages, regardless of show_system
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return int|\ADORecordSet A recordset
      */
     public function getLanguages($all = false)
     {
@@ -436,18 +436,18 @@ class Postgres extends ADOdbBase
         }
 
         // Build up each SQL statement, they can be multiline
-        $query_buf = null;
-        $query_start = 0;
-        $in_quote = 0;
-        $in_xcomment = 0;
+        $query_buf    = null;
+        $query_start  = 0;
+        $in_quote     = 0;
+        $in_xcomment  = 0;
         $bslash_count = 0;
-        $dol_quote = '';
-        $paren_level = 0;
-        $len = 0;
-        $i = 0;
-        $prevlen = 0;
-        $thislen = 0;
-        $lineno = 0;
+        $dol_quote    = '';
+        $paren_level  = 0;
+        $len          = 0;
+        $i            = 0;
+        $prevlen      = 0;
+        $thislen      = 0;
+        $lineno       = 0;
 
         // Loop over each line in the file
         while (!\feof($fd)) {
@@ -459,7 +459,7 @@ class Postgres extends ADOdbBase
                 continue;
             }
 
-            $len = \mb_strlen($line);
+            $len         = \mb_strlen($line);
             $query_start = 0;
 
             /**
@@ -521,11 +521,11 @@ class Postgres extends ADOdbBase
                             $line = \mb_substr($line, 0, $i); /* remove comment */
                             break;
                         }
-                        $pre = \mb_substr($line, 0, $i);
-                        $post = \mb_substr($line, $i + 2 + $finishpos, $len);
-                        $line = $pre . ' ' . $post;
+                        $pre         = \mb_substr($line, 0, $i);
+                        $post        = \mb_substr($line, $i + 2 + $finishpos, $len);
+                        $line        = $pre . ' ' . $post;
                         $in_xcomment = 0;
-                        $i = 0;
+                        $i           = 0;
                     }
                 } elseif ($in_xcomment) {
                     $position = \mb_strpos(\mb_substr($line, $i, $len), '*/');
@@ -557,7 +557,7 @@ class Postgres extends ADOdbBase
                 } elseif ('\'' === \mb_substr($line, $i, 1) || '"' === \mb_substr($line, $i, 1)) {
                     $in_quote = \mb_substr($line, $i, 1);
                 } elseif (!$dol_quote && $this->valid_dolquote(\mb_substr($line, $i))) {
-                    $dol_end = \mb_strpos(\mb_substr($line, $i + 1), '$');
+                    $dol_end   = \mb_strpos(\mb_substr($line, $i + 1), '$');
                     $dol_quote = \mb_substr($line, $i, $dol_end + 1);
                     $this->advance_1($i, $prevlen, $thislen);
 
@@ -615,7 +615,7 @@ class Postgres extends ADOdbBase
                                 }
                             }
                         }
-                        $query_buf = null;
+                        $query_buf   = null;
                         $query_start = $i + $thislen;
                     } elseif (\preg_match('/^[_[:alpha:]]$/', \mb_substr($line, $i, 1))) {
                         $sub = \mb_substr($line, $i, $thislen);
@@ -697,7 +697,7 @@ class Postgres extends ADOdbBase
      * @param null|int $page_size The number of rows per page
      * @param int      $max_pages (return-by-ref) The max number of pages in the relation
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A  recordset on success or an int with error code
+     * @return int|\ADORecordSet A  recordset on success or an int with error code
      *                                      - -1 transaction error
      *                                      - -2 counting error
      *                                      - -3 page or page_size invalid
@@ -753,7 +753,7 @@ class Postgres extends ADOdbBase
         if ($this->hasReadOnlyQueries()) {
             $status = $this->execute('SET TRANSACTION READ ONLY');
 
-            if (false !== $status) {
+            if ($status !== 0) {
                 $this->rollbackTransaction();
 
                 return -5;
@@ -801,7 +801,7 @@ class Postgres extends ADOdbBase
         }
 
         // Actually retrieve the rows, with offset and limit
-        $rs = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
+        $rs     = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
         $status = $this->endTransaction();
 
         if (false !== $status) {

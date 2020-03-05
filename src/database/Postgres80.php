@@ -20,35 +20,35 @@ class Postgres80 extends Postgres81
     // database encoding does not appear in this list, then its HTTP
     // encoding name is the same as its database encoding name.
     public $codemap = [
-        'ALT' => 'CP866',
-        'EUC_CN' => 'GB2312',
-        'EUC_JP' => 'EUC-JP',
-        'EUC_KR' => 'EUC-KR',
-        'EUC_TW' => 'EUC-TW',
+        'ALT'        => 'CP866',
+        'EUC_CN'     => 'GB2312',
+        'EUC_JP'     => 'EUC-JP',
+        'EUC_KR'     => 'EUC-KR',
+        'EUC_TW'     => 'EUC-TW',
         'ISO_8859_5' => 'ISO-8859-5',
         'ISO_8859_6' => 'ISO-8859-6',
         'ISO_8859_7' => 'ISO-8859-7',
         'ISO_8859_8' => 'ISO-8859-8',
-        'JOHAB' => 'CP1361',
-        'KOI8' => 'KOI8-R',
-        'LATIN1' => 'ISO-8859-1',
-        'LATIN2' => 'ISO-8859-2',
-        'LATIN3' => 'ISO-8859-3',
-        'LATIN4' => 'ISO-8859-4',
+        'JOHAB'      => 'CP1361',
+        'KOI8'       => 'KOI8-R',
+        'LATIN1'     => 'ISO-8859-1',
+        'LATIN2'     => 'ISO-8859-2',
+        'LATIN3'     => 'ISO-8859-3',
+        'LATIN4'     => 'ISO-8859-4',
         // The following encoding map is a known error in PostgreSQL < 7.2
         // See the constructor for Postgres72.
-        'LATIN5' => 'ISO-8859-5',
-        'LATIN6' => 'ISO-8859-10',
-        'LATIN7' => 'ISO-8859-13',
-        'LATIN8' => 'ISO-8859-14',
-        'LATIN9' => 'ISO-8859-15',
-        'LATIN10' => 'ISO-8859-16',
-        'SQL_ASCII' => 'US-ASCII',
-        'TCVN' => 'CP1258',
-        'UNICODE' => 'UTF-8',
-        'WIN' => 'CP1251',
-        'WIN874' => 'CP874',
-        'WIN1256' => 'CP1256',
+        'LATIN5'     => 'ISO-8859-5',
+        'LATIN6'     => 'ISO-8859-10',
+        'LATIN7'     => 'ISO-8859-13',
+        'LATIN8'     => 'ISO-8859-14',
+        'LATIN9'     => 'ISO-8859-15',
+        'LATIN10'    => 'ISO-8859-16',
+        'SQL_ASCII'  => 'US-ASCII',
+        'TCVN'       => 'CP1258',
+        'UNICODE'    => 'UTF-8',
+        'WIN'        => 'CP1251',
+        'WIN874'     => 'CP874',
+        'WIN1256'    => 'CP1256',
     ];
 
     /**
@@ -56,11 +56,11 @@ class Postgres80 extends Postgres81
      *
      * @param null|string $currentdatabase
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
+     * @return int|\ADORecordSet A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf = $this->conf;
+        $conf        = $this->conf;
         $server_info = $this->server_info;
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -103,7 +103,7 @@ class Postgres80 extends Postgres81
     /**
      * Return all schemas in the current database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet All schemas, sorted alphabetically
+     * @return int|\ADORecordSet All schemas, sorted alphabetically
      */
     public function getSchemas()
     {
@@ -131,7 +131,7 @@ class Postgres80 extends Postgres81
      *
      * @param string $schema The name of the schema
      *
-     * @return int|\PHPPgAdmin\ADORecordSet Schema information
+     * @return int|\ADORecordSet Schema information
      */
     public function getSchemaByName($schema)
     {
@@ -154,7 +154,7 @@ class Postgres80 extends Postgres81
      * @param string $username The username
      * @param string $password The new password
      *
-     * @return int|\PHPPgAdmin\ADORecordSet 0 if operation was successful
+     * @return int|\ADORecordSet 0 if operation was successful
      */
     public function changePassword($username, $password)
     {
@@ -175,7 +175,7 @@ class Postgres80 extends Postgres81
      * @param string $name     The name of the aggregate
      * @param string $basetype The input data type of the aggregate
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return int|\ADORecordSet A recordset
      */
     public function getAggregate($name, $basetype)
     {
@@ -259,7 +259,7 @@ class Postgres80 extends Postgres81
     /**
      * Return all tables in current database (and schema).
      *
-     * @return int|\PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
+     * @return int|\ADORecordSet All tables, sorted alphabetically
      */
     public function getTables()
     {
@@ -283,7 +283,7 @@ class Postgres80 extends Postgres81
      * Protected method which alter a table
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs      The table recordSet returned by getTable()
+     * @param \ADORecordSet $tblrs      The table recordSet returned by getTable()
      * @param string                   $name       The new name for the table
      * @param string                   $owner      The new owner for the table
      * @param string                   $schema     The new schema for the table
@@ -334,7 +334,7 @@ class Postgres80 extends Postgres81
      * Protected method which alter a view
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \PHPPgAdmin\ADORecordSet $vwrs    The view recordSet returned by getView()
+     * @param \ADORecordSet $vwrs    The view recordSet returned by getView()
      * @param string                   $name    The new name for the view
      * @param string                   $owner   The new owner for the view
      * @param string                   $schema  The view schema
@@ -380,7 +380,7 @@ class Postgres80 extends Postgres81
      * Protected method which alter a sequence
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \PHPPgAdmin\ADORecordSet $seqrs        The sequence recordSet returned by getSequence()
+     * @param \ADORecordSet $seqrs        The sequence recordSet returned by getSequence()
      * @param string                   $name         The new name for the sequence
      * @param string                   $comment      The comment on the sequence
      * @param string                   $owner        The new owner for the sequence

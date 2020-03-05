@@ -222,7 +222,7 @@ class BaseController
     /**
      * Display a table of data.
      *
-     * @param \PHPPgAdmin\ADORecordSet|\PHPPgAdmin\ArrayRecordSet $tabledata a set of data to be formatted
+     * @param \ADORecordSet|\PHPPgAdmin\ArrayRecordSet $tabledata a set of data to be formatted
      * @param array                                               $columns   An associative array of columns to be displayed:
      * @param array                                               $actions   Actions that can be performed on each object:
      * @param string                                              $place     Place where the $actions are displayed. Like 'display-browse',

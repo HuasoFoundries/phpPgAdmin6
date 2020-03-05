@@ -36,7 +36,7 @@ class HTMLTableController extends HTMLController
     /**
      * Display a table of data.
      *
-     * @param \PHPPgAdmin\ADORecordSet|\PHPPgAdmin\ArrayRecordSet $tabledata a set of data to be formatted, as returned by $data->getDatabases() etc
+     * @param \ADORecordSet|\PHPPgAdmin\ArrayRecordSet $tabledata a set of data to be formatted, as returned by $data->getDatabases() etc
      * @param array                                               $columns   An associative array of columns to be displayed:
      *                                                                       $columns = array(
      *                                                                       column_id => array(
@@ -79,7 +79,7 @@ class HTMLTableController extends HTMLController
         // Action buttons hook's place
         $this->plugin_functions_parameters = [
             'actionbuttons' => &$actions,
-            'place' => $place,
+            'place'         => $place,
         ];
 
         if ($this->has_ma = isset($actions['multiactions'])) {
@@ -88,11 +88,11 @@ class HTMLTableController extends HTMLController
         unset($actions['multiactions']);
 
         $this->tabledata = $tabledata;
-        $this->columns = $columns;
-        $this->actions = $actions;
-        $this->place = $place;
-        $this->nodata = $nodata;
-        $this->pre_fn = $pre_fn;
+        $this->columns   = $columns;
+        $this->actions   = $actions;
+        $this->place     = $place;
+        $this->nodata    = $nodata;
+        $this->pre_fn    = $pre_fn;
     }
 
     public function printTable($turn_into_datatable = true, $with_body = true)
@@ -207,9 +207,9 @@ class HTMLTableController extends HTMLController
 
     private function _getMaHtml()
     {
-        $matop_html = '';
+        $matop_html    = '';
         $ma_bottomhtml = '';
-        $lang = $this->lang;
+        $lang          = $this->lang;
 
         if ($this->has_ma) {
             $matop_html .= '<script src="' . SUBFOLDER . '/assets/js/multiactionform.js" type="text/javascript"></script>' . \PHP_EOL;
@@ -265,13 +265,13 @@ class HTMLTableController extends HTMLController
 
     private function getTbody()
     {
-        $columns = $this->columns;
-        $actions = $this->actions;
+        $columns   = $this->columns;
+        $actions   = $this->actions;
         $tabledata = $this->tabledata;
-        $pre_fn = $this->pre_fn;
+        $pre_fn    = $this->pre_fn;
 
         // Display table rows
-        $i = 0;
+        $i          = 0;
         $tbody_html = '<tbody>';
 
         while (!$tabledata->EOF) {
@@ -337,7 +337,7 @@ class HTMLTableController extends HTMLController
                                 $tbody_html .= $this->printUrlVars($column['vars'], $tabledata->fields, false);
                                 $tbody_html .= '">';
                             }
-                            $type = $column['type'] ?? null;
+                            $type   = $column['type'] ?? null;
                             $params = $column['params'] ?? [];
                             $tbody_html .= $this->misc->printVal($val, $type, $params);
 

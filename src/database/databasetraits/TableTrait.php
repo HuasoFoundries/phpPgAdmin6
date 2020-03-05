@@ -18,7 +18,7 @@ trait TableTrait
     /**
      * Return all tables in current database excluding schemas 'pg_catalog', 'information_schema' and 'pg_toast'.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getAllTables()
     {
@@ -36,7 +36,7 @@ trait TableTrait
     /**
      * Return all tables in current database (and schema).
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getTables()
     {
@@ -75,7 +75,7 @@ trait TableTrait
      *
      * @param string $table The table to find the parents for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getTableParents($table)
     {
@@ -105,7 +105,7 @@ trait TableTrait
      *
      * @param string $table The table to find the children for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getTableChildren($table)
     {
@@ -135,7 +135,7 @@ trait TableTrait
      * @param string $table       The table to define
      * @param string $cleanprefix set to '-- ' to avoid issuing DROP statement
      */
-    public function getTableDefPrefix($table, $cleanprefix = ''): ?string
+    public function getTableDefPrefix($table, $cleanprefix = ''):  ? string
     {
         // Fetch table
         $t = $this->getTable($table);
@@ -173,8 +173,8 @@ trait TableTrait
 
         // Output all table columns
         $col_comments_sql = ''; // Accumulate comments on columns
-        $num = $atts->recordCount() + $cons->recordCount();
-        $i = 1;
+        $num              = $atts->recordCount() + $cons->recordCount();
+        $i                = 1;
 
         $sql = $this->_dumpSerials($atts, $t, $sql, $col_comments_sql, $i, $num);
 
@@ -269,7 +269,7 @@ trait TableTrait
      *
      * @param string $table The name of the table
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getTable($table)
     {
@@ -304,7 +304,7 @@ trait TableTrait
      * @param string $table The name of the table
      * @param string $field (optional) The name of a field to return
      *
-     * @return \PHPPgAdmin\ADORecordSet|int
+     * @return \ADORecordSet|int
      */
     public function getTableAttributes($table, $field = '')
     {
@@ -328,7 +328,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getConstraints($table)
     {
@@ -403,7 +403,7 @@ trait TableTrait
      *
      * @param string $table The table to define
      */
-    public function getTableDefSuffix($table): ?string
+    public function getTableDefSuffix($table) :  ? string
     {
         $sql = '';
 
@@ -474,7 +474,7 @@ trait TableTrait
      * @param string $table  The name of a table whose indexes to retrieve
      * @param bool   $unique Only get unique/pk indexes
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getIndexes($table = '', $unique = false)
     {
@@ -502,7 +502,7 @@ trait TableTrait
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getTriggers($table = '')
     {
@@ -533,7 +533,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getRules($table)
     {
@@ -598,10 +598,10 @@ trait TableTrait
             return -1;
         }
 
-        $found = false;
-        $first = true;
+        $found       = false;
+        $first       = true;
         $comment_sql = ''; //Accumulate comments for the columns
-        $sql = "CREATE TABLE \"{$f_schema}\".\"{$name}\" (";
+        $sql         = "CREATE TABLE \"{$f_schema}\".\"{$name}\" (";
 
         for ($i = 0; $i < $fields; ++$i) {
             $this->fieldClean($field[$i]);
@@ -852,10 +852,10 @@ trait TableTrait
      * Alter a table's owner
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
+     * @param \ADORecordSet $tblrs The table RecordSet returned by getTable()
      * @param null|string              $owner
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function alterTableOwner($tblrs, $owner = null)
     {
@@ -878,10 +878,10 @@ trait TableTrait
      * Alter a table's tablespace
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs      The table RecordSet returned by getTable()
+     * @param \ADORecordSet $tblrs      The table RecordSet returned by getTable()
      * @param null|string              $tablespace
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function alterTableTablespace($tblrs, $tablespace = null)
     {
@@ -904,10 +904,10 @@ trait TableTrait
      * Alter a table's name
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
+     * @param \ADORecordSet $tblrs The table RecordSet returned by getTable()
      * @param string                   $name  The new table's name
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function alterTableName($tblrs, $name = null)
     {
@@ -917,7 +917,7 @@ trait TableTrait
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
 
-            $sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 === $status) {
@@ -936,10 +936,10 @@ trait TableTrait
      * Alter a table's schema
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs  The table RecordSet returned by getTable()
+     * @param \ADORecordSet $tblrs  The table RecordSet returned by getTable()
      * @param null|string              $schema
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function alterTableSchema($tblrs, $schema = null)
     {
@@ -988,7 +988,7 @@ trait TableTrait
      * @param string $table   The table to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function dropTable($table, $cascade)
     {
@@ -1021,7 +1021,7 @@ trait TableTrait
         }
 
         // Set serializable
-        $sql = 'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE';
+        $sql    = 'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE';
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -1031,7 +1031,7 @@ trait TableTrait
         }
 
         // Set datestyle to ISO
-        $sql = 'SET DATESTYLE = ISO';
+        $sql    = 'SET DATESTYLE = ISO';
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -1041,7 +1041,7 @@ trait TableTrait
         }
 
         // Set extra_float_digits to 2
-        $sql = 'SET extra_float_digits TO 2';
+        $sql    = 'SET extra_float_digits TO 2';
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -1071,7 +1071,7 @@ trait TableTrait
      * @param string $relation The name of a relation
      * @param bool   $oids     true to dump also the oids
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function dumpRelation($relation, $oids)
     {
@@ -1135,7 +1135,7 @@ trait TableTrait
 
             foreach (\explode(',', $_autovacs->fields['reloptions']) as $var) {
                 [$o, $v] = \explode('=', $var);
-                $_[$o] = $v;
+                $_[$o]   = $v;
             }
 
             $autovacs[] = $_;
@@ -1172,7 +1172,7 @@ trait TableTrait
      * @param int    $vaccostdelay   vacuum cost delay
      * @param int    $vaccostlimit   vacuum cost limit
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function saveAutovacuum(
         $table,
@@ -1239,7 +1239,7 @@ trait TableTrait
      *
      * @param string $table The table
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function dropAutovacuum($table)
     {
@@ -1298,7 +1298,7 @@ trait TableTrait
      * Protected method which alter a table
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs      The table recordSet returned by getTable()
+     * @param \ADORecordSet $tblrs      The table recordSet returned by getTable()
      * @param string                   $name       The new name for the table
      * @param string                   $owner      The new owner for the table
      * @param string                   $schema     The new schema for the table
@@ -1356,8 +1356,8 @@ trait TableTrait
     /**
      * Dumps serial-like columns in the table.
      *
-     * @param \PHPPgAdmin\ADORecordSet $atts             table attributes
-     * @param \PHPPgAdmin\ADORecordSet $tblfields        table fields object
+     * @param \ADORecordSet $atts             table attributes
+     * @param \ADORecordSet $tblfields        table fields object
      * @param string                   $sql              The sql sentence
      *                                                   generated so far
      * @param string                   $col_comments_sql Column comments,
@@ -1422,7 +1422,7 @@ trait TableTrait
     /**
      * Dumps constraints.
      *
-     * @param \PHPPgAdmin\ADORecordSet $cons  The table constraints
+     * @param \ADORecordSet $cons  The table constraints
      * @param string                   $table The table to define
      * @param string                   $sql   The sql sentence generated so
      *                                        far
@@ -1430,7 +1430,7 @@ trait TableTrait
      * @param int                      $num   Table attributes count + table
      *                                        constraints count
      */
-    private function _dumpConstraints($cons, $table, $sql, $i, $num): ?string
+    private function _dumpConstraints($cons, $table, $sql, $i, $num):  ? string
     {
         // Output all table constraints
         while (!$cons->EOF) {
@@ -1477,11 +1477,11 @@ trait TableTrait
     /**
      * Dumps col statistics.
      *
-     * @param \PHPPgAdmin\ADORecordSet $atts      table attributes
-     * @param \PHPPgAdmin\ADORecordSet $tblfields table field attributes
+     * @param \ADORecordSet $atts      table attributes
+     * @param \ADORecordSet $tblfields table field attributes
      * @param string                   $sql       The sql sentence generated so far
      */
-    private function _dumpColStats($atts, $tblfields, $sql): ?string
+    private function _dumpColStats($atts, $tblfields, $sql):  ? string
     {
         // Column storage and statistics
         $atts->moveFirst();
@@ -1535,11 +1535,11 @@ trait TableTrait
     /**
      * Dumps privileges.
      *
-     * @param \PHPPgAdmin\ADORecordSet $privs     The table privileges
-     * @param \PHPPgAdmin\ADORecordSet $tblfields The table fields definition
+     * @param \ADORecordSet $privs     The table privileges
+     * @param \ADORecordSet $tblfields The table fields definition
      * @param string                   $sql       The sql sentence generated so far
      */
-    private function _dumpPrivileges($privs, $tblfields, $sql): ?string
+    private function _dumpPrivileges($privs, $tblfields, $sql):  ? string
     {
         if (0 >= \count($privs)) {
             return $sql;
@@ -1651,7 +1651,7 @@ trait TableTrait
     /**
      * Dumps a create.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblfields   table fields object
+     * @param \ADORecordSet $tblfields   table fields object
      * @param string                   $sql         The sql sentence generated so far
      * @param string                   $cleanprefix set to '-- ' to avoid issuing DROP statement
      * @param mixed                    $fields
@@ -1679,7 +1679,7 @@ trait TableTrait
      * @param string $table    The name of the table
      * @param string $c_schema The name of the schema
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     private function _getTableAttributesAll($table, $c_schema)
     {
@@ -1731,7 +1731,7 @@ trait TableTrait
      * @param string $c_schema The schema of the table
      * @param string $field    (optional) The name of a field to return
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     private function _getTableAttribute($table, $c_schema, $field)
     {

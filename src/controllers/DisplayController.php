@@ -146,6 +146,7 @@ class DisplayController extends BaseController
             );
             $_REQUEST['query']  = $query;
             $_REQUEST['return'] = 'selectrows';
+            $this->prtrace($query);
         }
 
         //$object = $this->setIfIsset($object, $_REQUEST[$subject]);
@@ -163,6 +164,8 @@ class DisplayController extends BaseController
         $this->printTabs($subject, $tabsPosition);
 
         [$query, $title, $type] = $this->getQueryTitleAndType($data, $object);
+        $this->prtrace($query);
+
         $this->printTitle($this->lang[$title]);
 
         //$this->prtrace($subject, $object, $query, $_SESSION['sqlquery']);
@@ -509,7 +512,7 @@ class DisplayController extends BaseController
     /**
      * Print table header cells.
      *
-     * @param \PHPPgAdmin\ADORecordSet $resultset set of results from getRow operation
+     * @param \ADORecordSet $resultset set of results from getRow operation
      * @param array|bool               $args      - associative array for sort link parameters, or false if there isn't any
      * @param bool                     $withOid   either to display OIDs or not
      */
@@ -555,7 +558,7 @@ class DisplayController extends BaseController
     /**
      * Print table rows.
      *
-     * @param \PHPPgAdmin\ADORecordSet $resultset        The resultset
+     * @param \ADORecordSet $resultset        The resultset
      * @param array                    $fkey_information The fkey information
      * @param bool                     $withOid          either to display OIDs or not
      */
@@ -960,16 +963,17 @@ class DisplayController extends BaseController
         // Check that the key is actually in the result set.  This can occur for select
         // operations where the key fields aren't part of the select.  XXX:  We should
         // be able to support this, somehow.
-        foreach ($key as $v) {
-            // If a key column is not found in the record set, then we
-            // can't use the key.
-            if (!\array_key_exists($v, $resultset->fields)) {
-                $key = [];
+        if (\is_iterable($key)) {
+            foreach ($key as $v) {
+                // If a key column is not found in the record set, then we
+                // can't use the key.
+                if (!\array_key_exists($v, $resultset->fields)) {
+                    $key = [];
 
-                break;
+                    break;
+                }
             }
         }
-
         $buttons = [
             'edit'   => [
                 'content' => $this->lang['stredit'],
@@ -1019,7 +1023,7 @@ class DisplayController extends BaseController
         return [$actions, $key];
     }
 
-    private function _printResultsTableActionButtons(\PHPPgAdmin\ADORecordSet $resultset, $key, $actions, bool $display_action_column, string $buttonclass): void
+    private function _printResultsTableActionButtons(\ADORecordSet $resultset, $key, $actions, bool $display_action_column, string $buttonclass): void
     {
         if (!$display_action_column) {
             return;
@@ -1072,7 +1076,7 @@ class DisplayController extends BaseController
     /**
      * @param bool[] $printvalOpts
      */
-    private function _printFKLinks(\PHPPgAdmin\ADORecordSet $resultset, array $fkey_information, $k, $v, array &$printvalOpts): void
+    private function _printFKLinks(\ADORecordSet $resultset, array $fkey_information, $k, $v, array &$printvalOpts): void
     {
         if ((null === $v) || !isset($fkey_information['byfield'][$k])) {
             return;

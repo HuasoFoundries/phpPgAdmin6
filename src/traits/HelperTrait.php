@@ -54,22 +54,6 @@ trait HelperTrait
         throw new \Slim\Exception\SlimException($this->container->requestobj, $this->container->responseobj);
     }
 
-    /**
-     * Adds a flash message to the session that will be displayed on the next request.
-     *
-     * @param mixed  $content msg content (can be object, array, etc)
-     * @param string $key     The key to associate with the message. Defaults to the stack
-     *                        trace of the closure or method that called addFlassh
-     */
-    public function addFlash($content, $key = ''): void
-    {
-        if ('' === $key) {
-            $key = self::getBackTrace();
-        }
-        // $this->dump(__METHOD__ . ': addMessage ' . $key . '  ' . json_encode($content));
-        $this->container->flash->addMessage($key, $content);
-    }
-
     public static function getBackTrace($offset = 0)
     {
         $i0        = $offset;
@@ -96,7 +80,7 @@ trait HelperTrait
     /**
      * Converts an ADORecordSet to an array.
      *
-     * @param \PHPPgAdmin\ADORecordSet $set   The set
+     * @param \ADORecordSet $set   The set
      * @param string                   $field optionally the field to query for
      *
      * @return array the parsed array
@@ -201,7 +185,7 @@ trait HelperTrait
     /**
      * Receives N parameters and sends them to the console adding where was it called from.
      *
-     * @param array ...$args
+     * @param mixed ...$args
      */
     public function prtrace(...$args): void
     {
@@ -211,7 +195,7 @@ trait HelperTrait
     /**
      * Just a proxy for prtrace.
      *
-     * @param array ...$args The arguments
+     * @param mixed ...$args The arguments
      */
     public function dump(...$args): void
     {
@@ -221,7 +205,7 @@ trait HelperTrait
     /**Claveunica.,219
      * Dumps and die.
      *
-     * @param array ...$args The arguments
+     * @param mixed ...$args The arguments
      */
     public function dumpAndDie(...$args): void
     {
@@ -233,10 +217,10 @@ trait HelperTrait
      * Receives N parameters and sends them to the console adding where was it
      * called from.
      *
-     * @param array  $variablesToDump
+     * @param mixed  $variablesToDump
      */
     private static function staticTrace(
-        array...$variablesToDump
+        ...$variablesToDump
     ): void {
         if (!$variablesToDump) {
             $variablesToDump = \func_get_args();

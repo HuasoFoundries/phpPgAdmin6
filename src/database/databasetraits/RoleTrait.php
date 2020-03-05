@@ -16,7 +16,7 @@ trait RoleTrait
      *
      * @param string $rolename (optional) The role name to exclude from the select
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getRoles($rolename = '')
     {
@@ -51,7 +51,7 @@ trait RoleTrait
      *
      * @param string $rolename The name of the role to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getRole($rolename)
     {
@@ -80,7 +80,7 @@ trait RoleTrait
     /**
      * Returns all users in the database cluster.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getUsers()
     {
@@ -102,7 +102,7 @@ trait RoleTrait
      *
      * @param string $username The username of the user to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getUser($username)
     {
@@ -138,7 +138,7 @@ trait RoleTrait
      * @param array  $new_members_of_role (array) Roles which are automatically added as members of the new role
      * @param array  $new_admins_of_role  (array) Roles which are automatically added as admin members of the new role
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function createRole(
         $rolename,
@@ -305,7 +305,7 @@ trait RoleTrait
      * @param string $rolename    The name of the role to rename
      * @param string $newrolename The new name of the role
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function renameRole($rolename, $newrolename)
     {
@@ -404,7 +404,7 @@ trait RoleTrait
      * @param string $rolename The name of the role that will belong to the target role
      * @param int    $admin    (optional) Flag to grant the admin option
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function grantRole($role, $rolename, $admin = 0)
     {
@@ -428,7 +428,7 @@ trait RoleTrait
      * @param int    $admin    (optional) Flag to revoke only the admin option
      * @param string $type     (optional) Type of revoke: RESTRICT | CASCADE
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function revokeRole($role, $rolename, $admin = 0, $type = 'RESTRICT')
     {
@@ -451,7 +451,7 @@ trait RoleTrait
      *
      * @param string $rolename The name of the role to drop
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function dropRole($rolename)
     {
@@ -472,7 +472,7 @@ trait RoleTrait
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param array  $groups     The groups to create the user in
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      *
      * @internal param $group (array) The groups to create the user in
      */
@@ -554,7 +554,7 @@ trait RoleTrait
      * @param string $username The username of the user to rename
      * @param string $newname  The new name of the user
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function renameUser($username, $newname)
     {
@@ -577,7 +577,7 @@ trait RoleTrait
      * @param bool   $createuser boolean Whether or not the user can create other users
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function setUser($username, $password, $createdb, $createuser, $expiry)
     {
@@ -609,7 +609,7 @@ trait RoleTrait
      *
      * @param string $username The username of the user to drop
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function dropUser($username)
     {
@@ -626,7 +626,7 @@ trait RoleTrait
      * @param string $rolename The role name
      * @param string $password The new password
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function changePassword($rolename, $password)
     {
@@ -645,7 +645,7 @@ trait RoleTrait
      * @param string $groname The name of the group
      * @param string $user    The name of the user to add to the group
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function addGroupMember($groname, $user)
     {
@@ -662,7 +662,7 @@ trait RoleTrait
      *
      * @param string $rolename The role name
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getMemberOf($rolename)
     {
@@ -687,7 +687,7 @@ trait RoleTrait
      * @param string $rolename The role name
      * @param string $admin    (optional) Find only admin members
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getMembers($rolename, $admin = 'f')
     {
@@ -709,7 +709,7 @@ trait RoleTrait
      * @param string $groname The name of the group
      * @param string $user    The name of the user to remove from the group
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function dropGroupMember($groname, $user)
     {
@@ -726,7 +726,7 @@ trait RoleTrait
      *
      * @param string $groname The name of the group
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getGroup($groname)
     {
@@ -743,7 +743,7 @@ trait RoleTrait
     /**
      * Returns all groups in the database cluser.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function getGroups()
     {
@@ -758,7 +758,7 @@ trait RoleTrait
      * @param string $groname The name of the group
      * @param array  $users   An array of users to add to the group
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function createGroup($groname, $users)
     {
@@ -779,7 +779,7 @@ trait RoleTrait
      *
      * @param string $groname The name of the group to drop
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function dropGroup($groname)
     {

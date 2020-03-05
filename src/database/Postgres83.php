@@ -19,13 +19,13 @@ class Postgres83 extends Postgres84
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
-        'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
-        'database' => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
-        'function' => ['EXECUTE', 'ALL PRIVILEGES'],
-        'language' => ['USAGE', 'ALL PRIVILEGES'],
-        'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+        'table'      => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'view'       => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'sequence'   => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+        'database'   => ['CREATE', 'TEMPORARY', 'CONNECT', 'ALL PRIVILEGES'],
+        'function'   => ['EXECUTE', 'ALL PRIVILEGES'],
+        'language'   => ['USAGE', 'ALL PRIVILEGES'],
+        'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
         'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
     ];
 
@@ -53,11 +53,11 @@ class Postgres83 extends Postgres84
      *
      * @param string $currentdatabase database name that should be on top of the resultset
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset or an error number A list of databases, sorted alphabetically
+     * @return int|\ADORecordSet A recordset or an error number A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf = $this->conf;
+        $conf        = $this->conf;
         $server_info = $this->server_info;
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -102,7 +102,7 @@ class Postgres83 extends Postgres84
      *
      * @param string $table
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return int|\ADORecordSet A recordset
      */
     public function getTableAutovacuum($table = '')
     {
@@ -158,7 +158,7 @@ class Postgres83 extends Postgres84
      * @param mixed $vaccostdelay
      * @param mixed $vaccostlimit
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|\ADORecordSet
      */
     public function saveAutovacuum(
         $table,
@@ -302,7 +302,7 @@ class Postgres83 extends Postgres84
     /**
      * Alter a sequence's properties.
      *
-     * @param \PHPPgAdmin\ADORecordSet $seqrs        The sequence RecordSet returned by getSequence()
+     * @param \ADORecordSet $seqrs        The sequence RecordSet returned by getSequence()
      * @param int                      $increment    The sequence incremental value
      * @param int                      $minvalue     The sequence minimum value
      * @param int                      $maxvalue     The sequence maximum value
@@ -311,7 +311,7 @@ class Postgres83 extends Postgres84
      * @param bool                     $cycledvalue  Sequence can cycle ?
      * @param int                      $startvalue   The sequence start value when issueing a restart (ignored)
      *
-     * @return int|\PHPPgAdmin\ADORecordSet 0 if operation was successful
+     * @return int|\ADORecordSet 0 if operation was successful
      */
     public function alterSequenceProps(
         $seqrs,
@@ -364,10 +364,10 @@ class Postgres83 extends Postgres84
     /**
      * Alter a sequence's owner.
      *
-     * @param \PHPPgAdmin\ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
+     * @param \ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
      * @param string                   $owner sequence owner
      *
-     * @return int|\PHPPgAdmin\ADORecordSet 0 if operation was successful
+     * @return int|\ADORecordSet 0 if operation was successful
      *
      * @internal param string The $name new owner for the sequence
      */
@@ -395,7 +395,7 @@ class Postgres83 extends Postgres84
      *
      * @param $function_oid
      *
-     * @return int|\PHPPgAdmin\ADORecordSet Function info
+     * @return int|\ADORecordSet Function info
      *
      * @internal param string $func name of the function to retrieve
      */

@@ -288,6 +288,22 @@ class ContainerUtils
 
         return $destinationurl;
     }
+    /**
+     * Adds a flash message to the session that will be displayed on the next request.
+     *
+     * @param mixed  $content msg content (can be object, array, etc)
+     * @param string $key     The key to associate with the message. Defaults to the stack
+     *                        trace of the closure or method that called addFlassh
+     */
+    public function addFlash($content, $key = ''): void
+    {
+        if ('' === $key) {
+            $key = self::getBackTrace();
+        }
+        // $this->dump(__METHOD__ . ': addMessage ' . $key . '  ' . json_encode($content));
+
+        $this->container->flash->addMessage($key, $content);
+    }
 
     /**
      * Gets the destination with the last active tab selected for that controller
