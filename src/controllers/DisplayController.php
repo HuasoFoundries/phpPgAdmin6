@@ -146,7 +146,6 @@ class DisplayController extends BaseController
             );
             $_REQUEST['query']  = $query;
             $_REQUEST['return'] = 'selectrows';
-            $this->prtrace($query);
         }
 
         //$object = $this->setIfIsset($object, $_REQUEST[$subject]);
@@ -164,7 +163,6 @@ class DisplayController extends BaseController
         $this->printTabs($subject, $tabsPosition);
 
         [$query, $title, $type] = $this->getQueryTitleAndType($data, $object);
-        $this->prtrace($query);
 
         $this->printTitle($this->lang[$title]);
 
@@ -471,8 +469,12 @@ class DisplayController extends BaseController
         echo '<table id="data">' . \PHP_EOL;
         echo '<tr>';
 
-        // Display edit and delete actions if we have a key
-        $display_action_column = (0 < \count($actions['actionbuttons']) && 0 < \count($key));
+        try {
+            // Display edit and delete actions if we have a key
+            $display_action_column = (0 < \count($actions['actionbuttons']) && 0 < \count($key));
+        } catch (\Exception $e) {
+            $display_action_column = false;
+        }
 
         echo $display_action_column ? "<th class=\"data\">{$this->lang['stractions']}</th>" . \PHP_EOL : '';
 
@@ -957,20 +959,23 @@ class DisplayController extends BaseController
         if ($object) {
             $key = $data->getRowIdentifier($object);
         }
+        // -1 means no unique keys, other non iterable should be discarded as well
+        if ($key === -1 || \is_iterable($key)) {
+            $key = [];
+        }
         // Check that the key is actually in the result set.  This can occur for select
         // operations where the key fields aren't part of the select.  XXX:  We should
         // be able to support this, somehow.
-        if (\is_iterable($key)) {
-            foreach ($key as $v) {
-                // If a key column is not found in the record set, then we
-                // can't use the key.
-                if (!\array_key_exists($v, $resultset->fields)) {
-                    $key = [];
+        foreach ($key as $v) {
+            // If a key column is not found in the record set, then we
+            // can't use the key.
+            if (!\array_key_exists($v, $resultset->fields)) {
+                $key = [];
 
-                    break;
-                }
+                break;
             }
         }
+
         $buttons = [
             'edit'   => [
                 'content' => $this->lang['stredit'],
