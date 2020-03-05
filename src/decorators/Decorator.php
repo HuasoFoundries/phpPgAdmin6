@@ -128,7 +128,7 @@ class Decorator
     /**
      * @param array|null $vars
      */
-    public static function actionurl(string $base, ? array $vars = null/* ... */)
+    public static function actionurl($base, ? array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -146,7 +146,7 @@ class Decorator
     /**
      * @param array|null $vars
      */
-    public static function redirecturl(string $base, ? array $vars = null/* ... */)
+    public static function redirecturl($base, ? array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -164,7 +164,7 @@ class Decorator
     /**
      * @param array|null $vars
      */
-    public static function url(string $base, ? array $vars = null/* ... */)
+    public static function url($base, ? array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged

@@ -203,29 +203,29 @@ trait HelperTrait
      *
      * @param array ...$args
      */
-    public function prtrace(array...$args): void
+    public function prtrace(...$args): void
     {
-        self::staticTrace($args);
+        self::staticTrace(...$args);
     }
 
     /**
-     * { function_description }.
+     * Just a proxy for prtrace.
      *
      * @param array ...$args The arguments
      */
-    public function dump(array...$args): void
+    public function dump(...$args): void
     {
-        self::staticTrace($args);
+        self::staticTrace(...$args);
     }
 
-    /**
+    /**Claveunica.,219
      * Dumps and die.
      *
      * @param array ...$args The arguments
      */
-    public function dumpAndDie(array...$args): void
+    public function dumpAndDie(...$args): void
     {
-        self::staticTrace($args);
+        self::staticTrace(...$args);
         exit();
     }
 
