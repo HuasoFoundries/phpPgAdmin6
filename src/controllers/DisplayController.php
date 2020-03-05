@@ -294,7 +294,7 @@ class DisplayController extends BaseController
     /**
      * @param array $_gets
      */
-    public function getBrowseNavLinks($type, array $_gets, $page, $subject, $object, $resultset)
+    public function getBrowseNavLinks($type, array $_gets, $page, string $subject, $object, $resultset)
     {
         $fields = [
             'server'   => $_REQUEST['server'],
@@ -948,7 +948,7 @@ class DisplayController extends BaseController
         echo '</div>';
     }
 
-    private function _getKeyAndActions(object $resultset, $object, $data, $page, $_gets)
+    private function _getKeyAndActions(object $resultset, $object, $data, $page, array $_gets)
     {
         $key     = [];
         $strings = $_gets['strings'];

@@ -111,13 +111,13 @@ $container['view'] = static function ($c) {
     $misc = $c->misc;
 
     $view = new \Slim\Views\Twig(BASE_PATH . '/assets/templates', [
-        'cache' => BASE_PATH . '/temp/twigcache',
+        'cache'       => BASE_PATH . '/temp/twigcache',
         'auto_reload' => $c->get('settings')['debug'],
-        'debug' => $c->get('settings')['debug'],
+        'debug'       => $c->get('settings')['debug'],
     ]);
-    $environment = $c->get('environment');
+    $environment              = $c->get('environment');
     $base_script_trailing_str = \mb_substr($environment['SCRIPT_NAME'], 1);
-    $request_basepath = $c['request']->getUri()->getBasePath();
+    $request_basepath         = $c['request']->getUri()->getBasePath();
     // Instantiate and add Slim specific extension
     $basePath = \rtrim(\str_ireplace($base_script_trailing_str, '', $request_basepath), '/');
 

@@ -72,23 +72,23 @@ trait HelperTrait
 
     public static function getBackTrace($offset = 0)
     {
-        $i0 = $offset;
-        $i1 = $offset + 1;
+        $i0        = $offset;
+        $i1        = $offset + 1;
         $backtrace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, $offset + 3);
 
         return [
-            'class' => 'Closure' === $backtrace[$i1]['class'] ?
+            'class'    => 'Closure' === $backtrace[$i1]['class'] ?
             $backtrace[$i0]['file'] :
             $backtrace[$i1]['class'],
 
-            'type' => $backtrace[$i1]['type'],
+            'type'     => $backtrace[$i1]['type'],
 
             'function' => '{closure}' === $backtrace[$i1]['function']
             ? $backtrace[$i0]['function'] :
             $backtrace[$i1]['function'],
 
-            'spacer4' => ' ',
-            'line' => $backtrace[$i0]['line'],
+            'spacer4'  => ' ',
+            'line'     => $backtrace[$i0]['line'],
         ];
         //dump($backtrace);
     }
@@ -203,9 +203,9 @@ trait HelperTrait
      *
      * @param array ...$args
      */
-    public function prtrace(array ...$args): void
+    public function prtrace(array...$args): void
     {
-        self::staticTrace($args, '', false);
+        self::staticTrace($args);
     }
 
     /**
@@ -213,9 +213,9 @@ trait HelperTrait
      *
      * @param array ...$args The arguments
      */
-    public function dump(array ...$args): void
+    public function dump(array...$args): void
     {
-        self::staticTrace($args, '', false);
+        self::staticTrace($args);
     }
 
     /**
@@ -223,9 +223,10 @@ trait HelperTrait
      *
      * @param array ...$args The arguments
      */
-    public function dumpAndDie(array ...$args): void
+    public function dumpAndDie(array...$args): void
     {
-        self::staticTrace($args, '', true);
+        self::staticTrace($args);
+        exit();
     }
 
     /**
@@ -233,31 +234,29 @@ trait HelperTrait
      * called from.
      *
      * @param array  $variablesToDump
-     * @param string $whoCalledMe
-     * @param bool   $exitAfterwards
      */
     private static function staticTrace(
-        array $variablesToDump = [],
-        string $whoCalledMe = '',
-        $exitAfterwards = false
+        array...$variablesToDump
     ): void {
         if (!$variablesToDump) {
             $variablesToDump = \func_get_args();
         }
 
-        if ('' === $whoCalledMe) {
-            $whoCalledMe = \str_replace(BASE_PATH, '', \implode('', self::getBackTrace(2)));
-        }
+        $calledFrom = \str_replace(
+            dirname(
+                dirname(__DIR__)
+            ),
+            '',
+            implode(
+                '',
+                self::getBackTrace(2)
+            )
+        );
 
-        if ($exitAfterwards && \function_exists('dd')) {
-            dd([
-                'args' => $variablesToDump,
-                'from' => $whoCalledMe,
-            ]);
-        } elseif (\function_exists('dump')) {
+        if (\function_exists('dump')) {
             dump([
                 'args' => $variablesToDump,
-                'from' => $whoCalledMe,
+                'from' => $calledFrom,
             ]);
         }
     }

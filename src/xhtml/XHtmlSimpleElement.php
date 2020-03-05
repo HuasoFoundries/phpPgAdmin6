@@ -6,12 +6,7 @@
 
 namespace PHPPgAdmin\XHtml;
 
-\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
-\defined('SUBFOLDER') || \define(
-    'SUBFOLDER',
-    \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
-);
-\defined('DEBUGMODE') || \define('DEBUGMODE', false);
+use PHPPgAdmin\ContainerUtils;
 
 /**
  * XHtmlSimpleElement.
@@ -27,15 +22,15 @@ class XHtmlSimpleElement
     /**
      * @var string
      */
-    const BASE_PATH = BASE_PATH;
+    const BASE_PATH = ContainerUtils::BASE_PATH;
     /**
      * @var string
      */
-    const SUBFOLDER = SUBFOLDER;
+    const SUBFOLDER = ContainerUtils::SUBFOLDER;
     /**
      * @var string
      */
-    const DEBUGMODE = DEBUGMODE;
+    const DEBUGMODE = ContainerUtils::DEBUGMODE;
 
     public $_element;
 

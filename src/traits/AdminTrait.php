@@ -34,7 +34,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -45,7 +45,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfclustertable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -86,7 +86,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strreindex'], 'pg.reindex');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -97,7 +97,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['strreindex'], 'pg.reindex');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfreindextable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -141,7 +141,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['stranalyze'], 'pg.analyze');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -153,7 +153,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['stranalyze'], 'pg.analyze');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -190,7 +190,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strvacuum'], 'pg.vacuum');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -202,7 +202,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['strvacuum'], 'pg.vacuum');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfvacuumtable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -286,7 +286,7 @@ trait AdminTrait
             $old_val['autovacuum_vacuum_cost_limit'] = '';
         }
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo $this->misc->form;
         echo '<input type="hidden" name="action" value="editautovac" />' . \PHP_EOL;
         echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
@@ -661,7 +661,7 @@ trait AdminTrait
         // Vacuum
         echo '<tr class="row1">' . \PHP_EOL;
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
         echo '<p><input type="hidden" name="action" value="confirm_vacuum" />' . \PHP_EOL;
         echo $this->misc->form;
@@ -672,7 +672,7 @@ trait AdminTrait
 
         // Analyze
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="confirm_analyze" />' . \PHP_EOL;
         echo $this->misc->form;
         echo $table_hidden_inputs;
@@ -685,7 +685,7 @@ trait AdminTrait
 
         // Reindex
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="confirm_reindex" />' . \PHP_EOL;
         echo $this->misc->form;
         echo $table_hidden_inputs;
@@ -807,7 +807,7 @@ trait AdminTrait
 
         $disabled      = '';
         $reclusterconf = '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        $reclusterconf .= '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        $reclusterconf .= '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         $reclusterconf .= $this->misc->form;
         $reclusterconf .= $table_hidden_inputs;
 
@@ -854,13 +854,13 @@ trait AdminTrait
             'namespace'                       => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
+                'url'   => self::SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
                 'vars'  => ['schema' => 'nspname'],
             ],
             'relname'                         => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url'   => \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
+                'url'   => self::SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
                 'vars'  => ['table' => 'relname', 'schema' => 'nspname'],
             ],
             'autovacuum_enabled'              => [
@@ -947,7 +947,7 @@ trait AdminTrait
         if (('table' === $type) && (0 === $autovac->recordCount())) {
             echo '<br />';
 
-            echo '<a href="' . \SUBFOLDER . "/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";
+            echo '<a href="' . self::SUBFOLDER . "/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";
             echo \htmlspecialchars($_REQUEST['table']);
             echo "\">{$this->lang['straddvacuumtable']}</a>";
         }

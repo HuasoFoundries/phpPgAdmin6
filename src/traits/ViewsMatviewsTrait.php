@@ -21,13 +21,13 @@ trait ViewsMatviewsTrait
 
     public function doSubTree()
     {
-        $tabs = $this->misc->getNavTabs($this->keystring);
-        $items = $this->adjustTabsForTree($tabs);
+        $tabs    = $this->misc->getNavTabs($this->keystring);
+        $items   = $this->adjustTabsForTree($tabs);
         $reqvars = $this->misc->getRequestVars($this->keystring);
 
         $attrs = [
-            'text' => Decorator::field('title'),
-            'icon' => Decorator::field('icon'),
+            'text'   => Decorator::field('title'),
+            'icon'   => Decorator::field('icon'),
             'action' => Decorator::actionurl(Decorator::field('url'), $reqvars, Decorator::field('urlvars'), [$this->keystring => $_REQUEST[$this->keystring]]),
             'branch' => Decorator::ifempty(
                 Decorator::field('branch'),
@@ -37,7 +37,7 @@ trait ViewsMatviewsTrait
                     Decorator::field('urlvars'),
                     $reqvars,
                     [
-                        'action' => 'tree',
+                        'action'         => 'tree',
                         $this->keystring => $_REQUEST[$this->keystring],
                     ]
                 )
@@ -64,7 +64,7 @@ trait ViewsMatviewsTrait
 
             $attrs = $data->getTableAttributes($_REQUEST[$this->keystring]);
 
-            echo '<form action="' . \SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
+            echo '<form action="' . self::SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
             echo \PHP_EOL;
 
             if (0 < $attrs->recordCount()) {
@@ -165,7 +165,7 @@ trait ViewsMatviewsTrait
         // Generate query SQL
         $query = $data->getSelectSQL($_REQUEST[$this->keystring], \array_keys($_POST['show']), $_POST['values'], $_POST['ops']);
 
-        $_REQUEST['query'] = $query;
+        $_REQUEST['query']  = $query;
         $_REQUEST['return'] = 'schema';
 
         $this->setNoOutput(true);
@@ -184,7 +184,7 @@ trait ViewsMatviewsTrait
 
         $tables = $data->getAllTables();
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/{$this->script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . "/src/views/{$this->script}\" method=\"post\">" . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">" . \PHP_EOL;
@@ -192,10 +192,10 @@ trait ViewsMatviewsTrait
         $arrTables = [];
 
         while (!$tables->EOF) {
-            $arrTmp = [];
-            $arrTmp['schemaname'] = $tables->fields['nspname'];
-            $arrTmp['tablename'] = $tables->fields['relname'];
-            $schema_and_name = $tables->fields['nspname'] . '.' . $tables->fields['relname'];
+            $arrTmp                      = [];
+            $arrTmp['schemaname']        = $tables->fields['nspname'];
+            $arrTmp['tablename']         = $tables->fields['relname'];
+            $schema_and_name             = $tables->fields['nspname'] . '.' . $tables->fields['relname'];
             $arrTables[$schema_and_name] = \serialize($arrTmp);
             $tables->moveNext();
         }
@@ -243,8 +243,8 @@ trait ViewsMatviewsTrait
 
         $selFields = \mb_substr($selFields, 0, -2);
         unset($arrTmp, $tmpHsh);
-        $linkFields = '';
-        $arrJoined = [];
+        $linkFields  = '';
+        $arrJoined   = [];
         $arrUsedTbls = [];
 
         [$arrLinks, $count] = $this->_getArrLinks();
@@ -255,7 +255,7 @@ trait ViewsMatviewsTrait
 
         while ($j < $count) {
             foreach ($arrLinks as $curLink) {
-                $arrLeftLink = \unserialize($curLink['leftlink']);
+                $arrLeftLink  = \unserialize($curLink['leftlink']);
                 $arrRightLink = \unserialize($curLink['rightlink']);
                 $data->fieldArrayClean($arrLeftLink);
                 $data->fieldArrayClean($arrRightLink);
@@ -337,7 +337,7 @@ trait ViewsMatviewsTrait
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $tblCount = \count($_POST['formTables']);
+        $tblCount     = \count($_POST['formTables']);
         $arrSelTables = [];
         //unserialize our schema/table information and store in arrSelTables
         for ($i = 0; $i < $tblCount; ++$i) {
@@ -346,7 +346,7 @@ trait ViewsMatviewsTrait
 
         //get linking keys
         $rsLinkKeys = $data->getLinkingKeys($arrSelTables);
-        $linkCount = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
+        $linkCount  = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
 
         $arrFields = []; //array that will hold all our table/field names
 
@@ -365,8 +365,8 @@ trait ViewsMatviewsTrait
                 $arrFields["{$arrSelTables[$i]['schemaname']}.{$arrSelTables[$i]['tablename']}.{$attrs->fields['attname']}"] = \serialize(
                     [
                         'schemaname' => $arrSelTables[$i]['schemaname'],
-                        'tablename' => $arrSelTables[$i]['tablename'],
-                        'fieldname' => $attrs->fields['attname'], ]
+                        'tablename'  => $arrSelTables[$i]['tablename'],
+                        'fieldname'  => $attrs->fields['attname']]
                 );
                 $attrs->moveNext();
             }
@@ -375,7 +375,7 @@ trait ViewsMatviewsTrait
         }
         \asort($arrFields);
 
-        echo '<form action="' . \SUBFOLDER . '/src/views/materializedviews" method="post">' . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . '/src/views/materializedviews" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strviewname']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">" . \PHP_EOL;
@@ -414,11 +414,11 @@ trait ViewsMatviewsTrait
             echo "<tr>\n<td class=\"{$rowClass}\">" . \PHP_EOL;
 
             if (!$rsLinkKeys->EOF) {
-                $curLeftLink = \htmlspecialchars(\serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
+                $curLeftLink  = \htmlspecialchars(\serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
                 $curRightLink = \htmlspecialchars(\serialize(['schemaname' => $rsLinkKeys->fields['f_schema'], 'tablename' => $rsLinkKeys->fields['f_table'], 'fieldname' => $rsLinkKeys->fields['f_field']]));
                 $rsLinkKeys->moveNext();
             } else {
-                $curLeftLink = '';
+                $curLeftLink  = '';
                 $curRightLink = '';
             }
 
@@ -499,7 +499,7 @@ trait ViewsMatviewsTrait
     private function _getArrLinks()
     {
         $arrLinks = [];
-        $count = 0;
+        $count    = 0;
         // If we have links, out put the JOIN ... ON statements
         if (\is_array($_POST['formLink'])) {
             // Filter out invalid/blank entries for our links

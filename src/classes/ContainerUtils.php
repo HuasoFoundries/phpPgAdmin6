@@ -13,10 +13,11 @@ use Slim\App;
 \defined('THEME_PATH') || \define('THEME_PATH', BASE_PATH . '/assets/themes');
 \defined('SUBFOLDER') || \define(
     'SUBFOLDER',
-    \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', 'BASE_PATH')
+    \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
 );
 \defined('DEBUGMODE') || \define('DEBUGMODE', false);
 \defined('IN_TEST') || \define('IN_TEST', false);
+
 /**
  * @file
  * A class that adds convenience methods to the container
@@ -42,6 +43,11 @@ class ContainerUtils
     const DEBUGMODE = DEBUGMODE;
 
     /**
+     *
+     * @var string
+     */
+    const THEME_PATH = THEME_PATH;
+    /**
      * @var ContainerInterface
      */
     protected $container;
@@ -62,56 +68,56 @@ class ContainerUtils
     public function __construct()
     {
         $composerinfo = \json_decode(\file_get_contents(BASE_PATH . '/composer.json'));
-        $appVersion = $composerinfo->extra->version;
+        $appVersion   = $composerinfo->extra->version;
 
         $phpMinVer = (\str_replace(['<', '>', '='], '', $composerinfo->require->php));
         //$this->prtrace($appVersion);
         //$this->dump($composerinfo);
         $settings = [
             'determineRouteBeforeAppMiddleware' => true,
-            'base_path' => self::BASE_PATH,
-            'debug' => self::DEBUGMODE,
+            'base_path'                         => self::BASE_PATH,
+            'debug'                             => self::DEBUGMODE,
 
             // Configuration file version.  If this is greater than that in config.inc.php, then
             // the app will refuse to run.  This and $conf['version'] should be incremented whenever
             // backwards incompatible changes are made to config.inc.php-dist.
-            'base_version' => 60,
+            'base_version'                      => 60,
             // Application version
-            'appVersion' => 'v' . $appVersion,
+            'appVersion'                        => 'v' . $appVersion,
             // Application name
-            'appName' => 'phpPgAdmin6',
+            'appName'                           => 'phpPgAdmin6',
 
             // PostgreSQL and PHP minimum version
-            'postgresqlMinVer' => '9.3',
-            'phpMinVer' => $phpMinVer,
-            'displayErrorDetails' => self::DEBUGMODE,
-            'addContentLengthHeader' => false,
+            'postgresqlMinVer'                  => '9.3',
+            'phpMinVer'                         => $phpMinVer,
+            'displayErrorDetails'               => self::DEBUGMODE,
+            'addContentLengthHeader'            => false,
         ];
 
         if (!self::DEBUGMODE && !IN_TEST) {
             $settings['routerCacheFile'] = self::BASE_PATH . '/temp/route.cache.php';
         }
         $config = [
-            'msg' => '',
+            'msg'       => '',
             'appThemes' => [
-                'default' => 'Default',
+                'default'    => 'Default',
                 'cappuccino' => 'Cappuccino',
-                'gotar' => 'Blue/Green',
-                'bootstrap' => 'Bootstrap3',
+                'gotar'      => 'Blue/Green',
+                'bootstrap'  => 'Bootstrap3',
             ],
-            'settings' => $settings,
+            'settings'  => $settings,
         ];
 
         $this->_app = new App($config);
 
         // Fetch DI Container
-        $container = $this->_app->getContainer();
-        $container['utils'] = $this;
-        $container['version'] = 'v' . $appVersion;
-        $container['errors'] = [];
-        $container['requestobj'] = $container['request'];
+        $container                = $this->_app->getContainer();
+        $container['utils']       = $this;
+        $container['version']     = 'v' . $appVersion;
+        $container['errors']      = [];
+        $container['requestobj']  = $container['request'];
         $container['responseobj'] = $container['response'];
-        $this->container = $container;
+        $this->container          = $container;
     }
 
     public static function getContainerInstance()
@@ -143,13 +149,13 @@ class ContainerUtils
 
             $conf['display_sizes'] = [
                 'schemas' => (bool) $display_sizes,
-                'tables' => (bool) $display_sizes,
+                'tables'  => (bool) $display_sizes,
             ];
 
             if (\is_array($display_sizes)) {
                 $conf['display_sizes'] = [
                     'schemas' => $display_sizes['schemas'] ?? \in_array('schemas', $display_sizes, true),
-                    'tables' => $display_sizes['tables'] ?? \in_array('tables', $display_sizes, true),
+                    'tables'  => $display_sizes['tables'] ?? \in_array('tables', $display_sizes, true),
                 ];
             }
 
@@ -189,6 +195,7 @@ class ContainerUtils
         }
 
         $container->subfolder = $subfolder ?? self::SUBFOLDER;
+        $container->subfolder = $subfolder ?? self::SUBFOLDER;
         //ddd($container->subfolder);
         return [$container, self::$_instance->_app];
     }
@@ -200,14 +207,14 @@ class ContainerUtils
         $in_test = $c->view->offsetGet('in_test');
 
         if ('1' === $in_test) {
-            $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+            $className  = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
             $controller = new $className($c);
 
             return $controller->render();
         }
 
         $viewVars = [
-            'url' => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
+            'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
             'headertemplate' => 'header.twig',
         ];
 
@@ -273,10 +280,10 @@ class ContainerUtils
 
         // if server_id isn't set, then you will be redirected to intro
         if (null === $this->container->requestobj->getQueryParam('server')) {
-            $destinationurl = \SUBFOLDER . '/src/views/intro';
+            $destinationurl = self::SUBFOLDER . '/src/views/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
-            $destinationurl = \SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = self::SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
         }
 
         return $destinationurl;
@@ -310,10 +317,10 @@ class ContainerUtils
                     $urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
                 }
                 $_REQUEST = \array_merge($_REQUEST, $urlvars);
-                $_GET = \array_merge($_GET, $urlvars);
+                $_GET     = \array_merge($_GET, $urlvars);
             }
 
-            $actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
+            $actionurl      = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
             $destinationurl = $actionurl->value($_GET);
         }
         $destinationurl = \str_replace('views/?', "views/{$subject}?", $destinationurl);
@@ -330,7 +337,7 @@ class ContainerUtils
      */
     public function addError(string $errormsg): ContainerInterface
     {
-        $errors = $this->container->get('errors');
+        $errors   = $this->container->get('errors');
         $errors[] = $errormsg;
         $this->container->offsetSet('errors', $errors);
 
@@ -346,7 +353,7 @@ class ContainerUtils
     private function getThemeFolders()
     {
         // no THEME_PATH (how?) then return empty array
-        if (!$gestor = \opendir(THEME_PATH)) {
+        if (!$gestor = \opendir(self::THEME_PATH)) {
             \closedir($gestor);
 
             return [];
@@ -359,7 +366,7 @@ class ContainerUtils
                 continue;
             }
 
-            $folderpath = \sprintf('%s%s%s', THEME_PATH, \DIRECTORY_SEPARATOR, $foldername);
+            $folderpath = \sprintf('%s%s%s', self::THEME_PATH, \DIRECTORY_SEPARATOR, $foldername);
             $stylesheet = \sprintf('%s%s%s', $folderpath, \DIRECTORY_SEPARATOR, 'global.css');
             // if $folderpath if indeed a folder and contains a global.css file, then it's a theme
             if (\is_dir($folderpath) &&

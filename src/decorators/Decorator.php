@@ -6,9 +6,24 @@
 
 namespace PHPPgAdmin\Decorators;
 
+use PHPPgAdmin\ContainerUtils;
+
 class Decorator
 {
     use \PHPPgAdmin\Traits\HelperTrait;
+
+    /**
+     * @var string
+     */
+    const BASE_PATH = ContainerUtils::BASE_PATH;
+    /**
+     * @var string
+     */
+    const SUBFOLDER = ContainerUtils::SUBFOLDER;
+    /**
+     * @var string
+     */
+    const DEBUGMODE = ContainerUtils::DEBUGMODE;
 
     public $container;
 
@@ -17,13 +32,14 @@ class Decorator
         $this->val = $value;
     }
 
-    public function value($fields)
+    public function value(array $fields)
     {
         return $this->val;
     }
 
     /**
      * @param null|string $esc
+     * @param scalar $var
      */
     public static function get_sanitized_value(&$var, array &$fields, ? string $esc = null)
     {
@@ -65,7 +81,7 @@ class Decorator
     /**
      * @param scalar $var
      */
-    public static function value_url(&$var, &$fields)
+    public static function value_url(&$var, array &$fields)
     {
         return self::get_sanitized_value($var, $fields, 'url');
     }
@@ -91,7 +107,10 @@ class Decorator
         return new FieldDecorator($fieldName, $default);
     }
 
-    public static function branchurl($base, $vars = null/* ... */)
+    /**
+     * @param array|null $vars
+     */
+    public static function branchurl($base, ? array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -124,7 +143,10 @@ class Decorator
         return new ActionUrlDecorator($base, $vars);
     }
 
-    public static function redirecturl(string $base, $vars = null/* ... */)
+    /**
+     * @param array|null $vars
+     */
+    public static function redirecturl(string $base, ? array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged

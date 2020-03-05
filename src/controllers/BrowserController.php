@@ -19,8 +19,10 @@ class BrowserController extends BaseController
      * Default method to render the controller according to the action parameter.
      *
      * @param null|mixed $action
+     *
+     * @return string
      */
-    public function render($action = null)
+    public function render($action = null): string
     {
         if (null === $action) {
             $action = $this->action;

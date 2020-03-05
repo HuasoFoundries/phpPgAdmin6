@@ -14,18 +14,6 @@ use PHPPgAdmin\Decorators\Decorator;
 class TreeController extends BaseController
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-    /**
-     * @var string
-     */
-    const BASE_PATH = BASE_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = DEBUGMODE;
 
     public $form = '';
 
@@ -57,17 +45,17 @@ class TreeController extends BaseController
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
         $this->container = $container;
-        $this->lang = $container->get('lang');
+        $this->lang      = $container->get('lang');
         //$this->conf           = $container->get('conf');
         $this->view = $container->get('view');
 
-        $this->appName = $container->get('settings')['appName'];
-        $this->appVersion = $container->get('settings')['appVersion'];
+        $this->appName      = $container->get('settings')['appName'];
+        $this->appVersion   = $container->get('settings')['appVersion'];
         $this->appLangFiles = $container->get('appLangFiles');
-        $this->misc = $container->get('misc');
-        $this->conf = $this->misc->getConf();
-        $this->appThemes = $container->get('appThemes');
-        $this->action = $container->get('action');
+        $this->misc         = $container->get('misc');
+        $this->conf         = $this->misc->getConf();
+        $this->appThemes    = $container->get('appThemes');
+        $this->action       = $container->get('action');
 
         if (null !== $controller_name) {
             $this->controller_name = $controller_name;
@@ -106,8 +94,8 @@ class TreeController extends BaseController
 
         $tree_params = [
             'treedata' => &$treedata,
-            'attrs' => &$attrs,
-            'section' => $section,
+            'attrs'    => &$attrs,
+            'section'  => $section,
         ];
 
         return $this->printTreeJSON($treedata, $attrs, $print);
@@ -155,13 +143,13 @@ class TreeController extends BaseController
 
         if (isset($attrs['is_root'])) {
             $parent = [
-                'id' => 'root',
+                'id'       => 'root',
                 'children' => true,
-                'icon' => \SUBFOLDER . '/assets/images/themes/default/Servers.png',
-                'state' => ['opened' => true],
-                'a_attr' => ['href' => \str_replace('//', '/', \SUBFOLDER . '/src/views/servers')],
-                'url' => \str_replace('//', '/', \SUBFOLDER . '/src/views/servers?action=tree'),
-                'text' => 'Servers',
+                'icon'     => self::SUBFOLDER . '/assets/images/themes/default/Servers.png',
+                'state'    => ['opened' => true],
+                'a_attr'   => ['href' => \str_replace('//', '/', self::SUBFOLDER . '/src/views/servers')],
+                'url'      => \str_replace('//', '/', self::SUBFOLDER . '/src/views/servers?action=tree'),
+                'text'     => 'Servers',
             ];
         } elseif (0 < \count($treedata)) {
             foreach ($treedata as $rec) {
@@ -172,23 +160,23 @@ class TreeController extends BaseController
                 }
 
                 $tree = [
-                    'text' => Decorator::get_sanitized_value($attrs['text'], $rec),
-                    'id' => \sha1(Decorator::get_sanitized_value($attrs['action'], $rec)),
-                    'icon' => Decorator::get_sanitized_value($icon, $rec),
+                    'text'       => Decorator::get_sanitized_value($attrs['text'], $rec),
+                    'id'         => \sha1(Decorator::get_sanitized_value($attrs['action'], $rec)),
+                    'icon'       => Decorator::get_sanitized_value($icon, $rec),
                     'iconaction' => Decorator::get_sanitized_value($attrs['iconAction'], $rec),
-                    'openicon' => Decorator::get_sanitized_value($icon, $rec),
-                    'tooltip' => Decorator::get_sanitized_value($attrs['toolTip'], $rec),
-                    'a_attr' => ['href' => Decorator::get_sanitized_value($attrs['action'], $rec)],
-                    'children' => false,
+                    'openicon'   => Decorator::get_sanitized_value($icon, $rec),
+                    'tooltip'    => Decorator::get_sanitized_value($attrs['toolTip'], $rec),
+                    'a_attr'     => ['href' => Decorator::get_sanitized_value($attrs['action'], $rec)],
+                    'children'   => false,
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
 
                 if ($url && false === \mb_strpos($url, '/src/views')) {
-                    $url = \str_replace('//', '/', \SUBFOLDER . '/src/views/' . $url);
+                    $url = \str_replace('//', '/', self::SUBFOLDER . '/src/views/' . $url);
                 }
 
                 if ($url) {
-                    $tree['url'] = $url;
+                    $tree['url']      = $url;
                     $tree['children'] = true;
                 }
 
@@ -203,7 +191,7 @@ class TreeController extends BaseController
         if (true === $print) {
             if (isset($_REQUEST['children'])) {
                 $children = $parent;
-                $parent = ['children' => $children];
+                $parent   = ['children' => $children];
             }
 
             return $this

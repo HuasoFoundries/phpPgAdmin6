@@ -228,7 +228,7 @@ class DataexportController extends BaseController
         return $response;
     }
 
-    private function _getRS($data, $object, $oids)
+    private function _getRS($data, $object, bool $oids)
     {
         if ($object) {
             return $data->dumpRelation($object, $oids);
@@ -269,7 +269,7 @@ class DataexportController extends BaseController
             ->withHeader('Content-Disposition', 'attachment; filename=dump.' . $ext);
     }
 
-    private function pickFormat($data, $object, $oids, $rs, $format, $response)
+    private function pickFormat($data, $object, bool $oids, $rs, $format, $response)
     {
         if ('copy' === $format) {
             $this->_mimicCopy($data, $object, $oids, $rs);

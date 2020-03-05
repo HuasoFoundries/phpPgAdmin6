@@ -34,7 +34,7 @@ class RedirectUrlDecorator extends Decorator
             \ksort($queryVars);
 
             foreach ($queryVars as $var => $value) {
-                $varname = Decorator::value_url($var, $fields);
+                $varname  = Decorator::value_url($var, $fields);
                 $varvalue = Decorator::value_url($value, $fields);
 
                 if ('subject' === $varname) {
@@ -47,8 +47,8 @@ class RedirectUrlDecorator extends Decorator
             }
         }
 
-        if (\SUBFOLDER !== '' && (0 === \mb_strpos($url, '/')) && (false === \mb_strpos($url, \SUBFOLDER))) {
-            $url = \str_replace('//', '/', \SUBFOLDER . '/' . $url);
+        if (self::SUBFOLDER !== '' && (0 === \mb_strpos($url, '/')) && (false === \mb_strpos($url, self::SUBFOLDER))) {
+            $url = \str_replace('//', '/', self::SUBFOLDER . '/' . $url);
         }
 
         return \str_replace('.php', '', $url);

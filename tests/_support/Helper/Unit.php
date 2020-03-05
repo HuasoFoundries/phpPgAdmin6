@@ -9,12 +9,6 @@ namespace Helper;
 
 use PHPPgAdmin\ContainerUtils;
 
-defined('BASE_PATH') || define('BASE_PATH', dirname(dirname(dirname(__DIR__))));
-defined('SUBFOLDER') || define(
-    'SUBFOLDER',
-    str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
-);
-defined('DEBUGMODE') || define('DEBUGMODE', false);
 if (!is_readable(BASE_PATH . '/src/lib.inc.php')) {
     die('lib.inc.php is not readable');
 }
@@ -25,11 +19,11 @@ defined('IN_TEST') || define('IN_TEST', true);
 class Unit extends \Codeception\Module
 {
     /** @var string */
-    const BASE_PATH = BASE_PATH;
+    const BASE_PATH = ContainerUtils::BASE_PATH;
     /** @var string */
-    const SUBFOLDER = SUBFOLDER;
+    const SUBFOLDER = ContainerUtils::SUBFOLDER;
     /** @var string */
-    const DEBUGMODE = DEBUGMODE;
+    const DEBUGMODE = ContainerUtils::DEBUGMODE;
     /**
      * @var \PHPPgAdmin
      */

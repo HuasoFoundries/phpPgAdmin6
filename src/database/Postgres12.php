@@ -29,6 +29,6 @@ class Postgres12 extends Postgres11
      */
     public function hasObjectID($table)
     {
-        return null;
+        return false;
     }
 }

@@ -600,7 +600,7 @@ class DatabaseController extends BaseController
         return $optionhtml;
     }
 
-    private function _translatedType($curr)
+    private function _translatedType(string $curr)
     {
         $types = [
             'COLUMN' => $this->lang['strcolumns'],

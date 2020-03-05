@@ -225,7 +225,7 @@ class HTMLNavbarController extends HTMLController
                 'sql'     => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER . '/src/views/sqledit',
+                            'url'     => self::SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => \array_merge($reqvars, [
                                 'action' => 'sql',
                             ]),
@@ -239,7 +239,7 @@ class HTMLNavbarController extends HTMLController
                 'history' => [
                     'attr'    => [
                         'href'  => [
-                            'url'     => SUBFOLDER . '/src/views/history',
+                            'url'     => self::SUBFOLDER . '/src/views/history',
                             'urlvars' => \array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
@@ -252,7 +252,7 @@ class HTMLNavbarController extends HTMLController
                 'find'    => [
                     'attr'    => [
                         'href'   => [
-                            'url'     => SUBFOLDER . '/src/views/sqledit',
+                            'url'     => self::SUBFOLDER . '/src/views/sqledit',
                             'urlvars' => \array_merge($reqvars, [
                                 'action' => 'find',
                             ]),
@@ -266,7 +266,7 @@ class HTMLNavbarController extends HTMLController
                 'logout'  => [
                     'attr'    => [
                         'href' => [
-                            'url'     => SUBFOLDER . '/src/views/servers',
+                            'url'     => self::SUBFOLDER . '/src/views/servers',
                             'urlvars' => [
                                 'action'       => 'logout',
                                 'logoutServer' => \sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
@@ -326,7 +326,7 @@ class HTMLNavbarController extends HTMLController
 
         $trail['root'] = [
             'text' => $appName,
-            'url'  => SUBFOLDER . '/src/views/servers',
+            'url'  => self::SUBFOLDER . '/src/views/servers',
             'icon' => 'Introduction',
         ];
 

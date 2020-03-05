@@ -42,6 +42,6 @@ class ActionUrlDecorator extends Decorator
             }
         }
 
-        return \SUBFOLDER . '/src/views/' . \str_replace('.php', '', $url);
+        return self::SUBFOLDER . '/src/views/' . \str_replace('.php', '', $url);
     }
 }

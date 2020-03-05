@@ -6,14 +6,8 @@
 
 namespace PHPPgAdmin\XHtml;
 
+use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Decorators\Decorator;
-
-\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
-\defined('SUBFOLDER') || \define(
-    'SUBFOLDER',
-    \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
-);
-\defined('DEBUGMODE') || \define('DEBUGMODE', false);
 
 /**
  * Base HTMLController controller class.
@@ -24,15 +18,15 @@ class HTMLController
     /**
      * @var string
      */
-    const BASE_PATH = BASE_PATH;
+    const BASE_PATH = ContainerUtils::BASE_PATH;
     /**
      * @var string
      */
-    const SUBFOLDER = SUBFOLDER;
+    const SUBFOLDER = ContainerUtils::SUBFOLDER;
     /**
      * @var string
      */
-    const DEBUGMODE = DEBUGMODE;
+    const DEBUGMODE = ContainerUtils::DEBUGMODE;
 
     public $form = '';
 
@@ -66,16 +60,16 @@ class HTMLController
     public function __construct(\Slim\Container $container, $controller_name = null)
     {
         $this->container = $container;
-        $this->lang = $container->get('lang');
-        $this->view = $container->get('view');
+        $this->lang      = $container->get('lang');
+        $this->view      = $container->get('view');
 
-        $this->appName = $container->get('settings')['appName'];
-        $this->appVersion = $container->get('settings')['appVersion'];
+        $this->appName      = $container->get('settings')['appName'];
+        $this->appVersion   = $container->get('settings')['appVersion'];
         $this->appLangFiles = $container->get('appLangFiles');
-        $this->misc = $container->get('misc');
-        $this->conf = $this->misc->getConf();
-        $this->appThemes = $container->get('appThemes');
-        $this->action = $container->get('action');
+        $this->misc         = $container->get('misc');
+        $this->conf         = $this->misc->getConf();
+        $this->appThemes    = $container->get('appThemes');
+        $this->action       = $container->get('action');
 
         if (null !== $controller_name) {
             $this->controller_name = $controller_name;
@@ -110,7 +104,7 @@ class HTMLController
             $link['fields'] = $_REQUEST;
         }
         $from = $from ? $from : __METHOD__;
-        $tag = '<a ';
+        $tag  = '<a ';
 
         foreach ($link['attr'] as $attr => $value) {
             if ('href' === $attr && \is_array($value)) {
@@ -145,15 +139,32 @@ class HTMLController
      * @internal param $ (optional) $bMultiple bool to specify whether or not we want a multi select combo box
      * @internal param $ (optional) $iSize int to specify the size IF a multi select combo
      */
-    public static function printCombo(&$arrOptions, $szName, $bBlankEntry = true, $szDefault = '', $bMultiple = false, $iSize = 10)
-    {
+    public static function printCombo(
+        &$arrOptions,
+        $szName,
+        $bBlankEntry = true,
+        $szDefault = '',
+        $bMultiple = false,
+        $iSize = 10
+    ) {
         $htmlOut = '';
 
         if ($bMultiple) {
             // If multiple select combo
-            $htmlOut .= "<select rel=\"printCombo\" name=\"{$szName}\" id=\"{$szName}\" multiple=\"multiple\" size=\"{$iSize}\">" . \PHP_EOL;
+            $htmlOut .= sprintf(
+                '<select rel="printCombo" name="%s" id="%s" multiple="multiple" size="%s">',
+                $szName,
+                $szName,
+                $iSize
+            )
+            . \PHP_EOL;
         } else {
-            $htmlOut .= "<select rel=\"printCombo\" name=\"{$szName}\" id=\"{$szName}\" class=\"select2\" >" . \PHP_EOL;
+            $htmlOut .= sprintf(
+                '<select rel="printCombo" name="%s" id="%s" class="select2" >',
+                $szName,
+                $szName
+            )
+            . \PHP_EOL;
         }
 
         if ($bBlankEntry) {
@@ -204,9 +215,9 @@ class HTMLController
             $subject = '';
         }
 
-        $server = $this->container->server;
+        $server   = $this->container->server;
         $database = $this->container->database;
-        $schema = $this->container->schema;
+        $schema   = $this->container->schema;
 
         /*
         $server   = $this->container->has('server') ? $this->container->server : $_REQUEST['server'];
