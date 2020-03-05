@@ -25,8 +25,6 @@ class RedirectUrlDecorator extends Decorator
             return '';
         }
 
-        //$this->prtrace('url', $url);
-
         if (!empty($this->queryVars)) {
             $queryVars = Decorator::get_sanitized_value($this->queryVars, $fields);
 

@@ -225,8 +225,6 @@ class HTMLController
         $schema   = $this->container->has('schema') ? $this->container->schema : $_REQUEST['schema'];
          */
 
-        //$this->prtrace('server', $server, 'database', $database, 'schema', $schema);
-
         if ($server && !isset($urlvars['server']) && 'root' !== $subject) {
             $urlvars['server'] = $server;
 
@@ -270,7 +268,6 @@ class HTMLController
 
         foreach ($links as $link) {
             if ('PHPPgAdmin\Controller\BaseController::printNavLinks' === $from) {
-                //$this->prtrace($link);
             }
 
             $list_html .= "\t<li>";

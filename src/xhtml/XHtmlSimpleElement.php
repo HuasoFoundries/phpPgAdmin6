@@ -68,7 +68,6 @@ class XHtmlSimpleElement
         $lower_classname = \mb_strtolower(\get_class($this));
 
         return \str_replace('phppgadmin\xhtml\xhtml', '', $lower_classname);
-        //$this->prtrace('is_element_string', $is_element_string, 'lower_classname', $lower_classname, '__CLASS__');
     }
 
     /**

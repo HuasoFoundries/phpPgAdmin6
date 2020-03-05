@@ -97,8 +97,6 @@ class Misc
 
         $base_version = $container->get('settings')['base_version'];
 
-        //$this->prtrace($base_version);
-
         // Check for config file version mismatch
         if (!isset($this->conf['version']) || $base_version > $this->conf['version']) {
             $container->get('utils')->addError($this->lang['strbadconfig']);
@@ -148,7 +146,6 @@ class Misc
         } elseif (null !== $request_server) {
             $this->_server_id = $request_server;
         } elseif (isset($_SESSION['webdbLogin']) && 0 < \count($_SESSION['webdbLogin'])) {
-            //$this->prtrace('webdbLogin', $_SESSION['webdbLogin']);
             $this->_server_id = \array_keys($_SESSION['webdbLogin'])[0];
         }
 
@@ -327,7 +324,6 @@ class Misc
         if (null !== $server_id) {
             $this->_server_id = $server_id;
         }
-        //$this->prtrace($this->_server_id);
 
         $server_info = $this->getServerInfo($this->_server_id);
 
@@ -345,8 +341,6 @@ class Misc
 
                 return null;
             }
-
-            //$this->prtrace('_connection', $_connection);
             if (!$_connection) {
                 $this->container->utils->addError($lang['strloginfailed']);
                 $this->setErrorMsg($lang['strloginfailed']);
@@ -357,8 +351,6 @@ class Misc
             // The description of the server is returned in $platform.
             $_type = $_connection->getDriver($platform);
 
-            //$this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
-
             if (null === $_type) {
                 $errormsg = \sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer);
                 $this->container->utils->addError($errormsg);
@@ -367,8 +359,6 @@ class Misc
                 return null;
             }
             $_type = '\PHPPgAdmin\Database\\' . $_type;
-
-            //$this->prtrace('driver:', $_type);
 
             $this->setServerInfo('platform', $platform, $this->_server_id);
             $this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $this->_server_id);
@@ -380,8 +370,6 @@ class Misc
             $this->_data->platform = $_connection->platform;
 
             //$this->_data->getHelpPages();
-
-            //$this->prtrace('help_page has ' . count($this->_data->help_page) . ' items');
 
             /* we work on UTF-8 only encoding */
             $this->_data->execute("SET client_encoding TO 'UTF-8'");
@@ -766,7 +754,6 @@ class Misc
                 }
             }
         }
-        //$this->prtrace($v);
         return $v;
     }
 

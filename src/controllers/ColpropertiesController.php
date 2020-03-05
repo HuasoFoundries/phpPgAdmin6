@@ -97,14 +97,13 @@ class ColpropertiesController extends BaseController
             if (null !== $attrs->fields['comment']) {
                 echo '<p class="comment">', $this->misc->printVal($attrs->fields['comment']), '</p>' . \PHP_EOL;
             }
-            //$this->prtrace('$isTable', $isTable);
 
             $column = [
                 'column' => [
                     'title' => $this->lang['strcolumn'],
                     'field' => Decorator::field('attname'),
                 ],
-                'type' => [
+                'type'   => [
                     'title' => $this->lang['strtype'],
                     'field' => Decorator::field('+type'),
                 ],
@@ -112,9 +111,9 @@ class ColpropertiesController extends BaseController
 
             if ($isTable) {
                 $column['notnull'] = [
-                    'title' => $this->lang['strnotnull'],
-                    'field' => Decorator::field('attnotnull'),
-                    'type' => 'bool',
+                    'title'  => $this->lang['strnotnull'],
+                    'field'  => Decorator::field('attnotnull'),
+                    'type'   => 'bool',
                     'params' => ['true' => 'NOT NULL', 'false' => ''],
                 ];
                 $column['default'] = [
@@ -129,8 +128,8 @@ class ColpropertiesController extends BaseController
             echo '<br />' . \PHP_EOL;
 
             $f_attname = $_REQUEST['column'];
-            $f_table = $this->tableName;
-            $f_schema = $data->_schema;
+            $f_table   = $this->tableName;
+            $f_schema  = $data->_schema;
             $data->fieldClean($f_attname);
             $data->fieldClean($f_table);
             $data->fieldClean($f_schema);
@@ -138,53 +137,53 @@ class ColpropertiesController extends BaseController
             if ($isTable) {
                 $navlinks = [
                     'browse' => [
-                        'attr' => [
+                        'attr'    => [
                             'href' => [
-                                'url' => 'display',
-                                'method' => 'post',
+                                'url'     => 'display',
+                                'method'  => 'post',
                                 'urlvars' => [
-                                    'subject' => 'column',
-                                    'server' => $_REQUEST['server'],
-                                    'database' => $_REQUEST['database'],
-                                    'schema' => $_REQUEST['schema'],
-                                    'table' => $this->tableName,
-                                    'column' => $_REQUEST['column'],
-                                    'return' => 'column',
+                                    'subject'   => 'column',
+                                    'server'    => $_REQUEST['server'],
+                                    'database'  => $_REQUEST['database'],
+                                    'schema'    => $_REQUEST['schema'],
+                                    'table'     => $this->tableName,
+                                    'column'    => $_REQUEST['column'],
+                                    'return'    => 'column',
                                     'f_attname' => $f_attname,
-                                    'f_table' => $f_table,
-                                    'f_schema' => $f_schema,
+                                    'f_table'   => $f_table,
+                                    'f_schema'  => $f_schema,
                                 ],
                             ],
                         ],
                         'content' => $this->lang['strbrowse'],
                     ],
-                    'alter' => [
-                        'attr' => [
+                    'alter'  => [
+                        'attr'    => [
                             'href' => [
-                                'url' => 'colproperties',
+                                'url'     => 'colproperties',
                                 'urlvars' => [
-                                    'action' => 'properties',
-                                    'server' => $_REQUEST['server'],
+                                    'action'   => 'properties',
+                                    'server'   => $_REQUEST['server'],
                                     'database' => $_REQUEST['database'],
-                                    'schema' => $_REQUEST['schema'],
-                                    'table' => $this->tableName,
-                                    'column' => $_REQUEST['column'],
+                                    'schema'   => $_REQUEST['schema'],
+                                    'table'    => $this->tableName,
+                                    'column'   => $_REQUEST['column'],
                                 ],
                             ],
                         ],
                         'content' => $this->lang['stralter'],
                     ],
-                    'drop' => [
-                        'attr' => [
+                    'drop'   => [
+                        'attr'    => [
                             'href' => [
-                                'url' => 'tblproperties',
+                                'url'     => 'tblproperties',
                                 'urlvars' => [
-                                    'action' => 'confirm_drop',
-                                    'server' => $_REQUEST['server'],
+                                    'action'   => 'confirm_drop',
+                                    'server'   => $_REQUEST['server'],
                                     'database' => $_REQUEST['database'],
-                                    'schema' => $_REQUEST['schema'],
-                                    'table' => $this->tableName,
-                                    'column' => $_REQUEST['column'],
+                                    'schema'   => $_REQUEST['schema'],
+                                    'table'    => $this->tableName,
+                                    'column'   => $_REQUEST['column'],
                                 ],
                             ],
                         ],
@@ -195,21 +194,21 @@ class ColpropertiesController extends BaseController
                 // Browse link
                 $navlinks = [
                     'browse' => [
-                        'attr' => [
+                        'attr'    => [
                             'href' => [
-                                'url' => 'display',
-                                'method' => 'post',
+                                'url'     => 'display',
+                                'method'  => 'post',
                                 'urlvars' => [
-                                    'subject' => 'column',
-                                    'server' => $_REQUEST['server'],
-                                    'database' => $_REQUEST['database'],
-                                    'schema' => $_REQUEST['schema'],
-                                    'view' => $this->tableName,
-                                    'column' => $_REQUEST['column'],
-                                    'return' => 'column',
+                                    'subject'   => 'column',
+                                    'server'    => $_REQUEST['server'],
+                                    'database'  => $_REQUEST['database'],
+                                    'schema'    => $_REQUEST['schema'],
+                                    'view'      => $this->tableName,
+                                    'column'    => $_REQUEST['column'],
+                                    'return'    => 'column',
                                     'f_attname' => $f_attname,
-                                    'f_table' => $f_table,
-                                    'f_schema' => $f_schema,
+                                    'f_table'   => $f_table,
+                                    'f_schema'  => $f_schema,
                                 ],
                             ],
                         ],
@@ -233,8 +232,6 @@ class ColpropertiesController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'stage', 1);
 
-        //$this->prtrace('$_REQUEST', $_REQUEST, 'msg', $msg);
-
         switch ($_REQUEST['stage']) {
             case 1:
                 $this->printTrail('column');
@@ -256,21 +253,21 @@ class ColpropertiesController extends BaseController
                 }
                 echo "<th class=\"data\">{$this->lang['strnotnull']}</th>\n<th class=\"data\">{$this->lang['strdefault']}</th>\n<th class=\"data\">{$this->lang['strcomment']}</th></tr>" . \PHP_EOL;
 
-                $column = $data->getTableAttributes($_REQUEST['table'], $_REQUEST['column']);
+                $column                       = $data->getTableAttributes($_REQUEST['table'], $_REQUEST['column']);
                 $column->fields['attnotnull'] = $data->phpBool($column->fields['attnotnull']);
 
                 // Upon first drawing the screen, load the existing column information
                 // from the database.
                 if (!isset($_REQUEST['default'])) {
                     $_REQUEST['field'] = $column->fields['attname'];
-                    $_REQUEST['type'] = $column->fields['base_type'];
+                    $_REQUEST['type']  = $column->fields['base_type'];
                     // Check to see if its' an array type...
                     // @todo this is pretty hacky!
                     if ('[]' === \mb_substr($column->fields['base_type'], \mb_strlen($column->fields['base_type']) - 2)) {
-                        $_REQUEST['type'] = \mb_substr($column->fields['base_type'], 0, \mb_strlen($column->fields['base_type']) - 2);
+                        $_REQUEST['type']  = \mb_substr($column->fields['base_type'], 0, \mb_strlen($column->fields['base_type']) - 2);
                         $_REQUEST['array'] = '[]';
                     } else {
-                        $_REQUEST['type'] = $column->fields['base_type'];
+                        $_REQUEST['type']  = $column->fields['base_type'];
                         $_REQUEST['array'] = '';
                     }
                     // To figure out the length, look in the brackets :(
@@ -298,13 +295,13 @@ class ColpropertiesController extends BaseController
                 $escaped_predef_types = []; // the JS escaped array elements
                 if ($data->hasAlterColumnType()) {
                     // Fetch all available types
-                    $types = $data->getTypes(true, false, true);
+                    $types        = $data->getTypes(true, false, true);
                     $types_for_js = [];
 
                     echo "<td><select name=\"type\" id=\"type\" class=\"select2\" onchange=\"checkLengths(document.getElementById('type').value,'');\">" . \PHP_EOL;
 
                     while (!$types->EOF) {
-                        $typname = $types->fields['typname'];
+                        $typname        = $types->fields['typname'];
                         $types_for_js[] = $typname;
                         echo "\t<option value=\"", \htmlspecialchars($typname), '"', ($typname === $_REQUEST['type']) ? ' selected="selected"' : '', '>',
                         $this->misc->printVal($typname), '</option>' . \PHP_EOL;
@@ -385,8 +382,6 @@ class ColpropertiesController extends BaseController
                     $_REQUEST['oldtype'],
                     $_REQUEST['comment']
                 );
-
-                //$this->prtrace('status', $status, 'sql', $sql);
                 if (0 === $status) {
                     if ($_REQUEST['column'] !== $_REQUEST['field']) {
                         $_REQUEST['column'] = $_REQUEST['field'];

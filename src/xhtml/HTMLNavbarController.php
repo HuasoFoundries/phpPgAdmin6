@@ -77,8 +77,6 @@ class HTMLNavbarController extends HTMLController
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
             $alltabs                            = $this->misc->getNavTabs($alltabs);
         }
-
-        //$this->prtrace($tabs);
         $tabs_html = '';
 
         //Getting only visible tabs
@@ -90,7 +88,6 @@ class HTMLNavbarController extends HTMLController
                     $tabs[$tab_id]            = $tab;
                     $tabs[$tab_id]['active']  = ($tab_id === $activetab) ? ' active' : '';
                     $tabs[$tab_id]['tablink'] = \str_replace(['&amp;', '.php'], ['&', ''], \htmlentities($this->getActionUrl($tab, $_REQUEST, $from)));
-                    //$this->prtrace('link for ' . $tab_id, $tabs[$tab_id]['tablink']);
                     if (isset($tab['icon']) && $icon = $this->misc->icon($tab['icon'])) {
                         $tabs[$tab_id]['iconurl'] = $icon;
                     }
@@ -101,8 +98,6 @@ class HTMLNavbarController extends HTMLController
                 }
             }
         }
-
-        //$this->prtrace($tabs);
 
         if (0 < \count($tabs)) {
             $width = (int) (100 / \count($tabs)) . '%';
@@ -419,8 +414,6 @@ class HTMLNavbarController extends HTMLController
         if (null !== $subject) {
             $trail = $this->_getLastTrailPart($subject, $trail);
         }
-
-        //$this->prtrace($trail);
 
         return $trail;
     }

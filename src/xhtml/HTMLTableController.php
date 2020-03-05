@@ -121,8 +121,6 @@ class HTMLTableController extends HTMLController
 
         $tablehtml .= $this->getThead();
 
-        //$this->prtrace($tabledata, $actions);
-
         $tablehtml .= $with_body ? $this->getTbody() : '';
 
         $tablehtml .= $this->getTfooter();

@@ -36,11 +36,9 @@ class UrlDecorator extends Decorator
                 $sep = '&';
             }
         }
-        //$this->prtrace('url before', $url);
         if (self::SUBFOLDER !== '' && (0 === \mb_strpos($url, '/')) && (false === \mb_strpos($url, self::SUBFOLDER))) {
             $url = \str_replace('//', '/', self::SUBFOLDER . '/' . $url);
         }
-        //$this->prtrace('url after', $url);
         return $url;
     }
 }

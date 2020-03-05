@@ -102,8 +102,6 @@ trait DatabaseTrait
         $conf        = $this->conf;
         $server_info = $this->server_info;
 
-        //$this->prtrace('server_info', $server_info);
-
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
             $username = $server_info['username'];
             $this->clean($username);

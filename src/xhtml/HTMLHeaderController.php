@@ -50,14 +50,13 @@ class HTMLHeaderController extends HTMLController
 
         $viewVars = [];
 
-        $viewVars['dir'] = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
+        $viewVars['dir']            = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title'] = ('' !== $title) ? ' - ' . $title : '';
-        $viewVars['appName'] = \htmlspecialchars($this->appName);
+        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
+        $viewVars['appName']        = \htmlspecialchars($this->appName);
 
         $viewVars['script'] = $script;
-        //$this->prtrace($viewVars);
-        $header_html = $this->view->fetch($template, $viewVars);
+        $header_html        = $this->view->fetch($template, $viewVars);
 
         /*$plugins_head = [];
         $_params      = ['heads' => &$plugins_head];
@@ -84,7 +83,7 @@ class HTMLHeaderController extends HTMLController
     public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
         $bodyClass = $this->lang['applangdir'] . ' ' . \htmlspecialchars($bodyClass);
-        $onload = ($onloadInit ? 'onload="init();" ' : '');
+        $onload    = ($onloadInit ? 'onload="init();" ' : '');
 
         $bodyHtml = \sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
         $bodyHtml .= \PHP_EOL;

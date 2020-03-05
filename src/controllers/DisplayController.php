@@ -168,8 +168,6 @@ class DisplayController extends BaseController
 
         $this->printTitle($this->lang[$title]);
 
-        //$this->prtrace($subject, $object, $query, $_SESSION['sqlquery']);
-
         $this->printMsg($msg);
 
         // If 'sortkey' is not set, default to ''
@@ -238,7 +236,6 @@ class DisplayController extends BaseController
         $query = $query ? $query : \sprintf('SELECT * FROM %s.%s', $_REQUEST['schema'], $object);
 
         //$query = isset($_REQUEST['query'])? $_REQUEST['query'] : "select * from {$_REQUEST['schema']}.{$_REQUEST['table']};";
-        //$this->prtrace($query);
 
         //die(htmlspecialchars($query));
 

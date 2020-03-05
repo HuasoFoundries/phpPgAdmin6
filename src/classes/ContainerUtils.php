@@ -71,7 +71,6 @@ class ContainerUtils
         $appVersion   = $composerinfo->extra->version;
 
         $phpMinVer = (\str_replace(['<', '>', '='], '', $composerinfo->require->php));
-        //$this->prtrace($appVersion);
         //$this->dump($composerinfo);
         $settings = [
             'determineRouteBeforeAppMiddleware' => true,
@@ -288,6 +287,7 @@ class ContainerUtils
 
         return $destinationurl;
     }
+
     /**
      * Adds a flash message to the session that will be displayed on the next request.
      *
@@ -317,7 +317,6 @@ class ContainerUtils
     {
         $_server_info = $this->container->misc->getServerInfo();
         $this->addFlash($subject, 'getDestinationWithLastTab');
-        //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
         if (!isset($_server_info['username'])) {
             $destinationurl = $this->getRedirectUrl();
@@ -329,7 +328,6 @@ class ContainerUtils
                 $urlvars = [];
 
                 foreach ($url['urlvars'] as $key => $urlvar) {
-                    //$this->prtrace($key, $urlvar);
                     $urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
                 }
                 $_REQUEST = \array_merge($_REQUEST, $urlvars);

@@ -121,13 +121,12 @@ class HTMLFooterController extends HTMLController
         if (null === $from || false === $from) {
             $from = __METHOD__;
         }
-        //$this->prtrace($navlinks);
 
         // Navlinks hook's place
         $plugin_functions_parameters = [
             'navlinks' => &$navlinks,
-            'place' => $place,
-            'env' => $env,
+            'place'    => $place,
+            'env'      => $env,
         ];
 
         if (0 < \count($navlinks)) {

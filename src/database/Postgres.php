@@ -42,7 +42,6 @@ class Postgres extends ADOdbBase
 
     public function __construct(&$conn, $container, $server_info)
     {
-        //$this->prtrace('major_version :' . $this->major_version);
         $this->conn      = $conn;
         $this->container = $container;
 
@@ -488,7 +487,6 @@ class Postgres extends ADOdbBase
 
                 /* in quote? */
                 if (0 !== $in_quote) {
-                    //$this->prtrace('in_quote', $in_quote, $line);
                     /*
                      * end of quote if matching non-backslashed character.
                      * backslashes don't count for double quotes, though.
