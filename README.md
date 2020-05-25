@@ -1,6 +1,6 @@
 # phpPgAdmin6
 
-PHP Based administration tool for PostgreSQL. Blazing fast routing with [Slim Framework 3](https://www.slimframework.com/) and solid abstraction layer in its core with [AdoDB](https://adodb.org/). Originally forked from [phppgadmin/phppgadmin](https://github.com/phppgadmin/phppgadmin).
+PHP Based administration tool for PostgreSQL. Blazing fast routing with [Slim Framework 3](https://www.slimframework.com/) and solid abstraction layer in its core with [AdoDB](https://adodb.org/).
 
 [![Packagist](https://img.shields.io/packagist/dm/huasofoundries/phppgadmin6.svg)](https://packagist.org/packages/huasofoundries/phppgadmin6)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/289a56c1c7d94216b3d089c220689e9e)](https://www.codacy.com/app/amenadiel/phpPgAdmin6?utm_source=github.com&utm_medium=referral&utm_content=HuasoFoundries/phpPgAdmin6&utm_campaign=Badge_Grade)
@@ -8,7 +8,7 @@ PHP Based administration tool for PostgreSQL. Blazing fast routing with [Slim Fr
 [![Build Status](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/build-status/develop)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHuasoFoundries%2FphpPgAdmin6.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FHuasoFoundries%2FphpPgAdmin6?ref=badge_shield)
 
-This is a hard fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) which adds the following enhancements:
+This project is inspired in [phppgadmin](https://github.com/phppgadmin/phppgadmin). Said project stalled a few years ago so we took it, refactored almost entirely and added:
 
 -   Composer Installation and dependency management
 -   [PSR-2 Coding Standard](https://www.php-fig.org/psr/psr-2) (Will evolve to PSR-12 soon)
@@ -19,10 +19,6 @@ This is a hard fork of [phppgadmin](https://github.com/phppgadmin/phppgadmin) wh
 -   Usage of Dependency Injection compliant with [PSR-11 Container interface](http://www.php-fig.org/psr/psr-11/)
 -   Support for PG 9.3+ features (Materialized Views, BRIN Indexes, etc)
 -   Nice urls
-
-### WIP
-
-Other enhancements are in progress and would be a nice to have:
 
 ## Requirements
 
