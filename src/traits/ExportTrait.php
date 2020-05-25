@@ -144,7 +144,7 @@ trait ExportTrait
             $checked ? 'checked="checked"' : ''
         );
         $content .= \sprintf(
-            '<label for="what2">%s</label></th>',
+            '<label for="what2">%s</label></th>%s',
             $this->lang['strstructureonly'],
             \PHP_EOL
         );
@@ -172,7 +172,7 @@ trait ExportTrait
     {
         $content = \sprintf(
             '<form id="export_form" action="%s/%s" method="post">%s',
-            \SUBFOLDER . '/src/views',
+            self::SUBFOLDER . '/src/views',
             $endpoint,
             \PHP_EOL
         );
@@ -209,7 +209,7 @@ trait ExportTrait
             \PHP_EOL
         );
         $content .= \sprintf(
-            '<input type="hidden" name="%s" value="%s" />',
+            '<input type="hidden" name="%s" value="%s" />%s',
             $subject,
             \htmlspecialchars($object),
             \PHP_EOL
@@ -247,7 +247,7 @@ trait ExportTrait
         );
         $content .= '<p><input type="radio" id="output1" name="output" value="show" checked="checked" />';
         $content .= \sprintf(
-            '<label for="output1">%s</label>',
+            '<label for="output1">%s</label>%s',
             $this->lang['strshow'],
             \PHP_EOL
         );
@@ -283,7 +283,7 @@ trait ExportTrait
      */
     public function offerNoRoleExport($version10orMore)
     {
-        $this->prtrace($version10orMore);
+        //$this->prtrace($version10orMore);
 
         if (!$version10orMore) {
             return '';

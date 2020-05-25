@@ -1,39 +1,43 @@
 <?php
 
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace Helper;
 
+\defined('IN_TEST') || \define('IN_TEST', true);
 use PHPPgAdmin\ContainerUtils;
 
-defined('BASE_PATH') || define('BASE_PATH', dirname(dirname(dirname(__DIR__))));
-defined('SUBFOLDER') || define(
-    'SUBFOLDER',
-    str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
-);
-defined('DEBUGMODE') || define('DEBUGMODE', false);
-if (!is_readable(BASE_PATH . '/src/lib.inc.php')) {
+if (!\is_readable(ContainerUtils::BASE_PATH . '/src/lib.inc.php')) {
     die('lib.inc.php is not readable');
 }
-defined('IN_TEST') || define('IN_TEST', true);
+\defined('IN_TEST') || \define('IN_TEST', true);
+
+require_once ContainerUtils::BASE_PATH . '/src/lib.inc.php';
 // here you can define custom actions
 // all public methods declared in helper class will be available in $I
 
 class Unit extends \Codeception\Module
 {
-    /** @var string */
-    const BASE_PATH = BASE_PATH;
-    /** @var string */
-    const SUBFOLDER = SUBFOLDER;
-    /** @var string */
-    const DEBUGMODE = DEBUGMODE;
+    /**
+     * @var string
+     */
+    const BASE_PATH = ContainerUtils::BASE_PATH;
+    /**
+     * @var string
+     */
+    const SUBFOLDER = ContainerUtils::SUBFOLDER;
+    /**
+     * @var string
+     */
+    const DEBUGMODE = ContainerUtils::DEBUGMODE;
+
     /**
      * @var \PHPPgAdmin
      */
     private static $_container;
+
     private static $_conf;
 
     public static function getDir()
@@ -43,10 +47,8 @@ class Unit extends \Codeception\Module
 
     public static function getContainer()
     {
-
         //$conf = self::getConf();
         if (!static::$_container) {
-            require_once BASE_PATH . '/src/lib.inc.php';
             self::$_container = ContainerUtils::getContainerInstance();
         }
 

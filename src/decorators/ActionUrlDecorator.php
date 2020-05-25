@@ -19,7 +19,6 @@ class ActionUrlDecorator extends Decorator
 
     public function value($fields)
     {
-        //$this->prtrace($fields);
         $url = Decorator::get_sanitized_value($this->base, $fields);
 
         if (false === $url) {
@@ -42,6 +41,6 @@ class ActionUrlDecorator extends Decorator
             }
         }
 
-        return \SUBFOLDER . '/src/views/' . \str_replace('.php', '', $url);
+        return self::SUBFOLDER . '/src/views/' . \str_replace('.php', '', $url);
     }
 }

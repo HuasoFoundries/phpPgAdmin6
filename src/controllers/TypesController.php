@@ -98,22 +98,22 @@ class TypesController extends BaseController
         $types = $data->getTypes();
 
         $columns = [
-            'type'    => [
+            'type' => [
                 'title' => $this->lang['strtype'],
                 'field' => Decorator::field('typname'),
-                'url'   => "types?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['type' => 'basename'],
+                'url' => "types?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['type' => 'basename'],
             ],
-            'owner'   => [
+            'owner' => [
                 'title' => $this->lang['strowner'],
                 'field' => Decorator::field('typowner'),
             ],
             'flavour' => [
-                'title'  => $this->lang['strflavor'],
-                'field'  => Decorator::field('typtype'),
-                'type'   => 'verbatim',
+                'title' => $this->lang['strflavor'],
+                'field' => Decorator::field('typtype'),
+                'type' => 'verbatim',
                 'params' => [
-                    'map'   => [
+                    'map' => [
                         'b' => $this->lang['strbasetype'],
                         'c' => $this->lang['strcompositetype'],
                         'd' => $this->lang['strdomain'],
@@ -139,12 +139,12 @@ class TypesController extends BaseController
         $actions = [
             'drop' => [
                 'content' => $this->lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types',
+                        'url' => 'types',
                         'urlvars' => [
                             'action' => 'confirm_drop',
-                            'type'   => Decorator::field('basename'),
+                            'type' => Decorator::field('basename'),
                         ],
                     ],
                 ],
@@ -154,43 +154,43 @@ class TypesController extends BaseController
         echo $this->printTable($types, $columns, $actions, 'types-types', $this->lang['strnotypes']);
 
         $navlinks = [
-            'create'     => [
-                'attr'    => [
+            'create' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types',
+                        'url' => 'types',
                         'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
                 'content' => $this->lang['strcreatetype'],
             ],
             'createcomp' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types',
+                        'url' => 'types',
                         'urlvars' => [
-                            'action'   => 'create_comp',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create_comp',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
                 'content' => $this->lang['strcreatecomptype'],
             ],
             'createenum' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types',
+                        'url' => 'types',
                         'urlvars' => [
-                            'action'   => 'create_enum',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create_enum',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -217,15 +217,15 @@ class TypesController extends BaseController
         $reqvars = $this->misc->getRequestVars('type');
 
         $attrs = [
-            'text'    => Decorator::field('typname'),
-            'icon'    => 'Type',
+            'text' => Decorator::field('typname'),
+            'icon' => 'Type',
             'toolTip' => Decorator::field('typcomment'),
-            'action'  => Decorator::actionurl(
+            'action' => Decorator::actionurl(
                 'types',
                 $reqvars,
                 [
                     'action' => 'properties',
-                    'type'   => Decorator::field('basename'),
+                    'type' => Decorator::field('basename'),
                 ]
             ),
         ];
@@ -260,11 +260,11 @@ class TypesController extends BaseController
                     $attrs = $data->getTableAttributes($_REQUEST['type']);
 
                     $columns = [
-                        'field'   => [
+                        'field' => [
                             'title' => $this->lang['strfield'],
                             'field' => Decorator::field('attname'),
                         ],
-                        'type'    => [
+                        'type' => [
                             'title' => $this->lang['strtype'],
                             'field' => Decorator::field('+type'),
                         ],
@@ -299,7 +299,7 @@ class TypesController extends BaseController
                     echo '<td class="data1">', $this->misc->printVal($typedata->fields['typalign']), '</td></tr>' . \PHP_EOL;
 
                     if ($data->hasEnumTypes() && $vals) {
-                        $vals   = $vals->getArray();
+                        $vals = $vals->getArray();
                         $nbVals = \count($vals);
                         echo "<tr>\n\t<th class=\"data left\" rowspan=\"{$nbVals}\">{$this->lang['strenumvalues']}</th>" . \PHP_EOL;
                         echo "<td class=\"data2\">{$vals[0]['enumval']}</td></tr>" . \PHP_EOL;
@@ -312,13 +312,13 @@ class TypesController extends BaseController
             }
 
             $this->printNavLinks(['showall' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'types',
+                        'url' => 'types',
                         'urlvars' => [
-                            'server'   => $_REQUEST['server'],
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],

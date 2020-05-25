@@ -41,10 +41,8 @@ class OpclassesController extends BaseController
      * Show default list of opclasss in the database.
      *
      * @param string $msg
-     *
-     * @return string|void
      */
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -59,20 +57,20 @@ class OpclassesController extends BaseController
                 'title' => $this->lang['straccessmethod'],
                 'field' => Decorator::field('amname'),
             ],
-            'opclass'      => [
+            'opclass' => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('opcname'),
             ],
-            'type'         => [
+            'type' => [
                 'title' => $this->lang['strtype'],
                 'field' => Decorator::field('opcintype'),
             ],
-            'default'      => [
+            'default' => [
                 'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('opcdefault'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'comment'      => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('opccomment'),
             ],
@@ -96,8 +94,8 @@ class OpclassesController extends BaseController
         $proto = Decorator::concat(Decorator::field('opcname'), '/', Decorator::field('amname'));
 
         $attrs = [
-            'text'    => $proto,
-            'icon'    => 'OperatorClass',
+            'text' => $proto,
+            'icon' => 'OperatorClass',
             'toolTip' => Decorator::field('opccomment'),
         ];
 

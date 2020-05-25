@@ -6,21 +6,43 @@
 
 namespace PHPPgAdmin\Decorators;
 
+use PHPPgAdmin\ContainerUtils;
+
 class Decorator
 {
     use \PHPPgAdmin\Traits\HelperTrait;
+
+    /**
+     * @var string
+     */
+    const BASE_PATH = ContainerUtils::BASE_PATH;
+    /**
+     * @var string
+     */
+    const SUBFOLDER = ContainerUtils::SUBFOLDER;
+    /**
+     * @var string
+     */
+    const DEBUGMODE = ContainerUtils::DEBUGMODE;
+
+    public $container;
 
     public function __construct($value)
     {
         $this->val = $value;
     }
 
-    public function value($fields)
+    public function value(array $fields)
     {
         return $this->val;
     }
 
-    public static function get_sanitized_value(&$var, &$fields, $esc = null)
+    /**
+     * @param null|string $esc
+     * @param scalar      $var
+     * @param array       $fields
+     */
+    public static function get_sanitized_value(&$var, array &$fields, ?string $esc = null)
     {
         if (\is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
             $val = $var->value($fields);
@@ -48,12 +70,20 @@ class Decorator
         return $val;
     }
 
-    public static function callback($callback, $params = null)
+    /**
+     * @param \Closure|\Closure|\Closure $callback
+     * @param (mixed|string)[]|null      $params
+     */
+    public static function callback($callback, ?array $params = null)
     {
         return new \PHPPgAdmin\Decorators\CallbackDecorator($callback, $params);
     }
 
-    public static function value_url(&$var, &$fields)
+    /**
+     * @param scalar $var
+     * @param array  $fields
+     */
+    public static function value_url(&$var, array &$fields)
     {
         return self::get_sanitized_value($var, $fields, 'url');
     }
@@ -63,17 +93,29 @@ class Decorator
         return new \PHPPgAdmin\Decorators\ConcatDecorator(\func_get_args());
     }
 
-    public static function replace($str, $params)
+    /**
+     * @param array  $params
+     * @param string $str
+     */
+    public static function replace(string $str, array $params)
     {
         return new \PHPPgAdmin\Decorators\ReplaceDecorator($str, $params);
     }
 
-    public static function field($fieldName, $default = null)
+    /**
+     * @param null|array $default
+     * @param string     $fieldName
+     */
+    public static function field(string $fieldName, ?array $default = null)
     {
         return new FieldDecorator($fieldName, $default);
     }
 
-    public static function branchurl($base, $vars = null/* ... */)
+    /**
+     * @param null|array $vars
+     * @param mixed      $base
+     */
+    public static function branchurl($base, ?array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -88,7 +130,11 @@ class Decorator
         return new BranchUrlDecorator($base, $vars);
     }
 
-    public static function actionurl($base, $vars = null/* ... */)
+    /**
+     * @param null|array $vars
+     * @param mixed      $base
+     */
+    public static function actionurl($base, ?array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -103,7 +149,11 @@ class Decorator
         return new ActionUrlDecorator($base, $vars);
     }
 
-    public static function redirecturl($base, $vars = null/* ... */)
+    /**
+     * @param null|array $vars
+     * @param mixed      $base
+     */
+    public static function redirecturl($base, ?array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -118,7 +168,11 @@ class Decorator
         return new RedirectUrlDecorator($base, $vars);
     }
 
-    public static function url($base, $vars = null/* ... */)
+    /**
+     * @param null|array $vars
+     * @param mixed      $base
+     */
+    public static function url($base, ?array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -134,7 +188,7 @@ class Decorator
         return new UrlDecorator($base, $vars);
     }
 
-    public static function ifempty($value, $empty, $full = null)
+    public static function ifempty($value, string $empty, $full = null)
     {
         return new IfEmptyDecorator($value, $empty, $full);
     }

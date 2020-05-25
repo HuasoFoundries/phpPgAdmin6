@@ -16,7 +16,7 @@ trait TypeTrait
      * built-in function, and hence we need to do it manually.
      *
      * @param string $typname The name of the type
-     * @param string $typmod  The contents of the typmod field
+     * @param int    $typmod  The contents of the typmod field
      *
      * @return bool|string
      */
@@ -30,12 +30,12 @@ trait TypeTrait
 
         if ('_' === \mb_substr($typname, 0, 1)) {
             $is_array = true;
-            $typname  = \mb_substr($typname, 1);
+            $typname = \mb_substr($typname, 1);
         }
 
         // Show lengths on bpchar and varchar
         if ('bpchar' === $typname) {
-            $len  = $typmod - $varhdrsz;
+            $len = $typmod - $varhdrsz;
             $temp = 'character';
 
             if (1 < $len) {
@@ -52,8 +52,8 @@ trait TypeTrait
 
             if (-1 !== $typmod) {
                 $tmp_typmod = $typmod - $varhdrsz;
-                $precision  = ($tmp_typmod >> 16) & 0xffff;
-                $scale      = $tmp_typmod & 0xffff;
+                $precision = ($tmp_typmod >> 16) & 0xffff;
+                $scale = $tmp_typmod & 0xffff;
                 $temp .= "({$precision}, {$scale})";
             }
         } else {
@@ -73,7 +73,7 @@ trait TypeTrait
      *
      * @param string $typname The name of the view to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getType($typname)
     {
@@ -92,7 +92,7 @@ trait TypeTrait
      * @param bool $tabletypes If true, will include table types
      * @param bool $domains    If true, will include domains
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getTypes($all = false, $tabletypes = false, $domains = false)
     {
@@ -150,7 +150,7 @@ trait TypeTrait
      * @param string $typalign
      * @param string $typstorage
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      *
      * @internal param $ ...
      */
@@ -213,7 +213,7 @@ trait TypeTrait
      * @param string $typname The name of the type to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropType($typname, $cascade)
     {
@@ -293,7 +293,7 @@ trait TypeTrait
      *
      * @param string $name
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getEnumValues($name)
     {
@@ -334,10 +334,10 @@ trait TypeTrait
             return -1;
         }
 
-        $found       = false;
-        $first       = true;
+        $found = false;
+        $first = true;
         $comment_sql = ''; // Accumulate comments for the columns
-        $sql         = "CREATE TYPE \"{$f_schema}\".\"{$name}\" AS (";
+        $sql = "CREATE TYPE \"{$f_schema}\".\"{$name}\" AS (";
 
         for ($i = 0; $i < $fields; ++$i) {
             $this->fieldClean($field[$i]);
@@ -444,7 +444,7 @@ trait TypeTrait
     /**
      * Returns a list of all casts in the database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getCasts()
     {
@@ -489,7 +489,7 @@ trait TypeTrait
     /**
      * Returns a list of all conversions in the database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getConversions()
     {

@@ -19,13 +19,13 @@ class Postgres81 extends Postgres82
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
-        'table'      => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'view'       => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'sequence'   => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
-        'database'   => ['CREATE', 'TEMPORARY', 'ALL PRIVILEGES'],
-        'function'   => ['EXECUTE', 'ALL PRIVILEGES'],
-        'language'   => ['USAGE', 'ALL PRIVILEGES'],
-        'schema'     => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+        'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
+        'database' => ['CREATE', 'TEMPORARY', 'ALL PRIVILEGES'],
+        'function' => ['EXECUTE', 'ALL PRIVILEGES'],
+        'language' => ['USAGE', 'ALL PRIVILEGES'],
+        'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
         'tablespace' => ['CREATE', 'ALL PRIVILEGES'],
     ];
 
@@ -55,11 +55,11 @@ class Postgres81 extends Postgres82
      *
      * @param null|string $currentdatabase
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
+     * @return \ADORecordSet|int A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf        = $this->conf;
+        $conf = $this->conf;
         $server_info = $this->server_info;
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -158,7 +158,7 @@ class Postgres81 extends Postgres82
      * @param mixed $vaccostdelay
      * @param mixed $vaccostlimit
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function saveAutovacuum(
         $table,
@@ -266,7 +266,7 @@ class Postgres81 extends Postgres82
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getProcesses($database = null)
     {
@@ -294,7 +294,7 @@ class Postgres81 extends Postgres82
      *
      * @param string $spcname namespace
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getTablespace($spcname)
     {
@@ -311,7 +311,7 @@ class Postgres81 extends Postgres82
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getTablespaces($all = false)
     {

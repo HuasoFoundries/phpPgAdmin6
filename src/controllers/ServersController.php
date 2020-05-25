@@ -80,13 +80,13 @@ class ServersController extends BaseController
         $this->printMsg($msg);
         $group = $_GET['group'] ?? false;
 
-        $groups  = $this->getServersGroups(true, $group);
+        $groups = $this->getServersGroups(true, $group);
         $columns = [
             'group' => [
                 'title' => $this->lang['strgroup'],
                 'field' => Decorator::field('desc'),
-                'url'   => 'servers?',
-                'vars'  => ['group' => 'id'],
+                'url' => 'servers?',
+                'vars' => ['group' => 'id'],
             ],
         ];
         $actions = [];
@@ -102,17 +102,17 @@ class ServersController extends BaseController
         $servers = $this->getServers(true, $group);
 
         $columns = [
-            'server'   => [
+            'server' => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url'   => self::SUBFOLDER . '/redirect/server?',
-                'vars'  => ['server' => 'sha'],
+                'url' => self::SUBFOLDER . '/redirect/server?',
+                'vars' => ['server' => 'sha'],
             ],
-            'host'     => [
+            'host' => [
                 'title' => $this->lang['strhost'],
                 'field' => Decorator::field('host'),
             ],
-            'port'     => [
+            'port' => [
                 'title' => $this->lang['strport'],
                 'field' => Decorator::field('port'),
             ],
@@ -120,7 +120,7 @@ class ServersController extends BaseController
                 'title' => $this->lang['strusername'],
                 'field' => Decorator::field('username'),
             ],
-            'actions'  => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
         ];
@@ -128,11 +128,11 @@ class ServersController extends BaseController
         $actions = [
             'logout' => [
                 'content' => $this->lang['strlogout'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'servers',
+                        'url' => 'servers',
                         'urlvars' => [
-                            'action'       => 'logout',
+                            'action' => 'logout',
                             'logoutServer' => Decorator::field('id'),
                         ],
                     ],
@@ -157,7 +157,7 @@ class ServersController extends BaseController
 
     public function doTree()
     {
-        $nodes    = [];
+        $nodes = [];
         $group_id = $_GET['group'] ?? false;
 
         // root with srv_groups
@@ -179,17 +179,15 @@ class ServersController extends BaseController
 
         //$reqvars = $this->misc->getRequestVars('server');
 
-        //$this->prtrace($nodes);
-
         $attrs = [
-            'text'    => Decorator::field('desc'),
+            'text' => Decorator::field('desc'),
             // Show different icons for logged in/out
-            'icon'    => Decorator::field('icon'),
+            'icon' => Decorator::field('icon'),
             'toolTip' => Decorator::field('id'),
-            'action'  => Decorator::field('action'),
+            'action' => Decorator::field('action'),
             // Only create a branch url if the user has
             // logged into the server.
-            'branch'  => Decorator::field('branch'),
+            'branch' => Decorator::field('branch'),
         ];
 
         return $this->printTree($nodes, $attrs, $this->section);
@@ -234,9 +232,9 @@ class ServersController extends BaseController
                     )
                 ) {
                     $grps[$i] = [
-                        'id'     => $i,
-                        'desc'   => $group['desc'],
-                        'icon'   => 'Servers',
+                        'id' => $i,
+                        'desc' => $group['desc'],
+                        'icon' => 'Servers',
                         'action' => Decorator::url(
                             'servers',
                             [
@@ -247,7 +245,7 @@ class ServersController extends BaseController
                             'servers',
                             [
                                 'action' => 'tree',
-                                'group'  => $i,
+                                'group' => $i,
                             ]
                         ),
                     ];
@@ -256,9 +254,9 @@ class ServersController extends BaseController
 
             if (false === $group_id) {
                 $grps['all'] = [
-                    'id'     => 'all',
-                    'desc'   => $this->lang['strallservers'],
-                    'icon'   => 'Servers',
+                    'id' => 'all',
+                    'desc' => $this->lang['strallservers'],
+                    'icon' => 'Servers',
                     'action' => Decorator::url(
                         'servers',
                         [
@@ -269,7 +267,7 @@ class ServersController extends BaseController
                         'servers',
                         [
                             'action' => 'tree',
-                            'group'  => 'all',
+                            'group' => 'all',
                         ]
                     ),
                 ];

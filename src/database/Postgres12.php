@@ -25,10 +25,10 @@ class Postgres12 extends Postgres11
      *
      * @param string $table The table name
      *
-     * @return false
+     * @return bool false
      */
     public function hasObjectID($table)
     {
-        return null;
+        return false;
     }
 }

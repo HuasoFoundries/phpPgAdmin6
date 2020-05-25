@@ -28,8 +28,7 @@ version:
 install: fix_permissions composer_update
 install: 
 	@composer install --no-interaction --no-progress --no-suggest --prefer-dist ;\
-	composer validate --strict ;\
-	composer normalize
+	${MAKE} composer_validate  --no-print-directory
 
 
 
@@ -40,8 +39,13 @@ fix_permissions:
 	sudo rm -R --force temp/twigcache/*
 
 composer_update:
-	@echo -e "updating composer...${YELLOW}--lock --root-reqs --prefer-dist --prefer-stable --no-suggest -a${WHITE}" ;\
+	@echo -e "updating composer with params ${YELLOW}--lock --root-reqs --prefer-dist --prefer-stable --no-suggest -a${WHITE}" ;\
 	composer update  --lock --root-reqs --prefer-dist --prefer-stable --no-suggest -a
+
+composer_validate:
+	@composer check-platform-reqs ;\
+	composer validate --strict ;\
+	composer normalize
 
 update_version:
 	@echo "Current version is " ${VERSION} ;\
@@ -76,6 +80,8 @@ ifeq ("$(wildcard config.inc.php)","")
 	cp config.inc.php-dist config.inc.php
 endif
 	./vendor/bin/codecept run unit --debug
+	
+
 
 csfixer:
 	@if [ -f "vendor/bin/php-cs-fixer" ]; then \
@@ -121,14 +127,14 @@ var_dumper:
 	@echo ""
 
 folder ?= src
-psalm: FOLDER_BASENAME:=`basename $(folder)`
+psalm: FOLDER_BASENAME:=`basename $(folder)|sed 's/src//'`
 psalm:
 	@if [ -f "vendor/bin/psalm" ]; then \
 		mkdir -p .build/psalm ;\
 		${MAKE} disable_xdebug  --no-print-directory ;\
 		vendor/bin/psalm --show-info=false \
 			  --config=psalm.xml \
-			  --set-baseline=psalm-baseline-$(FOLDER_BASENAME).xml \
+			  --set-baseline=.build/psalm/psalm-baseline$(FOLDER_BASENAME).xml \
 			  --shepherd $(folder) ;\
 		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
 	else \
@@ -136,6 +142,41 @@ psalm:
 		echo -e "Install it with $(GREEN)composer require --dev vimeo/psalm$(WHITE)" ;\
 	fi
 	@echo ""
+
+
+phpstan:
+	@${MAKE} disable_xdebug  --no-print-directory 
+	@if [ ! -f "vendor/bin/phpstan" ]; then \
+		echo -e "$(GREEN)phpstan$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
+		echo -e "Install it with $(GREEN)composer require --dev phpstan/phpstan$(WHITE)" ;\
+		exit 0 ;\
+	fi
+	
+	@mkdir -p .build/phpstan ;\
+	./vendor/bin/phpstan analyse --memory-limit=2G   ${error_format}  
+	@${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory ;\
+	echo ""
+
+
+lint:
+	@if [ -f "vendor/bin/parallel-lint" ]; then \
+		mkdir -p .build/parallel ;\
+		${MAKE} disable_xdebug  --no-print-directory ;\
+		vendor/bin/parallel-lint \
+			--ignore-fails \
+			  --exclude vendor \
+			   $(folder) ;\
+		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
+	else \
+		echo -e "$(GREEN)parallel-lint$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
+		echo -e "Install it with $(GREEN)composer require --dev jakub-onderka/php-parallel-lint$(WHITE)" ;\
+	fi
+	@find ./src -name \*.php -print0 | xargs -0 -n 1 php -l
+	@echo ""
+
+
+
+fixers: phpmd psalm phpstan
 
 create_testdb:
 	PGPASSWORD=scrutinizer psql   -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql

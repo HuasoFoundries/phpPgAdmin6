@@ -53,7 +53,7 @@ class PrivilegesController extends BaseController
      */
     public function doDefault($msg = ''): void
     {
-        $data    = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
         $subject = $_REQUEST['subject'];
 
         $this->printTrail($subject);
@@ -172,10 +172,10 @@ class PrivilegesController extends BaseController
 
     public function printGrantLinks(): void
     {
-        $data     = $this->misc->getDatabaseAccessor();
-        $subject  = $_REQUEST['subject'];
+        $data = $this->misc->getDatabaseAccessor();
+        $subject = $_REQUEST['subject'];
         $alllabel = '';
-        $alltxt   = '';
+        $alltxt = '';
         // Links for granting to a user or group
         switch ($subject) {
             case 'table':
@@ -184,20 +184,20 @@ class PrivilegesController extends BaseController
             case 'function':
             case 'tablespace':
                 $alllabel = "showall{$subject}s";
-                $allurl   = "{$subject}s";
-                $alltxt   = $this->lang["strshowall{$subject}s"];
+                $allurl = "{$subject}s";
+                $alltxt = $this->lang["strshowall{$subject}s"];
 
                 break;
             case 'schema':
                 $alllabel = 'showallschemas';
-                $allurl   = 'schemas';
-                $alltxt   = $this->lang['strshowallschemas'];
+                $allurl = 'schemas';
+                $alltxt = $this->lang['strshowallschemas'];
 
                 break;
             case 'database':
                 $alllabel = 'showalldatabases';
-                $allurl   = 'alldb';
-                $alltxt   = $this->lang['strshowalldatabases'];
+                $allurl = 'alldb';
+                $alltxt = $this->lang['strshowalldatabases'];
 
                 break;
         }
@@ -206,23 +206,23 @@ class PrivilegesController extends BaseController
 
         if ('function' === $subject) {
             $objectoid = $_REQUEST[$subject . '_oid'];
-            $urlvars   = [
-                'action'         => 'alter',
-                'server'         => $_REQUEST['server'],
-                'database'       => $_REQUEST['database'],
-                'schema'         => $_REQUEST['schema'],
-                $subject         => $object,
+            $urlvars = [
+                'action' => 'alter',
+                'server' => $_REQUEST['server'],
+                'database' => $_REQUEST['database'],
+                'schema' => $_REQUEST['schema'],
+                $subject => $object,
                 "{$subject}_oid" => $objectoid,
-                'subject'        => $subject,
+                'subject' => $subject,
             ];
         } elseif ('column' === $subject) {
             $urlvars = [
-                'action'   => 'alter',
-                'server'   => $_REQUEST['server'],
+                'action' => 'alter',
+                'server' => $_REQUEST['server'],
                 'database' => $_REQUEST['database'],
-                'schema'   => $_REQUEST['schema'],
-                $subject   => $object,
-                'subject'  => $subject,
+                'schema' => $_REQUEST['schema'],
+                $subject => $object,
+                'subject' => $subject,
             ];
 
             if (isset($_REQUEST['table'])) {
@@ -234,11 +234,11 @@ class PrivilegesController extends BaseController
             }
         } else {
             $urlvars = [
-                'action'   => 'alter',
-                'server'   => $_REQUEST['server'],
+                'action' => 'alter',
+                'server' => $_REQUEST['server'],
                 'database' => $_REQUEST['database'],
-                $subject   => $object,
-                'subject'  => $subject,
+                $subject => $object,
+                'subject' => $subject,
             ];
 
             if (isset($_REQUEST['schema'])) {
@@ -247,19 +247,19 @@ class PrivilegesController extends BaseController
         }
 
         $navlinks = [
-            'grant'  => [
-                'attr'    => [
+            'grant' => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges',
+                        'url' => 'privileges',
                         'urlvars' => \array_merge($urlvars, ['mode' => 'grant']),
                     ],
                 ],
                 'content' => $this->lang['strgrant'],
             ],
             'revoke' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges',
+                        'url' => 'privileges',
                         'urlvars' => \array_merge($urlvars, ['mode' => 'revoke']),
                     ],
                 ],
@@ -269,11 +269,11 @@ class PrivilegesController extends BaseController
 
         if (isset($allurl)) {
             $navlinks[$alllabel] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => $allurl,
+                        'url' => $allurl,
                         'urlvars' => [
-                            'server'   => $_REQUEST['server'],
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
                         ],
                     ],

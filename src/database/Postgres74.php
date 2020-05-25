@@ -20,13 +20,13 @@ class Postgres74 extends Postgres80
     // List of all legal privileges that can be applied to different types
     // of objects.
     public $privlist = [
-        'table'    => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
-        'view'     => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'table' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
+        'view' => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'RULE', 'REFERENCES', 'TRIGGER', 'ALL PRIVILEGES'],
         'sequence' => ['SELECT', 'UPDATE', 'ALL PRIVILEGES'],
         'database' => ['CREATE', 'TEMPORARY', 'ALL PRIVILEGES'],
         'function' => ['EXECUTE', 'ALL PRIVILEGES'],
         'language' => ['USAGE', 'ALL PRIVILEGES'],
-        'schema'   => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
+        'schema' => ['CREATE', 'USAGE', 'ALL PRIVILEGES'],
     ];
 
     // Database functions
@@ -63,11 +63,11 @@ class Postgres74 extends Postgres80
      *
      * @param null|string $currentdatabase
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A list of databases, sorted alphabetically
+     * @return \ADORecordSet|int A list of databases, sorted alphabetically
      */
     public function getDatabases($currentdatabase = null)
     {
-        $conf        = $this->conf;
+        $conf = $this->conf;
         $server_info = $this->server_info;
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
@@ -110,7 +110,7 @@ class Postgres74 extends Postgres80
      * @param string $term   The search term
      * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function findObject($term, $filter)
     {
@@ -135,10 +135,10 @@ class Postgres74 extends Postgres80
         if (!$conf['show_system']) {
             // XXX: The mention of information_schema here is in the wrong place, but
             // it's the quickest fix to exclude the info schema from 7.4
-            $where     = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
+            $where = " AND pn.nspname NOT LIKE 'pg\\\\_%' AND pn.nspname != 'information_schema'";
             $lan_where = 'AND pl.lanispl';
         } else {
-            $where     = '';
+            $where = '';
             $lan_where = '';
         }
 
@@ -258,7 +258,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns table locks information in the current database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getLocks()
     {
@@ -324,7 +324,7 @@ class Postgres74 extends Postgres80
         $oldtype,
         $comment
     ) {
-        $sql    = '';
+        $sql = '';
         $status = $this->beginTransaction();
 
         if (0 !== $status) {
@@ -388,7 +388,7 @@ class Postgres74 extends Postgres80
      *
      * @param string $table The name of the table
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getTable($table)
     {
@@ -429,7 +429,7 @@ class Postgres74 extends Postgres80
      *
      * @param string $table the table where we are looking for fk
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getConstraintsWithFields($table)
     {
@@ -496,7 +496,7 @@ class Postgres74 extends Postgres80
      *
      * @param bool $all
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getSequences($all = false)
     {
@@ -528,7 +528,7 @@ class Postgres74 extends Postgres80
      *
      * @param int $function_oid function identifier
      *
-     * @return int|\PHPPgAdmin\ADORecordSet Function info
+     * @return \ADORecordSet|int Function info
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -568,7 +568,7 @@ class Postgres74 extends Postgres80
     /**
      * Returns a list of all casts in the database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet All casts
+     * @return \ADORecordSet|int All casts
      */
     public function getCasts()
     {
@@ -661,12 +661,12 @@ class Postgres74 extends Postgres80
      * Protected method which alter a table
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs      The table recordSet returned by getTable()
-     * @param string                   $name       The new name for the table
-     * @param string                   $owner      The new owner for the table
-     * @param string                   $schema     The new schema for the table
-     * @param string                   $comment    The comment on the table
-     * @param string                   $tablespace The new tablespace for the table ('' means leave as is)
+     * @param \ADORecordSet $tblrs      The table recordSet returned by getTable()
+     * @param string        $name       The new name for the table
+     * @param string        $owner      The new owner for the table
+     * @param string        $schema     The new schema for the table
+     * @param string        $comment    The comment on the table
+     * @param string        $tablespace The new tablespace for the table ('' means leave as is)
      *
      * @return int 0 success
      */

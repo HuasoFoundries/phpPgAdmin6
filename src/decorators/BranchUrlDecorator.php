@@ -43,8 +43,8 @@ class BranchUrlDecorator extends Decorator
             $url = \str_replace('//', '/', '/src/views/' . $url);
         }
 
-        if (\SUBFOLDER !== '' && (0 === \mb_strpos($url, '/')) && (0 !== \mb_strpos($url, \SUBFOLDER))) {
-            $url = \str_replace('//', '/', \SUBFOLDER . '/' . $url);
+        if (self::SUBFOLDER !== '' && (0 === \mb_strpos($url, '/')) && (0 !== \mb_strpos($url, self::SUBFOLDER))) {
+            $url = \str_replace('//', '/', self::SUBFOLDER . '/' . $url);
         }
 
         return \str_replace('.php', '', $url);

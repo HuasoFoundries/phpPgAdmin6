@@ -6,7 +6,7 @@
 
 \defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
 
-\define('THEME_PATH', BASE_PATH . '/assets/themes');
+\defined('THEME_PATH') || \define('THEME_PATH', BASE_PATH . '/assets/themes');
 // Enforce PHP environment
 \ini_set('arg_separator.output', '&amp;');
 
@@ -15,15 +15,28 @@ if (!\is_writable(BASE_PATH . '/temp')) {
 }
 
 require_once BASE_PATH . '/vendor/autoload.php';
-
+$subfolder = '';
 // Check to see if the configuration file exists, if not, explain
 if (\file_exists(BASE_PATH . '/config.inc.php')) {
     $conf = [];
 
     include BASE_PATH . '/config.inc.php';
+
+    if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
+        $subfolder = $conf['subfolder'];
+    } elseif (\PHP_SAPI === 'cli-server') {
+        $subfolder = '/index.php';
+    } elseif (isset($_SERVER['DOCUMENT_ROOT'])) {
+        $subfolder = \str_replace(
+            $_SERVER['DOCUMENT_ROOT'],
+            '',
+            BASE_PATH
+        );
+    }
 } else {
     die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
 }
+\defined('PHPPGA_SUBFOLDER') || \define('PHPPGA_SUBFOLDER', $subfolder);
 $shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
 && !\headers_sent()
 && !\ini_get('session.auto_start');
@@ -64,82 +77,10 @@ if (!$container instanceof \Psr\Container\ContainerInterface) {
     \trigger_error('App Container must be an instance of \\Psr\\Container\\ContainerInterface', \E_USER_ERROR);
 }
 
-$container['requestobj']  = $container['request'];
-$container['responseobj'] = $container['response'];
-
 // This should be deprecated once we're sure no php scripts are required directly
 $container->offsetSet('server', $_REQUEST['server'] ?? null);
 $container->offsetSet('database', $_REQUEST['database'] ?? null);
 $container->offsetSet('schema', $_REQUEST['schema'] ?? null);
-
-$container['flash'] = static function () {
-    return new \Slim\Flash\Messages();
-};
-
-$container['lang'] = static function ($c) {
-    $translations = new \PHPPgAdmin\Translations($c);
-
-    return $translations->lang;
-};
-
-// Create Misc class references
-$container['misc'] = static function ($c) {
-    $misc = new \PHPPgAdmin\Misc($c);
-
-    $conf = $c->get('conf');
-
-    // 4. Check for theme by server/db/user
-    $_server_info = $misc->getServerInfo();
-
-    /* starting with PostgreSQL 9.0, we can set the application name */
-    if (isset($_server_info['pgVersion']) && 9 <= $_server_info['pgVersion']) {
-        \putenv('PGAPPNAME=' . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
-    }
-
-    $_theme = $c->utils->getTheme($conf, $_server_info);
-
-    if (null !== $_theme) {
-        /* save the selected theme in cookie for a year */
-        \setcookie('ppaTheme', $_theme, \time() + 31536000, '/');
-        $_SESSION['ppaTheme'] = $_theme;
-        $misc->setConf('theme', $_theme);
-    }
-
-    return $misc;
-};
-
-// Register Twig View helper
-$container['view'] = static function ($c) {
-    $conf = $c->get('conf');
-    $misc = $c->misc;
-
-    $view = new \Slim\Views\Twig(BASE_PATH . '/assets/templates', [
-        'cache'       => BASE_PATH . '/temp/twigcache',
-        'auto_reload' => $c->get('settings')['debug'],
-        'debug'       => $c->get('settings')['debug'],
-    ]);
-    $environment              = $c->get('environment');
-    $base_script_trailing_str = \mb_substr($environment['SCRIPT_NAME'], 1);
-    $request_basepath         = $c['request']->getUri()->getBasePath();
-    // Instantiate and add Slim specific extension
-    $basePath = \rtrim(\str_ireplace($base_script_trailing_str, '', $request_basepath), '/');
-
-    $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
-
-    $view->offsetSet('subfolder', $c->subfolder);
-    $view->offsetSet('theme', $c->misc->getConf('theme'));
-    $view->offsetSet('Favicon', $c->misc->icon('Favicon'));
-    $view->offsetSet('Introduction', $c->misc->icon('Introduction'));
-    $view->offsetSet('lang', $c->lang);
-
-    $view->offsetSet('applangdir', $c->lang['applangdir']);
-
-    $view->offsetSet('appName', $c->get('settings')['appName']);
-
-    $misc->setView($view);
-
-    return $view;
-};
 
 $container['haltHandler'] = static function ($c) {
     return static function ($request, $response, $exits, $status = 500) use ($c) {

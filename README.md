@@ -26,9 +26,11 @@ Other enhancements are in progress and would be a nice to have:
 
 ## Requirements
 
--   PHP 7.1+ (but you should really, really consider switching to at least v7.1)
+-   PHP 7.1+
 -   ext-psql
 -   [Composer](https://getcomposer.org/download/)
+
+(If you're using PHP 5.6+, you can still try versions RC2 and below, but you should really, realy upgrade).
 
 ## Installation
 
@@ -48,6 +50,73 @@ Alternatively, clone this repo and run (inside then folder where the project was
 composer install --no-dev
 ```
 
+## Configuration
+
+You can set the config options either in a `config.inc.php` (refer to [config.inc.php-dist](config.inc.php-dist) for an example)
+AND/OR a [config.yml](config.yml). The use of the latter is complely optional. Keep in mind the config entries are merged giving
+precedence to the ones in the YAML file.
+
+## Rewrite Rules
+
+As this project is built over [Slim Framework 3](https://www.slimframework.com/), **you'll need some rewrite rules for nice-urls to work**.
+
+Please refer to Slim Framework 3 instructions on rewrite rules config for:
+
+-   [Nginx](http://www.slimframework.com/docs/v3/start/web-servers.html#nginx-configuration)
+-   [Apache](http://www.slimframework.com/docs/v3/start/web-servers.html#apache-configuration)
+-   [Lighttpd](http://www.slimframework.com/docs/v3/start/web-servers.html#lighttpd)
+-   [IIS](http://www.slimframework.com/docs/v3/start/web-servers.html#iis)
+-   [HHVM](http://www.slimframework.com/docs/v3/start/web-servers.html#hiphop-virtual-machine)
+-   [PHP Built-in dev server]http://www.slimframework.com/docs/v3/start/web-servers.html#php-built-in-server
+
+## Running inside a subfolder
+
+If you're planning to run phpPgAdmin6 under a subfolder, make sure you set it **explicitly** in the config file(s). I gave up trying to
+figure out the subfolder automatically and it's outside of this project's scope.
+
+This is:
+
+-   In `config.inc.php`
+
+```
+$conf['subfolder']='/phppga_subfolder';
+```
+
+OR
+
+-   In `config.yml`
+
+````
+$conf = [
+  'subfolder' => '/phppga_subfolder',
+  'other config...' => 'sure'
+];
+
+```yaml
+default_lang: auto
+subfolder: '/phppha_subfolder'
+````
+
+Remember that values set on the `yml` config take precedence.
+
+Besides, remember to modify your webserver configuration accordingly
+
+```
+location /subfolder/ {
+    try_files $uri $uri/ /subfolder/index.php$is_args$args;
+}
+```
+
+Instead of
+
+```
+location / {
+    try_files $uri $uri/ /index.php$is_args$args;
+}
+```
+
+(Implementation details for your specific setup fall **outside of this package's scope**)
+
 #### Installing dev branch
 
 If there's something broken and I cannot risk breaking the rest to fix your issue, I might push a fix or feature to [develop branch](https://github.com/HuasoFoundries/phpPgAdmin6/tree/develop). Said branch can be installed as
@@ -57,72 +126,6 @@ composer create-project huasofoundries/phppgadmin6 <FOLDER> v6.*.*@beta --no-dev
 ```
 
 (or, you know, clone the repo and make sure you're in develop branch)
-
-## Rewrite Rules
-
-As this project is built over [Slim Framework 3](https://www.slimframework.com/), **you'll need some rewrite rules for nice-urls to work**.
-
-### Apache
-
-Make sure you have the RewriteEngine module active in your Apache installation.
-
-Place an `.htaccess` file on your project root with the following contents
-
-```
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]
-
-```
-
-### Nginx
-
-Add the following vhost to your `sites-enabled` folder
-
-```
-server {
-        listen 80;
-        # or whatever port you want
-
-        server_name yourservername.com;
-
-        root /path/to/project;
-
-        index index.php;
-
-        # Use this block if you're running in your domain or subdomain root
-        location / {
-          try_files $uri $uri/ /index.php$is_args$args;
-        }
-
-      # If running inside a subfolder use instead
-        #location /subfolder/ {
-        #   try_files $uri $uri/ /subfolder/index.php$is_args$args;
-        #}
-
-        # pass the PHP scripts to FastCGI server listening on IP:PORT or socket
-        location ~ \.php$ {
-                fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
-                fastcgi_split_path_info ^(.+\.php)(/.+)$;
-
-                # Check that the PHP script exists before passing it
-                try_files $fastcgi_script_name =404;
-
-                # Bypass the fact that try_files resets $fastcgi_path_info
-                # see: http://trac.nginx.org/nginx/ticket/321
-                set $path_info $fastcgi_path_info;
-                fastcgi_param PATH_INFO $path_info;
-
-                fastcgi_index index.php;
-                include /etc/nginx/fastcgi_params;
-                fastcgi_pass unix:/run/php/php7.0-fpm.sock;
-                # or fastcgi_pass 127.0.0.1:9000; depending on your PHP-FPM pool
-        }
-}
-```
-
-Please note that you have to customize your server name, php upstream (sock or IP) and optinally the subfolder you want phpPgAdmin6 to run on.
 
 ## License
 

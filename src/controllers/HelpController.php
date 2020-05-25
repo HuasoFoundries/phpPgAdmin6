@@ -88,7 +88,7 @@ class HelpController extends BaseController
         $this->printFooter();
     }
 
-    public function doChoosePage($urls): void
+    public function doChoosePage(array $urls): void
     {
         $this->printHeader();
         $this->printBody();

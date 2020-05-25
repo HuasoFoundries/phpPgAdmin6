@@ -41,10 +41,8 @@ class ConversionsController extends BaseController
      * Show default list of conversions in the database.
      *
      * @param string $msg
-     *
-     * @return string|void
      */
-    public function doDefault($msg = '')
+    public function doDefault($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -55,7 +53,7 @@ class ConversionsController extends BaseController
         $conversions = $data->getconversions();
 
         $columns = [
-            'conversion'      => [
+            'conversion' => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('conname'),
             ],
@@ -67,12 +65,12 @@ class ConversionsController extends BaseController
                 'title' => $this->lang['strtargetencoding'],
                 'field' => Decorator::field('contoencoding'),
             ],
-            'default'         => [
+            'default' => [
                 'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('condefault'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
-            'comment'         => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('concomment'),
             ],

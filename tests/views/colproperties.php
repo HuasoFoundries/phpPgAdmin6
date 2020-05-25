@@ -5,13 +5,15 @@
  */
 
 // Include application functions
-function colpropertiesFactory($container) { $do_render = false ;
-if (!defined('BASE_PATH')) {
-    require_once '../../src/lib.inc.php';
-    $do_render = true;
+function colpropertiesFactory($container)
+{
+    $do_render = false;
+    $do_render = false;
+    $controller = new \PHPPgAdmin\Controller\ColpropertiesController($container);
+
+    if ($do_render) {
+        $controller->render();
+    }
+
+    return $controller;
 }
-$controller = new \PHPPgAdmin\Controller\ColpropertiesController($container);
-if ($do_render) {
-    $controller->render();
-}
-return $controller; }

@@ -48,9 +48,9 @@ class DatabaseController extends BaseController
             $scripts .= '<script type="text/javascript">' . \PHP_EOL;
             $scripts .= "var Database = {\n";
             $scripts .= "ajax_time_refresh: {$refreshTime},\n";
-            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '" . $this->misc->icon('Execute') . "'},\n";
-            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '" . $this->misc->icon('Stop') . "'},\n";
-            $scripts .= "load_icon: '" . $this->misc->icon('Loading') . "',\n";
+            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '" . $this->view->icon('Execute') . "'},\n";
+            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '" . $this->view->icon('Stop') . "'},\n";
+            $scripts .= "load_icon: '" . $this->view->icon('Loading') . "',\n";
             $scripts .= "server:'{$_REQUEST['server']}',\n";
             $scripts .= "dbname:'{$_REQUEST['database']}',\n";
             $scripts .= "action:'refresh_{$this->action}',\n";
@@ -122,12 +122,12 @@ class DatabaseController extends BaseController
     public function doTree($print = true)
     {
         $reqvars = $this->misc->getRequestVars('database');
-        $tabs    = $this->misc->getNavTabs('database');
-        $items   = $this->adjustTabsForTree($tabs);
+        $tabs = $this->misc->getNavTabs('database');
+        $items = $this->adjustTabsForTree($tabs);
 
         $attrs = [
-            'text'   => Decorator::field('title'),
-            'icon'   => Decorator::field('icon'),
+            'text' => Decorator::field('title'),
+            'icon' => Decorator::field('icon'),
             'action' => Decorator::actionurl(
                 Decorator::field('url'),
                 $reqvars,
@@ -141,7 +141,7 @@ class DatabaseController extends BaseController
                 $reqvars,
                 Decorator::field('urlvars'),
                 [
-                    'action'   => 'tree',
+                    'action' => 'tree',
                     'database' => $this->misc->getDatabase(),
                 ]
             ),
@@ -232,7 +232,7 @@ class DatabaseController extends BaseController
     public function doFind(): void
     {
         $data = $this->misc->getDatabaseAccessor();
-        $rs   = $data->findObject($_REQUEST['term'], $_REQUEST['filter']);
+        $rs = $data->findObject($_REQUEST['term'], $_REQUEST['filter']);
 
         if (0 < $rs->recordCount()) {
             $curr = '';
@@ -284,7 +284,7 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         $subject = 'database';
-        $object  = $_REQUEST['database'];
+        $object = $_REQUEST['database'];
 
         echo $this->formHeader('dbexport');
 
@@ -319,7 +319,7 @@ class DatabaseController extends BaseController
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('name'),
             ],
-            'value'    => [
+            'value' => [
                 'title' => $this->lang['strsetting'],
                 'field' => Decorator::field('setting'),
             ],
@@ -343,7 +343,7 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         if (0 === \mb_strlen($msg)) {
-            echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+            echo '<br /><a id="control" href=""><img src="' . $this->view->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
         }
 
         echo '<div id="data_block">';
@@ -351,7 +351,7 @@ class DatabaseController extends BaseController
         echo '</div>';
     }
 
-    public function currentProcesses($isAjax = false): void
+    public function currentProcesses(bool $isAjax = false): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -365,15 +365,15 @@ class DatabaseController extends BaseController
                     'title' => $this->lang['strxactid'],
                     'field' => Decorator::field('transaction'),
                 ],
-                'gid'         => [
+                'gid' => [
                     'title' => $this->lang['strgid'],
                     'field' => Decorator::field('gid'),
                 ],
-                'prepared'    => [
+                'prepared' => [
                     'title' => $this->lang['strstarttime'],
                     'field' => Decorator::field('prepared'),
                 ],
-                'owner'       => [
+                'owner' => [
                     'title' => $this->lang['strowner'],
                     'field' => Decorator::field('owner'),
                 ],
@@ -389,11 +389,11 @@ class DatabaseController extends BaseController
         $processes = $data->getProcesses($_REQUEST['database']);
 
         $columns = [
-            'user'             => [
+            'user' => [
                 'title' => $this->lang['strusername'],
                 'field' => Decorator::field('usename'),
             ],
-            'process'          => [
+            'process' => [
                 'title' => $this->lang['strprocess'],
                 'field' => Decorator::field('pid'),
             ],
@@ -401,19 +401,19 @@ class DatabaseController extends BaseController
                 'title' => 'application',
                 'field' => Decorator::field('application_name'),
             ],
-            'client_addr'      => [
+            'client_addr' => [
                 'title' => 'address',
                 'field' => Decorator::field('client_addr'),
             ],
-            'blocked'          => [
+            'blocked' => [
                 'title' => $this->lang['strblocked'],
                 'field' => Decorator::field('waiting'),
             ],
-            'query'            => [
+            'query' => [
                 'title' => $this->lang['strsql'],
                 'field' => Decorator::field('query'),
             ],
-            'start_time'       => [
+            'start_time' => [
                 'title' => $this->lang['strstarttime'],
                 'field' => Decorator::field('query_start'),
             ],
@@ -428,26 +428,26 @@ class DatabaseController extends BaseController
             $actions = [
                 'cancel' => [
                     'content' => $this->lang['strcancel'],
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'database',
+                            'url' => 'database',
                             'urlvars' => [
                                 'action' => 'signal',
                                 'signal' => 'CANCEL',
-                                'pid'    => Decorator::field('pid'),
+                                'pid' => Decorator::field('pid'),
                             ],
                         ],
                     ],
                 ],
-                'kill'   => [
+                'kill' => [
                     'content' => $this->lang['strkill'],
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'database',
+                            'url' => 'database',
                             'urlvars' => [
                                 'action' => 'signal',
                                 'signal' => 'KILL',
-                                'pid'    => Decorator::field('pid'),
+                                'pid' => Decorator::field('pid'),
                             ],
                         ],
                     ],
@@ -471,7 +471,7 @@ class DatabaseController extends BaseController
         echo $this->printTable($processes, $columns, $actions, 'database-processes', $this->lang['strnodata']);
     }
 
-    public function currentLocks($isAjax = false): void
+    public function currentLocks(bool $isAjax = false): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -479,15 +479,15 @@ class DatabaseController extends BaseController
         $variables = $data->getLocks();
 
         $columns = [
-            'namespace'     => [
+            'namespace' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
             ],
-            'tablename'     => [
+            'tablename' => [
                 'title' => $this->lang['strtablename'],
                 'field' => Decorator::field('tablename'),
             ],
-            'vxid'          => [
+            'vxid' => [
                 'title' => $this->lang['strvirtualtransaction'],
                 'field' => Decorator::field('virtualtransaction'),
             ],
@@ -495,18 +495,18 @@ class DatabaseController extends BaseController
                 'title' => $this->lang['strtransaction'],
                 'field' => Decorator::field('transaction'),
             ],
-            'processid'     => [
+            'processid' => [
                 'title' => $this->lang['strprocessid'],
                 'field' => Decorator::field('pid'),
             ],
-            'mode'          => [
+            'mode' => [
                 'title' => $this->lang['strmode'],
                 'field' => Decorator::field('mode'),
             ],
-            'granted'       => [
+            'granted' => [
                 'title' => $this->lang['strislockheld'],
                 'field' => Decorator::field('granted'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
         ];
 
@@ -526,7 +526,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'locks');
 
-        echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+        echo '<br /><a id="control" href=""><img src="' . $this->view->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
 
         echo '<div id="data_block">';
         $this->currentLocks();
@@ -590,9 +590,9 @@ class DatabaseController extends BaseController
         return \str_replace($term, "<b>{$term}</b>", $string);
     }
 
-    private function _printTypeOption($curr)
+    private function _printTypeOption(string $curr)
     {
-        $filter     = $_REQUEST['filter'];
+        $filter = $_REQUEST['filter'];
         $optionhtml = \sprintf('%s<option value="%s" %s>', "\t", $curr, ($curr === $filter) ? ' selected="selected"' : '');
         $optionhtml .= $this->_translatedType($curr);
         $optionhtml .= '</option>' . \PHP_EOL;
@@ -600,33 +600,33 @@ class DatabaseController extends BaseController
         return $optionhtml;
     }
 
-    private function _translatedType($curr)
+    private function _translatedType(string $curr)
     {
         $types = [
-            'COLUMN'           => $this->lang['strcolumns'],
-            'CONSTRAINT'       => $this->lang['strconstraints'],
-            'COLUMNTABLE'      => $this->lang['strcolumns'],
-            'COLUMNVIEW'       => $this->lang['strcolumns'],
+            'COLUMN' => $this->lang['strcolumns'],
+            'CONSTRAINT' => $this->lang['strconstraints'],
+            'COLUMNTABLE' => $this->lang['strcolumns'],
+            'COLUMNVIEW' => $this->lang['strcolumns'],
             'CONSTRAINTDOMAIN' => $this->lang['strconstraints'],
-            'CONSTRAINTTABLE'  => $this->lang['strconstraints'],
-            'DOMAIN'           => $this->lang['strdomains'],
-            'FUNCTION'         => $this->lang['strfunctions'],
-            'INDEX'            => $this->lang['strindexes'],
-            'RULE'             => $this->lang['strrules'],
-            'RULETABLE'        => $this->lang['strrules'],
-            'RULEVIEW'         => $this->lang['strrules'],
-            'SCHEMA'           => $this->lang['strschemas'],
-            'SEQUENCE'         => $this->lang['strsequences'],
-            'TABLE'            => $this->lang['strtables'],
-            'TRIGGER'          => $this->lang['strtriggers'],
-            'VIEW'             => $this->lang['strviews'],
+            'CONSTRAINTTABLE' => $this->lang['strconstraints'],
+            'DOMAIN' => $this->lang['strdomains'],
+            'FUNCTION' => $this->lang['strfunctions'],
+            'INDEX' => $this->lang['strindexes'],
+            'RULE' => $this->lang['strrules'],
+            'RULETABLE' => $this->lang['strrules'],
+            'RULEVIEW' => $this->lang['strrules'],
+            'SCHEMA' => $this->lang['strschemas'],
+            'SEQUENCE' => $this->lang['strsequences'],
+            'TABLE' => $this->lang['strtables'],
+            'TRIGGER' => $this->lang['strtriggers'],
+            'VIEW' => $this->lang['strviews'],
 
-            'AGGREGATE'        => $this->lang['straggregates'],
-            'CONVERSION'       => $this->lang['strconversions'],
-            'LANGUAGE'         => $this->lang['strlanguages'],
-            'OPCLASS'          => $this->lang['stropclasses'],
-            'OPERATOR'         => $this->lang['stroperators'],
-            'TYPE'             => $this->lang['strtypes'],
+            'AGGREGATE' => $this->lang['straggregates'],
+            'CONVERSION' => $this->lang['strconversions'],
+            'LANGUAGE' => $this->lang['strlanguages'],
+            'OPCLASS' => $this->lang['stropclasses'],
+            'OPERATOR' => $this->lang['stroperators'],
+            'TYPE' => $this->lang['strtypes'],
         ];
 
         if (\array_key_exists($curr, $types)) {

@@ -118,27 +118,27 @@ class DomainsController extends BaseController
         $domains = $data->getDomains();
 
         $columns = [
-            'domain'  => [
+            'domain' => [
                 'title' => $this->lang['strdomain'],
                 'field' => Decorator::field('domname'),
-                'url'   => "domains?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['domain' => 'domname'],
+                'url' => "domains?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['domain' => 'domname'],
             ],
-            'type'    => [
+            'type' => [
                 'title' => $this->lang['strtype'],
                 'field' => Decorator::field('domtype'),
             ],
             'notnull' => [
-                'title'  => $this->lang['strnotnull'],
-                'field'  => Decorator::field('domnotnull'),
-                'type'   => 'bool',
+                'title' => $this->lang['strnotnull'],
+                'field' => Decorator::field('domnotnull'),
+                'type' => 'bool',
                 'params' => ['true' => 'NOT NULL', 'false' => ''],
             ],
             'default' => [
                 'title' => $this->lang['strdefault'],
                 'field' => Decorator::field('domdef'),
             ],
-            'owner'   => [
+            'owner' => [
                 'title' => $this->lang['strowner'],
                 'field' => Decorator::field('domowner'),
             ],
@@ -154,9 +154,9 @@ class DomainsController extends BaseController
         $actions = [
             'alter' => [
                 'content' => $this->lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'domains',
+                        'url' => 'domains',
                         'urlvars' => [
                             'action' => 'alter',
                             'domain' => Decorator::field('domname'),
@@ -164,11 +164,11 @@ class DomainsController extends BaseController
                     ],
                 ],
             ],
-            'drop'  => [
+            'drop' => [
                 'content' => $this->lang['strdrop'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'domains',
+                        'url' => 'domains',
                         'urlvars' => [
                             'action' => 'confirm_drop',
                             'domain' => Decorator::field('domname'),
@@ -186,14 +186,14 @@ class DomainsController extends BaseController
 
         $navlinks = [
             'create' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'domains',
+                        'url' => 'domains',
                         'urlvars' => [
-                            'action'   => 'create',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'create',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
+                            'schema' => $_REQUEST['schema'],
                         ],
                     ],
                 ],
@@ -215,10 +215,10 @@ class DomainsController extends BaseController
         $reqvars = $this->misc->getRequestVars('domain');
 
         $attrs = [
-            'text'    => Decorator::field('domname'),
-            'icon'    => 'Domain',
+            'text' => Decorator::field('domname'),
+            'icon' => 'Domain',
             'toolTip' => Decorator::field('domcomment'),
-            'action'  => Decorator::actionurl(
+            'action' => Decorator::actionurl(
                 'domains',
                 $reqvars,
                 [
@@ -272,8 +272,8 @@ class DomainsController extends BaseController
 
         if (0 < $domaindata->recordCount()) {
             if (!isset($_POST['domname'])) {
-                $_POST['domtype']                 = $domaindata->fields['domtype'];
-                $_POST['domdefault']              = $domaindata->fields['domdef'];
+                $_POST['domtype'] = $domaindata->fields['domtype'];
+                $_POST['domdefault'] = $domaindata->fields['domdef'];
                 $domaindata->fields['domnotnull'] = $data->phpBool($domaindata->fields['domnotnull']);
 
                 if ($domaindata->fields['domnotnull']) {
@@ -456,7 +456,7 @@ class DomainsController extends BaseController
                 $domaincons = $data->getDomainConstraints($_REQUEST['domain']);
 
                 $columns = [
-                    'name'       => [
+                    'name' => [
                         'title' => $this->lang['strname'],
                         'field' => Decorator::field('conname'),
                     ],
@@ -464,7 +464,7 @@ class DomainsController extends BaseController
                         'title' => $this->lang['strdefinition'],
                         'field' => Decorator::field('consrc'),
                     ],
-                    'actions'    => [
+                    'actions' => [
                         'title' => $this->lang['stractions'],
                     ],
                 ];
@@ -472,14 +472,14 @@ class DomainsController extends BaseController
                 $actions = [
                     'drop' => [
                         'content' => $this->lang['strdrop'],
-                        'attr'    => [
+                        'attr' => [
                             'href' => [
-                                'url'     => 'domains',
+                                'url' => 'domains',
                                 'urlvars' => [
-                                    'action'     => 'confirm_drop_con',
-                                    'domain'     => $_REQUEST['domain'],
+                                    'action' => 'confirm_drop_con',
+                                    'domain' => $_REQUEST['domain'],
                                     'constraint' => Decorator::field('conname'),
-                                    'type'       => Decorator::field('contype'),
+                                    'type' => Decorator::field('contype'),
                                 ],
                             ],
                         ],
@@ -494,15 +494,15 @@ class DomainsController extends BaseController
 
         $navlinks = [
             'drop' => [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'domains',
+                        'url' => 'domains',
                         'urlvars' => [
-                            'action'   => 'confirm_drop',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'confirm_drop',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'domain'   => $_REQUEST['domain'],
+                            'schema' => $_REQUEST['schema'],
+                            'domain' => $_REQUEST['domain'],
                         ],
                     ],
                 ],
@@ -512,30 +512,30 @@ class DomainsController extends BaseController
 
         if ($data->hasAlterDomains()) {
             $navlinks['addcheck'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'domains',
+                        'url' => 'domains',
                         'urlvars' => [
-                            'action'   => 'add_check',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'add_check',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'domain'   => $_REQUEST['domain'],
+                            'schema' => $_REQUEST['schema'],
+                            'domain' => $_REQUEST['domain'],
                         ],
                     ],
                 ],
                 'content' => $this->lang['straddcheck'],
             ];
             $navlinks['alter'] = [
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'domains',
+                        'url' => 'domains',
                         'urlvars' => [
-                            'action'   => 'alter',
-                            'server'   => $_REQUEST['server'],
+                            'action' => 'alter',
+                            'server' => $_REQUEST['server'],
                             'database' => $_REQUEST['database'],
-                            'schema'   => $_REQUEST['schema'],
-                            'domain'   => $_REQUEST['domain'],
+                            'schema' => $_REQUEST['schema'],
+                            'domain' => $_REQUEST['domain'],
                         ],
                     ],
                 ],

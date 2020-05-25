@@ -25,8 +25,6 @@ class RedirectUrlDecorator extends Decorator
             return '';
         }
 
-        //$this->prtrace('url', $url);
-
         if (!empty($this->queryVars)) {
             $queryVars = Decorator::get_sanitized_value($this->queryVars, $fields);
 
@@ -47,8 +45,8 @@ class RedirectUrlDecorator extends Decorator
             }
         }
 
-        if (\SUBFOLDER !== '' && (0 === \mb_strpos($url, '/')) && (false === \mb_strpos($url, \SUBFOLDER))) {
-            $url = \str_replace('//', '/', \SUBFOLDER . '/' . $url);
+        if (self::SUBFOLDER !== '' && (0 === \mb_strpos($url, '/')) && (false === \mb_strpos($url, self::SUBFOLDER))) {
+            $url = \str_replace('//', '/', self::SUBFOLDER . '/' . $url);
         }
 
         return \str_replace('.php', '', $url);

@@ -16,7 +16,7 @@ trait DomainTrait
      *
      * @param string $domain The name of the domain to fetch
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getDomain($domain)
     {
@@ -46,7 +46,7 @@ trait DomainTrait
     /**
      * Return all domains in current schema.  Excludes domain constraints.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getDomains()
     {
@@ -77,7 +77,7 @@ trait DomainTrait
      *
      * @param string $domain The name of the domain whose constraints to fetch
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getDomainConstraints($domain)
     {
@@ -116,7 +116,7 @@ trait DomainTrait
      * @param string $default Default value for domain
      * @param string $check   A CHECK constraint if there is one
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function createDomain($domain, $type, $length, $array, $notnull, $default, $check)
     {
@@ -245,7 +245,7 @@ trait DomainTrait
      * @param string $domain  The name of the domain to drop
      * @param string $cascade True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropDomain($domain, $cascade)
     {
@@ -269,7 +269,7 @@ trait DomainTrait
      * @param string $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function addDomainCheckConstraint($domain, $definition, $name = '')
     {
@@ -296,7 +296,7 @@ trait DomainTrait
      * @param string $constraint The constraint to remove
      * @param bool   $cascade    True to cascade, false otherwise
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropDomainConstraint($domain, $constraint, $cascade)
     {

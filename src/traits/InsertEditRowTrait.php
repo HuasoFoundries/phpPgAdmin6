@@ -23,23 +23,27 @@ trait InsertEditRowTrait
      *
      * @param string $table The table to retrieve FK contraints from
      *
-     * @return array|bool the array of FK definition:
-     *                    array(
-     *                    'byconstr' => array(
-     *                    constrain id => array(
-     *                    confrelid => foreign relation oid
-     *                    f_schema => foreign schema name
-     *                    f_table => foreign table name
-     *                    pattnums => array of parent's fields nums
-     *                    pattnames => array of parent's fields names
-     *                    fattnames => array of foreign attributes names
-     *                    )
-     *                    ),
-     *                    'byfield' => array(
-     *                    attribute num => array (constraint id, ...)
-     *                    ),
-     *                    'code' => HTML/js code to include in the page for auto-completion
-     *                    )
+     * @return array{byconstr:array, byfield:array, code:string}|bool the array of FK definition:
+     *
+     * @example
+     * ```
+     * $fk = [
+     *     'byconstr' => [
+     *         'constrain id' => [
+     *             'confrelid' => 'foreign relation oid',
+     *             'f_schema'  => 'foreign schema name',
+     *             'f_table'   => 'foreign table name',
+     *             'pattnums'  => 'array of parent\'s fields nums',
+     *             'pattnames' => 'array of parent\'s fields names',
+     *             'fattnames' => 'array of foreign attributes names',
+     *         ],
+     *     ],
+     *     'byfield'  => [
+     *         'attribute num' => 'array (constraint id, ...)',
+     *     ],
+     *     'code'     => 'HTML/js code to include in the page for auto-completion',
+     * ];
+     * ```
      */
     public function getAutocompleteFKProperties($table)
     {
@@ -47,8 +51,8 @@ trait InsertEditRowTrait
 
         $fksprops = [
             'byconstr' => [],
-            'byfield'  => [],
-            'code'     => '',
+            'byfield' => [],
+            'code' => '',
         ];
 
         $constrs = $data->getConstraintsWithFields($table);
@@ -60,15 +64,15 @@ trait InsertEditRowTrait
                     if (!isset($fksprops['byconstr'][$constrs->fields['conid']])) {
                         $fksprops['byconstr'][$constrs->fields['conid']] = [
                             'confrelid' => $constrs->fields['confrelid'],
-                            'f_table'   => $constrs->fields['f_table'],
-                            'f_schema'  => $constrs->fields['f_schema'],
-                            'pattnums'  => [],
+                            'f_table' => $constrs->fields['f_table'],
+                            'f_schema' => $constrs->fields['f_schema'],
+                            'pattnums' => [],
                             'pattnames' => [],
                             'fattnames' => [],
                         ];
                     }
 
-                    $fksprops['byconstr'][$constrs->fields['conid']]['pattnums'][]  = $constrs->fields['p_attnum'];
+                    $fksprops['byconstr'][$constrs->fields['conid']]['pattnums'][] = $constrs->fields['p_attnum'];
                     $fksprops['byconstr'][$constrs->fields['conid']]['pattnames'][] = $constrs->fields['p_field'];
                     $fksprops['byconstr'][$constrs->fields['conid']]['fattnames'][] = $constrs->fields['f_field'];
 
@@ -115,12 +119,12 @@ trait InsertEditRowTrait
             $fksprops['code'] .= "var table='" . \addslashes(\htmlentities($table, \ENT_QUOTES, 'UTF-8')) . "';";
             $fksprops['code'] .= "var server='" . \htmlentities($_REQUEST['server'], \ENT_QUOTES, 'UTF-8') . "';";
             $fksprops['code'] .= "var database='" . \addslashes(\htmlentities($_REQUEST['database'], \ENT_QUOTES, 'UTF-8')) . "';";
-            $fksprops['code'] .= "var subfolder='" . SUBFOLDER . "';";
+            $fksprops['code'] .= "var subfolder='" . self::SUBFOLDER . "';";
             $fksprops['code'] .= '</script>' . \PHP_EOL;
 
             $fksprops['code'] .= '<div id="fkbg"></div>';
             $fksprops['code'] .= '<div id="fklist"></div>';
-            $fksprops['code'] .= '<script src="' . SUBFOLDER . '/assets/js/ac_insert_row.js" type="text/javascript"></script>';
+            $fksprops['code'] .= '<script src="' . self::SUBFOLDER . '/assets/js/ac_insert_row.js" type="text/javascript"></script>';
         } else {
             /* we have no foreign keys on this table */
             return false;

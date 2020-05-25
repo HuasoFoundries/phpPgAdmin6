@@ -12,12 +12,12 @@ namespace PHPPgAdmin\Controller;
 class DataexportController extends BaseController
 {
     public $extensions = [
-        'sql'  => 'sql',
+        'sql' => 'sql',
         'copy' => 'sql',
-        'csv'  => 'csv',
-        'tab'  => 'txt',
+        'csv' => 'csv',
+        'tab' => 'txt',
         'html' => 'html',
-        'xml'  => 'xml',
+        'xml' => 'xml',
     ];
 
     public $controller_title = 'strexport';
@@ -42,26 +42,26 @@ class DataexportController extends BaseController
             return $this->doDefault();
         }
 
-        $this->prtrace("REQUEST['what']", $_REQUEST['what']);
+        //$this->prtrace("REQUEST['what']", $_REQUEST['what']);
 
         // Include application functions
         $this->setNoOutput(true);
         $clean = false;
-        $oids  = false;
+        $oids = false;
 
         switch ($_REQUEST['what']) {
             case 'dataonly':
                 // Check to see if they have pg_dump set up and if they do, use that
                 // instead of custom dump code
                 if (!$forcemimic && $this->misc->isDumpEnabled() && ('copy' === $_REQUEST['d_format'] || 'sql' === $_REQUEST['d_format'])) {
-                    $this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
+                    //$this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
                     $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
 
                     return $dbexport_controller->render();
                 }
-                $this->prtrace('d_format is', $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
+
                 $format = $_REQUEST['d_format'];
-                $oids   = isset($_REQUEST['d_oids']);
+                $oids = isset($_REQUEST['d_oids']);
 
                 break;
             case 'structureonly':
@@ -84,8 +84,8 @@ class DataexportController extends BaseController
                     return $dbexport_controller->render();
                 }
                 $format = $_REQUEST['sd_format'];
-                $clean  = isset($_REQUEST['sd_clean']);
-                $oids   = isset($_REQUEST['sd_oids']);
+                $clean = isset($_REQUEST['sd_clean']);
+                $oids = isset($_REQUEST['sd_oids']);
 
                 break;
         }
@@ -137,8 +137,8 @@ class DataexportController extends BaseController
         } else {
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
         }
-        $this->prtrace('$_REQUEST[query]', $_REQUEST['query'], \htmlspecialchars(\urlencode($_REQUEST['query'])));
-        $this->prtrace('$_SESSION[sqlquery]', $_SESSION['sqlquery'], \htmlspecialchars(\urlencode($_SESSION['sqlquery'])));
+        //$this->prtrace('$_REQUEST[query]', $_REQUEST['query'], \htmlspecialchars(\urlencode($_REQUEST['query'])));
+        //$this->prtrace('$_SESSION[sqlquery]', $_SESSION['sqlquery'], \htmlspecialchars(\urlencode($_SESSION['sqlquery'])));
         echo '<input type="hidden" name="query" value="', \htmlspecialchars(\urlencode($_REQUEST['query'])), '" />' . \PHP_EOL;
 
         if (isset($_REQUEST['search_path'])) {
@@ -151,7 +151,7 @@ class DataexportController extends BaseController
         $this->printFooter();
     }
 
-    protected function mimicDumpFeature($format, $cleanprefix, $oids)
+    protected function mimicDumpFeature($format, string $cleanprefix, bool $oids)
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -165,7 +165,7 @@ class DataexportController extends BaseController
             return $this->doDefault();
         }
 
-        $this->prtrace("REQUEST['what']", $_REQUEST['what']);
+        //$this->prtrace("REQUEST['what']", $_REQUEST['what']);
 
         // Include application functions
         $this->setNoOutput(true);
@@ -189,15 +189,15 @@ class DataexportController extends BaseController
 
         // Set up the dump transaction
         $status = $data->beginDump();
-        $this->prtrace('subject', $subject);
-        $this->prtrace('object', $object);
+        //$this->prtrace('subject', $subject);
+        //$this->prtrace('object', $object);
         $tabledefprefix = '';
         $tabledefsuffix = '';
 
         // If the dump is not dataonly then dump the structure prefix
         if ('dataonly' !== $_REQUEST['what']) {
             $tabledefprefix = $data->getTableDefPrefix($object, $cleanprefix);
-            $this->prtrace('tabledefprefix', $tabledefprefix);
+            //$this->prtrace('tabledefprefix', $tabledefprefix);
             echo $tabledefprefix;
         }
 
@@ -218,7 +218,7 @@ class DataexportController extends BaseController
         if ('dataonly' !== $_REQUEST['what']) {
             $data->conn->setFetchMode(\ADODB_FETCH_ASSOC);
             $tabledefsuffix = $data->getTableDefSuffix($object);
-            $this->prtrace('tabledefsuffix', $tabledefsuffix);
+            //$this->prtrace('tabledefsuffix', $tabledefsuffix);
             echo $tabledefsuffix;
         }
 
@@ -228,13 +228,13 @@ class DataexportController extends BaseController
         return $response;
     }
 
-    private function _getRS($data, $object, $oids)
+    private function _getRS($data, $object, bool $oids)
     {
         if ($object) {
             return $data->dumpRelation($object, $oids);
         }
 
-        $this->prtrace('$_REQUEST[query]', $_REQUEST['query']);
+        //$this->prtrace('$_REQUEST[query]', $_REQUEST['query']);
 
         return $data->conn->Execute($_REQUEST['query']);
     }
@@ -269,7 +269,7 @@ class DataexportController extends BaseController
             ->withHeader('Content-Disposition', 'attachment; filename=dump.' . $ext);
     }
 
-    private function pickFormat($data, $object, $oids, $rs, $format, $response)
+    private function pickFormat($data, $object, bool $oids, $rs, $format, $response)
     {
         if ('copy' === $format) {
             $this->_mimicCopy($data, $object, $oids, $rs);
@@ -384,8 +384,8 @@ class DataexportController extends BaseController
 
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
-                $name  = \htmlspecialchars($finfo->name);
-                $type  = \htmlspecialchars($finfo->type);
+                $name = \htmlspecialchars($finfo->name);
+                $type = \htmlspecialchars($finfo->type);
                 echo "\t\t<column name=\"{$name}\" type=\"{$type}\" />" . \PHP_EOL;
             }
             echo "\t</header>" . \PHP_EOL;
@@ -398,7 +398,7 @@ class DataexportController extends BaseController
 
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
-                $name  = \htmlspecialchars($finfo->name);
+                $name = \htmlspecialchars($finfo->name);
 
                 if (null !== $v) {
                     $v = \htmlspecialchars($v);
@@ -421,11 +421,11 @@ class DataexportController extends BaseController
         while (!$rs->EOF) {
             echo "INSERT INTO \"{$object}\" (";
             $first = true;
-            $j     = 0;
+            $j = 0;
 
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($j++);
-                $k     = $finfo->name;
+                $k = $finfo->name;
                 // SQL (INSERT) format cannot handle oids
                 //                        if ($k == $data->id) continue;
                 // Output field
@@ -450,7 +450,7 @@ class DataexportController extends BaseController
 
                 if ($first) {
                     $values = (null === $v ? 'NULL' : "'{$v}'");
-                    $first  = false;
+                    $first = false;
                 } else {
                     $values .= ', ' . ((null === $v ? 'NULL' : "'{$v}'"));
                 }
@@ -480,7 +480,7 @@ class DataexportController extends BaseController
 
             foreach ($rs->fields as $k => $v) {
                 $finfo = $rs->fetchField($k);
-                $v     = $finfo->name;
+                $v = $finfo->name;
 
                 if (null !== $v) {
                     $v = \str_replace('"', '""', $v);

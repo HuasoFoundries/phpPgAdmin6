@@ -118,8 +118,8 @@ class MaterializedviewpropertiesController extends BaseController
     public function doRefresh()
     {
         $data = $this->misc->getDatabaseAccessor();
-        $sql  = 'REFRESH MATERIALIZED VIEW ' . $_REQUEST[$this->subject];
-        $this->prtrace($sql);
+        $sql = 'REFRESH MATERIALIZED VIEW ' . $_REQUEST[$this->subject];
+        //$this->prtrace($sql);
         $status = $data->execute($sql);
 
         if (0 === $status) {
@@ -147,7 +147,7 @@ class MaterializedviewpropertiesController extends BaseController
         if (0 < $viewdata->recordCount()) {
             if (!isset($_POST['formDefinition'])) {
                 $_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
-                $_POST['formComment']    = $viewdata->fields['relcomment'];
+                $_POST['formComment'] = $viewdata->fields['relcomment'];
             }
 
             echo '<form action="' . self::SUBFOLDER . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
@@ -197,7 +197,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $column = $data->getTableAttributes($_REQUEST[$this->subject], $_REQUEST['column']);
 
                 if (!isset($_REQUEST['default'])) {
-                    $_REQUEST['field']   = $column->fields['attname'];
+                    $_REQUEST['field'] = $column->fields['attname'];
                     $_REQUEST['default'] = $_REQUEST['olddefault'] = $column->fields['adsrc'];
                     $_REQUEST['comment'] = $column->fields['comment'];
                 }
@@ -264,7 +264,7 @@ class MaterializedviewpropertiesController extends BaseController
         }
     }
 
-    public function doAlter($confirm = false, $msg = ''): void
+    public function doAlter(bool $confirm = false, $msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 

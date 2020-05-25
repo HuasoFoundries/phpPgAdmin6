@@ -28,13 +28,13 @@ class SqleditController extends BaseController
     {
         switch ($this->action) {
             case 'find':
-                $title     = $this->lang['strfind'];
+                $title = $this->lang['strfind'];
                 $body_text = $this->doFind();
 
                 break;
             case 'sql':
             default:
-                $title     = $this->lang['strsql'];
+                $title = $this->lang['strsql'];
                 $body_text = $this->doDefault();
 
                 break;
@@ -64,9 +64,9 @@ class SqleditController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'search_path', \implode(',', $data->getSearchPath()));
         $search_path = \htmlspecialchars($_REQUEST['search_path']);
-        $sqlquery    = \htmlspecialchars($_SESSION['sqlquery']);
+        $sqlquery = \htmlspecialchars($_SESSION['sqlquery']);
 
-        $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'sql', false);
+        $default_html = $this->printTabs('popup', 'sql', false);
 
         $default_html .= '<form action="' . self::SUBFOLDER . '/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
         $default_html .= \PHP_EOL;
@@ -76,7 +76,7 @@ class SqleditController extends BaseController
 
         $default_html .= ' <div class="searchpath">';
         $default_html .= '<label>';
-        $default_html .= $this->misc->printHelp($this->lang['strsearchpath'], 'pg.schema.search_path', false);
+        $default_html .= $this->view->printHelp($this->lang['strsearchpath'], 'pg.schema.search_path', false);
 
         $default_html .= ': <input type="text" name="search_path" id="search_path" size="45" value="' . $search_path . '" />';
         $default_html .= '</label>' . \PHP_EOL;
@@ -140,13 +140,13 @@ class SqleditController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'filter', '');
 
-        $default_html = $this->printTabs($this->misc->getNavTabs('popup'), 'find', false);
+        $default_html = $this->printTabs('popup', 'find', false);
 
         $default_html .= '<form action="database" method="post" target="detail">' . \PHP_EOL;
         $default_html .= $this->printConnection('find', false);
         $default_html .= '<p><input class="focusme" name="term" id="term" value="' . \htmlspecialchars($_REQUEST['term']) . "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />" . \PHP_EOL;
 
-        $filters          = $this->_getFilters();
+        $filters = $this->_getFilters();
         $advanced_filters = $this->_getAdvancedFilters();
 
         if (isset($filters[$_REQUEST['filter']])) {
@@ -185,29 +185,29 @@ class SqleditController extends BaseController
     private function _getFilters()
     {
         return [
-            'SCHEMA'     => ['langkey' => 'strschemas', 'selected' => ''],
-            'TABLE'      => ['langkey' => 'strtables', 'selected' => ''],
-            'VIEW'       => ['langkey' => 'strviews', 'selected' => ''],
-            'SEQUENCE'   => ['langkey' => 'strsequences', 'selected' => ''],
-            'COLUMN'     => ['langkey' => 'strcolumns', 'selected' => ''],
-            'RULE'       => ['langkey' => 'strrules', 'selected' => ''],
-            'INDEX'      => ['langkey' => 'strindexes', 'selected' => ''],
-            'TRIGGER'    => ['langkey' => 'strtriggers', 'selected' => ''],
+            'SCHEMA' => ['langkey' => 'strschemas', 'selected' => ''],
+            'TABLE' => ['langkey' => 'strtables', 'selected' => ''],
+            'VIEW' => ['langkey' => 'strviews', 'selected' => ''],
+            'SEQUENCE' => ['langkey' => 'strsequences', 'selected' => ''],
+            'COLUMN' => ['langkey' => 'strcolumns', 'selected' => ''],
+            'RULE' => ['langkey' => 'strrules', 'selected' => ''],
+            'INDEX' => ['langkey' => 'strindexes', 'selected' => ''],
+            'TRIGGER' => ['langkey' => 'strtriggers', 'selected' => ''],
             'CONSTRAINT' => ['langkey' => 'strconstraints', 'selected' => ''],
-            'FUNCTION'   => ['langkey' => 'strfunctions', 'selected' => ''],
-            'DOMAIN'     => ['langkey' => 'strdomains', 'selected' => ''],
+            'FUNCTION' => ['langkey' => 'strfunctions', 'selected' => ''],
+            'DOMAIN' => ['langkey' => 'strdomains', 'selected' => ''],
         ];
     }
 
     private function _getAdvancedFilters()
     {
         return [
-            'AGGREGATE'  => ['langkey' => 'straggregates', 'selected' => ''],
-            'TYPE'       => ['langkey' => 'strtypes', 'selected' => ''],
-            'OPERATOR'   => ['langkey' => 'stroperators', 'selected' => ''],
-            'OPCLASS'    => ['langkey' => 'stropclasses', 'selected' => ''],
+            'AGGREGATE' => ['langkey' => 'straggregates', 'selected' => ''],
+            'TYPE' => ['langkey' => 'strtypes', 'selected' => ''],
+            'OPERATOR' => ['langkey' => 'stroperators', 'selected' => ''],
+            'OPCLASS' => ['langkey' => 'stropclasses', 'selected' => ''],
             'CONVERSION' => ['langkey' => 'strconversions', 'selected' => ''],
-            'LANGUAGE'   => ['langkey' => 'strlanguages', 'selected' => ''],
+            'LANGUAGE' => ['langkey' => 'strlanguages', 'selected' => ''],
         ];
     }
 }

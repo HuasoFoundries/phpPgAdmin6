@@ -57,10 +57,10 @@ class LanguagesController extends BaseController
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('lanname'),
             ],
-            'trusted'  => [
+            'trusted' => [
                 'title' => $this->lang['strtrusted'],
                 'field' => Decorator::field('lanpltrusted'),
-                'type'  => 'yesno',
+                'type' => 'yesno',
             ],
             'function' => [
                 'title' => $this->lang['strfunction'],

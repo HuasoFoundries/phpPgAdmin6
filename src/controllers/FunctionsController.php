@@ -114,17 +114,17 @@ class FunctionsController extends BaseController
         $funcs = $data->getFunctions();
 
         $columns = [
-            'function'     => [
+            'function' => [
                 'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url'   => self::SUBFOLDER . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
-                'vars'  => ['function' => 'proproto', 'function_oid' => 'prooid'],
+                'url' => self::SUBFOLDER . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
+                'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
-            'returns'      => [
+            'returns' => [
                 'title' => $this->lang['strreturns'],
                 'field' => Decorator::field('proreturns'),
             ],
-            'owner'        => [
+            'owner' => [
                 'title' => $this->lang['strowner'],
                 'field' => Decorator::field('proowner'),
             ],
@@ -132,10 +132,10 @@ class FunctionsController extends BaseController
                 'title' => $this->lang['strproglanguage'],
                 'field' => Decorator::field('prolanguage'),
             ],
-            'actions'      => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
-            'comment'      => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('procomment'),
             ],
@@ -144,43 +144,43 @@ class FunctionsController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['function' => 'proproto', 'function_oid' => 'prooid'],
-                'url'     => 'functions',
+                'url' => 'functions',
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $this->lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions',
+                        'url' => 'functions',
                         'urlvars' => [
-                            'action'       => 'edit',
-                            'function'     => Decorator::field('proproto'),
+                            'action' => 'edit',
+                            'function' => Decorator::field('proproto'),
                             'function_oid' => Decorator::field('prooid'),
                         ],
                     ],
                 ],
             ],
-            'drop'         => [
+            'drop' => [
                 'multiaction' => 'confirm_drop',
-                'content'     => $this->lang['strdrop'],
-                'attr'        => [
+                'content' => $this->lang['strdrop'],
+                'attr' => [
                     'href' => [
-                        'url'     => 'functions',
+                        'url' => 'functions',
                         'urlvars' => [
-                            'action'       => 'confirm_drop',
-                            'function'     => Decorator::field('proproto'),
+                            'action' => 'confirm_drop',
+                            'function' => Decorator::field('proproto'),
                             'function_oid' => Decorator::field('prooid'),
                         ],
                     ],
                 ],
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $this->lang['strprivileges'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges',
+                        'url' => 'privileges',
                         'urlvars' => [
-                            'subject'      => 'function',
-                            'function'     => Decorator::field('proproto'),
+                            'subject' => 'function',
+                            'function' => Decorator::field('proproto'),
                             'function_oid' => Decorator::field('prooid'),
                         ],
                     ],
@@ -207,15 +207,15 @@ class FunctionsController extends BaseController
         $reqvars = $this->misc->getRequestVars('function');
 
         $attrs = [
-            'text'    => $proto,
-            'icon'    => 'Function',
+            'text' => $proto,
+            'icon' => 'Function',
             'toolTip' => Decorator::field('procomment'),
-            'action'  => Decorator::redirecturl(
+            'action' => Decorator::redirecturl(
                 'redirect',
                 $reqvars,
                 [
-                    'action'       => 'properties',
-                    'function'     => $proto,
+                    'action' => 'properties',
+                    'function' => $proto,
                     'function_oid' => Decorator::field('prooid'),
                 ]
             ),
@@ -489,8 +489,8 @@ class FunctionsController extends BaseController
         $this->printTabs('function', 'export');
         $this->printTitle($this->lang['strproperties'], 'pg.function');
 
-        $fname     = \str_replace(' ', '', $f);
-        $funcdata  = $data->getFunctionDef($function_oid);
+        $fname = \str_replace(' ', '', $f);
+        $funcdata = $data->getFunctionDef($function_oid);
         $func_full = '';
 
         if (0 >= $funcdata->recordCount()) {
@@ -545,7 +545,7 @@ class FunctionsController extends BaseController
         $this->printTitle($this->lang['strproperties'], 'pg.function');
         $this->printMsg($msg);
 
-        $funcdata  = $data->getFunction($_REQUEST['function_oid']);
+        $funcdata = $data->getFunction($_REQUEST['function_oid']);
         $func_full = '';
 
         if (0 >= $funcdata->recordCount()) {
@@ -562,7 +562,7 @@ class FunctionsController extends BaseController
         }
 
         $funcdata->fields['proretset'] = $data->phpBool($funcdata->fields['proretset']);
-        $func_full                     = $funcdata->fields['proname'] . '(' . $funcdata->fields['proarguments'] . ')';
+        $func_full = $funcdata->fields['proname'] . '(' . $funcdata->fields['proarguments'] . ')';
 
         echo '<table style="width: 95%">' . \PHP_EOL;
 
@@ -668,7 +668,7 @@ class FunctionsController extends BaseController
             echo '</form>' . \PHP_EOL;
         } else {
             if (\is_array($_POST['function_oid'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
 
                 if (0 === $status) {
@@ -743,8 +743,8 @@ class FunctionsController extends BaseController
 
         $_POST['formComment'] = $this->getPostParam('formComment', '');
 
-        $types  = $data->getTypes(true, true, true);
-        $langs  = $data->getLanguages(true);
+        $types = $data->getTypes(true, true, true);
+        $langs = $data->getLanguages(true);
         $fnlang = \mb_strtolower($_POST['formLanguage']);
 
         switch ($fnlang) {
@@ -785,7 +785,7 @@ class FunctionsController extends BaseController
         $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="' .
         \htmlspecialchars($_POST['formArguments']) . '" /></td>';
 
-        $szSetOfSelected    = '';
+        $szSetOfSelected = '';
         $szNotSetOfSelected = '';
 
         if ('' === $_POST['formSetOf']) {
@@ -803,7 +803,7 @@ class FunctionsController extends BaseController
 
         // Create string array type selector
 
-        $szArraySelected    = '';
+        $szArraySelected = '';
         $szNotArraySelected = '';
 
         if ('' === $_POST['formArray']) {
@@ -845,8 +845,8 @@ class FunctionsController extends BaseController
 
         $szLanguage .= '</td>';
         $szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$this->lang['strarguments']}</th></tr>";
-        $arrayModes    = ['IN', 'OUT', 'INOUT'];
-        $szModes       = '<select name="formArgModes[]" style="width:100%;">';
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $szModes = '<select name="formArgModes[]" style="width:100%;">';
 
         foreach ($arrayModes as $pV) {
             $szModes .= "<option value=\"{$pV}\">{$pV}</option>";
@@ -865,7 +865,6 @@ class FunctionsController extends BaseController
         }
 
         if (empty($msg)) {
-            // $this->prtrace($subfolder);
             $szJSTRArg = "<script type=\"text/javascript\" >addArg('{$subfolder}');</script>" . \PHP_EOL;
         } else {
             $szJSTRArg = '';
@@ -998,7 +997,6 @@ class FunctionsController extends BaseController
             $szJS = $this->_buildJSRows($this->_buildFunctionArguments($_POST));
         } else {
             $subfolder = self::SUBFOLDER;
-            // $this->prtrace($subfolder);
             $szJS = '<script type="text/javascript" src="' . self::SUBFOLDER . '/assets/js/functions.js">noArgsRebuild(addArg("' . $subfolder . '"));</script>';
         }
 
@@ -1043,49 +1041,49 @@ class FunctionsController extends BaseController
         }
     }
 
-    private function _printNavLinks($place, $func_full = ''): void
+    private function _printNavLinks(string $place, string $func_full = ''): void
     {
         if ('functions-properties' === $place) {
             $navlinks = [
                 'showall' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'functions',
+                            'url' => 'functions',
                             'urlvars' => [
-                                'server'   => $_REQUEST['server'],
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                             ],
                         ],
                     ],
                     'content' => $this->lang['strshowallfunctions'],
                 ],
-                'alter'   => [
-                    'attr'    => [
+                'alter' => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'functions',
+                            'url' => 'functions',
                             'urlvars' => [
-                                'action'       => 'edit',
-                                'server'       => $_REQUEST['server'],
-                                'database'     => $_REQUEST['database'],
-                                'schema'       => $_REQUEST['schema'],
-                                'function'     => $_REQUEST['function'],
+                                'action' => 'edit',
+                                'server' => $_REQUEST['server'],
+                                'database' => $_REQUEST['database'],
+                                'schema' => $_REQUEST['schema'],
+                                'function' => $_REQUEST['function'],
                                 'function_oid' => $_REQUEST['function_oid'],
                             ],
                         ],
                     ],
                     'content' => $this->lang['stralter'],
                 ],
-                'drop'    => [
-                    'attr'    => [
+                'drop' => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'functions',
+                            'url' => 'functions',
                             'urlvars' => [
-                                'action'       => 'confirm_drop',
-                                'server'       => $_REQUEST['server'],
-                                'database'     => $_REQUEST['database'],
-                                'schema'       => $_REQUEST['schema'],
-                                'function'     => $func_full,
+                                'action' => 'confirm_drop',
+                                'server' => $_REQUEST['server'],
+                                'database' => $_REQUEST['database'],
+                                'schema' => $_REQUEST['schema'],
+                                'function' => $func_full,
                                 'function_oid' => $_REQUEST['function_oid'],
                             ],
                         ],
@@ -1095,45 +1093,45 @@ class FunctionsController extends BaseController
             ];
         } elseif ('functions-functions' === $place) {
             $navlinks = [
-                'createpl'       => [
-                    'attr'    => [
+                'createpl' => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'functions',
+                            'url' => 'functions',
                             'urlvars' => [
-                                'action'   => 'create',
-                                'server'   => $_REQUEST['server'],
+                                'action' => 'create',
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                             ],
                         ],
                     ],
                     'content' => $this->lang['strcreateplfunction'],
                 ],
                 'createinternal' => [
-                    'attr'    => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'functions',
+                            'url' => 'functions',
                             'urlvars' => [
-                                'action'   => 'create',
+                                'action' => 'create',
                                 'language' => 'internal',
-                                'server'   => $_REQUEST['server'],
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                             ],
                         ],
                     ],
                     'content' => $this->lang['strcreateinternalfunction'],
                 ],
-                'createc'        => [
-                    'attr'    => [
+                'createc' => [
+                    'attr' => [
                         'href' => [
-                            'url'     => 'functions',
+                            'url' => 'functions',
                             'urlvars' => [
-                                'action'   => 'create',
+                                'action' => 'create',
                                 'language' => 'C',
-                                'server'   => $_REQUEST['server'],
+                                'server' => $_REQUEST['server'],
                                 'database' => $_REQUEST['database'],
-                                'schema'   => $_REQUEST['schema'],
+                                'schema' => $_REQUEST['schema'],
                             ],
                         ],
                     ],
@@ -1154,9 +1152,9 @@ class FunctionsController extends BaseController
         } else {
             $args_arr = \explode(', ', $fndata->fields['proarguments']);
         }
-        $names_arr     = $data->phpArray($fndata->fields['proargnames']);
-        $modes_arr     = $data->phpArray($fndata->fields['proargmodes']);
-        $args          = '';
+        $names_arr = $data->phpArray($fndata->fields['proargnames']);
+        $modes_arr = $data->phpArray($fndata->fields['proargmodes']);
+        $args = '';
         $args_arr_size = \count($args_arr);
 
         for ($i = 0; $i < $args_arr_size; ++$i) {
@@ -1228,12 +1226,12 @@ class FunctionsController extends BaseController
      */
     private function _buildJSRows($szArgs)
     {
-        $arrayModes      = ['IN', 'OUT', 'INOUT'];
-        $arrayArgs       = \explode(',', $szArgs);
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $arrayArgs = \explode(',', $szArgs);
         $arrayProperArgs = [];
-        $nC              = 0;
-        $szReturn        = '';
-        $szMode          = [];
+        $nC = 0;
+        $szReturn = '';
+        $szMode = [];
 
         foreach ($arrayArgs as $pV) {
             $arrayWords = \explode(' ', $pV);
@@ -1245,15 +1243,14 @@ class FunctionsController extends BaseController
             $szArgName = \array_shift($arrayWords);
 
             if (false === \mb_strpos($arrayWords[\count($arrayWords) - 1], '[]')) {
-                $szArgType   = \implode(' ', $arrayWords);
+                $szArgType = \implode(' ', $arrayWords);
                 $bArgIsArray = 'false';
             } else {
-                $szArgType   = \str_replace('[]', '', \implode(' ', $arrayWords));
+                $szArgType = \str_replace('[]', '', \implode(' ', $arrayWords));
                 $bArgIsArray = 'true';
             }
             $arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
-            $subfolder         = self::SUBFOLDER;
-            // $this->prtrace($subfolder);
+            $subfolder = self::SUBFOLDER;
             $szReturn .= '<script type="text/javascript">';
             $szReturn .= "RebuildArgTR('{$szMode}','{$szArgName}','{$szArgType}',new Boolean({$bArgIsArray},{$subfolder}));";
             $szReturn .= '</script>;';
@@ -1267,8 +1264,8 @@ class FunctionsController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        $arrayModes  = ['IN', 'OUT', 'INOUT'];
-        $arrayTypes  = $data->getTypes(true, true, true);
+        $arrayModes = ['IN', 'OUT', 'INOUT'];
+        $arrayTypes = $data->getTypes(true, true, true);
         $arrayPTypes = [];
         $arrayPModes = [];
 
@@ -1290,7 +1287,7 @@ class FunctionsController extends BaseController
     /**
      * Get the concatenated arguments for a function.
      *
-     * @param \PHPPgAdmin\ADORecordSet $funcdata The funcdata record
+     * @param \ADORecordSet $funcdata The funcdata record
      *
      * @return string The arguments of the function
      */
@@ -1304,9 +1301,9 @@ class FunctionsController extends BaseController
             } else {
                 $args_arr = \explode(', ', $funcdata->fields['proarguments']);
             }
-            $names_arr     = $data->phpArray($funcdata->fields['proargnames']);
-            $modes_arr     = $data->phpArray($funcdata->fields['proargmodes']);
-            $args          = '';
+            $names_arr = $data->phpArray($funcdata->fields['proargnames']);
+            $modes_arr = $data->phpArray($funcdata->fields['proargmodes']);
+            $args = '';
             $args_arr_size = \count($args_arr);
 
             for ($i = 0; $i < $args_arr_size; ++$i) {

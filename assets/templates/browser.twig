@@ -32,7 +32,7 @@
         </div>
 
         <script>
-        $('#lazy').jstree({
+        window.jsTree = $('#lazy').jstree({
             "state": {
                 "key": "jstree"
             },
@@ -49,7 +49,9 @@
                 }
             }
         });
-        
+        if(parent.frames && parent.frames.detail) {
+             parent.frames.detail.jsTree=window.jsTree;
+        }
 
         $('#lazy').on("activate_node.jstree", function (e, data) {
             if (window.parent.frames.detail) {
@@ -58,6 +60,9 @@
         });
         $('#lazy').on("loaded.jstree", function (e, data) {
             $('#lazy').data('jstree').show_dots();
+        });
+        $('#lazy').on('click','.jstree-anchor',function(){
+            console.log(this);
         });
         </script>
 

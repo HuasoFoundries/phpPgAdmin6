@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Traits;
 
+\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
+
 /**
  * @file
  * A trait with helpers methods to debug, halt the app and format text to html
@@ -54,41 +56,25 @@ trait HelperTrait
         throw new \Slim\Exception\SlimException($this->container->requestobj, $this->container->responseobj);
     }
 
-    /**
-     * Adds a flash message to the session that will be displayed on the next request.
-     *
-     * @param mixed  $content msg content (can be object, array, etc)
-     * @param string $key     The key to associate with the message. Defaults to the stack
-     *                        trace of the closure or method that called addFlassh
-     */
-    public function addFlash($content, $key = ''): void
-    {
-        if ('' === $key) {
-            $key = self::getBackTrace();
-        }
-        // $this->dump(__METHOD__ . ': addMessage ' . $key . '  ' . json_encode($content));
-        $this->container->flash->addMessage($key, $content);
-    }
-
     public static function getBackTrace($offset = 0)
     {
-        $i0        = $offset;
-        $i1        = $offset + 1;
+        $i0 = $offset;
+        $i1 = $offset + 1;
         $backtrace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, $offset + 3);
 
         return [
-            'class'    => 'Closure' === $backtrace[$i1]['class'] ?
+            'class' => 'Closure' === $backtrace[$i1]['class'] ?
             $backtrace[$i0]['file'] :
             $backtrace[$i1]['class'],
 
-            'type'     => $backtrace[$i1]['type'],
+            'type' => $backtrace[$i1]['type'],
 
             'function' => '{closure}' === $backtrace[$i1]['function']
             ? $backtrace[$i0]['function'] :
             $backtrace[$i1]['function'],
 
-            'spacer4'  => ' ',
-            'line'     => $backtrace[$i0]['line'],
+            'spacer4' => ' ',
+            'line' => $backtrace[$i0]['line'],
         ];
         //dump($backtrace);
     }
@@ -96,8 +82,8 @@ trait HelperTrait
     /**
      * Converts an ADORecordSet to an array.
      *
-     * @param \PHPPgAdmin\ADORecordSet $set   The set
-     * @param string                   $field optionally the field to query for
+     * @param \ADORecordSet $set   The set
+     * @param string        $field optionally the field to query for
      *
      * @return array the parsed array
      */
@@ -201,54 +187,52 @@ trait HelperTrait
     /**
      * Receives N parameters and sends them to the console adding where was it called from.
      *
-     * @param array $args
+     * @param array<int, mixed> $args
      */
-    public function prtrace(...$args)
+    public function prtrace(...$args): void
     {
-        return self::staticTrace($args);
+        if (\function_exists('\dump')) {
+            \dump($args);
+        }
     }
 
-    public function dump(...$args)
+    /**
+     * Just an alias of prtrace.
+     *
+     * @param array<int, mixed> $args The arguments
+     */
+    public function dump(...$args): void
     {
-        return self::staticTrace($args);
+        if (\function_exists('\dump')) {
+            \dump($args);
+        }
     }
 
-    public function dumpAndDie(...$args)
+    /**
+     * Just an alias of prtrace.
+     *
+     * @param array<int, mixed> $args The arguments
+     */
+    public function dumpAndDie(...$args): void
     {
-        return self::staticTrace($args);
+        if (\function_exists('\dump')) {
+            \dump($args);
+        }
+
+        exit();
     }
 
     /**
      * Receives N parameters and sends them to the console adding where was it
      * called from.
      *
-     * @param mixed  $variablesToDump
-     * @param mixed  $exitAfterwards
-     * @param string $whoCalledMe
+     * @param array<int, mixed> $args
      */
-    private static function staticTrace(
-        $variablesToDump = [],
-        string $whoCalledMe = '',
-        $exitAfterwards = false
+    public static function staticTrace(
+        ...$args
     ): void {
-        if (!$variablesToDump) {
-            $variablesToDump = \func_get_args();
-        }
-
-        if ('' === $whoCalledMe) {
-            $whoCalledMe = \str_replace(BASE_PATH, '', \implode('', self::getBackTrace(2)));
-        }
-
-        if ($exitAfterwards && \function_exists('dd')) {
-            dd([
-                'args' => $variablesToDump,
-                'from' => $whoCalledMe,
-            ]);
-        } elseif (\function_exists('dump')) {
-            dump([
-                'args' => $variablesToDump,
-                'from' => $whoCalledMe,
-            ]);
+        if (\function_exists('\dump')) {
+            \dump($args);
         }
     }
 }

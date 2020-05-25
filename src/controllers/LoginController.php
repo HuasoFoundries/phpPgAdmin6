@@ -80,13 +80,13 @@ class LoginController extends BaseController
 
         foreach ($_REQUEST as $key => $val) {
             if (false !== \mb_strpos($key, '?')) {
-                $namexploded               = \explode('?', $key);
+                $namexploded = \explode('?', $key);
                 $_REQUEST[$namexploded[1]] = \htmlspecialchars($val);
             }
         }
 
         $server_info = $this->misc->getServerInfo($server_id);
-        $title       = \sprintf($this->lang['strlogintitle'], $server_info['desc']);
+        $title = \sprintf($this->lang['strlogintitle'], $server_info['desc']);
 
         $printTitle = $this->printTitle($title, null, false);
 

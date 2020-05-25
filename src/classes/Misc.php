@@ -6,13 +6,6 @@
 
 namespace PHPPgAdmin;
 
-\defined('BASE_PATH') || \define(BASE_PATH, \dirname(__DIR__, 2));
-\defined('SUBFOLDER') || \define(
-    'SUBFOLDER',
-    \str_replace($_SERVER['DOCUMENT_ROOT'] ?? '', '', BASE_PATH)
-);
-\defined('DEBUGMODE') || \define('DEBUGMODE', false);
-
 /**
  * @file
  * Class to hold various commonly used functions
@@ -33,15 +26,15 @@ class Misc
     /**
      * @var string
      */
-    const BASE_PATH = BASE_PATH;
+    const BASE_PATH = ContainerUtils::BASE_PATH;
     /**
      * @var string
      */
-    const SUBFOLDER = SUBFOLDER;
+    const SUBFOLDER = ContainerUtils::SUBFOLDER;
     /**
      * @var string
      */
-    const DEBUGMODE = DEBUGMODE;
+    const DEBUGMODE = ContainerUtils::DEBUGMODE;
 
     public $appLangFiles = [];
 
@@ -53,9 +46,15 @@ class Misc
 
     public $href = '';
 
-    public $controller_name = 'Misc';
-
     public $lang = [];
+
+    public $conf;
+
+    public $phpMinVer;
+
+    public $postgresqlMinVer;
+
+    public $view;
 
     protected $container;
 
@@ -96,8 +95,6 @@ class Misc
 
         $base_version = $container->get('settings')['base_version'];
 
-        //$this->prtrace($base_version);
-
         // Check for config file version mismatch
         if (!isset($this->conf['version']) || $base_version > $this->conf['version']) {
             $container->get('utils')->addError($this->lang['strbadconfig']);
@@ -115,6 +112,41 @@ class Misc
         //$this->dumpAndDie($this);
 
         $this->getServerId();
+    }
+
+    /**
+     * Gets the value of a config property, or the array of all config properties.
+     *
+     * @param null|string $key value of the key to be retrieved. If null, the full array is returnes
+     *
+     * @return null|array|string the whole $conf array, the value of $conf[key] or null if said key does not exist
+     */
+    public function getConf($key = null)
+    {
+        if (null === $key) {
+            return $this->conf;
+        }
+
+        if (\array_key_exists($key, $this->conf)) {
+            return $this->conf[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * Adds or modifies a key in the $conf instance property of this class.
+     *
+     * @param string $key   name of the key to set
+     * @param mixed  $value value of the key to set
+     *
+     * @return \PHPPgAdmin\Misc this class instance
+     */
+    public function setConf($key, $value)
+    {
+        $this->conf[$key] = $value;
+
+        return $this;
     }
 
     public function serverToSha()
@@ -147,7 +179,6 @@ class Misc
         } elseif (null !== $request_server) {
             $this->_server_id = $request_server;
         } elseif (isset($_SESSION['webdbLogin']) && 0 < \count($_SESSION['webdbLogin'])) {
-            //$this->prtrace('webdbLogin', $_SESSION['webdbLogin']);
             $this->_server_id = \array_keys($_SESSION['webdbLogin'])[0];
         }
 
@@ -166,75 +197,6 @@ class Misc
         $this->view = $view;
 
         return $this;
-    }
-
-    /**
-     * Adds or modifies a key in the $conf instance property of this class.
-     *
-     * @param string $key   name of the key to set
-     * @param mixed  $value value of the key to set
-     *
-     * @return \PHPPgAdmin\Misc this class instance
-     */
-    public function setConf($key, $value)
-    {
-        $this->conf[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of a config property, or the array of all config properties.
-     *
-     * @param null|string $key value of the key to be retrieved. If null, the full array is returnes
-     *
-     * @return null|array|string the whole $conf array, the value of $conf[key] or null if said key does not exist
-     */
-    public function getConf($key = null)
-    {
-        if (null === $key) {
-            return $this->conf;
-        }
-
-        if (\array_key_exists($key, $this->conf)) {
-            return $this->conf[$key];
-        }
-
-        return null;
-    }
-
-    /**
-     * Displays link to the context help.
-     *
-     * @param string $str      the string that the context help is related to (already escaped)
-     * @param string $help     help section identifier
-     * @param bool   $do_print true to echo, false to return
-     */
-    public function printHelp($str, $help = null, $do_print = true)
-    {
-        if (null !== $help) {
-            $helplink = $this->getHelpLink($help);
-            $str .= '<a class="help" href="' . $helplink . '" title="' . $this->lang['strhelp'] . '" target="phppgadminhelp">';
-            $str .= $this->lang['strhelpicon'] . '</a>';
-        }
-
-        if ($do_print) {
-            echo $str;
-        } else {
-            return $str;
-        }
-    }
-
-    /**
-     * Gets the help link.
-     *
-     * @param string $help The help subject
-     *
-     * @return string the help link
-     */
-    public function getHelpLink($help)
-    {
-        return \htmlspecialchars($this->getSubfolder('help?help=') . \urlencode($help) . '&server=' . \urlencode($this->getServerId()));
     }
 
     /**
@@ -317,16 +279,15 @@ class Misc
      *
      * @internal mixed $plaform placeholder that will receive the value of the platform
      *
-     * @return \PHPPgAdmin\Database\ADOdbBase the database accessor instance
+     * @return null|\PHPPgAdmin\Database\ADOdbBase the database accessor instance
      */
-    public function getDatabaseAccessor($database = '', $server_id = null)
+    public function getDatabaseAccessor($database = '', $server_id = null):  ? \PHPPgAdmin\Database\ADOdbBase
     {
         $lang = $this->lang;
 
         if (null !== $server_id) {
             $this->_server_id = $server_id;
         }
-        //$this->prtrace($this->_server_id);
 
         $server_info = $this->getServerInfo($this->_server_id);
 
@@ -345,18 +306,16 @@ class Misc
                 return null;
             }
 
-            //$this->prtrace('_connection', $_connection);
             if (!$_connection) {
                 $this->container->utils->addError($lang['strloginfailed']);
                 $this->setErrorMsg($lang['strloginfailed']);
 
                 return null;
             }
+            $platform = '';
             // Get the name of the database driver we need to use.
             // The description of the server is returned in $platform.
             $_type = $_connection->getDriver($platform);
-
-            //$this->prtrace(['type' => $_type, 'platform' => $platform, 'pgVersion' => $_connection->conn->pgVersion]);
 
             if (null === $_type) {
                 $errormsg = \sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer);
@@ -366,8 +325,6 @@ class Misc
                 return null;
             }
             $_type = '\PHPPgAdmin\Database\\' . $_type;
-
-            //$this->prtrace('driver:', $_type);
 
             $this->setServerInfo('platform', $platform, $this->_server_id);
             $this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $this->_server_id);
@@ -379,8 +336,6 @@ class Misc
             $this->_data->platform = $_connection->platform;
 
             //$this->_data->getHelpPages();
-
-            //$this->prtrace('help_page has ' . count($this->_data->help_page) . ' items');
 
             /* we work on UTF-8 only encoding */
             $this->_data->execute("SET client_encoding TO 'UTF-8'");
@@ -407,7 +362,7 @@ class Misc
         return $this->_data;
     }
 
-    public function getConnection($database = '', $server_id = null)
+    public function getConnection(string $database = '', $server_id = null)
     {
         $lang = $this->lang;
 
@@ -462,13 +417,12 @@ class Misc
     }
 
     /**
-     * Validate and retrieve information on a server.
-     * If the parameter isn't supplied then the currently
-     * connected server is returned.
+     * Validate and retrieve information on a server. If the parameter isn't supplied then the currently connected
+     * server is returned.
      *
      * @param string $server_id A server identifier (host:port)
      *
-     * @return array An associative array of server properties
+     * @return null|array An associative array of server properties
      */
     public function getServerInfo($server_id = null)
     {
@@ -513,10 +467,12 @@ class Misc
             return $this->_server_info;
         }
 
-//        $this->prtrace('Invalid server param');
+//      //$this->prtrace('Invalid server param');
         $this->_server_info = null;
         // Unable to find a matching server, are we being hacked?
-        return $this->halt($this->lang['strinvalidserverparam']);
+        $this->halt($this->lang['strinvalidserverparam']);
+
+        return $this->_server_info;
     }
 
     /**
@@ -527,7 +483,7 @@ class Misc
      * @param mixed       $value     the new value, or null to unset the parameter
      * @param null|string $server_id the server identifier, or null for current server
      */
-    public function setServerInfo($key, $value, $server_id = null): void
+    public function setServerInfo($key, $value, $server_id = null) : void
     {
         if (null === $server_id) {
             $server_id = $this->container->requestobj->getParam('server');
@@ -548,7 +504,7 @@ class Misc
         }
     }
 
-    public function getDatabase($database = '')
+    public function getDatabase(string $database = '')
     {
         if (null === $this->_server_id && !isset($_REQUEST['database'])) {
             return null;
@@ -660,29 +616,6 @@ class Misc
     }
 
     /**
-     * Sets the form tracking variable.
-     */
-    public function setForm()
-    {
-        $form = [];
-
-        if ($this->container->server) {
-            $form[] = '<input type="hidden" name="server" value="' . \htmlspecialchars($this->container->server) . '" />';
-        }
-
-        if ($this->container->database) {
-            $form[] = '<input type="hidden" name="database" value="' . \htmlspecialchars($this->container->database) . '" />';
-        }
-
-        if ($this->container->schema) {
-            $form[] = '<input type="hidden" name="schema" value="' . \htmlspecialchars($this->container->schema) . '" />';
-        }
-        $this->form = \implode("\n", $form);
-
-        return $this->form;
-    }
-
-    /**
      * A function to recursively strip slashes.  Used to
      * enforce magic_quotes_gpc being off.
      *
@@ -765,45 +698,8 @@ class Misc
                 }
             }
         }
-        //$this->prtrace($v);
+
         return $v;
-    }
-
-    public function icon($icon)
-    {
-        if (!\is_string($icon)) {
-            return '';
-        }
-
-        $theme        = $this->conf['theme'];
-        $path         = 'assets/images/themes';
-        $default_icon = \sprintf('%s/%s/default/DisconnectedServer.png', self::SUBFOLDER, $path);
-
-        if (\is_readable(\sprintf('%s/%s/%s/%s.png', self::BASE_PATH, $path, $theme, $icon))) {
-            return \sprintf('%s/%s/%s/%s.png', self::SUBFOLDER, $path, $theme, $icon);
-        }
-
-        if (\is_readable(\sprintf('%s/%s/%s/%s.gif', self::BASE_PATH, $path, $theme, $icon))) {
-            return \sprintf('%s/%s/%s/%s.gif', self::SUBFOLDER, $path, $theme, $icon);
-        }
-
-        if (\is_readable(\sprintf('%s/%s/%s/%s.ico', self::BASE_PATH, $path, $theme, $icon))) {
-            return \sprintf('%s/%s/%s/%s.ico', self::SUBFOLDER, $path, $theme, $icon);
-        }
-
-        if (\is_readable(\sprintf('%s/%s/default/%s.png', self::BASE_PATH, $path, $icon))) {
-            return \sprintf('%s/%s/default/%s.png', self::SUBFOLDER, $path, $icon);
-        }
-
-        if (\is_readable(\sprintf('%s/%s/default/%s.gif', self::BASE_PATH, $path, $icon))) {
-            return \sprintf('%s/%s/default/%s.gif', self::SUBFOLDER, $path, $icon);
-        }
-
-        if (\is_readable(\sprintf('%s/%s/default/%s.ico', self::BASE_PATH, $path, $icon))) {
-            return \sprintf('%s/%s/default/%s.ico', self::SUBFOLDER, $path, $icon);
-        }
-
-        return $default_icon;
     }
 
     /**
@@ -811,9 +707,9 @@ class Misc
      *
      * @param string $str The string to escape
      *
-     * @return string The escaped string
+     * @return null|string The escaped string
      */
-    public function escapeShellArg($str)
+    public function escapeShellArg($str):  ? string
     {
         //$data = $this->getDatabaseAccessor();
         $lang = $this->lang;
@@ -858,7 +754,7 @@ class Misc
      *
      * @param string $script the SQL script to save
      */
-    public function saveScriptHistory($script): void
+    public function saveScriptHistory($script) : void
     {
         [$usec, $sec] = \explode(' ', \microtime());
         $time         = ((float) $usec + (float) $sec);

@@ -32,7 +32,7 @@ class XHtmlElement extends XHtmlSimpleElement
     /**
      * Adds an xhtml child to element.
      *
-     * @param XHtmlElement $object The element to become a child of element
+     * @param XHtmlOption $object
      */
     public function add(XHtmlOption &$object): void
     {

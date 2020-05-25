@@ -16,7 +16,7 @@ trait TablespaceTrait
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getTablespaces($all = false)
     {
@@ -42,7 +42,7 @@ trait TablespaceTrait
      *
      * @param string $spcname
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getTablespace($spcname)
     {
@@ -120,7 +120,7 @@ trait TablespaceTrait
         }
 
         // Owner
-        $sql    = "ALTER TABLESPACE \"{$spcname}\" OWNER TO \"{$owner}\"";
+        $sql = "ALTER TABLESPACE \"{$spcname}\" OWNER TO \"{$owner}\"";
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -131,7 +131,7 @@ trait TablespaceTrait
 
         // Rename (only if name has changed)
         if ($name !== $spcname) {
-            $sql    = "ALTER TABLESPACE \"{$spcname}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TABLESPACE \"{$spcname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -160,7 +160,7 @@ trait TablespaceTrait
      *
      * @param string $spcname The name of the domain to drop
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropTablespace($spcname)
     {

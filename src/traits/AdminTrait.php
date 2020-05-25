@@ -34,7 +34,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -45,7 +45,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfclustertable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -72,9 +72,9 @@ trait AdminTrait
     public function confirmReindex($type): void
     {
         $this->script = ('database' === $type) ? 'database' : 'tables';
-        $script       = $this->script;
-        $this->misc   = $this->misc;
-        $data         = $this->misc->getDatabaseAccessor();
+        $script = $this->script;
+        $this->misc = $this->misc;
+        $data = $this->misc->getDatabaseAccessor();
 
         if (('table' === $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($this->lang['strspecifytabletoreindex']);
@@ -86,7 +86,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strreindex'], 'pg.reindex');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -97,7 +97,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['strreindex'], 'pg.reindex');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfreindextable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -141,7 +141,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['stranalyze'], 'pg.analyze');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -153,7 +153,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['stranalyze'], 'pg.analyze');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -190,7 +190,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strvacuum'], 'pg.vacuum');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -202,7 +202,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['strvacuum'], 'pg.vacuum');
 
-            echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfvacuumtable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -250,15 +250,15 @@ trait AdminTrait
             return;
         }
 
-        $old_val  = $data->getTableAutovacuum($_REQUEST['table']);
+        $old_val = $data->getTableAutovacuum($_REQUEST['table']);
         $defaults = $data->getAutovacuum();
-        $old_val  = $old_val->fields;
+        $old_val = $old_val->fields;
 
         if (isset($old_val['autovacuum_enabled']) && ('off' === $old_val['autovacuum_enabled'])) {
-            $enabled  = '';
+            $enabled = '';
             $disabled = 'checked="checked"';
         } else {
-            $enabled  = 'checked="checked"';
+            $enabled = 'checked="checked"';
             $disabled = '';
         }
 
@@ -286,7 +286,7 @@ trait AdminTrait
             $old_val['autovacuum_vacuum_cost_limit'] = '';
         }
 
-        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo $this->misc->form;
         echo '<input type="hidden" name="action" value="editautovac" />' . \PHP_EOL;
         echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
@@ -424,7 +424,7 @@ trait AdminTrait
     public function doReindex($type): void
     {
         $this->misc = $this->misc;
-        $data       = $this->misc->getDatabaseAccessor();
+        $data = $this->misc->getDatabaseAccessor();
 
         if (('table' === $type) && empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
             $this->doDefault($this->lang['strspecifytabletoreindex']);
@@ -640,10 +640,10 @@ trait AdminTrait
         echo '<table style="width: 50%">' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
         echo '<th class="data">';
-        $this->misc->printHelp($this->lang['strvacuum'], 'pg.admin.vacuum') . '</th>' . \PHP_EOL;
+        $this->view->printHelp($this->lang['strvacuum'], 'pg.admin.vacuum') . '</th>' . \PHP_EOL;
         echo '</th>';
         echo '<th class="data">';
-        $this->misc->printHelp($this->lang['stranalyze'], 'pg.admin.analyze');
+        $this->view->printHelp($this->lang['stranalyze'], 'pg.admin.analyze');
         echo '</th>';
 
         $table_hidden_inputs = ('table' === $type) ?
@@ -654,14 +654,14 @@ trait AdminTrait
         echo $recluster_help;
 
         echo '<th class="data">';
-        $this->misc->printHelp($this->lang['strreindex'], 'pg.index.reindex');
+        $this->view->printHelp($this->lang['strreindex'], 'pg.index.reindex');
         echo '</th>';
         echo '</tr>';
 
         // Vacuum
         echo '<tr class="row1">' . \PHP_EOL;
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
         echo '<p><input type="hidden" name="action" value="confirm_vacuum" />' . \PHP_EOL;
         echo $this->misc->form;
@@ -672,7 +672,7 @@ trait AdminTrait
 
         // Analyze
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="confirm_analyze" />' . \PHP_EOL;
         echo $this->misc->form;
         echo $table_hidden_inputs;
@@ -685,7 +685,7 @@ trait AdminTrait
 
         // Reindex
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        echo '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="confirm_reindex" />' . \PHP_EOL;
         echo $this->misc->form;
         echo $table_hidden_inputs;
@@ -779,13 +779,21 @@ trait AdminTrait
 
     abstract public function doDefault($msg = '');
 
-    abstract public function printTrail($trail = [], $do_print = true);
+    /**
+     * Prints a trail.
+     *
+     * @param array|string $trail    The trail
+     * @param bool         $do_print The do print
+     *
+     * @return string ( description_of_the_return_value )
+     */
+    abstract public function printTrail($trail = [], bool $do_print = true);
 
-    abstract public function printTitle($title, $help = null, $do_print = true);
+    abstract public function printTitle(string $title, ?string $help = null, bool $do_print = true);
 
     abstract public function printMsg($msg, $do_print = true);
 
-    abstract public function printTabs($tabs, $activetab, $do_print = true);
+    abstract public function printTabs(string $tabs, string $activetab, bool $do_print = true);
 
     abstract public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null);
 
@@ -794,12 +802,12 @@ trait AdminTrait
         if (!$data->hasRecluster()) {
             return ['', ''];
         }
-        $script         = $this->script;
-        $recluster_help = \sprintf('<th class="data">%s</th>', $this->misc->printHelp($this->lang['strclusterindex'], 'pg.index.cluster', false));
+        $script = $this->script;
+        $recluster_help = \sprintf('<th class="data">%s</th>', $this->view->printHelp($this->lang['strclusterindex'], 'pg.index.cluster', false));
 
-        $disabled      = '';
+        $disabled = '';
         $reclusterconf = '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        $reclusterconf .= '<form action="' . \SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        $reclusterconf .= '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         $reclusterconf .= $this->misc->form;
         $reclusterconf .= $table_hidden_inputs;
 
@@ -843,52 +851,52 @@ trait AdminTrait
         };
 
         $columns = [
-            'namespace'                       => [
+            'namespace' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => \SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
-                'vars'  => ['schema' => 'nspname'],
+                'url' => self::SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
+                'vars' => ['schema' => 'nspname'],
             ],
-            'relname'                         => [
+            'relname' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url'   => \SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
-                'vars'  => ['table' => 'relname', 'schema' => 'nspname'],
+                'url' => self::SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
+                'vars' => ['table' => 'relname', 'schema' => 'nspname'],
             ],
-            'autovacuum_enabled'              => [
+            'autovacuum_enabled' => [
                 'title' => $this->lang['strenabled'],
                 'field' => Decorator::callback($enlight, ['autovacuum_enabled', $defaults['autovacuum']]),
-                'type'  => 'verbatim',
+                'type' => 'verbatim',
             ],
-            'autovacuum_vacuum_threshold'     => [
+            'autovacuum_vacuum_threshold' => [
                 'title' => $this->lang['strvacuumbasethreshold'],
                 'field' => Decorator::callback($enlight, ['autovacuum_vacuum_threshold', $defaults['autovacuum_vacuum_threshold']]),
-                'type'  => 'verbatim',
+                'type' => 'verbatim',
             ],
-            'autovacuum_vacuum_scale_factor'  => [
+            'autovacuum_vacuum_scale_factor' => [
                 'title' => $this->lang['strvacuumscalefactor'],
                 'field' => Decorator::callback($enlight, ['autovacuum_vacuum_scale_factor', $defaults['autovacuum_vacuum_scale_factor']]),
-                'type'  => 'verbatim',
+                'type' => 'verbatim',
             ],
-            'autovacuum_analyze_threshold'    => [
+            'autovacuum_analyze_threshold' => [
                 'title' => $this->lang['stranalybasethreshold'],
                 'field' => Decorator::callback($enlight, ['autovacuum_analyze_threshold', $defaults['autovacuum_analyze_threshold']]),
-                'type'  => 'verbatim',
+                'type' => 'verbatim',
             ],
             'autovacuum_analyze_scale_factor' => [
                 'title' => $this->lang['stranalyzescalefactor'],
                 'field' => Decorator::callback($enlight, ['autovacuum_analyze_scale_factor', $defaults['autovacuum_analyze_scale_factor']]),
-                'type'  => 'verbatim',
+                'type' => 'verbatim',
             ],
-            'autovacuum_vacuum_cost_delay'    => [
+            'autovacuum_vacuum_cost_delay' => [
                 'title' => $this->lang['strvacuumcostdelay'],
                 'field' => Decorator::concat(Decorator::callback($enlight, ['autovacuum_vacuum_cost_delay', $defaults['autovacuum_vacuum_cost_delay']]), 'ms'),
-                'type'  => 'verbatim',
+                'type' => 'verbatim',
             ],
-            'autovacuum_vacuum_cost_limit'    => [
+            'autovacuum_vacuum_cost_limit' => [
                 'title' => $this->lang['strvacuumcostlimit'],
                 'field' => Decorator::callback($enlight, ['autovacuum_vacuum_cost_limit', $defaults['autovacuum_vacuum_cost_limit']]),
-                'type'  => 'verbatim',
+                'type' => 'verbatim',
             ],
         ];
 
@@ -896,30 +904,30 @@ trait AdminTrait
         $columns['actions'] = ['title' => $this->lang['stractions']];
 
         $actions = [
-            'edit'   => [
+            'edit' => [
                 'content' => $this->lang['stredit'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => $script,
+                        'url' => $script,
                         'urlvars' => [
                             'subject' => $type,
-                            'action'  => 'confeditautovac',
-                            'schema'  => Decorator::field('nspname'),
-                            'table'   => Decorator::field('relname'),
+                            'action' => 'confeditautovac',
+                            'schema' => Decorator::field('nspname'),
+                            'table' => Decorator::field('relname'),
                         ],
                     ],
                 ],
             ],
             'delete' => [
                 'content' => $this->lang['strdelete'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => $script,
+                        'url' => $script,
                         'urlvars' => [
                             'subject' => $type,
-                            'action'  => 'confdelautovac',
-                            'schema'  => Decorator::field('nspname'),
-                            'table'   => Decorator::field('relname'),
+                            'action' => 'confdelautovac',
+                            'schema' => Decorator::field('nspname'),
+                            'table' => Decorator::field('relname'),
                         ],
                     ],
                 ],
@@ -939,7 +947,7 @@ trait AdminTrait
         if (('table' === $type) && (0 === $autovac->recordCount())) {
             echo '<br />';
 
-            echo '<a href="' . \SUBFOLDER . "/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";
+            echo '<a href="' . self::SUBFOLDER . "/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";
             echo \htmlspecialchars($_REQUEST['table']);
             echo "\">{$this->lang['straddvacuumtable']}</a>";
         }
