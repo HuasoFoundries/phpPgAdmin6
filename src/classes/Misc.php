@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.0.1
+ * PHPPgAdmin 6.0.0
  */
 
 namespace PHPPgAdmin;
@@ -88,10 +88,10 @@ class Misc
 
         $this->appLangFiles = $container->get('appLangFiles');
 
-        $this->appName          = $container->get('settings')['appName'];
-        $this->appVersion       = $container->get('settings')['appVersion'];
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
         $this->postgresqlMinVer = $container->get('settings')['postgresqlMinVer'];
-        $this->phpMinVer        = $container->get('settings')['phpMinVer'];
+        $this->phpMinVer = $container->get('settings')['phpMinVer'];
 
         $base_version = $container->get('settings')['base_version'];
 
@@ -174,7 +174,7 @@ class Misc
         $request_server = $this->serverToSha();
 
         if (1 === \count($this->conf['servers'])) {
-            $info             = $this->conf['servers'][0];
+            $info = $this->conf['servers'][0];
             $this->_server_id = \sha1($info['host'] . ':' . $info['port'] . ':' . $info['sslmode']);
         } elseif (null !== $request_server) {
             $this->_server_id = $request_server;
@@ -281,7 +281,7 @@ class Misc
      *
      * @return null|\PHPPgAdmin\Database\ADOdbBase the database accessor instance
      */
-    public function getDatabaseAccessor($database = '', $server_id = null):  ? \PHPPgAdmin\Database\ADOdbBase
+    public function getDatabaseAccessor($database = '', $server_id = null): ?\PHPPgAdmin\Database\ADOdbBase
     {
         $lang = $this->lang;
 
@@ -332,7 +332,7 @@ class Misc
             // Create a database wrapper class for easy manipulation of the
             // connection.
 
-            $this->_data           = new $_type($_connection->conn, $this->container, $server_info);
+            $this->_data = new $_type($_connection->conn, $this->container, $server_info);
             $this->_data->platform = $_connection->platform;
 
             //$this->_data->getHelpPages();
@@ -370,7 +370,7 @@ class Misc
             if (null !== $server_id) {
                 $this->_server_id = $server_id;
             }
-            $server_info     = $this->getServerInfo($this->_server_id);
+            $server_info = $this->getServerInfo($this->_server_id);
             $database_to_use = $this->getDatabase($database);
 
             // Perform extra security checks if this config option is set
@@ -378,9 +378,9 @@ class Misc
                 // Disallowed logins if extra_login_security is enabled.
                 // These must be lowercase.
                 $bad_usernames = [
-                    'pgsql'         => 'pgsql',
-                    'postgres'      => 'postgres',
-                    'root'          => 'root',
+                    'pgsql' => 'pgsql',
+                    'postgres' => 'postgres',
+                    'root' => 'root',
                     'administrator' => 'administrator',
                 ];
 
@@ -442,7 +442,7 @@ class Misc
         // Otherwise, look for it in the conf file
         foreach ($this->conf['servers'] as $idx => $info) {
             $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
-            $server_sha    = \sha1($server_string);
+            $server_sha = \sha1($server_string);
 
             if ($this->_server_id === $server_string ||
                 $this->_server_id === $server_sha
@@ -483,7 +483,7 @@ class Misc
      * @param mixed       $value     the new value, or null to unset the parameter
      * @param null|string $server_id the server identifier, or null for current server
      */
-    public function setServerInfo($key, $value, $server_id = null) : void
+    public function setServerInfo($key, $value, $server_id = null): void
     {
         if (null === $server_id) {
             $server_id = $this->container->requestobj->getParam('server');
@@ -594,9 +594,9 @@ class Misc
     {
         $href = [];
 
-        $server   = $this->container->server || isset($_REQUEST['server']) ? $_REQUEST['server'] : null;
+        $server = $this->container->server || isset($_REQUEST['server']) ? $_REQUEST['server'] : null;
         $database = $this->container->database || isset($_REQUEST['database']) ? $_REQUEST['database'] : null;
-        $schema   = $this->container->schema || isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null;
+        $schema = $this->container->schema || isset($_REQUEST['schema']) ? $_REQUEST['schema'] : null;
 
         if ($server && 'server' !== $exclude_from) {
             $href[] = 'server=' . \urlencode($server);
@@ -665,7 +665,7 @@ class Misc
             return false;
         }
 
-        $nSize   = (float) $a_IniParts[1];
+        $nSize = (float) $a_IniParts[1];
         $strUnit = \mb_strtolower($a_IniParts[2]);
 
         switch ($strUnit) {
@@ -709,7 +709,7 @@ class Misc
      *
      * @return null|string The escaped string
      */
-    public function escapeShellArg($str):  ? string
+    public function escapeShellArg($str): ?string
     {
         //$data = $this->getDatabaseAccessor();
         $lang = $this->lang;
@@ -754,18 +754,18 @@ class Misc
      *
      * @param string $script the SQL script to save
      */
-    public function saveScriptHistory($script) : void
+    public function saveScriptHistory($script): void
     {
         [$usec, $sec] = \explode(' ', \microtime());
-        $time         = ((float) $usec + (float) $sec);
+        $time = ((float) $usec + (float) $sec);
 
-        $server   = $this->container->server ? $this->container->server : $_REQUEST['server'];
+        $server = $this->container->server ? $this->container->server : $_REQUEST['server'];
         $database = $this->container->database ? $this->container->database : $_REQUEST['database'];
 
         $_SESSION['history'][$server][$database]["{$time}"] = [
-            'query'    => $script,
+            'query' => $script,
             'paginate' => !isset($_REQUEST['paginate']) ? 'f' : 't',
-            'queryid'  => $time,
+            'queryid' => $time,
         ];
     }
 }

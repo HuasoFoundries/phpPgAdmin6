@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PHPPgAdmin 6.0.1
+ * PHPPgAdmin 6.0.0
  */
 
 use Ergebnis\PhpCsFixer\Config;

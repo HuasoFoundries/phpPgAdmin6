@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.0.1
+ * PHPPgAdmin 6.0.0
  */
 
 namespace PHPPgAdmin\Middleware;
@@ -19,17 +19,17 @@ class PopulateRequestResponse extends Middleware
         \Slim\Http\Response $response,
         $next
     ) {
-        $container                = $this->container;
-        $subfolder                = $this->getSubfolder();
-        $container['requestobj']  = $request;
+        $container = $this->container;
+        $subfolder = $this->getSubfolder();
+        $container['requestobj'] = $request;
         $container['responseobj'] = $response;
-        $route                    = $request->getAttribute('route');
+        $route = $request->getAttribute('route');
 
-        $container['server']   = $request->getParam('server');
+        $container['server'] = $request->getParam('server');
         $container['database'] = $request->getParam('database');
-        $container['schema']   = $request->getParam('schema');
-        $misc                  = $container->get('misc');
-        $view                  = $container->get('view');
+        $container['schema'] = $request->getParam('schema');
+        $misc = $container->get('misc');
+        $view = $container->get('view');
 
         $misc->setHREF();
         $view->setForm();

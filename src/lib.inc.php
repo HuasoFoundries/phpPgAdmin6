@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.0.1
+ * PHPPgAdmin 6.0.0
  */
 
 \defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
