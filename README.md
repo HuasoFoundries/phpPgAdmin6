@@ -32,6 +32,8 @@ Other enhancements are in progress and would be a nice to have:
 
 (If you're using PHP 5.6+, you can still try versions RC2 and below, but you should really, realy upgrade).
 
+---
+
 ## Installation
 
 ### Using Composer (recommended)
@@ -41,7 +43,7 @@ Other enhancements are in progress and would be a nice to have:
 Install with composer running the following command in your shell (replacing <FOLDER> whith your desired folder name)
 
 ```sh
-composer create-project huasofoundries/phppgadmin6 <FOLDER> v6.0.*@rc --no-dev --prefer-dist
+composer create-project huasofoundries/phppgadmin6 <FOLDER> v6.0.* --no-dev --prefer-dist
 ```
 
 Alternatively, clone this repo and run (inside then folder where the project was cloned)
@@ -56,6 +58,12 @@ You can set the config options either in a `config.inc.php` (refer to [config.in
 AND/OR a [config.yml](config.yml). The use of the latter is complely optional. Keep in mind the config entries are merged giving
 precedence to the ones in the YAML file.
 
+### Server Blocks
+
+Configuration has a `servers` entry whose details are in their on Wiki section: "[Config: Servers](https://github.com/HuasoFoundries/phpPgAdmin6/wiki/Config:-servers)"
+
+---
+
 ## Rewrite Rules
 
 As this project is built over [Slim Framework 3](https://www.slimframework.com/), **you'll need some rewrite rules for nice-urls to work**.
@@ -67,35 +75,28 @@ Please refer to Slim Framework 3 instructions on rewrite rules config for:
 -   [Lighttpd](http://www.slimframework.com/docs/v3/start/web-servers.html#lighttpd)
 -   [IIS](http://www.slimframework.com/docs/v3/start/web-servers.html#iis)
 -   [HHVM](http://www.slimframework.com/docs/v3/start/web-servers.html#hiphop-virtual-machine)
--   [PHP Built-in dev server]http://www.slimframework.com/docs/v3/start/web-servers.html#php-built-in-server
+-   [PHP Built-in dev server](http://www.slimframework.com/docs/v3/start/web-servers.html#php-built-in-server)
 
 ## Running inside a subfolder
 
 If you're planning to run phpPgAdmin6 under a subfolder, make sure you set it **explicitly** in the config file(s). I gave up trying to
 figure out the subfolder automatically and it's outside of this project's scope.
 
-This is:
-
--   In `config.inc.php`
+To set it in `config.inc.php`
 
 ```
-$conf['subfolder']='/phppga_subfolder';
-```
-
-OR
-
--   In `config.yml`
-
-````
 $conf = [
   'subfolder' => '/phppga_subfolder',
   'other config...' => 'sure'
 ];
+```
+
+To set it in `config.yml`
 
 ```yaml
 default_lang: auto
 subfolder: '/phppha_subfolder'
-````
+```
 
 Remember that values set on the `yml` config take precedence.
 

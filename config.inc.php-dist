@@ -27,6 +27,12 @@ $conf = [
 	 */
     'debugmode'     => false,
 
+    /**
+     * Don't touch this value. It's used to inform the config structure has a breaking change
+     * 
+     */
+    'version'=> 61
+
 ];
 
 $conf['register_debuggers'] = function () {
@@ -78,6 +84,11 @@ $conf['register_debuggers'] = function () {
 // indexed from zero upwards.
 $server_index = 0;
 
+/**
+ * $conf['servers'] is an array that holds (at least) one server block.
+ * @see https://github.com/HuasoFoundries/phpPgAdmin6/wiki/Config:-servers
+ * 
+ */
 $conf['servers'][$server_index] = [
     // Display name for the server on the login screen
     'desc'            => 'PostgreSQL',
@@ -102,61 +113,9 @@ $conf['servers'][$server_index] = [
     // Specify the path to the database dump utilities for this server.
     // You can set these to '' if no dumper is available.
     'pg_dump_path'    => '/usr/bin/pg_dump',
-    'pg_dumpall_path' => '/usr/bin/pg_dumpall',
+    'pg_dumpall_path' => '/usr/bin/pg_dumpall'
 ];
 
-// Example for a second server (PostgreSQL for Windows)
-/*
-$server_index++;
-$conf['servers'][$server_index][
-'desc'=> 'Test Server',
-'host'=> '127.0.0.1',
-'port'=> 5432,
-'sslmode'=> 'allow',
-'defaultdb'=> 'template1',
-'pg_dump_path'=> 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dump.exe',
-'pg_dumpall_path'=> 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dumpall.exe'
-];
- */
-
-/* Groups definition */
-/* Groups allow administrators to logicaly group servers together under
- * group nodes in the left browser tree
- *
- * The group '0' description
- */
-//$conf['srv_groups'][0]['desc'] = 'group one';
-
-/* Add here servers indexes belonging to the group '0' seperated by comma */
-//$conf['srv_groups'][0]['servers'] = '0,1,2';
-
-/* A server can belong to multi groups. Here server 1 is referenced in both
- * 'group one' and 'group two'*/
-//$conf['srv_groups'][1]['desc'] = 'group two';
-//$conf['srv_groups'][1]['servers'] = '3,1';
-
-/* A group can be nested in one or more existing groups using the 'parents'
- * parameter. Here the group 'group three' contains only one server and will
- * appear as a subgroup in both 'group one' and 'group two':
- */
-//$conf['srv_groups'][2]['desc'] = 'group three';
-//$conf['srv_groups'][2]['servers'] = '4';
-//$conf['srv_groups'][2]['parents'] = '0,1';
-
-/* Warning: Only groups with no parents appears at the root of the tree. */
-
-/* You can apply specific theme depending on servers, users and databases
- * The priority order is :
- *   * the theme defined for a server
- *   * the theme defined for a database apply over the server one
- *   * the theme defined for a user apply over the database one
- */
-/* Example for servers */
-//$conf['servers'][0]['theme']['default'] = 'default';
-/* Example for users */
-//$conf['servers'][0]['theme']['user']['specific_user'] = 'default';
-/* Example for databases */
-//$conf['servers'][0]['theme']['db']['specific_db'] = 'default';
 
 // Default language. E.g.: 'english', 'polish', etc.  See lang/ directory
 // for all possibilities. If you specify 'auto' (the default) it will use
@@ -230,12 +189,29 @@ $conf['ajax_refresh'] = 3;
 // If there's a config.yml in the root folder, parse it and merge its contents with $conf array
 // see config.example.yml
 $yamlConfigPath = implode(DIRECTORY_SEPARATOR, [__DIR__, 'config.yml']);
-if (is_readable($yamlConfigPath) && class_exists('Symfony\Component\Yaml\Yaml')) {
+if (\is_readable($yamlConfigPath) && \class_exists('Symfony\Component\Yaml\Yaml')) {
     try {
         $yamlConfig = Symfony\Component\Yaml\Yaml::parseFile($yamlConfigPath);
-        $conf       = array_merge($conf, $yamlConfig);
+        // Servers and srv_groups must be merged beforehand
+        $servers = $conf['servers'] ?? [];
+        foreach ($yamlConfig['servers'] ?? [] as $index => $srv) {
+            $servers[] = $srv;
+        }
+        $srv_groups = $conf['srv_groups'] ?? [];
+        foreach ($yamlConfig['srv_groups'] ?? [] as $index => $srv_group) {
+            $srv_groups[] = $srv;
+        }
+
+        $yamlConfig['srv_groups'] = array_merge([
+            $conf['srv_groups'] ?? [],
+            $yamlConfig['srv_groups'] ?? [],
+        ]);
+        $conf = \array_merge($conf, $yamlConfig);
+
+        $conf['servers']    = $servers ?? [];
+        $conf['srv_groups'] = $srv_groups ?? [];
     } catch (\Exception $e) {
         die($e->getMessage());
-        error_log($e->getTraceAsString());
+        \error_log($e->getTraceAsString());
     }
 }

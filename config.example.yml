@@ -1,4 +1,4 @@
-# uncomment to turn debug mode on/off
+# turns debug mode on/off
 debugmode: false
 # by default, display tables size.
 # displaying schema sizes may hit performance
@@ -7,7 +7,7 @@ display_sizes:
     schemas: false
 servers:
   # Define a server
-  - desc: "Server on remote host"
+  - desc: 'Server on remote host'
     host: server.host1.com
     port: 5432
     sslmode: prefer
@@ -19,7 +19,7 @@ servers:
     hiddendbs:
       - rdsadmin
   # Define a second server
-  - desc: "Server on localhost"
+  - desc: 'Server on localhost'
     host: localhost
     pg_dump_path: /usr/bin/pg_dump
     pg_dumpall_path: /usr/bin/pg_dumpall
@@ -32,7 +32,7 @@ servers:
       - postgres
 
 default_lang: auto
-autocomplete: "default on"
+autocomplete: 'default on'
 extra_login_security: true
 owned_only: true
 show_comments: true
@@ -45,6 +45,6 @@ show_oids: false
 max_rows: 30
 max_chars: 50
 use_xhtml_strict: false
-help_base: "http://www.postgresql.org/docs/%s/interactive/"
+help_base: 'http://www.postgresql.org/docs/%s/interactive/'
 ajax_refresh: 3
-version: 60
+version: 61

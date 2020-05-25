@@ -32,8 +32,8 @@ $app->post('/redirect/server', function (
     $body = $response->getBody();
     $misc = $this->misc;
 
-    $loginShared = $request->getParsedBodyParam('loginShared');
-    $loginServer = $request->getParsedBodyParam('loginServer');
+    $loginShared   = $request->getParsedBodyParam('loginShared');
+    $loginServer   = $request->getParsedBodyParam('loginServer');
     $loginUsername = $request->getParsedBodyParam('loginUsername');
     $loginPassword = $request->getParsedBodyParam('loginPassword_' . \md5($loginServer));
 
@@ -83,7 +83,7 @@ $app->get('/redirect[/{subject}]', function (
     /* @scrutinizer ignore-unused */
     array $args
 ) {
-    $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
+    $subject        = (isset($args['subject'])) ? $args['subject'] : 'root';
     $destinationurl = $this->utils->getDestinationWithLastTab($subject);
 
     return $response->withStatus(302)->withHeader('Location', $destinationurl);
@@ -116,7 +116,7 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
 
-    $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+    $className  = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     $controller = new $className($this);
 
     return $controller->render();
@@ -166,7 +166,7 @@ $app->get('/', function (
     return $this->view->maybeRenderIframes($response, $subject, $query_string);
 });
 
-$app->get('[/{path:.*}]', static function (
+$app->get('[/{path:.*}]', function (
     /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
     /* @scrutinizer ignore-unused */
@@ -174,7 +174,7 @@ $app->get('[/{path:.*}]', static function (
     /* @scrutinizer ignore-unused */
     array $args
 ) {
-    $filepath = \dirname(__DIR__) . '/' . $args['path'];
+    $filepath     = \dirname(__DIR__) . '/' . $args['path'];
     $query_string = $request->getUri()->getQuery();
 
     //d($this->subfolder, $args, $query_string, $filepath);

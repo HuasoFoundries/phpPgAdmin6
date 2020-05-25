@@ -65,55 +65,57 @@ class ContainerUtils
     public function __construct()
     {
         $composerinfo = \json_decode(\file_get_contents(BASE_PATH . '/composer.json'));
-        $appVersion = $composerinfo->extra->version;
+        $appVersion   = $composerinfo->extra->version;
 
         $phpMinVer = (\str_replace(['<', '>', '='], '', $composerinfo->require->php));
         //$this->prtrace($appVersion);
         //$this->dump($composerinfo);
         $settings = [
             'determineRouteBeforeAppMiddleware' => true,
-            'base_path' => self::BASE_PATH,
-            'debug' => self::DEBUGMODE,
+            'base_path'                         => self::BASE_PATH,
+            'subfolder'                         => self::SUBFOLDER,
+            'debug'                             => self::DEBUGMODE,
 
             // Configuration file version.  If this is greater than that in config.inc.php, then
             // the app will refuse to run.  This and $conf['version'] should be incremented whenever
             // backwards incompatible changes are made to config.inc.php-dist.
-            'base_version' => 60,
+            'base_version'                      => 61,
             // Application version
-            'appVersion' => 'v' . $appVersion,
+            'appVersion'                        => 'v' . $appVersion,
             // Application name
-            'appName' => 'phpPgAdmin6',
+            'appName'                           => 'phpPgAdmin6',
 
             // PostgreSQL and PHP minimum version
-            'postgresqlMinVer' => '9.3',
-            'phpMinVer' => $phpMinVer,
-            'displayErrorDetails' => self::DEBUGMODE,
-            'addContentLengthHeader' => false,
+            'postgresqlMinVer'                  => '9.3',
+            'phpMinVer'                         => $phpMinVer,
+            'displayErrorDetails'               => self::DEBUGMODE,
+            'addContentLengthHeader'            => false,
         ];
 
         if (!self::DEBUGMODE && !IN_TEST) {
             $settings['routerCacheFile'] = self::BASE_PATH . '/temp/route.cache.php';
         }
         $config = [
-            'msg' => '',
+            'msg'       => '',
             'appThemes' => [
-                'default' => 'Default',
+                'default'    => 'Default',
                 'cappuccino' => 'Cappuccino',
-                'gotar' => 'Blue/Green',
-                'bootstrap' => 'Bootstrap3',
+                'gotar'      => 'Blue/Green',
+                'bootstrap'  => 'Bootstrap3',
             ],
-            'settings' => $settings,
+            'settings'  => $settings,
         ];
 
         $this->_app = new App($config);
 
         // Fetch DI Container
-        $container = $this->_app->getContainer();
-        $container['utils'] = $this;
-        $container['version'] = 'v' . $appVersion;
-        $container['errors'] = [];
-        $container['requestobj'] = $container['request'];
+        $container                = $this->_app->getContainer();
+        $container['utils']       = $this;
+        $container['version']     = 'v' . $appVersion;
+        $container['errors']      = [];
+        $container['requestobj']  = $container['request'];
         $container['responseobj'] = $container['response'];
+
         $this->container = $container;
     }
 
@@ -170,6 +172,47 @@ class ContainerUtils
         return [$_instance->container, self::$_instance->_app];
     }
 
+    private function setConf($conf)
+    {
+        $container       = self::getContainerInstance();
+        $conf['plugins'] = [];
+
+        $container['conf'] = static function ($c) use ($conf) {
+            $display_sizes = $conf['display_sizes'];
+
+            if (\is_array($display_sizes)) {
+                $conf['display_sizes'] = [
+                    'schemas' => (bool) isset($display_sizes['schemas']) && true === $display_sizes['schemas'],
+                    'tables'  => (bool) isset($display_sizes['tables']) && true === $display_sizes['tables'],
+                ];
+            } else {
+                $conf['display_sizes'] = [
+                    'schemas' => (bool) $display_sizes,
+                    'tables'  => (bool) $display_sizes,
+                ];
+            }
+
+            if (!isset($conf['theme'])) {
+                $conf['theme'] = 'default';
+            }
+
+            foreach ($conf['servers'] as &$server) {
+                if (!isset($server['port'])) {
+                    $server['port'] = 5432;
+                }
+
+                if (!isset($server['sslmode'])) {
+                    $server['sslmode'] = 'unspecified';
+                }
+            }
+
+            return $conf;
+        };
+        $container->subfolder = self::SUBFOLDER;
+
+        return $this;
+    }
+
     public function maybeRenderIframes($response, $subject, $query_string)
     {
         $c = self::getContainerInstance();
@@ -177,14 +220,14 @@ class ContainerUtils
         $in_test = $c->view->offsetGet('in_test');
 
         if ('1' === $in_test) {
-            $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+            $className  = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
             $controller = new $className($c);
 
             return $controller->render();
         }
 
         $viewVars = [
-            'url' => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
+            'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
             'headertemplate' => 'header.twig',
         ];
 
@@ -305,10 +348,10 @@ class ContainerUtils
                     $urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
                 }
                 $_REQUEST = \array_merge($_REQUEST, $urlvars);
-                $_GET = \array_merge($_GET, $urlvars);
+                $_GET     = \array_merge($_GET, $urlvars);
             }
 
-            $actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
+            $actionurl      = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
             $destinationurl = $actionurl->value($_GET);
         }
         $destinationurl = \str_replace('views/?', "views/{$subject}?", $destinationurl);
@@ -325,53 +368,12 @@ class ContainerUtils
      */
     public function addError(string $errormsg): ContainerInterface
     {
-        $errors = $this->container->get('errors');
+        //dump($errormsg);
+        $errors   = $this->container->get('errors');
         $errors[] = $errormsg;
         $this->container->offsetSet('errors', $errors);
 
         return $this->container;
-    }
-
-    private function setConf($conf)
-    {
-        $container = self::getContainerInstance();
-        $conf['plugins'] = [];
-
-        $container['conf'] = static function ($c) use ($conf) {
-            $display_sizes = $conf['display_sizes'];
-
-            if (\is_array($display_sizes)) {
-                $conf['display_sizes'] = [
-                    'schemas' => (bool) isset($display_sizes['schemas']) && true === $display_sizes['schemas'],
-                    'tables' => (bool) isset($display_sizes['tables']) && true === $display_sizes['tables'],
-                ];
-            } else {
-                $conf['display_sizes'] = [
-                    'schemas' => (bool) $display_sizes,
-                    'tables' => (bool) $display_sizes,
-                ];
-            }
-
-            if (!isset($conf['theme'])) {
-                $conf['theme'] = 'default';
-            }
-
-            foreach ($conf['servers'] as &$server) {
-                if (!isset($server['port'])) {
-                    $server['port'] = 5432;
-                }
-
-                if (!isset($server['sslmode'])) {
-                    $server['sslmode'] = 'unspecified';
-                }
-            }
-
-            return $conf;
-        };
-
-        $container->subfolder = self::SUBFOLDER;
-
-        return $this;
     }
 
     /**
@@ -389,9 +391,9 @@ class ContainerUtils
         $container['view'] = static function ($c) {
             $misc = $c->misc;
             $view = new ViewManager(BASE_PATH . '/assets/templates', [
-                'cache' => BASE_PATH . '/temp/twigcache',
+                'cache'       => BASE_PATH . '/temp/twigcache',
                 'auto_reload' => $c->get('settings')['debug'],
-                'debug' => $c->get('settings')['debug'],
+                'debug'       => $c->get('settings')['debug'],
             ], $c);
 
             $misc->setView($view);
@@ -409,7 +411,7 @@ class ContainerUtils
      */
     private function setMisc()
     {
-        $container = self::getContainerInstance();
+        $container         = self::getContainerInstance();
         $container['misc'] = static function ($c) {
             $misc = new \PHPPgAdmin\Misc($c);
 
@@ -431,7 +433,7 @@ class ContainerUtils
 
     private function setExtra()
     {
-        $container = self::getContainerInstance();
+        $container          = self::getContainerInstance();
         $container['flash'] = static function () {
             return new \Slim\Flash\Messages();
         };
