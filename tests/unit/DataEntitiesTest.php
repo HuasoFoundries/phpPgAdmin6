@@ -1,9 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin 6.0.0
  */
 
+/**
+ * PHPPgAdmin v6.0.0-RC9.
+ *
+ * @internal
+ * @coversNothing
+ */
 class DataEntitiesTest extends \Codeception\Test\Unit
 {
     protected static $BASE_PATH;
@@ -57,7 +63,7 @@ class DataEntitiesTest extends \Codeception\Test\Unit
 
     protected function _before(): void
     {
-        $Helper          = $this->getModule('\Helper\Unit');
+        $Helper = $this->getModule('\Helper\Unit');
         $this->container = $Helper::getContainer();
         self::$BASE_PATH = $Helper::BASE_PATH;
         $this->container->get('misc')->setNoDBConnection(true);

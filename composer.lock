@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6fd894c8c404893fbc729fb3c928850",
+    "content-hash": "a9c8bd6594d2cc3e077c341395bdd5c2",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -5193,7 +5193,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.1",

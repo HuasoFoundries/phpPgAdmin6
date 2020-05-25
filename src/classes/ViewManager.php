@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin 6.0.0
  */
 
 namespace PHPPgAdmin;
@@ -92,10 +92,10 @@ class ViewManager extends \Slim\Views\Twig
         $this->conf = $c->get('conf');
         $this->misc = $c->get('misc');
         parent::__construct($path, $settings);
-        $this->container          = $c;
-        $environment              = $c->get('environment');
+        $this->container = $c;
+        $environment = $c->get('environment');
         $base_script_trailing_str = \mb_substr($environment['SCRIPT_NAME'], 1);
-        $request_basepath         = $c['request']->getUri()->getBasePath();
+        $request_basepath = $c['request']->getUri()->getBasePath();
         // Instantiate and add Slim specific extension
         $basePath = \rtrim(\str_ireplace($base_script_trailing_str, '', $request_basepath), '/');
 
@@ -115,7 +115,7 @@ class ViewManager extends \Slim\Views\Twig
 
         if (null !== $_theme && isset($_SESSION)) {
             /* save the selected theme in cookie for a year */
-            @\setcookie('ppaTheme', $_theme, \time() + 31536000, '/');
+            \setcookie('ppaTheme', $_theme, \time() + 31536000, '/');
             $_SESSION['ppaTheme'] = $_theme;
             $this->misc->setConf('theme', $_theme);
         }
@@ -128,14 +128,14 @@ class ViewManager extends \Slim\Views\Twig
         $in_test = $this->offsetGet('in_test');
 
         if ('1' === $in_test) {
-            $className  = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+            $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
             $controller = new $className($c);
 
             return $controller->render();
         }
 
         $viewVars = [
-            'url'            => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
+            'url' => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
             'headertemplate' => 'header.twig',
         ];
 
@@ -270,8 +270,8 @@ class ViewManager extends \Slim\Views\Twig
             return '';
         }
 
-        $theme        = $this->conf['theme'];
-        $path         = 'assets/images/themes';
+        $theme = $this->conf['theme'];
+        $path = 'assets/images/themes';
         $default_icon = \sprintf('%s/%s/default/DisconnectedServer.png', self::SUBFOLDER, $path);
 
         if (\is_readable(\sprintf('%s/%s/%s/%s.png', self::BASE_PATH, $path, $theme, $icon))) {

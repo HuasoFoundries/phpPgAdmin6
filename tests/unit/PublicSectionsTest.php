@@ -1,9 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9
+ * PHPPgAdmin 6.0.0
  */
 
+/**
+ * PHPPgAdmin v6.0.0-RC9.
+ *
+ * @internal
+ * @coversNothing
+ */
 class PublicSectionsTest extends \Codeception\Test\Unit
 {
     protected static $BASE_PATH;
