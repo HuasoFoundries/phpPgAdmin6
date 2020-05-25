@@ -26,7 +26,9 @@
 					query_string:"{{query_string}}",
 					strconfdropcred:"{{strconfdropcred}}",
 				};
-
+			if (stateObj.reload !== "none" && window.jsTree) {
+  			window.jsTree.jstree('refresh')
+			}
 		</script>
 
 

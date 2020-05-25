@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -37,8 +37,6 @@ class InfoController extends BaseController
      * List all the information on the table.
      *
      * @param string $msg
-     *
-     * @return void
      */
     public function doDefault($msg = ''): void
     {

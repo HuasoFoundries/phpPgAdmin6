@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -17,12 +17,12 @@ trait FunctionTrait
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If truthy, will return functions of type trigger
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFunctions($all = false, $type = null)
     {
         if ($all) {
-            $where    = 'pg_catalog.pg_function_is_visible(p.oid)';
+            $where = 'pg_catalog.pg_function_is_visible(p.oid)';
             $distinct = 'DISTINCT ON (p.proname)';
 
             if ($type) {
@@ -31,7 +31,7 @@ trait FunctionTrait
         } else {
             $c_schema = $this->_schema;
             $this->clean($c_schema);
-            $where    = "n.nspname = '{$c_schema}'";
+            $where = "n.nspname = '{$c_schema}'";
             $distinct = '';
         }
 
@@ -177,7 +177,7 @@ trait FunctionTrait
         $this->fieldClean($newname);
         /* $funcname is escaped in createFunction */
         if ($funcname !== $newname) {
-            $sql    = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) RENAME TO \"{$newname}\"";
+            $sql = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) RENAME TO \"{$newname}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -194,7 +194,7 @@ trait FunctionTrait
             $this->fieldClean($newown);
 
             if ($funcown !== $newown) {
-                $sql    = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) OWNER TO \"{$newown}\"";
+                $sql = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) OWNER TO \"{$newown}\"";
                 $status = $this->execute($sql);
 
                 if (0 !== $status) {
@@ -210,7 +210,7 @@ trait FunctionTrait
             $this->fieldClean($newschema);
             /* $funcschema is escaped in createFunction */
             if ($funcschema !== $newschema) {
-                $sql    = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) SET SCHEMA \"{$newschema}\"";
+                $sql = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) SET SCHEMA \"{$newschema}\"";
                 $status = $this->execute($sql);
 
                 if (0 !== $status) {
@@ -234,7 +234,7 @@ trait FunctionTrait
      * @param string $language   The language the function is written for
      * @param array  $flags      An array of optional flags
      * @param bool   $setof      True if it returns a set, false otherwise
-     * @param string $cost       cost the planner should use in the function  execution step
+     * @param float  $cost       cost the planner should use in the function  execution step
      * @param int    $rows       number of rows planner should estimate will be returned
      * @param string $comment    Comment for the function
      * @param bool   $replace    (optional) True if OR REPLACE, false for
@@ -342,12 +342,12 @@ trait FunctionTrait
      * @param int  $function_oid The OID of the function to drop
      * @param bool $cascade      True to cascade drop, false to restrict
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropFunction($function_oid, $cascade)
     {
         // Function comes in with $object as function OID
-        $fn       = $this->getFunction($function_oid);
+        $fn = $this->getFunction($function_oid);
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($fn->fields['proname']);
@@ -366,7 +366,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -405,7 +405,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFunctionDef($function_oid)
     {

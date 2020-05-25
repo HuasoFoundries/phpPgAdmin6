@@ -2,66 +2,81 @@
 // Allows to load yaml config. Matching keys will override config defined in this file
 use Symfony\Component\Yaml\Yaml;
 
+$conf = [
+    /**
+     * Change this parameter ONLY if you mean to serve phpPgAdmin from a subfolder
+     * e.g for `https://www.server.com/phppga`  this parameter should be `/phppga`
+     * (leading slash, no trailing slash)
+     * 
+     * If you mean to serve phpPgAdmin6 in the document root (e.g `https://www.server.com`)
+     * this parameter must be an empty string
+     */
+    'subfolder'     => '',
+    
+	/**
+	 * enable this to calculate schema and table sizes. This will have a performance impact
+	 * e.g. $conf['display_sizes'] = true
+	 *
+	 * you can also enable it specifically for tables and or schemas:
+	 * $conf['display_sizes'] = ['schemas'=>false,'tables'=>true];
+	 */
+    'display_sizes' => false,
 
+	/**
+	 * Set to true if you want to enable debugging output
+	 */
+    'debugmode'     => false,
 
+];
 
-$conf['debugmode'] = false;
-
-$conf['register_debuggers']=function() {
-	// If debugmode is active, and $conf['register_debuggers']
-	// is a function (or a callable), it will be invoked before 
-	// instancing the app's container
-	define('THIS_WAS_PRODUCTION',false);
-	// e.g. register Whoops as exception handler
-	if (THIS_WAS_PRODUCTION
-	   && class_exists('Whoops\Run')) {
+$conf['register_debuggers'] = function () {
+    // If debugmode is active, and $conf['register_debuggers']
+    // is a function (or a callable), it will be invoked before
+    // instancing the app's container
+    define('THIS_WAS_PRODUCTION', false);
+    // e.g. register Whoops as exception handler
+    if (THIS_WAS_PRODUCTION
+        && class_exists('Whoops\Run')) {
         $whoops = new Whoops\Run();
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
         $whoops->register();
     }
 
-  	// Using PHP-Console
-  	// PHP_CONSOLE doesn't work on PHP 7.4 yet
-	// https://github.com/barbushin/php-console
-	// (Only in Chrome)
-  if (THIS_WAS_PRODUCTION && 
-    version_compare(PHP_VERSION, 7.4, '<') && 
-    class_exists('PhpConsole\Handler')) {
-	    $phpConsoleHandler = \PhpConsole\Handler::getInstance();
-	 	$connector=$phpConsoleHandler->getConnector();
-	 	$connector->setPassword('yohoho123', true);
-	 	$connector->enableSslOnlyMode();
-		$phpConsoleHandler->start(); 
-	}
+    // Using PHP-Console
+    // PHP_CONSOLE doesn't work on PHP 7.4 yet
+    // https://github.com/barbushin/php-console
+    // (Only in Chrome)
+    if (THIS_WAS_PRODUCTION &&
+        version_compare(PHP_VERSION, 7.4, '<') &&
+        class_exists('PhpConsole\Handler')) {
+        $phpConsoleHandler = \PhpConsole\Handler::getInstance();
+        $connector         = $phpConsoleHandler->getConnector();
+        $connector->setPassword('yohoho123', true);
+        $connector->enableSslOnlyMode();
+        $phpConsoleHandler->start();
+    }
 
-	// Example with Kint
-	if (THIS_WAS_PRODUCTION && 
-		class_exists('Kint')) {
-	    \Kint::$enabled_mode                 = true;
-	    \Kint\Renderer\RichRenderer::$folder = false;
-		function ddd(...$v)
-		{
-	    	\Kint::dump(...$v);
-	    	exit;
-		}
-		
-		\Kint::$aliases[] = 'ddd';
-	}
+    // Example with Kint
+    if (THIS_WAS_PRODUCTION &&
+        class_exists('Kint')) {
+        \Kint::$enabled_mode                 = true;
+        \Kint\Renderer\RichRenderer::$folder = false;
+        function ddd(...$v)
+        {
+            \Kint::dump(...$v);
+            exit;
+        }
+
+        \Kint::$aliases[] = 'ddd';
+    }
 };
-
-
 
 // optionally, set a path for your error log, relative to this project root
 // $conf['error_log']='temp/phppga.php_error.log';
 
-
-// enable this to calculate schema and table sizes
-// e.g. $conf['display_sizes'] = ['schemas'=>false,'tables'=>true];
-$conf['display_sizes'] = false;
-
 // An example server.  Create as many of these as you wish,
 // indexed from zero upwards.
-$server_index=0;
+$server_index = 0;
 
 $conf['servers'][$server_index] = [
     // Display name for the server on the login screen
@@ -94,15 +109,15 @@ $conf['servers'][$server_index] = [
 /*
 $server_index++;
 $conf['servers'][$server_index][
-	'desc'=> 'Test Server',
-	'host'=> '127.0.0.1',
-	'port'=> 5432,
-	'sslmode'=> 'allow',
-	'defaultdb'=> 'template1',
-	'pg_dump_path'=> 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dump.exe',
-	'pg_dumpall_path'=> 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dumpall.exe'
+'desc'=> 'Test Server',
+'host'=> '127.0.0.1',
+'port'=> 5432,
+'sslmode'=> 'allow',
+'defaultdb'=> 'template1',
+'pg_dump_path'=> 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dump.exe',
+'pg_dumpall_path'=> 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dumpall.exe'
 ];
-*/
+ */
 
 /* Groups definition */
 /* Groups allow administrators to logicaly group servers together under
@@ -211,7 +226,6 @@ $conf['help_base'] = 'http://www.postgresql.org/docs/%s/interactive/';
 // Configuration for ajax scripts
 // Time in seconds. If set to 0, refreshing data using ajax will be disabled (locks and activity pages)
 $conf['ajax_refresh'] = 3;
-
 
 // If there's a config.yml in the root folder, parse it and merge its contents with $conf array
 // see config.example.yml

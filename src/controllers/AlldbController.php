@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -107,11 +107,7 @@ class AlldbController extends BaseController
 
         $href = $this->misc->getHREF();
         $redirecturl = $this->container->utils->getDestinationWithLastTab('database');
-        /*       $this->prtrace([
-        'redirecturl' => $redirecturl,
-        'href'        => $href]
-        );
-         */
+
         $columns = [
             'database' => [
                 'title' => $this->lang['strdatabase'],
@@ -577,8 +573,6 @@ class AlldbController extends BaseController
 
         $subject = 'server';
         $object = $_REQUEST['server'];
-
-//        $this->prtrace($this->misc->getServerInfo());
 
         echo $this->formHeader('dbexport');
 

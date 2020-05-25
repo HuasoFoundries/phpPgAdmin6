@@ -2,63 +2,65 @@
 <?php
 
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
+ * PHPPgAdmin vv6.0.0-RC8-16-g13de173f.
  *
+ * @internal
+ * @coversNothing
  */
-
 class ContainerTest extends \Codeception\Test\Unit
 {
+    protected static $BASE_PATH;
+
     /**
      * @var \UnitTester
      */
     protected $tester;
+
     protected $container;
 
-    protected function _before()
-    {
-        $Helper          = $this->getModule('\Helper\Unit');
-        $this->container = $Helper::getContainer();
-        //dump($this->container->environment->all());
-        //\Codeception\Util\Debug::debug($container);
-
-        $this->container->misc->setNoDBConnection(true);
-    }
-
-    protected function _after()
-    {
-    }
-
-    public function testContainerValidity()
+    public function testContainerValidity(): void
     {
         $utils = $this->container['utils'];
-        $this->assertTrue(
+        self::assertTrue(
             $this->container instanceof \Psr\Container\ContainerInterface,
             '$container must be an instance of \Psr\Container\ContainerInterface'
         );
     }
 
-    public function testContainerUtils()
+    public function testContainerUtils(): void
     {
         $utils = $this->container['utils'];
-        $this->assertTrue(
+        self::assertTrue(
             $this->container->utils instanceof \PHPPgAdmin\ContainerUtils,
             '$container->utils must be an instance of PHPPgAdmin\ContainerUtils'
         );
     }
 
-    public function testContainermisc()
+    public function testContainermisc(): void
     {
-        $this->assertTrue(
+        self::assertTrue(
             $this->container->misc instanceof \PHPPgAdmin\Misc,
             '$container->misc must be an instance of \PHPPgAdmin\Misc'
         );
     }
 
-    public function testContainerview()
+    public function testContainerview(): void
     {
-        $this->assertTrue(
+        self::assertTrue(
             $this->container->view instanceof \Slim\Views\Twig,
             '$container->view must be an instance of \Slim\Views\Twig'
         );
+    }
+
+    protected function _before(): void
+    {
+        $Helper = $this->getModule('\Helper\Unit');
+        $this->container = $Helper::getContainer();
+        self::$BASE_PATH = $Helper::BASE_PATH;
+        $this->container->misc->setNoDBConnection(true);
+    }
+
+    protected function _after(): void
+    {
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -328,6 +328,7 @@ class DataimportController extends BaseController
 
     /**
      * @param null|string $field
+     * @param mixed       $null_array
      */
     public static function determineNull(?string $field, $null_array)
     {

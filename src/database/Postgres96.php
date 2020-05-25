@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -23,7 +23,7 @@ class Postgres96 extends Postgres
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return int|\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getProcesses($database = null)
     {
@@ -67,7 +67,7 @@ class Postgres96 extends Postgres
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param array  $groups     The groups to create the user in
      *
-     * @return int|\ADORecordSet 0 if operation was successful
+     * @return \ADORecordSet|int 0 if operation was successful
      *
      * @internal param $group (array) The groups to create the user in
      */

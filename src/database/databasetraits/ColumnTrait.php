@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -43,13 +43,13 @@ trait ColumnTrait
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
                     $qual = \mb_substr($type, 9);
-                    $sql  = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" timestamp({$length}){$qual}";
+                    $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" timestamp({$length}){$qual}";
 
                     break;
                 case 'time with time zone':
                 case 'time without time zone':
                     $qual = \mb_substr($type, 4);
-                    $sql  = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" time({$length}){$qual}";
+                    $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" time({$length}){$qual}";
 
                     break;
 
@@ -136,8 +136,8 @@ trait ColumnTrait
         $comment
     ) {
         // Begin transaction
-        $status    = $this->beginTransaction();
-        $sql       = '';
+        $status = $this->beginTransaction();
+        $sql = '';
         $sqlrename = '';
 
         if (0 !== $status) {
@@ -187,13 +187,13 @@ trait ColumnTrait
                 // time zone types
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
-                    $qual  = \mb_substr($type, 9);
+                    $qual = \mb_substr($type, 9);
                     $ftype = "timestamp({$length}){$qual}";
 
                     break;
                 case 'time with time zone':
                 case 'time without time zone':
-                    $qual  = \mb_substr($type, 4);
+                    $qual = \mb_substr($type, 4);
                     $ftype = "time({$length}){$qual}";
 
                     break;
@@ -270,7 +270,7 @@ trait ColumnTrait
      * @param string $column  The column name to set
      * @param mixed  $default The new default value
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function setColumnDefault($table, $column, $default)
     {
@@ -291,7 +291,7 @@ trait ColumnTrait
      * @param string $column The column to alter
      * @param bool   $state  True to set null, false to set not null
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function setColumnNull($table, $column, $state)
     {
@@ -338,7 +338,7 @@ trait ColumnTrait
      * @param string $table  The table from which to drop
      * @param string $column The column name to drop default
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropColumnDefault($table, $column)
     {

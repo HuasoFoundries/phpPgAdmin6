@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -14,7 +14,7 @@ trait ViewTrait
     /**
      * Returns a list of all views in the database.
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getViews()
     {
@@ -34,7 +34,7 @@ trait ViewTrait
     /**
      * Returns a list of all materialized views in the database.
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getMaterializedViews()
     {
@@ -163,7 +163,7 @@ trait ViewTrait
      *
      * @param string $view The name of the view or materialized to retrieve
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getView($view)
     {
@@ -187,9 +187,9 @@ trait ViewTrait
      * Alter a view's owner.
      *
      * @param \ADORecordSet $vwrs  The view recordSet returned by getView()
-     * @param null|string              $owner
+     * @param null|string   $owner
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      *
      * @internal param  $name new view's owner
      */
@@ -215,9 +215,9 @@ trait ViewTrait
      * Rename a view.
      *
      * @param \ADORecordSet $vwrs The view recordSet returned by getView()
-     * @param string                   $name The new view's name
+     * @param string        $name The new view's name
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function alterViewName($vwrs, $name)
     {
@@ -227,7 +227,7 @@ trait ViewTrait
         if (!empty($name) && ($name !== $vwrs->fields['relname'])) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER {$type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER {$type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 === $status) {
@@ -244,9 +244,9 @@ trait ViewTrait
      * Alter a view's schema.
      *
      * @param \ADORecordSet $vwrs   The view recordSet returned by getView()
-     * @param string                   $schema
+     * @param string        $schema
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      *
      * @internal param The $name new view's schema
      */
@@ -274,7 +274,7 @@ trait ViewTrait
      * @param string $viewname The name of the view to drop
      * @param string $cascade  True to cascade drop, false to restrict
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropView($viewname, $cascade)
     {
@@ -317,10 +317,10 @@ trait ViewTrait
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
      * @param \ADORecordSet $vwrs    The view recordSet returned by getView()
-     * @param string                   $name    The new name for the view
-     * @param string                   $owner   The new owner for the view
-     * @param string                   $schema  Schema name
-     * @param string                   $comment The comment on the view
+     * @param string        $name    The new name for the view
+     * @param string        $owner   The new owner for the view
+     * @param string        $schema  Schema name
+     * @param string        $comment The comment on the view
      *
      * @return int 0 success
      */

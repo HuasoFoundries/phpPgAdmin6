@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -17,7 +17,7 @@ trait RowTrait
      * @param string $table The name of a table
      * @param array  $key   The associative array holding the key to retrieve
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function browseRow($table, $key)
     {
@@ -112,7 +112,7 @@ trait RowTrait
      * @param array  $format An array of the data type (VALUE or EXPRESSION)
      * @param array  $types  An array of field types
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function insertRow($table, $fields, $values, $nulls, $format, $types)
     {
@@ -126,7 +126,7 @@ trait RowTrait
         // Build clause
         if (0 < \count($values)) {
             // Escape all field names
-            $fields   = \array_map(['\PHPPgAdmin\Database\Postgres', 'fieldClean'], $fields);
+            $fields = \array_map(['\PHPPgAdmin\Database\Postgres', 'fieldClean'], $fields);
             $f_schema = $this->_schema;
             $this->fieldClean($table);
             $this->fieldClean($f_schema);

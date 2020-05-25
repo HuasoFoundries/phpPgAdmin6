@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -21,7 +21,7 @@ class Postgres92 extends Postgres93
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return int|\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getProcesses($database = null)
     {
@@ -47,7 +47,7 @@ class Postgres92 extends Postgres93
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return int|\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getTablespaces($all = false)
     {
@@ -73,7 +73,7 @@ class Postgres92 extends Postgres93
      *
      * @param $spcname
      *
-     * @return int|\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getTablespace($spcname)
     {

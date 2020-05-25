@@ -28,20 +28,16 @@
         "codeception/module-asserts": "^1.1",
         "ergebnis/composer-normalize": "^2.2",
         "ergebnis/php-cs-fixer-config": "^2.0",
-        "ocramius/package-versions": "~1.4",
         "filp/whoops": "^2.7",
         "friendsofphp/php-cs-fixer": "^2.16",
         "kint-php/kint": "~3.3",
+        "ocramius/package-versions": "~1.4",
+        "phpstan/phpstan": "^0.12.14",
         "simpletest/simpletest": "^1.1",
-        "symfony/var-dumper": "^5.0",
         "vimeo/psalm": "^3.9",
-        "phpstan/phpstan": "^0.12.14"
+        "php-parallel-lint/php-parallel-lint": "^1.2"
     },
     "extra": {
-        "current_tags": {
-            "master": "v6.0.0-RC9",
-            "develop": "v6.0.0-RC9"
-        },
         "version": "v6.0.0-RC9"
     },
     "autoload": {
@@ -59,13 +55,13 @@
         }
     },
     "scripts": {
-        "phpstan": "phpstan analyse src --memory-limit=2G ",
         "post-install-cmd": "@clear_twig_cache",
         "post-create-project-cmd": "@clear_twig_cache",
         "clear_twig_cache": [
             "make fix_permissions",
             "php -r \"array_map( 'unlink', array_filter((array) glob('temp/twigcache/**/*.php', GLOB_BRACE)));\"",
             "php -r \"array_map( 'rmdir', array_filter((array) glob('temp/twigcache/*', GLOB_BRACE)));\""
-        ]
+        ],
+        "phpstan": "phpstan analyse src --memory-limit=2G "
     }
 }

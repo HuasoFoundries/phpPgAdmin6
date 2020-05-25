@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Traits;
@@ -122,7 +122,7 @@ trait ServersTrait
             $connection_html .= '<input type="hidden" readonly="readonly" value="' . $server_id . '" name="server">';
         } else {
             $connection_html .= '<label>';
-            $connection_html .= $this->misc->printHelp($this->lang['strserver'], 'pg.server', false);
+            $connection_html .= $this->view->printHelp($this->lang['strserver'], 'pg.server', false);
             $connection_html .= ': </label>';
             $connection_html .= " <select name=\"server\" id='selectserver' >" . \PHP_EOL;
 
@@ -148,7 +148,7 @@ trait ServersTrait
 
             if (0 < $databases->recordCount()) {
                 $connection_html .= '<label>';
-                $connection_html .= $this->misc->printHelp($this->lang['strdatabase'], 'pg.database', false);
+                $connection_html .= $this->view->printHelp($this->lang['strdatabase'], 'pg.database', false);
                 $connection_html .= ": <select  id='selectdb'  name=\"database\" >" . \PHP_EOL;
 
                 //if no database was selected, user should select one

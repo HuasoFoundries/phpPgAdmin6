@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -18,30 +18,30 @@ class Postgres82 extends Postgres83
 
     // Select operators
     public $selectOps = [
-        '='              => 'i',
-        '!='             => 'i',
-        '<'              => 'i',
-        '>'              => 'i',
-        '<='             => 'i',
-        '>='             => 'i',
-        '<<'             => 'i',
-        '>>'             => 'i',
-        '<<='            => 'i',
-        '>>='            => 'i',
-        'LIKE'           => 'i',
-        'NOT LIKE'       => 'i',
-        'ILIKE'          => 'i',
-        'NOT ILIKE'      => 'i',
-        'SIMILAR TO'     => 'i',
+        '=' => 'i',
+        '!=' => 'i',
+        '<' => 'i',
+        '>' => 'i',
+        '<=' => 'i',
+        '>=' => 'i',
+        '<<' => 'i',
+        '>>' => 'i',
+        '<<=' => 'i',
+        '>>=' => 'i',
+        'LIKE' => 'i',
+        'NOT LIKE' => 'i',
+        'ILIKE' => 'i',
+        'NOT ILIKE' => 'i',
+        'SIMILAR TO' => 'i',
         'NOT SIMILAR TO' => 'i',
-        '~'              => 'i',
-        '!~'             => 'i',
-        '~*'             => 'i',
-        '!~*'            => 'i',
-        'IS NULL'        => 'p',
-        'IS NOT NULL'    => 'p',
-        'IN'             => 'x',
-        'NOT IN'         => 'x',
+        '~' => 'i',
+        '!~' => 'i',
+        '~*' => 'i',
+        '!~*' => 'i',
+        'IS NULL' => 'p',
+        'IS NOT NULL' => 'p',
+        'IN' => 'x',
+        'NOT IN' => 'x',
     ];
 
     // Database functions
@@ -49,7 +49,7 @@ class Postgres82 extends Postgres83
     /**
      * Returns table locks information in the current database.
      *
-     * @return int|\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getLocks()
     {
@@ -75,9 +75,9 @@ class Postgres82 extends Postgres83
      * Rename a sequence.
      *
      * @param \ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
-     * @param string                   $name  The new name for the sequence
+     * @param string        $name  The new name for the sequence
      *
-     * @return int|\ADORecordSet 0 if operation was successful
+     * @return \ADORecordSet|int 0 if operation was successful
      */
     public function alterSequenceName($seqrs, $name)
     {
@@ -85,7 +85,7 @@ class Postgres82 extends Postgres83
         if (!empty($name) && ($seqrs->fields['seqname'] !== $name)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TABLE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 === $status) {
@@ -104,9 +104,9 @@ class Postgres82 extends Postgres83
      * Rename a view.
      *
      * @param \ADORecordSet $vwrs The view recordSet returned by getView()
-     * @param string                   $name The new view's name
+     * @param string        $name The new view's name
      *
-     * @return int|\ADORecordSet -1 if Failed
+     * @return \ADORecordSet|int -1 if Failed
      */
     public function alterViewName($vwrs, $name)
     {
@@ -115,7 +115,7 @@ class Postgres82 extends Postgres83
         if (!empty($name) && ($name !== $vwrs->fields['relname'])) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TABLE \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 === $status) {
@@ -135,7 +135,7 @@ class Postgres82 extends Postgres83
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return int|\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getTriggers($table = '')
     {
@@ -167,7 +167,7 @@ class Postgres82 extends Postgres83
      *
      * @param int $function_oid
      *
-     * @return int|\ADORecordSet Function info
+     * @return \ADORecordSet|int Function info
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -344,7 +344,7 @@ class Postgres82 extends Postgres83
      *
      * @param int $operator_oid The oid of the operator
      *
-     * @return int|\ADORecordSet Function info
+     * @return \ADORecordSet|int Function info
      */
     public function getOperator($operator_oid)
     {
@@ -380,7 +380,7 @@ class Postgres82 extends Postgres83
     /**
      * Gets all opclasses.
      *
-     * @return int|\ADORecordSet A recordset
+     * @return \ADORecordSet|int A recordset
      */
     public function getOpClasses()
     {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -39,9 +39,10 @@ class Decorator
 
     /**
      * @param null|string $esc
-     * @param scalar $var
+     * @param scalar      $var
+     * @param array       $fields
      */
-    public static function get_sanitized_value(&$var, array &$fields, ? string $esc = null)
+    public static function get_sanitized_value(&$var, array &$fields, ?string $esc = null)
     {
         if (\is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
             $val = $var->value($fields);
@@ -71,15 +72,16 @@ class Decorator
 
     /**
      * @param \Closure|\Closure|\Closure $callback
-     * @param (mixed|string)[]|null $params
+     * @param (mixed|string)[]|null      $params
      */
-    public static function callback($callback, ? array $params = null)
+    public static function callback($callback, ?array $params = null)
     {
         return new \PHPPgAdmin\Decorators\CallbackDecorator($callback, $params);
     }
 
     /**
      * @param scalar $var
+     * @param array  $fields
      */
     public static function value_url(&$var, array &$fields)
     {
@@ -92,7 +94,8 @@ class Decorator
     }
 
     /**
-     * @param array $params
+     * @param array  $params
+     * @param string $str
      */
     public static function replace(string $str, array $params)
     {
@@ -100,17 +103,19 @@ class Decorator
     }
 
     /**
-     * @param array|null $default
+     * @param null|array $default
+     * @param string     $fieldName
      */
-    public static function field(string $fieldName, ? array $default = null)
+    public static function field(string $fieldName, ?array $default = null)
     {
         return new FieldDecorator($fieldName, $default);
     }
 
     /**
-     * @param array|null $vars
+     * @param null|array $vars
+     * @param mixed      $base
      */
-    public static function branchurl($base, ? array $vars = null/* ... */)
+    public static function branchurl($base, ?array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -126,9 +131,10 @@ class Decorator
     }
 
     /**
-     * @param array|null $vars
+     * @param null|array $vars
+     * @param mixed      $base
      */
-    public static function actionurl($base, ? array $vars = null/* ... */)
+    public static function actionurl($base, ?array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -144,9 +150,10 @@ class Decorator
     }
 
     /**
-     * @param array|null $vars
+     * @param null|array $vars
+     * @param mixed      $base
      */
-    public static function redirecturl($base, ? array $vars = null/* ... */)
+    public static function redirecturl($base, ?array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
@@ -162,16 +169,17 @@ class Decorator
     }
 
     /**
-     * @param array|null $vars
+     * @param null|array $vars
+     * @param mixed      $base
      */
-    public static function url($base, ? array $vars = null/* ... */)
+    public static function url($base, ?array $vars = null/* ... */)
     {
         // If more than one array of vars is given,
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
 
         if (2 < \func_num_args()) {
-            $v    = \func_get_args();
+            $v = \func_get_args();
             $base = \array_shift($v);
 
             return new UrlDecorator($base, new ArrayMergeDecorator($v));

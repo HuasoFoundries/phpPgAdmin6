@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -42,7 +42,7 @@ class DataexportController extends BaseController
             return $this->doDefault();
         }
 
-        $this->prtrace("REQUEST['what']", $_REQUEST['what']);
+        //$this->prtrace("REQUEST['what']", $_REQUEST['what']);
 
         // Include application functions
         $this->setNoOutput(true);
@@ -54,12 +54,12 @@ class DataexportController extends BaseController
                 // Check to see if they have pg_dump set up and if they do, use that
                 // instead of custom dump code
                 if (!$forcemimic && $this->misc->isDumpEnabled() && ('copy' === $_REQUEST['d_format'] || 'sql' === $_REQUEST['d_format'])) {
-                    $this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
+                    //$this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
                     $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
 
                     return $dbexport_controller->render();
                 }
-                $this->prtrace('d_format is', $_REQUEST['d_format'], 'd_oids is', isset($_REQUEST['d_oids']));
+
                 $format = $_REQUEST['d_format'];
                 $oids = isset($_REQUEST['d_oids']);
 
@@ -137,8 +137,8 @@ class DataexportController extends BaseController
         } else {
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
         }
-        $this->prtrace('$_REQUEST[query]', $_REQUEST['query'], \htmlspecialchars(\urlencode($_REQUEST['query'])));
-        $this->prtrace('$_SESSION[sqlquery]', $_SESSION['sqlquery'], \htmlspecialchars(\urlencode($_SESSION['sqlquery'])));
+        //$this->prtrace('$_REQUEST[query]', $_REQUEST['query'], \htmlspecialchars(\urlencode($_REQUEST['query'])));
+        //$this->prtrace('$_SESSION[sqlquery]', $_SESSION['sqlquery'], \htmlspecialchars(\urlencode($_SESSION['sqlquery'])));
         echo '<input type="hidden" name="query" value="', \htmlspecialchars(\urlencode($_REQUEST['query'])), '" />' . \PHP_EOL;
 
         if (isset($_REQUEST['search_path'])) {
@@ -165,7 +165,7 @@ class DataexportController extends BaseController
             return $this->doDefault();
         }
 
-        $this->prtrace("REQUEST['what']", $_REQUEST['what']);
+        //$this->prtrace("REQUEST['what']", $_REQUEST['what']);
 
         // Include application functions
         $this->setNoOutput(true);
@@ -189,15 +189,15 @@ class DataexportController extends BaseController
 
         // Set up the dump transaction
         $status = $data->beginDump();
-        $this->prtrace('subject', $subject);
-        $this->prtrace('object', $object);
+        //$this->prtrace('subject', $subject);
+        //$this->prtrace('object', $object);
         $tabledefprefix = '';
         $tabledefsuffix = '';
 
         // If the dump is not dataonly then dump the structure prefix
         if ('dataonly' !== $_REQUEST['what']) {
             $tabledefprefix = $data->getTableDefPrefix($object, $cleanprefix);
-            $this->prtrace('tabledefprefix', $tabledefprefix);
+            //$this->prtrace('tabledefprefix', $tabledefprefix);
             echo $tabledefprefix;
         }
 
@@ -218,7 +218,7 @@ class DataexportController extends BaseController
         if ('dataonly' !== $_REQUEST['what']) {
             $data->conn->setFetchMode(\ADODB_FETCH_ASSOC);
             $tabledefsuffix = $data->getTableDefSuffix($object);
-            $this->prtrace('tabledefsuffix', $tabledefsuffix);
+            //$this->prtrace('tabledefsuffix', $tabledefsuffix);
             echo $tabledefsuffix;
         }
 
@@ -234,7 +234,7 @@ class DataexportController extends BaseController
             return $data->dumpRelation($object, $oids);
         }
 
-        $this->prtrace('$_REQUEST[query]', $_REQUEST['query']);
+        //$this->prtrace('$_REQUEST[query]', $_REQUEST['query']);
 
         return $data->conn->Execute($_REQUEST['query']);
     }

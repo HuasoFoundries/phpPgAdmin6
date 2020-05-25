@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -119,7 +119,7 @@ class MaterializedviewpropertiesController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
         $sql = 'REFRESH MATERIALIZED VIEW ' . $_REQUEST[$this->subject];
-        $this->prtrace($sql);
+        //$this->prtrace($sql);
         $status = $data->execute($sql);
 
         if (0 === $status) {

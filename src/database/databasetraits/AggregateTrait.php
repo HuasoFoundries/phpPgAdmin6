@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -83,7 +83,7 @@ trait AggregateTrait
      * @param string $aggrtype The input data type of the aggregate
      * @param bool   $cascade  True to cascade drop, false to restrict
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropAggregate($aggrname, $aggrtype, $cascade)
     {
@@ -107,7 +107,7 @@ trait AggregateTrait
      * @param string $name     The name of the aggregate
      * @param string $basetype The input data type of the aggregate
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getAggregate($name, $basetype)
     {
@@ -137,7 +137,7 @@ trait AggregateTrait
     /**
      * Gets all aggregates.
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getAggregates()
     {
@@ -244,7 +244,7 @@ trait AggregateTrait
      * @param string $aggrtype     The input data type of the aggregate
      * @param string $newaggrowner The new owner of the aggregate
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function changeAggregateOwner($aggrname, $aggrtype, $newaggrowner)
     {
@@ -264,7 +264,7 @@ trait AggregateTrait
      * @param string $aggrtype      The input data type of the aggregate
      * @param string $newaggrschema The new schema for the aggregate
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function changeAggregateSchema($aggrname, $aggrtype, $newaggrschema)
     {
@@ -285,7 +285,7 @@ trait AggregateTrait
      * @param string $aggrtype    The actual input data type of the aggregate
      * @param string $newaggrname The new name of the aggregate
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function renameAggregate($aggrschema, $aggrname, $aggrtype, $newaggrname)
     {

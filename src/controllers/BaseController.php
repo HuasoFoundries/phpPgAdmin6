@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -121,27 +121,27 @@ class BaseController
     public function __construct(\Slim\Container $container)
     {
         $this->container = $container;
-        $this->lang      = $container->get('lang');
+        $this->lang = $container->get('lang');
 
         $this->controller_name = \str_replace(__NAMESPACE__ . '\\', '', \get_class($this));
-        $this->view_name       = \str_replace('controller', '', \mb_strtolower($this->controller_name));
-        $this->script          = $this->view_name;
+        $this->view_name = \str_replace('controller', '', \mb_strtolower($this->controller_name));
+        $this->script = $this->view_name;
 
         $this->view = $container->get('view');
 
-        $this->msg          = $container->get('msg');
+        $this->msg = $container->get('msg');
         $this->appLangFiles = $container->get('appLangFiles');
 
         $this->misc = $container->get('misc');
         $this->conf = $this->misc->getConf();
 
         $this->appThemes = $container->get('appThemes');
-        $this->action    = $container->get('action');
+        $this->action = $container->get('action');
 
-        $this->appName          = $container->get('settings')['appName'];
-        $this->appVersion       = $container->get('settings')['appVersion'];
+        $this->appName = $container->get('settings')['appName'];
+        $this->appVersion = $container->get('settings')['appVersion'];
         $this->postgresqlMinVer = $container->get('settings')['postgresqlMinVer'];
-        $this->phpMinVer        = $container->get('settings')['phpMinVer'];
+        $this->phpMinVer = $container->get('settings')['phpMinVer'];
 
         $msg = $container->get('msg');
 
@@ -223,11 +223,11 @@ class BaseController
      * Display a table of data.
      *
      * @param \ADORecordSet|\PHPPgAdmin\ArrayRecordSet $tabledata a set of data to be formatted
-     * @param array                                               $columns   An associative array of columns to be displayed:
-     * @param array                                               $actions   Actions that can be performed on each object:
-     * @param string                                              $place     Place where the $actions are displayed. Like 'display-browse',
-     * @param string                                              $nodata    (optional) Message to display if data set is empty
-     * @param callable                                            $pre_fn    (optional) callback closure for each row
+     * @param array                                    $columns   An associative array of columns to be displayed:
+     * @param array                                    $actions   Actions that can be performed on each object:
+     * @param string                                   $place     Place where the $actions are displayed. Like 'display-browse',
+     * @param string                                   $nodata    (optional) Message to display if data set is empty
+     * @param callable                                 $pre_fn    (optional) callback closure for each row
      *
      * @return string the html of the table
      */
@@ -274,14 +274,14 @@ class BaseController
     /**
      * Prints a trail.
      *
-     * @param array|string  $trail
-     * @param boolean       $do_print  The do print
+     * @param array|string $trail
+     * @param bool         $do_print The do print
      *
-     * @return string  ( description_of_the_return_value )
+     * @return string ( description_of_the_return_value )
      */
     public function printTrail($trail = [], bool $do_print = true)
     {
-        $from       = __METHOD__;
+        $from = __METHOD__;
         $html_trail = $this->_getNavbarController();
 
         return $html_trail->printTrail($trail, $do_print, $from);
@@ -289,10 +289,13 @@ class BaseController
 
     /**
      * @param (array|mixed)[][] $navlinks
+     * @param string            $place
+     * @param array             $env
+     * @param mixed             $do_print
      */
     public function printNavLinks(array $navlinks, string $place, array $env = [], $do_print = true)
     {
-        $from              = __METHOD__;
+        $from = __METHOD__;
         $footer_controller = $this->_getFooterController();
 
         return $footer_controller->printNavLinks($navlinks, $place, $env, $do_print, $from);
@@ -300,17 +303,18 @@ class BaseController
 
     public function printTabs(string $tabs, string $activetab, bool $do_print = true)
     {
-        $from       = __METHOD__;
+        $from = __METHOD__;
         $html_trail = $this->_getNavbarController();
 
         return $html_trail->printTabs($tabs, $activetab, $do_print, $from);
     }
 
     /**
-     * @param true $do_print
+     * @param true        $do_print
      * @param null|string $from
+     * @param mixed       $link
      */
-    public function printLink($link, bool $do_print = true, ? string $from = null)
+    public function printLink($link, bool $do_print = true, ?string $from = null)
     {
         if (null === $from) {
             $from = __METHOD__;
@@ -393,10 +397,13 @@ class BaseController
 
     /**
      * @param null|string $script
+     * @param string      $title
+     * @param bool        $do_print
+     * @param string      $template
      */
-    public function printHeader(string $title = '', ? string $script = null, bool $do_print = true, string $template = 'header.twig')
+    public function printHeader(string $title = '', ?string $script = null, bool $do_print = true, string $template = 'header.twig')
     {
-        $title             = $title ? $title : $this->headerTitle();
+        $title = $title ? $title : $this->headerTitle();
         $header_controller = $this->_getHeaderController();
 
         return $header_controller->printHeader($title, $script, $do_print, $template);
@@ -411,8 +418,10 @@ class BaseController
 
     /**
      * @param null|string $help
+     * @param string      $title
+     * @param bool        $do_print
      */
-    public function printTitle(string $title, ? string $help = null, bool $do_print = true)
+    public function printTitle(string $title, ?string $help = null, bool $do_print = true)
     {
         $header_controller = $this->_getHeaderController();
 
@@ -421,14 +430,16 @@ class BaseController
 
     /**
      * @param null|string $default
+     * @param string      $key
      */
-    public function getRequestParam(string $key, ? string $default = null)
+    public function getRequestParam(string $key, ?string $default = null)
     {
         return $this->container->requestobj->getParam($key, $default);
     }
 
     /**
-     * @param array|null|string $default
+     * @param null|array|string $default
+     * @param string            $key
      */
     public function getPostParam(string $key, $default = null)
     {
@@ -451,7 +462,7 @@ class BaseController
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
-        $msg  = \htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
+        $msg = \htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
 
         if ('' !== $msg) {
             $html .= '<p class="message">' . \nl2br($msg) . '</p>' . \PHP_EOL;

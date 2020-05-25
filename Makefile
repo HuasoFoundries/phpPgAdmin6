@@ -28,8 +28,7 @@ version:
 install: fix_permissions composer_update
 install: 
 	@composer install --no-interaction --no-progress --no-suggest --prefer-dist ;\
-	composer validate --strict ;\
-	composer normalize
+	${MAKE} composer_validate  --no-print-directory
 
 
 
@@ -40,8 +39,13 @@ fix_permissions:
 	sudo rm -R --force temp/twigcache/*
 
 composer_update:
-	@echo -e "updating composer...${YELLOW}--lock --root-reqs --prefer-dist --prefer-stable --no-suggest -a${WHITE}" ;\
+	@echo -e "updating composer with params ${YELLOW}--lock --root-reqs --prefer-dist --prefer-stable --no-suggest -a${WHITE}" ;\
 	composer update  --lock --root-reqs --prefer-dist --prefer-stable --no-suggest -a
+
+composer_validate:
+	@composer check-platform-reqs ;\
+	composer validate --strict ;\
+	composer normalize
 
 update_version:
 	@echo "Current version is " ${VERSION} ;\
@@ -76,7 +80,7 @@ ifeq ("$(wildcard config.inc.php)","")
 	cp config.inc.php-dist config.inc.php
 endif
 	./vendor/bin/codecept run unit --debug
-	find ./src -name \*.php -print0 | xargs -0 -n 1 php -l
+	
 
 
 csfixer:
@@ -152,6 +156,24 @@ phpstan:
 	./vendor/bin/phpstan analyse --memory-limit=2G   ${error_format}  
 	@${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory ;\
 	echo ""
+
+
+lint:
+	@if [ -f "vendor/bin/parallel-lint" ]; then \
+		mkdir -p .build/parallel ;\
+		${MAKE} disable_xdebug  --no-print-directory ;\
+		vendor/bin/parallel-lint \
+			--ignore-fails \
+			  --exclude vendor \
+			   $(folder) ;\
+		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
+	else \
+		echo -e "$(GREEN)parallel-lint$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
+		echo -e "Install it with $(GREEN)composer require --dev jakub-onderka/php-parallel-lint$(WHITE)" ;\
+	fi
+	@find ./src -name \*.php -print0 | xargs -0 -n 1 php -l
+	@echo ""
+
 
 
 fixers: phpmd psalm phpstan

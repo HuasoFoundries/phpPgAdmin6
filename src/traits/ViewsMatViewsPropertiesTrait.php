@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Traits;
@@ -153,7 +153,7 @@ trait ViewsMatViewsPropertiesTrait
                 'content' => $this->lang['stralter'],
             ],
         ];
-        $this->prtrace($this->view_name);
+        //$this->prtrace($this->view_name);
 
         if ('materializedviewproperties' === $this->view_name) {
             $navlinks['refresh'] = [

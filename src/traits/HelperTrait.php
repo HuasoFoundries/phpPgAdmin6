@@ -1,10 +1,12 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Traits;
+
+\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
 
 /**
  * @file
@@ -56,23 +58,23 @@ trait HelperTrait
 
     public static function getBackTrace($offset = 0)
     {
-        $i0        = $offset;
-        $i1        = $offset + 1;
+        $i0 = $offset;
+        $i1 = $offset + 1;
         $backtrace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, $offset + 3);
 
         return [
-            'class'    => 'Closure' === $backtrace[$i1]['class'] ?
+            'class' => 'Closure' === $backtrace[$i1]['class'] ?
             $backtrace[$i0]['file'] :
             $backtrace[$i1]['class'],
 
-            'type'     => $backtrace[$i1]['type'],
+            'type' => $backtrace[$i1]['type'],
 
             'function' => '{closure}' === $backtrace[$i1]['function']
             ? $backtrace[$i0]['function'] :
             $backtrace[$i1]['function'],
 
-            'spacer4'  => ' ',
-            'line'     => $backtrace[$i0]['line'],
+            'spacer4' => ' ',
+            'line' => $backtrace[$i0]['line'],
         ];
         //dump($backtrace);
     }
@@ -81,7 +83,7 @@ trait HelperTrait
      * Converts an ADORecordSet to an array.
      *
      * @param \ADORecordSet $set   The set
-     * @param string                   $field optionally the field to query for
+     * @param string        $field optionally the field to query for
      *
      * @return array the parsed array
      */
@@ -185,31 +187,38 @@ trait HelperTrait
     /**
      * Receives N parameters and sends them to the console adding where was it called from.
      *
-     * @param mixed ...$args
+     * @param array<int, mixed> $args
      */
     public function prtrace(...$args): void
     {
-        self::staticTrace(...$args);
+        if (\function_exists('\dump')) {
+            \dump($args);
+        }
     }
 
     /**
-     * Just a proxy for prtrace.
+     * Just an alias of prtrace.
      *
-     * @param mixed ...$args The arguments
+     * @param array<int, mixed> $args The arguments
      */
     public function dump(...$args): void
     {
-        self::staticTrace(...$args);
+        if (\function_exists('\dump')) {
+            \dump($args);
+        }
     }
 
-    /**Claveunica.,219
-     * Dumps and die.
+    /**
+     * Just an alias of prtrace.
      *
-     * @param mixed ...$args The arguments
+     * @param array<int, mixed> $args The arguments
      */
     public function dumpAndDie(...$args): void
     {
-        self::staticTrace(...$args);
+        if (\function_exists('\dump')) {
+            \dump($args);
+        }
+
         exit();
     }
 
@@ -217,31 +226,13 @@ trait HelperTrait
      * Receives N parameters and sends them to the console adding where was it
      * called from.
      *
-     * @param mixed  $variablesToDump
+     * @param array<int, mixed> $args
      */
-    private static function staticTrace(
-        ...$variablesToDump
+    public static function staticTrace(
+        ...$args
     ): void {
-        if (!$variablesToDump) {
-            $variablesToDump = \func_get_args();
-        }
-
-        $calledFrom = \str_replace(
-            dirname(
-                dirname(__DIR__)
-            ),
-            '',
-            implode(
-                '',
-                self::getBackTrace(2)
-            )
-        );
-
-        if (\function_exists('dump')) {
-            dump([
-                'args' => $variablesToDump,
-                'from' => $calledFrom,
-            ]);
+        if (\function_exists('\dump')) {
+            \dump($args);
         }
     }
 }

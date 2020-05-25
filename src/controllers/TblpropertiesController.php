@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -422,7 +422,6 @@ class TblpropertiesController extends BaseController
         $object = $_REQUEST['table'];
         // Determine whether or not the table has an object ID
         $hasID = $data->hasObjectID($object);
-        $this->prtrace('$hasID', $hasID);
         $this->printTrail('table');
         $this->printTabs('table', 'export');
         $this->printMsg($msg);
@@ -691,7 +690,8 @@ class TblpropertiesController extends BaseController
 
     private function _getCstrRender($misc, $data)
     {
-        $cstrRender = static function ($s, $p) use ($misc, $data) {
+        $view = $this->view;
+        $cstrRender = static function ($s, $p) use ($misc, $data, $view) {
             $str = '';
 
             foreach ($p['keys'] as $k => $c) {
@@ -699,29 +699,53 @@ class TblpropertiesController extends BaseController
                     $atts = $data->getAttributeNames($_REQUEST['table'], \explode(' ', $p['keys'][$k]['indkey']));
                     $c['consrc'] = ('u' === $c['contype'] ? 'UNIQUE (' : 'PRIMARY KEY (') . \implode(',', $atts) . ')';
                 }
+                $consrc = \htmlentities($c['consrc'], \ENT_QUOTES, 'UTF-8');
+                $table_key = 'p_table';
+                $schema_key = 'p_schema';
 
-                if ($c['p_field'] === $s) {
-                    switch ($c['contype']) {
-                        case 'p':
-                            $str .= '<a href="constraints?' . $misc->href . '&amp;table=' . \urlencode($c['p_table']) . '&amp;schema=' . \urlencode($c['p_schema']) . '"><img src="' .
-                            $misc->icon('PrimaryKey') . '" alt="[pk]" title="' . \htmlentities($c['consrc'], \ENT_QUOTES, 'UTF-8') . '" /></a>';
-
-                            break;
-                        case 'f':
-                            $str .= '<a href="tblproperties?' . $misc->href . '&amp;table=' . \urlencode($c['f_table']) . '&amp;schema=' . \urlencode($c['f_schema']) . '"><img src="' .
-                            $misc->icon('ForeignKey') . '" alt="[fk]" title="' . \htmlentities($c['consrc'], \ENT_QUOTES, 'UTF-8') . '" /></a>';
-
-                            break;
-                        case 'u':
-                            $str .= '<a href="constraints?' . $misc->href . '&amp;table=' . \urlencode($c['p_table']) . '&amp;schema=' . \urlencode($c['p_schema']) . '"><img src="' .
-                            $misc->icon('UniqueConstraint') . '" alt="[uniq]" title="' . \htmlentities($c['consrc'], \ENT_QUOTES, 'UTF-8') . '" /></a>';
-
-                            break;
-                        case 'c':
-                            $str .= '<a href="constraints?' . $misc->href . '&amp;table=' . \urlencode($c['p_table']) . '&amp;schema=' . \urlencode($c['p_schema']) . '"><img src="' .
-                            $misc->icon('CheckConstraint') . '" alt="[check]" title="' . \htmlentities($c['consrc'], \ENT_QUOTES, 'UTF-8') . '" /></a>';
-                    }
+                if ($c['p_field'] !== $s) {
+                    continue;
                 }
+
+                switch ($c['contype']) {
+                    case 'p':
+                        $type = 'pk';
+
+                        $icon = 'PrimaryKey';
+
+                        break;
+                    case 'f':
+                        $table_key = 'f_table';
+                        $icon = 'ForeignKey';
+                        $schema_key = 'f_schema';
+                        $type = 'fk';
+
+                        break;
+                    case 'u':
+                        $type = 'uniq';
+
+                        $icon = 'UniqueConstraint';
+
+                        break;
+                    case 'c':
+                        $type = 'check';
+
+                        $icon = 'CheckConstraint';
+                }
+                $str .= \sprintf(
+                    '<a href="tblproperties?%s&amp;table=%s&amp;schema=%s">',
+                    $misc->href,
+                    \urlencode($c[$table_key]),
+                    \urlencode($c[$schema_key])
+                );
+
+                $str .= \sprintf(
+                    '
+                    <img src="%s" alt="[%s]" title="%s" /></a>',
+                    $view->icon($icon),
+                    $type,
+                    $consrc
+                );
             }
 
             return $str;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -105,7 +105,6 @@ class SqlController extends BaseController
             $message = $e->getMessage();
             $trace = $e->getTraceAsString();
             $lastError = $_connection->getLastError();
-            $this->prtrace(['message' => $message, 'trace' => $trace, 'lastError' => $lastError]);
 
             return null;
         }
@@ -194,7 +193,7 @@ class SqlController extends BaseController
 
         echo \htmlspecialchars($this->query);
         echo '</textarea><br>';
-        echo $this->misc->setForm();
+        echo $this->view->setForm();
         echo '<input type="submit"/></form>';
 
         // $rs will only be an object if there is no error
@@ -244,7 +243,9 @@ class SqlController extends BaseController
     }
 
     /**
-     * @param true $doBody
+     * @param true       $doBody
+     * @param string     $template
+     * @param null|mixed $rs
      */
     private function doFooter(bool $doBody = true, string $template = 'footer.twig', $rs = null)
     {

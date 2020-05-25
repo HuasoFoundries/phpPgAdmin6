@@ -1,8 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin vv6.0.0-RC8-16-g13de173f
- *
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -32,6 +31,7 @@ class BrowserController extends BaseController
                 return $this->doTree();
 
                 break;
+
             default:
                 return $this->doDefault();
 
@@ -51,8 +51,8 @@ class BrowserController extends BaseController
         $this->setNoBottomLink(true);
 
         $viewVars = ['icon' => [
-            'Refresh' => $this->misc->icon('Refresh'),
-            'Servers' => $this->misc->icon('Servers'),
+            'Refresh' => $this->view->icon('Refresh'),
+            'Servers' => $this->view->icon('Servers'),
         ]];
 
         return $this->view->fetch('browser.twig', $viewVars);
@@ -66,16 +66,16 @@ class BrowserController extends BaseController
     public function doTree()
     {
         $treedata = new \PHPPgAdmin\ArrayRecordSet([]);
-        $reqvars  = [];
-        $action   = Decorator::url('/src/views/servers');
-        $branch   = Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']);
+        $reqvars = [];
+        $action = Decorator::url('/src/views/servers');
+        $branch = Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']);
         // $this->dump($branch);
         $attrs = [
-            'text'    => 'Servers',
-            'icon'    => 'Servers',
+            'text' => 'Servers',
+            'icon' => 'Servers',
             'is_root' => 'true',
-            'action'  => $action,
-            'branch'  => $branch,
+            'action' => $action,
+            'branch' => $branch,
         ];
 
         return $this->printTree($treedata, $attrs, 'server');

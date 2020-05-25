@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -99,17 +99,17 @@ class SchemasController extends BaseController
         $this->printMsg($msg);
 
         // Check that the DB actually supports schemas
-        $schemas     = $data->getSchemas();
+        $schemas = $data->getSchemas();
         $destination = $this->container->utils->getDestinationWithLastTab('schema');
 
         $columns = [
-            'schema'      => [
+            'schema' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url'   => self::SUBFOLDER . "{$destination}&amp;",
-                'vars'  => ['schema' => 'nspname'],
+                'url' => self::SUBFOLDER . "{$destination}&amp;",
+                'vars' => ['schema' => 'nspname'],
             ],
-            'owner'       => [
+            'owner' => [
                 'title' => $this->lang['strowner'],
                 'field' => Decorator::field('nspowner'),
             ],
@@ -117,10 +117,10 @@ class SchemasController extends BaseController
                 'title' => $this->lang['strsize'],
                 'field' => Decorator::field('schema_size'),
             ],
-            'actions'     => [
+            'actions' => [
                 'title' => $this->lang['stractions'],
             ],
-            'comment'     => [
+            'comment' => [
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('nspcomment'),
             ],
@@ -129,38 +129,38 @@ class SchemasController extends BaseController
         $actions = [
             'multiactions' => [
                 'keycols' => ['nsp' => 'nspname'],
-                'url'     => 'schemas',
+                'url' => 'schemas',
             ],
-            'drop'         => [
-                'content'     => $this->lang['strdrop'],
-                'attr'        => [
+            'drop' => [
+                'content' => $this->lang['strdrop'],
+                'attr' => [
                     'href' => [
-                        'url'     => 'schemas',
+                        'url' => 'schemas',
                         'urlvars' => [
                             'action' => 'drop',
-                            'nsp'    => Decorator::field('nspname'),
+                            'nsp' => Decorator::field('nspname'),
                         ],
                     ],
                 ],
                 'multiaction' => 'drop',
             ],
-            'privileges'   => [
+            'privileges' => [
                 'content' => $this->lang['strprivileges'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'privileges',
+                        'url' => 'privileges',
                         'urlvars' => [
                             'subject' => 'schema',
-                            'schema'  => Decorator::field('nspname'),
+                            'schema' => Decorator::field('nspname'),
                         ],
                     ],
                 ],
             ],
-            'alter'        => [
+            'alter' => [
                 'content' => $this->lang['stralter'],
-                'attr'    => [
+                'attr' => [
                     'href' => [
-                        'url'     => 'schemas',
+                        'url' => 'schemas',
                         'urlvars' => [
                             'action' => 'alter',
                             'schema' => Decorator::field('nspname'),
@@ -177,12 +177,12 @@ class SchemasController extends BaseController
         echo $this->printTable($schemas, $columns, $actions, 'schemas-schemas', $this->lang['strnoschemas']);
 
         $this->printNavLinks(['create' => [
-            'attr'    => [
+            'attr' => [
                 'href' => [
-                    'url'     => 'schemas',
+                    'url' => 'schemas',
                     'urlvars' => [
-                        'action'   => 'create',
-                        'server'   => $_REQUEST['server'],
+                        'action' => 'create',
+                        'server' => $_REQUEST['server'],
                         'database' => $_REQUEST['database'],
                     ],
                 ],
@@ -203,18 +203,18 @@ class SchemasController extends BaseController
         $reqvars = $this->misc->getRequestVars('schema');
 
         $attrs = [
-            'text'    => Decorator::field('nspname'),
-            'icon'    => 'Schema',
+            'text' => Decorator::field('nspname'),
+            'icon' => 'Schema',
             'toolTip' => Decorator::field('nspcomment'),
-            'action'  => Decorator::redirecturl(
+            'action' => Decorator::redirecturl(
                 'redirect',
                 $reqvars,
                 [
                     'subject' => 'schema',
-                    'schema'  => Decorator::field('nspname'),
+                    'schema' => Decorator::field('nspname'),
                 ]
             ),
-            'branch'  => Decorator::url(
+            'branch' => Decorator::url(
                 'schemas',
                 $reqvars,
                 [
@@ -236,8 +236,8 @@ class SchemasController extends BaseController
         $reqvars = $this->misc->getRequestVars('schema');
 
         $attrs = [
-            'text'   => Decorator::field('title'),
-            'icon'   => Decorator::field('icon'),
+            'text' => Decorator::field('title'),
+            'icon' => Decorator::field('icon'),
             'action' => Decorator::actionurl(
                 Decorator::field('url'),
                 $reqvars,
@@ -459,7 +459,7 @@ class SchemasController extends BaseController
             echo '</form>' . \PHP_EOL;
         } else {
             if (\is_array($_POST['nsp'])) {
-                $msg    = '';
+                $msg = '';
                 $status = $data->beginTransaction();
 
                 if (0 === $status) {
@@ -509,7 +509,7 @@ class SchemasController extends BaseController
         $this->printMsg($msg);
 
         $subject = 'schema';
-        $object  = $_REQUEST['schema'];
+        $object = $_REQUEST['schema'];
 
         echo $this->formHeader('dbexport');
 

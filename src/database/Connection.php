@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -25,10 +25,10 @@ class Connection
     protected $server_info;
 
     protected $version_dictionary = [
-        '13'  => 'Postgres13',
-        '12'  => 'Postgres12',
-        '11'  => 'Postgres11',
-        '10'  => 'Postgres10',
+        '13' => 'Postgres13',
+        '12' => 'Postgres12',
+        '11' => 'Postgres11',
+        '10' => 'Postgres10',
         '9.7' => 'Postgres96',
         '9.6' => 'Postgres96',
         '9.5' => 'Postgres95',
@@ -59,17 +59,17 @@ class Connection
      */
     public function __construct($server_info, $database, $container, $fetchMode = ADODB_FETCH_ASSOC)
     {
-        $host     = $server_info['host'];
-        $port     = $server_info['port'];
-        $sslmode  = $server_info['sslmode'];
-        $user     = $server_info['username'];
+        $host = $server_info['host'];
+        $port = $server_info['port'];
+        $sslmode = $server_info['sslmode'];
+        $user = $server_info['username'];
         $password = $server_info['password'];
 
         $this->server_info = $server_info;
 
         $this->container = $container;
 
-        $this->conn = ADONewConnection('postgres9');
+        $this->conn = \ADONewConnection('postgres9');
         //$this->conn->debug = true;
         $this->conn->setFetchMode($fetchMode);
 
@@ -93,14 +93,14 @@ class Connection
 
         /*try {
         $this->_connection_result = $this->conn->connect($pghost, $user, $password, $database);
-        $this->prtrace(['_connection_result' => $this->_connection_result, 'conn' => $this->conn]);
+        //$this->prtrace(['_connection_result' => $this->_connection_result, 'conn' => $this->conn]);
         } catch (\PHPPgAdmin\ADOdbException $e) {
-        $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+        //$this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
          */
         try {
             $this->conn->connect($pghost, $user, $password, $database);
         } catch (\Exception $e) {
-            $this->prtrace($e->getMessage(), $e->getTrace());
+            //$this->prtrace($e->getMessage(), $e->getTrace());
         }
     }
 
@@ -131,7 +131,7 @@ class Connection
         if (!isset($version)) {
             $adodb = new ADOdbBase($this->conn, $this->container, $this->server_info);
 
-            $sql   = 'SELECT VERSION() AS version';
+            $sql = 'SELECT VERSION() AS version';
             $field = $adodb->selectField($sql, 'version');
 
             // Check the platform, if it's mingw, set it

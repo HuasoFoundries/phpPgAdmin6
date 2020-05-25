@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -50,13 +50,13 @@ class HTMLHeaderController extends HTMLController
 
         $viewVars = [];
 
-        $viewVars['dir']            = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
+        $viewVars['dir'] = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
-        $viewVars['title']          = ('' !== $title) ? ' - ' . $title : '';
-        $viewVars['appName']        = \htmlspecialchars($this->appName);
+        $viewVars['title'] = ('' !== $title) ? ' - ' . $title : '';
+        $viewVars['appName'] = \htmlspecialchars($this->appName);
 
         $viewVars['script'] = $script;
-        $header_html        = $this->view->fetch($template, $viewVars);
+        $header_html = $this->view->fetch($template, $viewVars);
 
         /*$plugins_head = [];
         $_params      = ['heads' => &$plugins_head];
@@ -68,9 +68,11 @@ class HTMLHeaderController extends HTMLController
         if (!$this->_no_output && $do_print) {
             \header('Content-Type: text/html; charset=utf-8');
             echo $header_html;
-        } else {
-            return $header_html;
+
+            return '';
         }
+
+        return $header_html;
     }
 
     /**
@@ -79,20 +81,24 @@ class HTMLHeaderController extends HTMLController
      * @param bool   $doBody     True to output body tag, false to return
      * @param string $bodyClass  - name of body class
      * @param bool   $onloadInit - if true, call init() on body load event
+     *
+     * @return string the parsed template
      */
     public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
     {
         $bodyClass = $this->lang['applangdir'] . ' ' . \htmlspecialchars($bodyClass);
-        $onload    = ($onloadInit ? 'onload="init();" ' : '');
+        $onload = ($onloadInit ? 'onload="init();" ' : '');
 
         $bodyHtml = \sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
         $bodyHtml .= \PHP_EOL;
 
         if (!$this->_no_output && $doBody) {
             echo $bodyHtml;
-        } else {
-            return $bodyHtml;
+
+            return '';
         }
+
+        return $bodyHtml;
     }
 
     /**
@@ -101,17 +107,21 @@ class HTMLHeaderController extends HTMLController
      * @param string $title    Title, already escaped
      * @param string $help     (optional) The identifier for the help link
      * @param bool   $do_print
+     *
+     * @return string the parsed template
      */
     public function printTitle($title, $help = null, $do_print = true)
     {
         $title_html = '<h2>';
-        $title_html .= $this->misc->printHelp($title, $help, false);
+        $title_html .= $this->view->printHelp($title, $help, false);
         $title_html .= '</h2>' . \PHP_EOL;
 
         if ($do_print) {
             echo $title_html;
-        } else {
-            return $title_html;
+
+            return '';
         }
+
+        return $title_html;
     }
 }

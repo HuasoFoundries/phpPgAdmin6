@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -55,7 +55,7 @@ class AcinsertController extends BaseController
                 echo '<th>';
 
                 if (\in_array($h, $fkeynames, true)) {
-                    echo '<img src="' . $this->misc->icon('ForeignKey') . '" alt="[referenced key]" />';
+                    echo '<img src="' . $this->view->icon('ForeignKey') . '" alt="[referenced key]" />';
                 }
 
                 echo \htmlentities($h, \ENT_QUOTES, 'UTF-8'), '</th>';

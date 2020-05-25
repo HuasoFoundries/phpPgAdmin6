@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -28,19 +28,19 @@ class ADOdbBase
     /**
      * Base constructor.
      *
-     * @param \PHPPgAdmin\ADONewConnection $conn        The connection object
-     * @param mixed                        $container
-     * @param mixed                        $server_info
+     * @param \ADODB_postgres9 $conn        The connection object
+     * @param mixed            $container
+     * @param mixed            $server_info
      */
     public function __construct(&$conn, $container, $server_info)
     {
-        $this->container   = $container;
+        $this->container = $container;
         $this->server_info = $server_info;
 
         $this->lang = $container->get('lang');
         $this->conf = $container->get('conf');
 
-        $this->prtrace('instanced connection class');
+        //$this->prtrace('instanced connection class');
         $this->conn = $conn;
     }
 
@@ -55,7 +55,7 @@ class ADOdbBase
      * @param string      $comment  the comment to add
      * @param null|string $basetype
      *
-     * @return int|\ADORecordSet recordset of results or error code
+     * @return \ADORecordSet|int recordset of results or error code
      */
     public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
     {
@@ -174,8 +174,8 @@ class ADOdbBase
      *
      * @param string $sql The SQL query to execute
      *
-     * @return int|\ADORecordSet A recordset or an error code
-     *                         (However, error code 0 means success WTF)
+     * @return \ADORecordSet|int A recordset or an error code
+     *                           (However, error code 0 means success WTF)
      */
     public function execute($sql)
     {
@@ -203,7 +203,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL statement to be executed
      *
-     * @return int|\ADORecordSet A recordset or an error number
+     * @return \ADORecordSet|int A recordset or an error number
      */
     public function selectSet($sql)
     {
@@ -404,7 +404,7 @@ class ADOdbBase
     {
         $this->fieldClean($table);
 
-        $setClause   = '';
+        $setClause = '';
         $whereClause = '';
 
         // Populate the syntax arrays
@@ -506,7 +506,7 @@ class ADOdbBase
         try {
             return $this->conn->platform;
         } catch (\Exception $e) {
-            $this->prtrace($e->getMessage());
+            //$this->prtrace($e->getMessage());
 
             return 'UNKNOWN';
         }
@@ -560,8 +560,8 @@ class ADOdbBase
 
         // Pick out array entries by carefully parsing.  This is necessary in order
         // to cope with double quotes and commas, etc.
-        $elements  = [];
-        $i         = $j         = 0;
+        $elements = [];
+        $i = $j = 0;
         $in_quotes = false;
 
         while (\mb_strlen($arr) > $i) {
@@ -574,7 +574,7 @@ class ADOdbBase
             } elseif (',' === $char && !$in_quotes) {
                 // Add text so far to the array
                 $elements[] = \mb_substr($arr, $j, $i - $j);
-                $j          = $i + 1;
+                $j = $i + 1;
             }
             ++$i;
         }
@@ -588,9 +588,9 @@ class ADOdbBase
             $v = $elements[$i];
 
             if (0 === \mb_strpos($v, '"')) {
-                $v            = \mb_substr($v, 1, \mb_strlen($v) - 2);
-                $v            = \str_replace('\\"', '"', $v);
-                $v            = \str_replace('\\\\', '\\', $v);
+                $v = \mb_substr($v, 1, \mb_strlen($v) - 2);
+                $v = \str_replace('\\"', '"', $v);
+                $v = \str_replace('\\\\', '\\', $v);
                 $elements[$i] = $v;
             }
         }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Traits;
@@ -283,7 +283,7 @@ trait ExportTrait
      */
     public function offerNoRoleExport($version10orMore)
     {
-        $this->prtrace($version10orMore);
+        //$this->prtrace($version10orMore);
 
         if (!$version10orMore) {
             return '';

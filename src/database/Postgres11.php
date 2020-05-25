@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -26,12 +26,12 @@ class Postgres11 extends Postgres10
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If truthy, will return functions of type trigger
      *
-     * @return int|\ADORecordSet All functions
+     * @return \ADORecordSet|int All functions
      */
     public function getFunctions($all = false, $type = null)
     {
         if ($all) {
-            $where    = 'pg_catalog.pg_function_is_visible(p.oid)';
+            $where = 'pg_catalog.pg_function_is_visible(p.oid)';
             $distinct = 'DISTINCT ON (p.proname)';
 
             if ($type) {
@@ -40,7 +40,7 @@ class Postgres11 extends Postgres10
         } else {
             $c_schema = $this->_schema;
             $this->clean($c_schema);
-            $where    = "n.nspname = '{$c_schema}'";
+            $where = "n.nspname = '{$c_schema}'";
             $distinct = '';
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -36,9 +36,11 @@ class UrlDecorator extends Decorator
                 $sep = '&';
             }
         }
+
         if (self::SUBFOLDER !== '' && (0 === \mb_strpos($url, '/')) && (false === \mb_strpos($url, self::SUBFOLDER))) {
             $url = \str_replace('//', '/', self::SUBFOLDER . '/' . $url);
         }
+
         return $url;
     }
 }

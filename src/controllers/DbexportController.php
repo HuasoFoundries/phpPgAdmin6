@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -33,7 +33,6 @@ class DbexportController extends BaseController
 
         // Are we doing a cluster-wide dump or just a per-database dump
         $dumpall = ('server' === $_REQUEST['subject']);
-        $this->prtrace('REQUEST[subject]', $_REQUEST['subject']);
 
         // Check that database dumps are enabled.
         if (!$this->misc->isDumpEnabled($dumpall)) {
@@ -197,7 +196,7 @@ class DbexportController extends BaseController
             \putenv('PGDATABASE');
         }
 
-        $this->prtrace(
+        /*$this->prtrace(
             'ENV VARS',
             [
                 'PGUSER' => \getenv('PGUSER'),
@@ -206,12 +205,10 @@ class DbexportController extends BaseController
                 'PGPORT' => \getenv('PGPORT'),
                 'PGDATABASE' => \getenv('PGDATABASE'),
             ]
-        );
-        $this->prtrace('cmd', $cmd);
+        );*/
 
         // Execute command and return the output to the screen
         \passthru($cmd);
-        //\Kint::dump($cmd);
 
         return $response;
     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -14,10 +14,10 @@ trait FtsTrait
     /**
      * Creates a new FTS configuration.
      *
-     * @param string $cfgname  The name of the FTS configuration to create
-     * @param string $parser   The parser to be used in new FTS configuration
-     * @param string $template The existing FTS configuration to be used as template for the new one
-     * @param string $comment  If omitted, defaults to nothing
+     * @param string       $cfgname  The name of the FTS configuration to create
+     * @param array|string $parser   The parser to be used in new FTS configuration
+     * @param array|string $template The existing FTS configuration to be used as template for the new one
+     * @param string       $comment  If omitted, defaults to nothing
      *
      * @return bool|int 0 success
      *
@@ -87,7 +87,7 @@ trait FtsTrait
      *
      * @param bool $all if false, returns schema qualified FTS confs
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFtsConfigurations($all = true)
     {
@@ -121,7 +121,7 @@ trait FtsTrait
      *
      * @param string $ftscfg Name of the FTS configuration
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFtsConfigurationMap($ftscfg)
     {
@@ -161,7 +161,7 @@ trait FtsTrait
      *
      * @param bool $all if false, return only Parsers from the current schema
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFtsParsers($all = true)
     {
@@ -190,7 +190,7 @@ trait FtsTrait
      *
      * @param bool $all if false, return only Dics from the current schema
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFtsDictionaries($all = true)
     {
@@ -216,7 +216,7 @@ trait FtsTrait
     /**
      * Returns all FTS dictionary templates available.
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFtsDictionaryTemplates()
     {
@@ -247,7 +247,7 @@ trait FtsTrait
      * @param string $ftscfg  The configuration's name
      * @param bool   $cascade true to Cascade to dependenced objects
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropFtsConfiguration($ftscfg, $cascade)
     {
@@ -270,7 +270,7 @@ trait FtsTrait
      * @param string $ftsdict The dico's name
      * @param bool   $cascade Cascade to dependenced objects
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      *
      * @todo Support of dictionary templates dropping
      */
@@ -325,7 +325,7 @@ trait FtsTrait
             $this->fieldClean($f_schema);
             $this->fieldClean($name);
 
-            $sql    = "ALTER TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$cfgname}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$cfgname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -471,7 +471,7 @@ trait FtsTrait
             $this->fieldClean($f_schema);
             $this->fieldClean($name);
 
-            $sql    = "ALTER TEXT SEARCH DICTIONARY \"{$f_schema}\".\"{$dictname}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER TEXT SEARCH DICTIONARY \"{$f_schema}\".\"{$dictname}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -489,7 +489,7 @@ trait FtsTrait
      *
      * @param string $ftsdict The name of the FTS dictionary
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFtsDictionaryByName($ftsdict)
     {
@@ -524,7 +524,7 @@ trait FtsTrait
      * @param string $action   What to do with the mapping: add, alter or drop
      * @param string $dictname Dictionary that will process tokens given or null in case of drop action
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      *
      * @internal param string $cfgname The name of the FTS configuration to alter
      */
@@ -572,7 +572,7 @@ trait FtsTrait
      * @param string $ftscfg  The name of the FTS configuration
      * @param string $mapping The name of the mapping
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFtsMappingByName($ftscfg, $mapping)
     {
@@ -587,7 +587,7 @@ trait FtsTrait
             WHERE c.cfgname = '{$ftscfg}'
                 AND n.nspname='{$c_schema}'");
 
-        $oid       = $oidSet->fields['oid'];
+        $oid = $oidSet->fields['oid'];
         $cfgparser = $oidSet->fields['cfgparser'];
 
         $tokenIdSet = $this->selectSet("SELECT tokid
@@ -612,7 +612,7 @@ trait FtsTrait
      *
      * @param string $ftscfg The config's name that use the parser
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFtsMappings($ftscfg)
     {
@@ -630,7 +630,7 @@ trait FtsTrait
      *
      * @param string $ftscfg The name of the FTS configuration
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getFtsConfigurationByName($ftscfg)
     {

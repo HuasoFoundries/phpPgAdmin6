@@ -3,36 +3,14 @@
 declare(strict_types=1);
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 use Ergebnis\PhpCsFixer\Config;
 
 $composerinfo = \json_decode(\file_get_contents('composer.json'));
 
-$tags = [
-    'master' => \trim(\shell_exec('git describe --tags master')),
-
-    'develop' => \trim(\shell_exec('git describe --tags develop')),
-];
-
-$current_branch = \trim(\shell_exec('git rev-parse --abbrev-ref HEAD'));
-
-$version = $tags[$current_branch] ?? $tags['develop'];
-
-$composer_tags = $composerinfo->extra->current_tags;
-\var_dump($composerinfo->extra->current_tags);
-
-if (
-    \array_key_exists(\trim($current_branch), $tags) &&
-    ($tags['master'] !== $composer_tags->master
-    || $tags['develop'] !== $composer_tags->develop)
-) {
-    $composerinfo->extra->current_tags->master = $tags['master'];
-    $composerinfo->extra->current_tags->develop = $tags['develop'];
-    $composerinfo->extra->version = $version;
-    \file_put_contents('composer.json', \json_encode($composerinfo, \JSON_PRETTY_PRINT));
-}
+$version = $composerinfo->extra->version;
 
 $header = "PHPPgAdmin {$version}";
 
@@ -65,7 +43,7 @@ $config->getFinder()
         'docs',
         'node_modules',
         'temp',
-        'tests',
+
         'vendor',
         '.github',
     ])

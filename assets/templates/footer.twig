@@ -1,4 +1,6 @@
- {% include 'components/footer_scripts.twig' %}
+{{script_footer|raw}} {% if print_bottom_link == true %}
+<a data-footertemplate="{{footer_template}}" href="#" class="bottom_link">{{lang.strgotoppage}}</a> {% endif %}
+<script src="{{subfolder}}/assets/js/footer_scripts.js" type="text/javascript"></script>
 
 </body>
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database;
@@ -25,7 +25,7 @@ class Postgres10 extends Postgres96
     /**
      * Return all tables in current database (and schema).
      *
-     * @return int|\ADORecordSet All tables, sorted alphabetically
+     * @return \ADORecordSet|int All tables, sorted alphabetically
      */
     public function getTables()
     {

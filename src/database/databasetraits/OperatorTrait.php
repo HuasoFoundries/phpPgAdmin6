@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -14,7 +14,7 @@ trait OperatorTrait
     /**
      * Returns a list of all operators in the database.
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getOperators()
     {
@@ -45,12 +45,12 @@ trait OperatorTrait
      * @param mixed $operator_oid The OID of the operator to drop
      * @param bool  $cascade      True to cascade drop, false to restrict
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function dropOperator($operator_oid, $cascade)
     {
         // Function comes in with $object as operator OID
-        $opr      = $this->getOperator($operator_oid);
+        $opr = $this->getOperator($operator_oid);
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
         $this->fieldClean($opr->fields['oprname']);
@@ -81,7 +81,7 @@ trait OperatorTrait
      *
      * @param mixed $operator_oid The oid of the operator
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getOperator($operator_oid)
     {
@@ -112,7 +112,7 @@ trait OperatorTrait
     /**
      * Gets all opclasses.
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getOpClasses()
     {

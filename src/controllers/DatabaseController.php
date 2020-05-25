@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Controller;
@@ -48,9 +48,9 @@ class DatabaseController extends BaseController
             $scripts .= '<script type="text/javascript">' . \PHP_EOL;
             $scripts .= "var Database = {\n";
             $scripts .= "ajax_time_refresh: {$refreshTime},\n";
-            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '" . $this->misc->icon('Execute') . "'},\n";
-            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '" . $this->misc->icon('Stop') . "'},\n";
-            $scripts .= "load_icon: '" . $this->misc->icon('Loading') . "',\n";
+            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '" . $this->view->icon('Execute') . "'},\n";
+            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '" . $this->view->icon('Stop') . "'},\n";
+            $scripts .= "load_icon: '" . $this->view->icon('Loading') . "',\n";
             $scripts .= "server:'{$_REQUEST['server']}',\n";
             $scripts .= "dbname:'{$_REQUEST['database']}',\n";
             $scripts .= "action:'refresh_{$this->action}',\n";
@@ -343,7 +343,7 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         if (0 === \mb_strlen($msg)) {
-            echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+            echo '<br /><a id="control" href=""><img src="' . $this->view->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
         }
 
         echo '<div id="data_block">';
@@ -526,7 +526,7 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'locks');
 
-        echo '<br /><a id="control" href=""><img src="' . $this->misc->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+        echo '<br /><a id="control" href=""><img src="' . $this->view->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
 
         echo '<div id="data_block">';
         $this->currentLocks();

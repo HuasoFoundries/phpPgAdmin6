@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin v6.0.0-RC9-3-gd93ec300
+ * PHPPgAdmin v6.0.0-RC9
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -16,7 +16,7 @@ trait SequenceTrait
      *
      * @param bool $all true to get all sequences of all schemas
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getSequences($all = false)
     {
@@ -46,7 +46,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function nextvalSequence($sequence)
     {
@@ -68,7 +68,7 @@ trait SequenceTrait
      * @param string $sequence  Sequence name
      * @param number $nextvalue The next value
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function setvalSequence($sequence, $nextvalue)
     {
@@ -90,7 +90,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function restartSequence($sequence)
     {
@@ -108,7 +108,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function resetSequence($sequence)
     {
@@ -137,7 +137,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function getSequence($sequence)
     {
@@ -170,16 +170,16 @@ trait SequenceTrait
      * @param number $cachevalue  The cache value
      * @param bool   $cycledvalue True if cycled, false otherwise
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function createSequence(
         $sequence,
         $increment,
-        $minvalue,
-        $maxvalue,
-        $startvalue,
-        $cachevalue,
-        $cycledvalue
+        $minvalue = null,
+        $maxvalue = null,
+        $startvalue = null,
+        $cachevalue = null,
+        $cycledvalue = false
     ) {
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
@@ -297,9 +297,9 @@ trait SequenceTrait
      * Alter a sequence's owner.
      *
      * @param \ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
-     * @param string                   $owner the new owner of the sequence
+     * @param string        $owner the new owner of the sequence
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      *
      * @internal string $name new owner for the sequence
      */
@@ -324,15 +324,15 @@ trait SequenceTrait
      * Alter a sequence's properties.
      *
      * @param \ADORecordSet $seqrs        The sequence RecordSet returned by getSequence()
-     * @param number                   $increment    The sequence incremental value
-     * @param number                   $minvalue     The sequence minimum value
-     * @param number                   $maxvalue     The sequence maximum value
-     * @param number                   $restartvalue The sequence current value
-     * @param number                   $cachevalue   The sequence cache value
-     * @param null|bool                $cycledvalue  Sequence can cycle ?
-     * @param number                   $startvalue   The sequence start value when issueing a restart
+     * @param number        $increment    The sequence incremental value
+     * @param number        $minvalue     The sequence minimum value
+     * @param number        $maxvalue     The sequence maximum value
+     * @param number        $restartvalue The sequence current value
+     * @param number        $cachevalue   The sequence cache value
+     * @param null|bool     $cycledvalue  Sequence can cycle ?
+     * @param number        $startvalue   The sequence start value when issueing a restart
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function alterSequenceProps(
         $seqrs,
@@ -390,9 +390,9 @@ trait SequenceTrait
      * Rename a sequence.
      *
      * @param \ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
-     * @param string                   $name  The new name for the sequence
+     * @param string        $name  The new name for the sequence
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
     public function alterSequenceName($seqrs, $name)
     {
@@ -400,7 +400,7 @@ trait SequenceTrait
         if (!empty($name) && ($seqrs->fields['seqname'] !== $name)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql    = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
+            $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
             $status = $this->execute($sql);
 
             if (0 === $status) {
@@ -417,9 +417,9 @@ trait SequenceTrait
      * Alter a sequence's schema.
      *
      * @param \ADORecordSet $seqrs  The sequence RecordSet returned by getSequence()
-     * @param string                   $schema
+     * @param string        $schema
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      *
      * @internal param The $name new schema for the sequence
      */
@@ -440,12 +440,12 @@ trait SequenceTrait
     /**
      * Drops a given sequence.
      *
-     * @param $sequence Sequence name
-     * @param $cascade  True to cascade drop, false to restrict
+     * @param string $sequence Sequence name
+     * @param bool   $cascade  True to cascade drop, false to restrict
      *
-     * @return int|\ADORecordSet
+     * @return \ADORecordSet|int
      */
-    public function dropSequence($sequence, $cascade)
+    public function dropSequence($sequence, $cascade = false)
     {
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
@@ -483,17 +483,17 @@ trait SequenceTrait
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
      * @param \ADORecordSet $seqrs        The sequence recordSet returned by getSequence()
-     * @param string                   $name         The new name for the sequence
-     * @param string                   $comment      The comment on the sequence
-     * @param string                   $owner        The new owner for the sequence
-     * @param string                   $schema       The new schema for the sequence
-     * @param string                   $increment    The increment
-     * @param string                   $minvalue     The min value
-     * @param string                   $maxvalue     The max value
-     * @param string                   $restartvalue The starting value
-     * @param string                   $cachevalue   The cache value
-     * @param null|bool                $cycledvalue  True if cycled, false otherwise
-     * @param string                   $startvalue   The sequence start value when issueing a restart
+     * @param string        $name         The new name for the sequence
+     * @param string        $comment      The comment on the sequence
+     * @param string        $owner        The new owner for the sequence
+     * @param string        $schema       The new schema for the sequence
+     * @param int           $increment    The increment
+     * @param int           $minvalue     The min value
+     * @param int           $maxvalue     The max value
+     * @param int           $restartvalue The starting value
+     * @param int           $cachevalue   The cache value
+     * @param null|bool     $cycledvalue  True if cycled, false otherwise
+     * @param int           $startvalue   The sequence start value when issueing a restart
      *
      * @return int 0 success
      */
