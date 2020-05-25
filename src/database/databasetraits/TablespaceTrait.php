@@ -16,7 +16,7 @@ trait TablespaceTrait
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getTablespaces($all = false)
     {
@@ -42,7 +42,7 @@ trait TablespaceTrait
      *
      * @param string $spcname
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getTablespace($spcname)
     {
@@ -160,7 +160,7 @@ trait TablespaceTrait
      *
      * @param string $spcname The name of the domain to drop
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropTablespace($spcname)
     {

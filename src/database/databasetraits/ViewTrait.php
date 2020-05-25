@@ -14,7 +14,7 @@ trait ViewTrait
     /**
      * Returns a list of all views in the database.
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getViews()
     {
@@ -34,7 +34,7 @@ trait ViewTrait
     /**
      * Returns a list of all materialized views in the database.
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getMaterializedViews()
     {
@@ -163,7 +163,7 @@ trait ViewTrait
      *
      * @param string $view The name of the view or materialized to retrieve
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getView($view)
     {
@@ -186,10 +186,10 @@ trait ViewTrait
     /**
      * Alter a view's owner.
      *
-     * @param \ADORecordSet $vwrs  The view recordSet returned by getView()
-     * @param null|string   $owner
+     * @param \PHPPgAdmin\ADORecordSet $vwrs  The view recordSet returned by getView()
+     * @param null|string              $owner
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      *
      * @internal param  $name new view's owner
      */
@@ -214,10 +214,10 @@ trait ViewTrait
     /**
      * Rename a view.
      *
-     * @param \ADORecordSet $vwrs The view recordSet returned by getView()
-     * @param string        $name The new view's name
+     * @param \PHPPgAdmin\ADORecordSet $vwrs The view recordSet returned by getView()
+     * @param string                   $name The new view's name
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterViewName($vwrs, $name)
     {
@@ -243,10 +243,10 @@ trait ViewTrait
     /**
      * Alter a view's schema.
      *
-     * @param \ADORecordSet $vwrs   The view recordSet returned by getView()
-     * @param string        $schema
+     * @param \PHPPgAdmin\ADORecordSet $vwrs   The view recordSet returned by getView()
+     * @param string                   $schema
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      *
      * @internal param The $name new view's schema
      */
@@ -274,7 +274,7 @@ trait ViewTrait
      * @param string $viewname The name of the view to drop
      * @param string $cascade  True to cascade drop, false to restrict
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropView($viewname, $cascade)
     {
@@ -316,11 +316,11 @@ trait ViewTrait
      * Protected method which alter a view
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \ADORecordSet $vwrs    The view recordSet returned by getView()
-     * @param string        $name    The new name for the view
-     * @param string        $owner   The new owner for the view
-     * @param string        $schema  Schema name
-     * @param string        $comment The comment on the view
+     * @param \PHPPgAdmin\ADORecordSet $vwrs    The view recordSet returned by getView()
+     * @param string                   $name    The new name for the view
+     * @param string                   $owner   The new owner for the view
+     * @param string                   $schema  Schema name
+     * @param string                   $comment The comment on the view
      *
      * @return int 0 success
      */

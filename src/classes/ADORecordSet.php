@@ -23,4 +23,16 @@ class ADORecordSet extends \ADORecordSet implements \Countable
     {
         return $this->NumRows();
     }
+
+    /**
+     * Returns the recordCount.
+     *
+     * @param int $fieldoffset
+     *
+     * @return \ADOFieldObject the field
+     */
+    public function fetchField($fieldoffset = -1): \ADOFieldObject
+    {
+        return parent::fetchField();
+    }
 }

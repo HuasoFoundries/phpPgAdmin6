@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin;
 
+use PHPPgAdmin\Database\Postgres;
+
 /**
  * @file
  * Class to hold various commonly used functions
@@ -64,6 +66,9 @@ class Misc
 
     private $_reload_browser = false;
 
+    /**
+     * @var Postgres
+     */
     private $_data;
 
     private $_database;
@@ -279,9 +284,9 @@ class Misc
      *
      * @internal mixed $plaform placeholder that will receive the value of the platform
      *
-     * @return null|\PHPPgAdmin\Database\ADOdbBase the database accessor instance
+     * @return null|\PHPPgAdmin\Database\Postgres the database accessor instance
      */
-    public function getDatabaseAccessor($database = '', $server_id = null): ?\PHPPgAdmin\Database\ADOdbBase
+    public function getDatabaseAccessor($database = '', $server_id = null): ?\PHPPgAdmin\Database\Postgres
     {
         $lang = $this->lang;
 

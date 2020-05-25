@@ -132,7 +132,7 @@ psalm:
 	@if [ -f "vendor/bin/psalm" ]; then \
 		mkdir -p .build/psalm ;\
 		${MAKE} disable_xdebug  --no-print-directory ;\
-		vendor/bin/psalm --show-info=false \
+		vendor/bin/psalm --show-info=true \
 			  --config=psalm.xml \
 			  --set-baseline=.build/psalm/psalm-baseline$(FOLDER_BASENAME).xml \
 			  --shepherd $(folder) ;\

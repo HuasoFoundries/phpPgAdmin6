@@ -52,7 +52,10 @@ parameters:
 			message: "#^Result of method PHPPgAdmin\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:[a-zA-Z0-9_]+\\(\\) \\(void\\) is used\\.$#"
 			path: src/*
 
- 
+		- 
+			message: "#^Call to static method br2ln\\(\\) on trait PHPPgAdmin\\Traits\\HelperTrait\\.#"
+			path: src/*
+
 		-
 			message: "#^Constructor of class [a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+ has an unused parameter \\$[a-zA-Z0-9_]+\\.$#"
 			path: src/*

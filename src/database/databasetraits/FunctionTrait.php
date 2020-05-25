@@ -17,7 +17,7 @@ trait FunctionTrait
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If truthy, will return functions of type trigger
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFunctions($all = false, $type = null)
     {
@@ -64,7 +64,7 @@ trait FunctionTrait
     /**
      * Returns a list of all functions that can be used in triggers.
      *
-     * @return \ADORecordSet|int
+     * @return \PHPPgAdmin\ADORecordSet Functions that can be used in a trigger
      */
     public function getTriggerFunctions()
     {
@@ -234,7 +234,7 @@ trait FunctionTrait
      * @param string $language   The language the function is written for
      * @param array  $flags      An array of optional flags
      * @param bool   $setof      True if it returns a set, false otherwise
-     * @param float  $cost       cost the planner should use in the function  execution step
+     * @param string $cost       cost the planner should use in the function  execution step
      * @param int    $rows       number of rows planner should estimate will be returned
      * @param string $comment    Comment for the function
      * @param bool   $replace    (optional) True if OR REPLACE, false for
@@ -342,7 +342,7 @@ trait FunctionTrait
      * @param int  $function_oid The OID of the function to drop
      * @param bool $cascade      True to cascade drop, false to restrict
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropFunction($function_oid, $cascade)
     {
@@ -366,7 +366,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -405,7 +405,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getFunctionDef($function_oid)
     {

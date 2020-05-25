@@ -62,6 +62,6 @@
             "php -r \"array_map( 'unlink', array_filter((array) glob('temp/twigcache/**/*.php', GLOB_BRACE)));\"",
             "php -r \"array_map( 'rmdir', array_filter((array) glob('temp/twigcache/*', GLOB_BRACE)));\""
         ],
-        "phpstan": "phpstan analyse src --memory-limit=2G "
+        "phpstan": "phpstan analyse src   "
     }
 }

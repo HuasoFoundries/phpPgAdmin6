@@ -27,10 +27,11 @@ Other enhancements are in progress and would be a nice to have:
 ## Requirements
 
 -   PHP 7.1+
+-   PostgreSQL v9+
 -   ext-psql
 -   [Composer](https://getcomposer.org/download/)
 
-(If you're using PHP 5.6+, you can still try versions RC2 and below, but you should really, realy upgrade).
+(If you're using PostgreSQL 7.4 or 8.x, or PHP 5.6+, you can still try versions RC2 and below, but you should really, realy upgrade).
 
 ---
 

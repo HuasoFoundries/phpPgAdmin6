@@ -37,8 +37,8 @@ class DataimportController extends BaseController
         /**
          * Character data handler for XML import feature.
          *
-         * @param $parser
-         * @param $cdata
+         * @param resource $parser
+         * @param string   $cdata
          */
         $_charHandler = static function ($parser, $cdata) use (&$state, &$curr_col_val): void {
             if ('COLUMN' === $state) {

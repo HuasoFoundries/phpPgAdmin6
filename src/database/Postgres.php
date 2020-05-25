@@ -42,6 +42,7 @@ class Postgres extends ADOdbBase
 
     public function __construct(&$conn, $container, $server_info)
     {
+        //$this->prtrace('major_version :' . $this->major_version);
         $this->conn = $conn;
         $this->container = $container;
 
@@ -182,7 +183,7 @@ class Postgres extends ADOdbBase
      * @param string $term   The search term
      * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return \ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function findObject($term, $filter)
     {
@@ -382,7 +383,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all True to get all languages, regardless of show_system
      *
-     * @return \ADORecordSet|int A recordset
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset
      */
     public function getLanguages($all = false)
     {
@@ -473,7 +474,7 @@ class Postgres extends ADOdbBase
             for ($i = 0; $i < $len; $this->advance_1($i, $prevlen, $thislen)) {
                 /* was the previous character a backslash? */
                 if (0 < $i && '\\' === \mb_substr($line, $i - $prevlen, 1)) {
-                    //$this->prtrace('bslash_count', $bslash_count, $line);
+                    $this->prtrace('bslash_count', $bslash_count, $line);
                     ++$bslash_count;
                 } else {
                     $bslash_count = 0;
@@ -487,6 +488,7 @@ class Postgres extends ADOdbBase
 
                 /* in quote? */
                 if (0 !== $in_quote) {
+                    //$this->prtrace('in_quote', $in_quote, $line);
                     /*
                      * end of quote if matching non-backslashed character.
                      * backslashes don't count for double quotes, though.
@@ -497,7 +499,7 @@ class Postgres extends ADOdbBase
                         $in_quote = 0;
                     }
                 } elseif ($dol_quote) {
-                    //$this->prtrace('dol_quote', $dol_quote, $line);
+                    $this->prtrace('dol_quote', $dol_quote, $line);
 
                     if (0 === \strncmp(\mb_substr($line, $i), $dol_quote, \mb_strlen($dol_quote))) {
                         $this->advance_1($i, $prevlen, $thislen);
@@ -509,7 +511,7 @@ class Postgres extends ADOdbBase
                         $dol_quote = '';
                     }
                 } elseif ('/*' === \mb_substr($line, $i, 2)) {
-                    //$this->prtrace('open_xcomment', $in_xcomment, $line, $i, $prevlen, $thislen);
+                    $this->prtrace('open_xcomment', $in_xcomment, $line, $i, $prevlen, $thislen);
 
                     if (0 === $in_xcomment) {
                         ++$in_xcomment;
@@ -695,12 +697,12 @@ class Postgres extends ADOdbBase
      * @param null|int $page_size The number of rows per page
      * @param int      $max_pages (return-by-ref) The max number of pages in the relation
      *
-     * @return \ADORecordSet|int A  recordset on success or an int with error code
-     *                           - -1 transaction error
-     *                           - -2 counting error
-     *                           - -3 page or page_size invalid
-     *                           - -4 unknown type
-     *                           - -5 failed setting transaction read only
+     * @return int|\PHPPgAdmin\ADORecordSet A  recordset on success or an int with error code
+     *                                      - -1 transaction error
+     *                                      - -2 counting error
+     *                                      - -3 page or page_size invalid
+     *                                      - -4 unknown type
+     *                                      - -5 failed setting transaction read only
      */
     public function browseQuery($type, $table, $query, $sortkey, $sortdir, $page, $page_size, &$max_pages)
     {
@@ -742,7 +744,7 @@ class Postgres extends ADOdbBase
         // Open a transaction
         $status = $this->beginTransaction();
 
-        if (false !== $status) {
+        if (0 !== $status) {
             return -1;
         }
 
@@ -802,7 +804,7 @@ class Postgres extends ADOdbBase
         $rs = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
         $status = $this->endTransaction();
 
-        if (false !== $status) {
+        if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;

@@ -135,7 +135,7 @@ class TreeController extends BaseController
      *                        'nodata' - message to display when node has no children
      * @param bool  $print    either to return or echo the result
      *
-     * @return \Slim\Http\Response|string the json rendered tree
+     * @return array<int|string, array<string, mixed>|bool|string> the json rendered tree
      */
     private function printTreeJSON(&$treedata, &$attrs, $print = true)
     {

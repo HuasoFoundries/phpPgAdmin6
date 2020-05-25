@@ -43,7 +43,7 @@ $config->getFinder()
         'docs',
         'node_modules',
         'temp',
-
+        'src/router.php',
         'vendor',
         '.github',
     ])

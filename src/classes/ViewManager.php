@@ -60,6 +60,11 @@ class ViewManager extends \Slim\Views\Twig
 
     public $view;
 
+    /**
+     * @var \PHPPgAdmin\Misc
+     */
+    public $misc;
+
     protected $container;
 
     private $_connection;
@@ -101,7 +106,7 @@ class ViewManager extends \Slim\Views\Twig
 
         $this->addExtension(new \Slim\Views\TwigExtension($c['router'], $basePath));
 
-        $this->offsetSet('subfolder', $c->subfolder);
+        $this->offsetSet('subfolder', self::SUBFOLDER);
         $this->offsetSet('theme', $this->misc->getConf('theme'));
         $this->offsetSet('Favicon', $this->icon('Favicon'));
         $this->offsetSet('Introduction', $this->icon('Introduction'));

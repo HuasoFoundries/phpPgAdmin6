@@ -69,7 +69,7 @@ class Connection
 
         $this->container = $container;
 
-        $this->conn = \ADONewConnection('postgres9');
+        $this->conn = ADONewConnection('postgres9');
         //$this->conn->debug = true;
         $this->conn->setFetchMode($fetchMode);
 
@@ -93,14 +93,15 @@ class Connection
 
         /*try {
         $this->_connection_result = $this->conn->connect($pghost, $user, $password, $database);
-        //$this->prtrace(['_connection_result' => $this->_connection_result, 'conn' => $this->conn]);
+        $this->prtrace(['_connection_result' => $this->_connection_result, 'conn' => $this->conn]);
         } catch (\PHPPgAdmin\ADOdbException $e) {
-        //$this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+        $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
          */
         try {
             $this->conn->connect($pghost, $user, $password, $database);
+            //$this->prtrace($this->conn);
         } catch (\Exception $e) {
-            //$this->prtrace($e->getMessage(), $e->getTrace());
+            $this->prtrace($e->getMessage(), $e->getTrace());
         }
     }
 
@@ -157,6 +158,8 @@ class Connection
         } else {
             $major_version = \implode('.', [$version_parts[0], $version_parts[1]]);
         }
+
+        //$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), 'version' => $version, 'major_version' => $major_version]);
         // Detect version and choose appropriate database driver
         if (\array_key_exists($major_version, $this->version_dictionary)) {
             return $this->version_dictionary[$major_version];

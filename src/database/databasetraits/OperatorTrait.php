@@ -14,7 +14,7 @@ trait OperatorTrait
     /**
      * Returns a list of all operators in the database.
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getOperators()
     {
@@ -45,7 +45,7 @@ trait OperatorTrait
      * @param mixed $operator_oid The OID of the operator to drop
      * @param bool  $cascade      True to cascade drop, false to restrict
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropOperator($operator_oid, $cascade)
     {
@@ -81,7 +81,7 @@ trait OperatorTrait
      *
      * @param mixed $operator_oid The oid of the operator
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getOperator($operator_oid)
     {
@@ -112,7 +112,7 @@ trait OperatorTrait
     /**
      * Gets all opclasses.
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getOpClasses()
     {

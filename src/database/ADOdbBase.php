@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\ADONewConnection;
+
 /**
  * @file
  * Parent class of all ADODB objects.
@@ -28,7 +30,7 @@ class ADOdbBase
     /**
      * Base constructor.
      *
-     * @param \ADODB_postgres9 $conn        The connection object
+     * @param ADONewConnection $conn        The connection object
      * @param mixed            $container
      * @param mixed            $server_info
      */
@@ -40,7 +42,7 @@ class ADOdbBase
         $this->lang = $container->get('lang');
         $this->conf = $container->get('conf');
 
-        //$this->prtrace('instanced connection class');
+        $this->prtrace('instanced connection class');
         $this->conn = $conn;
     }
 
@@ -55,7 +57,7 @@ class ADOdbBase
      * @param string      $comment  the comment to add
      * @param null|string $basetype
      *
-     * @return \ADORecordSet|int recordset of results or error code
+     * @return int|\PHPPgAdmin\ADORecordSet recordset of results or error code
      */
     public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
     {
@@ -174,8 +176,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL query to execute
      *
-     * @return \ADORecordSet|int A recordset or an error code
-     *                           (However, error code 0 means success WTF)
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset or an error code
      */
     public function execute($sql)
     {
@@ -203,7 +204,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL statement to be executed
      *
-     * @return \ADORecordSet|int A recordset or an error number
+     * @return int|\PHPPgAdmin\ADORecordSet A recordset or an error number
      */
     public function selectSet($sql)
     {
@@ -506,7 +507,7 @@ class ADOdbBase
         try {
             return $this->conn->platform;
         } catch (\Exception $e) {
-            //$this->prtrace($e->getMessage());
+            $this->prtrace($e->getMessage());
 
             return 'UNKNOWN';
         }

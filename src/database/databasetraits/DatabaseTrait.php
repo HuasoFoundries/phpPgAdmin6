@@ -58,7 +58,7 @@ trait DatabaseTrait
      *
      * @param string $table (optional) The table to analyze
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function analyzeDB($table = '')
     {
@@ -80,7 +80,7 @@ trait DatabaseTrait
      *
      * @param string $database The name of the database to retrieve
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getDatabase($database)
     {
@@ -95,12 +95,14 @@ trait DatabaseTrait
      *
      * @param null|string $currentdatabase database name that should be on top of the resultset
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getDatabases($currentdatabase = null)
     {
         $conf = $this->conf;
         $server_info = $this->server_info;
+
+        //$this->prtrace('server_info', $server_info);
 
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
             $username = $server_info['username'];
@@ -162,7 +164,7 @@ trait DatabaseTrait
      *
      * @param string $database the name of the database to get the comment for
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getDatabaseComment($database)
     {
@@ -181,7 +183,7 @@ trait DatabaseTrait
      *
      * @param string $database the name of the database to get the owner for
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getDatabaseOwner($database)
     {
@@ -274,7 +276,7 @@ trait DatabaseTrait
      *
      * @param string $database The name of the database to drop
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function dropDatabase($database)
     {
@@ -345,7 +347,7 @@ trait DatabaseTrait
      * @param string $oldName name of database to rename
      * @param string $newName new name of database
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterDatabaseRename($oldName, $newName)
     {
@@ -368,7 +370,7 @@ trait DatabaseTrait
      * @param string $dbName   database to change ownership of
      * @param string $newOwner user that will own the database
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function alterDatabaseOwner($dbName, $newOwner)
     {
@@ -385,7 +387,7 @@ trait DatabaseTrait
      *
      * @param null|string $database (optional) Find only prepared transactions executed in a specific database
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getPreparedXacts($database = null)
     {
@@ -405,7 +407,7 @@ trait DatabaseTrait
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getProcesses($database = null)
     {
@@ -431,7 +433,7 @@ trait DatabaseTrait
     /**
      * Returns table locks information in the current database.
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getLocks()
     {
@@ -569,7 +571,7 @@ trait DatabaseTrait
     /**
      * Returns all available variable information.
      *
-     * @return \ADORecordSet|int
+     * @return int|\PHPPgAdmin\ADORecordSet
      */
     public function getVariables()
     {
