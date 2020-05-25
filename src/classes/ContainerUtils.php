@@ -16,11 +16,6 @@ use Slim\App;
 \defined('IN_TEST') || \define('IN_TEST', false);
 
 /**
- * @file
- * A class that adds convenience methods to the container
- */
-
-/**
  * A class that adds convenience methods to the container.
  */
 class ContainerUtils

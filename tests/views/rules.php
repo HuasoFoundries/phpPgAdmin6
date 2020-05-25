@@ -9,12 +9,6 @@
 function rulesFactory($container)
 {
     $do_render = false;
-    $do_render = false;
-    $controller = new \PHPPgAdmin\Controller\RulesController($container);
 
-    if ($do_render) {
-        $controller->render();
-    }
-
-    return $controller;
+    return new \PHPPgAdmin\Controller\RulesController($container);
 }

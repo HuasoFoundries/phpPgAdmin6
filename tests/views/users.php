@@ -8,7 +8,7 @@
 function usersFactory($container)
 {
     $do_render = false;
-    $do_render = false;
+
     $controller = new \PHPPgAdmin\Controller\UsersController($container);
 
     if ($do_render) {

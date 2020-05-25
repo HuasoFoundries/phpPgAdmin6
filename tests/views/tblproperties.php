@@ -9,7 +9,7 @@
 function tblpropertiesFactory($container)
 {
     $do_render = false;
-    $do_render = false;
+
     $controller = new \PHPPgAdmin\Controller\TblpropertiesController($container);
 
     if ($do_render) {

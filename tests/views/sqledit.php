@@ -9,7 +9,7 @@
 function sqleditFactory($container)
 {
     $do_render = false;
-    $do_render = false;
+
     $controller = new \PHPPgAdmin\Controller\SqleditController($container);
 
     if ($do_render) {

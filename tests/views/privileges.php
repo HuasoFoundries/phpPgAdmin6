@@ -5,14 +5,12 @@
  */
 
 /**
- * PHPPgAdmin v6.0.0-RC9.
- *
- * @param mixed $container
+ * @param Psr\Container\ContainerInterface $container
  */
 function privilegesFactory($container)
 {
     $do_render = false;
-    $do_render = false;
+
     $controller = new \PHPPgAdmin\Controller\PrivilegesController($container);
 
     if ($do_render) {

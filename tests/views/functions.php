@@ -9,7 +9,7 @@
 function functionsFactory($container)
 {
     $do_render = false;
-    $do_render = false;
+
     $controller = new \PHPPgAdmin\Controller\FunctionsController($container);
 
     if ($do_render) {

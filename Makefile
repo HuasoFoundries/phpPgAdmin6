@@ -73,7 +73,7 @@ tag_and_push:
 
 
 
-tag: test update_version csfixer tag_and_push	
+tag: test update_version csfixer lint tag_and_push	
 
 test:
 ifeq ("$(wildcard config.inc.php)","")

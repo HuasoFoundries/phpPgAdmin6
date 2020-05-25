@@ -5,7 +5,7 @@
  */
 
 /**
- * PHPPgAdmin v6.0.0-RC9.
+ * PHPPgAdmin 6.0.0.
  */
 class FunctionalTester extends \Codeception\Actor
 {
