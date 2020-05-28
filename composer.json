@@ -35,7 +35,7 @@
         "php-parallel-lint/php-parallel-lint": "^1.2",
         "phpstan/phpstan": "^0.12.14",
         "simpletest/simpletest": "^1.1",
-        "vimeo/psalm": "~3.9.3"
+        "vimeo/psalm": "~3.11.5"
     },
     "extra": {
         "version": "6.0.0"
