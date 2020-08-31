@@ -240,7 +240,7 @@ class DisplayController extends BaseController
         //die(htmlspecialchars($query));
 
         echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
-        echo $this->misc->form;
+        echo $this->view->form;
 
         if ($object) {
             echo '<input type="hidden" name="' . $subject . '" value="', \htmlspecialchars($object), '" />' . \PHP_EOL;
@@ -711,7 +711,7 @@ class DisplayController extends BaseController
         }
 
         echo '<input type="hidden" name="action" value="editrow" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo isset($_REQUEST['table']) ? \sprintf('<input type="hidden" name="table" value="%s" />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL) : '';
 
         echo isset($_REQUEST['subject']) ? \sprintf('<input type="hidden" name="subject" value="%s" />%s', \htmlspecialchars($_REQUEST['subject']), \PHP_EOL) : '';
@@ -798,7 +798,7 @@ class DisplayController extends BaseController
             $resultset = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
             echo '<form action="' . self::SUBFOLDER . '/src/views/display" method="post">' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
 
             if (1 === $resultset->recordCount()) {
                 echo "<p>{$this->lang['strconfdeleterow']}</p>" . \PHP_EOL;

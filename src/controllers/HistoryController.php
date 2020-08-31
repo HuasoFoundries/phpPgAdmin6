@@ -203,7 +203,7 @@ class HistoryController extends BaseController
             echo '<form action="' . self::SUBFOLDER . '/src/views/history" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="delhistory" />' . \PHP_EOL;
             echo "<input type=\"hidden\" name=\"queryid\" value=\"{$qid}\" />" . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -225,7 +225,7 @@ class HistoryController extends BaseController
 
             echo '<form action="' . self::SUBFOLDER . '/src/views/history" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="clearhistory" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;

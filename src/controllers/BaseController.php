@@ -62,7 +62,7 @@ class BaseController
     public $controller_title = 'base';
 
     public $msg = '';
-
+/** @var \PHPPgAdmin\ViewManager */
     public $view;
 
     public $misc;

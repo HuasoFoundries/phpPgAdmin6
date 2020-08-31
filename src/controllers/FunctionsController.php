@@ -467,7 +467,7 @@ class FunctionsController extends BaseController
         echo '<p><input type="hidden" name="action" value="save_edit" />' . \PHP_EOL;
         echo '<input type="hidden" name="function" value="', \htmlspecialchars($_REQUEST['function']), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="function_oid" value="', \htmlspecialchars($_REQUEST['function_oid']), '" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -661,7 +661,7 @@ class FunctionsController extends BaseController
 
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
 
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -964,7 +964,7 @@ class FunctionsController extends BaseController
         echo '</tbody></table>' . \PHP_EOL;
         echo $szJSTRArg;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;

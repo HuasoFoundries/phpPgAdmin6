@@ -189,7 +189,7 @@ class TablespacesController extends BaseController
             $this->coalesceArr($_POST, 'comment', ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '');
 
             echo '<form action="' . self::SUBFOLDER . '/src/views/tablespaces" method="post">' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
@@ -265,7 +265,7 @@ class TablespacesController extends BaseController
             echo '<p>', \sprintf($this->lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), '</p>' . \PHP_EOL;
 
             echo '<form action="' . self::SUBFOLDER . '/src/views/tablespaces" method="post">' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="tablespace" value="', \htmlspecialchars($_REQUEST['tablespace']), '" />' . \PHP_EOL;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
@@ -309,7 +309,7 @@ class TablespacesController extends BaseController
         $this->printMsg($msg);
 
         echo '<form action="' . self::SUBFOLDER . '/src/views/tablespaces" method="post">' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formSpcname\" maxlength=\"{$data->_maxNameLen}\" value=\"", \htmlspecialchars($_POST['formSpcname']), "\" /></td>\n\t</tr>" . \PHP_EOL;

@@ -144,7 +144,7 @@ class DataexportController extends BaseController
         if (isset($_REQUEST['search_path'])) {
             echo '<input type="hidden" name="search_path" value="', \htmlspecialchars($_REQUEST['search_path']), '" />' . \PHP_EOL;
         }
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
 

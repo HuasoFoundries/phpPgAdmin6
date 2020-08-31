@@ -348,7 +348,7 @@ class TypesController extends BaseController
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="type" value="', \htmlspecialchars($_REQUEST['type']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -402,7 +402,7 @@ class TypesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create_comp" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />" . \PHP_EOL;
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
                 echo '</form>' . \PHP_EOL;
@@ -481,7 +481,7 @@ class TypesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create_comp" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="3" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo '<input type="hidden" name="name" value="', \htmlspecialchars($_REQUEST['name']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="fields" value="', \htmlspecialchars($_REQUEST['fields']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="typcomment" value="', \htmlspecialchars($_REQUEST['typcomment']), '" />' . \PHP_EOL;
@@ -579,7 +579,7 @@ class TypesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create_enum" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />" . \PHP_EOL;
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
                 echo '</form>' . \PHP_EOL;
@@ -625,7 +625,7 @@ class TypesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create_enum" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="3" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo '<input type="hidden" name="name" value="', \htmlspecialchars($_REQUEST['name']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="values" value="', \htmlspecialchars($_REQUEST['values']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="typcomment" value="', \htmlspecialchars($_REQUEST['typcomment']), '" />' . \PHP_EOL;
@@ -777,7 +777,7 @@ class TypesController extends BaseController
         echo '</select></td></tr>' . \PHP_EOL;
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;

@@ -161,7 +161,7 @@ class MaterializedviewpropertiesController extends BaseController
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="save_edit" />' . \PHP_EOL;
             echo '<input type="hidden" name="matview" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -214,7 +214,7 @@ class MaterializedviewpropertiesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="properties" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo '<input type="hidden" name="matview" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="olddefault" value="', \htmlspecialchars($_REQUEST['olddefault']), '" />' . \PHP_EOL;
@@ -329,7 +329,7 @@ class MaterializedviewpropertiesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<input type="hidden" name="action" value="alter" />' . \PHP_EOL;
                 echo '<input type="hidden" name="matview" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo "<p><input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
                 echo '</form>' . \PHP_EOL;

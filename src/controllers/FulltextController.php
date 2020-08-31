@@ -313,7 +313,7 @@ class FulltextController extends BaseController
             echo '<p><input type="hidden" name="action" value="dropconfig" />' . \PHP_EOL;
             echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_REQUEST['ftscfg']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -346,7 +346,7 @@ class FulltextController extends BaseController
             echo '<input type="hidden" name="ftsdict" value="', \htmlspecialchars($_REQUEST['ftsdict']), '" />' . \PHP_EOL;
             //echo "<input type=\"hidden\" name=\"ftscfg\" value=\"", htmlspecialchars($_REQUEST['ftscfg']), "\" />".PHP_EOL;
             echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -454,7 +454,7 @@ class FulltextController extends BaseController
         echo '<p>' . \PHP_EOL;
         echo '<input type="hidden" name="action" value="createconfig" />' . \PHP_EOL;
         echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
         echo '</p>' . \PHP_EOL;
@@ -550,7 +550,7 @@ class FulltextController extends BaseController
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="alterconfig" />' . \PHP_EOL;
             echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_POST['ftscfg']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -880,7 +880,7 @@ class FulltextController extends BaseController
         echo '<p>' . \PHP_EOL;
         echo '<input type="hidden" name="action" value="createdict" />' . \PHP_EOL;
         echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
         echo '</p>' . \PHP_EOL;
@@ -986,7 +986,7 @@ class FulltextController extends BaseController
             echo '<p><input type="hidden" name="action" value="alterdict" />' . \PHP_EOL;
             echo '<input type="hidden" name="ftsdict" value="', \htmlspecialchars($_POST['ftsdict']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -1053,7 +1053,7 @@ class FulltextController extends BaseController
             echo "<input type=\"hidden\" name=\"ftscfg\" value=\"{$_REQUEST['ftscfg']}\" />" . \PHP_EOL;
             echo '<input type="hidden" name="action" value="dropmapping" />' . \PHP_EOL;
             echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -1149,7 +1149,7 @@ class FulltextController extends BaseController
             echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_POST['ftscfg']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>' . \PHP_EOL;
 
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -1236,7 +1236,7 @@ class FulltextController extends BaseController
             echo '<p><input type="hidden" name="action" value="addmapping" />' . \PHP_EOL;
             echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_POST['ftscfg']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"add\" value=\"{$this->lang['stradd']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;

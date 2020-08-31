@@ -274,7 +274,7 @@ class IndexesController extends BaseController
             echo '<input type="hidden" name="action" value="cluster_index" />' . \PHP_EOL;
             echo '<input type="hidden" name="table" value="', \htmlspecialchars($object), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="index" value="', \htmlspecialchars($_REQUEST['index']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"cluster\" value=\"{$this->lang['strclusterindex']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -434,7 +434,7 @@ class IndexesController extends BaseController
         echo '</table>';
 
         echo '<p><input type="hidden" name="action" value="save_create_index" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo '<input type="hidden" name="subject" value="', \htmlspecialchars($subject), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="' . $subject . '" value="', \htmlspecialchars($object), '" />' . \PHP_EOL;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
@@ -507,7 +507,7 @@ class IndexesController extends BaseController
             echo '<input type="hidden" name="action" value="drop_index" />' . \PHP_EOL;
             echo '<input type="hidden" name="table" value="', \htmlspecialchars($object), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="index" value="', \htmlspecialchars($this->getRequestParam('index')), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo '<p><input type="checkbox" id="cascade" name="cascade" value="1" />';
             echo '<label for="cascade">' . $this->lang['strcascade'] . '</label></p>' . \PHP_EOL;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;

@@ -305,7 +305,7 @@ class AggregatesController extends BaseController
 
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -378,7 +378,7 @@ class AggregatesController extends BaseController
             \htmlspecialchars($aggrdata->fields['aggrcomment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="save_alter" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo '<input type="hidden" name="aggrname" value="', \htmlspecialchars($_REQUEST['aggrname']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrtype" value="', \htmlspecialchars($_REQUEST['aggrtype']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrowner" value="', \htmlspecialchars($aggrdata->fields['usename']), '" />' . \PHP_EOL;
@@ -413,7 +413,7 @@ class AggregatesController extends BaseController
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrname" value="', \htmlspecialchars($_REQUEST['aggrname']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrtype" value="', \htmlspecialchars($_REQUEST['aggrtype']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;

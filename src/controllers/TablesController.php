@@ -342,7 +342,7 @@ class TablesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />" . \PHP_EOL;
                 echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
                 echo '</form>' . \PHP_EOL;
@@ -457,7 +457,7 @@ class TablesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="3" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo '<input type="hidden" name="name" value="', \htmlspecialchars($_REQUEST['name']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="fields" value="', \htmlspecialchars($_REQUEST['fields']), '" />' . \PHP_EOL;
 
@@ -630,7 +630,7 @@ class TablesController extends BaseController
             echo '</table>';
 
             echo '<input type="hidden" name="action" value="confcreatelike" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<p><input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -756,7 +756,7 @@ class TablesController extends BaseController
             echo '<p><input type="hidden" name="action" value="selectrows" />' . \PHP_EOL;
             echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$this->lang['strselect']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -944,7 +944,7 @@ class TablesController extends BaseController
             echo "<p>{$this->lang['strnofieldsforinsert']}</p>" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
         }
-        echo $this->misc->form;
+        echo $this->view->form;
         echo '</form>' . \PHP_EOL;
         echo '<script src="' . self::SUBFOLDER . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
     }
@@ -1021,7 +1021,7 @@ class TablesController extends BaseController
             }
             echo "<input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label>";
             echo '<input type="hidden" name="action" value="empty" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"empty\" value=\"{$this->lang['strempty']}\" /> <input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
             echo "</form>\n"; //  END if confirm
         } else {
@@ -1097,7 +1097,7 @@ class TablesController extends BaseController
             }
 
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;

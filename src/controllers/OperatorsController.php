@@ -261,7 +261,7 @@ class OperatorsController extends BaseController
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="operator" value="', \htmlspecialchars($_REQUEST['operator']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="operator_oid" value="', \htmlspecialchars($_REQUEST['operator_oid']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;

@@ -315,7 +315,7 @@ class RolesController extends BaseController
 
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -481,7 +481,7 @@ class RolesController extends BaseController
         echo '<input type="hidden" name="memberofold" value="', $_POST['memberofold'] ?? \htmlspecialchars($memberofold), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="membersold" value="', $_POST['membersold'] ?? \htmlspecialchars($membersold), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="adminmembersold" value="', $_POST['adminmembersold'] ?? \htmlspecialchars($adminmembersold), '" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -538,7 +538,7 @@ class RolesController extends BaseController
             echo '<form action="' . self::SUBFOLDER . '/src/views/roles" method="post">' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="rolename" value="', \htmlspecialchars($_REQUEST['rolename']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -771,7 +771,7 @@ class RolesController extends BaseController
             echo "\t\t<td><input type=\"password\" name=\"confirm\" size=\"32\" value=\"\" /></td>\n\t</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="changepassword" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"ok\" value=\"{$this->lang['strok']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
             echo '</p></form>' . \PHP_EOL;

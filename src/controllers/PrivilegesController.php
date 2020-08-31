@@ -388,7 +388,7 @@ class PrivilegesController extends BaseController
             \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
         }
 
-        echo $this->misc->form;
+        echo $this->view->form;
         echo \sprintf('<input type="submit" name="%s" value="%s" />%s', $mode, $this->lang['str' . $mode], \PHP_EOL);
 
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>";

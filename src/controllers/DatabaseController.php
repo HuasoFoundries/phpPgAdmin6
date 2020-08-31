@@ -214,7 +214,7 @@ class DatabaseController extends BaseController
 
         echo '</select>' . \PHP_EOL;
         echo "<input type=\"submit\" value=\"{$this->lang['strfind']}\" />" . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo '<input type="hidden" name="action" value="find" /></p>' . \PHP_EOL;
         echo '<input type="hidden" name="confirm" value="true" /></p>' . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -564,7 +564,7 @@ class DatabaseController extends BaseController
 
         echo '<p><input type="checkbox" id="paginate" name="paginate"', (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), " /><label for=\"paginate\">{$this->lang['strpaginate']}</label></p>" . \PHP_EOL;
         echo "<p><input type=\"submit\" name=\"execute\" accesskey=\"r\" value=\"{$this->lang['strexecute']}\" />" . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"reset\" accesskey=\"q\" value=\"{$this->lang['strreset']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
 

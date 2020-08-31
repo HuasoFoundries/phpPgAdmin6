@@ -303,7 +303,7 @@ class AlldbController extends BaseController
             }
             echo '</table>' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="alter" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo '<input type="hidden" name="oldname" value="',
             \htmlspecialchars($_REQUEST['alterdatabase']), '" />' . \PHP_EOL;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
@@ -355,7 +355,8 @@ class AlldbController extends BaseController
             }
 
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
-            echo $this->misc->form;
+            
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
             echo "</form>\n"; //  END confirm
@@ -495,7 +496,7 @@ class AlldbController extends BaseController
             ('' === $_POST['formSpc']) ? ' selected="selected"' : '', '></option>' . \PHP_EOL;
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
-                $spcname = \htmlspecialchars($tablespaces->fields['spcname']);
+                $spcname = \htmlspecialchars($tablespaces->fields['spcname']??'');
                 echo "\t\t\t\t<option value=\"{$spcname}\"",
                 ($spcname === $_POST['formSpc']) ? ' selected="selected"' : '', ">{$spcname}</option>" . \PHP_EOL;
                 $tablespaces->moveNext();
@@ -512,7 +513,7 @@ class AlldbController extends BaseController
 
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;

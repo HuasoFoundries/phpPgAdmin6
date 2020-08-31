@@ -202,7 +202,7 @@ class RulesController extends BaseController
             echo '<input type="hidden" name="subject" value="', \htmlspecialchars($_REQUEST['subject']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="', \htmlspecialchars($_REQUEST['subject']),
             '" value="', \htmlspecialchars($_REQUEST[$_REQUEST['subject']]), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<p><input type=\"submit\" name=\"ok\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -254,7 +254,7 @@ class RulesController extends BaseController
             echo '<input type="hidden" name="', \htmlspecialchars($_REQUEST['reltype']),
             '" value="', \htmlspecialchars($_REQUEST[$_REQUEST['reltype']]), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="rule" value="', \htmlspecialchars($_REQUEST['rule']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
