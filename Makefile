@@ -88,7 +88,7 @@ csfixer:
 		echo "XDEBUG was: "$(XDSWI_STATUS) ;\
 		${MAKE} disable_xdebug  --no-print-directory ;\
 		mkdir -p .build/php-cs-fixer ;\
-        vendor/bin/php-cs-fixer fix --config=.php_cs --verbose ;\
+        vendor/bin/php-cs-fixer fix --config=.php_cs.php --verbose ;\
 		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
     else \
         echo -e "$(GREEN)php-cs-fixer$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\

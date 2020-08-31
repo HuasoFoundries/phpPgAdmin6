@@ -6,8 +6,8 @@
 
 namespace PHPPgAdmin;
 
-use Slim\Container;
 use Slim\App;
+use Slim\Container;
 
 \defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
 \defined('THEME_PATH') || \define('THEME_PATH', BASE_PATH . '/assets/themes');
@@ -161,7 +161,7 @@ class ContainerUtils
     public static function createApp($conf)
     {
         $_instance = self::getInstance();
-        
+
         $_instance
             ->withConf($conf)
             ->setExtra()
@@ -171,7 +171,6 @@ class ContainerUtils
         //ddd($container->subfolder);
         return $_instance->_app;
     }
- 
 
     /**
      * Determines the redirection url according to query string.
@@ -225,13 +224,14 @@ class ContainerUtils
         $this->addFlash($subject, 'getDestinationWithLastTab');
         //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
-        $url = $this->container->misc->getLastTabURL($subject)??['url'=>'alldb','urlvars'=>[ 'subject'=>'server']];
+        $url = $this->container->misc->getLastTabURL($subject) ?? ['url' => 'alldb', 'urlvars' => ['subject' => 'server']];
         $destinationurl = $this->getRedirectUrl();
-       
+
         if (!isset($_server_info['username'])) {
             return $destinationurl;
         }
-        if (!is_array($url)) {
+
+        if (!\is_array($url)) {
             return $this->getRedirectUrl($subject);
         }
         $this->addFlash($url, 'getLastTabURL for ' . $subject);
@@ -248,7 +248,7 @@ class ContainerUtils
         }
         $actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
         $destinationurl = $actionurl->value($_GET);
-        
+
         return \str_replace('views/?', "views/{$subject}?", $destinationurl);
     }
 
@@ -259,7 +259,7 @@ class ContainerUtils
      *
      * @return\Slim\Container The app container
      */
-    public function addError(string $errormsg):\Slim\Container
+    public function addError(string $errormsg): \Slim\Container
     {
         //dump($errormsg);
         $errors = $this->container->get('errors');
@@ -268,15 +268,16 @@ class ContainerUtils
 
         return $this->container;
     }
+
     /**
      * @param array $conf
      */
-    private function withConf($conf):self
+    private function withConf($conf): self
     {
         $container = self::getContainerInstance();
         $conf['plugins'] = [];
 
-        $container['conf'] = static function (\Slim\Container $c) use ($conf):array {
+        $container['conf'] = static function (\Slim\Container $c) use ($conf): array {
             $display_sizes = $conf['display_sizes'];
 
             if (\is_array($display_sizes)) {
@@ -310,7 +311,8 @@ class ContainerUtils
         $container->subfolder = self::SUBFOLDER;
 
         return $this;
-    } 
+    }
+
     /**
      * Sets the views.
      *
@@ -323,7 +325,7 @@ class ContainerUtils
         /**
          * @return \PHPPgAdmin\ViewManager
          */
-        $container['view'] = static function (\Slim\Container $c):\PHPPgAdmin\ViewManager {
+        $container['view'] = static function (\Slim\Container $c): \PHPPgAdmin\ViewManager {
             $misc = $c->misc;
             $view = new ViewManager(BASE_PATH . '/assets/templates', [
                 'cache' => BASE_PATH . '/temp/twigcache',
@@ -350,7 +352,7 @@ class ContainerUtils
         /**
          * @return \PHPPgAdmin\Misc
          */
-        $container['misc'] = static function (\Slim\Container $c):\PHPPgAdmin\Misc {
+        $container['misc'] = static function (\Slim\Container $c): \PHPPgAdmin\Misc {
             $misc = new \PHPPgAdmin\Misc($c);
 
             $conf = $c->get('conf');
@@ -372,11 +374,11 @@ class ContainerUtils
     private function setExtra()
     {
         $container = self::getContainerInstance();
-        $container['flash'] = static function ():\Slim\Flash\Messages {
+        $container['flash'] = static function (): \Slim\Flash\Messages {
             return new \Slim\Flash\Messages();
         };
 
-        $container['lang'] = static function (\Slim\Container $c):array {
+        $container['lang'] = static function (\Slim\Container $c): array {
             $translations = new \PHPPgAdmin\Translations($c);
 
             return $translations->lang;
@@ -384,5 +386,4 @@ class ContainerUtils
 
         return $this;
     }
- 
 }

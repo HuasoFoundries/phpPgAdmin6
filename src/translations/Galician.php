@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for Galician language.
  */
-class Galician extends AbstractLang 
+class Galician extends AbstractLang
 {
-    public function getLang():array
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Galego';

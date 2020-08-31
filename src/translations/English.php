@@ -11,7 +11,6 @@ namespace PHPPgAdmin\Translations;
  */
 class English extends AbstractLang
 {
- 
     public function __construct()
     {
         $lang = $this->lang; //  Language and character set
@@ -874,6 +873,4 @@ class English extends AbstractLang
 
         $this->lang = $lang;
     }
-
-   
 }

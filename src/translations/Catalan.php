@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for Catalan language.
  */
-class Catalan extends AbstractLang 
+class Catalan extends AbstractLang
 {
-    public function getLang():array
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Català';

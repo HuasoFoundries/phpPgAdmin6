@@ -5,7 +5,7 @@
  */
 
 namespace PHPPgAdmin;
-use PHPPgAdmin\ContainerUtils; 
+
 /**
  * @file
  * Class to hold various commonly used functions
@@ -39,26 +39,52 @@ class ViewManager extends \Slim\Views\Twig
      * @var string
      */
     const DEBUGMODE = ContainerUtils::DEBUGMODE;
-/** @var array */
+
+    /**
+     * @var array
+     */
     public $appLangFiles = [];
-/** @var string */
+
+    /**
+     * @var string
+     */
     public $appName = '';
-/** @var string */
+
+    /**
+     * @var string
+     */
     public $appVersion = '';
-/** @var string */
+
+    /**
+     * @var string
+     */
     public $form = '';
-/** @var string */
+
+    /**
+     * @var string
+     */
     public $href = '';
-/** @var array */
+
+    /**
+     * @var array
+     */
     public $lang = [];
-/** @var array */
+
+    /**
+     * @var array
+     */
     public $conf;
-/** @var string */
+
+    /**
+     * @var string
+     */
     public $phpMinVer;
-/** @var string */
+
+    /**
+     * @var string
+     */
     public $postgresqlMinVer;
 
- 
     /**
      * @var \PHPPgAdmin\Misc
      */
@@ -124,15 +150,6 @@ class ViewManager extends \Slim\Views\Twig
             $this->misc->setConf('theme', $_theme);
         }
     }
-    /**
-     * Undocumented function
-     *
-     * @param string $subject
-     * @return class-string
-     */
-    private static function getControllerClassName(string $subject) {
-        return '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
-    }
 
     public function maybeRenderIframes($response, $subject, $query_string)
     {
@@ -141,7 +158,7 @@ class ViewManager extends \Slim\Views\Twig
         $in_test = $this->offsetGet('in_test');
 
         if ('1' === $in_test) {
-            $className =self::getControllerClassName($subject);
+            $className = self::getControllerClassName($subject);
             $controller = new $className($c);
 
             return $controller->render();
@@ -195,7 +212,7 @@ class ViewManager extends \Slim\Views\Twig
             \is_string($conf['theme']) &&
             \array_key_exists($conf['theme'], $themefolders)) {
             $_theme = $conf['theme'];
-            }
+        }
 
         return $_theme;
     }
@@ -203,7 +220,7 @@ class ViewManager extends \Slim\Views\Twig
     /**
      * Sets the form tracking variable.
      */
-    public function setForm():string
+    public function setForm(): string
     {
         $form = [];
 
@@ -241,6 +258,7 @@ class ViewManager extends \Slim\Views\Twig
      * @param string $str      the string that the context help is related to (already escaped)
      * @param string $help     help section identifier
      * @param bool   $do_print true to echo, false to return
+     *
      * @return string|void
      */
     public function printHelp($str, $help = null, $do_print = true)
@@ -274,14 +292,15 @@ class ViewManager extends \Slim\Views\Twig
             \urlencode($this->misc->getServerId())
         );
     }
+
     /**
      * @param string $icon
+     *
      * @return string
      */
-    public function icon(  $icon=''):string
+    public function icon($icon = ''): string
     {
-       
-        $icon=strval($icon??'');
+        $icon = (string) ($icon ?? '');
 
         $theme = $this->conf['theme'];
         $path = 'assets/images/themes';
@@ -314,7 +333,19 @@ class ViewManager extends \Slim\Views\Twig
         return $default_icon;
     }
 
-    private function getContainer():\Slim\Container
+    /**
+     * Undocumented function.
+     *
+     * @param string $subject
+     *
+     * @return class-string
+     */
+    private static function getControllerClassName(string $subject)
+    {
+        return '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+    }
+
+    private function getContainer(): \Slim\Container
     {
         return $this->container;
     }
@@ -325,7 +356,7 @@ class ViewManager extends \Slim\Views\Twig
      *
      * @return array the theme folders
      */
-    private function getThemeFolders():array
+    private function getThemeFolders(): array
     {
         // no THEME_PATH (how?) then return empty array
         if (!$gestor = \opendir(self::THEME_PATH)) {

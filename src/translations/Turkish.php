@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for Turkish language.
  */
-class Turkish extends AbstractLang 
+class Turkish extends AbstractLang
 {
-    public function getLang():array
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Türkçe';

@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for Romanian language.
  */
-class Romanian extends AbstractLang 
+class Romanian extends AbstractLang
 {
-    public function getLang():array
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Română';

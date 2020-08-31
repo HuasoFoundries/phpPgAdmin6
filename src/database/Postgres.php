@@ -846,7 +846,7 @@ class Postgres extends ADOdbBase
 
             $sql .= \implode('","', $show) . '" FROM ';
         }
-$this->prtrace(['id'=>$this->id]);
+        $this->prtrace(['id' => $this->id]);
         $this->fieldClean($table);
 
         if (isset($_REQUEST['schema'])) {

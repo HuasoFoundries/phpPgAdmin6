@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for ChineseTr language.
  */
-class ChineseTr extends AbstractLang 
+class ChineseTr extends AbstractLang
 {
-    public function getLang():array
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = '正體中文（big5）';

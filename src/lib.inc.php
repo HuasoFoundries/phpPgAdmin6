@@ -35,7 +35,7 @@ if (!\file_exists(\dirname(__DIR__) . '/config.inc.php')) {
             \dirname(__DIR__)
         );
     }
- 
+
 \defined('PHPPGA_SUBFOLDER') || \define('PHPPGA_SUBFOLDER', $subfolder);
 $shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
 && !\headers_sent()
@@ -57,7 +57,7 @@ if (!\defined('ADODB_ERROR_HANDLER_TYPE')) {
 if (!\defined('ADODB_ERROR_HANDLER')) {
     \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 }
- 
+
 if (DEBUGMODE) {
     \ini_set('display_errors', 'On');
 
@@ -68,12 +68,11 @@ if (DEBUGMODE) {
     if (\array_key_exists('register_debuggers', $conf) && \is_callable($conf['register_debuggers'])) {
         $conf['register_debuggers']();
     }
-    
 }
 
 // Fetch App and DI Container
 $app = \PHPPgAdmin\ContainerUtils::createApp($conf);
-$container=$app->getContainer();
+$container = $app->getContainer();
 
 if (!$container instanceof \Slim\Container) {
     \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
@@ -85,7 +84,7 @@ $container->offsetSet('database', $_REQUEST['database'] ?? null);
 $container->offsetSet('schema', $_REQUEST['schema'] ?? null);
 
 $container['haltHandler'] = static function (\Slim\Container $c) {
-    return static function ($request, $response, $exits, $status = 500) use ( $c) {
+    return static function ($request, $response, $exits, $status = 500) use ($c) {
         $title = 'PHPPgAdmin Error';
 
         $html = '<p>The application could not run because of the following error:</p>';

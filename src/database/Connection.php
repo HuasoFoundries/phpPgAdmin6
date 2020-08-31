@@ -36,7 +36,7 @@ class Connection
         '9.3' => 'Postgres93',
         '9.2' => 'Postgres92',
         '9.1' => 'Postgres91',
-        '9.0' => 'Postgres90'
+        '9.0' => 'Postgres90',
     ];
 
     // The backend platform.  Set to UNKNOWN by default.
@@ -113,19 +113,18 @@ class Connection
      * @return string The driver. e.g. Postgres96
      */
     public function getDriver(&$description)
-    { 
-        $version=null;
-        if($this->conn->_connectionID) {
+    {
+        $version = null;
 
-      
-        $v = \pg_version($this->conn->_connectionID);
+        if ($this->conn->_connectionID) {
+            $v = \pg_version($this->conn->_connectionID);
 
-        //\PhpConsole\Handler::getInstance()->debug($v, 'pg_version');
+            //\PhpConsole\Handler::getInstance()->debug($v, 'pg_version');
 
-        if (isset($v['server'])) {
-            $version = $v['server'];
+            if (isset($v['server'])) {
+                $version = $v['server'];
+            }
         }
-    }
         // If we didn't manage to get the version without a query, query...
         if (!isset($version)) {
             $adodb = new ADOdbBase($this->conn, $this->container, $this->server_info);
@@ -141,7 +140,7 @@ class Connection
             $params = \explode(' ', $field);
 
             if (!isset($params[1])) {
-                 return null;
+                return null;
             }
 
             $version = $params[1]; // eg. 8.4.4
@@ -163,7 +162,6 @@ class Connection
             return $this->version_dictionary[$major_version];
         }
 
-        
         // if major version is less than 9 return null, we don't support it
         if (9 > (int) \mb_substr($version, 0, 1)) {
             return null;

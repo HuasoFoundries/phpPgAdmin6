@@ -11,13 +11,15 @@ namespace PHPPgAdmin\Translations;
  */
 abstract class AbstractLang
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $lang = [];
- 
+
     /**
      * @return array
      */
-    public function getLang():array 
+    public function getLang(): array
     {
         return $this->lang;
     }

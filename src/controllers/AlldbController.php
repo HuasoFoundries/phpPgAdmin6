@@ -355,7 +355,7 @@ class AlldbController extends BaseController
             }
 
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
-            
+
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -496,7 +496,7 @@ class AlldbController extends BaseController
             ('' === $_POST['formSpc']) ? ' selected="selected"' : '', '></option>' . \PHP_EOL;
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
-                $spcname = \htmlspecialchars($tablespaces->fields['spcname']??'');
+                $spcname = \htmlspecialchars($tablespaces->fields['spcname'] ?? '');
                 echo "\t\t\t\t<option value=\"{$spcname}\"",
                 ($spcname === $_POST['formSpc']) ? ' selected="selected"' : '', ">{$spcname}</option>" . \PHP_EOL;
                 $tablespaces->moveNext();
