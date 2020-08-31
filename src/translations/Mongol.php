@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for Mongol language.
  */
-class Mongol extends English
+class Mongol extends AbstractLang 
 {
-    public function getLang()
+    public function getLang():array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Mongolian';

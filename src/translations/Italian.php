@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for Italian language.
  */
-class Italian extends English
+class Italian extends AbstractLang 
 {
-    public function getLang()
+    public function getLang():array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Italiano';

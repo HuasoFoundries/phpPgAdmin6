@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for PortuguesePt language.
  */
-class PortuguesePt extends English
+class PortuguesePt extends AbstractLang 
 {
-    public function getLang()
+    public function getLang():array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Português-Português';

@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for Greek language.
  */
-class Greek extends English
+class Greek extends AbstractLang 
 {
-    public function getLang()
+    public function getLang():array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Ελληνικά';

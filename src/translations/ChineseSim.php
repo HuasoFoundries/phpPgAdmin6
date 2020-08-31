@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for ChineseSim language.
  */
-class ChineseSim extends English
+class ChineseSim extends AbstractLang 
 {
-    public function getLang()
+    public function getLang():array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = '简体中文（统一码）';

@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for RussianUtf8 language.
  */
-class RussianUtf8 extends English
+class RussianUtf8 extends AbstractLang 
 {
-    public function getLang()
+    public function getLang():array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Русский (UTF-8)';

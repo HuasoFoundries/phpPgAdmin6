@@ -9,10 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for Ukrainian language.
  */
-class English
+class English extends AbstractLang
 {
-    protected $lang = [];
-
+ 
     public function __construct()
     {
         $lang = $this->lang; //  Language and character set
@@ -876,8 +875,5 @@ class English
         $this->lang = $lang;
     }
 
-    public function getLang()
-    {
-        return $this->lang;
-    }
+   
 }

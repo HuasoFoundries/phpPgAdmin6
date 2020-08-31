@@ -9,9 +9,9 @@ namespace PHPPgAdmin\Translations;
 /**
  * Class providing translation for ChineseUtf8ZhTw language.
  */
-class ChineseUtf8ZhTw extends English
+class ChineseUtf8ZhTw extends AbstractLang 
 {
-    public function getLang()
+    public function getLang():array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = '正體中文（UTF-8）';
