@@ -38,45 +38,64 @@ class Misc
      */
     const DEBUGMODE = ContainerUtils::DEBUGMODE;
 
+    
+    /** @var array */
     public $appLangFiles = [];
-
+    
+    /** @var string */
     public $appName = '';
-
+    
+    /** @var string */
     public $appVersion = '';
 
+
     public $form = '';
-
+    
+    /** @var string */
     public $href = '';
-
+    
+    /** @var array */
     public $lang = [];
-
+    
+    /** @var array */
     public $conf;
-
+    
+    /** @var string */
     public $phpMinVer;
-
+    
+    /** @var string */
     public $postgresqlMinVer;
-
+    
+    /** @var \Slim\Views\Twig */
     public $view;
 
+    /** @var \Slim\Container */
     protected $container;
-
+    
+    /** @var \PHPPgAdmin\Database\Connection|null */
     private $_connection;
-
+    
+    /** @var bool */
     private $_no_db_connection = false;
-
+    
+    /** @var bool */
     private $_reload_browser = false;
 
     /**
-     * @var Postgres
+     * @var Postgres|null
      */
     private $_data;
-
+    
+    /** @var string|null */
     private $_database;
-
+    
+    /** @var string|null */
     private $_server_id;
-
+    
+    /** @var array|null */
     private $_server_info;
-
+    
+    /** @var string */
     private $_error_msg = '';
 
     /**
@@ -125,6 +144,7 @@ class Misc
      * @param null|string $key value of the key to be retrieved. If null, the full array is returnes
      *
      * @return null|array|string the whole $conf array, the value of $conf[key] or null if said key does not exist
+    
      */
     public function getConf($key = null)
     {
@@ -146,6 +166,7 @@ class Misc
      * @param mixed  $value value of the key to set
      *
      * @return \PHPPgAdmin\Misc this class instance
+    
      */
     public function setConf($key, $value)
     {
@@ -153,7 +174,10 @@ class Misc
 
         return $this;
     }
-
+    /**
+     * @return string|null
+    
+     */
     public function serverToSha()
     {
         $request_server = $this->container->requestobj->getParam('server');
@@ -169,7 +193,10 @@ class Misc
 
         return $request_server;
     }
-
+    /**
+     * @return string
+    
+     */
     public function getServerId()
     {
         if ($this->_server_id) {
@@ -196,6 +223,7 @@ class Misc
      * @param \Slim\Views\Twig $view view instance
      *
      * @return \PHPPgAdmin\Misc this class instance
+    
      */
     public function setView(\Slim\Views\Twig $view)
     {
@@ -210,6 +238,7 @@ class Misc
      * @param bool $flag sets internal $_reload_browser var which will be passed to the footer methods
      *
      * @return \PHPPgAdmin\Misc this class instance
+    
      */
     public function setReloadBrowser($flag)
     {
@@ -217,11 +246,15 @@ class Misc
 
         return $this;
     }
+/**
+ * @return bool
+ */
 
     public function getReloadBrowser()
     {
         return $this->_reload_browser;
     }
+
 
     public function getContainer()
     {
@@ -234,6 +267,7 @@ class Misc
      * @param bool $flag true or false to allow unconnected clients to access the view
      *
      * @return \PHPPgAdmin\Misc this class instance
+    
      */
     public function setNoDBConnection($flag)
     {
@@ -246,6 +280,7 @@ class Misc
      * Gets member variable $_no_db_connection.
      *
      * @return bool value of member variable $_no_db_connection
+    
      */
     public function getNoDBConnection()
     {
@@ -258,6 +293,7 @@ class Misc
      * @param string $msg error message string
      *
      * @return \PHPPgAdmin\Misc this class instance
+    
      */
     public function setErrorMsg($msg)
     {
@@ -270,6 +306,7 @@ class Misc
      * Returns the error messages stored in member variable $_error_msg.
      *
      * @return string the error message
+    
      */
     public function getErrorMsg()
     {
@@ -284,7 +321,8 @@ class Misc
      *
      * @internal mixed $plaform placeholder that will receive the value of the platform
      *
-     * @return null|\PHPPgAdmin\Database\Postgres the database accessor instance
+     * @return \PHPPgAdmin\Database\Postgres|null the database accessor instance
+    
      */
     public function getDatabaseAccessor($database = '', $server_id = null): ?\PHPPgAdmin\Database\Postgres
     {
@@ -350,7 +388,8 @@ class Misc
             }
         }
 
-        if (false === $this->_no_db_connection &&
+        if (
+            false === $this->_no_db_connection &&
             null !== $this->getDatabase() &&
             isset($_REQUEST['schema'])
         ) {
@@ -367,7 +406,14 @@ class Misc
         return $this->_data;
     }
 
-    public function getConnection(string $database = '', $server_id = null)
+/**
+ * Undocumented function
+ *
+ * @param string $database
+ * @param string $server_id
+ * @return \PHPPgAdmin\Database\Connection
+ */
+    public function getConnection(string $database = '', $server_id = null):\PHPPgAdmin\Database\Connection
     {
         $lang = $this->lang;
 
@@ -389,7 +435,8 @@ class Misc
                     'administrator' => 'administrator',
                 ];
 
-                if (isset($server_info['username']) &&
+                if (
+                    isset($server_info['username']) &&
                     \array_key_exists(\mb_strtolower($server_info['username']), $bad_usernames)
                 ) {
                     $msg = $lang['strlogindisallowed'];
@@ -397,7 +444,8 @@ class Misc
                     throw new \Exception($msg);
                 }
 
-                if (!isset($server_info['password']) ||
+                if (
+                    !isset($server_info['password']) ||
                     '' === $server_info['password']
                 ) {
                     $msg = $lang['strlogindisallowed'];
@@ -428,6 +476,7 @@ class Misc
      * @param string $server_id A server identifier (host:port)
      *
      * @return null|array An associative array of server properties
+    
      */
     public function getServerInfo($server_id = null)
     {
@@ -449,7 +498,8 @@ class Misc
             $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
             $server_sha = \sha1($server_string);
 
-            if ($this->_server_id === $server_string ||
+            if (
+                $this->_server_id === $server_string ||
                 $this->_server_id === $server_sha
             ) {
                 if (isset($info['username'])) {
@@ -472,7 +522,7 @@ class Misc
             return $this->_server_info;
         }
 
-//      //$this->prtrace('Invalid server param');
+        //      //$this->prtrace('Invalid server param');
         $this->_server_info = null;
         // Unable to find a matching server, are we being hacked?
         $this->halt($this->lang['strinvalidserverparam']);
@@ -487,6 +537,7 @@ class Misc
      *                               params with the assoc-array in $value
      * @param mixed       $value     the new value, or null to unset the parameter
      * @param null|string $server_id the server identifier, or null for current server
+    
      */
     public function setServerInfo($key, $value, $server_id = null): void
     {
@@ -509,6 +560,7 @@ class Misc
         }
     }
 
+
     public function getDatabase(string $database = '')
     {
         if (null === $this->_server_id && !isset($_REQUEST['database'])) {
@@ -517,7 +569,8 @@ class Misc
 
         $server_info = $this->getServerInfo($this->_server_id);
 
-        if (null !== $this->_server_id &&
+        if (
+            null !== $this->_server_id &&
             isset($server_info['useonlydefaultdb']) &&
             true === $server_info['useonlydefaultdb'] &&
             isset($server_info['defaultdb'])
@@ -544,6 +597,7 @@ class Misc
      * @param string $schema The schema name
      *
      * @return int 0 on success
+    
      */
     public function setCurrentSchema($schema)
     {
@@ -568,6 +622,7 @@ class Misc
      * @param bool $all (optional) True to check pg_dumpall, false to just check pg_dump
      *
      * @return bool True, dumps are set up, false otherwise
+    
      */
     public function isDumpEnabled($all = false)
     {
@@ -580,6 +635,7 @@ class Misc
      * Sets the href tracking variable.
      *
      * @return \PHPPgAdmin\Misc this class instance
+    
      */
     public function setHREF()
     {
@@ -594,6 +650,7 @@ class Misc
      * @param null|string $exclude_from
      *
      * @return string
+    
      */
     public function getHREF($exclude_from = null)
     {
@@ -625,6 +682,7 @@ class Misc
      * enforce magic_quotes_gpc being off.
      *
      * @param mixed $var The variable to strip (passed by reference)
+    
      */
     public function stripVar(&$var): void
     {
@@ -654,6 +712,7 @@ class Misc
      * @param mixed $strIniSize The PHP.INI variable
      *
      * @return bool|float|int size in bytes, false on failure
+    
      */
     public function inisizeToBytes($strIniSize)
     {
@@ -684,6 +743,7 @@ class Misc
         }
     }
 
+
     public function getRequestVars($subject = '')
     {
         $v = [];
@@ -713,6 +773,7 @@ class Misc
      * @param string $str The string to escape
      *
      * @return null|string The escaped string
+    
      */
     public function escapeShellArg($str): ?string
     {
@@ -739,6 +800,7 @@ class Misc
      * @param string $str The string to escape
      *
      * @return string The escaped string
+    
      */
     public function escapeShellCmd($str)
     {
@@ -758,6 +820,7 @@ class Misc
      * of the database and server.
      *
      * @param string $script the SQL script to save
+    
      */
     public function saveScriptHistory($script): void
     {

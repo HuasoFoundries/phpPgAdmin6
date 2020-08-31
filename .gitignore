@@ -1,6 +1,6 @@
 selenium/tests/config.inc.php
 tests/selenium/config.test.php
-*sublime*
+
 
 
 
@@ -16,13 +16,18 @@ phppga
 /.idea/*
 sublime-*
 .php.tools.ini
-
+.vscode/*
+*.code-workspace
+*sublime*
 
 ###> temp and generated files
 temp/sessions/*
+temp/route.cache.php 
 playground
 *.log
 tests/_output
+temp/*.output.txt
+*baseline.*
 
 ###> Vendor files
 node_modules

@@ -6,21 +6,23 @@
 
 \defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
 
-\defined('THEME_PATH') || \define('THEME_PATH', BASE_PATH . '/assets/themes');
+\defined('THEME_PATH') || \define('THEME_PATH', \dirname(__DIR__) . '/assets/themes');
 // Enforce PHP environment
 \ini_set('arg_separator.output', '&amp;');
 
-if (!\is_writable(BASE_PATH . '/temp')) {
+if (!\is_writable(\dirname(__DIR__) . '/temp')) {
     die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
 }
 
-require_once BASE_PATH . '/vendor/autoload.php';
+require_once \dirname(__DIR__) . '/vendor/autoload.php';
 $subfolder = '';
 // Check to see if the configuration file exists, if not, explain
-if (\file_exists(BASE_PATH . '/config.inc.php')) {
+if (!\file_exists(\dirname(__DIR__) . '/config.inc.php')) {
+    die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
+}
     $conf = [];
 
-    include BASE_PATH . '/config.inc.php';
+    include \dirname(__DIR__) . '/config.inc.php';
 
     if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
         $subfolder = $conf['subfolder'];
@@ -30,12 +32,10 @@ if (\file_exists(BASE_PATH . '/config.inc.php')) {
         $subfolder = \str_replace(
             $_SERVER['DOCUMENT_ROOT'],
             '',
-            BASE_PATH
+            \dirname(__DIR__)
         );
     }
-} else {
-    die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
-}
+ 
 \defined('PHPPGA_SUBFOLDER') || \define('PHPPGA_SUBFOLDER', $subfolder);
 $shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
 && !\headers_sent()
@@ -57,7 +57,7 @@ if (!\defined('ADODB_ERROR_HANDLER_TYPE')) {
 if (!\defined('ADODB_ERROR_HANDLER')) {
     \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 }
-
+ 
 if (DEBUGMODE) {
     \ini_set('display_errors', 'On');
 
@@ -68,13 +68,15 @@ if (DEBUGMODE) {
     if (\array_key_exists('register_debuggers', $conf) && \is_callable($conf['register_debuggers'])) {
         $conf['register_debuggers']();
     }
+    
 }
 
 // Fetch App and DI Container
-[$container, $app] = \PHPPgAdmin\ContainerUtils::createContainer($conf);
+$app = \PHPPgAdmin\ContainerUtils::createApp($conf);
+$container=$app->getContainer();
 
-if (!$container instanceof \Psr\Container\ContainerInterface) {
-    \trigger_error('App Container must be an instance of \\Psr\\Container\\ContainerInterface', \E_USER_ERROR);
+if (!$container instanceof \Slim\Container) {
+    \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
 }
 
 // This should be deprecated once we're sure no php scripts are required directly
@@ -82,8 +84,8 @@ $container->offsetSet('server', $_REQUEST['server'] ?? null);
 $container->offsetSet('database', $_REQUEST['database'] ?? null);
 $container->offsetSet('schema', $_REQUEST['schema'] ?? null);
 
-$container['haltHandler'] = static function ($c) {
-    return static function ($request, $response, $exits, $status = 500) use ($c) {
+$container['haltHandler'] = static function (\Slim\Container $c) {
+    return static function ($request, $response, $exits, $status = 500) use ( $c) {
         $title = 'PHPPgAdmin Error';
 
         $html = '<p>The application could not run because of the following error:</p>';

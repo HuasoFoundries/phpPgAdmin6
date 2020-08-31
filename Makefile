@@ -126,23 +126,20 @@ var_dumper:
 	fi;
 	@echo ""
 
-folder ?= src
-psalm: FOLDER_BASENAME:=`basename $(folder)|sed 's/src//'`
-psalm:
-	@if [ -f "vendor/bin/psalm" ]; then \
-		mkdir -p .build/psalm ;\
-		${MAKE} disable_xdebug  --no-print-directory ;\
-		vendor/bin/psalm --show-info=true \
-			  --config=psalm.xml \
-			  --set-baseline=.build/psalm/psalm-baseline$(FOLDER_BASENAME).xml \
-			  --shepherd $(folder) ;\
-		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
-	else \
-	 	echo -e "$(GREEN)vimeo/psalm$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-		echo -e "Install it with $(GREEN)composer require --dev vimeo/psalm$(WHITE)" ;\
-	fi
-	@echo ""
 
+
+psalm:
+	@${MAKE} disable_xdebug  --no-print-directory 
+	@if [ ! -f "vendor/bin/psalm" ]; then \
+		echo -e "$(GREEN)psalm$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
+		echo -e "Install it with $(GREEN)composer require --dev vimeo/psalm$(WHITE)" ;\
+		exit 0 ;\
+	fi
+	
+	@mkdir -p .build/psalm ;\
+	vendor/bin/psalm --show-info=false --long-progress --threads=2 --config=psalm.xml | tee temp/psalm.output.txt
+	@${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory ;\
+	echo ""
 
 phpstan:
 	@${MAKE} disable_xdebug  --no-print-directory 
@@ -153,27 +150,30 @@ phpstan:
 	fi
 	
 	@mkdir -p .build/phpstan ;\
-	./vendor/bin/phpstan analyse --memory-limit=2G   ${error_format}  
+	./vendor/bin/phpstan analyse --memory-limit=2G   --configuration phpstan.neon  | tee temp/phpstan.output.txt
 	@${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory ;\
 	echo ""
-
 
 lint:
 	@if [ -f "vendor/bin/parallel-lint" ]; then \
 		mkdir -p .build/parallel ;\
 		${MAKE} disable_xdebug  --no-print-directory ;\
-		vendor/bin/parallel-lint \
-			--ignore-fails \
-			  --exclude vendor \
-			   $(folder) ;\
+		vendor/bin/parallel-lint --ignore-fails --exclude vendor  src ;\
 		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
 	else \
 		echo -e "$(GREEN)parallel-lint$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-		echo -e "Install it with $(GREEN)composer require --dev jakub-onderka/php-parallel-lint$(WHITE)" ;\
+		echo -e "Install it with $(GREEN)composer require --dev php-parallel-lint/php-parallel-lint$(WHITE)" ;\
 	fi
 	@find ./src -name \*.php -print0 | xargs -0 -n 1 php -l
 	@echo ""
 
+update_baselines:
+	@${MAKE} disable_xdebug  --no-print-directory ;\
+    find .build/phpstan -mtime +5 -type f -name "*.php" -exec rm -rf {} \;
+	@vendor/bin/phpstan analyze --configuration phpstan.neon --generate-baseline ;\
+	find .build/psalm -mtime +5 -type f   -exec rm -rf {} \;
+	@vendor/bin/psalm --config=psalm.xml --update-baseline --ignore-baseline  --set-baseline=psalm-baseline.xml ;\
+	${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory
 
 
 fixers: phpmd psalm phpstan

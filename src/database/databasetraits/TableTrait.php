@@ -389,7 +389,7 @@ trait TableTrait
         $rs = $this->selectSet($sql);
 
         if (1 !== $rs->recordCount()) {
-            return null;
+            return false;
         }
 
         $rs->fields['relhasoids'] = $this->phpBool($rs->fields['relhasoids']);
