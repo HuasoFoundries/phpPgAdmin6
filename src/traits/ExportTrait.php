@@ -202,7 +202,7 @@ trait ExportTrait
     {
         $content = '<p><input type="hidden" name="action" value="export" />' . \PHP_EOL;
 
-        $content .= $this->misc->form;
+        $content .= $this->view->form;
         $content .= \sprintf(
             '<input type="hidden" name="subject" value="%s" />%s',
             $subject,

@@ -137,7 +137,7 @@ trait ViewsMatviewsTrait
             echo '<p><input type="hidden" name="action" value="selectrows" />' . \PHP_EOL;
             echo '<input type="hidden" name="view" value="', \htmlspecialchars($_REQUEST[$this->keystring]), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="subject" value="view" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$this->lang['strselect']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -204,7 +204,7 @@ trait ViewsMatviewsTrait
         echo "</td>\n</tr>" . \PHP_EOL;
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="set_params_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -460,7 +460,7 @@ trait ViewsMatviewsTrait
             echo '<input type="hidden" name="formTables[]" value="' . \htmlspecialchars(\serialize($curTable)) . '" />' . \PHP_EOL;
         }
 
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;

@@ -23,7 +23,7 @@ trait FormTrait
      */
     public function getActionTableAndButtons($action, $table, $add, $cancel)
     {
-        $content = $this->misc->form;
+        $content = $this->view->form;
         $content .= \sprintf('<input type="hidden" name="action" value="%s" />%s', $action, \PHP_EOL);
         $content .= \sprintf('<input type="hidden" name="table" value="%s" />%s', $table, \PHP_EOL);
         $content .= \sprintf('<input type="submit" value="%s" />%s', $add, \PHP_EOL);
@@ -41,7 +41,7 @@ trait FormTrait
      */
     public function getFormInputsAndButtons($inputs, $buttons, $cheboxes = [])
     {
-        $content = $this->misc->form;
+        $content = $this->view->form;
 
         foreach ($cheboxes as $checkbox) {
             $content .= \sprintf('<p>%s', \PHP_EOL);

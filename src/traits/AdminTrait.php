@@ -57,7 +57,7 @@ trait AdminTrait
         }
         echo '<input type="hidden" name="action" value="cluster" />' . \PHP_EOL;
 
-        echo $this->misc->form;
+        echo $this->view->form;
 
         echo "<input type=\"submit\" name=\"cluster\" value=\"{$this->lang['strcluster']}\" />\n"; //TODO
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -113,7 +113,7 @@ trait AdminTrait
             echo "<p><input type=\"checkbox\" id=\"reindex_force\" name=\"reindex_force\" /><label for=\"reindex_force\">{$this->lang['strforce']}</label></p>" . \PHP_EOL;
         }
 
-        echo $this->misc->form;
+        echo $this->view->form;
 
         echo "<input type=\"submit\" name=\"reindex\" value=\"{$this->lang['strreindex']}\" />\n"; //TODO
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -164,7 +164,7 @@ trait AdminTrait
             }
         }
         echo '<input type="hidden" name="action" value="analyze" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
 
         echo "<input type=\"submit\" name=\"analyze\" value=\"{$this->lang['stranalyze']}\" />\n"; //TODO
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -213,7 +213,7 @@ trait AdminTrait
             }
         }
         echo '<input type="hidden" name="action" value="vacuum" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<p><input type=\"checkbox\" id=\"vacuum_full\" name=\"vacuum_full\" /> <label for=\"vacuum_full\">{$this->lang['strfull']}</label></p>" . \PHP_EOL;
         echo "<p><input type=\"checkbox\" id=\"vacuum_analyze\" name=\"vacuum_analyze\" /> <label for=\"vacuum_analyze\">{$this->lang['stranalyze']}</label></p>" . \PHP_EOL;
         echo "<p><input type=\"checkbox\" id=\"vacuum_freeze\" name=\"vacuum_freeze\" /> <label for=\"vacuum_freeze\">{$this->lang['strfreeze']}</label></p>" . \PHP_EOL;
@@ -287,7 +287,7 @@ trait AdminTrait
         }
 
         echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo '<input type="hidden" name="action" value="editautovac" />' . \PHP_EOL;
         echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
 
@@ -351,7 +351,7 @@ trait AdminTrait
 
         echo "<form style=\"float: left\" action=\"{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<input type="hidden" name="action" value="delautovac" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="rel" value="', \htmlspecialchars(\serialize([$_REQUEST['schema'], $_REQUEST['table']])), '" />' . \PHP_EOL;
         echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
@@ -664,7 +664,7 @@ trait AdminTrait
         echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
         echo '<p><input type="hidden" name="action" value="confirm_vacuum" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo $table_hidden_inputs;
         echo "<input type=\"submit\" value=\"{$this->lang['strvacuum']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -674,7 +674,7 @@ trait AdminTrait
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
         echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="confirm_analyze" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo $table_hidden_inputs;
         echo "<input type=\"submit\" value=\"{$this->lang['stranalyze']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -687,7 +687,7 @@ trait AdminTrait
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
         echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="confirm_reindex" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo $table_hidden_inputs;
         echo "<input type=\"submit\" value=\"{$this->lang['strreindex']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -808,7 +808,7 @@ trait AdminTrait
         $disabled = '';
         $reclusterconf = '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
         $reclusterconf .= '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
-        $reclusterconf .= $this->misc->form;
+        $reclusterconf .= $this->view->form;
         $reclusterconf .= $table_hidden_inputs;
 
         if ('table' === $type && !$data->alreadyClustered($_REQUEST['object'])) {
