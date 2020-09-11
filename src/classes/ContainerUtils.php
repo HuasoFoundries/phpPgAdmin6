@@ -40,7 +40,7 @@ class ContainerUtils
     const THEME_PATH = THEME_PATH;
 
     /**
-     * @var\Slim\Container
+     * @var\Psr\Container\ContainerInterface
      */
     protected $container;
 
@@ -124,7 +124,7 @@ class ContainerUtils
      *
      * @throws \Exception (description)
      *
-     * @return\Slim\Container the container instance
+     * @return\Psr\Container\ContainerInterface the container instance
      */
     public static function getContainerInstance()
     {
@@ -140,15 +140,15 @@ class ContainerUtils
     /**
      * Gets the instance.
      *
-     * @return self the instance
-     */
-    public static function getInstance()
+      */
+    public static function getInstance():self
     {
-        if (!self::$_instance) {
+        if (!$_instance=self::$_instance) {
             self::$_instance = new self();
+            $_instance=self::$_instance;
         }
 
-        return self::$_instance;
+        return $_instance;
     }
 
     /**

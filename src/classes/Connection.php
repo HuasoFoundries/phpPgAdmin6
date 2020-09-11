@@ -4,7 +4,9 @@
  * PHPPgAdmin 6.0.0
  */
 
-namespace PHPPgAdmin\Database;
+namespace PHPPgAdmin;
+
+use ADODB2_postgres;
 
 /**
  * @file
@@ -19,6 +21,8 @@ class Connection
     public $conn;
 
     public $platform = 'UNKNOWN';
+    /** @var string */
+    private $pgVersion;
 
     protected $container;
 
@@ -38,10 +42,11 @@ class Connection
         '9.1' => 'Postgres91',
         '9.0' => 'Postgres90',
     ];
-
+private $adodb_driver='postgres9'; // or pdo
     // The backend platform.  Set to UNKNOWN by default.
     private $_connection_result;
-
+    /** @var string */
+    public $driver;
     /**
      * Creates a new connection.  Will actually make a database connection.
      *
@@ -62,10 +67,43 @@ class Connection
 
         $this->container = $container;
 
-        $this->conn = \ADONewConnection('postgres9');
-        //$this->conn->debug = true;
+        // ADODB_Postgres9 Approach
+        //$driver='postgres9';
+        $this->conn = \ADONewConnection($this->adodb_driver);
         $this->conn->setFetchMode($fetchMode);
 
+        // PDO Approach
+        
+        
+
+        /*try {
+        $this->_connection_result = $this->conn->connect($pghost, $user, $password, $database);
+        $this->prtrace(['_connection_result' => $this->_connection_result, 'conn' => $this->conn]);
+        } catch (\PHPPgAdmin\ADOdbException $e) {
+        $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+         */
+        try {
+            $connectionResult = $this->adodb_driver === 'pdo' ? 
+            $this->getPDOConnection($host,$port,$sslmode,$database,$user,$password,$fetchMode):
+            $this->getPG9Connection($host,$port,$sslmode,$database,$user,$password,$fetchMode);
+
+            //$this->prtrace($this->conn);
+        } catch (\Exception $e) {
+            //dump($dsnString, $this->adodb_driver);
+            $this->prtrace($e->getMessage(), array_slice($e->getTrace(), 0, 10));
+        }
+    }
+ 
+    private function getPG9Connection(
+        string $host,int $port=5432,string $sslmode='prefer',
+        ?string $database,
+
+        ?string $user,
+
+        ?string $password,
+        int $fetchMode = \ADODB_FETCH_ASSOC) :  \ADODB_postgres9{
+        $this->conn = ADONewConnection('postgres9');
+        $this->conn->setFetchMode($fetchMode);
         // Ignore host if null
         if (null === $host || '' === $host) {
             if (null !== $port && '' !== $port) {
@@ -84,26 +122,37 @@ class Connection
             $pghost .= ' requiressl=1';
         }
 
-        /*try {
-        $this->_connection_result = $this->conn->connect($pghost, $user, $password, $database);
-        $this->prtrace(['_connection_result' => $this->_connection_result, 'conn' => $this->conn]);
-        } catch (\PHPPgAdmin\ADOdbException $e) {
-        $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-         */
-        try {
-            $this->conn->connect($pghost, $user, $password, $database);
-            //$this->prtrace($this->conn);
-        } catch (\Exception $e) {
-            dump($e);
-            $this->prtrace($e->getMessage(), $e->getTrace());
-        }
-    }
+        
+        $this->conn->connect($pghost, $user, $password, $database);
+        
+        return $this->conn;
 
+    }
+    private function getPDOConnection(
+        string $host,int $port=5432,string $sslmode='prefer',
+        ?string $database,
+
+        ?string $user,
+
+        ?string $password,
+        int $fetchMode = \ADODB_FETCH_ASSOC) :  \ADODB_pdo {
+        $this->conn = ADONewConnection('pdo');
+        $this->conn->setFetchMode($fetchMode);
+        $dsnString = sprintf('pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;application_name=PHPPgAdmin6', $host, $port, $database, $sslmode);
+        $this->conn->connect($dsnString, $user, $password) ;
+        return $this->conn;
+
+    }
+    
     public function getConnectionResult()
     {
         return $this->_connection_result;
     }
 
+    public function getVersion()
+    {
+        return $this->pgVersion;
+    }
     /**
      * Gets the name of the correct database driver to use.  As a side effect,
      * sets the platform.
@@ -114,61 +163,37 @@ class Connection
      */
     public function getDriver(&$description)
     {
-        $version = null;
-
-        if ($this->conn->_connectionID) {
-            $v = \pg_version($this->conn->_connectionID);
-
-            //\PhpConsole\Handler::getInstance()->debug($v, 'pg_version');
-
-            if (isset($v['server'])) {
-                $version = $v['server'];
-            }
+        if(!$this->conn->IsConnected()) {
+            return null;
         }
-        // If we didn't manage to get the version without a query, query...
-        if (!isset($version)) {
-            $adodb = new ADOdbBase($this->conn, $this->container, $this->server_info);
+       $serverInfo=$this->conn->ServerInfo();
+        $this->pgVersion =$serverInfo['version'];
+        $description = "PostgreSQL {$this->pgVersion}";
 
-            $sql = 'SELECT VERSION() AS version';
-            $field = $adodb->selectField($sql, 'version');
-
-            // Check the platform, if it's mingw, set it
-            if (\preg_match('/ mingw /i', $field)) {
-                $this->platform = 'MINGW';
-            }
-
-            $params = \explode(' ', $field);
-
-            if (!isset($params[1])) {
-                return null;
-            }
-
-            $version = $params[1]; // eg. 8.4.4
-        }
-
-        $description = "PostgreSQL {$version}";
-
-        $version_parts = \explode('.', $version);
+        $version_parts = \explode('.', $this->pgVersion);
 
         if ((int) (10 <= $version_parts[0])) {
             $major_version = $version_parts[0];
         } else {
             $major_version = \implode('.', [$version_parts[0], $version_parts[1]]);
         }
-
-        //$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), 'version' => $version, 'major_version' => $major_version]);
-        // Detect version and choose appropriate database driver
-        if (\array_key_exists($major_version, $this->version_dictionary)) {
-            return $this->version_dictionary[$major_version];
-        }
-
+        
         // if major version is less than 9 return null, we don't support it
-        if (9 > (int) \mb_substr($version, 0, 1)) {
+        if (9 > (float)  $major_version) {
+            $this->driver = null;
             return null;
         }
 
+        $this->driver = 'Postgres';
+        //$this->prtrace(['pg_version' => pg_version($this->conn->_connectionID), 'version' => $version, 'major_version' => $major_version]);
+        // Detect version and choose appropriate database driver
+        if (\array_key_exists($major_version, $this->version_dictionary)) {
+            $this->driver = $this->version_dictionary[$major_version];
+        }
+
+
         // If unknown version, then default to latest driver
-        return 'Postgres';
+        return $this->driver;
     }
 
     /**
@@ -178,6 +203,8 @@ class Connection
      */
     public function getLastError()
     {
-        return \pg_last_error($this->conn->_connectionID);
+        
+        return $this->conn->ErrorMsg();
+        
     }
 }

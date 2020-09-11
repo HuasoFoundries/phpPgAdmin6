@@ -344,7 +344,7 @@ class TablesController extends BaseController
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
                 echo $this->view->form;
                 echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
 
                 break;
@@ -470,7 +470,7 @@ class TablesController extends BaseController
                     echo '<input type="hidden" name="spcname" value="', \htmlspecialchars($_REQUEST['spcname']), '" />' . \PHP_EOL;
                 }
                 echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
 
                 break;
@@ -632,7 +632,7 @@ class TablesController extends BaseController
             echo '<input type="hidden" name="action" value="confcreatelike" />' . \PHP_EOL;
             echo $this->view->form;
             echo "<p><input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             if ('' === \trim($_REQUEST['name'])) {
@@ -754,11 +754,11 @@ class TablesController extends BaseController
             }
 
             echo '<p><input type="hidden" name="action" value="selectrows" />' . \PHP_EOL;
-            echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+            echo sprintf('<input type="hidden" name="table" value="%s"  />%s',\htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$this->lang['strselect']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
 
             return;
@@ -927,7 +927,7 @@ class TablesController extends BaseController
             echo '<input type="hidden" name="action" value="insertrow" />' . \PHP_EOL;
             echo '<input type="hidden" name="fields" value="', \htmlentities(\serialize($fields), \ENT_QUOTES, 'UTF-8'), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="protection_counter" value="' . $_SESSION['counter'] . '" />' . \PHP_EOL;
-            echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+            echo sprintf('<input type="hidden" name="table" value="%s"  />%s',\htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             echo "<p><input type=\"submit\" name=\"insert\" value=\"{$this->lang['strinsert']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"insertandrepeat\" accesskey=\"r\" value=\"{$this->lang['strinsertandrepeat']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -1016,7 +1016,7 @@ class TablesController extends BaseController
 
                 echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
 
-                echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+                echo sprintf('<input type="hidden" name="table" value="%s"  />%s',\htmlspecialchars($_REQUEST['table']), \PHP_EOL);
                 // END not mutli empty
             }
             echo "<input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label>";
@@ -1092,7 +1092,7 @@ class TablesController extends BaseController
                 echo '<p>', \sprintf($this->lang['strconfdroptable'], $this->misc->printVal($_REQUEST['table'])), '</p>' . \PHP_EOL;
 
                 echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
-                echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+                echo sprintf('<input type="hidden" name="table" value="%s"  />%s',\htmlspecialchars($_REQUEST['table']), \PHP_EOL);
                 // END if multi drop
             }
 

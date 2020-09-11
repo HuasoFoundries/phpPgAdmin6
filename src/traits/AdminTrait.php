@@ -289,7 +289,7 @@ trait AdminTrait
         echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo $this->view->form;
         echo '<input type="hidden" name="action" value="editautovac" />' . \PHP_EOL;
-        echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+        echo sprintf('<input type="hidden" name="table" value="%s"  />%s',\htmlspecialchars($_REQUEST['table']), \PHP_EOL);
 
         echo "<br />\n<br />\n<table>" . \PHP_EOL;
         echo "\t<tr><td>&nbsp;</td>" . \PHP_EOL;
@@ -321,7 +321,7 @@ trait AdminTrait
         echo '<br />';
         echo '<br />';
         echo "<input type=\"submit\" name=\"save\" value=\"{$this->lang['strsave']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
 
         echo '</form>' . \PHP_EOL;
     }
@@ -352,7 +352,7 @@ trait AdminTrait
         echo "<form style=\"float: left\" action=\"{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<input type="hidden" name="action" value="delautovac" />' . \PHP_EOL;
         echo $this->view->form;
-        echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+        echo sprintf('<input type="hidden" name="table" value="%s"  />%s',\htmlspecialchars($_REQUEST['table']), \PHP_EOL);
         echo '<input type="hidden" name="rel" value="', \htmlspecialchars(\serialize([$_REQUEST['schema'], $_REQUEST['table']])), '" />' . \PHP_EOL;
         echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;

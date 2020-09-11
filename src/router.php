@@ -13,6 +13,8 @@ $app->get('/status', function (
     /* @scrutinizer ignore-unused */
     array $args
 ) {
+    phpinfo();
+    return;
     //dump($this->get('settings')->all());
     return $response
         ->withHeader('Content-type', 'application/json')
@@ -128,14 +130,14 @@ $app->get('/{subject:\w+}[/{server_id}]', function (
     /* @scrutinizer ignore-unused */
     \Slim\Http\Response $response,
     /* @scrutinizer ignore-unused */
-    $subject,
-    $server_id = null
+    array $args
+    
 ) {
-    $subject = (isset($args['subject'])) ? $args['subject'] : 'intro';
-    //ddd($subject, $server_id);
+    $subject=$args['subject']??'intro';
+    $server_id=$args['server_id']??$request->getQueryParam('server');
+     //ddd($subject, $server_id);
     $_server_info = $this->misc->getServerInfo();
-
-    $server_id = $request->getQueryParam('server');
+ 
 
     //$this->utils->prtrace($_server_info);
 

@@ -91,7 +91,7 @@ class Misc
     protected $container;
 
     /**
-     * @var null|\PHPPgAdmin\Database\Connection
+     * @var null|\PHPPgAdmin\Connection
      */
     private $_connection;
 
@@ -392,7 +392,7 @@ class Misc
             $_type = '\PHPPgAdmin\Database\\' . $_type;
 
             $this->setServerInfo('platform', $platform, $this->_server_id);
-            $this->setServerInfo('pgVersion', $_connection->conn->pgVersion, $this->_server_id);
+            $this->setServerInfo('pgVersion', $_connection->getVersion(), $this->_server_id);
 
             // Create a database wrapper class for easy manipulation of the
             // connection.
@@ -434,9 +434,9 @@ class Misc
      * @param string $database
      * @param string $server_id
      *
-     * @return \PHPPgAdmin\Database\Connection
+     * @return \PHPPgAdmin\Connection
      */
-    public function getConnection(string $database = '', $server_id = null): \PHPPgAdmin\Database\Connection
+    public function getConnection(string $database = '', $server_id = null): \PHPPgAdmin\Connection
     {
         $lang = $this->lang;
 
@@ -479,7 +479,7 @@ class Misc
 
             try {
                 // Create the connection object and make the connection
-                $this->_connection = new \PHPPgAdmin\Database\Connection(
+                $this->_connection = new \PHPPgAdmin\Connection(
                     $server_info,
                     $database_to_use,
                     $this->container

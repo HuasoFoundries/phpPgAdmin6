@@ -69,7 +69,7 @@ if (DEBUGMODE) {
         $conf['register_debuggers']();
     }
 }
-
+define('ADODB_ASSOC_CASE',ADODB_ASSOC_CASE_NATIVE);
 // Fetch App and DI Container
 $app = \PHPPgAdmin\ContainerUtils::createApp($conf);
 $container = $app->getContainer();
@@ -77,7 +77,19 @@ $container = $app->getContainer();
 if (!$container instanceof \Slim\Container) {
     \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
 }
+function container():\Slim\Container  {
+return \PHPPgAdmin\ContainerUtils::getContainerInstance();
+}
+ 
+function request():\Slim\Http\Request {
+    return  container()->request;
+    }
 
+    function response():\Slim\Http\Response {
+        return container()->response;
+        }
+
+        
 // This should be deprecated once we're sure no php scripts are required directly
 $container->offsetSet('server', $_REQUEST['server'] ?? null);
 $container->offsetSet('database', $_REQUEST['database'] ?? null);

@@ -67,7 +67,9 @@ class BaseController
      * @var \PHPPgAdmin\ViewManager
      */
     public $view;
-
+ /**
+     * @var \PHPPgAdmin\Misc
+     */
     public $misc;
 
     public $conf;
@@ -75,10 +77,8 @@ class BaseController
     public $phpMinVer;
 
     protected $script;
-
+    /** @var \Slim\Container */
     protected $container;
-
-    protected $app;
 
     protected $data;
 
@@ -88,26 +88,31 @@ class BaseController
 
     /**
      * @var XHtml\HTMLTableController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_table_controller;
 
     /**
      * @var XHtml\HTMLFooterController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_footer_controller;
 
     /**
      * @var XHtml\HTMLHeaderController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_header_controller;
 
     /**
      * @var XHtml\HTMLNavbarController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_trail_controller;
 
     /**
      * @var TreeController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_tree_controller;
 
@@ -432,8 +437,9 @@ class BaseController
     }
 
     /**
-     * @param null|string $default
+     * 
      * @param string      $key
+     * @param null|string $default
      */
     public function getRequestParam(string $key, ?string $default = null)
     {
@@ -441,15 +447,24 @@ class BaseController
     }
 
     /**
-     * @param null|array|string $default
+     * 
      * @param string            $key
+     * @param  bool|null|array|string|int|float $default
+     * 
+     * @return bool| null|array|string|int|float
      */
     public function getPostParam(string $key, $default = null)
     {
         return $this->container->requestobj->getParsedBodyParam($key, $default);
     }
-
-    public function getQueryParam($key, $default = null)
+ /**
+     *
+     * @param string            $key
+     *  @param null|array|string|int|float $default
+     * 
+     * @return  null|array|string|int|float
+     */
+    public function getQueryParamstring ($key, $default = null)
     {
         return $this->container->requestobj->getQueryParam($key, $default);
     }

@@ -163,7 +163,7 @@ class MaterializedviewpropertiesController extends BaseController
             echo '<input type="hidden" name="matview" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
             echo $this->view->form;
             echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -219,7 +219,7 @@ class MaterializedviewpropertiesController extends BaseController
                 echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="olddefault" value="', \htmlspecialchars($_REQUEST['olddefault']), '" />' . \PHP_EOL;
                 echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
 
                 break;
@@ -331,7 +331,7 @@ class MaterializedviewpropertiesController extends BaseController
                 echo '<input type="hidden" name="matview" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
                 echo $this->view->form;
                 echo "<p><input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
             } else {
                 echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;

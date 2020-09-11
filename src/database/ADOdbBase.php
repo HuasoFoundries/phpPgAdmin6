@@ -18,23 +18,24 @@ class ADOdbBase
 {
     use \PHPPgAdmin\Traits\HelperTrait;
     use \PHPPgAdmin\Database\Traits\HasTrait;
-
+/** @var array */
     public $lang;
-
+/** @var array */
     public $conf;
-
+/** @var \Slim\Container */
     protected $container;
-
+/** @var array */
     protected $server_info;
-
+    /** @var string */
+    protected $lastExecutedSql;
     /**
      * Base constructor.
      *
-     * @param ADONewConnection $conn        The connection object
+     * @param \ADODB_postgres9|\ADODB_pdo  $conn        The connection object
      * @param mixed            $container
      * @param mixed            $server_info
      */
-    public function __construct(&$conn, $container, $server_info)
+    public function __construct(  &$conn, $container, $server_info)
     {
         $this->container = $container;
         $this->server_info = $server_info;
@@ -43,8 +44,9 @@ class ADOdbBase
         $this->conf = $container->get('conf');
 
         $this->prtrace('instanced connection class');
+        $this->lastExecutedSql='';
         $this->conn = $conn;
-    }
+     }
 
     /**
      * Sets the comment for an object in the database.
@@ -118,10 +120,14 @@ class ADOdbBase
         } else {
             $sql .= 'NULL;';
         }
-
+$this->lastExecutedSql=$sql;
         return $this->execute($sql);
     }
-
+public function getLastExecutedSQL():string {
+    $lastExecutedSql=$this->lastExecutedSql;
+    $this->lastExecutedSql='';
+    return $lastExecutedSql;
+}
     /**
      * Turns on or off query debugging.
      *
@@ -470,31 +476,31 @@ class ADOdbBase
     /**
      * Begin a transaction.
      *
-     * @return bool 0 success
+     * @return int 0 success
      */
     public function beginTransaction()
     {
-        return !$this->conn->BeginTrans();
+        return intval(!$this->conn->BeginTrans());
     }
 
     /**
      * End a transaction.
      *
-     * @return bool 0 success
+     * @return int 0 success
      */
     public function endTransaction()
     {
-        return !$this->conn->CommitTrans();
+        return intval(!$this->conn->CommitTrans());
     }
 
     /**
      * Roll back a transaction.
      *
-     * @return bool 0 success
+     * @return int 0 success
      */
     public function rollbackTransaction()
     {
-        return !$this->conn->RollbackTrans();
+        return intval( !$this->conn->RollbackTrans());
     }
 
     /**

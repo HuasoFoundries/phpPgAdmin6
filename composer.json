@@ -52,7 +52,12 @@
             "PHPPgAdmin\\Database\\Traits\\": "src/database/databasetraits",
             "PHPPgAdmin\\Help\\": "src/help",
             "PHPPgAdmin\\Translations\\": "src/translations"
-        }
+        },
+        "files": [
+            "vendor/adodb/adodb-php/drivers/adodb-postgres9.inc.php",
+"vendor/adodb/adodb-php/drivers/adodb-pdo.inc.php",
+"vendor/adodb/adodb-php/drivers/adodb-pdo_pgsql.inc.php"
+        ]
     },
     "scripts": {
         "post-install-cmd": "@clear_twig_cache",
