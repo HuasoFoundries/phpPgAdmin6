@@ -1,0 +1,100 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: "Coding_Standards"
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+env:
+  MIN_COVERED_MSI: 100
+  MIN_MSI: 100
+  PHP_EXTENSIONS: "mbstring, pgsql"
+  key: cache-v1 # can be any string, change to clear the extension cache.
+jobs:
+  coding_standards:
+    name: "Coding_Standards"
+
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php_version:
+          - "7.3"
+
+        dependencies:
+          - "locked"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2.3.3"
+
+      - uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GH_ACTIONS_TOKEN }}
+
+      - name: Setup cache environment
+        id: extcache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ matrix.php_version }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          key: ${{ env.key }}
+
+      - name: Cache extensions
+        uses: "actions/cache@v2.1.1"
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
+
+      - name: "Install PHP with extensions"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
+          php-version: "${{ matrix.php_version }}"
+          tools: composer, phpcs, cs2pr
+
+      - name: Cache Composer
+        uses: "actions/cache@v2.1.1"
+        with:
+          path: "~/.composer/cache"
+          key: "composer-${{ hashFiles('composer.lock') }}"
+          restore-keys: "composer-"
+
+      - name: "Install locked dependencies from composer.lock"
+        run: "composer install --no-interaction --no-progress --no-suggest"
+
+      - name: "Create dummy config files"
+        run: "cp config.inc.php-dist config.inc.php"
+
+      - name: "Run ergebnis/composer-normalize"
+        run: "composer normalize --dry-run"
+
+      - name: "Create cache directories and files for friendsofphp/php-cs-fixer"
+        run: "mkdir -p .build/phpcs"
+      - run: touch .build/phpcs/php-cs.cache 
+      - run: touch .build/phpcs/csfixer.cache 
+
+        
+ 
+      - name: "Cache cache directory for phpcs and friendsofphp/php-cs-fixer"
+        uses: "actions/cache@v2.1.1"
+        with:
+          path: ".build/phpcs"
+          key: "php-${{ matrix.php_version }}-phpcs-${{ github.sha }}"
+          restore-keys: "php-${{ matrix.php_version }}-phpcs-"
+          
+#      - name: "Run CodeShiffer"
+#        run: phpcs  --standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache --report=checkstyle src/* | cs2pr
+                    
+            
+      - name: "Run friendsofphp/php-cs-fixer"
+        run: "vendor/bin/php-cs-fixer fix --config=.php_cs.php --diff --diff-format=udiff --cache-file=.build/phpcs/csfixer.cache --dry-run --format=checkstyle | cs2pr"

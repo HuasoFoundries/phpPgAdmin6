@@ -242,6 +242,7 @@ class DataimportController extends BaseController
                 // Get first line of field names
                 $fields = \fgetcsv($fd, $csv_max_line, $csv_delimiter);
                 $row = 2; //We start on the line AFTER the field names
+
                 while ($line = \fgetcsv($fd, $csv_max_line, $csv_delimiter)) {
                     // Build value map
                     $t_fields = [];

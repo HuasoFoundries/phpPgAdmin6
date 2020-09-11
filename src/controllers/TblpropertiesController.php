@@ -306,13 +306,13 @@ class TblpropertiesController extends BaseController
                 // Jump them to the new table name
                 $_REQUEST['table'] = $_POST['name'];
                 // Force a browser reload
-                $misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
             }
             // If schema has changed, need to change to the new schema and reload the browser
             if (!empty($_POST['newschema']) && ($_POST['newschema'] !== $data->_schema)) {
                 // Jump them to the new sequence schema
                 $misc->setCurrentSchema($_POST['newschema']);
-                $misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
             }
             $this->doDefault($this->lang['strtablealtered']);
         } else {
@@ -357,7 +357,7 @@ class TblpropertiesController extends BaseController
                 $_POST['tablespace'] = $table->fields['tablespace'];
             }
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/tblproperties" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/tblproperties" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
@@ -482,7 +482,7 @@ class TblpropertiesController extends BaseController
         $max_size = $misc->inisizeToBytes(\ini_get('upload_max_filesize'));
 
         if (\is_float($max_size) && 0 < $max_size) {
-            echo '<form action="' . self::SUBFOLDER . '/src/views/dataimport" method="post" enctype="multipart/form-data">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/dataimport" method="post" enctype="multipart/form-data">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strformat']}</th>" . \PHP_EOL;
             echo "\t\t<td><select name=\"format\">" . \PHP_EOL;
@@ -545,8 +545,8 @@ class TblpropertiesController extends BaseController
                 $this->printTitle($this->lang['straddcolumn'], 'pg.column.add');
                 $this->printMsg($msg);
 
-                echo '<script src="' . self::SUBFOLDER . '/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tblproperties" method="post">' . \PHP_EOL;
+                echo '<script src="' . \containerInstance()->subFolder . '/assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tblproperties" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -592,6 +592,7 @@ class TblpropertiesController extends BaseController
                 echo '</select></td>' . \PHP_EOL;
                 $predefined_size_types = \array_intersect($data->predefined_size_types, $types_for_js);
                 $escaped_predef_types = []; // the JS escaped array elements
+
                 foreach ($predefined_size_types as $value) {
                     $escaped_predef_types[] = "'{$value}'";
                 }
@@ -648,7 +649,7 @@ class TblpropertiesController extends BaseController
                 );
 
                 if (0 === $status) {
-                    $misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                     $this->doDefault(\sprintf('%s %s %s', $sql, \PHP_EOL, $this->lang['strcolumnadded']));
                 } else {
                     $_REQUEST['stage'] = 1;
@@ -680,7 +681,7 @@ class TblpropertiesController extends BaseController
 
             echo '<p>' . \sprintf($this->lang['strconfdropcolumn'], $misc->printVal($_REQUEST['column']), $misc->printVal($_REQUEST['table'])) . '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/tblproperties" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/tblproperties" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
@@ -693,7 +694,7 @@ class TblpropertiesController extends BaseController
             [$status, $sql] = $data->dropColumn($_POST['table'], $_POST['column'], isset($_POST['cascade']));
 
             if (0 === $status) {
-                $misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doDefault(\sprintf('%s %s %s', $sql, \PHP_EOL, $this->lang['strcolumndropped']));
             } else {
                 $this->doDefault($this->lang['strcolumndroppedbad']);

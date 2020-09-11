@@ -5,11 +5,26 @@
   "repository": "git@github.com:HuasoFoundries/phpPgAdmin6.git",
   "author": "ffflabs <amenadiel@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "npm run compile_less && workbox injectManifest workbox-config.js && yarn disable_development_mode",
+    "disable_development_mode":"sed -i 's/development_assets=true/development_assets=false/' assets/templates/components/common_head.twig ",
+    "compile_less": "lessc assets/themes/global.less assets/themes/global.css",
+    "eslint": "eslint --fix --ext js --ignore-path .eslintignore assets",
+    "prettier": "prettier -c --config .prettierrc  assets/{js,themes}/*"
+  },
   "devDependencies": {
+    "@types/jquery": "^3.5.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.8.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "prettier": "^2.1.1"
-  }
+    "lessc": "^1.0.2",
+    "melody-idom": "^1.7.5",
+    "melody-runtime": "^1.7.5",
+    "prettier": "^2.1.1",
+    "prettier-plugin-twig-melody": "^0.4.6",
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {}
 }

@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Turkish language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Turkish extends AbstractLang
 {

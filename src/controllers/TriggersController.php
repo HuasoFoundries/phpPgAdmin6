@@ -273,7 +273,7 @@ class TriggersController extends BaseController
         if (0 < $triggerdata->recordCount()) {
             $this->coalesceArr($_POST, 'name', $triggerdata->fields['tgname']);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/triggers" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
@@ -311,7 +311,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/triggers" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             echo '<input type="hidden" name="trigger" value="', \htmlspecialchars($_REQUEST['trigger']), '" />' . \PHP_EOL;
@@ -350,7 +350,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/triggers" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="enable" />' . \PHP_EOL;
             echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             echo '<input type="hidden" name="trigger" value="', \htmlspecialchars($_REQUEST['trigger']), '" />' . \PHP_EOL;
@@ -388,7 +388,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/triggers" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="disable" />' . \PHP_EOL;
             echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             echo '<input type="hidden" name="trigger" value="', \htmlspecialchars($_REQUEST['trigger']), '" />' . \PHP_EOL;
@@ -449,7 +449,7 @@ class TriggersController extends BaseController
         $sel3 = new \PHPPgAdmin\XHtml\XHtmlSelect('formFrequency');
         $sel3->set_data($data->triggerFrequency);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/triggers" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
         echo "		<th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;

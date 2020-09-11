@@ -198,9 +198,7 @@ class TypesController extends BaseController
             ],
         ];
 
-        if (!$data->hasEnumTypes()) {
-            unset($navlinks['enum']);
-        }
+        //if (!$data->hasEnumTypes()) {            unset($navlinks['enum']);        }
 
         $this->printNavLinks($navlinks, 'types-types', \get_defined_vars());
     }
@@ -344,7 +342,7 @@ class TypesController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdroptype'], $this->misc->printVal($_REQUEST['type'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="type" value="', \htmlspecialchars($_REQUEST['type']), '" />' . \PHP_EOL;
@@ -386,7 +384,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -432,7 +430,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -563,7 +561,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -607,7 +605,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -710,7 +708,7 @@ class TypesController extends BaseController
         $this->printTitle($this->lang['strcreatetype'], 'pg.type.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

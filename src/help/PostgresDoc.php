@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Help;
 
 /**
  * Help links for PostgreSQL 7.4 documentation.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class PostgresDoc
 {
@@ -188,7 +190,7 @@ class PostgresDoc
      *
      * @return null|string|string[]
      */
-    public function getHelpTopics(?string $topic = null): array
+    public function getHelpTopics(?string $topic = null)
     {
         return  $topic ? $this->help_topics[$topic] ?? null : $this->help_topics;
     }

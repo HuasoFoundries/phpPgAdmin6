@@ -1,3 +1,6 @@
+function historyApiBack() {
+  window.history && window.history.back();
+}
 function redirectToIframesView() {
   if (
     window.inPopUp ||
@@ -26,16 +29,18 @@ function addBehaviorToTopLinks(amIDetailFrame) {
       amIDetailFrame && window.parent.document.querySelector('#detail'),
     toplink_logout =
       amIDetailFrame &&
-      parentHandle.contentDocument.querySelector('#toplink_logout');
+      (parentHandle.contentDocument || document).querySelector(
+        '#toplink_logout'
+      );
 
   parentHandle &&
     [
-      ...parentHandle.contentDocument.querySelectorAll(
+      ...(parentHandle.contentDocument || document).querySelectorAll(
         '.toplink a.toplink_popup'
       ),
-    ].forEach(element => {
+    ].forEach((element) => {
       let href = element.href;
-      element.addEventListener('click', e => {
+      element.addEventListener('click', (e) => {
         e.preventDefault();
         window
           .open(
@@ -50,7 +55,7 @@ function addBehaviorToTopLinks(amIDetailFrame) {
       element.href = 'javascript:void(this.click())'; // eslint-disable-line
     });
   toplink_logout &&
-    toplink_logout.addEventListener('click', e => {
+    toplink_logout.addEventListener('click', (e) => {
       e.preventDefault();
       if (confirm(stateObj.strconfdropcred)) {
         window.location.href = e.target.href;
@@ -67,6 +72,13 @@ if (
 ) {
   redirectToIframesView();
 }
+let {
+  frames: { browser },
+} = window.parent;
+if (browser && browser.jsTree && stateObj.reload) {
+  browser.jsTree.jstree('refresh');
+}
+
 $.ready
   .then(() => {
     let amIDetailFrame = document.body.classList.contains('detailbody');
@@ -103,7 +115,7 @@ $.ready
   })
   .then(() => {
     if (window.location.href.indexOf('servers?action=logout') !== -1) {
-      window.setTimeout(function() {
+      window.setTimeout(function () {
         window.parent.location.replace(`${stateObj.subfolder}/servers`);
       }, 3000);
     } else if (
@@ -130,12 +142,12 @@ $.ready
       }
     }
     if (typeof hljs !== 'undefined') {
-      $('pre code.hljs').each(function(i, block) {
+      $('pre code.hljs').each(function (i, block) {
         hljs.highlightBlock(block);
       });
     }
     return;
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });

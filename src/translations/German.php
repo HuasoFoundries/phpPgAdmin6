@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for German language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class German extends AbstractLang
 {

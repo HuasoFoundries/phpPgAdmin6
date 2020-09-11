@@ -49,19 +49,23 @@ class Connection
      */
     private $pgVersion;
 
+    /**
+     * @var string
+     */
+    private $_captured_error;
+
     private $adodb_driver = 'postgres9';
 
-    // or pdo
     // The backend platform.  Set to UNKNOWN by default.
     private $_connection_result;
 
     /**
      * Creates a new connection.  Will actually make a database connection.
      *
-     * @param array           $server_info
-     * @param string          $database    database name
-     * @param \Slim\Container $container
-     * @param int             $fetchMode   Defaults to associative.  Override for different behaviour
+     * @param array                      $server_info
+     * @param string                     $database    database name
+     * @param \PHPPgAdmin\ContainerUtils $container
+     * @param int                        $fetchMode   Defaults to associative.  Override for different behaviour
      */
     public function __construct($server_info, $database, $container, $fetchMode = ADODB_FETCH_ASSOC)
     {
@@ -75,37 +79,15 @@ class Connection
 
         $this->container = $container;
 
-        // ADODB_Postgres9 Approach
-        //$driver='postgres9';
-        $this->conn = \ADONewConnection($this->adodb_driver);
+        $this->conn = 'pdo' === $this->adodb_driver ?
+                $this->getPDOConnection($host, $port, $sslmode, $database, $user, $password, $fetchMode) :
+                $this->getPG9Connection($host, $port, $sslmode, $database, $user, $password, $fetchMode);
         $this->conn->setFetchMode($fetchMode);
 
-        // PDO Approach
-
-        /*try {
-        $this->_connection_result = $this->conn->connect($pghost, $user, $password, $database);
-        $this->prtrace(['_connection_result' => $this->_connection_result, 'conn' => $this->conn]);
-        } catch (\PHPPgAdmin\ADOdbException $e) {
-        $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-         */
-        try {
-            $connectionResult = 'pdo' === $this->adodb_driver ?
-            $this->getPDOConnection($host, $port, $sslmode, $database, $user, $password, $fetchMode) :
-            $this->getPG9Connection($host, $port, $sslmode, $database, $user, $password, $fetchMode);
-
-            //$this->prtrace($this->conn);
-        } catch (\Exception $e) {
-            //dump($dsnString, $this->adodb_driver);
-            $this->prtrace($e->getMessage(), \array_slice($e->getTrace(), 0, 10));
-        }
+        //$this->prtrace($this->conn);
     }
 
-    public function getConnectionResult()
-    {
-        return $this->_connection_result;
-    }
-
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->pgVersion;
     }
@@ -124,6 +106,7 @@ class Connection
             return null;
         }
         $serverInfo = $this->conn->ServerInfo();
+        $this->dump($serverInfo);
         $this->pgVersion = $serverInfo['version'];
         $description = "PostgreSQL {$this->pgVersion}";
 
@@ -171,8 +154,7 @@ class Connection
         ?string $user,
         ?string $password,
         int $fetchMode = \ADODB_FETCH_ASSOC
-    ): \ADODB_postgres9
-    {
+    ): \ADODB_postgres9 {
         $this->conn = ADONewConnection('postgres9');
         $this->conn->setFetchMode($fetchMode);
         // Ignore host if null
@@ -192,8 +174,10 @@ class Connection
         } elseif ('legacy' === $sslmode) {
             $pghost .= ' requiressl=1';
         }
+        \ob_start();
+        $this->_connection_result = $this->conn->connect($pghost, $user, $password, $database);
 
-        $this->conn->connect($pghost, $user, $password, $database);
+        $this->_captured_error = \ob_get_clean();
 
         return $this->conn;
     }
@@ -206,8 +190,7 @@ class Connection
         ?string $user,
         ?string $password,
         int $fetchMode = \ADODB_FETCH_ASSOC
-    ): \ADODB_pdo
-    {
+    ): \ADODB_pdo {
         $this->conn = ADONewConnection('pdo');
         $this->conn->setFetchMode($fetchMode);
         $dsnString = \sprintf('pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;application_name=PHPPgAdmin6', $host, $port, $database, $sslmode);

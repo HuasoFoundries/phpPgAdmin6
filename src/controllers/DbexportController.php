@@ -23,7 +23,7 @@ class DbexportController extends BaseController
 
         $response = $this
             ->container
-            ->responseobj;
+            ->response;
 
         // Include application functions
         $f_schema = $f_object = '';

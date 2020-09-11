@@ -119,12 +119,12 @@ trait InsertEditRowTrait
             $fksprops['code'] .= "var table='" . \addslashes(\htmlentities($table, \ENT_QUOTES, 'UTF-8')) . "';";
             $fksprops['code'] .= "var server='" . \htmlentities($_REQUEST['server'], \ENT_QUOTES, 'UTF-8') . "';";
             $fksprops['code'] .= "var database='" . \addslashes(\htmlentities($_REQUEST['database'], \ENT_QUOTES, 'UTF-8')) . "';";
-            $fksprops['code'] .= "var subfolder='" . self::SUBFOLDER . "';";
+            $fksprops['code'] .= "var subfolder='" . \containerInstance()->subFolder . "';";
             $fksprops['code'] .= '</script>' . \PHP_EOL;
 
             $fksprops['code'] .= '<div id="fkbg"></div>';
             $fksprops['code'] .= '<div id="fklist"></div>';
-            $fksprops['code'] .= '<script src="' . self::SUBFOLDER . '/assets/js/ac_insert_row.js" type="text/javascript"></script>';
+            $fksprops['code'] .= '<script src="' . \containerInstance()->subFolder . '/assets/js/ac_insert_row.js" type="text/javascript"></script>';
         } else {
             /* we have no foreign keys on this table */
             return false;

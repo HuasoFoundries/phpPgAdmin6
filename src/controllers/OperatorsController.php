@@ -256,7 +256,7 @@ class OperatorsController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/operators" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/operators" method="post">' . \PHP_EOL;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="operator" value="', \htmlspecialchars($_REQUEST['operator']), '" />' . \PHP_EOL;

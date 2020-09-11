@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for ChineseTr language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class ChineseTr extends AbstractLang
 {

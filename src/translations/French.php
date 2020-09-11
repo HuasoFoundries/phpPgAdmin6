@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for French language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class French extends AbstractLang
 {

@@ -124,7 +124,7 @@ class ViewsController extends BaseController
             $this->keystring => [
                 'title' => $this->lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url' => self::SUBFOLDER . "/redirect/view?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . "/redirect/view?{$this->misc->href}&amp;",
                 'vars' => [$this->keystring => 'relname'],
             ],
             'owner' => [
@@ -281,7 +281,7 @@ class ViewsController extends BaseController
             $this->printTrail('view');
             $this->printTitle($this->lang['strdrop'], 'pg.view.drop');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/views" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/views" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -312,10 +312,19 @@ class ViewsController extends BaseController
                         $status = $data->dropView($s, isset($_POST['cascade']));
 
                         if (0 === $status) {
-                            $msg .= \sprintf('%s: %s<br />', \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strviewdropped']);
+                            $msg .= \sprintf(
+                                '%s: %s<br />',
+                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strviewdropped']
+                            );
                         } else {
                             $data->endTransaction();
-                            $this->doDefault(\sprintf('%s%s: %s<br />', $msg, \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strviewdroppedbad']));
+                            $this->doDefault(\sprintf(
+                                '%s%s: %s<br />',
+                                $msg,
+                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strviewdroppedbad']
+                            ));
 
                             return;
                         }
@@ -324,7 +333,7 @@ class ViewsController extends BaseController
 
                 if (0 === $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                     $this->doDefault($msg);
                 } else {
                     $this->doDefault($this->lang['strviewdroppedbad']);
@@ -333,7 +342,7 @@ class ViewsController extends BaseController
                 $status = $data->dropView($_POST['view'], isset($_POST['cascade']));
 
                 if (0 === $status) {
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                     $this->doDefault($this->lang['strviewdropped']);
                 } else {
                     $this->doDefault($this->lang['strviewdroppedbad']);
@@ -403,7 +412,7 @@ class ViewsController extends BaseController
         $this->printTitle($this->lang['strcreateview'], 'pg.view.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . "/src/views/{$this->view_name}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$this->view_name}\" method=\"post\">" . \PHP_EOL;
         echo '<table style="width: 100%">' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -438,7 +447,7 @@ class ViewsController extends BaseController
             $status = $data->createView($_POST['formView'], $_POST['formDefinition'], false, $_POST['formComment']);
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doDefault($this->lang['strviewcreated']);
             } else {
                 $this->doCreate($this->lang['strviewcreatedbad']);

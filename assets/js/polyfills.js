@@ -3,11 +3,10 @@
 // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Polyfill
 if (!Array.prototype.map) {
   Array.prototype.map = function (callback, thisArg) {
-
     var T, A, k;
 
     if (this == null) {
-      throw new TypeError(" this is null or not defined");
+      throw new TypeError(' this is null or not defined');
     }
 
     // 1. Let O be the result of calling ToObject passing the |this| value as the argument.
@@ -19,8 +18,8 @@ if (!Array.prototype.map) {
 
     // 4. If IsCallable(callback) is false, throw a TypeError exception.
     // See: http://es5.github.com/#x9.11
-    if (typeof callback !== "function") {
-      throw new TypeError(callback + " is not a function");
+    if (typeof callback !== 'function') {
+      throw new TypeError(callback + ' is not a function');
     }
 
     // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
@@ -37,7 +36,6 @@ if (!Array.prototype.map) {
 
     // 8. Repeat, while k < len
     while (k < len) {
-
       var kValue, mappedValue;
 
       // a. Let Pk be ToString(k).
@@ -46,7 +44,6 @@ if (!Array.prototype.map) {
       //   This step can be combined with c
       // c. If kPresent is true, then
       if (k in O) {
-
         // i. Let kValue be the result of calling the Get internal method of O with argument Pk.
         kValue = O[k];
 

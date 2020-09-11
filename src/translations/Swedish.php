@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Swedish language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Swedish extends AbstractLang
 {

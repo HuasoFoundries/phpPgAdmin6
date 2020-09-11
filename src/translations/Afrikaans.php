@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Afrikaans language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Afrikaans extends AbstractLang
 {

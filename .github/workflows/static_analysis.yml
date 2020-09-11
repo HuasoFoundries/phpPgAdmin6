@@ -1,0 +1,115 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: "Static_Analysis"
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+
+env:
+  MIN_COVERED_MSI: 100
+  MIN_MSI: 100
+  PHP_EXTENSIONS: "mbstring, pgsql"
+  GH_ACTIONS_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
+  PHP_TOOLS: composer, prestissimo, composer-require-checker, composer-normalize, composer-unused, phpcs, cs2pr
+  key: cache-v1 # can be any string, change to clear the extension cache.
+jobs:
+  Static_Analysis:
+    name: "Static_Analysis"
+
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php_version:
+          - "7.3"
+
+        dependencies:
+          - "locked"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2.3.3"
+
+      - uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GH_ACTIONS_TOKEN }}
+
+      - name: Setup cache for extensions
+        id: extcache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ matrix.php_version }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          key: ${{ env.key }}
+
+      - name: Create cache entry for extensions
+        uses: "actions/cache@v2.1.1"
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
+
+      - name: "Install PHP with extensions"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          extensions: "${{ env.PHP_EXTENSIONS }}"
+          php-version: "${{ matrix.php_version }}"
+          tools: "${{ env.PHP_TOOLS }}"
+
+      - name: Create cache entry for Composer
+        uses: "actions/cache@v2.1.1"
+        with:
+          path: "~/.composer/cache"
+          key: "composer-${{ hashFiles('composer.lock') }}"
+          restore-keys: "composer-"
+
+      - name: "Install locked dependencies from composer.lock"
+        run: "composer install --no-interaction --no-progress --no-suggest"
+
+      - name: "Create dummy config files"
+        run: "cp config.inc.php-dist config.inc.php"
+
+      - name: "Run php-parallel-lint"
+        run: "vendor/bin/parallel-lint  --exclude vendor --exclude .build ."
+
+      - name: "Create cache directory for phpstan/phpstan"
+        run: "mkdir -p .build/phpstan"
+
+      - name: "Create cache directory for vimeo/psalm"
+        run: "mkdir -p .build/psalm"
+
+      - name: "Create cache entry for phpstan/phpstan"
+        uses: "actions/cache@v2.1.1"
+        with:
+          path: ".build/phpstan"
+          key: "php-7.3-phpstan-${{ github.sha }}"
+          restore-keys: "php-7.3-phpstan-"
+
+      - name: "Run phpstan/phpstan"
+        run: "vendor/bin/phpstan analyse --configuration=phpstan.neon --error-format=checkstyle | cs2pr"
+
+
+      - name: "Create cache entry for vimeo/psalm"
+        uses: "actions/cache@v2.1.1"
+        with:
+          path: ".build/psalm"
+          key: "php-7.3-psalm-${{ github.sha }}"
+          restore-keys: "php-7.3-psalm-"
+
+      - name: "Run vimeo/psalm"
+        run: "vendor/bin/psalm --config=psalm.xml --shepherd --show-info=false --output-format=checkstyle --diff --diff-methods  --threads=4 | cs2pr"
+
+      
+#      - uses: reviewdog/action-setup@v1
+#        with:
+#          reviewdog_version: latest # Optional. [latest,nightly,v.X.Y.Z]
+#
+#      - name: Run reviewdog
+#        env:
+#          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
+#        run: |
+#          reviewdog -conf=.reviewdog.yml -reporter=github-check

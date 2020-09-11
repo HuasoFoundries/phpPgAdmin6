@@ -16,7 +16,6 @@ $header = "PHPPgAdmin {$version}";
 
 $config = Config\Factory::fromRuleSet(new Config\RuleSet\Php71($header), [
     'declare_strict_types' => false,
-    //'header_comment' => ['commentType' => 'PHPDoc', 'header' => $header],
     'escape_implicit_backslashes' => false,
     'final_class' => false,
     'final_internal_class' => false,
@@ -35,6 +34,7 @@ $config = Config\Factory::fromRuleSet(new Config\RuleSet\Php71($header), [
 $config->getFinder()
     ->ignoreDotFiles(false)
     ->in(__DIR__)
+    ->notName('rector.php')
     ->exclude([
         '.build',
         '.configs',
@@ -43,12 +43,13 @@ $config->getFinder()
         'docs',
         'node_modules',
         'temp',
+        'rector.php',
         'src/router.php',
         'vendor',
         '.github',
     ])
-    ->name('.php_cs');
+    ->name('.php_cs.php');
 
-$config->setCacheFile(__DIR__ . '/.build/php-cs-fixer/php_cs.cache');
+$config->setCacheFile(__DIR__ . '/.build/phpcs/csfixer.cache');
 
 return $config;

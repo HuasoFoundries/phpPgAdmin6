@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Hungarian language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Hungarian extends AbstractLang
 {

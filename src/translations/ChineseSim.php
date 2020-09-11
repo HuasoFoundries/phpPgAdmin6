@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for ChineseSim language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class ChineseSim extends AbstractLang
 {

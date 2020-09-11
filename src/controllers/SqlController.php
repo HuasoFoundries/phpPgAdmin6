@@ -186,6 +186,9 @@ class SqlController extends BaseController
         $data->conn->setFetchMode(\ADODB_FETCH_NUM);
         \set_time_limit(25000);
 
+        /**
+         * @var \ADORecordSet
+         */
         $rs = $data->conn->Execute($this->query);
 
         echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
@@ -260,7 +263,7 @@ class SqlController extends BaseController
         }
 
         // Reload the browser as we may have made schema changes
-        $this->misc->setReloadBrowser(true);
+        $this->view->setReloadBrowser(true);
 
         // Display duration if we know it
         if (null !== $this->duration) {

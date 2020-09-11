@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Ukrainian language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Ukrainian extends AbstractLang
 {

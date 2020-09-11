@@ -27,7 +27,7 @@ playground
 *.log
 tests/_output
 temp/*.output.txt
-*baseline.*
+
 
 ###> Vendor files
 node_modules
@@ -36,7 +36,7 @@ vendor
 
 ###> Config files other tan examples
 config.yml
-.configs/
+.configs
 sftp-config*
 config.*.php*
 !config.inc.php-dist
@@ -47,3 +47,12 @@ config.*.php*
 .build
 .php_cs.cache
 .phpunit.result.cache
+
+### Linter's reports
+temp/*.checkstyle.xml
+temp/*.junit.xml
+temp/*.report.json
+temp/*.report.xml
+tools/composer*
+tools/phpcbf
+tools/phpmd_checkstyle

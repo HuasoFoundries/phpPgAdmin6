@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Catalan language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Catalan extends AbstractLang
 {

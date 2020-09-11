@@ -20,16 +20,16 @@ class PopulateRequestResponse extends Middleware
         $next
     ) {
         $container = $this->container;
-        $subfolder = $this->getSubfolder();
-        $container['requestobj'] = $request;
-        $container['responseobj'] = $response;
+        $subfolder = $this->container->getSubfolder();
+
         $route = $request->getAttribute('route');
 
         $container['server'] = $request->getParam('server');
         $container['database'] = $request->getParam('database');
         $container['schema'] = $request->getParam('schema');
         $misc = $container->get('misc');
-        $view = $container->get('view');
+
+        $view = $this->getViewManager($container);
 
         $misc->setHREF();
         $view->setForm();
@@ -41,10 +41,13 @@ class PopulateRequestResponse extends Middleware
             $container['server'] = $route->getArgument('server', $request->getParam('server'));
         }
 
-        $query_string = $request->getUri()->getQuery();
+        $request = $request->withUri($this->getUri($request)->withBasePath($subfolder));
+        $uri = $request->getUri();
+        $query_string = $uri->getQuery();
+        $requestPath = $uri->getPath();
+
         $view->offsetSet('query_string', $query_string);
-        $path = ($subfolder ? ($subfolder . '/') : '')
-        . $request->getUri()->getPath() . ($query_string ? '?' . $query_string : '');
+        $path = $requestPath . ($query_string ? '?' . $query_string : '');
         $view->offsetSet('path', $path);
 
         $params = $request->getParams();
@@ -71,13 +74,27 @@ class PopulateRequestResponse extends Middleware
         $view->offsetSet('in_test', $in_test);
 
         if (0 < \count($container['errors'])) {
-            return ($container->haltHandler)($container->requestobj, $container->responseobj, $container['errors'], 412);
+            return ($container->haltHandler)($request, $response, $container['errors'], 412);
         }
+        $enqueued_reload_browser = ($container->flash->getFirstMessage('reload_browser') ?? false);
 
+        if ($enqueued_reload_browser) {
+            $view->setReloadBrowser($enqueued_reload_browser);
+        }
         // First execute anything else
         $response = $next($request, $response);
 
         // Any other request, pass on current response
         return $response;
+    }
+
+    private function getUri(\Slim\Http\Request $request): \Slim\Http\Uri
+    {
+        return $request->getUri();
+    }
+
+    private function getViewManager(\PHPPgAdmin\ContainerUtils $container): \PHPPgAdmin\ViewManager
+    {
+        return $container->get('view');
     }
 }

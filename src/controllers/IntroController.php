@@ -18,14 +18,10 @@ class IntroController extends BaseController
      */
     public function render()
     {
-        if (null === \requestInstance()->getAttribute('route')) {
-            echo $this->doDefault();
-        } else {
-            $body = \responseInstance()->getBody();
-            $body->write($this->doDefault());
+        $body = \responseInstance()->getBody();
+        $body->write($this->doDefault());
 
-            return \responseInstance();
-        }
+        return \responseInstance();
     }
 
     /**
@@ -89,7 +85,7 @@ class IntroController extends BaseController
         $intro_html .= '</ul>';
 
         if (\requestInstance()->getQueryParam('language')) {
-            $this->misc->setReloadBrowser(true);
+            $this->view->setReloadBrowser(true);
         }
 
         $intro_html .= $this->printFooter(false);

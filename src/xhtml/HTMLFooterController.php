@@ -55,7 +55,7 @@ class HTMLFooterController extends HTMLController
     {
         $reload_param = 'none';
 
-        if ($this->misc->getReloadBrowser()) {
+        if ($this->view->getReloadBrowser()) {
             $reload_param = 'other';
         } elseif ($this->_reload_drop_database) {
             $reload_param = 'database';

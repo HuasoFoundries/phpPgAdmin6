@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Arabic language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Arabic extends AbstractLang
 {

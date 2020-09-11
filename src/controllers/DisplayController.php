@@ -26,7 +26,7 @@ class DisplayController extends BaseController
 
         \set_time_limit(0);
 
-        $scripts = '<script src="' . self::SUBFOLDER . '/assets/js/display.js" type="text/javascript"></script>';
+        $scripts = '<script src="' . \containerInstance()->subFolder . '/assets/js/display.js" type="text/javascript"></script>';
 
         $scripts .= '<script type="text/javascript">' . \PHP_EOL;
         $scripts .= "var Display = {\n";
@@ -52,6 +52,7 @@ class DisplayController extends BaseController
 
                 break;
             case 'confeditrow':
+               // d($_REQUEST);
                 $this->formEditRow();
 
                 break;
@@ -187,6 +188,7 @@ class DisplayController extends BaseController
 
         try {
             $max_pages = 0;
+
             // Retrieve page from query.  $max_pages is returned by reference.
             $resultset = $data->browseQuery(
                 $type,
@@ -194,7 +196,7 @@ class DisplayController extends BaseController
                 $query,
                 $sortkey,
                 $sortdir,
-                $page,
+                (int) ($page ?? 1),
                 $this->conf['max_rows'],
                 $max_pages
             );
@@ -227,7 +229,7 @@ class DisplayController extends BaseController
         $_gets['sortkey'] = $sortkey;
         $_gets['sortdir'] = $sortdir;
         $_gets['strings'] = $strings;
-
+        // d($_gets);
         if ($save_history && \is_object($resultset) && ('QUERY' === $type)) {
             //{
             $this->misc->saveScriptHistory($_REQUEST['query']);
@@ -471,7 +473,7 @@ class DisplayController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         [$actions, $key] = $this->_getKeyAndActions($resultset, $object, $data, $page, $_gets);
-
+        //d($actions['actionbuttons']);
         $fkey_information = $this->getFKInfo();
         // Show page navigation
         $paginator = $this->_printPages($page, $max_pages, $_gets);
@@ -622,7 +624,7 @@ class DisplayController extends BaseController
 
         $fksprops = $this->_getFKProps();
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/display" method="post" id="ac_form">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post" id="ac_form">' . \PHP_EOL;
 
         $elements = 0;
         $error = true;
@@ -711,16 +713,21 @@ class DisplayController extends BaseController
         }
 
         echo '<input type="hidden" name="action" value="editrow" />' . \PHP_EOL;
+        // d($_REQUEST);
+        // d($this->getAllParams());
         echo $this->view->form;
+
+        $subject = $this->getRequestParam('subject', $_REQUEST['subject'] ?? null);
+        $return = $this->getRequestParam('return', $_REQUEST['return'] ?? null);
         echo isset($_REQUEST['table']) ? \sprintf('<input type="hidden" name="table" value="%s" />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL) : '';
 
-        echo isset($_REQUEST['subject']) ? \sprintf('<input type="hidden" name="subject" value="%s" />%s', \htmlspecialchars($_REQUEST['subject']), \PHP_EOL) : '';
+        echo isset($subject) ? \sprintf('<input type="hidden" name="subject" value="%s" />%s', \htmlspecialchars($_REQUEST['subject']), \PHP_EOL) : '';
 
         echo isset($_REQUEST['query']) ? \sprintf('<input type="hidden" name="query" value="%s" />%s', \htmlspecialchars($_REQUEST['query']), \PHP_EOL) : '';
 
         echo isset($_REQUEST['count']) ? \sprintf('<input type="hidden" name="count" value="%s" />%s', \htmlspecialchars($_REQUEST['count']), \PHP_EOL) : '';
 
-        echo isset($_REQUEST['return']) ? \sprintf('<input type="hidden" name="return" value="%s" />%s', \htmlspecialchars($_REQUEST['return']), \PHP_EOL) : '';
+        echo isset($return) ? \sprintf('<input type="hidden" name="return" value="%s" />%s', \htmlspecialchars($_REQUEST['return']), \PHP_EOL) : '';
 
         echo '<input type="hidden" name="page" value="', \htmlspecialchars($_REQUEST['page']), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="sortkey" value="', \htmlspecialchars($_REQUEST['sortkey']), '" />' . \PHP_EOL;
@@ -746,7 +753,7 @@ class DisplayController extends BaseController
 
         echo '</p>' . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
-        echo '<script src="' . self::SUBFOLDER . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
+        echo '<script src="' . \containerInstance()->subFolder . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
     }
 
     /**
@@ -797,7 +804,7 @@ class DisplayController extends BaseController
 
             $resultset = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/display" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post">' . \PHP_EOL;
             echo $this->view->form;
 
             if (1 === $resultset->recordCount()) {
@@ -968,9 +975,10 @@ class DisplayController extends BaseController
         // Fetch unique row identifier, if this is a table browse request.
         if ($object) {
             $key = $data->getRowIdentifier($object);
+            // d([$object=>$key]);
         }
         // -1 means no unique keys, other non iterable should be discarded as well
-        if (-1 === $key || \is_iterable($key)) {
+        if (-1 === $key || !\is_iterable($key)) {
             $key = [];
         }
         // Check that the key is actually in the result set.  This can occur for select

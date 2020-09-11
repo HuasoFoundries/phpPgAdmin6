@@ -1,72 +1,89 @@
 $(document).ready(function () {
+  var timeid = (query = null);
+  var controlLink = $('#control');
 
-	var timeid = query = null;
-	var controlLink = $('#control');
+  console.log('Database is', Database);
 
-	console.log('Database is', Database);
+  var errmsg = $('<p class="errmsg">' + Database.errmsg + '</p>')
+    .insertBefore(controlLink)
+    .hide();
 
-	var errmsg = $('<p class="errmsg">' + Database.errmsg + '</p>')
-		.insertBefore(controlLink)
-		.hide();
+  var loading = $(
+    '<img class="loading" alt="[loading]" src="' + Database.load_icon + '" />'
+  )
+    .insertAfter(controlLink)
+    .hide();
 
-	var loading = $('<img class="loading" alt="[loading]" src="' + Database.load_icon + '" />')
-		.insertAfter(controlLink)
-		.hide();
+  controlLink.show();
 
-	controlLink.show();
+  function refreshTable() {
+    if (Database.ajax_time_refresh > 0) {
+      loading.show();
+      query = $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        data: {
+          server: Database.server,
+          database: Database.dbname,
+          action: Database.action,
+        },
+        url: '/src/views/database.php',
+        cache: false,
+        contentType: 'application/x-www-form-urlencoded',
+        success: function (html) {
+          $('#data_block').html(html);
+          timeid = window.setTimeout(refreshTable, Database.ajax_time_refresh);
+          loading.hide();
+        },
+        error: function () {
+          controlLink.click();
+          //errmsg.show();
+        },
+        complete: function () {
+          //loading.hide();
+        },
+      });
+    }
+  }
 
+  controlLink.on('click', function () {
+    console.log(timeid);
+    if (timeid === null) {
+      console.log('toggle 1');
+      timeid = window.setTimeout(refreshTable, Database.ajax_time_refresh);
+      controlLink
+        .empty()
+        .append(
+          '<img src="' +
+            Database.str_stop.icon +
+            '" alt="" />&nbsp;' +
+            Database.str_stop.text +
+            '&nbsp;&nbsp;&nbsp;'
+        );
+    } else {
+      console.log('toggle 2');
+      window.clearInterval(timeid);
+      if (query) {
+        query.abort();
+      }
+      controlLink
+        .empty()
+        .append(
+          '<img src="' +
+            Database.str_start.icon +
+            '" alt="" />&nbsp;' +
+            Database.str_start.text
+        );
+    }
+  });
 
-	function refreshTable() {
-		if (Database.ajax_time_refresh > 0) {
-			loading.show();
-			query = $.ajax({
-				type: 'GET',
-				dataType: 'html',
-				data: {
-					server: Database.server,
-					database: Database.dbname,
-					action: Database.action
-				},
-				url: '/src/views/database.php',
-				cache: false,
-				contentType: 'application/x-www-form-urlencoded',
-				success: function (html) {
-					$('#data_block').html(html);
-					timeid = window.setTimeout(refreshTable, Database.ajax_time_refresh)
-					loading.hide();
-				},
-				error: function () {
-					controlLink.click();
-					//errmsg.show();
-				},
-				complete: function () {
-					//loading.hide();
-				}
-			});
-		}
-	}
+  /* preload images */
+  $('#control img')
+    .hide()
+    .attr('src', Database.str_start.icon)
+    .attr('src', Database.str_stop.icon)
+    .show();
 
-	controlLink.on('click', function () {
-		console.log(timeid);
-		if (timeid === null) {
-			console.log('toggle 1');
-			timeid = window.setTimeout(refreshTable, Database.ajax_time_refresh);
-			controlLink.empty().append('<img src="' + Database.str_stop.icon + '" alt="" />&nbsp;' + Database.str_stop.text + '&nbsp;&nbsp;&nbsp;');
-		} else {
-			console.log('toggle 2');
-			window.clearInterval(timeid);
-			if (query) query.abort();
-			controlLink.empty().append('<img src="' + Database.str_start.icon + '" alt="" />&nbsp;' + Database.str_start.text);
-		}
-	});
-
-
-	/* preload images */
-	$('#control img').hide()
-		.attr('src', Database.str_start.icon)
-		.attr('src', Database.str_stop.icon)
-		.show();
-
-	/* start refreshing */
-	controlLink.click();
+  /* start refreshing */
+  controlLink.click();
 });

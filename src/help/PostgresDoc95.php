@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Help;
 
 /**
  * Help links for PostgreSQL 9.5 documentation.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class PostgresDoc95 extends PostgresDoc94
 {

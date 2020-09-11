@@ -1422,8 +1422,7 @@ trait TableTrait
             $this->fieldClean($atts->fields['attname']);
             $sql .= "    \"{$atts->fields['attname']}\"";
             // Dump SERIAL and BIGSERIAL columns correctly
-            if (
-                $this->phpBool($atts->fields['attisserial']) &&
+            if ($this->phpBool($atts->fields['attisserial']) &&
                 ('integer' === $atts->fields['type'] || 'bigint' === $atts->fields['type'])
             ) {
                 if ('integer' === $atts->fields['type']) {

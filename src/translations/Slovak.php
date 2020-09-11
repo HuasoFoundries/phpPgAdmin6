@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Slovak language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Slovak extends AbstractLang
 {

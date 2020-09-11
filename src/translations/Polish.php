@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Polish language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Polish extends AbstractLang
 {

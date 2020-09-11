@@ -6,96 +6,112 @@
 
 namespace PHPPgAdmin;
 
-use Slim\App;
-use Slim\Container;
-
-\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
-\defined('THEME_PATH') || \define('THEME_PATH', BASE_PATH . '/assets/themes');
-
-\defined('DEBUGMODE') || \define('DEBUGMODE', false);
-\defined('IN_TEST') || \define('IN_TEST', false);
+use Psr\Container\ContainerInterface;
+use Slim\Collection;
+use Slim\DefaultServicesProvider;
 
 /**
- * A class that adds convenience methods to the container.
+ * @property array $deploy_info
+ * @property \Slim\Flash\Messages $flash
+ * @property \GuzzleHttp\Client $fcIntranetClient
+ * @property \PHPPgAdmin\Misc $misc
+ * @property \PHPPgAdmin\ViewManager $view
+ * @property \Slim\Http\Request $request
+ * @property \Slim\Http\Response $response
+ * @property string $BASE_PATH
+ * @property string $THEME_PATH
+ * @property string $subFolder
+ * @property bool $DEBUGMODE
+ * @property bool $IN_TEST
+ * @property string  $server
+ * @property string $database
+ * @property string  $schema
+ * @property
  */
-class ContainerUtils
+class ContainerUtils extends \Slim\Container implements ContainerInterface
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-    /**
-     * @var string
-     */
-    const BASE_PATH = BASE_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = PHPPGA_SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = DEBUGMODE;
 
     /**
-     * @var string
+     * @var null|self
      */
-    const THEME_PATH = THEME_PATH;
+    private static $instance;
 
     /**
-     * @var \Slim\Container
+     * $appInstance.
+     *
+     * @var null|\Slim\App
      */
-    protected $container;
+    private static $appInstance;
 
     /**
-     * @var App
-     */
-    protected $_app;
-
-    /**
+     * Default settings.
+     *
      * @var array
      */
-    protected $conf;
+    private $defaultSettings = [
+        'httpVersion' => '1.1',
+        'responseChunkSize' => 4096,
+        'outputBuffering' => 'append',
+        'determineRouteBeforeAppMiddleware' => false,
+        'displayErrorDetails' => false,
+        'addContentLengthHeader' => true,
+        'routerCacheFile' => false,
+    ];
 
     /**
-     * @var self
+     * Undocumented variable.
+     *
+     * @var array
      */
-    protected static $_instance;
+    private static $envConfig = [
+        'BASE_PATH' => '',
+        'subFolder' => '',
+        'DEBUGMODE' => false,
+        'THEME_PATH' => '',
+    ];
 
     /**
-     * Constructor of the ContainerUtils class.
+     * @param array $values the parameters or objects
      */
-    public function __construct()
+    final public function __construct(array $values = [])
     {
-        $composerinfo = \json_decode(\file_get_contents(BASE_PATH . '/composer.json'));
-        $appVersion = $composerinfo->extra->version;
+        parent::__construct($values);
 
-        $phpMinVer = (\str_replace(['<', '>', '='], '', $composerinfo->require->php));
-        //$this->prtrace($appVersion);
-        //$this->dump($composerinfo);
-        $settings = [
-            'determineRouteBeforeAppMiddleware' => true,
-            'base_path' => self::BASE_PATH,
-            'subfolder' => self::SUBFOLDER,
-            'debug' => self::DEBUGMODE,
+        $userSettings = $values['settings'] ?? [];
+        $this->registerDefaultServices($userSettings);
 
-            // Configuration file version.  If this is greater than that in config.inc.php, then
-            // the app will refuse to run.  This and $conf['version'] should be incremented whenever
-            // backwards incompatible changes are made to config.inc.php-dist.
-            'base_version' => 61,
-            // Application version
-            'appVersion' => 'v' . $appVersion,
-            // Application name
-            'appName' => 'phpPgAdmin6',
+        self::$instance = $this;
+    }
 
-            // PostgreSQL and PHP minimum version
-            'postgresqlMinVer' => '9.3',
-            'phpMinVer' => $phpMinVer,
-            'displayErrorDetails' => self::DEBUGMODE,
-            'addContentLengthHeader' => false,
-        ];
+    /**
+     * Gets the subfolder.
+     *
+     * @param string $path The path
+     *
+     * @return string the subfolder
+     */
+    public function getSubfolder(string $path = ''): string
+    {
+        return \implode(\DIRECTORY_SEPARATOR, [$this->subFolder, $path]);
+    }
 
-        if (!self::DEBUGMODE && !IN_TEST) {
-            $settings['routerCacheFile'] = self::BASE_PATH . '/temp/route.cache.php';
+    public static function getAppInstance(array $config = []): \Slim\App
+    {
+        $config = \array_merge(self::getDefaultConfig($config['debugmode'] ?? false), $config);
+
+        $container = self::getContainerInstance($config);
+
+        if (!self::$appInstance) {
+            self::$appInstance = new \Slim\App($container);
         }
-        $config = [
+
+        return self::$appInstance;
+    }
+
+    public static function getContainerInstance(array $config = []): self
+    {
+        self::$envConfig = [
             'msg' => '',
             'appThemes' => [
                 'default' => 'Default',
@@ -103,72 +119,31 @@ class ContainerUtils
                 'gotar' => 'Blue/Green',
                 'bootstrap' => 'Bootstrap3',
             ],
-            'settings' => $settings,
+            'BASE_PATH' => $config['BASE_PATH'] ?? \dirname(__DIR__, 2),
+            'subFolder' => $config['subfolder'] ?? '',
+            'debug' => $config['debugmode'] ?? false,
+            'THEME_PATH' => $config['theme_path'] ?? \dirname(__DIR__, 2) . '/assets/themes',
+            'IN_TEST' => $config['IN_TEST'] ?? false,
+            'webdbLastTab' => [],
         ];
 
-        $this->_app = new App($config);
+        self::$envConfig = \array_merge(self::$envConfig, $config);
 
-        // Fetch DI Container
-        $container = $this->_app->getContainer();
-        $container['utils'] = $this;
-        $container['version'] = 'v' . $appVersion;
-        $container['errors'] = [];
-        $container['requestobj'] = $container['request'];
-        $container['responseobj'] = $container['response'];
+        if (!self::$instance) {
+            self::$instance = new static(self::$envConfig);
 
-        $this->container = $container;
-    }
+            self::$instance
+                ->withConf(self::$envConfig);
 
-    /**
-     * Gets the container instance.
-     *
-     * @throws \Exception (description)
-     *
-     * @return \Slim\Container the container instance
-     */
-    public static function getContainerInstance()
-    {
-        $_instance = self::getInstance();
-
-        if (!$container = $_instance->container) {
-            throw new \Exception('Could not get a container');
+            $handlers = new ContainerHandlers(self::$instance);
+            $handlers->setExtra()
+                ->setMisc()
+                ->setViews()
+                ->storeMainRequestParams()
+                ->setHaltHandler();
         }
-
-        return $container;
-    }
-
-    /**
-     * Gets the instance.
-     */
-    public static function getInstance(): self
-    {
-        if (!$_instance = self::$_instance) {
-            self::$_instance = new self();
-            $_instance = self::$_instance;
-        }
-
-        return $_instance;
-    }
-
-    /**
-     * Creates a container.
-     *
-     * @param array $conf The conf
-     *
-     * @return \Slim\App ( description_of_the_return_value )
-     */
-    public static function createApp($conf)
-    {
-        $_instance = self::getInstance();
-
-        $_instance
-            ->withConf($conf)
-            ->setExtra()
-            ->setMisc()
-            ->setViews();
-
         //ddd($container->subfolder);
-        return $_instance->_app;
+        return self::$instance;
     }
 
     /**
@@ -178,14 +153,15 @@ class ContainerUtils
      */
     public function getRedirectUrl()
     {
-        $query_string = $this->container->requestobj->getUri()->getQuery();
+        $container = self::getContainerInstance();
+        $query_string = $container->request->getUri()->getQuery();
 
         // if server_id isn't set, then you will be redirected to intro
-        if (null === $this->container->requestobj->getQueryParam('server')) {
-            $destinationurl = self::SUBFOLDER . '/src/views/intro';
+        if (null === $container->request->getQueryParam('server')) {
+            $destinationurl = self::$envConfig['subFolder'] . '/src/views/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
-            $destinationurl = self::SUBFOLDER . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = self::$envConfig['subFolder'] . '/src/views/login' . ($query_string ? '?' . $query_string : '');
         }
 
         return $destinationurl;
@@ -203,9 +179,10 @@ class ContainerUtils
         if ('' === $key) {
             $key = self::getBackTrace();
         }
+        $container = self::getContainerInstance();
         // $this->dump(__METHOD__ . ': addMessage ' . $key . '  ' . json_encode($content));
-        if ($this->container->flash) {
-            $this->container->flash->addMessage($key, $content);
+        if ($container->flash) {
+            $container->flash->addMessage($key, $content);
         }
     }
 
@@ -219,11 +196,12 @@ class ContainerUtils
      */
     public function getDestinationWithLastTab($subject)
     {
-        $_server_info = $this->container->misc->getServerInfo();
+        $container = self::getContainerInstance();
+        $_server_info = $container->misc->getServerInfo();
         $this->addFlash($subject, 'getDestinationWithLastTab');
         //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
-        $url = $this->container->misc->getLastTabURL($subject) ?? ['url' => 'alldb', 'urlvars' => ['subject' => 'server']];
+        $url = $container->misc->getLastTabURL($subject) ?? ['url' => 'alldb', 'urlvars' => ['subject' => 'server']];
         $destinationurl = $this->getRedirectUrl();
 
         if (!isset($_server_info['username'])) {
@@ -260,12 +238,39 @@ class ContainerUtils
      */
     public function addError(string $errormsg): \Slim\Container
     {
-        //dump($errormsg);
-        $errors = $this->container->get('errors');
+        $container = self::getContainerInstance();
+        $errors = $container->get('errors');
         $errors[] = $errormsg;
-        $this->container->offsetSet('errors', $errors);
+        $container->offsetSet('errors', $errors);
 
-        return $this->container;
+        return $container;
+    }
+
+    /**
+     * Returns a string with html <br> variant replaced with a new line.
+     *
+     * @param string $msg message to parse (<br> separated)
+     *
+     * @return string parsed message (linebreak separated)
+     */
+    public static function br2ln($msg)
+    {
+        return \str_replace(['<br>', '<br/>', '<br />'], \PHP_EOL, $msg);
+    }
+
+    public static function getDefaultConfig(bool $debug = false): array
+    {
+        return  [
+            'settings' => [
+                'displayErrorDetails' => $debug,
+                'determineRouteBeforeAppMiddleware' => true,
+                'base_path' => \dirname(__DIR__, 2),
+                'debug' => $debug,
+                'phpMinVer' => '7.2', // PHP minimum version
+                'addContentLengthHeader' => false,
+                'appName' => 'PHPPgAdmin6',
+            ],
+        ];
     }
 
     /**
@@ -276,6 +281,12 @@ class ContainerUtils
         $container = self::getContainerInstance();
         $conf['plugins'] = [];
 
+        $container->BASE_PATH = $conf['BASE_PATH'];
+        $container->subFolder = $conf['subfolder'];
+        $container->debug = $conf['debugmode'];
+        $container->THEME_PATH = $conf['theme_path'];
+        $container->IN_TEST = $conf['IN_TEST'];
+        $container['errors'] = [];
         $container['conf'] = static function (\Slim\Container $c) use ($conf): array {
             $display_sizes = $conf['display_sizes'];
 
@@ -307,82 +318,34 @@ class ContainerUtils
 
             return $conf;
         };
-        $container->subfolder = self::SUBFOLDER;
+
+        $container->subFolder = $conf['subfolder'];
 
         return $this;
     }
 
     /**
-     * Sets the views.
+     * This function registers the default services that Slim needs to work.
      *
-     * @return self ( description_of_the_return_value )
+     * All services are shared, they are registered such that the
+     * same instance is returned on subsequent calls.
+     *
+     * @param array $userSettings Associative array of application settings
      */
-    private function setViews()
+    private function registerDefaultServices($userSettings): void
     {
-        $container = self::getContainerInstance();
+        $defaultSettings = $this->defaultSettings;
 
         /**
-         * @return \PHPPgAdmin\ViewManager
+         * This service MUST return an array or an instance of ArrayAccess.
+         *
+         * @return array|ArrayAccess
          */
-        $container['view'] = static function (\Slim\Container $c): \PHPPgAdmin\ViewManager {
-            $misc = $c->misc;
-            $view = new ViewManager(BASE_PATH . '/assets/templates', [
-                'cache' => BASE_PATH . '/temp/twigcache',
-                'auto_reload' => $c->get('settings')['debug'],
-                'debug' => $c->get('settings')['debug'],
-            ], $c);
-
-            $misc->setView($view);
-
-            return $view;
+        $this['settings'] = static function () use ($userSettings, $defaultSettings): \Slim\Collection {
+            return new Collection(\array_merge($defaultSettings, $userSettings));
         };
 
-        return $this;
-    }
-
-    /**
-     * Sets the instance of Misc class.
-     *
-     * @return self ( description_of_the_return_value )
-     */
-    private function setMisc()
-    {
-        $container = self::getContainerInstance();
-        /**
-         * @return \PHPPgAdmin\Misc
-         */
-        $container['misc'] = static function (\Slim\Container $c): \PHPPgAdmin\Misc {
-            $misc = new \PHPPgAdmin\Misc($c);
-
-            $conf = $c->get('conf');
-
-            // 4. Check for theme by server/db/user
-            $_server_info = $misc->getServerInfo();
-
-            /* starting with PostgreSQL 9.0, we can set the application name */
-            if (isset($_server_info['pgVersion']) && 9 <= $_server_info['pgVersion']) {
-                \putenv('PGAPPNAME=' . $c->get('settings')['appName'] . '_' . $c->get('settings')['appVersion']);
-            }
-
-            return $misc;
-        };
-
-        return $this;
-    }
-
-    private function setExtra()
-    {
-        $container = self::getContainerInstance();
-        $container['flash'] = static function (): \Slim\Flash\Messages {
-            return new \Slim\Flash\Messages();
-        };
-
-        $container['lang'] = static function (\Slim\Container $c): array {
-            $translations = new \PHPPgAdmin\Translations($c);
-
-            return $translations->lang;
-        };
-
-        return $this;
+        $defaultProvider = new DefaultServicesProvider();
+        $defaultProvider->register($this);
     }
 }

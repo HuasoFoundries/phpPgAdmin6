@@ -1,0 +1,492 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to method setFetchMode\\(\\) on an unknown class the\\.$#"
+			count: 2
+			path: src/classes/Connection.php
+
+		-
+			message: "#^Call to method connect\\(\\) on an unknown class the\\.$#"
+			count: 2
+			path: src/classes/Connection.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(\\)\\: Unexpected token \"\\\\n \", expected type at offset 540$#"
+			count: 1
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\ContainerUtils\\:\\:getRedirectUrl\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			count: 1
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\ContainerUtils\\:\\:\\$debug\\.$#"
+			count: 1
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^PHPDoc tag @var contains unresolvable type\\.$#"
+			count: 1
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Misc\\:\\:halt\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\AggregatesController\\:\\:doCreate\\(\\) \\(void\\) is used\\.$#"
+			count: 4
+			path: src/controllers/AggregatesController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\AlldbController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/AlldbController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$no_db_connection$#"
+			count: 1
+			path: src/controllers/BaseController.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Controller\\\\BaseController\\:\\:\\$postgresqlMinVer\\.$#"
+			count: 1
+			path: src/controllers/BaseController.php
+
+		-
+			message: "#^Call to an undefined method PHPPgAdmin\\\\Controller\\\\ConstraintsController\\:\\:doTree\\(\\)\\.$#"
+			count: 1
+			path: src/controllers/ConstraintsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\ConstraintsController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 7
+			path: src/controllers/ConstraintsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\ConstraintsController\\:\\:formPrimaryOrUniqueKey\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: src/controllers/ConstraintsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\ConstraintsController\\:\\:formAddForeignKey\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/ConstraintsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\DatabaseController\\:\\:currentLocks\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\DatabaseController\\:\\:currentProcesses\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\DatabaseController\\:\\:doFind\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\DatabaseController\\:\\:doAdmin\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$confirm$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$msg$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Cannot unset offset 'vars' on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confeditautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Cannot unset offset 'vars' on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confdelautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\DataexportController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: src/controllers/DataexportController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\DisplayController\\:\\:doBrowseFK\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\BaseController\\:\\:halt\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Variable \\$subject in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Access to property \\$name on an unknown class the\\.$#"
+			count: 2
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Access to property \\$type on an unknown class the\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Parameter \\#1 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Database\\\\Postgres\\:\\:printField\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\DisplayController\\:\\:formEditRow\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\FulltextController\\:\\:doCreateConfig\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/FulltextController.php
+
+		-
+			message: "#^Variable \\$mapping might not be defined\\.$#"
+			count: 1
+			path: src/controllers/FulltextController.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Controller\\\\FunctionsController\\:\\:showDefinition\\(\\) invoked with 0 parameters, 2 required\\.$#"
+			count: 1
+			path: src/controllers/FunctionsController.php
+
+		-
+			message: "#^Undefined variable\\: \\$f$#"
+			count: 1
+			path: src/controllers/FunctionsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\FunctionsController\\:\\:_printNavLinks\\(\\) \\(void\\) is used\\.$#"
+			count: 4
+			path: src/controllers/FunctionsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\FunctionsController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/FunctionsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\HistoryController\\:\\:doDownloadHistory\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/HistoryController.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Controller\\\\InfoController\\:\\:\\$shownull\\.$#"
+			count: 21
+			path: src/controllers/InfoController.php
+
+		-
+			message: "#^Comparison operation \"\\<\" between 0 and \\(array\\|float\\|int\\) results in an error\\.$#"
+			count: 5
+			path: src/controllers/InfoController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\MaterializedviewpropertiesController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: src/controllers/MaterializedviewpropertiesController.php
+
+		-
+			message: "#^Cannot call method alterMatView\\(\\) on PHPPgAdmin\\\\Database\\\\Postgres\\|void\\.$#"
+			count: 1
+			path: src/controllers/MaterializedviewpropertiesController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\MaterializedviewsController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: src/controllers/MaterializedviewsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\MaterializedviewsController\\:\\:doWizardCreate\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/MaterializedviewsController.php
+
+		-
+			message: "#^Parameter \\#1 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/controllers/MaterializedviewsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Database\\\\Postgres\\:\\:printField\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/MaterializedviewsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\BaseController\\:\\:halt\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/MaterializedviewsController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$msg$#"
+			count: 1
+			path: src/controllers/SchemasController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\SchemasController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/SchemasController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\SequencesController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/SequencesController.php
+
+		-
+			message: "#^Access to property \\$name on an unknown class the\\.$#"
+			count: 1
+			path: src/controllers/SqlController.php
+
+		-
+			message: "#^Access to property \\$type on an unknown class the\\.$#"
+			count: 1
+			path: src/controllers/SqlController.php
+
+		-
+			message: "#^Parameter \\#2 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Database\\\\Postgres\\:\\:printField\\(\\) \\(void\\) is used\\.$#"
+			count: 3
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Parameter \\#1 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 2
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\TablesController\\:\\:formInsertRow\\(\\) \\(void\\) is used\\.$#"
+			count: 3
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\TablesController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\TablesController\\:\\:doAdmin\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$confirm$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$msg$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Cannot unset offset 'vars' on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confeditautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Cannot unset offset 'vars' on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confdelautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Variable \\$icon might not be defined\\.$#"
+			count: 1
+			path: src/controllers/TblpropertiesController.php
+
+		-
+			message: "#^Variable \\$type might not be defined\\.$#"
+			count: 1
+			path: src/controllers/TblpropertiesController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\ViewsController\\:\\:doDefault\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: src/controllers/ViewsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\ViewsController\\:\\:doWizardCreate\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/ViewsController.php
+
+		-
+			message: "#^Parameter \\#1 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/controllers/ViewsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Database\\\\Postgres\\:\\:printField\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/ViewsController.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Controller\\\\BaseController\\:\\:halt\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/controllers/ViewsController.php
+
+		-
+			message: "#^Call to method recordCount\\(\\) on an unknown class RecordSet\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Access to property \\$fields on an unknown class RecordSet\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Access to an undefined property ADODB_postgres9\\:\\:\\$platform\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Database\\\\Postgres\\:\\:_alterTable\\(\\) invoked with 8 parameters, 6\\-7 required\\.$#"
+			count: 1
+			path: src/database/Postgres.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$owner$#"
+			count: 1
+			path: src/database/Postgres.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$fields$#"
+			count: 1
+			path: src/database/Postgres.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\ActionUrlDecorator\\:\\:\\$base\\.$#"
+			count: 2
+			path: src/decorators/ActionUrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\ActionUrlDecorator\\:\\:\\$queryVars\\.$#"
+			count: 1
+			path: src/decorators/ActionUrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\ArrayMergeDecorator\\:\\:\\$m\\.$#"
+			count: 2
+			path: src/decorators/ArrayMergeDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\BranchUrlDecorator\\:\\:\\$base\\.$#"
+			count: 2
+			path: src/decorators/BranchUrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\BranchUrlDecorator\\:\\:\\$queryVars\\.$#"
+			count: 1
+			path: src/decorators/BranchUrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\CallbackDecorator\\:\\:\\$fn\\.$#"
+			count: 2
+			path: src/decorators/CallbackDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\CallbackDecorator\\:\\:\\$p\\.$#"
+			count: 2
+			path: src/decorators/CallbackDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\ConcatDecorator\\:\\:\\$c\\.$#"
+			count: 2
+			path: src/decorators/ConcatDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\Decorator\\:\\:\\$val\\.$#"
+			count: 2
+			path: src/decorators/Decorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\FieldDecorator\\:\\:\\$f\\.$#"
+			count: 3
+			path: src/decorators/FieldDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\FieldDecorator\\:\\:\\$d\\.$#"
+			count: 2
+			path: src/decorators/FieldDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\IfEmptyDecorator\\:\\:\\$val\\.$#"
+			count: 2
+			path: src/decorators/IfEmptyDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\IfEmptyDecorator\\:\\:\\$empty\\.$#"
+			count: 2
+			path: src/decorators/IfEmptyDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\IfEmptyDecorator\\:\\:\\$full\\.$#"
+			count: 1
+			path: src/decorators/IfEmptyDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\RedirectUrlDecorator\\:\\:\\$base\\.$#"
+			count: 2
+			path: src/decorators/RedirectUrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\RedirectUrlDecorator\\:\\:\\$queryVars\\.$#"
+			count: 1
+			path: src/decorators/RedirectUrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\ReplaceDecorator\\:\\:\\$s\\.$#"
+			count: 2
+			path: src/decorators/ReplaceDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\ReplaceDecorator\\:\\:\\$p\\.$#"
+			count: 2
+			path: src/decorators/ReplaceDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\UrlDecorator\\:\\:\\$base\\.$#"
+			count: 2
+			path: src/decorators/UrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\Decorators\\\\UrlDecorator\\:\\:\\$queryVars\\.$#"
+			count: 1
+			path: src/decorators/UrlDecorator.php
+
+		-
+			message: "#^Constructor of class PHPPgAdmin\\\\XHtml\\\\XHtmlOption has an unused parameter \\$value\\.$#"
+			count: 1
+			path: src/xhtml/XHtmlOption.php
+
+		-
+			message: "#^Constructor of class PHPPgAdmin\\\\XHtml\\\\XHtmlSimpleElement has an unused parameter \\$element\\.$#"
+			count: 1
+			path: src/xhtml/XHtmlSimpleElement.php
+

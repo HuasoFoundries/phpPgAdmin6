@@ -284,7 +284,7 @@ class DomainsController extends BaseController
             }
 
             // Display domain info
-            echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), '</td></tr>' . \PHP_EOL;
@@ -336,7 +336,7 @@ class DomainsController extends BaseController
             $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>" . \PHP_EOL;
@@ -393,7 +393,7 @@ class DomainsController extends BaseController
                 $this->misc->printVal($_REQUEST['constraint']),
                 $this->misc->printVal($_REQUEST['domain'])
             ), '</p>' . \PHP_EOL;
-            echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop_con" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="constraint" value="', \htmlspecialchars($_REQUEST['constraint']), '" />' . \PHP_EOL;
@@ -560,7 +560,7 @@ class DomainsController extends BaseController
             $this->printTitle($this->lang['strdrop'], 'pg.domain.drop');
 
             echo '<p>', \sprintf($this->lang['strconfdropdomain'], $this->misc->printVal($_REQUEST['domain'])), '</p>' . \PHP_EOL;
-            echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
@@ -606,7 +606,7 @@ class DomainsController extends BaseController
         $this->printTitle($this->lang['strcreatedomain'], 'pg.domain.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "<td class=\"data1\"><input name=\"domname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

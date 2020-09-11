@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Hebrew language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Hebrew extends AbstractLang
 {
