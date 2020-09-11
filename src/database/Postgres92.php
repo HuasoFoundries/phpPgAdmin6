@@ -14,7 +14,15 @@ class Postgres92 extends Postgres93
 {
     public $typIndexes = ['BTREE', 'RTREE', 'GIST', 'GIN', 'HASH'];
 
+    /**
+     * @var float
+     */
     public $major_version = 9.2;
+
+    /**
+     * @var class-string
+     */
+    public $help_classname = \PHPPgAdmin\Help\PostgresDoc92::class;
 
     /**
      * Returns all available process information.

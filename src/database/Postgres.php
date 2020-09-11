@@ -36,6 +36,21 @@ class Postgres extends ADOdbBase
 
     public $conf;
 
+    /**
+     * @var float
+     */
+    public $major_version = 9.6;
+
+    /**
+     * @var class-string
+     */
+    public $help_classname = \PHPPgAdmin\Help\PostgresDoc::class;
+
+    /**
+     * @var \PHPPgAdmin\Help\PostgresDoc
+     */
+    public $help_class;
+
     protected $container;
 
     protected $server_info;
@@ -49,6 +64,8 @@ class Postgres extends ADOdbBase
         $this->lang = $container->get('lang');
         $this->conf = $container->get('conf');
         $this->server_info = $server_info;
+        $this->help_class = new $this->help_classname($this->conf, $this->major_version);
+        $this->lastExecutedSql = '';
     }
 
     /**
@@ -60,23 +77,24 @@ class Postgres extends ADOdbBase
      */
     public function getHelp($help)
     {
-        $this->getHelpPages();
+        $this->help_page = $this->help_class->getHelpTopics();
+        $this->help_base = $this->help_class->getHelpBase();
 
-        if (isset($this->help_page[$help])) {
-            if (\is_array($this->help_page[$help])) {
-                $urls = [];
-
-                foreach ($this->help_page[$help] as $link) {
-                    $urls[] = $this->help_base . $link;
-                }
-
-                return $urls;
-            }
-
-            return $this->help_base . $this->help_page[$help];
+        if (!$topicResult = $this->help_class->getHelpTopic($help)) {
+            return null;
         }
 
-        return null;
+        if (\is_array($topicResult)) {
+            $urls = [];
+
+            foreach ($topicResult as $link) {
+                $urls[] = $this->help_base . $link;
+            }
+
+            return $urls;
+        }
+
+        return $this->help_base . $topicResult;
     }
 
     /**
@@ -84,15 +102,9 @@ class Postgres extends ADOdbBase
      * get help page by instancing the corresponding help class
      * if $this->help_page and $this->help_base are set, this function is a noop.
      */
-    public function getHelpPages(): void
+    public function getHelpPages(): array
     {
-        if (null === $this->help_page || null === $this->help_base) {
-            $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . \str_replace('.', '', $this->major_version);
-
-            $help_class = new $help_classname($this->conf, $this->major_version);
-            $this->help_page = $help_class->getHelpPage();
-            $this->help_base = $help_class->getHelpBase();
-        }
+        return $this->help_class->getHelpTopics();
     }
 
     // Formatting functions
@@ -144,7 +156,7 @@ class Postgres extends ADOdbBase
                 if (null !== $value) {
                     $value = $this->escapeBytea($value);
                 }
-            // no break
+                // no break
             case 'text':
             case 'text[]':
             case 'json':
@@ -493,7 +505,8 @@ class Postgres extends ADOdbBase
                      * end of quote if matching non-backslashed character.
                      * backslashes don't count for double quotes, though.
                      */
-                    if (\mb_substr($line, $i, 1) === $in_quote &&
+                    if (
+                        \mb_substr($line, $i, 1) === $in_quote &&
                         (0 === $bslash_count % 2 || '"' === $in_quote)
                     ) {
                         $in_quote = 0;

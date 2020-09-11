@@ -53,7 +53,7 @@ class IndexesController extends BaseController
 
                 break;
             case 'save_create_index':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doSaveCreateIndex();
@@ -65,7 +65,7 @@ class IndexesController extends BaseController
 
                 break;
             case 'drop_index':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDropIndex(false);
                 } else {
                     $this->doDefault();
@@ -438,7 +438,7 @@ class IndexesController extends BaseController
         echo '<input type="hidden" name="subject" value="', \htmlspecialchars($subject), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="' . $subject . '" value="', \htmlspecialchars($object), '" />' . \PHP_EOL;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 

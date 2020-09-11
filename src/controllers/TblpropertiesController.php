@@ -32,7 +32,7 @@ class TblpropertiesController extends BaseController
 
         switch ($this->action) {
             case 'alter':
-                if (isset($_POST['alter'])) {
+                if (null !== $this->getPostParam('alter')) {
                     $this->doSaveAlter();
                 } else {
                     $this->doDefault();
@@ -52,7 +52,7 @@ class TblpropertiesController extends BaseController
 
                 break;
             case 'add_column':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $header_template = 'header_select2.twig';
@@ -61,7 +61,7 @@ class TblpropertiesController extends BaseController
 
                 break;
                 /*case 'properties':
-                if (isset($_POST['cancel'])) {
+                if($this->getPostParam('cancel')!==null){
                 $this->doDefault();
                 } else {
                 $this->doProperties();
@@ -69,7 +69,7 @@ class TblpropertiesController extends BaseController
 
                 break;
             case 'drop':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDrop(false);
                 } else {
                     $this->doDefault();
@@ -287,7 +287,7 @@ class TblpropertiesController extends BaseController
         $this->coalesceArr($_POST, 'tablespace', null);
 
         $this->coalesceArr($_POST, 'newschema', null);
-        $with_oids = boolval($this->getPostParam('with_oids', false));
+        $with_oids = (bool) ($this->getPostParam('with_oids', false));
 
         $status = $data->alterTable(
             $this->getPostParam('table'),
@@ -316,7 +316,6 @@ class TblpropertiesController extends BaseController
             }
             $this->doDefault($this->lang['strtablealtered']);
         } else {
-
             $this->doAlter($this->lang['strtablealteredbad']);
         }
     }
@@ -417,22 +416,22 @@ class TblpropertiesController extends BaseController
                 }
                 echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
             }
-            echo "<tr><th class=\"data left\"> </th>" . \PHP_EOL;
+            echo '<tr><th class="data left"> </th>' . \PHP_EOL;
             echo '<td class="data1">';
-            echo sprintf('<input type="checkbox" name="with_oids" value="1" %s /> %s', $data->hasObjectID($table->fields['relname']) ? 'checked' : '', ' WITH OIDS');
+            echo \sprintf('<input type="checkbox" name="with_oids" value="1" %s /> %s', $data->hasObjectID($table->fields['relname']) ? 'checked' : '', ' WITH OIDS');
 
             echo '</td></tr>';
 
             echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
-            echo sprintf('<textarea rows="3" cols="62" name="comment">%s</textarea>', \htmlspecialchars($_POST['comment']));
-            echo sprintf('</td></tr>%s</table>%s', \PHP_EOL, \PHP_EOL);
+            echo \sprintf('<textarea rows="3" cols="62" name="comment">%s</textarea>', \htmlspecialchars($_POST['comment']));
+            echo \sprintf('</td></tr>%s</table>%s', \PHP_EOL, \PHP_EOL);
             echo '<p><input type="hidden" name="action" value="alter" />' . \PHP_EOL;
-            echo sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
 
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -505,7 +504,7 @@ class TblpropertiesController extends BaseController
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="import" />' . \PHP_EOL;
             echo $this->view->form;
-            echo sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             echo "<input type=\"submit\" value=\"{$this->lang['strimport']}\" /></p>" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         }
@@ -616,13 +615,13 @@ class TblpropertiesController extends BaseController
                 echo '<p><input type="hidden" name="action" value="add_column" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
                 echo $this->view->form;
-                echo sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+                echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
 
                 if (!$data->hasCreateFieldWithConstraints()) {
                     echo '<input type="hidden" name="default" value="" />' . \PHP_EOL;
                 }
                 echo "<input type=\"submit\" value=\"{$this->lang['stradd']}\" />" . \PHP_EOL;
-                echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
                 echo '<script type="text/javascript">predefined_lengths = new Array(' . \implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>" . \PHP_EOL;
 
@@ -683,7 +682,7 @@ class TblpropertiesController extends BaseController
 
             echo '<form action="' . self::SUBFOLDER . '/src/views/tblproperties" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
-            echo sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
             echo $this->view->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\"> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;

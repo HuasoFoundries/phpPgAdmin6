@@ -25,6 +25,16 @@ class ADORecordSet extends \ADORecordSet implements \Countable
     }
 
     /**
+     * synonyms RecordCount and RowCount.
+     *
+     * @return int number of rows or -1 if this is not supported
+     */
+    public function recordCount()
+    {
+        return $this->count();
+    }
+
+    /**
      * Returns the recordCount.
      *
      * @param int $fieldoffset

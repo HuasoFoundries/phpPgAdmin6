@@ -64,13 +64,13 @@ class ServersController extends BaseController
 
         $server_html .= $this->printFooter(false);
 
-        if (null === $this->container->requestobj->getAttribute('route')) {
+        if (null === \requestInstance()->getAttribute('route')) {
             echo $server_html;
         } else {
-            $body = $this->container->responseobj->getBody();
+            $body = \responseInstance()->getBody();
             $body->write($server_html);
 
-            return $this->container->responseobj;
+            return \responseInstance();
         }
     }
 

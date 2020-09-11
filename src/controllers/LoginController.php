@@ -46,13 +46,13 @@ class LoginController extends BaseController
      */
     public function render()
     {
-        if (null === $this->container->requestobj->getAttribute('route')) {
+        if (null === \requestInstance()->getAttribute('route')) {
             echo $this->doLoginForm();
         } else {
-            $body = $this->container->responseobj->getBody();
+            $body = \responseInstance()->getBody();
             $body->write($this->doLoginForm());
 
-            return $this->container->responseobj;
+            return \responseInstance();
         }
     }
 
@@ -60,7 +60,7 @@ class LoginController extends BaseController
     {
         $this->misc->setNoDBConnection(true);
 
-        $server_id = $this->container->requestobj->getQueryParam('server');
+        $server_id = \requestInstance()->getQueryParam('server');
 
         if (null === $server_id) {
             $this->prtrace('invalid server param');

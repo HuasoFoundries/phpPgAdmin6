@@ -825,7 +825,7 @@ class DisplayController extends BaseController
             }
 
             if (isset($_REQUEST['table'])) {
-                echo sprintf('<input type="hidden" name="table" value="%s"  />%s',\htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+                echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             }
 
             if (isset($_REQUEST['subject'])) {

@@ -18,13 +18,13 @@ class IntroController extends BaseController
      */
     public function render()
     {
-        if (null === $this->container->requestobj->getAttribute('route')) {
+        if (null === \requestInstance()->getAttribute('route')) {
             echo $this->doDefault();
         } else {
-            $body = $this->container->responseobj->getBody();
+            $body = \responseInstance()->getBody();
             $body->write($this->doDefault());
 
-            return $this->container->responseobj;
+            return \responseInstance();
         }
     }
 
@@ -88,7 +88,7 @@ class IntroController extends BaseController
         //$intro_html .= '<li><a href="' . $this->lang['strviewfaq_url'] . '">' . $this->lang['strviewfaq'] . '</a></li>';
         $intro_html .= '</ul>';
 
-        if ($this->container->requestobj->getQueryParam('language')) {
+        if (\requestInstance()->getQueryParam('language')) {
             $this->misc->setReloadBrowser(true);
         }
 

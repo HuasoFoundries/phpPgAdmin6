@@ -14,7 +14,15 @@ class Postgres96 extends Postgres
 {
     public $typIndexes = ['BTREE', 'BRIN', 'RTREE', 'GIST', 'GIN', 'HASH', 'SP-GIST'];
 
+    /**
+     * @var float
+     */
     public $major_version = 9.6;
+
+    /**
+     * @var class-string
+     */
+    public $help_classname = \PHPPgAdmin\Help\PostgresDoc96::class;
 
     // Administration functions
 

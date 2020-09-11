@@ -9,14 +9,23 @@ namespace PHPPgAdmin\Help;
 /**
  * Help links for PostgreSQL 7.4 documentation.
  */
-class PostgresDoc74
+class PostgresDoc
 {
     use \PHPPgAdmin\Traits\HelperTrait;
 
+    /**
+     * @var float
+     */
     protected $major_version;
 
-    protected $help_page;
+    /**
+     * @var array
+     */
+    protected $help_topics;
 
+    /**
+     * @var array
+     */
     protected $conf;
 
     public function __construct($conf, $major_version)
@@ -25,7 +34,7 @@ class PostgresDoc74
         $this->conf = $conf;
 
         // TODO: Check and fix links
-        $this->help_page = [
+        $this->help_topics = [
             'pg.database' => 'managing-databases.html',
             'pg.database.create' => ['sql-createdatabase.html', 'manage-ag-createdb.html'],
             'pg.database.alter' => 'sql-alterdatabase.html',
@@ -172,8 +181,27 @@ class PostgresDoc74
         return \sprintf(\str_replace('http://', 'https://', $this->conf['help_base']), (string) ($this->major_version));
     }
 
-    public function getHelpPage()
+    /**
+     * Undocumented function.
+     *
+     * @param null|string $topic
+     *
+     * @return null|string|string[]
+     */
+    public function getHelpTopics(?string $topic = null): array
     {
-        return $this->help_page;
+        return  $topic ? $this->help_topics[$topic] ?? null : $this->help_topics;
+    }
+
+    /**
+     * Undocumented function.
+     *
+     * @param string $topic
+     *
+     * @return null|string|string[]
+     */
+    public function getHelpTopic(string $topic)
+    {
+        return  $this->help_topics[$topic] ?? null;
     }
 }

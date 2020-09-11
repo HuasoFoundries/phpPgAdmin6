@@ -16,6 +16,11 @@ trait HasTrait
     // The backend platform.  Set to UNKNOWN by default.
     public $platform = 'UNKNOWN';
 
+    /** @var string */
+
+    /**
+     * @var float
+     */
     public $major_version = 9.6;
 
     // Max object name length

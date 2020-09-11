@@ -30,7 +30,7 @@ class SchemasController extends BaseController
             return $this->doSubTree();
         }
 
-        if (isset($_POST['cancel'])) {
+        if (null !== $this->getPostParam('cancel')) {
             $this->action = '';
         }
 
@@ -40,7 +40,7 @@ class SchemasController extends BaseController
 
         switch ($this->action) {
             case 'create':
-                if (isset($_POST['create'])) {
+                if (null !== $this->getPostParam('create')) {
                     $this->doSaveCreate();
                 } else {
                     $this->doCreate();
@@ -48,7 +48,7 @@ class SchemasController extends BaseController
 
                 break;
             case 'alter':
-                if (isset($_POST['alter'])) {
+                if (null !== $this->getPostParam('alter')) {
                     $this->doSaveAlter();
                 } else {
                     $this->doAlter();
@@ -56,7 +56,7 @@ class SchemasController extends BaseController
 
                 break;
             case 'drop':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDrop(false);
                 } else {
                     $this->doDrop(true);
@@ -394,7 +394,7 @@ class SchemasController extends BaseController
             echo '<input type="hidden" name="schema" value="', \htmlspecialchars($_POST['schema']), '" />' . \PHP_EOL;
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -455,7 +455,7 @@ class SchemasController extends BaseController
             echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             if (\is_array($_POST['nsp'])) {

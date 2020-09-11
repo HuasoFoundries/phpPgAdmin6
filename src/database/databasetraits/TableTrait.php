@@ -187,8 +187,6 @@ trait TableTrait
 
         $sql .= ')';
 
-
-
         // Handle WITHOUT OIDS
         if ($this->hasObjectID($table)) {
             $sql .= ' WITH OIDS';
@@ -793,7 +791,8 @@ trait TableTrait
      * @param string $schema     The new schema for the table
      * @param string $comment    The comment on the table
      * @param string $tablespace The new tablespace for the table ('' means leave as is)
-     * @param bool                     $with_oids If set to FALSE, will drop oids column
+     * @param bool   $with_oids  If set to FALSE, will drop oids column
+     *
      * @return bool|int 0 success
      */
     public function alterTable($table, $name, $owner, $schema, $comment, $tablespace, bool $with_oids = true)
@@ -805,16 +804,16 @@ trait TableTrait
         }
 
         $status = $this->beginTransaction();
-        dump(['beginTransaction' => $status]);
+        //dump(['beginTransaction' => $status]);
 
         if (0 !== $status) {
             $this->rollbackTransaction();
 
             return -1;
         }
-        $sql_sentence="ALTER TABLE \"{$this->_schema}\".\"{$tblrs->fields['relname']}\" ";
-        $status = $this->_alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace, !$with_oids,$sql_sentence);
-        dump(['_alterTable' => [$status, $sql_sentence.$this->getLastExecutedSQL()]]);
+        $sql_sentence = "ALTER TABLE \"{$this->_schema}\".\"{$tblrs->fields['relname']}\" ";
+        $status = $this->_alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace, !$with_oids, $sql_sentence);
+        //dump(['_alterTable' => [$status, $sql_sentence.$this->getLastExecutedSQL()]]);
 
         if (0 !== $status) {
             $this->rollbackTransaction();
@@ -824,88 +823,14 @@ trait TableTrait
 
         return $this->endTransaction();
     }
-    /**
-     * Protected method which alter a table
-     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
-     *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs      The table recordSet returned by getTable()
-     * @param string                   $name       The new name for the table
-     * @param string                   $owner      The new owner for the table
-     * @param string                   $schema     The new schema for the table
-     * @param string                   $comment    The comment on the table
-     * @param string                   $tablespace The new tablespace for the table ('' means leave as is)
-     * @param bool                     $withoutoids If set to TRUE, will drop oids column
-     * @return int 0 success
-     */
-    protected function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace, bool $withoutoids = false )
-    {
-        $this->fieldArrayClean($tblrs->fields);
-
-        // Comment
-        $status = $this->setComment('TABLE', '', $tblrs->fields['relname'], $comment);
-        dump(['setComment' => $this->getLastExecutedSQL()]);
-
-        $this->lastExecutedSql=$this->getLastExecutedSQL();
-        if (0 !== $status) {
-            return -4;
-        }
- 
-        // Owner
-        $this->fieldClean($owner);
-        [$TableOwnerStatus,$TableOwnerSQL] = $this->alterTableOwner($tblrs, $owner);
-        $this->lastExecutedSql.=$TableOwnerSQL?sprintf('%s%s',\PHP_EOL,$TableOwnerSQL):'';
-        //dump(['alterTableOwner' => [$TableOwnerStatus,$TableOwnerSQL]]);
-
-        if (0 !== $TableOwnerStatus) {
-            return -5;
-        }
-
-        // Tablespace
-        $this->fieldClean($tablespace);
-        [$TableTablespaceStatus,$TableTablespaceSQL] = $this->alterTableTablespace($tblrs, $tablespace);
-        $this->lastExecutedSql.=$TableTablespaceSQL?sprintf('%s%s',\PHP_EOL,$TableTablespaceSQL):'';
-        //dump(['alterTableTablespace' => [$TableTablespaceStatus,$TableTablespaceSQL]]);
-
-        if (0 !== $TableTablespaceStatus) {
-            return -6;
-        }
-
-        // Rename
-        $this->fieldClean($name);
-        [$TableNameStatus,$TableNameSQL] = $this->alterTableName($tblrs, $name);
-        $this->lastExecutedSql.=$TableNameSQL?sprintf('%s%s',\PHP_EOL,$TableNameSQL):'';
-        //dump(['alterTableName' => [$TableNameStatus,$TableNameSQL]]);
-
-        if (0 !== $TableNameStatus) {
-            return -3;
-        }
-
-        // Schema
-        $this->fieldClean($schema);
-        [$TableSchemaStatus,$TableSchemaSQL] = $this->alterTableSchema($tblrs, $schema);
-        $this->lastExecutedSql.=$TableSchemaSQL?sprintf('%s%s',\PHP_EOL,$TableSchemaSQL):'';
-        //dump(['alterTableSchema' => [$TableSchemaStatus,$TableSchemaSQL]]);
-
-        if (0 !== $TableSchemaStatus) {
-            return -7;
-        }
-        [$TableOidsStatus,$TableOidsSQL] = $this->alterTableOids($tblrs, $withoutoids);
-        $this->lastExecutedSql.=$TableOidsSQL?sprintf('%s%s',\PHP_EOL,$TableOidsSQL):'';
-        //dump(['alterTableOids' => [$TableOidsStatus,$TableOidsSQL]]);
-        if (0 !== $TableOidsStatus) {
-            return -7;
-        }
-
-        
-        return 0;
-    }
 
     /**
      * Enables or disables the oid system column to a table a table's owner
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
+     * @param \PHPPgAdmin\ADORecordSet $tblrs       The table RecordSet returned by getTable()
      * @param null|string              $owner
+     * @param bool                     $withoutoids
      *
      * @return array{0:int,1:string} [status:0 if successful, change_sql: changed attribute]
      */
@@ -914,27 +839,27 @@ trait TableTrait
         $status = 0;
         $change_sql = '';
         // no changes. Return 0
-        if (boolval($this->hasObjectID($tblrs->fields['relname'])) !== !$withoutoids) {
-
-
+        if ((bool) ($this->hasObjectID($tblrs->fields['relname'])) !== !$withoutoids) {
             /* vars cleaned in _alterTable */
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
 
             $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
-            $change_sql = "   SET ";
+            $change_sql = '   SET ';
+
             if ($withoutoids) {
                 $change_sql .= ' WITHOUT OIDS';
             } else {
                 $change_sql .= ' WITH OIDS';
             }
-            $sql = implode(' ', [$alter_sql, $change_sql]);
+            $sql = \implode(' ', [$alter_sql, $change_sql]);
 
             $status = $this->execute($sql);
         }
 
         return [$status, $change_sql];
     }
+
     /**
      * Alter a table's owner
      * /!\ this function is called from _alterTable which take care of escaping fields.
@@ -957,14 +882,13 @@ trait TableTrait
             // superuser only function.
             $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
             $change_sql = " OWNER TO \"{$owner}\"";
-            $sql = implode(' ', [$alter_sql, $change_sql]);
+            $sql = \implode(' ', [$alter_sql, $change_sql]);
 
             $status = $this->execute($sql);
         }
 
         return [$status, $change_sql];
     }
-
 
     /**
      * Alter a table's tablespace
@@ -988,7 +912,7 @@ trait TableTrait
             // don't want to do this unnecessarily.
             $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
             $change_sql = " SET TABLESPACE \"{$tablespace}\"";
-            $sql = implode(' ', [$alter_sql, $change_sql]);
+            $sql = \implode(' ', [$alter_sql, $change_sql]);
 
             $status = $this->execute($sql);
         }
@@ -1017,7 +941,7 @@ trait TableTrait
 
             $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
             $change_sql = " RENAME TO \"{$name}\"";
-            $sql = implode(' ', [$alter_sql, $change_sql]);
+            $sql = \implode(' ', [$alter_sql, $change_sql]);
             $status = $this->execute($sql);
 
             if (0 === $status) {
@@ -1051,7 +975,7 @@ trait TableTrait
             // don't want to do this unnecessarily.
             $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
             $change_sql = " SET SCHEMA \"{$schema}\"";
-            $sql = implode(' ', [$alter_sql, $change_sql]);
+            $sql = \implode(' ', [$alter_sql, $change_sql]);
 
             $status = $this->execute($sql);
         }
@@ -1396,6 +1320,82 @@ trait TableTrait
 
     abstract public function getAttributeNames($table, $atts);
 
+    /**
+     * Protected method which alter a table
+     * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
+     *
+     * @param \PHPPgAdmin\ADORecordSet $tblrs       The table recordSet returned by getTable()
+     * @param string                   $name        The new name for the table
+     * @param string                   $owner       The new owner for the table
+     * @param string                   $schema      The new schema for the table
+     * @param string                   $comment     The comment on the table
+     * @param string                   $tablespace  The new tablespace for the table ('' means leave as is)
+     * @param bool                     $withoutoids If set to TRUE, will drop oids column
+     *
+     * @return int 0 success
+     */
+    protected function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace, bool $withoutoids = false)
+    {
+        $this->fieldArrayClean($tblrs->fields);
+
+        // Comment
+        $status = $this->setComment('TABLE', '', $tblrs->fields['relname'], $comment);
+        //dump(['setComment' => $this->getLastExecutedSQL()]);
+
+        $this->lastExecutedSql = $this->getLastExecutedSQL();
+
+        if (0 !== $status) {
+            return -4;
+        }
+
+        // Owner
+        $this->fieldClean($owner);
+        [$TableOwnerStatus,$TableOwnerSQL] = $this->alterTableOwner($tblrs, $owner);
+        $this->lastExecutedSql .= $TableOwnerSQL ? \sprintf('%s%s', \PHP_EOL, $TableOwnerSQL) : '';
+        //dump(['alterTableOwner' => [$TableOwnerStatus,$TableOwnerSQL]]);
+
+        if (0 !== $TableOwnerStatus) {
+            return -5;
+        }
+
+        // Tablespace
+        $this->fieldClean($tablespace);
+        [$TableTablespaceStatus,$TableTablespaceSQL] = $this->alterTableTablespace($tblrs, $tablespace);
+        $this->lastExecutedSql .= $TableTablespaceSQL ? \sprintf('%s%s', \PHP_EOL, $TableTablespaceSQL) : '';
+        //dump(['alterTableTablespace' => [$TableTablespaceStatus,$TableTablespaceSQL]]);
+
+        if (0 !== $TableTablespaceStatus) {
+            return -6;
+        }
+
+        // Rename
+        $this->fieldClean($name);
+        [$TableNameStatus,$TableNameSQL] = $this->alterTableName($tblrs, $name);
+        $this->lastExecutedSql .= $TableNameSQL ? \sprintf('%s%s', \PHP_EOL, $TableNameSQL) : '';
+        //dump(['alterTableName' => [$TableNameStatus,$TableNameSQL]]);
+
+        if (0 !== $TableNameStatus) {
+            return -3;
+        }
+
+        // Schema
+        $this->fieldClean($schema);
+        [$TableSchemaStatus,$TableSchemaSQL] = $this->alterTableSchema($tblrs, $schema);
+        $this->lastExecutedSql .= $TableSchemaSQL ? \sprintf('%s%s', \PHP_EOL, $TableSchemaSQL) : '';
+        //dump(['alterTableSchema' => [$TableSchemaStatus,$TableSchemaSQL]]);
+
+        if (0 !== $TableSchemaStatus) {
+            return -7;
+        }
+        [$TableOidsStatus,$TableOidsSQL] = $this->alterTableOids($tblrs, $withoutoids);
+        $this->lastExecutedSql .= $TableOidsSQL ? \sprintf('%s%s', \PHP_EOL, $TableOidsSQL) : '';
+        //dump(['alterTableOids' => [$TableOidsStatus,$TableOidsSQL]]);
+        if (0 !== $TableOidsStatus) {
+            return -7;
+        }
+
+        return 0;
+    }
 
     /**
      * Dumps serial-like columns in the table.

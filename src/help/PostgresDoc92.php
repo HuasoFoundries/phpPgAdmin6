@@ -17,6 +17,6 @@ class PostgresDoc92 extends PostgresDoc91
     {
         parent::__construct($conf, $major_version);
 
-        $this->help_page['pg.rule.view'] = 'rules-views.html';
+        $this->help_topics['pg.rule.view'] = 'rules-views.html';
     }
 }
